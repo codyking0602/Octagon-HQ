@@ -1,0 +1,14 @@
+{
+  "kind": "football-spotlight",
+  "sport": "cfb",
+  "week_of": "2026-10-13",
+  "destination": "public/assets/football/weekly/2026-10-13/cfb/spotlight.webp",
+  "player_name": "LaNorris Sellers",
+  "photos": [
+    {
+      "kind": "portrait",
+      "url": "https://a.espncdn.com/combiner/i?img=%2Fi%2Fheadshots%2Fcollege-football%2Fplayers%2Ffull%2F4875127.png",
+      "identity_reference_url": "https://www.espn.com/college-football/player/_/id/4875127/lanorris-sellers"
+    }
+  ]
+}
