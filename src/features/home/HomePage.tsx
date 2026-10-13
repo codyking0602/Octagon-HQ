@@ -301,7 +301,7 @@ export default function HomePage() {
     />
   );
 
-  const ufcPoster = reviewedMmaManiaPoster(currentEvent);
+  const ufcPoster = reviewedMmaManiaPoster(null); // Next-event art remains visible until the new Picks card is staged.
 
   const ufcHq = (
     <section
