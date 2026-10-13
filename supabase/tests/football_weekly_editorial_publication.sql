@@ -44,7 +44,7 @@ begin
     'kickoff_at','2034-11-11T21:00:00Z',
     'header_asset_path','/assets/football/weekly/2034-11-07/cfb/game-header.webp',
     'header_photo_sources',jsonb_build_array(
-      'https://a.espncdn.com/away.webp','https://a.espncdn.com/home.webp'));
+      'https://seatgeekimages.com/matchup/verified/600x450.jpg'));
   v_receipt := jsonb_build_object(
     'player',jsonb_build_object('id','picked-qb','name','Selected Quarterback',
       'team','Test Team','position','QB','summary','Verified selection'),
