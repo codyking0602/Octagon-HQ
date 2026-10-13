@@ -140,7 +140,7 @@ describe("Phase 3 verified media and Football editorial", () => {
   const game = {
     home_team: "Home", away_team: "Away", kickoff_at: "2026-10-17T19:30:00Z",
     header_asset_path: "/assets/football/weekly/2026-10-13/cfb/game-header.webp",
-    header_photo_sources: ["https://a.espncdn.com/away.jpg", "https://a.espncdn.com/home.jpg"],
+    header_photo_sources: ["https://seatgeekimages.com/matchup/verified/600x450.jpg"],
   };
   const paragraph = "A real team-specific matchup can turn on protection, pressure, and who wins the early downs.";
   const editorial = {
@@ -177,9 +177,9 @@ describe("Phase 3 verified media and Football editorial", () => {
   });
 
   it("requires the real matchup header references and established complete editorial form", () => {
-    expect(footballWeeklyPreparedGameSchema.parse(game).header_photo_sources).toHaveLength(2);
+    expect(footballWeeklyPreparedGameSchema.parse(game).header_photo_sources).toHaveLength(1);
     expect(() => footballWeeklyPreparedGameSchema.parse({
-      ...game, header_photo_sources: [game.header_photo_sources[0]],
+      ...game, header_photo_sources: ["https://unknown.example/matchup/header.jpg"],
     })).toThrow();
     expect(footballWeeklyEditorialProofSchema.parse(editorial).breakdown.things).toHaveLength(3);
     expect(() => footballWeeklyEditorialProofSchema.parse({
