@@ -123,50 +123,55 @@ export const MLB_FIND_LEADER_SECOND_PRODUCTION_DATE = "2026-10-13" as const;
  * October 13 production boards. The season is part of every season-based
  * candidate name so the identity remains visible even in compact/mobile cards.
  *
- * Career-hit values follow MLB.com's all-time totals. Stolen-base values use
- * MLB's Modern Era (since 1900) season records and team-season leader records.
+ * Career hits and single-season home runs are matched to MLB's official records.
+ */
+/**
+ * October 13: household-name candidate field, deliberately weighted to
+ * the 1990s–2020s rather than filling boards from obscure all-time rankings.
+ * All totals are MLB regular-season records, and season years remain visible.
+ * Sources: MLB all-time hits and MLB single-season home-run leaders.
  */
 export const MLB_FIND_LEADER_SECOND_PRODUCTION_BOARDS: readonly MlbFindLeaderBoard[] = [
   {
     id: "mlb-2026-play-13-career-hits",
-    question: "Who has the most career MLB hits?",
-    context: "Official MLB career hit totals.",
+    question: "Which baseball legend finished with the most career MLB hits?",
+    context: "Career regular-season hits. Ten household-name stars spanning multiple eras.",
     categoryLabel: "MLB · CAREER HITS",
     statLabel: "career MLB hits",
     shortLabel: "H",
     valueFormat: "integer",
     candidates: [
       { id: "pete-rose", name: "Pete Rose", subtitle: "1B / OF", value: 4256, teamAbbreviation: "CIN" },
-      { id: "honus-wagner", name: "Honus Wagner", subtitle: "SS", value: 3430, teamAbbreviation: "PIT" },
-      { id: "carl-yastrzemski", name: "Carl Yastrzemski", subtitle: "LF", value: 3419, teamAbbreviation: "BOS" },
-      { id: "paul-molitor", name: "Paul Molitor", subtitle: "DH / 3B", value: 3319, teamAbbreviation: "MIL" },
-      { id: "eddie-collins", name: "Eddie Collins", subtitle: "2B", value: 3314, teamAbbreviation: "CWS" },
-      { id: "eddie-murray", name: "Eddie Murray", subtitle: "1B", value: 3255, teamAbbreviation: "BAL" },
-      { id: "nap-lajoie", name: "Nap Lajoie", subtitle: "2B", value: 3252, teamAbbreviation: "CLE" },
-      { id: "paul-waner", name: "Paul Waner", subtitle: "RF", value: 3152, teamAbbreviation: "PIT" },
-      { id: "robin-yount", name: "Robin Yount", subtitle: "SS / CF", value: 3142, teamAbbreviation: "MIL" },
-      { id: "dave-winfield", name: "Dave Winfield", subtitle: "RF", value: 3110, teamAbbreviation: "SD" },
+      { id: "hank-aaron", name: "Hank Aaron", subtitle: "RF", value: 3771, teamAbbreviation: "ATL" },
+      { id: "derek-jeter", name: "Derek Jeter", subtitle: "SS", value: 3465, teamAbbreviation: "NYY" },
+      { id: "albert-pujols", name: "Albert Pujols", subtitle: "1B", value: 3384, teamAbbreviation: "STL" },
+      { id: "willie-mays", name: "Willie Mays", subtitle: "CF", value: 3293, teamAbbreviation: "SF" },
+      { id: "cal-ripken-jr", name: "Cal Ripken Jr.", subtitle: "SS", value: 3184, teamAbbreviation: "BAL" },
+      { id: "miguel-cabrera", name: "Miguel Cabrera", subtitle: "1B", value: 3174, teamAbbreviation: "DET" },
+      { id: "tony-gwynn", name: "Tony Gwynn", subtitle: "RF", value: 3141, teamAbbreviation: "SD" },
+      { id: "alex-rodriguez", name: "Alex Rodriguez", subtitle: "SS / 3B", value: 3115, teamAbbreviation: "NYY" },
+      { id: "ichiro-suzuki", name: "Ichiro Suzuki", subtitle: "RF", value: 3089, teamAbbreviation: "SEA" },
     ],
   },
   {
-    id: "mlb-2026-play-13-single-season-stolen-bases",
-    question: "Who stole the most bases in a single MLB season?",
-    context: "Modern Era single-season stolen bases. The season is part of each candidate identity.",
-    categoryLabel: "MLB · SINGLE-SEASON STOLEN BASES",
-    statLabel: "stolen bases that season",
-    shortLabel: "SB",
+    id: "mlb-2026-play-13-single-season-home-runs",
+    question: "Who hit the most home runs in a single MLB season?",
+    context: "Regular-season home runs in the season shown. The year is part of each player's identity.",
+    categoryLabel: "MLB · SINGLE-SEASON HOME RUNS",
+    statLabel: "home runs that season",
+    shortLabel: "HR",
     valueFormat: "integer",
     candidates: [
-      { id: "rickey-henderson-1982", name: "Rickey Henderson (1982)", subtitle: "LF", value: 130, teamAbbreviation: "ATH" },
-      { id: "lou-brock-1974", name: "Lou Brock (1974)", subtitle: "LF", value: 118, teamAbbreviation: "STL" },
-      { id: "vince-coleman-1985", name: "Vince Coleman (1985)", subtitle: "LF", value: 110, teamAbbreviation: "STL" },
-      { id: "maury-wills-1962", name: "Maury Wills (1962)", subtitle: "SS", value: 104, teamAbbreviation: "LAD" },
-      { id: "ty-cobb-1915", name: "Ty Cobb (1915)", subtitle: "CF", value: 96, teamAbbreviation: "DET" },
-      { id: "eric-davis-1986", name: "Eric Davis (1986)", subtitle: "CF", value: 80, teamAbbreviation: "CIN" },
-      { id: "jose-reyes-2007", name: "José Reyes (2007)", subtitle: "SS", value: 78, teamAbbreviation: "NYM" },
-      { id: "ronald-acuna-jr-2023", name: "Ronald Acuña Jr. (2023)", subtitle: "RF", value: 73, teamAbbreviation: "ATL" },
-      { id: "tony-womack-1999", name: "Tony Womack (1999)", subtitle: "2B / OF", value: 72, teamAbbreviation: "ARI" },
-      { id: "scott-podsednik-2004", name: "Scott Podsednik (2004)", subtitle: "CF", value: 70, teamAbbreviation: "MIL" },
+      { id: "barry-bonds-2001", name: "Barry Bonds (2001)", subtitle: "LF", value: 73, teamAbbreviation: "SF" },
+      { id: "mark-mcgwire-1998", name: "Mark McGwire (1998)", subtitle: "1B", value: 70, teamAbbreviation: "STL" },
+      { id: "sammy-sosa-1998", name: "Sammy Sosa (1998)", subtitle: "RF", value: 66, teamAbbreviation: "CHC" },
+      { id: "aaron-judge-2022", name: "Aaron Judge (2022)", subtitle: "RF", value: 62, teamAbbreviation: "NYY" },
+      { id: "cal-raleigh-2025", name: "Cal Raleigh (2025)", subtitle: "C", value: 60, teamAbbreviation: "SEA" },
+      { id: "babe-ruth-1927", name: "Babe Ruth (1927)", subtitle: "RF", value: 60, teamAbbreviation: "NYY" },
+      { id: "giancarlo-stanton-2017", name: "Giancarlo Stanton (2017)", subtitle: "RF", value: 59, teamAbbreviation: "MIA" },
+      { id: "ryan-howard-2006", name: "Ryan Howard (2006)", subtitle: "1B", value: 58, teamAbbreviation: "PHI" },
+      { id: "david-ortiz-2006", name: "David Ortiz (2006)", subtitle: "DH", value: 54, teamAbbreviation: "BOS" },
+      { id: "shohei-ohtani-2024", name: "Shohei Ohtani (2024)", subtitle: "DH", value: 54, teamAbbreviation: "LAD" },
     ],
   },
 ] as const;
