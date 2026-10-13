@@ -183,3 +183,7 @@
     font-size: 19px;
   }
 }
+
+/* Long Today’s Challenge names wrap instead of being cut off on phones. */
+.home-challenge-card__copy h3 { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; line-height: 1.14; }
+@media (max-width: 390px) { .home-challenge-card__result { min-width: 62px; } }

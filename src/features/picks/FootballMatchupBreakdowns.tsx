@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { footballWeeklySuperteamIdentity } from "../back-room/footballWeeklySuperteamVisualIdentity";
 import FootballPushControl from "../picks-control/FootballPushControl";
 import { createPickControlRepository } from "../picks-control/pickControlRepository";
@@ -204,11 +205,6 @@ export function FootballMatchupBreakdowns({
           </nav>
         ) : null}
 
-        {active.headerAssetPath ? (
-          <img className="football-matchup-breakdown-weekly-art" src={active.headerAssetPath}
-            alt={active.title + " Game of the Week artwork"} loading="lazy" />
-        ) : null}
-
         {active.compact ? (
           <div
             className="football-matchup-breakdown-sheet__body football-matchup-breakdown-sheet__body--compact"
@@ -335,7 +331,15 @@ export function FootballMatchupBreakdowns({
         </button>
       ) : null}
       {canControl && footballEvent ? (
-        <FootballPushControl eventId={footballEvent.eventId} repository={controlRepository} />
+        <details className="football-picks-owner-menu">
+          <summary>OWNER TOOLS ⚙</summary>
+          <div>
+            <FootballPushControl eventId={footballEvent.eventId} repository={controlRepository} />
+            <Link className="picks-control-entry" to={`/picks/control?sport=football&event=${encodeURIComponent(footballEvent.eventId)}#header`}>
+              MANAGE HEADERS →
+            </Link>
+          </div>
+        </details>
       ) : null}
       {modal}
     </>
