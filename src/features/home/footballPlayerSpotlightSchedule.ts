@@ -166,6 +166,42 @@ export const FOOTBALL_PLAYER_SPOTLIGHT_PAIRS: readonly FootballPlayerSpotlightPa
       },
     },
   },
+  {
+    id: "2026-10-13-sellers-maye",
+    activatesAt: "2026-10-13T05:00:00.000Z",
+    spotlights: {
+      cfb: {
+        name: "LaNorris Sellers",
+        team: "South Carolina",
+        position: "QB",
+        stats: [
+          { value: "279", label: "PASS YDS" },
+          { value: "4", label: "PASS TD" },
+          { value: "65.7%", label: "CMP" },
+          { value: "0", label: "INT" },
+        ],
+        result: "AT #16 FLORIDA · W 38–19 · 5 TOTAL TD",
+        measurements: "6'3\" · 240 LB",
+        teamColor: "#73000A",
+        highlightUrl: "https://youtube.com/shorts/bYGatw4Ul8k?is=MBLbECweV9VHir9d",
+      },
+      nfl: {
+        name: "Drake Maye",
+        team: "New England Patriots",
+        position: "QB",
+        stats: [
+          { value: "374", label: "PASS YDS" },
+          { value: "4", label: "PASS TD" },
+          { value: "150.9", label: "PASSER RTG" },
+          { value: "76.5%", label: "CMP" },
+        ],
+        result: "VS LAS VEGAS · W 45–17 · 5 TOTAL TD",
+        measurements: "6'4\" · 225 LB",
+        teamColor: "#002244",
+        highlightUrl: "https://www.nfl.com/videos/drake-maye-s-best-plays-from-5-td-game-vs-raiders-week-5",
+      },
+    },
+  },
 ] as const;
 
 export const FOOTBALL_BASE_SPOTLIGHT_PAIR_ID = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[0].id;
@@ -183,6 +219,10 @@ export const FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES: FootballSpotlightPhotoSou
   "2026-10-06-jamal-tet": {
     cfb: "/assets/football/player-spotlight/2026-10-06-jamal-tet/cfb.webp",
     nfl: "/assets/football/player-spotlight/2026-10-06-jamal-tet/nfl.webp",
+  },
+  "2026-10-13-sellers-maye": {
+    cfb: "/assets/football/weekly/2026-10-13/cfb/spotlight.webp",
+    nfl: "/assets/football/weekly/2026-10-13/nfl/spotlight.webp",
   },
 };
 
