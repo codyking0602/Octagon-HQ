@@ -657,12 +657,10 @@ function MlbPlayResultDetail({
   const sharedBarTrivia = isBarTrivia
     ? mlbBarTriviaResultProjection(entry, challengeKey, challengeDate)
     : null;
-  const sharedResult = sharedSportsFeud ?? (sharedBarTrivia
-    ? { projection: sharedBarTrivia, resultDetail: entry.resultDetail }
-    : null);
-
-  if (sharedResult) {
-    return (
+  const renderSharedResult = (sharedResult: {
+    projection: TodayChallengeProjection;
+    resultDetail: Record<string, unknown>;
+  }) => (
       <div
         className="today-hub-official-result"
         role="dialog"
@@ -687,7 +685,18 @@ function MlbPlayResultDetail({
           />
         </div>
       </div>
-    );
+
+  );
+
+  if (isSportsFeud && sharedSportsFeud) {
+    return renderSharedResult(sharedSportsFeud);
+  }
+
+  if (isBarTrivia && sharedBarTrivia) {
+    return renderSharedResult({
+      projection: sharedBarTrivia,
+      resultDetail: entry.resultDetail,
+    });
   }
 
   return (
