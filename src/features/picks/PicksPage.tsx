@@ -19,6 +19,7 @@ import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { pickEventPoster } from "./picksEventAssets";
+import { reviewedMmaManiaPoster } from "./ufcMmaManiaPoster";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
@@ -137,7 +138,7 @@ export default function PicksPage() {
   const cardOddsMeta = orderedBouts
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
-  const eventPoster = pickEventPoster(activeEvent);
+  const eventPoster = reviewedMmaManiaPoster(activeEvent) ?? pickEventPoster(activeEvent);
   const numberedUfcEvent = Boolean(
     activeEvent?.sport !== "football" && activeEvent?.name.match(/^UFC\s+\d+\b/i),
   );

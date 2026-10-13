@@ -326,3 +326,37 @@ a.home-event-card__standing:focus-visible {
     font-size: 24px;
   }
 }
+
+/* Verified, source-linked publisher artwork; not generated fighter imagery. */
+.home-ufc-poster {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 628;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(229, 9, 20, .26);
+  background: #090b10;
+  color: #fff;
+  text-decoration: none;
+}
+.home-ufc-poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.home-ufc-poster small {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 4px 7px;
+  background: rgba(0,0,0,.78);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+.home-ufc-poster:focus-visible {
+  outline: 2px solid var(--ufc-red-strong);
+  outline-offset: 2px;
+}
