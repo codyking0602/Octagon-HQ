@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 describe("Football Picks event-header ownership contract", () => {
   it("routes the published Football slate into the existing Picks header owner", () => {
-    const playerSource = readFileSync("src/features/picks/FootballPicksPage.tsx", "utf8");
+    const playerSource = readFileSync("src/features/picks/FootballMatchupBreakdowns.tsx", "utf8");
     const controlSource = readFileSync("src/features/picks-control/PicksControlCenterPage.tsx", "utf8");
     const headerSource = readFileSync("src/features/picks-control/PickEventHeaderControl.tsx", "utf8");
 

@@ -194,7 +194,8 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("3")).toBeInTheDocument();
     expect(within(hq).getByText("TOTAL TDS")).toBeInTheDocument();
     expect(within(hq).queryByText(/LAST WEEK/)).not.toBeInTheDocument();
-    expect(within(hq).getByText("VS #6 OREGON · W 39–31 · 6'3\" · 215 LB")).toBeInTheDocument();
+    expect(within(hq).getByText("VS #6 OREGON · W 39–31")).toBeInTheDocument();
+    expect(within(hq).getByText("6'3\" · 215 LB")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
       "https://youtu.be/Ia6UXgdSKw4?is=i2gxMRVoqonuhYtB",
