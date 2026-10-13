@@ -28,6 +28,49 @@ export interface NflGmLongSave {
   midseason: NflGmLongMidseason | null;
 }
 
+/**
+ * Phase 2 originally offered unplayable future-pick trades with only nine
+ * starters and no bench. Restore those saved teams to their original nine,
+ * retain the eight locked games/development and mark the deadline closed.
+ * Valid one-for-one trades remain intact. Only migrate the known legacy shape.
+ */
+export function nflGmLongMigrateDeadlineSave(value: unknown, picks: readonly NflGmLongPick[]): unknown {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return value;
+  const mid = value as Record<string, unknown>;
+  const rawRejected = mid.rejectedOfferIds;
+  const oldRejected = Array.isArray(rawRejected) && rawRejected.includes("future");
+  const rawTrade = mid.trade;
+  let nextTrade: unknown = rawTrade;
+  let changed = oldRejected;
+
+  if (rawTrade && typeof rawTrade === "object" && !Array.isArray(rawTrade)) {
+    const trade = rawTrade as Record<string, unknown>;
+    const outgoingId = trade.outgoingId;
+    const partner = trade.partnerTeam;
+    const oldRound = trade.futurePickRound;
+    const signed = typeof outgoingId === "string" && picks.some(p => p.playerId === outgoingId);
+    const matching = mid.stage === "complete" && signed
+      && mid.shoppedPlayerId === outgoingId && mid.partnerTeam === partner
+      && typeof partner === "string";
+    if (trade.incomingId === null && matching
+      && (oldRound === 1 || oldRound === 2 || oldRound === 3)) {
+      // A future-pick acceptance is void under the approved nine-starter rules.
+      nextTrade = null;
+      changed = true;
+    } else if (typeof trade.incomingId === "string"
+      && Object.prototype.hasOwnProperty.call(trade, "futurePickRound")
+      && oldRound === null) {
+      const { futurePickRound: _unused, ...realPlayerTrade } = trade;
+      nextTrade = realPlayerTrade;
+      changed = true;
+    }
+  }
+  return changed ? {
+    ...mid, trade: nextTrade,
+    rejectedOfferIds: oldRejected ? (rawRejected as unknown[]).filter(x => x !== "future") : rawRejected,
+  } : value;
+}
+
 export function nflGmLongStorageKey(profileId: string): string {
   if (!/^[a-z0-9-]{8,128}$/i.test(profileId)) throw new Error("Invalid Long GM owner identity.");
   return `octagon:nfl-gm-long:v1:${profileId}`;
@@ -82,7 +125,8 @@ export function nflGmLongParseSave(
   if (raw.phase !== "draft" && raw.picks.length !== 9) return null;
   if ((raw.phase === "coach-wheel" || raw.phase === "outlook") && !bucket) return null;
   if ((raw.phase === "outlook" || raw.phase === "midseason") && (!coach || draw == null)) return null;
-  const mid = raw.midseason ?? null;
+  const mid = raw.midseason == null
+    ? null : nflGmLongMigrateDeadlineSave(raw.midseason, raw.picks);
   if (mid !== null && !nflGmLongValidMidseason(mid, raw.picks)) return null;
   if (raw.phase === "midseason" && mid === null) return null;
   if (mid !== null && raw.phase !== "midseason") return null;
