@@ -91,7 +91,7 @@ describe("MLB Bar Trivia official leaderboard drill-down", () => {
     expect(screen.getByText("2× DOUBLE ROUND")).toBeInTheDocument();
     expect(screen.getByText(MLB_BAR_TRIVIA_PRODUCTION_RUN[0]!.prompt)).toBeInTheDocument();
     const wrong = container.querySelectorAll(".leaderboard-bar-trivia-questions details")[2]!;
-    expect(within(wrong as HTMLElement).getByText("MISS · +0 PTS")).toBeInTheDocument();
+    expect(within(wrong as HTMLElement).getByText("MISS · 0 PTS")).toBeInTheDocument();
     expect(within(wrong as HTMLElement).getByText(MLB_BAR_TRIVIA_PRODUCTION_RUN[2]!.explanation)).toBeInTheDocument();
     expect(screen.queryByText(/predates answer-by-answer recording/i)).not.toBeInTheDocument();
   });
@@ -114,7 +114,7 @@ describe("MLB Bar Trivia official leaderboard drill-down", () => {
     expect(container.querySelectorAll(".leaderboard-bar-trivia-questions details")).toHaveLength(10);
     expect(screen.getAllByText("PICK NOT RECORDED")).toHaveLength(10);
     expect(screen.getByText(MLB_BAR_TRIVIA_PRODUCTION_RUN[9]!.prompt)).toBeInTheDocument();
-    expect(screen.queryByText("MISS · +0 PTS")).not.toBeInTheDocument();
+    expect(screen.queryByText("MISS · 0 PTS")).not.toBeInTheDocument();
   });
 
   it("resolves the future October 27 run by its own ID and date and refuses a mismatched date", () => {
