@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import homeSource from "./HomePage.tsx?raw";
 import { describe, expect, it } from "vitest";
 import { dailyTwoGameOfficialAverageScore } from "../play/DailyTwoGameStatus";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
@@ -15,7 +15,7 @@ describe("Home Daily two-game official average", () => {
       },
     } as unknown as TodayChallengeProjection;
     expect(dailyTwoGameOfficialAverageScore(projection)).toBe(55);
-    const source = readFileSync(new URL("./HomePage.tsx", import.meta.url), "utf8");
+    const source = homeSource;
     expect(source).toContain("dailyTwoGameOfficialAverageScore(projection!)");
     expect(source).toContain("ownLeaderboardEntry?.normalizedScore");
     expect(source).toContain("<strong>{displayedScore}<small>/100</small></strong>");
