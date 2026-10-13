@@ -298,4 +298,25 @@ describe("Football Player Spotlight weekly schedule", () => {
     });
   });
 
+  it("preloads and atomically activates this week's owner-selected Sellers/Maye Spotlights at Tuesday midnight Chicago", () => {
+    const pair = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.find((item) => item.id === "2026-10-13-sellers-maye");
+    expect(pair).toBeDefined();
+    expect(FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-13-sellers-maye"]).toEqual({
+      cfb: "/assets/football/weekly/2026-10-13/cfb/spotlight.webp",
+      nfl: "/assets/football/weekly/2026-10-13/nfl/spotlight.webp",
+    });
+    expect(footballSpotlightPairAt(
+      new Date("2026-10-13T04:59:59.999Z"),
+      FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
+    ).id).toBe("2026-10-06-jamal-tet");
+    expect(footballSpotlightPairAt(
+      new Date("2026-10-13T05:00:00.000Z"),
+      FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
+    ).id).toBe("2026-10-13-sellers-maye");
+    expect(pair?.spotlights.cfb.name).toBe("LaNorris Sellers");
+    expect(pair?.spotlights.nfl.name).toBe("Drake Maye");
+    expect(pair?.spotlights.cfb.stats).toHaveLength(4);
+    expect(pair?.spotlights.nfl.stats).toHaveLength(4);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-13T05:00:00.000Z"))).toBe(false);
+  });
 });
