@@ -7,6 +7,7 @@ import {
   PlayerHeadshot, PlayerQualityPill, PlayerOutlookPill,
 } from "./FootballGmModePage";
 import { wheelFootballTeam } from "./wheelFootballModel";
+import { useNflGmLongOlBio } from "./footballGmLongOlMedia";
 import {
   NFL_GM_LONG_CAP, NFL_GM_LONG_SLOTS, NFL_GM_LONG_SLOT_LABELS,
   nflGmLongSpend, type NflGmLongPick, type NflGmLongSlot,
@@ -27,6 +28,36 @@ function teamStyle(teamCode: string): CSSProperties | undefined {
     "--gm-team-primary": team.primaryColor,
     "--gm-team-secondary": team.secondaryColor,
   } as CSSProperties;
+}
+
+/** Short keeps its existing picture component; only OL needs an ESPN lookup. */
+function LongPlayerPortrait({ player, className = "football-gm__player-headshot" }: {
+  player: NflGmLongPlayer;
+  className?: string;
+}) {
+  const isOl = player.family === "OL";
+  const bio = useNflGmLongOlBio(player.team, player.name, isOl);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  if (!isOl) return <PlayerHeadshot player={player} className={className} />;
+  const headshot = bio?.headshotUrl;
+  const team = wheelFootballTeam(player.team);
+  return <span className={className} aria-hidden="true">
+    {headshot && failedUrl !== headshot
+      ? <img src={headshot} alt="" onError={() => setFailedUrl(headshot)} />
+      : team?.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team?.shortCode ?? player.team}</b>}
+  </span>;
+}
+
+function LongPlayerRoleAge({ player, includeTeam = false }: {
+  player: NflGmLongPlayer;
+  includeTeam?: boolean;
+}) {
+  const bio = useNflGmLongOlBio(player.team, player.name, player.family === "OL");
+  const age = player.age ?? bio?.age;
+  const role = includeTeam ? `${player.team} · ${player.position}` : player.position;
+  // Unknown OL age must be visibly unknown, never a made-up value.
+  const text = `${role}${age != null ? ` · AGE ${age}` : player.family === "OL" ? " · AGE —" : ""}`;
+  return includeTeam ? <em>{text}</em> : <small>{text}</small>;
 }
 
 function longScouting(player: NflGmLongPlayer) {
@@ -100,10 +131,10 @@ export function LongRosterGrid({ picks }: { picks: readonly NflGmLongPick[] }) {
           <small>{label(slot)}</small>
           {player ? <>
             <div className="football-gm__roster-player">
-              <PlayerHeadshot player={player} />
+              <LongPlayerPortrait player={player} />
               <span>
                 <strong>{player.name}</strong>
-                <em>{player.team} · {player.position}</em>
+                <LongPlayerRoleAge player={player} includeTeam />
                 <span className="football-gm__roster-scouting">
                   <LongQualityAndOutlook player={player} />
                 </span>
@@ -183,10 +214,10 @@ export function LongCandidateBoard({ teamCode, picks, onPick }: {
               onClick={() => onPick(player.id)} key={player.id}
               aria-label={`Select ${player.name} for ${footballGmMoney(player.salaryWindow[0])}`}>
               <span className="gm-long__candidate-identity">
-                <PlayerHeadshot player={player} className="football-wheel-picker__headshot" />
+                <LongPlayerPortrait player={player} className="football-wheel-picker__headshot" />
                 <span className="football-gm__picker-player-copy">
                   <strong>{player.name}</strong>
-                  <small>{player.position}{player.age != null ? ` · AGE ${player.age}` : ""}</small>
+                  <LongPlayerRoleAge player={player} />
                   <PlayerTags player={player} />
                 </span>
               </span>
