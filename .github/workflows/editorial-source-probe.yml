@@ -7,20 +7,15 @@ jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe actual publisher image URLs
+      - name: See actual CDN images
         shell: python
         run: |
-          import urllib.request, io, struct
-          targets = {
-            "mma-mania-ufc-horizontal": "https://platform.mmamania.com/wp-content/uploads/sites/110/2026/10/HTgg68BWAAAl9gb.jpeg?quality=90&strip=all&crop=0%2C3.4613147178592%2C100%2C93.077370564282&w=1200",
-            "seatgeek-cfb-matchup": "https://seatgeekimages.com/matchup/v3_4901d84e/5585/5570/600x450.jpg",
-            "seatgeek-nfl-matchup": "https://seatgeekimages.com/matchup/v3_4901d84e/2066/2083/600x450.jpg",
-            "seatgeek-cfb-stadium": "https://images.ctfassets.net/45eypz94062x/4x6EaZnXu1SZmNsBantmKr/4ebd82f4d26eca0c3c6416f1128db756/BYU_Cougars_Football.jpg?fm=webp&q=80&w=1920",
+          import urllib.request,base64
+          urls = {
+            "CFB": "https://seatgeekimages.com/matchup/v3_4901d84e/5585/5570/600x450.jpg",
+            "NFL": "https://seatgeekimages.com/matchup/v3_4901d84e/2066/2083/600x450.jpg",
           }
-          for name, url in targets.items():
-            try:
-              req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0", "Accept":"image/*"})
-              with urllib.request.urlopen(req, timeout=20) as r:
-                body = r.read(24000000)
-                print(name, r.status, r.headers.get("Content-Type"), len(body), body[:16].hex(), "url",r.geturl(), flush=True)
-            except Exception as e: print(name,type(e).__name__,str(e)[:180],flush=True)
+          for name,url in urls.items():
+            with urllib.request.urlopen(url,timeout=15) as r:
+              image = r.read(50000)
+              print("VISUAL_"+name+"="+base64.b64encode(image).decode(),flush=True)
