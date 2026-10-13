@@ -21,7 +21,8 @@
 .home-sport-chooser__identity small {
   display: block;
   margin-top: 5px;
-  color: #8ebce6;
+  /* Universal HQ streak is neutral across Football and UFC selections. */
+  color: #bdc4cd;
   font-size: 9px;
   font-weight: 850;
   letter-spacing: .08em;
