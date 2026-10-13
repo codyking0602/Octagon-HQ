@@ -66,6 +66,16 @@ describe("public Football weekly release projection", () => {
     expect(match[0]?.headerAssetPath).toContain("game-header.webp");
     expect(match[0]?.keyMatchups).toHaveLength(3);
     expect(match[0]?.unitEdges).toHaveLength(2);
+    // Real Picks displays school + mascot (the owner selects the school name).
+    const fullNames = {
+      ...event, bouts: [{ ...event.bouts[0],
+        redFighterSlug: "byu-cougars", redFighterName: "BYU Cougars",
+        blueFighterSlug: "notre-dame-fighting-irish",
+        blueFighterName: "Notre Dame Fighting Irish",
+        homeTeamSlug: "byu-cougars", awayTeamSlug: "notre-dame-fighting-irish",
+      }],
+    };
+    expect(publishedFootballMatchupsForEvent(fullNames, item)).toHaveLength(1);
     expect(publishedFootballMatchupsForEvent({
       ...event, bouts: [{ ...event.bouts[0], redFighterSlug: "texas",
         redFighterName: "Texas", homeTeamSlug: "texas" }],
