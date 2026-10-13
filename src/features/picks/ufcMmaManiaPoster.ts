@@ -33,6 +33,22 @@ export const APPROVED_MMA_MANIA_POSTERS: readonly ApprovedUfcPoster[] = [
   },
 ];
 
+function verifiedReleaseWindow(item: ApprovedUfcPoster): boolean {
+  const start = Date.parse(item.activeAt);
+  const end = Date.parse(item.expiresAt);
+  const event = Date.parse(item.eventStartsAt);
+  if (![start, end, event].every(Number.isFinite) || start >= end || event < start) return false;
+  // Retain the already-approved Edmonton launch; all FUTURE UFC content must
+  // become visible at Tuesday 00:00 Central, automatically respecting DST.
+  if (item.source === MMA_MANIA_EDMONTON_POSTER.source) return true;
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago", weekday: "short", hour: "2-digit",
+    minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(new Date(start));
+  const part = (type: string) => parts.find((entry) => entry.type === type)?.value;
+  return part("weekday") === "Tue" && part("hour") === "00" && part("minute") === "00";
+}
+
 function verifiedPublisherSource(item: ApprovedUfcPoster): boolean {
   try {
     const page = new URL(item.source);
@@ -40,7 +56,8 @@ function verifiedPublisherSource(item: ApprovedUfcPoster): boolean {
     return page.protocol === "https:" && page.hostname === "www.mmamania.com"
       && image.protocol === "https:" && image.hostname === "platform.mmamania.com"
       && image.pathname.includes("/wp-content/uploads/")
-      && /^[0-9]+ \/ [0-9]+$/.test(item.aspectRatio);
+      && /^[0-9]+ \/ [0-9]+$/.test(item.aspectRatio)
+      && verifiedReleaseWindow(item);
   } catch {
     return false;
   }
