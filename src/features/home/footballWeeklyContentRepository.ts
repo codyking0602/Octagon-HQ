@@ -147,8 +147,12 @@ export const footballWeeklyPreparedSpotlightSchema = footballWeeklySpotlightSche
 
 export const footballWeeklyPreparedGameSchema = footballWeeklyGameSchema.safeExtend({
   header_asset_path: z.string().regex(/^\/assets\/football\/weekly\/\d{4}-\d{2}-\d{2}\/(cfb|nfl)\/game-header[.]webp$/),
-  header_photo_sources: z.array(z.url().refine((url) => url.startsWith("https://"))).length(2),
-});
+  header_photo_sources: z.array(z.url().refine((url) => url.startsWith("https://"))).min(1).max(2),
+}).refine((item) => item.header_photo_sources.length === 2
+  // Existing already-published historical material remains readable. New weekly
+  // preparation and the asset processor allow ONLY one approved SeatGeek image.
+  || /^https:\/\/(www\.)?seatgeekimages\.com\/matchup\/[^?#]+\.(jpg|jpeg|png|webp)(\?[^#]*)?$/.test(item.header_photo_sources[0] ?? ""),
+  "New weekly header must use a real SeatGeek matchup artwork source");
 
 export const footballWeeklyContentPackageSchema = z.object({
   week_of: footballEditorialTuesdaySchema,
