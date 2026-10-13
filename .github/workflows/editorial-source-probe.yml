@@ -7,17 +7,17 @@ jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
-      - run: python -m pip install pillow --disable-pip-version-check
-      - name: Inspect original MMA Mania event poster composition
+      - name: Verify exact Octagon HQ live deployment and approved image files
         shell: python
         run: |
-          import urllib.request,base64,io
-          from PIL import Image
-          url='https://platform.mmamania.com/wp-content/uploads/sites/110/2026/10/HTgg68BWAAAl9gb.jpeg?quality=90&strip=all&crop=0%2C3.4613147178592%2C100%2C93.077370564282&w=1200'
-          with urllib.request.urlopen(url,timeout=20) as r:
-            im=Image.open(io.BytesIO(r.read()))
-            print('SOURCE SIZE',im.size)
-            im.thumbnail((600,315))
-            buf=io.BytesIO()
-            im.convert('RGB').save(buf,'JPEG',quality=65)
-            print('POSTER_PREVIEW_BASE64='+base64.b64encode(buf.getvalue()).decode())
+          import urllib.request,json
+          for origin in ("https://octagon.hq-app.workers.dev", "https://the.hq-app.workers.dev"):
+            for path in ("/deployment.json",
+                         "/assets/football/weekly/2026-10-13/cfb/spotlight.webp",
+                         "/assets/football/weekly/2026-10-13/nfl/spotlight.webp"):
+              try:
+                with urllib.request.urlopen(urllib.request.Request(origin+path,headers={"User-Agent":"OctagonHQReleaseVerification/1.0"}),timeout=15) as r:
+                  raw=r.read(250) if path.endswith(".json") else r.read(28)
+                  print("LIVE",origin,path,r.status,r.headers.get("Content-Type"),raw,flush=True)
+              except Exception as e:
+                print("NOT_LIVE",origin,path,type(e).__name__,str(e)[:120],flush=True)
