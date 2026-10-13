@@ -5,7 +5,7 @@ import type { PickEvent } from "./picksModel";
 export const MMA_MANIA_EDMONTON_POSTER = {
   title: "Buckley vs Malott",
   source: "https://www.mmamania.com/ufc-strikeforce-posters/476183/ufc-edmonton-poster-slaps-buckley-vs-malott-oct-17-canada",
-  image: "https://platform.mmamania.com/wp-content/uploads/sites/110/2026/10/HTgg68BWAAAl9gb.jpeg?quality=90&strip=all&crop=0%2C3.4613147178592%2C100%2C93.077370564282&w=1200",
+  src: "https://platform.mmamania.com/wp-content/uploads/sites/110/2026/10/HTgg68BWAAAl9gb.jpeg?quality=90&strip=all&crop=0%2C3.4613147178592%2C100%2C93.077370564282&w=1200",
   aspectRatio: "1200 / 628",
 } as const;
 
