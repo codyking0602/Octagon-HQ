@@ -49,13 +49,14 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   }, [repository, identity.ready, preview, isOwner]);
 
   useEffect(() => {
-    if (!identity.ready || preview || !auctionRepository || !state?.week_start) return;
+    const gmWeekStart = state?.week_start;
+    if (!identity.ready || preview || !auctionRepository || !gmWeekStart) return;
     let active = true;
     // Preserve and surface the completed auction even though this week's
     // featured competition is GM. Archives remain server-owned/read-only.
     void auctionRepository.loadHistory().then((history) => {
       if (!active) return;
-      setPreviousAuction(history.find((result) => result.week_start < state.week_start) ?? null);
+      setPreviousAuction(history.find((result) => result.week_start < gmWeekStart) ?? null);
     }).catch(() => {
       // A weekly GM run must stay playable if the unrelated recap cannot load.
       if (active) setPreviousAuction(null);
