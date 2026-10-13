@@ -18,6 +18,7 @@ import {
 } from "./footballGmLongPersistence";
 import { FootballGmLongMidseasonPage } from "./FootballGmLongMidseasonPage";
 import { FOOTBALL_GM_CAP, FOOTBALL_GM_ROSTER_SLOTS, FOOTBALL_GM_TEAMS } from "./footballGmEngine";
+import { nflGmLongMigrateDeadlineSave } from "./footballGmLongPersistence";
 
 const profileId = "7e9b17e6-118b-47b3-8f92-c9bc19b7d242";
 function legalPicks(): NflGmLongPick[] {
@@ -139,32 +140,66 @@ describe("NFL GM Long Year 1 midseason", () => {
     expect(nflGmLongTradePartners("unknown")).toHaveLength(0);
     const mid = afterShop(checkpoint(picks), outgoingId, partner);
     expect(nflGmLongValidMidseason(mid, picks)).toBe(true);
-    expect(() => nflGmLongTryTrade(runId, picks, { ...mid, stage: "complete" }, null)).toThrow();
+    expect(() => nflGmLongTryTrade(runId, picks, { ...mid, stage: "complete" }, "anyone")).toThrow();
     expect(() => nflGmLongTryTrade(runId, picks, mid, "unknown-player")).toThrow();
     expect(nflGmLongTradeTargets(picks, outgoingId, "NOT-A-TEAM")).toHaveLength(0);
   });
 
-  it("a future-pick trade genuinely vacates a starter and reduces team strength", () => {
+  it("rejects draft-pick deals outright and preserves all nine starters", () => {
     const picks = legalPicks();
     const outgoingId = picks[0]!.playerId;
     const partner = nflGmLongSpinTradePartner(runId, outgoingId);
     const mid = afterShop(checkpoint(picks), outgoingId, partner);
-    let accepted: ReturnType<typeof nflGmLongTryTrade> | null = null;
-    for (let i = 0; i < 60; i++) {
-      const attempt = nflGmLongTryTrade("future-seed-" + i, picks, mid, null);
-      if (attempt.accepted) { accepted = attempt; break; }
-    }
-    expect(accepted).not.toBeNull();
-    const completed = accepted!.midseason;
-    expect(completed.stage).toBe("complete");
-    expect(completed.trade?.incomingId).toBeNull();
-    expect(completed.trade?.futurePickRound).toBeGreaterThanOrEqual(1);
-    expect(nflGmLongValidMidseason(completed, picks)).toBe(true);
-    expect(nflGmLongActivePicks(picks, completed.trade)).toHaveLength(8);
-    expect(nflGmLongSpend(nflGmLongActivePicks(picks, completed.trade), NFL_GM_LONG_BY_ID))
-      .toBeLessThan(nflGmLongSpend(picks, NFL_GM_LONG_BY_ID));
-    expect(nflGmLongActiveGrade(picks, completed)).toBeLessThan(nflGmLongActiveGrade(picks, mid));
-    expect(completed.games).toEqual(mid.games);
+    // Runtime attack/old caller: null is never a valid incoming starter.
+    expect(() => nflGmLongTryTrade(runId, picks, mid, null as unknown as string)).toThrow();
+    expect(nflGmLongActivePicks(picks, null)).toEqual(picks);
+    expect(nflGmLongValidMidseason({
+      ...mid, stage: "complete",
+      trade: { outgoingId, incomingId: null, partnerTeam: partner, futurePickRound: 1 },
+    }, picks)).toBe(false);
+    expect(nflGmLongValidMidseason({
+      ...mid, rejectedOfferIds: ["future"],
+    }, picks)).toBe(false);
+    expect(nflGmLongValidMidseason({
+      ...mid, stage: "complete",
+      trade: { outgoingId, incomingId: "fake", partnerTeam: partner },
+    }, picks)).toBe(false);
+  });
+
+  it("migrates older saved future-pick trades to the original nine-player roster without resetting the record", () => {
+    const picks = legalPicks();
+    const coach = NFL_GM_LONG_COACHES.find(c => c.name === coachName)!;
+    const outgoingId = picks[0]!.playerId;
+    const partner = nflGmLongSpinTradePartner(runId, outgoingId);
+    const original = checkpoint(picks);
+    const oldSaved = {
+      ...nflGmLongInitialSave(profileId, runId),
+      phase: "midseason", picks,
+      selectedCoachBucket: coach.bucket, selectedCoach: coach.name, coachWheelDraw: 0.43,
+      midseason: { ...original, stage: "complete", shoppedPlayerId: outgoingId,
+        partnerTeam: partner,
+        rejectedOfferIds: ["future"],
+        trade: { outgoingId, incomingId: null, partnerTeam: partner, futurePickRound: 2 },
+      },
+    };
+    const migrated = nflGmLongParseSave(oldSaved, profileId, NFL_GM_LONG_BY_ID);
+    expect(migrated?.phase).toBe("midseason");
+    expect(migrated?.midseason?.trade).toBeNull();
+    expect(migrated?.midseason?.stage).toBe("complete");
+    expect(migrated?.midseason?.games).toEqual(original.games);
+    expect(migrated?.midseason?.development).toEqual(original.development);
+    expect(nflGmLongActivePicks(picks, migrated!.midseason!.trade)).toHaveLength(9);
+    expect(migrated?.picks).toEqual(picks);
+    const db = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => db.get(key) ?? null,
+      setItem: (key: string, value: string) => { db.set(key, value); },
+      removeItem: (key: string) => { db.delete(key); },
+    };
+    nflGmLongWriteSave(storage, migrated!, NFL_GM_LONG_BY_ID);
+    expect(nflGmLongLoadSave(storage, profileId, NFL_GM_LONG_BY_ID)).toEqual(migrated);
+    // No arbitrary deleted slot or future draft asset survives the migration.
+    expect(JSON.stringify(migrated)).not.toMatch(/"futurePickRound"|"incomingId":null/);
   });
 
   it("replacement offers cannot duplicate players or exceed $205M and lose the chance after two refusals", () => {
@@ -175,16 +210,29 @@ describe("NFL GM Long Year 1 midseason", () => {
     expect(candidate).toBeDefined();
     const rosterAfter = nflGmLongActivePicks(picks, {
       outgoingId: candidate!.pick.playerId, incomingId: candidate!.player.id,
-      partnerTeam: candidate!.team, futurePickRound: null,
+      partnerTeam: candidate!.team,
     });
     expect(rosterAfter).toHaveLength(9);
     expect(nflGmLongSpend(rosterAfter, NFL_GM_LONG_BY_ID)).toBeLessThanOrEqual(NFL_GM_LONG_CAP);
     expect(nflGmLongValidRoster(rosterAfter, NFL_GM_LONG_BY_ID)).toBe(true);
 
     const firstAttempt = afterShop(checkpoint(picks), candidate!.pick.playerId, candidate!.team);
-    const invalid = { ...firstAttempt, rejectedOfferIds: ["future", candidate!.player.id] };
-    expect(() => nflGmLongTryTrade(runId, picks, invalid, null)).toThrow();
-    expect(nflGmLongValidMidseason({ ...invalid, rejectedOfferIds: ["future", "future"] }, picks)).toBe(false);
+    const invalid = { ...firstAttempt, rejectedOfferIds: [candidate!.player.id, candidate!.player.id] };
+    expect(() => nflGmLongTryTrade(runId, picks, invalid, candidate!.player.id)).toThrow();
+    expect(nflGmLongValidMidseason(invalid, picks)).toBe(false);
+    expect(() => nflGmLongTryTrade(runId, picks,
+      { ...firstAttempt, rejectedOfferIds: [candidate!.player.id, "other-player"] },
+      candidate!.player.id)).toThrow();
+    const legacyRegularTrade = {
+      ...firstAttempt, stage: "complete", trade: {
+        outgoingId: candidate!.pick.playerId, incomingId: candidate!.player.id,
+        partnerTeam: candidate!.team, futurePickRound: null,
+      },
+    };
+    expect(nflGmLongValidMidseason(legacyRegularTrade, picks)).toBe(false);
+    const migrated = nflGmLongMigrateDeadlineSave(legacyRegularTrade, picks);
+    expect(nflGmLongValidMidseason(migrated, picks)).toBe(true);
+    expect(nflGmLongActivePicks(picks, (migrated as NflGmLongMidseason).trade)).toHaveLength(9);
   });
 
   it("renders the compact record and an actionable deadline without a season finish claim", () => {
@@ -201,6 +249,14 @@ describe("NFL GM Long Year 1 midseason", () => {
     expect(screen.getByText("THE TRADE DEADLINE")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "EXPLORE A TRADE →" }));
     expect(explore).toHaveBeenCalledOnce();
-    expect(container.textContent).not.toMatch(/SUPER BOWL CHAMPION|SEASON 1 FORECAST|INJURY/);
+    expect(container.textContent).not.toMatch(/SUPER BOWL CHAMPION|SEASON 1 FORECAST|INJURY|FUTURE ROUND|DRAFT PICK/);
+    const offersMid = afterShop(midseason, picks[0]!.playerId,
+      nflGmLongSpinTradePartner(runId, picks[0]!.playerId));
+    const offers = render(<FootballGmLongMidseasonPage
+      runId={runId} picks={picks} coachName={coachName} midseason={offersMid}
+      onExplore={vi.fn()} onShop={vi.fn()} onSpin={() => "BUF"} onOffer={vi.fn()} onSkip={vi.fn()} />);
+    expect(offers.container.querySelector(".gm-long__deadline-future")).toBeNull();
+    expect(offers.container.textContent).toMatch(/same starting slot/);
+    expect(offers.container.textContent).not.toMatch(/draft pick|future round|vacant/i);
   });
 });
