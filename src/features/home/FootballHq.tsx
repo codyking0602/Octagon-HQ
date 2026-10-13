@@ -227,7 +227,8 @@ function PlayerSpotlight({
           ))}
         </div>
         <p className="football-player-spotlight__meta">
-          {spotlight.result} · {spotlight.measurements}
+          <span>{spotlight.measurements}</span>
+          <span>{spotlight.result}</span>
         </p>
         <a href={spotlight.highlightUrl} target="_blank" rel="noreferrer">
           {memorial ? "REMEMBER IRON MIKE ↗" : "WATCH HIGHLIGHT ↗"}
@@ -277,7 +278,6 @@ function FeaturedGameRow({
       to={`/football/picks?matchup=${encodeURIComponent(breakdown.id)}`}
       aria-label={`Open matchup breakdown for ${breakdown.title}`}
     >
-      {breakdown.headerAssetPath ? <img className="football-hq-game-row__art" src={breakdown.headerAssetPath} alt="" loading="lazy" /> : null}
       <div className="football-hq-game-row__main">
         <span>{label}</span>
         <div className="football-hq-game-row__teams">
