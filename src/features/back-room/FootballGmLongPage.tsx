@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import { footballGmSpinTeam, footballGmMoney } from "./footballGmEngine";
-import { footballGmSimulateLeagueSeason } from "./footballGmLeagueSimulation";
 import { GmFootballWheel } from "./FootballGmModePage";
-import { nflGmLongCoachFit, nflGmLongCoachPointerRotation, nflGmLongYearTwoCapOverage } from "./footballGmLongPresentation";
+import { nflGmLongCoachFit, nflGmLongCoachPointerRotation } from "./footballGmLongPresentation";
+import { FootballGmLongPhaseOneResult } from "./FootballGmLongPhaseOneResult";
 import { LongCapMeter, LongRosterGrid, LongCandidateBoard } from "./FootballGmLongDraftPresentation";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
 import {
   NFL_GM_LONG_SLOTS, NFL_GM_LONG_SLOT_LABELS,
-  nflGmLongOverall, nflGmLongSpend,
+  nflGmLongOverall,
   type NflGmLongPick,
 } from "./footballGmLongFoundation";
 import {
@@ -58,20 +58,10 @@ function longProjection(run: NflGmLongSave, coachName: string) {
   if (!coach) return null;
   const roster = run.picks.map(playerRow).filter((row): row is NonNullable<typeof row> => row !== null);
   const grade = nflGmLongOverall(run.picks, NFL_GM_LONG_BY_ID);
-  if (!grade) return null;
-  const effects = nflGmLongCoachEffects(coach, roster);
-  // Contextual game-winning opportunity shifts, never a player OVR boost.
-  const matchup = (effects.passingMatchupPct + effects.rushingMatchupPct
-    + effects.pressurePct + effects.coveragePct) / 400
-    + effects.chemistryResiliencePct / 650 + effects.developmentOpportunityPct / 850;
-  const winChancePenalty = -Math.min(.025, Math.max(0, matchup));
-  const sims = Array.from({ length: 16 }, (_, i) =>
-    footballGmSimulateLeagueSeason({
-      seed: `${run.runId}:long-outlook-${i}`, year: 1,
-      franchises: [{ key: "owner", grade, winChancePenalty }],
-    }).franchises.owner!.wins);
-  const avgWins = sims.reduce((s, n) => s + n, 0) / sims.length;
-  return { grade, effects, avgWins, range: [Math.min(...sims), Math.max(...sims)] };
+  if (grade === null) return null;
+  // Phase 1 is a draft and coaching reveal, not a played-season forecast.
+  // Contextual coach effects stay available for the future midseason engine.
+  return { grade, effects: nflGmLongCoachEffects(coach, roster) };
 }
 
 function TeamMark({ code, size = 46 }: { code: string; size?: number }) {
@@ -194,8 +184,6 @@ export default function FootballGmLongPage() {
   if (!run || initializedFor !== profileId) return <main className="page football-gm-page gm-long"><section className="surface-card">Restoring your Long GM franchise…</section></main>;
 
   const coachOptions = run.selectedCoachBucket ? nflGmLongCoachesInBucket(run.selectedCoachBucket) : [];
-  const futureSpent = nflGmLongSpend(run.picks, NFL_GM_LONG_BY_ID, 2);
-  const yearTwoOverage = nflGmLongYearTwoCapOverage(futureSpent, 205_000_000);
   const coachFit = hired && outlook
     ? nflGmLongCoachFit(hired, run.picks.map(pick => {
         const player = NFL_GM_LONG_BY_ID.get(pick.playerId)!;
@@ -208,8 +196,10 @@ export default function FootballGmLongPage() {
       <span><small>NFL FRONT OFFICE · OWNER PLAYTEST</small><strong>THE GM · LONG</strong></span>
       <b>$205M</b>
     </header>
-    <LongCapMeter picks={run.picks} />
-    <LongRosterGrid picks={run.picks} />
+    {run.phase !== "outlook" && <>
+      <LongCapMeter picks={run.picks} />
+      <LongRosterGrid picks={run.picks} />
+    </>}
     {error && <p role="alert" className="gm-long__error">{error}</p>}
     {run.phase === "draft" && <>
       <div className="football-gm__draft-context" aria-label="Draft round and open roster spots">
@@ -254,28 +244,15 @@ export default function FootballGmLongPage() {
         <button className="gm-long__primary" disabled={spinningCoach || !!run.selectedCoach}
           onClick={spinCoach} type="button">{spinningCoach ? "WHEEL SPINNING…" : "SPIN FOR YOUR HEAD COACH"}</button>}
     </section>}
-    {run.phase === "outlook" && hired && outlook && <section className="surface-card gm-long__outlook">
-      <p className="eyebrow">PHASE 1 COMPLETE · FRANCHISE SNAPSHOT</p><h2>YOUR NINE-PLAYER FRANCHISE</h2>
-      <div className="gm-long__outlook-stats"><div><small>TEAM CORE GRADE</small><strong>{outlook.grade.toFixed(1)}</strong></div>
-        <div><small>SEASON 1 FORECAST</small><strong>{outlook.avgWins.toFixed(1)} W</strong></div>
-        <div className={yearTwoOverage > 0 ? "is-over-cap" : ""}><small>YEAR 2 CAP EST.</small><strong>{footballGmMoney(futureSpent)}</strong></div></div>
-      {yearTwoOverage > 0 ? <div className="gm-long__cap-alert" role="status">
-        <strong>YEAR 2 CAP WATCH · {footballGmMoney(yearTwoOverage)} OVER</strong>
-        <span>Your current Year 2 estimate exceeds the $205M cap. One-year contracts may reprice after Year 1; you'll need to make room in the offseason. This is a projection, not a current penalty.</span>
-      </div> : null}
-      <p className="gm-long__outlook-note">Projected from 16 league simulations, not an actual season result. Coaching changes matchup and growth opportunities, never player grades. No injuries.</p>
-      <div className="gm-long__hired"><small>HEAD COACH · {CATEGORY[hired.bucket].title}</small><h3>{hired.name}</h3>
-        {coachFit ? <>
-          <strong className="gm-long__fit-title">{coachFit.headline}</strong>
-          <p>{coachFit.explanation}</p>
-          <p className="gm-long__fit-watch"><b>Watch for:</b> {coachFit.limitation}</p>
-          <div className="gm-long__fit-tags" aria-label="Main coaching influences">{coachFit.influences.map(influence => <span key={influence}>{influence}</span>)}</div>
-        </> : null}
-      </div>
-      <p>Next phase: midseason standings, provisional development, and the optional trade deadline. Your existing draft and coach are saved.</p>
-    </section>}
-    <footer className="gm-long__footer"><button type="button" onClick={restart}>NEW LONG GM RUN</button>
+    {run.phase === "outlook" && hired && outlook && coachFit && <FootballGmLongPhaseOneResult
+      picks={run.picks}
+      grade={outlook.grade}
+      coach={hired}
+      coachCategoryLabel={CATEGORY[hired.bucket].title}
+      coachFit={coachFit}
+    />}
+    <footer className={`gm-long__footer${run.phase === "outlook" ? " gm-long__footer--complete" : ""}`}><button type="button" onClick={restart}>NEW LONG GM RUN</button>
       <Link to="/football/gm-mode">PLAY SHORT GM →</Link>
-      <small>Private owner preview · Short GM, Weekly, multiplayer and existing saves remain unchanged</small></footer>
+      {run.phase !== "outlook" ? <small>Private owner preview · Short GM, Weekly, multiplayer and existing saves remain unchanged</small> : null}</footer>
   </main>;
 }
