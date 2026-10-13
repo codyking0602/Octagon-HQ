@@ -194,7 +194,7 @@ export default function FootballGmLongPage() {
     setRun({ ...run, midseason: { ...run.midseason, partnerTeam: partner, stage: "offers" } });
     return partner;
   }
-  function makeDeadlineOffer(incomingId: string | null) {
+  function makeDeadlineOffer(incomingId: string) {
     if (run?.phase !== "midseason" || !run.midseason) return;
     try {
       const result = nflGmLongTryTrade(run.runId, run.picks, run.midseason, incomingId);
