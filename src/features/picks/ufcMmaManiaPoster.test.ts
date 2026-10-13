@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PickEvent } from "./picksModel";
-import { MMA_MANIA_EDMONTON_POSTER, reviewedMmaManiaPoster } from "./ufcMmaManiaPoster";
+import { APPROVED_MMA_MANIA_POSTERS, MMA_MANIA_EDMONTON_POSTER, reviewedMmaManiaPoster } from "./ufcMmaManiaPoster";
 
 const onFightWeek = new Date("2026-10-13T03:00:00Z");
 const event = {
@@ -28,6 +28,13 @@ describe("publisher-sourced UFC poster", () => {
     expect(reviewedMmaManiaPoster(null, new Date("2026-10-19T01:00:00Z"))).toBeNull();
     expect(reviewedMmaManiaPoster(null, new Date("2026-10-10T01:00:00Z"))).toBeNull();
   });
+  it("keeps publisher posters event-bound and never leaks the old one", () => {
+    expect(APPROVED_MMA_MANIA_POSTERS).toHaveLength(1);
+    expect(APPROVED_MMA_MANIA_POSTERS[0]?.fighterNames).toEqual(["buckley", "malott"]);
+    expect(reviewedMmaManiaPoster(null, new Date("2026-10-18T05:00:01Z"))).toBeNull();
+    expect(reviewedMmaManiaPoster({ ...event, subtitle: "Other vs Other" }, onFightWeek)).toBeNull();
+  });
+
   it("uses only vetted MMA Mania publisher hosts", () => {
     expect(new URL(MMA_MANIA_EDMONTON_POSTER.src).hostname).toBe("platform.mmamania.com");
     expect(new URL(MMA_MANIA_EDMONTON_POSTER.source).hostname).toBe("www.mmamania.com");
