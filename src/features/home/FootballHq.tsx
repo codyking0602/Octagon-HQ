@@ -5,7 +5,7 @@ import { footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMe
 import { footballTeamAssets } from "../back-room/footballSubjectAssets";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
 import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreakdowns";
-import { footballPublishedSpotlight, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "./footballWeeklyPublication";
+import { footballPublishedSpotlight, footballWeeklyTeamKey, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "./footballWeeklyPublication";
 import { footballDateTimeLabel } from "../picks/footballTime";
 import { footballSpotlightForDisplay } from "./footballSpotlightPresentation";
 import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
@@ -113,9 +113,9 @@ function featuredGameForBreakdown(event: PickEvent, breakdown: FootballMatchupBr
       game.redFighterSlug, game.redFighterName,
       game.blueFighterSlug, game.blueFighterName,
       game.homeTeamSlug ?? "", game.awayTeamSlug ?? "",
-    ].map(normalizeTeamIdentity);
+    ].map(footballWeeklyTeamKey);
     return breakdown.teams.every((team) => team.aliases.some((alias) =>
-      participants.includes(normalizeTeamIdentity(alias))));
+      participants.includes(footballWeeklyTeamKey(alias))));
   }) ?? null;
 }
 
