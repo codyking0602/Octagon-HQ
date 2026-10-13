@@ -85,6 +85,17 @@ export function dailyTwoGameSeriesState(
   };
 }
 
+/** The completed Daily is the average of both rounds, never the final round's score. */
+export function dailyTwoGameOfficialAverageScore(projection: TodayChallengeProjection): number | null {
+  if (!projection.officialAttempt) return null;
+  const series = dailyTwoGameSeriesState(projection);
+  if (!series?.complete) return null;
+  if (series.roundScores.length === 2) {
+    return Math.round((series.roundScores[0]! + series.roundScores[1]!) / 2);
+  }
+  return series.averageScore;
+}
+
 export function dailyTwoGameActiveScore(projection: TodayChallengeProjection) {
   const series = dailyTwoGameSeriesState(projection);
   if (!series) return projection.officialAttempt?.normalizedScore ?? null;
