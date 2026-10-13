@@ -4,7 +4,7 @@ import {
   type NflGmLongPick,
   type NflGmLongPlayerFit,
 } from "./footballGmLongFoundation";
-import { nflGmLongValidMidseason, type NflGmLongMidseason } from "./footballGmLongMidseason";
+import { nflGmLongNormalizeLegacyDeadline, nflGmLongValidMidseason, type NflGmLongMidseason } from "./footballGmLongMidseason";
 import {
   NFL_GM_LONG_COACH_BUCKETS, NFL_GM_LONG_COACHES,
   type NflGmLongCoachBucket,
@@ -82,7 +82,7 @@ export function nflGmLongParseSave(
   if (raw.phase !== "draft" && raw.picks.length !== 9) return null;
   if ((raw.phase === "coach-wheel" || raw.phase === "outlook") && !bucket) return null;
   if ((raw.phase === "outlook" || raw.phase === "midseason") && (!coach || draw == null)) return null;
-  const mid = raw.midseason ?? null;
+  const mid = raw.midseason == null ? null : nflGmLongNormalizeLegacyDeadline(raw.midseason);
   if (mid !== null && !nflGmLongValidMidseason(mid, raw.picks)) return null;
   if (raw.phase === "midseason" && mid === null) return null;
   if (mid !== null && raw.phase !== "midseason") return null;
