@@ -28,7 +28,8 @@ import {
 } from "./footballGmEngine";
 import {
   FOOTBALL_GM_VERSION,
-  FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT,
+  footballGmFreeAgencyVisitLimit,
+  footballGmReleaseVisitCeiling,
   footballGmEmergencyFreeAgents,
   footballGmMarketVisitsUsed,
   footballGmAcceptedTargetTradeOffers,
@@ -125,6 +126,8 @@ function normalizedRun(seed: string, value: unknown): PersistedRun {
     shoppedPlayerIds: Array.isArray(raw.shoppedPlayerIds) ? raw.shoppedPlayerIds : [],
     negotiationConsequences: raw.negotiationConsequences ?? {},
     freeAgencyVisitsUsed: footballGmMarketVisitsUsed(raw.freeAgencyVisitsUsed, raw.freeAgentSpinIndex ?? 0),
+    freeAgencyRules: raw.freeAgencyRules === "three-plus-one" ? "three-plus-one" : raw.freeAgencyRules === "legacy" || raw.version ? "legacy" : "three-plus-one",
+    freeAgencyVisitCeiling: typeof raw.freeAgencyVisitCeiling === "number" ? raw.freeAgencyVisitCeiling : null,
     releasedPlayerIds: [...new Set([
       ...(Array.isArray(raw.releasedPlayerIds) ? raw.releasedPlayerIds : []),
       ...(raw.releasedFreeAgentPlayerId ? [raw.releasedFreeAgentPlayerId] : []),
@@ -367,6 +370,7 @@ function ReleasePicker({
       seed: run.seed,
       consequences: run.negotiationConsequences,
       excludedPlayerIds: [...excludedPlayerIds, player.id],
+      requireDirectFit: run.freeAgencyRules === "three-plus-one",
     });
     const y2Room = FOOTBALL_GM_CAP - footballGmAdjustedRosterCap(stripped, 2, run.seed, run.negotiationConsequences);
     const y3Room = FOOTBALL_GM_CAP - footballGmAdjustedRosterCap(stripped, 3, run.seed, run.negotiationConsequences);
@@ -638,6 +642,7 @@ export default function FootballGmHeadToHeadPage() {
       ? cpuPendingTeam
       : run.pendingTeam;
   const pendingTeam = pendingTeamCode ? wheelFootballTeam(pendingTeamCode) ?? null : null;
+  const freeAgencyVisitLimit = footballGmFreeAgencyVisitLimit(run);
   const canUseFreeAgency = displayedPhase === "offseason"
     && isMyTurn
     && footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds);
@@ -649,6 +654,7 @@ export default function FootballGmHeadToHeadPage() {
         consequences: run.negotiationConsequences,
         previousTeam: run.previousFreeAgentTeam,
         excludedPlayerIds: exclusionIds,
+        requireDirectFit: run.freeAgencyRules === "three-plus-one",
       })
     : [];
   const freeAgencyWheelTeams = freeAgencyTeamCodes
@@ -1027,7 +1033,7 @@ export default function FootballGmHeadToHeadPage() {
 
   function spinFreeAgency() {
     if (!canUseFreeAgency || faWheelSpinning || run.pendingFreeAgentTeam
-      || run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT) return;
+      || run.freeAgencyVisitsUsed >= freeAgencyVisitLimit) return;
     const teamCode = footballGmSpinTeam(
       `${run.seed}:free-agency`,
       run.freeAgentSpinIndex,
@@ -1071,14 +1077,14 @@ export default function FootballGmHeadToHeadPage() {
     patch({
       previousFreeAgentTeam: run.pendingFreeAgentTeam,
       pendingFreeAgentTeam: null,
-      tradeMessage: "Passed on this team. One of your four visits was used.",
+      tradeMessage: "Passed on this team. One of your market visits was used.",
     });
   }
 
   function makeFreeAgentPick(playerId: string, slot: FootballGmRosterSlot, displacedPlayerId?: string) {
     if (exclusionIds.includes(playerId)) return;
     const emergency = !run.pendingFreeAgentTeam
-      && run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT;
+      && run.freeAgencyVisitsUsed >= freeAgencyVisitLimit;
     const player = footballGmPlayerById(playerId);
     if (!player) return;
     if (run.pendingFreeAgentTeam ? player.team !== run.pendingFreeAgentTeam : !emergency) return;
@@ -1123,6 +1129,7 @@ export default function FootballGmHeadToHeadPage() {
       seed: run.seed,
       consequences: run.negotiationConsequences,
       excludedPlayerIds: [...exclusionIds, playerId],
+      requireDirectFit: run.freeAgencyRules === "three-plus-one",
     });
     if (!eligible.length) {
       patch({ tradeMessage: `Releasing ${player.name} does not create a legal free-agency path.` });
@@ -1131,6 +1138,7 @@ export default function FootballGmHeadToHeadPage() {
     patch({
       finalRoster: stripped,
       voluntaryFreeAgencyUsed: true,
+      freeAgencyVisitCeiling: footballGmReleaseVisitCeiling(run),
       releasedFreeAgentPlayerId: playerId,
       releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])],
       pendingFreeAgentTeam: null,
@@ -1695,7 +1703,7 @@ export default function FootballGmHeadToHeadPage() {
                         onPick={makeFreeAgentPick}
                         onPass={passFreeAgency}
                       />
-                    ) : canUseFreeAgency && run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT ? (
+                    ) : canUseFreeAgency && run.freeAgencyVisitsUsed >= freeAgencyVisitLimit ? (
                       <EmergencyFreeAgencyBoard
                         roster={run.finalRoster}
                         tradeChipPlayerIds={run.tradeChipPlayerIds}
@@ -1707,16 +1715,16 @@ export default function FootballGmHeadToHeadPage() {
                     ) : canUseFreeAgency ? (
                       <section className="football-gm__market-wheel">
                         <div className="football-gm__trade-stage-heading">
-                          <p className="eyebrow">FREE AGENCY · {run.freeAgencyVisitsUsed}/{FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT} VISITS USED · {footballGmOpenSlots(run.finalRoster).map(footballGmSlotLabel).join(" · ")} OPEN</p>
+                          <p className="eyebrow">FREE AGENCY · {run.freeAgencyVisitsUsed}/{freeAgencyVisitLimit} VISITS USED · {footballGmOpenSlots(run.finalRoster).map(footballGmSlotLabel).join(" · ")} OPEN</p>
                           <h2>SPIN THE 1YR MARKET</h2>
-                          <span>Four total team visits, including passes. Released players stay off the market. {opponentDisplayName}'s roster is unavailable.</span>
+                          <span>{freeAgencyVisitLimit} total team visits, including passes. Released players stay off the market. {opponentDisplayName}'s roster is unavailable.</span>
                         </div>
                         <GmFootballWheel
                           teams={freeAgencyWheelTeams}
                           rotation={faWheelRotation}
                           spinning={faWheelSpinning}
                           pendingTeam={pendingFreeAgencyTeam}
-                          canSpin={!faWheelSpinning && !run.pendingFreeAgentTeam && freeAgencyWheelTeams.length > 0}
+                          canSpin={!faWheelSpinning && !run.pendingFreeAgentTeam && run.freeAgencyVisitsUsed < freeAgencyVisitLimit && freeAgencyWheelTeams.length > 0}
                           onSpin={spinFreeAgency}
                         />
                       </section>
