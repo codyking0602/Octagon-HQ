@@ -145,14 +145,15 @@ export const footballWeeklyPreparedSpotlightSchema = footballWeeklySpotlightSche
 }).refine((item) => new Set(item.stats.map((stat) => stat.label.trim().toUpperCase())).size === 4,
   "Spotlight stats must use four distinct labels");
 
+// One original SeatGeek matchup image contains both teams. Never accept a
+// two-player montage or arbitrary third-party image as new weekly artwork.
 export const footballWeeklyPreparedGameSchema = footballWeeklyGameSchema.safeExtend({
   header_asset_path: z.string().regex(/^\/assets\/football\/weekly\/\d{4}-\d{2}-\d{2}\/(cfb|nfl)\/game-header[.]webp$/),
-  header_photo_sources: z.array(z.url().refine((url) => url.startsWith("https://"))).min(1).max(2),
-}).refine((item) => item.header_photo_sources.length === 2
-  // Existing already-published historical material remains readable. New weekly
-  // preparation and the asset processor allow ONLY one approved SeatGeek image.
-  || /^https:\/\/(www\.)?seatgeekimages\.com\/matchup\/[^?#]+\.(jpg|jpeg|png|webp)(\?[^#]*)?$/.test(item.header_photo_sources[0] ?? ""),
-  "New weekly header must use a real SeatGeek matchup artwork source");
+  header_photo_sources: z.array(z.url().refine((url) =>
+    /^https:\/\/(www\.)?seatgeekimages\.com\/matchup\/[^?#]+\.(jpg|jpeg|png|webp)(\?[^#]*)?$/.test(url),
+    "A real SeatGeek matchup graphic URL is required",
+  )).length(1),
+});
 
 export const footballWeeklyContentPackageSchema = z.object({
   week_of: footballEditorialTuesdaySchema,
