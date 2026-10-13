@@ -61,11 +61,11 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
   const dailyRoute = sport === "football" ? "/football/today" : adapter?.dailyRoute ?? "/play";
   const ownLeaderboardEntry = overview.leaderboard?.entries.find((entry) => entry.isCurrentUser);
   const ownPlace = ownLeaderboardEntry?.rank;
+  const isTwoGameDaily = projection ? dailyUsesTwoGameAverage(projection.gameType, projection.centralDay) : false;
   const officialDailyScore = projection?.officialAttempt
-    ? dailyTwoGameOfficialAverageScore(projection)
-      ?? (dailyUsesTwoGameAverage(projection.gameType, projection.centralDay)
-        ? ownLeaderboardEntry?.normalizedScore : null)
-      ?? projection.officialAttempt.normalizedScore
+    ? (isTwoGameDaily
+      ? dailyTwoGameOfficialAverageScore(projection) ?? ownLeaderboardEntry?.normalizedScore
+      : null) ?? projection.officialAttempt.normalizedScore
     : null;
   const [showResults, setShowResults] = useState(false);
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
