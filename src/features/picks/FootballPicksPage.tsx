@@ -101,14 +101,22 @@ export default function FootballPicksPage() {
 
     return { outcomes, wins, losses, pushes, settled: wins + losses + pushes };
   }, [games, picks.selections, picks.footballLocks]);
-  const posters = useMemo(() => pickEventPosters(event), [event]);
   const matchupBreakdowns = useMemo(() => {
     const current = publishedFootballMatchupsForEvent(event, published);
     const legacy = footballMatchupBreakdownsForEvent(event).filter((old) => !current.some((recent) =>
       recent.teams.every((team) => old.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase()))));
     return [...current, ...legacy];
   }, [event, published]);
-  const poster = posters[0] ?? null;
+  // Featured weekly matchup art is owned by Picks, not Home or the breakdown modal.
+  // Event-level headers remain the fallback for weeks without approved editorial.
+  const posters = useMemo(() => {
+    const weeklyArt = matchupBreakdowns.filter((game) => Boolean(game.headerAssetPath))
+      .map((game) => ({ src: game.headerAssetPath!, aspectRatio: "16 / 9" }));
+    return weeklyArt.length ? weeklyArt : pickEventPosters(event);
+  }, [matchupBreakdowns, event]);
+  const [failedPosterSources, setFailedPosterSources] = useState<string[]>([]);
+  const usablePosters = posters.filter((image) => !failedPosterSources.includes(image.src));
+  const poster = usablePosters[0] ?? null;
   const [activePosterIndex, setActivePosterIndex] = useState(0);
   const spreadSources = Array.from(new Set(games
     .map((game) => game.spreadSource?.trim())
@@ -127,12 +135,12 @@ export default function FootballPicksPage() {
   }, [event?.eventId, event?.headerStoragePath]);
 
   useEffect(() => {
-    if (posters.length < 2) return undefined;
+    if (usablePosters.length < 2) return undefined;
     const intervalId = window.setInterval(() => {
-      setActivePosterIndex((index) => (index + 1) % posters.length);
-    }, 5000);
+      setActivePosterIndex((index) => (index + 1) % usablePosters.length);
+    }, 8000);
     return () => window.clearInterval(intervalId);
-  }, [posters.length]);
+  }, [usablePosters.length]);
 
   const visualStyle = poster ? ({
     "--picks-event-poster": `url("${poster.src}")`,
@@ -227,31 +235,20 @@ export default function FootballPicksPage() {
 
       {event ? (
         <>
-          <section className={`football-picks-hero${poster ? " has-poster" : ""}`} aria-label={`${event.name} event artwork`}>
-            {posters.map((image, index) => (
-              <div
-                key={image.src}
-                className={`football-picks-hero__image${index === activePosterIndex ? " is-active" : ""}`}
-                style={{ backgroundImage: `url("${image.src}")` }}
-                aria-hidden="true"
-              />
+          <section className={`football-picks-hero${poster ? " has-poster" : ""}`} aria-label={`${event.name} featured game artwork`}>
+            {usablePosters.map((image, index) => (
+              <img key={image.src} className={`football-picks-hero__image${index === (activePosterIndex % usablePosters.length) ? " is-active" : ""}`}
+                src={image.src} alt="Featured football matchup artwork" loading={index === 0 ? "eager" : "lazy"}
+                onError={() => setFailedPosterSources((current) => current.includes(image.src) ? current : [...current, image.src])} />
             ))}
+            {!usablePosters.length ? <div className="football-picks-hero__empty"><strong>THIS WEEK’S FOOTBALL</strong><span>Featured matchup artwork is being prepared.</span></div> : null}
           </section>
 
           {matchupBreakdowns.length || event.canControl ? (
             <div className="football-picks-owner-tools">
               <FootballMatchupBreakdowns breakdowns={matchupBreakdowns} />
-              {event.canControl ? (
-                <Link
-                  className="picks-control-entry"
-                  to={`/picks/control?sport=football&event=${encodeURIComponent(event.eventId)}#header`}
-                >
-                  <span aria-hidden="true">⚙</span> MANAGE EVENT / HEADERS
-                </Link>
-              ) : null}
             </div>
           ) : null}
-
           {identity.profile ? (
             <details className="surface-card football-group-hub" data-football-section="group">
               <summary className="football-group-hub__summary">

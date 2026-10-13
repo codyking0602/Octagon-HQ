@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { FOOTBALL_MATCHUP_BREAKDOWNS } from "./footballMatchupBreakdowns";
@@ -159,7 +160,7 @@ describe("FootballMatchupBreakdowns", () => {
     expect(video).toHaveTextContent("YOUTUBE");
   });
 
-  it("keeps SEND PUSH visible in the published Football owner tools even without a matchup breakdown", () => {
+  it("keeps SEND PUSH reachable in the compact owner menu without a matchup breakdown", () => {
     vi.mocked(usePicks).mockReturnValue({
       event: {
         eventId: "football-picks-2026-09-08",
@@ -168,8 +169,10 @@ describe("FootballMatchupBreakdowns", () => {
       },
     } as never);
 
-    render(<FootballMatchupBreakdowns breakdowns={[]} />);
+    render(<MemoryRouter><FootballMatchupBreakdowns breakdowns={[]} /></MemoryRouter>);
 
+    fireEvent.click(screen.getByText("OWNER TOOLS ⚙"));
     expect(screen.getByRole("button", { name: "SEND PUSH" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "MANAGE HEADERS →" })).toHaveAttribute("href", "/picks/control?sport=football&event=football-picks-2026-09-08#header");
   });
 });

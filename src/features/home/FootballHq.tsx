@@ -7,6 +7,7 @@ import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdown
 import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreakdowns";
 import { footballPublishedSpotlight, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "./footballWeeklyPublication";
 import { footballDateTimeLabel } from "../picks/footballTime";
+import { footballSpotlightForDisplay } from "./footballSpotlightPresentation";
 import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
 import { picksSeasonStandings } from "../picks/picksSeasonStandings";
@@ -227,7 +228,7 @@ function PlayerSpotlight({
           ))}
         </div>
         <p className="football-player-spotlight__meta">
-          {spotlight.result} · {spotlight.measurements}
+          <span>{spotlight.result}</span><span>{spotlight.measurements}</span>
         </p>
         <a href={spotlight.highlightUrl} target="_blank" rel="noreferrer">
           {memorial ? "REMEMBER IRON MIKE ↗" : "WATCH HIGHLIGHT ↗"}
@@ -277,7 +278,6 @@ function FeaturedGameRow({
       to={`/football/picks?matchup=${encodeURIComponent(breakdown.id)}`}
       aria-label={`Open matchup breakdown for ${breakdown.title}`}
     >
-      {breakdown.headerAssetPath ? <img className="football-hq-game-row__art" src={breakdown.headerAssetPath} alt="" loading="lazy" /> : null}
       <div className="football-hq-game-row__main">
         <span>{label}</span>
         <div className="football-hq-game-row__teams">
@@ -362,9 +362,9 @@ export function FootballHq({
       : scheduledSpotlightKind;
   const memorial = footballDitkaMemorialIsActive(spotlightNow);
   const publishedSport = published?.[activeSpotlightKind] ?? null;
-  const activeSpotlight = memorial ? FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT
+  const activeSpotlight = footballSpotlightForDisplay(memorial ? FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT
     : publishedSport ? footballPublishedSpotlight(publishedSport)
-    : activePair.spotlights[activeSpotlightKind];
+    : activePair.spotlights[activeSpotlightKind]);
   const activeSpotlightPhoto = memorial ? FOOTBALL_DITKA_MEMORIAL_PHOTO
     : publishedSport ? publishedSport.spotlight.photo_asset_path
     : activePairPhotos[activeSpotlightKind] ?? null;

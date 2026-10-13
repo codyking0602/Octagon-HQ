@@ -47,11 +47,11 @@ describe("FootballPicksPage", () => {
 
   it("keeps event artwork clean and makes every Football Picks time explicitly Central", () => {
     const { container } = render(<FootballPicksPage />);
-    const hero = screen.getByLabelText("Football Week 1 event artwork");
+    const hero = screen.getByLabelText("Football Week 1 featured game artwork");
     const slate = screen.getByLabelText("This week’s football games");
     const provenance = screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/);
 
-    expect(hero).toHaveTextContent("");
+    expect(hero).toHaveTextContent("Featured matchup artwork is being prepared.");
     expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
     expect(screen.queryByText("Opening weekend")).not.toBeInTheDocument();
     expect(provenance).toHaveTextContent("Sep 1, 7:00 AM CT");
@@ -102,11 +102,12 @@ describe("FootballPicksPage", () => {
     expect(details).not.toHaveTextContent("3 points total");
   });
 
-  it("gives the Picks owner a direct manage-event path below the clean Football header", () => {
+  it("keeps the manage-event path inside owner tools below the clean Football header", () => {
     vi.mocked(usePicks).mockReturnValue(runtime({ event: { ...event, canControl: true } }) as never);
     const { container } = render(<MemoryRouter><FootballPicksPage /></MemoryRouter>);
     const hero = container.querySelector(".football-picks-hero");
-    const manageLink = screen.getByRole("link", { name: /MANAGE EVENT \/ HEADERS/ });
+    fireEvent.click(screen.getByText("OWNER TOOLS ⚙"));
+    const manageLink = screen.getByRole("link", { name: /MANAGE HEADERS/ });
 
     expect(hero).not.toContainElement(manageLink);
     expect(manageLink).toHaveAttribute(

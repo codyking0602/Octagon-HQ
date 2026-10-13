@@ -157,7 +157,7 @@ describe("football matchup breakdowns", () => {
     for (const game of matches) {
       expect(game.headerAssetPath).toMatch(/^https:\/\/seatgeekimages[.]com\/matchup\//);
       expect(game.compact?.things).toHaveLength(3);
-      expect(game.compact?.bottomLine.some((part) => part.href === "https://seatgeek.com/")).toBe(true);
+      expect(game.compact?.bottomLine.every((part) => !part.href && !/source|graphic|kickoff/i.test(part.text))).toBe(true);
     }
   });
 });

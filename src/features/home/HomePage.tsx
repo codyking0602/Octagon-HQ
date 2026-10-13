@@ -10,7 +10,6 @@ import {
 } from "../picks/picksModel";
 import { picksSeasonStandings } from "../picks/picksSeasonStandings";
 import { usePicks } from "../picks/PicksProvider";
-import { reviewedMmaManiaPoster } from "../picks/ufcMmaManiaPoster";
 import {
   TodayChallengeRepositoryError,
   type TodayChallengeLeaderboard,
@@ -301,8 +300,6 @@ export default function HomePage() {
     />
   );
 
-  const ufcPoster = reviewedMmaManiaPoster(null); // Next-event art remains visible until the new Picks card is staged.
-
   const ufcHq = (
     <section
       className="home-section home-sport-hq home-sport-hq--ufc home-section--ufc-hq"
@@ -318,12 +315,6 @@ export default function HomePage() {
         <small>PICKS · RANKINGS · CONTENDERS</small>
       </header>
 
-      {ufcPoster ? (
-        <a className="home-ufc-poster" href={ufcPoster.source} target="_blank" rel="noopener noreferrer" aria-label={`View ${ufcPoster.title} event poster at MMA Mania`}>
-          <img src={ufcPoster.src} alt={`UFC ${ufcPoster.title} official event artwork`} loading="eager" />
-          <small>OFFICIAL EVENT ARTWORK · MMA MANIA ↗</small>
-        </a>
-      ) : null}
       <section className="surface-card home-event-card home-event-card--compact" aria-label="UFC Picks and standing">
         <div className="home-event-card__topline">
           <p className="eyebrow">UFC PICKS</p>

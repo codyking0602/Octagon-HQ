@@ -239,3 +239,11 @@
   .football-matchup-breakdown-sheet__body--compact > section { padding: 18px 22px; }
   .football-matchup-breakdown-grid, .football-matchup-breakdown-edges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Private administration stays accessible without crowding the player-facing toolbar. */
+.football-picks-owner-menu { margin-left: auto; min-width: 0; }
+.football-picks-owner-menu > summary { cursor: pointer; list-style: none; color: #a3abb4; font-size: .58rem; font-weight: 900; letter-spacing: .08em; }
+.football-picks-owner-menu > summary::-webkit-details-marker { display: none; }
+.football-picks-owner-menu[open] { position: relative; }
+.football-picks-owner-menu > div { position: absolute; z-index: 8; right: 0; top: 100%; display: grid; gap: 10px; padding: 12px; border: 1px solid #4c535b; border-radius: 12px; min-width: 210px; background: #161a1e; }
+.football-picks-owner-menu .picks-control-entry { margin: 0; }

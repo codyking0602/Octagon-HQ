@@ -23,6 +23,7 @@ const thumbnailSlugAliases = new Map([
 ]);
 
 const remotePhotoBySlug = new Map([
+  ["timmy-cuamba", "https://a.espncdn.com/i/headshots/mma/players/full/5123311.png"],
   ["joshua-van", "https://a.espncdn.com/i/headshots/mma/players/full/5120301.png"],
   ["arman-tsarukyan", "https://a.espncdn.com/i/headshots/mma/players/full/4419372.png"],
   ["mauricio-ruffy", "https://a.espncdn.com/i/headshots/mma/players/full/5122238.png"],
