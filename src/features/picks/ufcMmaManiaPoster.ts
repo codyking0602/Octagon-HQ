@@ -1,7 +1,8 @@
 import type { PickEvent } from "./picksModel";
 
-// Approved horizontal event art from MMA Mania's UFC Posters archive.
-// Link to the publisher; do not generate a replacement fighter image.
+// Only authentic, individually verified horizontal artwork from MMA Mania's UFC
+// poster archive. The weekly research task adds an approved catalog entry;
+// neither the frontend nor its publisher fabricates fighter imagery.
 export const MMA_MANIA_EDMONTON_POSTER = {
   title: "Buckley vs Malott",
   source: "https://www.mmamania.com/ufc-strikeforce-posters/476183/ufc-edmonton-poster-slaps-buckley-vs-malott-oct-17-canada",
@@ -9,18 +10,56 @@ export const MMA_MANIA_EDMONTON_POSTER = {
   aspectRatio: "1200 / 628",
 } as const;
 
+interface ApprovedUfcPoster {
+  title: string;
+  source: string;
+  src: string;
+  aspectRatio: string;
+  /** Exact Central Tuesday cutover, already resolved to offset-aware ISO time. */
+  activeAt: string;
+  expiresAt: string;
+  eventStartsAt: string;
+  fighterNames: readonly [string, string];
+}
+
+/** Append verified next-event MMA Mania posters here, never replacing another event. */
+export const APPROVED_MMA_MANIA_POSTERS: readonly ApprovedUfcPoster[] = [
+  {
+    ...MMA_MANIA_EDMONTON_POSTER,
+    activeAt: "2026-10-12T00:00:00-05:00", // Existing owner-approved fight-week exception.
+    expiresAt: "2026-10-18T00:00:00-05:00",
+    eventStartsAt: "2026-10-17T19:00:00-05:00",
+    fighterNames: ["buckley", "malott"],
+  },
+];
+
+function verifiedPublisherSource(item: ApprovedUfcPoster): boolean {
+  try {
+    const page = new URL(item.source);
+    const image = new URL(item.src);
+    return page.protocol === "https:" && page.hostname === "www.mmamania.com"
+      && image.protocol === "https:" && image.hostname === "platform.mmamania.com"
+      && image.pathname.includes("/wp-content/uploads/")
+      && /^\\d+ \\/ \\d+$/.test(item.aspectRatio);
+  } catch {
+    return false;
+  }
+}
+
 export function reviewedMmaManiaPoster(event: PickEvent | null, now = new Date()) {
   const timestamp = now.getTime();
-  if (!Number.isFinite(timestamp)
-    || timestamp < Date.parse("2026-10-12T00:00:00-05:00")
-    || timestamp >= Date.parse("2026-10-18T00:00:00-05:00")) return null;
-  if (event) {
-    if (event.sport === "football") return null;
-    const title = `${event.name} ${event.subtitle}`.toLowerCase();
-    if (!title.includes("buckley") || !title.includes("malott")) return null;
-    const start = Date.parse(event.startsAt);
-    if (!Number.isFinite(start)
-      || Math.abs(start - Date.parse("2026-10-17T19:00:00-05:00")) > 24 * 60 * 60 * 1000) return null;
-  }
-  return MMA_MANIA_EDMONTON_POSTER;
+  if (!Number.isFinite(timestamp) || event?.sport === "football") return null;
+  return APPROVED_MMA_MANIA_POSTERS
+    .filter((item) => timestamp >= Date.parse(item.activeAt)
+      && timestamp < Date.parse(item.expiresAt)
+      && verifiedPublisherSource(item))
+    .sort((a, b) => Date.parse(b.activeAt) - Date.parse(a.activeAt))
+    .find((item) => {
+      if (!event) return true;
+      const title = `${event.name} ${event.subtitle}`.toLowerCase();
+      if (!item.fighterNames.every((name) => title.includes(name))) return false;
+      const start = Date.parse(event.startsAt);
+      return Number.isFinite(start)
+        && Math.abs(start - Date.parse(item.eventStartsAt)) <= 24 * 60 * 60 * 1000;
+    }) ?? null;
 }
