@@ -48,7 +48,7 @@ describe("MLB Find the Leader production runs", () => {
     expect(names.some((name) => name.includes("Derek Jeter"))).toBe(true);
     expect(names.some((name) => name.includes("Mark McGwire"))).toBe(true);
     expect(names.some((name) => name.includes("Sammy Sosa"))).toBe(true);
-    expect(names.filter((name) => /\\(19\\d\\d\\)|\\(20\\d\\d\\)/.test(name))).toHaveLength(10);
+    expect(names.filter((name) => /\((?:19|20)\d{2}\)/.test(name))).toHaveLength(10);
   });
 
   it("keeps the season year visible in every season-based candidate identity", () => {
