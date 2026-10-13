@@ -97,7 +97,7 @@ describe("FootballHomeSpotlightPhotoControl", () => {
     expect(screen.getByAltText("CURRENT NFL Football Home Player Spotlight"))
       .toHaveAttribute("src", currentSources.nfl);
   });
-  it("shows Jamal/Tet as CURRENT immediately after early activation and no stale NEXT pair", async () => {
+  it("shows Jamal/Tet as CURRENT with upcoming Sellers/Maye pair preloaded", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-10-06T03:45:00Z"));
 
@@ -118,8 +118,12 @@ describe("FootballHomeSpotlightPhotoControl", () => {
       .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-06-jamal-tet"]?.cfb);
     expect(screen.getByAltText("CURRENT NFL Football Home Player Spotlight"))
       .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-06-jamal-tet"]?.nfl);
-    expect(screen.queryByLabelText("Upload NEXT CFB Player Spotlight photo")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Upload NEXT NFL Player Spotlight photo")).not.toBeInTheDocument();
+    expect(screen.getByText("LANORRIS SELLERS")).toBeInTheDocument();
+    expect(screen.getByText("DRAKE MAYE")).toBeInTheDocument();
+    expect(screen.getByAltText("NEXT CFB Football Home Player Spotlight"))
+      .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-13-sellers-maye"]?.cfb);
+    expect(screen.getByAltText("NEXT NFL Football Home Player Spotlight"))
+      .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-13-sellers-maye"]?.nfl);
   });
 
 });
