@@ -20,7 +20,7 @@ describe("MLB Find the Leader production runs", () => {
     expect(MLB_FIND_LEADER_SECOND_PRODUCTION_BOARDS).toHaveLength(2);
     expect(MLB_FIND_LEADER_SECOND_PRODUCTION_BOARDS.map((board) => board.id)).toEqual([
       "mlb-2026-play-13-career-hits",
-      "mlb-2026-play-13-single-season-stolen-bases",
+      "mlb-2026-play-13-single-season-home-runs",
     ]);
   });
 
@@ -37,9 +37,18 @@ describe("MLB Find the Leader production runs", () => {
       value: 4256,
     });
     expect(MLB_FIND_LEADER_SECOND_PRODUCTION_BOARDS[1]!.candidates[0]).toMatchObject({
-      name: "Rickey Henderson (1982)",
-      value: 130,
+      name: "Barry Bonds (2001)",
+      value: 73,
     });
+  });
+
+  it("uses recognizable stars, with McGwire, Sosa, Jeter, and Griffey represented", () => {
+    const names = MLB_FIND_LEADER_SECOND_PRODUCTION_BOARDS.flatMap((board) =>
+      board.candidates.map((candidate) => candidate.name));
+    expect(names.some((name) => name.includes("Derek Jeter"))).toBe(true);
+    expect(names.some((name) => name.includes("Mark McGwire"))).toBe(true);
+    expect(names.some((name) => name.includes("Sammy Sosa"))).toBe(true);
+    expect(names.filter((name) => /\\(19\\d\\d\\)|\\(20\\d\\d\\)/.test(name))).toHaveLength(10);
   });
 
   it("keeps the season year visible in every season-based candidate identity", () => {
