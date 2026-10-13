@@ -216,6 +216,81 @@ describe("NFL GM Long Year 1 midseason", () => {
     }, picks)).toBe(false);
   });
 
+  it("migrates previously accepted future-pick compensation without resetting completed games", () => {
+    const picks = legalPicks();
+    const coach = NFL_GM_LONG_COACHES.find(c => c.name === coachName)!;
+    const original = { ...nflGmLongInitialSave(profileId, runId),
+      phase: "midseason" as const, picks, selectedCoachBucket: coach.bucket,
+      selectedCoach: coach.name, coachWheelDraw: 0.43,
+    };
+    const outgoingId = picks[0]!.playerId;
+    const partnerTeam = nflGmLongTradePartners(outgoingId)[0]!;
+    const mid = checkpoint(picks);
+    const priorDraftPick = {
+      ...mid, stage: "complete", shoppedPlayerId: outgoingId, partnerTeam,
+      rejectedOfferIds: ["future", "unaccepted-player"],
+      trade: { outgoingId, incomingId: null, partnerTeam, futurePickRound: 3 },
+    };
+    const restored = nflGmLongParseSave({ ...original, midseason: priorDraftPick },
+      profileId, NFL_GM_LONG_BY_ID);
+    expect(restored?.phase).toBe("midseason");
+    expect(restored?.midseason?.trade).toBeNull();
+    expect(restored?.midseason?.retiredDraftPickTrade).toBe(true);
+    expect(restored?.midseason?.rejectedOfferIds).toEqual(["unaccepted-player"]);
+    expect(restored?.midseason?.stage).toBe("complete");
+    expect(restored?.midseason?.games).toEqual(mid.games);
+    expect(restored?.midseason?.development).toEqual(mid.development);
+    expect(nflGmLongActivePicks(picks, restored!.midseason!.trade)).toEqual(picks);
+    expect(nflGmLongActivePicks(picks, restored!.midseason!.trade)).toHaveLength(9);
+    expect(nflGmLongValidMidseason(restored!.midseason, picks)).toBe(true);
+
+    const memory = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => memory.get(key) ?? null,
+      setItem: (key: string, value: string) => { memory.set(key, value); },
+      removeItem: (key: string) => { memory.delete(key); },
+    };
+    nflGmLongWriteSave(storage, restored!, NFL_GM_LONG_BY_ID);
+    expect(nflGmLongLoadSave(storage, profileId, NFL_GM_LONG_BY_ID)).toEqual(restored);
+    expect(memory.get(nflGmLongStorageKey(profileId))).not.toContain("futurePickRound");
+  });
+
+  it("restores rejected pick attempts and keeps older player-for-player trades valid", () => {
+    const picks = legalPicks();
+    const coach = NFL_GM_LONG_COACHES.find(c => c.name === coachName)!;
+    const original = { ...nflGmLongInitialSave(profileId, runId),
+      phase: "midseason" as const, picks, selectedCoachBucket: coach.bucket,
+      selectedCoach: coach.name, coachWheelDraw: 0.43,
+    };
+    const outgoingId = picks[0]!.playerId;
+    const partnerTeam = nflGmLongTradePartners(outgoingId)[0]!;
+    const mid = checkpoint(picks);
+    const rejectedFuture = {
+      ...mid, stage: "offers", shoppedPlayerId: outgoingId, partnerTeam,
+      rejectedOfferIds: ["future"], trade: null,
+    };
+    const continued = nflGmLongParseSave({ ...original, midseason: rejectedFuture },
+      profileId, NFL_GM_LONG_BY_ID);
+    expect(continued?.midseason?.stage).toBe("offers");
+    expect(continued?.midseason?.rejectedOfferIds).toEqual([]);
+
+    const candidate = picks.flatMap(pick => nflGmLongTradePartners(pick.playerId).flatMap(team =>
+      nflGmLongTradeTargets(picks, pick.playerId, team)
+        .map(player => ({ pick, team, player })))).at(0)!;
+    const legacyPlayerTrade = {
+      ...mid, stage: "complete", shoppedPlayerId: candidate.pick.playerId,
+      partnerTeam: candidate.team, trade: {
+        outgoingId: candidate.pick.playerId, incomingId: candidate.player.id,
+        partnerTeam: candidate.team, futurePickRound: null,
+      },
+    };
+    const loaded = nflGmLongParseSave({ ...original, midseason: legacyPlayerTrade },
+      profileId, NFL_GM_LONG_BY_ID);
+    expect(loaded?.midseason?.trade?.incomingId).toBe(candidate.player.id);
+    expect(loaded?.midseason?.trade).not.toHaveProperty("futurePickRound");
+    expect(nflGmLongActivePicks(picks, loaded!.midseason!.trade)).toHaveLength(9);
+  });
+
   it("renders the compact record and an actionable deadline without a season finish claim", () => {
     const picks = legalPicks();
     const midseason = checkpoint(picks);
