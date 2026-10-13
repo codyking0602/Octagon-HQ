@@ -16,6 +16,12 @@ import "../../styles/football-weekly-auction-center.css";
 
 type CenterTab = "week" | "results";
 
+function gmFeaturedWeek(now = new Date()) {
+  const time = now.getTime();
+  return time >= Date.parse("2026-10-13T05:00:00Z")
+    && time < Date.parse("2026-10-20T05:00:00Z");
+}
+
 function subjectLabel(subjectKey: FootballWeeklyFinal["subject_key"] | "cfb-best-teams-since-2000") {
   if (subjectKey === "cfb-superteam") return "CFB SUPERTEAM";
   if (subjectKey === "nfl-build-qb") return "NFL BUILD A QB";
@@ -50,8 +56,9 @@ export default function FootballWeeklyAuctionCenterPage() {
   const identity = useIdentity();
   const owner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
   const impostorWindow = hqImpostorV1Window();
+  const gmWeek = gmFeaturedWeek();
   const repository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
-  const [tab, setTab] = useState<CenterTab>("week");
+  const [tab, setTab] = useState<CenterTab>(gmWeek ? "results" : "week");
   const [state, setState] = useState<FootballWeeklyAuctionState | null>(null);
   const [history, setHistory] = useState<FootballWeeklyFinal[]>([]);
   const [selectedResult, setSelectedResult] = useState<FootballWeeklyFinal | null>(null);
@@ -66,7 +73,7 @@ export default function FootballWeeklyAuctionCenterPage() {
       return () => { active = false; };
     }
 
-    const request = impostorWindow.active
+    const request = (impostorWindow.active || gmWeek)
       ? repository.loadHistory().then((nextHistory) => {
           if (!active) return;
           setState(null);
@@ -87,7 +94,7 @@ export default function FootballWeeklyAuctionCenterPage() {
       });
 
     return () => { active = false; };
-  }, [repository, impostorWindow.active]);
+  }, [repository, impostorWindow.active, gmWeek]);
 
   if (selectedResult) {
     return (
@@ -182,7 +189,25 @@ export default function FootballWeeklyAuctionCenterPage() {
       {error ? <section className="football-weekly-auction-center__message surface-card is-error">{error}</section> : null}
 
       {!loading && !error && tab === "week" ? (
-        impostorWindow.active ? (
+        gmWeek ? (
+          <section className="football-weekly-auction-center__current surface-card">
+            <div className="football-weekly-auction-center__current-title">
+              <div>
+                <small>OCT 13–19 · FEATURED CHALLENGE</small>
+                <strong>NFL GM CHAMPIONSHIP</strong>
+              </div>
+              <span>THIS WEEK</span>
+            </div>
+            <p>Last week's Auction is complete. Its winner, Wildcard wheel, collections and all grades are under Results. This week's featured competition is Weekly GM.</p>
+            <button
+              className="football-weekly-auction-center__primary"
+              type="button"
+              onClick={() => navigate("/football/weekly-gm")}
+            >
+              OPEN WEEKLY GM →
+            </button>
+          </section>
+        ) : impostorWindow.active ? (
           <section className="football-weekly-auction-center__current surface-card">
             <div className="football-weekly-auction-center__current-title">
               <div>

@@ -4,9 +4,22 @@ import { useIdentity } from "../identity/IdentityProvider";
 import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import FootballGmModePage from "./FootballGmModePage";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
+import { FootballWeeklyNflTeamSeasonFinalResult } from "./FootballWeeklyNflTeamSeasonGate";
+import { createFootballWeeklyAuctionRepository, type FootballWeeklyNflTeamSeasonFinal } from "../play/footballWeeklyAuctionRepository";
 import { createFootballWeeklyGmRepository, type WeeklyGmResult, type WeeklyGmScenario, type WeeklyGmState } from "./footballWeeklyGmRepository";
 import type { PersistedRun } from "./FootballGmModePage";
 import "../../styles/football-gm-mode.css";
+
+const LAST_AUCTION_WEEK = "2026-10-06";
+const LAST_AUCTION_REVEAL_KEY = "football-weekly-gm-2026-10-13-auction-reveal-seen";
+
+function auctionRevealAlreadySeen() {
+  try {
+    return typeof window !== "undefined" && window.localStorage.getItem(LAST_AUCTION_REVEAL_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 const scenarios: { id: WeeklyGmScenario; title: string; quarterback: string; development: string }[] = [
   { id: "elite", title: "ELITE FRANCHISE", quarterback: "Josh Allen", development: "Steady development" },
@@ -17,11 +30,35 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   const identity = useIdentity();
   const isOwner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
   const repository = useMemo(() => createFootballWeeklyGmRepository(preview), [preview]);
+  const auctionRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [state, setState] = useState<WeeklyGmState | null>(null);
   const [playing, setPlaying] = useState<WeeklyGmScenario | null>(null);
   const [detail, setDetail] = useState<WeeklyGmResult | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [lastAuction, setLastAuction] = useState<FootballWeeklyNflTeamSeasonFinal | null>(null);
+  const [showAuctionReveal, setShowAuctionReveal] = useState(() => !auctionRevealAlreadySeen());
+
+  useEffect(() => {
+    if (preview || !identity.ready || !auctionRepository) return;
+    let active = true;
+    void auctionRepository.loadHistory().then((history) => {
+      if (!active) return;
+      const final = history.find((entry) =>
+        entry.week_start === LAST_AUCTION_WEEK
+        && entry.subject_key === "nfl-best-team-seasons-since-2000");
+      setLastAuction(final && final.subject_key === "nfl-best-team-seasons-since-2000" ? final : null);
+    }).catch(() => {
+      // The standalone Auction Center remains available if its history request fails.
+    });
+    return () => { active = false; };
+  }, [preview, identity.ready, auctionRepository]);
+
+  function continueToGm() {
+    setShowAuctionReveal(false);
+    try { window.localStorage.setItem(LAST_AUCTION_REVEAL_KEY, "1"); } catch { /* private browsing */ }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   async function refresh() {
     if (!repository) throw new Error("Sign in to play the Weekly GM Championship.");
@@ -111,6 +148,32 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
       {error ? <button type="button" onClick={() => void refresh().catch((failure: unknown) => setError(String(failure)))}>RETRY</button> : null}
     </section></div>
   );
+  if (!preview && showAuctionReveal && lastAuction) {
+    const winner = lastAuction.standings.find((entry) => entry.is_winner)
+      ?? lastAuction.standings.find((entry) => entry.rank === 1);
+    return (
+      <div className="page football-gm-page">
+        <section className="surface-card" style={{ padding: 16, marginBottom: 12 }}>
+          <Link to="/football">← FOOTBALL HQ</Link>
+          <p className="eyebrow">OCT 6–12 · LAST WEEK'S NFL AUCTION</p>
+          <h1>FINAL AUCTION RESULTS</h1>
+          <p><strong>{winner?.display_name ?? "Weekly winner"}</strong> finished first{winner?.final_score != null ? ` with ${winner.final_score.toFixed(1)} points` : ""}.</p>
+          <p>Explore the final standings, every collection, all 32 team grades and the Day 7 Wildcard wheel before starting this week's GM.</p>
+          <button className="primary-action" type="button" onClick={continueToGm}>CONTINUE TO THIS WEEK'S GM →</button>
+        </section>
+        <FootballWeeklyNflTeamSeasonFinalResult
+          result={lastAuction}
+          busy={false}
+          onAcknowledge={continueToGm}
+          showNewWeekAction={false}
+        />
+        <section className="surface-card" style={{ padding: 12, marginTop: 12 }}>
+          <button type="button" className="primary-action" onClick={continueToGm}>CONTINUE TO THIS WEEK'S GM →</button>
+        </section>
+      </div>
+    );
+  }
+
   const myTotal = (state.attempts.elite?.score ?? 0) + (state.attempts.young?.score ?? 0);
   return (
     <div className="page football-gm-page">
@@ -120,6 +183,15 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         <h1>{preview ? "TEST THE FULL WEEKLY GM" : "NFL GM CHAMPIONSHIP"}</h1>
         <p>{preview ? "This is the real Josh Allen and Jaxson Dart competition with genuine spins, trading, free agency, development, server saves, scores, and clickable results. Test entries are completely separate from Tuesday’s official championship." : "October 13–19 · Two franchises, each with a starting QB and six random spins. Build your best seven-player core. One official attempt per franchise."}</p>
         {!preview && isOwner && state.status === "upcoming" ? <p><Link to="/football/weekly-gm-test">OWNER-ONLY: PLAY THE REAL COMPETITION NOW ↗</Link></p> : null}
+        {!preview ? (
+          <p>
+            {lastAuction ? (
+              <button type="button" onClick={() => { setShowAuctionReveal(true); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+                VIEW OCT 6–12 AUCTION RESULTS · WHEEL · COLLECTIONS · ALL GRADES ↗
+              </button>
+            ) : <Link to="/football/weekly-auction">VIEW PRIOR AUCTION RESULTS ↗</Link>}
+          </p>
+        ) : null}
         <p><strong>{myTotal.toFixed(1)} / 200</strong> · {Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</p>
         <small>{preview ? "Owner-only production playtest · Test data never enters championship standings · Closes Tuesday at 12:00 AM Central" :
           state.status === "upcoming" ? "Opens Tuesday, October 13 at midnight Central" :

@@ -85,8 +85,13 @@ describe("public Football/UFC Play 2.0 release", () => {
     });
     preview("football");
     const hub = screen.getByTestId("play-v2-hub");
-    expect(within(hub).getByRole("region", { name: "Weekly Featured Championship" })).toHaveTextContent("Auction Center");
-    expect(within(hub).getByRole("link", { name: /open current weekly/i })).toHaveAttribute("href", "/football/weekly-auction");
+    // The featured weekly game rotates on October 13; the archive remains independently accessible.
+    const inGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z")
+      && Date.now() < Date.parse("2026-10-20T05:00:00Z");
+    expect(within(hub).getByRole("region", { name: "Weekly Featured Championship" }))
+      .toHaveTextContent(inGmWeek ? "NFL GM Championship" : "Auction Center");
+    expect(within(hub).getByRole("link", { name: /open current weekly/i }))
+      .toHaveAttribute("href", inGmWeek ? "/football/weekly-gm" : "/football/weekly-auction");
     expect(within(hub).getByRole("region", { name: "Today's Challenge" })).toHaveTextContent("Sports Feud");
     expect(within(hub).getByText("DAILY AVERAGE")).toBeInTheDocument();
     expect(within(hub).getByText("81.3")).toBeInTheDocument();
