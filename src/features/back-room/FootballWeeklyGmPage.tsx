@@ -129,6 +129,8 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
             scenario: playing,
             seed: attempt.seed,
             savedState: attempt.state,
+            // Keep the already-started October 13 championship on its original rules.
+            legacyFreeAgency: state.week_start < "2026-10-20",
             onBack: () => { setPlaying(null); void refresh().catch(() => {}); },
             save: async (run: PersistedRun, score: number | null) => {
               if (!repository) throw new Error("Weekly GM is not connected.");
