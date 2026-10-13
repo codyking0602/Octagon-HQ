@@ -10,6 +10,16 @@ Phase 1: canonical storage for the CFB/NFL Player Spotlight + Game of the Week s
 - Sunday 8 AM Central: college recommendations. Monday 10 PM Central: NFL recommendations, allowing up to two hours to prepare before Tuesday midnight.
 - If production is not valid and ready at midnight, retain the last approved live material. Do not silently switch content later on Tuesday or publish partial assets.
 
+## Approved presentation and editorial rules (locked for future weekly automation)
+
+- **Home Football HQ:** display the established compact two-team Game of the Week rows with full team names/logos, kickoff, and OPEN BREAKDOWN. Never insert the game-header graphic into these rows, duplicate team marks, or narrow team abbreviations to vertical letters.
+- **Football Picks:** the existing wide hero is the home of the two owner-approved matchup graphics (CFB and NFL). Crossfade about every **8 seconds**, with the canonical Picks event-header gallery only as a fallback. Matchup breakdown sheets use the team/venue header without repeating the large graphic.
+- **UFC HQ:** do not add a poster to the Home Fight Week section. MMA Mania's approved horizontal fight poster belongs to UFC Picks, not the UFC Home hub.
+- **Football Player Spotlight:** exactly four genuinely informative featured-game stats, avoiding filler such as 0 INT when a standout rushing/statistical achievement is available. Below those four stats show **only height/weight and the featured game's opponent, final score and W/L**; no repeated TD total or clipped text on phones. Stat and meta rendering belongs to the established Spotlight component, not a photo or weekly payload template.
+- **Breakdown THE SETUP and THE BOTTOM LINE:** about the specific teams and on-field dynamics, not kickoff time, station, location, prior GameDay visits, image credits, or a predicted winner. Times/venue already live in metadata. Store provenance in editorial source URLs rather than appending “Game graphic: SeatGeek” or source links to the written analysis. Do not bloat the article to comply.
+- **Image trust:** use authentic owner-approved SeatGeek NFL/CFB matchup graphics (and MMA Mania for UFC). Never create a synthetic/photo-composite game graphic as a visual substitute when real approved art is required. Fail closed for missing or unusable media; don't show a black placeholder as approved content.
+- Automated research/staging/release is limited to supplying verified content into these established slots. It must not alter the established Home/Picks layout or text treatment.
+
 ## Package contents
 
 The four independent JSON slots are cfb_spotlight, nfl_spotlight, cfb_game_of_week, and nfl_game_of_week.
@@ -71,7 +81,7 @@ One automatic readiness worker, supabase/functions/football-weekly-publisher, us
 
 CFB and NFL advance independently. If CFB is armed at midnight and NFL is not, only the new CFB goes live; NFL keeps its most recent eligible published week. If neither is ready, the existing manual/last published presentation remains in place. No arming after the midnight deadline, no half-finished content and no delayed Tuesday evening surprise publication.
 
-Existing Home Player Spotlight and six-section Football matchup renderer are reused. Published games enter the established featured-matchup display only if the current Football Picks event includes that same matchup/kickoff. The real 1600×900 GOTW art appears in the home row and Picks breakdown. Event-wide manually curated header galleries and manually authored legacy content are preserved.
+Existing Home Player Spotlight and six-section Football matchup renderer are reused. Published games enter the featured-matchup rows only when the live Football Picks event includes that matchup/kickoff. The approved artwork is reserved for the Football Picks 8-second matchup carousel. Home Game of the Week rows and matchup breakdown sheets retain the approved compact text/team-logo layouts. Keep manually curated header galleries only as fallbacks.
 
 The optional in-app owner fallback is Verify Art & Arm Midnight, which checks the actual live images and deployment marker before calling the restricted owner RPC; the automatic worker is the normal no-extra-click path. The exact authenticated owner selection remains mandatory.
 
