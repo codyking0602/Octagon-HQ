@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   createFootballWeeklyAuctionRepository,
   type FootballWeeklyAuctionState,
@@ -47,6 +47,8 @@ function archivedScore(result: FootballWeeklyFinal) {
 
 export default function FootballWeeklyAuctionCenterPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const openLatestResults = new URLSearchParams(location.search).get("results") === "latest";
   const identity = useIdentity();
   const owner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
   const impostorWindow = hqImpostorV1Window();
@@ -71,11 +73,19 @@ export default function FootballWeeklyAuctionCenterPage() {
           if (!active) return;
           setState(null);
           setHistory(nextHistory);
+          if (openLatestResults) {
+            setTab("results");
+            setSelectedResult(nextHistory[0] ?? null);
+          }
         })
       : Promise.all([repository.load(), repository.loadHistory()]).then(([nextState, nextHistory]) => {
           if (!active) return;
           setState(nextState);
           setHistory(nextHistory);
+          if (openLatestResults) {
+            setTab("results");
+            setSelectedResult(nextHistory[0] ?? null);
+          }
         });
 
     request
@@ -87,13 +97,17 @@ export default function FootballWeeklyAuctionCenterPage() {
       });
 
     return () => { active = false; };
-  }, [repository, impostorWindow.active]);
+  }, [repository, impostorWindow.active, openLatestResults]);
 
   if (selectedResult) {
     return (
       <div className="page football-weekly-auction-center">
         <div className="football-weekly-auction-center__archive-nav">
-          <button type="button" onClick={() => setSelectedResult(null)}>← ALL RESULTS</button>
+          <button type="button" onClick={() => {
+            setSelectedResult(null);
+            setTab("results");
+            navigate("/football/weekly-auction?results=all", { replace: true });
+          }}>← ALL RESULTS</button>
           <span>{weekLabel(selectedResult.week_start)} · {subjectLabel(selectedResult.subject_key)}</span>
         </div>
         {selectedResult.subject_key === "nfl-best-team-seasons-since-2000" ? (
