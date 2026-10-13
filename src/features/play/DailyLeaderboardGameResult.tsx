@@ -524,12 +524,14 @@ function BarTriviaLeaderboardResult({
                         })}
                       </div>
 
-                      <div className="leaderboard-bar-trivia-scoring">
-                        <span>BASE {row.correct ? row.basePoints : 0}</span>
-                        {row.doubleRoundBonus ? <span>DOUBLE +{row.doubleRoundBonus}</span> : null}
-                        {row.streakBonus ? <span>STREAK +{row.streakBonus}</span> : null}
-                        {row.wagerDelta ? <span>WAGER {signedPoints(row.wagerDelta)}</span> : null}
-                      </div>
+                      {row.hasRecordedAnswer ? (
+                        <div className="leaderboard-bar-trivia-scoring">
+                          <span>BASE {row.correct ? row.basePoints : 0}</span>
+                          {row.doubleRoundBonus ? <span>DOUBLE +{row.doubleRoundBonus}</span> : null}
+                          {row.streakBonus ? <span>STREAK +{row.streakBonus}</span> : null}
+                          {row.wagerDelta ? <span>WAGER {signedPoints(row.wagerDelta)}</span> : null}
+                        </div>
+                      ) : null}
 
                       {row.explanation ? <p>{row.explanation}</p> : null}
                     </div>
