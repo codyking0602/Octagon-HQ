@@ -320,7 +320,7 @@ export default function HomePage() {
 
       {ufcPoster ? (
         <a className="home-ufc-poster" href={ufcPoster.source} target="_blank" rel="noopener noreferrer" aria-label={`View ${ufcPoster.title} event poster at MMA Mania`}>
-          <img src={ufcPoster.image} alt={`UFC ${ufcPoster.title} official event artwork`} loading="eager" />
+          <img src={ufcPoster.src} alt={`UFC ${ufcPoster.title} official event artwork`} loading="eager" />
           <small>OFFICIAL EVENT ARTWORK · MMA MANIA ↗</small>
         </a>
       ) : null}
