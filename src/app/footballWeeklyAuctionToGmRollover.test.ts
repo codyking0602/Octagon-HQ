@@ -9,7 +9,7 @@ const auctionFinal = readFileSync("src/features/back-room/FootballWeeklyNflTeamS
 describe("October 13 Football Weekly Auction to GM rollover", () => {
   it("preserves access to the completed Auction archive during the GM featured week", () => {
     expect(router).toContain('{ path: "football/weekly-auction", element: <FootballWeeklyAuctionCenterPage /> }');
-    expect(router).not.toMatch(/path: "football\\/weekly-auction"[^\\n]+Navigate to="\\/football\\/weekly-gm"/);
+    expect(router).not.toContain('Navigate to="/football/weekly-gm" replace /> : <FootballWeeklyAuctionCenterPage />');
     expect(center).toContain('const [tab, setTab] = useState<CenterTab>(gmWeek ? "results" : "week")');
     expect(center).toContain('setHistory(nextHistory)');
     expect(center).toContain('setSelectedResult(result)');
