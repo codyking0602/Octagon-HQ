@@ -56,6 +56,8 @@ const remotePhotoBySlug = new Map([
   ["marwan-rahiki", "https://a.espncdn.com/i/headshots/mma/players/full/5302274.png"],
   ["waldo-cortes-acosta", "https://a.espncdn.com/i/headshots/mma/players/full/4903365.png"],
   ["david-martinez", "https://a.espncdn.com/i/headshots/mma/players/full/4503229.png"],
+  ["timmy-cuamba", "https://a.espncdn.com/i/headshots/mma/players/full/5123311.png"],
+  ["timothy-cuamba", "https://a.espncdn.com/i/headshots/mma/players/full/5123311.png"],
 ]);
 
 const runtimePhotoBySlug = new Map<string, string>();
