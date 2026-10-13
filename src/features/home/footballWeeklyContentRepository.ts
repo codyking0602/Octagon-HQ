@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import { isYouTubeVideoUrl } from "../../lib/youtubeVideoUrl";
 
 // A Football editorial week begins at midnight Tuesday in America/Chicago.
 // SQL derives the UTC release instant, automatically accounting for CST/CDT.
@@ -21,7 +22,7 @@ export const footballWeeklySpotlightSchema = z.strictObject({
   result: z.string().trim().min(1),
   measurements: z.string().trim().min(1),
   team_color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
-  highlight_url: z.url().refine((url) => url.startsWith("https://")),
+  highlight_url: z.url().refine(isYouTubeVideoUrl, "A direct YouTube video or Short URL is required"),
   photo_source: z.url().optional(),
   photo_asset_path: z.string().trim().min(1).optional(),
   photo_kind: z.enum(["action", "portrait", "manual"]).optional(),
@@ -141,7 +142,7 @@ export const footballWeeklyPreparedSpotlightSchema = footballWeeklySpotlightSche
   photo_source: z.url().refine((url) => url.startsWith("https://")),
   photo_asset_path: z.string().regex(/^\/assets\/football\/weekly\/\d{4}-\d{2}-\d{2}\/(cfb|nfl)\/spotlight[.]webp$/),
   photo_kind: z.enum(["action", "portrait", "manual"]),
-  highlight_url: z.url().refine((url) => /^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//.test(url)),
+  highlight_url: z.url().refine(isYouTubeVideoUrl, "A direct YouTube video or Short URL is required"),
 }).refine((item) => new Set(item.stats.map((stat) => stat.label.trim().toUpperCase())).size === 4,
   "Spotlight stats must use four distinct labels");
 
