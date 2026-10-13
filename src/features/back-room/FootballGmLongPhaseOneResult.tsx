@@ -18,13 +18,14 @@ export function nflGmLongGradeHeadline(grade: number): string {
 
 /** Owner-only Phase 1 finish: no season has been played or awarded yet. */
 export function FootballGmLongPhaseOneResult({
-  picks, grade, coach, coachCategoryLabel, coachFit,
+  picks, grade, coach, coachCategoryLabel, coachFit, onStartMidseason,
 }: {
   picks: readonly NflGmLongPick[];
   grade: number;
   coach: NflGmLongCoach;
   coachCategoryLabel: string;
   coachFit: CoachFit;
+  onStartMidseason?: () => void;
 }) {
   const yearOneLeft = NFL_GM_LONG_CAP - nflGmLongSpend(picks, NFL_GM_LONG_BY_ID, 1);
   const yearTwoEstimate = nflGmLongSpend(picks, NFL_GM_LONG_BY_ID, 2);
@@ -97,7 +98,10 @@ export function FootballGmLongPhaseOneResult({
     <div className="gm-long__summary-next">
       <span>UP NEXT <b>· MIDSEASON</b></span>
       <p>First-half record, player development, and an optional trade deadline.</p>
-      <small>Coming in Phase 2. Your franchise and coach are saved.</small>
+      <small>Your nine-player draft and coach are saved. Ready for the first eight games.</small>
+      {onStartMidseason && <button className="gm-long__phase-two-enter" type="button" onClick={onStartMidseason}>
+        PLAY MIDSEASON →
+      </button>}
     </div>
   </section>;
 }

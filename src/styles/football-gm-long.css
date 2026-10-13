@@ -713,3 +713,147 @@
   .gm-long__summary-headshot { width: 26px; height: 26px; }
   .gm-long__summary-roster-identity strong { font-size: 11px; }
 }
+
+/* Long-only Year 1 midseason playtest. All other GM modes remain untouched. */
+.gm-long__phase-two-enter {
+  display: block;
+  width: min(100%, 360px);
+  min-height: 45px;
+  margin: 13px auto 1px;
+  border: 1px solid #e7bf76;
+  border-radius: 10px;
+  padding: 11px 18px;
+  background: #e7bf76;
+  color: #172b3d;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: .055em;
+}
+.gm-long__midseason.surface-card {
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 8px;
+  padding: 17px;
+  border: 1px solid rgba(172,197,221,.21);
+  border-radius: 16px;
+  background: linear-gradient(145deg,rgba(22,35,53,.97),rgba(12,24,39,.97));
+}
+.gm-long__midseason-top { text-align: center; }
+.gm-long__midseason-top .eyebrow { margin: 2px 0 7px; color: #e7bd73; }
+.gm-long__midseason-top h2 { margin: 0; font-size: clamp(20px,3.2vw,26px); line-height: 1.2; }
+.gm-long__midseason-score { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 14px 0; }
+.gm-long__midseason-score > strong {
+  font-size: clamp(59px,9vw,85px);
+  font-weight: 950;
+  line-height: .9;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.07em;
+  color: #f5f8fc;
+}
+.gm-long__midseason-score > span { display: flex; flex-direction: column; gap: 5px; align-items: flex-start; min-width: 0; text-align: left; }
+.gm-long__midseason-score b { font-size: 10px; color: #dae9f3; letter-spacing: .055em; }
+.gm-long__midseason-score small { color: #9fc2d9; font-size: 12px; }
+.gm-long__midseason-games { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); gap: 6px; }
+.gm-long__midseason-games > span {
+  display: grid; align-items: center; justify-items: center; min-width: 0;
+  gap: 3px; padding: 9px 3px; border: 1px solid rgba(112,154,183,.3);
+  border-radius: 7px; background: rgba(44,73,95,.33);
+}
+.gm-long__midseason-games b { font-size: 15px; font-weight: 900; }
+.gm-long__midseason-games small { font-size: 10px; color: #c5d5e3; }
+.gm-long__midseason-games .is-win { background: rgba(34,119,87,.20); border-color: rgba(80,202,140,.32); color: #94e3b0; }
+.gm-long__midseason-games .is-loss { background: rgba(134,60,54,.18); border-color: rgba(220,122,109,.29); color: #f2ac9f; }
+.gm-long__midseason-disclaimer { display: block; margin-top: 10px; color: #8aabba; font-size: 10px; line-height: 1.4; }
+.gm-long__midseason-outlook { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin: 15px 0 12px; }
+.gm-long__midseason-outlook > div { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; min-width: 0;
+  padding: 11px 13px; border: 1px solid rgba(123,164,193,.22); border-radius: 10px; background: #1b3448;
+}
+.gm-long__midseason-outlook small { font-size: 9px; letter-spacing: .07em; font-weight: 900; color: #a9c5d7; }
+.gm-long__midseason-outlook strong { font-size: 27px; line-height: 1; font-variant-numeric: tabular-nums; }
+.gm-long__midseason-outlook em { font-size: 10px; font-style: normal; line-height: 1.35; color: #b6cfe0; }
+.gm-long__midseason-section-header { display: flex; align-items: center; justify-content: space-between; gap: 9px; margin-bottom: 7px; }
+.gm-long__midseason-section-header h3 { margin: 0; font-size: 13px; letter-spacing: .055em; font-weight: 900; }
+.gm-long__midseason-section-header span { font-size: 9px; letter-spacing: .06em; font-weight: 900; color: #b7cdda; }
+.gm-long__midseason-growth, .gm-long__deadline {
+  min-width: 0; margin-top: 10px; padding: 12px;
+  background: #0f2030; border: 1px solid rgba(126,172,207,.18); border-radius: 11px;
+}
+.gm-long__midseason-growth > p, .gm-long__deadline > p { font-size: 11px; color: #acc3d3; line-height: 1.5; margin: 4px 0 10px; }
+.gm-long__midseason-growth-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px; }
+.gm-long__midseason-growth-grid > div {
+  display: grid; align-items: center; grid-template-columns: 36px minmax(0,1fr) 27px; gap: 6px;
+  min-width: 0; min-height: 35px; padding: 6px 8px; border-radius: 7px;
+  background: rgba(43,74,97,.42); border: 1px solid rgba(129,163,190,.10);
+}
+.gm-long__midseason-slot { font-size: 9px; font-weight: 900; color: #85c8f4; }
+.gm-long__midseason-growth-grid strong { font-size: 11px; line-height: 1.2; overflow-wrap: break-word; }
+.gm-long__midseason-growth-grid b { font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; color: #a0bacb; }
+.gm-long__midseason-growth-grid .is-positive { color: #82dfaa; }
+.gm-long__midseason-growth-grid .is-negative { color: #eeaa9e; }
+.gm-long__deadline-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 10px; }
+.gm-long__deadline .gm-long__primary,
+.gm-long__deadline .gm-long__secondary {
+  min-height: 43px; padding: 9px 12px; border-radius: 9px; font-size: 11px;
+  font-weight: 900; letter-spacing: .035em; line-height: 1.3;
+}
+.gm-long__deadline .gm-long__primary { background: #e7bd72; color: #102639; border: 1px solid #e7bd72; }
+.gm-long__deadline .gm-long__secondary { color: #d4e4ee; background: #1c3448; border: 1px solid rgba(140,183,210,.3); }
+.gm-long__deadline-roster { display: grid; gap: 5px; margin-bottom: 10px; }
+.gm-long__deadline-roster button {
+  display: grid; grid-template-columns: 43px 31px minmax(0,1fr) auto auto; gap: 8px;
+  align-items: center; min-width: 0; min-height: 49px; padding: 7px 9px;
+  border: 1px solid rgba(142,175,200,.20); border-radius: 8px;
+  color: #f3f7fc; text-align: left; background: rgba(38,65,84,.5);
+}
+.gm-long__deadline-roster button > span:first-child { color: #89c4ef; font-size: 10px; font-weight: 900; }
+.gm-long__deadline-roster button .football-gm__player-headshot { width: 31px; height: 31px; }
+.gm-long__deadline-roster button strong { min-width: 0; font-size: 11px; overflow-wrap: break-word; }
+.gm-long__deadline-roster button small { color: #a9c2d5; white-space: nowrap; font-size: 10px; }
+.gm-long__deadline-roster button > b { white-space: nowrap; font-size: 10px; color: #81bfe7; }
+.gm-long__deadline-partner { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.gm-long__deadline-partner img { width: 40px; height: 40px; object-fit: contain; }
+.gm-long__deadline-partner > span { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.gm-long__deadline-partner small { font-size: 9px; font-weight: 900; color: #89c4ef; }
+.gm-long__deadline-partner strong { font-size: 17px; }
+.gm-long__deadline-offers { display: grid; gap: 6px; margin: 9px 0 12px; }
+.gm-long__deadline-offers button {
+  display: grid; align-items: center; min-width: 0;
+  grid-template-columns: 36px minmax(0,1fr) auto auto; gap: 8px;
+  padding: 9px; border-radius: 9px; border: 1px solid rgba(142,175,200,.22);
+  color: #f3f8fc; text-align: left; background: rgba(38,65,84,.48);
+}
+.gm-long__deadline-offers .football-gm__player-headshot { width: 36px; height: 36px; }
+.gm-long__deadline-offers button > span:nth-child(2) { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.gm-long__deadline-offers strong { font-size: 12px; overflow-wrap: break-word; }
+.gm-long__deadline-offers small { font-size: 10px; color: #a4c0d4; line-height: 1.35; }
+.gm-long__deadline-offers button > b { font-size: 10px; white-space: nowrap; color: #8cc8eb; }
+.gm-long__deadline-offers .football-gm__quality-pill { width: auto; position: static; margin: 0; padding: 4px 6px; font-size: 9px; white-space: nowrap; }
+.gm-long__deadline-future { border-color: rgba(226,187,115,.40) !important; }
+.gm-long__deadline-future-icon { display: grid; place-items: center; width: 36px; height: 36px;
+  border-radius: 8px; background: rgba(231,190,114,.15); color: #edc377; font-size: 18px; }
+.gm-long__deadline-future > span:nth-child(2) { grid-column: 2 / 4; }
+.gm-long__deadline-rejected { color: #f1b0a3 !important; font-weight: 800; font-size: 11px !important; }
+.gm-long__deadline-complete { padding: 10px 12px; border-radius: 9px; border: 1px solid rgba(92,190,145,.4); background: rgba(46,123,99,.13); }
+.gm-long__deadline-complete strong { color: #91e2b4; font-size: 13px; }
+.gm-long__deadline-complete p { font-size: 12px; margin: 6px 0; line-height: 1.5; }
+.gm-long__deadline-complete small { font-size: 10px; color: #b6cfdd; }
+.gm-long__midseason-next { margin-top: 14px; padding: 10px 0 0; text-align: center; border-top: 1px solid rgba(135,164,188,.20); }
+.gm-long__midseason-next small { color: #e5bc79; font-size: 10px; font-weight: 900; letter-spacing: .07em; }
+.gm-long__midseason-next p { margin: 5px 0 0; font-size: 11px; line-height: 1.5; color: #a7bfce; }
+@media (max-width: 700px) {
+  .gm-long__midseason-games { grid-template-columns: repeat(4,minmax(0,1fr)); }
+  .gm-long__midseason-growth-grid { grid-template-columns: minmax(0,1fr); }
+  .gm-long__midseason .gm-long__coach-wheel-frame { max-width: 275px; }
+}
+@media (max-width: 430px) {
+  .gm-long__midseason.surface-card { padding: 12px 10px; }
+  .gm-long__midseason-games { gap: 5px; }
+  .gm-long__midseason-score > strong { font-size: 60px; }
+  .gm-long__deadline-roster button { grid-template-columns: 29px 28px minmax(0,1fr) auto; gap: 5px; padding: 7px 5px; }
+  .gm-long__deadline-roster button .football-gm__player-headshot { width: 28px; height: 28px; }
+  .gm-long__deadline-roster button > b { display: none; }
+  .gm-long__deadline-offers button { grid-template-columns: 33px minmax(0,1fr) auto; gap: 6px; padding: 9px 7px; }
+  .gm-long__deadline-offers .football-gm__quality-pill { display: none; }
+  .gm-long__deadline-offers button > b { font-size: 9px; }
+  .gm-long__deadline-future > span:nth-child(2) { grid-column: 2; }
+}

@@ -6,6 +6,8 @@ import { footballGmSpinTeam, footballGmMoney } from "./footballGmEngine";
 import { GmFootballWheel } from "./FootballGmModePage";
 import { nflGmLongCoachFit, nflGmLongCoachPointerRotation } from "./footballGmLongPresentation";
 import { FootballGmLongPhaseOneResult } from "./FootballGmLongPhaseOneResult";
+import { FootballGmLongMidseasonPage } from "./FootballGmLongMidseasonPage";
+import { nflGmLongCreateMidseason, nflGmLongSpinTradePartner, nflGmLongTryTrade } from "./footballGmLongMidseason";
 import { LongCapMeter, LongRosterGrid, LongCandidateBoard } from "./FootballGmLongDraftPresentation";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
 import {
@@ -165,6 +167,47 @@ export default function FootballGmLongPage() {
     if (run?.phase !== "coach-wheel" || !run.selectedCoach || spinningCoach) return;
     setRun({ ...run, phase: "outlook" });
   }
+  function enterMidseason() {
+    if (!run || run.phase !== "outlook" || !run.selectedCoach || run.midseason) return;
+    try {
+      const midseason = nflGmLongCreateMidseason(run.runId, run.picks, run.selectedCoach);
+      setRun({ ...run, phase: "midseason", midseason });
+      setError("");
+    } catch {
+      setError("Unable to start midseason. Your original nine-player franchise remains saved.");
+    }
+  }
+  function exploreDeadline() {
+    if (run?.phase !== "midseason" || run.midseason?.stage !== "decision") return;
+    setRun({ ...run, midseason: { ...run.midseason, stage: "shop" } });
+  }
+  function shopDeadlinePlayer(playerId: string) {
+    if (run?.phase !== "midseason" || run.midseason?.stage !== "shop"
+      || !run.picks.some(pick => pick.playerId === playerId)) return;
+    setRun({ ...run, midseason: { ...run.midseason, shoppedPlayerId: playerId, stage: "spin" } });
+  }
+  function spinDeadlinePartner(): string {
+    if (run?.phase !== "midseason" || run.midseason?.stage !== "spin" || !run.midseason.shoppedPlayerId) {
+      throw new Error("No trade partner wheel is available.");
+    }
+    const partner = nflGmLongSpinTradePartner(run.runId, run.midseason.shoppedPlayerId);
+    setRun({ ...run, midseason: { ...run.midseason, partnerTeam: partner, stage: "offers" } });
+    return partner;
+  }
+  function makeDeadlineOffer(incomingId: string | null) {
+    if (run?.phase !== "midseason" || !run.midseason) return;
+    try {
+      const result = nflGmLongTryTrade(run.runId, run.picks, run.midseason, incomingId);
+      setRun({ ...run, midseason: result.midseason });
+      setError("");
+    } catch {
+      setError("That offer is no longer eligible under the current roster and cap.");
+    }
+  }
+  function skipDeadline() {
+    if (run?.phase !== "midseason" || !run.midseason || run.midseason.stage === "complete") return;
+    setRun({ ...run, midseason: { ...run.midseason, stage: "complete" } });
+  }
   function restart() {
     if (!profileId || !window.confirm("Start a new NFL GM Long roster? Your current Long save will be replaced.")) return;
     nflGmLongClearSave(window.localStorage, profileId);
@@ -196,7 +239,7 @@ export default function FootballGmLongPage() {
       <span><small>NFL FRONT OFFICE · OWNER PLAYTEST</small><strong>THE GM · LONG</strong></span>
       <b>$205M</b>
     </header>
-    {run.phase !== "outlook" && <>
+    {run.phase !== "outlook" && run.phase !== "midseason" && <>
       <LongCapMeter picks={run.picks} />
       <LongRosterGrid picks={run.picks} />
     </>}
@@ -250,6 +293,18 @@ export default function FootballGmLongPage() {
       coach={hired}
       coachCategoryLabel={CATEGORY[hired.bucket].title}
       coachFit={coachFit}
+      onStartMidseason={enterMidseason}
+    />}
+    {run.phase === "midseason" && run.midseason && run.selectedCoach && <FootballGmLongMidseasonPage
+      runId={run.runId}
+      picks={run.picks}
+      coachName={run.selectedCoach}
+      midseason={run.midseason}
+      onExplore={exploreDeadline}
+      onShop={shopDeadlinePlayer}
+      onSpin={spinDeadlinePartner}
+      onOffer={makeDeadlineOffer}
+      onSkip={skipDeadline}
     />}
     <footer className={`gm-long__footer${run.phase === "outlook" ? " gm-long__footer--complete" : ""}`}><button type="button" onClick={restart}>NEW LONG GM RUN</button>
       <Link to="/football/gm-mode">PLAY SHORT GM →</Link>
