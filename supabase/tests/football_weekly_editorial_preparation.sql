@@ -50,7 +50,7 @@ begin
     'kickoff_at','2026-10-17T19:30:00Z',
     'header_asset_path','/assets/football/weekly/2026-10-13/cfb/game-header.webp',
     'header_photo_sources',jsonb_build_array(
-      'https://a.espncdn.com/away.jpg','https://a.espncdn.com/home.jpg'));
+      'https://seatgeekimages.com/matchup/verified/600x450.jpg'));
   v_editorial := jsonb_build_object(
     'source_urls',jsonb_build_array('https://www.espn.com/football/game/1',
       'https://www.sports-reference.com/cfb/schools/example/2026.html'),
