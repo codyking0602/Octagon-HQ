@@ -101,13 +101,18 @@ export default function FootballPicksPage() {
 
     return { outcomes, wins, losses, pushes, settled: wins + losses + pushes };
   }, [games, picks.selections, picks.footballLocks]);
-  const posters = useMemo(() => pickEventPosters(event), [event]);
   const matchupBreakdowns = useMemo(() => {
     const current = publishedFootballMatchupsForEvent(event, published);
     const legacy = footballMatchupBreakdownsForEvent(event).filter((old) => !current.some((recent) =>
       recent.teams.every((team) => old.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase()))));
     return [...current, ...legacy];
   }, [event, published]);
+  // Keep weekly graphics in the rotating Picks header, never on the Home rows.
+  const posters = useMemo(() => {
+    const featured = matchupBreakdowns.filter((matchup) => matchup.headerAssetPath)
+      .map((matchup) => ({ src: matchup.headerAssetPath!, aspectRatio: "16 / 9" }));
+    return featured.length ? featured : pickEventPosters(event);
+  }, [event, matchupBreakdowns]);
   const poster = posters[0] ?? null;
   const [activePosterIndex, setActivePosterIndex] = useState(0);
   const spreadSources = Array.from(new Set(games
@@ -130,7 +135,7 @@ export default function FootballPicksPage() {
     if (posters.length < 2) return undefined;
     const intervalId = window.setInterval(() => {
       setActivePosterIndex((index) => (index + 1) % posters.length);
-    }, 5000);
+    }, 8000);
     return () => window.clearInterval(intervalId);
   }, [posters.length]);
 
@@ -241,14 +246,6 @@ export default function FootballPicksPage() {
           {matchupBreakdowns.length || event.canControl ? (
             <div className="football-picks-owner-tools">
               <FootballMatchupBreakdowns breakdowns={matchupBreakdowns} />
-              {event.canControl ? (
-                <Link
-                  className="picks-control-entry"
-                  to={`/picks/control?sport=football&event=${encodeURIComponent(event.eventId)}#header`}
-                >
-                  <span aria-hidden="true">⚙</span> MANAGE EVENT / HEADERS
-                </Link>
-              ) : null}
             </div>
           ) : null}
 
