@@ -9,9 +9,8 @@ export type NflGmLongGame = { opponent: string; grade: number; won: boolean };
 export type NflGmLongPlayerChange = { playerId: string; delta: number };
 export type NflGmLongTrade = {
   outgoingId: string;
-  incomingId: string | null;
+  incomingId: string;
   partnerTeam: string;
-  futurePickRound: 1 | 2 | 3 | null;
 };
 export interface NflGmLongMidseason {
   games: NflGmLongGame[];
@@ -168,34 +167,33 @@ export function nflGmLongTradeTargets(
     && !names.has(player.name.toLowerCase()) && player.currentGrade <= outgoing.currentGrade + 4
     && player.currentGrade >= outgoing.currentGrade - 9
     && otherSpend + player.salaryWindow[0] <= NFL_GM_LONG_CAP
+    && nflGmLongValidRoster([
+      ...others, { slot: outgoingPick.slot, playerId: player.id },
+    ], NFL_GM_LONG_BY_ID)
   ).sort((a, b) => Math.abs(a.currentGrade - outgoing.currentGrade) - Math.abs(b.currentGrade - outgoing.currentGrade)
     || a.salaryWindow[0] - b.salaryWindow[0]).slice(0, 5);
 }
 
-/** One deterministic offer per target. Up to two tries, no infinite shopping. */
+/** One legal starter-for-starter offer per target. Maximum two refusals. */
 export function nflGmLongTryTrade(
   runId: string, picks: readonly NflGmLongPick[], mid: NflGmLongMidseason,
-  incomingId: string | null,
+  incomingId: string,
 ): { accepted: boolean; midseason: NflGmLongMidseason } {
   if (mid.stage !== "offers" || !mid.shoppedPlayerId || !mid.partnerTeam
     || mid.rejectedOfferIds.length >= 2 || mid.trade) throw new Error("Deadline trading is closed.");
   const outgoingId = mid.shoppedPlayerId;
   const outgoing = NFL_GM_LONG_BY_ID.get(outgoingId)!;
-  const candidates = nflGmLongTradeTargets(picks, outgoingId, mid.partnerTeam);
-  if (incomingId !== null && !candidates.some(p => p.id === incomingId)) throw new Error("Invalid trade target.");
-  const id = incomingId ?? "future";
-  if (mid.rejectedOfferIds.includes(id)) throw new Error("Already proposed this deal.");
-  const incoming = incomingId ? NFL_GM_LONG_BY_ID.get(incomingId)! : null;
-  const difference = incoming ? incoming.currentGrade - outgoing.currentGrade : 0;
-  const saving = incoming ? (incoming.salaryWindow[0] - outgoing.salaryWindow[0]) / 1_000_000 : 0;
-  const chance = incoming
-    ? clamp(0.68 - 0.075 * difference + 0.008 * saving, 0.12, 0.92)
-    : clamp(0.64 + (outgoing.currentGrade - 84) * 0.018, 0.28, 0.87);
-  const accepted = roll(runId + ":trade:" + outgoingId + ":" + mid.partnerTeam + ":" + id) < chance;
-  const rejectedOfferIds = accepted ? mid.rejectedOfferIds : [...mid.rejectedOfferIds, id];
-  const futurePickRound: 1 | 2 | 3 | null = incoming ? null
-    : outgoing.currentGrade >= 92 ? 1 : outgoing.currentGrade >= 84 ? 2 : 3;
-  const trade = accepted ? { outgoingId, incomingId, partnerTeam: mid.partnerTeam, futurePickRound } : null;
+  const incoming = nflGmLongTradeTargets(picks, outgoingId, mid.partnerTeam)
+    .find(p => p.id === incomingId);
+  if (!incoming) throw new Error("A trade must replace the outgoing starter with a legal NFL player.");
+  if (mid.rejectedOfferIds.includes(incomingId)) throw new Error("Already proposed this deal.");
+  const difference = incoming.currentGrade - outgoing.currentGrade;
+  const saving = (incoming.salaryWindow[0] - outgoing.salaryWindow[0]) / 1_000_000;
+  const chance = clamp(0.68 - 0.075 * difference + 0.008 * saving, 0.12, 0.92);
+  const accepted = roll(runId + ":trade:" + outgoingId + ":" + mid.partnerTeam + ":" + incomingId) < chance;
+  const rejectedOfferIds = accepted ? mid.rejectedOfferIds : [...mid.rejectedOfferIds, incomingId];
+  const trade: NflGmLongTrade | null = accepted
+    ? { outgoingId, incomingId, partnerTeam: mid.partnerTeam } : null;
   return {
     accepted,
     midseason: {
@@ -205,14 +203,15 @@ export function nflGmLongTryTrade(
   };
 }
 
+/** A completed deadline trade changes only one slot; the nine starters stay intact. */
 export function nflGmLongActivePicks(picks: readonly NflGmLongPick[], trade: NflGmLongTrade | null) {
   if (!trade) return [...picks];
-  return picks.flatMap(p => p.playerId === trade.outgoingId
-    ? trade.incomingId ? [{ slot: p.slot, playerId: trade.incomingId }] : []
-    : [p]);
+  return picks.map(p => p.playerId === trade.outgoingId
+    ? { slot: p.slot, playerId: trade.incomingId }
+    : p);
 }
 
-/** Optional future pick creates a REAL vacancy, not an invisible replacement. */
+/** Development-adjusted core grade retains all nine starting positions. */
 export function nflGmLongActiveGrade(
   picks: readonly NflGmLongPick[], mid: NflGmLongMidseason,
 ): number {
@@ -221,7 +220,7 @@ export function nflGmLongActiveGrade(
   const grade = NFL_GM_LONG_NEUTRAL_GRADE + Object.entries(NFL_GM_LONG_POSITION_WEIGHTS)
     .reduce((sum, [slot, weight]) => {
       const id = active.get(slot as NflGmLongSlot);
-      const value = id ? NFL_GM_LONG_BY_ID.get(id)!.currentGrade + (changes.get(id) ?? 0) : 67;
+      const value = id ? NFL_GM_LONG_BY_ID.get(id)!.currentGrade + (changes.get(id) ?? 0) : NFL_GM_LONG_NEUTRAL_GRADE;
       return sum + weight * (value - NFL_GM_LONG_NEUTRAL_GRADE);
     }, 0);
   return round(grade);
@@ -281,18 +280,17 @@ export function nflGmLongValidMidseason(
     && (!state.shoppedPlayerId || !nflGmLongTradePartners(state.shoppedPlayerId).includes(state.partnerTeam))) return false;
   if ((state.stage === "spin" || state.stage === "offers") && !state.shoppedPlayerId) return false;
   if (state.stage === "offers" && !state.partnerTeam) return false;
+  if (state.rejectedOfferIds.includes("future")) return false;
   if (state.trade) {
     const t = state.trade;
     if (state.stage !== "complete" || t.outgoingId !== state.shoppedPlayerId
-      || t.partnerTeam !== state.partnerTeam) return false;
-    const out = NFL_GM_LONG_BY_ID.get(t.outgoingId);
-    if (!out) return false;
-    if (t.incomingId === null) {
-      const round = out.currentGrade >= 92 ? 1 : out.currentGrade >= 84 ? 2 : 3;
-      if (t.futurePickRound !== round) return false;
-    } else {
-      if (t.futurePickRound !== null || !nflGmLongTradeTargets(picks, t.outgoingId, t.partnerTeam).some(p => p.id === t.incomingId)) return false;
-    }
+      || t.partnerTeam !== state.partnerTeam
+      || typeof t.incomingId !== "string"
+      || !nflGmLongTradeTargets(picks, t.outgoingId, t.partnerTeam)
+        .some(player => player.id === t.incomingId)) return false;
+    // No partial teams or future compensation can be loaded as a valid trade.
+    if (!nflGmLongValidRoster(nflGmLongActivePicks(picks, t), NFL_GM_LONG_BY_ID)
+      || nflGmLongActivePicks(picks, t).length !== 9) return false;
   }
   return true;
 }
