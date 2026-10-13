@@ -346,7 +346,8 @@ describe("Football HQ Home summary", () => {
     expect(screen.getByText("PASS TD")).toBeInTheDocument();
     expect(screen.getByText("RUSH TD")).toBeInTheDocument();
     expect(screen.getByText("130.5")).toBeInTheDocument();
-    expect(screen.getByText("AT HOUSTON · W 36–31 · 6'5\" · 237 LB")).toBeInTheDocument();
+    expect(screen.getByText("AT HOUSTON · W 36–31")).toBeInTheDocument();
+    expect(screen.getByText("6'5\" · 237 LB")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
       "https://youtu.be/ZeJwLzd2I4E?is=a_f7gk7JKUEYJPZs",
