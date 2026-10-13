@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { allTime } from "./rankingModel";
+import { isYouTubeVideoUrl } from "../../lib/youtubeVideoUrl";
 import { profileSignatureFightUrls } from "./profileSignatureFightUrls";
 import {
   resolveProfileWatchAction,
@@ -99,6 +100,13 @@ describe("ranking profile watch actions", () => {
     expect(resolveProfileWatchAction("amanda-nunes")?.url).toBe(
       "https://youtu.be/qwPBPiUzgag?is=pTBaihmA06TEDxKo",
     );
+  });
+
+  it("routes every UFC Ranking Spotlight Watch Moment to a direct YouTube video", () => {
+    for (const fighter of allTime) {
+      const action = resolveWatchMomentAction(fighter.slug);
+      if (action) expect(isYouTubeVideoUrl(action.url), fighter.slug).toBe(true);
+    }
   });
 
   it("keeps fighter profiles on the signature fight while Home spotlight uses the short", () => {
