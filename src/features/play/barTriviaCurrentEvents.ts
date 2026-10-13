@@ -1,6 +1,40 @@
 import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
 
 export const BAR_TRIVIA_CURRENT_EVENT_QUESTIONS: readonly BarTriviaQuestion[] = [
+  barTriviaQuestion({
+    id: "nfl-current-2026-w5-commanders-clock-tie",
+    league: "nfl",
+    round: "round1",
+    difficulty: "easy",
+    category: "Bizarre Endings",
+    prompt: "Which team let the clock expire in overtime while in position for a potential game-winning field goal, settling for a tie with the Giants?",
+    choices: ["Washington Commanders","Philadelphia Eagles","Dallas Cowboys","Chicago Bears"],
+    answer: "Washington Commanders",
+    explanation: "Washington's late overtime clock-management blunder prevented a potential winning kick against New York.",
+    contentType: "current-event",
+    activeFrom: "2026-10-13T00:00:00-05:00",
+    expiresAt: "2026-10-27T23:59:59-05:00",
+    sourceId: "nfl-current-2026-w5-commanders-clock-tie",
+    sourceUrl: "https://amp.nfl.com/news/nfl-week-5-sunday-aftermath-commanders-melt-down-in-tie-eagles-rue-costly-last-second-gaffe",
+    verifiedAt: "2026-10-13",
+  }),
+  barTriviaQuestion({
+    id: "cfb-current-2026-w6-oklahoma-red-river",
+    league: "cfb",
+    round: "round1",
+    difficulty: "easy",
+    category: "Rivalry Upsets",
+    prompt: "Which unranked team stunned No. 1 Texas in the 2026 Red River Rivalry?",
+    choices: ["Oklahoma","Texas A&M","Arkansas","TCU"],
+    answer: "Oklahoma",
+    explanation: "Oklahoma upset top-ranked Texas in Dallas with a late winning field goal in the Red River Rivalry.",
+    contentType: "current-event",
+    activeFrom: "2026-10-13T00:00:00-05:00",
+    expiresAt: "2026-11-03T23:59:59-05:00",
+    sourceId: "cfb-current-2026-w6-oklahoma-red-river",
+    sourceUrl: "https://www.ncaa.com/live-updates/football/fbs/college-football-week-6-live-updates-schedule-scores-rankings",
+    verifiedAt: "2026-10-13",
+  }),
   // Oct. 6 editorial additions
   barTriviaQuestion({
     id: "nfl-current-2026-w4-keenum-bears-eagles",
