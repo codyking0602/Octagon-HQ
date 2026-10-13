@@ -26,7 +26,7 @@ const sport = {
   game: {
     home_team: "BYU", away_team: "Notre Dame", kickoff_at: "2026-10-17T21:00:00Z",
     header_asset_path: "/assets/football/weekly/2026-10-13/cfb/game-header.webp",
-    header_photo_sources: ["https://a.espncdn.com/away.webp", "https://a.espncdn.com/home.webp"],
+    header_photo_sources: ["https://seatgeekimages.com/matchup/v3_4901d84e/5585/5570/600x450.jpg"],
   },
   breakdown: {
     setup: [paragraph, paragraph],
