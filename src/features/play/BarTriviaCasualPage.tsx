@@ -28,6 +28,7 @@ export type BarTriviaSettledResult = {
   bestStreak: number;
   wager: number;
   doubleRound: BarTriviaDoubleRound;
+  answers: readonly BarTriviaAnswerResult[];
 };
 
 function storageKey(league: BarTriviaLeague) {
@@ -138,6 +139,7 @@ export default function BarTriviaCasualPage({
           bestStreak: state.bestStreak,
           wager: state.wager ?? 0,
           doubleRound: state.doubleRound,
+          answers: state.answers,
         });
       }
       setScene("result");
