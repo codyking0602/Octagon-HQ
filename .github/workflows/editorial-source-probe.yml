@@ -1,0 +1,42 @@
+name: Editorial source discovery diagnostic
+on:
+  push:
+    branches: [preview/football-editorial-20261013]
+    paths: [.github/workflows/editorial-source-probe.yml]
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe approved page images
+        shell: python
+        run: |
+          import urllib.request, re, html
+          from html.parser import HTMLParser
+          targets = {
+            "mma": "https://www.mmamania.com/ufc-strikeforce-posters/476183/ufc-edmonton-poster-slaps-buckley-vs-malott-oct-17-canada",
+            "cfb": "https://seatgeek.com/matchups/ncaa-football/notre-dame-byu-tickets",
+            "nfl": "https://seatgeek.com/cowboys-packers-tickets",
+          }
+          class Probe(HTMLParser):
+            def __init__(self):
+              super().__init__()
+              self.items=[]
+            def handle_starttag(self,tag,attrs):
+              d=dict(attrs)
+              if tag in ("img","source","meta","iframe"):
+                if tag=="meta" and not any(k in str(d).lower() for k in ("image","twitter")):return
+                if tag in ("img","source") and not any(k in str(d).lower() for k in ("buckley","malott","ufc","poster","matchup","game","byu","packers","football","cowboys","hero")):return
+                self.items.append((tag,{k:str(v)[:280] for k,v in d.items() if k in ('src','srcset','content','name','property','alt','data-src','data-image','type')}))
+          for key,url in targets.items():
+            print("\n=== ",key,url,flush=True)
+            try:
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=15) as r:
+                raw=r.read(2_000_000)
+                print('status',r.status,'bytes',len(raw))
+                page=raw.decode('utf-8','replace')
+                parser=Probe();parser.feed(page)
+                for item in parser.items[:35]: print(item)
+                for pattern in ('https://[^" ]+(?:jpg|png|webp)',):
+                  for s in list(dict.fromkeys(re.findall(pattern,page)))[:12]:print('URL',html.unescape(s[:350]))
+            except Exception as e: print(type(e).__name__,str(e)[:300])
