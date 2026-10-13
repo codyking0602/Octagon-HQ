@@ -52,6 +52,7 @@ export type BarTriviaLeaderboardQuestion = {
   choices: string[];
   pickedChoice: string;
   correctChoice: string;
+  hasRecordedAnswer: boolean;
   correct: boolean;
   points: number;
   rawPoints: number;
@@ -404,6 +405,7 @@ export function buildBarTriviaLeaderboardQuestions(
     const id = String(question.id ?? "");
     const answer = answersByQuestion.get(id) ?? {};
     const pickedChoice = String(answer.choice ?? "");
+    const hasRecordedAnswer = pickedChoice.length > 0;
     const correctChoice = String(question.answer ?? "");
     const recordedCorrect = answer.correct;
 
@@ -416,9 +418,10 @@ export function buildBarTriviaLeaderboardQuestions(
       choices: strings(question.choices),
       pickedChoice,
       correctChoice,
-      correct: typeof recordedCorrect === "boolean"
+      hasRecordedAnswer,
+      correct: hasRecordedAnswer && (typeof recordedCorrect === "boolean"
         ? recordedCorrect
-        : Boolean(pickedChoice && correctChoice && pickedChoice === correctChoice),
+        : Boolean(correctChoice && pickedChoice === correctChoice)),
       points: Number(answer.points ?? 0),
       rawPoints: Number(answer.raw_points ?? answer.rawPoints ?? 0),
       basePoints: Number(answer.base_points ?? answer.basePoints ?? 0),
@@ -462,11 +465,14 @@ function BarTriviaLeaderboardResult({
           <div><dt>Correct</dt><dd>{correctCount} / 10</dd></div>
           <div><dt>Best streak</dt><dd>{bestStreak}</dd></div>
           <div><dt>Double Round</dt><dd>{barTriviaRoundLabel(doubleRound)}</dd></div>
-          <div><dt>Last Call</dt><dd>{lastCall ? signedPoints(lastCall.wagerDelta) : signedPoints(wager)}</dd></div>
+          <div><dt>Last Call</dt><dd>{lastCall?.hasRecordedAnswer ? signedPoints(lastCall.wagerDelta) : `${wager} PT WAGER`}</dd></div>
         </dl>
       </section>
 
       <div className="leaderboard-bar-trivia-rounds">
+        {rows.some((row) => !row.hasRecordedAnswer) ? (
+          <p className="leaderboard-bar-trivia-history-note">This result predates answer-by-answer recording. Official questions and correct answers are available below; this player’s picks and question points were not saved.</p>
+        ) : null}
         {roundOrder.map((round) => {
           const questions = rows.filter((row) => row.round === round);
           if (!questions.length) return null;
@@ -483,9 +489,9 @@ function BarTriviaLeaderboardResult({
               <div className="leaderboard-bar-trivia-questions">
                 {questions.map((row) => (
                   <details
-                    className={row.correct ? "is-correct" : "is-wrong"}
+                    className={!row.hasRecordedAnswer ? "" : row.correct ? "is-correct" : "is-wrong"}
                     key={row.id || row.index}
-                    open={!row.correct}
+                    open={row.hasRecordedAnswer && !row.correct}
                   >
                     <summary>
                       <b>Q{row.index + 1}</b>
@@ -493,7 +499,7 @@ function BarTriviaLeaderboardResult({
                         <small>{row.category || barTriviaRoundLabel(row.round)}</small>
                         <strong>{row.prompt}</strong>
                       </span>
-                      <em>{row.correct ? "CORRECT" : "MISS"} · {signedPoints(row.points)} PTS</em>
+                      <em>{!row.hasRecordedAnswer ? "PICK NOT RECORDED" : `${row.correct ? "CORRECT" : "MISS"} · ${signedPoints(row.points)} PTS`}</em>
                     </summary>
 
                     <div className="leaderboard-bar-trivia-question__detail">
@@ -518,12 +524,14 @@ function BarTriviaLeaderboardResult({
                         })}
                       </div>
 
-                      <div className="leaderboard-bar-trivia-scoring">
-                        <span>BASE {row.correct ? row.basePoints : 0}</span>
-                        {row.doubleRoundBonus ? <span>DOUBLE +{row.doubleRoundBonus}</span> : null}
-                        {row.streakBonus ? <span>STREAK +{row.streakBonus}</span> : null}
-                        {row.wagerDelta ? <span>WAGER {signedPoints(row.wagerDelta)}</span> : null}
-                      </div>
+                      {row.hasRecordedAnswer ? (
+                        <div className="leaderboard-bar-trivia-scoring">
+                          <span>BASE {row.correct ? row.basePoints : 0}</span>
+                          {row.doubleRoundBonus ? <span>DOUBLE +{row.doubleRoundBonus}</span> : null}
+                          {row.streakBonus ? <span>STREAK +{row.streakBonus}</span> : null}
+                          {row.wagerDelta ? <span>WAGER {signedPoints(row.wagerDelta)}</span> : null}
+                        </div>
+                      ) : null}
 
                       {row.explanation ? <p>{row.explanation}</p> : null}
                     </div>
