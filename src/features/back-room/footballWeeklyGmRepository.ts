@@ -13,7 +13,7 @@ export interface WeeklyGmStanding {
   display_name: string;
   elite_score: number | null;
   young_score: number | null;
-  total_score: number;
+  total_score: number | null;
   completed_runs: number;
   rank: number;
 }
