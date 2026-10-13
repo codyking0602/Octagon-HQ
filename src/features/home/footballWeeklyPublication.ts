@@ -31,7 +31,7 @@ export function footballPublishedSpotlight(item: PublishedFootballSport): Footba
     team: item.spotlight.team,
     position: item.spotlight.position,
     stats: item.spotlight.stats,
-    result: item.spotlight.result,
+    result: item.spotlight.result.replace(/\s*·\s*\d+\s+TOTAL\s+TDS?/gi, "").trim(),
     measurements: item.spotlight.measurements,
     teamColor: item.spotlight.team_color,
     highlightUrl: item.spotlight.highlight_url,
