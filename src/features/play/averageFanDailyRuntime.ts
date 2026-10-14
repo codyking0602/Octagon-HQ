@@ -212,6 +212,7 @@ function finalFor(
   day: string,
   scheduleVersion: string,
   history: readonly AverageFanPublicationHistoryRow[],
+  board: readonly AverageFanQuestion[],
 ) {
   const now = `${day}T12:00:00.000Z`;
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport] as readonly AverageFanQuestion[];
@@ -223,10 +224,15 @@ function finalFor(
   );
   const active = bank.filter((question) => averageFanQuestionEligibleForFinal(question, now));
   const fresh = active.filter((question) => !used.has(question.id));
+  const boardTopics = new Set(board.flatMap(averageFanQuestionNamedTopics));
   const ordered = deterministicOrder(
     fresh.length ? fresh : active,
     `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}|final`,
-  );
+  ).sort((left, right) => {
+    const overlaps = (question: AverageFanQuestion) =>
+      averageFanQuestionNamedTopics(question).filter((key) => boardTopics.has(key)).length;
+    return overlaps(left) - overlaps(right);
+  });
   const final = ordered[0];
   if (!final) throw new Error(`Average Fan ${sport} has no active protected Final question.`);
   return final;
@@ -254,7 +260,7 @@ export function buildAverageFanDailySetup(
   const blockedCurrentEventSourceIds = usedCurrentEventSourceIds(publicationHistory);
   const sport = dailySport(scope, history);
   const questions = boardFor(sport, day, scheduleVersion, history, blockedCurrentEventSourceIds);
-  const finalQuestion = finalFor(sport, day, scheduleVersion, history);
+  const finalQuestion = finalFor(sport, day, scheduleVersion, history, questions);
   const questionIds = questions.map((question) => question.id);
   const proof = `${AVERAGE_FAN_DAILY_CONTENT_VERSION}:${stableLineupHash([
     AVERAGE_FAN_CONTENT_VERSION,
