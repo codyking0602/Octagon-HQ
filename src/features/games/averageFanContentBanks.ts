@@ -1759,7 +1759,16 @@ const COMMON_SHORT_ANSWER_ALIASES: Readonly<Record<string, readonly string[]>> =
 function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
   const surnameOwners = new Map<string, Set<string>>();
 
-  for (const question of bank.filter(questionExpectsPerson)) {
+  // Four-choice identities still own their surnames. Otherwise switching one
+  // Jones Final to recognition would accidentally make "Jones" a unique and
+  // accepted free-text answer for the other Jones Final.
+  const isPersonIdentity = (question: AverageFanQuestion) => (
+    questionExpectsPerson(question)
+    || (question.format === "four-choice"
+      && PERSON_SHORT_ANSWER_PROMPT.test(question.prompt.trim())
+      && personSurnameAlias(question.answer) != null)
+  );
+  for (const question of bank.filter(isPersonIdentity)) {
     for (const value of [question.answer, ...question.aliases, ...(question.fanMisses ?? [])]) {
       const surname = personSurnameAlias(value);
       if (!surname) continue;
