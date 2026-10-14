@@ -120,7 +120,7 @@ describe("Long GM Year 1 Phase 3 — existing franchise preserved", () => {
     const css = readFileSync("src/styles/football-gm-long.css", "utf8");
     expect(ui).toContain("<LongPlayerTags player={player} />");
     expect(ui).toContain("nflGmLongDevelopmentOutcome(delta)");
-    expect(ui).not.toMatch(/\{delta\s*[><=]/);
+    expect(ui).not.toContain("${delta}");
     expect(css).toContain(".gm-long-y1__games");
     expect(css).toContain("@media(max-width:350px)");
     expect(ui).toContain("FIRST EIGHT · LOCKED");
