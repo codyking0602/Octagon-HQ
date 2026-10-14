@@ -386,6 +386,48 @@ describe("Average Fan durable content banks", () => {
     expect(authored.some((question) => question.subject === "Fights")).toBe(true);
   });
 
+  it("retire CFB ordinary facts already protected as authored Finals", () => {
+    const retired = [
+      "old-brass-spittoon",
+      "illibuck",
+      "watts-jackson-2015",
+    ];
+    const bank = AVERAGE_FAN_CONTENT_BANKS.cfb;
+    for (const fact of retired) {
+      expect(
+        bank.filter((question) => question.id.startsWith(`average-fan:cfb:authored:00-g5:${fact}:`)),
+        fact,
+      ).toEqual([]);
+    }
+    // Do not backfill three duplicates with unaudited hard questions.
+    expect(AVERAGE_FAN_BANK_TARGETS.cfb).toBe(158);
+    expect(bank.filter((question) => question.grade === 5 && !question.protectedFinal).length)
+      .toBeLessThanOrEqual(23);
+  });
+
+  it("uses bounded four-choice answers for generated UFC multi-opponent identity puzzles", () => {
+    const generated = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((question) =>
+      question.id.endsWith(":three-win-identity")
+      || (question.protectedFinal && (question.id.endsWith(":title") || question.id.endsWith(":fight"))),
+    );
+    expect(generated.length).toBeGreaterThan(0);
+    for (const question of generated) {
+      expect(question.format, question.id).toBe("four-choice");
+      expect(question.choices, question.id).toHaveLength(4);
+      expect(question.choices!.filter((choice) => choice === question.answer), question.id).toHaveLength(1);
+    }
+  });
+
+  it("states the NFL fourth-down fumble rule without disallowing teammate recovery", () => {
+    const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (row) => row.id === "average-fan:nfl:00-0tf:fourth-down-fumble",
+    );
+    expect(question, "NFL fourth down editorial row should stay selected").toBeTruthy();
+    expect(question?.answer).toBe("False");
+    expect(question?.prompt).toMatch(/teammate who recovers a fumble can keep running/);
+    expect(question?.explanation).toMatch(/teammate may recover.*ball is dead/);
+  });
+
   it("never selects an ambiguous UFC multi-opponent fighter identity", () => {
     const normalized = (name: string) => name.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "");
     const fought = (subject: (typeof ufcFactualLedgerSubjects)[number], opponent: string, condition: "beat" | "title" | "faced") =>
