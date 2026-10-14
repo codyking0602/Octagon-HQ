@@ -12,7 +12,7 @@ import {
   AVERAGE_FAN_PLAYABLE_GRADES,
   type AverageFanQuestion,
 } from "../games/averageFanEngine";
-import { AVERAGE_FAN_CONTENT_BANKS } from "../games/averageFanContentBanks";
+import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionNamedTopics } from "../games/averageFanContentBanks";
 import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
 
 function contextFrom(
@@ -30,6 +30,42 @@ function contextFrom(
     publicState: previous?.publicState ?? publication.publicSetup.initial_state as Record<string, unknown>,
   };
 }
+
+describe("Average Fan named board topic diversity", () => {
+  it("identifies repeat subjects even when the questions and correct answers differ", () => {
+    const ufc = AVERAGE_FAN_CONTENT_BANKS.ufc[0]!;
+    const firstUfc = averageFanQuestionNamedTopics({
+      ...ufc, prompt: "Who defeated Conor McGregor at UFC 196?", answer: "Nate Diaz",
+    });
+    const secondUfc = averageFanQuestionNamedTopics({
+      ...ufc, prompt: "Who did Conor McGregor beat for the lightweight championship?", answer: "Eddie Alvarez",
+    });
+    expect(firstUfc).toContain("ufc:conor mcgregor");
+    expect(secondUfc).toContain("ufc:conor mcgregor");
+
+    const cfb = AVERAGE_FAN_CONTENT_BANKS.cfb[0]!;
+    const firstCfb = averageFanQuestionNamedTopics({
+      ...cfb, prompt: "Which school faces Michigan in The Game?", answer: "Ohio State",
+    });
+    const secondCfb = averageFanQuestionNamedTopics({
+      ...cfb, prompt: "Which conference did Ohio State play in for 2025?", answer: "Big Ten",
+    });
+    expect(firstCfb).toContain("cfb:ohio state");
+    expect(secondCfb).toContain("cfb:ohio state");
+  });
+
+  it("keeps multiple unrelated names distinct instead of collapsing on a surname", () => {
+    const nfl = AVERAGE_FAN_CONTENT_BANKS.nfl[0]!;
+    const mike = averageFanQuestionNamedTopics({
+      ...nfl, prompt: "Who tackled Kevin Dyson in Super Bowl XXXIV?", answer: "Mike Jones",
+    });
+    const jacoby = averageFanQuestionNamedTopics({
+      ...nfl, prompt: "Who returned the Super Bowl XLVII kickoff?", answer: "Jacoby Jones",
+    });
+    expect(mike).not.toContain("nfl:jacoby jones");
+    expect(jacoby).not.toContain("nfl:mike jones");
+  });
+});
 
 describe("Average Fan selected content long-range board audit", () => {
   it("publishes a 120-day sequence without repeated questions inside 30 days", () => {
@@ -50,6 +86,17 @@ describe("Average Fan selected content long-range board audit", () => {
         const ids = questions.map((question) => question.id);
         expect(questions, `${scope} ${day}`).toHaveLength(AVERAGE_FAN_BOARD_QUESTION_COUNT);
         expect(new Set([...ids, final.id]).size, `${scope} ${day}`).toBe(9);
+        const boardNamedTopics = questions.map((question) => averageFanQuestionNamedTopics(question));
+        const topicOwners = new Map<string, string>();
+        for (const [index, topicKeys] of boardNamedTopics.entries()) {
+          for (const topicKey of topicKeys) {
+            expect(topicOwners.has(topicKey), `${scope} ${day}: ${topicKey} appeared in ${topicOwners.get(topicKey)} and ${ids[index]}`).toBe(false);
+            topicOwners.set(topicKey, ids[index]!);
+          }
+        }
+        for (const topicKey of averageFanQuestionNamedTopics(final)) {
+          expect(topicOwners.has(topicKey), `${scope} ${day}: Final repeats ${topicKey} from the board`).toBe(false);
+        }
         expect(questions.every((question) => question.sport === sport), day).toBe(true);
 
         const monthAgo = Date.parse(`${day}T00:00:00Z`) - 30 * 86_400_000;

@@ -14,7 +14,7 @@ import {
   type AverageFanQuestion,
   type AverageFanSport,
 } from "../games/averageFanEngine";
-import { AVERAGE_FAN_CONTENT_BANKS } from "../games/averageFanContentBanks";
+import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionNamedTopics } from "../games/averageFanContentBanks";
 import { stableLineupHash } from "./lineupModel";
 import type {
   OfficialDailyAdvanceResult,
@@ -113,9 +113,11 @@ function boardFor(
 ) {
   const now = `${day}T12:00:00.000Z`;
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport] as readonly AverageFanQuestion[];
-  const used = new Set(
-    recentHistory(history, day)
-      .filter((row) => row.sport === sport)
+  const priorSportHistory = recentHistory(history, day).filter((row) => row.sport === sport);
+  const used = new Set(priorSportHistory.flatMap((row) => row.questionIds));
+  const usedWithinThirtyDays = new Set(
+    priorSportHistory
+      .filter((row) => dayNumber(day) - dayNumber(row.day) <= 30)
       .flatMap((row) => row.questionIds),
   );
   const active = bank.filter((question) => averageFanQuestionEligibleForBoard(question, now));
@@ -125,7 +127,13 @@ function boardFor(
   const poolForGrade = (grade: number) => {
     const freshGrade = evergreenFresh.filter((question) => question.grade === grade);
     if (freshGrade.length >= 2) return freshGrade;
-    return evergreenActive.filter((question) => question.grade === grade);
+    // After several months, the quality-first CFB bank may exhaust unused
+    // questions within 183 days. Fall back to previously used questions *older
+    // than 30 days*, never the recently published pool if a safe option exists.
+    const olderEligible = evergreenActive.filter((question) =>
+      question.grade === grade && !usedWithinThirtyDays.has(question.id));
+    return olderEligible.length >= 2 ? olderEligible
+      : evergreenActive.filter((question) => question.grade === grade);
   };
 
   const seed = `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}`;
@@ -139,12 +147,25 @@ function boardFor(
   const current = currentCandidates[0] ?? null;
   const selected: AverageFanQuestion[] = [];
   const subjectCounts = new Map<string, number>();
+  const usedTopics = new Set<string>();
+  // A featured current event is guaranteed a slot, so avoid selecting its
+  // subject earlier on the same board just because it appears in another grade.
+  const reservedCurrentTopics = new Set(current ? averageFanQuestionNamedTopics(current) : []);
+  const topicKeys = new Map(bank.map((question) => [question.id, averageFanQuestionNamedTopics(question)] as const));
+  const rememberTopics = (question: AverageFanQuestion) => {
+    for (const key of topicKeys.get(question.id) ?? []) usedTopics.add(key);
+  };
+  const topicCollisionCount = (question: AverageFanQuestion) => (
+    (topicKeys.get(question.id) ?? [])
+      .filter((key) => usedTopics.has(key) || reservedCurrentTopics.has(key)).length
+  );
 
   for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
     const gradeSelected: AverageFanQuestion[] = [];
     if (current?.grade === grade) {
       gradeSelected.push(current);
       subjectCounts.set(current.subject, (subjectCounts.get(current.subject) ?? 0) + 1);
+      rememberTopics(current);
     }
 
     const candidates = deterministicOrder(
@@ -157,6 +178,12 @@ function boardFor(
         const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
         const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
         if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
+
+        // Different facts about the same star are still repetitive in an
+        // eight-tile Daily board. Prefer distinct named people/programs/teams.
+        const leftTopicRepeat = topicCollisionCount(left);
+        const rightTopicRepeat = topicCollisionCount(right);
+        if (leftTopicRepeat !== rightTopicRepeat) return leftTopicRepeat - rightTopicRepeat;
 
         if (grade <= 3) {
           const leftShortAnswer = left.format === "short-answer" ? 1 : 0;
@@ -176,6 +203,7 @@ function boardFor(
       if (!next) throw new Error(`Average Fan ${sport} grade ${grade} cannot build two Daily questions.`);
       gradeSelected.push(next);
       subjectCounts.set(next.subject, (subjectCounts.get(next.subject) ?? 0) + 1);
+      rememberTopics(next);
       candidates.splice(candidates.indexOf(next), 1);
     }
     selected.push(...gradeSelected);
@@ -192,21 +220,32 @@ function finalFor(
   day: string,
   scheduleVersion: string,
   history: readonly AverageFanPublicationHistoryRow[],
+  board: readonly AverageFanQuestion[],
 ) {
   const now = `${day}T12:00:00.000Z`;
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport] as readonly AverageFanQuestion[];
+  const priorSportHistory = recentHistory(history, day).filter((row) => row.sport === sport);
   const used = new Set(
-    recentHistory(history, day)
-      .filter((row) => row.sport === sport)
+    priorSportHistory.map((row) => row.finalQuestionId)
+      .filter((id): id is string => Boolean(id)),
+  );
+  const usedWithinThirtyDays = new Set(
+    priorSportHistory.filter((row) => dayNumber(day) - dayNumber(row.day) <= 30)
       .map((row) => row.finalQuestionId)
       .filter((id): id is string => Boolean(id)),
   );
   const active = bank.filter((question) => averageFanQuestionEligibleForFinal(question, now));
   const fresh = active.filter((question) => !used.has(question.id));
+  const olderEligible = active.filter((question) => !usedWithinThirtyDays.has(question.id));
+  const boardTopics = new Set(board.flatMap(averageFanQuestionNamedTopics));
   const ordered = deterministicOrder(
-    fresh.length ? fresh : active,
+    fresh.length ? fresh : olderEligible.length ? olderEligible : active,
     `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}|final`,
-  );
+  ).sort((left, right) => {
+    const overlaps = (question: AverageFanQuestion) =>
+      averageFanQuestionNamedTopics(question).filter((key) => boardTopics.has(key)).length;
+    return overlaps(left) - overlaps(right);
+  });
   const final = ordered[0];
   if (!final) throw new Error(`Average Fan ${sport} has no active protected Final question.`);
   return final;
@@ -234,7 +273,7 @@ export function buildAverageFanDailySetup(
   const blockedCurrentEventSourceIds = usedCurrentEventSourceIds(publicationHistory);
   const sport = dailySport(scope, history);
   const questions = boardFor(sport, day, scheduleVersion, history, blockedCurrentEventSourceIds);
-  const finalQuestion = finalFor(sport, day, scheduleVersion, history);
+  const finalQuestion = finalFor(sport, day, scheduleVersion, history, questions);
   const questionIds = questions.map((question) => question.id);
   const proof = `${AVERAGE_FAN_DAILY_CONTENT_VERSION}:${stableLineupHash([
     AVERAGE_FAN_CONTENT_VERSION,
