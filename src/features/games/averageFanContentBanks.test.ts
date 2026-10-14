@@ -485,6 +485,53 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("ties every generated UFC opponent short answer to exactly one documented bout", () => {
+    const pattern = /^average-fan:ufc:g([34]):(ufc:[^:]+):(opponent|method-win|title-opponent)$/;
+    const selected = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((question) => pattern.test(question.id));
+    expect(selected.length).toBeGreaterThan(30);
+
+    for (const question of selected) {
+      const match = pattern.exec(question.id)!;
+      const fighter = getUfcFactualSubject(match[2]!);
+      expect(fighter, question.id).toBeTruthy();
+      if (!fighter) continue;
+
+      const matchingBouts = fighter.fights.filter((fight) => {
+        const [, year, month, day] = /^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(fight.date) ?? [];
+        if (!year || !month || !day) return false;
+        const calendarDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+        const dateLabel = calendarDate.toLocaleDateString("en-US", {
+          month: "long", day: "numeric", year: "numeric", timeZone: "UTC",
+        });
+        return question.prompt.includes(dateLabel);
+      });
+      expect(matchingBouts, `${question.id}: unique dated bout`).toHaveLength(1);
+      const bout = matchingBouts[0]!;
+      expect(question.answer, question.id).toBe(bout.opponent);
+      if (match[3] === "method-win") {
+        expect(question.format, question.id).toBe("short-answer");
+        expect(bout.result, question.id).toBe("win");
+      } else if (match[3] === "title-opponent") {
+        expect(question.format, question.id).toBe("short-answer");
+        expect(bout.titleFight, question.id).toBe(true);
+      } else {
+        expect(question.format, question.id).toBe("four-choice");
+        expect(question.prompt, question.id).toMatch(/which of these fighters/i);
+        if (/did .* defeat/.test(question.prompt)) expect(bout.result, question.id).toBe("win");
+      }
+      expect(question.prompt, question.id).not.toMatch(/name one (?:fighter|opponent)/i);
+    }
+  });
+
+  it("does not treat entry-level Octagon IQ definitions as fifth-grade difficulty", () => {
+    for (const id of ["feint", "switch-stance", "hip-escape", "frame"]) {
+      const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find((row) =>
+        row.id.startsWith(`average-fan:ufc:iq:${id}:`),
+      );
+      if (question) expect(question.grade, id).toBeLessThan(5);
+    }
+  });
+
   it("keeps generated UFC fighter distractors plausible by division and gender", () => {
     const roster = new Map(
       ufcFactualLedgerSubjects.map((fighter) => [fighter.name, fighter]),
