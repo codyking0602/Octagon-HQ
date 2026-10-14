@@ -1721,10 +1721,17 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
     proposed.push(...(COMMON_SHORT_ANSWER_ALIASES[normalizedAliasKey(question.answer)] ?? []));
 
     const answerKey = normalizedAliasKey(question.answer);
+    const surname = questionExpectsPerson(question) ? personSurnameAlias(question.answer) : null;
+    const surnameKey = surname ? normalizedAliasKey(surname) : null;
+    const ambiguousSurnameKey = surnameKey
+      && (surnameOwners.get(surnameKey)?.size ?? 0) > 1 ? surnameKey : null;
     const missKeys = new Set((question.fanMisses ?? []).map(normalizedAliasKey));
     const seen = new Set<string>();
     const aliases = [...question.aliases, ...proposed].filter((alias) => {
       const key = normalizedAliasKey(alias);
+      // Explicit authored surname aliases need the same collision screening
+      // as automatically generated aliases (e.g. two different Jones Finals).
+      if (key === ambiguousSurnameKey) return false;
       if (!key || key === answerKey || missKeys.has(key) || seen.has(key)) return false;
       seen.add(key);
       return true;
