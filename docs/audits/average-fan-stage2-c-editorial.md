@@ -41,6 +41,12 @@ Two older October 1 `average-fan-daily-v1` setup snapshots each contain a 10-til
 
 These are structure/repetition checks, **not** independent fact, answer, alias, distractor, difficulty or gameplay certification of all 48 questions.
 
+## UFC cross-game fact inversion: Masvidal–Askren five-second record
+
+The retained UFC protected Final `average-fan:ufc:final:authored:final-masvidal-five` asks for **Ben Askren**, the fighter knocked out by Jorge Masvidal in the UFC's five-second KO record. Bar Trivia evergreen `ufc-r3-fastest-ko` asks for **Jorge Masvidal**, the holder of the same five-second KO record over Ben Askren. Different accepted-answer text **does not make this a new fact**. Official primary evidence: [UFC 239 result](https://www.ufc.com/news/ufc-239-results) and [UFC fastest KO statistics](https://statleaders.ufc.com/en/fight/). Preserve Bar Trivia, retire the overlapping Average Fan Final for **future candidate selection only**, and decrease UFC protected Final ceiling 30 → 29 / total 440 → 439 without inventing a replacement. The October 13 published Final remains immutable.
+
+The earlier high-confidence duplicate detector missed this collision because it required identical answers. This is evidence for continuing semantic human review across all games rather than treating mechanical overlap tests as editorial clearance.
+
 ## Regression & remaining audit scope
 
 Regression guards verify removal of the three CFB duplicate families, the smaller grade ceiling, the unambiguous fourth-down true/false item, and four-choice UFC generated multi-opponent identity questions. Existing broad bank tests continue to check answer/distractor/schema constraints, same-fact keys, current-event expiry, cross-game overlaps, and simulated Daily board runs.
