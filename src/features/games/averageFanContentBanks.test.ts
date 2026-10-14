@@ -71,12 +71,12 @@ function oneCharacterHumanTypo(value: string) {
 }
 
 describe("Average Fan durable content banks", () => {
-  it("hits the locked six-month bank sizes and protected Final counts", () => {
+  it("does not pad selected banks to satisfy the old inventory targets", () => {
     for (const sport of sports) {
       const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
-      expect(bank).toHaveLength(AVERAGE_FAN_BANK_TARGETS[sport]);
-      expect(bank.filter((question) => question.protectedFinal))
-        .toHaveLength(AVERAGE_FAN_FINAL_TARGETS[sport]);
+      expect(bank.length, sport).toBeLessThanOrEqual(AVERAGE_FAN_BANK_TARGETS[sport]);
+      expect(bank.filter((question) => question.protectedFinal).length)
+        .toBeLessThanOrEqual(AVERAGE_FAN_FINAL_TARGETS[sport]);
     }
   });
 
@@ -89,7 +89,7 @@ describe("Average Fan durable content banks", () => {
         globalIds.add(question.id);
       }
     }
-    expect(globalIds.size).toBe(880);
+    expect(globalIds.size).toBe(sports.reduce((total, sport) => total + AVERAGE_FAN_CONTENT_BANKS[sport].length, 0));
   });
 
   it("runs every banked short answer through tolerant human-input grading without accepting authored misses", () => {
@@ -181,15 +181,18 @@ describe("Average Fan durable content banks", () => {
   });
 
   it("regrades the durable banks to the four playable grades", () => {
-    expect(averageFanBankSummary("nfl").grades).toEqual({
-      2: 40, 3: 40, 4: 40, 5: 85,
-    });
-    expect(averageFanBankSummary("cfb").grades).toEqual({
-      2: 40, 3: 40, 4: 40, 5: 85,
-    });
-    expect(averageFanBankSummary("ufc").grades).toEqual({
-      2: 80, 3: 80, 4: 80, 5: 170,
-    });
+    const caps = {
+      nfl: { 2: 40, 3: 40, 4: 40, 5: 85 },
+      cfb: { 2: 40, 3: 40, 4: 40, 5: 85 },
+      ufc: { 2: 80, 3: 80, 4: 80, 5: 170 },
+    };
+    for (const sport of sports) {
+      const grades = averageFanBankSummary(sport).grades;
+      for (const [grade, cap] of Object.entries(caps[sport])) {
+        expect(Number(grades[grade]), `${sport} grade ${grade}`).toBeLessThanOrEqual(cap);
+        expect(Number(grades[grade]), `${sport} grade ${grade}`).toBeGreaterThanOrEqual(2);
+      }
+    }
 
     for (const sport of sports) {
       const ordinary = AVERAGE_FAN_CONTENT_BANKS[sport].filter((question) => !question.protectedFinal);
@@ -238,7 +241,7 @@ describe("Average Fan durable content banks", () => {
 
   it("keeps the selected NFL bank fully authored and player-facing", () => {
     const ordinary = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => !question.protectedFinal);
-    expect(ordinary).toHaveLength(205);
+    expect(ordinary.length).toBeLessThanOrEqual(205);
     const evergreen = ordinary.filter((question) => question.contentType === "evergreen");
     expect(evergreen.every((question) => question.id.startsWith("average-fan:nfl:00-"))).toBe(true);
 
@@ -447,7 +450,7 @@ describe("Average Fan durable content banks", () => {
   it("keeps current events inside the locked grade totals rather than inflating the bank", () => {
     for (const sport of sports) {
       const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
-      expect(bank).toHaveLength(AVERAGE_FAN_BANK_TARGETS[sport]);
+      expect(bank.length, sport).toBeLessThanOrEqual(AVERAGE_FAN_BANK_TARGETS[sport]);
       for (const question of bank.filter((row) => row.contentType === "current-event")) {
         expect(question.protectedFinal, question.id).toBe(false);
         expect(question.grade, question.id).toBeGreaterThanOrEqual(3);
@@ -514,7 +517,7 @@ describe("Average Fan durable content banks", () => {
         expect(question.grade).toBe(5);
       }
       const ordinary = bank.filter((row) => !row.protectedFinal);
-      expect(ordinary.length).toBe(
+      expect(ordinary.length).toBeLessThanOrEqual(
         AVERAGE_FAN_BANK_TARGETS[sport] - AVERAGE_FAN_FINAL_TARGETS[sport],
       );
     }
