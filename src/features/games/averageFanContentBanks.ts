@@ -14,14 +14,14 @@ import {
 
 export const AVERAGE_FAN_BANK_TARGETS = {
   nfl: 220,
-  cfb: 161,
-  ufc: 440,
+  cfb: 158,
+  ufc: 439,
 } as const;
 
 export const AVERAGE_FAN_FINAL_TARGETS = {
   nfl: 15,
   cfb: 15,
-  ufc: 30,
+  ufc: 29,
 } as const;
 
 const FOOTBALL_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
@@ -37,7 +37,7 @@ const CFB_REVIEWED_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
   2: 40,
   3: 40,
   4: 40,
-  5: 26,
+  5: 23,
 };
 
 const UFC_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
@@ -311,7 +311,7 @@ const NFL_TRUE_FALSE_FACTS: readonly NflTrueFalseFact[] = [
   { id: "terrell-davis-first-round", grade: 4, subject: "Players", prompt: "Terrell Davis was a first-round NFL Draft pick.", answer: false, explanation: "Denver selected Terrell Davis in the sixth round of the 1995 NFL Draft." },
   { id: "gates-college-football", grade: 4, subject: "Players", prompt: "Antonio Gates played college football before becoming an NFL tight end.", answer: false, explanation: "Antonio Gates played college basketball at Kent State and did not play college football." },
 
-  { id: "fourth-down-fumble", grade: 5, subject: "X’s & O’s", prompt: "On fourth down, only the offensive player who fumbled may recover and advance that fumble.", answer: true, explanation: "On fourth down, the fumbler is the only offensive player allowed to recover and advance the fumble; a teammate's recovery makes the ball dead." },
+  { id: "fourth-down-fumble", grade: 5, subject: "X’s & O’s", prompt: "On fourth down, an offensive teammate who recovers a fumble can keep running with the ball.", answer: false, explanation: "On fourth down, a teammate may recover the offensive fumble, but the ball is dead immediately; only the original fumbler may recover and advance before a change of possession." },
   { id: "moon-cfl", grade: 5, subject: "Players", prompt: "Warren Moon began his professional football career in the CFL before starring in the NFL.", answer: true, explanation: "Moon starred for Edmonton in the CFL before beginning his NFL career with Houston." },
   { id: "elway-colts", grade: 5, subject: "NFL History", prompt: "John Elway was drafted by the Baltimore Colts before his rights were traded to Denver.", answer: true, explanation: "Baltimore selected Elway first overall in 1983 and later traded his rights to the Broncos." },
 
@@ -499,7 +499,7 @@ const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "freezer-bowl", grade: 4, prompt: "Which two teams played the 1981 AFC Championship known as the “Freezer Bowl”?", answer: "Cincinnati Bengals and San Diego Chargers", wrong: ["Cincinnati Bengals and Pittsburgh Steelers", "San Diego Chargers and Miami Dolphins"], explanation: "Cincinnati beat San Diego in brutally cold conditions at Riverfront Stadium." },
 
   { id: "the-fumble", grade: 5, prompt: "Which Browns running back lost the famous late fumble near Denver's goal line in the 1987 AFC Championship Game?", answer: "Earnest Byner", wrong: ["Kevin Mack", "Ozzie Newsome", "Bernie Kosar"], explanation: "Earnest Byner's late fumble became known simply as The Fumble." },
-  { id: "ghost-to-post", grade: 5, prompt: "Which Raiders tight end made the deep overtime catch remembered as “Ghost to the Post” in the 1977 playoffs?", answer: "Dave Casper", wrong: ["Raymond Chester", "Cliff Branch"], explanation: "Dave Casper's long overtime reception set up the winning score against Baltimore." },
+  { id: "ghost-to-post", grade: 5, prompt: "Which Raiders tight end made the 42-yard “Ghost to the Post” catch late in regulation against Baltimore in the 1977 playoffs?", answer: "Dave Casper", wrong: ["Raymond Chester", "Cliff Branch"], explanation: "Dave Casper's 42-yard catch in the fourth quarter set up the game-tying field goal. The Raiders won in double overtime on a separate Casper touchdown." },
   { id: "epic-in-miami", grade: 5, prompt: "Which team beat Miami 41–38 in overtime in the 1981 playoff classic known as the “Epic in Miami”?", answer: "San Diego Chargers", wrong: ["Oakland Raiders", "Cincinnati Bengals"], explanation: "San Diego survived the Dolphins in a 41–38 overtime divisional playoff." },
   { id: "oilers-bills-comeback-qb", grade: 5, prompt: "Which Bills quarterback led the 32-point comeback against Houston in the 1992 playoffs?", answer: "Frank Reich", wrong: ["Jim Kelly", "Doug Flutie", "Joe Ferguson"], explanation: "Backup Frank Reich led Buffalo from a 35–3 deficit to an overtime win." },
 ];
@@ -1330,7 +1330,7 @@ function ufcCandidates() {
       );
       if (isUnique) {
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
-      questions.push(shortQuestion({
+      questions.push(choiceQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
         sport: "ufc",
         grade: 5,
@@ -1338,7 +1338,7 @@ function ufcCandidates() {
         prompt: `Which UFC fighter owns wins over ${anchors[0]!.opponent}, ${anchors[1]!.opponent}, and ${anchors[2]!.opponent}, including the ${anchors[0]!.date.slice(0, 4)} win over ${anchors[0]!.opponent}?`,
         answer: fighter.name,
         explanation: `${fighter.name} has UFC wins over all three opponents, including the ${anchors[0]!.date.slice(0, 4)} win over ${anchors[0]!.opponent}.`,
-        fanMisses: wrongNames,
+        wrongChoices: wrongNames,
         difficultyNudge: 2,
       }));
       }
@@ -1388,7 +1388,7 @@ function ufcCandidates() {
         { opponent: titleFight.opponent, condition: "title" },
         ...finalOtherOpponents.map((opponent) => ({ opponent, condition: "faced" as const })),
       ])) {
-      questions.push(shortQuestion({
+      questions.push(choiceQuestion({
         id: `average-fan:ufc:final:${fighter.id}:title`,
         sport: "ufc",
         grade: 5,
@@ -1396,7 +1396,7 @@ function ufcCandidates() {
         prompt: `Which UFC fighter faced ${titleFight.opponent} in a title fight${finalOpponentPhrase}?`,
         answer: fighter.name,
         explanation: `${fighter.name} faced ${titleFight.opponent} in a UFC title fight${finalOpponentPhrase}.`,
-        fanMisses: wrongNames,
+        wrongChoices: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
       }));
@@ -1411,7 +1411,7 @@ function ufcCandidates() {
         { opponent: anchorB.opponent, condition: "faced" },
         { opponent: anchorC.opponent, condition: "faced" },
       ])) {
-      questions.push(shortQuestion({
+      questions.push(choiceQuestion({
         id: `average-fan:ufc:final:${fighter.id}:fight`,
         sport: "ufc",
         grade: 5,
@@ -1419,7 +1419,7 @@ function ufcCandidates() {
         prompt: `Which UFC fighter faced ${anchorA.opponent}, ${anchorB.opponent}, and ${anchorC.opponent}?`,
         answer: fighter.name,
         explanation: `${fighter.name} faced all three opponents in the UFC.`,
-        fanMisses: wrongNames,
+        wrongChoices: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
       }));
@@ -1721,10 +1721,17 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
     proposed.push(...(COMMON_SHORT_ANSWER_ALIASES[normalizedAliasKey(question.answer)] ?? []));
 
     const answerKey = normalizedAliasKey(question.answer);
+    const surname = questionExpectsPerson(question) ? personSurnameAlias(question.answer) : null;
+    const surnameKey = surname ? normalizedAliasKey(surname) : null;
+    const ambiguousSurnameKey = surnameKey
+      && (surnameOwners.get(surnameKey)?.size ?? 0) > 1 ? surnameKey : null;
     const missKeys = new Set((question.fanMisses ?? []).map(normalizedAliasKey));
     const seen = new Set<string>();
     const aliases = [...question.aliases, ...proposed].filter((alias) => {
       const key = normalizedAliasKey(alias);
+      // Explicit authored surname aliases need the same collision screening
+      // as automatically generated aliases (e.g. two different Jones Finals).
+      if (key === ambiguousSurnameKey) return false;
       if (!key || key === answerKey || missKeys.has(key) || seen.has(key)) return false;
       seen.add(key);
       return true;
@@ -1748,6 +1755,8 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   "average-fan:ufc:authored-history:first-170:",
   "average-fan:ufc:authored-history:first-fox-time:",
   "average-fan:ufc:final:authored:final-silva-reign",
+  // Bar Trivia already asks the five-second Masvidal/Askren UFC record (inverted answer).
+  "average-fan:ufc:final:authored:final-masvidal-five",
   "average-fan:nfl:00-team:terrible-towel:",
   "average-fan:nfl:00-team:bills-four-straight:",
   "average-fan:cfb:tradition:sooner-schooner:",
@@ -1763,6 +1772,10 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   "average-fan:cfb:authored:00-g5:bennett-double-cfp-mvp:",
   "average-fan:cfb:authored:00-g5:hunter-biletnikoff-bednarik:",
   "average-fan:cfb:authored:00-g5:utah-sugar-alabama:",
+  // Identical answers and factual anchors are already retained as CFB Finals.
+  "average-fan:cfb:authored:00-g5:old-brass-spittoon:",
+  "average-fan:cfb:authored:00-g5:illibuck:",
+  "average-fan:cfb:authored:00-g5:watts-jackson-2015:",
   "average-fan:nfl:00-history:immaculate:",
   "average-fan:nfl:00-history:minneapolis:",
   "average-fan:nfl:00-history:holmes:",

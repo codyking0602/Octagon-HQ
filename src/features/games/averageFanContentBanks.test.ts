@@ -122,7 +122,9 @@ describe("Average Fan durable content banks", () => {
       }
     }
 
-    expect(shortAnswerCount).toBeGreaterThanOrEqual(300);
+    // This is a breadth smoke check, not a quota: verified questions may be
+    // retired or converted to bounded choice without requiring backfill.
+    expect(shortAnswerCount).toBeGreaterThan(250);
     expect(typoCount).toBeGreaterThan(220);
   });
 
@@ -384,6 +386,85 @@ describe("Average Fan durable content banks", () => {
     expect(authored.length).toBeGreaterThan(0);
     expect(authored.some((question) => question.subject === "Championships")).toBe(true);
     expect(authored.some((question) => question.subject === "Fights")).toBe(true);
+  });
+
+  it("does not repeat the Bar Trivia five-second Masvidal knockout as an inverted Average Fan Final", () => {
+    const barFact = BAR_TRIVIA_QUESTION_BANK.find((row) => row.id === "ufc-r3-fastest-ko");
+    expect(barFact?.answer).toBe("Jorge Masvidal");
+    expect(barFact?.prompt).toMatch(/five-second finish of Ben Askren/i);
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+      question.id === "average-fan:ufc:final:authored:final-masvidal-five",
+    )).toBe(false);
+    expect(AVERAGE_FAN_BANK_TARGETS.ufc).toBe(439);
+    expect(AVERAGE_FAN_FINAL_TARGETS.ufc).toBe(29);
+  });
+
+  it("retire CFB ordinary facts already protected as authored Finals", () => {
+    const retired = [
+      "old-brass-spittoon",
+      "illibuck",
+      "watts-jackson-2015",
+    ];
+    const bank = AVERAGE_FAN_CONTENT_BANKS.cfb;
+    for (const fact of retired) {
+      expect(
+        bank.filter((question) => question.id.startsWith(`average-fan:cfb:authored:00-g5:${fact}:`)),
+        fact,
+      ).toEqual([]);
+    }
+    // Do not backfill three duplicates with unaudited hard questions.
+    expect(AVERAGE_FAN_BANK_TARGETS.cfb).toBe(158);
+    expect(bank.filter((question) => question.grade === 5 && !question.protectedFinal).length)
+      .toBeLessThanOrEqual(23);
+  });
+
+  it("uses bounded four-choice answers for generated UFC multi-opponent identity puzzles", () => {
+    const generated = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((question) =>
+      question.id.endsWith(":three-win-identity")
+      || (question.protectedFinal && (question.id.endsWith(":title") || question.id.endsWith(":fight"))),
+    );
+    expect(generated.length).toBeGreaterThan(0);
+    for (const question of generated) {
+      expect(question.format, question.id).toBe("four-choice");
+      expect(question.choices, question.id).toHaveLength(4);
+      expect(question.choices!.filter((choice) => choice === question.answer), question.id).toHaveLength(1);
+    }
+  });
+
+  it("does not confuse the Ghost to the Post regulation catch with the overtime touchdown", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.nfl) {
+      if (!question.id.includes("ghost-to-post")) continue;
+      expect(question.prompt).toMatch(/late in regulation/);
+      expect(question.explanation).toMatch(/fourth quarter/);
+      expect(question.explanation).toMatch(/double overtime/);
+      expect(question.prompt).not.toMatch(/overtime catch/);
+    }
+  });
+
+  it("states the NFL fourth-down fumble rule without disallowing teammate recovery", () => {
+    const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (row) => row.id === "average-fan:nfl:00-0tf:fourth-down-fumble",
+    );
+    expect(question, "NFL fourth down editorial row should stay selected").toBeTruthy();
+    expect(question?.answer).toBe("False");
+    expect(question?.prompt).toMatch(/teammate who recovers a fumble can keep running/);
+    expect(question?.explanation).toMatch(/teammate may recover.*ball is dead/);
+  });
+
+  it("rejects ambiguous authored surname-only aliases when two people share a name", () => {
+    for (const [id, fullName] of [
+      ["mike-jones", "Mike Jones"],
+      ["jacoby-jones", "Jacoby Jones"],
+    ] as const) {
+      const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+        (row) => row.id === `average-fan:nfl:final-authored:${id}`,
+      );
+      expect(question, id).toBeTruthy();
+      expect(question?.format, id).toBe("short-answer");
+      expect(averageFanAnswersMatch(question!, fullName), id).toBe(true);
+      expect(question?.aliases, id).not.toContain("Jones");
+      expect(averageFanAnswersMatch(question!, "Jones"), id).toBe(false);
+    }
   });
 
   it("never selects an ambiguous UFC multi-opponent fighter identity", () => {
