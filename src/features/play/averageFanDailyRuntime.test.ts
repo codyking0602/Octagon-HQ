@@ -86,6 +86,17 @@ describe("Average Fan selected content long-range board audit", () => {
         const ids = questions.map((question) => question.id);
         expect(questions, `${scope} ${day}`).toHaveLength(AVERAGE_FAN_BOARD_QUESTION_COUNT);
         expect(new Set([...ids, final.id]).size, `${scope} ${day}`).toBe(9);
+        const boardNamedTopics = questions.map((question) => averageFanQuestionNamedTopics(question));
+        const topicOwners = new Map<string, string>();
+        for (const [index, topicKeys] of boardNamedTopics.entries()) {
+          for (const topicKey of topicKeys) {
+            expect(topicOwners.has(topicKey), `${scope} ${day}: ${topicKey} appeared in ${topicOwners.get(topicKey)} and ${ids[index]}`).toBe(false);
+            topicOwners.set(topicKey, ids[index]!);
+          }
+        }
+        for (const topicKey of averageFanQuestionNamedTopics(final)) {
+          expect(topicOwners.has(topicKey), `${scope} ${day}: Final repeats ${topicKey} from the board`).toBe(false);
+        }
         expect(questions.every((question) => question.sport === sport), day).toBe(true);
 
         const monthAgo = Date.parse(`${day}T00:00:00Z`) - 30 * 86_400_000;
