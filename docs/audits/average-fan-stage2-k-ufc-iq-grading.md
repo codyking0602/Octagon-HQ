@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | `half-guard` | Keep, regrade legacy 5 → 3 (playable 5 → 4) | A standard, widely named ground-control position is not rare title-level knowledge |
 | `body-triangle` | Keep, regrade 5 → 4 (playable remains 5) | Distinct back-control leg lock, more specialized than half guard |
-| `hip-escape` | Keep, regrade 5 → 3 (playable 5 → 4), accept shrimp / shrimping | The original prompt *already names* shrimp; both alternatives represent the same movement and must score correctly |
+| `hip-escape` | Keep, regrade 5 → 3 (playable 5 → 4), accept shrimp / shrimping | The previous prompt gave away the synonym shrimp, so replace it with a movement-based clue; both shrimp / shrimping alternatives remain accepted |
 | `frame` | Keep, regrade 5 → 3 (playable 5 → 4), accept framing | Foundational grappling space-making vocabulary with natural verb-form answer |
 | `pummeling` | Rewrite and regrade 5 → 4 (playable remains 5) | Generic **hand fighting** (original "wrong" choice) includes pummeling and was misleading. New prompt specifies repeatedly swimming arms into underhooks; swap distractor to collar-tie snapdown |
 | `cage-cutting` | Keep, regrade 5 → 3 (playable 5 → 4) | Positioning and cutting off exits is commonplace, not specialist trivia; authored human aliases already cover "cutting off" |
