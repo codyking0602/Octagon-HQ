@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { footballGmMoney, footballGmPlayerById } from "./footballGmEngine";
+import { nflGmLongCalibratedOlDevelopment } from "./footballGmLongOlCalibration";
 import {
   footballGmOutlookFromOdds, footballGmTalentTier, footballGmRepriceLabel,
 } from "./footballGmScouting";
@@ -63,7 +64,7 @@ function LongPlayerRoleAge({ player, includeTeam = false }: {
 function longScouting(player: NflGmLongPlayer) {
   const tier = footballGmTalentTier(player.currentGrade);
   if (player.family !== "OL") return { tier, outlook: null };
-  const odds = player.development;
+  const odds = nflGmLongCalibratedOlDevelopment(player);
   const outlook = odds ? footballGmOutlookFromOdds(odds) : "STEADY";
   return { tier, outlook };
 }

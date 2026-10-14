@@ -2,6 +2,7 @@ import { footballGmProjectedGradeForPlayer, footballGmSpinTeam, footballGmPlayer
 import { NFL_GM_LONG_CAP, NFL_GM_LONG_NEUTRAL_GRADE, NFL_GM_LONG_POSITION_WEIGHTS, nflGmLongValidRoster, type NflGmLongPick, type NflGmLongSlot } from "./footballGmLongFoundation";
 import { NFL_GM_LONG_BY_ID, NFL_GM_LONG_PLAYER_POOL, type NflGmLongPlayer } from "./footballGmLongCatalog";
 import { NFL_GM_LONG_COACHES, nflGmLongCoachEffects, type NflGmLongCoach } from "./footballGmLongCoaches";
+import { nflGmLongCalibratedOlDevelopment } from "./footballGmLongOlCalibration";
 
 export const NFL_GM_LONG_MIDSEASON_GAMES = 8;
 export type NflGmLongDeadlineStage = "decision" | "shop" | "spin" | "offers" | "complete";
@@ -97,7 +98,7 @@ export function nflGmLongPlayerHalftimeDelta(player: NflGmLongPlayer, runId: str
     }
     return clamp(change, -Math.min(4, baseline - 70), Math.min(4, 99 - baseline));
   }
-  const development = player.development;
+  const development = nflGmLongCalibratedOlDevelopment(player);
   if (!development) return 0;
   const n = roll(runId + ":development:" + player.id) * 100;
   // The researched OL odds are for an entire YEAR. At the eight-game mark

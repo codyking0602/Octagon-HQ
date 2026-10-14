@@ -1152,3 +1152,43 @@
  .gm-long-y1__games { grid-template-columns:repeat(6,minmax(0,1fr)) }
  .gm-long-y1__roster .football-gm__candidate-tags > span { font-size:7px; padding:3px 4px }
 }
+
+/* Phase 3.1: playoff-time compression and championship hierarchy */
+.gm-long-y1__schedule-collapse { min-width:0; margin-top:13px; border:1px solid rgba(166,195,215,.22); border-radius:8px; background:rgba(32,59,80,.5) }
+.gm-long-y1__schedule-collapse summary { display:flex; gap:10px; flex-wrap:wrap; align-items:center; padding:10px 12px; font-size:10px; font-weight:900; color:#cce4f6; cursor:pointer; list-style:none }
+.gm-long-y1__schedule-collapse summary::-webkit-details-marker { display:none }
+.gm-long-y1__schedule-collapse summary b { font-size:13px; color:#fff }
+.gm-long-y1__schedule-collapse summary span { margin-left:auto; color:#e8c076; font-size:9px; letter-spacing:.05em }
+.gm-long-y1__schedule-collapse[open] summary { border-bottom:1px solid rgba(166,195,215,.18) }
+.gm-long-y1__schedule-collapse > .gm-long-y1__games { padding:10px }
+.gm-long-y1__championship { position:relative; display:grid; justify-items:center; gap:8px; padding:23px 15px; overflow:hidden; text-align:center; background:radial-gradient(ellipse at 50% 0,rgba(205,156,58,.3),transparent 62%),linear-gradient(135deg,#1e2d39,#111b24) !important; border:1px solid rgba(228,188,92,.63) !important }
+.gm-long-y1__trophy { font-size:52px; line-height:1.2; filter:drop-shadow(0 5px 16px rgba(221,157,52,.35)) }
+.gm-long-y1__championship h3 { margin:0; color:#ffdd87; font-size:clamp(23px,6vw,36px); font-weight:950; font-style:italic; line-height:1.1; letter-spacing:-.025em }
+.gm-long-y1__championship > strong { font-size:31px; line-height:1; color:#fff }
+.gm-long-y1__championship > strong span { display:block; margin-top:4px; color:#d4bb80; font-size:9px; letter-spacing:.12em }
+.gm-long-y1__championship > p:not(.eyebrow) { margin:3px 0 6px; max-width:32rem; color:#cfdde5; font-size:12px }
+.gm-long-y1__champion-road { width:100%; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; margin-top:7px }
+.gm-long-y1__champion-road > span { min-width:0; display:grid; gap:5px; padding:9px 3px; background:rgba(242,203,112,.09); border:1px solid rgba(234,191,97,.34); border-radius:7px }
+.gm-long-y1__champion-road b { font-size:9px; color:#f4d997; overflow-wrap:anywhere }
+.gm-long-y1__champion-road small { font-size:10px; font-weight:900; color:#eff5f7 }
+.gm-long-y1__title-banner { display:grid; justify-items:center; gap:5px; padding:15px 8px; border:1px solid #b9944a; border-radius:9px; background:rgba(181,136,52,.17); text-align:center }
+.gm-long-y1__title-banner > span { font-size:38px }
+.gm-long-y1__title-banner strong { color:#fbd989; font-size:21px; font-weight:950 }
+.gm-long-y1__title-banner small { color:#e0d1af; font-size:10px }
+.gm-long-y1__roster article { grid-template-columns:30px 33px minmax(0,1fr); gap:6px; align-items:center; min-height:0; height:auto; padding:6px 8px }
+.gm-long-y1__roster .football-gm__player-headshot { width:33px; height:33px }
+.gm-long-y1__slot { padding-top:0; align-self:center }
+.gm-long-y1__roster article > .gm-long-y1__player-info { display:flex; flex-direction:column; align-items:stretch; gap:2px; width:100%; min-width:0 }
+.gm-long-y1__roster article > .gm-long-y1__player-info > strong { font-size:13px; line-height:1.2 }
+.gm-long-y1__roster article > .gm-long-y1__player-info > small { font-size:10px; line-height:1.2 }
+.gm-long-y1__player-bottom { display:flex; gap:5px 8px; align-items:center; flex-wrap:wrap; min-width:0; margin-top:2px }
+.gm-long-y1__player-bottom .football-gm__candidate-tags { display:flex; flex:0 1 auto; width:auto; max-width:100%; gap:3px; margin:0; height:auto; overflow:visible }
+.gm-long-y1__player-bottom .football-gm__candidate-tags > span { min-height:19px; padding:3px 5px; margin:0; font-size:9px; line-height:1.15 }
+.gm-long-y1__player-bottom em { font-size:10px; font-style:normal; font-weight:950; color:#b7cfdd; line-height:1.15 }
+.gm-long-y1__player-bottom em.is-up { color:#8ee1b1 }
+.gm-long-y1__player-bottom em.is-down { color:#f1ac9a }
+@media(max-width:430px) {
+  .gm-long-y1__roster article { grid-template-columns:27px 31px minmax(0,1fr); gap:5px; padding:6px }
+  .gm-long-y1__roster .football-gm__player-headshot { width:31px; height:31px }
+  .gm-long-y1__champion-road { grid-template-columns:repeat(2,minmax(0,1fr)) }
+}
