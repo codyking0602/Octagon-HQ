@@ -8,6 +8,7 @@ import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreak
 import { footballPublishedSpotlight, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "./footballWeeklyPublication";
 import { footballDateTimeLabel } from "../picks/footballTime";
 import { footballSpotlightForDisplay } from "./footballSpotlightPresentation";
+import { footballTeamSportsReferenceUrl } from "./footballTeamSportsReference";
 import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
 import { picksSeasonStandings } from "../picks/picksSeasonStandings";
@@ -278,6 +279,52 @@ function TeamMark({
   );
 }
 
+function FeaturedGameTeamPill({
+  team,
+  game,
+  presentation,
+  name,
+  nickname,
+  level,
+  season,
+}: {
+  team: FootballMatchupBreakdown["teams"][number];
+  game: PickBout;
+  presentation: ReturnType<typeof footballHqTeamPresentationFor>;
+  name: string;
+  nickname: string;
+  level: "CFB" | "NFL";
+  season: number;
+}) {
+  const url = footballTeamSportsReferenceUrl(team.name, level, season);
+  const style = {
+    "--team-color": presentation.color,
+    "--team-accent": team.name === "Green Bay Packers" ? "#156342" : presentation.color,
+  } as CSSProperties;
+  const contents = (
+    <>
+      <TeamMark logoUrl={logoForTeam(game, team)} name={team.name} logoTreatment={presentation.logoTreatment} />
+      <span className="football-hq-game-row__team-label">
+        <strong>{name}</strong>
+        {nickname ? <small>{nickname}</small> : null}
+      </span>
+    </>
+  );
+  // Unknown teams are intentionally not sent to guessed/mismatched reference pages.
+  return url ? (
+    <a
+      className="football-hq-game-row__team-pill"
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Open ${season} ${team.name} Sports Reference page`}
+      style={style}
+    >{contents}</a>
+  ) : (
+    <div className="football-hq-game-row__team-pill" style={style}>{contents}</div>
+  );
+}
+
 function FeaturedGameRow({
   event,
   breakdown,
@@ -295,45 +342,29 @@ function FeaturedGameRow({
   const firstLabel = featuredGameTeamLabel(fullTeamNameForGame(game, firstTeam), firstTeam.name);
   const secondLabel = featuredGameTeamLabel(fullTeamNameForGame(game, secondTeam), secondTeam.name);
 
+  const level = isCollegeGame(game.weightClass) ? "CFB" : "NFL";
+
   return (
-    <Link
-      className="football-hq-game-row"
-      to={`/football/picks?matchup=${encodeURIComponent(breakdown.id)}`}
-      aria-label={`Open matchup breakdown for ${breakdown.title}`}
-    >
+    <article className="football-hq-game-row">
+      <Link
+        className="football-hq-game-row__breakdown-hit"
+        to={`/football/picks?matchup=${encodeURIComponent(breakdown.id)}`}
+        aria-label={`Open matchup breakdown for ${breakdown.title}`}
+      />
       <div className="football-hq-game-row__main">
         <span>{label}</span>
         <div className="football-hq-game-row__teams">
-          <div style={{ "--team-color": firstPresentation.color, "--team-accent": firstTeam.name === "Green Bay Packers" ? "#156342" : firstPresentation.color } as CSSProperties}>
-            <TeamMark
-              logoUrl={logoForTeam(game, firstTeam)}
-              name={firstTeam.name}
-              logoTreatment={firstPresentation.logoTreatment}
-            />
-            <span className="football-hq-game-row__team-label">
-              <strong>{firstLabel.name}</strong>
-              {firstLabel.nickname ? <small>{firstLabel.nickname}</small> : null}
-            </span>
-          </div>
+          <FeaturedGameTeamPill team={firstTeam} game={game} presentation={firstPresentation}
+            name={firstLabel.name} nickname={firstLabel.nickname} level={level} season={event.season} />
           <b aria-hidden="true">VS</b>
-          <div style={{ "--team-color": secondPresentation.color, "--team-accent": secondTeam.name === "Green Bay Packers" ? "#156342" : secondPresentation.color } as CSSProperties}>
-            <TeamMark
-              logoUrl={logoForTeam(game, secondTeam)}
-              name={secondTeam.name}
-              logoTreatment={secondPresentation.logoTreatment}
-            />
-            <span className="football-hq-game-row__team-label">
-              <strong>{secondLabel.name}</strong>
-              {secondLabel.nickname ? <small>{secondLabel.nickname}</small> : null}
-            </span>
-          </div>
+          <FeaturedGameTeamPill team={secondTeam} game={game} presentation={secondPresentation}
+            name={secondLabel.name} nickname={secondLabel.nickname} level={level} season={event.season} />
         </div>
       </div>
       <div className="football-hq-game-row__meta">
         <strong><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></svg>{footballDateTimeLabel(breakdown.kickoffAt ?? game.locksAt ?? event.startsAt)}</strong>
-        <b>BREAKDOWN <span aria-hidden="true">→</span></b>
+        <b aria-hidden="true">BREAKDOWN <span>→</span></b>
       </div>
-    </Link>
   );
 }
 
