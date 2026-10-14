@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_BANK_TARGETS,
   AVERAGE_FAN_CONTENT_BANKS,
+  averageFanQuestionFactKey,
   AVERAGE_FAN_FINAL_TARGETS,
   averageFanBankSummary,
 } from "./averageFanContentBanks";
@@ -397,11 +398,20 @@ describe("Average Fan durable content banks", () => {
   });
 
 
+  it("does not select the same player fact twice using alternate formats or grades", () => {
+    for (const sport of sports) {
+      const keys = AVERAGE_FAN_CONTENT_BANKS[sport]
+        .map(averageFanQuestionFactKey)
+        .filter((key): key is string => key != null);
+      expect(new Set(keys).size, sport).toBe(keys.length);
+    }
+  });
+
   it("does not copy Bar Trivia questions into Average Fan in any sport", () => {
     const authored = [...BAR_TRIVIA_QUESTION_BANK, ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS];
     const entries: DailyContentAuditEntry[] = [
       ...authored.map((question) => ({
-        sport: question.league,
+        sport: question.league as "nfl" | "cfb" | "ufc",
         game: "bar_trivia",
         questionId: question.id,
         prompt: question.prompt,
