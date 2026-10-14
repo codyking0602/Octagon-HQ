@@ -32,22 +32,29 @@ export function FootballGmLongYearOnePage({ picks, coachName, midseason, yearOne
   return <section className="gm-long-y1" aria-label="NFL GM Long Year 1">
     <header className="surface-card gm-long-y1__hero">
       <p className="eyebrow">THE GM · LONG · YEAR 1</p>
-      <h2>{finished ? "YEAR ONE · IN THE BOOKS" : yearOne.stage === "regular" ? "THE FINAL NINE"
+      <h2>{finished && yearOne.finish === "Champion" ? "SUPER BOWL CHAMPIONS" : finished ? "YEAR ONE · IN THE BOOKS" : yearOne.stage === "regular" ? "THE STRETCH RUN"
         : yearOne.stage === "standings" ? "REGULAR SEASON COMPLETE" : "THE POSTSEASON"}</h2>
       <div className="gm-long-y1__score"><strong>{wins}–{8 + visible - wins}</strong><span>
         <b>{finished ? footballGmPlayoffFinishLabel(yearOne.finish).toUpperCase()
           : yearOne.stage === "regular" ? `WEEK ${8 + visible} OF 17` : "FINAL REGULAR-SEASON RECORD"}</b>
         <small>{coachName} · Nine-player core</small></span></div>
-      <div className="gm-long-y1__schedule-title"><span>FIRST EIGHT · LOCKED</span><span>SECOND HALF · {visible}/9</span></div>
-      <div className="gm-long-y1__games" aria-label="Seventeen game results">
-        {yearOne.games.map((game, i) => {
-          const shown = i < 8 + visible;
-          return <div key={i} className={shown ? game.won ? "is-win" : "is-loss" : "is-pending"}
-            title={shown ? `Week ${i + 1} against ${game.opponent}` : `Week ${i + 1} pending`}>
-            <small>{i + 1}</small><b>{shown ? game.won ? "W" : "L" : "—"}</b><em>{shown ? game.opponent : "NFL"}</em>
-          </div>;
-        })}
-      </div>
+      {(yearOne.stage === "regular" || yearOne.stage === "standings") ? <>
+        <div className="gm-long-y1__schedule-title"><span>FIRST EIGHT · LOCKED</span><span>SECOND HALF · {visible}/9</span></div>
+        <div className="gm-long-y1__games" aria-label="Seventeen game results">
+          {yearOne.games.map((game, i) => <div key={i} className={game.won ? "is-win" : "is-loss"}
+            title={`Week ${i + 1} against ${game.opponent}`}>
+            <small>{i + 1}</small><b>{i < 8 + visible ? game.won ? "W" : "L" : "—"}</b>
+            <em>{i < 8 + visible ? game.opponent : "NFL"}</em>
+          </div>)}
+        </div>
+      </> : <details className="gm-long-y1__schedule-collapse">
+        <summary>17-GAME SEASON <b>{yearOne.wins}–{yearOne.losses}</b><span>VIEW GAME LOG</span></summary>
+        <div className="gm-long-y1__games" aria-label="Seventeen saved game results">
+          {yearOne.games.map((game, i) => <div key={i} className={game.won ? "is-win" : "is-loss"}>
+            <small>{i + 1}</small><b>{game.won ? "W" : "L"}</b><em>{game.opponent}</em>
+          </div>)}
+        </div>
+      </details>}
     </header>
 
     {yearOne.stage === "regular" && <section className="surface-card gm-long-y1__panel">
@@ -66,7 +73,7 @@ export function FootballGmLongYearOnePage({ picks, coachName, midseason, yearOne
         <div><b>{qualified ? `#${yearOne.playoffSeed}` : "—"}</b><small>SEED</small></div>
       </div>
       <p>{qualified ? yearOne.playoffSeed === 1 ? "Top conference seed. Your Wild Card bye is earned."
-        : "You earned a berth in the existing seven-team playoff bracket." : "The postseason was determined by your complete 17-game season."}</p>
+        : "Your team earned its place in the playoffs. Win and advance." : "The postseason was determined by your complete 17-game season."}</p>
       <button className="gm-long__primary" type="button" onClick={() => onAdvance(qualified ? "playoffs" : "results")}>
         {qualified ? "ENTER PLAYOFFS →" : "VIEW YEAR 1 RESULTS →"}</button>
     </section>}
@@ -87,12 +94,25 @@ export function FootballGmLongYearOnePage({ picks, coachName, midseason, yearOne
           <strong>VS {wheelFootballTeam(next.opponent)?.name ?? next.opponent}</strong></span></div>
         <button className="gm-long__primary" type="button" onClick={onRevealRound}>PLAY {next.round.toUpperCase()} →</button>
       </> : <>
-        <h3>{footballGmPlayoffFinishLabel(yearOne.finish).toUpperCase()}</h3>
+        {yearOne.finish === "Champion" ? <div className="gm-long-y1__title-banner">
+          <span aria-hidden="true">🏆</span><strong>SUPER BOWL CHAMPIONS</strong>
+          <small>{yearOne.wins}–{yearOne.losses} · FOUR PLAYOFF WINS · {coachName}</small>
+        </div> : <h3>{footballGmPlayoffFinishLabel(yearOne.finish).toUpperCase()}</h3>}
         <button className="gm-long__primary" type="button" onClick={() => onAdvance("results")}>VIEW YEAR 1 RESULTS →</button>
       </>}
     </section>}
 
     {finished && <>
+      {yearOne.finish === "Champion" && <section className="surface-card gm-long-y1__championship" aria-label="Super Bowl championship celebration">
+        <div className="gm-long-y1__trophy" aria-hidden="true">🏆</div>
+        <p className="eyebrow">YEAR 1 · NFL CHAMPIONS</p>
+        <h3>SUPER BOWL CHAMPIONS</h3>
+        <strong>{yearOne.wins}–{yearOne.losses} <span>REGULAR SEASON</span></strong>
+        <p>{coachName} led your nine-player franchise through the postseason to the title.</p>
+        <div className="gm-long-y1__champion-road" aria-label="Winning playoff path">
+          {yearOne.postseason.map(round => <span key={round.round}><b>{round.round}</b><small>W vs {round.opponent}</small></span>)}
+        </div>
+      </section>}
       <section className="surface-card gm-long-y1__panel">
         <p className="eyebrow">FINAL YEAR 1 REPORT</p><h3>{footballGmPlayoffFinishLabel(yearOne.finish).toUpperCase()}</h3>
         <div className="gm-long-y1__stats"><div><b>{yearOne.wins}–{yearOne.losses}</b><small>RECORD</small></div>
@@ -108,16 +128,20 @@ export function FootballGmLongYearOnePage({ picks, coachName, midseason, yearOne
           const delta = yearOne.development.find(row => row.playerId === player.id)?.delta ?? 0;
           return <article key={pick.slot}>
             <b className="gm-long-y1__slot">{longSlotLabel(pick.slot)}</b><LongPlayerPortrait player={player} />
-            <span><strong>{player.name}</strong><small>{player.team} · {footballGmMoney(player.salaryWindow[0])}
-              {midseason.trade?.incomingId === player.id ? " · TRADE" : ""}</small><LongPlayerTags player={player} /></span>
-            <em className={delta > 0 ? "is-up" : delta < 0 ? "is-down" : "is-steady"}>{nflGmLongDevelopmentOutcome(delta)}</em>
+            <span className="gm-long-y1__player-info"><strong>{player.name}</strong>
+              <small>{player.team} · {footballGmMoney(player.salaryWindow[0])}
+                {midseason.trade?.incomingId === player.id ? " · TRADE" : ""}</small>
+              <span className="gm-long-y1__player-bottom"><LongPlayerTags player={player} />
+                <em className={delta > 0 ? "is-up" : delta < 0 ? "is-down" : "is-steady"}>{nflGmLongDevelopmentOutcome(delta)}</em>
+              </span>
+            </span>
           </article>;
         })}</div>
       </section>
       <section className="surface-card gm-long-y1__panel">
         <p className="eyebrow">YEAR 2 · CONTRACT WATCH</p>
         <h3>{nextCap < 0 ? `${footballGmMoney(-nextCap)} PROJECTED OVER CAP` : `${footballGmMoney(nextCap)} PROJECTED ROOM`}</h3>
-        <p>Based on existing 1YR/3YR contracts. No offseason transactions or repricing have occurred.</p>
+        <p>Projected Year 2 payroll includes estimated repricing of 1YR contracts; 3YR salaries stay locked. Those estimates are not signed deals. No offseason moves have occurred.</p>
         <b className="gm-long-y1__end">YEAR 1 COMPLETE · OFFSEASON COMING NEXT</b>
       </section>
     </>}
