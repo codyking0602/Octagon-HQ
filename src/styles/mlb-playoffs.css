@@ -4304,3 +4304,12 @@
     min-height: 58px;
   }
 }
+
+/* Give each MLB Hit the Number board full width so names, seasons and actual values stay readable. */
+.mlb-play-result-card__games.is-hit-number {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.mlb-play-result-card__games.is-hit-number .hit-number-pick-breakdown li > strong {
+  font-size: .9rem;
+}
