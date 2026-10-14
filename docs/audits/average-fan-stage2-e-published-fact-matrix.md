@@ -6,7 +6,7 @@ Date: 2026-10-14. **Read-only editorial evidence snapshot; not a completed Stage
 
 We inspected the **six active published sport-days** in production (October 2–13). These contain **48 board questions and 6 Finals**. The abandoned, unpublished October 1 version-1 setup snapshots are excluded. Historical publications are immutable and must not be modified by future question-bank editorial changes.
 
-Of the **54** actual published prompts, **14** have independent source evidence for the *stated answer or fact signature* in the linked primary/publisher record; **1** has a confirmed primary anchor but still needs corroboration of the other named opponent conditions; **39** remain explicitly **pending individual source certification**. A source match does not by itself clear alternative accepted answers, distractors, difficulty, protected Final suitability, or content reuse. Do not treat remaining rows as factually false: “pending” means unverified in this pass.
+Of the **54** actual published prompts, **14** have independent source evidence for the *stated answer or fact signature* in the linked primary/publisher record; **1** has a confirmed primary anchor but still needs corroboration of the other named opponent conditions; **38** remain explicitly **pending individual source certification**, and **1** is flagged for ambiguous wording. A source match does not by itself clear alternative accepted answers, distractors, difficulty, protected Final suitability, or content reuse. Do not treat remaining rows as factually false: “pending” means unverified in this pass.
 
 Sources prioritize official UFC results/athlete history, NCAA/CFP/Heisman, NFL league reporting, and university athletics. A few links to reliable statistical archives are provided where the official historical poll data is harder to navigate.
 
@@ -17,7 +17,7 @@ Sources prioritize official UFC results/athlete history, NCAA/CFP/Heisman, NFL l
 | 2026-10-02 | CFB | G2 | `average-fan:cfb:authored:cfb-easy2-the-game` | The rivalry simply called 'The Game' is played between Michigan and which school? | **Ohio State** | not yet source-certified |
 | 2026-10-02 | CFB | G2 | `average-fan:cfb:g1:program-ohio-state:conference` | For the 2025 season, which conference was Ohio State in? | **Big Ten** | not yet source-certified |
 | 2026-10-02 | CFB | G3 | `average-fan:cfb:current:cfb-current-2026-w3-kentucky-texas-am` | Which unranked team stunned No. 9 Texas A&M 31–21 at Kyle Field in Week 3? | **Kentucky** | [verified](https://12thman.com/news/2026/09/19/aggies-vs-kentucky) |
-| 2026-10-02 | CFB | G3 | `average-fan:cfb:g2:cfb-ashton-jeanty:position-tf` | Ashton Jeanty played WR. | **False** | not yet source-certified |
+| 2026-10-02 | CFB | G3 | `average-fan:cfb:g2:cfb-ashton-jeanty:position-tf` | Ashton Jeanty played WR. | **False** | [ambiguous unscoped wording; future corrected](https://broncosports.com/sports/football/roster/ashton-jeanty/10215) |
 | 2026-10-02 | CFB | G4 | `average-fan:cfb:authored:cfb-r1-largest-stadium-school` | Which school plays in the largest-capacity primary FBS stadium entering the 2026 season? | **Michigan** | not yet source-certified |
 | 2026-10-02 | CFB | G4 | `average-fan:cfb:authored:cfb-r2-1996-florida-title` | Florida won its first national championship by beating which rival in the Sugar Bowl? | **Florida State** | not yet source-certified |
 | 2026-10-02 | CFB | G5 | `average-fan:cfb:authored:cfb-r3-cfp-semifinal-first-2ot` | Which team won the first CFP semifinal to go to double overtime? | **Georgia** | [verified](https://collegefootballplayoff.com/sports/2019/5/14/semifinals-1718) |
@@ -68,6 +68,12 @@ Sources prioritize official UFC results/athlete history, NCAA/CFP/Heisman, NFL l
 | 2026-10-13 | UFC | G5 | `average-fan:ufc:g5:ufc:anthony-pettis:title-identity` | Which fighter recorded a loss against Max Holloway in a UFC title fight on December 10, 2016 and also fought Clay Guida? | **Anthony Pettis** | not yet source-certified |
 | 2026-10-13 | UFC | G5 | `average-fan:ufc:iq:body-triangle:choice` | What back-control configuration locks the legs around an opponent's torso in a figure-four shape? | **Body triangle** | not yet source-certified |
 | 2026-10-13 | UFC | Final | `average-fan:ufc:final:authored:final-masvidal-five` | Whom did Jorge Masvidal knock out in five seconds in 2019 for the fastest knockout in UFC history? | **Ben Askren** | [verified](https://statleaders.ufc.com/en/fight/) |
+
+## Concrete fairness correction: Jeanty position question
+
+The published October 2 CFB true/false question asked **“Ashton Jeanty played WR.”** and expected **False**. That wording is too broad: Boise State's [official athlete bio](https://broncosports.com/sports/football/roster/ashton-jeanty/10215) explicitly lists WR as one of his high-school positions, although he was a collegiate RB. A user answering *True* has a defensible literal reading; this is **not** a clean true/false question as originally worded.
+
+For **future** selection, scope all generated player-position true/false prompts to the player's *primary NFL or college football position*, rather than implying the player never lined up anywhere else. Keep question IDs unchanged for compatibility, and never silently rewrite the immutable published October 2 question, its answer evidence, or recorded results. This reviewed ambiguity is a reason Stage 2 cannot yet be certified.
 
 ## Next certification steps
 
