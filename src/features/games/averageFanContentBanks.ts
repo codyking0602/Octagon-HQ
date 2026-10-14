@@ -1302,7 +1302,6 @@ function ufcPlausibleFighterMisses(
 
 function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
-  const fighterNames = fighters.map((fighter) => fighter.name);
   const questions: AverageFanQuestion[] = [];
 
   for (const [index, fighter] of fighters.entries()) {
@@ -1360,24 +1359,22 @@ function ufcCandidates() {
 
     const methodWins = wins.filter((fight) => fight.methodCategory !== "other");
     const methodFight = methodWins[stableOffset(`${fighter.id}:method`, Math.max(1, methodWins.length))];
-    if (methodFight) {
-      const sameMethodOpponents = unique(
-        wins
-          .filter((fight) => fight.methodCategory === methodFight.methodCategory)
-          .map((fight) => fight.opponent),
+    // The ranking/factual ledger is curated, not an exhaustive UFC fight history.
+    // An open "name one opponent" answer can therefore reject other true wins.
+    // Bind each future choice to one documented bout instead.
+    if (methodFight && fighter.fights.filter((fight) => fight.date === methodFight.date).length === 1) {
+      const wrongOpponents = ufcPlausibleFighterMisses(
+        fighter, fighters, [methodFight.opponent], `${fighter.id}:method-opponent`,
       );
-      const answer = sameMethodOpponents[0]!;
-      const wrongOpponents = peerValues(fighterNames, sameMethodOpponents, `${fighter.id}:method-opponent`);
-      questions.push(shortQuestion({
+      if (wrongOpponents.length === 3) questions.push(choiceQuestion({
         id: `average-fan:ufc:g4:${fighter.id}:method-win`,
         sport: "ufc",
         grade: 4,
         subject: "Fights",
-        prompt: `Name one opponent ${fighter.name} beat by ${methodLabel(methodFight.methodCategory)} in the UFC.`,
-        answer,
-        aliases: sameMethodOpponents.slice(1),
-        explanation: `${fighter.name} beat ${answer} by ${methodLabel(methodFight.methodCategory)} in the UFC.`,
-        fanMisses: wrongOpponents,
+        prompt: `Which fighter did ${fighter.name} defeat by ${methodLabel(methodFight.methodCategory)} in the UFC on ${naturalFightDate(methodFight.date)}?`,
+        answer: methodFight.opponent,
+        explanation: `${fighter.name} defeated ${methodFight.opponent} by ${methodLabel(methodFight.methodCategory)} on ${naturalFightDate(methodFight.date)}.`,
+        wrongChoices: wrongOpponents,
         difficultyNudge: 1,
       }));
     }
@@ -1412,20 +1409,24 @@ function ufcCandidates() {
     if (titleFights.length) {
       const titleFight = titleFights[titleFights.length - 1]!;
       const wrongNames = ufcPlausibleFighterMisses(fighter, fighters, [fighter.name], `${fighter.id}:title-identity`);
-      const titleOpponents = unique(titleFights.map((fight) => fight.opponent));
-      const wrongTitleOpponents = peerValues(fighterNames, titleOpponents, `${fighter.id}:title-opponent`);
-      questions.push(shortQuestion({
-        id: `average-fan:ufc:g4:${fighter.id}:title-opponent`,
-        sport: "ufc",
-        grade: 4,
-        subject: "Championships",
-        prompt: `Name one fighter ${fighter.name} faced in a UFC title fight.`,
-        answer: titleOpponents[0]!,
-        aliases: titleOpponents.slice(1),
-        explanation: `${fighter.name}'s UFC title-fight opponents include ${titleOpponents.join(", ")}.`,
-        fanMisses: wrongTitleOpponents,
-        difficultyNudge: 1,
-      }));
+      // Use a single sourced title bout, not an open-ended request for every
+      // opponent: curated title records must not exclude other correct answers.
+      if (fighter.fights.filter((fight) => fight.date === titleFight.date).length === 1) {
+        const wrongTitleOpponents = ufcPlausibleFighterMisses(
+          fighter, fighters, [titleFight.opponent], `${fighter.id}:title-opponent`,
+        );
+        if (wrongTitleOpponents.length === 3) questions.push(choiceQuestion({
+          id: `average-fan:ufc:g4:${fighter.id}:title-opponent`,
+          sport: "ufc",
+          grade: 4,
+          subject: "Championships",
+          prompt: `Which fighter faced ${fighter.name} in a UFC title fight on ${naturalFightDate(titleFight.date)}?`,
+          answer: titleFight.opponent,
+          explanation: `${fighter.name} faced ${titleFight.opponent} in a UFC title fight on ${naturalFightDate(titleFight.date)}.`,
+          wrongChoices: wrongTitleOpponents,
+          difficultyNudge: 1,
+        }));
+      }
       const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
         .filter((opponent) => opponent !== titleFight.opponent)
         .slice(0, 2);

@@ -1,6 +1,6 @@
 # Daily Challenge content quality program — approved 13-stage rollout
 
-Status: **Stage 1 complete; Stage 2 Average Fan in progress. Future rotation not yet activated.**
+Status: **Stage 1 complete; Stage 2 Average Fan in progress (through Stage 2H UFC answer-scope review). Future rotation not yet activated.**
 Baseline inspected: main at `374f130988d6d70c018145881a1e3fcfffe4bca3` (2026-10-13).
 
 ## Decision and release rule
