@@ -25,6 +25,10 @@ The generated three-win puzzle and two generated protected Final identity famili
 
 Keep the existing full-signature ledger collision checks, and use a four-choice format for these three generated identity families. Distractors are still selected from the canonical fighter ledger, and all four candidates pass through the existing same-signature and schema checks. This prevents penalizing an outside-ledger answer when it was never presented as an answer option. The source of the UFC record is [the official UFC statistics reference](https://statleaders.ufc.com/); this PR does **not** claim that every fighter's individual bout history has been independently reverified.
 
+## Same-surname alias collision in NFL Finals
+
+Two separate protected Finals correctly answer **Mike Jones** (Super Bowl XXXIV goal-line tackle) and **Jacoby Jones** (Super Bowl XLVII kickoff-return score), but both authored `Jones` as a short-answer alias. This accepts the same underspecified answer for two different identities. Keep both source-backed questions and full-name answers; screen authored aliases against the existing cross-bank surname owner map and remove `Jones` as a standalone accepted answer for both. [NFL retrospective of the tackle](https://www.nfl.com/videos/nfl-100-greatest-no-11-rams-stop-titans-at-1-yard-line-in-sb-xxxiv); [NFL on Jacoby Jones](https://www.nfl.com/news/jacoby-jones-former-ravens-wr-and-super-bowl-xlvii-star-dies-at-40).
+
 ## Regression & remaining audit scope
 
 Regression guards verify removal of the three CFB duplicate families, the smaller grade ceiling, the unambiguous fourth-down true/false item, and four-choice UFC generated multi-opponent identity questions. Existing broad bank tests continue to check answer/distractor/schema constraints, same-fact keys, current-event expiry, cross-game overlaps, and simulated Daily board runs.
