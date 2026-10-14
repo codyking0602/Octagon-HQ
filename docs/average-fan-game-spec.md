@@ -1,7 +1,7 @@
 # Are You Smarter Than an Average Fan? — Canonical Game + Content Spec
 
 **Status:** LIVE canonical Daily game
-**Calibration:** October 1, 2026
+**Calibration:** October 1, 2026; content quality audit updated October 14, 2026
 **Repository:** `codyking0602/Octagon-HQ`
 
 This is the locked product and engineering contract for **Are You Smarter Than an Average Fan?**. Preserve the approved visual treatment and reuse the existing Daily platform.
@@ -10,7 +10,7 @@ This is the locked product and engineering contract for **Are You Smarter Than a
 
 Sports: NFL, CFB, UFC, with MLB postseason appearances using the same gameplay contract.
 
-Football alternates CFB and NFL across official Average Fan appearances using publication history. Target cadence remains approximately five Football and five UFC appearances per month.
+Football alternates CFB and NFL across official Average Fan appearances using publication history. The live rotation remains five Average Fan slots per 27-day Football / 29-day UFC cycle; the approved future target is **four per 28-day Football / 30-day UFC cycle**, only after Higher or Lower is fully integrated in Stage 4.
 
 ## Game structure
 
@@ -76,18 +76,18 @@ Tolerant short-answer grading continues to accept reasonable punctuation, accent
 
 ## Current events
 
-Average Fan reuses the **same current-event pool as Bar Trivia**. Do not build a second ingestion or expiry system.
+Average Fan **must not reuse the same authored current-event questions or materially identical fact families as Bar Trivia**. It can reuse the existing event provenance and expiry infrastructure, but its own current-event questions require independent editorial verification before entry.
 
 Current-event records use:
 - `contentType: "current-event"`
 - optional `activeFrom`
 - required `expiresAt`
 
-Once a shared current-event question is added, Average Fan automatically sees it. Once `expiresAt` passes, it automatically becomes ineligible.
+A Bar Trivia current event is **not** automatically eligible for Average Fan; only separately approved Average Fan questions are eligible. Once an approved question's `expiresAt` passes, it becomes ineligible.
 
 A current-event fact is keyed by `sourceId` across Daily games. If that source has already appeared in an earlier Daily for the same sport while it is still eligible, Average Fan must skip it and use another unused current event or evergreen content. A single Average Fan board uses at most one current-event question.
 
-New story authoring/ingestion is not itself automatic; the shared Bar Trivia current-event pool remains the source owner.
+New story authoring/ingestion remains subject to the existing shared event pipeline, but **question and fact reuse across games is prohibited**. Stage 2 retires the old directly borrowed events until independently verified nonoverlapping Average Fan questions exist.
 
 Average Fan applies its own difficulty calibration on top of that pool. **Current events do not appear in 2nd Grade by default**, even when the Bar Trivia source labels them easy/Round 1.
 
@@ -141,11 +141,13 @@ That unsuccessful Save behavior is intentional.
 
 ## Durable bank
 
-Keep the durable six-month bank:
+Retain a quality-first bank with room for six months of Daily selection; **bank sizes are ceilings, not required quotas**. As of the Stage 2C review, ceilings are:
 - NFL: 220
-- CFB: 220
+- CFB: 158
 - UFC: 440
-- total: 880
+- total: 818
+
+Actual selected inventories may be smaller. Retire unverified, repeated, ambiguous, or low-enjoyment items rather than refill to meet a target.
 
 Ordinary playable shape:
 - NFL: 40 Grade 2 / 40 Grade 3 / 40 Grade 4 / 85 Grade 5 + 15 protected Finals
