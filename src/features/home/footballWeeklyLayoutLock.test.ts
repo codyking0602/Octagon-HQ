@@ -24,6 +24,22 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
     expect(css).toContain("grid-template-columns:minmax(0, 1fr); gap:8px");
     expect(source("../../styles/home-challenges.css")).toContain("white-space: normal");
   });
+  it("keeps the approved Home team pills independently linked to the actual season reference", () => {
+    const home = source("./FootballHq.tsx");
+    const css = source("../../styles/home-football-hq.css");
+    const resolver = source("./footballTeamSportsReference.ts");
+    expect(home).toContain('className="football-hq-game-row__team-pill"');
+    expect(home).toContain('className="football-hq-game-row__breakdown-hit"');
+    expect(home).toContain("footballTeamSportsReferenceUrl(team.name, level, season)");
+    expect(home).toContain("season={event.season}");
+    expect(home).toContain('rel="noopener noreferrer"');
+    expect(css).toContain(".football-hq-game-row__team-pill[href]");
+    expect(css).toContain("z-index: 2;");
+    expect(resolver).toContain("footballTeamSchoolMetadata");
+    // The weekly publisher must never need bespoke URL entries per chosen matchup.
+    expect(source("./footballWeeklyPublication.ts")).toContain("publishedFootballMatchup");
+  });
+
   it("keeps source credits and kickoff reminders out of the short featured analysis", () => {
     const editorial = source("../picks/footballWeekOct13Featured.ts");
     expect(editorial).not.toMatch(/Game graphic:|Matchup information:|Saturday's 6:30|Sunday Night Football at/);
