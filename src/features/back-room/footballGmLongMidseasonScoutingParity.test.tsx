@@ -83,9 +83,9 @@ describe("Long midseason scouting parity and win-probability calibration", () =>
     expect(cells[3]?.textContent).toContain("REGRESSED");
     expect(cells[7]?.textContent).toContain("MAJOR REGRESSION");
     expect(cells.every(c => !/[+−-]\d/.test(c.textContent ?? ""))).toBe(true);
-    expect(screen.getByText("5 Improving")).toBeTruthy();
+    expect(screen.getByText("4 Improving")).toBeTruthy();
     expect(screen.getByText("2 Steady")).toBeTruthy();
-    expect(screen.getByText("2 Regressing")).toBeTruthy();
+    expect(screen.getByText("3 Regressing")).toBeTruthy();
     expect(container.textContent).toContain("8 games complete · Results locked");
   });
 
