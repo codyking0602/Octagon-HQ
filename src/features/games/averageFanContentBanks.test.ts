@@ -328,6 +328,12 @@ describe("Average Fan durable content banks", () => {
       expect(final?.choices, id).toHaveLength(4);
       expect(final?.choices?.filter((choice) => choice === final.answer), id).toHaveLength(1);
     }
+    const stallworth = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (question) => question.id === "average-fan:nfl:final-authored:stallworth-73",
+    );
+    expect(stallworth?.choices).toContain("Theo Bell");
+    expect(stallworth?.choices).not.toContain("Franco Harris");
+
     const demetrious = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
       (question) => question.id === "average-fan:ufc:final:authored:final-mighty-mouse-defenses",
     );

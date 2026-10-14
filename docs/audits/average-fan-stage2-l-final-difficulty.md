@@ -8,7 +8,7 @@ Date: 2026-10-14. **Scoped question-by-question Final review, not full Stage 2 c
 | --- | --- | --- |
 | NFL authored **bucs-home**, **bears-46**, **ravens-two-qbs** | **Regrade** protected Final to ordinary playable Grade 4 (new future-only IDs) | Well-known team/championship identities can be good hard questions but give away too much to justify a final that should feel earned |
 | NFL authored **mike-jones** | **Rewrite format** to four-choice, maintain Final | The iconic Super Bowl XXXIV tackle is memorable, but freely recalling this relatively obscure name is extreme; add Todd Lyght as a third era/team-credible wrong choice alongside Aeneas Williams and London Fletcher |
-| NFL authored **stallworth-73** | **Rewrite format** to four-choice, maintain Final | 73-yard Super Bowl XIV reception is an identifiable postseason highlight, not a fair unassisted exact-name test; Jim Smith joins the authored alternative list |
+| NFL authored **stallworth-73** | **Rewrite format** to four-choice, maintain Final | 73-yard Super Bowl XIV reception is an identifiable postseason highlight, not a fair unassisted exact-name test; Jim Smith and Theo Bell complete an all-receiver, same-team-era alternative list instead of giving away the answer with running back Franco Harris |
 | NFL authored **harrison-100** | **Rewrite format** to four-choice, maintain Final | James Harrison's 100-yard Super Bowl XLIII interception return warrants harder recognition without obscure unassisted recall; Ryan Clark is a third defensible false option |
 | NFL authored **mills** | **Rewrite format** to four-choice, maintain Final | Post-plus-dig route pairing is detailed scheme literacy; Mesh, Smash and Flood are distinct alternatives, avoiding an overly technical free-text-only requirement |
 | UFC authored **final-mighty-mouse-defenses** | **Rewrite format** to four-choice (11 / 9 / 10 / 12), maintain Final | Demetrious Johnson's historic **11** consecutive UFC title defenses is a major achievement; exact-number free typing is unnecessarily punitive |
@@ -34,3 +34,6 @@ Not claiming the 120-day generated schedule is the same as human playtesting, no
 - Reviewed NFL historical identity/scheme Finals have exactly four choices containing only one correct response.
 - UFC record-count Final includes three number alternatives rather than demanding a number typed cold.
 - Existing 120-day deterministic official Daily publication tests remain the gameplay rotation gate.
+
+- [Official 1979 Steelers roster](https://www.nfl.com/sitemap/html/rosters/1979/pittsburgh-steelers) and [Steelers 1979 receiving statistics](https://www.steelers.com/team/stats/1979/reg), confirming Theo Bell and Jim Smith as actual contemporary wide receivers rather than unrelated positional decoys.
+- [Steelers official Super Bowl XIV recap](https://www.steelers.com/news/winning-their-fourth-super-bowl), confirming Stallworth's 73-yard scoring catch.
