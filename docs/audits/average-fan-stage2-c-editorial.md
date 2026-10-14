@@ -29,6 +29,10 @@ Keep the existing full-signature ledger collision checks, and use a four-choice 
 
 Two separate protected Finals correctly answer **Mike Jones** (Super Bowl XXXIV goal-line tackle) and **Jacoby Jones** (Super Bowl XLVII kickoff-return score), but both authored `Jones` as a short-answer alias. This accepts the same underspecified answer for two different identities. Keep both source-backed questions and full-name answers; screen authored aliases against the existing cross-bank surname owner map and remove `Jones` as a standalone accepted answer for both. [NFL retrospective of the tackle](https://www.nfl.com/videos/nfl-100-greatest-no-11-rams-stop-titans-at-1-yard-line-in-sb-xxxiv); [NFL on Jacoby Jones](https://www.nfl.com/news/jacoby-jones-former-ravens-wr-and-super-bowl-xlvii-star-dies-at-40).
 
+## NFL historical play chronology
+
+The original “Ghost to the Post” question wrongly described Dave Casper's famous **42-yard catch as an overtime reception**. The catch came late in the fourth quarter of Oakland's 1977 playoff game against Baltimore, setting up the tying field goal. Casper separately scored the game-winning touchdown in *double overtime*. Correct the prompt and explanation, preserving the answer and question ID. Confirmed by [the Raiders' official retrospective](https://www.raiders.com/news/ghost-to-the-post-992110) and [the Pro Football Hall of Fame](https://www.profootballhof.com/news/the-ghost).
+
 ## Regression & remaining audit scope
 
 Regression guards verify removal of the three CFB duplicate families, the smaller grade ceiling, the unambiguous fourth-down true/false item, and four-choice UFC generated multi-opponent identity questions. Existing broad bank tests continue to check answer/distractor/schema constraints, same-fact keys, current-event expiry, cross-game overlaps, and simulated Daily board runs.
