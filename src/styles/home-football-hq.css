@@ -349,98 +349,17 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 }
 
 @media (max-width: 430px) {
-  .football-player-spotlight {
-    grid-template-columns: minmax(104px, .64fr) minmax(0, 1.36fr);
-    min-height: 170px;
-  }
-
-  .football-player-spotlight__media img,
-  .football-player-spotlight__placeholder {
-    min-height: 170px;
-  }
-
-  .football-player-spotlight__copy {
-    padding: 10px 9px 10px 7px;
-  }
-
-  .football-player-spotlight__copy h3 {
-    font-size: 22px;
-  }
-
-  .football-player-spotlight__stats b {
-    font-size: 9px;
-  }
-
-  .football-player-spotlight__stats small {
-    font-size: 5.5px;
-  }
-
-  .football-hq-game-row {
-    grid-template-columns: minmax(0, 1fr) 110px;
-    gap: 8px;
-    padding-inline: 8px;
-  }
-
-  .football-hq-game-row__teams {
-    grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr);
-    gap: 5px;
-  }
-
-  .football-hq-game-row__teams > div {
-    grid-template-columns: 24px minmax(0, 1fr);
-    gap: 3px;
-    min-height: 44px;
-    padding: 4px;
-  }
-
-  .football-hq-game-row__teams > b {
-    width: 14px;
-  }
-
-  .football-hq-game-row__teams strong {
-    font-size: 8px;
-    line-height: 1.02;
-    -webkit-line-clamp: 3;
-  }
-
-  .football-hq-team-mark {
-    width: 24px;
-    height: 24px;
-  }
-
-  .football-hq-game-row__meta > strong {
-    font-size: 7px;
-  }
+  .football-player-spotlight { grid-template-columns: minmax(104px,.64fr) minmax(0,1.36fr); min-height:170px; }
+  .football-player-spotlight__media img, .football-player-spotlight__placeholder { min-height:170px; }
+  .football-player-spotlight__copy { padding:10px 9px 10px 7px; }
+  .football-player-spotlight__copy h3 { font-size:22px; }
+  .football-player-spotlight__stats b { font-size:9px; }
+  .football-player-spotlight__stats small { font-size:5.5px; }
 }
-
 @media (max-width: 360px) {
-  .football-player-spotlight__copy > strong,
-  .football-player-spotlight__meta {
-    font-size: 7px;
-  }
-
-  .football-player-spotlight__stats b {
-    font-size: 8px;
-  }
-
-  .football-player-spotlight__stats small {
-    font-size: 5px;
-  }
-
-  .football-hq-game-row {
-    grid-template-columns: 1fr;
-  }
-
-  .football-hq-game-row__meta {
-    grid-template-columns: 1fr auto;
-    padding: 7px 0 0;
-    border-top: 1px solid var(--border);
-    border-left: 0;
-  }
-
-  .football-hq-game-row__meta > b {
-    margin: 0;
-  }
+  .football-player-spotlight__copy > strong, .football-player-spotlight__meta { font-size:7px; }
+  .football-player-spotlight__stats b { font-size:8px; }
+  .football-player-spotlight__stats small { font-size:5px; }
 }
 
 /* Temporary Mike Ditka tribute through Monday night: preserve the established compact card. */
