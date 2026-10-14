@@ -118,6 +118,13 @@ export function findDailyContentOverlaps(
         reason = "identical_prompt";
       } else if (left.factKey && left.factKey === right.factKey) {
         reason = "same_fact";
+      } else if (
+        left.factKey && right.factKey && left.factKey !== right.factKey
+        && left.entry.game === right.entry.game
+      ) {
+        // Explicitly distinct subjects (e.g. Arizona vs Arizona State) can
+        // share an answer and question template without repeating one fact.
+        continue;
       } else if (left.answer && left.answer === right.answer
           && isNearDuplicate(left.prompt, right.prompt)) {
         reason = "near_duplicate";

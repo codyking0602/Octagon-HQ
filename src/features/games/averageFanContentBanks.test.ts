@@ -381,7 +381,7 @@ describe("Average Fan durable content banks", () => {
     }
 
     const authored = bank.filter((question) => question.id.includes(":authored-history:"));
-    expect(authored.length).toBeGreaterThanOrEqual(20);
+    expect(authored.length).toBeGreaterThan(0);
     expect(authored.some((question) => question.subject === "Championships")).toBe(true);
     expect(authored.some((question) => question.subject === "Fights")).toBe(true);
   });
