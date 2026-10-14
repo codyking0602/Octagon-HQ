@@ -330,7 +330,7 @@ function FeaturedGameRow({
         </div>
       </div>
       <div className="football-hq-game-row__meta">
-        <strong><span aria-hidden="true">▢</span> {footballDateTimeLabel(breakdown.kickoffAt ?? game.locksAt ?? event.startsAt)}</strong>
+        <strong><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></svg>{footballDateTimeLabel(breakdown.kickoffAt ?? game.locksAt ?? event.startsAt)}</strong>
         <b>BREAKDOWN <span aria-hidden="true">→</span></b>
       </div>
     </Link>
