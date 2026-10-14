@@ -41,7 +41,7 @@ export function FootballGmLongYearOnePage({ picks, coachName, midseason, yearOne
       {(yearOne.stage === "regular" || yearOne.stage === "standings") ? <>
         <div className="gm-long-y1__schedule-title"><span>FIRST EIGHT · LOCKED</span><span>SECOND HALF · {visible}/9</span></div>
         <div className="gm-long-y1__games" aria-label="Seventeen game results">
-          {yearOne.games.map((game, i) => <div key={i} className={game.won ? "is-win" : "is-loss"}
+          {yearOne.games.map((game, i) => <div key={i} className={i < 8 + visible ? game.won ? "is-win" : "is-loss" : "is-pending"}
             title={`Week ${i + 1} against ${game.opponent}`}>
             <small>{i + 1}</small><b>{i < 8 + visible ? game.won ? "W" : "L" : "—"}</b>
             <em>{i < 8 + visible ? game.opponent : "NFL"}</em>
