@@ -336,7 +336,7 @@ describe("Average Fan durable content banks", () => {
       const match = /^average-fan:ufc:g3:(ufc:[^:]+):opponent$/.exec(question.id)!;
       const fighter = getUfcFactualSubject(match[1]!);
       expect(fighter, question.id).toBeTruthy();
-      const dateText = /\\bon ([A-Za-z]+ \\d{1,2}, \\d{4})\\?$/.exec(question.prompt)?.[1];
+      const dateText = /\bon ([A-Za-z]+ \d{1,2}, \d{4})\?$/.exec(question.prompt)?.[1];
       expect(dateText, question.id).toBeTruthy();
       const matchingFights = fighter!.fights.filter((fight) =>
         new Date(`${fight.date}T12:00:00Z`).toLocaleDateString("en-US", {
