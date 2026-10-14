@@ -14,7 +14,7 @@ import {
   type AverageFanQuestion,
   type AverageFanSport,
 } from "../games/averageFanEngine";
-import { AVERAGE_FAN_CONTENT_BANKS } from "../games/averageFanContentBanks";
+import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionNamedTopics } from "../games/averageFanContentBanks";
 import { stableLineupHash } from "./lineupModel";
 import type {
   OfficialDailyAdvanceResult,
@@ -139,12 +139,25 @@ function boardFor(
   const current = currentCandidates[0] ?? null;
   const selected: AverageFanQuestion[] = [];
   const subjectCounts = new Map<string, number>();
+  const usedTopics = new Set<string>();
+  // A featured current event is guaranteed a slot, so avoid selecting its
+  // subject earlier on the same board just because it appears in another grade.
+  const reservedCurrentTopics = new Set(current ? averageFanQuestionNamedTopics(current) : []);
+  const topicKeys = new Map(bank.map((question) => [question.id, averageFanQuestionNamedTopics(question)] as const));
+  const rememberTopics = (question: AverageFanQuestion) => {
+    for (const key of topicKeys.get(question.id) ?? []) usedTopics.add(key);
+  };
+  const topicCollisionCount = (question: AverageFanQuestion) => (
+    (topicKeys.get(question.id) ?? [])
+      .filter((key) => usedTopics.has(key) || reservedCurrentTopics.has(key)).length
+  );
 
   for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
     const gradeSelected: AverageFanQuestion[] = [];
     if (current?.grade === grade) {
       gradeSelected.push(current);
       subjectCounts.set(current.subject, (subjectCounts.get(current.subject) ?? 0) + 1);
+      rememberTopics(current);
     }
 
     const candidates = deterministicOrder(
@@ -157,6 +170,12 @@ function boardFor(
         const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
         const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
         if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
+
+        // Different facts about the same star are still repetitive in an
+        // eight-tile Daily board. Prefer distinct named people/programs/teams.
+        const leftTopicRepeat = topicCollisionCount(left);
+        const rightTopicRepeat = topicCollisionCount(right);
+        if (leftTopicRepeat !== rightTopicRepeat) return leftTopicRepeat - rightTopicRepeat;
 
         if (grade <= 3) {
           const leftShortAnswer = left.format === "short-answer" ? 1 : 0;
@@ -176,6 +195,7 @@ function boardFor(
       if (!next) throw new Error(`Average Fan ${sport} grade ${grade} cannot build two Daily questions.`);
       gradeSelected.push(next);
       subjectCounts.set(next.subject, (subjectCounts.get(next.subject) ?? 0) + 1);
+      rememberTopics(next);
       candidates.splice(candidates.indexOf(next), 1);
     }
     selected.push(...gradeSelected);
