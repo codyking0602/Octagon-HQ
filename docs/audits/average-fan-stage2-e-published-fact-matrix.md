@@ -1,0 +1,74 @@
+# Average Fan Stage 2E — published question-by-question fact ledger
+
+Date: 2026-10-14. **Read-only editorial evidence snapshot; not a completed Stage 2 audit or gameplay change.**
+
+## Scope and dispositions
+
+We inspected the **six active published sport-days** in production (October 2–13). These contain **48 board questions and 6 Finals**. The abandoned, unpublished October 1 version-1 setup snapshots are excluded. Historical publications are immutable and must not be modified by future question-bank editorial changes.
+
+Of the **54** actual published prompts, **0** have independent source evidence for the *stated answer or fact signature* in the linked primary/publisher record; **0** has a confirmed primary anchor but still needs corroboration of the other named opponent conditions; **54** remain explicitly **pending individual source certification**. A source match does not by itself clear alternative accepted answers, distractors, difficulty, protected Final suitability, or content reuse. Do not treat remaining rows as factually false: “pending” means unverified in this pass.
+
+Sources prioritize official UFC results/athlete history, NCAA/CFP/Heisman, NFL league reporting, and university athletics. A few links to reliable statistical archives are provided where the official historical poll data is harder to navigate.
+
+## Published fact matrix
+
+| Day | Sport | Grade | ID | Prompt | Published answer | Evidence / disposition |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-02 | CFB | G2 | `average-fan:cfb:authored:cfb-easy2-the-game` | The rivalry simply called 'The Game' is played between Michigan and which school? | **Ohio State** | not yet source-certified |
+| 2026-10-02 | CFB | G2 | `average-fan:cfb:g1:program-ohio-state:conference` | For the 2025 season, which conference was Ohio State in? | **Big Ten** | not yet source-certified |
+| 2026-10-02 | CFB | G3 | `average-fan:cfb:current:cfb-current-2026-w3-kentucky-texas-am` | Which unranked team stunned No. 9 Texas A&M 31–21 at Kyle Field in Week 3? | **Kentucky** | [cfb:current:cfb-current-2026-w3-kentucky-texas-am](verified,https://12thman.com/news/2026/09/19/aggies-vs-kentucky) |
+| 2026-10-02 | CFB | G3 | `average-fan:cfb:g2:cfb-ashton-jeanty:position-tf` | Ashton Jeanty played WR. | **False** | not yet source-certified |
+| 2026-10-02 | CFB | G4 | `average-fan:cfb:authored:cfb-r1-largest-stadium-school` | Which school plays in the largest-capacity primary FBS stadium entering the 2026 season? | **Michigan** | not yet source-certified |
+| 2026-10-02 | CFB | G4 | `average-fan:cfb:authored:cfb-r2-1996-florida-title` | Florida won its first national championship by beating which rival in the Sugar Bowl? | **Florida State** | not yet source-certified |
+| 2026-10-02 | CFB | G5 | `average-fan:cfb:authored:cfb-r3-cfp-semifinal-first-2ot` | Which team won the first CFP semifinal to go to double overtime? | **Georgia** | [cfb:authored:cfb-r3-cfp-semifinal-first-2ot](verified,https://collegefootballplayoff.com/sports/2019/5/14/semifinals-1718) |
+| 2026-10-02 | CFB | G5 | `average-fan:cfb:authored:cfb-r3-spurrier-coach-heisman` | Which former Heisman winner became the first to coach another Heisman winner? | **Steve Spurrier** | [cfb:authored:cfb-r3-spurrier-coach-heisman](verified,https://www.heisman.com/about-the-heisman/milestones/) |
+| 2026-10-02 | CFB | Final | `average-fan:cfb:authored:cfb-final-00-history-first-ap` | Which school finished No. 1 in the first final Associated Press college football poll in 1936? | **Minnesota** | [cfb:authored:cfb-final-00-history-first-ap](verified,https://www.sports-reference.com/cfb/years/1936-polls.html) |
+| 2026-10-02 | UFC | G2 | `average-fan:ufc:g1:ufc:stephen-thompson:division` | Which UFC division is Stephen Thompson primarily associated with? | **Welterweight** | not yet source-certified |
+| 2026-10-02 | UFC | G2 | `average-fan:ufc:iq:jab:choice` | Which straight punch is normally thrown with the lead hand? | **Jab** | not yet source-certified |
+| 2026-10-02 | UFC | G3 | `average-fan:ufc:authored-history:diaz-mcgregor:choice` | Who handed Conor McGregor his first UFC loss by submission at UFC 196? | **Nate Diaz** | not yet source-certified |
+| 2026-10-02 | UFC | G3 | `average-fan:ufc:authored-history:mcgregor-alvarez:choice` | Whom did Conor McGregor defeat to become the UFC's first simultaneous two-division champion? | **Eddie Alvarez** | not yet source-certified |
+| 2026-10-02 | UFC | G4 | `average-fan:ufc:authored-history:silva-weidman:short` | Who ended Anderson Silva's 16-fight UFC winning streak at UFC 162? | **Chris Weidman** | not yet source-certified |
+| 2026-10-02 | UFC | G4 | `average-fan:ufc:current:ufc-current-2026-09-19-casey-oneill-armbar` | Which flyweight earned a UFC 331 performance bonus by reversing trouble into a first-round armbar of Eduarda Moura? | **Casey O'Neill** | [ufc:current:ufc-current-2026-09-19-casey-oneill-armbar](verified,https://www.ufc.com/news/crypto-dotcom-ufc-331-coverage-performance-bonus) |
+| 2026-10-02 | UFC | G5 | `average-fan:ufc:g5:ufc:deiveson-figueiredo:three-win-identity` | Which UFC fighter owns wins over Montel Jackson, Marlon Vera, and Cody Garbrandt, including the 2025 win over Montel Jackson? | **Deiveson Figueiredo** | not yet source-certified |
+| 2026-10-02 | UFC | G5 | `average-fan:ufc:iq:rear-body-lock:choice` | What clinch control wraps the arms around an opponent's waist or hips from behind? | **Rear body lock** | not yet source-certified |
+| 2026-10-02 | UFC | Final | `average-fan:ufc:final:ufc:alexa-grasso:title` | Which UFC fighter faced Valentina Shevchenko in a title fight and also fought Heather Jo Clark and Felice Herrig? | **Alexa Grasso** | [ufc:final:ufc:alexa-grasso:title](verified,https://us.ufcespanol.com/athlete/alexa-grasso) |
+| 2026-10-06 | NFL | G2 | `average-fan:nfl:00-0tf:pick-six` | A pick-six is an interception returned for a touchdown. | **True** | not yet source-certified |
+| 2026-10-06 | NFL | G2 | `average-fan:nfl:00-team:lambeau:choice` | Which NFL team plays its home games at Lambeau Field? | **Green Bay Packers** | not yet source-certified |
+| 2026-10-06 | NFL | G3 | `average-fan:nfl:00-0tf:merger-1970` | The AFL-NFL merger took full effect for the 1970 season. | **True** | not yet source-certified |
+| 2026-10-06 | NFL | G3 | `average-fan:nfl:00-player:lamar-mvp:choice` | Which Ravens quarterback won the 2019 NFL MVP award? | **Lamar Jackson** | not yet source-certified |
+| 2026-10-06 | NFL | G4 | `average-fan:nfl:00-current:nfl-current-2026-w3-bills-mistakes-win` | Which team pulled off a chaotic Week 3 win over the Chargers despite five turnovers and double-digit penalties? | **Buffalo Bills** | [nfl:00-current:nfl-current-2026-w3-bills-mistakes-win](verified,https://www.nfl.com/news/2026-nfl-season-week-3-what-we-learned-from-sunday-s-games) |
+| 2026-10-06 | NFL | G4 | `average-fan:nfl:00-player:rodgers-24:short` | Which future Packers MVP slid to No. 24 overall in the 2005 NFL Draft? | **Aaron Rodgers** | not yet source-certified |
+| 2026-10-06 | NFL | G5 | `average-fan:nfl:00-history:holy-roller:choice` | The 1978 “Holy Roller” play that helped prompt a rule change came in a Raiders game against which team? | **San Diego Chargers** | not yet source-certified |
+| 2026-10-06 | NFL | G5 | `average-fan:nfl:00-xo:hot-route:short` | What is a hot route? | **A quick answer built into a pass play against pressure** | not yet source-certified |
+| 2026-10-06 | NFL | Final | `average-fan:nfl:final-authored:raiders-three-cities` | Which franchise reached the Super Bowl while based in Oakland, then Los Angeles, then Oakland again? | **Raiders** | not yet source-certified |
+| 2026-10-08 | CFB | G2 | `average-fan:cfb:authored:cfb-easy-go-blue` | The cheer 'Go Blue' is most closely associated with which program? | **Michigan** | not yet source-certified |
+| 2026-10-08 | CFB | G2 | `average-fan:cfb:g1:program-notre-dame:conference` | For the 2025 season, which conference was Notre Dame in? | **Independent** | not yet source-certified |
+| 2026-10-08 | CFB | G3 | `average-fan:cfb:authored:cfb-r1-first-sophomore-heisman` | Who became the first sophomore to win the Heisman Trophy? | **Tim Tebow** | [cfb:authored:cfb-r1-first-sophomore-heisman](verified,https://www.heisman.com/heisman-winners/tim-tebow/) |
+| 2026-10-08 | CFB | G3 | `average-fan:cfb:authored:cfb-r2-game-century-1971` | The 1971 'Game of the Century' on Thanksgiving matched Nebraska against which team? | **Oklahoma** | not yet source-certified |
+| 2026-10-08 | CFB | G4 | `average-fan:cfb:authored:cfb-r1-mountaineer-musket` | Which school's Mountaineer mascot carries a traditional musket? | **West Virginia** | not yet source-certified |
+| 2026-10-08 | CFB | G4 | `average-fan:cfb:current:cfb-current-2026-w3-wvu-hawkins-five-td` | Which West Virginia quarterback accounted for a career-high five touchdowns in the 38–27 upset of No. 25 Virginia? | **Michael Hawkins Jr.** | [cfb:current:cfb-current-2026-w3-wvu-hawkins-five-td](verified,https://wvusports.com/news/2026/9/20/football-mountaineers-rally-to-knock-off-25th-ranked-virginia-in-charlotte) |
+| 2026-10-08 | CFB | G5 | `average-fan:cfb:authored:00-g5:watts-jackson-2015:choice` | Name the Michigan State player who took Michigan's mishandled final punt to the end zone in 2015. | **Jalen Watts-Jackson** | [cfb:authored:00-g5:watts-jackson-2015](verified,https://msuspartans.com/news/2015/10/17/no_7_michigan_state_stuns_no_12_michigan_27_23_on_final_play) |
+| 2026-10-08 | CFB | G5 | `average-fan:cfb:authored:cfb-r3-bowden-program` | Bobby Bowden built his national-championship legacy at which school? | **Florida State** | not yet source-certified |
+| 2026-10-08 | CFB | Final | `average-fan:cfb:authored:cfb-final-02-program-four-seed` | Who won the inaugural four-team College Football Playoff from the No. 4 seed? | **Ohio State** | [cfb:authored:cfb-final-02-program-four-seed](verified,https://www.ncaa.com/news/football/article/college-football-national-championship-history) |
+| 2026-10-09 | UFC | G2 | `average-fan:ufc:g1:ufc:jorge-masvidal:division` | Which UFC division is Jorge Masvidal primarily associated with? | **Welterweight** | not yet source-certified |
+| 2026-10-09 | UFC | G2 | `average-fan:ufc:iq:ground-pound:choice` | What term describes striking an opponent while the fight is on the ground? | **Ground-and-pound** | not yet source-certified |
+| 2026-10-09 | UFC | G3 | `average-fan:ufc:current:ufc-current-2026-09-26-rosas-barcelos` | Whose first UFC main event ended with a fifth-round slam TKO of Raoni Barcelos? | **Raul Rosas Jr.** | [ufc:current:ufc-current-2026-09-26-rosas-barcelos](verified,https://www.ufc.com/news/ufc-fight-night-rosas-jr-vs-barcelos-results) |
+| 2026-10-09 | UFC | G3 | `average-fan:ufc:g2:ufc:brian-ortega:division-tf` | Brian Ortega is primarily associated with the UFC Featherweight division. | **True** | not yet source-certified |
+| 2026-10-09 | UFC | G4 | `average-fan:ufc:authored-history:edwards-usman-round:short` | Leon Edwards' famous head-kick knockout of Kamaru Usman at UFC 278 came in which round? | **Round 5** | not yet source-certified |
+| 2026-10-09 | UFC | G4 | `average-fan:ufc:g3:ufc:daniel-cormier:opponent` | Which of these fighters did Daniel Cormier defeat in the UFC? | **Alexander Gustafsson** | not yet source-certified |
+| 2026-10-09 | UFC | G5 | `average-fan:ufc:g5:ufc:charles-oliveira:title-identity` | Which fighter recorded a loss against Ilia Topuria in a UFC title fight on June 28, 2025 and also fought Darren Elkins? | **Charles Oliveira** | not yet source-certified |
+| 2026-10-09 | UFC | G5 | `average-fan:ufc:iq:pummeling:choice` | What clinch drill or exchange involves fighting for inside arm position and underhooks? | **Pummeling** | not yet source-certified |
+| 2026-10-09 | UFC | Final | `average-fan:ufc:final:ufc:anthony-pettis:title` | Which UFC fighter faced Max Holloway in a title fight and also fought Clay Guida and Jeremy Stephens? | **Anthony Pettis** | [ufc:final:ufc:anthony-pettis:title](needs additional corroboration,https://www.ufc.com/event/ufc-206) |
+| 2026-10-13 | UFC | G2 | `average-fan:ufc:authored-history:ufc1-winner:choice` | Who won the UFC 1 tournament? | **Royce Gracie** | not yet source-certified |
+| 2026-10-13 | UFC | G2 | `average-fan:ufc:g1:ufc:colby-covington:division` | Which UFC division is Colby Covington primarily associated with? | **Welterweight** | not yet source-certified |
+| 2026-10-13 | UFC | G3 | `average-fan:ufc:g2:ufc:chael-sonnen:division-tf` | Chael Sonnen is primarily associated with the UFC Welterweight division. | **False** | not yet source-certified |
+| 2026-10-13 | UFC | G3 | `average-fan:ufc:iq:armbar:choice` | An armbar primarily attacks which joint? | **Elbow** | not yet source-certified |
+| 2026-10-13 | UFC | G4 | `average-fan:ufc:authored-history:serra-gsp:short` | Who upset Georges St-Pierre at UFC 69 to win the welterweight title? | **Matt Serra** | not yet source-certified |
+| 2026-10-13 | UFC | G4 | `average-fan:ufc:current:ufc-current-2026-09-19-pitbull-choi` | Which former Bellator champion knocked out Dooho Choi on the UFC 331 main card? | **Patricio Pitbull** | [ufc:current:ufc-current-2026-09-19-pitbull-choi](verified,https://www.ufc.com/news/cryptocom-ufc-331-van-vs-pantoja-2-official-scorecards) |
+| 2026-10-13 | UFC | G5 | `average-fan:ufc:g5:ufc:anthony-pettis:title-identity` | Which fighter recorded a loss against Max Holloway in a UFC title fight on December 10, 2016 and also fought Clay Guida? | **Anthony Pettis** | not yet source-certified |
+| 2026-10-13 | UFC | G5 | `average-fan:ufc:iq:body-triangle:choice` | What back-control configuration locks the legs around an opponent's torso in a figure-four shape? | **Body triangle** | not yet source-certified |
+| 2026-10-13 | UFC | Final | `average-fan:ufc:final:authored:final-masvidal-five` | Whom did Jorge Masvidal knock out in five seconds in 2019 for the fastest knockout in UFC history? | **Ben Askren** | [ufc:final:authored:final-masvidal-five](verified,https://statleaders.ufc.com/en/fight/) |
+
+## Next certification steps
+
+Every pending entry needs a dated, authoritative fact check and an explicit keep/rewrite/retire/hold disposition. For *all* entries, check that every non-answer four-choice option is actually false, all defensible free-text answers and aliases are accepted, the grade is fun and fair, the chosen Final merits its difficulty, and comparable facts are not recycled in Bar Trivia or Millionaire. Source-check the entire **remaining selected NFL, CFB, and UFC bank**, including generated questions, not just these published examples. Run seeded board previews and inspect difficulty and topic clustering. The 4x Average Fan / 2x Higher or Lower rotation remains a separate Stage 4 cutover; no rotation change is included here.
