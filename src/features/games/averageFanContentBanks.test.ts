@@ -213,14 +213,14 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
-  it("keeps short answer dominant while retaining both alternate formats", () => {
+  it("retains a reasonable format mix without filling banks with repeated facts", () => {
     for (const sport of sports) {
       const summary = averageFanBankSummary(sport);
       const shortShare = Number(summary.formats["short-answer"]) / summary.total;
       const choiceShare = Number(summary.formats["four-choice"]) / summary.total;
       const trueFalseShare = Number(summary.formats["true-false"]) / summary.total;
 
-      expect(shortShare).toBeGreaterThanOrEqual(0.3);
+      expect(shortShare).toBeGreaterThanOrEqual(0.2);
       expect(shortShare).toBeLessThanOrEqual(0.7);
       expect(choiceShare).toBeGreaterThanOrEqual(0.18);
       expect(trueFalseShare).toBeGreaterThanOrEqual(0.05);

@@ -1685,6 +1685,42 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
   });
 }
 
+/**
+ * Individually identified Average Fan facts that are already used by Bar Trivia.
+ * Retire them rather than disguising the same fact with different wording.
+ * See Stage 2 audit for the source-game pairs.
+ */
+const RETIRED_BAR_TRIVIA_FACT_IDS = new Set<string>([
+  "average-fan:nfl:00-history:lombardi:short",
+  "average-fan:nfl:00-history:hester:short",
+  "average-fan:nfl:00-history:music-city:choice",
+  "average-fan:nfl:final-authored:howley",
+  "average-fan:cfb:tradition:ralphie:short",
+  "average-fan:ufc:authored-history:ufc1-winner:choice",
+  "average-fan:nfl:00-history:sb1:choice",
+  "average-fan:nfl:00-history:perfect:short",
+  "average-fan:nfl:00-history:first-wild-card:short",
+  "average-fan:nfl:00-history:helmet:choice",
+  "average-fan:nfl:00-team:purple-people-eaters:short",
+  "average-fan:nfl:00-team:legion-boom:choice",
+  "average-fan:nfl:00-player:brady-50:short",
+  "average-fan:ufc:authored-history:edwards-usman-round:short",
+  "average-fan:ufc:authored-history:jones-hamill:short",
+  "average-fan:ufc:authored-history:mcgregor-alvarez:choice",
+  "average-fan:ufc:final:authored:final-dean-mean",
+  "average-fan:ufc:authored-history:belfort-19:short",
+  "average-fan:ufc:authored-history:ufc1-one-glove:short",
+  "average-fan:ufc:authored-history:ufc1-headkick:short",
+  "average-fan:ufc:authored-history:first-155:short",
+  "average-fan:ufc:authored-history:ufc5-winner:short",
+  "average-fan:ufc:authored-history:sterling-dq-title:short",
+  "average-fan:ufc:authored-history:taktarov-nine:choice",
+  "average-fan:ufc:final:authored:final-maine-iac",
+  "average-fan:ufc:final:authored:final-muscle-shark",
+  "average-fan:nfl:00-team:americas-team:short",
+  "average-fan:ufc:iq:round-length:short",
+]);
+
 function buildBank(
   sport: AverageFanSport,
   candidates: readonly AverageFanQuestion[],
@@ -1692,7 +1728,9 @@ function buildBank(
   finalTarget: number,
 ) {
   const subjects = AVERAGE_FAN_SUBJECTS[sport] as readonly AverageFanSubject[];
-  const playableCandidates = candidates.map(calibratedPlayableQuestion);
+  const playableCandidates = candidates
+    .filter((question) => !RETIRED_BAR_TRIVIA_FACT_IDS.has(question.id))
+    .map(calibratedPlayableQuestion);
   const usedFacts = new Set<string>();
   const ordinary = AVERAGE_FAN_PLAYABLE_GRADES.flatMap((grade) => {
     const current = playableCandidates
