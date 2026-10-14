@@ -869,6 +869,19 @@ function footballCandidates(league: "NFL" | "CFB") {
       difficultyNudge: player.recognizabilityTier === "A" || player.recognizabilityTier === "B" ? -2 : -1,
     }));
 
+    const tfTrue = index % 2 === 0;
+    const tfPosition = tfTrue ? position : wrongPositions[0]!;
+    questions.push(trueFalseQuestion({
+      id: `average-fan:${sport}:g2:${player.id}:position-tf`,
+      sport,
+      grade: 2,
+      subject: playerSubject,
+      prompt: `${player.name} played ${tfPosition}.`,
+      answer: tfTrue,
+      explanation: `${player.name} is listed as a ${position}.`,
+      difficultyNudge: 0,
+    }));
+
     if (league === "NFL" && player.school) {
       const wrongSchools = peerValues(schools, player.school, `${player.id}:school`);
       questions.push(choiceQuestion({
@@ -1045,6 +1058,17 @@ function footballCandidates(league: "NFL" | "CFB") {
         explanation: `${program.name} was in the ${program.conference} for the ${conferenceSeason} season.`,
         difficultyNudge: program.recognizabilityTier === "A" || program.recognizabilityTier === "B" ? -2 : -1,
       }));
+      const tfTrue = index % 2 === 0;
+      const shownConference = tfTrue ? program.conference : wrongConferences[0]!;
+      questions.push(trueFalseQuestion({
+        id: `average-fan:cfb:g2:${program.id}:conference-tf`,
+        sport: "cfb",
+        grade: 2,
+        subject: "Programs",
+        prompt: `${program.name} was in the ${shownConference} for the ${conferenceSeason} season.`,
+        answer: tfTrue,
+        explanation: `${program.name} is listed in the ${program.conference}.`,
+      }));
       const conferenceProgramKey = `${program.conference}:${conferenceSeason}`;
       if (!seenConferenceProgramQuestions.has(conferenceProgramKey)) {
         seenConferenceProgramQuestions.add(conferenceProgramKey);
@@ -1198,6 +1222,17 @@ function ufcCandidates() {
         difficultyNudge: fighter.scope === "recognizable-expansion" ? -2 : -1,
       }));
 
+      const tfTrue = index % 2 === 0;
+      const shownDivision = tfTrue ? primaryDivision : wrongDivisions[0]!;
+      questions.push(trueFalseQuestion({
+        id: `average-fan:ufc:g2:${fighter.id}:division-tf`,
+        sport: "ufc",
+        grade: 2,
+        subject: "Fighters",
+        prompt: `${fighter.name} is primarily associated with the UFC ${shownDivision} division.`,
+        answer: tfTrue,
+        explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
+      }));
     }
 
     const wins = fighter.fights.filter((fight) => fight.result === "win");
@@ -1407,11 +1442,29 @@ function calibratedPlayableQuestion(question: AverageFanQuestion) {
   return assertAverageFanQuestion({ ...question, grade });
 }
 
+/**
+ * Shared fact-identity gate: different formats or grades of the same player
+ * fact count as one question, not extra inventory.
+ */
+export function averageFanQuestionFactKey(question: AverageFanQuestion): string | null {
+  const id = question.id;
+  const position = /^average-fan:(nfl|cfb):g[1-5]:([^:]+):(position|position-tf|school-position)$/.exec(id);
+  if (position) return `${position[1]}:player:${position[2]}:position`;
+  const conference = /^average-fan:cfb:g[1-5]:([^:]+):(conference|conference-tf|conference-program)$/.exec(id);
+  if (conference) return `cfb:program:${conference[1]}:conference`;
+  const division = /^average-fan:ufc:g[1-5]:([^:]+):(division|division-tf)$/.exec(id);
+  if (division) return `ufc:fighter:${division[1]}:division`;
+  const cfbDraft = /^average-fan:cfb:(?:g[1-5]|final):([^:]+):(draft-pick|draft-identity|draft)$/.exec(id);
+  if (cfbDraft) return `cfb:player:${cfbDraft[1]}:draft-slot`;
+  return null;
+}
+
 function balancedTake(
   candidates: readonly AverageFanQuestion[],
   target: number,
   subjects: readonly AverageFanSubject[],
   label: string,
+  usedFacts: Set<string> = new Set<string>(),
 ) {
   const isNflOrdinary = /^nfl grade [1-5] evergreen$/.test(label);
   const isOpeningGrade = / grade 2 evergreen$/.test(label);
@@ -1496,11 +1549,20 @@ function balancedTake(
     for (const subject of subjects) {
       if (selected.length >= target) break;
       const queue = bySubject.get(subject) ?? [];
-      const offset = offsets.get(subject) ?? 0;
-      const next = queue[offset];
+      let offset = offsets.get(subject) ?? 0;
+      let next: AverageFanQuestion | undefined;
+      while (offset < queue.length) {
+        const candidate = queue[offset++]!;
+        const fact = averageFanQuestionFactKey(candidate);
+        if (fact && usedFacts.has(fact)) continue;
+        next = candidate;
+        break;
+      }
+      offsets.set(subject, offset);
       if (!next) continue;
-      offsets.set(subject, offset + 1);
       selected.push(next);
+      const fact = averageFanQuestionFactKey(next);
+      if (fact) usedFacts.add(fact);
       progressed = true;
     }
     if (!progressed) {
@@ -1624,6 +1686,7 @@ function buildBank(
 ) {
   const subjects = AVERAGE_FAN_SUBJECTS[sport] as readonly AverageFanSubject[];
   const playableCandidates = candidates.map(calibratedPlayableQuestion);
+  const usedFacts = new Set<string>();
   const ordinary = AVERAGE_FAN_PLAYABLE_GRADES.flatMap((grade) => {
     const current = playableCandidates
       .filter((question) => (
@@ -1645,6 +1708,7 @@ function buildBank(
       evergreenTarget,
       subjects,
       `${sport} grade ${grade} evergreen`,
+      usedFacts,
     );
     return [...current, ...evergreen];
   });
@@ -1653,6 +1717,7 @@ function buildBank(
     finalTarget,
     subjects,
     `${sport} Finals`,
+    usedFacts,
   );
   const bank = [...ordinary, ...finals];
   const ids = new Set(bank.map((question) => question.id));
