@@ -57,7 +57,7 @@ const normalize = (name: string) => name.trim().toLowerCase().replace(/[^a-z0-9]
 /** Returns a verified canonical team identity, even when live Picks includes a mascot. */
 export function sportsReferenceTeamIdentity(name: string, level: FootballMetadataLevel) {
   const exact = footballTeamSchoolMetadataFor(name);
-  if (exact?.level === level) return exact;
+  if (exact) return exact.level === level ? exact : null;
   const subject = normalize(name);
   // Longest alias first: Michigan State vs Michigan; Texas Tech vs Texas.
   const candidates = footballTeamSchoolMetadata
