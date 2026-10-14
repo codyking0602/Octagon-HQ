@@ -7,7 +7,7 @@ import {
   averageFanBankSummary,
 } from "./averageFanContentBanks";
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
-import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
+import { getUfcFactualSubject, ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
 import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
 import { MILLIONAIRE_DAILY_RUN_COUNT, millionaireDailyRun } from "../play/millionaireDailyQuestionBank";
@@ -384,6 +384,49 @@ describe("Average Fan durable content banks", () => {
     expect(authored.length).toBeGreaterThan(0);
     expect(authored.some((question) => question.subject === "Championships")).toBe(true);
     expect(authored.some((question) => question.subject === "Fights")).toBe(true);
+  });
+
+  it("never selects an ambiguous UFC multi-opponent fighter identity", () => {
+    const normalized = (name: string) => name.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const fought = (subject: (typeof ufcFactualLedgerSubjects)[number], opponent: string, condition: "beat" | "title" | "faced") =>
+      subject.fights.some((fight) =>
+        normalized(fight.opponent) === normalized(opponent)
+        && (condition === "faced" || (condition === "beat" ? fight.result === "win" : fight.titleFight)));
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      const winMatch = /^average-fan:ufc:g5:(.+):three-win-identity$/.exec(question.id);
+      const titleMatch = /^average-fan:ufc:final:(.+):title$/.exec(question.id);
+      const fightMatch = /^average-fan:ufc:final:(.+):fight$/.exec(question.id);
+      const id = winMatch?.[1] ?? titleMatch?.[1] ?? fightMatch?.[1];
+      if (!id) continue;
+      const subject = getUfcFactualSubject(id);
+      expect(subject, question.id).toBeTruthy();
+      if (!subject) continue;
+      let constraints: Array<{ opponent: string; condition: "beat" | "title" | "faced" }> = [];
+      if (winMatch) {
+        const wins = subject.fights
+          .filter((fight) => fight.result === "win")
+          .filter((fight, i, all) => all.findIndex((f) => f.opponent === fight.opponent) === i)
+          .sort((a, b) => b.date.localeCompare(a.date));
+        constraints = wins.slice(0, 3).map((fight) => ({ opponent: fight.opponent, condition: "beat" }));
+      } else if (titleMatch) {
+        const titles = subject.fights.filter((fight) => fight.titleFight);
+        const latest = titles[titles.length - 1]!;
+        const others = [...new Set(subject.fights.map((fight) => fight.opponent))]
+          .filter((name) => name !== latest.opponent).slice(0, 2);
+        constraints = [
+          { opponent: latest.opponent, condition: "title" },
+          ...others.map((opponent) => ({ opponent, condition: "faced" as const })),
+        ];
+      } else if (fightMatch) {
+        const fights = subject.fights;
+        constraints = [fights[fights.length - 1]!, fights[Math.max(0, fights.length - 3)]!, fights[Math.max(0, fights.length - 5)]!]
+          .map((fight) => ({ opponent: fight.opponent, condition: "faced" }));
+      }
+      expect(constraints.length, question.id).toBeGreaterThanOrEqual(3);
+      const colliders = ufcFactualLedgerSubjects.filter((other) => other.id !== id
+        && constraints.every(({ opponent, condition }) => fought(other, opponent, condition)));
+      expect(colliders.map((row) => row.name), question.id).toEqual([]);
+    }
   });
 
   it("keeps UFC hard identity prompts specific enough to avoid two-opponent ambiguity", () => {
