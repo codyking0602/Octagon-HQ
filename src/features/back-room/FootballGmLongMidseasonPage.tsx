@@ -128,7 +128,7 @@ export function FootballGmLongMidseasonPage({
           {roster.map(({ pick, player }) => <button key={pick.slot} type="button"
             onClick={() => onShop(player.id)}>
             <span>{longSlotLabel(pick.slot)}</span><LongPlayerPortrait player={player} />
-            <strong>{player.name}</strong><small>{footballGmMoney(player.salaryWindow[0])}</small><b>SHOP →</b>
+            <strong>{player.name}</strong><span className="gm-long__deadline-shop-action"><small>{footballGmMoney(player.salaryWindow[0])}</small><b>SHOP →</b></span>
           </button>)}
         </div>
         <button type="button" className="gm-long__secondary" onClick={onSkip}>KEEP MY ROSTER</button>
