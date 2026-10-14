@@ -42,9 +42,9 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
 
   it("keeps all future Top Games boards neutral charcoal without changing team-color pills", () => {
     const css = source("../../styles/home-football-hq.css");
-    const board = css.match(/\\.football-hq-games \\{([^}]+)\\}/)?.[1];
-    const matchup = css.match(/\\.football-hq-game-row \\{([^}]+)\\}/)?.[1];
-    const schedule = css.match(/\\.football-hq-games__schedule \\{([^}]+)\\}/)?.[1];
+    const board = css.split(".football-hq-games {")[1]?.split("}")[0];
+    const matchup = css.split(".football-hq-game-row {")[1]?.split("}")[0];
+    const schedule = css.split(".football-hq-games__schedule {")[1]?.split("}")[0];
     expect(board).toContain("background: linear-gradient(145deg, #202124, #17181a)");
     expect(board).toContain("border: 1px solid #404146");
     expect(matchup).toContain("background: linear-gradient(135deg, #191a1c, #121315)");
