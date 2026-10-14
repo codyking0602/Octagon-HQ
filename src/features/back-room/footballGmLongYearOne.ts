@@ -1,6 +1,6 @@
 import { footballGmPlayerById, footballGmProjectedGradeForPlayer, FOOTBALL_GM_TEAMS, type FootballGmPlayoffFinish } from "./footballGmEngine";
 import { footballGmSimulateLeagueSeason, type FootballGmLongLeagueTimeline } from "./footballGmLeagueSimulation";
-import { NFL_GM_LONG_NEUTRAL_GRADE, NFL_GM_LONG_POSITION_WEIGHTS, nflGmLongValidRoster, type NflGmLongPick, type NflGmLongSlot } from "./footballGmLongFoundation";
+import { NFL_GM_LONG_NEUTRAL_GRADE, NFL_GM_LONG_POSITION_WEIGHTS, nflGmLongValidRoster, type NflGmLongPick } from "./footballGmLongFoundation";
 import { NFL_GM_LONG_BY_ID, type NflGmLongPlayer } from "./footballGmLongCatalog";
 import { NFL_GM_LONG_COACHES, nflGmLongCoachEffects } from "./footballGmLongCoaches";
 import { nflGmLongActivePicks, nflGmLongPlayerHalftimeDelta, type NflGmLongMidseason, type NflGmLongPlayerChange } from "./footballGmLongMidseason";
