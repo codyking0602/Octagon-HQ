@@ -1691,7 +1691,23 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
  * See Stage 2 audit for the source-game pairs.
  */
 // Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
-const RETIRED_MILLIONAIRE_FACT_ID_PREFIXES = [
+// Other known Bar Trivia, Millionaire, and intra-bank same-fact repeats.
+const RETIRED_REPEATED_FACT_ID_PREFIXES = [
+  "average-fan:nfl:00-team:terrible-towel:",
+  "average-fan:nfl:00-team:bills-four-straight:",
+  "average-fan:cfb:tradition:sooner-schooner:",
+  "average-fan:cfb:tradition:jump-around:",
+  "average-fan:cfb:tradition:howards-rock:",
+  "average-fan:ufc:final:authored:final-tuf1",
+  "average-fan:nfl:00-player:peterson-2012-mvp:",
+  "average-fan:nfl:00-player:moss-23:",
+  "average-fan:nfl:00-player:dickerson-2105:",
+  "average-fan:nfl:00-history:music-city-lateral:",
+  "average-fan:ufc:authored-history:barboza-etim:",
+  "average-fan:cfb:authored:00-g5:daniels-2023-heisman:",
+  "average-fan:cfb:authored:00-g5:bennett-double-cfp-mvp:",
+  "average-fan:cfb:authored:00-g5:hunter-biletnikoff-bednarik:",
+  "average-fan:cfb:authored:00-g5:utah-sugar-alabama:",
   "average-fan:nfl:00-history:immaculate:",
   "average-fan:nfl:00-history:minneapolis:",
   "average-fan:nfl:00-history:holmes:",
@@ -1746,7 +1762,7 @@ function buildBank(
   const subjects = AVERAGE_FAN_SUBJECTS[sport] as readonly AverageFanSubject[];
   const playableCandidates = candidates
     .filter((question) => !RETIRED_BAR_TRIVIA_FACT_IDS.has(question.id)
-      && !RETIRED_MILLIONAIRE_FACT_ID_PREFIXES.some((prefix) => question.id.startsWith(prefix)))
+      && !RETIRED_REPEATED_FACT_ID_PREFIXES.some((prefix) => question.id.startsWith(prefix)))
     .map(calibratedPlayableQuestion);
   const usedFacts = new Set<string>();
   const ordinary = AVERAGE_FAN_PLAYABLE_GRADES.flatMap((grade) => {
