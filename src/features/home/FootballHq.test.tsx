@@ -214,23 +214,38 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("Alabama")).toBeInTheDocument();
     expect(within(hq).getByText("Mississippi State")).toBeInTheDocument();
     const collegeGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Alabama at Mississippi State" });
-    const collegeTeams = collegeGame.querySelectorAll(".football-hq-game-row__teams > div");
+    const collegeCard = collegeGame.closest(".football-hq-game-row")!;
+    const collegeTeams = collegeCard.querySelectorAll(".football-hq-game-row__team-pill");
     expect(collegeTeams[0]).toHaveStyle("--team-color: #9E1B32");
     expect(collegeTeams[1]).toHaveStyle("--team-color: #5D1725");
-    const collegeMarks = collegeGame.querySelectorAll(".football-hq-team-mark");
+    const collegeMarks = collegeCard.querySelectorAll(".football-hq-team-mark");
     expect(collegeMarks[0]).toHaveClass("is-white-logo");
     expect(collegeMarks[1]).toHaveClass("is-white-logo");
+    const alabama = within(hq).getByRole("link", { name: "Open 2026 Alabama Sports Reference page" });
+    expect(alabama).toHaveAttribute("href", "https://www.sports-reference.com/cfb/schools/alabama/2026.html");
+    expect(alabama).toHaveAttribute("target", "_blank");
+    expect(alabama).toHaveAttribute("rel", "noopener noreferrer");
+    expect(within(hq).getByRole("link", { name: "Open 2026 Mississippi State Sports Reference page" }))
+      .toHaveAttribute("href", "https://www.sports-reference.com/cfb/schools/mississippi-state/2026.html");
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByText("Kansas City")).toBeInTheDocument();
     expect(within(hq).getByText("Chiefs")).toBeInTheDocument();
     expect(within(hq).getByText("Las Vegas")).toBeInTheDocument();
     expect(within(hq).getByText("Raiders")).toBeInTheDocument();
     const nflGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Chiefs at Raiders" });
-    const nflTeams = nflGame.querySelectorAll(".football-hq-game-row__teams > div");
+    const nflCard = nflGame.closest(".football-hq-game-row")!;
+    const nflTeams = nflCard.querySelectorAll(".football-hq-game-row__team-pill");
+    expect(within(hq).getByRole("link", { name: "Open 2026 Kansas City Chiefs Sports Reference page" }))
+      .toHaveAttribute("href", "https://www.pro-football-reference.com/teams/kan/2026.htm");
+    expect(within(hq).getByRole("link", { name: "Open 2026 Las Vegas Raiders Sports Reference page" }))
+      .toHaveAttribute("href", "https://www.pro-football-reference.com/teams/rai/2026.htm");
+    // Standalone anchors, never nested inside the full-card breakdown target.
+    expect(nflCard.querySelector(".football-hq-game-row__team-pill[href]")?.closest(".football-hq-game-row__breakdown-hit")).toBeNull();
+
     expect(nflTeams[0]).toHaveStyle("--team-color: #E31837");
     expect(nflTeams[1]).toHaveStyle("--team-color: #000000");
-    expect(nflGame.querySelector('img[src="https://a.espncdn.com/i/teamlogos/nfl/500/kc.png"]')).toBeInTheDocument();
-    expect(nflGame.querySelector('img[src="https://a.espncdn.com/i/teamlogos/nfl/500/lv.png"]')).toBeInTheDocument();
+    expect(nflCard.querySelector('img[src="https://a.espncdn.com/i/teamlogos/nfl/500/kc.png"]')).toBeInTheDocument();
+    expect(nflCard.querySelector('img[src="https://a.espncdn.com/i/teamlogos/nfl/500/lv.png"]')).toBeInTheDocument();
     expect(within(hq).queryByText("Davis Wade Stadium · Starkville")).not.toBeInTheDocument();
     expect(within(hq).queryByText("Allegiant Stadium · Las Vegas")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
