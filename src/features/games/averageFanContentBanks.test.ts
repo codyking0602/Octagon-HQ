@@ -10,6 +10,7 @@ import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
 import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
+import { MILLIONAIRE_DAILY_RUN_COUNT, millionaireDailyRun } from "../play/millionaireDailyQuestionBank";
 import { findDailyContentOverlaps, type DailyContentAuditEntry } from "../play/dailyContentQualityPolicy";
 import {
   averageFanAnswersMatch,
@@ -445,6 +446,35 @@ describe("Average Fan durable content banks", () => {
       );
       expect(borrowedIds.map((question) => question.id)).toEqual([]);
     }
+  });
+
+  it("does not publish the same question as Millionaire and Average Fan", () => {
+    const entries: DailyContentAuditEntry[] = [
+      ...sports.flatMap((sport) => Array.from(
+        { length: MILLIONAIRE_DAILY_RUN_COUNT },
+        (_, runIndex) => millionaireDailyRun(sport, runIndex).map((question) => ({
+          sport,
+          game: "millionaire",
+          questionId: question.id,
+          prompt: question.prompt,
+          answer: question.choices.find((choice) => choice.id === question.correctChoiceId)!.text,
+        })),
+      ).flat()),
+      ...sports.flatMap((sport) => AVERAGE_FAN_CONTENT_BANKS[sport].map((question) => ({
+        sport,
+        game: "average_fan",
+        questionId: question.id,
+        prompt: question.prompt,
+        answer: question.answer,
+      }))),
+    ];
+    const overlaps = findDailyContentOverlaps(entries)
+      .filter((item) => item.scope === "across_games");
+    expect(overlaps.map((item) => ({
+      reason: item.reason,
+      left: item.left.questionId,
+      right: item.right.questionId,
+    }))).toEqual([]);
   });
 
   it("keeps current events inside the locked grade totals rather than inflating the bank", () => {

@@ -1690,6 +1690,22 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
  * Retire them rather than disguising the same fact with different wording.
  * See Stage 2 audit for the source-game pairs.
  */
+// Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
+const RETIRED_MILLIONAIRE_FACT_ID_PREFIXES = [
+  "average-fan:nfl:00-history:immaculate:",
+  "average-fan:nfl:00-history:minneapolis:",
+  "average-fan:nfl:00-history:holmes:",
+  "average-fan:nfl:00-player:cooper-kupp-2021-opoy:",
+  "average-fan:cfb:authored:00-g5:tennessee-first-bcs:",
+  "average-fan:cfb:authored:00-g5:ohio-state-four-seed:",
+  "average-fan:cfb:authored:cfb-final-00-program-tennessee-bcs",
+  "average-fan:cfb:authored:cfb-final-02-program-four-seed",
+  "average-fan:ufc:authored-history:serra-gsp:",
+  "average-fan:ufc:authored-history:rousey-carmouche:",
+  "average-fan:ufc:authored-history:diaz-mcgregor:",
+  "average-fan:ufc:final:authored:final-ufc217-gsp",
+] as const;
+
 const RETIRED_BAR_TRIVIA_FACT_IDS = new Set<string>([
   "average-fan:nfl:00-history:lombardi:short",
   "average-fan:nfl:00-history:hester:short",
@@ -1729,7 +1745,8 @@ function buildBank(
 ) {
   const subjects = AVERAGE_FAN_SUBJECTS[sport] as readonly AverageFanSubject[];
   const playableCandidates = candidates
-    .filter((question) => !RETIRED_BAR_TRIVIA_FACT_IDS.has(question.id))
+    .filter((question) => !RETIRED_BAR_TRIVIA_FACT_IDS.has(question.id)
+      && !RETIRED_MILLIONAIRE_FACT_ID_PREFIXES.some((prefix) => question.id.startsWith(prefix)))
     .map(calibratedPlayableQuestion);
   const usedFacts = new Set<string>();
   const ordinary = AVERAGE_FAN_PLAYABLE_GRADES.flatMap((grade) => {

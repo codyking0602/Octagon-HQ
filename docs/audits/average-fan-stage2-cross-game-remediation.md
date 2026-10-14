@@ -20,3 +20,10 @@ The Average Fan test suite now checks against **actual Bar Trivia bank prompts a
 
 ## Grade-5 inventory integrity
 Removing borrowed CFB Bar Trivia questions and rejecting duplicate player fact variants leaves fewer than 85 independently distinct grade-5 CFB candidates. The former hard quota of 85 was not a quality standard. Cap CFB grade 5 at 26 (a minimum of approximately 13 CFB Daily appearances, two per board); preserve the one-Final-per-board rule. Remaining content still requires verification before Stage 2 closure.
+
+
+## Millionaire cross-game remediation
+
+Reviewed all 10 authored Millionaire runs per NFL/CFB/UFC alongside the Average Fan curated prompts, comparing both question and answer identity. Flagged repeat topics include the Immaculate Reception, Minneapolis Miracle, Super Bowl XLIII catch, first BCS/No. 4 CFP champions, Serra–GSP, Rousey–Carmouche, Diaz–McGregor, and UFC 217 GSP–Bisping. Retire the overlapping Average Fan candidate families rather than rewording them.
+
+A regression test now blocks future **high-confidence** Millionaire–Average Fan question reuse. It is not equivalent to manual verification of every fact or a guarantee that every paraphrase is detected.
