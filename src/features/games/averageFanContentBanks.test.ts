@@ -327,7 +327,33 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
-    it("never uses another valid UFC opponent as a wrong opponent choice", () => {
+  it("scopes every selected UFC grade-three fighter-opponent question to a single sourced bout", () => {
+    const generated = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((question) =>
+      /^average-fan:ufc:g3:ufc:[^:]+:opponent$/.test(question.id),
+    );
+    expect(generated.length).toBeGreaterThan(10);
+    for (const question of generated) {
+      const match = /^average-fan:ufc:g3:(ufc:[^:]+):opponent$/.exec(question.id)!;
+      const fighter = getUfcFactualSubject(match[1]!);
+      expect(fighter, question.id).toBeTruthy();
+      const dateText = /\\bon ([A-Za-z]+ \\d{1,2}, \\d{4})\\?$/.exec(question.prompt)?.[1];
+      expect(dateText, question.id).toBeTruthy();
+      const matchingFights = fighter!.fights.filter((fight) =>
+        new Date(`${fight.date}T12:00:00Z`).toLocaleDateString("en-US", {
+          month: "long", day: "numeric", year: "numeric", timeZone: "UTC",
+        }) === dateText,
+      );
+      expect(matchingFights, question.id).toHaveLength(1);
+      expect(matchingFights[0]!.opponent, question.id).toBe(question.answer);
+      if (question.prompt.includes("defeat in the UFC")) {
+        expect(matchingFights[0]!.result, question.id).toBe("win");
+      }
+      expect(question.format, question.id).toBe("four-choice");
+      expect(question.choices, question.id).toHaveLength(4);
+    }
+  });
+
+  it("never uses another valid UFC opponent as a wrong opponent choice", () => {
     for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
       const match = /^average-fan:ufc:g3:(.+):opponent$/.exec(question.id);
       if (!match || !question.choices) continue;
