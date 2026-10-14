@@ -27,3 +27,7 @@ Removing borrowed CFB Bar Trivia questions and rejecting duplicate player fact v
 Reviewed all 10 authored Millionaire runs per NFL/CFB/UFC alongside the Average Fan curated prompts, comparing both question and answer identity. Flagged repeat topics include the Immaculate Reception, Minneapolis Miracle, Super Bowl XLIII catch, first BCS/No. 4 CFP champions, Serra–GSP, Rousey–Carmouche, Diaz–McGregor, and UFC 217 GSP–Bisping. Retire the overlapping Average Fan candidate families rather than rewording them.
 
 A regression test now blocks future **high-confidence** Millionaire–Average Fan question reuse. It is not equivalent to manual verification of every fact or a guarantee that every paraphrase is detected.
+
+## Obscure-recall retirement
+
+Retire the first UFC 170-pound bout opponent-name question, the precisely timed 64-second first FOX main-event finish, and the Anderson Silva reign-length measured to the exact day. These are narrow memorization tests rather than strong Average Fan identity or landmark questions. Preserve the genuinely memorable KO, championship, and historical milestone prompts, with hard rounds still answerable from recognizable anchors.

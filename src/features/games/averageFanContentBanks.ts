@@ -1693,6 +1693,10 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
 // Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
 // Other known Bar Trivia, Millionaire, and intra-bank same-fact repeats.
 const RETIRED_REPEATED_FACT_ID_PREFIXES = [
+  // Exclude exact-number recall or deep undercard trivia lacking a memorable anchor.
+  "average-fan:ufc:authored-history:first-170:",
+  "average-fan:ufc:authored-history:first-fox-time:",
+  "average-fan:ufc:final:authored:final-silva-reign",
   "average-fan:nfl:00-team:terrible-towel:",
   "average-fan:nfl:00-team:bills-four-straight:",
   "average-fan:cfb:tradition:sooner-schooner:",
