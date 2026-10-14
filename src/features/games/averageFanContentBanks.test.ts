@@ -428,6 +428,22 @@ describe("Average Fan durable content banks", () => {
     expect(question?.explanation).toMatch(/teammate may recover.*ball is dead/);
   });
 
+  it("rejects ambiguous authored surname-only aliases when two people share a name", () => {
+    for (const [id, fullName] of [
+      ["mike-jones", "Mike Jones"],
+      ["jacoby-jones", "Jacoby Jones"],
+    ] as const) {
+      const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+        (row) => row.id === `average-fan:nfl:final-authored:${id}`,
+      );
+      expect(question, id).toBeTruthy();
+      expect(question?.format, id).toBe("short-answer");
+      expect(averageFanAnswersMatch(question!, fullName), id).toBe(true);
+      expect(question?.aliases, id).not.toContain("Jones");
+      expect(averageFanAnswersMatch(question!, "Jones"), id).toBe(false);
+    }
+  });
+
   it("never selects an ambiguous UFC multi-opponent fighter identity", () => {
     const normalized = (name: string) => name.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "");
     const fought = (subject: (typeof ufcFactualLedgerSubjects)[number], opponent: string, condition: "beat" | "title" | "faced") =>
