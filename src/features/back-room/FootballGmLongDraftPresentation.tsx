@@ -99,7 +99,7 @@ function repriceRisk(player: NflGmLongPlayer) {
     : increase >= 8_000_000 || multiple >= 2 ? "MEDIUM" as const : "LOW" as const;
 }
 
-function PlayerTags({ player }: { player: NflGmLongPlayer }) {
+export function LongPlayerTags({ player }: { player: NflGmLongPlayer }) {
   const risk = repriceRisk(player);
   return <span className="football-gm__candidate-tags">
     <LongQualityAndOutlook player={player} />
@@ -226,7 +226,7 @@ export function LongCandidateBoard({ teamCode, picks, onPick }: {
                 <span className="football-gm__picker-player-copy">
                   <strong>{player.name}</strong>
                   <LongPlayerRoleAge player={player} />
-                  <PlayerTags player={player} />
+                  <LongPlayerTags player={player} />
                 </span>
               </span>
               <span className="football-gm__picker-action gm-long__candidate-select">

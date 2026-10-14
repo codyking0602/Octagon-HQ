@@ -3,11 +3,11 @@ import { footballGmMoney } from "./footballGmEngine";
 import { GmFootballWheel } from "./FootballGmModePage";
 import { NFL_GM_LONG_CAP, nflGmLongSpend, type NflGmLongPick } from "./footballGmLongFoundation";
 import { NFL_GM_LONG_BY_ID } from "./footballGmLongCatalog";
-import { LongPlayerPortrait, LongPlayerTier, longSlotLabel } from "./FootballGmLongDraftPresentation";
+import { LongPlayerPortrait, LongPlayerTags, longSlotLabel } from "./FootballGmLongDraftPresentation";
 import { nflGmLongCoachPointerRotation } from "./footballGmLongPresentation";
 import {
   nflGmLongActiveGrade, nflGmLongActivePicks, nflGmLongPlayoffOutlook,
-  nflGmLongRecord, nflGmLongTradePartners, nflGmLongTradeTargets,
+  nflGmLongRecord, nflGmLongTradePartners, nflGmLongTradeTargets, nflGmLongDevelopmentOutcome,
   type NflGmLongMidseason,
 } from "./footballGmLongMidseason";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
@@ -42,6 +42,14 @@ export function FootballGmLongMidseasonPage({
     ? nflGmLongTradeTargets(picks, outgoing.id, midseason.partnerTeam)
     : [];
   const status = midseason.stage;
+  const trendCounts = midseason.development.reduce((acc, change) => {
+    const result = nflGmLongDevelopmentOutcome(change.delta);
+    if (result === "HELD STEADY") acc.steady++;
+    else if (change.delta > 0) acc.improving++;
+    else acc.regressing++;
+    return acc;
+  }, { improving: 0, steady: 0, regressing: 0 });
+
 
   function spinPartner() {
     if (spinning || status !== "spin") return;
@@ -67,10 +75,7 @@ export function FootballGmLongMidseasonPage({
           <b>{game.won ? "W" : "L"}</b><small>{game.opponent}</small>
         </span>)}
       </div>
-      <small className="gm-long__midseason-disclaimer">
-        Simulated on your franchise seed. These are completed games—not a preseason forecast.
-        Your record stays locked when you reach the trade deadline.
-      </small>
+      <small className="gm-long__midseason-disclaimer">8 games complete · Results locked</small>
     </header>
 
     <div className="gm-long__midseason-outlook">
@@ -84,14 +89,22 @@ export function FootballGmLongMidseasonPage({
       <div className="gm-long__midseason-section-header">
         <h3>HALFTIME DEVELOPMENT</h3><span>PROVISIONAL</span>
       </div>
-      <p>These are midseason trends, not finalized end-of-year ratings. Your coach creates development opportunities without changing talent ceilings.</p>
+      <div className="gm-long__midseason-trend-counts" aria-label="Midseason development summary">
+        <span className="is-up">{trendCounts.improving} Improving</span>
+        <span className="is-steady">{trendCounts.steady} Steady</span>
+        <span className="is-down">{trendCounts.regressing} Regressing</span>
+      </div>
       <div className="gm-long__midseason-growth-grid">
         {roster.map(({ pick, player }) => {
           const delta = midseason.development.find(d => d.playerId === player.id)?.delta ?? 0;
+          const result = nflGmLongDevelopmentOutcome(delta);
+          const tone = delta > 0 ? "up" : delta < 0 ? "down" : "steady";
           return <div key={player.id}>
             <span className="gm-long__midseason-slot">{longSlotLabel(pick.slot)}</span>
             <strong>{player.name}</strong>
-            <b className={delta > 0 ? "is-positive" : delta < 0 ? "is-negative" : ""}>{delta > 0 ? "+" + delta : delta < 0 ? String(delta) : "—"}</b>
+            <span className={`gm-long__midseason-outcome football-gm__development-note is-${tone}`}>
+              {result}
+            </span>
           </div>;
         })}
       </div>
@@ -110,12 +123,12 @@ export function FootballGmLongMidseasonPage({
       </>}
 
       {status === "shop" && <>
-        <p>Choose one of your starters to shop. Then spin an independent 31-team wheel for a partner. You can walk away with your roster intact.</p>
+        <p>Shop one starter, spin a trading partner, or keep your team.</p>
         <div className="gm-long__deadline-roster">
           {roster.map(({ pick, player }) => <button key={pick.slot} type="button"
             onClick={() => onShop(player.id)}>
             <span>{longSlotLabel(pick.slot)}</span><LongPlayerPortrait player={player} />
-            <strong>{player.name}</strong><small>{footballGmMoney(player.salaryWindow[0])}</small><b>SHOP →</b>
+            <strong>{player.name}</strong><span className="gm-long__deadline-shop-action"><small>{footballGmMoney(player.salaryWindow[0])}</small><b>SHOP →</b></span>
           </button>)}
         </div>
         <button type="button" className="gm-long__secondary" onClick={onSkip}>KEEP MY ROSTER</button>
@@ -131,19 +144,34 @@ export function FootballGmLongMidseasonPage({
 
       {status === "offers" && !spinning && outgoing && partner && <>
         <div className="gm-long__deadline-partner">
-          {partner.logoSrc && <img src={partner.logoSrc} alt="" />}
+          {partner.logoSrc && <span className="gm-long__deadline-partner-logo">
+            <img src={partner.logoSrc} alt="" />
+          </span>}
           <span><small>YOUR WHEEL PARTNER</small><strong>{partner.name}</strong></span>
         </div>
         <p>You are offering <b>{outgoing.name}</b>. Choose a replacement from {partner.name}.
-          Your nine-player starting core stays intact, and the $205M cap still applies.
-          You have <b>{2 - midseason.rejectedOfferIds.length} offer attempt(s)</b> left.</p>
+          Your nine starters stay intact. <b>{2 - midseason.rejectedOfferIds.length} offers left.</b></p>
         <div className="gm-long__deadline-offers">
-          {targets.filter(p => !midseason.rejectedOfferIds.includes(p.id)).map(player => <button
-            key={player.id} type="button" onClick={() => onOffer(player.id)}>
-            <LongPlayerPortrait player={player} />
-            <span><strong>{player.name}</strong><small>{player.team} · {player.position} · {footballGmMoney(player.salaryWindow[0])}</small></span>
-            <LongPlayerTier player={player} /><b>OFFER →</b>
-          </button>)}
+          {targets.filter(p => !midseason.rejectedOfferIds.includes(p.id)).map(player => {
+            const difference = player.salaryWindow[0] - outgoing.salaryWindow[0];
+            const capChange = difference < 0 ? `+${footballGmMoney(-difference)} room`
+              : difference > 0 ? `−${footballGmMoney(difference)} room` : "No cap change";
+            return <button className="gm-long__deadline-offer-card"
+              key={player.id} type="button" onClick={() => onOffer(player.id)}
+              aria-label={`Offer ${player.name} for ${outgoing.name}`}>
+              <span className="gm-long__deadline-offer-profile">
+                <LongPlayerPortrait player={player} />
+                <span className="gm-long__deadline-offer-identity">
+                  <strong>{player.name}</strong>
+                  <small>{player.team} · {player.position} · {footballGmMoney(player.salaryWindow[0])}</small>
+                  <LongPlayerTags player={player} />
+                </span>
+              </span>
+              <span className="gm-long__deadline-offer-footer">
+                <small>CAP IMPACT · {capChange}</small><b>OFFER →</b>
+              </span>
+            </button>;
+          })}
         </div>
         {targets.every(player => midseason.rejectedOfferIds.includes(player.id)) && <p className="gm-long__deadline-rejected">
           No available player-for-player offers remain with this team. Keep your original roster.
