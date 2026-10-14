@@ -369,6 +369,31 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("keeps fundamental UFC grappling vocabulary out of protected-difficulty tiers and grades synonyms fairly", () => {
+    const expected: Record<string, number> = {
+      "half-guard": 4, "body-triangle": 5, "hip-escape": 4,
+      "frame": 4, "pummeling": 5, "cage-cutting": 4,
+    };
+    for (const [id, maxGrade] of Object.entries(expected)) {
+      const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find((q) =>
+        q.id.startsWith(`average-fan:ufc:iq:${id}:`),
+      );
+      if (!question) continue; // No inventory quota; a vetted row may be unselected.
+      expect(question.grade, question.id).toBeLessThanOrEqual(maxGrade);
+      if (id === "pummeling") {
+        expect(question.prompt, question.id).toMatch(/swims the arms inside/);
+        expect(question.choices, question.id).not.toContain("Hand fighting");
+      }
+      if (id === "hip-escape" && question.format === "short-answer") {
+        expect(averageFanAnswersMatch(question, "Shrimping"), question.id).toBe(true);
+        expect(averageFanAnswersMatch(question, "Shrimp"), question.id).toBe(true);
+      }
+      if (id === "frame" && question.format === "short-answer") {
+        expect(averageFanAnswersMatch(question, "Framing"), question.id).toBe(true);
+      }
+    }
+  });
+
   it("keeps UFC division choices to real standard UFC weight classes", () => {
     const allowed = new Set([
       "Flyweight", "Bantamweight", "Featherweight", "Lightweight",
