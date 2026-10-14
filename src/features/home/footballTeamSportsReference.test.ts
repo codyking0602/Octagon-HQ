@@ -55,6 +55,8 @@ describe("Top Games Sports Reference team-pill destinations", () => {
     expect(footballTeamSportsReferenceUrl("Future School That Does Not Exist", "CFB", 2026)).toBeNull();
     expect(footballTeamSportsReferenceUrl("Notre Dame", "NFL", 2026)).toBeNull();
     expect(footballTeamSportsReferenceUrl("Packers", "CFB", 2026)).toBeNull();
+    expect(footballTeamSportsReferenceUrl("Washington Commanders", "CFB", 2026)).toBeNull();
+    expect(footballTeamSportsReferenceUrl("Miami Dolphins", "CFB", 2026)).toBeNull();
     expect(footballTeamSportsReferenceUrl("Packers", "NFL", Number.NaN)).toBeNull();
     expect(footballTeamSportsReferenceUrl("Packers", "NFL", 0)).toBeNull();
   });
