@@ -364,6 +364,24 @@ describe("Average Fan durable content banks", () => {
       .toBe(false);
   });
 
+  it("scopes generated college position true/false facts to the primary college position", () => {
+    const positionFacts = AVERAGE_FAN_CONTENT_BANKS.cfb.filter((question) =>
+      /^average-fan:cfb:g2:.+:position-tf$/.test(question.id),
+    );
+    expect(positionFacts.length).toBeGreaterThan(0);
+    for (const question of positionFacts) {
+      expect(question.prompt, question.id).toMatch(/primary college football position was/);
+      expect(question.explanation, question.id).toMatch(/primary college football position was/);
+    }
+    // Jeanty was a college RB but did play WR in high school: unscoped
+    // "Ashton Jeanty played WR" was defensibly true despite a False key.
+    const jeanty = positionFacts.find((question) => question.id.includes("ashton-jeanty"));
+    if (jeanty) {
+      expect(jeanty.prompt).not.toBe("Ashton Jeanty played WR.");
+      expect(jeanty.prompt).toMatch(/primary college football position/);
+    }
+  });
+
   it("keeps generated UFC opening-grade fighter recall recognition-first", () => {
     for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
       if (question.grade !== 2 || question.subject !== "Fighters") continue;
