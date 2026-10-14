@@ -144,8 +144,8 @@ That unsuccessful Save behavior is intentional.
 Retain a quality-first bank with room for six months of Daily selection; **bank sizes are ceilings, not required quotas**. As of the Stage 2C review, ceilings are:
 - NFL: 220
 - CFB: 158
-- UFC: 440
-- total: 818
+- UFC: 439
+- total: 817
 
 Actual selected inventories may be smaller. Retire unverified, repeated, ambiguous, or low-enjoyment items rather than refill to meet a target.
 
