@@ -12,6 +12,8 @@ import type { FootballGmPlayoffFinish } from "./footballGmEngine";
 
 export interface FootballGmLeagueClub {
   id: string;
+  /** NFL club identity for Long-only opponent displays. */
+  code?: string;
   conference: 0 | 1;
   division: number;
   grade: number;
@@ -64,13 +66,36 @@ function compareStandings(a: FootballGmLeagueClub, b: FootballGmLeagueClub): num
   return b.wins - a.wins || b.grade - a.grade || a.id.localeCompare(b.id);
 }
 
+/**
+ * Long-only checkpoint adapter. Ordinary Short, Weekly and H2H calls provide
+ * no plan and retain their original 17-game league outcomes byte-for-byte.
+ */
+export interface FootballGmLongLeaguePlan {
+  firstEight: readonly { opponent: string; grade: number; won: boolean }[];
+  remaining: readonly { opponent: string; grade: number }[];
+  fillers: readonly { opponent: string; grade: number }[];
+  gradesByWeek: readonly number[];
+  oddsAdjustments: readonly number[];
+  playoffOddsAdjustments: readonly number[];
+}
+export interface FootballGmLongLeagueTimeline {
+  games: { opponent: string; grade: number; won: boolean }[];
+  postseason: {
+    round: "Wild Card" | "Divisional" | "Conference Championship" | "Super Bowl";
+    opponent: string;
+    won: boolean;
+  }[];
+}
+
 export function footballGmSimulateLeagueSeason(input: {
   seed: string;
   year: 1 | 2 | 3;
   franchises: readonly FootballGmLeagueFranchise[];
+  long?: FootballGmLongLeaguePlan;
 }): {
   franchises: Record<string, FootballGmLeagueClub>;
   clubs: FootballGmLeagueClub[];
+  timeline?: FootballGmLongLeagueTimeline;
 } {
   const franchises = [...input.franchises].sort((a, b) => a.key.localeCompare(b.key));
   if (franchises.length < 1 || franchises.length > 2
@@ -80,6 +105,36 @@ export function footballGmSimulateLeagueSeason(input: {
   }
 
   const seed = `gm-league-v10:${input.seed}:year:${input.year}`;
+  const long = input.long;
+  if (long && (franchises.length !== 1 || long.firstEight.length !== 8
+    || long.remaining.length !== 9 || long.fillers.length !== 14
+    || long.gradesByWeek.length !== 9 || long.oddsAdjustments.length !== 9
+    || long.playoffOddsAdjustments.length !== 4
+    || [...long.firstEight, ...long.remaining, ...long.fillers].some(row =>
+      !row.opponent || !Number.isFinite(row.grade))
+    || new Set([...long.firstEight, ...long.remaining, ...long.fillers].map(row => row.opponent)).size !== 31
+    || [...long.gradesByWeek, ...long.oddsAdjustments, ...long.playoffOddsAdjustments]
+      .some(value => !Number.isFinite(value)))) {
+    throw new Error("Long GM requires 31 unique clubs and a valid locked 8 + 9 season.");
+  }
+  // The Short engine's circle schedule pairs slot zero with 17 distinct clubs.
+  // Bind saved weeks 1-8 to those exact slots, then the nine remaining games.
+  const clubIdentity = new Map<number, { opponent: string; grade: number }>();
+  if (long) {
+    let schedule = Array.from({ length: 32 }, (_, i) => i);
+    const ownerOpponents: number[] = [];
+    for (let week = 0; week < 17; week++) {
+      ownerOpponents.push(schedule[31]!);
+      schedule = [schedule[0]!, schedule[31]!, ...schedule.slice(1, 31)];
+    }
+    const spareSlots = Array.from({ length: 31 }, (_, i) => i + 1)
+      .filter(index => !ownerOpponents.includes(index));
+    [...ownerOpponents, ...spareSlots].forEach((slot, index) => {
+      const row = [...long.firstEight, ...long.remaining, ...long.fillers][index]!;
+      clubIdentity.set(slot, row);
+    });
+  }
+  const timeline: FootballGmLongLeagueTimeline = { games: [], postseason: [] };
   const ownerSlots = new Map<number, FootballGmLeagueFranchise>([
     [0, franchises[0]!],
     ...(franchises[1] ? [[16, franchises[1]!] as const] : []),
@@ -88,9 +143,10 @@ export function footballGmSimulateLeagueSeason(input: {
     const owned = ownerSlots.get(index);
     return {
       id: owned ? `gm:${owned.key}` : `npc:${index}`,
+      ...(long && !owned ? { code: clubIdentity.get(index)?.opponent } : {}),
       conference: (index < 16 ? 0 : 1) as 0 | 1,
       division: index % 4,
-      grade: owned ? owned.grade : 82.5 + 7 * roll(`${seed}:npc-grade:${index}`),
+      grade: owned ? owned.grade : clubIdentity.get(index)?.grade ?? (82.5 + 7 * roll(`${seed}:npc-grade:${index}`)),
       winChancePenalty: owned?.winChancePenalty ?? 0,
       wins: 0,
       losses: 0,
@@ -108,8 +164,22 @@ export function footballGmSimulateLeagueSeason(input: {
       const rightId = order[31 - pair]!;
       const left = clubs[leftId]!;
       const right = clubs[rightId]!;
-      const winning = roll(`${seed}:week:${week}:${leftId}:${rightId}`) < winChance(left, right)
-        ? left : right;
+      let winning: FootballGmLeagueClub;
+      if (long && (leftId === 0 || rightId === 0)) {
+        const owner = clubs[0]!;
+        const opponent = leftId === 0 ? right : left;
+        if (week < 8) {
+          // Never reroll or reinterpret the completed Phase 2 games.
+          winning = long.firstEight[week]!.won ? owner : opponent;
+        } else {
+          owner.grade = long.gradesByWeek[week - 8]!;
+          const chance = clamp(winChance(owner, opponent) + long.oddsAdjustments[week - 8]!, 0.08, 0.92);
+          winning = roll(`${seed}:week:${week}:${leftId}:${rightId}`) < chance ? owner : opponent;
+        }
+        timeline.games.push({ opponent: opponent.code!, grade: opponent.grade, won: winning === owner });
+      } else {
+        winning = roll(`${seed}:week:${week}:${leftId}:${rightId}`) < winChance(left, right) ? left : right;
+      }
       winning.wins += 1;
       (winning === left ? right : left).losses += 1;
     }
@@ -124,10 +194,26 @@ export function footballGmSimulateLeagueSeason(input: {
   ): FootballGmLeagueClub => {
     // Better seeds earn a modest home/bye advantage; upsets remain possible.
     const seedBonus = 0.012 * ((b.playoffSeed ?? 1) - (a.playoffSeed ?? 1));
-    const probability = clamp(winChance(a, b, seedBonus), 0.10, 0.90);
+    let probability = clamp(winChance(a, b, seedBonus), 0.10, 0.90);
+    const owner = clubs[0]!;
+    const ownerInMatch = Boolean(long && (a === owner || b === owner));
+    if (ownerInMatch) {
+      const roundIndex = round === "super-bowl" ? 3
+        : round.includes(":wc:") ? 0 : round.includes(":div:") ? 1 : 2;
+      const adjustment = long!.playoffOddsAdjustments[roundIndex]!;
+      probability = clamp(probability + (a === owner ? adjustment : -adjustment), 0.10, 0.90);
+    }
     const matchup = [a.id, b.id].sort().join(":");
     const winning = roll(`${seed}:playoff:${round}:${matchup}`) < probability ? a : b;
     (winning === a ? b : a).finish = exit;
+    if (ownerInMatch) {
+      const roundName = round === "super-bowl" ? "Super Bowl"
+        : round.includes(":wc:") ? "Wild Card"
+          : round.includes(":div:") ? "Divisional" : "Conference Championship";
+      timeline.postseason.push({
+        round: roundName, opponent: (a === owner ? b : a).code!, won: winning === owner,
+      });
+    }
     return winning;
   };
 
@@ -165,5 +251,6 @@ export function footballGmSimulateLeagueSeason(input: {
       return [franchise.key, club];
     })),
     clubs,
+    ...(long ? { timeline } : {}),
   };
 }

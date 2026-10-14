@@ -83,7 +83,7 @@ export function nflGmLongDevelopmentOutcome(delta: number): NflGmLongDevelopment
   return "HELD STEADY";
 }
 
-function playerDelta(player: NflGmLongPlayer, runId: string, coach: NflGmLongCoach): number {
+export function nflGmLongPlayerHalftimeDelta(player: NflGmLongPlayer, runId: string, coach: NflGmLongCoach): number {
   const baseline = player.currentGrade;
   const short = footballGmPlayerById(player.id);
   if (short) {
@@ -150,7 +150,7 @@ export function nflGmLongCreateMidseason(
     games,
     development: picks.map(pick => ({
       playerId: pick.playerId,
-      delta: playerDelta(NFL_GM_LONG_BY_ID.get(pick.playerId)!, runId, coach),
+      delta: nflGmLongPlayerHalftimeDelta(NFL_GM_LONG_BY_ID.get(pick.playerId)!, runId, coach),
     })),
     stage: "decision", shoppedPlayerId: null, partnerTeam: null,
     rejectedOfferIds: [], trade: null,
@@ -235,14 +235,14 @@ export function nflGmLongActivePicks(picks: readonly NflGmLongPick[], trade: Nfl
 
 /** Every accepted trade retains the complete nine-player starting core. */
 export function nflGmLongActiveGrade(
-  picks: readonly NflGmLongPick[], mid: NflGmLongMidseason,
+  picks: readonly NflGmLongPick[], mid: NflGmLongMidseason, runId?: string, coachName?: string,
 ): number {
   const changes = new Map(mid.development.map(d => [d.playerId, d.delta]));
   const active = new Map(nflGmLongActivePicks(picks, mid.trade).map(p => [p.slot, p.playerId]));
   const grade = NFL_GM_LONG_NEUTRAL_GRADE + Object.entries(NFL_GM_LONG_POSITION_WEIGHTS)
     .reduce((sum, [slot, weight]) => {
       const id = active.get(slot as NflGmLongSlot);
-      const value = id ? NFL_GM_LONG_BY_ID.get(id)!.currentGrade + (changes.get(id) ?? 0) : NFL_GM_LONG_NEUTRAL_GRADE;
+      const value = id ? NFL_GM_LONG_BY_ID.get(id)!.currentGrade + (changes.get(id) ?? (runId && coachName ? nflGmLongPlayerHalftimeDelta(NFL_GM_LONG_BY_ID.get(id)!, runId, coachFor(coachName)) : 0)) : NFL_GM_LONG_NEUTRAL_GRADE;
       return sum + weight * (value - NFL_GM_LONG_NEUTRAL_GRADE);
     }, 0);
   return round(grade);
@@ -260,7 +260,7 @@ export function nflGmLongPlayoffOutlook(
 ): { percent: number; label: string } {
   const coach = coachFor(coachName);
   const effects = coachBonuses(nflGmLongActivePicks(picks, mid.trade), coach);
-  const grade = nflGmLongActiveGrade(picks, mid);
+  const grade = nflGmLongActiveGrade(picks, mid, runId, coachName);
   const wins = nflGmLongRecord(mid).wins;
   // distribution[k] = probability of winning exactly k MORE games.
   let distribution = [1];
