@@ -1693,6 +1693,8 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
 // Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
 // Other known Bar Trivia, Millionaire, and intra-bank same-fact repeats.
 const RETIRED_REPEATED_FACT_ID_PREFIXES = [
+  // Arizona and Arizona State ask the same easy 2025 Big 12 answer; keep just one.
+  "average-fan:cfb:g1:program-arizona:conference",
   // Exclude exact-number recall or deep undercard trivia lacking a memorable anchor.
   "average-fan:ufc:authored-history:first-170:",
   "average-fan:ufc:authored-history:first-fox-time:",
