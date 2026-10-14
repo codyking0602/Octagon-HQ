@@ -1565,9 +1565,7 @@ function balancedTake(
       if (fact) usedFacts.add(fact);
       progressed = true;
     }
-    if (!progressed) {
-      throw new Error(`Average Fan ${label} has only ${selected.length} eligible questions for a target of ${target}.`);
-    }
+    if (!progressed) break; // Quality before inventory: a cap is not a minimum quota.
   }
   return selected;
 }
@@ -1719,6 +1717,11 @@ function buildBank(
     `${sport} Finals`,
     usedFacts,
   );
+  if (finals.length === 0 || AVERAGE_FAN_PLAYABLE_GRADES.some((grade) =>
+    ordinary.filter((question) => question.grade === grade).length < 2
+  )) {
+    throw new Error(`Average Fan ${sport} needs at least two eligible questions at each grade and one Final.`);
+  }
   const bank = [...ordinary, ...finals];
   const ids = new Set(bank.map((question) => question.id));
   if (ids.size !== bank.length) throw new Error(`Average Fan ${sport} bank contains duplicate ids.`);
