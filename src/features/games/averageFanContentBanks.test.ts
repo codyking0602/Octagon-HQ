@@ -455,6 +455,28 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("excludes dual-position college facts and avoids trivial top-grade UFC vocabulary", () => {
+    const college = AVERAGE_FAN_CONTENT_BANKS.cfb;
+    expect(college.some((question) =>
+      question.id.includes("cfb-travis-hunter") && (
+        question.id.endsWith(":position")
+        || question.id.endsWith(":position-tf")
+        || question.id.endsWith(":school-position")
+      ),
+    )).toBe(false);
+    for (const question of college.filter((item) =>
+      item.id.endsWith(":position") || item.id.endsWith(":school-position")
+    )) {
+      expect(question.prompt, question.id).toMatch(/primary college football position/);
+    }
+
+    const ufc = AVERAGE_FAN_CONTENT_BANKS.ufc;
+    expect(ufc.some((question) => question.id.startsWith("average-fan:ufc:iq:switch-stance:"))).toBe(false);
+    expect(ufc.some((question) =>
+      question.id.startsWith("average-fan:ufc:iq:feint:") && question.grade === 5,
+    )).toBe(false);
+  });
+
   it("does not confuse the Ghost to the Post regulation catch with the overtime touchdown", () => {
     for (const question of AVERAGE_FAN_CONTENT_BANKS.nfl) {
       if (!question.id.includes("ghost-to-post")) continue;

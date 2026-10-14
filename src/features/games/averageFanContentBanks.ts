@@ -615,7 +615,7 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "whizzer", grade: 5, prompt: "In wrestling-heavy MMA terminology, what is another common name for an overhook used to counter grappling?", answer: "Whizzer", wrong: ["Underhook", "Body lock"], explanation: "A whizzer is an overhook commonly used to counter takedown and clinch control." },
   { id: "half-guard", grade: 5, prompt: "What guard position has the bottom fighter trapping one of the top fighter's legs?", answer: "Half guard", wrong: ["Full mount", "Side control"], explanation: "In half guard, the bottom fighter controls one of the top fighter's legs." },
   { id: "body-triangle", grade: 5, prompt: "What back-control configuration locks the legs around an opponent's torso in a figure-four shape?", answer: "Body triangle", wrong: ["Closed guard", "Seatbelt grip", "Hooks"], explanation: "A body triangle uses a figure-four leg lock around the torso during back control." },
-  { id: "feint", grade: 5, prompt: "What striking term describes a fake attack used to draw a defensive reaction?", answer: "Feint", wrong: ["Frame", "Scramble"], explanation: "A feint is a false attack or movement used to provoke a reaction." },
+  { id: "feint", grade: 2, prompt: "What striking term describes a fake attack used to draw a defensive reaction?", answer: "Feint", wrong: ["Frame", "Scramble"], explanation: "A feint is a false attack or movement used to provoke a reaction." },
   { id: "switch-stance", grade: 5, prompt: "What does a fighter do when switching stance?", answer: "Changes which side is forward", wrong: ["Changes weight class", "Moves from standing to guard"], explanation: "Switching stance changes the lead side, such as moving between orthodox and southpaw." },
   { id: "single-leg", grade: 2, prompt: "What wrestling takedown attacks one of an opponent\'s legs?", answer: "Single-leg takedown", wrong: ["Double-leg takedown", "Hip toss"], explanation: "A single-leg takedown attacks one leg and works to finish from that control." },
   { id: "side-control", grade: 3, prompt: "What top grappling position places a fighter across the opponent\'s torso after passing the legs?", answer: "Side control", wrong: ["Closed guard", "Back control", "Half guard"], explanation: "Side control is a dominant top position across the opponent\'s torso after the legs have been passed." },
@@ -865,34 +865,39 @@ function footballCandidates(league: "NFL" | "CFB") {
     const position = player.position!;
     const wrongPositions = peerValues(FOOTBALL_POSITIONS, position, `${player.id}:position`);
     const playerSubject = "Players" as AverageFanSubject;
+    // Colorado officially identifies Hunter as an ATH and credits him as both
+    // first-team WR and DB. One-position questions have two equally valid answers.
+    const hasSinglePrimaryPosition = !(league === "CFB" && player.id === "cfb-travis-hunter");
 
-    questions.push(shortQuestion({
-      id: `average-fan:${sport}:g1:${player.id}:position`,
-      sport,
-      grade: 1,
-      subject: playerSubject,
-      prompt: `What position did ${player.name} play?`,
-      answer: position,
-      explanation: `${player.name} played ${position}.`,
-      fanMisses: wrongPositions,
-      difficultyNudge: player.recognizabilityTier === "A" || player.recognizabilityTier === "B" ? -2 : -1,
-    }));
+    if (hasSinglePrimaryPosition) {
+      questions.push(shortQuestion({
+        id: `average-fan:${sport}:g1:${player.id}:position`,
+        sport,
+        grade: 1,
+        subject: playerSubject,
+        prompt: `What was ${player.name}'s primary ${league === "NFL" ? "NFL" : "college football"} position?`,
+        answer: position,
+        explanation: `${player.name} played ${position}.`,
+        fanMisses: wrongPositions,
+        difficultyNudge: player.recognizabilityTier === "A" || player.recognizabilityTier === "B" ? -2 : -1,
+      }));
 
-    const tfTrue = index % 2 === 0;
-    const tfPosition = tfTrue ? position : wrongPositions[0]!;
-    questions.push(trueFalseQuestion({
-      id: `average-fan:${sport}:g2:${player.id}:position-tf`,
-      sport,
-      grade: 2,
-      subject: playerSubject,
-      // A player's college/high-school/NFL career can include secondary roles.
-      // Ask for their sourced primary *league-scoped* position, not whether
-      // they ever lined up elsewhere (e.g. Ashton Jeanty played WR in high school).
-      prompt: `${player.name}'s primary ${league === "NFL" ? "NFL" : "college football"} position was ${tfPosition}.`,
-      answer: tfTrue,
-      explanation: `${player.name}'s primary ${league === "NFL" ? "NFL" : "college football"} position was ${position}.`,
-      difficultyNudge: 0,
-    }));
+      const tfTrue = index % 2 === 0;
+      const tfPosition = tfTrue ? position : wrongPositions[0]!;
+      questions.push(trueFalseQuestion({
+        id: `average-fan:${sport}:g2:${player.id}:position-tf`,
+        sport,
+        grade: 2,
+        subject: playerSubject,
+        // A player's college/high-school/NFL career can include secondary roles.
+        // Ask for their sourced primary *league-scoped* position, not whether
+        // they ever lined up elsewhere (e.g. Ashton Jeanty played WR in high school).
+        prompt: `${player.name}'s primary ${league === "NFL" ? "NFL" : "college football"} position was ${tfPosition}.`,
+        answer: tfTrue,
+        explanation: `${player.name}'s primary ${league === "NFL" ? "NFL" : "college football"} position was ${position}.`,
+        difficultyNudge: 0,
+      }));
+    }
 
     if (league === "NFL" && player.school) {
       const wrongSchools = peerValues(schools, player.school, `${player.id}:school`);
@@ -986,13 +991,13 @@ function footballCandidates(league: "NFL" | "CFB") {
         }
       }
     } else {
-      if (player.school) {
+      if (player.school && hasSinglePrimaryPosition) {
         questions.push(choiceQuestion({
           id: `average-fan:cfb:g3:${player.id}:school-position`,
           sport: "cfb",
           grade: 3,
           subject: "Players",
-          prompt: `What position did ${player.name} play at ${player.school}?`,
+          prompt: `What was ${player.name}'s primary college football position at ${player.school}?`,
           answer: position,
           wrongChoices: wrongPositions,
           explanation: `${player.name} played ${position} at ${player.school}.`,
@@ -1817,6 +1822,8 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   // Arizona and Arizona State ask the same easy 2025 Big 12 answer; keep just one.
   "average-fan:cfb:g1:program-arizona:conference",
   // Exclude exact-number recall or deep undercard trivia lacking a memorable anchor.
+  // This UFC definition essentially gives away its answer in the prompt.
+  "average-fan:ufc:iq:switch-stance:",
   "average-fan:ufc:authored-history:first-170:",
   "average-fan:ufc:authored-history:first-fox-time:",
   "average-fan:ufc:final:authored:final-silva-reign",
