@@ -14,7 +14,7 @@ import {
 
 export const AVERAGE_FAN_BANK_TARGETS = {
   nfl: 220,
-  cfb: 220,
+  cfb: 161,
   ufc: 440,
 } as const;
 
@@ -29,6 +29,15 @@ const FOOTBALL_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
   3: 40,
   4: 40,
   5: 85,
+};
+
+// Stage 2: unique fact families, not cloned Bar Trivia content, determine
+// the bank ceiling. Add future questions only after independent fact review.
+const CFB_REVIEWED_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
+  2: 40,
+  3: 40,
+  4: 40,
+  5: 26,
 };
 
 const UFC_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
@@ -1753,7 +1762,7 @@ const averageFanCfbCandidates = footballCandidates("CFB").filter(
 export const averageFanCfbQuestionBank = buildBank(
   "cfb",
   averageFanCfbCandidates,
-  FOOTBALL_GRADE_TARGETS,
+  CFB_REVIEWED_GRADE_TARGETS,
   AVERAGE_FAN_FINAL_TARGETS.cfb,
 );
 
