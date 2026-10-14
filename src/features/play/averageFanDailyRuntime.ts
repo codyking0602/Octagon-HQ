@@ -224,17 +224,22 @@ function finalFor(
 ) {
   const now = `${day}T12:00:00.000Z`;
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport] as readonly AverageFanQuestion[];
+  const priorSportHistory = recentHistory(history, day).filter((row) => row.sport === sport);
   const used = new Set(
-    recentHistory(history, day)
-      .filter((row) => row.sport === sport)
+    priorSportHistory.map((row) => row.finalQuestionId)
+      .filter((id): id is string => Boolean(id)),
+  );
+  const usedWithinThirtyDays = new Set(
+    priorSportHistory.filter((row) => dayNumber(day) - dayNumber(row.day) <= 30)
       .map((row) => row.finalQuestionId)
       .filter((id): id is string => Boolean(id)),
   );
   const active = bank.filter((question) => averageFanQuestionEligibleForFinal(question, now));
   const fresh = active.filter((question) => !used.has(question.id));
+  const olderEligible = active.filter((question) => !usedWithinThirtyDays.has(question.id));
   const boardTopics = new Set(board.flatMap(averageFanQuestionNamedTopics));
   const ordered = deterministicOrder(
-    fresh.length ? fresh : active,
+    fresh.length ? fresh : olderEligible.length ? olderEligible : active,
     `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}|final`,
   ).sort((left, right) => {
     const overlaps = (question: AverageFanQuestion) =>
