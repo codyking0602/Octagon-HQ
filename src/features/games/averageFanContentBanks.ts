@@ -1940,7 +1940,7 @@ const AVERAGE_FAN_NAMED_TOPICS: Record<"nfl" | "cfb" | "ufc", readonly string[]>
 };
 
 function normalizeNamedTopic(value: string) {
-  return value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "")
+  return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
     .toLocaleLowerCase("en-US").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
