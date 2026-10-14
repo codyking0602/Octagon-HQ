@@ -40,6 +40,23 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
     expect(source("./footballWeeklyPublication.ts")).toContain("publishedFootballMatchup");
   });
 
+  it("keeps all future Top Games boards neutral charcoal without changing team-color pills", () => {
+    const css = source("../../styles/home-football-hq.css");
+    const board = css.match(/\\.football-hq-games \\{([^}]+)\\}/)?.[1];
+    const matchup = css.match(/\\.football-hq-game-row \\{([^}]+)\\}/)?.[1];
+    const schedule = css.match(/\\.football-hq-games__schedule \\{([^}]+)\\}/)?.[1];
+    expect(board).toContain("background: linear-gradient(145deg, #202124, #17181a)");
+    expect(board).toContain("border: 1px solid #404146");
+    expect(matchup).toContain("background: linear-gradient(135deg, #191a1c, #121315)");
+    expect(matchup).toContain("border: 1px solid #35363b");
+    expect(schedule).toContain("border: 1px solid #3c3d42");
+    expect(board).not.toContain("#18212b");
+    expect(matchup).not.toContain("#161e27");
+    expect(css).toContain("var(--team-accent, var(--team-color)) 30%");
+    expect(css).toContain(".football-hq-game-row__team-pill[href]");
+    expect(css).toContain("color: var(--home-football-blue, #8ebce6)");
+  });
+
   it("keeps source credits and kickoff reminders out of the short featured analysis", () => {
     const editorial = source("../picks/footballWeekOct13Featured.ts");
     expect(editorial).not.toMatch(/Game graphic:|Matchup information:|Saturday's 6:30|Sunday Night Football at/);
