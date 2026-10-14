@@ -20,8 +20,8 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
   it("retains readable player measurements and team names on mobile", () => {
     const css = source("../../styles/home-football-hq.css");
     expect(css).toContain(".football-player-spotlight__meta > span");
-    expect(css).toContain("-webkit-line-clamp: unset");
-    expect(css).toContain("grid-template-columns: minmax(0, 1fr); gap: 8px");
+    expect(css).toContain("-webkit-line-clamp:unset");
+    expect(css).toContain("grid-template-columns:minmax(0, 1fr); gap:8px");
     expect(source("../../styles/home-challenges.css")).toContain("white-space: normal");
   });
   it("keeps source credits and kickoff reminders out of the short featured analysis", () => {
