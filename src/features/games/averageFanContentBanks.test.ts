@@ -497,7 +497,7 @@ describe("Average Fan durable content banks", () => {
       if (!fighter) continue;
 
       const matchingBouts = fighter.fights.filter((fight) => {
-        const [, year, month, day] = /^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(fight.date) ?? [];
+        const [, year, month, day] = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fight.date) ?? [];
         if (!year || !month || !day) return false;
         const calendarDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
         const dateLabel = calendarDate.toLocaleDateString("en-US", {
