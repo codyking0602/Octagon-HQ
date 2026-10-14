@@ -215,37 +215,32 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 
 .football-hq-game-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(118px, .47fr);
-  gap: 11px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
   min-width: 0;
-  padding: 9px 10px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, .18);
+  padding: 10px;
+  border: 1px solid #313d4a;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #161e27, #10161e);
   color: var(--text-primary);
   text-decoration: none;
 }
-
-.football-hq-game-row__main {
-  min-width: 0;
-}
-
+.football-hq-game-row:hover { border-color: rgba(142, 188, 230, .65); }
+.football-hq-game-row__main { min-width: 0; }
 .football-hq-game-row__main > span {
   display: block;
-  margin-bottom: 7px;
-  color: var(--home-football-blue, var(--football-brand-blue, #8EBCE6));
-  font-size: 7px;
-  font-weight: 950;
-  letter-spacing: .09em;
+  margin-bottom: 8px;
+  color: var(--home-football-blue, #8ebce6);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
 }
-
 .football-hq-game-row__teams {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
   align-items: center;
   gap: 7px;
 }
-
 .football-hq-game-row__teams > div {
   display: grid;
   grid-template-columns: 32px minmax(0, 1fr);
