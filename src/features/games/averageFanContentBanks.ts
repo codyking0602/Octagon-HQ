@@ -885,9 +885,12 @@ function footballCandidates(league: "NFL" | "CFB") {
       sport,
       grade: 2,
       subject: playerSubject,
-      prompt: `${player.name} played ${tfPosition}.`,
+      // A player's college/high-school/NFL career can include secondary roles.
+      // Ask for their sourced primary *league-scoped* position, not whether
+      // they ever lined up elsewhere (e.g. Ashton Jeanty played WR in high school).
+      prompt: `${player.name}'s primary ${league === "NFL" ? "NFL" : "college football"} position was ${tfPosition}.`,
       answer: tfTrue,
-      explanation: `${player.name} is listed as a ${position}.`,
+      explanation: `${player.name}'s primary ${league === "NFL" ? "NFL" : "college football"} position was ${position}.`,
       difficultyNudge: 0,
     }));
 
