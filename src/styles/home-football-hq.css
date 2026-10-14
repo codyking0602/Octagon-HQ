@@ -176,9 +176,10 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
   display: grid;
   gap: 10px;
   padding: 13px;
-  border: 1px solid rgba(var(--home-football-blue-rgb, var(--football-brand-blue-rgb, 142, 188, 230)), .38);
+  border: 1px solid #404146;
   border-radius: 19px;
-  background: linear-gradient(145deg, #18212b, #121820);
+  /* Locked neutral graphite board; branding belongs on teams and text, not surfaces. */
+  background: linear-gradient(145deg, #202124, #17181a);
   box-shadow: inset 0 1px rgba(255, 255, 255, .045);
 }
 
@@ -221,14 +222,14 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
   gap: 9px;
   min-width: 0;
   padding: 10px;
-  border: 1px solid #313d4a;
+  border: 1px solid #35363b;
   border-radius: 15px;
-  background: linear-gradient(135deg, #161e27, #10161e);
+  background: linear-gradient(135deg, #191a1c, #121315);
   color: var(--text-primary);
   text-decoration: none;
 }
-.football-hq-game-row:hover { border-color: rgba(142, 188, 230, .65); }
-.football-hq-game-row:focus-within { border-color: rgba(142, 188, 230, .65); }
+.football-hq-game-row:hover { border-color: #656870; }
+.football-hq-game-row:focus-within { border-color: #656870; }
 .football-hq-game-row__breakdown-hit {
   position: absolute;
   inset: 0;
@@ -367,9 +368,9 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
   align-items: center;
   justify-content: center;
   min-height: 34px;
-  border: 1px solid #35404d;
+  border: 1px solid #3c3d42;
   border-radius: 11px;
-  background: rgba(255, 255, 255, .035);
+  background: rgba(255, 255, 255, .025);
   color: #e8edf5;
   font-size: 10px;
   font-weight: 850;
