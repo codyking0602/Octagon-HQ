@@ -2,13 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_BANK_TARGETS,
   AVERAGE_FAN_CONTENT_BANKS,
-  AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS,
   AVERAGE_FAN_FINAL_TARGETS,
   averageFanBankSummary,
 } from "./averageFanContentBanks";
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
+import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
+import { findDailyContentOverlaps, type DailyContentAuditEntry } from "../play/dailyContentQualityPolicy";
 import {
   averageFanAnswersMatch,
   validateAverageFanQuestion,
@@ -396,35 +397,40 @@ describe("Average Fan durable content banks", () => {
   });
 
 
-  it("reuses the newest verified Bar Trivia current-event pool without letting stale rows grow the bank", () => {
+  it("does not copy Bar Trivia questions into Average Fan in any sport", () => {
+    const authored = [...BAR_TRIVIA_QUESTION_BANK, ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS];
+    const entries: DailyContentAuditEntry[] = [
+      ...authored.map((question) => ({
+        sport: question.league,
+        game: "bar_trivia",
+        questionId: question.id,
+        prompt: question.prompt,
+        answer: question.answer,
+      })),
+      ...sports.flatMap((sport) => AVERAGE_FAN_CONTENT_BANKS[sport].map((question) => ({
+        sport,
+        game: "average_fan",
+        questionId: question.id,
+        prompt: question.prompt,
+        answer: question.answer,
+      }))),
+    ];
+    const overlaps = findDailyContentOverlaps(entries)
+      .filter((item) => item.scope === "across_games");
+    expect(overlaps.map((item) => ({
+      reason: item.reason, left: item.left.questionId, right: item.right.questionId,
+    }))).toEqual([]);
+
     for (const sport of sports) {
-      const source = BAR_TRIVIA_CURRENT_EVENT_QUESTIONS
-        .filter((question) => question.league === sport)
-        .sort((a, b) => {
-          const activeCompare = (b.activeFrom ?? "").localeCompare(a.activeFrom ?? "");
-          return activeCompare || b.id.localeCompare(a.id);
-        })
-        .slice(0, AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS[sport]);
-      const bankCurrent = AVERAGE_FAN_CONTENT_BANKS[sport].filter(
-        (question) => question.contentType === "current-event",
+      const average = AVERAGE_FAN_CONTENT_BANKS[sport];
+      const borrowedIds = average.filter((question) =>
+        question.id.includes(":current:") || (
+          sport === "cfb" && authored.some((original) =>
+            question.id === `average-fan:cfb:authored:${original.id}`
+          )
+        )
       );
-      expect(bankCurrent).toHaveLength(source.length);
-      expect(source.length).toBeGreaterThan(0);
-
-      const bankBySourceId = new Map(bankCurrent.map((question) => [question.sourceId, question]));
-      for (const sourceQuestion of source) {
-        expect(sourceQuestion.sourceId, sourceQuestion.id).toBeTruthy();
-        expect(sourceQuestion.sourceUrl, sourceQuestion.id).toBeTruthy();
-        expect(sourceQuestion.verifiedAt, sourceQuestion.id).toBeTruthy();
-
-        const adapted = bankBySourceId.get(sourceQuestion.sourceId);
-        expect(adapted, sourceQuestion.id).toBeTruthy();
-        expect(adapted?.activeFrom, sourceQuestion.id).toBe(sourceQuestion.activeFrom);
-        expect(adapted?.expiresAt, sourceQuestion.id).toBe(sourceQuestion.expiresAt);
-        expect(adapted?.verifiedAt, sourceQuestion.id).toBe(sourceQuestion.verifiedAt);
-        expect(adapted?.sourceUrl, sourceQuestion.id).toBe(sourceQuestion.sourceUrl);
-        expect(adapted?.protectedFinal, sourceQuestion.id).toBe(false);
-      }
+      expect(borrowedIds.map((question) => question.id)).toEqual([]);
     }
   });
 
