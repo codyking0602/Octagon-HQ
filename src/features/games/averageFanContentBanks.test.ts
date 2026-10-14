@@ -402,6 +402,25 @@ describe("Average Fan durable content banks", () => {
   });
 
 
+  it("recognizes nested fighter and player IDs when deduplicating question facts", () => {
+    const division = {
+      id: "average-fan:ufc:g1:ufc:jon-jones:division",
+    } as AverageFanQuestion;
+    const divisionTf = {
+      id: "average-fan:ufc:g2:ufc:jon-jones:division-tf",
+    } as AverageFanQuestion;
+    expect(averageFanQuestionFactKey(division))
+      .toBe("ufc:fighter:ufc:jon-jones:division");
+    expect(averageFanQuestionFactKey(divisionTf))
+      .toBe(averageFanQuestionFactKey(division));
+
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc.filter((q) =>
+      q.id.endsWith(":division") || q.id.endsWith(":division-tf")
+    )) {
+      expect(averageFanQuestionFactKey(question), question.id).not.toBeNull();
+    }
+  });
+
   it("does not select the same player fact twice using alternate formats or grades", () => {
     for (const sport of sports) {
       const keys = AVERAGE_FAN_CONTENT_BANKS[sport]

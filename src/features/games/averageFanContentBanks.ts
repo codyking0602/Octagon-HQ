@@ -1457,13 +1457,13 @@ function calibratedPlayableQuestion(question: AverageFanQuestion) {
  */
 export function averageFanQuestionFactKey(question: AverageFanQuestion): string | null {
   const id = question.id;
-  const position = /^average-fan:(nfl|cfb):g[1-5]:([^:]+):(position|position-tf|school-position)$/.exec(id);
+  const position = /^average-fan:(nfl|cfb):g[1-5]:(.+):(position|position-tf|school-position)$/.exec(id);
   if (position) return `${position[1]}:player:${position[2]}:position`;
-  const conference = /^average-fan:cfb:g[1-5]:([^:]+):(conference|conference-tf|conference-program)$/.exec(id);
+  const conference = /^average-fan:cfb:g[1-5]:(.+):(conference|conference-tf|conference-program)$/.exec(id);
   if (conference) return `cfb:program:${conference[1]}:conference`;
-  const division = /^average-fan:ufc:g[1-5]:([^:]+):(division|division-tf)$/.exec(id);
+  const division = /^average-fan:ufc:g[1-5]:(.+):(division|division-tf)$/.exec(id);
   if (division) return `ufc:fighter:${division[1]}:division`;
-  const cfbDraft = /^average-fan:cfb:(?:g[1-5]|final):([^:]+):(draft-pick|draft-identity|draft)$/.exec(id);
+  const cfbDraft = /^average-fan:cfb:(?:g[1-5]|final):(.+):(draft-pick|draft-identity|draft)$/.exec(id);
   if (cfbDraft) return `cfb:player:${cfbDraft[1]}:draft-slot`;
   return null;
 }
