@@ -15,13 +15,13 @@ import {
 export const AVERAGE_FAN_BANK_TARGETS = {
   nfl: 220,
   cfb: 158,
-  ufc: 440,
+  ufc: 439,
 } as const;
 
 export const AVERAGE_FAN_FINAL_TARGETS = {
   nfl: 15,
   cfb: 15,
-  ufc: 30,
+  ufc: 29,
 } as const;
 
 const FOOTBALL_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
@@ -1755,6 +1755,8 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   "average-fan:ufc:authored-history:first-170:",
   "average-fan:ufc:authored-history:first-fox-time:",
   "average-fan:ufc:final:authored:final-silva-reign",
+  // Bar Trivia already asks the five-second Masvidal/Askren UFC record (inverted answer).
+  "average-fan:ufc:final:authored:final-masvidal-five",
   "average-fan:nfl:00-team:terrible-towel:",
   "average-fan:nfl:00-team:bills-four-straight:",
   "average-fan:cfb:tradition:sooner-schooner:",
