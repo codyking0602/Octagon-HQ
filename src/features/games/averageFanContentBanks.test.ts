@@ -420,6 +420,16 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("does not confuse the Ghost to the Post regulation catch with the overtime touchdown", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.nfl) {
+      if (!question.id.includes("ghost-to-post")) continue;
+      expect(question.prompt).toMatch(/late in regulation/);
+      expect(question.explanation).toMatch(/fourth quarter/);
+      expect(question.explanation).toMatch(/double overtime/);
+      expect(question.prompt).not.toMatch(/overtime catch/);
+    }
+  });
+
   it("states the NFL fourth-down fumble rule without disallowing teammate recovery", () => {
     const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
       (row) => row.id === "average-fan:nfl:00-0tf:fourth-down-fumble",
