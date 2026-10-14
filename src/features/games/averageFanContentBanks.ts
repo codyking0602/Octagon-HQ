@@ -615,8 +615,8 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "whizzer", grade: 5, prompt: "In wrestling-heavy MMA terminology, what is another common name for an overhook used to counter grappling?", answer: "Whizzer", wrong: ["Underhook", "Body lock"], explanation: "A whizzer is an overhook commonly used to counter takedown and clinch control." },
   { id: "half-guard", grade: 5, prompt: "What guard position has the bottom fighter trapping one of the top fighter's legs?", answer: "Half guard", wrong: ["Full mount", "Side control"], explanation: "In half guard, the bottom fighter controls one of the top fighter's legs." },
   { id: "body-triangle", grade: 5, prompt: "What back-control configuration locks the legs around an opponent's torso in a figure-four shape?", answer: "Body triangle", wrong: ["Closed guard", "Seatbelt grip", "Hooks"], explanation: "A body triangle uses a figure-four leg lock around the torso during back control." },
-  { id: "feint", grade: 5, prompt: "What striking term describes a fake attack used to draw a defensive reaction?", answer: "Feint", wrong: ["Frame", "Scramble"], explanation: "A feint is a false attack or movement used to provoke a reaction." },
-  { id: "switch-stance", grade: 5, prompt: "What does a fighter do when switching stance?", answer: "Changes which side is forward", wrong: ["Changes weight class", "Moves from standing to guard"], explanation: "Switching stance changes the lead side, such as moving between orthodox and southpaw." },
+  { id: "feint", grade: 2, prompt: "What striking term describes a fake attack used to draw a defensive reaction?", answer: "Feint", wrong: ["Frame", "Scramble"], explanation: "A feint is a false attack or movement used to provoke a reaction." },
+  { id: "switch-stance", grade: 2, prompt: "What does a fighter do when switching stance?", answer: "Changes which side is forward", wrong: ["Changes weight class", "Moves from standing to guard"], explanation: "Switching stance changes the lead side, such as moving between orthodox and southpaw." },
   { id: "single-leg", grade: 2, prompt: "What wrestling takedown attacks one of an opponent\'s legs?", answer: "Single-leg takedown", wrong: ["Double-leg takedown", "Hip toss"], explanation: "A single-leg takedown attacks one leg and works to finish from that control." },
   { id: "side-control", grade: 3, prompt: "What top grappling position places a fighter across the opponent\'s torso after passing the legs?", answer: "Side control", wrong: ["Closed guard", "Back control", "Half guard"], explanation: "Side control is a dominant top position across the opponent\'s torso after the legs have been passed." },
   { id: "teep", grade: 3, prompt: "What striking term is commonly used for a push kick that helps manage distance?", answer: "Teep", wrong: ["Spinning backfist", "Overhand"], explanation: "A teep is a push kick commonly used to control range and disrupt forward movement." },
@@ -624,8 +624,8 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "back-hooks", grade: 4, prompt: "In back control, what are the legs called when they are inserted inside an opponent\'s thighs?", answer: "Hooks", wrong: ["Frames", "Posts"], explanation: "Hooks use the feet and legs inside the opponent\'s thighs to help secure back control." },
   { id: "rear-body-lock", grade: 4, prompt: "What clinch control wraps the arms around an opponent\'s waist or hips from behind?", answer: "Rear body lock", wrong: ["Front headlock", "Double collar tie", "Double underhooks"], explanation: "A rear body lock controls the opponent from behind with the arms locked around the waist or hips." },
   { id: "calf-kick", grade: 4, prompt: "A calf kick is aimed primarily at which area?", answer: "Lower leg", wrong: ["Ribs", "Forearm"], explanation: "A calf kick targets the lower leg around the calf rather than the thigh or upper body." },
-  { id: "hip-escape", grade: 5, prompt: "What grappling movement is also commonly called a shrimp?", answer: "Hip escape", wrong: ["Granby roll", "Technical stand-up"], explanation: "The hip escape, often called a shrimp, creates space by moving the hips away from pressure." },
-  { id: "frame", grade: 5, prompt: "What grappling term describes using the forearm or other skeletal structure to create and maintain space?", answer: "Frame", wrong: ["Hook", "Whizzer"], explanation: "A frame uses skeletal structure, often the forearm, to manage distance and resist pressure." },
+  { id: "hip-escape", grade: 3, prompt: "What grappling movement is also commonly called a shrimp?", answer: "Hip escape", wrong: ["Granby roll", "Technical stand-up"], explanation: "The hip escape, often called a shrimp, creates space by moving the hips away from pressure." },
+  { id: "frame", grade: 3, prompt: "What grappling term describes using the forearm or other skeletal structure to create and maintain space?", answer: "Frame", wrong: ["Hook", "Whizzer"], explanation: "A frame uses skeletal structure, often the forearm, to manage distance and resist pressure." },
   { id: "pummeling", grade: 5, prompt: "What clinch drill or exchange involves fighting for inside arm position and underhooks?", answer: "Pummeling", wrong: ["Shrimping", "Posting", "Hand fighting"], explanation: "Pummeling is the hand-and-arm battle for inside position and underhooks in the clinch." },
   { id: "cage-cutting", grade: 5, prompt: "What striking-footwork concept limits an opponent\'s escape routes instead of simply following them around the cage?", answer: "Cage cutting", aliases: ["Cutting off", "Cutting off the cage", "Cut off the cage"], wrong: ["Level changing", "Wall walking"], explanation: "Cage cutting uses angles and positioning to reduce an opponent\'s available space and exits." },
 ];
@@ -1306,6 +1306,12 @@ function ufcCandidates() {
   const questions: AverageFanQuestion[] = [];
 
   for (const [index, fighter] of fighters.entries()) {
+    // Pinned UFC records can list more than one fight on a tournament date.
+    // A date-specific answer is only unique when exactly one bout is recorded
+    // for that fighter on that date. Never accept an open-ended "name one"
+    // answer against the selected/partial opponent ledger.
+    const isUniqueBoutDate = (date: string) =>
+      fighter.fights.filter((fight) => fight.date === date).length === 1;
     const primaryDivision = formatDivision(fighter.primaryDivision);
     if ((UFC_STANDARD_DIVISIONS as readonly string[]).includes(primaryDivision)) {
       const divisionPool = primaryDivision.startsWith("Women's ")
@@ -1338,7 +1344,10 @@ function ufcCandidates() {
     }
 
     const wins = fighter.fights.filter((fight) => fight.result === "win");
-    const recognizableFight = wins[stableOffset(`${fighter.id}:win`, Math.max(1, wins.length))] ?? fighter.fights[0];
+    const dateUniqueWins = wins.filter((fight) => isUniqueBoutDate(fight.date));
+    const dateUniqueFights = fighter.fights.filter((fight) => isUniqueBoutDate(fight.date));
+    const recognizableFight = dateUniqueWins[stableOffset(`${fighter.id}:win`, Math.max(1, dateUniqueWins.length))]
+      ?? dateUniqueFights[0];
     if (recognizableFight) {
       const acceptedOpponents = (wins.length ? wins : fighter.fights).map((fight) => fight.opponent);
       const wrongOpponents = ufcPlausibleFighterMisses(fighter, fighters, acceptedOpponents, `${fighter.id}:opponent`);
@@ -1349,9 +1358,9 @@ function ufcCandidates() {
         sport: "ufc",
         grade: 3,
         subject: "Fights",
-        prompt: wins.length
-          ? `Which of these fighters did ${fighter.name} defeat in the UFC?`
-          : `Which of these fighters did ${fighter.name} face in the UFC?`,
+        prompt: recognizableFight.result === "win"
+          ? `Which of these fighters did ${fighter.name} defeat in the UFC on ${naturalFightDate(recognizableFight.date)}?`
+          : `Which of these fighters did ${fighter.name} face in the UFC on ${naturalFightDate(recognizableFight.date)}?`,
         answer: recognizableFight.opponent,
         wrongChoices: wrongOpponents,
         explanation: `${fighter.name} ${recognizableFight.result === "win" ? "defeated" : "faced"} ${recognizableFight.opponent} in the UFC.`,
@@ -1359,24 +1368,20 @@ function ufcCandidates() {
     }
 
     const methodWins = wins.filter((fight) => fight.methodCategory !== "other");
-    const methodFight = methodWins[stableOffset(`${fighter.id}:method`, Math.max(1, methodWins.length))];
+    const uniqueDateMethodWins = methodWins.filter((fight) => isUniqueBoutDate(fight.date));
+    const methodFight = uniqueDateMethodWins[
+      stableOffset(`${fighter.id}:method`, Math.max(1, uniqueDateMethodWins.length))
+    ];
     if (methodFight) {
-      const sameMethodOpponents = unique(
-        wins
-          .filter((fight) => fight.methodCategory === methodFight.methodCategory)
-          .map((fight) => fight.opponent),
-      );
-      const answer = sameMethodOpponents[0]!;
-      const wrongOpponents = peerValues(fighterNames, sameMethodOpponents, `${fighter.id}:method-opponent`);
+      const wrongOpponents = peerValues(fighterNames, methodFight.opponent, `${fighter.id}:method-opponent`);
       questions.push(shortQuestion({
         id: `average-fan:ufc:g4:${fighter.id}:method-win`,
         sport: "ufc",
         grade: 4,
         subject: "Fights",
-        prompt: `Name one opponent ${fighter.name} beat by ${methodLabel(methodFight.methodCategory)} in the UFC.`,
-        answer,
-        aliases: sameMethodOpponents.slice(1),
-        explanation: `${fighter.name} beat ${answer} by ${methodLabel(methodFight.methodCategory)} in the UFC.`,
+        prompt: `Who did ${fighter.name} defeat by ${methodLabel(methodFight.methodCategory)} in the UFC on ${naturalFightDate(methodFight.date)}?`,
+        answer: methodFight.opponent,
+        explanation: `${fighter.name} defeated ${methodFight.opponent} by ${methodLabel(methodFight.methodCategory)} in the UFC on ${naturalFightDate(methodFight.date)}.`,
         fanMisses: wrongOpponents,
         difficultyNudge: 1,
       }));
@@ -1412,20 +1417,20 @@ function ufcCandidates() {
     if (titleFights.length) {
       const titleFight = titleFights[titleFights.length - 1]!;
       const wrongNames = ufcPlausibleFighterMisses(fighter, fighters, [fighter.name], `${fighter.id}:title-identity`);
-      const titleOpponents = unique(titleFights.map((fight) => fight.opponent));
-      const wrongTitleOpponents = peerValues(fighterNames, titleOpponents, `${fighter.id}:title-opponent`);
-      questions.push(shortQuestion({
-        id: `average-fan:ufc:g4:${fighter.id}:title-opponent`,
-        sport: "ufc",
-        grade: 4,
-        subject: "Championships",
-        prompt: `Name one fighter ${fighter.name} faced in a UFC title fight.`,
-        answer: titleOpponents[0]!,
-        aliases: titleOpponents.slice(1),
-        explanation: `${fighter.name}'s UFC title-fight opponents include ${titleOpponents.join(", ")}.`,
-        fanMisses: wrongTitleOpponents,
-        difficultyNudge: 1,
-      }));
+      if (isUniqueBoutDate(titleFight.date)) {
+        const wrongTitleOpponents = peerValues(fighterNames, titleFight.opponent, `${fighter.id}:title-opponent`);
+        questions.push(shortQuestion({
+          id: `average-fan:ufc:g4:${fighter.id}:title-opponent`,
+          sport: "ufc",
+          grade: 4,
+          subject: "Championships",
+          prompt: `Who did ${fighter.name} face in a UFC title fight on ${naturalFightDate(titleFight.date)}?`,
+          answer: titleFight.opponent,
+          explanation: `${fighter.name} faced ${titleFight.opponent} in a UFC title fight on ${naturalFightDate(titleFight.date)}.`,
+          fanMisses: wrongTitleOpponents,
+          difficultyNudge: 1,
+        }));
+      }
       const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
         .filter((opponent) => opponent !== titleFight.opponent)
         .slice(0, 2);
