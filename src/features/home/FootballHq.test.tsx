@@ -221,8 +221,10 @@ describe("Football HQ Home summary", () => {
     expect(collegeMarks[0]).toHaveClass("is-white-logo");
     expect(collegeMarks[1]).toHaveClass("is-white-logo");
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("Kansas City Chiefs")).toBeInTheDocument();
-    expect(within(hq).getByText("Las Vegas Raiders")).toBeInTheDocument();
+    expect(within(hq).getByText("Kansas City")).toBeInTheDocument();
+    expect(within(hq).getByText("Chiefs")).toBeInTheDocument();
+    expect(within(hq).getByText("Las Vegas")).toBeInTheDocument();
+    expect(within(hq).getByText("Raiders")).toBeInTheDocument();
     const nflGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Chiefs at Raiders" });
     const nflTeams = nflGame.querySelectorAll(".football-hq-game-row__teams > div");
     expect(nflTeams[0]).toHaveStyle("--team-color: #E31837");

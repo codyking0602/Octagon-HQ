@@ -145,6 +145,27 @@ function fullTeamNameForGame(game: PickBout, team: FootballMatchupBreakdown["tea
   return team.name;
 }
 
+/**
+ * Keep long school/city names intact while giving nicknames a calmer second line.
+ * This works for the live matchup each week, not a hardcoded pair of teams.
+ */
+function featuredGameTeamLabel(fullName: string, canonicalName: string) {
+  const full = fullName.trim();
+  const metadata = footballTeamSchoolMetadataFor(canonicalName);
+  if (metadata?.level === "CFB") {
+    const school = metadata.name;
+    if (full.toLowerCase().startsWith(`${school.toLowerCase()} `)) {
+      return { name: school, nickname: full.slice(school.length).trim() };
+    }
+    return { name: full, nickname: "" };
+  }
+  const lastSpace = full.lastIndexOf(" ");
+  if (metadata?.level === "NFL" && lastSpace > 0) {
+    return { name: full.slice(0, lastSpace), nickname: full.slice(lastSpace + 1) };
+  }
+  return { name: full, nickname: "" };
+}
+
 function PlayerSpotlight({
   spotlight,
   photoSource,
@@ -271,6 +292,8 @@ function FeaturedGameRow({
   const secondTeam = breakdown.teams[1];
   const firstPresentation = footballHqTeamPresentationFor(firstTeam.name);
   const secondPresentation = footballHqTeamPresentationFor(secondTeam.name);
+  const firstLabel = featuredGameTeamLabel(fullTeamNameForGame(game, firstTeam), firstTeam.name);
+  const secondLabel = featuredGameTeamLabel(fullTeamNameForGame(game, secondTeam), secondTeam.name);
 
   return (
     <Link
@@ -281,28 +304,34 @@ function FeaturedGameRow({
       <div className="football-hq-game-row__main">
         <span>{label}</span>
         <div className="football-hq-game-row__teams">
-          <div style={{ "--team-color": firstPresentation.color } as CSSProperties}>
+          <div style={{ "--team-color": firstPresentation.color, "--team-accent": firstTeam.name === "Green Bay Packers" ? "#156342" : firstPresentation.color } as CSSProperties}>
             <TeamMark
               logoUrl={logoForTeam(game, firstTeam)}
               name={firstTeam.name}
               logoTreatment={firstPresentation.logoTreatment}
             />
-            <strong>{fullTeamNameForGame(game, firstTeam)}</strong>
+            <span className="football-hq-game-row__team-label">
+              <strong>{firstLabel.name}</strong>
+              {firstLabel.nickname ? <small>{firstLabel.nickname}</small> : null}
+            </span>
           </div>
-          <b>VS</b>
-          <div style={{ "--team-color": secondPresentation.color } as CSSProperties}>
+          <b aria-hidden="true">VS</b>
+          <div style={{ "--team-color": secondPresentation.color, "--team-accent": secondTeam.name === "Green Bay Packers" ? "#156342" : secondPresentation.color } as CSSProperties}>
             <TeamMark
               logoUrl={logoForTeam(game, secondTeam)}
               name={secondTeam.name}
               logoTreatment={secondPresentation.logoTreatment}
             />
-            <strong>{fullTeamNameForGame(game, secondTeam)}</strong>
+            <span className="football-hq-game-row__team-label">
+              <strong>{secondLabel.name}</strong>
+              {secondLabel.nickname ? <small>{secondLabel.nickname}</small> : null}
+            </span>
           </div>
         </div>
       </div>
       <div className="football-hq-game-row__meta">
-        <strong>{footballDateTimeLabel(breakdown.kickoffAt ?? game.locksAt ?? event.startsAt)}</strong>
-        <b>OPEN BREAKDOWN →</b>
+        <strong><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></svg>{footballDateTimeLabel(breakdown.kickoffAt ?? game.locksAt ?? event.startsAt)}</strong>
+        <b>BREAKDOWN <span aria-hidden="true">→</span></b>
       </div>
     </Link>
   );

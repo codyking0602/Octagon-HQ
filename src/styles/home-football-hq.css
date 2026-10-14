@@ -174,11 +174,12 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 
 .football-hq-games {
   display: grid;
-  gap: 9px;
-  padding: 11px;
-  border: 1px solid rgba(var(--home-football-blue-rgb, var(--football-brand-blue-rgb, 142, 188, 230)), .28);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, .022);
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid rgba(var(--home-football-blue-rgb, var(--football-brand-blue-rgb, 142, 188, 230)), .38);
+  border-radius: 19px;
+  background: linear-gradient(145deg, #18212b, #121820);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .045);
 }
 
 .football-hq-games > header {
@@ -191,7 +192,7 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 
 .football-hq-games > header > span,
 .football-hq-games > header > small {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 950;
   letter-spacing: .12em;
 }
@@ -210,82 +211,88 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 
 .football-hq-games__list {
   display: grid;
-  gap: 7px;
+  gap: 9px;
 }
 
 .football-hq-game-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(118px, .47fr);
-  gap: 11px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
   min-width: 0;
-  padding: 9px 10px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, .18);
+  padding: 10px;
+  border: 1px solid #313d4a;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #161e27, #10161e);
   color: var(--text-primary);
   text-decoration: none;
 }
-
-.football-hq-game-row__main {
-  min-width: 0;
-}
-
+.football-hq-game-row:hover { border-color: rgba(142, 188, 230, .65); }
+.football-hq-game-row__main { min-width: 0; }
 .football-hq-game-row__main > span {
   display: block;
-  margin-bottom: 7px;
-  color: var(--home-football-blue, var(--football-brand-blue, #8EBCE6));
-  font-size: 7px;
-  font-weight: 950;
-  letter-spacing: .09em;
+  margin-bottom: 8px;
+  color: var(--home-football-blue, #8ebce6);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
 }
-
 .football-hq-game-row__teams {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
   align-items: center;
   gap: 7px;
 }
-
 .football-hq-game-row__teams > div {
+  position: relative;
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr);
+  grid-template-columns: 36px minmax(0, 1fr);
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
-  min-height: 46px;
-  padding: 5px 7px;
-  border: 1px solid color-mix(in srgb, var(--team-color) 68%, white);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--team-color) 34%, #111415);
+  min-height: 60px;
+  padding: 8px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--team-accent, var(--team-color)) 65%, #8993a1);
+  border-radius: 11px;
+  background: linear-gradient(110deg,
+    color-mix(in srgb, var(--team-accent, var(--team-color)) 30%, #101922),
+    color-mix(in srgb, var(--team-accent, var(--team-color)) 15%, #0e161f));
   color: #fff;
 }
-
+.football-hq-game-row__teams > div::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 14px;
+  background: var(--team-accent, var(--team-color));
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
 .football-hq-game-row__teams > b {
   display: grid;
   place-items: center;
-  width: 18px;
-  color: var(--text-muted);
-  font-size: 7px;
+  color: #a4aeba;
+  font-size: 10px;
   letter-spacing: .06em;
-  text-align: center;
 }
-
-.football-hq-game-row__teams strong {
-  display: -webkit-box;
-  overflow: hidden;
-  color: #fff;
-  font-size: 9px;
-  line-height: 1.05;
-  white-space: normal;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+.football-hq-game-row__team-label { display: grid; gap: 2px; min-width: 0; }
+.football-hq-game-row__team-label strong {
+  color: #f7f9fc;
+  font-size: 13px;
+  line-height: 1.15;
+}
+.football-hq-game-row__team-label small {
+  color: #b9c2ce;
+  font-size: 11px;
+  line-height: 1.2;
 }
 
 .football-hq-team-mark {
+  position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
 }
 
 .football-hq-team-mark img {
@@ -307,137 +314,55 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 }
 
 .football-hq-game-row__meta {
-  display: grid;
-  align-content: center;
-  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   min-width: 0;
-  padding-left: 10px;
-  border-left: 1px solid var(--border);
+  padding: 9px 2px 0;
+  border-top: 1px solid rgba(175, 187, 201, .18);
 }
-
 .football-hq-game-row__meta > strong {
-  overflow: hidden;
-  font-size: 8px;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
 }
-
 .football-hq-game-row__meta > b {
-  margin-top: 2px;
-  color: var(--home-football-blue, var(--football-brand-blue, #8EBCE6));
-  font-size: 7px;
-  letter-spacing: .05em;
+  flex: 0 0 auto;
+  color: var(--home-football-blue, #8ebce6);
+  font-size: 10px;
+  letter-spacing: .03em;
 }
-
 .football-hq-games__schedule {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
-  border: 1px solid var(--border);
+  min-height: 34px;
+  border: 1px solid #35404d;
   border-radius: 11px;
-  background: rgba(255, 255, 255, .025);
-  color: var(--text-primary);
-  font-size: 8px;
-  font-weight: 950;
-  letter-spacing: .06em;
+  background: rgba(255, 255, 255, .035);
+  color: #e8edf5;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .055em;
   text-decoration: none;
 }
 
 @media (max-width: 430px) {
-  .football-player-spotlight {
-    grid-template-columns: minmax(104px, .64fr) minmax(0, 1.36fr);
-    min-height: 170px;
-  }
-
-  .football-player-spotlight__media img,
-  .football-player-spotlight__placeholder {
-    min-height: 170px;
-  }
-
-  .football-player-spotlight__copy {
-    padding: 10px 9px 10px 7px;
-  }
-
-  .football-player-spotlight__copy h3 {
-    font-size: 22px;
-  }
-
-  .football-player-spotlight__stats b {
-    font-size: 9px;
-  }
-
-  .football-player-spotlight__stats small {
-    font-size: 5.5px;
-  }
-
-  .football-hq-game-row {
-    grid-template-columns: minmax(0, 1fr) 110px;
-    gap: 8px;
-    padding-inline: 8px;
-  }
-
-  .football-hq-game-row__teams {
-    grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr);
-    gap: 5px;
-  }
-
-  .football-hq-game-row__teams > div {
-    grid-template-columns: 24px minmax(0, 1fr);
-    gap: 3px;
-    min-height: 44px;
-    padding: 4px;
-  }
-
-  .football-hq-game-row__teams > b {
-    width: 14px;
-  }
-
-  .football-hq-game-row__teams strong {
-    font-size: 8px;
-    line-height: 1.02;
-    -webkit-line-clamp: 3;
-  }
-
-  .football-hq-team-mark {
-    width: 24px;
-    height: 24px;
-  }
-
-  .football-hq-game-row__meta > strong {
-    font-size: 7px;
-  }
+  .football-player-spotlight { grid-template-columns: minmax(104px,.64fr) minmax(0,1.36fr); min-height:170px; }
+  .football-player-spotlight__media img, .football-player-spotlight__placeholder { min-height:170px; }
+  .football-player-spotlight__copy { padding:10px 9px 10px 7px; }
+  .football-player-spotlight__copy h3 { font-size:22px; }
+  .football-player-spotlight__stats b { font-size:9px; }
+  .football-player-spotlight__stats small { font-size:5.5px; }
 }
-
 @media (max-width: 360px) {
-  .football-player-spotlight__copy > strong,
-  .football-player-spotlight__meta {
-    font-size: 7px;
-  }
-
-  .football-player-spotlight__stats b {
-    font-size: 8px;
-  }
-
-  .football-player-spotlight__stats small {
-    font-size: 5px;
-  }
-
-  .football-hq-game-row {
-    grid-template-columns: 1fr;
-  }
-
-  .football-hq-game-row__meta {
-    grid-template-columns: 1fr auto;
-    padding: 7px 0 0;
-    border-top: 1px solid var(--border);
-    border-left: 0;
-  }
-
-  .football-hq-game-row__meta > b {
-    margin: 0;
-  }
+  .football-player-spotlight__copy > strong, .football-player-spotlight__meta { font-size:7px; }
+  .football-player-spotlight__stats b { font-size:8px; }
+  .football-player-spotlight__stats small { font-size:5px; }
 }
 
 /* Temporary Mike Ditka tribute through Monday night: preserve the established compact card. */
@@ -459,18 +384,23 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 .football-player-spotlight__meta > span { display: block; overflow-wrap: anywhere; }
 .football-player-spotlight__meta > span:last-child { color: #d9e4ef; }
 @media (max-width: 700px) {
-  .football-hq-game-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-  .football-hq-game-row__teams { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 7px; }
-  .football-hq-game-row__teams > div { grid-template-columns: 28px minmax(0, 1fr); gap: 6px; padding: 6px; min-height: 45px; }
-  .football-hq-team-mark { width: 28px; height: 28px; }
-  .football-hq-game-row__teams strong { font-size: clamp(9px, 2.7vw, 11px); line-height: 1.15; -webkit-line-clamp: unset; overflow: visible; overflow-wrap: normal; }
-  .football-hq-game-row__meta { display: flex; justify-content: space-between; align-items: center; gap: 9px; border-left: 0; border-top: 1px solid var(--border); padding: 7px 0 0; }
-  .football-hq-game-row__meta > strong { font-size: 9px; white-space: normal; }
-  .football-hq-game-row__meta > b { font-size: 8px; flex: 0 0 auto; margin: 0; }
+  .football-hq-games { padding:10px; gap:9px; }
+  .football-hq-game-row { grid-template-columns:minmax(0, 1fr); gap:8px; padding:9px; }
+  .football-hq-game-row__teams { grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr); gap:6px; }
+  .football-hq-game-row__teams > div { grid-template-columns:28px minmax(0,1fr); gap:5px; min-height:51px; padding:6px; }
+  .football-hq-team-mark { width:28px; height:28px; }
+  .football-hq-game-row__team-label strong { font-size:clamp(9.5px,2.75vw,12px); -webkit-line-clamp:unset; overflow:visible; }
+  .football-hq-game-row__team-label small { font-size:clamp(8.5px,2.45vw,11px); }
+  .football-hq-game-row__meta > strong { font-size:9px; white-space:normal; }
+  .football-hq-game-row__meta > b { font-size:9px; }
 }
 @media (max-width: 360px) {
-  .football-hq-game-row__teams > div { grid-template-columns: 24px minmax(0, 1fr); gap: 4px; padding: 5px; }
-  .football-hq-team-mark { width: 24px; height: 24px; }
-  .football-hq-game-row__meta { display: flex; }
-  .football-player-spotlight__meta { font-size: 8px; }
+  .football-hq-games { padding:8px; }
+  .football-hq-game-row__teams { grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr); gap:4px; }
+  .football-hq-game-row__teams > div { grid-template-columns:24px minmax(0,1fr); gap:4px; padding:5px; }
+  .football-hq-team-mark { width:24px; height:24px; }
+  .football-hq-game-row__team-label strong { font-size:9px; }
+  .football-hq-game-row__team-label small { font-size:8px; }
+  .football-hq-game-row__meta { display:flex; }
+  .football-player-spotlight__meta { font-size:8px; }
 }
