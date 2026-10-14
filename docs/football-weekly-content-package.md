@@ -7,8 +7,12 @@ Phase 1: canonical storage for the CFB/NFL Player Spotlight + Game of the Week s
 - One row per Tuesday, keyed by the DATE week_of.
 - **Tuesday at 12:00 AM America/Chicago**, precisely when Monday becomes Tuesday, is the future activation instant.
 - The server derives release_at from week_of::timestamp AT TIME ZONE 'America/Chicago'; the UTC instant changes between CST and CDT.
-- Sunday 8 AM Central: college recommendations. Monday 10 PM Central: NFL recommendations, allowing up to two hours to prepare before Tuesday midnight.
+- The **single enabled Football Weekly Content monitoring task** runs Sunday **8:00 AM Central** (five CFB Spotlight + five CFB GOTW recommendations), and Monday **10:30 PM Central** (five NFL Spotlight + five NFL GOTW recommendations, factoring in Monday Night Football). Owner chooses one of each; nothing is auto-selected. This leaves at most 90 minutes before Tuesday midnight, so do not bypass approvals or verification when too late.
 - If production is not valid and ready at midnight, retain the last approved live material. Do not silently switch content later on Tuesday or publish partial assets.
+
+## Locked Home Top Games team links
+
+The approved compact premium Home Top Games layout is permanent across weekly editorial content refreshes. Each independently clickable, branded **team pill** links to the team's Sports Reference page for the **PickEvent football season**: CFB at `sports-reference.com/cfb/schools/<canonical-school>/<season>.html`, NFL at `pro-football-reference.com/teams/<PFR-team-id>/<season>.htm`. Clicking the rest of the matchup card still opens its in-app Breakdown; no nested links. The URL is resolved automatically from the canonical school/NFL identity using `footballTeamSportsReference.ts` (including BYU, Notre Dame, long school names, alias/mascot handling, and PFR's non-ESPN franchise IDs). Never hardcode a current-year URL into the weekly content, and never infer the calendar year in January. An unrecognized identity must **not** open a guessed team's statistics page; check/update the canonical team mapping as part of owner-selected editorial preparation if a new program enters the package. Links open the reference website in a separate tab. These Home presentation rules do not alter or relocate the eight-second SeatGeek image carousel in Football Picks.
 
 ## Package contents
 
