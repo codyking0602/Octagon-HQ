@@ -1921,6 +1921,47 @@ export const AVERAGE_FAN_CONTENT_BANKS = {
   ufc: averageFanUfcQuestionBank,
 } as const;
 
+/**
+ * Same-fact deduplication alone misses boards that repeatedly quiz one star or
+ * school using *different* facts. Names come from the existing sport registries,
+ * not a manually maintained list of current celebrity names. The matcher uses
+ * whole normalized names so two different people who share a surname remain distinct.
+ */
+const AVERAGE_FAN_NAMED_TOPICS: Record<"nfl" | "cfb" | "ufc", readonly string[]> = {
+  nfl: unique([
+    ...footballPlayers("NFL").map((player) => player.name),
+    ...Object.values(NFL_TEAM_NAMES),
+  ]),
+  cfb: unique([
+    ...footballPlayers("CFB").map((player) => player.name),
+    ...queryFootballSubjects({ league: "CFB", kind: "program" }).map((program) => program.name),
+  ]),
+  ufc: unique(ufcFactualLedgerSubjects.map((fighter) => fighter.name)),
+};
+
+function normalizeNamedTopic(value: string) {
+  return value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "")
+    .toLocaleLowerCase("en-US").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+export function averageFanQuestionNamedTopics(question: AverageFanQuestion): string[] {
+  if (question.sport === "mlb") return [];
+  const textFields = [question.prompt, question.answer]
+    .map((text) => ` ${normalizeNamedTopic(text)} `);
+  const matches = AVERAGE_FAN_NAMED_TOPICS[question.sport]
+    .map((name) => normalizeNamedTopic(name))
+    .filter((name) => name.length >= 4 && textFields.some((field) => field.includes(` ${name} `)))
+    .sort((left, right) => right.length - left.length || left.localeCompare(right));
+  // "Georgia Tech" implies that program, not a second question about Georgia.
+  const distinct: string[] = [];
+  for (const name of matches) {
+    if (!distinct.some((moreSpecific) => ` ${moreSpecific} `.includes(` ${name} `))) {
+      distinct.push(name);
+    }
+  }
+  return distinct.map((name) => `${question.sport}:${name}`);
+}
+
 export function averageFanBankSummary(sport: Exclude<AverageFanSport, "mlb">) {
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
   return {
