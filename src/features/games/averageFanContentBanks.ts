@@ -1241,6 +1241,65 @@ function uniquelyIdentifiedUfcFighter(
     && signature.every(({ opponent, condition }) => ufcHasOpponent(other, opponent, condition)));
 }
 
+/**
+ * Give recognition-based UFC questions credible near-peers rather than
+ * unrelated 125 lb / heavyweight or men's / women's choices. UFC history is
+ * a full-fight source for the selected fighters, but the player-facing
+ * distractors should still resemble genuine opponents or title contenders.
+ * A same-division, same-era candidate is more useful than random celebrity
+ * names. Do not backfill sparse divisions with fighters of another gender.
+ */
+function ufcPlausibleFighterMisses(
+  fighter: UfcFactualSubject,
+  fighters: readonly UfcFactualSubject[],
+  acceptedNames: readonly string[],
+  salt: string,
+): string[] {
+  const primary = formatDivision(fighter.primaryDivision);
+  const isWomens = primary.startsWith("Women's ");
+  const divisionOrder = isWomens ? UFC_WOMENS_STANDARD_DIVISIONS : UFC_MENS_STANDARD_DIVISIONS;
+  const mainIndex = divisionOrder.indexOf(primary as never);
+  const associated = new Set(
+    [fighter.primaryDivision, ...fighter.secondaryDivisions].map(formatDivision),
+  );
+  const excluded = new Set(
+    [fighter.name, ...acceptedNames].map(normalizedUfcOpponent),
+  );
+  const candidates = fighters
+    .filter((other) => (
+      formatDivision(other.primaryDivision).startsWith("Women's ") === isWomens
+      && !excluded.has(normalizedUfcOpponent(other.name))
+    ))
+    .map((other) => {
+      const otherPrimary = formatDivision(other.primaryDivision);
+      const otherDivisions = [other.primaryDivision, ...other.secondaryDivisions].map(formatDivision);
+      const otherIndex = divisionOrder.indexOf(otherPrimary as never);
+      const divisionDistance = otherPrimary === primary ? 0
+        : otherDivisions.some((value) => associated.has(value)) ? 1
+        : mainIndex >= 0 && otherIndex >= 0 && Math.abs(mainIndex - otherIndex) === 1 ? 2
+        : 3;
+      const gap = Math.max(
+        0,
+        Date.parse(fighter.activeFrom) - Date.parse(other.activeTo),
+        Date.parse(other.activeFrom) - Date.parse(fighter.activeTo),
+      );
+      const yearsApart = Math.floor(gap / (365.25 * 86_400_000));
+      return {
+        fighter: other,
+        divisionDistance,
+        yearsApart,
+        tieBreak: stableLineupHash(`${salt}:${other.id}`),
+      };
+    })
+    .sort((a, b) =>
+      a.divisionDistance - b.divisionDistance
+      || a.yearsApart - b.yearsApart
+      || a.tieBreak - b.tieBreak
+      || a.fighter.name.localeCompare(b.fighter.name)
+    );
+  return candidates.slice(0, 3).map((candidate) => candidate.fighter.name);
+}
+
 function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
   const fighterNames = fighters.map((fighter) => fighter.name);
@@ -1282,8 +1341,10 @@ function ufcCandidates() {
     const recognizableFight = wins[stableOffset(`${fighter.id}:win`, Math.max(1, wins.length))] ?? fighter.fights[0];
     if (recognizableFight) {
       const acceptedOpponents = (wins.length ? wins : fighter.fights).map((fight) => fight.opponent);
-      const wrongOpponents = peerValues(fighterNames, acceptedOpponents, `${fighter.id}:opponent`);
-      questions.push(choiceQuestion({
+      const wrongOpponents = ufcPlausibleFighterMisses(fighter, fighters, acceptedOpponents, `${fighter.id}:opponent`);
+      // If the roster has fewer than three safe same-gender wrong choices,
+      // retire this candidate instead of adding giveaway opposite-sex options.
+      if (wrongOpponents.length === 3) questions.push(choiceQuestion({
         id: `average-fan:ufc:g3:${fighter.id}:opponent`,
         sport: "ufc",
         grade: 3,
@@ -1332,8 +1393,8 @@ function ufcCandidates() {
         anchors.map((fight) => ({ opponent: fight.opponent, condition: "beat" as const })),
       );
       if (isUnique) {
-      const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
-      questions.push(choiceQuestion({
+      const wrongNames = ufcPlausibleFighterMisses(fighter, fighters, [fighter.name], `${fighter.id}:three-win-identity`);
+      if (wrongNames.length === 3) questions.push(choiceQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
         sport: "ufc",
         grade: 5,
@@ -1350,7 +1411,7 @@ function ufcCandidates() {
     const titleFights = fighter.fights.filter((fight) => fight.titleFight);
     if (titleFights.length) {
       const titleFight = titleFights[titleFights.length - 1]!;
-      const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:title-identity`);
+      const wrongNames = ufcPlausibleFighterMisses(fighter, fighters, [fighter.name], `${fighter.id}:title-identity`);
       const titleOpponents = unique(titleFights.map((fight) => fight.opponent));
       const wrongTitleOpponents = peerValues(fighterNames, titleOpponents, `${fighter.id}:title-opponent`);
       questions.push(shortQuestion({
@@ -1387,7 +1448,7 @@ function ufcCandidates() {
         : finalOtherOpponents.length === 1
           ? ` and also fought ${finalOtherOpponents[0]}`
           : "";
-      if (uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
+      if (wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
         { opponent: titleFight.opponent, condition: "title" },
         ...finalOtherOpponents.map((opponent) => ({ opponent, condition: "faced" as const })),
       ])) {
@@ -1408,8 +1469,8 @@ function ufcCandidates() {
       const anchorA = fighter.fights[fighter.fights.length - 1]!;
       const anchorB = fighter.fights[Math.max(0, fighter.fights.length - 3)]!;
       const anchorC = fighter.fights[Math.max(0, fighter.fights.length - 5)]!;
-      const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:final-fight`);
-      if (uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
+      const wrongNames = ufcPlausibleFighterMisses(fighter, fighters, [fighter.name], `${fighter.id}:final-fight`);
+      if (wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
         { opponent: anchorA.opponent, condition: "faced" },
         { opponent: anchorB.opponent, condition: "faced" },
         { opponent: anchorC.opponent, condition: "faced" },
