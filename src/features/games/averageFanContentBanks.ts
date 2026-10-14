@@ -14,7 +14,7 @@ import {
 
 export const AVERAGE_FAN_BANK_TARGETS = {
   nfl: 220,
-  cfb: 161,
+  cfb: 158,
   ufc: 440,
 } as const;
 
@@ -37,7 +37,7 @@ const CFB_REVIEWED_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
   2: 40,
   3: 40,
   4: 40,
-  5: 26,
+  5: 23,
 };
 
 const UFC_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
@@ -311,7 +311,7 @@ const NFL_TRUE_FALSE_FACTS: readonly NflTrueFalseFact[] = [
   { id: "terrell-davis-first-round", grade: 4, subject: "Players", prompt: "Terrell Davis was a first-round NFL Draft pick.", answer: false, explanation: "Denver selected Terrell Davis in the sixth round of the 1995 NFL Draft." },
   { id: "gates-college-football", grade: 4, subject: "Players", prompt: "Antonio Gates played college football before becoming an NFL tight end.", answer: false, explanation: "Antonio Gates played college basketball at Kent State and did not play college football." },
 
-  { id: "fourth-down-fumble", grade: 5, subject: "X’s & O’s", prompt: "On fourth down, only the offensive player who fumbled may recover and advance that fumble.", answer: true, explanation: "On fourth down, the fumbler is the only offensive player allowed to recover and advance the fumble; a teammate's recovery makes the ball dead." },
+  { id: "fourth-down-fumble", grade: 5, subject: "X’s & O’s", prompt: "On fourth down, an offensive teammate who recovers a fumble can keep running with the ball.", answer: false, explanation: "On fourth down, a teammate may recover the offensive fumble, but the ball is dead immediately; only the original fumbler may recover and advance before a change of possession." },
   { id: "moon-cfl", grade: 5, subject: "Players", prompt: "Warren Moon began his professional football career in the CFL before starring in the NFL.", answer: true, explanation: "Moon starred for Edmonton in the CFL before beginning his NFL career with Houston." },
   { id: "elway-colts", grade: 5, subject: "NFL History", prompt: "John Elway was drafted by the Baltimore Colts before his rights were traded to Denver.", answer: true, explanation: "Baltimore selected Elway first overall in 1983 and later traded his rights to the Broncos." },
 
@@ -1330,7 +1330,7 @@ function ufcCandidates() {
       );
       if (isUnique) {
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
-      questions.push(shortQuestion({
+      questions.push(choiceQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
         sport: "ufc",
         grade: 5,
@@ -1338,7 +1338,7 @@ function ufcCandidates() {
         prompt: `Which UFC fighter owns wins over ${anchors[0]!.opponent}, ${anchors[1]!.opponent}, and ${anchors[2]!.opponent}, including the ${anchors[0]!.date.slice(0, 4)} win over ${anchors[0]!.opponent}?`,
         answer: fighter.name,
         explanation: `${fighter.name} has UFC wins over all three opponents, including the ${anchors[0]!.date.slice(0, 4)} win over ${anchors[0]!.opponent}.`,
-        fanMisses: wrongNames,
+        wrongChoices: wrongNames,
         difficultyNudge: 2,
       }));
       }
@@ -1388,7 +1388,7 @@ function ufcCandidates() {
         { opponent: titleFight.opponent, condition: "title" },
         ...finalOtherOpponents.map((opponent) => ({ opponent, condition: "faced" as const })),
       ])) {
-      questions.push(shortQuestion({
+      questions.push(choiceQuestion({
         id: `average-fan:ufc:final:${fighter.id}:title`,
         sport: "ufc",
         grade: 5,
@@ -1396,7 +1396,7 @@ function ufcCandidates() {
         prompt: `Which UFC fighter faced ${titleFight.opponent} in a title fight${finalOpponentPhrase}?`,
         answer: fighter.name,
         explanation: `${fighter.name} faced ${titleFight.opponent} in a UFC title fight${finalOpponentPhrase}.`,
-        fanMisses: wrongNames,
+        wrongChoices: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
       }));
@@ -1411,7 +1411,7 @@ function ufcCandidates() {
         { opponent: anchorB.opponent, condition: "faced" },
         { opponent: anchorC.opponent, condition: "faced" },
       ])) {
-      questions.push(shortQuestion({
+      questions.push(choiceQuestion({
         id: `average-fan:ufc:final:${fighter.id}:fight`,
         sport: "ufc",
         grade: 5,
@@ -1419,7 +1419,7 @@ function ufcCandidates() {
         prompt: `Which UFC fighter faced ${anchorA.opponent}, ${anchorB.opponent}, and ${anchorC.opponent}?`,
         answer: fighter.name,
         explanation: `${fighter.name} faced all three opponents in the UFC.`,
-        fanMisses: wrongNames,
+        wrongChoices: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
       }));
@@ -1763,6 +1763,10 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   "average-fan:cfb:authored:00-g5:bennett-double-cfp-mvp:",
   "average-fan:cfb:authored:00-g5:hunter-biletnikoff-bednarik:",
   "average-fan:cfb:authored:00-g5:utah-sugar-alabama:",
+  // Identical answers and factual anchors are already retained as CFB Finals.
+  "average-fan:cfb:authored:00-g5:old-brass-spittoon:",
+  "average-fan:cfb:authored:00-g5:illibuck:",
+  "average-fan:cfb:authored:00-g5:watts-jackson-2015:",
   "average-fan:nfl:00-history:immaculate:",
   "average-fan:nfl:00-history:minneapolis:",
   "average-fan:nfl:00-history:holmes:",
