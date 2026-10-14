@@ -16,9 +16,9 @@ describe("Home mobile text fit", () => {
   });
 
   it("gives full college and NFL identities enough mobile lines instead of truncating nicknames", () => {
-    expect(homeFootballCss).toContain("grid-template-columns: 24px minmax(0, 1fr);");
-    expect(homeFootballCss).toContain("font-size: 8px;");
-    expect(homeFootballCss).toContain("-webkit-line-clamp: 3;");
-    expect(homeFootballCss).toContain("width: 14px;");
+    expect(homeFootballCss).toContain("grid-template-columns:24px minmax(0,1fr);");
+    expect(homeFootballCss).toContain("font-size:8px;");
+    expect(homeFootballCss).toContain("-webkit-line-clamp:unset;");
+    expect(homeFootballCss).toContain("grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr)");
   });
 });
