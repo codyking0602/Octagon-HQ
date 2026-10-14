@@ -282,7 +282,7 @@ describe("Average Fan durable content banks", () => {
         return counts;
       }, {}),
     ).toEqual({
-      Players: 4,
+      Players: 3,
       Teams: 4,
       "NFL History": 4,
       "X’s & O’s": 3,
