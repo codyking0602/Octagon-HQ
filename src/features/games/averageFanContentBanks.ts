@@ -1343,22 +1343,27 @@ function ufcCandidates() {
 
     const wins = fighter.fights.filter((fight) => fight.result === "win");
     const recognizableFight = wins[stableOffset(`${fighter.id}:win`, Math.max(1, wins.length))] ?? fighter.fights[0];
-    if (recognizableFight) {
+    // The curated ledger is not the complete UFC fight record. A generic
+    // "which fighter did X ever defeat?" may contain another correct choice
+    // outside the ledger and unfairly count it wrong. Anchor the fight to a
+    // precise documented date so all three distractors are unequivocally
+    // false for this bout, not alleged never-opponents.
+    if (recognizableFight && fighter.fights.filter((fight) => fight.date === recognizableFight.date).length === 1) {
       const acceptedOpponents = (wins.length ? wins : fighter.fights).map((fight) => fight.opponent);
       const wrongOpponents = ufcPlausibleFighterMisses(fighter, fighters, acceptedOpponents, `${fighter.id}:opponent`);
-      // If the roster has fewer than three safe same-gender wrong choices,
-      // retire this candidate instead of adding giveaway opposite-sex options.
+      // If the roster has fewer than three plausible same-gender choices,
+      // retire this candidate instead of adding giveaway opponents.
       if (wrongOpponents.length === 3) questions.push(choiceQuestion({
         id: `average-fan:ufc:g3:${fighter.id}:opponent`,
         sport: "ufc",
         grade: 3,
         subject: "Fights",
         prompt: wins.length
-          ? `Which of these fighters did ${fighter.name} defeat in the UFC?`
-          : `Which of these fighters did ${fighter.name} face in the UFC?`,
+          ? `Which of these fighters did ${fighter.name} defeat in the UFC on ${naturalFightDate(recognizableFight.date)}?`
+          : `Which of these fighters did ${fighter.name} face in the UFC on ${naturalFightDate(recognizableFight.date)}?`,
         answer: recognizableFight.opponent,
         wrongChoices: wrongOpponents,
-        explanation: `${fighter.name} ${recognizableFight.result === "win" ? "defeated" : "faced"} ${recognizableFight.opponent} in the UFC.`,
+        explanation: `${fighter.name} ${recognizableFight.result === "win" ? "defeated" : "faced"} ${recognizableFight.opponent} on ${naturalFightDate(recognizableFight.date)} in the UFC.`,
       }));
     }
 
