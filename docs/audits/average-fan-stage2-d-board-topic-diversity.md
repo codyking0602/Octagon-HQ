@@ -22,6 +22,12 @@ For each future eight-tile Daily board, prefer a candidate with no named athlete
 
 Deterministic future board simulations now explicitly check question-ID uniqueness, per-grade structure, no recent 30-day question reuse, and no repeated recognized named topics within the board or its Final.
 
+## Long-horizon freshness correction
+
+The new 120-day seed simulation also exposed a pre-existing fallback weakness made visible by the revised selection order: after the reduced CFB inventory exhausted entirely unused questions under the six-month lookback, the old fallback considered **all** evergreens, including one asked in the previous 30 days (the 2003 LSU/USC split-title true/false item on January 22, 2027 in the test sequence). A small bank is intentional, but a needless 30-day repeat is not.
+
+When the six-month-unused grade pool falls below two, prefer already-reviewed questions **older than 30 days** before considering the full active bank. Apply the equivalent protection to Finals. This preserves the approved quality-before-quota decision rather than adding unreviewed filler just to sustain a six-month no-repeat illusion.
+
 ## Still outstanding
 
 This does not individually verify the surviving factual claims, alternate answers, distractor truthfulness, difficulty, and all 183-day published histories. Automated name matching is an editorial aid, not comprehensive semantic understanding. Stage 2 remains in progress. Stage 3 Blind Resume remains untouched, and the 4x Average Fan / 2x Higher or Lower rotation remains staged for Stage 4.
