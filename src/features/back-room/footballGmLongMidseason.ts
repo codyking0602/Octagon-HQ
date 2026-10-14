@@ -71,6 +71,18 @@ export function nflGmLongGameProbability(
     + specialty / 100 + effects.chemistryResiliencePct / 200, 0.08, 0.92);
 }
 
+/** The same qualitative development language as the established GM report.
+ * Preserve numeric changes internally for playoff and roster calculations only. */
+export type NflGmLongDevelopmentOutcome =
+  "MAJOR IMPROVEMENT" | "IMPROVED" | "HELD STEADY" | "REGRESSED" | "MAJOR REGRESSION";
+export function nflGmLongDevelopmentOutcome(delta: number): NflGmLongDevelopmentOutcome {
+  if (delta >= 3) return "MAJOR IMPROVEMENT";
+  if (delta >= 1) return "IMPROVED";
+  if (delta <= -3) return "MAJOR REGRESSION";
+  if (delta <= -1) return "REGRESSED";
+  return "HELD STEADY";
+}
+
 function playerDelta(player: NflGmLongPlayer, runId: string, coach: NflGmLongCoach): number {
   const baseline = player.currentGrade;
   const short = footballGmPlayerById(player.id);
@@ -88,15 +100,25 @@ function playerDelta(player: NflGmLongPlayer, runId: string, coach: NflGmLongCoa
   const development = player.development;
   if (!development) return 0;
   const n = roll(runId + ":development:" + player.id) * 100;
-  const bonus = player.age !== null && player.age <= 26 ? coach.focus[4] * 5 : 0;
-  const breakout = development.breakoutPct + bonus * 0.3;
-  const improve = breakout + development.improvePct + bonus * 0.7;
-  const steady = improve + Math.max(0, development.steadyPct - bonus);
-  const positive = n < breakout
+  // The researched OL odds are for an entire YEAR. At the eight-game mark
+  // only a portion of that season's development and regression risk should
+  // have materialized. Keep the remainder as HELD STEADY, never invent an
+  // injury or alter the underlying research/grade authority.
+  const coachLift = player.age !== null && player.age <= 26 ? coach.focus[4] * 2 : 0;
+  const breakoutChance = development.breakoutPct * .5 + coachLift * .25;
+  const improveChance = development.improvePct * .5 + coachLift * .75;
+  const declineChance = development.declinePct * .45;
+  const positive = n < breakoutChance
     ? Math.max(1, Math.ceil(development.maxAnnualGain * .55))
-    : n < improve ? Math.max(1, Math.ceil(development.maxAnnualGain * .30)) : 0;
-  const decline = n >= steady ? -Math.max(1, Math.ceil(development.maxAnnualLoss * .40)) : 0;
-  return clamp(positive + decline, -Math.min(4, baseline - 70), Math.min(4, 99 - baseline));
+    : n < breakoutChance + improveChance
+      ? Math.max(1, Math.ceil(development.maxAnnualGain * .30)) : 0;
+  const negative = n >= 100 - declineChance
+    ? -Math.max(1, Math.ceil(development.maxAnnualLoss * .30)) : 0;
+  // The midseason signal for an elite OL starter is provisional; a harsh
+  // full-year regression must not be booked after eight games.
+  const change = player.family === "OL" && baseline >= 91
+    ? Math.max(-1, positive + negative) : positive + negative;
+  return clamp(change, -Math.min(4, baseline - 70), Math.min(4, 99 - baseline));
 }
 
 /** A deterministic eight-game snapshot, saved once and never rerolled on refresh. */
@@ -227,9 +249,11 @@ export function nflGmLongActiveGrade(
 }
 
 /**
- * Monte Carlo remaining nine regular-season games from recorded 8-game results.
- * The benchmark uses a 10-win berth with partial 9-win wildcard qualification,
- * not a guaranteed postseason finish or future-result prediction.
+ * Exactly model remaining wins as a Poisson-binomial distribution rather than
+ * trusting 256 optimistic Monte Carlo draws that round a 5–3 contender to 100%.
+ * The second-half schedule is not played yet: use a plausible spread of
+ * opponent strengths (including playoff-caliber teams), not nine soft draws.
+ * Nothing below changes the eight completed and saved games.
  */
 export function nflGmLongPlayoffOutlook(
   runId: string, picks: readonly NflGmLongPick[], coachName: string, mid: NflGmLongMidseason,
@@ -238,18 +262,29 @@ export function nflGmLongPlayoffOutlook(
   const effects = coachBonuses(nflGmLongActivePicks(picks, mid.trade), coach);
   const grade = nflGmLongActiveGrade(picks, mid);
   const wins = nflGmLongRecord(mid).wins;
-  let made = 0;
-  const trials = 256;
-  for (let i = 0; i < trials; i++) {
-    let projectedWins = wins;
-    for (let week = 8; week < 17; week++) {
-      const otherGrade = round(82.5 + roll(runId + ":npc-grade:" + week) * 7);
-      const probability = nflGmLongGameProbability(grade, otherGrade, effects, week);
-      if (roll(runId + ":playoff-outlook:" + i + ":" + week) < probability) projectedWins++;
+  // distribution[k] = probability of winning exactly k MORE games.
+  let distribution = [1];
+  for (let week = 8; week < 17; week++) {
+    // A conservative, league-wide opponent-strength envelope accounts for
+    // elite opponents and unknown schedule difficulty in the remaining games.
+    const opponentGrade = 84.5 + 12 * roll(runId + ":playoff-schedule:" + week);
+    const chance = nflGmLongGameProbability(grade, opponentGrade, effects, week);
+    const next = new Array<number>(distribution.length + 1).fill(0);
+    for (let k = 0; k < distribution.length; k++) {
+      next[k] = (next[k] ?? 0) + distribution[k]! * (1 - chance);
+      next[k + 1] = (next[k + 1] ?? 0) + distribution[k]! * chance;
     }
-    if (projectedWins >= 10 || (projectedWins === 9 && roll(runId + ":wildcard:" + i) < .38)) made++;
+    distribution = next;
   }
-  const percent = Math.round(made / trials * 100);
+  let made = 0;
+  for (let extra = 0; extra < distribution.length; extra++) {
+    const totalWins = wins + extra;
+    if (totalWins >= 10) made += distribution[extra]!;
+    else if (totalWins === 9) made += .38 * distribution[extra]!;
+  }
+  // A team cannot have clinched a spot after only eight games. Preserve
+  // sub-percent uncertainty instead of displaying a false guaranteed 100%.
+  const percent = Math.max(0, Math.min(99.9, Math.round(made * 1000) / 10));
   return {
     percent,
     label: percent >= 85 ? "Strong playoff position" : percent >= 55 ? "In the playoff race"
