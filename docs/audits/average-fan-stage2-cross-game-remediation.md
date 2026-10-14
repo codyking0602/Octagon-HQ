@@ -7,7 +7,7 @@
 - NFL, CFB, UFC Average Fan current-event banks copied the same Bar Trivia questions. Stop borrowing all of them until Average Fan has independent, editorially reviewed events covering *different facts*, not just changed phrasing.
 - CFB curated rounds held redundant DeVonta Smith Heisman and CFP first-ranked #1 prompts; retire the weaker repeats.
 - CFB Finals included first AP champion, inaugural Rose Bowl opponent, and first Heisman facts already asked by Bar Trivia. Retire their duplicate Average Fan versions.
-- CFB player-position, CFB conference, and UFC division subjects generated inverse true/false versions of the same facts already generated as direct questions. Retire those redundant candidate families.
+- CFB player-position, CFB conference, and UFC division subjects can generate alternate formats of the same fact. Keep the candidate formats for grade/subject diversity but **select only one per exact person or program fact** across the bank using explicit fact-identity keys. CFB draft-slot variants follow the same rule.
 
 ## Anti-regression
 The Average Fan test suite now checks against **actual Bar Trivia bank prompts and answers** across NFL/CFB/UFC for exact and high-confidence near-duplicate overlap. The mechanism is conservative: editorial fact-identity tags and human review remain required for subtle semantic repeats.
