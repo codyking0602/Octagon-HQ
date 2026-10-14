@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { footballWavelengthClues } from "../back-room/footballWavelengthModel";
 import { getPlayFighter } from "./playFighterPool";
+import { HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
+import { HitTheNumberPickBreakdown } from "./HitTheNumberPickBreakdown";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 import { wavelengthClues } from "./wavelengthEngine";
 import "./DailyTwoGameLeaderboardResult.css";
@@ -223,13 +225,28 @@ function HitNumberRoundDetail({
     String(candidate.id ?? ""),
     String(candidate.name ?? ""),
   ]));
-  const ids = selectedIds.length ? selectedIds : selections.map((selection) => String(selection.fighterId ?? selection.fighter_id ?? "")).filter(Boolean);
-  const names = ids.map((id) => {
+  const selectionById = new Map(selections.map((selection) => [
+    String(selection.fighterId ?? selection.fighter_id ?? selection.subjectId ?? selection.subject_id ?? ""),
+    selection,
+  ]));
+  const ids = selectedIds.length ? selectedIds : selections.map((selection) => String(
+    selection.fighterId ?? selection.fighter_id ?? selection.subjectId ?? selection.subject_id ?? "",
+  )).filter(Boolean);
+  const picks = ids.map((id) => {
     const footballName = candidateNames.get(id);
-    if (footballName) return footballName;
-    if (sport === "ufc") return getPlayFighter(id)?.name ?? prettyId(id);
-    return prettyId(id);
+    const name = footballName || (sport === "ufc" ? getPlayFighter(id)?.name : null) || prettyId(id);
+    const rawValue = selectionById.get(id)?.value;
+    return {
+      id,
+      name,
+      // Completed-result snapshots are the authority; never recalculate historical stats.
+      value: typeof rawValue === "number" && Number.isFinite(rawValue) ? rawValue : null,
+    };
   });
+  const statId = String(setup.statId ?? "");
+  const metricLabel = typeof setup.metric_label === "string"
+    ? setup.metric_label
+    : HIT_THE_NUMBER_STATS.find((stat) => stat.id === statId)?.label ?? "STAT CONTRIBUTIONS";
   const total = Number(result.total);
   const target = Number(result.target ?? setup.target);
   const distance = Number(result.distance);
@@ -242,12 +259,7 @@ function HitNumberRoundDetail({
         <div><span>TOTAL</span><strong>{Number.isFinite(total) ? total : "—"}</strong></div>
         <div><span>RESULT</span><strong className="is-word">{status || (Number.isFinite(distance) ? `${distance} OFF` : "—")}</strong></div>
       </div>
-      {names.length ? (
-        <div className="daily-two-game-result__picks">
-          <span>YOUR PICKS</span>
-          <div>{names.map((name, index) => <strong key={name + index}>{name}</strong>)}</div>
-        </div>
-      ) : null}
+      <HitTheNumberPickBreakdown metricLabel={metricLabel} picks={picks} />
     </div>
   );
 }

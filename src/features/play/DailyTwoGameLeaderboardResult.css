@@ -381,21 +381,6 @@
   line-height: 1.3;
 }
 
-.daily-two-game-result__picks > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.daily-two-game-result__picks strong {
-  border: 1px solid #33373d;
-  border-radius: 999px;
-  background: #0d0f11;
-  padding: 6px 9px;
-  color: #e7e9ed;
-  font-size: 0.74rem;
-  font-weight: 800;
-}
 
 .daily-two-game-result__rail--clues {
   gap: 8px;

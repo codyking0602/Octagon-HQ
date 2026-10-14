@@ -20,6 +20,7 @@ import { useMlbChampionship } from "./useMlbChampionship";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import { millionaireMoneyLabel, millionaireTimeLabel } from "../play/MillionaireCasualModel";
 import { DailyLeaderboardGameResult } from "../play/DailyLeaderboardGameResult";
+import { HitTheNumberPickBreakdown } from "../play/HitTheNumberPickBreakdown";
 import { buildFamilyFeudDailySetup } from "../play/familyFeudDailyRuntime";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
@@ -864,7 +865,7 @@ function MlbPlayResultDetail({
               ))}
             </div>
           ) : isHitTheNumber && hitTheNumberGames.length ? (
-            <div className="mlb-play-result-card__games">
+            <div className="mlb-play-result-card__games is-hit-number">
               {hitTheNumberGames.map((game) => (
                 <article key={game.game}>
                   <span>GAME {game.game} · {game.metricLabel.toUpperCase()}</span>
@@ -877,11 +878,14 @@ function MlbPlayResultDetail({
                         : `${game.distance.toLocaleString()} UNDER · ${game.total.toLocaleString()} / ${game.target.toLocaleString()}`}
                   </small>
                   {game.configurationLabel ? <small>{game.configurationLabel.toUpperCase()}</small> : null}
-                  {game.selections.length ? (
-                    <small>
-                      {game.selections.map((selection) => `${selection.name.toUpperCase()} ${selection.value.toLocaleString()}`).join(" · ")}
-                    </small>
-                  ) : null}
+                  <HitTheNumberPickBreakdown
+                    metricLabel={game.metricLabel}
+                    picks={game.selections.map((selection, index) => ({
+                      id: `${game.game}-${index}`,
+                      name: selection.name,
+                      value: selection.value,
+                    }))}
+                  />
                 </article>
               ))}
             </div>

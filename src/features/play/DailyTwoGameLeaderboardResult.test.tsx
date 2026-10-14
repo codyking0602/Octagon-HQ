@@ -206,4 +206,123 @@ describe("compact two-game leaderboard result", () => {
     expect(games[1]!.textContent).toContain("Ryan Tannehill");
     expect(games[1]!.textContent).toContain("46");
   });
+  it("reveals recorded UFC contributions for both games without exposing unpicked fighters", () => {
+    const ufcProjection = projection({
+      gameType: "hit_the_number",
+      publicSetup: {
+        rounds: [
+          { statId: "ufc-wins", target: 24 },
+          { statId: "ufc-title-fights", target: 29 },
+        ],
+      },
+      revealSetup: { rounds: [{}, {}] },
+      officialAttempt: {
+        nativeScore: 20,
+        normalizedScore: 60,
+        completedAt: "2026-10-14T12:00:00.000Z",
+        publicResult: {
+          daily_series: {
+            round_scores: [46, 74],
+            average_score: 60,
+            rounds: [
+              { normalized_score: 46, target: 24, total: 26, status: "bust", selections: [
+                { fighterId: "tony-ferguson", value: 8 },
+                { fighterId: "leon-edwards", value: 7 },
+                { fighterId: "conor-mcgregor", value: 5 },
+                { fighterId: "sean-strickland", value: 4 },
+                { fighterId: "matt-hughes", value: 2 },
+              ] },
+              { normalized_score: 74, target: 29, total: 14, status: "under", selections: [
+                { fighterId: "alex-pereira", value: 4 },
+                { fighterId: "anderson-silva", value: 3 },
+                { fighterId: "amanda-nunes", value: 3 },
+                { fighterId: "conor-mcgregor", value: 2 },
+                { fighterId: "francis-ngannou", value: 2 },
+              ] },
+            ],
+          },
+        },
+      },
+    });
+    const { container } = render(
+      <DailyTwoGameLeaderboardResult projection={ufcProjection} resultDetail={{}} sport="ufc" />,
+    );
+    const breakdowns = container.querySelectorAll(".hit-number-pick-breakdown");
+    expect(breakdowns).toHaveLength(2);
+    expect(breakdowns[0]!.textContent).toContain("UFC Wins");
+    expect(breakdowns[1]!.textContent).toContain("UFC Title Fights");
+    expect(breakdowns[0]!.querySelectorAll("li")).toHaveLength(5);
+    expect(breakdowns[0]!.querySelector("li")!.textContent).toContain("Tony Ferguson");
+    expect(breakdowns[0]!.querySelector("li")!.textContent).toContain("8");
+    expect(breakdowns[1]!.textContent).toContain("Francis Ngannou");
+    expect(breakdowns[1]!.querySelectorAll("li")).toHaveLength(5);
+    expect(breakdowns[0]!.textContent).not.toContain("Unpicked Fighter");
+  });
+
+  it("shows NFL and CFB recorded values, including zero, decimals and full season years", () => {
+    const footballProjection = projection({
+      gameType: "hit_the_number",
+      publicSetup: { rounds: [
+        { metric_label: "NFL Passing Touchdowns", target: 45, candidates: [
+          { id: "nfl-a", name: "Quarterback A" }, { id: "nfl-b", name: "Quarterback B" },
+        ] },
+        { metric_label: "CFB 2024 Passing Yards", target: 5000, candidates: [
+          { id: "cfb-a", name: "Quarterback A · 2024" }, { id: "cfb-b", name: "Quarterback B · 2023" },
+        ] },
+      ] },
+      revealSetup: { rounds: [{}, {}] },
+      officialAttempt: {
+        nativeScore: 100,
+        normalizedScore: 93,
+        completedAt: "2026-10-14T12:00:00.000Z",
+        publicResult: { daily_series: {
+          round_scores: [90, 96], average_score: 93,
+          rounds: [
+            { normalized_score: 90, total: 12.5, target: 45, status: "under", selections: [
+              { fighterId: "nfl-a", value: 12.5 }, { fighterId: "nfl-b", value: 0 },
+            ] },
+            { normalized_score: 96, total: 2000.5, target: 5000, status: "under", selections: [
+              { fighterId: "cfb-a", value: 1024.5 }, { fighterId: "cfb-b", value: 976 },
+            ] },
+          ],
+        } },
+      },
+    });
+    const { container } = render(
+      <DailyTwoGameLeaderboardResult projection={footballProjection} resultDetail={{}} sport="football" />,
+    );
+    const breakdowns = container.querySelectorAll(".hit-number-pick-breakdown");
+    expect(breakdowns).toHaveLength(2);
+    expect(breakdowns[0]!.textContent).toContain("NFL Passing Touchdowns");
+    expect(breakdowns[0]!.textContent).toContain("12.5");
+    expect(breakdowns[0]!.querySelectorAll("li")[1]!.textContent).toContain("0");
+    expect(breakdowns[1]!.textContent).toContain("CFB 2024 Passing Yards");
+    expect(breakdowns[1]!.textContent).toContain("Quarterback A · 2024");
+    expect(breakdowns[1]!.textContent).toContain("1,024.5");
+  });
+
+  it("never invents a missing historical contribution", () => {
+    const legacyProjection = projection({
+      gameType: "hit_the_number",
+      publicSetup: { rounds: [{ statId: "ufc-wins" }, {}] },
+      officialAttempt: {
+        nativeScore: 5,
+        normalizedScore: 50,
+        completedAt: "2026-10-14T12:00:00.000Z",
+        publicResult: { daily_series: {
+          round_scores: [50, 50], average_score: 50,
+          rounds: [
+            { selected_ids: ["tony-ferguson"], total: 5, target: 10, status: "under" },
+            { selections: [], total: 0, target: 10, status: "under" },
+          ],
+        } },
+      },
+    });
+    const { container } = render(
+      <DailyTwoGameLeaderboardResult projection={legacyProjection} resultDetail={{}} sport="ufc" />,
+    );
+    expect(container.querySelectorAll(".hit-number-pick-breakdown")).toHaveLength(1);
+    expect(container.querySelector(".hit-number-pick-breakdown li")!.textContent).toContain("—");
+  });
+
 });
