@@ -13,6 +13,7 @@ import {
   type AverageFanQuestion,
 } from "../games/averageFanEngine";
 import { AVERAGE_FAN_CONTENT_BANKS } from "../games/averageFanContentBanks";
+import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
 
 function contextFrom(
   publication: ReturnType<typeof buildAverageFanDailySetup>,
@@ -29,6 +30,46 @@ function contextFrom(
     publicState: previous?.publicState ?? publication.publicSetup.initial_state as Record<string, unknown>,
   };
 }
+
+describe("Average Fan selected content long-range board audit", () => {
+  it("publishes a 120-day sequence without repeated questions inside 30 days", () => {
+    for (const scope of ["football", "ufc"] as const) {
+      const history: Array<{
+        day: string;
+        sport: "nfl" | "cfb" | "ufc";
+        question_ids: string[];
+        final_question_id: string;
+      }> = [];
+      for (let offset = 0; offset < 120; offset += 1) {
+        const day = new Date(Date.UTC(2026, 9, 3 + offset)).toISOString().slice(0, 10);
+        if (lockedWeightedGameForDay(scope, day) !== "average_fan") continue;
+        const published = buildAverageFanDailySetup(scope, day, "average-fan-stage2-rotation-audit", history);
+        const sport = published.publicSetup.sport as "nfl" | "cfb" | "ufc";
+        const questions = published.privateSetupEvidence.questions as AverageFanQuestion[];
+        const final = published.privateSetupEvidence.final_question as AverageFanQuestion;
+        const ids = questions.map((question) => question.id);
+        expect(questions, `${scope} ${day}`).toHaveLength(AVERAGE_FAN_BOARD_QUESTION_COUNT);
+        expect(new Set([...ids, final.id]).size, `${scope} ${day}`).toBe(9);
+        expect(questions.every((question) => question.sport === sport), day).toBe(true);
+
+        const monthAgo = Date.parse(`${day}T00:00:00Z`) - 30 * 86_400_000;
+        const recentlyUsed = new Set(
+          history
+            .filter((row) => row.sport === sport && Date.parse(`${row.day}T00:00:00Z`) >= monthAgo)
+            .flatMap((row) => row.question_ids),
+        );
+        expect(ids.filter((id) => recentlyUsed.has(id)), `${scope} ${day} reused a recent fact`)
+          .toEqual([]);
+        history.push({
+          day, sport,
+          question_ids: ids,
+          final_question_id: final.id,
+        });
+      }
+      expect(history.length, `${scope} published Average Fan history`).toBeGreaterThan(10);
+    }
+  });
+});
 
 describe("Average Fan canonical Daily runtime", () => {
   it("builds two questions per grade without leaking answers", () => {

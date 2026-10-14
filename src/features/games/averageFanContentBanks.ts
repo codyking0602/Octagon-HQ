@@ -1,9 +1,6 @@
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
 import { stableLineupHash } from "../play/lineupModel";
-import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
-import type { BarTriviaQuestion } from "./barTriviaEngine";
-import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
 import {
   AVERAGE_FAN_PLAYABLE_GRADES,
   AVERAGE_FAN_SUBJECTS,
@@ -17,7 +14,7 @@ import {
 
 export const AVERAGE_FAN_BANK_TARGETS = {
   nfl: 220,
-  cfb: 220,
+  cfb: 161,
   ufc: 440,
 } as const;
 
@@ -27,17 +24,20 @@ export const AVERAGE_FAN_FINAL_TARGETS = {
   ufc: 30,
 } as const;
 
-export const AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS = {
-  nfl: 10,
-  cfb: 10,
-  ufc: 10,
-} as const;
-
 const FOOTBALL_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
   2: 40,
   3: 40,
   4: 40,
   5: 85,
+};
+
+// Stage 2: unique fact families, not cloned Bar Trivia content, determine
+// the bank ceiling. Add future questions only after independent fact review.
+const CFB_REVIEWED_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
+  2: 40,
+  3: 40,
+  4: 40,
+  5: 26,
 };
 
 const UFC_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
@@ -490,9 +490,9 @@ const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "ice-bowl-teams", grade: 2, prompt: "Which two teams played in the 1967 NFL Championship game known as the Ice Bowl?", answer: "Green Bay Packers and Dallas Cowboys", wrong: ["Green Bay Packers and Chicago Bears", "Dallas Cowboys and Cleveland Browns"], explanation: "Green Bay defeated Dallas in the frigid 1967 NFL Championship Game at Lambeau Field." },
   { id: "shula-perfect", grade: 2, prompt: "Which head coach led Miami through its perfect 1972 season?", answer: "Don Shula", wrong: ["Tom Landry", "Chuck Noll"], explanation: "Don Shula coached the 1972 Dolphins to the NFL's only perfect season through the Super Bowl." },
 
-  { id: "double-doink", grade: 3, prompt: "Which team was eliminated by the Eagles after the famous “Double Doink” field-goal miss in the 2018 playoffs?", answer: "Chicago Bears", wrong: ["Minnesota Vikings", "Dallas Cowboys", "Los Angeles Rams"], explanation: "Chicago's potential game-winning field goal hit the upright and crossbar against Philadelphia." },
+  { id: "double-doink", grade: 3, prompt: "Which team lost to the Eagles on the “Double Doink” missed field goal in the January 2019 playoffs after the 2018 NFL season?", answer: "Chicago Bears", wrong: ["Minnesota Vikings", "Dallas Cowboys", "Los Angeles Rams"], explanation: "Chicago's potential game-winning field goal hit the upright and crossbar against Philadelphia." },
   { id: "13-seconds", grade: 3, prompt: "The famous “13 Seconds” finish in the 2021 playoffs came in Chiefs vs. which team?", answer: "Buffalo Bills", wrong: ["Cincinnati Bengals", "Tennessee Titans"], explanation: "Kansas City tied Buffalo in the final 13 seconds before winning in overtime." },
-  { id: "mile-high-miracle", grade: 3, prompt: "Which team pulled off the “Mile High Miracle” against Denver in the 2012 playoffs?", answer: "Baltimore Ravens", wrong: ["New England Patriots", "Indianapolis Colts"], explanation: "Joe Flacco's late deep touchdown to Jacoby Jones forced overtime for Baltimore." },
+  { id: "mile-high-miracle", grade: 3, prompt: "Which team pulled off the “Mile High Miracle” against Denver in January 2013, following the 2012 NFL season?", answer: "Baltimore Ravens", wrong: ["New England Patriots", "Indianapolis Colts"], explanation: "Joe Flacco's late deep touchdown to Jacoby Jones forced overtime for Baltimore." },
 
   { id: "holy-roller", grade: 4, prompt: "The 1978 “Holy Roller” play that helped prompt a rule change came in a Raiders game against which team?", answer: "San Diego Chargers", wrong: ["Denver Broncos", "Kansas City Chiefs", "Seattle Seahawks"], explanation: "Oakland's chaotic late fumble sequence against San Diego led to a rule limiting who can advance a teammate's fumble late in a game." },
   { id: "miracle-meadowlands", grade: 4, prompt: "Who returned Joe Pisarcik's fumble for the winning touchdown in the 1978 “Miracle at the Meadowlands”?", answer: "Herm Edwards", wrong: ["Bill Bergey", "Ron Jaworski"], explanation: "Herm Edwards scooped the late Giants fumble and scored for Philadelphia." },
@@ -714,67 +714,6 @@ function knowledgeQuestions(
 }
 
 
-function currentEventGrade(question: BarTriviaQuestion): AverageFanGrade {
-  if (question.round === "round1") return 1;
-  if (question.round === "round2") return 3;
-  if (question.round === "round3") return 4;
-  return 5;
-}
-
-function currentEventSubject(question: BarTriviaQuestion): AverageFanSubject {
-  if (question.league === "nfl") {
-    return ["Clutch Moments", "Milestones", "Coaching Debuts", "Comebacks"].includes(question.category)
-      ? "Players"
-      : "Teams";
-  }
-  if (question.league === "cfb") {
-    return ["Milestones", "Weird Moments", "Defensive Takeovers", "Breakout Games"].includes(question.category)
-      ? "Players"
-      : "Programs";
-  }
-  if (question.category === "Title Fights") return "Championships";
-  if (question.category === "TUF History") return "Fighters";
-  return "Fights";
-}
-
-function currentEventCandidates(sport: Exclude<AverageFanSport, "mlb">) {
-  return BAR_TRIVIA_CURRENT_EVENT_QUESTIONS
-    .filter((question) => question.league === sport)
-    .sort((a, b) => {
-      const activeCompare = (b.activeFrom ?? "").localeCompare(a.activeFrom ?? "");
-      return activeCompare || b.id.localeCompare(a.id);
-    })
-    .slice(0, AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS[sport])
-    .map((question) => {
-      const wrongChoices = question.choices.filter((choice) => choice !== question.answer);
-      if (wrongChoices.length < 3) {
-        throw new Error(`Average Fan current-event source ${question.id} does not have three distractors.`);
-      }
-      return assertAverageFanQuestion({
-        id: sport === "nfl"
-          ? `average-fan:nfl:00-current:${question.id}`
-          : `average-fan:${sport}:current:${question.id}`,
-        sport,
-        grade: currentEventGrade(question),
-        subject: currentEventSubject(question),
-        format: "four-choice",
-        prompt: question.prompt,
-        answer: question.answer,
-        aliases: [],
-        choices: fourChoiceOrder(`average-fan:${sport}:current:${question.id}`, question.answer, wrongChoices),
-        explanation: question.explanation,
-        contentType: "current-event",
-        activeFrom: question.activeFrom,
-        expiresAt: question.expiresAt,
-        difficultyNudge: question.round === "round1" ? -1 : question.round === "round2" ? 0 : 1,
-        protectedFinal: false,
-        sourceId: question.sourceId,
-        sourceUrl: question.sourceUrl,
-        verifiedAt: question.verifiedAt,
-      });
-    });
-}
-
 function nflKnowledgeQuestions(
   subject: AverageFanSubject,
   prefix: string,
@@ -811,95 +750,13 @@ function nflKnowledgeQuestions(
   ));
 }
 
-const CFB_TRADITION_CATEGORY_HINTS = [
-  "tradition", "rivalr", "troph", "mascot", "stadium", "fan culture", "cheer",
-  "entrance", "band", "fight song", "tailgating", "gameday",
-] as const;
-
-const CFB_PLAYER_CATEGORY_HINTS = [
-  "heisman", "player", "quarterback", "running back", "receiver", "championship star",
-  "two-sport", "award",
-] as const;
-
-const CFB_PROGRAM_CATEGORY_HINTS = [
-  "team identity", "program", "national championship", "championship history",
-  "conference", "bowl game", "coaches", "coaching",
-] as const;
-
-function cfbAuthoredSubject(question: BarTriviaQuestion): AverageFanSubject {
-  const category = question.category.toLocaleLowerCase();
-  if (CFB_TRADITION_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Traditions";
-  if (CFB_PLAYER_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Players";
-  if (CFB_PROGRAM_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Programs";
-  return "CFB History";
-}
-
-function cfbAuthoredGrade(question: BarTriviaQuestion): AverageFanGrade {
-  if (question.round === "last-call") return 5;
-  const bucket = stableOffset(question.id, 4);
-  if (question.difficulty === "easy") return bucket === 0 ? 2 : 1;
-  if (question.difficulty === "medium") return bucket < 2 ? 2 : 3;
-  if (question.difficulty === "hard") return bucket < 2 ? 4 : 5;
-  if (question.round === "round1") return bucket === 0 ? 2 : 1;
-  if (question.round === "round2") return bucket < 2 ? 2 : 3;
-  return bucket < 2 ? 4 : 5;
-}
-
-function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
-  const grade = cfbAuthoredGrade(question);
-  const subject = cfbAuthoredSubject(question);
-  const protectedFinal = question.round === "last-call";
-  const wrongChoices = question.choices.filter((choice) => choice !== question.answer).slice(0, 3);
-  const formatRoll = stableOffset(question.id + ":average-fan-format", 10);
-  const common = {
-    id: `average-fan:cfb:authored:${question.id}`,
-    sport: "cfb" as const,
-    grade,
-    subject,
-    answer: question.answer,
-    aliases: [] as string[],
-    explanation: question.explanation,
-    contentType: question.contentType,
-    activeFrom: question.activeFrom,
-    expiresAt: question.expiresAt,
-    difficultyNudge: grade >= 4 ? 1 : grade === 1 ? -1 : 0,
-    protectedFinal,
-    sourceId: question.sourceId,
-    sourceUrl: question.sourceUrl,
-    verifiedAt: question.verifiedAt,
-  };
-
-  const blankRecallNeedsChoices = /\btroph(?:y|ies)\b/i.test(question.prompt)
-    || /^\d{4}$/.test(question.answer.trim());
-
-  if (grade === 1 || formatRoll <= 3 || protectedFinal || blankRecallNeedsChoices) {
-    return assertAverageFanQuestion({
-      ...common,
-      format: "four-choice",
-      prompt: question.prompt,
-      choices: fourChoiceOrder(`average-fan:cfb:authored:${question.id}`, question.answer, wrongChoices),
-    });
-  }
-  return assertAverageFanQuestion({
-    ...common,
-    format: "short-answer",
-    prompt: question.prompt,
-    fanMisses: wrongChoices,
-  });
-}
-
-
-
-
 const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
   ["00-smith-heisman-receiver", 4, "Players", "DeVonta Smith was the first wide receiver to win the Heisman Trophy since Desmond Howard.", true, "Smith won the 2020 Heisman; the previous wide receiver winner was Desmond Howard in 1991."],
   ["00-fsu-last-bcs-champ", 4, "Programs", "Florida State won the final BCS National Championship Game before the College Football Playoff era.", true, "Florida State beat Auburn for the 2013 national title in the final BCS championship game."],
   ["00-lsu-two-loss-champ", 4, "CFB History", "LSU won the 2007 BCS national championship after entering the title game with two losses.", true, "LSU finished 12–2 and beat Ohio State for the 2007 season's BCS national championship."],
   ["00-lamar-2016:heisman", 3, "CFB History", "Lamar Jackson won the Heisman Trophy for the 2016 season.", true, "Lamar Jackson won the 2016 Heisman Trophy at Louisville."],
   ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as an eight-team playoff for the 2014 season.", false, "The CFP began with a four-team field for the 2014 season."],
-  ["00a-smith-2020:heisman", 3, "CFB History", "DeVonta Smith won the 2020 Heisman Trophy.", true, "DeVonta Smith won the 2020 Heisman Trophy after his record-setting season at Alabama."],
   ["00b-mccaffrey-2015:heisman", 3, "CFB History", "Christian McCaffrey won the 2015 Heisman Trophy.", false, "Derrick Henry won the 2015 Heisman Trophy; Christian McCaffrey finished second."],
-  ["01-cfp-first-number-one", 4, "CFB History", "Mississippi State was the first team ranked No. 1 by the College Football Playoff selection committee.", true, "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
   ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
   ["03-champ-2003-split", 4, "CFB History", "The 2003 season ended with LSU and USC recognized by major selectors as national champions.", true, "LSU won the BCS title while USC finished No. 1 in the AP poll, producing a split championship."],
 ].map(([id, grade, subject, prompt, answer, explanation]) => assertAverageFanQuestion({
@@ -933,10 +790,7 @@ const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
   ["02-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Tre Mason", "Nick Marshall"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
   ["03-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Josh Reed", "Skyler Green"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
 
-  ["00-history-first-ap", "CFB History", "Which school finished No. 1 in the first final Associated Press college football poll in 1936?", "Minnesota", ["Notre Dame", "Alabama", "Pittsburgh"], "Minnesota finished atop the first final AP poll in 1936."],
-  ["01-history-first-rose", "CFB History", "Michigan beat which school 49–0 in the first Rose Bowl game in 1902?", "Stanford", ["California", "USC", "Washington"], "Michigan defeated Stanford 49–0 in the inaugural Tournament East-West football game, now known as the Rose Bowl."],
   ["02-history-watts-jackson", "CFB History", "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", "Jalen Watts-Jackson", ["LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired."],
-  ["03-history-first-heisman", "CFB History", "The inaugural Downtown Athletic Club Trophy, later renamed the Heisman, went to which Chicago halfback?", "Jay Berwanger", ["Davey O'Brien", "Doc Blanchard", "Tom Harmon"], "University of Chicago halfback Jay Berwanger won the inaugural Downtown Athletic Club Trophy, later renamed the Heisman."],
 ].map(([id, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:cfb-final-${id}`,
   sport: "cfb",
@@ -982,9 +836,6 @@ function authoredCfbQuestions() {
             difficultyNudge: 2,
           })
     )),
-    ...BAR_TRIVIA_QUESTION_BANK
-      .filter((question) => question.league === "cfb" && question.contentType !== "current-event")
-      .map(authoredCfbQuestion),
   ];
 }
 
@@ -1283,7 +1134,6 @@ function footballCandidates(league: "NFL" | "CFB") {
     questions.push(...knowledgeQuestions("cfb", "Traditions", "average-fan:cfb:tradition", CFB_TRADITION_FACTS));
   }
 
-  questions.push(...currentEventCandidates(sport));
   return league === "CFB"
     ? [...authoredCfbQuestions(), ...questions]
     : questions;
@@ -1529,7 +1379,6 @@ function ufcCandidates() {
   }
 
   questions.push(...knowledgeQuestions("ufc", "Octagon IQ", "average-fan:ufc:iq", UFC_IQ_FACTS));
-  questions.push(...currentEventCandidates("ufc"));
   const authoredHistory = knowledgeQuestions("ufc", "Fights", "average-fan:ufc:authored-history", UFC_HISTORY_FACTS);
   const authoredChampionshipIds = new Set([
     "mcgregor-alvarez", "sterling-dq-title", "edwards-usman-round",
@@ -1602,11 +1451,29 @@ function calibratedPlayableQuestion(question: AverageFanQuestion) {
   return assertAverageFanQuestion({ ...question, grade });
 }
 
+/**
+ * Shared fact-identity gate: different formats or grades of the same player
+ * fact count as one question, not extra inventory.
+ */
+export function averageFanQuestionFactKey(question: AverageFanQuestion): string | null {
+  const id = question.id;
+  const position = /^average-fan:(nfl|cfb):g[1-5]:(.+):(position|position-tf|school-position)$/.exec(id);
+  if (position) return `${position[1]}:player:${position[2]}:position`;
+  const conference = /^average-fan:cfb:g[1-5]:(.+):(conference|conference-tf|conference-program)$/.exec(id);
+  if (conference) return `cfb:program:${conference[1]}:conference`;
+  const division = /^average-fan:ufc:g[1-5]:(.+):(division|division-tf)$/.exec(id);
+  if (division) return `ufc:fighter:${division[1]}:division`;
+  const cfbDraft = /^average-fan:cfb:(?:g[1-5]|final):(.+):(draft-pick|draft-identity|draft)$/.exec(id);
+  if (cfbDraft) return `cfb:player:${cfbDraft[1]}:draft-slot`;
+  return null;
+}
+
 function balancedTake(
   candidates: readonly AverageFanQuestion[],
   target: number,
   subjects: readonly AverageFanSubject[],
   label: string,
+  usedFacts: Set<string> = new Set<string>(),
 ) {
   const isNflOrdinary = /^nfl grade [1-5] evergreen$/.test(label);
   const isOpeningGrade = / grade 2 evergreen$/.test(label);
@@ -1691,16 +1558,23 @@ function balancedTake(
     for (const subject of subjects) {
       if (selected.length >= target) break;
       const queue = bySubject.get(subject) ?? [];
-      const offset = offsets.get(subject) ?? 0;
-      const next = queue[offset];
+      let offset = offsets.get(subject) ?? 0;
+      let next: AverageFanQuestion | undefined;
+      while (offset < queue.length) {
+        const candidate = queue[offset++]!;
+        const fact = averageFanQuestionFactKey(candidate);
+        if (fact && usedFacts.has(fact)) continue;
+        next = candidate;
+        break;
+      }
+      offsets.set(subject, offset);
       if (!next) continue;
-      offsets.set(subject, offset + 1);
       selected.push(next);
+      const fact = averageFanQuestionFactKey(next);
+      if (fact) usedFacts.add(fact);
       progressed = true;
     }
-    if (!progressed) {
-      throw new Error(`Average Fan ${label} has only ${selected.length} eligible questions for a target of ${target}.`);
-    }
+    if (!progressed) break; // Quality before inventory: a cap is not a minimum quota.
   }
   return selected;
 }
@@ -1811,6 +1685,80 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
   });
 }
 
+/**
+ * Individually identified Average Fan facts that are already used by Bar Trivia.
+ * Retire them rather than disguising the same fact with different wording.
+ * See Stage 2 audit for the source-game pairs.
+ */
+// Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
+// Other known Bar Trivia, Millionaire, and intra-bank same-fact repeats.
+const RETIRED_REPEATED_FACT_ID_PREFIXES = [
+  // Arizona and Arizona State ask the same easy 2025 Big 12 answer; keep just one.
+  "average-fan:cfb:g1:program-arizona:conference",
+  // Exclude exact-number recall or deep undercard trivia lacking a memorable anchor.
+  "average-fan:ufc:authored-history:first-170:",
+  "average-fan:ufc:authored-history:first-fox-time:",
+  "average-fan:ufc:final:authored:final-silva-reign",
+  "average-fan:nfl:00-team:terrible-towel:",
+  "average-fan:nfl:00-team:bills-four-straight:",
+  "average-fan:cfb:tradition:sooner-schooner:",
+  "average-fan:cfb:tradition:jump-around:",
+  "average-fan:cfb:tradition:howards-rock:",
+  "average-fan:ufc:final:authored:final-tuf1",
+  "average-fan:nfl:00-player:peterson-2012-mvp:",
+  "average-fan:nfl:00-player:moss-23:",
+  "average-fan:nfl:00-player:dickerson-2105:",
+  "average-fan:nfl:00-history:music-city-lateral:",
+  "average-fan:ufc:authored-history:barboza-etim:",
+  "average-fan:cfb:authored:00-g5:daniels-2023-heisman:",
+  "average-fan:cfb:authored:00-g5:bennett-double-cfp-mvp:",
+  "average-fan:cfb:authored:00-g5:hunter-biletnikoff-bednarik:",
+  "average-fan:cfb:authored:00-g5:utah-sugar-alabama:",
+  "average-fan:nfl:00-history:immaculate:",
+  "average-fan:nfl:00-history:minneapolis:",
+  "average-fan:nfl:00-history:holmes:",
+  "average-fan:nfl:00-player:cooper-kupp-2021-opoy:",
+  "average-fan:cfb:authored:00-g5:tennessee-first-bcs:",
+  "average-fan:cfb:authored:00-g5:ohio-state-four-seed:",
+  "average-fan:cfb:authored:cfb-final-00-program-tennessee-bcs",
+  "average-fan:cfb:authored:cfb-final-02-program-four-seed",
+  "average-fan:ufc:authored-history:serra-gsp:",
+  "average-fan:ufc:authored-history:rousey-carmouche:",
+  "average-fan:ufc:authored-history:diaz-mcgregor:",
+  "average-fan:ufc:final:authored:final-ufc217-gsp",
+] as const;
+
+const RETIRED_BAR_TRIVIA_FACT_IDS = new Set<string>([
+  "average-fan:nfl:00-history:lombardi:short",
+  "average-fan:nfl:00-history:hester:short",
+  "average-fan:nfl:00-history:music-city:choice",
+  "average-fan:nfl:final-authored:howley",
+  "average-fan:cfb:tradition:ralphie:short",
+  "average-fan:ufc:authored-history:ufc1-winner:choice",
+  "average-fan:nfl:00-history:sb1:choice",
+  "average-fan:nfl:00-history:perfect:short",
+  "average-fan:nfl:00-history:first-wild-card:short",
+  "average-fan:nfl:00-history:helmet:choice",
+  "average-fan:nfl:00-team:purple-people-eaters:short",
+  "average-fan:nfl:00-team:legion-boom:choice",
+  "average-fan:nfl:00-player:brady-50:short",
+  "average-fan:ufc:authored-history:edwards-usman-round:short",
+  "average-fan:ufc:authored-history:jones-hamill:short",
+  "average-fan:ufc:authored-history:mcgregor-alvarez:choice",
+  "average-fan:ufc:final:authored:final-dean-mean",
+  "average-fan:ufc:authored-history:belfort-19:short",
+  "average-fan:ufc:authored-history:ufc1-one-glove:short",
+  "average-fan:ufc:authored-history:ufc1-headkick:short",
+  "average-fan:ufc:authored-history:first-155:short",
+  "average-fan:ufc:authored-history:ufc5-winner:short",
+  "average-fan:ufc:authored-history:sterling-dq-title:short",
+  "average-fan:ufc:authored-history:taktarov-nine:choice",
+  "average-fan:ufc:final:authored:final-maine-iac",
+  "average-fan:ufc:final:authored:final-muscle-shark",
+  "average-fan:nfl:00-team:americas-team:short",
+  "average-fan:ufc:iq:round-length:short",
+]);
+
 function buildBank(
   sport: AverageFanSport,
   candidates: readonly AverageFanQuestion[],
@@ -1818,7 +1766,14 @@ function buildBank(
   finalTarget: number,
 ) {
   const subjects = AVERAGE_FAN_SUBJECTS[sport] as readonly AverageFanSubject[];
-  const playableCandidates = candidates.map(calibratedPlayableQuestion);
+  const playableCandidates = candidates
+    .filter((question) => !RETIRED_BAR_TRIVIA_FACT_IDS.has(question.id)
+      && !RETIRED_REPEATED_FACT_ID_PREFIXES.some((prefix) => question.id.startsWith(prefix))
+      // A dated title-fight identity riddle rewards calendar memorization, not
+      // a recognizable UFC career anchor. Keep stronger opponent/finish puzzles.
+      && (sport !== "ufc" || !question.id.endsWith(":title-identity")))
+    .map(calibratedPlayableQuestion);
+  const usedFacts = new Set<string>();
   const ordinary = AVERAGE_FAN_PLAYABLE_GRADES.flatMap((grade) => {
     const current = playableCandidates
       .filter((question) => (
@@ -1840,6 +1795,7 @@ function buildBank(
       evergreenTarget,
       subjects,
       `${sport} grade ${grade} evergreen`,
+      usedFacts,
     );
     return [...current, ...evergreen];
   });
@@ -1848,7 +1804,13 @@ function buildBank(
     finalTarget,
     subjects,
     `${sport} Finals`,
+    usedFacts,
   );
+  if (finals.length === 0 || AVERAGE_FAN_PLAYABLE_GRADES.some((grade) =>
+    ordinary.filter((question) => question.grade === grade).length < 2
+  )) {
+    throw new Error(`Average Fan ${sport} needs at least two eligible questions at each grade and one Final.`);
+  }
   const bank = [...ordinary, ...finals];
   const ids = new Set(bank.map((question) => question.id));
   if (ids.size !== bank.length) throw new Error(`Average Fan ${sport} bank contains duplicate ids.`);
@@ -1880,7 +1842,7 @@ const averageFanCfbCandidates = footballCandidates("CFB").filter(
 export const averageFanCfbQuestionBank = buildBank(
   "cfb",
   averageFanCfbCandidates,
-  FOOTBALL_GRADE_TARGETS,
+  CFB_REVIEWED_GRADE_TARGETS,
   AVERAGE_FAN_FINAL_TARGETS.cfb,
 );
 

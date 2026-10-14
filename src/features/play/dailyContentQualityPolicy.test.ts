@@ -84,6 +84,16 @@ describe("Daily quality and rollout contract (Stage 1)", () => {
     expect(findDailyContentOverlaps(entries)[0]?.reason).toBe("near_duplicate");
   });
 
+  it("does not mistake distinct programs with identical conference answers for one fact", () => {
+    const rows: DailyContentAuditEntry[] = [
+      {sport:"cfb",game:"average_fan",questionId:"asu",factKey:"cfb:program:program-arizona-state:conference",prompt:"For the 2025 season, which conference was Arizona State in?",answer:"Big 12"},
+      {sport:"cfb",game:"average_fan",questionId:"arizona",factKey:"cfb:program:program-arizona:conference",prompt:"For the 2025 season, which conference was Arizona in?",answer:"Big 12"},
+    ];
+    expect(findDailyContentOverlaps(rows)).toEqual([]);
+    const genuinelySame = [{ ...rows[0]!, prompt: rows[1]!.prompt }, rows[1]!];
+    expect(findDailyContentOverlaps(genuinelySame)[0]?.reason).toBe("identical_prompt");
+  });
+
   it("does not confuse separate facts about the same person", () => {
     const entries: DailyContentAuditEntry[] = [
       { sport: "nfl", game: "millionaire", questionId: "a", prompt: "Which college did Tom Brady attend?", answer: "Michigan" },

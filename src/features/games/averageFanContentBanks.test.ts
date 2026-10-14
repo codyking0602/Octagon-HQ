@@ -2,13 +2,16 @@ import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_BANK_TARGETS,
   AVERAGE_FAN_CONTENT_BANKS,
-  AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS,
+  averageFanQuestionFactKey,
   AVERAGE_FAN_FINAL_TARGETS,
   averageFanBankSummary,
 } from "./averageFanContentBanks";
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
+import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
+import { MILLIONAIRE_DAILY_RUN_COUNT, millionaireDailyRun } from "../play/millionaireDailyQuestionBank";
+import { findDailyContentOverlaps, type DailyContentAuditEntry } from "../play/dailyContentQualityPolicy";
 import {
   averageFanAnswersMatch,
   validateAverageFanQuestion,
@@ -69,12 +72,12 @@ function oneCharacterHumanTypo(value: string) {
 }
 
 describe("Average Fan durable content banks", () => {
-  it("hits the locked six-month bank sizes and protected Final counts", () => {
+  it("does not pad selected banks to satisfy the old inventory targets", () => {
     for (const sport of sports) {
       const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
-      expect(bank).toHaveLength(AVERAGE_FAN_BANK_TARGETS[sport]);
-      expect(bank.filter((question) => question.protectedFinal))
-        .toHaveLength(AVERAGE_FAN_FINAL_TARGETS[sport]);
+      expect(bank.length, sport).toBeLessThanOrEqual(AVERAGE_FAN_BANK_TARGETS[sport]);
+      expect(bank.filter((question) => question.protectedFinal).length)
+        .toBeLessThanOrEqual(AVERAGE_FAN_FINAL_TARGETS[sport]);
     }
   });
 
@@ -87,7 +90,7 @@ describe("Average Fan durable content banks", () => {
         globalIds.add(question.id);
       }
     }
-    expect(globalIds.size).toBe(880);
+    expect(globalIds.size).toBe(sports.reduce((total, sport) => total + AVERAGE_FAN_CONTENT_BANKS[sport].length, 0));
   });
 
   it("runs every banked short answer through tolerant human-input grading without accepting authored misses", () => {
@@ -179,15 +182,18 @@ describe("Average Fan durable content banks", () => {
   });
 
   it("regrades the durable banks to the four playable grades", () => {
-    expect(averageFanBankSummary("nfl").grades).toEqual({
-      2: 40, 3: 40, 4: 40, 5: 85,
-    });
-    expect(averageFanBankSummary("cfb").grades).toEqual({
-      2: 40, 3: 40, 4: 40, 5: 85,
-    });
-    expect(averageFanBankSummary("ufc").grades).toEqual({
-      2: 80, 3: 80, 4: 80, 5: 170,
-    });
+    const caps = {
+      nfl: { 2: 40, 3: 40, 4: 40, 5: 85 },
+      cfb: { 2: 40, 3: 40, 4: 40, 5: 85 },
+      ufc: { 2: 80, 3: 80, 4: 80, 5: 170 },
+    };
+    for (const sport of sports) {
+      const grades = averageFanBankSummary(sport).grades;
+      for (const [grade, cap] of Object.entries(caps[sport])) {
+        expect(Number(grades[grade]), `${sport} grade ${grade}`).toBeLessThanOrEqual(cap);
+        expect(Number(grades[grade]), `${sport} grade ${grade}`).toBeGreaterThanOrEqual(2);
+      }
+    }
 
     for (const sport of sports) {
       const ordinary = AVERAGE_FAN_CONTENT_BANKS[sport].filter((question) => !question.protectedFinal);
@@ -208,14 +214,14 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
-  it("keeps short answer dominant while retaining both alternate formats", () => {
+  it("retains a reasonable format mix without filling banks with repeated facts", () => {
     for (const sport of sports) {
       const summary = averageFanBankSummary(sport);
       const shortShare = Number(summary.formats["short-answer"]) / summary.total;
       const choiceShare = Number(summary.formats["four-choice"]) / summary.total;
       const trueFalseShare = Number(summary.formats["true-false"]) / summary.total;
 
-      expect(shortShare).toBeGreaterThanOrEqual(0.3);
+      expect(shortShare).toBeGreaterThanOrEqual(0.2);
       expect(shortShare).toBeLessThanOrEqual(0.7);
       expect(choiceShare).toBeGreaterThanOrEqual(0.18);
       expect(trueFalseShare).toBeGreaterThanOrEqual(0.05);
@@ -236,7 +242,7 @@ describe("Average Fan durable content banks", () => {
 
   it("keeps the selected NFL bank fully authored and player-facing", () => {
     const ordinary = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => !question.protectedFinal);
-    expect(ordinary).toHaveLength(205);
+    expect(ordinary.length).toBeLessThanOrEqual(205);
     const evergreen = ordinary.filter((question) => question.contentType === "evergreen");
     expect(evergreen.every((question) => question.id.startsWith("average-fan:nfl:00-"))).toBe(true);
 
@@ -276,7 +282,7 @@ describe("Average Fan durable content banks", () => {
         return counts;
       }, {}),
     ).toEqual({
-      Players: 4,
+      Players: 3,
       Teams: 4,
       "NFL History": 4,
       "X’s & O’s": 3,
@@ -351,11 +357,9 @@ describe("Average Fan durable content banks", () => {
     expect(question?.grade).toBe(3);
   });
 
-  it("uses natural UFC title-fight year wording instead of raw ISO dates", () => {
-    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc.filter((row) => row.id.includes(":title-identity"))) {
-      expect(question.prompt, question.id).not.toMatch(/\b20\d{2}-\d{2}-\d{2}\b/);
-      expect(question.explanation, question.id).not.toMatch(/\b20\d{2}-\d{2}-\d{2}\b/);
-    }
+  it("does not use dated UFC title-fight identity riddles as hard-question filler", () => {
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) => question.id.endsWith(":title-identity")))
+      .toBe(false);
   });
 
   it("keeps generated UFC opening-grade fighter recall recognition-first", () => {
@@ -377,7 +381,7 @@ describe("Average Fan durable content banks", () => {
     }
 
     const authored = bank.filter((question) => question.id.includes(":authored-history:"));
-    expect(authored.length).toBeGreaterThanOrEqual(20);
+    expect(authored.length).toBeGreaterThan(0);
     expect(authored.some((question) => question.subject === "Championships")).toBe(true);
     expect(authored.some((question) => question.subject === "Fights")).toBe(true);
   });
@@ -396,42 +400,122 @@ describe("Average Fan durable content banks", () => {
   });
 
 
-  it("reuses the newest verified Bar Trivia current-event pool without letting stale rows grow the bank", () => {
-    for (const sport of sports) {
-      const source = BAR_TRIVIA_CURRENT_EVENT_QUESTIONS
-        .filter((question) => question.league === sport)
-        .sort((a, b) => {
-          const activeCompare = (b.activeFrom ?? "").localeCompare(a.activeFrom ?? "");
-          return activeCompare || b.id.localeCompare(a.id);
-        })
-        .slice(0, AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS[sport]);
-      const bankCurrent = AVERAGE_FAN_CONTENT_BANKS[sport].filter(
-        (question) => question.contentType === "current-event",
-      );
-      expect(bankCurrent).toHaveLength(source.length);
-      expect(source.length).toBeGreaterThan(0);
+  it("recognizes nested fighter and player IDs when deduplicating question facts", () => {
+    const division = {
+      id: "average-fan:ufc:g1:ufc:jon-jones:division",
+    } as AverageFanQuestion;
+    const divisionTf = {
+      id: "average-fan:ufc:g2:ufc:jon-jones:division-tf",
+    } as AverageFanQuestion;
+    expect(averageFanQuestionFactKey(division))
+      .toBe("ufc:fighter:ufc:jon-jones:division");
+    expect(averageFanQuestionFactKey(divisionTf))
+      .toBe(averageFanQuestionFactKey(division));
 
-      const bankBySourceId = new Map(bankCurrent.map((question) => [question.sourceId, question]));
-      for (const sourceQuestion of source) {
-        expect(sourceQuestion.sourceId, sourceQuestion.id).toBeTruthy();
-        expect(sourceQuestion.sourceUrl, sourceQuestion.id).toBeTruthy();
-        expect(sourceQuestion.verifiedAt, sourceQuestion.id).toBeTruthy();
-
-        const adapted = bankBySourceId.get(sourceQuestion.sourceId);
-        expect(adapted, sourceQuestion.id).toBeTruthy();
-        expect(adapted?.activeFrom, sourceQuestion.id).toBe(sourceQuestion.activeFrom);
-        expect(adapted?.expiresAt, sourceQuestion.id).toBe(sourceQuestion.expiresAt);
-        expect(adapted?.verifiedAt, sourceQuestion.id).toBe(sourceQuestion.verifiedAt);
-        expect(adapted?.sourceUrl, sourceQuestion.id).toBe(sourceQuestion.sourceUrl);
-        expect(adapted?.protectedFinal, sourceQuestion.id).toBe(false);
-      }
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc.filter((q) =>
+      q.id.endsWith(":division") || q.id.endsWith(":division-tf")
+    )) {
+      expect(averageFanQuestionFactKey(question), question.id).not.toBeNull();
     }
+  });
+
+  it("does not select the same player fact twice using alternate formats or grades", () => {
+    for (const sport of sports) {
+      const keys = AVERAGE_FAN_CONTENT_BANKS[sport]
+        .map(averageFanQuestionFactKey)
+        .filter((key): key is string => key != null);
+      expect(new Set(keys).size, sport).toBe(keys.length);
+    }
+  });
+
+  it("blocks identical and high-confidence near-duplicate facts inside selected Average Fan banks", () => {
+    const entries: DailyContentAuditEntry[] = sports.flatMap((sport) =>
+      AVERAGE_FAN_CONTENT_BANKS[sport].map((question) => ({
+        sport,
+        game: "average_fan",
+        questionId: question.id,
+        prompt: question.prompt,
+        answer: question.answer,
+        factKey: averageFanQuestionFactKey(question) ?? undefined,
+      })),
+    );
+    const overlaps = findDailyContentOverlaps(entries)
+      .filter((item) => item.scope === "within_game");
+    expect(overlaps.map((item) => ({
+      reason: item.reason, first: item.left.questionId, second: item.right.questionId,
+    }))).toEqual([]);
+  });
+
+  it("does not copy Bar Trivia questions into Average Fan in any sport", () => {
+    const authored = [...BAR_TRIVIA_QUESTION_BANK, ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS];
+    const entries: DailyContentAuditEntry[] = [
+      ...authored.map((question) => ({
+        sport: question.league as "nfl" | "cfb" | "ufc",
+        game: "bar_trivia",
+        questionId: question.id,
+        prompt: question.prompt,
+        answer: question.answer,
+      })),
+      ...sports.flatMap((sport) => AVERAGE_FAN_CONTENT_BANKS[sport].map((question) => ({
+        sport,
+        game: "average_fan",
+        questionId: question.id,
+        prompt: question.prompt,
+        answer: question.answer,
+      }))),
+    ];
+    const overlaps = findDailyContentOverlaps(entries)
+      .filter((item) => item.scope === "across_games");
+    expect(overlaps.map((item) => ({
+      reason: item.reason, left: item.left.questionId, right: item.right.questionId,
+    }))).toEqual([]);
+
+    for (const sport of sports) {
+      const average = AVERAGE_FAN_CONTENT_BANKS[sport];
+      const borrowedIds = average.filter((question) =>
+        question.id.includes(":current:") || (
+          sport === "cfb" && authored.some((original) =>
+            question.id === `average-fan:cfb:authored:${original.id}`
+          )
+        )
+      );
+      expect(borrowedIds.map((question) => question.id)).toEqual([]);
+    }
+  });
+
+  it("does not publish the same question as Millionaire and Average Fan", () => {
+    const entries: DailyContentAuditEntry[] = [
+      ...sports.flatMap((sport) => Array.from(
+        { length: MILLIONAIRE_DAILY_RUN_COUNT },
+        (_, runIndex) => millionaireDailyRun(sport, runIndex).map((question) => ({
+          sport,
+          game: "millionaire",
+          questionId: question.id,
+          prompt: question.prompt,
+          answer: question.choices.find((choice) => choice.id === question.correctChoiceId)!.text,
+        })),
+      ).flat()),
+      ...sports.flatMap((sport) => AVERAGE_FAN_CONTENT_BANKS[sport].map((question) => ({
+        sport,
+        game: "average_fan",
+        questionId: question.id,
+        prompt: question.prompt,
+        answer: question.answer,
+      }))),
+    ];
+    const overlaps = findDailyContentOverlaps(entries)
+      .filter((item) => item.scope === "across_games");
+    expect(overlaps.map((item) => ({
+      reason: item.reason,
+      left: item.left.questionId,
+      right: item.right.questionId,
+    }))).toEqual([]);
   });
 
   it("keeps current events inside the locked grade totals rather than inflating the bank", () => {
     for (const sport of sports) {
       const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
-      expect(bank).toHaveLength(AVERAGE_FAN_BANK_TARGETS[sport]);
+      expect(bank.length, sport).toBeLessThanOrEqual(AVERAGE_FAN_BANK_TARGETS[sport]);
       for (const question of bank.filter((row) => row.contentType === "current-event")) {
         expect(question.protectedFinal, question.id).toBe(false);
         expect(question.grade, question.id).toBeGreaterThanOrEqual(3);
@@ -498,7 +582,7 @@ describe("Average Fan durable content banks", () => {
         expect(question.grade).toBe(5);
       }
       const ordinary = bank.filter((row) => !row.protectedFinal);
-      expect(ordinary.length).toBe(
+      expect(ordinary.length).toBeLessThanOrEqual(
         AVERAGE_FAN_BANK_TARGETS[sport] - AVERAGE_FAN_FINAL_TARGETS[sport],
       );
     }
