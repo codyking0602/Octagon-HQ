@@ -113,9 +113,11 @@ function boardFor(
 ) {
   const now = `${day}T12:00:00.000Z`;
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport] as readonly AverageFanQuestion[];
-  const used = new Set(
-    recentHistory(history, day)
-      .filter((row) => row.sport === sport)
+  const priorSportHistory = recentHistory(history, day).filter((row) => row.sport === sport);
+  const used = new Set(priorSportHistory.flatMap((row) => row.questionIds));
+  const usedWithinThirtyDays = new Set(
+    priorSportHistory
+      .filter((row) => dayNumber(day) - dayNumber(row.day) <= 30)
       .flatMap((row) => row.questionIds),
   );
   const active = bank.filter((question) => averageFanQuestionEligibleForBoard(question, now));
@@ -125,7 +127,13 @@ function boardFor(
   const poolForGrade = (grade: number) => {
     const freshGrade = evergreenFresh.filter((question) => question.grade === grade);
     if (freshGrade.length >= 2) return freshGrade;
-    return evergreenActive.filter((question) => question.grade === grade);
+    // After several months, the quality-first CFB bank may exhaust unused
+    // questions within 183 days. Fall back to previously used questions *older
+    // than 30 days*, never the recently published pool if a safe option exists.
+    const olderEligible = evergreenActive.filter((question) =>
+      question.grade === grade && !usedWithinThirtyDays.has(question.id));
+    return olderEligible.length >= 2 ? olderEligible
+      : evergreenActive.filter((question) => question.grade === grade);
   };
 
   const seed = `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}`;
