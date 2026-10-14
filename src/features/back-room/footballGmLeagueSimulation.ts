@@ -9,6 +9,7 @@
  * an emergent property of games and opponents, never an awarded finish.
  */
 import type { FootballGmPlayoffFinish } from "./footballGmEngine";
+import { NFL_GM_LONG_ALL_TEAMS, nflGmLongTeamGeography } from "./footballGmLongConference";
 
 export interface FootballGmLeagueClub {
   id: string;
@@ -106,7 +107,12 @@ export function footballGmSimulateLeagueSeason(input: {
 
   const seed = `gm-league-v10:${input.seed}:year:${input.year}`;
   const long = input.long;
-  if (long && (franchises.length !== 1 || long.firstEight.length !== 8
+  const longTeams = long ? [...long.firstEight, ...long.remaining, ...long.fillers].map(row => row.opponent) : [];
+  const missing = long ? NFL_GM_LONG_ALL_TEAMS.filter(code => !longTeams.includes(code)) : [];
+  const ownerGeography = missing.length === 1 ? nflGmLongTeamGeography(missing[0]!) : null;
+  if (long && (missing.length !== 1 || ownerGeography?.conference !== 0
+    || longTeams.some(code => !nflGmLongTeamGeography(code))
+    || franchises.length !== 1 || long.firstEight.length !== 8
     || long.remaining.length !== 9 || long.fillers.length !== 14
     || long.gradesByWeek.length !== 9 || long.oddsAdjustments.length !== 9
     || long.playoffOddsAdjustments.length !== 4
@@ -144,8 +150,15 @@ export function footballGmSimulateLeagueSeason(input: {
     return {
       id: owned ? `gm:${owned.key}` : `npc:${index}`,
       ...(long && !owned ? { code: clubIdentity.get(index)?.opponent } : {}),
-      conference: (index < 16 ? 0 : 1) as 0 | 1,
-      division: index % 4,
+      // Real NFL conference/division identity for Long-only opponents.
+      // The fantasy franchise replaces the missing AFC club, without
+      // altering a single saved first-half opponent or result.
+      conference: long ? (owned ? ownerGeography!.conference
+        : nflGmLongTeamGeography(clubIdentity.get(index)!.opponent)!.conference)
+        : (index < 16 ? 0 : 1) as 0 | 1,
+      division: long ? (owned ? ownerGeography!.division
+        : nflGmLongTeamGeography(clubIdentity.get(index)!.opponent)!.division)
+        : index % 4,
       grade: owned ? owned.grade : clubIdentity.get(index)?.grade ?? (82.5 + 7 * roll(`${seed}:npc-grade:${index}`)),
       winChancePenalty: owned?.winChancePenalty ?? 0,
       wins: 0,

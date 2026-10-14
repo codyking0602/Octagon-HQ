@@ -3,6 +3,8 @@ import { footballGmSimulateLeagueSeason, type FootballGmLongLeagueTimeline } fro
 import { NFL_GM_LONG_NEUTRAL_GRADE, NFL_GM_LONG_POSITION_WEIGHTS, nflGmLongValidRoster, type NflGmLongPick } from "./footballGmLongFoundation";
 import { NFL_GM_LONG_BY_ID, type NflGmLongPlayer } from "./footballGmLongCatalog";
 import { NFL_GM_LONG_COACHES, nflGmLongCoachEffects } from "./footballGmLongCoaches";
+import { nflGmLongTeamGeography } from "./footballGmLongConference";
+import { nflGmLongCalibratedOlDevelopment, nflGmLongOlRegressionMagnitude } from "./footballGmLongOlCalibration";
 import { nflGmLongActivePicks, nflGmLongPlayerHalftimeDelta, type NflGmLongMidseason, type NflGmLongPlayerChange } from "./footballGmLongMidseason";
 
 export type NflGmLongYearOneStage = "regular" | "standings" | "playoffs" | "results";
@@ -39,11 +41,12 @@ function yearEndDelta(player: NflGmLongPlayer, runId: string, half: number): num
   if (old) {
     full = footballGmProjectedGradeForPlayer(old, 2, "long-mid:" + runId) - player.currentGrade;
   } else if (player.development) {
-    const d = player.development;
+    const d = nflGmLongCalibratedOlDevelopment(player)!;
     const n = roll(runId + ":development:" + player.id) * 100;
     if (n < d.breakoutPct) full = Math.ceil(d.maxAnnualGain);
     else if (n < d.breakoutPct + d.improvePct) full = Math.max(1, Math.ceil(d.maxAnnualGain * .5));
-    else if (n >= 100 - d.declinePct) full = -Math.max(1, Math.ceil(d.maxAnnualLoss * .7));
+    else if (n >= 100 - d.declinePct) full = -nflGmLongOlRegressionMagnitude(
+      player, roll(runId + ":elite-ol-severe:" + player.id) < .12);
   }
   // A half-season provisional signal may hold, but it cannot be silently
   // discarded by a separate annual roll. Never display raw changes.
@@ -95,10 +98,15 @@ export function nflGmLongCreateYearOne(
   const chemistry = effects.chemistryResiliencePct / 200;
   const remainingTeams = FOOTBALL_GM_TEAMS.filter(team => !mid.games.some(game => game.opponent === team))
     .sort((a, b) => hash(runId + ":remaining:" + a) - hash(runId + ":remaining:" + b));
-  const remaining = remainingTeams.slice(0, 9).map((opponent, i) => ({
+  // Omit one still-unplayed AFC identity so the fantasy franchise takes
+  // its divisional place. Real clubs retain their proper conferences.
+  const omittedAfc = [...remainingTeams].reverse().find(team => nflGmLongTeamGeography(team)?.conference === 0);
+  if (!omittedAfc) throw new Error("Missing Long GM AFC host division.");
+  const assignedTeams = remainingTeams.filter(team => team !== omittedAfc);
+  const remaining = assignedTeams.slice(0, 9).map((opponent, i) => ({
     opponent, grade: round(84.5 + 12 * roll(runId + ":playoff-schedule:" + (i + 8))),
   }));
-  const fillers = remainingTeams.slice(9, 23).map((opponent, i) => ({
+  const fillers = assignedTeams.slice(9).map((opponent, i) => ({
     opponent, grade: round(82.5 + 10 * roll(runId + ":extra-opponent:" + i)),
   }));
   const plan = {
