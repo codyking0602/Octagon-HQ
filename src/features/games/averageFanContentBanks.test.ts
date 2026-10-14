@@ -388,6 +388,17 @@ describe("Average Fan durable content banks", () => {
     expect(authored.some((question) => question.subject === "Fights")).toBe(true);
   });
 
+  it("does not repeat the Bar Trivia five-second Masvidal knockout as an inverted Average Fan Final", () => {
+    const barFact = BAR_TRIVIA_QUESTION_BANK.find((row) => row.id === "ufc-r3-fastest-ko");
+    expect(barFact?.answer).toBe("Jorge Masvidal");
+    expect(barFact?.prompt).toMatch(/five-second finish of Ben Askren/i);
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+      question.id === "average-fan:ufc:final:authored:final-masvidal-five",
+    )).toBe(false);
+    expect(AVERAGE_FAN_BANK_TARGETS.ufc).toBe(439);
+    expect(AVERAGE_FAN_FINAL_TARGETS.ufc).toBe(29);
+  });
+
   it("retire CFB ordinary facts already protected as authored Finals", () => {
     const retired = [
       "old-brass-spittoon",
