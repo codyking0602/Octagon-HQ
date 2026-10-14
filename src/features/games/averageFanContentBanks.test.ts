@@ -357,11 +357,9 @@ describe("Average Fan durable content banks", () => {
     expect(question?.grade).toBe(3);
   });
 
-  it("uses natural UFC title-fight year wording instead of raw ISO dates", () => {
-    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc.filter((row) => row.id.includes(":title-identity"))) {
-      expect(question.prompt, question.id).not.toMatch(/\b20\d{2}-\d{2}-\d{2}\b/);
-      expect(question.explanation, question.id).not.toMatch(/\b20\d{2}-\d{2}-\d{2}\b/);
-    }
+  it("does not use dated UFC title-fight identity riddles as hard-question filler", () => {
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) => question.id.endsWith(":title-identity")))
+      .toBe(false);
   });
 
   it("keeps generated UFC opening-grade fighter recall recognition-first", () => {

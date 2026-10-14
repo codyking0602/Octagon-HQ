@@ -1766,7 +1766,10 @@ function buildBank(
   const subjects = AVERAGE_FAN_SUBJECTS[sport] as readonly AverageFanSubject[];
   const playableCandidates = candidates
     .filter((question) => !RETIRED_BAR_TRIVIA_FACT_IDS.has(question.id)
-      && !RETIRED_REPEATED_FACT_ID_PREFIXES.some((prefix) => question.id.startsWith(prefix)))
+      && !RETIRED_REPEATED_FACT_ID_PREFIXES.some((prefix) => question.id.startsWith(prefix))
+      // A dated title-fight identity riddle rewards calendar memorization, not
+      // a recognizable UFC career anchor. Keep stronger opponent/finish puzzles.
+      && (sport !== "ufc" || !question.id.endsWith(":title-identity")))
     .map(calibratedPlayableQuestion);
   const usedFacts = new Set<string>();
   const ordinary = AVERAGE_FAN_PLAYABLE_GRADES.flatMap((grade) => {
