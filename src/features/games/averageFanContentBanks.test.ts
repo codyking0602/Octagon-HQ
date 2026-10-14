@@ -411,6 +411,24 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("blocks identical and high-confidence near-duplicate facts inside selected Average Fan banks", () => {
+    const entries: DailyContentAuditEntry[] = sports.flatMap((sport) =>
+      AVERAGE_FAN_CONTENT_BANKS[sport].map((question) => ({
+        sport,
+        game: "average_fan",
+        questionId: question.id,
+        prompt: question.prompt,
+        answer: question.answer,
+        factKey: averageFanQuestionFactKey(question) ?? undefined,
+      })),
+    );
+    const overlaps = findDailyContentOverlaps(entries)
+      .filter((item) => item.scope === "within_game");
+    expect(overlaps.map((item) => ({
+      reason: item.reason, first: item.left.questionId, second: item.right.questionId,
+    }))).toEqual([]);
+  });
+
   it("does not copy Bar Trivia questions into Average Fan in any sport", () => {
     const authored = [...BAR_TRIVIA_QUESTION_BANK, ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS];
     const entries: DailyContentAuditEntry[] = [
