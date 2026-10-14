@@ -507,6 +507,7 @@ const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
 type NflFinalFact = KnowledgeFact & {
   subject: "Players" | "Teams" | "NFL History" | "X’s & O’s";
   aliases?: readonly string[];
+  finalTier?: "ordinary";
 };
 
 const NFL_FINAL_FACTS: readonly NflFinalFact[] = [
@@ -515,17 +516,17 @@ const NFL_FINAL_FACTS: readonly NflFinalFact[] = [
   { id: "steve-young-six", grade: 5, subject: "Players", prompt: "Which quarterback threw six touchdown passes in Super Bowl XXIX?", answer: "Steve Young", aliases: ["Young"], wrong: ["Joe Montana", "Troy Aikman"], explanation: "Steve Young threw six touchdown passes in San Francisco's Super Bowl XXIX victory." },
   { id: "terrell-davis-three", grade: 5, subject: "Players", prompt: "Which running back scored three rushing touchdowns and won MVP in Super Bowl XXXII?", answer: "Terrell Davis", aliases: ["Davis"], wrong: ["John Elway", "Dorsey Levens"], explanation: "Terrell Davis scored three rushing touchdowns and earned Super Bowl XXXII MVP." },
 
-  { id: "bucs-home", grade: 5, subject: "Teams", prompt: "Which franchise became the first to play in and win a Super Bowl in its home stadium in 2021?", answer: "Tampa Bay Buccaneers", aliases: ["Buccaneers", "Bucs", "Tampa Bay"], wrong: ["Los Angeles Rams", "Miami Dolphins"], explanation: "Tampa Bay won Super Bowl LV at Raymond James Stadium." },
-  { id: "bears-46", grade: 5, subject: "Teams", prompt: "Which franchise rode the famous '46 defense' to a Super Bowl XX championship?", answer: "Chicago Bears", aliases: ["Bears", "Chicago"], wrong: ["New York Giants", "Pittsburgh Steelers"], explanation: "The 1985 Chicago Bears used Buddy Ryan's 46 defense on the way to winning Super Bowl XX." },
+  { id: "bucs-home", grade: 5, finalTier: "ordinary", subject: "Teams", prompt: "Which franchise became the first to play in and win a Super Bowl in its home stadium in 2021?", answer: "Tampa Bay Buccaneers", aliases: ["Buccaneers", "Bucs", "Tampa Bay"], wrong: ["Los Angeles Rams", "Miami Dolphins"], explanation: "Tampa Bay won Super Bowl LV at Raymond James Stadium." },
+  { id: "bears-46", grade: 5, finalTier: "ordinary", subject: "Teams", prompt: "Which franchise rode the famous '46 defense' to a Super Bowl XX championship?", answer: "Chicago Bears", aliases: ["Bears", "Chicago"], wrong: ["New York Giants", "Pittsburgh Steelers"], explanation: "The 1985 Chicago Bears used Buddy Ryan's 46 defense on the way to winning Super Bowl XX." },
   { id: "raiders-three-cities", grade: 5, subject: "Teams", prompt: "Which franchise reached the Super Bowl while based in Oakland, then Los Angeles, then Oakland again?", answer: "Raiders", aliases: ["Oakland Raiders", "Los Angeles Raiders"], wrong: ["Rams", "Chargers"], explanation: "The Raiders reached Super Bowls from Oakland, then Los Angeles, and later Oakland again." },
-  { id: "ravens-two-qbs", grade: 5, subject: "Teams", prompt: "Which franchise won its first two Super Bowls with Trent Dilfer and Joe Flacco as its starting quarterbacks?", answer: "Baltimore Ravens", aliases: ["Ravens", "Baltimore"], wrong: ["Tampa Bay Buccaneers", "New York Giants"], explanation: "Baltimore won Super Bowl XXXV with Trent Dilfer and Super Bowl XLVII with Joe Flacco." },
+  { id: "ravens-two-qbs", grade: 5, finalTier: "ordinary", subject: "Teams", prompt: "Which franchise won its first two Super Bowls with Trent Dilfer and Joe Flacco as its starting quarterbacks?", answer: "Baltimore Ravens", aliases: ["Ravens", "Baltimore"], wrong: ["Tampa Bay Buccaneers", "New York Giants"], explanation: "Baltimore won Super Bowl XXXV with Trent Dilfer and Super Bowl XLVII with Joe Flacco." },
 
-  { id: "mike-jones", grade: 5, subject: "NFL History", prompt: "Who made the tackle at the one-yard line on the final play of Super Bowl XXXIV?", answer: "Mike Jones", aliases: ["Jones"], wrong: ["Aeneas Williams", "London Fletcher"], explanation: "Rams linebacker Mike Jones tackled Kevin Dyson just short of the goal line to end Super Bowl XXXIV." },
+  { id: "mike-jones", grade: 5, subject: "NFL History", prompt: "Who made the tackle at the one-yard line on the final play of Super Bowl XXXIV?", answer: "Mike Jones", aliases: ["Jones"], wrong: ["Aeneas Williams", "London Fletcher", "Todd Lyght"], explanation: "Rams linebacker Mike Jones tackled Kevin Dyson just short of the goal line to end Super Bowl XXXIV." },
   { id: "jacoby-jones", grade: 5, subject: "NFL History", prompt: "Who opened the second half of Super Bowl XLVII in 2013 with a 108-yard kickoff-return touchdown?", answer: "Jacoby Jones", aliases: ["Jones"], wrong: ["Devin Hester", "Ted Ginn Jr."], explanation: "Jacoby Jones returned the second-half kickoff 108 yards for Baltimore." },
-  { id: "stallworth-73", grade: 5, subject: "NFL History", prompt: "Which Steelers receiver caught a 73-yard touchdown from Terry Bradshaw in Super Bowl XIV?", answer: "John Stallworth", aliases: ["Stallworth"], wrong: ["Lynn Swann", "Franco Harris"], explanation: "John Stallworth's 73-yard touchdown catch was a defining play in Pittsburgh's Super Bowl XIV win." },
-  { id: "harrison-100", grade: 5, subject: "NFL History", prompt: "Who returned an interception 100 yards for a touchdown in Super Bowl XLIII?", answer: "James Harrison", aliases: ["Harrison"], wrong: ["Troy Polamalu", "Ike Taylor"], explanation: "James Harrison's 100-yard interception return closed the first half of Super Bowl XLIII." },
+  { id: "stallworth-73", grade: 5, subject: "NFL History", prompt: "Which Steelers receiver caught a 73-yard touchdown from Terry Bradshaw in Super Bowl XIV?", answer: "John Stallworth", aliases: ["Stallworth"], wrong: ["Lynn Swann", "Franco Harris", "Jim Smith"], explanation: "John Stallworth's 73-yard touchdown catch was a defining play in Pittsburgh's Super Bowl XIV win." },
+  { id: "harrison-100", grade: 5, subject: "NFL History", prompt: "Who returned an interception 100 yards for a touchdown in Super Bowl XLIII?", answer: "James Harrison", aliases: ["Harrison"], wrong: ["Troy Polamalu", "Ike Taylor", "Ryan Clark"], explanation: "James Harrison's 100-yard interception return closed the first half of Super Bowl XLIII." },
 
-  { id: "mills", grade: 5, subject: "X’s & O’s", prompt: "Which passing concept commonly pairs a post route with a deep dig underneath it?", answer: "Mills", aliases: ["Mills concept"], wrong: ["Mesh", "Smash"], explanation: "The Mills concept combines a post route with a deep in-breaking dig to stress a safety." },
+  { id: "mills", grade: 5, subject: "X’s & O’s", prompt: "Which passing concept commonly pairs a post route with a deep dig underneath it?", answer: "Mills", aliases: ["Mills concept"], wrong: ["Mesh", "Smash", "Flood"], explanation: "The Mills concept combines a post route with a deep in-breaking dig to stress a safety." },
   { id: "cover-zero", grade: 5, subject: "X’s & O’s", prompt: "What coverage family typically has no deep safety help and uses man coverage across the board?", answer: "Cover 0", aliases: ["Cover zero"], wrong: ["Cover 2", "Cover 4"], explanation: "Cover 0 is a man-coverage pressure structure with no dedicated deep safety." },
   { id: "tampa-two", grade: 5, subject: "X’s & O’s", prompt: "In a classic Tampa 2, which defender is asked to carry the deep middle between the two safeties?", answer: "Middle linebacker", aliases: ["Mike linebacker", "Mike"], wrong: ["Nickel corner", "Defensive end"], explanation: "The middle linebacker drops deeper than in a standard Cover 2 to help close the middle of the field." },
 ];
@@ -668,7 +669,7 @@ const UFC_FINAL_FACTS: readonly KnowledgeFact[] = [
   { id: "final-muscle-shark", grade: 5, prompt: "Which former UFC lightweight champion was known as 'The Muscle Shark'?", answer: "Sean Sherk", wrong: ["Jens Pulver", "Kenny Florian"], explanation: "Former lightweight champion Sean Sherk fought under the nickname The Muscle Shark." },
   { id: "final-maine-iac", grade: 5, prompt: "Which former two-time UFC heavyweight champion was nicknamed 'The Maine-iac'?", answer: "Tim Sylvia", wrong: ["Andrei Arlovski", "Josh Barnett"], explanation: "Two-time heavyweight champion Tim Sylvia was known as The Maine-iac." },
   { id: "final-dean-mean", grade: 5, prompt: "Which UFC light heavyweight was known as 'The Dean of Mean'?", answer: "Keith Jardine", wrong: ["Forrest Griffin", "Stephan Bonnar"], explanation: "Keith Jardine fought under the nickname The Dean of Mean." },
-  { id: "final-mighty-mouse-defenses", grade: 5, prompt: "How many consecutive UFC title defenses did Demetrious Johnson record during his 2012–2018 flyweight reign?", answer: "11", wrong: ["9", "10"], explanation: "Johnson successfully defended the UFC flyweight title 11 consecutive times." },
+  { id: "final-mighty-mouse-defenses", grade: 5, prompt: "How many consecutive UFC title defenses did Demetrious Johnson record during his 2012–2018 flyweight reign?", answer: "11", wrong: ["9", "10", "12"], explanation: "Johnson successfully defended the UFC flyweight title 11 consecutive times." },
   { id: "final-silva-reign", grade: 5, prompt: "How many days did Anderson Silva's UFC middleweight title reign from 2006 to 2013 last?", answer: "2,457 days", wrong: ["2,142 days", "2,237 days"], explanation: "Silva's middleweight title reign lasted a UFC-record 2,457 days." },
   { id: "final-masvidal-five", grade: 5, prompt: "Whom did Jorge Masvidal knock out in five seconds in 2019 for the fastest knockout in UFC history?", answer: "Ben Askren", wrong: ["Darren Till", "Nate Diaz"], explanation: "Masvidal knocked out Ben Askren with a flying knee five seconds into their UFC 239 fight." },
   { id: "final-tuf1", grade: 5, prompt: "Who defeated Stephan Bonnar by unanimous decision in the light heavyweight final of The Ultimate Fighter 1?", answer: "Forrest Griffin", wrong: ["Diego Sanchez", "Rashad Evans"], explanation: "Forrest Griffin defeated Stephan Bonnar in the historic TUF 1 light heavyweight final." },
@@ -976,18 +977,6 @@ function footballCandidates(league: "NFL" | "CFB") {
             fanMisses: wrongNames,
             difficultyNudge: 2,
           }));
-          questions.push(shortQuestion({
-            id: `average-fan:nfl:final:${player.id}:draft`,
-            sport: "nfl",
-            grade: 5,
-            subject: "NFL History",
-            prompt: `Name the ${position} from ${player.school} who went No. ${pick} overall in the ${player.draftYear} NFL Draft.`,
-            answer: player.name,
-            explanation: `${player.name} matched that draft slot and college profile.`,
-            fanMisses: wrongNames,
-            difficultyNudge: 3,
-            protectedFinal: true,
-          }));
         }
       }
     } else {
@@ -1041,18 +1030,6 @@ function footballCandidates(league: "NFL" | "CFB") {
           explanation: `${player.name} matches that college, position, and draft slot.`,
           fanMisses: wrongNames,
           difficultyNudge: 2,
-        }));
-        questions.push(shortQuestion({
-          id: `average-fan:cfb:final:${player.id}:draft`,
-          sport: "cfb",
-          grade: 5,
-          subject: "CFB History",
-          prompt: `Which ${player.school} ${position} was taken No. ${player.draftPick} overall in the ${player.draftYear} NFL Draft?`,
-          answer: player.name,
-          explanation: `${player.name} matched that college résumé and exact draft slot.`,
-          fanMisses: wrongNames,
-          difficultyNudge: 3,
-          protectedFinal: true,
         }));
       }
     }
@@ -1125,19 +1102,30 @@ function footballCandidates(league: "NFL" | "CFB") {
       explanation: fact.explanation,
       difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
     })));
-    questions.push(...NFL_FINAL_FACTS.map((fact) => shortQuestion({
-      id: `average-fan:nfl:final-authored:${fact.id}`,
-      sport: "nfl",
-      grade: 5,
-      subject: fact.subject,
-      prompt: fact.prompt,
-      answer: fact.answer,
-      aliases: fact.aliases,
-      explanation: fact.explanation,
-      fanMisses: fact.wrong,
-      difficultyNudge: 3,
-      protectedFinal: true,
-    })));
+    // Straightforward champion/team clues belong in the hard rounds, not the
+    // protected Final. Preserve former published IDs in their immutable snapshots.
+    // Recognizable but less famous historical plays get four credible choices
+    // instead of an all-or-nothing, exact-name memory test.
+    const recognitionFinals = new Set(["mike-jones", "stallworth-73", "harrison-100", "mills"]);
+    questions.push(...NFL_FINAL_FACTS.map((fact) => {
+      const protectedFinal = fact.finalTier !== "ordinary";
+      const base = {
+        id: protectedFinal
+          ? `average-fan:nfl:final-authored:${fact.id}`
+          : `average-fan:nfl:00-final-regraded:${fact.id}`,
+        sport: "nfl" as const,
+        grade: (protectedFinal ? 5 : 3) as AverageFanGrade,
+        subject: fact.subject,
+        prompt: fact.prompt,
+        answer: fact.answer,
+        explanation: fact.explanation,
+        difficultyNudge: protectedFinal ? 3 : 1,
+        protectedFinal,
+      };
+      return recognitionFinals.has(fact.id)
+        ? choiceQuestion({ ...base, wrongChoices: fact.wrong })
+        : shortQuestion({ ...base, aliases: fact.aliases, fanMisses: fact.wrong });
+    }));
   } else {
     questions.push(...knowledgeQuestions("cfb", "Traditions", "average-fan:cfb:tradition", CFB_TRADITION_FACTS));
   }
@@ -1514,18 +1502,24 @@ function ufcCandidates() {
       ? assertAverageFanQuestion({ ...question, subject: "Championships" })
       : question;
   }));
-  questions.push(...UFC_FINAL_FACTS.map((fact) => shortQuestion({
-    id: `average-fan:ufc:final:authored:${fact.id}`,
-    sport: "ufc",
-    grade: 5,
-    subject: "Fights",
-    prompt: fact.prompt,
-    answer: fact.answer,
-    explanation: fact.explanation,
-    fanMisses: fact.wrong,
-    difficultyNudge: 3,
-    protectedFinal: true,
-  })));
+  questions.push(...UFC_FINAL_FACTS.map((fact) => {
+    const base = {
+      id: `average-fan:ufc:final:authored:${fact.id}`,
+      sport: "ufc" as const,
+      grade: 5 as const,
+      subject: "Fights" as const,
+      prompt: fact.prompt,
+      answer: fact.answer,
+      explanation: fact.explanation,
+      difficultyNudge: 3,
+      protectedFinal: true,
+    };
+    // Eleven title defenses is a major achievement, but exact-number
+    // free-text recall makes an otherwise good Final unnecessarily punishing.
+    return fact.id === "final-mighty-mouse-defenses"
+      ? choiceQuestion({ ...base, wrongChoices: fact.wrong })
+      : shortQuestion({ ...base, fanMisses: fact.wrong });
+  }));
   return questions;
 }
 

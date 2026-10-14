@@ -291,11 +291,52 @@ describe("Average Fan durable content banks", () => {
       }, {}),
     ).toEqual({
       Players: 3,
-      Teams: 4,
+      Teams: 1,
       "NFL History": 4,
       "X’s & O’s": 3,
     });
   });
+
+  it("keeps Finals challenging without narrow draft-slot memorization or obvious team reveals", () => {
+    for (const sport of ["nfl", "cfb"] as const) {
+      const finals = AVERAGE_FAN_CONTENT_BANKS[sport].filter((question) => question.protectedFinal);
+      expect(finals.length, sport).toBeGreaterThanOrEqual(8);
+      expect(finals.some((question) => /^average-fan:(nfl|cfb):final:[^:]+:draft$/.test(question.id)), sport).toBe(false);
+      expect(finals.every((question) => question.grade === 5), sport).toBe(true);
+      expect(finals.every((question) => !/\\bno\\. \\d+ overall in the \\d{4} nfl draft/i.test(question.prompt)), sport).toBe(true);
+    }
+    for (const id of ["bucs-home", "bears-46", "ravens-two-qbs"]) {
+      const legacyFinal = `average-fan:nfl:final-authored:${id}`;
+      expect(AVERAGE_FAN_CONTENT_BANKS.nfl.some((question) => question.id === legacyFinal)).toBe(false);
+      const regraded = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+        (question) => question.id === `average-fan:nfl:00-final-regraded:${id}`,
+      );
+      if (regraded) {
+        expect(regraded.protectedFinal, id).toBe(false);
+        expect(regraded.grade, id).toBe(4);
+      }
+    }
+  });
+
+  it("offers credible choices for name-heavy NFL Finals and record-count UFC Finals", () => {
+    for (const id of ["mike-jones", "stallworth-73", "harrison-100", "mills"]) {
+      const final = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+        (question) => question.id === `average-fan:nfl:final-authored:${id}`,
+      );
+      expect(final, id).toBeTruthy();
+      expect(final?.format, id).toBe("four-choice");
+      expect(final?.choices, id).toHaveLength(4);
+      expect(final?.choices?.filter((choice) => choice === final.answer), id).toHaveLength(1);
+    }
+    const demetrious = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
+      (question) => question.id === "average-fan:ufc:final:authored:final-mighty-mouse-defenses",
+    );
+    if (demetrious) {
+      expect(demetrious.format).toBe("four-choice");
+      expect(demetrious.choices).toEqual(expect.arrayContaining(["11", "9", "10", "12"]));
+    }
+  });
+
   it("keeps CFB conference choices to exactly one program from the requested conference", () => {
     const programs = queryFootballSubjects({ league: "CFB", kind: "program" });
     const conferenceByName = new Map(programs.map((program) => [program.name, program.conference]));
