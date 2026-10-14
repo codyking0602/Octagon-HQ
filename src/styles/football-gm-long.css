@@ -1087,3 +1087,68 @@
     justify-self: start;
   }
 }
+
+/* Long Year 1: isolated, mobile-first Short GM-style season presentation */
+.gm-long-y1 { display:grid; gap:11px; min-width:0 }
+.gm-long-y1 > .surface-card { min-width:0 }
+.gm-long-y1__hero,.gm-long-y1__panel { padding:15px; min-width:0 }
+.gm-long-y1__hero h2 { margin:5px 0 12px; font-size:clamp(20px,5vw,27px); line-height:1.12 }
+.gm-long-y1__score { display:flex; gap:13px; align-items:center }
+.gm-long-y1__score > strong { font-size:clamp(40px,11vw,58px); color:#f6fbff; letter-spacing:-.06em; line-height:1; white-space:nowrap }
+.gm-long-y1__score > span { display:grid; gap:4px; min-width:0 }
+.gm-long-y1__score b { color:#d9eeff; font-size:11px; overflow-wrap:anywhere }
+.gm-long-y1__score small { color:#a8c5d8; font-size:10px }
+.gm-long-y1__schedule-title { display:flex; justify-content:space-between; flex-wrap:wrap; gap:7px; margin:15px 0 7px; color:#a9c8df; font-size:9px; font-weight:900 }
+.gm-long-y1__games { display:grid; grid-template-columns:repeat(9,minmax(0,1fr)); gap:4px; min-width:0 }
+.gm-long-y1__games > div { display:grid; justify-items:center; align-content:center; gap:4px; min-width:0; padding:6px 0; background:#203b50; border:1px solid #355269; border-radius:6px }
+.gm-long-y1__games small { color:#adc8db; font-size:8px }
+.gm-long-y1__games b { color:#f4fbff; font-size:15px; line-height:1 }
+.gm-long-y1__games em { color:#c9deeb; font-size:9px; font-style:normal; font-weight:900; white-space:nowrap }
+.gm-long-y1__games .is-win { background:#183c36; border-color:#3c775f }
+.gm-long-y1__games .is-loss { background:#442d33; border-color:#83505a }
+.gm-long-y1__games .is-pending { opacity:.45 }
+.gm-long-y1__panel { display:grid; gap:11px }
+.gm-long-y1__panel h3 { margin:0; color:#f1f9fe; font-size:16px; line-height:1.2; overflow-wrap:anywhere }
+.gm-long-y1__panel p { margin:0; font-size:12px; line-height:1.4; color:#bed1de }
+.gm-long-y1__panel > strong { font-size:13px; color:#ceeafa }
+.gm-long-y1__panel .gm-long__primary { justify-self:start; max-width:100%; white-space:normal }
+.gm-long-y1__stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px }
+.gm-long-y1__stats > div { display:grid; gap:4px; justify-items:center; padding:10px 3px; min-width:0; border-radius:8px; background:#244255 }
+.gm-long-y1__stats b { color:#f5fbff; font-size:clamp(16px,5vw,21px); white-space:nowrap }
+.gm-long-y1__stats small { color:#b9cfdf; font-size:9px; font-weight:900 }
+.gm-long-y1__bye { padding:9px 10px; color:#ead49d!important; background:#334657; border-radius:8px; font-weight:900 }
+.gm-long-y1__rounds { display:grid; gap:7px }
+.gm-long-y1__rounds > div,.gm-long-y1__next { display:flex; gap:10px; align-items:center; justify-content:space-between; min-width:0; padding:9px; border:1px solid #51718b; border-radius:8px }
+.gm-long-y1__rounds > div.is-win { border-color:#3d8d6d }
+.gm-long-y1__rounds > div.is-loss { border-color:#a76b65 }
+.gm-long-y1__rounds span,.gm-long-y1__next span { display:grid; gap:4px; min-width:0 }
+.gm-long-y1__rounds small,.gm-long-y1__next small { color:#b8ccdd; font-size:9px }
+.gm-long-y1__rounds strong,.gm-long-y1__next strong { color:#f6fbff; font-size:12px; overflow-wrap:anywhere }
+.gm-long-y1__rounds img,.gm-long-y1__next img { width:35px; height:35px; object-fit:contain; padding:3px; flex:none; background:#f7f9fa; border-radius:7px }
+.gm-long-y1__next { justify-content:flex-start }
+.gm-long-y1__subhead,.gm-long-y1__end { color:#abcadb; font-weight:900; font-size:10px; letter-spacing:.04em }
+.gm-long-y1__roster { display:grid; gap:7px }
+.gm-long-y1__roster article { display:grid; grid-template-columns:36px 36px minmax(0,1fr); gap:7px; align-items:start; min-width:0; padding:8px 7px; background:#203c4e; border:1px solid #385165; border-radius:8px }
+.gm-long-y1__slot { color:#d4e8f5; font-size:10px; padding-top:8px; white-space:nowrap }
+.gm-long-y1__roster .football-gm__player-headshot { width:36px; height:36px }
+.gm-long-y1__roster article > span { display:grid; gap:4px; min-width:0 }
+.gm-long-y1__roster article > span > strong { color:#f3f9ff; font-size:13px; overflow-wrap:anywhere }
+.gm-long-y1__roster article > span > small { color:#b2cedd; font-size:10px; overflow-wrap:anywhere }
+.gm-long-y1__roster .football-gm__candidate-tags { display:flex; flex-wrap:wrap; gap:4px; width:100%; height:auto; max-height:none; overflow:visible; margin:2px 0 }
+.gm-long-y1__roster .football-gm__candidate-tags > span { flex:none; width:auto; max-width:100%; min-height:20px; padding:4px 6px; margin:0; font-size:8px; white-space:nowrap }
+.gm-long-y1__roster article > em { grid-column:3; color:#b7cfdd; font-size:10px; font-style:normal; font-weight:900 }
+.gm-long-y1__roster article > em.is-up { color:#8ee1b1 }
+.gm-long-y1__roster article > em.is-down { color:#f1ac9a }
+@media(max-width:430px) {
+ .gm-long-y1 { gap:9px }
+ .gm-long-y1__hero,.gm-long-y1__panel { padding:11px }
+ .gm-long-y1__score { gap:10px }
+ .gm-long-y1__games { gap:3px }
+ .gm-long-y1__games em { font-size:8px }
+ .gm-long-y1__roster article { grid-template-columns:31px 32px minmax(0,1fr); gap:5px }
+ .gm-long-y1__roster .football-gm__player-headshot { width:32px; height:32px }
+}
+@media(max-width:350px) {
+ .gm-long-y1__games { grid-template-columns:repeat(6,minmax(0,1fr)) }
+ .gm-long-y1__roster .football-gm__candidate-tags > span { font-size:7px; padding:3px 4px }
+}

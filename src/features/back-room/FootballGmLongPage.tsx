@@ -7,6 +7,8 @@ import { GmFootballWheel } from "./FootballGmModePage";
 import { nflGmLongCoachFit, nflGmLongCoachPointerRotation } from "./footballGmLongPresentation";
 import { FootballGmLongPhaseOneResult } from "./FootballGmLongPhaseOneResult";
 import { FootballGmLongMidseasonPage } from "./FootballGmLongMidseasonPage";
+import { FootballGmLongYearOnePage } from "./FootballGmLongYearOnePage";
+import { nflGmLongCreateYearOne, type NflGmLongYearOneStage } from "./footballGmLongYearOne";
 import { nflGmLongCreateMidseason, nflGmLongSpinTradePartner, nflGmLongTryTrade } from "./footballGmLongMidseason";
 import { LongCapMeter, LongRosterGrid, LongCandidateBoard } from "./FootballGmLongDraftPresentation";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
@@ -208,6 +210,38 @@ export default function FootballGmLongPage() {
     if (run?.phase !== "midseason" || !run.midseason || run.midseason.stage === "complete") return;
     setRun({ ...run, midseason: { ...run.midseason, stage: "complete" } });
   }
+  function startYearOne() {
+    if (run?.phase !== "midseason" || run.midseason?.stage !== "complete" || !run.selectedCoach) return;
+    try {
+      const yearOne = nflGmLongCreateYearOne(run.runId, run.picks, run.selectedCoach, run.midseason);
+      setRun({ ...run, phase: "year1", yearOne });
+      setError("");
+    } catch {
+      setError("Unable to play Year 1. Your nine players and the eight locked games remain saved.");
+    }
+  }
+  function revealYearOneGame() {
+    setRun(previous => previous?.phase === "year1" && previous.yearOne?.stage === "regular"
+      && previous.yearOne.revealedGames < 9
+      ? { ...previous, yearOne: { ...previous.yearOne, revealedGames: previous.yearOne.revealedGames + 1 } }
+      : previous);
+  }
+  function revealYearOneRound() {
+    setRun(previous => previous?.phase === "year1" && previous.yearOne?.stage === "playoffs"
+      && previous.yearOne.revealedRounds < previous.yearOne.postseason.length
+      ? { ...previous, yearOne: { ...previous.yearOne, revealedRounds: previous.yearOne.revealedRounds + 1 } }
+      : previous);
+  }
+  function advanceYearOne(stage: NflGmLongYearOneStage) {
+    setRun(previous => {
+      if (previous?.phase !== "year1" || !previous.yearOne) return previous;
+      const result = previous.yearOne;
+      const valid = (result.stage === "regular" && result.revealedGames === 9 && stage === "standings")
+        || (result.stage === "standings" && stage === (result.postseason.length ? "playoffs" : "results"))
+        || (result.stage === "playoffs" && result.revealedRounds === result.postseason.length && stage === "results");
+      return valid ? { ...previous, yearOne: { ...result, stage } } : previous;
+    });
+  }
   function restart() {
     if (!profileId || !window.confirm("Start a new NFL GM Long roster? Your current Long save will be replaced.")) return;
     nflGmLongClearSave(window.localStorage, profileId);
@@ -239,7 +273,7 @@ export default function FootballGmLongPage() {
       <span><small>NFL FRONT OFFICE · OWNER PLAYTEST</small><strong>THE GM · LONG</strong></span>
       <b>$205M</b>
     </header>
-    {run.phase !== "outlook" && run.phase !== "midseason" && <>
+    {run.phase !== "outlook" && run.phase !== "midseason" && run.phase !== "year1" && <>
       <LongCapMeter picks={run.picks} />
       <LongRosterGrid picks={run.picks} />
     </>}
@@ -305,6 +339,16 @@ export default function FootballGmLongPage() {
       onSpin={spinDeadlinePartner}
       onOffer={makeDeadlineOffer}
       onSkip={skipDeadline}
+      onStartYearOne={startYearOne}
+    />}
+    {run.phase === "year1" && run.yearOne && run.midseason && run.selectedCoach && <FootballGmLongYearOnePage
+      picks={run.picks}
+      coachName={run.selectedCoach}
+      midseason={run.midseason}
+      yearOne={run.yearOne}
+      onRevealGame={revealYearOneGame}
+      onRevealRound={revealYearOneRound}
+      onAdvance={advanceYearOne}
     />}
     <footer className={`gm-long__footer${run.phase === "outlook" ? " gm-long__footer--complete" : ""}`}><button type="button" onClick={restart}>NEW LONG GM RUN</button>
       <Link to="/football/gm-mode">PLAY SHORT GM →</Link>
