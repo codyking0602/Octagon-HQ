@@ -1,5 +1,5 @@
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
-import { ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
+import { ufcFactualLedgerSubjects, type UfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { stableLineupHash } from "../play/lineupModel";
 import {
   AVERAGE_FAN_PLAYABLE_GRADES,
@@ -1207,6 +1207,37 @@ function naturalFightDate(value: string) {
   return `${UFC_MONTH_NAMES[month - 1]} ${day}, ${year}`;
 }
 
+/**
+ * A multi-opponent identity question must resolve to exactly one ledger fighter.
+ * Three famous opponents do not necessarily identify one person, especially
+ * in the lightweight/welterweight roster where contenders share opposition.
+ * Retire ambiguous candidates before the grade-balancer can select them.
+ */
+function normalizedUfcOpponent(value: string) {
+  return value.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function ufcHasOpponent(
+  fighter: UfcFactualSubject,
+  opponent: string,
+  condition: "faced" | "beat" | "title",
+) {
+  const target = normalizedUfcOpponent(opponent);
+  return fighter.fights.some((fight) =>
+    normalizedUfcOpponent(fight.opponent) === target
+    && (condition === "faced" || (condition === "beat" ? fight.result === "win" : fight.titleFight))
+  );
+}
+
+function uniquelyIdentifiedUfcFighter(
+  subjectId: string,
+  allFighters: readonly UfcFactualSubject[],
+  signature: readonly { opponent: string; condition: "faced" | "beat" | "title" }[],
+) {
+  return !allFighters.some((other) => other.id !== subjectId
+    && signature.every(({ opponent, condition }) => ufcHasOpponent(other, opponent, condition)));
+}
+
 function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
   const fighterNames = fighters.map((fighter) => fighter.name);
@@ -1292,6 +1323,12 @@ function ufcCandidates() {
       .sort((left, right) => right.date.localeCompare(left.date));
     if (uniqueWins.length >= 3) {
       const anchors = uniqueWins.slice(0, 3);
+      const isUnique = uniquelyIdentifiedUfcFighter(
+        fighter.id,
+        fighters,
+        anchors.map((fight) => ({ opponent: fight.opponent, condition: "beat" as const })),
+      );
+      if (isUnique) {
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
       questions.push(shortQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
@@ -1304,6 +1341,7 @@ function ufcCandidates() {
         fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
+      }
     }
 
     const titleFights = fighter.fights.filter((fight) => fight.titleFight);
@@ -1346,6 +1384,10 @@ function ufcCandidates() {
         : finalOtherOpponents.length === 1
           ? ` and also fought ${finalOtherOpponents[0]}`
           : "";
+      if (uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
+        { opponent: titleFight.opponent, condition: "title" },
+        ...finalOtherOpponents.map((opponent) => ({ opponent, condition: "faced" as const })),
+      ])) {
       questions.push(shortQuestion({
         id: `average-fan:ufc:final:${fighter.id}:title`,
         sport: "ufc",
@@ -1358,11 +1400,17 @@ function ufcCandidates() {
         difficultyNudge: 3,
         protectedFinal: true,
       }));
+      }
     } else if (fighter.fights.length >= 5) {
       const anchorA = fighter.fights[fighter.fights.length - 1]!;
       const anchorB = fighter.fights[Math.max(0, fighter.fights.length - 3)]!;
       const anchorC = fighter.fights[Math.max(0, fighter.fights.length - 5)]!;
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:final-fight`);
+      if (uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
+        { opponent: anchorA.opponent, condition: "faced" },
+        { opponent: anchorB.opponent, condition: "faced" },
+        { opponent: anchorC.opponent, condition: "faced" },
+      ])) {
       questions.push(shortQuestion({
         id: `average-fan:ufc:final:${fighter.id}:fight`,
         sport: "ufc",
@@ -1375,6 +1423,7 @@ function ufcCandidates() {
         difficultyNudge: 3,
         protectedFinal: true,
       }));
+      }
     }
   }
 
