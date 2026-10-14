@@ -211,8 +211,10 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).getByText("Crimson Tide")).toBeInTheDocument();
     expect(within(hq).getByText("Alabama")).toBeInTheDocument();
     expect(within(hq).getByText("Mississippi State")).toBeInTheDocument();
+    expect(within(hq).getByText("Bulldogs")).toBeInTheDocument();
     const collegeGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Alabama at Mississippi State" });
     const collegeTeams = collegeGame.querySelectorAll(".football-hq-game-row__teams > div");
     expect(collegeTeams[0]).toHaveStyle("--team-color: #9E1B32");
@@ -221,8 +223,10 @@ describe("Football HQ Home summary", () => {
     expect(collegeMarks[0]).toHaveClass("is-white-logo");
     expect(collegeMarks[1]).toHaveClass("is-white-logo");
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("Kansas City Chiefs")).toBeInTheDocument();
-    expect(within(hq).getByText("Las Vegas Raiders")).toBeInTheDocument();
+    expect(within(hq).getByText("Kansas City")).toBeInTheDocument();
+    expect(within(hq).getByText("Chiefs")).toBeInTheDocument();
+    expect(within(hq).getByText("Las Vegas")).toBeInTheDocument();
+    expect(within(hq).getByText("Raiders")).toBeInTheDocument();
     const nflGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Chiefs at Raiders" });
     const nflTeams = nflGame.querySelectorAll(".football-hq-game-row__teams > div");
     expect(nflTeams[0]).toHaveStyle("--team-color: #E31837");
