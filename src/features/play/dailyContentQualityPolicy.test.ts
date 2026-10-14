@@ -22,8 +22,8 @@ describe("Daily quality and rollout contract (Stage 1)", () => {
     const football = APPROVED_DAILY_ROTATION_WEIGHTS.football;
     const ufc = APPROVED_DAILY_ROTATION_WEIGHTS.ufc;
 
-    expect(Object.values(football).reduce((a, b) => a + b, 0)).toBe(28);
-    expect(Object.values(ufc).reduce((a, b) => a + b, 0)).toBe(30);
+    expect(Object.values(football).reduce<number>((a, b) => a + b, 0)).toBe(28);
+    expect(Object.values(ufc).reduce<number>((a, b) => a + b, 0)).toBe(30);
 
     for (const sport of [football, ufc]) {
       expect(sport.average_fan).toBe(4);
