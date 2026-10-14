@@ -13,7 +13,7 @@ import {
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
 
 export function FootballGmLongMidseasonPage({
-  runId, picks, coachName, midseason, onExplore, onShop, onSpin, onOffer, onSkip,
+  runId, picks, coachName, midseason, onExplore, onShop, onSpin, onOffer, onSkip, onStartYearOne,
 }: {
   runId: string;
   picks: readonly NflGmLongPick[];
@@ -24,6 +24,7 @@ export function FootballGmLongMidseasonPage({
   onSpin: () => string;
   onOffer: (incomingId: string) => void;
   onSkip: () => void;
+  onStartYearOne?: () => void;
 }) {
   const { wins, losses } = nflGmLongRecord(midseason);
   const outlook = nflGmLongPlayoffOutlook(runId, picks, coachName, midseason);
@@ -80,7 +81,7 @@ export function FootballGmLongMidseasonPage({
 
     <div className="gm-long__midseason-outlook">
       <div><small>PLAYOFF OUTLOOK</small><strong>{outlook.percent}%</strong><em>{outlook.label}</em></div>
-      <div><small>CURRENT CORE</small><strong>{nflGmLongActiveGrade(picks, midseason).toFixed(1)}</strong>
+      <div><small>CURRENT CORE</small><strong>{nflGmLongActiveGrade(picks, midseason, runId, coachName).toFixed(1)}</strong>
         <em>{footballGmMoney(NFL_GM_LONG_CAP - activeSalary)} cap room</em>
       </div>
     </div>
@@ -196,7 +197,9 @@ export function FootballGmLongMidseasonPage({
 
     <footer className="gm-long__midseason-next">
       <small>UP NEXT · YEAR 1 SECOND HALF</small>
-      <p>The remaining games, season finish and eventual offseason will follow in the next release. Your midseason decisions are saved.</p>
+      <p>{status === "complete" ? "The trade deadline is locked. Finish the 17-game season and chase the postseason." : "Settle the trade deadline to continue into Games 9–17."}</p>
+      {status === "complete" && onStartYearOne
+        ? <button type="button" className="gm-long__primary" onClick={onStartYearOne}>PLAY GAMES 9–17 →</button> : null}
     </footer>
   </section>;
 }
