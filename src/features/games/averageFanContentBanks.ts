@@ -1944,8 +1944,12 @@ function normalizeNamedTopic(value: string) {
     .toLocaleLowerCase("en-US").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+const averageFanTopicCache = new WeakMap<AverageFanQuestion, readonly string[]>();
+
 export function averageFanQuestionNamedTopics(question: AverageFanQuestion): string[] {
   if (question.sport === "mlb") return [];
+  const cached = averageFanTopicCache.get(question);
+  if (cached) return [...cached];
   const textFields = [question.prompt, question.answer]
     .map((text) => ` ${normalizeNamedTopic(text)} `);
   const matches = AVERAGE_FAN_NAMED_TOPICS[question.sport]
@@ -1959,7 +1963,9 @@ export function averageFanQuestionNamedTopics(question: AverageFanQuestion): str
       distinct.push(name);
     }
   }
-  return distinct.map((name) => `${question.sport}:${name}`);
+  const topics = distinct.map((name) => `${question.sport}:${name}`);
+  averageFanTopicCache.set(question, topics);
+  return [...topics];
 }
 
 export function averageFanBankSummary(sport: Exclude<AverageFanSport, "mlb">) {
