@@ -1,7 +1,7 @@
 export const WHEEL_FOOTBALL_AP_TOP_25_SEASON = 2026 as const;
-export const WHEEL_FOOTBALL_AP_TOP_25_POLL_DATE = "2026-10-04" as const;
+export const WHEEL_FOOTBALL_AP_TOP_25_POLL_DATE = "2026-10-11" as const;
 export const WHEEL_FOOTBALL_AP_TOP_25_SOURCE_URL =
-  "https://apnews.com/article/7db03c4123afa589863a8b53f4db520c";
+  "https://apnews.com/article/f1cb200a8e2cd56902253c89e6255d21";
 
 export interface WheelFootballApTop25Entry {
   rank: number;
@@ -9,31 +9,31 @@ export interface WheelFootballApTop25Entry {
 }
 
 export const WHEEL_FOOTBALL_AP_TOP_25: readonly WheelFootballApTop25Entry[] = [
-  { rank: 1, schoolId: "texas" },
-  { rank: 2, schoolId: "georgia" },
-  { rank: 3, schoolId: "notre-dame" },
-  { rank: 4, schoolId: "miami" },
-  { rank: 5, schoolId: "ohio-state" },
+  { rank: 1, schoolId: "georgia" },
+  { rank: 2, schoolId: "notre-dame" },
+  { rank: 3, schoolId: "miami" },
+  { rank: 4, schoolId: "ohio-state" },
+  { rank: 5, schoolId: "indiana" },
   { rank: 6, schoolId: "alabama" },
-  { rank: 7, schoolId: "indiana" },
+  { rank: 7, schoolId: "texas" },
   { rank: 8, schoolId: "byu" },
   { rank: 9, schoolId: "ole-miss" },
-  { rank: 10, schoolId: "lsu" },
-  { rank: 11, schoolId: "texas-tech" },
-  { rank: 12, schoolId: "utah" },
-  { rank: 13, schoolId: "oregon" },
-  { rank: 14, schoolId: "missouri" },
-  { rank: 15, schoolId: "tennessee" },
-  { rank: 16, schoolId: "florida" },
-  { rank: 17, schoolId: "mississippi-state" },
+  { rank: 10, schoolId: "texas-tech" },
+  { rank: 11, schoolId: "utah" },
+  { rank: 12, schoolId: "ucla" },
+  { rank: 13, schoolId: "missouri" },
+  { rank: 14, schoolId: "tennessee" },
+  { rank: 15, schoolId: "kentucky" },
+  { rank: 16, schoolId: "mississippi-state" },
+  { rank: 17, schoolId: "iowa" },
   { rank: 18, schoolId: "oklahoma-state" },
   { rank: 19, schoolId: "usc" },
-  { rank: 20, schoolId: "iowa" },
-  { rank: 21, schoolId: "ucla" },
-  { rank: 22, schoolId: "houston" },
+  { rank: 20, schoolId: "houston" },
+  { rank: 21, schoolId: "wake-forest" },
+  { rank: 22, schoolId: "lsu" },
   { rank: 23, schoolId: "boise-state" },
   { rank: 24, schoolId: "smu" },
-  { rank: 25, schoolId: "pittsburgh" },
+  { rank: 25, schoolId: "northwestern" },
 ] as const;
 
 const rankBySchoolId = new Map(
