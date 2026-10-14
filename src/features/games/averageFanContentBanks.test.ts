@@ -485,6 +485,36 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("bounds UFC method and title opponents to one documented fight instead of an incomplete any-opponent ledger", () => {
+    const generated = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((question) =>
+      /^average-fan:ufc:g4:ufc:[^:]+:(?:method-win|title-opponent)$/.test(question.id),
+    );
+    expect(generated.length).toBeGreaterThan(10);
+    for (const question of generated) {
+      const match = /^average-fan:ufc:g4:(ufc:[^:]+):(method-win|title-opponent)$/.exec(question.id)!;
+      const fighter = getUfcFactualSubject(match[1]!);
+      expect(fighter, question.id).toBeTruthy();
+      const dateText = /\\bon ([A-Za-z]+ \\d{1,2}, \\d{4})\\?$/.exec(question.prompt)?.[1];
+      expect(dateText, question.id).toBeTruthy();
+      const matchingFights = fighter!.fights.filter((fight) =>
+        new Date(`${fight.date}T12:00:00Z`).toLocaleDateString("en-US", {
+          month: "long", day: "numeric", year: "numeric", timeZone: "UTC",
+        }) === dateText,
+      );
+      expect(matchingFights, question.id).toHaveLength(1);
+      expect(matchingFights[0]?.opponent, question.id).toBe(question.answer);
+      if (match[2] === "method-win") {
+        expect(matchingFights[0]?.result, question.id).toBe("win");
+      } else {
+        expect(matchingFights[0]?.titleFight, question.id).toBe(true);
+      }
+      expect(question.format, question.id).toBe("four-choice");
+      expect(question.aliases, question.id).toEqual([]);
+      expect(question.choices?.filter((choice) => choice === question.answer), question.id).toHaveLength(1);
+      expect(question.prompt, question.id).not.toMatch(/name one/i);
+    }
+  });
+
   it("keeps generated UFC fighter distractors plausible by division and gender", () => {
     const roster = new Map(
       ufcFactualLedgerSubjects.map((fighter) => [fighter.name, fighter]),
