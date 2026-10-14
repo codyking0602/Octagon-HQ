@@ -485,6 +485,43 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("keeps generated UFC fighter distractors plausible by division and gender", () => {
+    const roster = new Map(
+      ufcFactualLedgerSubjects.map((fighter) => [fighter.name, fighter]),
+    );
+    const generatedPattern = /^average-fan:ufc:(?:g3|g5|final):(ufc:[^:]+):(?:opponent|three-win-identity|title|fight)$/;
+    const selected = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((question) =>
+      generatedPattern.test(question.id),
+    );
+    expect(selected.length).toBeGreaterThan(10);
+
+    for (const question of selected) {
+      expect(question.format, question.id).toBe("four-choice");
+      const match = generatedPattern.exec(question.id)!;
+      const subject = getUfcFactualSubject(match[1]!);
+      expect(subject, question.id).toBeTruthy();
+      if (!subject) continue;
+      const womens = subject.primaryDivision.toLowerCase().includes("women");
+      const wrong = question.choices!.filter((choice) => choice !== question.answer);
+      expect(wrong, question.id).toHaveLength(3);
+      for (const name of wrong) {
+        const candidate = roster.get(name);
+        expect(candidate, `${question.id}: missing candidate ${name}`).toBeTruthy();
+        expect(candidate?.primaryDivision.toLowerCase().includes("women"), `${question.id}: ${name}`).toBe(womens);
+      }
+    }
+
+    // This was actually published October 9: Holly Holm and Henry Cejudo
+    // were giveaway choices against Cormier's 205-lb title-fight resume.
+    const cormier = AVERAGE_FAN_CONTENT_BANKS.ufc.find((question) =>
+      question.id === "average-fan:ufc:g3:ufc:daniel-cormier:opponent",
+    );
+    expect(cormier).toBeTruthy();
+    expect(cormier?.choices).toContain("Alexander Gustafsson");
+    expect(cormier?.choices).not.toContain("Holly Holm");
+    expect(cormier?.choices).not.toContain("Henry Cejudo");
+  });
+
   it("never selects an ambiguous UFC multi-opponent fighter identity", () => {
     const normalized = (name: string) => name.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "");
     const fought = (subject: (typeof ufcFactualLedgerSubjects)[number], opponent: string, condition: "beat" | "title" | "faced") =>
