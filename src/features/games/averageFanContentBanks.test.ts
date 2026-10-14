@@ -589,20 +589,23 @@ describe("Average Fan durable content banks", () => {
     expect(question?.explanation).toMatch(/teammate may recover.*ball is dead/);
   });
 
-  it("rejects ambiguous authored surname-only aliases when two people share a name", () => {
-    for (const [id, fullName] of [
-      ["mike-jones", "Mike Jones"],
-      ["jacoby-jones", "Jacoby Jones"],
-    ] as const) {
-      const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
-        (row) => row.id === `average-fan:nfl:final-authored:${id}`,
-      );
-      expect(question, id).toBeTruthy();
-      expect(question?.format, id).toBe("short-answer");
-      expect(averageFanAnswersMatch(question!, fullName), id).toBe(true);
-      expect(question?.aliases, id).not.toContain("Jones");
-      expect(averageFanAnswersMatch(question!, "Jones"), id).toBe(false);
-    }
+  it("rejects ambiguous surname-only answers and keeps the reviewed Mike Jones Final recognition-based", () => {
+    const mike = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (row) => row.id === "average-fan:nfl:final-authored:mike-jones",
+    );
+    expect(mike).toBeTruthy();
+    expect(mike?.format).toBe("four-choice");
+    expect(mike?.choices).toContain("Mike Jones");
+    expect(mike?.choices).not.toContain("Jones");
+
+    const jacoby = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (row) => row.id === "average-fan:nfl:final-authored:jacoby-jones",
+    );
+    expect(jacoby).toBeTruthy();
+    expect(jacoby?.format).toBe("short-answer");
+    expect(averageFanAnswersMatch(jacoby!, "Jacoby Jones")).toBe(true);
+    expect(jacoby?.aliases).not.toContain("Jones");
+    expect(averageFanAnswersMatch(jacoby!, "Jones")).toBe(false);
   });
 
   it("bounds UFC method and title opponents to one documented fight instead of an incomplete any-opponent ledger", () => {
