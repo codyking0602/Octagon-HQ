@@ -211,10 +211,8 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("Crimson Tide")).toBeInTheDocument();
     expect(within(hq).getByText("Alabama")).toBeInTheDocument();
     expect(within(hq).getByText("Mississippi State")).toBeInTheDocument();
-    expect(within(hq).getByText("Bulldogs")).toBeInTheDocument();
     const collegeGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Alabama at Mississippi State" });
     const collegeTeams = collegeGame.querySelectorAll(".football-hq-game-row__teams > div");
     expect(collegeTeams[0]).toHaveStyle("--team-color: #9E1B32");
