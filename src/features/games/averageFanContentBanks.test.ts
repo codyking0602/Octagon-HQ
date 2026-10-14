@@ -291,11 +291,58 @@ describe("Average Fan durable content banks", () => {
       }, {}),
     ).toEqual({
       Players: 3,
-      Teams: 4,
+      Teams: 1,
       "NFL History": 4,
       "X’s & O’s": 3,
     });
   });
+
+  it("keeps Finals challenging without narrow draft-slot memorization or obvious team reveals", () => {
+    for (const sport of ["nfl", "cfb"] as const) {
+      const finals = AVERAGE_FAN_CONTENT_BANKS[sport].filter((question) => question.protectedFinal);
+      expect(finals.length, sport).toBeGreaterThanOrEqual(8);
+      expect(finals.some((question) => /^average-fan:(nfl|cfb):final:[^:]+:draft$/.test(question.id)), sport).toBe(false);
+      expect(finals.every((question) => question.grade === 5), sport).toBe(true);
+      expect(finals.every((question) => !/\\bno\\. \\d+ overall in the \\d{4} nfl draft/i.test(question.prompt)), sport).toBe(true);
+    }
+    for (const id of ["bucs-home", "bears-46", "ravens-two-qbs"]) {
+      const legacyFinal = `average-fan:nfl:final-authored:${id}`;
+      expect(AVERAGE_FAN_CONTENT_BANKS.nfl.some((question) => question.id === legacyFinal)).toBe(false);
+      const regraded = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+        (question) => question.id === `average-fan:nfl:00-final-regraded:${id}`,
+      );
+      if (regraded) {
+        expect(regraded.protectedFinal, id).toBe(false);
+        expect(regraded.grade, id).toBe(4);
+      }
+    }
+  });
+
+  it("offers credible choices for name-heavy NFL Finals and record-count UFC Finals", () => {
+    for (const id of ["mike-jones", "stallworth-73", "harrison-100", "mills"]) {
+      const final = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+        (question) => question.id === `average-fan:nfl:final-authored:${id}`,
+      );
+      expect(final, id).toBeTruthy();
+      expect(final?.format, id).toBe("four-choice");
+      expect(final?.choices, id).toHaveLength(4);
+      expect(final?.choices?.filter((choice) => choice === final.answer), id).toHaveLength(1);
+    }
+    const stallworth = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (question) => question.id === "average-fan:nfl:final-authored:stallworth-73",
+    );
+    expect(stallworth?.choices).toContain("Theo Bell");
+    expect(stallworth?.choices).not.toContain("Franco Harris");
+
+    const demetrious = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
+      (question) => question.id === "average-fan:ufc:final:authored:final-mighty-mouse-defenses",
+    );
+    if (demetrious) {
+      expect(demetrious.format).toBe("four-choice");
+      expect(demetrious.choices).toEqual(expect.arrayContaining(["11", "9", "10", "12"]));
+    }
+  });
+
   it("keeps CFB conference choices to exactly one program from the requested conference", () => {
     const programs = queryFootballSubjects({ league: "CFB", kind: "program" });
     const conferenceByName = new Map(programs.map((program) => [program.name, program.conference]));
@@ -548,20 +595,23 @@ describe("Average Fan durable content banks", () => {
     expect(question?.explanation).toMatch(/teammate may recover.*ball is dead/);
   });
 
-  it("rejects ambiguous authored surname-only aliases when two people share a name", () => {
-    for (const [id, fullName] of [
-      ["mike-jones", "Mike Jones"],
-      ["jacoby-jones", "Jacoby Jones"],
-    ] as const) {
-      const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
-        (row) => row.id === `average-fan:nfl:final-authored:${id}`,
-      );
-      expect(question, id).toBeTruthy();
-      expect(question?.format, id).toBe("short-answer");
-      expect(averageFanAnswersMatch(question!, fullName), id).toBe(true);
-      expect(question?.aliases, id).not.toContain("Jones");
-      expect(averageFanAnswersMatch(question!, "Jones"), id).toBe(false);
-    }
+  it("rejects ambiguous surname-only answers and keeps the reviewed Mike Jones Final recognition-based", () => {
+    const mike = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (row) => row.id === "average-fan:nfl:final-authored:mike-jones",
+    );
+    expect(mike).toBeTruthy();
+    expect(mike?.format).toBe("four-choice");
+    expect(mike?.choices).toContain("Mike Jones");
+    expect(mike?.choices).not.toContain("Jones");
+
+    const jacoby = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (row) => row.id === "average-fan:nfl:final-authored:jacoby-jones",
+    );
+    expect(jacoby).toBeTruthy();
+    expect(jacoby?.format).toBe("short-answer");
+    expect(averageFanAnswersMatch(jacoby!, "Jacoby Jones")).toBe(true);
+    expect(jacoby?.aliases).not.toContain("Jones");
+    expect(averageFanAnswersMatch(jacoby!, "Jones")).toBe(false);
   });
 
   it("bounds UFC method and title opponents to one documented fight instead of an incomplete any-opponent ledger", () => {
