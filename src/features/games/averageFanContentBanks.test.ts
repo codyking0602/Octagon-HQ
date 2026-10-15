@@ -422,6 +422,62 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+
+  it("deduplicates UFC dated bouts across opponent, finish, and title question generators", () => {
+    const source = ufcCandidates();
+    // Individually compared both generated templates for these same-fight
+    // collisions against the pinned UFCStats expansion fighter record.
+    const repeated = [
+      ["jorge-masvidal", "July 30, 2016", "Ross Pearson"],
+      ["diego-lopes", "September 13, 2025", "Jean Silva"],
+      ["urijah-faber", "February 23, 2013", "Ivan Menjivar"],
+      ["kimbo-slice", "December 5, 2009", "Houston Alexander"],
+    ] as const;
+    for (const [slug, date, opponent] of repeated) {
+      const fighterId = `ufc:${slug}`;
+      const opponentQuestion = source.find((q) =>
+        q.id === `average-fan:ufc:g3:${fighterId}:opponent`,
+      );
+      const finishQuestion = source.find((q) =>
+        q.id === `average-fan:ufc:g4:${fighterId}:method-win`,
+      );
+      expect(opponentQuestion, fighterId).toBeDefined();
+      expect(finishQuestion, fighterId).toBeDefined();
+      expect(opponentQuestion?.answer, fighterId).toBe(opponent);
+      expect(finishQuestion?.answer, fighterId).toBe(opponent);
+      expect(opponentQuestion?.prompt, fighterId).toContain(date);
+      expect(finishQuestion?.prompt, fighterId).toContain(date);
+      expect(averageFanQuestionFactKey(opponentQuestion!), fighterId)
+        .toBe(averageFanQuestionFactKey(finishQuestion!));
+      expect(averageFanQuestionFactKey(opponentQuestion!), fighterId)
+        .toMatch(/^ufc:bout:/);
+    }
+
+    const candidate = source.find((q) =>
+      q.id === "average-fan:ufc:g3:ufc:jorge-masvidal:opponent",
+    )!;
+    const forward = {
+      ...candidate,
+      prompt: "Which of these fighters did Jorge Masvidal defeat in the UFC on November 2, 2019?",
+      answer: "Nate Diaz",
+    };
+    const reverse = {
+      ...candidate,
+      id: "average-fan:ufc:g3:ufc:nate-diaz:opponent",
+      prompt: "Which of these fighters did Nate Diaz face in the UFC on November 2, 2019?",
+      answer: "Jorge Masvidal",
+    };
+    expect(averageFanQuestionFactKey(forward)).toBe(averageFanQuestionFactKey(reverse));
+
+    const deduped = new Set<string>();
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      const key = averageFanQuestionFactKey(question);
+      if (!key) continue;
+      expect(deduped.has(key), `${question.id}: duplicate ${key}`).toBe(false);
+      deduped.add(key);
+    }
+  });
+
   it("scopes every selected UFC grade-three fighter-opponent question to a single sourced bout", () => {
     const generated = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((question) =>
       /^average-fan:ufc:g3:ufc:[^:]+:opponent$/.test(question.id),
