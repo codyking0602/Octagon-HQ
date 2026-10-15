@@ -551,6 +551,14 @@ describe("Average Fan durable content banks", () => {
   });
 
   it("retires the Silva-Weidman UFC 162 answer already used in Millionaire", () => {
+    const millionaire = Array.from({ length: MILLIONAIRE_DAILY_RUN_COUNT }, (_, index) =>
+      millionaireDailyRun("ufc", index),
+    ).flat();
+    const collision = millionaire.find((q) =>
+      q.prompt === "Who handed Anderson Silva his first UFC loss?",
+    );
+    expect(collision?.choices.find((choice) => choice.id === collision.correctChoiceId)?.text)
+      .toBe("Chris Weidman");
     expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((q) =>
       q.id.startsWith("average-fan:ufc:authored-history:silva-weidman:"),
     )).toBe(false);
