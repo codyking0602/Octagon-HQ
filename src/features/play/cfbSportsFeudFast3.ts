@@ -255,7 +255,7 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
         alsoAcceptedAnswers: ["Gator Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
       },
       {
-        prompt: "Name a bowl game that sounds like a big deal on the schedule.",
+        prompt: "Name a traditional major college football bowl game with a long history.",
         answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Alamo Bowl","Citrus Bowl"],
         alsoAcceptedAnswers: ["Gator Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
       },

@@ -284,7 +284,7 @@ export const CFB_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("cfb-fast2", [
         alsoAcceptedAnswers: ["Jake Long","Chad Henne","Donovan Edwards","Will Johnson","David Ojabo","Rashan Gary","Devin Bush","Jourdan Lewis","Nico Collins","Roman Wilson"],
       },
       {
-        prompt: "Name a Wolverines star fans remember from the 2000s or later.",
+        prompt: "Name a Michigan Wolverines star who played college football during or after the 2000 season.",
         answers: ["Aidan Hutchinson","Blake Corum","Denard Robinson","Mike Hart","JJ McCarthy","Braylon Edwards","Jabrill Peppers","Jake Long"],
         alsoAcceptedAnswers: ["Chad Henne","Donovan Edwards","Will Johnson","Mason Graham","David Ojabo","Rashan Gary","Devin Bush","Jourdan Lewis","Nico Collins","Roman Wilson"],
       },

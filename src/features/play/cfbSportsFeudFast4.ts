@@ -254,7 +254,7 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
     prompts: [
       "Name an offensive concept you hear in college football.",
       {
-        prompt: "Name a football play concept an offense might build around.",
+        prompt: "Name a specific offensive scheme or play concept, not just a run or pass.",
         answers: ["RPO","Read option","Inside zone","Outside zone","Air Raid","Spread offense","Power run","Play-action"],
         alsoAcceptedAnswers: ["Screen pass","Four verticals","Mesh","Zone read","Counter","Bootleg","Jet sweep"],
       },

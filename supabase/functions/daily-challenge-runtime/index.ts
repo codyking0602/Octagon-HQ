@@ -1410,12 +1410,26 @@ Deno.serve(async (request) => {
     const advanced = isDailyCombo(context)
       ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
       : advanceUfcRuntime(context, body.action);
+
+    // Keep the full choice sequence for new UFC Millionaire replays. Older
+    // in-progress runs cannot acquire a truthful history retroactively.
+    const priorMillionaireActions = context.gameType === "millionaire"
+      ? footballActionHistory(context)
+      : [];
+    const canRecordMillionaireHistory = context.gameType === "millionaire"
+      && (priorMillionaireActions.length > 0 || Number(context.progress_revision) === 0);
+    const persistedUfcSubmission = canRecordMillionaireHistory
+      ? {
+          ...advanced.submissionState,
+          action_history: [...priorMillionaireActions, requiredRecord(body.action, "UFC Millionaire action")],
+        }
+      : advanced.submissionState;
     const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
       p_daily_challenge_id: materialized.dailyChallengeId,
       p_profile_id: profileId,
       p_expected_revision: Number(context.progress_revision),
       p_submission_state: submissionStateWithClientActionId(
-        advanced.submissionState,
+        persistedUfcSubmission,
         dailyClientActionIds(context),
         clientActionId,
       ),
