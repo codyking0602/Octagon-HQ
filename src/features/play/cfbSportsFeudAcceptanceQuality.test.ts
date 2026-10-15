@@ -146,7 +146,7 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     expect(youngStar.answers.map((answer) => answer.name)).toContain("Lamar Jackson");
     expect(matchName(youngStar, "Lamar Jackson")).toMatchObject({
       name: "Lamar Jackson",
-      kind: "ranked",
+      kind: "exact",
     });
 
     expect(authoredQuestion("cfb-fast2-07-3").prompt).toContain("during or after the 2000 season");
