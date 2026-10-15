@@ -373,7 +373,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
       {
         prompt: "Name a player who looked ready for the spotlight almost immediately in college.",
         answers: ["Adrian Peterson","Trevor Lawrence","Jameis Winston","Caleb Williams","Jadeveon Clowney","Sammy Watkins","Brock Bowers","Jeremiah Smith"],
-        alsoAcceptedAnswers: ["Marcus Lattimore","Derek Stingley Jr.","Maurice Clarett","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper"],
+        alsoAcceptedAnswers: ["Marcus Lattimore","Derek Stingley Jr.","Maurice Clarett","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper","Lamar Jackson","Tim Tebow"],
       },
       {
         prompt: "Name a college star who made a huge impact as a freshman or young player.",
@@ -388,7 +388,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
       {
         prompt: "Name a college player whose breakout came almost right away.",
         answers: ["Adrian Peterson","Trevor Lawrence","Sammy Watkins","Marcus Lattimore","Maurice Clarett","Jadeveon Clowney","Brock Bowers","Jeremiah Smith"],
-        alsoAcceptedAnswers: ["Caleb Williams","Derek Stingley Jr.","Jameis Winston","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper"],
+        alsoAcceptedAnswers: ["Caleb Williams","Derek Stingley Jr.","Jameis Winston","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper","Lamar Jackson","Tim Tebow"],
       },
     ],
     answers: [
