@@ -1,6 +1,6 @@
 # Daily Challenge content quality program — approved 13-stage rollout
 
-Status: **Stage 1 complete; Stage 2 Average Fan in progress (through Stage 2V, batched NFL authored source-row screen). Future rotation not yet activated.**
+Status: **Stage 1 complete; Stage 2 Average Fan in progress (through Stage 2W, expanded all imported Bar Trivia wave sources and definitive remaining inventory). Future rotation not yet activated.**
 Baseline inspected: main at `374f130988d6d70c018145881a1e3fcfffe4bca3` (2026-10-13).
 
 ## Decision and release rule
@@ -58,7 +58,7 @@ Current production remains **27 Football / 29 UFC**, with Average Fan 5x and Hig
 | Stage | Game or gate | Status |
 | --- | --- | --- |
 | 1 | Quality policy, cross-game audit aid, approved rotation target | Complete (#1903 merged) |
-| 2 | Average Fan — NFL, CFB, UFC, reduced quality-first banks | In progress: cleanup through Stage 2V; authored Finals and UFC IQ/history sources reviewed, 51 UFC expansion records checked for bout overlap, CFB tradition/trivia overlap reviewed, all 54 persisted production Daily questions reviewed, and 228 NFL authored source rows screened in one batch (20 additional cross-game repeats withdrawn, 3 unordered two-team prompts bounded); deeper independent verification of NFL surviving statistics, unbounded future generated boards, and broader CFB/UFC generated identity/Final bank audits remain |
+| 2 | Average Fan — NFL, CFB, UFC, reduced quality-first banks | In progress: cleanup through Stage 2W; source inventory 374 authored questions (NFL 228, CFB 63, UFC 83) plus CFB registry and 133 UFC fighter-generated candidate scope recorded; six persisted production Daily boards (54 questions) editorially inspected; 228 NFL source rows screened in Stage 2V (20 repeat withdrawals and 3 fair pair conversions); all later imported Bar Trivia wave files screened in Stage 2W (270 additional source rows, 20 newly identified same-fact retirements across all three sports); surviving fact-by-fact verification and selected generated future Daily board quality remain before Stage 2 closure |
 | 3 | Blind Resume — format/difficulty, especially UFC | Pending full review |
 | 4 | Higher or Lower — Football audit, UFC game, official Daily x2 both | Pending |
 | 5 | Sports Feud — 1,050 existing prompts and answer sets | Pending full review |
