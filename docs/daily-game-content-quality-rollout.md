@@ -1,6 +1,6 @@
 # Daily Challenge content quality program — approved 13-stage rollout
 
-Status: **Stage 1 complete; Stage 2 Average Fan in progress (through Stage 2R UFC authored IQ and final ordinary UFC 261 source review). Future rotation not yet activated.**
+Status: **Stage 1 complete; Stage 2 Average Fan in progress (through Stage 2S generated UFC dated-bout fact-family overlap review). Future rotation not yet activated.**
 Baseline inspected: main at `374f130988d6d70c018145881a1e3fcfffe4bca3` (2026-10-13).
 
 ## Decision and release rule
@@ -58,7 +58,7 @@ Current production remains **27 Football / 29 UFC**, with Average Fan 5x and Hig
 | Stage | Game or gate | Status |
 | --- | --- | --- |
 | 1 | Quality policy, cross-game audit aid, approved rotation target | Complete (#1903 merged) |
-| 2 | Average Fan — NFL, CFB, UFC, reduced quality-first banks | In progress: cleanup through Stage 2R; authored Finals reviewed, UFC ordinary history source rows dispositioned across prior passes, remaining 33 authored UFC IQ rows and UFC 261 source reviewed; generated UFC identity/Finals, NFL/CFB ordinary and actual Daily-board reviews remain |
+| 2 | Average Fan — NFL, CFB, UFC, reduced quality-first banks | In progress: cleanup through Stage 2S; authored Finals reviewed; UFC authored IQ/history sources dispositioned; 51 UFC expansion fighters checked for overlapping generated dated-bout families, four source duplicates collapsed by symmetric match key; generated UFC identity/Finals, ranked-core subject review, NFL/CFB ordinary and actual Daily-board reviews remain |
 | 3 | Blind Resume — format/difficulty, especially UFC | Pending full review |
 | 4 | Higher or Lower — Football audit, UFC game, official Daily x2 both | Pending |
 | 5 | Sports Feud — 1,050 existing prompts and answer sets | Pending full review |
