@@ -533,15 +533,15 @@ const NFL_FINAL_FACTS: readonly NflFinalFact[] = [
 
 const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
   { id: "the-game", grade: 1, prompt: "Which two programs play the rivalry commonly called “The Game”?", answer: "Michigan and Ohio State", wrong: ["Alabama and Auburn", "Texas and Oklahoma", "Florida and Georgia"], explanation: "Michigan and Ohio State meet in the rivalry known as The Game." },
-  { id: "iron-bowl", grade: 1, prompt: "Which two programs play the Iron Bowl?", answer: "Alabama and Auburn", wrong: ["Georgia and Florida", "Ole Miss and Mississippi State"], explanation: "The Iron Bowl is Alabama versus Auburn." },
-  { id: "red-river", grade: 1, prompt: "Which programs play the Red River rivalry?", answer: "Texas and Oklahoma", wrong: ["USC and UCLA", "Iowa and Iowa State"], explanation: "Texas and Oklahoma meet in the Red River rivalry." },
+  { id: "iron-bowl", preferredFormat: "four-choice", grade: 1, prompt: "Which two programs play the Iron Bowl?", answer: "Alabama and Auburn", wrong: ["Georgia and Florida", "Ole Miss and Mississippi State", "Alabama and Tennessee"], explanation: "The Iron Bowl is Alabama versus Auburn." },
+  { id: "red-river", preferredFormat: "four-choice", grade: 1, prompt: "Which programs play the Red River rivalry?", answer: "Texas and Oklahoma", wrong: ["USC and UCLA", "Iowa and Iowa State", "Oklahoma and Oklahoma State"], explanation: "Texas and Oklahoma meet in the Red River rivalry." },
   { id: "army-navy", grade: 1, prompt: "Which service academies play the Army–Navy Game?", answer: "Army and Navy", wrong: ["Army and Air Force", "Navy and Air Force"], explanation: "The Army–Navy Game matches the U.S. Military Academy and U.S. Naval Academy." },
   { id: "egg-bowl", grade: 2, prompt: "Which two programs play the Egg Bowl?", answer: "Ole Miss and Mississippi State", wrong: ["Alabama and Auburn", "Clemson and South Carolina", "Arkansas and LSU"], explanation: "The Egg Bowl is Ole Miss versus Mississippi State." },
   { id: "paul-bunyan", grade: 3, prompt: "Michigan and Michigan State play for which trophy?", answer: "Paul Bunyan Trophy", wrong: ["Little Brown Jug", "Old Oaken Bucket", "Floyd of Rosedale"], explanation: "Michigan and Michigan State compete for the Paul Bunyan Trophy." },
   { id: "axe", grade: 2, prompt: "Minnesota and Wisconsin play for which trophy?", answer: "Paul Bunyan's Axe", wrong: ["Floyd of Rosedale", "Heartland Trophy", "Old Oaken Bucket"], explanation: "Minnesota and Wisconsin compete for Paul Bunyan's Axe." },
-  { id: "cy-hawk", grade: 2, prompt: "Which two programs play for the Cy-Hawk Trophy?", answer: "Iowa and Iowa State", wrong: ["Iowa and Minnesota", "Iowa State and Kansas State", "Iowa and Wisconsin"], explanation: "The Cy-Hawk Trophy belongs to the Iowa–Iowa State rivalry." },
+  { id: "cy-hawk", preferredFormat: "four-choice", grade: 2, prompt: "Which two programs play for the Cy-Hawk Trophy?", answer: "Iowa and Iowa State", wrong: ["Iowa and Minnesota", "Iowa State and Kansas State", "Iowa and Wisconsin"], explanation: "The Cy-Hawk Trophy belongs to the Iowa–Iowa State rivalry." },
   { id: "palmetto", grade: 2, prompt: "Which two programs meet in South Carolina's Palmetto Bowl rivalry?", answer: "Clemson and South Carolina", wrong: ["Georgia and Georgia Tech", "Florida and Florida State", "Kentucky and Louisville"], explanation: "Clemson and South Carolina meet in the Palmetto Bowl rivalry." },
-  { id: "bedlam", grade: 2, prompt: "Which two programs are associated with the Bedlam rivalry?", answer: "Oklahoma and Oklahoma State", wrong: ["Oklahoma and Texas", "Oklahoma State and Texas Tech"], explanation: "Bedlam traditionally refers to Oklahoma versus Oklahoma State." },
+  { id: "bedlam", preferredFormat: "four-choice", grade: 2, prompt: "Which two programs are associated with the Bedlam rivalry?", answer: "Oklahoma and Oklahoma State", wrong: ["Oklahoma and Texas", "Oklahoma State and Texas Tech", "Kansas and Kansas State"], explanation: "Bedlam traditionally refers to Oklahoma versus Oklahoma State." },
   { id: "howards-rock", grade: 3, prompt: "Which program is associated with Howard's Rock?", answer: "Clemson", wrong: ["Auburn", "Tennessee"], explanation: "Clemson players touch Howard's Rock before running down the hill into Memorial Stadium." },
   { id: "jump-around", grade: 2, prompt: "Which program is famous for “Jump Around” between the third and fourth quarters at home games?", answer: "Wisconsin", wrong: ["Iowa", "Nebraska"], explanation: "Wisconsin's Camp Randall crowd is famous for Jump Around between the third and fourth quarters." },
   { id: "white-out", grade: 1, prompt: "Which program is most associated with the stadium “White Out” tradition?", answer: "Penn State", wrong: ["Michigan", "Notre Dame", "Ohio State"], explanation: "Penn State's White Out is a signature Beaver Stadium tradition." },
@@ -555,7 +555,7 @@ const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
   { id: "floyd-rosedale", grade: 5, prompt: "Iowa and Minnesota play for which trophy?", answer: "Floyd of Rosedale", wrong: ["Heartland Trophy", "Little Brown Jug", "Paul Bunyan's Axe"], explanation: "Iowa and Minnesota compete for Floyd of Rosedale." },
   { id: "old-oaken-bucket", grade: 5, prompt: "Indiana and Purdue play for which trophy?", answer: "Old Oaken Bucket", wrong: ["Old Brass Spittoon", "Illibuck", "Little Brown Jug"], explanation: "Indiana and Purdue compete for the Old Oaken Bucket." },
   { id: "jeweled-shillelagh", grade: 5, prompt: "Notre Dame and USC play for which trophy?", answer: "Jeweled Shillelagh", wrong: ["Victory Bell", "Legends Trophy", "Paul Bunyan Trophy"], explanation: "Notre Dame and USC compete for the Jeweled Shillelagh." },
-  { id: "stanford-axe", grade: 5, prompt: "Stanford and California play for which trophy?", answer: "Stanford Axe", wrong: ["Territorial Cup", "Victory Bell", "Paul Bunyan's Axe"], explanation: "Stanford and Cal compete for the Stanford Axe." },
+  { id: "stanford-axe", grade: 3, prompt: "Stanford and California play for which trophy?", answer: "Stanford Axe", wrong: ["Territorial Cup", "Victory Bell", "Paul Bunyan's Axe"], explanation: "Stanford and Cal compete for the Stanford Axe." },
   { id: "golden-boot", grade: 5, prompt: "LSU and Arkansas play for which trophy?", answer: "Golden Boot", wrong: ["Magnolia Bowl Trophy", "Tiger Rag", "Floyd of Rosedale"], explanation: "LSU and Arkansas compete for the Golden Boot." },
 ];
 
@@ -1866,6 +1866,10 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   "average-fan:nfl:00-team:terrible-towel:",
   "average-fan:nfl:00-team:bills-four-straight:",
   "average-fan:cfb:tradition:sooner-schooner:",
+  // The "Army–Navy Game" question literally includes both answers in its title.
+  "average-fan:cfb:tradition:army-navy:",
+  // Bar Trivia already tests both programs that compete for the Little Brown Jug.
+  "average-fan:cfb:authored:00-g5:little-brown-jug:",
   "average-fan:cfb:tradition:jump-around:",
   "average-fan:cfb:tradition:howards-rock:",
   "average-fan:ufc:final:authored:final-tuf1",

@@ -415,6 +415,51 @@ describe("Average Fan durable content banks", () => {
     expect(answers.has("False")).toBe(true);
   });
 
+
+  it("keeps unordered CFB rivalry pairs answer-bounded and distinct from Bar Trivia", () => {
+    const selected = AVERAGE_FAN_CONTENT_BANKS.cfb;
+    const content = [
+      ["iron-bowl", "Alabama and Auburn"],
+      ["red-river", "Texas and Oklahoma"],
+      ["cy-hawk", "Iowa and Iowa State"],
+      ["bedlam", "Oklahoma and Oklahoma State"],
+    ] as const;
+    for (const [name, answer] of content) {
+      const idPrefix = `average-fan:cfb:tradition:${name}:`;
+      const question = selected.find((q) => q.id.startsWith(idPrefix));
+      expect(question, idPrefix).toBeDefined();
+      expect(question?.id, idPrefix).toBe(`${idPrefix}choice`);
+      expect(question?.format, idPrefix).toBe("four-choice");
+      expect(question?.choices, idPrefix).toHaveLength(4);
+      expect(question?.choices?.filter((choice) => choice === answer), idPrefix).toHaveLength(1);
+      expect(new Set(question?.choices).size, idPrefix).toBe(4);
+    }
+
+    // This legacy template supplies its own answer in the name Army–Navy.
+    expect(selected.some((q) =>
+      q.id.startsWith("average-fan:cfb:tradition:army-navy:"),
+    )).toBe(false);
+
+    const bar = BAR_TRIVIA_QUESTION_BANK.find((q) =>
+      q.id === "cfb-r3-little-brown-jug",
+    );
+    expect(bar?.answer).toBe("Minnesota");
+    expect(bar?.prompt).toMatch(/Little Brown Jug.*Michigan/);
+    expect(selected.some((q) =>
+      q.id.startsWith("average-fan:cfb:authored:00-g5:little-brown-jug:"),
+    )).toBe(false);
+
+    const axe = selected.find((q) =>
+      q.id.startsWith("average-fan:cfb:tradition:stanford-axe:"),
+    );
+    if (axe) {
+      expect(axe.prompt).toMatch(/Stanford and California/);
+      expect(axe.answer).toBe("Stanford Axe");
+      expect(axe.grade).toBe(4);
+      expect(axe.format).toBe("four-choice");
+    }
+  });
+
   it("keeps rivalry-trophy name recall out of short answer", () => {
     for (const question of AVERAGE_FAN_CONTENT_BANKS.cfb) {
       if (!/play for which (?:rivalry )?trophy/i.test(question.prompt)) continue;
