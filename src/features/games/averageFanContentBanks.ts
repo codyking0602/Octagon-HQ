@@ -635,10 +635,10 @@ const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "ufc1-winner", grade: 1, prompt: "Who won the UFC 1 tournament?", answer: "Royce Gracie", wrong: ["Ken Shamrock", "Gerard Gordeau", "Dan Severn"], explanation: "Royce Gracie won the inaugural UFC tournament in 1993." },
   { id: "ufc1-one-glove", grade: 2, prompt: "Which UFC 1 fighter famously entered the Octagon wearing one boxing glove?", answer: "Art Jimmerson", wrong: ["Kevin Rosier", "Gerard Gordeau"], explanation: "Art Jimmerson wore one red boxing glove against Royce Gracie at UFC 1." },
   { id: "ufc1-headkick", grade: 3, prompt: "Who scored the first head-kick knockout in UFC history?", answer: "Gerard Gordeau", wrong: ["Vitor Belfort", "Marco Ruas"], explanation: "Gerard Gordeau stopped Teila Tuli with the UFC's first head-kick knockout." },
-  { id: "ufc3-winner", grade: 4, prompt: "Which alternate won the unusual UFC 3 tournament after fighting only once?", answer: "Steve Jennum", wrong: ["Kimo Leopoldo", "Ken Shamrock"], explanation: "Steve Jennum entered late as an alternate and won UFC 3 after one fight." },
+  { id: "ufc3-winner", grade: 4, prompt: "Which alternate won the unusual UFC 3 tournament after fighting only once?", answer: "Steve Jennum", wrong: ["Kimo Leopoldo", "Ken Shamrock", "Keith Hackney"], explanation: "Steve Jennum entered late as an alternate and won UFC 3 after one fight.", preferredFormat: "four-choice" },
   { id: "ufc4-final", grade: 3, prompt: "Royce Gracie submitted which wrestler to win the UFC 4 tournament?", answer: "Dan Severn", wrong: ["Ken Shamrock", "Oleg Taktarov", "Kimo Leopoldo"], explanation: "Gracie submitted Dan Severn in the UFC 4 tournament final." },
   { id: "ufc5-winner", grade: 4, prompt: "Who won the UFC 5 tournament?", answer: "Dan Severn", wrong: ["Oleg Taktarov", "Ken Shamrock"], explanation: "Dan Severn submitted Dave Beneteau to win UFC 5." },
-  { id: "ufc6-winner", grade: 4, prompt: "Who won the UFC 6 tournament by submitting Tank Abbott in the final?", answer: "Oleg Taktarov", wrong: ["Dan Severn", "Ken Shamrock"], explanation: "Oleg Taktarov submitted Tank Abbott to win UFC 6." },
+  { id: "ufc6-winner", grade: 4, prompt: "Who won the UFC 6 tournament by submitting Tank Abbott in the final?", answer: "Oleg Taktarov", wrong: ["Dan Severn", "Ken Shamrock", "Marco Ruas"], explanation: "Oleg Taktarov submitted Tank Abbott to win UFC 6.", preferredFormat: "four-choice" },
   { id: "first-wheel-kick", grade: 2, prompt: "Who scored the UFC's first spinning wheel-kick knockout?", answer: "Edson Barboza", wrong: ["Stephen Thompson", "Yair Rodriguez"], explanation: "Edson Barboza knocked out Terry Etim with a spinning wheel kick at UFC 142." },
   { id: "gonzaga-crocop", grade: 2, prompt: "Who knocked out Mirko Cro Cop with a head kick at UFC 70?", answer: "Gabriel Gonzaga", wrong: ["Fabricio Werdum", "Junior dos Santos", "Cheick Kongo"], explanation: "Gabriel Gonzaga shocked Cro Cop with a first-round head-kick knockout." },
   { id: "fox-first", grade: 2, prompt: "Who knocked out Cain Velasquez in the UFC's first fight broadcast live on FOX?", answer: "Junior dos Santos", wrong: ["Brock Lesnar", "Alistair Overeem"], explanation: "Junior dos Santos stopped Velasquez to win the heavyweight title in 2011." },
@@ -651,11 +651,11 @@ const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "lewis-volkov", grade: 3, prompt: "Derrick Lewis delivered his famous 'my balls was hot' interview after knocking out whom at UFC 229?", answer: "Alexander Volkov", wrong: ["Curtis Blaydes", "Travis Browne", "Francis Ngannou"], explanation: "Lewis stopped Alexander Volkov with 11 seconds left before the memorable interview." },
   { id: "barboza-etim", grade: 4, prompt: "Edson Barboza's spinning wheel-kick knockout at UFC 142 in 2012 came against whom?", answer: "Terry Etim", wrong: ["Ross Pearson", "Anthony Njokuani"], explanation: "Barboza knocked out Terry Etim with the UFC's first spinning wheel-kick finish." },
   { id: "belfort-19", grade: 5, prompt: "How old was Vitor Belfort when he won the UFC 12 heavyweight tournament?", answer: "19", wrong: ["21", "23"], explanation: "Vitor Belfort was 19 when he won the UFC 12 heavyweight tournament." },
-  { id: "daley-koscheck", grade: 5, prompt: "Which UFC 113 fighter was released in 2010 after punching Josh Koscheck after the final bell?", answer: "Paul Daley", wrong: ["Thiago Alves", "Dan Hardy"], explanation: "Paul Daley struck Josh Koscheck after the horn and was released from the UFC." },
+  { id: "daley-koscheck", grade: 5, prompt: "Which UFC 113 fighter was released in 2010 after punching Josh Koscheck after the final bell?", answer: "Paul Daley", wrong: ["Thiago Alves", "Dan Hardy", "Carlos Condit"], explanation: "Paul Daley struck Josh Koscheck after the horn and was released from the UFC.", preferredFormat: "four-choice" },
   { id: "taktarov-nine", grade: 5, prompt: "Oleg Taktarov's nine-second submission at UFC 6 came against whom?", answer: "Anthony Macias", wrong: ["Paul Varelans", "Dave Beneteau", "Tank Abbott"], explanation: "Taktarov submitted Anthony Macias in nine seconds at UFC 6." },
   { id: "first-170", grade: 5, prompt: "Laverne Clark faced whom in the UFC's first 170-pound bout at UFC 16?", answer: "Josh Stewart", wrong: ["Pat Miletich", "Mikey Burnett"], explanation: "UFC's official anniversary history identifies Clark vs. Josh Stewart at UFC 16 as its first 170-pound bout." },
   { id: "first-155", grade: 5, prompt: "Jens Pulver faced whom in the UFC's first 155-pound bout at UFC 26?", answer: "Joao Roque", wrong: ["Caol Uno", "John Lewis"], explanation: "UFC's official anniversary history identifies Pulver vs. Joao Roque at UFC 26 as its first 155-pound bout." },
-  { id: "first-125", grade: 4, prompt: "Demetrious Johnson faced whom in one of the two bouts that launched the UFC flyweight division in 2012 at UFC on FX 2?", answer: "Ian McCall", wrong: ["Joseph Benavidez", "John Dodson"], explanation: "Johnson faced Ian McCall as the UFC introduced flyweight with a four-man tournament at UFC on FX 2." },
+  { id: "first-125", grade: 4, prompt: "Demetrious Johnson faced whom in one of the two bouts that launched the UFC flyweight division in 2012 at UFC on FX 2?", answer: "Ian McCall", wrong: ["Joseph Benavidez", "John Dodson", "Yasuhiro Urushitani"], explanation: "Johnson faced Ian McCall as the UFC introduced flyweight with a four-man tournament at UFC on FX 2.", preferredFormat: "four-choice" },
   { id: "first-fox-time", grade: 5, prompt: "How long did Junior dos Santos need to stop Cain Velasquez in the UFC's 2011 FOX debut?", answer: "64 seconds", wrong: ["48 seconds", "94 seconds", "75 seconds"], explanation: "Dos Santos stopped Velasquez 64 seconds into the first round." },
   { id: "silva-weidman", grade: 3, prompt: "Who ended Anderson Silva's 16-fight UFC winning streak at UFC 162?", answer: "Chris Weidman", wrong: ["Chael Sonnen", "Vitor Belfort"], explanation: "Chris Weidman knocked out Silva at UFC 162 after Silva had won 16 straight UFC fights." },
   { id: "serra-gsp", grade: 3, prompt: "Who upset Georges St-Pierre at UFC 69 to win the welterweight title?", answer: "Matt Serra", wrong: ["Matt Hughes", "Josh Koscheck"], explanation: "Matt Serra stopped St-Pierre in the first round at UFC 69 to win the welterweight championship." },
@@ -686,8 +686,11 @@ function knowledgeQuestions(
   facts: readonly KnowledgeFact[],
 ) {
   return facts.map((fact, index) => (
-    (index % 4 === 0
-      || ((/\btroph(?:y|ies)\b/i.test(fact.prompt) || /^\d{4}$/.test(fact.answer.trim())) && fact.wrong.length === 3))
+    (fact.preferredFormat === "four-choice"
+      || (fact.preferredFormat !== "short-answer" && (
+        index % 4 === 0
+        || ((/\btroph(?:y|ies)\b/i.test(fact.prompt) || /^\d{4}$/.test(fact.answer.trim())) && fact.wrong.length === 3)
+      )))
       ? choiceQuestion({
           id: `${prefix}:${fact.id}:choice`,
           sport,
@@ -1293,7 +1296,7 @@ function ufcPlausibleFighterMisses(
   return candidates.slice(0, 3).map((candidate) => candidate.fighter.name);
 }
 
-function ufcCandidates() {
+export function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
   const questions: AverageFanQuestion[] = [];
 
@@ -1874,6 +1877,8 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   // UFC 193 upset with the winning fighter as its answer.
   "average-fan:ufc:authored-history:aldo-13:",
   "average-fan:ufc:authored-history:holm-rousey:",
+  // Millionaire already tests Chris Weidman's UFC 162 defeat of Silva.
+  "average-fan:ufc:authored-history:silva-weidman:",
   "average-fan:ufc:authored-history:diaz-mcgregor:",
   "average-fan:ufc:final:authored:final-ufc217-gsp",
   // Millionaire already asks Rose's UFC 217 win over Joanna, in reverse.

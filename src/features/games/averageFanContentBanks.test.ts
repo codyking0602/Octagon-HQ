@@ -5,6 +5,7 @@ import {
   averageFanQuestionFactKey,
   AVERAGE_FAN_FINAL_TARGETS,
   averageFanBankSummary,
+  ufcCandidates,
 } from "./averageFanContentBanks";
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { getUfcFactualSubject, ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
@@ -175,16 +176,22 @@ describe("Average Fan durable content banks", () => {
     expect(question?.choices).toContain("A quick answer built into a pass play against pressure");
   });
 
-  it("regresses the exact Weidman false-negative from owner preview", () => {
-    const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
+  it("preserves the historic Weidman surname-grading regression without republishing the Millionaire duplicate", () => {
+    // The former published Average Fan fact is now retired from future rotations:
+    // exercise the same accepted-answer mechanism against a non-published fixture.
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some(
+      (row) => row.id === "average-fan:ufc:authored-history:silva-weidman:short",
+    )).toBe(false);
+    const source = ufcCandidates().find(
       (row) => row.id === "average-fan:ufc:authored-history:silva-weidman:short",
     );
-    expect(question).toBeTruthy();
-    expect(question?.answer).toBe("Chris Weidman");
-    expect(question?.aliases).toContain("Weidman");
-    expect(averageFanAnswersMatch(question!, "weidman")).toBe(true);
-    expect(averageFanAnswersMatch(question!, "weidmn")).toBe(true);
-    expect(averageFanAnswersMatch(question!, "Chris")).toBe(false);
+    expect(source).toBeDefined();
+    expect(source?.answer).toBe("Chris Weidman");
+    if (!source) return;
+    const historicalFixture = { ...source, aliases: ["Weidman"] };
+    expect(averageFanAnswersMatch(historicalFixture, "weidman")).toBe(true);
+    expect(averageFanAnswersMatch(historicalFixture, "weidmn")).toBe(true);
+    expect(averageFanAnswersMatch(historicalFixture, "Chris")).toBe(false);
   });
 
   it("regrades the durable banks to the four playable grades", () => {
@@ -531,6 +538,40 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("makes four reviewed specialist UFC history questions multiple-choice without changing their facts", () => {
+    const checked = [
+      ["ufc3-winner", "Steve Jennum", 4],
+      ["ufc6-winner", "Oleg Taktarov", 4],
+      ["daley-koscheck", "Paul Daley", 5],
+      ["first-125", "Ian McCall", 4],
+    ] as const;
+    const sourceCandidates = ufcCandidates();
+    for (const [id, answer, grade] of checked) {
+      const prefix = `average-fan:ufc:authored-history:${id}:`;
+      expect(sourceCandidates.some((q) => q.id === `${prefix}short`), id).toBe(false);
+      const question = sourceCandidates.find((q) => q.id === `${prefix}choice`);
+      expect(question, id).toBeDefined();
+      expect(question?.grade, id).toBe(grade);
+      expect(question?.format, id).toBe("four-choice");
+      expect(question?.choices, id).toHaveLength(4);
+      expect(question?.choices?.filter((choice) => choice === answer), id).toHaveLength(1);
+    }
+  });
+
+  it("retires the Silva-Weidman UFC 162 answer already used in Millionaire", () => {
+    const millionaire = Array.from({ length: MILLIONAIRE_DAILY_RUN_COUNT }, (_, index) =>
+      millionaireDailyRun("ufc", index),
+    ).flat();
+    const collision = millionaire.find((q) =>
+      q.prompt === "Who handed Anderson Silva his first UFC loss?",
+    );
+    expect(collision?.choices.find((choice) => choice.id === collision.correctChoiceId)?.text)
+      .toBe("Chris Weidman");
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((q) =>
+      q.id.startsWith("average-fan:ufc:authored-history:silva-weidman:"),
+    )).toBe(false);
+  });
+
   it("removes UFC 194 and UFC 193 fact inversions already published in Millionaire", () => {
     const millionaire = Array.from({ length: MILLIONAIRE_DAILY_RUN_COUNT }, (_, index) =>
       millionaireDailyRun("ufc", index),
@@ -549,12 +590,14 @@ describe("Average Fan durable content banks", () => {
   });
 
   it("replaces exact final-second memorization with the recognizable UFC 300 opponent", () => {
-    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+    const authored = ufcCandidates();
+    expect(authored.some((question) =>
       question.id.includes("holloway-gaethje-time"),
     )).toBe(false);
-    const revised = AVERAGE_FAN_CONTENT_BANKS.ufc.find((question) =>
+    const revised = authored.find((question) =>
       question.id.includes("holloway-gaethje-last-second"),
     );
+    expect(revised).toBeDefined();
     if (revised) {
       expect(revised.answer).toBe("Justin Gaethje");
       expect(revised.prompt).toMatch(/Max Holloway.*one second left.*UFC 300/);
