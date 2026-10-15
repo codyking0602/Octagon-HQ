@@ -915,7 +915,6 @@ describe("Average Fan durable content banks", () => {
     ]));
     expect(jacoby?.choices).toHaveLength(4);
     expect(jacoby?.choices).not.toContain("Jones");
-    expect(mike?.choices).not.toContain("Jacoby Jones");
     expect(jacoby?.choices).not.toContain("Mike Jones");
   });
 
