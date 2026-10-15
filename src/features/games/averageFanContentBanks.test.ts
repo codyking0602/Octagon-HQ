@@ -510,7 +510,7 @@ describe("Average Fan durable content banks", () => {
     ).flat();
     expect(millionaireQuestions.some((question) =>
       /Rose Namajunas defeat at UFC 217/i.test(question.prompt)
-      && question.answer === "Joanna Jedrzejczyk",
+      && question.choices.find((choice) => choice.id === question.correctChoiceId)?.text === "Joanna Jedrzejczyk",
     )).toBe(true);
     expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
       question.id === "average-fan:ufc:final:authored:final-ufc217-rose",
