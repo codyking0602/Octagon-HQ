@@ -5,6 +5,7 @@ import {
   averageFanQuestionFactKey,
   AVERAGE_FAN_FINAL_TARGETS,
   averageFanBankSummary,
+  ufcCandidates,
 } from "./averageFanContentBanks";
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { getUfcFactualSubject, ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
@@ -538,10 +539,11 @@ describe("Average Fan durable content banks", () => {
       ["daley-koscheck", "Paul Daley", 5],
       ["first-125", "Ian McCall", 4],
     ] as const;
+    const sourceCandidates = ufcCandidates();
     for (const [id, answer, grade] of checked) {
       const prefix = `average-fan:ufc:authored-history:${id}:`;
-      expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((q) => q.id === `${prefix}short`), id).toBe(false);
-      const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find((q) => q.id === `${prefix}choice`);
+      expect(sourceCandidates.some((q) => q.id === `${prefix}short`), id).toBe(false);
+      const question = sourceCandidates.find((q) => q.id === `${prefix}choice`);
       expect(question, id).toBeDefined();
       expect(question?.grade, id).toBe(grade);
       expect(question?.format, id).toBe("four-choice");
