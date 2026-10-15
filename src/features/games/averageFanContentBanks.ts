@@ -582,7 +582,7 @@ const CFB_CURATED_GRADE_FIVE_FACTS: readonly CfbCuratedGradeFiveFact[] = [
   { id: "illibuck", grade: 5, subject: "Traditions", prompt: "What wooden-turtle trophy goes to the winner of Illinois–Ohio State?", answer: "Illibuck", wrong: ["Illini-Buckeye Cup", "Victory Bell", "Old Brass Spittoon"], explanation: "Illinois and Ohio State compete for the Illibuck trophy." },
 
   { id: "stanford-usc-2007", grade: 5, subject: "CFB History", prompt: "Which powerhouse did Stanford upset 24-23 in 2007 during Jim Harbaugh's first season as head coach?", answer: "USC", wrong: ["Oregon", "UCLA"], explanation: "Stanford stunned USC 24-23 at the Los Angeles Memorial Coliseum in 2007." },
-  { id: "watts-jackson-2015", grade: 5, subject: "CFB History", prompt: "Name the Michigan State player who took Michigan's mishandled final punt to the end zone in 2015.", answer: "Jalen Watts-Jackson", wrong: ["Darian Hicks", "Montae Nicholson", "Arjen Colquhoun"], explanation: "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired." },
+  { id: "watts-jackson-2015", grade: 5, subject: "CFB History", prompt: "Name the Michigan State player who took Michigan's mishandled final punt to the end zone in 2015.", answer: "Jalen Watts-Jackson", wrong: ["LJ Scott", "Aaron Burbridge", "Connor Cook"], explanation: "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired." },
   { id: "kick-six-chris-davis", grade: 5, subject: "CFB History", prompt: "Who returned Alabama's missed field goal for Auburn's Kick Six touchdown in 2013?", answer: "Chris Davis", wrong: ["Tre Mason", "Ricardo Louis"], explanation: "Chris Davis returned the missed field goal for the walk-off touchdown that gave Auburn the 2013 Iron Bowl." },
 ];
 
@@ -791,7 +791,7 @@ const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
   ["02-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Quan Bray", "Trovon Reed"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
   ["03-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Skyler Green", "Jerel Myers"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
 
-  ["02-history-watts-jackson", "CFB History", "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", "Jalen Watts-Jackson", ["LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired."],
+  ["02-history-watts-jackson", "CFB History", "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", "Jalen Watts-Jackson", ["Darian Hicks", "Montae Nicholson", "Arjen Colquhoun"], "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired."],
 ].map(([id, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:cfb-final-${id}`,
   sport: "cfb",
