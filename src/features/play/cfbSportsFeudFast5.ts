@@ -381,9 +381,9 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
         alsoAcceptedAnswers: ["Caleb Williams","Jameis Winston","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper","Jeremiah Smith"],
       },
       {
-        prompt: "Name a player fans knew was special before he was an upperclassman.",
-        answers: ["Adrian Peterson","Trevor Lawrence","Caleb Williams","Jadeveon Clowney","Sammy Watkins","Brock Bowers","Derek Stingley Jr.","Saquon Barkley"],
-        alsoAcceptedAnswers: ["Marcus Lattimore","Maurice Clarett","Jameis Winston","Johnny Manziel","Todd Gurley","Amari Cooper","Jeremiah Smith"],
+        prompt: "Name a college football player who broke out by his sophomore season.",
+        answers: ["Adrian Peterson","Trevor Lawrence","Caleb Williams","Lamar Jackson","Jadeveon Clowney","Sammy Watkins","Brock Bowers","Saquon Barkley"],
+        alsoAcceptedAnswers: ["Derek Stingley Jr.","Marcus Lattimore","Maurice Clarett","Jameis Winston","Johnny Manziel","Todd Gurley","Amari Cooper","Jeremiah Smith"],
       },
       {
         prompt: "Name a college player whose breakout came almost right away.",
