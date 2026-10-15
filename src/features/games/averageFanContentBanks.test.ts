@@ -319,7 +319,7 @@ describe("Average Fan durable content banks", () => {
   });
 
   it("offers credible choices for name-heavy NFL Finals and record-count UFC Finals", () => {
-    for (const id of ["mike-jones", "stallworth-73", "harrison-100", "mills"]) {
+    for (const id of ["mike-jones", "jacoby-jones", "stallworth-73", "harrison-100", "mills"]) {
       const final = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
         (question) => question.id === `average-fan:nfl:final-authored:${id}`,
       );
@@ -649,10 +649,14 @@ describe("Average Fan durable content banks", () => {
       (row) => row.id === "average-fan:nfl:final-authored:jacoby-jones",
     );
     expect(jacoby).toBeTruthy();
-    expect(jacoby?.format).toBe("short-answer");
-    expect(averageFanAnswersMatch(jacoby!, "Jacoby Jones")).toBe(true);
-    expect(jacoby?.aliases).not.toContain("Jones");
-    expect(averageFanAnswersMatch(jacoby!, "Jones")).toBe(false);
+    expect(jacoby?.format).toBe("four-choice");
+    expect(jacoby?.choices).toEqual(expect.arrayContaining([
+      "Jacoby Jones", "Torrey Smith", "Anquan Boldin", "David Reed",
+    ]));
+    expect(jacoby?.choices).toHaveLength(4);
+    expect(jacoby?.choices).not.toContain("Jones");
+    expect(mike?.choices).not.toContain("Jacoby Jones");
+    expect(jacoby?.choices).not.toContain("Mike Jones");
   });
 
   it("bounds UFC method and title opponents to one documented fight instead of an incomplete any-opponent ledger", () => {

@@ -522,7 +522,7 @@ const NFL_FINAL_FACTS: readonly NflFinalFact[] = [
   { id: "ravens-two-qbs", grade: 5, finalTier: "ordinary", subject: "Teams", prompt: "Which franchise won its first two Super Bowls with Trent Dilfer and Joe Flacco as its starting quarterbacks?", answer: "Baltimore Ravens", aliases: ["Ravens", "Baltimore"], wrong: ["Tampa Bay Buccaneers", "New York Giants"], explanation: "Baltimore won Super Bowl XXXV with Trent Dilfer and Super Bowl XLVII with Joe Flacco." },
 
   { id: "mike-jones", grade: 5, subject: "NFL History", prompt: "Who made the tackle at the one-yard line on the final play of Super Bowl XXXIV?", answer: "Mike Jones", aliases: ["Jones"], wrong: ["Aeneas Williams", "London Fletcher", "Todd Lyght"], explanation: "Rams linebacker Mike Jones tackled Kevin Dyson just short of the goal line to end Super Bowl XXXIV." },
-  { id: "jacoby-jones", grade: 5, subject: "NFL History", prompt: "Who opened the second half of Super Bowl XLVII in 2013 with a 108-yard kickoff-return touchdown?", answer: "Jacoby Jones", aliases: ["Jones"], wrong: ["Devin Hester", "Ted Ginn Jr."], explanation: "Jacoby Jones returned the second-half kickoff 108 yards for Baltimore." },
+  { id: "jacoby-jones", grade: 5, subject: "NFL History", prompt: "Who opened the second half of Super Bowl XLVII in 2013 with a 108-yard kickoff-return touchdown?", answer: "Jacoby Jones", aliases: ["Jones"], wrong: ["Torrey Smith", "Anquan Boldin", "David Reed"], explanation: "Jacoby Jones returned the second-half kickoff 108 yards for Baltimore." },
   { id: "stallworth-73", grade: 5, subject: "NFL History", prompt: "Which Steelers receiver caught a 73-yard touchdown from Terry Bradshaw in Super Bowl XIV?", answer: "John Stallworth", aliases: ["Stallworth"], wrong: ["Lynn Swann", "Theo Bell", "Jim Smith"], explanation: "John Stallworth's 73-yard touchdown catch was a defining play in Pittsburgh's Super Bowl XIV win." },
   { id: "harrison-100", grade: 5, subject: "NFL History", prompt: "Who returned an interception 100 yards for a touchdown in Super Bowl XLIII?", answer: "James Harrison", aliases: ["Harrison"], wrong: ["Troy Polamalu", "Ike Taylor", "Ryan Clark"], explanation: "James Harrison's 100-yard interception return closed the first half of Super Bowl XLIII." },
 
@@ -1106,7 +1106,7 @@ function footballCandidates(league: "NFL" | "CFB") {
     // protected Final. Preserve former published IDs in their immutable snapshots.
     // Recognizable but less famous historical plays get four credible choices
     // instead of an all-or-nothing, exact-name memory test.
-    const recognitionFinals = new Set(["mike-jones", "stallworth-73", "harrison-100", "mills"]);
+    const recognitionFinals = new Set(["mike-jones", "jacoby-jones", "stallworth-73", "harrison-100", "mills"]);
     questions.push(...NFL_FINAL_FACTS.map((fact) => {
       const protectedFinal = fact.finalTier !== "ordinary";
       const base = {
