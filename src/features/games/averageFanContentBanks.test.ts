@@ -538,6 +538,49 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+
+  it("audits specialist UFC Octagon IQ terms with exact source-level choices and safe retirements", () => {
+    const source = ufcCandidates();
+    const reviewed = [
+      ["underhook", "Underhook", ["Overhook", "Collar tie", "Body lock"]],
+      ["whizzer", "Whizzer", ["Underhook", "Body lock", "Arm drag"]],
+      ["level-change", "Level change", ["Switch step", "Hip escape", "Sprawl"]],
+      ["back-hooks", "Hooks", ["Frames", "Posts", "Body triangle"]],
+    ] as const;
+    for (const [id, answer, wrong] of reviewed) {
+      const prefix = `average-fan:ufc:iq:${id}:`;
+      expect(source.some((q) => q.id === `${prefix}short`), id).toBe(false);
+      const question = source.find((q) => q.id === `${prefix}choice`);
+      expect(question, id).toBeDefined();
+      expect(question?.format, id).toBe("four-choice");
+      expect(question?.choices, id).toHaveLength(4);
+      expect(new Set(question?.choices).size, id).toBe(4);
+      expect(question?.choices?.filter((choice) => choice === answer), id).toHaveLength(1);
+      expect(question?.choices, id).toEqual(expect.arrayContaining([answer, ...wrong]));
+    }
+
+    for (const id of ["guillotine", "orthodox", "calf-kick"]) {
+      const prefix = `average-fan:ufc:iq:${id}:`;
+      expect(source.some((q) => q.id.startsWith(prefix)), id).toBe(true);
+      expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((q) => q.id.startsWith(prefix)), id).toBe(false);
+    }
+
+    const teep = source.find((q) => q.id === "average-fan:ufc:iq:teep:short");
+    expect(teep).toBeDefined();
+    expect(teep?.answer).toBe("Teep");
+    for (const accepted of ["Teep", "Push kick", "Front push kick"]) {
+      expect(averageFanAnswersMatch(teep!, accepted), accepted).toBe(true);
+    }
+    expect(averageFanAnswersMatch(teep!, "Spinning backfist")).toBe(false);
+    expect(averageFanAnswersMatch(teep!, "Overhand")).toBe(false);
+
+    const event = source.find((q) => q.id.startsWith("average-fan:ufc:authored-history:usman-masvidal:"));
+    expect(event).toBeDefined();
+    expect(event?.answer).toBe("Jorge Masvidal");
+    expect(event?.prompt).toMatch(/Usman.*UFC 261.*2021/);
+    expect(event?.explanation).toMatch(/Masvidal.*UFC 261/);
+  });
+
   it("makes four reviewed specialist UFC history questions multiple-choice without changing their facts", () => {
     const checked = [
       ["ufc3-winner", "Steve Jennum", 4],
