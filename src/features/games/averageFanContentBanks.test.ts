@@ -176,16 +176,22 @@ describe("Average Fan durable content banks", () => {
     expect(question?.choices).toContain("A quick answer built into a pass play against pressure");
   });
 
-  it("regresses the exact Weidman false-negative from owner preview", () => {
-    const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
+  it("preserves the historic Weidman surname-grading regression without republishing the Millionaire duplicate", () => {
+    // The former published Average Fan fact is now retired from future rotations:
+    // exercise the same accepted-answer mechanism against a non-published fixture.
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some(
+      (row) => row.id === "average-fan:ufc:authored-history:silva-weidman:short",
+    )).toBe(false);
+    const source = ufcCandidates().find(
       (row) => row.id === "average-fan:ufc:authored-history:silva-weidman:short",
     );
-    expect(question).toBeTruthy();
-    expect(question?.answer).toBe("Chris Weidman");
-    expect(question?.aliases).toContain("Weidman");
-    expect(averageFanAnswersMatch(question!, "weidman")).toBe(true);
-    expect(averageFanAnswersMatch(question!, "weidmn")).toBe(true);
-    expect(averageFanAnswersMatch(question!, "Chris")).toBe(false);
+    expect(source).toBeDefined();
+    expect(source?.answer).toBe("Chris Weidman");
+    if (!source) return;
+    const historicalFixture = { ...source, aliases: ["Weidman"] };
+    expect(averageFanAnswersMatch(historicalFixture, "weidman")).toBe(true);
+    expect(averageFanAnswersMatch(historicalFixture, "weidmn")).toBe(true);
+    expect(averageFanAnswersMatch(historicalFixture, "Chris")).toBe(false);
   });
 
   it("regrades the durable banks to the four playable grades", () => {
