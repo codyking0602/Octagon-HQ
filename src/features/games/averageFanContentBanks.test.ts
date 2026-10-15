@@ -565,6 +565,22 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+
+  it("regrades basic UFC rear body lock recognition after inspecting the published October 2 board", () => {
+    const source = ufcCandidates().find((question) =>
+      question.id === "average-fan:ufc:iq:rear-body-lock:choice",
+    );
+    expect(source).toBeDefined();
+    expect(source?.grade).toBe(3);
+    expect(source?.format).toBe("four-choice");
+    expect(source?.answer).toBe("Rear body lock");
+    expect(source?.choices).toHaveLength(4);
+    const future = AVERAGE_FAN_CONTENT_BANKS.ufc.find((question) => question.id === source!.id);
+    expect(future).toBeDefined();
+    expect(future?.grade).toBe(4);
+    // Published October 2 Grade 5 question stays immutable in the Daily store.
+  });
+
   it("keeps fundamental UFC grappling vocabulary out of protected-difficulty tiers and grades synonyms fairly", () => {
     const expected: Record<string, number> = {
       "half-guard": 4, "body-triangle": 5, "hip-escape": 4,
