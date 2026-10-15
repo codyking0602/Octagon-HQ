@@ -531,6 +531,38 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("removes UFC 194 and UFC 193 fact inversions already published in Millionaire", () => {
+    const millionaire = Array.from({ length: MILLIONAIRE_DAILY_RUN_COUNT }, (_, index) =>
+      millionaireDailyRun("ufc", index),
+    ).flat();
+    const correctText = (prompt: RegExp) => {
+      const q = millionaire.find((question) => prompt.test(question.prompt));
+      return q?.choices.find((choice) => choice.id === q.correctChoiceId)?.text;
+    };
+    expect(correctText(/Who knocked out Jose Aldo in 13 seconds/)).toBe("Conor McGregor");
+    expect(correctText(/Who handed Ronda Rousey her first professional loss/)).toBe("Holly Holm");
+    for (const id of ["aldo-13", "holm-rousey"]) {
+      expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+        question.id.startsWith(`average-fan:ufc:authored-history:${id}:`),
+      ), id).toBe(false);
+    }
+  });
+
+  it("replaces exact final-second memorization with the recognizable UFC 300 opponent", () => {
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+      question.id.includes("holloway-gaethje-time"),
+    )).toBe(false);
+    const revised = AVERAGE_FAN_CONTENT_BANKS.ufc.find((question) =>
+      question.id.includes("holloway-gaethje-last-second"),
+    );
+    if (revised) {
+      expect(revised.answer).toBe("Justin Gaethje");
+      expect(revised.prompt).toMatch(/Max Holloway.*one second left.*UFC 300/);
+      expect(revised.prompt).not.toMatch(/how much time/i);
+      expect(revised.fanMisses).not.toContain(revised.answer);
+    }
+  });
+
   it("does not use dated UFC title-fight identity riddles as hard-question filler", () => {
     expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) => question.id.endsWith(":title-identity")))
       .toBe(false);

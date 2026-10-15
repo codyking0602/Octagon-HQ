@@ -647,7 +647,7 @@ const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "mcgregor-alvarez", grade: 2, prompt: "Whom did Conor McGregor defeat to become the UFC's first simultaneous two-division champion?", answer: "Eddie Alvarez", wrong: ["Jose Aldo", "Nate Diaz", "Chad Mendes"], explanation: "McGregor stopped Eddie Alvarez at UFC 205 to hold featherweight and lightweight gold simultaneously." },
   { id: "aldo-13", grade: 3, prompt: "How many seconds did Conor McGregor need to knock out Jose Aldo at UFC 194?", answer: "13", wrong: ["7", "21"], explanation: "McGregor stopped Aldo 13 seconds into their featherweight title fight." },
   { id: "edwards-usman-round", grade: 3, prompt: "Leon Edwards' famous head-kick knockout of Kamaru Usman at UFC 278 came in which round?", answer: "Round 5", wrong: ["Round 3", "Round 4"], explanation: "Edwards knocked out Usman late in Round 5 to win the welterweight title." },
-  { id: "holloway-gaethje-time", grade: 4, prompt: "Max Holloway knocked out Justin Gaethje at UFC 300 in 2024 with how much time left in Round 5?", answer: "1 second", wrong: ["5 seconds", "10 seconds"], explanation: "Holloway's knockout came at 4:59 of Round 5." },
+  { id: "holloway-gaethje-last-second", grade: 4, prompt: "Whom did Max Holloway knock out with one second left in Round 5 at UFC 300?", answer: "Justin Gaethje", wrong: ["Dustin Poirier", "Calvin Kattar", "Yair Rodriguez"], explanation: "Holloway knocked out Justin Gaethje at 4:59 of Round 5 at UFC 300, winning the BMF title." },
   { id: "lewis-volkov", grade: 3, prompt: "Derrick Lewis delivered his famous 'my balls was hot' interview after knocking out whom at UFC 229?", answer: "Alexander Volkov", wrong: ["Curtis Blaydes", "Travis Browne", "Francis Ngannou"], explanation: "Lewis stopped Alexander Volkov with 11 seconds left before the memorable interview." },
   { id: "barboza-etim", grade: 4, prompt: "Edson Barboza's spinning wheel-kick knockout at UFC 142 in 2012 came against whom?", answer: "Terry Etim", wrong: ["Ross Pearson", "Anthony Njokuani"], explanation: "Barboza knocked out Terry Etim with the UFC's first spinning wheel-kick finish." },
   { id: "belfort-19", grade: 5, prompt: "How old was Vitor Belfort when he won the UFC 12 heavyweight tournament?", answer: "19", wrong: ["21", "23"], explanation: "Vitor Belfort was 19 when he won the UFC 12 heavyweight tournament." },
@@ -1870,6 +1870,10 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   "average-fan:cfb:authored:cfb-final-02-program-four-seed",
   "average-fan:ufc:authored-history:serra-gsp:",
   "average-fan:ufc:authored-history:rousey-carmouche:",
+  // Millionaire already asks the same Aldo 13-second title KO and Holm-Rousey
+  // UFC 193 upset with the winning fighter as its answer.
+  "average-fan:ufc:authored-history:aldo-13:",
+  "average-fan:ufc:authored-history:holm-rousey:",
   "average-fan:ufc:authored-history:diaz-mcgregor:",
   "average-fan:ufc:final:authored:final-ufc217-gsp",
   // Millionaire already asks Rose's UFC 217 win over Joanna, in reverse.
