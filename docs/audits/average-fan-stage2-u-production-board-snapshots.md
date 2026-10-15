@@ -2,7 +2,7 @@
 
 Date: October 15, 2026. **These are the actual production database snapshots**, not regenerated source test fixtures. Read-only audited `private.daily_challenges` joined to `private.daily_challenge_setups` by `setup_id`, preserving `central_day`, source `reveal_setup.questions`, and `reveal_setup.final_question` for *every persisted Average Fan Daily*. No attempt/progress/member data accessed or modified.
 
-**Inventory observed:** 6 real published Average Fan setups from October 2–13, 2026: **48 ordinary questions and 6 protected Finals = 54 individual published prompts**. Two UFC and two CFB/one NFL? Exact grouping: UFC three boards (October 2, 9, 13); CFB two (October 2, 8); NFL one (October 6).
+**Inventory observed:** 6 real published Average Fan setups from October 2–13, 2026: **48 ordinary questions and 6 protected Finals = 54 individual published prompts**. Sport split: **UFC 3 boards** (October 2, 9, 13), **CFB 2** (October 2, 8), and **NFL 1** (October 6).
 
 **Historical-slot disposition:** 30 substantively fair with no new change, 17 already retired/withdrawn for future selection, 6 already rewritten/reformatted in the current source, and 1 newly regraded in this pass. These are **not counts of current source-bank membership**; retired questions remain intentionally immutable in archived Daily setups. No live Daily board or stored answers were changed.
 
