@@ -504,6 +504,33 @@ describe("Average Fan durable content banks", () => {
     expect(question?.grade).toBe(3);
   });
 
+  it("retires an inverted UFC 217 Rose-Joanna fact already asked by Millionaire", () => {
+    const millionaireQuestions = Array.from({ length: MILLIONAIRE_DAILY_RUN_COUNT }, (_, index) =>
+      millionaireDailyRun("ufc", index),
+    ).flat();
+    expect(millionaireQuestions.some((question) =>
+      /Rose Namajunas defeat at UFC 217/i.test(question.prompt)
+      && question.choices.find((choice) => choice.id === question.correctChoiceId)?.text === "Joanna Jedrzejczyk",
+    )).toBe(true);
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+      question.id === "average-fan:ufc:final:authored:final-ufc217-rose",
+    )).toBe(false);
+  });
+
+  it("regrades the familiar UFC 217 Garbrandt result out of protected Finals", () => {
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+      question.id === "average-fan:ufc:final:authored:final-ufc217-tj",
+    )).toBe(false);
+    const ordinary = AVERAGE_FAN_CONTENT_BANKS.ufc.find((question) =>
+      question.id === "average-fan:ufc:authored-history:ufc217-tj:short",
+    );
+    if (ordinary) {
+      expect(ordinary.protectedFinal).toBe(false);
+      expect(ordinary.grade).toBe(4);
+      expect(ordinary.answer).toBe("Cody Garbrandt");
+    }
+  });
+
   it("does not use dated UFC title-fight identity riddles as hard-question filler", () => {
     expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) => question.id.endsWith(":title-identity")))
       .toBe(false);
