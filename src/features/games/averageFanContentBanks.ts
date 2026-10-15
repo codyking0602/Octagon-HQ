@@ -1589,10 +1589,10 @@ export function averageFanQuestionFactKey(question: AverageFanQuestion): string 
   const ufcBout = /^average-fan:ufc:g[34]:(ufc:[^:]+):(opponent|method-win|title-opponent)$/.exec(id);
   if (ufcBout) {
     const fighter = ufcFactualLedgerSubjects.find((row) => row.id === ufcBout[1]);
-    const date = /\\bon ([A-Za-z]+ \\d{1,2}, \\d{4})\\?$/.exec(question.prompt)?.[1];
+    const date = / on ([A-Za-z]+ [0-9]{1,2}, [0-9]{4})[?]$/.exec(question.prompt)?.[1];
     if (fighter && date) {
       const pair = [normalizedUfcOpponent(fighter.name), normalizedUfcOpponent(question.answer)].sort();
-      return `ufc:bout:${date.toLowerCase().replace(/\\s+/g, "")}:${pair.join("~")}`;
+      return `ufc:bout:${date.toLowerCase().split(" ").join("")}:${pair.join("~")}`;
     }
   }
   const position = /^average-fan:(nfl|cfb):g[1-5]:(.+):(position|position-tf|school-position)$/.exec(id);
