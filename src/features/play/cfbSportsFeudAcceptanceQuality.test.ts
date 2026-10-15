@@ -135,6 +135,25 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     }
   });
 
+  it("clarifies specific traditions and credits sophomore breakout stars in future CFB Feud", () => {
+    const traditions = authoredQuestion("cfb-main-13-3");
+    expect(traditions.prompt).toContain("Sooner Schooner");
+    expect(traditions.answers.map((answer) => answer.name)).not.toContain("Oklahoma Sooner Schooner");
+    expect(traditions.alsoAcceptedAnswers?.map((answer) => answer.name)).toContain("Oklahoma Sooner Schooner");
+
+    const youngStar = authoredQuestion("cfb-fast5-08-4");
+    expect(youngStar.prompt).toContain("sophomore");
+    expect(youngStar.answers.map((answer) => answer.name)).toContain("Lamar Jackson");
+    expect(matchName(youngStar, "Lamar Jackson")).toMatchObject({
+      name: "Lamar Jackson",
+      kind: "ranked",
+    });
+
+    expect(authoredQuestion("cfb-fast2-07-3").prompt).toContain("during or after the 2000 season");
+    expect(authoredQuestion("cfb-fast3-06-5").prompt).toContain("long history");
+    expect(authoredQuestion("cfb-fast4-06-2").prompt).toContain("not just a run or pass");
+  });
+
   it("locks current closed-set CFB facts through the 2025 season", () => {
     const heismanQbs = candidates(authoredQuestion("cfb-fast1-06-1")).map((answer) => answer.name);
     expect(heismanQbs).toHaveLength(21);
