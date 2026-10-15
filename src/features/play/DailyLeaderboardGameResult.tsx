@@ -10,7 +10,7 @@ type MillionaireQuestionResult = {
   selectedChoiceIds: string[];
   correctChoiceId: string | null;
   lifelines: string[];
-  status: "correct" | "wrong" | "walked-away" | "timeout" | "unreached";
+  status: "correct" | "wrong" | "played" | "walked-away" | "timeout" | "unreached";
 };
 
 type FeudAnswerRow = {
@@ -295,19 +295,31 @@ export function buildMillionaireLeaderboardQuestions(
     doubleDipMisses = 0;
   }
 
-  const result = projection.officialAttempt?.publicResult ?? {};
-  const completedQuestions = Math.max(0, Math.min(rows.length, Number(result.completed_questions ?? 0)));
-  for (let index = 0; index < completedQuestions; index += 1) {
-    if (rows[index]?.status === "unreached") rows[index]!.status = "correct";
-  }
+  // Older UFC Daily runs did not persist their per-question action history.
+  // A total of five correct answers does not mean Q1-Q5 were correct: players
+  // keep answering after the first miss. Never invent a sequential streak.
+  if (!records(resultDetail.action_history).length && projection.officialAttempt) {
+    const result = projection.officialAttempt.publicResult;
+    const firstMiss = Number(result.first_miss_question ?? 0);
+    const completed = Math.max(0, Math.min(rows.length, Number(result.completed_questions ?? 0)));
+    const state = record(projection.publicState);
+    const current = Number(state.current_question_index);
+    const lastPlayed = Number.isInteger(current) && current >= 0 && current < rows.length
+      ? current
+      : Math.min(rows.length - 1, Math.max(completed, firstMiss) - 1);
+    const outcome = String(result.outcome ?? state.status ?? "");
 
-  if (!settled && projection.officialAttempt) {
-    const outcome = String(result.outcome ?? record(projection.publicState).status ?? "");
-    const terminalIndex = Math.min(rows.length - 1, completedQuestions);
-    const terminal = rows[terminalIndex];
-    if (terminal && terminal.status === "unreached") {
-      if (outcome === "walked-away") terminal.status = "walked-away";
-      else if (outcome === "lost") terminal.status = "wrong";
+    if (firstMiss >= 1 && firstMiss <= rows.length) {
+      for (let index = 0; index < firstMiss - 1; index += 1) rows[index]!.status = "correct";
+      rows[firstMiss - 1]!.status = "wrong";
+      for (let index = firstMiss; index <= lastPlayed; index += 1) rows[index]!.status = "played";
+      if (outcome === "lost" && state.last_answer_outcome === "wrong" && lastPlayed >= firstMiss) {
+        rows[lastPlayed]!.status = "wrong";
+      }
+    } else {
+      for (let index = 0; index < completed; index += 1) rows[index]!.status = "correct";
+      if (outcome === "lost" && completed < rows.length) rows[completed]!.status = "wrong";
+      if (outcome === "walked-away" && completed < rows.length) rows[completed]!.status = "walked-away";
     }
   }
 
@@ -975,6 +987,9 @@ function MillionaireLeaderboardResult({
         <header>
           <span>QUESTION LADDER</span>
           <h3>How the run unfolded</h3>
+          {!records(resultDetail.action_history).length ? (
+            <p>Older runs did not save individual picks. PLAYED means the question was reached, but its result cannot be verified.</p>
+          ) : null}
         </header>
         <div className="leaderboard-millionaire-ladder__rows">
           {rows.map((row) => {
@@ -984,6 +999,8 @@ function MillionaireLeaderboardResult({
               ? "CORRECT"
               : row.status === "wrong"
                 ? "WRONG"
+                : row.status === "played"
+                  ? "PLAYED"
                 : row.status === "walked-away"
                   ? "WALKED"
                   : row.status === "timeout"
