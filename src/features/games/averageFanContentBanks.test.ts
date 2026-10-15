@@ -299,7 +299,7 @@ describe("Average Fan durable content banks", () => {
     ).toEqual({
       Players: 3,
       Teams: 1,
-      "NFL History": 4,
+      "NFL History": 3,
       "X’s & O’s": 3,
     });
   });
@@ -326,7 +326,7 @@ describe("Average Fan durable content banks", () => {
   });
 
   it("offers credible choices for name-heavy NFL Finals and record-count UFC Finals", () => {
-    for (const id of ["mike-jones", "jacoby-jones", "stallworth-73", "harrison-100", "mills"]) {
+    for (const id of ["jacoby-jones", "stallworth-73", "harrison-100", "mills"]) {
       const final = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
         (question) => question.id === `average-fan:nfl:final-authored:${id}`,
       );
@@ -898,14 +898,12 @@ describe("Average Fan durable content banks", () => {
     expect(question?.explanation).toMatch(/teammate may recover.*ball is dead/);
   });
 
-  it("rejects ambiguous surname-only answers and keeps the reviewed Mike Jones Final recognition-based", () => {
-    const mike = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
-      (row) => row.id === "average-fan:nfl:final-authored:mike-jones",
-    );
-    expect(mike).toBeTruthy();
-    expect(mike?.format).toBe("four-choice");
-    expect(mike?.choices).toContain("Mike Jones");
-    expect(mike?.choices).not.toContain("Jones");
+  it("rejects ambiguous surname-only answers and keeps NFL name Finals recognition-based", () => {
+    // Mike Jones was withdrawn for direct overlap with Bar Trivia. Keep
+    // recognition/alias coverage on retained uniquely named NFL Finals.
+    expect(AVERAGE_FAN_CONTENT_BANKS.nfl.some((row) =>
+      row.id === "average-fan:nfl:final-authored:mike-jones",
+    )).toBe(false);
 
     const jacoby = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
       (row) => row.id === "average-fan:nfl:final-authored:jacoby-jones",
