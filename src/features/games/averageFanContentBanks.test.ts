@@ -1091,6 +1091,55 @@ describe("Average Fan durable content banks", () => {
     }))).toEqual([]);
   });
 
+  it("withdraws screened NFL fact-family repeats rather than restating Bar Trivia or Millionaire", () => {
+    const formerSources = [
+      "average-fan:nfl:00-player:beast-mode:",
+      "average-fan:nfl:00-player:megatron:",
+      "average-fan:nfl:00-player:gronk:",
+      "average-fan:nfl:00-player:prime-time:",
+      "average-fan:nfl:00-player:sheriff:",
+      "average-fan:nfl:00-player:emmitt-record:",
+      "average-fan:nfl:00-player:mahomes-drafted-chiefs:",
+      "average-fan:nfl:00-team:lambeau:",
+      "average-fan:nfl:00-team:arrowhead:",
+      "average-fan:nfl:00-team:dawg-pound:",
+      "average-fan:nfl:00-team:steel-curtain:",
+      "average-fan:nfl:00-team:monsters-midway:",
+      "average-fan:nfl:00-team:orange-crush:",
+      "average-fan:nfl:00-team:hogs:",
+      "average-fan:nfl:00-team:85-bears:",
+      "average-fan:nfl:00-team:cowboys-three-four:",
+      "average-fan:nfl:00-history:holy-roller:",
+      "average-fan:nfl:00-history:first-sb-touchdown:",
+      "average-fan:nfl:00-final-regraded:bucs-home",
+      "average-fan:nfl:final-authored:mike-jones",
+    ];
+    expect(formerSources).toHaveLength(20);
+    for (const id of formerSources) {
+      expect(AVERAGE_FAN_CONTENT_BANKS.nfl.some((question) => question.id.startsWith(id)), id)
+        .toBe(false);
+    }
+  });
+
+  it("never makes NFL unordered team pairs an exact-spelling short answer", () => {
+    const pairFacts = [
+      ["average-fan:nfl:00-team:six-super-bowls:", "Pittsburgh Steelers and New England Patriots"],
+      ["average-fan:nfl:00-history:ice-bowl-teams:", "Green Bay Packers and Dallas Cowboys"],
+      ["average-fan:nfl:00-history:first-mnf:", "Cleveland Browns and New York Jets"],
+    ] as const;
+    let selected = 0;
+    for (const [prefix, correct] of pairFacts) {
+      const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find((row) => row.id.startsWith(prefix));
+      if (!question) continue; // Quality-driven caps may leave a valid candidate unselected.
+      selected += 1;
+      expect(question.id, prefix).toBe(`${prefix}choice`);
+      expect(question.format, prefix).toBe("four-choice");
+      expect(question.choices, prefix).toContain(correct);
+      expect(new Set(question.choices).size, prefix).toBe(4);
+    }
+    expect(selected).toBeGreaterThan(0);
+  });
+
   it("does not copy Bar Trivia questions into Average Fan in any sport", () => {
     const authored = [...BAR_TRIVIA_QUESTION_BANK, ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS];
     const entries: DailyContentAuditEntry[] = [
