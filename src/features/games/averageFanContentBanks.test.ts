@@ -812,7 +812,7 @@ describe("Average Fan durable content banks", () => {
     // Duplicated authored title-event facts now live in Bar Trivia; generated
     // ledger-backed title bouts preserve Average Fan championship coverage.
     expect(bank.some((question) => question.subject === "Championships")).toBe(true);
-    expect(authored.some((question) => question.subject === "Fights")).toBe(true);
+    expect(bank.some((question) => question.subject === "Fights")).toBe(true);
   });
 
   it("does not repeat the Bar Trivia five-second Masvidal knockout as an inverted Average Fan Final", () => {
