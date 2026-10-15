@@ -137,9 +137,9 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
 
   it("clarifies specific traditions and credits sophomore breakout stars in future CFB Feud", () => {
     const traditions = authoredQuestion("cfb-main-13-3");
-    expect(traditions.prompt).toContain("Sooner Schooner");
-    expect(traditions.answers.map((answer) => answer.name)).not.toContain("Oklahoma Sooner Schooner");
-    expect(traditions.alsoAcceptedAnswers?.map((answer) => answer.name)).toContain("Oklahoma Sooner Schooner");
+    expect(traditions.prompt).toContain("Wisconsin");
+    expect(traditions.prompt).toContain("Jump Around");
+    expect(traditions.answers.map((answer) => answer.name)).toContain("Wisconsin Jump Around");
 
     const youngStar = authoredQuestion("cfb-fast5-08-4");
     expect(youngStar.prompt).toContain("sophomore");
