@@ -809,7 +809,9 @@ describe("Average Fan durable content banks", () => {
 
     const authored = bank.filter((question) => question.id.includes(":authored-history:"));
     expect(authored.length).toBeGreaterThan(0);
-    expect(authored.some((question) => question.subject === "Championships")).toBe(true);
+    // Duplicated authored title-event facts now live in Bar Trivia; generated
+    // ledger-backed title bouts preserve Average Fan championship coverage.
+    expect(bank.some((question) => question.subject === "Championships")).toBe(true);
     expect(authored.some((question) => question.subject === "Fights")).toBe(true);
   });
 
