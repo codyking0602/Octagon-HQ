@@ -584,10 +584,11 @@ describe("Average Fan durable content banks", () => {
   });
 
   it("replaces exact final-second memorization with the recognizable UFC 300 opponent", () => {
-    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+    const authored = ufcCandidates();
+    expect(authored.some((question) =>
       question.id.includes("holloway-gaethje-time"),
     )).toBe(false);
-    const revised = AVERAGE_FAN_CONTENT_BANKS.ufc.find((question) =>
+    const revised = authored.find((question) =>
       question.id.includes("holloway-gaethje-last-second"),
     );
     expect(revised).toBeDefined();
