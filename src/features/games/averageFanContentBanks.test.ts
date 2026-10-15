@@ -343,6 +343,47 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+
+  it("keeps independently reviewed CFB authored Finals on same-position, same-season alternatives", () => {
+    const expected = [
+      {
+        id: "02-tradition-prayer",
+        answer: "Ricardo Louis",
+        wrong: ["Sammie Coates", "Quan Bray", "Trovon Reed"],
+      },
+      {
+        id: "03-tradition-bluegrass",
+        answer: "Devery Henderson",
+        wrong: ["Michael Clayton", "Skyler Green", "Jerel Myers"],
+      },
+      {
+        id: "02-history-watts-jackson",
+        answer: "Jalen Watts-Jackson",
+        wrong: ["Darian Hicks", "Montae Nicholson", "Arjen Colquhoun"],
+      },
+    ] as const;
+    for (const row of expected) {
+      const id = `average-fan:cfb:authored:cfb-final-${row.id}`;
+      const question = AVERAGE_FAN_CONTENT_BANKS.cfb.find((item) => item.id === id);
+      expect(question, id).toBeTruthy();
+      expect(question?.protectedFinal, id).toBe(true);
+      expect(question?.answer, id).toBe(row.answer);
+      expect(question?.format, id).toBe("four-choice");
+      expect(new Set(question?.choices).size, id).toBe(4);
+      expect(question?.choices, id).toEqual(expect.arrayContaining([row.answer, ...row.wrong]));
+      expect(question?.choices?.filter((choice) => choice === row.answer), id).toHaveLength(1);
+    }
+    const expectedRetired = [
+      "00-program-tennessee-bcs",
+      "02-program-four-seed",
+    ];
+    for (const id of expectedRetired) {
+      expect(AVERAGE_FAN_CONTENT_BANKS.cfb.some((question) =>
+        question.id === `average-fan:cfb:authored:cfb-final-${id}`
+      )).toBe(false);
+    }
+  });
+
   it("keeps CFB conference choices to exactly one program from the requested conference", () => {
     const programs = queryFootballSubjects({ league: "CFB", kind: "program" });
     const conferenceByName = new Map(programs.map((program) => [program.name, program.conference]));
