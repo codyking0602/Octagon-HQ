@@ -1503,16 +1503,20 @@ function ufcCandidates() {
       : question;
   }));
   questions.push(...UFC_FINAL_FACTS.map((fact) => {
+    // The familiar UFC 217 bantamweight title change belongs in an ordinary
+    // hard round, not a protected Final. Future-only question ID.
+    const ordinary = fact.id === "final-ufc217-tj";
     const base = {
-      id: `average-fan:ufc:final:authored:${fact.id}`,
+      id: ordinary ? "average-fan:ufc:authored-history:ufc217-tj:short"
+        : `average-fan:ufc:final:authored:${fact.id}`,
       sport: "ufc" as const,
-      grade: 5 as const,
-      subject: "Fights" as const,
+      grade: (ordinary ? 3 : 5) as AverageFanGrade,
+      subject: (ordinary ? "Championships" : "Fights") as AverageFanSubject,
       prompt: fact.prompt,
       answer: fact.answer,
       explanation: fact.explanation,
-      difficultyNudge: 3,
-      protectedFinal: true,
+      difficultyNudge: ordinary ? 1 : 3,
+      protectedFinal: !ordinary,
     };
     // Eleven title defenses is a major achievement, but exact-number
     // free-text recall makes an otherwise good Final unnecessarily punishing.
@@ -1868,6 +1872,8 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   "average-fan:ufc:authored-history:rousey-carmouche:",
   "average-fan:ufc:authored-history:diaz-mcgregor:",
   "average-fan:ufc:final:authored:final-ufc217-gsp",
+  // Millionaire already asks Rose's UFC 217 win over Joanna, in reverse.
+  "average-fan:ufc:final:authored:final-ufc217-rose",
 ] as const;
 
 const RETIRED_BAR_TRIVIA_FACT_IDS = new Set<string>([
