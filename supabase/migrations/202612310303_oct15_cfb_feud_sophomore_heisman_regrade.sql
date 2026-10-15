@@ -43,13 +43,13 @@ declare
   v_original_first jsonb;
   v_engine jsonb;
   v_evidence jsonb;
-  v_result jsonb;
   v_rows integer;
 begin
-  select d.id,d.setup_id into strict v_daily,v_setup
+  select d.id,d.setup_id into v_daily,v_setup
   from private.daily_challenges d
   join private.daily_challenge_schedule_versions v on v.version=d.schedule_version
   where d.central_day=date '2026-10-15' and v.sport='football' and d.game_type='sports_feud';
+  if v_daily is null then return; end if; -- Fresh/legacy test databases have no Oct 15 published board.
 
   select private_setup_evidence,private_grading_evidence,reveal_setup
     into strict v_setup_evidence,v_grading,v_reveal
@@ -114,11 +114,13 @@ begin
   end if;
 
   for v_name in select unnest(array['CODY','LIB']) loop
-    select id into strict v_profile from public.profiles where normalized_name=v_name;
-    select a.id,a.normalized_score into strict v_attempt,v_current_score
+    select id into v_profile from public.profiles where normalized_name=v_name;
+    if v_profile is null then continue; end if;
+    select a.id,a.normalized_score into v_attempt,v_current_score
       from private.daily_challenge_attempts a
       where a.daily_challenge_id=v_daily and a.profile_id=v_profile
         and a.attempt_kind='official_first' for update;
+    if v_attempt is null then continue; end if;
 
     v_old:=case when v_name='CODY' then 59 else 28 end;
     v_new:=case when v_name='CODY' then 64 else 29 end;
