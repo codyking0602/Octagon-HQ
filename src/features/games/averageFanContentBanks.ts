@@ -429,7 +429,7 @@ const NFL_TEAM_FACTS: readonly KnowledgeFact[] = [
   { id: "seahawks-12s", grade: 2, prompt: "Which franchise calls its fanbase the “12s”?", answer: "Seattle Seahawks", wrong: ["Denver Broncos", "Los Angeles Chargers"], explanation: "Seattle has long celebrated its fans as the 12s." },
   { id: "rams-st-louis", grade: 2, prompt: "Which current Los Angeles team played in St. Louis from 1995 through 2015?", answer: "Los Angeles Rams", wrong: ["Los Angeles Chargers", "Las Vegas Raiders"], explanation: "The Rams played in St. Louis before returning to Los Angeles in 2016." },
 
-  { id: "six-super-bowls", grade: 3, prompt: "Which two franchises were the first pair to reach six Super Bowl victories?", answer: "Pittsburgh Steelers and New England Patriots", wrong: ["Dallas Cowboys and San Francisco 49ers", "Green Bay Packers and New York Giants", "Denver Broncos and Kansas City Chiefs"], explanation: "Pittsburgh reached six Super Bowl wins first, and New England later matched that total." },
+  { id: "six-super-bowls", preferredFormat: "four-choice", grade: 3, prompt: "Which two franchises were the first pair to reach six Super Bowl victories?", answer: "Pittsburgh Steelers and New England Patriots", wrong: ["Dallas Cowboys and San Francisco 49ers", "Green Bay Packers and New York Giants", "Denver Broncos and Kansas City Chiefs"], explanation: "Pittsburgh reached six Super Bowl wins first, and New England later matched that total." },
   { id: "85-bears", grade: 3, prompt: "Which team is remembered for the dominant 1985 defense and the “Super Bowl Shuffle”?", answer: "Chicago Bears", wrong: ["New York Giants", "Washington"], explanation: "The 1985 Chicago Bears went 15–1 and won Super Bowl XX." },
   { id: "2005-steelers-six-seed", grade: 3, prompt: "Which team became the first No. 6 playoff seed to win the Super Bowl?", answer: "Pittsburgh Steelers", wrong: ["Green Bay Packers", "New York Giants"], explanation: "Pittsburgh entered the 2005 playoffs as the AFC's sixth seed and won Super Bowl XL." },
   { id: "02-bucs-defense", grade: 3, prompt: "Derrick Brooks, Warren Sapp, John Lynch and Ronde Barber anchored which championship defense in 2002?", answer: "Tampa Bay Buccaneers", wrong: ["Baltimore Ravens", "Oakland Raiders", "Pittsburgh Steelers"], explanation: "Those stars led Tampa Bay's dominant defense to a Super Bowl XXXVII title." },
@@ -477,7 +477,7 @@ const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
 
   { id: "first-sb-touchdown", grade: 5, prompt: "Who caught the first touchdown pass in Super Bowl history?", answer: "Max McGee", wrong: ["Boyd Dowler", "Jim Taylor", "Paul Hornung"], explanation: "Max McGee caught Bart Starr's 37-yard touchdown pass for the first touchdown in Super Bowl history." },
   { id: "dungy", grade: 5, prompt: "Who became the first Black head coach to win a Super Bowl in 2007?", answer: "Tony Dungy", wrong: ["Lovie Smith", "Mike Tomlin"], explanation: "Tony Dungy coached Indianapolis to victory in Super Bowl XLI." },
-  { id: "first-mnf", grade: 5, prompt: "Which two teams played in the first Monday Night Football game in 1970?", answer: "Cleveland Browns and New York Jets", wrong: ["Dallas Cowboys and Washington", "Green Bay Packers and Chicago Bears"], explanation: "Cleveland hosted the New York Jets in the first Monday Night Football game." },
+  { id: "first-mnf", preferredFormat: "four-choice", grade: 5, prompt: "Which two teams played in the first Monday Night Football game in 1970?", answer: "Cleveland Browns and New York Jets", wrong: ["Dallas Cowboys and Washington", "Green Bay Packers and Chicago Bears", "Kansas City Chiefs and Oakland Raiders"], explanation: "Cleveland hosted the New York Jets in the first Monday Night Football game." },
   { id: "sb-name", grade: 5, prompt: "Which championship game was the first for which the 'Super Bowl' name was officially recognized?", answer: "Super Bowl III", wrong: ["Super Bowl I", "Super Bowl V", "Super Bowl IV"], explanation: "The Super Bowl title was officially recognized for the game played in January 1969." },
   { id: "butler-target", grade: 5, prompt: "Which Seahawks receiver was the intended target on Malcolm Butler's goal-line interception in Super Bowl XLIX in 2015?", answer: "Ricardo Lockette", wrong: ["Doug Baldwin", "Jermaine Kearse"], explanation: "Russell Wilson's pass was intended for Ricardo Lockette when Malcolm Butler jumped the route." },
   { id: "music-city-lateral", grade: 5, prompt: "Which Titans tight end threw the lateral across the field on the Music City Miracle?", answer: "Frank Wycheck", wrong: ["Kevin Dyson", "Lorenzo Neal"], explanation: "Frank Wycheck took the handoff and threw the lateral to Kevin Dyson on the Music City Miracle." },
@@ -487,7 +487,7 @@ const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "saints-first-title", grade: 1, prompt: "Which franchise won its first Super Bowl after the 2009 season?", answer: "New Orleans Saints", wrong: ["Atlanta Falcons", "Carolina Panthers"], explanation: "New Orleans beat Indianapolis in Super Bowl XLIV for the franchise's first championship." },
 
   { id: "tuck-rule-raiders", grade: 2, prompt: "The famous Tuck Rule playoff game matched New England against which team?", answer: "Oakland Raiders", wrong: ["Pittsburgh Steelers", "New York Jets", "Indianapolis Colts"], explanation: "New England beat Oakland in the snowy 2001 AFC Divisional playoff known for the Tuck Rule decision." },
-  { id: "ice-bowl-teams", grade: 2, prompt: "Which two teams played in the 1967 NFL Championship game known as the Ice Bowl?", answer: "Green Bay Packers and Dallas Cowboys", wrong: ["Green Bay Packers and Chicago Bears", "Dallas Cowboys and Cleveland Browns"], explanation: "Green Bay defeated Dallas in the frigid 1967 NFL Championship Game at Lambeau Field." },
+  { id: "ice-bowl-teams", preferredFormat: "four-choice", grade: 2, prompt: "Which two teams played in the 1967 NFL Championship game known as the Ice Bowl?", answer: "Green Bay Packers and Dallas Cowboys", wrong: ["Green Bay Packers and Chicago Bears", "Dallas Cowboys and Cleveland Browns", "Green Bay Packers and Minnesota Vikings"], explanation: "Green Bay defeated Dallas in the frigid 1967 NFL Championship Game at Lambeau Field." },
   { id: "shula-perfect", grade: 2, prompt: "Which head coach led Miami through its perfect 1972 season?", answer: "Don Shula", wrong: ["Tom Landry", "Chuck Noll"], explanation: "Don Shula coached the 1972 Dolphins to the NFL's only perfect season through the Super Bowl." },
 
   { id: "double-doink", grade: 3, prompt: "Which team lost to the Eagles on the “Double Doink” missed field goal in the January 2019 playoffs after the 2018 NFL season?", answer: "Chicago Bears", wrong: ["Minnesota Vikings", "Dallas Cowboys", "Los Angeles Rams"], explanation: "Chicago's potential game-winning field goal hit the upright and crossbar against Philadelphia." },
@@ -1847,6 +1847,29 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
 // Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
 // Other known Bar Trivia, Millionaire, and intra-bank same-fact repeats.
 const RETIRED_REPEATED_FACT_ID_PREFIXES = [
+  // Stage 2V: individually screened 228 NFL authored entries, identified
+  // direct fact-family repeats in Bar Trivia/Millionaire, and withdrew the
+  // Average Fan copies. These IDs stay untouched in persisted historic Dailies.
+  "average-fan:nfl:00-player:beast-mode:",
+  "average-fan:nfl:00-player:megatron:",
+  "average-fan:nfl:00-player:gronk:",
+  "average-fan:nfl:00-player:prime-time:",
+  "average-fan:nfl:00-player:sheriff:",
+  "average-fan:nfl:00-player:emmitt-record:",
+  "average-fan:nfl:00-player:mahomes-drafted-chiefs:",
+  "average-fan:nfl:00-team:lambeau:",
+  "average-fan:nfl:00-team:arrowhead:",
+  "average-fan:nfl:00-team:dawg-pound:",
+  "average-fan:nfl:00-team:steel-curtain:",
+  "average-fan:nfl:00-team:monsters-midway:",
+  "average-fan:nfl:00-team:orange-crush:",
+  "average-fan:nfl:00-team:hogs:",
+  "average-fan:nfl:00-team:85-bears:",
+  "average-fan:nfl:00-team:cowboys-three-four:",
+  "average-fan:nfl:00-history:holy-roller:",
+  "average-fan:nfl:00-history:first-sb-touchdown:",
+  "average-fan:nfl:00-final-regraded:bucs-home",
+  "average-fan:nfl:final-authored:mike-jones",
   // Arizona and Arizona State ask the same easy 2025 Big 12 answer; keep just one.
   "average-fan:cfb:g1:program-arizona:conference",
   // Exclude exact-number recall or deep undercard trivia lacking a memorable anchor.
