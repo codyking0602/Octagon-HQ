@@ -28,8 +28,9 @@ describe("October 15 CFB sophomore Heisman Fast Money correction", () => {
   it("recognizes LIB's exact surname entry and Cody's full name", () => {
     const pack = buildSportsFeudPack("cfb", "2026-10-15");
     const q = pack.fastMoney.find((question) => question.id === "cfb-fast5-08-4");
-    // 2026-10-15 pack rotation is versioned; the published run is checked in SQL.
-    if (!q) return;
+    // Daily rotation must still include the audited published question.
+    expect(q).toBeDefined();
+    if (!q) throw new Error("CFB Oct 15 first Fast Money question changed");
     expect(matchFamilyFeudAnswer(pack, q, "Lamar Jackson").status).toBe("matched");
     expect(matchFamilyFeudAnswer(pack, q, "Tebow").status).toBe("matched");
   });
