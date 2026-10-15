@@ -122,6 +122,44 @@ describe("Daily leaderboard game result reconstruction", () => {
     expect(rows[4]?.status).toBe("unreached");
   });
 
+  it("does not invent correct answers from a historic UFC Millionaire aggregate score", () => {
+    const questions = Array.from({ length: 8 }, (_, index) => ({
+      id: `q${index + 1}`,
+      prompt: `Question ${index + 1}`,
+      choices: ["A", "B", "C", "D"].map((id) => ({ id, text: id })),
+    }));
+    const projection = baseProjection({
+      sport: "ufc",
+      publicSetup: { questions },
+      publicState: {
+        complete: true,
+        current_question_index: 7,
+        last_answer_outcome: "wrong",
+      },
+      revealSetup: {
+        questions: questions.map((question) => ({ id: question.id, correct_choice_id: "A" })),
+      },
+      officialAttempt: {
+        nativeScore: 50,
+        normalizedScore: 50,
+        completedAt: "2026-10-15T12:05:44Z",
+        publicResult: {
+          score: 50,
+          outcome: "lost",
+          completed_questions: 5,
+          first_miss_question: 2,
+        },
+      },
+    });
+
+    const rows = buildMillionaireLeaderboardQuestions(projection, {});
+
+    expect(rows.map((row) => row.status)).toEqual([
+      "correct", "wrong", "played", "played", "played", "played", "played", "wrong",
+    ]);
+    expect(rows.every((row) => row.selectedChoiceIds.length === 0)).toBe(true);
+  });
+
   it("reconstructs both Who Am I rounds with guesses, recovery, and seen clues", () => {
     const projection = baseProjection({
       sport: "ufc",
