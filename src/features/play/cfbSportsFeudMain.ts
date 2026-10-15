@@ -593,7 +593,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
         alsoAcceptedAnswers: ["Wisconsin Jump Around","Notre Dame Play Like a Champion Today","Penn State White Out","Iowa Wave","Alabama Rammer Jammer"],
       },
       {
-        prompt: "Name a pregame or in-game college tradition with national recognition.",
+        prompt: "Name a specific college football stadium tradition, like a school entrance, song, or crowd ritual. Example: Oklahoma\'s Sooner Schooner.",
         answers: ["Virginia Tech Enter Sandman","Clemson running down the hill","Ohio State dotting the i","Wisconsin Jump Around","Penn State White Out","Iowa Wave","Florida State spear plant","Tennessee running through the T"],
         alsoAcceptedAnswers: ["Texas A&M 12th Man","Notre Dame Play Like a Champion Today","Oklahoma Sooner Schooner","Michigan touching the banner","Alabama Rammer Jammer","Army-Navy March On"],
       },
