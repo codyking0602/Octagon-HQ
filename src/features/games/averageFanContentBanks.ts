@@ -788,10 +788,10 @@ const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
 
   ["00-tradition-spittoon", "Traditions", "Indiana and Michigan State play for which rivalry trophy?", "Old Brass Spittoon", ["Old Oaken Bucket", "Land Grant Trophy", "Paul Bunyan Trophy"], "Indiana and Michigan State compete for the Old Brass Spittoon."],
   ["01-tradition-illibuck", "Traditions", "Illinois and Ohio State play for which rivalry trophy?", "Illibuck", ["Illini-Buckeye Cup", "Victory Bell", "Old Brass Spittoon"], "Illinois and Ohio State compete for the Illibuck trophy."],
-  ["02-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Tre Mason", "Nick Marshall"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
-  ["03-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Josh Reed", "Skyler Green"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
+  ["02-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Quan Bray", "Trovon Reed"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
+  ["03-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Skyler Green", "Jerel Myers"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
 
-  ["02-history-watts-jackson", "CFB History", "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", "Jalen Watts-Jackson", ["LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired."],
+  ["02-history-watts-jackson", "CFB History", "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", "Jalen Watts-Jackson", ["Darian Hicks", "Montae Nicholson", "Arjen Colquhoun"], "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired."],
 ].map(([id, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:cfb-final-${id}`,
   sport: "cfb",
