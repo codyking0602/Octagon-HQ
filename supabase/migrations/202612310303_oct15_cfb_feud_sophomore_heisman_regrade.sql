@@ -40,6 +40,7 @@ declare
   v_submission jsonb;
   v_fast jsonb;
   v_first jsonb;
+  v_original_first jsonb;
   v_engine jsonb;
   v_evidence jsonb;
   v_result jsonb;
@@ -152,6 +153,7 @@ begin
     then raise exception 'Oct 15 % original fast-money evidence changed',v_name; end if;
 
     -- Preserve all other answers. Only the first Fast Money question is regraded.
+    v_original_first:=v_first;
     v_first:=v_first||jsonb_build_object(
       'points',v_award,'counted',true,'board_rank',v_rank,
       'accepted_as',case when v_name='CODY' then 'Lamar Jackson' else 'Tim Tebow' end,
@@ -174,7 +176,7 @@ begin
       'awarded_answer',v_answer,'awarded_points',v_award,'board_rank',v_rank,
       'original_question_id','cfb-fast5-08-4',
       'original_question_prompt','Name a player fans knew was special before he was an upperclassman.',
-      'original_answer_result',v_public#>'{fast_money,results,0}',
+      'original_answer_result',v_original_first,
       'heisman_evidence',jsonb_build_array(
         'https://www.heisman.com/heisman-winners/lamar-jackson/',
         'https://www.heisman.com/heisman-winners/tim-tebow/'),
