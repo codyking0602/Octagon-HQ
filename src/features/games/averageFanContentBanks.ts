@@ -1296,7 +1296,7 @@ function ufcPlausibleFighterMisses(
   return candidates.slice(0, 3).map((candidate) => candidate.fighter.name);
 }
 
-function ufcCandidates() {
+export function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
   const questions: AverageFanQuestion[] = [];
 
