@@ -201,6 +201,19 @@ describe("Stage 2 generated Average Fan source-ledger editorial quality", () => 
       if (/Which two (?:teams|franchises) played/i.test(row.prompt))
         expect(row.format, row.id).not.toBe("short-answer");
     }
+    const proseDefinitions = [
+      "play-action", "slot", "hard-count", "kneel", "spike",
+      "motion", "bootleg", "bracket", "contain", "stunt",
+    ];
+    for (const id of proseDefinitions) {
+      const question = nfl.find((row) => row.id.startsWith(`average-fan:nfl:00-xo:${id}:`));
+      if (question) {
+        expect(question.format, id + " requires bounded definitions").toBe("four-choice");
+        expect(question.choices, id).toHaveLength(4);
+      }
+    }
+    expect(nfl.some((row) => row.id.startsWith("average-fan:nfl:00-xo:edge-rusher:")))
+      .toBe(false);
     const schoolPosition = AVERAGE_FAN_CONTENT_BANKS.cfb.filter((row) =>
       row.id.endsWith(":school-position"));
     for (const row of schoolPosition) expect(row.grade, row.id).toBe(2);
