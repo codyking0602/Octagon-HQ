@@ -61,6 +61,8 @@ export type UfcFactualSubject = {
   name: string;
   slug: string;
   scope: "ranked-core" | "recognizable-expansion";
+  /** Use the ranking board: legacy female divisions may omit the "Women's" prefix. */
+  gender: "men" | "women";
   recognizabilityTier: "A" | null;
   primaryDivision: string;
   secondaryDivisions: readonly string[];
@@ -94,6 +96,7 @@ function rankedSubjects(): UfcFactualSubject[] {
       name: fighter.fighter,
       slug: fighter.presentation.slug,
       scope: "ranked-core",
+      gender: fighter.board,
       recognizabilityTier: null,
       primaryDivision: fighter.facts.identity.primaryDivision,
       secondaryDivisions: fighter.facts.identity.secondaryDivisions,
@@ -118,6 +121,7 @@ function expansionSubjects(): UfcFactualSubject[] {
   return ufcFactualExpansion.subjects.map((subject) => ({
     ...subject,
     scope: "recognizable-expansion",
+    gender: subject.primaryDivision.startsWith("Women's ") ? "women" as const : "men" as const,
   }));
 }
 
