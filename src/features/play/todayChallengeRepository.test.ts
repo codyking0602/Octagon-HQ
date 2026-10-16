@@ -54,6 +54,19 @@ describe("Today’s Challenge runtime repository", () => {
     expect(parsed).not.toHaveProperty("privateGradingEvidence");
   });
 
+  it("hides Supabase 546 compute resource messages from players", async () => {
+    const response = new Response(JSON.stringify({
+      code: "WORKER_RESOURCE_LIMIT",
+      message: "Function failed due to not having enough compute resources (please check logs)",
+    }), { status: 546, headers: { "Content-Type": "application/json" } });
+    const { client } = clientWithResponses([{ data: null, error: { message: "Edge Function error", context: response } }]);
+    const repository = createTodayChallengeRepository(client as never)!;
+    await expect(repository.loadToday()).rejects.toMatchObject({
+      code: "DAILY_RUNTIME_BUSY",
+      message: "The game server is temporarily busy. Refresh to restore your latest saved progress.",
+    });
+  });
+
   it("uses one sport-aware Edge Function owner for reads and optimistic progress writes", async () => {
     const { client, invoke } = clientWithResponses([
       { data: runtimeProjection(), error: null },

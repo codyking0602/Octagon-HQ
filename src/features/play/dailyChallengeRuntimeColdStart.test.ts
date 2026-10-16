@@ -47,6 +47,25 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(ufcAdvanceLoad).toBeGreaterThan(ufcReadReturn);
   });
 
+  it("advances published UFC Blind Resume V3 without importing the heavyweight UFC generator", () => {
+    const persistedAdvance = readFileSync(
+      "supabase/functions/daily-challenge-runtime/blindResumeAdvance.ts",
+      "utf8",
+    );
+    expect(runtime).toContain('import { advancePersistedBlindResumeV3 } from "./blindResumeAdvance.ts"');
+    const getTodayReturn = runtime.indexOf(
+      'if (body.mode === "get-today" || body.mode === undefined) {',
+      runtime.indexOf('const materialized = await materializeToday(admin);'),
+    );
+    const v3FastPath = runtime.lastIndexOf('context.setupKey.startsWith("blind-resume-v3:")');
+    const heavyweightFallback = runtime.lastIndexOf('(await loadUfcRuntime()).advanceOfficialDailyRuntime');
+    expect(v3FastPath).toBeGreaterThan(getTodayReturn);
+    expect(heavyweightFallback).toBeGreaterThan(v3FastPath);
+    expect(runtime).toContain("? advancePersistedBlindResumeV3");
+    expect(persistedAdvance).not.toMatch(/from ["'].*(?:playFighterPool|blindResumeEngine|todaysChallengeRuntime)/);
+    expect(persistedAdvance).toContain("context.revealSetup.rounds");
+  });
+
   it("keeps Who Am I authority split by sport so UFC cold starts do not import Football research", () => {
     const ufcRuntime = readFileSync("src/features/play/todaysChallengeRuntime.ts", "utf8");
     const footballRuntime = readFileSync("src/features/play/footballTodayChallengeRuntime.ts", "utf8");

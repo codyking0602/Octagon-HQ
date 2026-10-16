@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.110.7";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
+import { advancePersistedBlindResumeV3 } from "./blindResumeAdvance.ts";
 
 type OfficialDailyGameType =
   | "find_leader"
@@ -1406,7 +1407,9 @@ Deno.serve(async (request) => {
 
     const advanceUfcRuntime = context.gameType === "average_fan"
       ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
-      : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
+      : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
+        ? advancePersistedBlindResumeV3
+        : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
     const advanced = isDailyCombo(context)
       ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
       : advanceUfcRuntime(context, body.action);
