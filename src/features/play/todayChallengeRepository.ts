@@ -321,7 +321,7 @@ async function invokeRuntime(client: TodayChallengeClient, body: Record<string, 
     : error.message || "Octagon HQ could not sync Today’s Challenge.";
   // Supabase Edge HTTP 546 is a compute-limit failure, not a player action error.
   // Never expose the provider's internal resource/logging message in the game.
-  const resourceLimit = (context instanceof Response && context.status === 546)
+  const resourceLimit = (error.context instanceof Response && error.context.status === 546)
     || code === "WORKER_RESOURCE_LIMIT"
     || /not having enough compute resources|CPU Time exceeded/i.test(message);
   if (resourceLimit) {
