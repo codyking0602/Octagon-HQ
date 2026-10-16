@@ -1196,7 +1196,7 @@ function ufcDivisionForFighter(fighter: UfcFactualSubject, division = fighter.pr
 
 function plausibleUfcDivisions(fighter: UfcFactualSubject) {
   const primary = ufcDivisionForFighter(fighter);
-  const pool = fighter.gender === "women" ? UFC_WOMENS_STANDARD_DIVISIONS : UFC_MENS_STANDARD_DIVISIONS;
+  const pool: readonly string[] = fighter.gender === "women" ? UFC_WOMENS_STANDARD_DIVISIONS : UFC_MENS_STANDARD_DIVISIONS;
   const primaryIndex = pool.indexOf(primary as never);
   const secondary = new Set(fighter.secondaryDivisions.map((division) =>
     ufcDivisionForFighter(fighter, division)));
