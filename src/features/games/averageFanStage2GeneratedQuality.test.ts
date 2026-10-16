@@ -130,11 +130,15 @@ describe("Stage 2 generated Average Fan source-ledger editorial quality", () => 
       expect(question.format, question.id).toBe("four-choice");
       const allowed = new Map(ufcFactualLedgerSubjects.map((subject) => [nameKey(subject.name), subject] as const));
       const isWomen = fighter!.primaryDivision.toLowerCase().includes("women");
-      const fighterChoices = question.choices!.filter((choice) => allowed.has(nameKey(choice)));
-      expect(fighterChoices, question.id).toHaveLength(4);
-      for (const choice of fighterChoices) {
-        const entry = allowed.get(nameKey(choice))!;
-        expect(entry.primaryDivision.toLowerCase().includes("women"), question.id + " " + choice)
+      // The sourced opponent may not be a ledger *subject*. Distractors must
+      // still be roster-verified fighters of the same gender as this bout.
+      const wrongChoices = question.choices!.filter((choice) =>
+        nameKey(choice) !== nameKey(question.answer));
+      expect(wrongChoices, question.id).toHaveLength(3);
+      for (const choice of wrongChoices) {
+        const entry = allowed.get(nameKey(choice));
+        expect(entry, question.id + " " + choice).toBeTruthy();
+        expect(entry!.primaryDivision.toLowerCase().includes("women"), question.id + " " + choice)
           .toBe(isWomen);
       }
     }
