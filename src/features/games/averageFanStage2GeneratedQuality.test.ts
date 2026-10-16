@@ -124,6 +124,11 @@ describe("Stage 2 generated Average Fan source-ledger editorial quality", () => 
         nameKey(fight.opponent) === nameKey(question.answer));
       expect(rows, question.id + " date + opponent absent").toHaveLength(1);
       const bout = rows[0]!;
+      if (match[2] === "opponent") {
+        const claimsDefeat = question.prompt.includes(" defeat ");
+        expect(claimsDefeat, question.id + " cannot claim a win when sourced bout was a loss")
+          .toBe(bout.result === "win");
+      }
       if (match[2] === "method-win") {
         expect(bout.result, question.id).toBe("win");
         expect(bout.methodCategory, question.id).not.toBe("other");
