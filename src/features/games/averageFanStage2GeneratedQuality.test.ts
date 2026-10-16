@@ -4,6 +4,8 @@ import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import {
   AVERAGE_FAN_CONTENT_BANKS,
   averageFanQuestionFactKey,
+  ufcCandidates,
+  averageFanQuestionNamedTopics,
 } from "./averageFanContentBanks";
 import { buildAverageFanDailySetup } from "../play/averageFanDailyRuntime";
 import { lockedWeightedGameForDay } from "../play/dailyChallengeRotation";
@@ -129,7 +131,7 @@ describe("Stage 2 generated Average Fan source-ledger editorial quality", () => 
       if (match[2] === "title-opponent") expect(bout.titleFight, question.id).toBe(true);
       expect(question.format, question.id).toBe("four-choice");
       const allowed = new Map(ufcFactualLedgerSubjects.map((subject) => [nameKey(subject.name), subject] as const));
-      const isWomen = fighter!.primaryDivision.toLowerCase().includes("women");
+      const isWomen = fighter!.gender === "women";
       // The sourced opponent may not be a ledger *subject*. Distractors must
       // still be roster-verified fighters of the same gender as this bout.
       const wrongChoices = question.choices!.filter((choice) =>
@@ -138,10 +140,77 @@ describe("Stage 2 generated Average Fan source-ledger editorial quality", () => 
       for (const choice of wrongChoices) {
         const entry = allowed.get(nameKey(choice));
         expect(entry, question.id + " " + choice).toBeTruthy();
-        expect(entry!.primaryDivision.toLowerCase().includes("women"), question.id + " " + choice)
-          .toBe(isWomen);
+        expect(entry!.gender === "women", question.id + " " + choice).toBe(isWomen);
       }
     }
+  });
+
+  it("honors the ranked UFC women's board instead of treating its unprefixed divisions as men's", () => {
+    const rankedWomen = ufcFactualLedgerSubjects.filter((fighter) =>
+      fighter.scope === "ranked-core" && fighter.gender === "women");
+    expect(rankedWomen.length).toBeGreaterThan(10);
+    const generated = ufcCandidates();
+    for (const fighter of rankedWomen) {
+      const division = generated.find((row) =>
+        row.id === `average-fan:ufc:g1:${fighter.id}:division`);
+      if (!division) continue;
+      expect(division.answer, division.id).toMatch(/^Women's /);
+      expect(division.choices?.every((choice) => choice.startsWith("Women's ")), division.id).toBe(true);
+    }
+    // The actual production bug had male contenders on Holly Holm / Nunes
+    // female-opponent cards. Keep that impossible even for unselected candidates.
+    for (const question of generated.filter((row) =>
+      /^average-fan:ufc:g[34]:ufc:[^:]+:(?:opponent|method-win|title-opponent)$/.test(row.id))) {
+      const fighterId = /^average-fan:ufc:g[34]:(ufc:[^:]+):/.exec(question.id)![1]!;
+      const fighter = getUfcFactualSubject(fighterId)!;
+      const peers = ufcFactualLedgerSubjects.filter((subject) => question.choices?.some(
+        (choice) => nameKey(choice) === nameKey(subject.name) && nameKey(choice) !== nameKey(question.answer)));
+      expect(peers, question.id).toHaveLength(3);
+      expect(peers.every((peer) => peer.gender === fighter.gender), question.id).toBe(true);
+    }
+  });
+
+  it("keeps date-based fighter and finish questions focused on recognizable UFC opponents", () => {
+    const recognizable = new Set(ufcFactualLedgerSubjects.map((fighter) => nameKey(fighter.name)));
+    const generated = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((row) =>
+      /^average-fan:ufc:g[34]:ufc:[^:]+:(?:opponent|method-win)$/.test(row.id));
+    expect(generated.length).toBeGreaterThan(20);
+    for (const question of generated) {
+      expect(recognizable.has(nameKey(question.answer)), question.id + ": obscure fight opponent").toBe(true);
+    }
+  });
+
+  it("keeps all two-franchise/definition recalls fairly answer-bounded", () => {
+    const nfl = AVERAGE_FAN_CONTENT_BANKS.nfl;
+    const freezer = nfl.find((row) => row.id.startsWith("average-fan:nfl:00-history:freezer-bowl:"));
+    if (freezer) {
+      expect(freezer.format).toBe("four-choice");
+      expect(freezer.choices).toHaveLength(4);
+    }
+    const stunt = nfl.find((row) => row.id.startsWith("average-fan:nfl:00-xo:stunt:"));
+    if (stunt) {
+      expect(stunt.format).toBe("four-choice");
+      expect(stunt.choices).toHaveLength(4);
+    }
+    for (const row of nfl) {
+      if (/Which two (?:teams|franchises) played/i.test(row.prompt))
+        expect(row.format, row.id).not.toBe("short-answer");
+    }
+    const schoolPosition = AVERAGE_FAN_CONTENT_BANKS.cfb.filter((row) =>
+      row.id.endsWith(":school-position"));
+    for (const row of schoolPosition) expect(row.grade, row.id).toBe(2);
+  });
+
+  it("normalizes accented UFC names consistently in board topic diversity", () => {
+    const question = AVERAGE_FAN_CONTENT_BANKS.ufc[0]!;
+    const decorated = averageFanQuestionNamedTopics({
+      ...question, prompt: "Who defeated Jan Błachowicz?", answer: "Alex Pereira",
+    });
+    const ascii = averageFanQuestionNamedTopics({
+      ...question, prompt: "Who defeated Jan Blachowicz?", answer: "Alex Pereira",
+    });
+    expect(decorated).toContain("ufc:jan blachowicz");
+    expect(ascii).toContain("ufc:jan blachowicz");
   });
 
   it("uses stable symmetric UFC bout identities for accent and ASCII name variants", () => {
