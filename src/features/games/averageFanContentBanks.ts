@@ -1335,6 +1335,8 @@ function ufcPlausibleFighterMisses(
 
 export function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
+  const recognizableOpponents = new Set(fighters.map((fighter) => normalizedUfcOpponent(fighter.name)));
+  const isRecognizableOpponent = (name: string) => recognizableOpponents.has(normalizedUfcOpponent(name));
   const questions: AverageFanQuestion[] = [];
 
   for (const [index, fighter] of fighters.entries()) {
@@ -1367,7 +1369,12 @@ export function ufcCandidates() {
     }
 
     const wins = fighter.fights.filter((fight) => fight.result === "win");
-    const recognizableFight = wins[stableOffset(`${fighter.id}:win`, Math.max(1, wins.length))] ?? fighter.fights[0];
+    // Prefer recognizably named UFC matchups, not calendar trivia about
+    // undercard opponents absent from the recognizable-fighter population.
+    const landmarkWins = wins.filter((fight) => isRecognizableOpponent(fight.opponent));
+    const landmarkFights = fighter.fights.filter((fight) => isRecognizableOpponent(fight.opponent));
+    const recognizablePool = landmarkWins.length ? landmarkWins : landmarkFights;
+    const recognizableFight = recognizablePool[stableOffset(`${fighter.id}:win`, Math.max(1, recognizablePool.length))];
     // The curated ledger is not the complete UFC fight record. A generic
     // "which fighter did X ever defeat?" may contain another correct choice
     // outside the ledger and unfairly count it wrong. Anchor the fight to a
@@ -1393,7 +1400,8 @@ export function ufcCandidates() {
     }
 
     const methodWins = wins.filter((fight) => fight.methodCategory !== "other");
-    const methodFight = methodWins[stableOffset(`${fighter.id}:method`, Math.max(1, methodWins.length))];
+    const landmarkMethodWins = methodWins.filter((fight) => isRecognizableOpponent(fight.opponent));
+    const methodFight = landmarkMethodWins[stableOffset(`${fighter.id}:method`, Math.max(1, landmarkMethodWins.length))];
     // The ranking/factual ledger is curated, not an exhaustive UFC fight history.
     // An open "name one opponent" answer can therefore reject other true wins.
     // Bind each future choice to one documented bout instead.
@@ -1415,7 +1423,9 @@ export function ufcCandidates() {
     }
 
     const uniqueWins = wins
-      .filter((fight, fightIndex) => wins.findIndex((candidate) => candidate.opponent === fight.opponent) === fightIndex)
+      .filter((fight) => isRecognizableOpponent(fight.opponent))
+      .filter((fight, fightIndex, recognizable) =>
+        recognizable.findIndex((candidate) => normalizedUfcOpponent(candidate.opponent) === normalizedUfcOpponent(fight.opponent)) === fightIndex)
       .sort((left, right) => right.date.localeCompare(left.date));
     if (uniqueWins.length >= 3) {
       const anchors = uniqueWins.slice(0, 3);
@@ -1463,8 +1473,9 @@ export function ufcCandidates() {
         }));
       }
       const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
-        .filter((opponent) => opponent !== titleFight.opponent)
-        .slice(0, 2);
+        .filter((opponent) => isRecognizableOpponent(opponent)
+          && normalizedUfcOpponent(opponent) !== normalizedUfcOpponent(titleFight.opponent))
+        .reverse().slice(0, 2);
       const titleIdentityExtra = finalOtherOpponents[0]
         ? ` and also fought ${finalOtherOpponents[0]}`
         : "";
@@ -1484,7 +1495,7 @@ export function ufcCandidates() {
         : finalOtherOpponents.length === 1
           ? ` and also fought ${finalOtherOpponents[0]}`
           : "";
-      if (wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
+      if (finalOtherOpponents.length >= 1 && wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
         { opponent: titleFight.opponent, condition: "title" },
         ...finalOtherOpponents.map((opponent) => ({ opponent, condition: "faced" as const })),
       ])) {
@@ -1501,12 +1512,15 @@ export function ufcCandidates() {
         protectedFinal: true,
       }));
       }
-    } else if (fighter.fights.length >= 5) {
-      const anchorA = fighter.fights[fighter.fights.length - 1]!;
-      const anchorB = fighter.fights[Math.max(0, fighter.fights.length - 3)]!;
-      const anchorC = fighter.fights[Math.max(0, fighter.fights.length - 5)]!;
+    } else {
+      const notableFights = fighter.fights.filter((fight) => isRecognizableOpponent(fight.opponent));
+      const anchorA = notableFights[notableFights.length - 1];
+      const anchorB = notableFights[Math.max(0, notableFights.length - 3)];
+      const anchorC = notableFights[Math.max(0, notableFights.length - 5)];
       const wrongNames = ufcPlausibleFighterMisses(fighter, fighters, [fighter.name], `${fighter.id}:final-fight`);
-      if (wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
+      if (notableFights.length >= 3 && anchorA && anchorB && anchorC
+        && new Set([anchorA.opponent, anchorB.opponent, anchorC.opponent].map(normalizedUfcOpponent)).size === 3
+        && wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
         { opponent: anchorA.opponent, condition: "faced" },
         { opponent: anchorB.opponent, condition: "faced" },
         { opponent: anchorC.opponent, condition: "faced" },
