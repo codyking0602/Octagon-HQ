@@ -1213,7 +1213,20 @@ function naturalFightDate(value: string) {
  * Retire ambiguous candidates before the grade-balancer can select them.
  */
 function normalizedUfcOpponent(value: string) {
-  return value.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "");
+  // NFKD decomposes accents (e.g. Procházka), but does not decompose
+  // stroke letters such as Polish ł. UFCStats often prints the opponent as
+  // "Jan Blachowicz" while the fighter's display name is "Jan Błachowicz".
+  // Treat both as the same fighter when identifying repeat bouts, excluding
+  // distractors and testing whether a multi-opponent clue is unique.
+  return value
+    .replace(/[Łł]/g, "l")
+    .replace(/[Øø]/g, "o")
+    .replace(/[Đđ]/g, "d")
+    .replace(/ß/g, "ss")
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "");
 }
 
 function ufcHasOpponent(
