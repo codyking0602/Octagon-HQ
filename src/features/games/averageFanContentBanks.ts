@@ -280,7 +280,7 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
 
   { id: "bracket", grade: 4, prompt: "What does bracket coverage usually mean?", answer: "Two defenders combining on one receiver", wrong: ["A seven-man blitz", "A four-deep zone"], explanation: "Bracket coverage uses two defenders to constrain one receiving threat." },
   { id: "robber", grade: 4, prompt: "What does a 'robber' defender typically do in coverage?", answer: "Drops into an intermediate zone to jump routes", wrong: ["Rushes off the edge every snap", "Plays a deep outside quarter", "Plays man coverage on the slot receiver"], explanation: "A robber defender reads the quarterback and looks to cut off intermediate throws." },
-  { id: "stunt", grade: 4, prompt: "What is a defensive-line stunt or twist?", answer: "Rushers exchanging paths after the snap", wrong: ["Safeties swapping deep halves", "Receivers switching sides before the snap"], explanation: "A stunt has pass rushers cross or exchange gaps to stress protection rules." },
+  { id: "stunt", preferredFormat: "four-choice", grade: 4, prompt: "What is a defensive-line stunt or twist?", answer: "Rushers exchanging paths after the snap", wrong: ["Safeties rotating into a different coverage shell", "Linebackers dropping underneath short routes", "Offensive linemen switching their blocking assignments"], explanation: "A stunt has pass rushers cross or exchange gaps to stress protection rules." },
   { id: "contain", grade: 4, prompt: "What is the main goal of edge contain?", answer: "Keep the ball carrier or quarterback from escaping outside", wrong: ["Force every play up the middle before the snap", "Double-team the slot receiver"], explanation: "Contain protects the outside edge and turns the play back toward pursuit." },
   { id: "inside-zone", grade: 4, prompt: "What run concept asks blockers to work zone combinations while the back reads interior gaps?", answer: "Inside zone", wrong: ["Jet sweep", "Quarterback draw", "Power"], explanation: "Inside zone uses zone blocking with the runner reading the interior flow." },
   { id: "outside-zone", grade: 4, prompt: "What run concept stretches the defense laterally while the back reads for a cut?", answer: "Outside zone", wrong: ["Power", "Trap"], explanation: "Outside zone creates horizontal stretch before the runner chooses a crease." },
@@ -307,7 +307,7 @@ const NFL_TRUE_FALSE_FACTS: readonly NflTrueFalseFact[] = [
   { id: "warner-drafted", grade: 3, subject: "Players", prompt: "Kurt Warner entered the NFL as a drafted player.", answer: false, explanation: "Kurt Warner went undrafted before becoming an NFL and Super Bowl MVP." },
   { id: "romo-drafted", grade: 3, subject: "Players", prompt: "Tony Romo was selected in the NFL Draft.", answer: false, explanation: "Tony Romo entered the NFL as an undrafted free agent." },
 
-  { id: "two-forward-passes", grade: 4, subject: "X’s & O’s", prompt: "An offense can throw two forward passes on the same play as long as both are released behind the line of scrimmage.", answer: false, explanation: "An NFL play can include only one forward pass." },
+  { id: "two-forward-passes", grade: 2, subject: "X’s & O’s", prompt: "An offense can throw two forward passes on the same play as long as both are released behind the line of scrimmage.", answer: false, explanation: "An NFL play can include only one forward pass." },
   { id: "terrell-davis-first-round", grade: 4, subject: "Players", prompt: "Terrell Davis was a first-round NFL Draft pick.", answer: false, explanation: "Denver selected Terrell Davis in the sixth round of the 1995 NFL Draft." },
   { id: "gates-college-football", grade: 4, subject: "Players", prompt: "Antonio Gates played college football before becoming an NFL tight end.", answer: false, explanation: "Antonio Gates played college basketball at Kent State and did not play college football." },
 
@@ -496,7 +496,7 @@ const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
 
   { id: "holy-roller", grade: 4, prompt: "The 1978 “Holy Roller” play that helped prompt a rule change came in a Raiders game against which team?", answer: "San Diego Chargers", wrong: ["Denver Broncos", "Kansas City Chiefs", "Seattle Seahawks"], explanation: "Oakland's chaotic late fumble sequence against San Diego led to a rule limiting who can advance a teammate's fumble late in a game." },
   { id: "miracle-meadowlands", grade: 4, prompt: "Who returned Joe Pisarcik's fumble for the winning touchdown in the 1978 “Miracle at the Meadowlands”?", answer: "Herm Edwards", wrong: ["Bill Bergey", "Ron Jaworski"], explanation: "Herm Edwards scooped the late Giants fumble and scored for Philadelphia." },
-  { id: "freezer-bowl", grade: 4, prompt: "Which two teams played the 1981 AFC Championship known as the “Freezer Bowl”?", answer: "Cincinnati Bengals and San Diego Chargers", wrong: ["Cincinnati Bengals and Pittsburgh Steelers", "San Diego Chargers and Miami Dolphins"], explanation: "Cincinnati beat San Diego in brutally cold conditions at Riverfront Stadium." },
+  { id: "freezer-bowl", preferredFormat: "four-choice", grade: 4, prompt: "Which two teams played the 1981 AFC Championship known as the “Freezer Bowl”?", answer: "Cincinnati Bengals and San Diego Chargers", wrong: ["Cincinnati Bengals and Pittsburgh Steelers", "San Diego Chargers and Miami Dolphins", "Cincinnati Bengals and Cleveland Browns"], explanation: "Cincinnati beat San Diego in brutally cold conditions at Riverfront Stadium." },
 
   { id: "the-fumble", grade: 5, prompt: "Which Browns running back lost the famous late fumble near Denver's goal line in the 1987 AFC Championship Game?", answer: "Earnest Byner", wrong: ["Kevin Mack", "Ozzie Newsome", "Bernie Kosar"], explanation: "Earnest Byner's late fumble became known simply as The Fumble." },
   { id: "ghost-to-post", grade: 5, prompt: "Which Raiders tight end made the 42-yard “Ghost to the Post” catch late in regulation against Baltimore in the 1977 playoffs?", answer: "Dave Casper", wrong: ["Raymond Chester", "Cliff Branch"], explanation: "Dave Casper's 42-yard catch in the fourth quarter set up the game-tying field goal. The Raiders won in double overtime on a separate Casper touchdown." },
@@ -756,12 +756,12 @@ function nflKnowledgeQuestions(
 
 const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
   ["00-smith-heisman-receiver", 4, "Players", "DeVonta Smith was the first wide receiver to win the Heisman Trophy since Desmond Howard.", true, "Smith won the 2020 Heisman; the previous wide receiver winner was Desmond Howard in 1991."],
-  ["00-fsu-last-bcs-champ", 4, "Programs", "Florida State won the final BCS National Championship Game before the College Football Playoff era.", true, "Florida State beat Auburn for the 2013 national title in the final BCS championship game."],
+  ["00-fsu-last-bcs-champ", 3, "Programs", "Florida State won the final BCS National Championship Game before the College Football Playoff era.", true, "Florida State beat Auburn for the 2013 national title in the final BCS championship game."],
   ["00-lsu-two-loss-champ", 4, "CFB History", "LSU won the 2007 BCS national championship after entering the title game with two losses.", true, "LSU finished 12–2 and beat Ohio State for the 2007 season's BCS national championship."],
   ["00-lamar-2016:heisman", 3, "CFB History", "Lamar Jackson won the Heisman Trophy for the 2016 season.", true, "Lamar Jackson won the 2016 Heisman Trophy at Louisville."],
   ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as an eight-team playoff for the 2014 season.", false, "The CFP began with a four-team field for the 2014 season."],
   ["00b-mccaffrey-2015:heisman", 3, "CFB History", "Christian McCaffrey won the 2015 Heisman Trophy.", false, "Derrick Henry won the 2015 Heisman Trophy; Christian McCaffrey finished second."],
-  ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
+  ["02-cfp-2021-cincinnati", 3, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
   ["03-champ-2003-split", 4, "CFB History", "The 2003 season ended with LSU and USC recognized by major selectors as national champions.", true, "LSU won the BCS title while USC finished No. 1 in the AP poll, producing a split championship."],
 ].map(([id, grade, subject, prompt, answer, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:00-tf-${id}`,
@@ -1576,6 +1576,9 @@ function calibratedPlayableGrade(question: AverageFanQuestion): AverageFanPlayab
     return 5;
   }
 
+  // Recognizing a famous college player's position with four choices is
+  // introductory knowledge, not a Grade-4 historical recall challenge.
+  if (question.sport === "cfb" && question.id.endsWith(":school-position")) return 2;
   if (question.grade <= 1) return 2;
   if (question.grade === 2) return 3;
   if (question.grade === 3) return 4;
