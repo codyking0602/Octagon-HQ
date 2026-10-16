@@ -53,7 +53,10 @@ describe("daily challenge runtime cold-start isolation", () => {
       "utf8",
     );
     expect(runtime).toContain('import { advancePersistedBlindResumeV3 } from "./blindResumeAdvance.ts"');
-    const getTodayReturn = runtime.lastIndexOf('return json(publicPayload(context));');
+    const getTodayReturn = runtime.indexOf(
+      'if (body.mode === "get-today" || body.mode === undefined) {\\n      return json(publicPayload(context));',
+      runtime.indexOf('const materialized = await materializeToday(admin);'),
+    );
     const v3FastPath = runtime.lastIndexOf('context.setupKey.startsWith("blind-resume-v3:")');
     const heavyweightFallback = runtime.lastIndexOf('(await loadUfcRuntime()).advanceOfficialDailyRuntime');
     expect(v3FastPath).toBeGreaterThan(getTodayReturn);
