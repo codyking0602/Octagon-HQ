@@ -1381,7 +1381,10 @@ export function ufcCandidates() {
     // precise documented date so all three distractors are unequivocally
     // false for this bout, not alleged never-opponents.
     if (recognizableFight && fighter.fights.filter((fight) => fight.date === recognizableFight.date).length === 1) {
-      const acceptedOpponents = (wins.length ? wins : fighter.fights).map((fight) => fight.opponent);
+      const acceptedOpponents = [
+        ...(wins.length ? wins : fighter.fights).map((fight) => fight.opponent),
+        recognizableFight.opponent,
+      ];
       const wrongOpponents = ufcPlausibleFighterMisses(fighter, fighters, acceptedOpponents, `${fighter.id}:opponent`);
       // If the roster has fewer than three plausible same-gender choices,
       // retire this candidate instead of adding giveaway opponents.
@@ -1390,7 +1393,7 @@ export function ufcCandidates() {
         sport: "ufc",
         grade: 3,
         subject: "Fights",
-        prompt: wins.length
+        prompt: recognizableFight.result === "win"
           ? `Which of these fighters did ${fighter.name} defeat in the UFC on ${naturalFightDate(recognizableFight.date)}?`
           : `Which of these fighters did ${fighter.name} face in the UFC on ${naturalFightDate(recognizableFight.date)}?`,
         answer: recognizableFight.opponent,
