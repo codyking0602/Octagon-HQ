@@ -1847,6 +1847,29 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
 // Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
 // Other known Bar Trivia, Millionaire, and intra-bank same-fact repeats.
 const RETIRED_REPEATED_FACT_ID_PREFIXES = [
+  // Stage 2W: cross-game semantic facts in later Bar Trivia wave 4-7 banks
+  // and expanded easy/CFB waves. Same sporting facts, not mere shared people.
+  // Keep the Bar Trivia copy; never touch published Daily snapshots/results.
+  "average-fan:nfl:00-team:who-dat:", // Bar Trivia: nfl-r1-who-dat
+  "average-fan:nfl:00-team:bills-mafia:", // Bar Trivia: nfl-r1-bills-mafia
+  "average-fan:nfl:00-team:skol-vikings:", // Bar Trivia: nfl-r1-skol
+  "average-fan:nfl:00-team:fly-eagles-fly:", // Bar Trivia: nfl-r1-fly-eagles-fly
+  "average-fan:nfl:00-team:bengals-who-dey:", // Bar Trivia: nfl-r1-who-dey
+  "average-fan:nfl:00-history:wide-right:", // Bar Trivia: nfl-r2-wide-right-norwood
+  "average-fan:cfb:tradition:white-out:", // Bar Trivia: cfb-easy-white-out
+  "average-fan:cfb:tradition:midnight-yell:", // Bar Trivia: cfb-r1-midnight-yell
+  "average-fan:cfb:tradition:script-ohio:", // Bar Trivia: cfb-r1-script-ohio
+  "average-fan:cfb:authored:00-g5:renfrow-title-catch:", // Bar Trivia: cfb-r2-2016-title-catch
+  "average-fan:ufc:iq:title-rounds:", // Bar Trivia: ufc-easy2-title-rounds
+  "average-fan:ufc:authored-history:ufc3-winner:", // Bar Trivia: ufc-r1-ufc3-winner
+  "average-fan:ufc:authored-history:ufc4-final:", // Bar Trivia: ufc-r2-ufc4-final
+  "average-fan:ufc:authored-history:ufc6-winner:", // Bar Trivia: ufc-r1-ufc6-winner
+  "average-fan:ufc:authored-history:first-wheel-kick:", // Bar Trivia: ufc-r3-first-wheel-kick-ko
+  "average-fan:ufc:authored-history:gonzaga-crocop:", // Bar Trivia: ufc-r1-gonzaga-crocop
+  "average-fan:ufc:authored-history:fox-first:", // Bar Trivia: ufc-r1-fox-first-winner
+  "average-fan:ufc:authored-history:lewis-volkov:", // Bar Trivia: ufc-final-lewis-volkov-quote
+  "average-fan:ufc:authored-history:daley-koscheck:", // Bar Trivia: ufc-final-daley-koscheck-release
+  "average-fan:ufc:authored-history:first-125:", // Bar Trivia: ufc-r1-first-125-fight
   // Stage 2V: individually screened 228 NFL authored entries, identified
   // direct fact-family repeats in Bar Trivia/Millionaire, and withdrew the
   // Average Fan copies. These IDs stay untouched in persisted historic Dailies.

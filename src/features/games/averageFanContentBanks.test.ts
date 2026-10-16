@@ -809,8 +809,10 @@ describe("Average Fan durable content banks", () => {
 
     const authored = bank.filter((question) => question.id.includes(":authored-history:"));
     expect(authored.length).toBeGreaterThan(0);
-    expect(authored.some((question) => question.subject === "Championships")).toBe(true);
-    expect(authored.some((question) => question.subject === "Fights")).toBe(true);
+    // Duplicated authored title-event facts now live in Bar Trivia; generated
+    // ledger-backed title bouts preserve Average Fan championship coverage.
+    expect(bank.some((question) => question.subject === "Championships")).toBe(true);
+    expect(bank.some((question) => question.subject === "Fights")).toBe(true);
   });
 
   it("does not repeat the Bar Trivia five-second Masvidal knockout as an inverted Average Fan Final", () => {
@@ -1135,6 +1137,44 @@ describe("Average Fan durable content banks", () => {
       expect(new Set(question.choices).size, prefix).toBe(4);
     }
     expect(selected).toBeGreaterThan(0);
+  });
+
+  it("withdraws 20 newly reviewed Bar Trivia wave fact repeats across all three sports", () => {
+    const sourcePairs = [
+      ["nfl", "average-fan:nfl:00-team:who-dat:", "nfl-r1-who-dat"],
+      ["nfl", "average-fan:nfl:00-team:bills-mafia:", "nfl-r1-bills-mafia"],
+      ["nfl", "average-fan:nfl:00-team:skol-vikings:", "nfl-r1-skol"],
+      ["nfl", "average-fan:nfl:00-team:fly-eagles-fly:", "nfl-r1-fly-eagles-fly"],
+      ["nfl", "average-fan:nfl:00-team:bengals-who-dey:", "nfl-r1-who-dey"],
+      ["nfl", "average-fan:nfl:00-history:wide-right:", "nfl-r2-wide-right-norwood"],
+      ["cfb", "average-fan:cfb:tradition:white-out:", "cfb-easy-white-out"],
+      ["cfb", "average-fan:cfb:tradition:midnight-yell:", "cfb-r1-midnight-yell"],
+      ["cfb", "average-fan:cfb:tradition:script-ohio:", "cfb-r1-script-ohio"],
+      ["cfb", "average-fan:cfb:authored:00-g5:renfrow-title-catch:", "cfb-r2-2016-title-catch"],
+      ["ufc", "average-fan:ufc:iq:title-rounds:", "ufc-easy2-title-rounds"],
+      ["ufc", "average-fan:ufc:authored-history:ufc3-winner:", "ufc-r1-ufc3-winner"],
+      ["ufc", "average-fan:ufc:authored-history:ufc4-final:", "ufc-r2-ufc4-final"],
+      ["ufc", "average-fan:ufc:authored-history:ufc6-winner:", "ufc-r1-ufc6-winner"],
+      ["ufc", "average-fan:ufc:authored-history:first-wheel-kick:", "ufc-r3-first-wheel-kick-ko"],
+      ["ufc", "average-fan:ufc:authored-history:gonzaga-crocop:", "ufc-r1-gonzaga-crocop"],
+      ["ufc", "average-fan:ufc:authored-history:fox-first:", "ufc-r1-fox-first-winner"],
+      ["ufc", "average-fan:ufc:authored-history:lewis-volkov:", "ufc-final-lewis-volkov-quote"],
+      ["ufc", "average-fan:ufc:authored-history:daley-koscheck:", "ufc-final-daley-koscheck-release"],
+      ["ufc", "average-fan:ufc:authored-history:first-125:", "ufc-r1-first-125-fight"],
+    ] as const;
+    expect(sourcePairs).toHaveLength(20);
+    for (const [sport, averagePrefix, barId] of sourcePairs) {
+      const bar = BAR_TRIVIA_QUESTION_BANK.find((row) => row.id === barId);
+      expect(bar, `Source Bar Trivia question ${barId} must exist`).toBeTruthy();
+      expect(bar?.league).toBe(sport);
+      expect(AVERAGE_FAN_CONTENT_BANKS[sport].some((row) => row.id.startsWith(averagePrefix)), averagePrefix)
+        .toBe(false);
+    }
+    // UFC candidate generation remains intact; only future final-bank selection
+    // retires the specific overlap. No historical Daily setups are touched.
+    expect(ufcCandidates().some((row) =>
+      row.id.startsWith("average-fan:ufc:authored-history:ufc3-winner:"),
+    )).toBe(true);
   });
 
   it("does not copy Bar Trivia questions into Average Fan in any sport", () => {
