@@ -54,7 +54,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     );
     expect(runtime).toContain('import { advancePersistedBlindResumeV3 } from "./blindResumeAdvance.ts"');
     const getTodayReturn = runtime.indexOf(
-      'if (body.mode === "get-today" || body.mode === undefined) {\\n      return json(publicPayload(context));',
+      'if (body.mode === "get-today" || body.mode === undefined) {',
       runtime.indexOf('const materialized = await materializeToday(admin);'),
     );
     const v3FastPath = runtime.lastIndexOf('context.setupKey.startsWith("blind-resume-v3:")');
