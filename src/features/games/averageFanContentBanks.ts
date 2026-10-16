@@ -241,7 +241,7 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "nickel", grade: 1, prompt: "What nickname is used for a defense with five defensive backs?", answer: "Nickel", wrong: ["Dime", "Goal line"], explanation: "Nickel personnel uses five defensive backs." },
   { id: "dime", grade: 2, prompt: "What nickname is used for a defense with six defensive backs?", answer: "Dime", wrong: ["Nickel", "Bear"], explanation: "Dime personnel uses six defensive backs." },
   { id: "blitz", grade: 1, prompt: "What is it called when a defense sends extra rushers after the quarterback?", answer: "Blitz", wrong: ["Spy", "Contain", "Stunt"], explanation: "A blitz commits additional defenders to the pass rush." },
-  { id: "play-action", grade: 2, prompt: "What play concept begins with a fake handoff before the quarterback attempts a pass?", answer: "Play action", wrong: ["Screen pass", "Draw"], explanation: "Play action uses a run fake to influence defenders before a pass." },
+  { id: "play-action", preferredFormat: "four-choice", grade: 2, prompt: "What play concept begins with a fake handoff before the quarterback attempts a pass?", answer: "Play action", wrong: ["Screen pass", "Draw", "Read option"], explanation: "Play action uses a run fake to influence defenders before a pass." },
   { id: "shotgun", grade: 1, prompt: "What formation places the quarterback several yards behind the center for the snap?", answer: "Shotgun", wrong: ["I formation", "Goal line"], explanation: "In shotgun, the quarterback receives a longer snap while aligned behind the center." },
   { id: "screen", grade: 3, prompt: "What pass concept commonly lets the rush come upfield before throwing short to a receiver with blockers in front?", answer: "Screen pass", wrong: ["Fade", "Hail Mary", "Slant"], explanation: "A screen invites pressure and then releases the ball short behind the rush." },
   { id: "draw", grade: 3, prompt: "What run concept initially looks like a pass before the ball carrier takes the handoff?", answer: "Draw", wrong: ["Counter", "Jet sweep"], explanation: "A draw play sells pass before developing as a run." },
@@ -250,7 +250,7 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "cover-3", grade: 3, prompt: "How many primary deep zones are used in a basic Cover 3?", answer: "3", wrong: ["2", "4"], explanation: "Cover 3 divides the deep field into three zones." },
   { id: "cover-4", grade: 4, prompt: "What common coverage nickname is also used for Cover 4?", answer: "Quarters", wrong: ["Cloud", "Robber"], explanation: "Cover 4 is commonly called quarters because four defenders divide the deep field." },
   { id: "qb-spy", grade: 4, prompt: "What defensive assignment designates a player to track a mobile quarterback?", answer: "Quarterback spy", wrong: ["Bracket", "Contain rush", "Robber"], explanation: "A quarterback spy mirrors the quarterback rather than immediately committing elsewhere." },
-  { id: "slot", grade: 2, prompt: "Where does a slot receiver typically align?", answer: "Inside the outside receiver", wrong: ["Behind the quarterback", "On the defensive line"], explanation: "The slot is the space inside an outside receiver and outside the offensive line." },
+  { id: "slot", preferredFormat: "four-choice", grade: 2, prompt: "Where does a slot receiver typically align?", answer: "Inside the outside receiver", wrong: ["Behind the quarterback", "Outside the widest receiver", "On the defensive line"], explanation: "The slot is the space inside an outside receiver and outside the offensive line." },
   { id: "edge-rusher", grade: 2, prompt: "Which defender is primarily associated with rushing from the outside edge of the formation?", answer: "Edge rusher", wrong: ["Free safety", "Center"], explanation: "Edge rushers attack from the outside of the offensive front." },
   { id: "mike", grade: 3, prompt: "In common defensive terminology, what does the “Mike” usually identify?", answer: "Middle linebacker", wrong: ["Nickel corner", "Strong safety", "Outside linebacker"], explanation: "Mike is a common label for the middle linebacker." },
   { id: "safety-score", grade: 1, prompt: "How many points is a safety worth?", answer: "2", wrong: ["1", "3"], explanation: "A safety scores two points for the defense." },
@@ -265,23 +265,23 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "zone-blitz", grade: 5, prompt: "What pressure concept can send a linebacker or defensive back while dropping a defensive lineman into coverage?", answer: "Zone blitz", wrong: ["Prevent defense", "Cover zero"], explanation: "A zone blitz exchanges rush and coverage responsibilities while keeping zone structure behind the pressure." },
   { id: "touchdown-points", grade: 1, prompt: "How many points is a touchdown worth before the try?", answer: "6", wrong: ["3", "7"], explanation: "A touchdown is worth six points before the extra-point or two-point try." },
   { id: "field-goal-points", grade: 1, prompt: "How many points is a successful field goal worth?", answer: "3", wrong: ["2", "6", "1"], explanation: "A successful field goal scores three points." },
-  { id: "kneel", grade: 1, prompt: "What play is commonly used by an offense to safely run out the clock at the end of a game?", answer: "Quarterback kneel", wrong: ["Hail Mary", "Onside kick"], explanation: "A quarterback kneel is commonly used to drain the remaining clock safely." },
-  { id: "spike", grade: 1, prompt: "What does a quarterback commonly do immediately after the snap to stop the clock?", answer: "Spike the ball", wrong: ["Take a knee", "Throw a screen"], explanation: "An immediate spike is a legal incomplete forward pass used to stop the clock." },
+  { id: "kneel", preferredFormat: "four-choice", grade: 1, prompt: "What play is commonly used by an offense to safely run out the clock at the end of a game?", answer: "Quarterback kneel", wrong: ["Hail Mary", "Onside kick", "Spike the ball"], explanation: "A quarterback kneel is commonly used to drain the remaining clock safely." },
+  { id: "spike", preferredFormat: "four-choice", grade: 1, prompt: "What does a quarterback commonly do immediately after the snap to stop the clock?", answer: "Spike the ball", wrong: ["Take a knee", "Throw a screen", "Call for a fair catch"], explanation: "An immediate spike is a legal incomplete forward pass used to stop the clock." },
 
   { id: "audible", grade: 2, prompt: "What is an audible?", answer: "A play change at the line of scrimmage", wrong: ["A defensive substitution", "A replay challenge", "A timeout called by the quarterback"], explanation: "An audible changes the called play or assignment before the snap." },
-  { id: "hard-count", grade: 2, prompt: "What is a hard count designed to make the defense do?", answer: "Jump early", wrong: ["Call timeout", "Drop into zone"], explanation: "A hard count varies the quarterback's cadence to try to draw defenders offside." },
-  { id: "motion", grade: 2, prompt: "What is pre-snap motion?", answer: "An eligible player moving before the snap", wrong: ["The quarterback scrambling", "A lineman pulling after the snap"], explanation: "Pre-snap motion sends an eligible player across or around the formation before the ball is snapped." },
+  { id: "hard-count", preferredFormat: "four-choice", grade: 2, prompt: "What is a hard count designed to make the defense do?", answer: "Jump early", wrong: ["Call timeout", "Drop into zone", "Switch defensive personnel"], explanation: "A hard count varies the quarterback's cadence to try to draw defenders offside." },
+  { id: "motion", preferredFormat: "four-choice", grade: 2, prompt: "What is pre-snap motion?", answer: "An eligible player moving before the snap", wrong: ["The quarterback scrambling", "A lineman pulling after the snap", "A defender substituting after the snap"], explanation: "Pre-snap motion sends an eligible player across or around the formation before the ball is snapped." },
   { id: "checkdown", grade: 2, prompt: "What is a checkdown in the passing game?", answer: "A short outlet option", wrong: ["A deep post route", "A quarterback sneak", "A screen pass"], explanation: "A checkdown is a shorter outlet target used when deeper reads are unavailable." },
 
-  { id: "bootleg", grade: 3, prompt: "What quarterback action usually defines a bootleg?", answer: "Rolling away from the run fake", wrong: ["Taking a straight drop", "Pitching an option immediately"], explanation: "A bootleg moves the quarterback outside after selling action in another direction." },
+  { id: "bootleg", preferredFormat: "four-choice", grade: 3, prompt: "What quarterback action usually defines a bootleg?", answer: "Rolling away from the run fake", wrong: ["Taking a straight drop", "Pitching an option immediately", "Taking a knee behind the center"], explanation: "A bootleg moves the quarterback outside after selling action in another direction." },
   { id: "jet-sweep", grade: 3, prompt: "Which run concept gives or pitches the ball to a receiver already moving across the formation at the snap?", answer: "Jet sweep", wrong: ["Quarterback sneak", "Power dive"], explanation: "A jet sweep uses fast horizontal motion to get the ball carrier to the edge." },
   { id: "bunch", grade: 3, prompt: "What formation term describes three receivers aligned close together?", answer: "Bunch", wrong: ["Empty", "Wishbone", "Pistol"], explanation: "A bunch set clusters multiple receivers tightly to create traffic and leverage." },
   { id: "press", grade: 3, prompt: "What coverage technique places a defensive back tight to a receiver at the line of scrimmage?", answer: "Press coverage", wrong: ["Off coverage", "Prevent coverage"], explanation: "Press coverage challenges a receiver at or near the line of scrimmage." },
 
-  { id: "bracket", grade: 4, prompt: "What does bracket coverage usually mean?", answer: "Two defenders combining on one receiver", wrong: ["A seven-man blitz", "A four-deep zone"], explanation: "Bracket coverage uses two defenders to constrain one receiving threat." },
+  { id: "bracket", preferredFormat: "four-choice", grade: 4, prompt: "What does bracket coverage usually mean?", answer: "Two defenders combining on one receiver", wrong: ["A seven-man blitz", "A four-deep zone", "Corners trading sides against motion"], explanation: "Bracket coverage uses two defenders to constrain one receiving threat." },
   { id: "robber", grade: 4, prompt: "What does a 'robber' defender typically do in coverage?", answer: "Drops into an intermediate zone to jump routes", wrong: ["Rushes off the edge every snap", "Plays a deep outside quarter", "Plays man coverage on the slot receiver"], explanation: "A robber defender reads the quarterback and looks to cut off intermediate throws." },
-  { id: "stunt", grade: 4, prompt: "What is a defensive-line stunt or twist?", answer: "Rushers exchanging paths after the snap", wrong: ["Safeties swapping deep halves", "Receivers switching sides before the snap"], explanation: "A stunt has pass rushers cross or exchange gaps to stress protection rules." },
-  { id: "contain", grade: 4, prompt: "What is the main goal of edge contain?", answer: "Keep the ball carrier or quarterback from escaping outside", wrong: ["Force every play up the middle before the snap", "Double-team the slot receiver"], explanation: "Contain protects the outside edge and turns the play back toward pursuit." },
+  { id: "stunt", preferredFormat: "four-choice", grade: 4, prompt: "What is a defensive-line stunt or twist?", answer: "Rushers exchanging paths after the snap", wrong: ["Safeties rotating into a different coverage shell", "Linebackers dropping underneath short routes", "Offensive linemen switching their blocking assignments"], explanation: "A stunt has pass rushers cross or exchange gaps to stress protection rules." },
+  { id: "contain", preferredFormat: "four-choice", grade: 4, prompt: "What is the main goal of edge contain?", answer: "Keep the ball carrier or quarterback from escaping outside", wrong: ["Force every play up the middle before the snap", "Double-team the slot receiver", "Leave the outside gap open to invite a run"], explanation: "Contain protects the outside edge and turns the play back toward pursuit." },
   { id: "inside-zone", grade: 4, prompt: "What run concept asks blockers to work zone combinations while the back reads interior gaps?", answer: "Inside zone", wrong: ["Jet sweep", "Quarterback draw", "Power"], explanation: "Inside zone uses zone blocking with the runner reading the interior flow." },
   { id: "outside-zone", grade: 4, prompt: "What run concept stretches the defense laterally while the back reads for a cut?", answer: "Outside zone", wrong: ["Power", "Trap"], explanation: "Outside zone creates horizontal stretch before the runner chooses a crease." },
   { id: "hot-route", grade: 4, prompt: "What is a hot route?", answer: "A quick answer built into a pass play against pressure", aliases: ["An audible to change a route against pressure", "Audible to change route", "A route adjustment against pressure", "A quick route adjustment against a blitz"], wrong: ["A deep route run only from the slot", "A route used only in the red zone", "A route that automatically becomes a go route against man coverage"], explanation: "A hot route gives the quarterback and receiver a fast response to an unblocked or extra rusher.", preferredFormat: "four-choice" },
@@ -307,7 +307,7 @@ const NFL_TRUE_FALSE_FACTS: readonly NflTrueFalseFact[] = [
   { id: "warner-drafted", grade: 3, subject: "Players", prompt: "Kurt Warner entered the NFL as a drafted player.", answer: false, explanation: "Kurt Warner went undrafted before becoming an NFL and Super Bowl MVP." },
   { id: "romo-drafted", grade: 3, subject: "Players", prompt: "Tony Romo was selected in the NFL Draft.", answer: false, explanation: "Tony Romo entered the NFL as an undrafted free agent." },
 
-  { id: "two-forward-passes", grade: 4, subject: "X’s & O’s", prompt: "An offense can throw two forward passes on the same play as long as both are released behind the line of scrimmage.", answer: false, explanation: "An NFL play can include only one forward pass." },
+  { id: "two-forward-passes", grade: 2, subject: "X’s & O’s", prompt: "An offense can throw two forward passes on the same play as long as both are released behind the line of scrimmage.", answer: false, explanation: "An NFL play can include only one forward pass." },
   { id: "terrell-davis-first-round", grade: 4, subject: "Players", prompt: "Terrell Davis was a first-round NFL Draft pick.", answer: false, explanation: "Denver selected Terrell Davis in the sixth round of the 1995 NFL Draft." },
   { id: "gates-college-football", grade: 4, subject: "Players", prompt: "Antonio Gates played college football before becoming an NFL tight end.", answer: false, explanation: "Antonio Gates played college basketball at Kent State and did not play college football." },
 
@@ -496,7 +496,7 @@ const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
 
   { id: "holy-roller", grade: 4, prompt: "The 1978 “Holy Roller” play that helped prompt a rule change came in a Raiders game against which team?", answer: "San Diego Chargers", wrong: ["Denver Broncos", "Kansas City Chiefs", "Seattle Seahawks"], explanation: "Oakland's chaotic late fumble sequence against San Diego led to a rule limiting who can advance a teammate's fumble late in a game." },
   { id: "miracle-meadowlands", grade: 4, prompt: "Who returned Joe Pisarcik's fumble for the winning touchdown in the 1978 “Miracle at the Meadowlands”?", answer: "Herm Edwards", wrong: ["Bill Bergey", "Ron Jaworski"], explanation: "Herm Edwards scooped the late Giants fumble and scored for Philadelphia." },
-  { id: "freezer-bowl", grade: 4, prompt: "Which two teams played the 1981 AFC Championship known as the “Freezer Bowl”?", answer: "Cincinnati Bengals and San Diego Chargers", wrong: ["Cincinnati Bengals and Pittsburgh Steelers", "San Diego Chargers and Miami Dolphins"], explanation: "Cincinnati beat San Diego in brutally cold conditions at Riverfront Stadium." },
+  { id: "freezer-bowl", preferredFormat: "four-choice", grade: 4, prompt: "Which two teams played the 1981 AFC Championship known as the “Freezer Bowl”?", answer: "Cincinnati Bengals and San Diego Chargers", wrong: ["Cincinnati Bengals and Pittsburgh Steelers", "San Diego Chargers and Miami Dolphins", "Cincinnati Bengals and Cleveland Browns"], explanation: "Cincinnati beat San Diego in brutally cold conditions at Riverfront Stadium." },
 
   { id: "the-fumble", grade: 5, prompt: "Which Browns running back lost the famous late fumble near Denver's goal line in the 1987 AFC Championship Game?", answer: "Earnest Byner", wrong: ["Kevin Mack", "Ozzie Newsome", "Bernie Kosar"], explanation: "Earnest Byner's late fumble became known simply as The Fumble." },
   { id: "ghost-to-post", grade: 5, prompt: "Which Raiders tight end made the 42-yard “Ghost to the Post” catch late in regulation against Baltimore in the 1977 playoffs?", answer: "Dave Casper", wrong: ["Raymond Chester", "Cliff Branch"], explanation: "Dave Casper's 42-yard catch in the fourth quarter set up the game-tying field goal. The Raiders won in double overtime on a separate Casper touchdown." },
@@ -756,12 +756,12 @@ function nflKnowledgeQuestions(
 
 const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
   ["00-smith-heisman-receiver", 4, "Players", "DeVonta Smith was the first wide receiver to win the Heisman Trophy since Desmond Howard.", true, "Smith won the 2020 Heisman; the previous wide receiver winner was Desmond Howard in 1991."],
-  ["00-fsu-last-bcs-champ", 4, "Programs", "Florida State won the final BCS National Championship Game before the College Football Playoff era.", true, "Florida State beat Auburn for the 2013 national title in the final BCS championship game."],
+  ["00-fsu-last-bcs-champ", 3, "Programs", "Florida State won the final BCS National Championship Game before the College Football Playoff era.", true, "Florida State beat Auburn for the 2013 national title in the final BCS championship game."],
   ["00-lsu-two-loss-champ", 4, "CFB History", "LSU won the 2007 BCS national championship after entering the title game with two losses.", true, "LSU finished 12–2 and beat Ohio State for the 2007 season's BCS national championship."],
   ["00-lamar-2016:heisman", 3, "CFB History", "Lamar Jackson won the Heisman Trophy for the 2016 season.", true, "Lamar Jackson won the 2016 Heisman Trophy at Louisville."],
   ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as an eight-team playoff for the 2014 season.", false, "The CFP began with a four-team field for the 2014 season."],
   ["00b-mccaffrey-2015:heisman", 3, "CFB History", "Christian McCaffrey won the 2015 Heisman Trophy.", false, "Derrick Henry won the 2015 Heisman Trophy; Christian McCaffrey finished second."],
-  ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
+  ["02-cfp-2021-cincinnati", 3, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
   ["03-champ-2003-split", 4, "CFB History", "The 2003 season ended with LSU and USC recognized by major selectors as national champions.", true, "LSU won the BCS title while USC finished No. 1 in the AP poll, producing a split championship."],
 ].map(([id, grade, subject, prompt, answer, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:00-tf-${id}`,
@@ -1188,6 +1188,28 @@ function formatDivision(value: string) {
   return canonical.get(key) ?? value.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function ufcDivisionForFighter(fighter: UfcFactualSubject, division = fighter.primaryDivision) {
+  const display = formatDivision(division);
+  return fighter.gender === "women" && !display.startsWith("Women's ")
+    ? `Women's ${display}` : display;
+}
+
+function plausibleUfcDivisions(fighter: UfcFactualSubject) {
+  const primary = ufcDivisionForFighter(fighter);
+  const pool: readonly string[] = fighter.gender === "women" ? UFC_WOMENS_STANDARD_DIVISIONS : UFC_MENS_STANDARD_DIVISIONS;
+  const primaryIndex = pool.indexOf(primary as never);
+  const secondary = new Set(fighter.secondaryDivisions.map((division) =>
+    ufcDivisionForFighter(fighter, division)));
+  // Prefer nearby *other* divisions, never featherweights as implausible
+  // distractors for a heavyweight, and avoid a documented secondary division
+  // when constructing a false primary-division claim.
+  return pool.filter((division) => division !== primary).sort((a, b) =>
+    Math.abs(pool.indexOf(a) - primaryIndex) - Math.abs(pool.indexOf(b) - primaryIndex)
+    || Number(secondary.has(a)) - Number(secondary.has(b))
+    || stableLineupHash(fighter.id + ":division:" + a) - stableLineupHash(fighter.id + ":division:" + b)
+  ).slice(0, 3);
+}
+
 function methodLabel(method: string) {
   if (method === "ko-tko") return "KO/TKO";
   if (method === "submission") return "submission";
@@ -1213,7 +1235,20 @@ function naturalFightDate(value: string) {
  * Retire ambiguous candidates before the grade-balancer can select them.
  */
 function normalizedUfcOpponent(value: string) {
-  return value.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "");
+  // NFKD decomposes accents (e.g. Procházka), but does not decompose
+  // stroke letters such as Polish ł. UFCStats often prints the opponent as
+  // "Jan Blachowicz" while the fighter's display name is "Jan Błachowicz".
+  // Treat both as the same fighter when identifying repeat bouts, excluding
+  // distractors and testing whether a multi-opponent clue is unique.
+  return value
+    .replace(/[Łł]/g, "l")
+    .replace(/[Øø]/g, "o")
+    .replace(/[Đđ]/g, "d")
+    .replace(/ß/g, "ss")
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "");
 }
 
 function ufcHasOpponent(
@@ -1251,24 +1286,26 @@ function ufcPlausibleFighterMisses(
   acceptedNames: readonly string[],
   salt: string,
 ): string[] {
-  const primary = formatDivision(fighter.primaryDivision);
-  const isWomens = primary.startsWith("Women's ");
+  const primary = ufcDivisionForFighter(fighter);
+  const isWomens = fighter.gender === "women";
   const divisionOrder = isWomens ? UFC_WOMENS_STANDARD_DIVISIONS : UFC_MENS_STANDARD_DIVISIONS;
   const mainIndex = divisionOrder.indexOf(primary as never);
   const associated = new Set(
-    [fighter.primaryDivision, ...fighter.secondaryDivisions].map(formatDivision),
+    [fighter.primaryDivision, ...fighter.secondaryDivisions].map((division) =>
+      ufcDivisionForFighter(fighter, division)),
   );
   const excluded = new Set(
     [fighter.name, ...acceptedNames].map(normalizedUfcOpponent),
   );
   const candidates = fighters
     .filter((other) => (
-      formatDivision(other.primaryDivision).startsWith("Women's ") === isWomens
+      other.gender === fighter.gender
       && !excluded.has(normalizedUfcOpponent(other.name))
     ))
     .map((other) => {
-      const otherPrimary = formatDivision(other.primaryDivision);
-      const otherDivisions = [other.primaryDivision, ...other.secondaryDivisions].map(formatDivision);
+      const otherPrimary = ufcDivisionForFighter(other);
+      const otherDivisions = [other.primaryDivision, ...other.secondaryDivisions].map((division) =>
+        ufcDivisionForFighter(other, division));
       const otherIndex = divisionOrder.indexOf(otherPrimary as never);
       const divisionDistance = otherPrimary === primary ? 0
         : otherDivisions.some((value) => associated.has(value)) ? 1
@@ -1298,15 +1335,14 @@ function ufcPlausibleFighterMisses(
 
 export function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
+  const recognizableOpponents = new Set(fighters.map((fighter) => normalizedUfcOpponent(fighter.name)));
+  const isRecognizableOpponent = (name: string) => recognizableOpponents.has(normalizedUfcOpponent(name));
   const questions: AverageFanQuestion[] = [];
 
   for (const [index, fighter] of fighters.entries()) {
-    const primaryDivision = formatDivision(fighter.primaryDivision);
+    const primaryDivision = ufcDivisionForFighter(fighter);
     if ((UFC_STANDARD_DIVISIONS as readonly string[]).includes(primaryDivision)) {
-      const divisionPool = primaryDivision.startsWith("Women's ")
-        ? UFC_WOMENS_STANDARD_DIVISIONS
-        : UFC_MENS_STANDARD_DIVISIONS;
-      const wrongDivisions = peerValues(divisionPool, primaryDivision, `${fighter.id}:division`);
+      const wrongDivisions = plausibleUfcDivisions(fighter);
       questions.push(choiceQuestion({
         id: `average-fan:ufc:g1:${fighter.id}:division`,
         sport: "ufc",
@@ -1333,14 +1369,22 @@ export function ufcCandidates() {
     }
 
     const wins = fighter.fights.filter((fight) => fight.result === "win");
-    const recognizableFight = wins[stableOffset(`${fighter.id}:win`, Math.max(1, wins.length))] ?? fighter.fights[0];
+    // Prefer recognizably named UFC matchups, not calendar trivia about
+    // undercard opponents absent from the recognizable-fighter population.
+    const landmarkWins = wins.filter((fight) => isRecognizableOpponent(fight.opponent));
+    const landmarkFights = fighter.fights.filter((fight) => isRecognizableOpponent(fight.opponent));
+    const recognizablePool = landmarkWins.length ? landmarkWins : landmarkFights;
+    const recognizableFight = recognizablePool[stableOffset(`${fighter.id}:win`, Math.max(1, recognizablePool.length))];
     // The curated ledger is not the complete UFC fight record. A generic
     // "which fighter did X ever defeat?" may contain another correct choice
     // outside the ledger and unfairly count it wrong. Anchor the fight to a
     // precise documented date so all three distractors are unequivocally
     // false for this bout, not alleged never-opponents.
     if (recognizableFight && fighter.fights.filter((fight) => fight.date === recognizableFight.date).length === 1) {
-      const acceptedOpponents = (wins.length ? wins : fighter.fights).map((fight) => fight.opponent);
+      const acceptedOpponents = [
+        ...(wins.length ? wins : fighter.fights).map((fight) => fight.opponent),
+        recognizableFight.opponent,
+      ];
       const wrongOpponents = ufcPlausibleFighterMisses(fighter, fighters, acceptedOpponents, `${fighter.id}:opponent`);
       // If the roster has fewer than three plausible same-gender choices,
       // retire this candidate instead of adding giveaway opponents.
@@ -1349,7 +1393,7 @@ export function ufcCandidates() {
         sport: "ufc",
         grade: 3,
         subject: "Fights",
-        prompt: wins.length
+        prompt: recognizableFight.result === "win"
           ? `Which of these fighters did ${fighter.name} defeat in the UFC on ${naturalFightDate(recognizableFight.date)}?`
           : `Which of these fighters did ${fighter.name} face in the UFC on ${naturalFightDate(recognizableFight.date)}?`,
         answer: recognizableFight.opponent,
@@ -1359,7 +1403,8 @@ export function ufcCandidates() {
     }
 
     const methodWins = wins.filter((fight) => fight.methodCategory !== "other");
-    const methodFight = methodWins[stableOffset(`${fighter.id}:method`, Math.max(1, methodWins.length))];
+    const landmarkMethodWins = methodWins.filter((fight) => isRecognizableOpponent(fight.opponent));
+    const methodFight = landmarkMethodWins[stableOffset(`${fighter.id}:method`, Math.max(1, landmarkMethodWins.length))];
     // The ranking/factual ledger is curated, not an exhaustive UFC fight history.
     // An open "name one opponent" answer can therefore reject other true wins.
     // Bind each future choice to one documented bout instead.
@@ -1381,7 +1426,9 @@ export function ufcCandidates() {
     }
 
     const uniqueWins = wins
-      .filter((fight, fightIndex) => wins.findIndex((candidate) => candidate.opponent === fight.opponent) === fightIndex)
+      .filter((fight) => isRecognizableOpponent(fight.opponent))
+      .filter((fight, fightIndex, recognizable) =>
+        recognizable.findIndex((candidate) => normalizedUfcOpponent(candidate.opponent) === normalizedUfcOpponent(fight.opponent)) === fightIndex)
       .sort((left, right) => right.date.localeCompare(left.date));
     if (uniqueWins.length >= 3) {
       const anchors = uniqueWins.slice(0, 3);
@@ -1429,8 +1476,9 @@ export function ufcCandidates() {
         }));
       }
       const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
-        .filter((opponent) => opponent !== titleFight.opponent)
-        .slice(0, 2);
+        .filter((opponent) => isRecognizableOpponent(opponent)
+          && normalizedUfcOpponent(opponent) !== normalizedUfcOpponent(titleFight.opponent))
+        .reverse().slice(0, 2);
       const titleIdentityExtra = finalOtherOpponents[0]
         ? ` and also fought ${finalOtherOpponents[0]}`
         : "";
@@ -1450,7 +1498,7 @@ export function ufcCandidates() {
         : finalOtherOpponents.length === 1
           ? ` and also fought ${finalOtherOpponents[0]}`
           : "";
-      if (wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
+      if (finalOtherOpponents.length >= 1 && wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
         { opponent: titleFight.opponent, condition: "title" },
         ...finalOtherOpponents.map((opponent) => ({ opponent, condition: "faced" as const })),
       ])) {
@@ -1467,12 +1515,15 @@ export function ufcCandidates() {
         protectedFinal: true,
       }));
       }
-    } else if (fighter.fights.length >= 5) {
-      const anchorA = fighter.fights[fighter.fights.length - 1]!;
-      const anchorB = fighter.fights[Math.max(0, fighter.fights.length - 3)]!;
-      const anchorC = fighter.fights[Math.max(0, fighter.fights.length - 5)]!;
+    } else {
+      const notableFights = fighter.fights.filter((fight) => isRecognizableOpponent(fight.opponent));
+      const anchorA = notableFights[notableFights.length - 1];
+      const anchorB = notableFights[Math.max(0, notableFights.length - 3)];
+      const anchorC = notableFights[Math.max(0, notableFights.length - 5)];
       const wrongNames = ufcPlausibleFighterMisses(fighter, fighters, [fighter.name], `${fighter.id}:final-fight`);
-      if (wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
+      if (notableFights.length >= 3 && anchorA && anchorB && anchorC
+        && new Set([anchorA.opponent, anchorB.opponent, anchorC.opponent].map(normalizedUfcOpponent)).size === 3
+        && wrongNames.length === 3 && uniquelyIdentifiedUfcFighter(fighter.id, fighters, [
         { opponent: anchorA.opponent, condition: "faced" },
         { opponent: anchorB.opponent, condition: "faced" },
         { opponent: anchorC.opponent, condition: "faced" },
@@ -1542,6 +1593,9 @@ function calibratedPlayableGrade(question: AverageFanQuestion): AverageFanPlayab
     return 5;
   }
 
+  // Recognizing a famous college player's position with four choices is
+  // introductory knowledge, not a Grade-4 historical recall challenge.
+  if (question.sport === "cfb" && question.id.endsWith(":school-position")) return 2;
   if (question.grade <= 1) return 2;
   if (question.grade === 2) return 3;
   if (question.grade === 3) return 4;
@@ -1847,6 +1901,12 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
 // Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
 // Other known Bar Trivia, Millionaire, and intra-bank same-fact repeats.
 const RETIRED_REPEATED_FACT_ID_PREFIXES = [
+  // The curated 2015 runner-up fact already explicitly asks whether McCaffrey
+  // won the Heisman. Retire the generic registry boolean instead of repeating
+  // the same true/false knowledge in two Average Fan grade pools.
+  "average-fan:cfb:g3:cfb-christian-mccaffrey:heisman",
+  // Stage 2X: this source definition gives away "edge rusher" in the stem.
+  "average-fan:nfl:00-xo:edge-rusher:",
   // Stage 2W: cross-game semantic facts in later Bar Trivia wave 4-7 banks
   // and expanded easy/CFB waves. Same sporting facts, not mere shared people.
   // Keep the Bar Trivia copy; never touch published Daily snapshots/results.
@@ -2104,7 +2164,8 @@ const AVERAGE_FAN_NAMED_TOPICS: Record<"nfl" | "cfb" | "ufc", readonly string[]>
 };
 
 function normalizeNamedTopic(value: string) {
-  return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+  return value.replace(/[Łł]/g, "l").replace(/[Øø]/g, "o").replace(/[Đđ]/g, "d")
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
     .toLocaleLowerCase("en-US").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
