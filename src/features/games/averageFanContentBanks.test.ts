@@ -494,8 +494,9 @@ describe("Average Fan durable content banks", () => {
       const dateText = new Date(date + "T12:00:00Z").toLocaleDateString("en-US", {
         month: "long", day: "numeric", year: "numeric", timeZone: "UTC",
       });
-      const base = source.find((q) => q.id === `average-fan:ufc:g3:${fighterId}:opponent`)
-        ?? source.find((q) => q.id === `average-fan:ufc:g4:${fighterId}:method-win`);
+      // A historical recorded bout need not survive the post-audit
+      // recognizability selector to retain a stable cross-template fact key.
+      const base = source[0];
       expect(base, fighterId).toBeDefined();
       const opponentQuestion = {
         ...base!,
