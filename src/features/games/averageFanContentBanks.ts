@@ -1188,6 +1188,28 @@ function formatDivision(value: string) {
   return canonical.get(key) ?? value.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function ufcDivisionForFighter(fighter: UfcFactualSubject, division = fighter.primaryDivision) {
+  const display = formatDivision(division);
+  return fighter.gender === "women" && !display.startsWith("Women's ")
+    ? `Women's ${display}` : display;
+}
+
+function plausibleUfcDivisions(fighter: UfcFactualSubject) {
+  const primary = ufcDivisionForFighter(fighter);
+  const pool = fighter.gender === "women" ? UFC_WOMENS_STANDARD_DIVISIONS : UFC_MENS_STANDARD_DIVISIONS;
+  const primaryIndex = pool.indexOf(primary as never);
+  const secondary = new Set(fighter.secondaryDivisions.map((division) =>
+    ufcDivisionForFighter(fighter, division)));
+  // Prefer nearby *other* divisions, never featherweights as implausible
+  // distractors for a heavyweight, and avoid a documented secondary division
+  // when constructing a false primary-division claim.
+  return pool.filter((division) => division !== primary).sort((a, b) =>
+    Number(secondary.has(a)) - Number(secondary.has(b))
+    || Math.abs(pool.indexOf(a) - primaryIndex) - Math.abs(pool.indexOf(b) - primaryIndex)
+    || stableLineupHash(fighter.id + ":division:" + a) - stableLineupHash(fighter.id + ":division:" + b)
+  ).slice(0, 3);
+}
+
 function methodLabel(method: string) {
   if (method === "ko-tko") return "KO/TKO";
   if (method === "submission") return "submission";
@@ -1264,24 +1286,26 @@ function ufcPlausibleFighterMisses(
   acceptedNames: readonly string[],
   salt: string,
 ): string[] {
-  const primary = formatDivision(fighter.primaryDivision);
-  const isWomens = primary.startsWith("Women's ");
+  const primary = ufcDivisionForFighter(fighter);
+  const isWomens = fighter.gender === "women";
   const divisionOrder = isWomens ? UFC_WOMENS_STANDARD_DIVISIONS : UFC_MENS_STANDARD_DIVISIONS;
   const mainIndex = divisionOrder.indexOf(primary as never);
   const associated = new Set(
-    [fighter.primaryDivision, ...fighter.secondaryDivisions].map(formatDivision),
+    [fighter.primaryDivision, ...fighter.secondaryDivisions].map((division) =>
+      ufcDivisionForFighter(fighter, division)),
   );
   const excluded = new Set(
     [fighter.name, ...acceptedNames].map(normalizedUfcOpponent),
   );
   const candidates = fighters
     .filter((other) => (
-      formatDivision(other.primaryDivision).startsWith("Women's ") === isWomens
+      other.gender === fighter.gender
       && !excluded.has(normalizedUfcOpponent(other.name))
     ))
     .map((other) => {
-      const otherPrimary = formatDivision(other.primaryDivision);
-      const otherDivisions = [other.primaryDivision, ...other.secondaryDivisions].map(formatDivision);
+      const otherPrimary = ufcDivisionForFighter(other);
+      const otherDivisions = [other.primaryDivision, ...other.secondaryDivisions].map((division) =>
+        ufcDivisionForFighter(other, division));
       const otherIndex = divisionOrder.indexOf(otherPrimary as never);
       const divisionDistance = otherPrimary === primary ? 0
         : otherDivisions.some((value) => associated.has(value)) ? 1
@@ -1314,12 +1338,9 @@ export function ufcCandidates() {
   const questions: AverageFanQuestion[] = [];
 
   for (const [index, fighter] of fighters.entries()) {
-    const primaryDivision = formatDivision(fighter.primaryDivision);
+    const primaryDivision = ufcDivisionForFighter(fighter);
     if ((UFC_STANDARD_DIVISIONS as readonly string[]).includes(primaryDivision)) {
-      const divisionPool = primaryDivision.startsWith("Women's ")
-        ? UFC_WOMENS_STANDARD_DIVISIONS
-        : UFC_MENS_STANDARD_DIVISIONS;
-      const wrongDivisions = peerValues(divisionPool, primaryDivision, `${fighter.id}:division`);
+      const wrongDivisions = plausibleUfcDivisions(fighter);
       questions.push(choiceQuestion({
         id: `average-fan:ufc:g1:${fighter.id}:division`,
         sport: "ufc",
@@ -2117,7 +2138,8 @@ const AVERAGE_FAN_NAMED_TOPICS: Record<"nfl" | "cfb" | "ufc", readonly string[]>
 };
 
 function normalizeNamedTopic(value: string) {
-  return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+  return value.replace(/[Łł]/g, "l").replace(/[Øø]/g, "o").replace(/[Đđ]/g, "d")
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
     .toLocaleLowerCase("en-US").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
