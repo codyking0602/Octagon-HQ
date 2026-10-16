@@ -4274,3 +4274,177 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
 .football-gm-page[data-cfb-gm="true"] .football-gm__picker-action em {
   color: #79b9f1;
 }
+
+/* Solo GM: same seven-slot economy, with an optional preselected QB. */
+.football-gm__solo-start {
+  display: grid;
+  gap: 9px;
+}
+
+.football-gm__solo-modes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.football-gm__solo-modes > button,
+.football-gm__qb-list > button {
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  min-width: 0;
+  text-align: left;
+}
+
+.football-gm__solo-modes > button {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+}
+
+.football-gm__solo-modes strong,
+.football-gm__qb-name strong {
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.football-gm__solo-modes small,
+.football-gm__qb-name small,
+.football-gm__qb-contract small {
+  color: #96aabd;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.football-gm__solo-modes > button.is-selected,
+.football-gm__qb-list > button.is-selected {
+  background: rgba(117,191,244,.12);
+  border-color: #75bff4;
+}
+
+.football-gm__solo-modes button:focus-visible,
+.football-gm__qb-list button:focus-visible,
+.football-gm__qb-picker input:focus-visible {
+  outline: 2px solid #75bff4;
+  outline-offset: 2px;
+}
+
+.football-gm__qb-picker {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.football-gm__qb-picker > label {
+  color: #a4cde8;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .06em;
+}
+
+.football-gm__qb-picker > input {
+  background: #101f2c;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 11px;
+  box-sizing: border-box;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  min-height: 44px;
+  padding: 11px 12px;
+  width: 100%;
+}
+
+.football-gm__qb-list {
+  display: grid;
+  gap: 5px;
+  max-height: 276px;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.football-gm__qb-list > button {
+  align-items: center;
+  display: grid;
+  gap: 9px;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  min-height: 53px;
+  padding: 7px 9px;
+}
+
+.football-gm__qb-list .football-gm__team-logo,
+.football-gm__qb-list .football-gm__team-fallback {
+  height: 30px;
+  max-width: 30px;
+  object-fit: contain;
+  width: 30px;
+}
+
+.football-gm__qb-name,
+.football-gm__qb-contract {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.football-gm__qb-name strong,
+.football-gm__qb-name small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-gm__qb-contract {
+  text-align: right;
+}
+
+.football-gm__qb-contract b {
+  color: #dceefb;
+  font-size: 12px;
+}
+
+.football-gm__qb-selected {
+  align-items: center;
+  background: rgba(117,191,244,.08);
+  border: 1px solid rgba(117,191,244,.24);
+  border-radius: 12px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  padding: 10px;
+}
+
+.football-gm__qb-selected > span:last-child {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.football-gm__qb-selected small,
+.football-gm__qb-selected em,
+.football-gm__qb-help,
+.football-gm__qb-draft-banner {
+  color: #9eb6c8;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.4;
+}
+
+.football-gm__qb-selected strong {
+  color: #fff;
+  font-size: 15px;
+}
+
+.football-gm__qb-help { margin: 0; }
+.football-gm__qb-draft-banner { margin: 0 2px; font-weight: 850; letter-spacing: .04em; }
+
+@media (max-width: 390px) {
+  .football-gm__solo-modes > button { padding: 9px; }
+  .football-gm__qb-list > button { grid-template-columns: 27px minmax(0, 1fr) auto; gap: 6px; }
+  .football-gm__qb-list .football-gm__team-logo,
+  .football-gm__qb-list .football-gm__team-fallback { width: 25px; height: 25px; }
+  .football-gm__qb-contract b { font-size: 11px; }
+}

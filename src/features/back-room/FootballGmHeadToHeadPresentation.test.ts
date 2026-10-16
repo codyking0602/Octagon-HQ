@@ -49,11 +49,11 @@ describe("The GM head-to-head presentation", () => {
     expect(page).toContain("requireDirectFit: run.freeAgencyRules === \"three-plus-one\"");
   });
 
-  it("keeps the approved intro and offers the original solo run or one-GM play", () => {
+  it("keeps the approved mode picker and routes solo through its starting-mode selection", () => {
     expect(page).toContain("BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.");
     expect(page).toContain("<strong>SOLO RUN</strong>");
     expect(page).toContain('navigate("/football/gm-mode?solo=1")');
-    expect(page).toContain("<FootballGmSoloPage startImmediately standalone />");
+    expect(page).toContain("<FootballGmSoloPage standalone />");
     expect(page).not.toContain("<strong>VS CPU</strong>");
     expect(page).toContain("HEAD TO HEAD");
     expect(page).toContain("Alternate every draft pick");

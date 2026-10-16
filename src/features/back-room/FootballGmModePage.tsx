@@ -64,7 +64,12 @@ import {
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
 import { FootballGmDevelopmentReport } from "./FootballGmDevelopmentReport";
 import { FOOTBALL_GM_DEVELOPMENT_SEED_TAG } from "./wheelFootballGmEconomy";
-import { footballGmRepriceLabel, footballGmScoutingSnapshot } from "./footballGmScouting";
+import { footballGmRepriceLabel, footballGmScoutingSnapshot, footballGmTalentTier } from "./footballGmScouting";
+import {
+  FOOTBALL_GM_SOLO_QUARTERBACKS,
+  footballGmSoloOpeningQuarterback,
+  type FootballGmSoloStartMode,
+} from "./footballGmSoloStart";
 
 type Phase = "intro" | "draft" | "year1" | "offseason" | "years23" | "final";
 
@@ -83,6 +88,7 @@ export interface PersistedRun {
   version: string;
   seed: string;
   phase: Phase;
+  startMode?: FootballGmSoloStartMode;
   roster: FootballGmRosterEntry[];
   finalRoster: FootballGmRosterEntry[];
   tradeChipPlayerIds: string[];
@@ -138,6 +144,7 @@ export function initialRun(seed: string, freeAgencyRules: FootballGmFreeAgencyRu
     version: FOOTBALL_GM_VERSION,
     seed,
     phase: "intro",
+    startMode: "classic",
     roster: [],
     finalRoster: [],
     tradeChipPlayerIds: [],
@@ -194,6 +201,7 @@ function parsePersistedRun(value: unknown) {
   return {
     ...parsed,
     version: FOOTBALL_GM_VERSION,
+    startMode: parsed.startMode === "choose-qb" ? "choose-qb" : "classic",
     freeAgencyVisitsUsed: footballGmMarketVisitsUsed(parsed.freeAgencyVisitsUsed, parsed.freeAgentSpinIndex ?? 0),
     freeAgencyRules: parsed.freeAgencyRules === "three-plus-one" ? "three-plus-one" : "legacy",
     freeAgencyVisitCeiling: typeof parsed.freeAgencyVisitCeiling === "number" ? parsed.freeAgencyVisitCeiling : null,
@@ -314,6 +322,7 @@ function gmAuditSnapshot(
     version: run.version,
     seed: run.seed,
     phase: run.phase,
+    startMode: run.startMode ?? "classic",
     context,
     run,
     cap: {
@@ -1541,6 +1550,13 @@ export default function FootballGmModePage({
     return startImmediately ? { ...fresh, phase: "draft" } : fresh;
   });
   const [challengeStatus, setChallengeStatus] = useState("");
+  const [soloStartMode, setSoloStartMode] = useState<FootballGmSoloStartMode>("classic");
+  const [soloQbSearch, setSoloQbSearch] = useState("");
+  const [selectedSoloQbId, setSelectedSoloQbId] = useState<string | null>(null);
+  const selectedSoloQuarterback = FOOTBALL_GM_SOLO_QUARTERBACKS.find((player) => player.id === selectedSoloQbId) ?? null;
+  const filteredSoloQuarterbacks = FOOTBALL_GM_SOLO_QUARTERBACKS.filter((player) =>
+    (player.name + " " + player.team).toLowerCase().includes(soloQbSearch.trim().toLowerCase()));
+  const canChooseStartingQb = standalone && !weeklyRun && !profileMatch.code;
   const [runRepository] = useState(() => createFootballGmRunRepository());
   const [soloHydrated, setSoloHydrated] = useState(() => !standalone || Boolean(weeklyRun));
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
@@ -1718,6 +1734,23 @@ export default function FootballGmModePage({
 
   function patch(next: Partial<PersistedRun>) {
     setRun((current) => ({ ...current, ...next }));
+  }
+
+  function beginDraft() {
+    if (!canChooseStartingQb || soloStartMode === "classic") {
+      patch({ phase: "draft", startMode: "classic" });
+      return;
+    }
+    const openingRoster = footballGmSoloOpeningQuarterback(selectedSoloQbId);
+    if (!openingRoster) return;
+    patch({
+      phase: "draft",
+      startMode: "choose-qb",
+      roster: openingRoster,
+      spinIndex: 1,
+      previousTeam: null,
+      pendingTeam: null,
+    });
   }
 
   function spinDraft() {
@@ -2078,6 +2111,9 @@ export default function FootballGmModePage({
     const nextSeed = freshSeed();
     setSeed(nextSeed);
     setRun(initialRun(nextSeed));
+    setSoloStartMode("classic");
+    setSelectedSoloQbId(null);
+    setSoloQbSearch("");
     setChallengeStatus("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -2155,12 +2191,56 @@ export default function FootballGmModePage({
           <h1>BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.</h1>
           <p className="football-gm__intro-lede">Build a 7-man NFL core under a {footballGmMoney(FOOTBALL_GM_CAP)} cap.</p>
 
+          {canChooseStartingQb ? (
+            <div className="football-gm__solo-start">
+              <p className="eyebrow">CHOOSE YOUR START</p>
+              <div className="football-gm__solo-modes" role="group" aria-label="Solo GM starting mode">
+                <button type="button" className={soloStartMode === "classic" ? "is-selected" : ""} aria-pressed={soloStartMode === "classic"} onClick={() => setSoloStartMode("classic")}>
+                  <strong>CLASSIC GM</strong>
+                  <small>Seven wheel picks. Original rules.</small>
+                </button>
+                <button type="button" className={soloStartMode === "choose-qb" ? "is-selected" : ""} aria-pressed={soloStartMode === "choose-qb"} onClick={() => setSoloStartMode("choose-qb")}>
+                  <strong>CHOOSE YOUR QB</strong>
+                  <small>Pick your franchise QB, then spin six times.</small>
+                </button>
+              </div>
+              {soloStartMode === "choose-qb" ? (
+                <div className="football-gm__qb-picker">
+                  <label htmlFor="football-gm-qb-search">SELECT YOUR FRANCHISE QUARTERBACK</label>
+                  <input id="football-gm-qb-search" type="search" autoComplete="off" value={soloQbSearch} onChange={(event) => setSoloQbSearch(event.target.value)} placeholder="Search 34 NFL quarterbacks…" />
+                  <div className="football-gm__qb-list" role="group" aria-label="Starting quarterback options">
+                    {filteredSoloQuarterbacks.map((player) => (
+                      <button
+                        type="button"
+                        key={player.id}
+                        className={selectedSoloQbId === player.id ? "is-selected" : ""}
+                        aria-pressed={selectedSoloQbId === player.id}
+                        onClick={() => setSelectedSoloQbId(player.id)}
+                      >
+                        <TeamLogo teamCode={player.team} />
+                        <span className="football-gm__qb-name"><strong>{player.name}</strong><small>{player.team} · {footballGmTalentTier(player.currentGrade)} · {footballGmRepriceLabel(player.extensionRisk)}</small></span>
+                        <span className="football-gm__qb-contract"><b>{footballGmMoney(player.salaryApy)}</b><small>{player.gameContract}</small></span>
+                      </button>
+                    ))}
+                    {!filteredSoloQuarterbacks.length ? <p>No quarterbacks match that search.</p> : null}
+                  </div>
+                  {selectedSoloQuarterback ? (
+                    <div className="football-gm__qb-selected" aria-live="polite">
+                      <PlayerHeadshot key={selectedSoloQuarterback.id} player={selectedSoloQuarterback} />
+                      <span><small>YOUR FRANCHISE QB</small><strong>{selectedSoloQuarterback.name}</strong><em>{selectedSoloQuarterback.gameContract === "3YR" ? "Salary locked for all three seasons" : "Salary reprices in the offseason"} · Normal player-specific development</em></span>
+                    </div>
+                  ) : <p className="football-gm__qb-help">Choose any quarterback to start with his real GM salary and contract. Ratings stay hidden, and player development is not guaranteed.</p>}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
           <div className="football-gm__intro-stages">
             <article>
               <b>1</b>
               <span>
                 <strong>DRAFT</strong>
-                <small>Spin a team. Pick one player. Fill all 7 spots.</small>
+                <small>{canChooseStartingQb && soloStartMode === "choose-qb" ? "Start with your chosen QB, then spin for the other six spots." : "Spin a team. Pick one player. Fill all 7 spots."}</small>
               </span>
             </article>
             <article>
@@ -2190,7 +2270,9 @@ export default function FootballGmModePage({
             <p>QB and WR carry a little more weight. EDGE and CB have a modest positional premium; linebackers, safeties and FLEX options are valued by their real role. Every match uses the same rules, and player HQ grades stay unchanged.</p>
           </details>
 
-          <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
+          <button className="primary-action" type="button" disabled={canChooseStartingQb && soloStartMode === "choose-qb" && !selectedSoloQuarterback} onClick={beginDraft}>
+            {canChooseStartingQb && soloStartMode === "choose-qb" ? "BUILD AROUND YOUR QB" : "START THE DRAFT"}
+          </button>
         </section>
       ) : null}
 
@@ -2198,6 +2280,7 @@ export default function FootballGmModePage({
         <>
           <CapMeter roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
           <RosterGrid roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
+          {run.startMode === "choose-qb" ? <p className="football-gm__qb-draft-banner">CHOOSE YOUR QB · SIX INDEPENDENT WHEEL PICKS · NORMAL DEVELOPMENT</p> : null}
           <div className="football-gm__draft-context" aria-label="Draft round and open roster spots">
             <span>ROUND {run.roster.length + 1} OF 7</span>
             <strong>{footballGmOpenSlots(run.roster).join(" · ")}</strong>
