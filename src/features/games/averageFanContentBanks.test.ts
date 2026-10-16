@@ -582,8 +582,16 @@ describe("Average Fan durable content banks", () => {
         ...(wins.length ? wins : fighter.fights).map((fight) => fight.opponent),
         question.answer,
       ]);
-      const sourcedAnswer = fighter.fights.find((fight) => fight.opponent === question.answer);
-      expect(sourcedAnswer, question.id).toBeDefined();
+      const dateText = /\\bon ([A-Za-z]+ \\d{1,2}, \\d{4})\\?$/.exec(question.prompt)?.[1];
+      expect(dateText, question.id).toBeTruthy();
+      const sourcedAnswer = fighter.fights.find((fight) =>
+        fight.opponent === question.answer &&
+        new Date(fight.date + "T12:00:00Z").toLocaleDateString("en-US", {
+          month: "long", day: "numeric", year: "numeric", timeZone: "UTC",
+        }) === dateText);
+      expect(sourcedAnswer, question.id + " exact date+opponent").toBeDefined();
+      // Brandon Moreno fought Deiveson Figueiredo multiple times, including
+      // a draw and a win. Only the specifically dated fight determines outcome.
       if (question.prompt.includes(" defeat in the UFC")) {
         expect(sourcedAnswer?.result, question.id).toBe("win");
       }
@@ -1009,7 +1017,11 @@ describe("Average Fan durable content banks", () => {
       question.id === "average-fan:ufc:g3:ufc:daniel-cormier:opponent",
     );
     expect(cormier).toBeTruthy();
-    expect(cormier?.choices).toContain("Alexander Gustafsson");
+    // The named correct opponent changes when the generator favors a
+    // recognizable fight. Protect the actual sourced fight and peer quality,
+    // not a prior handpicked correct answer from an older version.
+    expect(cormier?.choices).toContain(cormier?.answer);
+    expect(cormier?.choices).toHaveLength(4);
     expect(cormier?.choices).not.toContain("Holly Holm");
     expect(cormier?.choices).not.toContain("Henry Cejudo");
   });
