@@ -2226,7 +2226,7 @@ export default function FootballGmModePage({
                   </div>
                   {selectedSoloQuarterback ? (
                     <div className="football-gm__qb-selected" aria-live="polite">
-                      <PlayerHeadshot player={selectedSoloQuarterback} />
+                      <PlayerHeadshot key={selectedSoloQuarterback.id} player={selectedSoloQuarterback} />
                       <span><small>YOUR FRANCHISE QB</small><strong>{selectedSoloQuarterback.name}</strong><em>{selectedSoloQuarterback.gameContract === "3YR" ? "Salary locked for all three seasons" : "Salary reprices in the offseason"} · Normal player-specific development</em></span>
                     </div>
                   ) : <p className="football-gm__qb-help">Choose any quarterback to start with his real GM salary and contract. Ratings stay hidden, and player development is not guaranteed.</p>}
@@ -2240,7 +2240,7 @@ export default function FootballGmModePage({
               <b>1</b>
               <span>
                 <strong>DRAFT</strong>
-                <small>Spin a team. Pick one player. Fill all 7 spots.</small>
+                <small>{canChooseStartingQb && soloStartMode === "choose-qb" ? "Start with your chosen QB, then spin for the other six spots." : "Spin a team. Pick one player. Fill all 7 spots."}</small>
               </span>
             </article>
             <article>
