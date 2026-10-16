@@ -879,7 +879,7 @@ export default function FootballGmHeadToHeadPage() {
   }, [cpuOffseasonDone, cpuRun, localPhase, localTurn, mode, run, userOffseasonDone]);
 
   if (!identity.ready) return null;
-  if (soloRequested) return <FootballGmSoloPage startImmediately standalone />;
+  if (soloRequested) return <FootballGmSoloPage standalone />;
 
   function resetLocal() {
     navigate("/football/gm-mode?solo=1");
