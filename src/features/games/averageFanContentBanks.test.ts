@@ -582,7 +582,7 @@ describe("Average Fan durable content banks", () => {
         ...(wins.length ? wins : fighter.fights).map((fight) => fight.opponent),
         question.answer,
       ]);
-      const dateText = /\\bon ([A-Za-z]+ \\d{1,2}, \\d{4})\\?$/.exec(question.prompt)?.[1];
+      const dateText = /\bon ([A-Za-z]+ \d{1,2}, \d{4})\?$/.exec(question.prompt)?.[1];
       expect(dateText, question.id).toBeTruthy();
       const sourcedAnswer = fighter.fights.find((fight) =>
         fight.opponent === question.answer &&
