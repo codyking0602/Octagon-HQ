@@ -1204,8 +1204,8 @@ function plausibleUfcDivisions(fighter: UfcFactualSubject) {
   // distractors for a heavyweight, and avoid a documented secondary division
   // when constructing a false primary-division claim.
   return pool.filter((division) => division !== primary).sort((a, b) =>
-    Number(secondary.has(a)) - Number(secondary.has(b))
-    || Math.abs(pool.indexOf(a) - primaryIndex) - Math.abs(pool.indexOf(b) - primaryIndex)
+    Math.abs(pool.indexOf(a) - primaryIndex) - Math.abs(pool.indexOf(b) - primaryIndex)
+    || Number(secondary.has(a)) - Number(secondary.has(b))
     || stableLineupHash(fighter.id + ":division:" + a) - stableLineupHash(fighter.id + ":division:" + b)
   ).slice(0, 3);
 }
