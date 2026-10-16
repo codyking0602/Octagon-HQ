@@ -1901,6 +1901,10 @@ function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
 // Also retire manually reviewed topic collisions with Millionaire's ten-run banks.
 // Other known Bar Trivia, Millionaire, and intra-bank same-fact repeats.
 const RETIRED_REPEATED_FACT_ID_PREFIXES = [
+  // The curated 2015 runner-up fact already explicitly asks whether McCaffrey
+  // won the Heisman. Retire the generic registry boolean instead of repeating
+  // the same true/false knowledge in two Average Fan grade pools.
+  "average-fan:cfb:g3:cfb-christian-mccaffrey:heisman",
   // Stage 2X: this source definition gives away "edge rusher" in the stem.
   "average-fan:nfl:00-xo:edge-rusher:",
   // Stage 2W: cross-game semantic facts in later Bar Trivia wave 4-7 banks
