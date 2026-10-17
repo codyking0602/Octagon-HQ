@@ -81,9 +81,12 @@ describe("complete calculation-backed ranking model", () => {
       expect(row.weighted, `${row.fighter} weighted categories`).toEqual(expected.weighted);
       expect(row.totals, `${row.fighter} totals`).toEqual(expected.totals);
       expect(row.tieBreakers, `${row.fighter} tie breakers`).toEqual(expected.tieBreakers);
-      expect(row.metadata?.visibleStats, `${row.fighter} visible stats`).toEqual(
-        expected.visibleStats,
-      );
+      const visibleStats = row.metadata!.visibleStats;
+      const { auditedPrimeRoundCount, ...migratedVisibleStats } = visibleStats;
+      // Preserve exact V1 historical values while verifying the new audit denominator separately.
+      expect(migratedVisibleStats, `${row.fighter} visible stats`).toEqual(expected.visibleStats);
+      expect(Number.isInteger(auditedPrimeRoundCount)).toBe(true);
+      expect(auditedPrimeRoundCount).toBeGreaterThanOrEqual(0);
       });
   });
 
