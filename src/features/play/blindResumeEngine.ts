@@ -239,7 +239,13 @@ export function orderEvidenceSafeBlindResumeStats(pair: BlindResumePair, stats: 
     return Number.isFinite(a) && Number.isFinite(b)
       && (winnerOnA ? a! < b! : b! < a!);
   });
-  const openingContrast = opposing[0] ?? "Main UFC era";
+  // Avoid stacking the two title-count rows at the opening. Do not use
+  // percentage-of-audited-rounds as a counterargument without source coverage.
+  const openingContrast = opposing.find((label) => (
+    label !== "UFC title-fight wins"
+    && label !== "Top-5 wins"
+    && label !== "Rounds won"
+  )) ?? "Main UFC era";
   const secondSupport = supporting.find((label) => label !== openingAnchor)!;
   const thirdSupport = supporting.find((label) => (
     label !== openingAnchor && label !== secondSupport
