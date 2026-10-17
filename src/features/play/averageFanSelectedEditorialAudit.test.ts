@@ -22,6 +22,7 @@ describe("Average Fan final selected-board editorial evidence", () => {
   it("prints five exact selected boards per sport and validates 180 days of published compositions", () => {
     const captured: Record<DailySport, number> = { nfl: 0, cfb: 0, ufc: 0 };
     let scheduled = 0;
+    const repeatedNamedTopics: string[] = [];
 
     for (const scope of ["football", "ufc"] as const) {
       const history: HistoryRow[] = [];
@@ -46,7 +47,7 @@ describe("Average Fan final selected-board editorial evidence", () => {
           expect(question.prompt.trim().length, question.id).toBeGreaterThan(0);
           expect(question.answer.trim().length, question.id).toBeGreaterThan(0);
           for (const topic of averageFanQuestionNamedTopics(question)) {
-            expect(topics.has(topic), `${day} repeated named topic ${topic}`).toBe(false);
+            if (topics.has(topic)) repeatedNamedTopics.push(`${sport} ${day}: ${topic} in ${question.id}`);
             topics.add(topic);
           }
           if (question.format === "four-choice") {
@@ -79,5 +80,7 @@ describe("Average Fan final selected-board editorial evidence", () => {
 
     for (const sport of ["nfl", "cfb", "ufc"] as const) expect(captured[sport], sport).toBe(5);
     expect(scheduled).toBeGreaterThan(30);
+    // Report every repeat in one run instead of hiding all but the first.
+    expect(repeatedNamedTopics, "Repeated person/program or incident in selected Daily boards").toEqual([]);
   });
 });
