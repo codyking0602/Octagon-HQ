@@ -3,7 +3,6 @@ import {
   BLIND_RESUME_ROUNDS,
   blindResumeStats,
   blindResumeWinner,
-  createBlindResumeRounds,
 } from "./blindResumeEngine";
 import { createBlindResumeV3Card } from "./blindResumeV3";
 import { rankedPlayFighters } from "./playFighterPool";
@@ -55,7 +54,7 @@ describe("Stage 3 Blind Resume content-audit baseline", () => {
         for (const stat of visible) {
           expect(stat.valueA.trim().length).toBeGreaterThan(0);
           expect(stat.valueB.trim().length).toBeGreaterThan(0);
-          expect([stat.valueA, stat.valueB].join(" ")).not.toMatch(/\\b(?:NaN|Infinity|undefined|null)\\b/);
+          expect([stat.valueA, stat.valueB].join(" ")).not.toMatch(/(?:NaN|Infinity|undefined|null)/);
         }
         expect(
           visible.slice(0, 2).map((stat) => stat.label).sort(),
