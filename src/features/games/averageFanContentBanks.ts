@@ -854,6 +854,26 @@ function displayNflTeam(code: string) {
   return NFL_TEAM_NAMES[code] ?? code;
 }
 
+/** Use plausible peer leagues in generated *false* 2025 conference claims.
+ * Random power-conference pairings made Group-of-Five false statements like
+ * "FAU was in the SEC" trivial instead of measuring real CFB knowledge. */
+const CFB_PLAUSIBLE_FALSE_CONFERENCES: Readonly<Record<string, readonly string[]>> = {
+  SEC: ["ACC", "Big 12", "Big Ten"],
+  "Big Ten": ["Big 12", "ACC", "SEC"],
+  "Big 12": ["Big Ten", "ACC", "American"],
+  ACC: ["SEC", "Big 12", "Big Ten"],
+  American: ["Sun Belt", "Mountain West", "ACC"],
+  "Sun Belt": ["American", "Mountain West", "ACC"],
+  "Mountain West": ["American", "Big 12", "Sun Belt"],
+  Independent: ["ACC", "Big Ten", "American"],
+};
+
+function credibleCfbFalseConference(answer: string, available: readonly string[]) {
+  return CFB_PLAUSIBLE_FALSE_CONFERENCES[answer]
+    ?.find((conference) => conference !== answer && available.includes(conference))
+    ?? available.find((conference) => conference !== answer);
+}
+
 function footballCandidates(league: "NFL" | "CFB") {
   const sport = league === "NFL" ? "nfl" as const : "cfb" as const;
   const players = footballPlayers(league).filter((player) => league !== "NFL" || player.casualEligible);
@@ -1057,7 +1077,9 @@ function footballCandidates(league: "NFL" | "CFB") {
         difficultyNudge: program.recognizabilityTier === "A" || program.recognizabilityTier === "B" ? -2 : -1,
       }));
       const tfTrue = index % 2 === 0;
-      const shownConference = tfTrue ? program.conference : wrongConferences[0]!;
+      const shownConference = tfTrue
+        ? program.conference
+        : credibleCfbFalseConference(program.conference, conferences) ?? wrongConferences[0]!;
       questions.push(trueFalseQuestion({
         id: `average-fan:cfb:g2:${program.id}:conference-tf`,
         sport: "cfb",
@@ -1070,9 +1092,19 @@ function footballCandidates(league: "NFL" | "CFB") {
       const conferenceProgramKey = `${program.conference}:${conferenceSeason}`;
       if (!seenConferenceProgramQuestions.has(conferenceProgramKey)) {
         seenConferenceProgramQuestions.add(conferenceProgramKey);
+        // Conference identity is not a meaningful middle-grade challenge when
+        // all three wrong programs are from a visibly weaker classification
+        // (e.g. Illinois / Tulane / Tulsa / UAB for the Big Ten). Compare
+        // Power Four teams with P4 peers and Group-of-Five with G5 peers.
+        // Notre Dame's Independent identity is P4-caliber for this purpose.
+        const powerConferences = new Set(["SEC", "ACC", "Big Ten", "Big 12"]);
+        const g5Conferences = new Set(["American", "Mountain West", "Sun Belt"]);
+        const targetGroup = (powerConferences.has(program.conference) || program.conference === "Independent")
+          ? powerConferences : g5Conferences;
         const wrongPrograms = peerValues(
           programs
-            .filter((candidate) => candidate.conference && candidate.conference !== program.conference)
+            .filter((candidate) => candidate.conference && candidate.conference !== program.conference
+              && targetGroup.has(candidate.conference))
             .map((candidate) => candidate.name),
           program.name,
           `${program.id}:program-choice`,
@@ -2195,7 +2227,41 @@ export function averageFanQuestionNamedTopics(question: AverageFanQuestion): str
       distinct.push(name);
     }
   }
+  // An event can have several different correct answers but still be the
+  // same quiz topic. Both the Malcolm Butler pick and the intended-target
+  // follow-up on a single 2026-12-01 NFL board were redundant, although the
+  // imported person registry did not include Butler as a named subject.
+  const promptKey = normalizeNamedTopic(question.prompt);
+  if (question.sport === "nfl"
+    && promptKey.includes("super bowl xlix")
+    && (promptKey.includes("goal line") || promptKey.includes("malcolm butler"))
+    && /intercept/i.test(promptKey)) {
+    distinct.push("super-bowl-xlix-goal-line-interception");
+  }
+  // Different judging-result definitions on the same UFC board are a
+  // repetitive Octagon IQ exercise, not useful Grade-3/4 variety.
+  const answerKey = normalizeNamedTopic(question.answer);
+  if (question.sport === "ufc"
+    && answerKey.endsWith("decision")
+    && /judg|draw|decision|unanimous|majority|split/.test(promptKey)) {
+    distinct.push("judges-decision-vocabulary");
+  }
   return distinct.map((name) => `${question.sport}:${name}`);
+}
+
+/** Best-effort within-board content variety. These broad topical families are
+ * selection preferences, not identity assertions: related rivalries are
+ * different valid facts, yet three trophy questions on one day feels repetitive.
+ */
+export function averageFanQuestionBoardTopics(question: AverageFanQuestion) {
+  const topics = averageFanQuestionNamedTopics(question);
+  const prompt = normalizeNamedTopic(question.prompt);
+  if (question.sport === "cfb"
+    && (/rivalry|trophy/.test(prompt) || /which two programs play/.test(prompt)
+      || /play for which/.test(prompt) || /which programs play/.test(prompt))) {
+    topics.push("cfb:topic-family:rivalries-and-trophies");
+  }
+  return topics;
 }
 
 export function averageFanBankSummary(sport: Exclude<AverageFanSport, "mlb">) {

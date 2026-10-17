@@ -73,6 +73,48 @@ function oneCharacterHumanTypo(value: string) {
 }
 
 describe("Average Fan durable content banks", () => {
+  it("never uses G5-only distractors against a Power Four CFB conference identity", () => {
+    const programs = new Map(queryFootballSubjects({ league: "CFB", kind: "program" })
+      .map((program) => [program.name, program]));
+    const selected = AVERAGE_FAN_CONTENT_BANKS.cfb.filter((question) =>
+      question.id.endsWith(":conference-program"));
+    expect(selected.length).toBeGreaterThan(0);
+    const powerConferences = new Set(["SEC", "ACC", "Big Ten", "Big 12"]);
+    const g5Conferences = new Set(["American", "Sun Belt", "Mountain West"]);
+    for (const question of selected) {
+      const source = programs.get(question.answer);
+      expect(source, question.id).toBeTruthy();
+      const targetGroup = source?.conference === "Independent"
+        || powerConferences.has(source?.conference ?? "")
+        ? powerConferences : g5Conferences;
+      expect(question.format, question.id).toBe("four-choice");
+      for (const choice of question.choices ?? []) {
+        if (choice === question.answer) continue;
+        const peer = programs.get(choice);
+        expect(peer, `${question.id}: ${choice}`).toBeTruthy();
+        expect(targetGroup.has(peer?.conference ?? ""), `${question.id}: ${choice}`).toBe(true);
+      }
+    }
+  });
+
+  it("uses credible rather than giveaway false 2025 CFB conference peers", () => {
+    const programs = new Map(queryFootballSubjects({ league: "CFB", kind: "program" })
+      .map((program) => [program.id, program]));
+    const falseClaims = AVERAGE_FAN_CONTENT_BANKS.cfb.filter((question) =>
+      question.id.endsWith(":conference-tf") && question.answer === "False");
+    expect(falseClaims.length).toBeGreaterThan(2);
+    for (const question of falseClaims) {
+      const programId = question.id.replace(/^average-fan:cfb:g2:/, "").replace(/:conference-tf$/, "");
+      const program = programs.get(programId);
+      expect(program, question.id).toBeTruthy();
+      expect(question.prompt, question.id).not.toContain(`the ${program?.conference} for the`);
+      if (program?.conference === "American" || program?.conference === "Sun Belt") {
+        expect(question.prompt, question.id).toMatch(/the (?:American|Sun Belt|Mountain West) for the/);
+        expect(question.prompt, question.id).not.toMatch(/the (?:SEC|Big Ten|Big 12) for the/);
+      }
+    }
+  });
+
   it("credits historically correct Rams-era answers and keeps the misnamed UFC 16 undercard fact retired", () => {
     const rams = AVERAGE_FAN_CONTENT_BANKS.nfl.find((question) =>
       question.id.startsWith("average-fan:nfl:00-team:greatest-show:"));

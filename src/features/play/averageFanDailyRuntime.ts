@@ -14,7 +14,7 @@ import {
   type AverageFanQuestion,
   type AverageFanSport,
 } from "../games/averageFanEngine";
-import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionNamedTopics } from "../games/averageFanContentBanks";
+import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionBoardTopics } from "../games/averageFanContentBanks";
 import { stableLineupHash } from "./lineupModel";
 import type {
   OfficialDailyAdvanceResult,
@@ -123,13 +123,10 @@ function boardFor(
   const active = bank.filter((question) => averageFanQuestionEligibleForBoard(question, now));
   const fresh = active.filter((question) => !used.has(question.id));
   const evergreenActive = active.filter((question) => question.contentType === "evergreen");
-  const evergreenFresh = fresh.filter((question) => question.contentType === "evergreen");
   const poolForGrade = (grade: number) => {
-    const freshGrade = evergreenFresh.filter((question) => question.grade === grade);
-    if (freshGrade.length >= 2) return freshGrade;
-    // After several months, the quality-first CFB bank may exhaust unused
-    // questions within 183 days. Fall back to previously used questions *older
-    // than 30 days*, never the recently published pool if a safe option exists.
+    // Always consider safe 31+-day-old content alongside fresh content.
+    // Fresh-only selection could force the *same person* twice on one CFB
+    // board while a previously played, differently themed question was safe.
     const olderEligible = evergreenActive.filter((question) =>
       question.grade === grade && !usedWithinThirtyDays.has(question.id));
     return olderEligible.length >= 2 ? olderEligible
@@ -150,8 +147,8 @@ function boardFor(
   const usedTopics = new Set<string>();
   // A featured current event is guaranteed a slot, so avoid selecting its
   // subject earlier on the same board just because it appears in another grade.
-  const reservedCurrentTopics = new Set(current ? averageFanQuestionNamedTopics(current) : []);
-  const topicKeys = new Map(bank.map((question) => [question.id, averageFanQuestionNamedTopics(question)] as const));
+  const reservedCurrentTopics = new Set(current ? averageFanQuestionBoardTopics(current) : []);
+  const topicKeys = new Map(bank.map((question) => [question.id, averageFanQuestionBoardTopics(question)] as const));
   const rememberTopics = (question: AverageFanQuestion) => {
     for (const key of topicKeys.get(question.id) ?? []) usedTopics.add(key);
   };
@@ -175,15 +172,21 @@ function boardFor(
 
     while (gradeSelected.length < 2) {
       const ordered = [...candidates].sort((left, right) => {
-        const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
-        const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
-        if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
-
-        // Different facts about the same star are still repetitive in an
-        // eight-tile Daily board. Prefer distinct named people/programs/teams.
+        // Prevent repeated named people/programs across the entire Daily first.
+        // Subject variety is secondary: sorting by subject before topic used to
+        // let another Weidman question appear on the same 2027-04-01 UFC board.
         const leftTopicRepeat = topicCollisionCount(left);
         const rightTopicRepeat = topicCollisionCount(right);
         if (leftTopicRepeat !== rightTopicRepeat) return leftTopicRepeat - rightTopicRepeat;
+
+        // Prefer unused candidates when topical quality is equally good.
+        const leftUsed = used.has(left.id) ? 1 : 0;
+        const rightUsed = used.has(right.id) ? 1 : 0;
+        if (leftUsed !== rightUsed) return leftUsed - rightUsed;
+
+        const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
+        const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
+        if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
 
         if (grade <= 3) {
           const leftShortAnswer = left.format === "short-answer" ? 1 : 0;
@@ -237,13 +240,24 @@ function finalFor(
   const active = bank.filter((question) => averageFanQuestionEligibleForFinal(question, now));
   const fresh = active.filter((question) => !used.has(question.id));
   const olderEligible = active.filter((question) => !usedWithinThirtyDays.has(question.id));
-  const boardTopics = new Set(board.flatMap(averageFanQuestionNamedTopics));
+  const boardTopics = new Set(board.flatMap(averageFanQuestionBoardTopics));
+  const withoutTopicOverlap = (questions: readonly AverageFanQuestion[]) =>
+    questions.filter((question) =>
+      averageFanQuestionBoardTopics(question).every((key) => !boardTopics.has(key)));
+  // Prefer a safely reusable older Final over a *fresh* Final about the same
+  // player already on this board. Do not exhaust unique topics just to avoid a
+  // 31+-day-old Final; never compromise the protected Final eligibility gate.
+  const pool = withoutTopicOverlap(fresh).length ? withoutTopicOverlap(fresh)
+    : withoutTopicOverlap(olderEligible).length ? withoutTopicOverlap(olderEligible)
+    : fresh.length ? fresh
+    : olderEligible.length ? olderEligible
+    : active;
   const ordered = deterministicOrder(
-    fresh.length ? fresh : olderEligible.length ? olderEligible : active,
+    pool,
     `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}|final`,
   ).sort((left, right) => {
     const overlaps = (question: AverageFanQuestion) =>
-      averageFanQuestionNamedTopics(question).filter((key) => boardTopics.has(key)).length;
+      averageFanQuestionBoardTopics(question).filter((key) => boardTopics.has(key)).length;
     return overlaps(left) - overlaps(right);
   });
   const final = ordered[0];
