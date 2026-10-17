@@ -152,7 +152,7 @@ describe("Blind Resume V3 shared contract", () => {
     const seed = "v3-intelligence-return";
     const card = createEvidenceSafeBlindResumeV3Card(seed);
     const pair = card.roundSet.pairs[0]!;
-    const { container } = renderBlindResumeWithIntelligence(`/play/blind-resume?run=${seed}`);
+    const { container } = renderBlindResumeWithIntelligence(`/play/blind-resume?run=${seed}&q=1`);
     const view = within(container);
 
     fireEvent.click(view.getByText("REVEAL 2 MORE STATS"));
