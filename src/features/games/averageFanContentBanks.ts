@@ -2195,6 +2195,25 @@ export function averageFanQuestionNamedTopics(question: AverageFanQuestion): str
       distinct.push(name);
     }
   }
+  // An event can have several different correct answers but still be the
+  // same quiz topic. Both the Malcolm Butler pick and the intended-target
+  // follow-up on a single 2026-12-01 NFL board were redundant, although the
+  // imported person registry did not include Butler as a named subject.
+  const promptKey = normalizeNamedTopic(question.prompt);
+  if (question.sport === "nfl"
+    && promptKey.includes("super bowl xlix")
+    && (promptKey.includes("goal line") || promptKey.includes("malcolm butler"))
+    && /intercept/i.test(promptKey)) {
+    distinct.push("super-bowl-xlix-goal-line-interception");
+  }
+  // Different judging-result definitions on the same UFC board are a
+  // repetitive Octagon IQ exercise, not useful Grade-3/4 variety.
+  const answerKey = normalizeNamedTopic(question.answer);
+  if (question.sport === "ufc"
+    && answerKey.endsWith("decision")
+    && /judg|draw|decision|unanimous|majority|split/.test(promptKey)) {
+    distinct.push("judges-decision-vocabulary");
+  }
   return distinct.map((name) => `${question.sport}:${name}`);
 }
 
