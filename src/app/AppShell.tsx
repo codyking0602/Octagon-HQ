@@ -42,9 +42,11 @@ function sportContextForPath(pathname: string): SportContext | null {
   if (pathname === "/picks") return { sport: "ufc", section: "PICKS", switchable: true };
   if (pathname === "/football/picks") return { sport: "football", section: "PICKS", switchable: true };
   if (pathname === "/mlb/picks") return { sport: "mlb", section: "PICKS", switchable: true };
+  if (pathname === "/nba/picks") return { sport: "nba", section: "PICKS", switchable: true };
   if (pathname === "/play") return { sport: "ufc", section: "PLAY", switchable: true };
   if (pathname === "/football") return { sport: "football", section: "PLAY", switchable: true };
   if (pathname === "/mlb") return { sport: "mlb", section: "PLAY", switchable: true };
+  if (pathname === "/nba") return { sport: "nba", section: "PLAY", switchable: true };
   if (pathname === "/rankings") return { sport: "ufc", section: "RANKINGS", switchable: false };
   if (pathname === "/intelligence") return { sport: "ufc", section: "INTELLIGENCE", switchable: false };
   return null;
@@ -68,10 +70,12 @@ function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqTh
 
   if (pathname.startsWith("/championship/football")) return "football";
   if (pathname.startsWith("/championship/mlb")) return "mlb";
+  if (pathname.startsWith("/championship/nba")) return "nba";
   if (pathname.startsWith("/championship/ufc")) return "ufc";
 
   if (pathname === "/football" || pathname.startsWith("/football/")) return "football";
   if (pathname === "/mlb" || pathname.startsWith("/mlb/")) return "mlb";
+  if (pathname === "/nba" || pathname.startsWith("/nba/")) return "nba";
 
   return "ufc";
 }
@@ -80,11 +84,13 @@ function sportSectionDestination(section: SportContextSection, sport: SelectedSp
   if (section === "PICKS") {
     if (sport === "football") return "/football/picks";
     if (sport === "mlb") return "/mlb/picks";
+    if (sport === "nba") return "/nba/picks";
     return "/picks";
   }
   if (section === "PLAY") {
     if (sport === "football") return "/football";
     if (sport === "mlb") return "/mlb";
+    if (sport === "nba") return "/nba";
     return "/play";
   }
   return null;
@@ -117,6 +123,7 @@ function SportContextRow({
             <option value="football">Football</option>
             <option value="ufc">UFC</option>
             {showMlb ? <option value="mlb">MLB</option> : null}
+            <option value="nba">Basketball</option>
           </select>
         </label>
       ) : null}

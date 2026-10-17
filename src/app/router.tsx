@@ -59,6 +59,9 @@ const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRou
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
 const MlbPlayoffsPage = lazy(() => import("../features/mlb/MlbPlayoffsPage"));
 const MlbPicksPage = lazy(() => import("../features/mlb/MlbPicksPage"));
+const NbaFuturesPage = lazy(() => import("../features/nba/NbaFuturesPage"));
+const NbaPlayPage = lazy(() => import("../features/nba/NbaPlayPage"));
+const NbaChampionshipPage = lazy(() => import("../features/nba/NbaChampionshipPage"));
 const MlbFeaturedChallengePage = lazy(() => import("../features/mlb/MlbFeaturedChallengePage"));
 const MlbSeriesBreakdownPage = lazy(() => import("../features/mlb/MlbSeriesBreakdownPage"));
 const WhatsNewPage = lazy(() => import("../features/whats-new/WhatsNewPage"));
@@ -70,6 +73,7 @@ export const appRoutes: RouteObject[] = [
     errorElement: <AppRouteError />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "championship/nba", element: <NbaChampionshipPage /> },
       { path: "championship/:sport", element: <ChampionshipLeaderboardPage /> },
       { path: "fighters-to-watch", element: <ShanesWatchlistPage /> },
       { path: "rankings", element: <RankingsPage /> },
@@ -134,6 +138,8 @@ export const appRoutes: RouteObject[] = [
       { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
       { path: "football/bar-trivia", element: <Navigate to="/football" replace /> },
       { path: "picks", element: <PicksPage /> },
+      { path: "nba", element: <NbaPlayPage /> },
+      { path: "nba/picks", element: <NbaFuturesPage /> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
       { path: "mlb/challenge", element: <MlbGate fallback="/play"><MlbFeaturedChallengePage /></MlbGate> },

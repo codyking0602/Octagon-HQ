@@ -29,6 +29,7 @@ import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
 import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
 import { MlbHomeHq } from "../mlb/MlbHomeHq";
+import { NbaHomeHq } from "../nba/NbaHomeHq";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
 import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
@@ -167,7 +168,7 @@ export default function HomePage() {
   const ownerPreview = signedIn;
   const sportPreference = useOptionalSport();
   const selectedSport = sportPreference?.selectedSport ?? "football";
-  const setSelectedSport = (sport: "football" | "ufc" | "mlb") => sportPreference?.setSelectedSport(sport);
+  const setSelectedSport = (sport: "football" | "ufc" | "mlb" | "nba") => sportPreference?.setSelectedSport(sport);
   // All is a Home-only view; selecting a sport persists it for Picks and Play.
   const [homeOverview, setHomeOverview] = useState(false);
   const ownerSport: SportFilter = homeOverview ? "all" : selectedSport;
@@ -393,6 +394,7 @@ export default function HomePage() {
               <option value="football">Football</option>
               <option value="ufc">UFC</option>
               {mlbVisible ? <option value="mlb">MLB</option> : null}
+              <option value="nba">Basketball</option>
             </select>
           </label>
         </header>
@@ -485,6 +487,7 @@ export default function HomePage() {
       {ownerPreview && ownerSport !== "all" ? (
         ownerSport === "football" ? footballHq
           : ownerSport === "ufc" ? ufcHq
+            : ownerSport === "nba" ? <NbaHomeHq signedIn={signedIn} />
             : mlbVisible ? (
               <MlbHomeHq
                 enabled={mlbVisible}
@@ -497,6 +500,7 @@ export default function HomePage() {
       {isFootballSeason() ? (
         <>
           {footballHq}
+          <NbaHomeHq signedIn={signedIn} />
           {mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}
@@ -510,6 +514,7 @@ export default function HomePage() {
         <>
           {ufcHq}
           {footballHq}
+          <NbaHomeHq signedIn={signedIn} />
           {mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}
@@ -521,7 +526,7 @@ export default function HomePage() {
       )}
         </>
       )}
-      {ownerPreview && ownerSport !== "mlb" ? (
+      {ownerPreview && ownerSport !== "mlb" && ownerSport !== "nba" ? (
         <OwnerChampionshipHome
           streak={hqDailyStreak.streak.currentStreak}
           streakLoading={hqDailyStreak.loading}

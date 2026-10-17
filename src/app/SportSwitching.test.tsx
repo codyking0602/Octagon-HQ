@@ -31,7 +31,7 @@ async function sportContext(label: string) {
   return row;
 }
 
-function switchSport(row: HTMLElement, next: "football" | "ufc" | "mlb") {
+function switchSport(row: HTMLElement, next: "football" | "ufc" | "mlb" | "nba") {
   const section = row.textContent?.includes("PICKS") ? "Picks" : "Play";
   fireEvent.change(within(row).getByRole("combobox", { name: "Sport for " + section }), { target: { value: next } });
 }
@@ -40,7 +40,7 @@ async function expectPath(router: ReturnType<typeof renderRoute>, pathname: stri
   await waitFor(() => expect(router.state.location.pathname).toBe(pathname));
 }
 
-function expectThemeScope(theme: "neutral" | "ufc" | "football") {
+function expectThemeScope(theme: "neutral" | "ufc" | "football" | "nba") {
   const shell = document.querySelector(".app-shell");
   expect(shell).toHaveAttribute("data-hq-theme", theme);
   expect(screen.getByRole("navigation", { name: "Primary navigation" })).toHaveAttribute(
@@ -185,5 +185,21 @@ describe("The HQ sport switching", () => {
     expectThemeScope("ufc");
     expect(within(row).queryByRole("group")).not.toBeInTheDocument();
     expect(within(row).queryByRole("button", { name: "Football" })).not.toBeInTheDocument();
+  });
+});
+
+// Basketball uses the existing canonical sport selector, not a parallel navigation.
+describe("Basketball sport selection",()=>{
+  it("switches Picks to NBA Futures and Play to Basketball",async()=>{
+    const router=renderRoute("/picks");
+    let row=await sportContext("UFC PICKS");
+    switchSport(row,"nba");
+    await expectPath(router,"/nba/picks");
+    row=await sportContext("NBA PICKS");
+    expectThemeScope("nba");
+    fireEvent.click(screen.getByRole("link",{name:"Play"}));
+    await expectPath(router,"/nba");
+    await sportContext("NBA PLAY");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("nba");
   });
 });

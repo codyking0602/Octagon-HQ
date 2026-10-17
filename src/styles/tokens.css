@@ -69,3 +69,6 @@
   --hq-context-accent-soft: rgba(var(--mlb-green-rgb), .13);
   --hq-context-accent-border: rgba(var(--mlb-green-rgb), .38);
 }
+
+/* NBA uses the same single sport-context theming owner as other sports. */
+[data-hq-theme="nba"] { --hq-context-accent: #85C7E9; --hq-context-accent-strong: #a8dcf5; --hq-context-accent-rgb: 133, 199, 233; --hq-context-accent-soft: rgba(133,199,233,.16); --hq-context-accent-border: rgba(133,199,233,.48); }
