@@ -41,14 +41,29 @@ describe("Average Fan final selected-board editorial evidence", () => {
         for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
           expect(questions.filter((question) => question.grade === grade), `${sport} ${day} G${grade}`).toHaveLength(2);
         }
-        const topics = new Set<string>();
+        const topics = new Map<string, string>();
+        // Alabama is incidental opponent context in two distinct iconic
+        // events: Clemson's 2016 CFP title (Deshaun Watson) and Auburn's
+        // 2013 Kick Six (Chris Davis). Sharing the losing school does not
+        // make them two questions about the same incident or featured player.
+        const independentAlabamaEvents = new Set([
+          "average-fan:cfb:authored:00-g5:watson-2016-title-420:short",
+          "average-fan:cfb:authored:00-g5:kick-six-chris-davis:short",
+        ]);
         for (const question of [...questions, final]) {
           expect(question.sport, question.id).toBe(sport);
           expect(question.prompt.trim().length, question.id).toBeGreaterThan(0);
           expect(question.answer.trim().length, question.id).toBeGreaterThan(0);
           for (const topic of averageFanQuestionNamedTopics(question)) {
-            if (topics.has(topic)) repeatedNamedTopics.push(`${sport} ${day}: ${topic} in ${question.id}`);
-            topics.add(topic);
+            const earlierId = topics.get(topic);
+            if (earlierId && !(
+              topic === "cfb:alabama"
+              && independentAlabamaEvents.has(earlierId)
+              && independentAlabamaEvents.has(question.id)
+            )) {
+              repeatedNamedTopics.push(`${sport} ${day}: ${topic} in ${earlierId} and ${question.id}`);
+            }
+            if (!earlierId) topics.set(topic, question.id);
           }
           if (question.format === "four-choice") {
             expect(question.choices, question.id).toHaveLength(4);
