@@ -12,7 +12,7 @@ import {
   AVERAGE_FAN_PLAYABLE_GRADES,
   type AverageFanQuestion,
 } from "../games/averageFanEngine";
-import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionNamedTopics } from "../games/averageFanContentBanks";
+import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionNamedTopics, averageFanQuestionBoardTopics } from "../games/averageFanContentBanks";
 import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
 
 function contextFrom(
@@ -74,6 +74,19 @@ describe("Average Fan named board topic diversity", () => {
     });
     expect(firstCfb).toContain("cfb:ohio state");
     expect(secondCfb).toContain("cfb:ohio state");
+  });
+
+  it("spreads different CFB rivalry and trophy prompts across a Daily board when alternatives exist", () => {
+    const cfb = AVERAGE_FAN_CONTENT_BANKS.cfb[0]!;
+    for (const prompt of [
+      "Which two programs play the Cy-Hawk Trophy?",
+      "Michigan and Michigan State play for which trophy?",
+      "Which two programs play the Red River rivalry?",
+    ]) {
+      expect(averageFanQuestionBoardTopics({
+        ...cfb, prompt, answer: "Iowa and Iowa State",
+      })).toContain("cfb:topic-family:rivalries-and-trophies");
+    }
   });
 
   it("keeps multiple unrelated names distinct instead of collapsing on a surname", () => {
