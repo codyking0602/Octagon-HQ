@@ -1041,6 +1041,14 @@ describe("Average Fan durable content banks", () => {
     expect(cormier?.choices).not.toContain("Henry Cejudo");
   });
 
+  it("retires obscure UFC 6 and UFC 26 undercard-opponent prompts from future Dailies", () => {
+    for (const factId of ["taktarov-nine", "first-155"]) {
+      expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+        question.id.startsWith(`average-fan:ufc:authored-history:${factId}:`)
+      ), factId).toBe(false);
+    }
+  });
+
   it("requires recognized title opponents in every generated UFC championship anchor", () => {
     const normalized = (name: string) => name
       .replace(/[Łł]/g, "l").replace(/[Øø]/g, "o").replace(/[Đđ]/g, "d")
