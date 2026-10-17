@@ -82,7 +82,7 @@ describe("Stage 3 evidence-safe UFC Blind Resume selection", () => {
     expect(post.setupKey).toContain("evidence-safe-stage3-v1");
     const oldCard = createBlindResumeV3Card("stage3-old-casual-seed");
     expect(oldCard.selectionVersion).toBe("legacy");
-    expect(createBlindResumeRounds(oldCard.roundSet.seed).pairs).toEqual(oldCard.roundSet.pairs);
+    expect(createBlindResumeV3Card("stage3-old-casual-seed")).toEqual(oldCard);
     const future = createEvidenceSafeBlindResumeRounds("stage3-future-mode-check");
     expect(future.pairs.every(blindResumePairIsEvidenceSafe)).toBe(true);
   });
