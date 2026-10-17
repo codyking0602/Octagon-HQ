@@ -5,6 +5,7 @@ import {
   averageFanQuestionFactKey,
   AVERAGE_FAN_FINAL_TARGETS,
   averageFanBankSummary,
+  nflHistoricalFranchiseAliases,
   ufcCandidates,
 } from "./averageFanContentBanks";
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
@@ -73,6 +74,44 @@ function oneCharacterHumanTypo(value: string) {
 }
 
 describe("Average Fan durable content banks", () => {
+  it("accepts historic names for the same NFL franchise without mixing distinct teams", () => {
+    const cases: Array<[string, string, string]> = [
+      ["LAR", "Los Angeles Rams", "St. Louis Rams"],
+      ["LV", "Las Vegas Raiders", "Oakland Raiders"],
+      ["LAC", "Los Angeles Chargers", "San Diego Chargers"],
+      ["TEN", "Tennessee Titans", "Houston Oilers"],
+      ["WAS", "Washington Commanders", "Washington Football Team"],
+      ["WAS", "Washington Commanders", "Washington Redskins"],
+      ["IND", "Indianapolis Colts", "Baltimore Colts"],
+      ["ARI", "Arizona Cardinals", "Phoenix Cardinals"],
+      ["NE", "New England Patriots", "Boston Patriots"],
+    ];
+    for (const [code, current, former] of cases) {
+      const aliases = nflHistoricalFranchiseAliases([code]);
+      expect(aliases, code).toContain(former);
+      expect(averageFanAnswersMatch({ answer: current, aliases, format: "short-answer" }, former), former).toBe(true);
+    }
+    expect(nflHistoricalFranchiseAliases(["TEN"])).not.toContain("Houston Texans");
+    expect(nflHistoricalFranchiseAliases(["IND"])).not.toContain("Baltimore Ravens");
+    expect(nflHistoricalFranchiseAliases(["CLE"])).toEqual([]);
+  });
+
+  it("routes historic franchise spellings into selected player/team free-text answers", () => {
+    const players = new Map(queryFootballSubjects({ league: "NFL", kind: "player-career" })
+      .map((player) => [player.id, player]));
+    const teamQuestions = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) =>
+      /^average-fan:nfl:g3:.+:team$/.test(question.id));
+    expect(teamQuestions.length).toBeGreaterThan(0);
+    for (const question of teamQuestions) {
+      const playerId = /^average-fan:nfl:g3:(.+):team$/.exec(question.id)![1]!;
+      const player = players.get(playerId);
+      expect(player, question.id).toBeTruthy();
+      for (const historicalName of nflHistoricalFranchiseAliases(player?.franchises ?? [])) {
+        expect(averageFanAnswersMatch(question, historicalName), `${question.id}: ${historicalName}`).toBe(true);
+      }
+    }
+  });
+
   it("credits historically correct Rams-era answers and keeps the misnamed UFC 16 undercard fact retired", () => {
     const rams = AVERAGE_FAN_CONTENT_BANKS.nfl.find((question) =>
       question.id.startsWith("average-fan:nfl:00-team:greatest-show:"));
