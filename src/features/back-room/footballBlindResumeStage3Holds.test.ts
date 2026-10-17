@@ -47,6 +47,23 @@ describe("Stage 3 Football Blind Resume review-only holds", () => {
     expect(matched.size).toBeGreaterThan(10);
   });
 
+  it("opens six retained matchups with meaningful winner evidence rather than two misleading leads", () => {
+    const expectedWinnerOpening = new Map([
+      ["nfl-quarterbacks-drew-brees-v-peyton-manning", "5× AP MVP"],
+      ["nfl-running-backs-adrian-peterson-v-emmitt-smith", "3 championships"],
+      ["nfl-running-backs-adrian-peterson-v-walter-payton", "5× first-team All-Pro"],
+      ["nfl-wide-receivers-randy-moss-v-jerry-rice", "22,895 receiving yards"],
+      ["nfl-wide-receivers-calvin-johnson-v-jerry-rice", "22,895 receiving yards"],
+      ["nfl-tight-ends-antonio-gates-v-tony-gonzalez", "6× first-team All-Pro"],
+    ]);
+    for (const [id, anchor] of expectedWinnerOpening) {
+      const pair = footballBlindResumeMatchups.find((round) => round.id === id);
+      expect(pair, id).toBeDefined();
+      const firstClues = pair!.stats.slice(0, pair!.revealCounts[0]);
+      expect(firstClues.some((clue) => clue.valueB.includes(anchor)), id).toBe(true);
+    }
+  });
+
   it("does not rewrite legacy seed selection when safe mode is omitted", () => {
     const seed = "stage3-legacy-football-seed";
     const legacy = buildFootballBlindResumeRounds(seed, FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES);
