@@ -1971,6 +1971,10 @@ const RETIRED_REPEATED_FACT_ID_PREFIXES = [
   "average-fan:ufc:iq:orthodox:",
   // The term "calf kick" supplies its own answer; no useful trivia remains.
   "average-fan:ufc:iq:calf-kick:",
+  // Historically correct early bouts, but trivia about unfamiliar undercard
+  // opponents is not a fair hard-question recognition anchor.
+  "average-fan:ufc:authored-history:taktarov-nine:",
+  "average-fan:ufc:authored-history:first-155:",
   "average-fan:ufc:authored-history:first-170:",
   "average-fan:ufc:authored-history:first-fox-time:",
   "average-fan:ufc:final:authored:final-silva-reign",
