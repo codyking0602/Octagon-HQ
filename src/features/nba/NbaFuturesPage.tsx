@@ -169,7 +169,7 @@ export default function NbaFuturesPage() {
   },[draft,snapshot,persist]);
   const errors=useMemo(()=>draft?validateNbaFutures(draft):[],[draft]);
   const progress=draft?nbaFuturesProgress(draft):0;
-  const locked=snapshot?.locked??Date.now()>=Date.parse(NBA_FUTURES_LOCK_AT);
+  const locked=(snapshot?.locked??false)||Date.now()>=Date.parse(NBA_FUTURES_LOCK_AT);
   return <div className="page nba-hq-page" data-sport="nba">
     <header className="nba-hq-hero">
       <p className="eyebrow">BASKETBALL HQ · 2026–27</p>

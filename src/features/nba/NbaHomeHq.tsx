@@ -1,12 +1,12 @@
 import { useEffect,useState } from "react";
 import { Link } from "react-router-dom";
-import { NBA_FUTURES_SELECTIONS,emptyNbaFutures,nbaFuturesProgress } from "./nbaFutures";
+import { NBA_FUTURES_SELECTIONS,NBA_FUTURES_LOCK_AT,emptyNbaFutures,nbaFuturesProgress } from "./nbaFutures";
 import { loadNbaFutures } from "./nbaFuturesRepository";
 import "../../styles/nba-hq.css";
 
 export function NbaHomeHq({signedIn}:{signedIn:boolean}) {
   const [count,setCount]=useState<number|null>(null);
-  const [locked,setLocked]=useState(false);
+  const [locked,setLocked]=useState(Date.now()>=Date.parse(NBA_FUTURES_LOCK_AT));
   useEffect(()=>{
     let mounted=true;
     if(!signedIn){setCount(null);return()=>{mounted=false}};
