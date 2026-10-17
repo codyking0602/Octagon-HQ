@@ -43,7 +43,7 @@ describe("permanent two-game Daily handoff", () => {
     expect(migration).not.toMatch(/TYLER|LIB|SHANE/i);
   });
   it("keeps the Game 2 handoff action legible and tappable in dark sport themes", () => {
-    const buttonStyle = dailyStyles.match(/\\.daily-two-game-intermission button \\{([^}]+)\\}/)?.[1];
+    const buttonStyle = dailyStyles.split(".daily-two-game-intermission button {")[1]?.split("}")[0];
     expect(buttonStyle).toBeDefined();
     expect(buttonStyle).toContain("background: var(--hq-context-accent, #fff)");
     expect(buttonStyle).toContain("color: var(--hq-context-accent-contrast, #08090a)");
