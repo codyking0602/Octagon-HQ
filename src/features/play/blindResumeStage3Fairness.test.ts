@@ -71,6 +71,18 @@ describe("Stage 3 evidence-safe UFC Blind Resume selection", () => {
             && (winnerOnA ? a < b : b < a);
         });
         if (opposing.length) mixedOpenings += 1;
+        const winnerLeadsThrough = (count: number) => ordered.slice(0, count).filter((stat) => {
+          const value = (v: string) => {
+            const match = /^(\\d+)-(\\d+)/.exec(v);
+            return match ? Number(match[1]) - Number(match[2]) : Number.parseFloat(v);
+          };
+          const a = value(stat.valueA);
+          const b = value(stat.valueB);
+          return Number.isFinite(a) && Number.isFinite(b)
+            && (winnerOnA ? a > b : b > a);
+        }).length;
+        expect(winnerLeadsThrough(4)).toBeGreaterThanOrEqual(2);
+        expect(winnerLeadsThrough(6)).toBeGreaterThanOrEqual(3);
       });
     }
     // Hard rounds should retain legitimate tradeoffs, not reveal two
