@@ -73,7 +73,7 @@ describe("Stage 3 evidence-safe UFC Blind Resume selection", () => {
         if (opposing.length) mixedOpenings += 1;
         const winnerLeadsThrough = (count: number) => ordered.slice(0, count).filter((stat) => {
           const value = (v: string) => {
-            const match = /^(\\d+)-(\\d+)/.exec(v);
+            const match = /^(\d+)-(\d+)/.exec(v);
             return match ? Number(match[1]) - Number(match[2]) : Number.parseFloat(v);
           };
           const a = value(stat.valueA);
