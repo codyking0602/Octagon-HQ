@@ -123,13 +123,10 @@ function boardFor(
   const active = bank.filter((question) => averageFanQuestionEligibleForBoard(question, now));
   const fresh = active.filter((question) => !used.has(question.id));
   const evergreenActive = active.filter((question) => question.contentType === "evergreen");
-  const evergreenFresh = fresh.filter((question) => question.contentType === "evergreen");
   const poolForGrade = (grade: number) => {
-    const freshGrade = evergreenFresh.filter((question) => question.grade === grade);
-    if (freshGrade.length >= 2) return freshGrade;
-    // After several months, the quality-first CFB bank may exhaust unused
-    // questions within 183 days. Fall back to previously used questions *older
-    // than 30 days*, never the recently published pool if a safe option exists.
+    // Always consider safe 31+-day-old content alongside fresh content.
+    // Fresh-only selection could force the *same person* twice on one CFB
+    // board while a previously played, differently themed question was safe.
     const olderEligible = evergreenActive.filter((question) =>
       question.grade === grade && !usedWithinThirtyDays.has(question.id));
     return olderEligible.length >= 2 ? olderEligible
@@ -181,6 +178,11 @@ function boardFor(
         const leftTopicRepeat = topicCollisionCount(left);
         const rightTopicRepeat = topicCollisionCount(right);
         if (leftTopicRepeat !== rightTopicRepeat) return leftTopicRepeat - rightTopicRepeat;
+
+        // Prefer unused candidates when topical quality is equally good.
+        const leftUsed = used.has(left.id) ? 1 : 0;
+        const rightUsed = used.has(right.id) ? 1 : 0;
+        if (leftUsed !== rightUsed) return leftUsed - rightUsed;
 
         const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
         const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
