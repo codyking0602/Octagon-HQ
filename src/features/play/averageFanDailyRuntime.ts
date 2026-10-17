@@ -14,7 +14,7 @@ import {
   type AverageFanQuestion,
   type AverageFanSport,
 } from "../games/averageFanEngine";
-import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionNamedTopics } from "../games/averageFanContentBanks";
+import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionBoardTopics } from "../games/averageFanContentBanks";
 import { stableLineupHash } from "./lineupModel";
 import type {
   OfficialDailyAdvanceResult,
@@ -150,8 +150,8 @@ function boardFor(
   const usedTopics = new Set<string>();
   // A featured current event is guaranteed a slot, so avoid selecting its
   // subject earlier on the same board just because it appears in another grade.
-  const reservedCurrentTopics = new Set(current ? averageFanQuestionNamedTopics(current) : []);
-  const topicKeys = new Map(bank.map((question) => [question.id, averageFanQuestionNamedTopics(question)] as const));
+  const reservedCurrentTopics = new Set(current ? averageFanQuestionBoardTopics(current) : []);
+  const topicKeys = new Map(bank.map((question) => [question.id, averageFanQuestionBoardTopics(question)] as const));
   const rememberTopics = (question: AverageFanQuestion) => {
     for (const key of topicKeys.get(question.id) ?? []) usedTopics.add(key);
   };
@@ -238,10 +238,10 @@ function finalFor(
   const active = bank.filter((question) => averageFanQuestionEligibleForFinal(question, now));
   const fresh = active.filter((question) => !used.has(question.id));
   const olderEligible = active.filter((question) => !usedWithinThirtyDays.has(question.id));
-  const boardTopics = new Set(board.flatMap(averageFanQuestionNamedTopics));
+  const boardTopics = new Set(board.flatMap(averageFanQuestionBoardTopics));
   const withoutTopicOverlap = (questions: readonly AverageFanQuestion[]) =>
     questions.filter((question) =>
-      averageFanQuestionNamedTopics(question).every((key) => !boardTopics.has(key)));
+      averageFanQuestionBoardTopics(question).every((key) => !boardTopics.has(key)));
   // Prefer a safely reusable older Final over a *fresh* Final about the same
   // player already on this board. Do not exhaust unique topics just to avoid a
   // 31+-day-old Final; never compromise the protected Final eligibility gate.
@@ -255,7 +255,7 @@ function finalFor(
     `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}|final`,
   ).sort((left, right) => {
     const overlaps = (question: AverageFanQuestion) =>
-      averageFanQuestionNamedTopics(question).filter((key) => boardTopics.has(key)).length;
+      averageFanQuestionBoardTopics(question).filter((key) => boardTopics.has(key)).length;
     return overlaps(left) - overlaps(right);
   });
   const final = ordered[0];
