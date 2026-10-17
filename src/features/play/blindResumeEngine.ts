@@ -227,13 +227,23 @@ export function orderEvidenceSafeBlindResumeStats(pair: BlindResumePair, stats: 
     return Number.isFinite(a) && Number.isFinite(b)
       && (winnerOnA ? a! > b! : b! > a!);
   });
-  // Show genuine winner-supporting evidence early, retain the strongest anchors
-  // at the end, and never disguise an opposing stat as a decisive clue.
+  // Open with one meaningful advantage for the canonical winner. A hard
+  // matchup can show a genuine counterargument alongside it, rather than
+  // making every opening an obvious two-stat sweep. Never start with two
+  // loser-favoring facts as the old shuffle sometimes did.
   const openingAnchor = supporting.find((label) => label === "Top-5 wins" || label === "UFC title-fight wins")!;
-  const openingContrast = supporting.find((label) => (
+  const opposing = keys.filter((label) => {
+    if (label === openingAnchor || supporting.includes(label)) return false;
+    const stat = byLabel.get(label)!;
+    const [a, b] = metric(stat);
+    return Number.isFinite(a) && Number.isFinite(b)
+      && (winnerOnA ? a! < b! : b! < a!);
+  });
+  const openingContrast = opposing[0] ?? supporting.find((label) => (
     label !== openingAnchor && label !== "Top-5 wins" && label !== "UFC title-fight wins"
   ))!;
   const first = [openingAnchor, openingContrast];
+  // The late reveal must still contain strong *independent* winner evidence.
   const last = supporting.filter((label) => !first.includes(label)).slice(-2);
   const selected = new Set([...first, ...last]);
   const middle = stats.map((stat) => stat.label).filter((label) => !selected.has(label));
