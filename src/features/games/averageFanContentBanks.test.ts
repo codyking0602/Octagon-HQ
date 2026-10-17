@@ -73,6 +73,30 @@ function oneCharacterHumanTypo(value: string) {
 }
 
 describe("Average Fan durable content banks", () => {
+  it("never uses G5-only distractors against a Power Four CFB conference identity", () => {
+    const programs = new Map(queryFootballSubjects({ league: "CFB", kind: "program" })
+      .map((program) => [program.name, program]));
+    const selected = AVERAGE_FAN_CONTENT_BANKS.cfb.filter((question) =>
+      question.id.endsWith(":conference-program"));
+    expect(selected.length).toBeGreaterThan(0);
+    const powerConferences = new Set(["SEC", "ACC", "Big Ten", "Big 12"]);
+    const g5Conferences = new Set(["American", "Sun Belt", "Mountain West"]);
+    for (const question of selected) {
+      const source = programs.get(question.answer);
+      expect(source, question.id).toBeTruthy();
+      const targetGroup = source?.conference === "Independent"
+        || powerConferences.has(source?.conference ?? "")
+        ? powerConferences : g5Conferences;
+      expect(question.format, question.id).toBe("four-choice");
+      for (const choice of question.choices ?? []) {
+        if (choice === question.answer) continue;
+        const peer = programs.get(choice);
+        expect(peer, `${question.id}: ${choice}`).toBeTruthy();
+        expect(targetGroup.has(peer?.conference ?? ""), `${question.id}: ${choice}`).toBe(true);
+      }
+    }
+  });
+
   it("uses credible rather than giveaway false 2025 CFB conference peers", () => {
     const programs = new Map(queryFootballSubjects({ league: "CFB", kind: "program" })
       .map((program) => [program.id, program]));
