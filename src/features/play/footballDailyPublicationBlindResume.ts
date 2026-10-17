@@ -108,7 +108,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
       },
     },
     revealSetup: {},
-    privateSetupEvidence: { rounds: privateRounds, selection_version: stage3Selection ? "stage3-holds-v1" : "legacy" },
+    privateSetupEvidence: { rounds: privateRounds, ...(stage3Selection ? { selection_version: "stage3-holds-v1" } : {}) },
     privateGradingEvidence: { correct_choices: rounds.map((round) => round.winnerId) },
   };
 }
