@@ -175,15 +175,16 @@ function boardFor(
 
     while (gradeSelected.length < 2) {
       const ordered = [...candidates].sort((left, right) => {
-        const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
-        const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
-        if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
-
-        // Different facts about the same star are still repetitive in an
-        // eight-tile Daily board. Prefer distinct named people/programs/teams.
+        // Prevent repeated named people/programs across the entire Daily first.
+        // Subject variety is secondary: sorting by subject before topic used to
+        // let another Weidman question appear on the same 2027-04-01 UFC board.
         const leftTopicRepeat = topicCollisionCount(left);
         const rightTopicRepeat = topicCollisionCount(right);
         if (leftTopicRepeat !== rightTopicRepeat) return leftTopicRepeat - rightTopicRepeat;
+
+        const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
+        const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
+        if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
 
         if (grade <= 3) {
           const leftShortAnswer = left.format === "short-answer" ? 1 : 0;
@@ -238,8 +239,19 @@ function finalFor(
   const fresh = active.filter((question) => !used.has(question.id));
   const olderEligible = active.filter((question) => !usedWithinThirtyDays.has(question.id));
   const boardTopics = new Set(board.flatMap(averageFanQuestionNamedTopics));
+  const withoutTopicOverlap = (questions: readonly AverageFanQuestion[]) =>
+    questions.filter((question) =>
+      averageFanQuestionNamedTopics(question).every((key) => !boardTopics.has(key)));
+  // Prefer a safely reusable older Final over a *fresh* Final about the same
+  // player already on this board. Do not exhaust unique topics just to avoid a
+  // 31+-day-old Final; never compromise the protected Final eligibility gate.
+  const pool = withoutTopicOverlap(fresh).length ? withoutTopicOverlap(fresh)
+    : withoutTopicOverlap(olderEligible).length ? withoutTopicOverlap(olderEligible)
+    : fresh.length ? fresh
+    : olderEligible.length ? olderEligible
+    : active;
   const ordered = deterministicOrder(
-    fresh.length ? fresh : olderEligible.length ? olderEligible : active,
+    pool,
     `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}|final`,
   ).sort((left, right) => {
     const overlaps = (question: AverageFanQuestion) =>
