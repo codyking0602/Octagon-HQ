@@ -32,6 +32,28 @@ function contextFrom(
 }
 
 describe("Average Fan named board topic diversity", () => {
+  it("treats same-play NFL questions and UFC decision definitions as repeated Daily topics", () => {
+    const nfl = AVERAGE_FAN_CONTENT_BANKS.nfl[0]!;
+    const pick = averageFanQuestionNamedTopics({
+      ...nfl, prompt: "Who intercepted Russell Wilson at the goal line in Super Bowl XLIX?", answer: "Malcolm Butler",
+    });
+    const target = averageFanQuestionNamedTopics({
+      ...nfl, prompt: "Which receiver was targeted on Malcolm Butler's Super Bowl XLIX goal-line interception?", answer: "Ricardo Lockette",
+    });
+    expect(pick).toContain("nfl:super-bowl-xlix-goal-line-interception");
+    expect(target).toContain("nfl:super-bowl-xlix-goal-line-interception");
+
+    const ufc = AVERAGE_FAN_CONTENT_BANKS.ufc[0]!;
+    const unanimous = averageFanQuestionNamedTopics({
+      ...ufc, prompt: "What type of decision occurs when all three judges pick the same winner?", answer: "Unanimous decision",
+    });
+    const majority = averageFanQuestionNamedTopics({
+      ...ufc, prompt: "What type of decision occurs when two judges pick one fighter and the third scores it a draw?", answer: "Majority decision",
+    });
+    expect(unanimous).toContain("ufc:judges-decision-vocabulary");
+    expect(majority).toContain("ufc:judges-decision-vocabulary");
+  });
+
   it("identifies repeat subjects even when the questions and correct answers differ", () => {
     const ufc = AVERAGE_FAN_CONTENT_BANKS.ufc[0]!;
     const firstUfc = averageFanQuestionNamedTopics({
