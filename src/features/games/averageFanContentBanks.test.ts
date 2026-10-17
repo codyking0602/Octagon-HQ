@@ -1041,6 +1041,44 @@ describe("Average Fan durable content banks", () => {
     expect(cormier?.choices).not.toContain("Henry Cejudo");
   });
 
+  it("retires obscure UFC 6 and UFC 26 undercard-opponent prompts from future Dailies", () => {
+    for (const factId of ["taktarov-nine", "first-155"]) {
+      expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+        question.id.startsWith(`average-fan:ufc:authored-history:${factId}:`)
+      ), factId).toBe(false);
+    }
+  });
+
+  it("requires recognized title opponents in every generated UFC championship anchor", () => {
+    const normalized = (name: string) => name
+      .replace(/[Łł]/g, "l").replace(/[Øø]/g, "o").replace(/[Đđ]/g, "d")
+      .normalize("NFKD").toLowerCase().replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "");
+    const recognized = new Set(ufcFactualLedgerSubjects.map((fighter) => normalized(fighter.name)));
+    let checked = 0;
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      const g4 = /^average-fan:ufc:g4:(ufc:[^:]+):title-opponent$/.exec(question.id);
+      const g5 = /^average-fan:ufc:g5:(ufc:[^:]+):title-identity$/.exec(question.id);
+      const final = /^average-fan:ufc:final:(ufc:[^:]+):title$/.exec(question.id);
+      const fighterId = g4?.[1] ?? g5?.[1] ?? final?.[1];
+      if (!fighterId) continue;
+      const titleOpponent = g4
+        ? question.answer
+        : g5
+          ? /recorded a (?:win|loss|draw|no-contest) against (.*?) in a UFC title fight on /.exec(question.prompt)?.[1]
+          : /^Which UFC fighter faced (.*?) in a title fight/.exec(question.prompt)?.[1];
+      expect(titleOpponent, question.id).toBeTruthy();
+      expect(recognized.has(normalized(titleOpponent ?? "")), question.id).toBe(true);
+      const fighter = getUfcFactualSubject(fighterId);
+      expect(fighter, question.id).toBeTruthy();
+      expect(fighter?.fights.some((fight) =>
+        fight.titleFight && normalized(fight.opponent) === normalized(titleOpponent ?? "")
+      ), question.id).toBe(true);
+      checked += 1;
+    }
+    expect(checked).toBeGreaterThan(10);
+  });
+
   it("never selects an ambiguous UFC multi-opponent fighter identity", () => {
     const normalized = (name: string) => name.replace(/[Łł]/g, "l")
       .normalize("NFKD").toLowerCase().replace(/[\u0300-\u036f]/g, "")
