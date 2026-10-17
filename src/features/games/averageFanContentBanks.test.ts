@@ -73,6 +73,21 @@ function oneCharacterHumanTypo(value: string) {
 }
 
 describe("Average Fan durable content banks", () => {
+  it("credits historically correct Rams-era answers and keeps the misnamed UFC 16 undercard fact retired", () => {
+    const rams = AVERAGE_FAN_CONTENT_BANKS.nfl.find((question) =>
+      question.id.startsWith("average-fan:nfl:00-team:greatest-show:"));
+    expect(rams).toBeDefined();
+    expect(rams?.format).toBe("short-answer");
+    for (const response of ["St. Louis Rams", "St Louis Rams", "Rams", "The Rams"]) {
+      expect(averageFanAnswersMatch(rams!, response), response).toBe(true);
+    }
+
+    // Clark's UFC 16 opponent is spelled Josh Stuart on the official UFC card,
+    // not Stewart. The fact remains withdrawn as undercard-name memorization.
+    expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
+      question.id.startsWith("average-fan:ufc:authored-history:first-170:"))).toBe(false);
+  });
+
   it("does not pad selected banks to satisfy the old inventory targets", () => {
     for (const sport of sports) {
       const bank = AVERAGE_FAN_CONTENT_BANKS[sport];

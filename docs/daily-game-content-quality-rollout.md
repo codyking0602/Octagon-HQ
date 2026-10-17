@@ -1,6 +1,6 @@
 # Daily Challenge content quality program — approved 13-stage rollout
 
-Status: **Stage 1 complete; Stage 2 Average Fan in progress (through Stage 2X, generated-ledger source alignment and selected future Daily board editorial review). Future rotation not yet activated.**
+Status: **Stage 1 complete; Stage 2 Average Fan in progress (through Stage 2Y, including historical Rams answer-alias repair and retired UFC source correction). Future rotation not yet activated.**
 Baseline inspected: main at `374f130988d6d70c018145881a1e3fcfffe4bca3` (2026-10-13).
 
 ## Decision and release rule
@@ -58,7 +58,7 @@ Current production remains **27 Football / 29 UFC**, with Average Fan 5x and Hig
 | Stage | Game or gate | Status |
 | --- | --- | --- |
 | 1 | Quality policy, cross-game audit aid, approved rotation target | Complete (#1903 merged) |
-| 2 | Average Fan — NFL, CFB, UFC, reduced quality-first banks | In progress: cleanup through Stage 2X; source inventory 374 authored questions (NFL 228, CFB 63, UFC 83), 133 UFC factual-ledger fighters, six persisted production Daily boards (54 questions), NFL authored source-row screen and Bar Trivia late waves completed through prior passes; Stage 2X now tests all expansion-fighter reciprocal fixtures (51 source-confirming two-sided bouts), CFB generated identity/source metadata, UFC gender-correct and identifiable opponent choices, and samples 15 seeded future Daily boards across 180-day simulation; documented concrete difficulty, multi-team short-answer and misgendered distractor repairs; revised boards, remaining individually sourced surviving facts and broader non-sampled generated Finals still need editorial sign-off before stage closure |
+| 2 | Average Fan — NFL, CFB, UFC, reduced quality-first banks | In progress: cleanup through Stage 2X; source inventory 374 authored questions (NFL 228, CFB 63, UFC 83), 133 UFC factual-ledger fighters, six persisted production Daily boards (54 questions), NFL authored source-row screen and Bar Trivia late waves completed through prior passes; Stage 2X now tests all expansion-fighter reciprocal fixtures (51 source-confirming two-sided bouts), CFB generated identity/source metadata, UFC gender-correct and identifiable opponent choices, and samples 15 seeded future Daily boards across 180-day simulation; documented concrete difficulty, multi-team short-answer and misgendered distractor repairs; Stage 2Y preserves these gates while fixing historical Rams free-text grading and a retired UFC source spelling error; revised boards, remaining individually sourced surviving facts and broader non-sampled generated Finals still need editorial sign-off before stage closure |
 | 3 | Blind Resume — format/difficulty, especially UFC | Pending full review |
 | 4 | Higher or Lower — Football audit, UFC game, official Daily x2 both | Pending |
 | 5 | Sports Feud — 1,050 existing prompts and answer sets | Pending full review |
