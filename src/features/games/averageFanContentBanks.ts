@@ -854,6 +854,26 @@ function displayNflTeam(code: string) {
   return NFL_TEAM_NAMES[code] ?? code;
 }
 
+/** Use plausible peer leagues in generated *false* 2025 conference claims.
+ * Random power-conference pairings made Group-of-Five false statements like
+ * "FAU was in the SEC" trivial instead of measuring real CFB knowledge. */
+const CFB_PLAUSIBLE_FALSE_CONFERENCES: Readonly<Record<string, readonly string[]>> = {
+  SEC: ["ACC", "Big 12", "Big Ten"],
+  "Big Ten": ["Big 12", "ACC", "SEC"],
+  "Big 12": ["Big Ten", "ACC", "American"],
+  ACC: ["SEC", "Big 12", "Big Ten"],
+  American: ["Sun Belt", "Mountain West", "ACC"],
+  "Sun Belt": ["American", "Mountain West", "ACC"],
+  "Mountain West": ["American", "Big 12", "Sun Belt"],
+  Independent: ["ACC", "Big Ten", "American"],
+};
+
+function credibleCfbFalseConference(answer: string, available: readonly string[]) {
+  return CFB_PLAUSIBLE_FALSE_CONFERENCES[answer]
+    ?.find((conference) => conference !== answer && available.includes(conference))
+    ?? available.find((conference) => conference !== answer);
+}
+
 function footballCandidates(league: "NFL" | "CFB") {
   const sport = league === "NFL" ? "nfl" as const : "cfb" as const;
   const players = footballPlayers(league).filter((player) => league !== "NFL" || player.casualEligible);
@@ -1057,7 +1077,9 @@ function footballCandidates(league: "NFL" | "CFB") {
         difficultyNudge: program.recognizabilityTier === "A" || program.recognizabilityTier === "B" ? -2 : -1,
       }));
       const tfTrue = index % 2 === 0;
-      const shownConference = tfTrue ? program.conference : wrongConferences[0]!;
+      const shownConference = tfTrue
+        ? program.conference
+        : credibleCfbFalseConference(program.conference, conferences) ?? wrongConferences[0]!;
       questions.push(trueFalseQuestion({
         id: `average-fan:cfb:g2:${program.id}:conference-tf`,
         sport: "cfb",
