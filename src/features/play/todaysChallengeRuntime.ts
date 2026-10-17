@@ -543,7 +543,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
       },
     },
     revealSetup: { rounds: revealRounds },
-    privateSetupEvidence: { seed, rounds: privateRounds, selection_version: evidenceSafe ? "evidence-safe-stage3-v1" : "legacy" },
+    privateSetupEvidence: { seed, rounds: privateRounds, ...(evidenceSafe ? { selection_version: "evidence-safe-stage3-v1" } : {}) },
     privateGradingEvidence: {
       correct_choices: privateRounds.map((round) => round.winner_id),
     },
