@@ -91,9 +91,10 @@ function v3OpeningReveal(card: BlindResumeV3Card) {
   return asRevealCount(blindResumeV3FirstRevealCount(card));
 }
 
-function casualBlindResumeRun(seed?: string): BlindResumeRun {
+function casualBlindResumeRun(seed?: string, evidenceSafe = true): BlindResumeRun {
+  const buildCard = evidenceSafe ? createEvidenceSafeBlindResumeV3Card : createBlindResumeV3Card;
   if (seed) {
-    const card = createEvidenceSafeBlindResumeV3Card(seed);
+    const card = buildCard(seed);
     const ids = roundSetIds(card.roundSet);
     const identity = replayLineupIdentity("blind-resume", seed);
     rememberLineup(identity, ids, ids);
@@ -108,7 +109,7 @@ function casualBlindResumeRun(seed?: string): BlindResumeRun {
     validItemIds: validIds,
     validFighterIds: validIds,
     build: (nextSeed) => {
-      const card = createEvidenceSafeBlindResumeV3Card(nextSeed);
+      const card = buildCard(nextSeed);
       const ids = roundSetIds(card.roundSet);
       return { value: card, itemIds: ids, fighterIds: ids };
     },
@@ -223,12 +224,12 @@ export default function BlindResumePage() {
         `shared:${challengeSeed}`,
       );
     }
-    return casualBlindResumeRun(runSeed || undefined);
+    return casualBlindResumeRun(runSeed || undefined, !runSeed || searchParams.get("q") === "1");
   });
   const roundSet = run.roundSet;
   const sessionId = run.version === "v3" ? `v3:${run.identity.challengeId}` : run.identity.challengeId;
   const returnPath = run.identity.type === "replayable"
-    ? `/play/blind-resume?run=${encodeURIComponent(roundSet.seed)}`
+    ? `/play/blind-resume?run=${encodeURIComponent(roundSet.seed)}${run.v3Card?.selectionVersion === "evidence-safe-stage3-v1" ? "&q=1" : ""}`
     : `/play/blind-resume?${searchParams.toString()}`;
   const restored = useMemo(() => loadBlindResumeSession(sessionId), [sessionId]);
   const restoredResults = useMemo(
@@ -330,7 +331,7 @@ export default function BlindResumePage() {
     setRevealedCount(nextRun.v3Card ? v3OpeningReveal(nextRun.v3Card) : 8);
     setChallengeStatus("");
     if (nextRun.identity.type === "replayable") {
-      setSearchParams({ run: nextRun.roundSet.seed }, { replace: true });
+      setSearchParams({ run: nextRun.roundSet.seed, ...(nextRun.v3Card?.selectionVersion === "evidence-safe-stage3-v1" ? { q: "1" } : {}) }, { replace: true });
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
