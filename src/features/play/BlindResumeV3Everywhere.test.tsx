@@ -148,6 +148,16 @@ describe("Blind Resume V3 shared contract", () => {
     expect([...container.querySelectorAll(".blind-resume-recap__round header b")].every((node) => node.textContent === "CORRECT · +20")).toBe(true);
   });
 
+  it("retains the legacy matchups for old run links without the quality marker", () => {
+    const seed = "legacy-casual-stage3-compat";
+    const legacy = createBlindResumeV3Card(seed).roundSet.pairs[0]!;
+    const { container } = renderBlindResume(`/play/blind-resume?run=${seed}`);
+    const winner = blindResumeWinner(legacy);
+    const buttons = container.querySelectorAll<HTMLButtonElement>(".blind-resume-picks button");
+    fireEvent.click(buttons[legacy.fighterA.id === winner.id ? 0 : 1]!);
+    expect(container.textContent).toContain("+20 POINTS");
+  });
+
   it("restores the exact scored matchup after taking both fighters to Intelligence", () => {
     const seed = "v3-intelligence-return";
     const card = createEvidenceSafeBlindResumeV3Card(seed);
