@@ -4,6 +4,7 @@ import {
   FOOTBALL_BLIND_RESUME_STAGE3_HOLDS,
   buildFootballBlindResumeRounds,
   footballBlindResumeMatchups,
+  footballBlindResumeStage3ReviewedMatchups,
   footballBlindResumeStage3Eligible,
   footballBlindResumeSubjectIdentityId,
 } from "./footballBlindResumeModel";
@@ -57,11 +58,20 @@ describe("Stage 3 Football Blind Resume review-only holds", () => {
       ["nfl-tight-ends-antonio-gates-v-tony-gonzalez", "6× first-team All-Pro"],
     ]);
     for (const [id, anchor] of expectedWinnerOpening) {
-      const pair = footballBlindResumeMatchups.find((round) => round.id === id);
+      const pair = footballBlindResumeStage3ReviewedMatchups().find((round) => round.id === id);
       expect(pair, id).toBeDefined();
       const firstClues = pair!.stats.slice(0, pair!.revealCounts[0]);
       expect(firstClues.some((clue) => clue.valueB.includes(anchor)), id).toBe(true);
     }
+  });
+
+  it("keeps the historical authored evidence order exactly as before", () => {
+    const id = "nfl-quarterbacks-drew-brees-v-peyton-manning";
+    const original = footballBlindResumeMatchups.find((row) => row.id === id)!;
+    const revised = footballBlindResumeStage3ReviewedMatchups().find((row) => row.id === id)!;
+    expect(original.stats[0]!.valueA).toContain("98.7 career passer rating");
+    expect(revised.stats[0]!.valueB).toContain("5,477 yards");
+    expect(revised.stats[1]!.valueB).toContain("5× AP MVP");
   });
 
   it("does not rewrite legacy seed selection when safe mode is omitted", () => {
