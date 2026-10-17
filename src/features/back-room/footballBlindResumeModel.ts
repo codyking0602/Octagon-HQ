@@ -150,6 +150,17 @@ const CURATED_MATCHUPS: readonly CuratedMatchupSpec[] = [
   { packId: "college-program-eras", leftId: "usc-2002-2008", rightId: "alabama-2009-2020", winnerId: "alabama-2009-2020", difficulty: "hard", evidenceOrder: PROGRAM_SWING, revealCounts: [3, 6, 8] },
 ] as const;
 
+// Only new Stage 3 slates use these editorially reviewed opening sequences.
+// The original CURATED_MATCHUPS remains immutable for old seeded/public Daily cards.
+const STAGE3_EVIDENCE_ORDERS = new Map<string, readonly number[]>([
+  ["nfl-quarterbacks-drew-brees-v-peyton-manning", [2, 3, 0, 1, 5, 4, 6, 7]],
+  ["nfl-running-backs-adrian-peterson-v-emmitt-smith", [0, 4, 2, 1, 3, 5, 6]],
+  ["nfl-running-backs-adrian-peterson-v-walter-payton", [0, 3, 2, 1, 4, 5, 6, 7]],
+  ["nfl-wide-receivers-randy-moss-v-jerry-rice", [0, 3, 2, 1, 4, 5, 6]],
+  ["nfl-wide-receivers-calvin-johnson-v-jerry-rice", [0, 3, 2, 1, 4, 5, 6]],
+  ["nfl-tight-ends-antonio-gates-v-tony-gonzalez", [0, 3, 1, 2, 4, 5, 6, 7]],
+]);
+
 function familyFor(packId: FootballRankFivePackId) {
   const family = MATCHUP_FAMILIES[packId];
   if (!family) throw new Error(`Football Blind Resume has no curated family metadata for ${packId}.`);
@@ -350,6 +361,19 @@ export function resolvedFootballBlindResumeMatchups() {
   return footballBlindResumeMatchups.map(resolveMatchup);
 }
 
+let stage3ReviewedMatchupsCache: FootballBlindResumeRound[] | null = null;
+
+export function footballBlindResumeStage3ReviewedMatchups() {
+  if (!stage3ReviewedMatchupsCache) {
+    stage3ReviewedMatchupsCache = CURATED_MATCHUPS.map((spec) => {
+      const id = `${spec.packId}-${spec.leftId}-v-${spec.rightId}`;
+      const evidenceOrder = STAGE3_EVIDENCE_ORDERS.get(id);
+      return resolveMatchup(makeMatchup(evidenceOrder ? { ...spec, evidenceOrder } : spec));
+    });
+  }
+  return stage3ReviewedMatchupsCache;
+}
+
 const nflQuarterbackCareerIds = new Set(
   queryFootballSubjects({
     kind: "player-career",
@@ -370,6 +394,22 @@ export function footballBlindResumeDifficultyLabel(difficulty: FootballBlindResu
   return difficulty.toUpperCase();
 }
 
+/** Specific Stage 3 editorial holds; all 30 published matchup IDs remain resolvable. */
+export const FOOTBALL_BLIND_RESUME_STAGE3_HOLDS = new Set([
+  // Both seasons were MVP-caliber; the winning criterion across years is subjective.
+  "nfl-qb-seasons-aaron-rodgers-2011-v-patrick-mahomes-2022",
+  "nfl-qb-seasons-aaron-rodgers-2011-v-steve-young-1994",
+  "nfl-qb-seasons-tom-brady-2007-v-patrick-mahomes-2022",
+  // Six-/four-/seven-year windows versus Alabama's twelve-year dynasty.
+  "college-program-eras-clemson-2015-2020-v-alabama-2009-2020",
+  "college-program-eras-georgia-2021-2024-v-alabama-2009-2020",
+  "college-program-eras-usc-2002-2008-v-alabama-2009-2020",
+]);
+
+export function footballBlindResumeStage3Eligible(matchup: Pick<FootballBlindResumeMatchup, "id">) {
+  return !FOOTBALL_BLIND_RESUME_STAGE3_HOLDS.has(matchup.id);
+}
+
 function canUseRound(matchup: FootballBlindResumeRound, usedMatchupIds: ReadonlySet<string>, usedSubjectIds: ReadonlySet<string>, usedPackIds: ReadonlySet<FootballRankFivePackId>) {
   return !usedMatchupIds.has(matchup.id)
     && !usedPackIds.has(matchup.packId)
@@ -377,12 +417,20 @@ function canUseRound(matchup: FootballBlindResumeRound, usedMatchupIds: Readonly
     && !usedSubjectIds.has(footballBlindResumeSubjectIdentityId(matchup.rightId));
 }
 
-export function buildFootballBlindResumeRounds(seed: string, requestedDifficulties?: readonly FootballBlindResumeDifficulty[]) {
+export function buildFootballBlindResumeRounds(
+  seed: string,
+  requestedDifficulties?: readonly FootballBlindResumeDifficulty[],
+  options: { stage3ReviewedSelection?: boolean } = {},
+) {
   if (requestedDifficulties && requestedDifficulties.length !== FOOTBALL_BLIND_RESUME_ROUNDS) {
     throw new Error("Football Blind Resume difficulty slate must contain exactly three rounds.");
   }
   const random = seededLineupRandom(FOOTBALL_BLIND_RESUME_GAME_ID, seed);
-  const shuffled = shuffleLineup(resolvedFootballBlindResumeMatchups(), random);
+  const inventory = options.stage3ReviewedSelection
+    ? footballBlindResumeStage3ReviewedMatchups().filter(footballBlindResumeStage3Eligible)
+    : resolvedFootballBlindResumeMatchups();
+  const eligible = inventory;
+  const shuffled = shuffleLineup(eligible, random);
 
   const search = (
     index: number,

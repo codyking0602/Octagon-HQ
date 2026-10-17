@@ -53,10 +53,14 @@ function visibleBlindResumeRound(round: JsonRecord, revealedCount: number) {
   };
 }
 
+export const FOOTBALL_BLIND_RESUME_STAGE3_CUTOVER_DAY = "2026-10-18";
+
 function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
+  const stage3Selection = day >= FOOTBALL_BLIND_RESUME_STAGE3_CUTOVER_DAY;
   const rounds = buildFootballBlindResumeRounds(
     `${FOOTBALL_DAILY_RUNTIME_VERSION}|blind-resume|${scheduleVersion}|${day}`,
     FOOTBALL_BLIND_RESUME_DAILY_DIFFICULTIES,
+    { stage3ReviewedSelection: stage3Selection },
   );
   const privateRounds = rounds.map((round) => ({
     id: round.id,
@@ -84,7 +88,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
   }));
   const openingCount = blindResumeRevealCounts(privateRounds[0]!)[0];
   return {
-    setupKey: `${FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}`,
+    setupKey: `${FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}${stage3Selection ? ":stage3-holds" : ""}`,
     contentVersion: FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION,
     scoringVersion: FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION as OfficialDailySetupPublication["scoringVersion"],
     publicSetup: {
@@ -104,7 +108,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
       },
     },
     revealSetup: {},
-    privateSetupEvidence: { rounds: privateRounds },
+    privateSetupEvidence: { rounds: privateRounds, ...(stage3Selection ? { selection_version: "stage3-holds-v1" } : {}) },
     privateGradingEvidence: { correct_choices: rounds.map((round) => round.winnerId) },
   };
 }
