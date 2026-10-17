@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const runtime = readFileSync("src/features/play/dailyTwoGameRuntime.ts", "utf8");
+const dailyStyles = readFileSync("src/styles/today-challenge.css", "utf8");
 const edgeRuntime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const migration = readFileSync(
   "supabase/migrations/202612310202_auto_advance_two_game_daily.sql",
@@ -41,4 +42,13 @@ describe("permanent two-game Daily handoff", () => {
     expect(migration).not.toContain("submission_state =");
     expect(migration).not.toMatch(/TYLER|LIB|SHANE/i);
   });
+  it("keeps the Game 2 handoff action legible and tappable in dark sport themes", () => {
+    const buttonStyle = dailyStyles.split(".daily-two-game-intermission button {")[1]?.split("}")[0];
+    expect(buttonStyle).toBeDefined();
+    expect(buttonStyle).toContain("background: var(--hq-context-accent, #fff)");
+    expect(buttonStyle).toContain("color: var(--hq-context-accent-contrast, #08090a)");
+    expect(buttonStyle).toContain("min-height: 48px");
+    expect(buttonStyle).not.toContain("background: currentColor");
+  });
+
 });

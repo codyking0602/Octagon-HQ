@@ -894,16 +894,31 @@
 }
 
 .daily-two-game-intermission button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  min-height: 48px;
   margin-top: 18px;
   padding: 13px 16px;
   border: 0;
   border-radius: 12px;
-  background: currentColor;
-  color: var(--surface, #fff);
+  background: var(--hq-context-accent, #fff);
+  color: var(--hq-context-accent-contrast, #08090a);
   font: inherit;
   font-weight: 900;
   letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.daily-two-game-intermission button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.daily-two-game-intermission button:focus-visible {
+  outline: 2px solid var(--text-primary, #fff);
+  outline-offset: 3px;
 }
 
 .daily-two-game-final > span {
