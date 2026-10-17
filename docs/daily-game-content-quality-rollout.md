@@ -71,4 +71,4 @@ Current production remains **27 Football / 29 UFC**, with Average Fan 5x and Hig
 | 12 | MLB — all live game banks | Pending full review |
 | 13 | Cross-game semantic overlap + simulated rotation + production rollout | Pending |
 
-**Important:** This stage does not represent a reviewed or cleaned content bank. Do not mark a game complete on the strength of a schema test or sample inspection.
+**Important:** Stage 1 established the policy but did not certify any game bank. Stage 2 was accepted only after the cumulative authored source-row editorial screens, generated-source tests, 15 actual complete board reviews, 180-day regressions and documented limits in Stage 2AC. Do not mark future games complete on a schema test or sample inspection alone.
