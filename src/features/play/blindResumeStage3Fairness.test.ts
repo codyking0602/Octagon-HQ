@@ -75,7 +75,7 @@ describe("Stage 3 evidence-safe UFC Blind Resume selection", () => {
   it("keeps previously published V3 setup generation unchanged at the cutover", () => {
     const legacy = buildOfficialDailySetup("blind_resume", "2026-10-16", "stage3-historic-pin");
     const post = buildOfficialDailySetup("blind_resume", UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY, "stage3-future-pin");
-    expect((legacy.privateSetupEvidence as Record<string, unknown>).selection_version).toBe("legacy");
+    expect((legacy.privateSetupEvidence as Record<string, unknown>).selection_version).toBeUndefined();
     expect((post.privateSetupEvidence as Record<string, unknown>).selection_version)
       .toBe("evidence-safe-stage3-v1");
     expect(legacy.setupKey).not.toContain("evidence-safe-stage3-v1");
