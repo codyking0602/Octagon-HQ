@@ -108,21 +108,21 @@ const PROGRAM_SWING = [0, 4, 5, 3, 2, 1, 6, 7] as const;
 // until Football has an approved exact-ranking product. Factual rows still come only from
 // footballFactualStats; generated comparison ratings do not decide these winners.
 const CURATED_MATCHUPS: readonly CuratedMatchupSpec[] = [
-  { packId: "nfl-quarterbacks", leftId: "drew-brees", rightId: "peyton-manning", winnerId: "peyton-manning", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 6, 8] },
+  { packId: "nfl-quarterbacks", leftId: "drew-brees", rightId: "peyton-manning", winnerId: "peyton-manning", difficulty: "hard", evidenceOrder: [2, 3, 0, 1, 5, 4, 6, 7], revealCounts: [3, 6, 8] },
   { packId: "nfl-quarterbacks", leftId: "dan-marino", rightId: "joe-montana", winnerId: "joe-montana", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
   { packId: "nfl-quarterbacks", leftId: "dan-marino", rightId: "peyton-manning", winnerId: "peyton-manning", difficulty: "medium", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 4, 7] },
 
-  { packId: "nfl-running-backs", leftId: "adrian-peterson", rightId: "emmitt-smith", winnerId: "emmitt-smith", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
-  { packId: "nfl-running-backs", leftId: "adrian-peterson", rightId: "walter-payton", winnerId: "walter-payton", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 5, 8] },
+  { packId: "nfl-running-backs", leftId: "adrian-peterson", rightId: "emmitt-smith", winnerId: "emmitt-smith", difficulty: "hard", evidenceOrder: [0, 4, 2, 1, 3, 5, 6], revealCounts: [2, 5, 7] },
+  { packId: "nfl-running-backs", leftId: "adrian-peterson", rightId: "walter-payton", winnerId: "walter-payton", difficulty: "hard", evidenceOrder: [0, 3, 2, 1, 4, 5, 6, 7], revealCounts: [3, 5, 8] },
   { packId: "nfl-running-backs", leftId: "adrian-peterson", rightId: "barry-sanders", winnerId: "barry-sanders", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
 
-  { packId: "nfl-wide-receivers", leftId: "randy-moss", rightId: "jerry-rice", winnerId: "jerry-rice", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
+  { packId: "nfl-wide-receivers", leftId: "randy-moss", rightId: "jerry-rice", winnerId: "jerry-rice", difficulty: "hard", evidenceOrder: [0, 3, 2, 1, 4, 5, 6], revealCounts: [2, 5, 7] },
   { packId: "nfl-wide-receivers", leftId: "terrell-owens", rightId: "jerry-rice", winnerId: "jerry-rice", difficulty: "medium", evidenceOrder: CAREER_SWING, revealCounts: [3, 6, 8] },
-  { packId: "nfl-wide-receivers", leftId: "calvin-johnson", rightId: "jerry-rice", winnerId: "jerry-rice", difficulty: "medium", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 4, 7] },
+  { packId: "nfl-wide-receivers", leftId: "calvin-johnson", rightId: "jerry-rice", winnerId: "jerry-rice", difficulty: "medium", evidenceOrder: [0, 3, 2, 1, 4, 5, 6], revealCounts: [2, 4, 7] },
 
   { packId: "nfl-tight-ends", leftId: "antonio-gates", rightId: "rob-gronkowski", winnerId: "rob-gronkowski", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 5, 8] },
   { packId: "nfl-tight-ends", leftId: "shannon-sharpe", rightId: "rob-gronkowski", winnerId: "rob-gronkowski", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
-  { packId: "nfl-tight-ends", leftId: "antonio-gates", rightId: "tony-gonzalez", winnerId: "tony-gonzalez", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 6, 8] },
+  { packId: "nfl-tight-ends", leftId: "antonio-gates", rightId: "tony-gonzalez", winnerId: "tony-gonzalez", difficulty: "hard", evidenceOrder: [0, 3, 1, 2, 4, 5, 6, 7], revealCounts: [3, 6, 8] },
 
   { packId: "nfl-defensive-players", leftId: "jj-watt", rightId: "lawrence-taylor", winnerId: "lawrence-taylor", difficulty: "hard", evidenceOrder: CAREER_PEAK_FIRST, revealCounts: [2, 5, 7] },
   { packId: "nfl-defensive-players", leftId: "jj-watt", rightId: "reggie-white", winnerId: "reggie-white", difficulty: "hard", evidenceOrder: CAREER_SWING, revealCounts: [3, 5, 8] },
