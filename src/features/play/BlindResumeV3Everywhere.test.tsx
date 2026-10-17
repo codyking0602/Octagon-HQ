@@ -11,6 +11,7 @@ import { blindResumeWinner } from "./blindResumeEngine";
 import {
   blindResumeV3RoundPoints,
   createBlindResumeV3Card,
+  createEvidenceSafeBlindResumeV3Card,
   storedBlindResumeV3Card,
 } from "./blindResumeV3";
 
@@ -149,7 +150,7 @@ describe("Blind Resume V3 shared contract", () => {
 
   it("restores the exact scored matchup after taking both fighters to Intelligence", () => {
     const seed = "v3-intelligence-return";
-    const card = createBlindResumeV3Card(seed);
+    const card = createEvidenceSafeBlindResumeV3Card(seed);
     const pair = card.roundSet.pairs[0]!;
     const { container } = renderBlindResumeWithIntelligence(`/play/blind-resume?run=${seed}`);
     const view = within(container);
