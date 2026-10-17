@@ -28,6 +28,7 @@ import {
   blindResumeV3NextRevealCount,
   blindResumeV3RoundPoints,
   createBlindResumeV3Card,
+  createEvidenceSafeBlindResumeV3Card,
   storedBlindResumeV3Card,
   type BlindResumeV3Card,
 } from "./blindResumeV3";
@@ -92,7 +93,7 @@ function v3OpeningReveal(card: BlindResumeV3Card) {
 
 function casualBlindResumeRun(seed?: string): BlindResumeRun {
   if (seed) {
-    const card = createBlindResumeV3Card(seed);
+    const card = createEvidenceSafeBlindResumeV3Card(seed);
     const ids = roundSetIds(card.roundSet);
     const identity = replayLineupIdentity("blind-resume", seed);
     rememberLineup(identity, ids, ids);
@@ -107,7 +108,7 @@ function casualBlindResumeRun(seed?: string): BlindResumeRun {
     validItemIds: validIds,
     validFighterIds: validIds,
     build: (nextSeed) => {
-      const card = createBlindResumeV3Card(nextSeed);
+      const card = createEvidenceSafeBlindResumeV3Card(nextSeed);
       const ids = roundSetIds(card.roundSet);
       return { value: card, itemIds: ids, fighterIds: ids };
     },
@@ -195,6 +196,7 @@ export default function BlindResumePage() {
   const profileIsV3 = profileMatch.challenge?.gameVersion === BLIND_RESUME_V3_GAME_VERSION;
   const challengeSeed = searchParams.get("challenge") || "";
   const directChallengeIsV3 = searchParams.get("v") === "3";
+  const directChallengeIsEvidenceSafe = searchParams.get("q") === "1";
   const runSeed = searchParams.get("run") || "";
   const [run, setRun] = useState<BlindResumeRun>(() => {
     if (profileSeed) {
@@ -209,7 +211,9 @@ export default function BlindResumePage() {
       if (directChallengeIsV3) {
         return curatedV3BlindResumeRun(
           challengeSeed,
-          createBlindResumeV3Card(challengeSeed),
+          directChallengeIsEvidenceSafe
+            ? createEvidenceSafeBlindResumeV3Card(challengeSeed)
+            : createBlindResumeV3Card(challengeSeed),
           `shared:v3:${challengeSeed}`,
         );
       }
@@ -360,7 +364,9 @@ export default function BlindResumePage() {
       shareText: v3
         ? `I scored ${pointsScore}/100 with a ${recordCopy} record in Blind Resume. Beat it on the exact same five matchups.`
         : `I challenged you to the same five hidden UFC resume matchups. Beat my ${correctCount}/${BLIND_RESUME_ROUNDS}.`,
-      shareUrl: v3 ? blindResumeV3ChallengeUrl(roundSet.seed) : blindResumeChallengeUrl(roundSet.seed),
+      shareUrl: v3
+        ? blindResumeV3ChallengeUrl(roundSet.seed, run.v3Card?.selectionVersion === "evidence-safe-stage3-v1")
+        : blindResumeChallengeUrl(roundSet.seed),
     });
     setChallengeStatus(status);
   }
