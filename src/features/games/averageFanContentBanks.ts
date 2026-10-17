@@ -1454,7 +1454,13 @@ export function ufcCandidates() {
       }
     }
 
-    const titleFights = fighter.fights.filter((fight) => fight.titleFight);
+    // Every named opponent in an identity Final must itself be a recognized
+    // fighter. A famous champion's obscure title challenger is not a fair
+    // Grade-5 recall anchor, even when two other opponents are recognizable.
+    // Fall back to the three-recognizable-opponent Final when no title bout
+    // has a recognizable opponent.
+    const titleFights = fighter.fights.filter((fight) =>
+      fight.titleFight && isRecognizableOpponent(fight.opponent));
     if (titleFights.length) {
       const titleFight = titleFights[titleFights.length - 1]!;
       const wrongNames = ufcPlausibleFighterMisses(fighter, fighters, [fighter.name], `${fighter.id}:title-identity`);
