@@ -1092,9 +1092,19 @@ function footballCandidates(league: "NFL" | "CFB") {
       const conferenceProgramKey = `${program.conference}:${conferenceSeason}`;
       if (!seenConferenceProgramQuestions.has(conferenceProgramKey)) {
         seenConferenceProgramQuestions.add(conferenceProgramKey);
+        // Conference identity is not a meaningful middle-grade challenge when
+        // all three wrong programs are from a visibly weaker classification
+        // (e.g. Illinois / Tulane / Tulsa / UAB for the Big Ten). Compare
+        // Power Four teams with P4 peers and Group-of-Five with G5 peers.
+        // Notre Dame's Independent identity is P4-caliber for this purpose.
+        const powerConferences = new Set(["SEC", "ACC", "Big Ten", "Big 12"]);
+        const g5Conferences = new Set(["American", "Mountain West", "Sun Belt"]);
+        const targetGroup = (powerConferences.has(program.conference) || program.conference === "Independent")
+          ? powerConferences : g5Conferences;
         const wrongPrograms = peerValues(
           programs
-            .filter((candidate) => candidate.conference && candidate.conference !== program.conference)
+            .filter((candidate) => candidate.conference && candidate.conference !== program.conference
+              && targetGroup.has(candidate.conference))
             .map((candidate) => candidate.name),
           program.name,
           `${program.id}:program-choice`,
