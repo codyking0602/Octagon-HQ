@@ -229,8 +229,12 @@ export function orderEvidenceSafeBlindResumeStats(pair: BlindResumePair, stats: 
   });
   // Show genuine winner-supporting evidence early, retain the strongest anchors
   // at the end, and never disguise an opposing stat as a decisive clue.
-  const first = supporting.slice(0, 2);
-  const last = supporting.slice(2).slice(-2);
+  const openingAnchor = supporting.find((label) => label === "Top-5 wins" || label === "UFC title-fight wins")!;
+  const openingContrast = supporting.find((label) => (
+    label !== openingAnchor && label !== "Top-5 wins" && label !== "UFC title-fight wins"
+  ))!;
+  const first = [openingAnchor, openingContrast];
+  const last = supporting.filter((label) => !first.includes(label)).slice(-2);
   const selected = new Set([...first, ...last]);
   const middle = stats.map((stat) => stat.label).filter((label) => !selected.has(label));
   const orderedLabels = [...first, ...middle, ...last];
