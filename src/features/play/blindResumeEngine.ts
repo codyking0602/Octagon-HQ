@@ -239,15 +239,21 @@ export function orderEvidenceSafeBlindResumeStats(pair: BlindResumePair, stats: 
     return Number.isFinite(a) && Number.isFinite(b)
       && (winnerOnA ? a! < b! : b! < a!);
   });
-  const openingContrast = opposing[0] ?? supporting.find((label) => (
-    label !== openingAnchor && label !== "Top-5 wins" && label !== "UFC title-fight wins"
+  const openingContrast = opposing[0] ?? "Main UFC era";
+  const secondSupport = supporting.find((label) => label !== openingAnchor)!;
+  const thirdSupport = supporting.find((label) => (
+    label !== openingAnchor && label !== secondSupport
   ))!;
-  const first = [openingAnchor, openingContrast];
-  // The late reveal must still contain strong *independent* winner evidence.
-  const last = supporting.filter((label) => !first.includes(label)).slice(-2);
-  const selected = new Set([...first, ...last]);
-  const middle = stats.map((stat) => stat.label).filter((label) => !selected.has(label));
-  const orderedLabels = [...first, ...middle, ...last];
+  // At 2 facts: one objective winner advantage plus a legitimate counterpoint
+  // or era context. At 4 and 6: reveal another independent winner anchor.
+  // The final 8 still displays every factual and contextual row, even if
+  // that row favors the other fighter.
+  const selected = new Set([openingAnchor, openingContrast, secondSupport, thirdSupport]);
+  const remaining = stats.map((stat) => stat.label).filter((label) => !selected.has(label));
+  const orderedLabels = [
+    openingAnchor, openingContrast, secondSupport, remaining[0]!,
+    thirdSupport, ...remaining.slice(1),
+  ];
   if (orderedLabels.length !== stats.length || new Set(orderedLabels).size !== stats.length) {
     throw new Error("Blind Resume evidence ladder is incomplete.");
   }
