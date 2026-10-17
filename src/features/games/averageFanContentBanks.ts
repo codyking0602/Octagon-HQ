@@ -58,6 +58,23 @@ const NFL_TEAM_NAMES: Readonly<Record<string, string>> = {
   SF: "San Francisco 49ers", TB: "Tampa Bay Buccaneers", TEN: "Tennessee Titans", WAS: "Washington Commanders",
 };
 
+/** Previously used names of the SAME continuing franchise; never conflate
+ * Oilers with Texans, Baltimore Colts with Ravens, or Browns with Ravens. */
+const NFL_HISTORIC_FRANCHISE_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  ARI: ["St. Louis Cardinals", "Phoenix Cardinals"],
+  IND: ["Baltimore Colts"],
+  LAC: ["San Diego Chargers"],
+  LAR: ["St. Louis Rams"],
+  LV: ["Oakland Raiders", "Los Angeles Raiders"],
+  NE: ["Boston Patriots"],
+  TEN: ["Houston Oilers", "Tennessee Oilers", "Oilers"],
+  WAS: ["Washington Football Team", "Washington Redskins", "Redskins"],
+};
+
+export function nflHistoricalFranchiseAliases(franchiseCodes: readonly string[]) {
+  return unique(franchiseCodes.flatMap((code) => NFL_HISTORIC_FRANCHISE_ALIASES[code] ?? []));
+}
+
 const FOOTBALL_POSITIONS = ["QB", "RB", "WR", "TE", "OL", "DL", "LB", "DB", "K", "P"] as const;
 
 function unique(values: readonly string[]) {
@@ -932,7 +949,7 @@ function footballCandidates(league: "NFL" | "CFB") {
             ? `Which NFL team did ${player.name} play for?`
             : `Name one NFL team ${player.name} played for.`,
           answer,
-          aliases: teams.slice(1),
+          aliases: unique([...teams.slice(1), ...nflHistoricalFranchiseAliases(player.franchises ?? [])]),
           explanation: `${player.name}'s NFL career included ${teams.join(", ")}.`,
           fanMisses: wrongTeams,
         }));
