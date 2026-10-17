@@ -274,7 +274,7 @@ export function OwnerChampionshipHome({
                   <strong data-testid="hq-league-leads">{leagueLeadDisplay}</strong>
                   <span>LEAGUE {leagueLeads === 1 ? "LEAD" : "LEADS"}</span>
                 </div>
-                <small>Across {showMlb ? 3 : 2} championships</small>
+                <small>Across {showMlb ? 4 : 3} championships</small>
               </div>
             </div>
             {showSportSelector ? <div className="home-champ-preview__overview-streak">
