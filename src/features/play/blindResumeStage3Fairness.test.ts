@@ -6,12 +6,12 @@ import {
   blindResumeWinner,
   createBlindResumeRounds,
   createEvidenceSafeBlindResumeRounds,
-  orderEvidenceSafeBlindResumeStats,
 } from "./blindResumeEngine";
 import {
   createBlindResumeV3Card,
   createEvidenceSafeBlindResumeV3Card,
 } from "./blindResumeV3";
+import { rankedPlayFighters } from "./playFighterPool";
 import {
   buildOfficialDailySetup,
   UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY,
@@ -26,7 +26,8 @@ const HELD_PAIRS = new Set([
 ]);
 
 describe("Stage 3 evidence-safe UFC Blind Resume selection", () => {
-  it("builds reproducible five-pair slates without known disputed matchups", () => {
+  it("builds reproducible five-pair slates with fair, varied openings", () => {
+    let mixedOpenings = 0;
     for (let index = 0; index < 30; index += 1) {
       const seed = `stage3-quality-${index}`;
       const card = createEvidenceSafeBlindResumeV3Card(seed);
@@ -59,16 +60,41 @@ describe("Stage 3 evidence-safe UFC Blind Resume selection", () => {
           return Number.isFinite(a) && Number.isFinite(b)
             && (winnerOnA ? a > b : b > a);
         });
-        expect(positive).toHaveLength(2);
+        expect(positive.length).toBeGreaterThanOrEqual(1);
+        const opposing = ordered.slice(0, 2).filter((stat) => {
+          const value = (v: string) => {
+            const match = /^(\d+)-(\d+)/.exec(v);
+            return match ? Number(match[1]) - Number(match[2]) : Number.parseFloat(v);
+          };
+          const a = value(stat.valueA);
+          const b = value(stat.valueB);
+          return Number.isFinite(a) && Number.isFinite(b)
+            && (winnerOnA ? a < b : b < a);
+        });
+        if (opposing.length) mixedOpenings += 1;
       });
     }
+    // Hard rounds should retain legitimate tradeoffs, not reveal two
+    // winner-favoring stats in every single opening.
+    expect(mixedOpenings).toBeGreaterThan(0);
   });
 
-  it("never accepts a known disputed historical pair as future eligible", () => {
-    const original = createBlindResumeRounds("stage3-held-pair-fixture");
-    for (const pair of original.pairs) {
-      const reordered = orderEvidenceSafeBlindResumeStats(pair, blindResumeStats(pair));
-      expect(reordered).toHaveLength(8);
+  it("excludes each known disputed matchup from new eligibility", () => {
+    const byId = new Map(rankedPlayFighters.map((fighter) => [fighter.id, fighter]));
+    for (const key of HELD_PAIRS) {
+      const [leftId, rightId] = key.split("|");
+      const fighterA = byId.get(leftId!)!;
+      const fighterB = byId.get(rightId!)!;
+      expect(fighterA).toBeDefined();
+      expect(fighterB).toBeDefined();
+      expect(blindResumePairIsEvidenceSafe({
+        id: `held-${key}`,
+        fighterA,
+        fighterB,
+        gender: fighterA.gender,
+        scoreGap: Math.abs(fighterA.model.rawScore - fighterB.model.rawScore),
+        band: "close",
+      })).toBe(false);
     }
   });
 
