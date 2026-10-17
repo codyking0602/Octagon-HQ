@@ -361,12 +361,17 @@ export function resolvedFootballBlindResumeMatchups() {
   return footballBlindResumeMatchups.map(resolveMatchup);
 }
 
+let stage3ReviewedMatchupsCache: FootballBlindResumeRound[] | null = null;
+
 export function footballBlindResumeStage3ReviewedMatchups() {
-  return CURATED_MATCHUPS.map((spec) => {
-    const id = `${spec.packId}-${spec.leftId}-v-${spec.rightId}`;
-    const evidenceOrder = STAGE3_EVIDENCE_ORDERS.get(id);
-    return resolveMatchup(makeMatchup(evidenceOrder ? { ...spec, evidenceOrder } : spec));
-  });
+  if (!stage3ReviewedMatchupsCache) {
+    stage3ReviewedMatchupsCache = CURATED_MATCHUPS.map((spec) => {
+      const id = `${spec.packId}-${spec.leftId}-v-${spec.rightId}`;
+      const evidenceOrder = STAGE3_EVIDENCE_ORDERS.get(id);
+      return resolveMatchup(makeMatchup(evidenceOrder ? { ...spec, evidenceOrder } : spec));
+    });
+  }
+  return stage3ReviewedMatchupsCache;
 }
 
 const nflQuarterbackCareerIds = new Set(
