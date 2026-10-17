@@ -73,6 +73,24 @@ function oneCharacterHumanTypo(value: string) {
 }
 
 describe("Average Fan durable content banks", () => {
+  it("uses credible rather than giveaway false 2025 CFB conference peers", () => {
+    const programs = new Map(queryFootballSubjects({ league: "CFB", kind: "program" })
+      .map((program) => [program.id, program]));
+    const falseClaims = AVERAGE_FAN_CONTENT_BANKS.cfb.filter((question) =>
+      question.id.endsWith(":conference-tf") && question.answer === "False");
+    expect(falseClaims.length).toBeGreaterThan(2);
+    for (const question of falseClaims) {
+      const programId = question.id.replace(/^average-fan:cfb:g2:/, "").replace(/:conference-tf$/, "");
+      const program = programs.get(programId);
+      expect(program, question.id).toBeTruthy();
+      expect(question.prompt, question.id).not.toContain(`the ${program?.conference} for the`);
+      if (program?.conference === "American" || program?.conference === "Sun Belt") {
+        expect(question.prompt, question.id).toMatch(/the (?:American|Sun Belt|Mountain West) for the/);
+        expect(question.prompt, question.id).not.toMatch(/the (?:SEC|Big Ten|Big 12) for the/);
+      }
+    }
+  });
+
   it("credits historically correct Rams-era answers and keeps the misnamed UFC 16 undercard fact retired", () => {
     const rams = AVERAGE_FAN_CONTENT_BANKS.nfl.find((question) =>
       question.id.startsWith("average-fan:nfl:00-team:greatest-show:"));
