@@ -122,7 +122,7 @@ const STAGE3_EDITORIAL_HOLDS = new Set([
 ]);
 
 function primeRecordNet(record: string) {
-  const match = /^(\\d+)-(\\d+)/.exec(record);
+  const match = /^(\d+)-(\d+)/.exec(record);
   return match ? Number(match[1]) - Number(match[2]) : NaN;
 }
 
