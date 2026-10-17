@@ -2217,6 +2217,21 @@ export function averageFanQuestionNamedTopics(question: AverageFanQuestion): str
   return distinct.map((name) => `${question.sport}:${name}`);
 }
 
+/** Best-effort within-board content variety. These broad topical families are
+ * selection preferences, not identity assertions: related rivalries are
+ * different valid facts, yet three trophy questions on one day feels repetitive.
+ */
+export function averageFanQuestionBoardTopics(question: AverageFanQuestion) {
+  const topics = averageFanQuestionNamedTopics(question);
+  const prompt = normalizeNamedTopic(question.prompt);
+  if (question.sport === "cfb"
+    && (/rivalry|trophy/.test(prompt) || /which two programs play/.test(prompt)
+      || /play for which/.test(prompt) || /which programs play/.test(prompt))) {
+    topics.push("cfb:topic-family:rivalries-and-trophies");
+  }
+  return topics;
+}
+
 export function averageFanBankSummary(sport: Exclude<AverageFanSport, "mlb">) {
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
   return {
