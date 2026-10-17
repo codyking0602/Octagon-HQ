@@ -121,11 +121,11 @@ begin
       end if;
     end loop;
   end loop;
-  if length(coalesce(p_picks->>'champion',''))>0 and not
+  if length(trim(coalesce(p_picks->>'champion','')))>0 and not
        (coalesce(p_picks->'finalsTeams','[]'::jsonb) ? (p_picks->>'champion')) then
     raise exception 'nba_futures_champion_not_in_finals';
   end if;
-  if length(coalesce(p_picks->>'cupChampion',''))>0 and not exists (
+  if length(trim(coalesce(p_picks->>'cupChampion','')))>0 and not exists (
       select 1 from public.nba_futures_win_lines
       where season=2026 and team_id=p_picks->>'cupChampion'
   ) then raise exception 'nba_futures_invalid_cup_champion'; end if;
@@ -147,12 +147,12 @@ as $$
     and jsonb_array_length(coalesce(p_picks->'conferenceFinalists','[]'::jsonb))=4
     and jsonb_array_length(coalesce(p_picks->'finalsTeams','[]'::jsonb))=2
     and jsonb_array_length(coalesce(p_picks->'oneSeeds','[]'::jsonb))=2
-    and length(coalesce(p_picks->>'champion',''))>0
-    and length(coalesce(p_picks->>'cupChampion',''))>0
-    and length(coalesce(p_picks->>'mvp',''))>0
-    and length(coalesce(p_picks->>'dpoy',''))>0
-    and length(coalesce(p_picks->>'roy',''))>0
-    and length(coalesce(p_picks->>'mip',''))>0;
+    and length(trim(coalesce(p_picks->>'champion','')))>0
+    and length(trim(coalesce(p_picks->>'cupChampion','')))>0
+    and length(trim(coalesce(p_picks->>'mvp','')))>0
+    and length(trim(coalesce(p_picks->>'dpoy','')))>0
+    and length(trim(coalesce(p_picks->>'roy','')))>0
+    and length(trim(coalesce(p_picks->>'mip','')))>0;
 $$;
 
 create or replace function public.get_nba_futures(p_season integer)

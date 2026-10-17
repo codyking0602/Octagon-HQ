@@ -49,7 +49,7 @@ export function emptyNbaFutures(): NbaFuturesPicks {
 export function nbaFuturesProgress(p: NbaFuturesPicks) {
   return Object.keys(p.winTotals).length + p.playoffTeams.length + p.conferenceFinalists.length
     + p.finalsTeams.length + p.oneSeeds.length
-    + [p.champion,p.mvp,p.dpoy,p.roy,p.mip,p.cupChampion].filter(Boolean).length;
+    + [p.champion,p.mvp,p.dpoy,p.roy,p.mip,p.cupChampion].filter(value=>value.trim().length>0).length;
 }
 export const NBA_FUTURES_SELECTIONS = 30+16+4+2+2+6;
 export function validateNbaFutures(p: NbaFuturesPicks): string[] {
@@ -114,5 +114,5 @@ export function scoreNbaFutures(p:NbaFuturesPicks,r:NbaFuturesResults) {
     cup:r.cupChampion===undefined?null:Number(match(p.cupChampion,r.cupChampion))*4,
   };
   return {scores,earned:Object.values(scores).reduce<number>((sum,n)=>sum+(n??0),0),
-    settledMax:Object.entries(scores).reduce((sum,[k,v])=>sum+(v===null?0:NBA_FUTURES_POINTS[k as keyof typeof NBA_FUTURES_POINTS]),0)};
+    settledMax:Object.entries(scores).reduce((sum,[k,v])=>sum+(v===null?0:k==="winTotals" ? Object.entries(r.regularWins??{}).filter(([id,wins])=>NBA_TEAM_BY_ID.has(id)&&Number.isInteger(wins)&&wins>=0&&wins<=82).length : NBA_FUTURES_POINTS[k as keyof typeof NBA_FUTURES_POINTS]),0)};
 }
