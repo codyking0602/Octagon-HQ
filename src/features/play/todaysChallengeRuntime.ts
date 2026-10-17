@@ -3,6 +3,9 @@ import {
   blindResumeStats,
   blindResumeWinner,
   createBlindResumeRounds,
+  createEvidenceSafeBlindResumeRounds,
+  orderEvidenceSafeBlindResumeStats,
+  blindResumePairIsEvidenceSafe,
   type BlindResumePair,
   type BlindResumeStat,
 } from "./blindResumeEngine";
@@ -149,6 +152,8 @@ export interface OfficialDailyAdvanceResult {
 type JsonRecord = Record<string, unknown>;
 type BlindResumeDifficulty = "readable" | "competitive" | "tight" | "nightmare";
 
+// Published and in-progress cards before this day retain their legacy selection and clues.
+export const UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY = "2026-10-18";
 const BLIND_RESUME_V3_REVEAL_COUNTS = [2, 4, 6, 8] as const;
 const BLIND_RESUME_V3_CORRECT_POINTS = [20, 19, 18, 17] as const;
 const BLIND_RESUME_V3_MISS_POINTS = [2, 4, 6, 8] as const;
@@ -449,6 +454,24 @@ function blindResumeDifficultyMap(pairs: readonly BlindResumePair[]) {
   return difficulty;
 }
 
+function evidenceSafeDifficulty(pair: BlindResumePair): BlindResumeDifficulty {
+  const winner = blindResumeWinner(pair);
+  const other = winner.id === pair.fighterA.id ? pair.fighterB : pair.fighterA;
+  const w = winner.model.visibleStats;
+  const o = other.model.visibleStats;
+  const leads = [
+    w.titleFightWins > o.titleFightWins,
+    w.topFiveWins > o.topFiveWins,
+    w.activeEliteYears > o.activeEliteYears,
+    w.finishRatePct > o.finishRatePct,
+  ].filter(Boolean).length;
+  // These labels describe independent visible evidence, not a mandatory one-per-card
+  // ranking of score gaps. No future "nightmare" is assigned without editorial review.
+  if (leads >= 4) return "readable";
+  if (leads === 3) return "competitive";
+  return "tight";
+}
+
 function visibleBlindResumeV3Round(round: JsonRecord, revealedCount: number) {
   const stage = blindResumeV3Stage(revealedCount);
   const stats = recordArray(round.stats, "Blind Resume V3 stats");
@@ -470,22 +493,31 @@ function visibleBlindResumeV3Round(round: JsonRecord, revealedCount: number) {
 }
 
 function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
+  const evidenceSafe = day >= UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY;
   const seed = `${OFFICIAL_DAILY_RUNTIME_VERSION}|${BLIND_RESUME_V3_CONTENT_VERSION}|${scheduleVersion}|${day}`;
-  const roundSet = createBlindResumeRounds(seed);
-  const difficulties = blindResumeDifficultyMap(roundSet.pairs);
-  const privateRounds = roundSet.pairs.map((pair, roundIndex) => ({
-    round_index: roundIndex,
-    pair_id: pair.id,
-    difficulty: difficulties.get(pair.id) ?? "competitive",
-    fighter_a_id: pair.fighterA.id,
-    fighter_b_id: pair.fighterB.id,
-    winner_id: blindResumeWinner(pair).id,
-    stats: shuffleBlindResumeStats(blindResumeStats(pair), seed, pair.id).map((stat) => ({
-      label: stat.label,
-      value_a: stat.valueA,
-      value_b: stat.valueB,
-    })),
-  }));
+  const roundSet = evidenceSafe ? createEvidenceSafeBlindResumeRounds(seed) : createBlindResumeRounds(seed);
+  const legacyDifficulties = evidenceSafe ? null : blindResumeDifficultyMap(roundSet.pairs);
+  const privateRounds = roundSet.pairs.map((pair, roundIndex) => {
+    if (evidenceSafe && !blindResumePairIsEvidenceSafe(pair)) {
+      throw new Error("Blind Resume attempted to publish a disputed matchup.");
+    }
+    const difficulty = evidenceSafe ? evidenceSafeDifficulty(pair) : legacyDifficulties!.get(pair.id) ?? "competitive";
+    const stats = blindResumeStats(pair);
+    return {
+      round_index: roundIndex,
+      pair_id: pair.id,
+      difficulty,
+      fighter_a_id: pair.fighterA.id,
+      fighter_b_id: pair.fighterB.id,
+      winner_id: blindResumeWinner(pair).id,
+      stats: (evidenceSafe ? orderEvidenceSafeBlindResumeStats(pair, stats) : shuffleBlindResumeStats(stats, seed, pair.id))
+        .map((stat) => ({
+          label: stat.label,
+          value_a: stat.valueA,
+          value_b: stat.valueB,
+        })),
+    };
+  });
   const revealRounds = privateRounds.map((round) => ({
     round_index: round.round_index,
     fighter_a: fighterPresentation(fighterFor(round.fighter_a_id)),
@@ -494,7 +526,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
   }));
 
   return {
-    setupKey: `${BLIND_RESUME_V3_CONTENT_VERSION}:${scheduleVersion}:${day}`,
+    setupKey: `${BLIND_RESUME_V3_CONTENT_VERSION}:${scheduleVersion}:${day}${evidenceSafe ? ":evidence-safe-stage3-v1" : ""}`,
     contentVersion: BLIND_RESUME_V3_CONTENT_VERSION,
     scoringVersion: BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION,
     publicSetup: {
@@ -511,7 +543,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
       },
     },
     revealSetup: { rounds: revealRounds },
-    privateSetupEvidence: { seed, rounds: privateRounds },
+    privateSetupEvidence: { seed, rounds: privateRounds, selection_version: evidenceSafe ? "evidence-safe-stage3-v1" : "legacy" },
     privateGradingEvidence: {
       correct_choices: privateRounds.map((round) => round.winner_id),
     },
