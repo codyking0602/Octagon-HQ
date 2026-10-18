@@ -1,5 +1,5 @@
 import { beforeEach,describe,expect,it,vi } from "vitest";
-import { fireEvent,render,screen } from "@testing-library/react";
+import { act,fireEvent,render,screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { NbaWelcomeTakeover,nbaWelcomeKey,NBA_WELCOME_REOPEN_EVENT } from "./NbaWelcomeTakeover";
 describe("NBA two-stage welcome",()=>{
@@ -19,7 +19,7 @@ describe("NBA two-stage welcome",()=>{
     fireEvent.click(screen.getByRole("button",{name:/explore the hq later/i}));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(window.localStorage.getItem(nbaWelcomeKey("owner"))).toBe("dismissed");
-    window.dispatchEvent(new Event(NBA_WELCOME_REOPEN_EVENT));
+    act(() => { window.dispatchEvent(new Event(NBA_WELCOME_REOPEN_EVENT)); });
     expect(screen.getByRole("button",{name:/continue/i})).toBeInTheDocument();
     r.unmount();
     render(<MemoryRouter><NbaWelcomeTakeover profileId="other" /></MemoryRouter>);
