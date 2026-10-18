@@ -30,6 +30,7 @@ describe("2026 NBA futures immutable contract",()=>{
     const p=emptyNbaFutures();
     p.cupChampion="BOS";p.oneSeeds=["BOS"];p.roy="Someone";p.mip="Another";
     expect(nbaFuturesProgress(p)).toBe(0);
+    expect(validateNbaFutures(p)).toEqual([]);
   });
   it("rejects bracket contradictions and cross-conference overflow",()=>{
     const p=emptyNbaFutures();p.conferenceFinalists=["DAL"];
