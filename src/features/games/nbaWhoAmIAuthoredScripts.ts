@@ -159,7 +159,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "profile"
+              "finals"
             ]
           },
           {
@@ -168,7 +168,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "profile"
+              "finals"
             ]
           },
           {
@@ -204,7 +204,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile"
+              "finals"
             ]
           },
           {
@@ -407,7 +407,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "hof"
+              "archive"
             ]
           },
           {
@@ -416,7 +416,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "hof"
+              "archive"
             ]
           },
           {
@@ -442,7 +442,8 @@ export const nbaWhoAmIAuthoredIdentities = [
       "archive": "https://www.nba.com/news/archive-75-lebron-james",
       "decision": "https://www.nba.com/news/legendary-moments-lebron-james-decision-miami-heat",
       "block": "https://www.nba.com/news/history-finals-moments-lebron-chasedown-block-2016",
-      "finals": "https://www.nba.com/news/history-finals-mvp-winners"
+      "finals": "https://www.nba.com/news/history-finals-mvp-winners",
+      "scoring": "https://www.nba.com/news/lebron-james-scoring-tracker"
     },
     "scripts": {
       "A": {
@@ -490,7 +491,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "decision"
             ]
           },
           {
@@ -499,7 +500,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "decision"
             ]
           },
           {
@@ -508,7 +509,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "decision"
             ]
           },
           {
@@ -517,7 +518,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "block"
             ]
           },
           {
@@ -535,7 +536,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           }
         ]
@@ -567,7 +568,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "decision"
             ]
           },
           {
@@ -585,7 +586,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "decision"
             ]
           },
           {
@@ -612,7 +613,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "block"
             ]
           },
           {
@@ -621,7 +622,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           },
           {
@@ -630,7 +631,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "scoring"
             ]
           }
         ]
@@ -646,7 +647,8 @@ export const nbaWhoAmIAuthoredIdentities = [
     "sources": {
       "archive": "https://www.nba.com/news/archive-75-stephen-curry",
       "finals": "https://www.nba.com/news/stephen-curry-wins-2022-bill-russell-nba-finals-mvp-award",
-      "hof": "https://www.nba.com/news/stephen-curry-honored-with-hall-of-fame-exhibit"
+      "hof": "https://www.nba.com/news/stephen-curry-honored-with-hall-of-fame-exhibit",
+      "records": "https://www.nba.com/news/history-top-moments-warriors-win-record-73-games"
     },
     "scripts": {
       "A": {
@@ -703,7 +705,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "records"
             ]
           },
           {
@@ -712,7 +714,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "records"
             ]
           },
           {
@@ -721,7 +723,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "records"
             ]
           },
           {
@@ -739,7 +741,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           }
         ]
@@ -798,7 +800,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "records"
             ]
           },
           {
@@ -834,7 +836,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "hof"
             ]
           }
         ]
@@ -907,7 +909,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "mvp"
             ]
           },
           {
@@ -1002,7 +1004,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "recap"
             ]
           },
           {
@@ -1011,7 +1013,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "recap"
             ]
           },
           {
@@ -1020,7 +1022,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "recap"
             ]
           },
           {
@@ -1121,7 +1123,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "history"
             ]
           },
           {
@@ -1130,7 +1132,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "trade"
             ]
           },
           {
@@ -1139,7 +1141,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "trade"
             ]
           },
           {
@@ -1198,7 +1200,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "june"
             ]
           },
           {
@@ -1216,7 +1218,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "trade"
             ]
           },
           {
@@ -1225,7 +1227,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "trade"
             ]
           },
           {
@@ -1234,7 +1236,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "trade"
             ]
           },
           {
@@ -1334,7 +1336,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           },
           {
@@ -1343,7 +1345,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           },
           {
@@ -1411,7 +1413,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           },
           {
@@ -1420,7 +1422,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "block"
             ]
           },
           {
@@ -1429,7 +1431,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           },
           {
@@ -1438,7 +1440,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           },
           {
@@ -1447,7 +1449,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "finals"
             ]
           }
         ]
@@ -1464,7 +1466,8 @@ export const nbaWhoAmIAuthoredIdentities = [
       "history": "https://www.nba.com/news/nikola-jokic-nba-history",
       "mvp": "https://www.nba.com/news/history-mvp-award-winners",
       "finals": "https://www.nba.com/news/history-finals-mvp-winners",
-      "recap": "https://www.nba.com/news/history-season-review-2023-24"
+      "recap": "https://www.nba.com/news/history-season-review-2023-24",
+      "title": "https://www.nba.com/news/nikola-jokics-hometown-in-serbia-celebrates-nuggets-1st-nba-title"
     },
     "scripts": {
       "A": {
@@ -1494,7 +1497,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "title"
             ]
           },
           {
@@ -1512,7 +1515,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "mvp"
             ]
           },
           {
@@ -1521,7 +1524,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "mvp"
             ]
           },
           {
@@ -1530,7 +1533,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "title"
             ]
           },
           {
@@ -1539,7 +1542,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "finals"
             ]
           },
           {
@@ -1548,7 +1551,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "recap"
             ]
           },
           {
@@ -1607,7 +1610,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "title"
             ]
           },
           {
@@ -1616,7 +1619,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "finals"
             ]
           },
           {
