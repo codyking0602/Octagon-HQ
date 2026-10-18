@@ -1,0 +1,109 @@
+name: Football Weekly Editorial Handoff
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.football-editorial/*.json'
+  workflow_dispatch:
+    inputs:
+      week:
+        description: Tuesday package date YYYY-MM-DD
+        required: true
+        type: string
+      sport:
+        description: Independent sport to retry
+        required: true
+        type: choice
+        options: [cfb, nfl]
+
+# Scoped GitHub OIDC is exchanged directly with our private Edge Function.
+# Neither GitHub nor source files receive a Supabase service-role credential.
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: football-weekly-editorial-handoff
+  cancel-in-progress: false
+
+jobs:
+  stage-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Send signed editorial package and verify canonical readback
+        shell: bash
+        env:
+          PREVIOUS_SHA: ${{ github.event.before }}
+          EVENT_NAME: ${{ github.event_name }}
+          SELECTED_WEEK: ${{ inputs.week }}
+          SELECTED_SPORT: ${{ inputs.sport }}
+          ENDPOINT: https://rvbspcjvebgwqzssayts.supabase.co/functions/v1/football-weekly-editorial-handoff
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, re, subprocess, sys, time, urllib.error, urllib.parse, urllib.request
+
+          base = pathlib.Path(".football-editorial")
+          if os.environ["EVENT_NAME"] == "workflow_dispatch":
+              week, sport = os.environ["SELECTED_WEEK"], os.environ["SELECTED_SPORT"]
+              if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}", week) or sport not in ("cfb", "nfl"):
+                  raise SystemExit("Invalid retry week/sport")
+              paths = [base / f"{week}-{sport}.json"]
+          else:
+              prev = os.environ.get("PREVIOUS_SHA", "")
+              if not re.fullmatch(r"[a-f0-9]{40}", prev) or prev == "0" * 40:
+                  raise SystemExit("Cannot prove exact changed manifest list")
+              changed = subprocess.check_output(
+                  ["git", "diff", "--name-only", prev, "HEAD"], text=True).splitlines()
+              paths = [pathlib.Path(p) for p in changed if re.fullmatch(
+                  r"\.football-editorial/20\d{2}-\d{2}-\d{2}-(cfb|nfl)\.json", p)]
+          if not paths:
+              raise SystemExit("No matching editorial manifest to process")
+          request_url = os.environ["ACTIONS_ID_TOKEN_REQUEST_URL"]
+          joiner = "&" if "?" in request_url else "?"
+          token_request = urllib.request.Request(
+              request_url + joiner + urllib.parse.urlencode({"audience": "octagon-hq-football-editorial"}),
+              headers={"Authorization": "Bearer " + os.environ["ACTIONS_ID_TOKEN_REQUEST_TOKEN"]})
+          token = json.load(urllib.request.urlopen(token_request, timeout=15))["value"]
+          for path in paths:
+              if not path.is_file():
+                  raise SystemExit(f"Missing canonical manifest: {path}")
+              data = json.loads(path.read_text())
+              required_name = f"{data.get('week_of')}-{data.get('sport')}.json"
+              if path.name != required_name:
+                  raise SystemExit(f"Manifest path/data mismatch: {path}")
+              if set(data) - {"week_of", "sport", "candidates", "selection"}:
+                  raise SystemExit(f"Unexpected manifest fields: {path}")
+              body = json.dumps(data).encode()
+              for attempt in range(4):
+                  req = urllib.request.Request(os.environ["ENDPOINT"], data=body, headers={
+                      "Content-Type": "application/json", "Authorization": "Bearer " + token,
+                  }, method="POST")
+                  try:
+                      with urllib.request.urlopen(req, timeout=45) as response:
+                          receipt = json.load(response)
+                      if receipt.get("status") != "verified" or receipt.get("week_of") != data["week_of"] or receipt.get("sport") != data["sport"]:
+                          raise RuntimeError("Canonical Supabase readback mismatch")
+                      if bool(data.get("selection")) != bool(receipt.get("selection_recorded")):
+                          raise RuntimeError("Owner approval not persisted")
+                      msg = f"Verified {path} at {receipt['source_sha']}; five players and five games"
+                      print(msg)
+                      with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+                          summary.write(f"### Football editorial handoff\n{msg}\n")
+                      break
+                  except urllib.error.HTTPError as exc:
+                      detail = exc.read().decode(errors="replace")[:500]
+                      if exc.code < 500 or attempt == 3:
+                          raise SystemExit(f"{path}: HTTP {exc.code}: {detail}")
+                      print(f"Transient HTTP {exc.code}, retry {attempt + 1}/3")
+                  except (urllib.error.URLError, TimeoutError):
+                      if attempt == 3:
+                          raise
+                      print(f"Network retry {attempt + 1}/3")
+                  time.sleep(2 ** (attempt + 1))
+          PY
