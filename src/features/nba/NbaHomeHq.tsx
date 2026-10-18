@@ -88,7 +88,7 @@ export function NbaHomeHq({ signedIn, compact = false }: { signedIn: boolean; co
               </Link>
             </div>
             <div className="nba-home-futures-actions">
-              <span>LOCKS OCT 30</span>
+              <span>LOCKS OCT 20 · 2 PM CT</span>
               <Link className="secondary-action" to="/nba/picks">
                 {locked ? "REVIEW FUTURES" : "OPEN FUTURES"} →
               </Link>
