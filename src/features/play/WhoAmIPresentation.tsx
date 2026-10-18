@@ -123,14 +123,17 @@ export default function WhoAmIPresentation({
 }: WhoAmIPresentationProps) {
   const football = sport === "football";
   const baseball = sport === "mlb";
-  const sportLabel = football ? "FOOTBALL" : baseball ? "MLB" : "UFC";
-  const gameLabel = football ? "FOOTBALL GAMES" : baseball ? "MLB PLAYOFF CHALLENGE" : "UFC GAMES";
-  const hiddenRole = football ? "player or head coach" : baseball ? "player" : "fighter";
+  const basketball = sport === "nba";
+  const sportLabel = football ? "FOOTBALL" : baseball ? "MLB" : basketball ? "NBA" : "UFC";
+  const gameLabel = football ? "FOOTBALL GAMES" : baseball ? "MLB PLAYOFF CHALLENGE" : basketball ? "BASKETBALL GAMES" : "UFC GAMES";
+  const hiddenRole = football ? "player or head coach" : baseball || basketball ? "player" : "fighter";
   const searchPlaceholder = football
     ? `Search ${league} names…`
     : baseball
       ? "Search MLB players…"
-      : "Search UFC fighters…";
+      : basketball
+        ? "Search NBA players…"
+        : "Search UFC fighters…";
   const finalGuessRequired = phase === "playing" && revealedCount >= WHO_AM_I_CLUE_LIMIT;
   const latestPairStart = Math.max(0, revealedCount - WHO_AM_I_CLUES_PER_REVEAL);
   const cluePairs = useMemo(() => (
