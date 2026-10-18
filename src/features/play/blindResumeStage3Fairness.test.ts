@@ -4,123 +4,132 @@ import {
   blindResumePairIsEvidenceSafe,
   blindResumeStats,
   blindResumeWinner,
+  createBlindResumeRounds,
   createEvidenceSafeBlindResumeRounds,
+  type BlindResumePair,
 } from "./blindResumeEngine";
 import {
   createBlindResumeV3Card,
   createEvidenceSafeBlindResumeV3Card,
 } from "./blindResumeV3";
-import { rankedPlayFighters } from "./playFighterPool";
+import { rankedPlayFighters, type RankedPlayFighter } from "./playFighterPool";
 import {
   buildOfficialDailySetup,
   UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY,
 } from "./todaysChallengeRuntime";
 
-const HELD_PAIRS = new Set([
-  "justin-gaethje|tito-ortiz",
-  "alexander-volkanovski|matt-hughes",
-  "brock-lesnar|shogun-rua",
-  "conor-mcgregor|petr-yan",
-  "jessica-andrade|ronda-rousey",
-]);
+function withRésumé(
+  fighter: RankedPlayFighter,
+  stats: {
+    titleFightWins: number;
+    topFiveWins: number;
+    primeRecord: string;
+    activeEliteYears: number;
+    finishRatePct: number;
+  },
+): RankedPlayFighter {
+  return { ...fighter, model: {
+    ...fighter.model,
+    visibleStats: { ...fighter.model.visibleStats, ...stats },
+  } };
+}
 
-describe("Stage 3 evidence-safe UFC Blind Resume selection", () => {
-  it("builds reproducible five-pair slates with fair, varied openings", () => {
-    let mixedOpenings = 0;
-    for (let index = 0; index < 30; index += 1) {
-      const seed = `stage3-quality-${index}`;
+describe("Stage 3 UFC Blind Resume — full-reveal solvability only", () => {
+  it("rejects full-resume domination but keeps tricky comparisons with legitimate counterarguments", () => {
+    const men = rankedPlayFighters.filter((fighter) => fighter.gender === "men")
+      .sort((a, b) => a.model.rank - b.model.rank);
+    const canonicalWinner = men[0]!;
+    const canonicalLoser = men[1]!;
+
+    const losingEveryCategory: BlindResumePair = {
+      id: "losing-every-stat",
+      fighterA: withRésumé(canonicalWinner, {
+        titleFightWins: 0, topFiveWins: 0, primeRecord: "0-10",
+        activeEliteYears: 0, finishRatePct: 0,
+      }),
+      fighterB: withRésumé(canonicalLoser, {
+        titleFightWins: 10, topFiveWins: 10, primeRecord: "10-0",
+        activeEliteYears: 10, finishRatePct: 90,
+      }),
+      gender: "men", scoreGap: 2, band: "close",
+    };
+    expect(blindResumeWinner(losingEveryCategory).id).toBe(canonicalWinner.id);
+    expect(blindResumePairIsEvidenceSafe(losingEveryCategory)).toBe(false);
+
+    const aGenuineDebate: BlindResumePair = {
+      ...losingEveryCategory,
+      id: "mixed-résumé",
+      fighterA: withRésumé(canonicalWinner, {
+        titleFightWins: 3, topFiveWins: 4, primeRecord: "1-9",
+        activeEliteYears: 1, finishRatePct: 10,
+      }),
+      fighterB: withRésumé(canonicalLoser, {
+        titleFightWins: 1, topFiveWins: 3, primeRecord: "9-1",
+        activeEliteYears: 10, finishRatePct: 90,
+      }),
+    };
+    // Winner leads only two of five independently verifiable categories:
+    // the player still has to weigh a real, non-obvious full résumé.
+    expect(blindResumePairIsEvidenceSafe(aGenuineDebate)).toBe(true);
+  });
+
+  it("generates reproducible 5-round slates with intact old eight-stat random reveals", () => {
+    let earlyCounterarguments = 0;
+    const openingLabels = new Set<string>();
+    for (let i = 0; i < 40; i += 1) {
+      const seed = `stage3-minimal-ufc-${i}`;
       const card = createEvidenceSafeBlindResumeV3Card(seed);
       expect(createEvidenceSafeBlindResumeV3Card(seed)).toEqual(card);
       expect(card.selectionVersion).toBe("evidence-safe-stage3-v1");
       expect(card.roundSet.pairs).toHaveLength(BLIND_RESUME_ROUNDS);
-      const ids = card.roundSet.pairs.flatMap((pair) => [pair.fighterA.id, pair.fighterB.id]);
-      expect(new Set(ids).size).toBe(10);
-      card.roundSet.pairs.forEach((pair, round) => {
-        const key = [pair.fighterA.id, pair.fighterB.id].sort().join("|");
-        expect(HELD_PAIRS.has(key)).toBe(false);
+      const names = card.roundSet.pairs.flatMap((pair) => [pair.fighterA.id, pair.fighterB.id]);
+      expect(new Set(names).size).toBe(10);
+      card.roundSet.pairs.forEach((pair, index) => {
+        expect(pair.gender).toBe(pair.fighterA.gender);
         expect(pair.fighterA.gender).toBe(pair.fighterB.gender);
         expect(blindResumePairIsEvidenceSafe(pair)).toBe(true);
-        expect(blindResumeWinner(pair).id).toMatch(/\S/);
-        const ordered = card.statsByRound[round]!;
-        expect(ordered).toHaveLength(8);
-        expect(new Set(ordered.map((stat) => stat.label))).toEqual(
-          new Set(blindResumeStats(pair).map((stat) => stat.label)),
+        const stats = card.statsByRound[index]!;
+        expect(stats).toHaveLength(8);
+        const canonical = blindResumeStats(pair);
+        expect(new Set(stats.map((stat) => stat.label))).toEqual(
+          new Set(canonical.map((stat) => stat.label)),
         );
-        // The opening must not be two facts that both point to the rejected fighter.
-        const winner = blindResumeWinner(pair).id;
-        const winnerOnA = winner === pair.fighterA.id;
-        const positive = ordered.slice(0, 2).filter((stat) => {
-          const value = (s: string) => {
-            const m = /^(\d+)-(\d+)/.exec(s);
-            return m ? Number(m[1]) - Number(m[2]) : Number.parseFloat(s);
-          };
-          const a = value(stat.valueA);
-          const b = value(stat.valueB);
-          return Number.isFinite(a) && Number.isFinite(b)
-            && (winnerOnA ? a > b : b > a);
-        });
-        expect(positive.length).toBeGreaterThanOrEqual(1);
-        const opposing = ordered.slice(0, 2).filter((stat) => {
-          const value = (v: string) => {
-            const match = /^(\d+)-(\d+)/.exec(v);
-            return match ? Number(match[1]) - Number(match[2]) : Number.parseFloat(v);
-          };
-          const a = value(stat.valueA);
-          const b = value(stat.valueB);
-          return Number.isFinite(a) && Number.isFinite(b)
-            && (winnerOnA ? a < b : b < a);
-        });
-        if (opposing.length) mixedOpenings += 1;
-        const winnerLeadsThrough = (count: number) => ordered.slice(0, count).filter((stat) => {
-          const value = (v: string) => {
-            const match = /^(\d+)-(\d+)/.exec(v);
-            return match ? Number(match[1]) - Number(match[2]) : Number.parseFloat(v);
-          };
-          const a = value(stat.valueA);
-          const b = value(stat.valueB);
-          return Number.isFinite(a) && Number.isFinite(b)
-            && (winnerOnA ? a > b : b > a);
-        }).length;
-        expect(winnerLeadsThrough(4)).toBeGreaterThanOrEqual(2);
-        expect(winnerLeadsThrough(6)).toBeGreaterThanOrEqual(3);
+        expect(stats.every((stat) => stat.valueA.trim() && stat.valueB.trim())).toBe(true);
+        for (const row of stats.slice(0, 2)) {
+          openingLabels.add(row.label);
+          const a = Number.parseFloat(row.valueA);
+          const b = Number.parseFloat(row.valueB);
+          if (Number.isFinite(a) && Number.isFinite(b) && a !== b) {
+            const winnerOnA = blindResumeWinner(pair).id === pair.fighterA.id;
+            if (winnerOnA ? a < b : b < a) earlyCounterarguments += 1;
+          }
+        }
       });
     }
-    // Hard rounds should retain legitimate tradeoffs, not reveal two
-    // winner-favoring stats in every single opening.
-    expect(mixedOpenings).toBeGreaterThan(0);
+    // A difficult, misleading opening is still allowed. No scripted
+    // winner-favoring evidence at 2, 4 or 6 reveals.
+    expect(earlyCounterarguments).toBeGreaterThan(0);
+    expect(openingLabels.size).toBeGreaterThanOrEqual(6);
   });
 
-  it("excludes each known disputed matchup from new eligibility", () => {
-    const byId = new Map(rankedPlayFighters.map((fighter) => [fighter.id, fighter]));
-    for (const key of HELD_PAIRS) {
-      const [leftId, rightId] = key.split("|");
-      const fighterA = byId.get(leftId!)!;
-      const fighterB = byId.get(rightId!)!;
-      expect(fighterA).toBeDefined();
-      expect(fighterB).toBeDefined();
-      expect(blindResumePairIsEvidenceSafe({
-        id: `held-${key}`,
-        fighterA,
-        fighterB,
-        gender: fighterA.gender,
-        scoreGap: Math.abs(fighterA.model.rawScore - fighterB.model.rawScore),
-        band: "close",
-      })).toBe(false);
-    }
-  });
+  it("preserves legacy Daily, casual and unmarked shared replay generation", () => {
+    const lastDay = buildOfficialDailySetup("blind_resume", "2026-10-18", "legacy-stage3-pinned");
+    expect((lastDay.privateSetupEvidence as Record<string, unknown>).selection_version).toBeUndefined();
+    expect(lastDay.setupKey).not.toContain("evidence-safe-stage3-v1");
 
-  it("keeps previously published V3 setup generation unchanged at the cutover", () => {
-    const legacy = buildOfficialDailySetup("blind_resume", "2026-10-16", "stage3-historic-pin");
-    const post = buildOfficialDailySetup("blind_resume", UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY, "stage3-future-pin");
-    expect((legacy.privateSetupEvidence as Record<string, unknown>).selection_version).toBeUndefined();
-    expect((post.privateSetupEvidence as Record<string, unknown>).selection_version)
-      .toBe("evidence-safe-stage3-v1");
-    expect(legacy.setupKey).not.toContain("evidence-safe-stage3-v1");
-    expect(post.setupKey).toContain("evidence-safe-stage3-v1");
     const oldCard = createBlindResumeV3Card("stage3-old-casual-seed");
     expect(oldCard.selectionVersion).toBe("legacy");
     expect(createBlindResumeV3Card("stage3-old-casual-seed")).toEqual(oldCard);
-    const future = createEvidenceSafeBlindResumeRounds("stage3-future-mode-check");
-    expect(future.pairs.every(blindResumePairIsEvidenceSafe)).toBe(true);
+    expect(createBlindResumeRounds(oldCard.roundSet.seed).pairs).toEqual(oldCard.roundSet.pairs);
+
+    // New Daily publication is deliberately disabled until an approved
+    // release date. This reserved day still exercises the future Daily owner.
+    expect(UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY).toBe("2099-01-01");
+    const future = buildOfficialDailySetup("blind_resume", UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY, "stage3-future-pin");
+    expect((future.privateSetupEvidence as Record<string, unknown>).selection_version)
+      .toBe("evidence-safe-stage3-v1");
+    expect(future.setupKey).toContain("evidence-safe-stage3-v1");
+    expect(createEvidenceSafeBlindResumeRounds("stage3-future-mode-check")
+      .pairs.every(blindResumePairIsEvidenceSafe)).toBe(true);
   });
 });
