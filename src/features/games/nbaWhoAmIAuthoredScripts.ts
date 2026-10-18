@@ -51,7 +51,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-2",
-            "text": "A physical Eastern Conference rival ended several of my early playoff runs.",
+            "text": "I reached consecutive conference finals before my team captured its first championship.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -555,7 +555,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-2",
-            "text": "I built a long career producing points and assists at an elite level.",
+            "text": "I earned repeated All-NBA selections over a long career that included several deep playoff runs.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -573,7 +573,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-4",
-            "text": "I reached more than one Finals before winning my first championship.",
+            "text": "I earned an NBA scoring title before capturing my first championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -665,7 +665,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-2",
-            "text": "The offenses I led were built around movement, passing and long-range shooting.",
+            "text": "My team returned to the playoffs after a lengthy absence before becoming a championship contender.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -760,7 +760,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-2",
-            "text": "My teams became known for spacing, quick decisions and a high volume of outside shots.",
+            "text": "I became an offensive centerpiece on teams that reached the NBA Finals repeatedly.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
