@@ -477,7 +477,7 @@ export default function HomePage() {
         <OwnerChampionshipHome
           streak={hqDailyStreak.streak.currentStreak}
           streakLoading={hqDailyStreak.loading}
-          showMlb={mlbVisible} showNba={nbaVisible} showNba={nbaVisible}
+          showMlb={mlbVisible} showNba={nbaVisible}
           sport={ownerSport}
           onSportChange={setOwnerSport}
           showSportSelector={false}
@@ -532,7 +532,7 @@ export default function HomePage() {
         <OwnerChampionshipHome
           streak={hqDailyStreak.streak.currentStreak}
           streakLoading={hqDailyStreak.loading}
-          showMlb={mlbVisible}
+          showMlb={mlbVisible} showNba={nbaVisible}
           sport={ownerSport}
           onSportChange={setOwnerSport}
           showSportSelector={false}
