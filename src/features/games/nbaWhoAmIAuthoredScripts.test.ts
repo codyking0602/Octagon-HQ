@@ -74,7 +74,7 @@ describe("NBA Who Am I authored A/B scripts", () => {
         expect(new Set(early).size).toBe(4);
       }
       const a = player.scripts.A.clues.map(clue => clue.text);
-      const b = player.scripts.B.clues.map(clue => clue.text);
+      const b: string[] = player.scripts.B.clues.map(clue => clue.text);
       expect(a.filter(text => b.includes(text))).toHaveLength(0);
     }
   });
