@@ -769,7 +769,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-3",
-            "text": "I grew up with a close family connection to professional basketball.",
+            "text": "I grew into a multiple-time All-Star after spending my first few NBA seasons establishing myself.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -852,7 +852,8 @@ export const nbaWhoAmIAuthoredIdentities = [
     "sources": {
       "archive": "https://www.nba.com/news/archive-75-tim-duncan",
       "mvp": "https://www.nba.com/news/history-mvp-award-winners",
-      "recap": "https://www.nba.com/news/history-season-recaps-index"
+      "recap": "https://www.nba.com/news/history-season-recaps-index",
+      "spursTimeline": "https://www.nba.com/spurs/duncanhof"
     },
     "scripts": {
       "A": {
@@ -860,7 +861,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-tim-duncan-a-1",
-            "text": "I was a college standout who stayed for four seasons before entering the NBA.",
+            "text": "I was an All-NBA selection from the first season of a lengthy professional career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -869,7 +870,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-2",
-            "text": "I earned both All-NBA and All-Defensive honors as a rookie.",
+            "text": "My teams relied on disciplined defense as much as the production of their leading scorer.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -878,20 +879,20 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-3",
-            "text": "I became a Finals MVP before ever winning the league's regular-season MVP award.",
+            "text": "I earned both All-NBA First Team and All-Defensive Second Team recognition as a rookie.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "spursTimeline"
             ]
           },
           {
             "id": "nba-tim-duncan-a-4",
-            "text": "I won a championship in only my second professional season.",
+            "text": "I earned a Finals MVP award before I ever won a regular-season MVP.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "spursTimeline"
             ]
           },
           {
@@ -955,7 +956,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-tim-duncan-b-1",
-            "text": "I entered the NBA after completing four seasons of major-conference college basketball.",
+            "text": "I earned repeated All-NBA First Team honors over a long career with strong defensive recognition.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -964,7 +965,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-2",
-            "text": "I earned All-NBA First Team honors during my rookie campaign.",
+            "text": "I entered the NBA from college rather than directly from high school or an overseas league.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -973,11 +974,11 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-3",
-            "text": "I won a Finals MVP award before my third NBA season began.",
+            "text": "I reached my first NBA Finals just two seasons into my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "spursTimeline"
             ]
           },
           {
@@ -1057,7 +1058,8 @@ export const nbaWhoAmIAuthoredIdentities = [
       "archive": "https://www.nba.com/news/archive-75-shaquille-oneal",
       "trade": "https://www.nba.com/news/legendary-moments-shaquille-oneal-trade-lakers-heat",
       "history": "https://www.nba.com/news/history-top-moments-key-superstars-retire-in-2010s",
-      "june": "https://www.nba.com/news/history-this-date-in-nba-june"
+      "june": "https://www.nba.com/news/history-this-date-in-nba-june",
+      "orlandoHall": "https://www.nba.com/magic/news/magic-induct-shaq-magic-hall-fame"
     },
     "scripts": {
       "A": {
@@ -1069,7 +1071,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "orlandoHall"
             ]
           },
           {
@@ -1173,7 +1175,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "orlandoHall"
             ]
           },
           {
@@ -1261,7 +1263,8 @@ export const nbaWhoAmIAuthoredIdentities = [
     "sources": {
       "archive": "https://www.nba.com/news/archive-75-giannis-antetokounmpo",
       "finals": "https://www.nba.com/news/giannis-wins-2021-finals-mvp",
-      "block": "https://www.nba.com/news/giannis-antetokounmpos-clutch-block-helps-bucks-even-finals"
+      "block": "https://www.nba.com/news/giannis-antetokounmpos-clutch-block-helps-bucks-even-finals",
+      "mostImproved": "https://www.nba.com/news/history-most-improved-award-winners"
     },
     "scripts": {
       "A": {
@@ -1269,7 +1272,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-giannis-antetokounmpo-a-1",
-            "text": "I entered the league outside the draft lottery and grew into a franchise centerpiece.",
+            "text": "I developed into a multi-time All-NBA selection after entering the league as a teenager.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1291,7 +1294,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "mostImproved"
             ]
           },
           {
@@ -1386,12 +1389,12 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "archive"
+              "mostImproved"
             ]
           },
           {
             "id": "nba-giannis-antetokounmpo-b-4",
-            "text": "I was drafted in the middle of the first round rather than among the top prospects.",
+            "text": "I made my first All-Star appearance in my fourth NBA season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1467,7 +1470,9 @@ export const nbaWhoAmIAuthoredIdentities = [
       "mvp": "https://www.nba.com/news/history-mvp-award-winners",
       "finals": "https://www.nba.com/news/history-finals-mvp-winners",
       "recap": "https://www.nba.com/news/history-season-review-2023-24",
-      "title": "https://www.nba.com/news/nikola-jokics-hometown-in-serbia-celebrates-nuggets-1st-nba-title"
+      "title": "https://www.nba.com/news/nikola-jokics-hometown-in-serbia-celebrates-nuggets-1st-nba-title",
+      "officialBio": "https://www.nba.com/player/203999/nikola-jokic/bio",
+      "finalsMvp": "https://www.nba.com/news/nikola-jokic-2023-bill-russell-nba-finals-mvp-award"
     },
     "scripts": {
       "A": {
@@ -1475,7 +1480,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-nikola-jokic-a-1",
-            "text": "I became an NBA All-Star despite being chosen outside the first round of the draft.",
+            "text": "I became an NBA All-Star several seasons after making my professional debut.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1484,7 +1489,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-2",
-            "text": "My game grew around a rare combination of scoring, rebounding and passing.",
+            "text": "My playoff teams relied on me to create shots for teammates as well as score.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1493,7 +1498,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-3",
-            "text": "I became a regular triple-double threat while playing for the team that drafted me.",
+            "text": "I regularly contributed in multiple statistical categories rather than relying on points alone.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1551,7 +1556,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "recap"
+              "finalsMvp"
             ]
           },
           {
@@ -1570,7 +1575,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-nikola-jokic-b-1",
-            "text": "I began my NBA career as a rotation big man instead of an immediate superstar.",
+            "text": "I developed from a reserve into an established All-Star rather than arriving as an immediate star.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1579,7 +1584,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-2",
-            "text": "I became known for combining passing and scoring in ways usually associated with guards.",
+            "text": "Playmaking became as important to my game as scoring and rebounding.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1588,7 +1593,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-3",
-            "text": "I developed into a multiple-time MVP while remaining with my original franchise.",
+            "text": "I became a frequent triple-double threat after earning a regular starting role.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1646,7 +1651,7 @@ export const nbaWhoAmIAuthoredIdentities = [
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
-              "history"
+              "finalsMvp"
             ]
           },
           {
