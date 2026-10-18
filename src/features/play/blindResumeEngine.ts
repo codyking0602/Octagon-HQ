@@ -111,159 +111,46 @@ export function createBlindResumeRounds(seed: string): BlindResumeRoundSet {
   return { seed, pairs };
 }
 
-// Stage 3 quality mode is additive: the legacy generator remains unchanged for
-// previously published Daily setups, old challenge links and versioned replays.
-const STAGE3_EDITORIAL_HOLDS = new Set([
-  "justin-gaethje|tito-ortiz",
-  "alexander-volkanovski|matt-hughes",
-  "brock-lesnar|shogun-rua",
-  "conor-mcgregor|petr-yan",
-  "jessica-andrade|ronda-rousey",
-]);
-
+// This quality filter is deliberately narrow: an early misleading reveal is
+// valid gameplay, but the full eight-stat board must give the ranked winner a
+// defensible factual case. Preserve the legacy pairing algorithm and reveal
+// order for all existing games and challenge links.
 function primeRecordNet(record: string) {
   const match = /^(\d+)-(\d+)/.exec(record);
-  return match ? Number(match[1]) - Number(match[2]) : NaN;
-}
-
-function evidenceDirections(winner: RankedPlayFighter, other: RankedPlayFighter) {
-  const a = winner.model.visibleStats;
-  const b = other.model.visibleStats;
-  // The synthetic apex index and labels for historical eras are intentionally
-  // excluded: neither is independent evidence for declaring a winner.
-  return [
-    Math.sign(a.titleFightWins - b.titleFightWins),
-    Math.sign(a.topFiveWins - b.topFiveWins),
-    Math.sign(primeRecordNet(a.primeRecord) - primeRecordNet(b.primeRecord)),
-    Math.sign(a.activeEliteYears - b.activeEliteYears),
-    Math.sign(a.finishRatePct - b.finishRatePct),
-  ];
+  return match ? Number(match[1]) - Number(match[2]) : Number.NaN;
 }
 
 export function blindResumePairIsEvidenceSafe(pair: BlindResumePair) {
-  const key = [pair.fighterA.id, pair.fighterB.id].sort().join("|");
-  if (STAGE3_EDITORIAL_HOLDS.has(key)) return false;
   const winner = blindResumeWinner(pair);
-  const loser = winner.id === pair.fighterA.id ? pair.fighterB : pair.fighterA;
-  const directions = evidenceDirections(winner, loser);
-  const supports = directions.filter((direction) => direction > 0).length;
-  const disputes = directions.filter((direction) => direction < 0).length;
-  return directions.every(Number.isFinite)
-    && supports >= 3 && disputes <= 1
-    && (directions[0]! > 0 || directions[1]! > 0);
+  const other = winner.id === pair.fighterA.id ? pair.fighterB : pair.fighterA;
+  const w = winner.model.visibleStats;
+  const o = other.model.visibleStats;
+  // The internal Apex rating and era names do not independently prove a
+  // ranking verdict. Do not use potentially unaudited round percentages.
+  const differences = [
+    w.titleFightWins - o.titleFightWins,
+    w.topFiveWins - o.topFiveWins,
+    primeRecordNet(w.primeRecord) - primeRecordNet(o.primeRecord),
+    w.activeEliteYears - o.activeEliteYears,
+    w.finishRatePct - o.finishRatePct,
+  ];
+  // Two independent supporting facts at *full reveal*, without demanding
+  // the winner lead the first two clues or even a majority of all stats.
+  return differences.every(Number.isFinite)
+    && differences.filter((difference) => difference > 0).length >= 2;
 }
 
-function actualBand(gap: number): BlindResumePair["band"] {
-  if (gap <= bandTarget.close.max) return "close";
-  if (gap <= bandTarget.stretch.max) return "stretch";
-  return "wildcard";
-}
-
-/** A new-round generator that never falls back to a disputed résumé comparison. */
+/** Preserve the original seeded pairing distribution; retry only slates with
+ * genuinely indefensible full-reveal comparisons. Never weaken the gate. */
 export function createEvidenceSafeBlindResumeRounds(seed: string): BlindResumeRoundSet {
-  const random = seededLineupRandom("blind-resume", "evidence-safe-stage3-v1", seed);
-  for (let attempt = 0; attempt < 40; attempt += 1) {
-    const used = new Set<string>();
-    const pairs: BlindResumePair[] = [];
-    let womenUsed = false;
-    for (let round = 0; round < BLIND_RESUME_ROUNDS; round += 1) {
-      const desiredGender = pickGender(round, womenUsed, random);
-      const requestedBand = chooseBand(random);
-      const potential = (gender: PlayGender) => {
-        const available = rankedPlayFighters.filter((fighter) => fighter.gender === gender && !used.has(fighter.id));
-        const eligible: BlindResumePair[] = [];
-        for (let i = 0; i < available.length; i += 1) {
-          for (let j = i + 1; j < available.length; j += 1) {
-            const fighterA = available[i]!;
-            const fighterB = available[j]!;
-            const scoreGap = Math.abs(fighterA.model.rawScore - fighterB.model.rawScore);
-            const pair: BlindResumePair = {
-              id: `round-${round + 1}-${[fighterA.id, fighterB.id].sort().join("|")}`,
-              fighterA, fighterB, gender, scoreGap, band: actualBand(scoreGap),
-            };
-            if (blindResumePairIsEvidenceSafe(pair)) eligible.push(pair);
-          }
-        }
-        return eligible;
-      };
-      const candidates = potential(desiredGender);
-      const available = candidates.length || desiredGender === "men" ? candidates : potential("men");
-      if (!available.length) break;
-      const inRequestedBand = available.filter((pair) => inBand(pair.scoreGap, requestedBand));
-      // A fallback may change the requested *band*, but never waive factual fairness.
-      const choices = inRequestedBand.length ? inRequestedBand : available;
-      const selected = weightedPick(choices, (pair) => {
-        const gap = Math.abs(pair.scoreGap - bandTarget[requestedBand].target);
-        return 1 / (1 + gap);
-      }, random);
-      const oriented = random() < 0.5 ? selected : {
-        ...selected, fighterA: selected.fighterB, fighterB: selected.fighterA,
-      };
-      pairs.push(oriented);
-      used.add(selected.fighterA.id);
-      used.add(selected.fighterB.id);
-      womenUsed ||= selected.gender === "women";
+  for (let attempt = 0; attempt < 96; attempt += 1) {
+    const candidateSeed = attempt === 0 ? seed : `${seed}|full-resume-review-${attempt}`;
+    const candidate = createBlindResumeRounds(candidateSeed);
+    if (candidate.pairs.every(blindResumePairIsEvidenceSafe)) {
+      return { seed, pairs: candidate.pairs };
     }
-    if (pairs.length === BLIND_RESUME_ROUNDS) return { seed, pairs };
   }
-  // Quality-first: never fill the five-round board with an unfair opponent.
-  throw new Error("Blind Resume has insufficient evidence-safe pairs for five unique rounds.");
-}
-
-export function orderEvidenceSafeBlindResumeStats(pair: BlindResumePair, stats: BlindResumeStat[]) {
-  const winner = blindResumeWinner(pair);
-  const winnerOnA = winner.id === pair.fighterA.id;
-  const byLabel = new Map(stats.map((row) => [row.label, row]));
-  const keys = [
-    "UFC title-fight wins", "Top-5 wins", "Prime UFC record",
-    "Active elite years", "Finish rate", "Rounds won",
-  ];
-  const metric = (stat: BlindResumeStat) => stat.label === "Prime UFC record"
-    ? [primeRecordNet(stat.valueA), primeRecordNet(stat.valueB)]
-    : [Number.parseFloat(stat.valueA), Number.parseFloat(stat.valueB)];
-  const supporting = keys.filter((label) => {
-    const stat = byLabel.get(label)!;
-    const [a, b] = metric(stat);
-    return Number.isFinite(a) && Number.isFinite(b)
-      && (winnerOnA ? a! > b! : b! > a!);
-  });
-  // Open with one meaningful advantage for the canonical winner. A hard
-  // matchup can show a genuine counterargument alongside it, rather than
-  // making every opening an obvious two-stat sweep. Never start with two
-  // loser-favoring facts as the old shuffle sometimes did.
-  const openingAnchor = supporting.find((label) => label === "Top-5 wins" || label === "UFC title-fight wins")!;
-  const opposing = keys.filter((label) => {
-    if (label === openingAnchor || supporting.includes(label)) return false;
-    const stat = byLabel.get(label)!;
-    const [a, b] = metric(stat);
-    return Number.isFinite(a) && Number.isFinite(b)
-      && (winnerOnA ? a! < b! : b! < a!);
-  });
-  // Avoid stacking the two title-count rows at the opening. Do not use
-  // percentage-of-audited-rounds as a counterargument without source coverage.
-  const openingContrast = opposing.find((label) => (
-    label !== "UFC title-fight wins"
-    && label !== "Top-5 wins"
-    && label !== "Rounds won"
-  )) ?? "Main UFC era";
-  const secondSupport = supporting.find((label) => label !== openingAnchor)!;
-  const thirdSupport = supporting.find((label) => (
-    label !== openingAnchor && label !== secondSupport
-  ))!;
-  // At 2 facts: one objective winner advantage plus a legitimate counterpoint
-  // or era context. At 4 and 6: reveal another independent winner anchor.
-  // The final 8 still displays every factual and contextual row, even if
-  // that row favors the other fighter.
-  const selected = new Set([openingAnchor, openingContrast, secondSupport, thirdSupport]);
-  const remaining = stats.map((stat) => stat.label).filter((label) => !selected.has(label));
-  const orderedLabels = [
-    openingAnchor, openingContrast, secondSupport, remaining[0]!,
-    thirdSupport, ...remaining.slice(1),
-  ];
-  if (orderedLabels.length !== stats.length || new Set(orderedLabels).size !== stats.length) {
-    throw new Error("Blind Resume evidence ladder is incomplete.");
-  }
-  return orderedLabels.map((label) => byLabel.get(label)!);
+  throw new Error("Unable to create five solvable Blind Resume comparisons.");
 }
 
 export function blindResumeWinner(pair: BlindResumePair) {
