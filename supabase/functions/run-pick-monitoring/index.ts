@@ -156,6 +156,18 @@ Deno.serve(async (request) => {
       });
     }
 
+    // UFC reuses the same scheduled wake and canonical event transition as Football.
+    // Also catches cards whose ESPN results were recorded on an earlier wake.
+    const ufcCompletion = await admin.rpc("finalize_ready_ufc_pick_events");
+    if (ufcCompletion.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "ufc_auto_completion_failed",
+        providerCalled: false,
+        response: safeError(503, "UFC_AUTO_COMPLETION_FAILED", "UFC event completion could not be verified."),
+      });
+    }
+
     const eventState = await admin.rpc("get_pick_monitoring_event_state");
     if (eventState.error) {
       return finishScheduledDecision({
@@ -400,6 +412,32 @@ Deno.serve(async (request) => {
           liveStateSync = persisted.error
             ? { ...liveStateSync, status: "write_error" }
             : { ...liveStateSync, status: "recorded", persistence: persisted.data };
+
+          if (!persisted.error) {
+            const completion = await admin.rpc("finalize_ready_ufc_pick_events");
+            if (completion.error) {
+              return finishScheduledDecision({
+                outcome: "failed",
+                reason: "ufc_auto_completion_failed",
+                identity: resolved.identity,
+                providerCalled: false,
+                response: safeError(503, "UFC_AUTO_COMPLETION_FAILED", "UFC event completion could not be verified."),
+              });
+            }
+            const completedCount = Number(asRecord(completion.data)?.completed ?? 0);
+            if (completedCount > 0) {
+              return finishScheduledDecision({
+                outcome: "skipped",
+                reason: "ufc_event_finalized",
+                identity: resolved.identity,
+                providerCalled: false,
+                response: noOp("ufc_event_finalized", resolved.identity, undefined, notificationDispatch, {
+                  ...liveStateSync,
+                  completion: completion.data,
+                }),
+              });
+            }
+          }
         }
       }
     } catch {

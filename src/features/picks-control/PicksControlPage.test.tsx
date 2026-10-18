@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { IdentityProvider } from "../identity/IdentityProvider";
@@ -73,49 +73,22 @@ describe("Fight Night Control results lifecycle", () => {
     await waitFor(() => expect(repo.loadControlEvent).toHaveBeenCalledWith("ufc-329"));
   });
 
-  it("publishes the supplied YouTube recap as the one final release action", async () => {
-    const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
+  it("shows automatic completion with no required video URL", async () => {
+    const repo = repository(event("locked", "pending"));
     renderPage(repo);
-    const recapInput = await screen.findByRole("textbox", { name: "RECAP URL" });
-    await act(async () => {
-      await Promise.resolve();
-    });
-    fireEvent.change(recapInput, { target: { value: "https://youtu.be/example" } });
-    fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
-    await waitFor(() => expect(repo.setWatchMoments).toHaveBeenCalledWith(
-      "ufc-control",
-      [{ title: "Alpha vs. Bravo", url: "https://youtu.be/example" }],
-    ));
-    expect(repo.completeEvent).not.toHaveBeenCalled();
-    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("final standings will publish"));
+    expect(await screen.findByText("AUTOMATIC FINALIZATION")).toBeInTheDocument();
+    expect(screen.getByText("Awaiting official results")).toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "RECAP URL" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "FINALIZE NOW" })).not.toBeInTheDocument();
   });
 
-  it("requires a YouTube recap URL before final standings can release", async () => {
+  it("permits owner recovery completion without a video URL when all fights are graded", async () => {
     const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
     renderPage(repo);
-    fireEvent.click(await screen.findByRole("button", { name: "PUBLISH EVENT RECAP" }));
-    expect(await screen.findByText("Add the YouTube recap URL before publishing final standings.")).toBeInTheDocument();
+    fireEvent.click(await screen.findByRole("button", { name: "FINALIZE NOW" }));
+    await waitFor(() => expect(repo.completeEvent).toHaveBeenCalledWith("ufc-control"));
     expect(repo.setWatchMoments).not.toHaveBeenCalled();
-    expect(repo.completeEvent).not.toHaveBeenCalled();
-  });
-
-  it("rejects invalid or non-YouTube recap URLs before publishing", async () => {
-    const repo = repository(event("locked", "red_win"), event("complete", "red_win"));
-    renderPage(repo);
-    const recapInput = await screen.findByRole("textbox", { name: "RECAP URL" });
-    await act(async () => {
-      await Promise.resolve();
-    });
-
-    fireEvent.change(recapInput, { target: { value: "https://example.com/video" } });
-    fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
-    expect(await screen.findByText("Enter a secure YouTube recap URL (youtube.com or youtu.be).")).toBeInTheDocument();
-
-    fireEvent.change(recapInput, { target: { value: "http://youtu.be/example" } });
-    fireEvent.click(screen.getByRole("button", { name: "PUBLISH EVENT RECAP" }));
-
-    expect(repo.setWatchMoments).not.toHaveBeenCalled();
-    expect(repo.completeEvent).not.toHaveBeenCalled();
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining("no video is required"));
   });
 
   it("keeps the owner surface private when signed out", async () => {
