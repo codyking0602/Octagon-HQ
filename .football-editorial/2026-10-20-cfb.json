@@ -1,0 +1,84 @@
+{
+  "week_of": "2026-10-20",
+  "sport": "cfb",
+  "candidates": {
+    "players": [
+      {
+        "id": "bear-bachmeier",
+        "name": "Bear Bachmeier",
+        "team": "BYU",
+        "position": "QB",
+        "summary": "Accounted for four touchdowns by pass, rush and reception in BYU's 28–24 win over No. 2 Notre Dame."
+      },
+      {
+        "id": "malachi-toney",
+        "name": "Malachi Toney",
+        "team": "Miami",
+        "position": "WR",
+        "summary": "11 catches, 154 receiving yards and two touchdowns in the 43–35 double-OT rivalry win over Florida State."
+      },
+      {
+        "id": "tramel-jones-jr",
+        "name": "Tramell Jones Jr.",
+        "team": "Florida",
+        "position": "QB",
+        "summary": "Freshman first-time starter helped Florida stun No. 7 Texas 27–24 on the road."
+      },
+      {
+        "id": "desean-bishop",
+        "name": "DeSean Bishop",
+        "team": "Tennessee",
+        "position": "RB",
+        "summary": "Key second-half offensive contributor as Tennessee beat No. 6 Alabama 26–10."
+      },
+      {
+        "id": "alex-mcpherson",
+        "name": "Alex McPherson",
+        "team": "Auburn",
+        "position": "K",
+        "summary": "Kicked the late decisive field goal in Auburn's 27–24 road upset of No. 1 Georgia."
+      }
+    ],
+    "games": [
+      {
+        "id": "ole-miss-at-texas",
+        "away_team": "Ole Miss",
+        "home_team": "Texas",
+        "kickoff_at": "2026-10-24T18:30:00-05:00",
+        "summary": "SEC showdown at DKR after Ole Miss beat Missouri and Texas fell to Florida."
+      },
+      {
+        "id": "texas-am-at-alabama",
+        "away_team": "Texas A&M",
+        "home_team": "Alabama",
+        "kickoff_at": "2026-10-24T14:30:00-05:00",
+        "summary": "High-stakes SEC meeting in Tuscaloosa, with Alabama coming off a rivalry loss to Tennessee."
+      },
+      {
+        "id": "indiana-at-michigan",
+        "away_team": "Indiana",
+        "home_team": "Michigan",
+        "kickoff_at": "2026-10-24T11:00:00-05:00",
+        "summary": "Big Noon Big Ten matchup featuring Indiana coming off a close loss at Ohio State."
+      },
+      {
+        "id": "pittsburgh-at-miami",
+        "away_team": "Pittsburgh",
+        "home_team": "Miami",
+        "kickoff_at": "2026-10-24T11:00:00-05:00",
+        "summary": "ACC contest in Miami after the Hurricanes' double-OT rivalry win over Florida State."
+      },
+      {
+        "id": "houston-at-utah",
+        "away_team": "Houston",
+        "home_team": "Utah",
+        "kickoff_at": "2026-10-24T21:15:00-05:00",
+        "summary": "ESPN College GameDay visits Utah for a top-20 Big 12 matchup following Houston's win over Oklahoma State."
+      }
+    ]
+  },
+  "selection": {
+    "player_id": "bear-bachmeier",
+    "game_id": "ole-miss-at-texas"
+  }
+}
