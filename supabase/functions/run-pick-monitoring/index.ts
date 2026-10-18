@@ -108,6 +108,17 @@ Deno.serve(async (request) => {
       return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled monitoring authorization required.");
     }
 
+    // UFC uses the existing ESPN grading and canonical Picks transition owner.
+    // This catch-up also closes fully graded cards after the bounded live polling window.
+    const ufcCompletion = await admin.rpc("finalize_resolved_ufc_pick_events");
+    if (ufcCompletion.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "ufc_finalization_failed",
+        response: safeError(503, "UFC_FINALIZATION_FAILED", "Resolved UFC Picks events could not be finalized safely."),
+      });
+    }
+
     // Reuse the one trusted hourly wake-up for all due in-app reminders and owner actions.
     // The database function owns timing and idempotency; this Edge Function adds no scheduler.
     const dispatched = await admin.rpc("dispatch_due_in_app_notifications", {
