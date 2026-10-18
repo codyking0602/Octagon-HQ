@@ -80,5 +80,141 @@
   "selection": {
     "player_id": "bear-bachmeier",
     "game_id": "ole-miss-at-texas"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Bear Bachmeier",
+      "team": "BYU",
+      "position": "QB",
+      "stats": [
+        {
+          "value": "224",
+          "label": "PASS YDS"
+        },
+        {
+          "value": "2",
+          "label": "RUSH TD"
+        },
+        {
+          "value": "1",
+          "label": "PASS TD"
+        },
+        {
+          "value": "1",
+          "label": "REC TD"
+        }
+      ],
+      "result": "W 28–24 vs No. 2 Notre Dame",
+      "measurements": "6 ft 2 in · 230 lbs",
+      "team_color": "#003DA5",
+      "highlight_url": "https://www.youtube.com/watch?v=zX_CzDNg_74",
+      "photo_source": "https://a.espncdn.com/i/headshots/college-football/players/full/5141367.png",
+      "photo_asset_path": "/assets/football/weekly/2026-10-20/cfb/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "home_team": "Texas",
+      "away_team": "Ole Miss",
+      "kickoff_at": "2026-10-24T18:30:00-05:00",
+      "header_asset_path": "/assets/football/weekly/2026-10-20/cfb/game-header.webp",
+      "header_photo_sources": [
+        "https://seatgeekimages.com/matchup/v3_3362f95b/5535/5647/600x600.jpg"
+      ]
+    },
+    "editorial": {
+      "source_urls": [
+        "https://texaslonghorns.com/game-center/22500",
+        "https://olemisssports.com/game-center/14816",
+        "https://olemisssports.com/news/2026/10/10/no-9-football-cruises-past-vanderbilt-on-the-road",
+        "https://www.reuters.com/sports/top-25-roundup-florida-tramell-jones-jr-upset-no-7-texas--flm-2026-10-17/"
+      ],
+      "breakdown": {
+        "setup": [
+          "Ole Miss arrives in Austin with another ranked win after taking apart Missouri, while Texas has lost two straight close SEC games. Both still have an opportunity to change the direction of their season on a nationally televised Saturday night.",
+          "The Rebels bring a productive passing attack led by Trinidad Chambliss and Deuce Alexander. Texas counters with Arch Manning, Cam Coleman and a defense that needs a steadier offensive complement after the Florida and Oklahoma defeats."
+        ],
+        "things": [
+          {
+            "title": "Can Texas sustain drives?",
+            "body": "Texas struggled to move the chains for a long stretch against Florida. Early-down efficiency and protecting the football would allow the Longhorns to dictate pace instead of asking their defense to cover repeated short fields.",
+            "edge": "Ole Miss"
+          },
+          {
+            "title": "Chambliss against Texas pressure",
+            "body": "Chambliss is the centerpiece of the Ole Miss passing game. Texas needs disciplined rush lanes and coverage that forces longer reads, while the Rebels need enough protection to generate their explosive intermediate plays.",
+            "edge": "Even"
+          },
+          {
+            "title": "Explosive receivers on both sides",
+            "body": "Ole Miss receiver Deuce Alexander has been a reliable chunk-play threat, while Texas has the talent of Cam Coleman and Ryan Wingo. The team that converts its downfield chances without turnovers could control the late-game script.",
+            "edge": "Even"
+          }
+        ],
+        "paths_to_win": [
+          {
+            "team": "Ole Miss",
+            "body": "Keep Chambliss upright, involve Alexander early, and force Texas into another uneven offensive start. A few sustained drives followed by explosive plays would make the Longhorns chase the game."
+          },
+          {
+            "team": "Texas",
+            "body": "Protect Manning, get Coleman and the run game touches before obvious passing downs, and limit turnovers. A balanced opening half gives Texas a chance to control field position and pressure the Rebels in the fourth quarter."
+          }
+        ],
+        "players_to_watch": [
+          {
+            "team": "Ole Miss",
+            "players": [
+              {
+                "name": "Trinidad Chambliss",
+                "position": "QB",
+                "body": "The Rebels' leading passer creates the main protection-versus-pressure chess match."
+              },
+              {
+                "name": "Kewan Lacy",
+                "position": "RB",
+                "body": "His early-down runs can keep the Ole Miss offense on schedule and temper the Texas pass rush."
+              },
+              {
+                "name": "Deuce Alexander",
+                "position": "WR",
+                "body": "Ole Miss' leading receiver is central to its field-stretching and third-down game plans."
+              }
+            ]
+          },
+          {
+            "team": "Texas",
+            "players": [
+              {
+                "name": "Arch Manning",
+                "position": "QB",
+                "body": "Texas needs a more consistent and ball-secure performance from its starting quarterback."
+              },
+              {
+                "name": "Hollywood Smothers",
+                "position": "RB",
+                "body": "The rushing leader can help Texas build efficient possessions against the Rebels' defensive front."
+              },
+              {
+                "name": "Cam Coleman",
+                "position": "WR",
+                "body": "The receiving leader gives Texas a high-upside target when the offense attacks beyond the sticks."
+              }
+            ]
+          }
+        ],
+        "unit_edges": [
+          {
+            "title": "Ole Miss offense vs Texas defense",
+            "body": "The Rebels' passing production puts pressure on Texas to rush without sacrificing coverage integrity. The Longhorns have to make Chambliss operate through full progressions rather than permitting quick momentum shifts.",
+            "edge": "Even"
+          },
+          {
+            "title": "Texas offense vs Ole Miss defense",
+            "body": "Texas has talented skill players but has been uneven for prolonged stretches in consecutive losses. Ole Miss can exploit predictable passing downs; Texas must create a steadier run-and-pass rhythm.",
+            "edge": "Ole Miss"
+          }
+        ]
+      }
+    }
   }
 }
