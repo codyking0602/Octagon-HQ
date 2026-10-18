@@ -68,7 +68,7 @@ function primaryStatus(
   const unresolved = unresolvedFightCount(eventState.value);
   return unresolved
     ? `${unresolved} FIGHT${unresolved === 1 ? "" : "S"} NEED RESULTS`
-    : "PICKS CLOSED · RESULTS OPEN";
+    : "RESULTS READY · AUTO-CLOSING";
 }
 
 function useProgressiveLockClock(event: PickControlEvent | null | undefined) {
