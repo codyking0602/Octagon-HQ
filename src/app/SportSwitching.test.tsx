@@ -188,12 +188,12 @@ describe("The HQ sport switching", () => {
   });
 });
 
-// Public profiles must not have a Basketball sport selector or a bypass route.
-describe("Basketball preview isolation",()=>{
-  it("hides Basketball from the public Picks sport selector",async()=>{
+// Basketball joins the public sport context; the previous owner-preview isolation is retired.
+describe("Basketball public launch",()=>{
+  it("offers Basketball in the public Picks selector",async()=>{
     const router=renderRoute("/picks");
     const row=await sportContext("UFC PICKS");
-    expect(within(row).queryByRole("option",{name:"Basketball"})).not.toBeInTheDocument();
+    expect(within(row).getByRole("option",{name:"Basketball"})).toBeInTheDocument();
     expect(router.state.location.pathname).toBe("/picks");
   });
 });
