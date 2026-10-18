@@ -13,8 +13,8 @@ export const SELECTED_SPORT_STORAGE_KEY = "the-hq:selected-sport";
 
 export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "mlb", "nba"];
 
-export function nextSport(current: SelectedSport, showMlb = true): SelectedSport {
-  const available = SPORT_ORDER.filter((sport) => showMlb || sport !== "mlb");
+export function nextSport(current: SelectedSport, showMlb = true, showNba = true): SelectedSport {
+  const available = SPORT_ORDER.filter((sport) => (showMlb || sport !== "mlb") && (showNba || sport !== "nba"));
   return available[(available.indexOf(current) + 1) % available.length] ?? "football";
 }
 

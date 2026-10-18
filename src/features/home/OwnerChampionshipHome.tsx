@@ -198,6 +198,7 @@ export function OwnerChampionshipHome({
   streak,
   streakLoading,
   showMlb,
+  showNba = false,
   sport,
   onSportChange,
   showSportSelector = true,
@@ -205,6 +206,7 @@ export function OwnerChampionshipHome({
   streak: number;
   streakLoading: boolean;
   showMlb: boolean;
+  showNba?: boolean;
   sport: SportFilter;
   onSportChange: (nextSport: SportFilter) => void;
   showSportSelector?: boolean;
@@ -259,7 +261,7 @@ export function OwnerChampionshipHome({
               <option value="football">Football</option>
               <option value="ufc">UFC</option>
               {showMlb ? <option value="mlb">MLB</option> : null}
-              <option value="nba">Basketball</option>
+              {showNba ? <option value="nba">Basketball</option> : null}
             </select>
           </label>
         ) : null}
@@ -274,7 +276,7 @@ export function OwnerChampionshipHome({
                   <strong data-testid="hq-league-leads">{leagueLeadDisplay}</strong>
                   <span>LEAGUE {leagueLeads === 1 ? "LEAD" : "LEADS"}</span>
                 </div>
-                <small>Across {showMlb ? 4 : 3} championships</small>
+                <small>Across {(showMlb ? 3 : 2) + (showNba ? 1 : 0)} championships</small>
               </div>
             </div>
             {showSportSelector ? <div className="home-champ-preview__overview-streak">
@@ -290,12 +292,12 @@ export function OwnerChampionshipHome({
           <div className="home-champ-preview__overview">
             <Summary sport="football" result={football} />
             <Summary sport="ufc" result={ufc} />
-            <Link className="home-champ-preview__summary" data-sport="nba" to="/championship/nba" aria-label="Open Basketball Championship">
+            {showNba ? <Link className="home-champ-preview__summary" data-sport="nba" to="/championship/nba" aria-label="Open Basketball Championship">
               <span className="home-champ-preview__summary-sport">BASKETBALL</span>
               <span className="home-champ-preview__summary-icon">🏀</span>
               <strong>—</strong><span className="home-champ-preview__summary-finish">SEASON OPEN</span>
               <small>FUTURES OPEN · SCORES PENDING</small>
-            </Link>
+            </Link> : null}
             {showMlb ? (
               <Link className="home-champ-preview__summary" data-sport="mlb" to="/championship/mlb" aria-label="Open MLB Postseason Championship standings">
                 <span className="home-champ-preview__summary-sport">MLB POSTSEASON</span>

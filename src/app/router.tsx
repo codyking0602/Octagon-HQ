@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, type RouteObject } from "react-router-do
 import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 import { MlbGate } from "../features/mlb/MlbGate";
+import { NbaPreviewGate } from "../features/nba/NbaPreviewGate";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
 const ChampionshipLeaderboardPage = lazy(() => import("../features/home/ChampionshipLeaderboardPage"));
@@ -73,7 +74,7 @@ export const appRoutes: RouteObject[] = [
     errorElement: <AppRouteError />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "championship/nba", element: <NbaChampionshipPage /> },
+      { path: "championship/nba", element: <NbaPreviewGate><NbaChampionshipPage /></NbaPreviewGate> },
       { path: "championship/:sport", element: <ChampionshipLeaderboardPage /> },
       { path: "fighters-to-watch", element: <ShanesWatchlistPage /> },
       { path: "rankings", element: <RankingsPage /> },
@@ -138,8 +139,8 @@ export const appRoutes: RouteObject[] = [
       { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
       { path: "football/bar-trivia", element: <Navigate to="/football" replace /> },
       { path: "picks", element: <PicksPage /> },
-      { path: "nba", element: <NbaPlayPage /> },
-      { path: "nba/picks", element: <NbaFuturesPage /> },
+      { path: "nba", element: <NbaPreviewGate><NbaPlayPage /></NbaPreviewGate> },
+      { path: "nba/picks", element: <NbaPreviewGate><NbaFuturesPage /></NbaPreviewGate> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
       { path: "mlb/challenge", element: <MlbGate fallback="/play"><MlbFeaturedChallengePage /></MlbGate> },

@@ -30,6 +30,7 @@ import { FootballHq } from "./FootballHq";
 import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
 import { MlbHomeHq } from "../mlb/MlbHomeHq";
 import { NbaHomeHq } from "../nba/NbaHomeHq";
+import { canPreviewNba } from "../nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
 import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
@@ -165,13 +166,14 @@ export default function HomePage() {
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
+  const nbaVisible = canPreviewNba(identity.profile);
   const ownerPreview = signedIn;
   const sportPreference = useOptionalSport();
   const selectedSport = sportPreference?.selectedSport ?? "football";
   const setSelectedSport = (sport: "football" | "ufc" | "mlb" | "nba") => sportPreference?.setSelectedSport(sport);
   // All is a Home-only view; selecting a sport persists it for Picks and Play.
   const [homeOverview, setHomeOverview] = useState(false);
-  const ownerSport: SportFilter = homeOverview ? "all" : selectedSport;
+  const ownerSport: SportFilter = homeOverview ? "all" : selectedSport === "nba" && !nbaVisible ? "football" : selectedSport;
   const setOwnerSport = (next: SportFilter) => {
     if (next === "all") setHomeOverview(true);
     else { setSelectedSport(next); setHomeOverview(false); }
@@ -394,7 +396,7 @@ export default function HomePage() {
               <option value="football">Football</option>
               <option value="ufc">UFC</option>
               {mlbVisible ? <option value="mlb">MLB</option> : null}
-              <option value="nba">Basketball</option>
+              {nbaVisible ? <option value="nba">Basketball</option> : null}
             </select>
           </label>
         </header>
@@ -475,7 +477,7 @@ export default function HomePage() {
         <OwnerChampionshipHome
           streak={hqDailyStreak.streak.currentStreak}
           streakLoading={hqDailyStreak.loading}
-          showMlb={mlbVisible}
+          showMlb={mlbVisible} showNba={nbaVisible} showNba={nbaVisible}
           sport={ownerSport}
           onSportChange={setOwnerSport}
           showSportSelector={false}
@@ -487,7 +489,7 @@ export default function HomePage() {
       {ownerPreview && ownerSport !== "all" ? (
         ownerSport === "football" ? footballHq
           : ownerSport === "ufc" ? ufcHq
-            : ownerSport === "nba" ? <NbaHomeHq signedIn={signedIn} />
+            : ownerSport === "nba" && nbaVisible ? <NbaHomeHq signedIn={signedIn} />
             : mlbVisible ? (
               <MlbHomeHq
                 enabled={mlbVisible}
@@ -500,7 +502,7 @@ export default function HomePage() {
       {isFootballSeason() ? (
         <>
           {footballHq}
-          <NbaHomeHq signedIn={signedIn} />
+          {nbaVisible ? <NbaHomeHq signedIn={signedIn} /> : null}
           {mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}
@@ -514,7 +516,7 @@ export default function HomePage() {
         <>
           {ufcHq}
           {footballHq}
-          <NbaHomeHq signedIn={signedIn} />
+          {nbaVisible ? <NbaHomeHq signedIn={signedIn} /> : null}
           {mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}

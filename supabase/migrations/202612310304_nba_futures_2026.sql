@@ -155,12 +155,23 @@ as $$
     and length(trim(coalesce(p_picks->>'mip','')))>0;
 $$;
 
+create or replace function public.nba_futures_owner_preview_allowed(p_profile uuid)
+returns boolean language sql stable security definer set search_path = ''
+as $
+  select exists (
+    select 1 from public.profiles
+    where id=p_profile and can_control_picks=true and upper(trim(display_name))='CODY'
+  )
+$;
+
 create or replace function public.get_nba_futures(p_season integer)
 returns jsonb language plpgsql stable security definer set search_path = ''
 as $$
 declare v_profile uuid:=auth.uid(); v_own jsonb; v_locked boolean; v_entries jsonb; v_count integer;
 begin
   if v_profile is null then raise exception 'sign in required'; end if;
+  if not public.nba_futures_owner_preview_allowed(v_profile) then raise exception 'nba_futures_preview_owner_only'; end if;
+  if not public.nba_futures_owner_preview_allowed(v_profile) then raise exception 'nba_futures_preview_owner_only'; end if;
   if p_season <> 2026 or p_season is null then raise exception 'nba_futures_invalid_season'; end if;
   v_locked:=now()>=public.nba_futures_lock_at(p_season);
   select picks into v_own from public.nba_futures_picks
@@ -197,6 +208,7 @@ begin
   return public.get_nba_futures(p_season);
 end;
 $$;
+revoke all on function public.nba_futures_owner_preview_allowed(uuid) from public,anon,authenticated;
 revoke all on function public.nba_futures_lock_at(integer) from public;
 revoke all on function public.validate_nba_futures(jsonb) from public,anon,authenticated;
 revoke all on function public.nba_futures_complete(jsonb) from public,anon,authenticated;

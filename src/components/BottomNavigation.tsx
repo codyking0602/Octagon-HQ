@@ -5,6 +5,7 @@ import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { nextSport, useSport } from "../app/SportProvider";
 import { useOptionalIdentity } from "../features/identity/IdentityProvider";
+import { canPreviewNba } from "../features/nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
 
 type NavigationIconName = "home" | "rankings" | "picks" | "play";
@@ -91,7 +92,8 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const mlbMode = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
   const nbaMode = location.pathname === "/nba" || location.pathname.startsWith("/nba/");
-  const effectiveSport = selectedSport === "mlb" && !canViewMlbPlayoffs(identity?.profile) ? "ufc" : selectedSport;
+  const nbaVisible = canPreviewNba(identity?.profile);
+  const effectiveSport = (selectedSport === "mlb" && !canViewMlbPlayoffs(identity?.profile)) || (selectedSport === "nba" && !nbaVisible) ? "football" : selectedSport;
   const selectedPlayRoot = effectiveSport === "football" ? "/football" : effectiveSport === "mlb" ? "/mlb" : effectiveSport === "nba" ? "/nba" : "/play";
   const selectedPicksRoot = effectiveSport === "football" ? "/football/picks" : effectiveSport === "mlb" ? "/mlb/picks" : effectiveSport === "nba" ? "/nba/picks" : "/picks";
   const standardDestinations = baseDestinations.map((destination) => (
@@ -163,7 +165,7 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
                   event.preventDefault();
                   lastActiveSportTapRef.current[section] = 0;
                   const currentSport = footballMode ? "football" : mlbMode ? "mlb" : nbaMode ? "nba" : "ufc";
-                  const next = nextSport(currentSport, canViewMlbPlayoffs(identity?.profile));
+                  const next = nextSport(currentSport, canViewMlbPlayoffs(identity?.profile), nbaVisible);
                   setSelectedSport(next);
                   const targetPath = section === "play"
                     ? next === "football" ? "/football" : next === "mlb" ? "/mlb" : next === "nba" ? "/nba" : "/play"

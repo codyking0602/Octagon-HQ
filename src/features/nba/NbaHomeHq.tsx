@@ -1,4 +1,5 @@
 import { useEffect,useState } from "react";
+import { NBA_WELCOME_REOPEN_EVENT } from "./NbaWelcomeTakeover";
 import { Link } from "react-router-dom";
 import { NBA_FUTURES_SELECTIONS,NBA_FUTURES_LOCK_AT,emptyNbaFutures,nbaFuturesProgress } from "./nbaFutures";
 import { loadNbaFutures } from "./nbaFuturesRepository";
@@ -25,6 +26,7 @@ export function NbaHomeHq({signedIn}:{signedIn:boolean}) {
       <small>30 team win totals · Playoffs · Awards · Champion</small>
       <div className="nba-home-futures-bottom"><span>{count===null?"100 POSSIBLE POINTS":count+" / "+NBA_FUTURES_SELECTIONS+" PICKS"}</span><b>OPEN FUTURES →</b></div>
     </Link>
+    <button type="button" className="nba-home-replay" onClick={() => window.dispatchEvent(new Event(NBA_WELCOME_REOPEN_EVENT))}>REPLAY BASKETBALL INTRODUCTION →</button>
     <Link className="nba-home-championship" to="/championship/nba">
       <strong>Basketball Championship</strong><small>Futures 15% · Cup 10% · Playoffs 55% · Games 20%</small><span aria-hidden="true">↗</span>
     </Link>

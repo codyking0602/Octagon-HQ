@@ -5,6 +5,8 @@ import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
 import { useIdentity } from "../features/identity/IdentityProvider";
 import { MlbPlayoffsWelcomeTakeover } from "../features/mlb/MlbPlayoffsWelcomeTakeover";
+import { NbaWelcomeTakeover } from "../features/nba/NbaWelcomeTakeover";
+import { canPreviewNba } from "../features/nba/nbaPreviewAccess";
 import { MLB_PLAYOFFS_PUBLIC_ENABLED, canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
 import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
@@ -100,10 +102,12 @@ function SportContextRow({
   context,
   onSelectSport,
   showMlb,
+  showNba,
 }: {
   context: SportContext;
   onSelectSport: (sport: SelectedSport) => void;
   showMlb: boolean;
+  showNba: boolean;
 }) {
   const sectionLabel = context.section[0] + context.section.slice(1).toLowerCase();
 
@@ -123,7 +127,7 @@ function SportContextRow({
             <option value="football">Football</option>
             <option value="ufc">UFC</option>
             {showMlb ? <option value="mlb">MLB</option> : null}
-            <option value="nba">Basketball</option>
+            {showNba ? <option value="nba">Basketball</option> : null}
           </select>
         </label>
       ) : null}
@@ -163,13 +167,14 @@ export function AppShell() {
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const isMlb = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
+  const nbaVisible = canPreviewNba(identity.profile);
   const showMlbWelcome = Boolean(
     identity.profile
     && (location.pathname === "/" || location.pathname === "/mlb")
     && (MLB_PLAYOFFS_PUBLIC_ENABLED || identity.profile.canControlPicks === true)
   );
   const mlbWelcomeMode = MLB_PLAYOFFS_PUBLIC_ENABLED ? "launch" : "preview";
-  const effectiveSelectedSport = selectedSport === "mlb" && !mlbVisible ? "ufc" : selectedSport;
+  const effectiveSelectedSport = (selectedSport === "mlb" && !mlbVisible) || (selectedSport === "nba" && !nbaVisible) ? "football" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
   const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
   // Direct/deep-linked sport URLs must keep the persisted tab preference in sync
@@ -181,6 +186,9 @@ export function AppShell() {
   }, [sportContext?.sport, sportContext?.switchable, selectedSport, setSelectedSport]);
 
 
+  if ((location.pathname.startsWith("/nba/") || location.pathname === "/nba" || location.pathname.startsWith("/championship/nba")) && !nbaVisible && identity.ready) {
+    return <Navigate to="/" replace />;
+  }
   if (isMlb && !mlbVisible) {
     return <Navigate to="/" replace />;
   }
@@ -188,6 +196,7 @@ export function AppShell() {
   function selectSport(sport: SelectedSport) {
     if (!sportContext?.switchable) return;
     if (sport === "mlb" && !mlbVisible) return;
+    if (sport === "nba" && !nbaVisible) return;
 
     setSelectedSport(sport);
     const destination = sportSectionDestination(sportContext.section, sport);
@@ -199,6 +208,9 @@ export function AppShell() {
       className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${isMlb ? " app-shell--mlb-room" : ""}`}
       data-hq-theme={themeScope}
     >
+      {nbaVisible && identity.profile && (location.pathname === "/" || location.pathname.startsWith("/nba") || location.pathname === "/championship/nba") ? (
+        <NbaWelcomeTakeover key={identity.profile.id} profileId={identity.profile.id} />
+      ) : null}
       {showMlbWelcome && identity.profile ? (
         <MlbPlayoffsWelcomeTakeover profileId={identity.profile.id} mode={mlbWelcomeMode} />
       ) : null}
@@ -266,7 +278,7 @@ export function AppShell() {
             <IdentityControl />
           </div>
           {sportContext ? (
-            <SportContextRow context={sportContext} onSelectSport={selectSport} showMlb={mlbVisible} />
+            <SportContextRow context={sportContext} onSelectSport={selectSport} showMlb={mlbVisible} showNba={nbaVisible} />
           ) : null}
         </header>
       )}
