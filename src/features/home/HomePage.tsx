@@ -502,7 +502,7 @@ export default function HomePage() {
       {isFootballSeason() ? (
         <>
           {footballHq}
-          {nbaVisible ? <NbaHomeHq signedIn={signedIn} /> : null}
+          {nbaVisible ? <NbaHomeHq signedIn={signedIn} compact /> : null}
           {mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}
@@ -516,7 +516,7 @@ export default function HomePage() {
         <>
           {ufcHq}
           {footballHq}
-          {nbaVisible ? <NbaHomeHq signedIn={signedIn} /> : null}
+          {nbaVisible ? <NbaHomeHq signedIn={signedIn} compact /> : null}
           {mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}
