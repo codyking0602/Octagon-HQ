@@ -150,7 +150,8 @@ export default function NbaFuturesPage() {
       // Never silently overwrite the canonical server-published lines.
       if(data.lines.length!==NBA_TEAMS.length||data.lines.some(t=>NBA_TEAMS.find(x=>x.id===t.id)?.line!==t.line))
         throw new Error("Frozen NBA win-total lines could not be verified.");
-      const restored={...emptyNbaFutures(),...data.own};
+      // Retired categories may exist in an earlier owner-preview draft; never resubmit them.
+      const restored={...emptyNbaFutures(),...data.own,oneSeeds:[],roy:"",mip:"",cupChampion:""};
       current.current=JSON.stringify(restored);persisted.current=current.current;
       setSnapshot(data);setDraft(restored);setLoading(false);
     }).catch(reason=>{if(alive){setError(reason instanceof Error?reason.message:"Futures unavailable.");setLoading(false);}});
