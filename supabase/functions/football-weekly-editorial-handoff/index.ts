@@ -46,7 +46,7 @@ export async function handleFootballHandoff(req: Request) {
   let data: Payload;
   try { data = await req.json(); } catch { return respond({ error: "Valid JSON required" }, 400); }
   if (!isObject(data) || Object.keys(data).some((key) =>
-      !["week_of","sport","candidates","selection"].includes(key)) ||
+      !["week_of","sport","candidates","selection","preparation"].includes(key)) ||
       !validWeek(data.week_of) || !["cfb","nfl"].includes(String(data.sport)) ||
       !isObject(data.candidates) ||
       Object.keys(data.candidates).sort().join(",") !== "games,players" ||
@@ -60,9 +60,17 @@ export async function handleFootballHandoff(req: Request) {
       typeof selection.player_id !== "string" || typeof selection.game_id !== "string")) {
     return respond({ error: "Selection must have exact staged IDs" }, 400);
   }
-  if (selection && (String(claims.actor_id) !== ownerActorId ||
+  if ((selection || data.preparation) && (String(claims.actor_id) !== ownerActorId ||
       !["push","workflow_dispatch"].includes(String(claims.event_name)))) {
     return respond({ error: "Owner-authenticated GitHub execution required for selections" }, 403);
+  }
+  const preparation = data.preparation;
+  if (preparation !== undefined && (!selection ||
+      !isObject(preparation) ||
+      Object.keys(preparation).sort().join(",") !== "editorial,game,spotlight" ||
+      !isObject(preparation.spotlight) || !isObject(preparation.game) ||
+      !isObject(preparation.editorial))) {
+    return respond({ error: "Preparation requires explicit owner selection and full editorial" }, 400);
   }
   const url = Deno.env.get("SUPABASE_URL");
   const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -96,10 +104,32 @@ export async function handleFootballHandoff(req: Request) {
   if (!staged || (selection && !selected)) {
     return respond({ error: "Post-write canonical verification failed" }, 503);
   }
+  let prepared = false;
+  if (preparation && isObject(preparation)) {
+    const preparedResult = await admin.rpc("ingest_football_weekly_editorial_preparation", {
+      p_week_of: data.week_of, p_sport: data.sport,
+      p_spotlight: preparation.spotlight, p_game: preparation.game,
+      p_editorial: preparation.editorial, p_actor_id: String(claims.actor_id),
+      p_source_sha: String(claims.sha),
+    });
+    const preparedProduction = isObject(preparedResult.data) &&
+      isObject(preparedResult.data.production)
+      ? preparedResult.data.production : {};
+    prepared = isObject(preparedProduction[String(data.sport)]) &&
+      Boolean(preparedProduction[String(data.sport)].prepared_at);
+    if (preparedResult.error || !prepared) {
+      console.error("Canonical Football preparation rejected", {
+        week: data.week_of, sport: data.sport,
+        error: preparedResult.error?.message ?? "no receipt",
+      });
+      return respond({ error: preparedResult.error?.message ?? "Canonical preparation readback failed" }, 409);
+    }
+  }
   return respond({
     status: "verified", week_of: data.week_of, sport: data.sport,
     staged_players: 5, staged_games: 5,
     selection_recorded: Boolean(selection && selected),
+    preparation_recorded: prepared,
     source_sha: String(claims.sha),
   });
 }
