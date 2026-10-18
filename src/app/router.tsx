@@ -4,6 +4,7 @@ import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 import { MlbGate } from "../features/mlb/MlbGate";
 import { NbaPreviewGate } from "../features/nba/NbaPreviewGate";
+import { NbaWhoAmIOwnerGate } from "../features/nba/NbaWhoAmIOwnerGate";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
 const ChampionshipLeaderboardPage = lazy(() => import("../features/home/ChampionshipLeaderboardPage"));
@@ -53,6 +54,7 @@ const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
 const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"));
 const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
+const NbaWhoAmIPage = lazy(() => import("../features/play/NbaWhoAmIPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
 const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
@@ -140,6 +142,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/bar-trivia", element: <Navigate to="/football" replace /> },
       { path: "picks", element: <PicksPage /> },
       { path: "nba", element: <NbaPreviewGate><NbaPlayPage /></NbaPreviewGate> },
+      { path: "nba/who-am-i", element: <NbaWhoAmIOwnerGate><NbaWhoAmIPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/picks", element: <NbaPreviewGate><NbaFuturesPage /></NbaPreviewGate> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
