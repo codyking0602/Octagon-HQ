@@ -77,7 +77,7 @@ jobs:
               required_name = f"{data.get('week_of')}-{data.get('sport')}.json"
               if path.name != required_name:
                   raise SystemExit(f"Manifest path/data mismatch: {path}")
-              if set(data) - {"week_of", "sport", "candidates", "selection"}:
+              if set(data) - {"week_of", "sport", "candidates", "selection", "preparation"}:
                   raise SystemExit(f"Unexpected manifest fields: {path}")
               body = json.dumps(data).encode()
               for attempt in range(4):
@@ -91,7 +91,9 @@ jobs:
                           raise RuntimeError("Canonical Supabase readback mismatch")
                       if bool(data.get("selection")) != bool(receipt.get("selection_recorded")):
                           raise RuntimeError("Owner approval not persisted")
-                      msg = f"Verified {path} at {receipt['source_sha']}; five players and five games"
+                      if bool(data.get("preparation")) != bool(receipt.get("preparation_recorded")):
+                          raise RuntimeError("Canonical preparation not persisted")
+                      msg = f"Verified {path} at {receipt['source_sha']}; five players and five games; selected={bool(data.get('selection'))}; prepared={bool(data.get('preparation'))}"
                       print(msg)
                       with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
                           summary.write(f"### Football editorial handoff\n{msg}\n")
