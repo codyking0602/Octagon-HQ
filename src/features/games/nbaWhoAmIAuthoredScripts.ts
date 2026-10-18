@@ -42,7 +42,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-michael-jordan-a-1",
-            "text": "I played college basketball at North Carolina before entering the NBA in the 1980s.",
+            "text": "I was a standout college player in the ACC before beginning my NBA career in the 1980s.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -137,7 +137,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-michael-jordan-b-1",
-            "text": "I was selected third overall in the 1984 NBA Draft.",
+            "text": "I joined the NBA after a high-profile college career as a guard in the 1980s.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -146,7 +146,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-2",
-            "text": "I spent my final two playing seasons with Washington.",
+            "text": "My final stretch of NBA games came after a period away from playing.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -340,7 +340,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-kobe-bryant-b-1",
-            "text": "I was born in Philadelphia and entered professional basketball at age 18.",
+            "text": "I began playing professional basketball while still a teenager.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -460,7 +460,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-2",
-            "text": "I came into the NBA as a heavily anticipated teenage prospect from Ohio.",
+            "text": "I arrived in the NBA with extraordinary expectations as a teenage prospect.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -751,7 +751,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-stephen-curry-b-1",
-            "text": "I grew up around professional basketball because my father played in the NBA.",
+            "text": "I grew up closely connected to professional basketball through my family.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -860,7 +860,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-tim-duncan-a-1",
-            "text": "I grew up in the U.S. Virgin Islands before becoming a college basketball prospect.",
+            "text": "I developed into a two-way NBA star after growing up outside the continental United States.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -869,7 +869,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-2",
-            "text": "Swimming was an important sport in my childhood before I devoted myself to basketball.",
+            "text": "I stayed in college for four seasons before beginning my professional basketball career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -955,7 +955,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-tim-duncan-b-1",
-            "text": "I played college basketball for coach Dave Odom at Wake Forest.",
+            "text": "I chose to finish a four-year college career before entering the NBA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -964,7 +964,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-2",
-            "text": "I joined a veteran NBA team coached by Gregg Popovich.",
+            "text": "I joined a veteran NBA team that already prided itself on disciplined defense.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1074,7 +1074,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-2",
-            "text": "I entered the league in the early 1990s after starring at LSU.",
+            "text": "I played college basketball in the South before being drafted in the early 1990s.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1160,7 +1160,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-shaquille-oneal-b-1",
-            "text": "I became a star with Orlando before joining another franchise as a free agent in 1996.",
+            "text": "My NBA career began with a young franchise before a move to one of the league's most famous teams.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1269,7 +1269,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-giannis-antetokounmpo-a-1",
-            "text": "I grew up in Greece in a family with Nigerian roots.",
+            "text": "I grew up in Europe in a family that had moved there from Africa.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1278,7 +1278,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-2",
-            "text": "I helped my family by selling items on the streets of Athens before becoming a star.",
+            "text": "My family experienced financial hardship before my basketball career changed our circumstances.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1484,7 +1484,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-2",
-            "text": "I am a center from Serbia known for unusual playmaking ability.",
+            "text": "I developed into a creative, pass-first NBA center after learning the game overseas.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [

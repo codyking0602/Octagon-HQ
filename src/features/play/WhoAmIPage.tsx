@@ -68,7 +68,9 @@ function rememberRecentSubject(league: WhoAmILeague, subjectId: string) {
 }
 
 function normalized(value: string) {
-  return value.trim().toLowerCase();
+  // NBA players such as Jokić should still match natural unaccented searches.
+  // Apostrophes in surnames (O'Neal) must not prevent common spelling matches.
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/['’]/g, "").trim().toLowerCase();
 }
 
 interface WhoAmIPageProps {
