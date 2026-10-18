@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 
 export function canAccessNbaWhoAmIPreview(
-  profile: { canControlPicks: boolean; displayName: string } | null | undefined,
+  profile: { canControlPicks?: boolean; displayName: string } | null | undefined,
 ) {
   return profile?.canControlPicks === true && profile.displayName.trim().toUpperCase() === "CODY";
 }
