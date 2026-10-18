@@ -1,5 +1,7 @@
 import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { Link } from "react-router-dom";
+import type { ReactNode } from "react";
+import { NbaTeamMark,nbaTeamColor } from "./nbaTeamBranding";
 import { useIdentity } from "../identity/IdentityProvider";
 import { NBA_SEASON,NBA_TEAMS,NBA_FUTURES_MAX,NBA_FUTURES_SELECTIONS,
   NBA_FUTURES_LINE_SOURCE,NBA_FUTURES_LOCK_AT,emptyNbaFutures,
@@ -12,12 +14,21 @@ function formattedLock(value:string) {
   return new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",month:"short",day:"numeric",
     hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(new Date(value));
 }
-function TeamSelector({title,points,selected,options,limit,perConference,onChange,locked,help}:{
-  title:string;points:number;selected:string[];options:string[];limit:number;perConference:number;
-  onChange:(next:string[])=>void;locked:boolean;help?:string;
+function FuturesSection({title,progress,points,open,onToggle,children}:{
+  title:string;progress:string;points:number;open:boolean;onToggle:()=>void;children:ReactNode;
 }) {
   return <section className="nba-futures-section">
-    <header><h2>{title}</h2><span>{selected.length}/{limit} · {points} PTS</span></header>
+    <button type="button" className="nba-futures-section-toggle" onClick={onToggle} aria-expanded={open}>
+      <strong>{title}</strong><span>{progress} · {points} PTS</span><b aria-hidden="true">{open?"⌃":"⌄"}</b>
+    </button>
+    {open?<div className="nba-futures-section-body">{children}</div>:null}
+  </section>;
+}
+function TeamSelector({title,points,selected,options,limit,perConference,onChange,locked,help,open,onToggle}:{
+  title:string;points:number;selected:string[];options:string[];limit:number;perConference:number;
+  onChange:(next:string[])=>void;locked:boolean;help?:string;open:boolean;onToggle:()=>void;
+}) {
+  return <FuturesSection title={title} progress={selected.length+"/"+limit} points={points} open={open} onToggle={onToggle}>
     {help?<p className="nba-futures-helper">{help}</p>:null}
     <div className="nba-futures-teams">
       {(["East","West"] as const).map(conf=><div key={conf} className="nba-futures-conference">
@@ -28,23 +39,29 @@ function TeamSelector({title,points,selected,options,limit,perConference,onChang
             const limitReached=selected.length>=limit||selected.filter(id=>NBA_TEAMS.some(team=>team.id===id&&team.conference===conf)).length>=perConference;
             return <button key={t.id} type="button" aria-pressed={picked} className={picked?"is-selected":""}
               disabled={locked||(!picked&&limitReached)}
-              onClick={()=>onChange(picked?selected.filter(id=>id!==t.id):[...selected,t.id])}>{t.name}</button>;
+              style={{borderLeftColor:nbaTeamColor(t.id)}}
+              onClick={()=>onChange(picked?selected.filter(id=>id!==t.id):[...selected,t.id])}>
+              <NbaTeamMark team={t}/><span>{t.name}</span>
+            </button>;
           })}
         </div>
+        {!options.some(id=>NBA_TEAMS.find(t=>t.id===id)?.conference===conf)
+          ?<p className="nba-futures-empty">Choose eligible teams in the previous section first.</p>:null}
       </div>)}
     </div>
-  </section>;
+  </FuturesSection>;
 }
 function NbaFuturesForm({picks,locked,onChange}:{
   picks:NbaFuturesPicks;locked:boolean;onChange:(p:NbaFuturesPicks)=>void;
 }){
   const [showWest,setShowWest]=useState(false);
+  const [openSection,setOpenSection]=useState<string|null>("wins");
+  const toggle=(section:string)=>setOpenSection(current=>current===section?null:section);
   const update=<K extends keyof NbaFuturesPicks>(key:K,value:NbaFuturesPicks[K])=>onChange({...picks,[key]:value});
-  const alterTeam=(key:"playoffTeams"|"conferenceFinalists"|"finalsTeams"|"oneSeeds",values:string[])=>{
+  const alterTeam=(key:"playoffTeams"|"conferenceFinalists"|"finalsTeams",values:string[])=>{
     const next={...picks,[key]:values};
     if(key==="playoffTeams"){
       next.conferenceFinalists=picks.conferenceFinalists.filter(id=>values.includes(id));
-      next.oneSeeds=picks.oneSeeds.filter(id=>values.includes(id));
       next.finalsTeams=picks.finalsTeams.filter(id=>next.conferenceFinalists.includes(id));
       if(!next.finalsTeams.includes(picks.champion)) next.champion="";
     }
@@ -56,8 +73,8 @@ function NbaFuturesForm({picks,locked,onChange}:{
     onChange(next);
   };
   return <>
-    <section className="nba-futures-section">
-      <header><h2>30-Team Win Totals</h2><span>{Object.keys(picks.winTotals).length}/30 · 30 PTS</span></header>
+    <FuturesSection title="30-Team Win Totals" progress={Object.keys(picks.winTotals).length+"/30"}
+      points={30} open={openSection==="wins"} onToggle={()=>toggle("wins")}>
       <p className="nba-futures-helper">One tap per team. Win totals are locked for every player to the same published board.</p>
       <div className="nba-futures-segments" role="group" aria-label="Win totals conference">
         <button className={!showWest?"is-active":""} type="button" aria-pressed={!showWest} onClick={()=>setShowWest(false)}>East · {NBA_TEAMS.filter(t=>t.conference==="East"&&picks.winTotals[t.id]).length}/15</button>
@@ -65,7 +82,7 @@ function NbaFuturesForm({picks,locked,onChange}:{
       </div>
       <div className="nba-futures-win-list">
         {NBA_TEAMS.filter(t=>t.conference===(showWest?"West":"East")).map(t=><div className="nba-futures-win-row" key={t.id}>
-          <div><strong>{t.name}</strong><small>{t.line} wins</small></div>
+          <div className="nba-futures-teamline"><NbaTeamMark team={t}/><span><strong>{t.name}</strong><small>{t.line} wins</small></span></div>
           <div className="nba-futures-win-buttons">
             {(["over","under"] as const).map(choice=><button type="button" key={choice}
               aria-pressed={picks.winTotals[t.id]===choice} disabled={locked}
@@ -79,48 +96,38 @@ function NbaFuturesForm({picks,locked,onChange}:{
         </div>)}
       </div>
       <p className="nba-futures-source">Source: <a href="https://sports.betmgm.com/en/blog/nba/nba-odds-predictions-season-win-totals-bm23/" target="_blank" rel="noreferrer">{NBA_FUTURES_LINE_SOURCE} ↗</a></p>
-    </section>
+    </FuturesSection>
     <TeamSelector title="16 Playoff Teams" points={16} selected={picks.playoffTeams} options={NBA_TEAMS.map(t=>t.id)}
-      limit={16} perConference={8} locked={locked} onChange={v=>alterTeam("playoffTeams",v)}
+      limit={16} perConference={8} locked={locked} open={openSection==="playoffs"} onToggle={()=>toggle("playoffs")}
+      onChange={v=>alterTeam("playoffTeams",v)}
       help="Choose eight teams per conference. These are the 16 teams that make the final playoff bracket after the Play-In."/>
-    <TeamSelector title="Conference Finals" points={8} selected={picks.conferenceFinalists}
+    <TeamSelector title="Conference Finals" points={12} selected={picks.conferenceFinalists}
       options={picks.playoffTeams} limit={4} perConference={2} locked={locked}
+      open={openSection==="conference"} onToggle={()=>toggle("conference")}
       onChange={v=>alterTeam("conferenceFinalists",v)}
-      help="Pick two teams from each conference (2 points each)."/>
-    <TeamSelector title="NBA Finals Matchup" points={10} selected={picks.finalsTeams}
+      help="Pick two teams from each conference (3 points each)."/>
+    <TeamSelector title="NBA Finals Matchup" points={12} selected={picks.finalsTeams}
       options={picks.conferenceFinalists} limit={2} perConference={1} locked={locked}
-      onChange={v=>alterTeam("finalsTeams",v)} help="One Eastern and one Western Conference finalist (5 points each)."/>
-    <section className="nba-futures-section">
-      <header><h2>NBA Champion</h2><span>10 PTS</span></header>
+      open={openSection==="finals"} onToggle={()=>toggle("finals")}
+      onChange={v=>alterTeam("finalsTeams",v)} help="One Eastern and one Western Conference finalist (6 points each)."/>
+    <FuturesSection title="NBA Champion" progress={(picks.champion?"1":"0")+"/1"} points={20}
+      open={openSection==="champion"} onToggle={()=>toggle("champion")}>
       <select aria-label="NBA Champion" disabled={locked||!picks.finalsTeams.length}
         value={picks.champion} onChange={e=>update("champion",e.target.value)}>
         <option value="">Select your champion</option>
         {NBA_TEAMS.filter(t=>picks.finalsTeams.includes(t.id)).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
       </select>
-    </section>
-    <TeamSelector title="East & West No. 1 Seeds" points={4} selected={picks.oneSeeds}
-      options={picks.playoffTeams} limit={2} perConference={1} locked={locked}
-      onChange={v=>alterTeam("oneSeeds",v)} help="Regular-season No. 1 seed in each conference (2 points each)."/>
-    <section className="nba-futures-section">
-      <header><h2>Season Awards</h2><span>18 PTS</span></header>
+    </FuturesSection>
+    <FuturesSection title="Season Awards" progress={[picks.mvp,picks.dpoy].filter(Boolean).length+"/2"}
+      points={10} open={openSection==="awards"} onToggle={()=>toggle("awards")}>
       <p className="nba-futures-helper">Enter the player’s full name. Use the NBA’s official season awards.</p>
-      {([["mvp","Most Valuable Player",7],["dpoy","Defensive Player of the Year",4],
-        ["roy","Rookie of the Year",4],["mip","Most Improved Player",3]] as const).map(([key,label,points])=>
+      {([["mvp","Most Valuable Player",7],["dpoy","Defensive Player of the Year",3]] as const).map(([key,label,points])=>
         <label className="nba-futures-award" key={key}>
           <span><strong>{label}</strong><small>{points} PTS</small></span>
           <input type="text" autoComplete="off" maxLength={120} disabled={locked} value={picks[key]}
             placeholder="Player name" onChange={e=>update(key,e.target.value)}/>
         </label>)}
-    </section>
-    <section className="nba-futures-section">
-      <header><h2>NBA Cup Champion</h2><span>4 PTS</span></header>
-      <select aria-label="NBA Cup Champion" disabled={locked} value={picks.cupChampion}
-        onChange={e=>update("cupChampion",e.target.value)}>
-        <option value="">Choose a team</option>
-        {NBA_TEAMS.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
-      </select>
-      <p className="nba-futures-helper">The NBA Cup final is December 11, 2026.</p>
-    </section>
+    </FuturesSection>
   </>;
 }
 export default function NbaFuturesPage() {
@@ -193,7 +200,7 @@ export default function NbaFuturesPage() {
       <div className="nba-futures-save">
         <button className="primary-action" type="button" disabled={locked||saving||errors.length>0}
           onClick={()=>persist(draft)}>{locked?"PICKS LOCKED":"SAVE MY FUTURES PICKS"}</button>
-        <small>{isNbaFuturesComplete(draft)?"All 60 selections complete.":"Partial drafts are saved and can be finished later."}</small>
+        <small>{isNbaFuturesComplete(draft)?"All 55 selections complete.":"Partial drafts are saved and can be finished later."}</small>
       </div>
     </main>:null}
   </div>;
