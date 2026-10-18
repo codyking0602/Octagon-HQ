@@ -42,7 +42,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-michael-jordan-a-1",
-            "text": "I was a standout college player in the ACC before beginning my NBA career in the 1980s.",
+            "text": "I earned Rookie of the Year before becoming a regular presence on All-NBA and All-Defensive teams.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -51,7 +51,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-2",
-            "text": "My NBA career included a return with a different franchise after years away from my first team.",
+            "text": "A physical Eastern Conference rival ended several of my early playoff runs.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -60,7 +60,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-3",
-            "text": "I won the NBA Rookie of the Year award early in my professional career.",
+            "text": "I won more than one NBA All-Star Game MVP award over my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -69,7 +69,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-4",
-            "text": "I earned a Defensive Player of the Year award while playing guard.",
+            "text": "I led the league in scoring in multiple seasons before winning my first championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -78,7 +78,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-5",
-            "text": "I won the league scoring title ten times.",
+            "text": "I won the scoring title and Defensive Player of the Year in the same season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -87,7 +87,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-6",
-            "text": "I scored 63 points against Boston in a playoff game.",
+            "text": "I scored 63 points in a playoff loss early in my career.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -96,7 +96,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-7",
-            "text": "I stepped away from the NBA to play minor-league baseball.",
+            "text": "I stepped away from basketball to play minor-league baseball, then returned to the NBA.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -105,7 +105,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-8",
-            "text": "When I came back in 1995, I initially wore No. 45 instead of my familiar number.",
+            "text": "After one comeback, my team set an NBA record with 72 regular-season wins.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -114,7 +114,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-9",
-            "text": "I led Chicago to six championships, winning Finals MVP in all six series.",
+            "text": "I won six titles and six Finals MVP awards with Chicago.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -123,7 +123,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-a-10",
-            "text": "My No. 23 jersey and the Air Jordan brand became symbols of the Bulls dynasty.",
+            "text": "I became the No. 23 Bulls icon behind the Air Jordan name.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -137,7 +137,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-michael-jordan-b-1",
-            "text": "I joined the NBA after a high-profile college career as a guard in the 1980s.",
+            "text": "I became a multiple-time league MVP after earning Rookie of the Year honors.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -146,7 +146,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-2",
-            "text": "My final stretch of NBA games came after a period away from playing.",
+            "text": "I was recognized as an elite defender despite winning numerous scoring titles.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -155,7 +155,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-3",
-            "text": "My first NBA championship came in 1991 against the Los Angeles Lakers.",
+            "text": "I reached several conference finals before winning my first NBA championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -164,7 +164,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-4",
-            "text": "The first three championship teams I led completed a three-peat from 1991 through 1993.",
+            "text": "I won the Finals MVP award in three straight seasons before a break in my title run.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -173,7 +173,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-5",
-            "text": "I earned five regular-season MVP awards.",
+            "text": "I finished my career with ten NBA scoring titles.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -182,7 +182,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-6",
-            "text": "I came back to a team that then won 72 regular-season games in 1995-96.",
+            "text": "I returned to the league and helped a team win 72 games in a single regular season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -191,7 +191,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-7",
-            "text": "I played with Scottie Pippen under coach Phil Jackson throughout a six-title run.",
+            "text": "My championship partner Scottie Pippen played alongside me under Phil Jackson.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -200,7 +200,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-8",
-            "text": "My last championship-clinching performance came against the Utah Jazz in 1998.",
+            "text": "My final championship came against Utah in 1998, with a decisive late basket in Game 6.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -209,7 +209,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-9",
-            "text": "The Chicago Bulls retired my No. 23 after my remarkable 1990s run.",
+            "text": "I won each of my six titles with the Chicago Bulls.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -218,7 +218,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-michael-jordan-b-10",
-            "text": "I was widely known by the nickname His Airness.",
+            "text": "I wore No. 23 and became known as His Airness.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -245,7 +245,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-kobe-bryant-a-1",
-            "text": "I entered the NBA straight from high school as a teenager.",
+            "text": "I earned repeated All-NBA and All-Defensive selections while carrying a heavy scoring load.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -254,7 +254,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-2",
-            "text": "I spent my entire NBA playing career with one franchise.",
+            "text": "I won multiple NBA scoring titles and later finished among the league's career scoring leaders.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -263,7 +263,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-3",
-            "text": "I played 20 NBA seasons after entering the league in 1996.",
+            "text": "I entered the NBA at an unusually young age and did not immediately become a full-time starter.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -272,7 +272,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-4",
-            "text": "I was selected to 18 NBA All-Star Games.",
+            "text": "My first three titles came before I won a regular-season MVP award.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -281,7 +281,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-5",
-            "text": "I earned eleven All-NBA First Team selections.",
+            "text": "I was chosen for eighteen NBA All-Star Games.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -290,7 +290,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-6",
-            "text": "I helped my team win three championships in a row from 2000 through 2002.",
+            "text": "I played all twenty of my NBA seasons for the same franchise.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -299,7 +299,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-7",
-            "text": "I captured the league's regular-season MVP award in 2008.",
+            "text": "I was named Finals MVP in consecutive championship seasons in 2009 and 2010.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -308,7 +308,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-8",
-            "text": "I led back-to-back championship runs in 2009 and 2010 as Finals MVP.",
+            "text": "My first three championship runs featured Shaquille O'Neal as a teammate.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -317,7 +317,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-9",
-            "text": "I scored 81 points against the Toronto Raptors in January 2006.",
+            "text": "I scored 81 points against Toronto in a 2006 regular-season game.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -326,7 +326,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-a-10",
-            "text": "I was the Lakers guard whose jersey numbers 8 and 24 were both retired.",
+            "text": "The Lakers retired both my No. 8 and No. 24 jerseys.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -340,7 +340,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-kobe-bryant-b-1",
-            "text": "I began playing professional basketball while still a teenager.",
+            "text": "I began my professional career as a teenager and grew into a perennial All-NBA selection.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -349,7 +349,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-b-2",
-            "text": "I was known for an especially intense competitive approach and tireless preparation.",
+            "text": "My career included scoring championships as well as repeated All-Defensive First Team honors.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -358,7 +358,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-b-3",
-            "text": "I won Olympic gold medals with the United States in 2008 and 2012.",
+            "text": "I won two Olympic gold medals after establishing myself as an NBA champion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -367,7 +367,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-b-4",
-            "text": "I was chosen to the NBA All-Defensive First Team nine times.",
+            "text": "I developed into one of the league's most prolific career scorers.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -385,7 +385,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-b-6",
-            "text": "My early title teams featured Shaquille O'Neal as my fellow superstar.",
+            "text": "Every one of my twenty NBA seasons came with the Los Angeles Lakers.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -394,7 +394,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-b-7",
-            "text": "My most productive single game became the second-highest scoring game in NBA history.",
+            "text": "I scored 60 points in the final game of my NBA career in 2016.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -403,7 +403,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-b-8",
-            "text": "I scored 60 points in the final NBA game of my career in 2016.",
+            "text": "I won five championships, including three alongside Shaquille O'Neal.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -412,7 +412,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-b-9",
-            "text": "My signature playing persona was known as the Black Mamba.",
+            "text": "My competitive alter ego was known as the Black Mamba.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -421,7 +421,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-kobe-bryant-b-10",
-            "text": "I helped deliver five NBA championships to Los Angeles before my retirement.",
+            "text": "My Los Angeles career is remembered through two retired jersey numbers: 8 and 24.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -451,7 +451,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-lebron-james-a-1",
-            "text": "My basketball games attracted national attention while I was still in high school.",
+            "text": "I earned Rookie of the Year honors and later led the NBA in scoring for a season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -460,7 +460,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-2",
-            "text": "I arrived in the NBA with extraordinary expectations as a teenage prospect.",
+            "text": "I reached the NBA Finals before winning my first regular-season MVP award.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -469,7 +469,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-3",
-            "text": "I was selected with the first pick in the 2003 NBA Draft.",
+            "text": "I made multiple All-Defensive First Teams while also running my team's offense.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -478,7 +478,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-4",
-            "text": "I took Cleveland to an NBA Finals appearance in 2007.",
+            "text": "I won a regular-season MVP award several years before winning a championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -487,7 +487,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-5",
-            "text": "I joined Dwyane Wade and Chris Bosh in Miami in 2010.",
+            "text": "One of my early championship chances ended in a Finals defeat against Dallas in 2011.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -496,7 +496,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-6",
-            "text": "I won consecutive championships with the Heat in 2012 and 2013.",
+            "text": "My first two NBA titles came in consecutive seasons alongside other established All-Stars.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -505,7 +505,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-7",
-            "text": "I returned to Cleveland in 2014 and led the team to an historic 2016 championship.",
+            "text": "I spent part of my career in Miami before returning to the Cleveland team that drafted me.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -514,7 +514,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-8",
-            "text": "My chase-down block on Andre Iguodala was a defining moment of the 2016 Finals.",
+            "text": "I led a comeback from a 3-1 Finals deficit against Golden State in 2016.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -523,7 +523,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-9",
-            "text": "I won a fourth championship with the Lakers in the 2020 Orlando bubble.",
+            "text": "I won Finals MVP with Miami, Cleveland and the Los Angeles Lakers.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -532,7 +532,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-a-10",
-            "text": "My nickname is King James, and I won Finals MVP with Miami, Cleveland and Los Angeles.",
+            "text": "I passed Kareem Abdul-Jabbar to become the NBA's all-time leading scorer.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -546,7 +546,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-lebron-james-b-1",
-            "text": "I grew up in Akron and entered the league without attending college.",
+            "text": "I became a perennial NBA All-Star without playing college basketball.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -555,7 +555,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-2",
-            "text": "I earned Rookie of the Year honors in 2003-04.",
+            "text": "I built a long career producing points and assists at an elite level.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -564,7 +564,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-3",
-            "text": "I won consecutive regular-season MVP awards with Cleveland in 2009 and 2010.",
+            "text": "I made the NBA Finals in my fourth professional season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -573,7 +573,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-4",
-            "text": "In a 2007 playoff game in Detroit, I scored Cleveland's final 25 points.",
+            "text": "I reached more than one Finals before winning my first championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -582,7 +582,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-5",
-            "text": "My first NBA championship opportunity with Miami ended in a loss to Dallas in 2011.",
+            "text": "In a 2007 conference finals game, I scored my team's last 25 points.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -591,7 +591,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-6",
-            "text": "I delivered a famous 2012 Eastern Conference finals Game 6 performance in Boston.",
+            "text": "I won back-to-back regular-season MVP awards twice, in two different stretches.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -600,7 +600,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-7",
-            "text": "I earned two more regular-season MVP awards while playing for Miami.",
+            "text": "I won consecutive NBA championships after joining Dwyane Wade and Chris Bosh in Miami.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -609,7 +609,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-8",
-            "text": "My 2016 Finals team became the first to rally from a 3-1 series deficit to win the title.",
+            "text": "A famous road performance in Boston helped save my team's 2012 playoff run.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -618,7 +618,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-9",
-            "text": "I became the first NBA player to win Finals MVP for three different franchises.",
+            "text": "I became the first player to earn Finals MVP with three different franchises.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -627,7 +627,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-lebron-james-b-10",
-            "text": "My NBA scoring milestones eventually carried me past Kareem Abdul-Jabbar's career points record.",
+            "text": "I won championships with the Heat, Cavaliers and Lakers and broke the NBA career points record.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -656,7 +656,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-stephen-curry-a-1",
-            "text": "I made my name as a skilled guard without the size typically associated with NBA superstars.",
+            "text": "I became a league MVP after beginning my basketball career without a major recruiting profile.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -665,7 +665,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-2",
-            "text": "My creative ballhandling became as recognizable as my shooting.",
+            "text": "The offenses I led were built around movement, passing and long-range shooting.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -674,7 +674,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-3",
-            "text": "I played college basketball at Davidson.",
+            "text": "I went from a small-conference college program to being selected in the NBA lottery.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -683,7 +683,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-4",
-            "text": "I was drafted by Golden State in 2009.",
+            "text": "I helped a franchise end a championship drought that had lasted several decades.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -692,7 +692,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-5",
-            "text": "I helped the Warriors win their first NBA championship in 40 years in 2015.",
+            "text": "I won consecutive regular-season MVP awards in the middle of the 2010s.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -701,7 +701,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-6",
-            "text": "I won the 2015 and 2016 regular-season MVP awards.",
+            "text": "During my second MVP season, I averaged more than 30 points per game.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -710,7 +710,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-7",
-            "text": "I helped a team reach 73 wins in the 2015-16 regular season.",
+            "text": "I helped a team win a record 73 games during the 2015-16 regular season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -719,7 +719,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-8",
-            "text": "I became the first unanimous MVP in NBA history.",
+            "text": "I scored 43 points in a 2022 NBA Finals game against Boston.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -728,7 +728,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-9",
-            "text": "My long-range shooting made me the NBA's career leader in three-pointers.",
+            "text": "I became the first unanimous NBA MVP and the league's career leader in made threes.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -737,7 +737,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-a-10",
-            "text": "I finally won my first NBA Finals MVP in 2022 after Golden State beat Boston.",
+            "text": "Wearing No. 30 for Golden State, I won four championships and the 2022 Finals MVP.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -751,7 +751,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-stephen-curry-b-1",
-            "text": "I grew up closely connected to professional basketball through my family.",
+            "text": "I made my first All-Star Game after several seasons of developing in the NBA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -760,7 +760,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-2",
-            "text": "I became famous for quick-release jumpers well beyond the three-point line.",
+            "text": "My teams became known for spacing, quick decisions and a high volume of outside shots.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -769,7 +769,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-3",
-            "text": "My college tournament runs introduced me to a national audience.",
+            "text": "I grew up with a close family connection to professional basketball.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -778,7 +778,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-4",
-            "text": "I wear No. 30 and became the centerpiece of a Golden State dynasty.",
+            "text": "I won more than one NBA scoring title during my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -787,7 +787,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-5",
-            "text": "In a 2016 overtime win at Oklahoma City, I made 12 three-pointers, including the winner.",
+            "text": "In one regular season, I made more than 400 three-pointers.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -796,7 +796,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-6",
-            "text": "My 2015-16 regular season included 402 made three-pointers.",
+            "text": "My college tournament breakout came at Davidson, far from a traditional basketball power.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -805,7 +805,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-7",
-            "text": "My championship teammates included Klay Thompson and Draymond Green.",
+            "text": "I hit twelve three-pointers, including an overtime winner, against Oklahoma City in 2016.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -814,7 +814,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-8",
-            "text": "I also won two championships alongside Kevin Durant in 2017 and 2018.",
+            "text": "I won two NBA championships alongside Kevin Durant with Golden State.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -823,7 +823,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-9",
-            "text": "I won four NBA titles through the 2022 championship.",
+            "text": "I was the first unanimous regular-season MVP in league history.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -832,7 +832,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-stephen-curry-b-10",
-            "text": "The Naismith Hall of Fame opened a special exhibit about my career while I was still an active player.",
+            "text": "I earned my first Finals MVP in 2022 after winning a fourth Warriors championship.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -860,7 +860,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-tim-duncan-a-1",
-            "text": "I developed into a two-way NBA star after growing up outside the continental United States.",
+            "text": "I was a college standout who stayed for four seasons before entering the NBA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -869,7 +869,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-2",
-            "text": "I stayed in college for four seasons before beginning my professional basketball career.",
+            "text": "I earned both All-NBA and All-Defensive honors as a rookie.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -878,7 +878,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-3",
-            "text": "I spent four college seasons playing at Wake Forest.",
+            "text": "I became a Finals MVP before ever winning the league's regular-season MVP award.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -887,7 +887,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-4",
-            "text": "I entered the NBA as the first overall pick in the 1997 Draft.",
+            "text": "I won a championship in only my second professional season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -896,7 +896,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-5",
-            "text": "My entire NBA playing career was spent with the same franchise.",
+            "text": "I collected consecutive NBA MVP awards in the early 2000s.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -905,7 +905,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-6",
-            "text": "I earned consecutive regular-season MVP awards in 2002 and 2003.",
+            "text": "My second title run coincided with the retirement of a veteran teammate who had been the franchise's star.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -914,7 +914,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-7",
-            "text": "My frontcourt partner David Robinson retired after we won the 2003 title.",
+            "text": "I won championships under one head coach in three different decades.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -923,7 +923,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-8",
-            "text": "My reliable midrange bank shot became a signature part of my game.",
+            "text": "My early frontcourt partner was David Robinson, who had been known as The Admiral.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -932,7 +932,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-9",
-            "text": "I won five NBA championships with San Antonio between 1999 and 2014.",
+            "text": "I helped San Antonio win five NBA championships between 1999 and 2014.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -941,7 +941,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-a-10",
-            "text": "The Spurs great wearing No. 21 was known as the Big Fundamental.",
+            "text": "I wore No. 21 for the Spurs and earned the nickname The Big Fundamental.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -955,7 +955,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-tim-duncan-b-1",
-            "text": "I chose to finish a four-year college career before entering the NBA.",
+            "text": "I entered the NBA after completing four seasons of major-conference college basketball.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -964,7 +964,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-2",
-            "text": "I joined a veteran NBA team that already prided itself on disciplined defense.",
+            "text": "I earned All-NBA First Team honors during my rookie campaign.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -973,7 +973,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-3",
-            "text": "I won an NBA championship in my second professional season.",
+            "text": "I won a Finals MVP award before my third NBA season began.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -982,7 +982,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-4",
-            "text": "I shared my earliest title teams with another Hall of Fame big man nicknamed The Admiral.",
+            "text": "My first and last championships came fifteen years apart.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -991,7 +991,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-5",
-            "text": "My 2003 team knocked out the three-time defending champion Lakers.",
+            "text": "I earned two straight regular-season MVP awards in 2002 and 2003.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1000,7 +1000,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-6",
-            "text": "I led championship teams in 1999, 2003, 2005 and 2007.",
+            "text": "I spent much of my career playing for coach Gregg Popovich.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1009,7 +1009,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-7",
-            "text": "I helped San Antonio sweep a LeBron-led Cleveland team in the 2007 Finals.",
+            "text": "My team defeated a LeBron James-led Cleveland side in the 2007 Finals.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1018,7 +1018,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-8",
-            "text": "After falling to Miami in the 2013 Finals, my team won the rematch in 2014.",
+            "text": "After losing a Finals series to Miami in 2013, I won the rematch in 2014.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1027,7 +1027,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-9",
-            "text": "I won my first and last NBA championships fifteen years apart.",
+            "text": "All five of my championship seasons came with San Antonio.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1036,7 +1036,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-tim-duncan-b-10",
-            "text": "My calm leadership helped define the Spurs' championship era.",
+            "text": "The No. 21 Spur known for bank shots became famous as the Big Fundamental.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1065,7 +1065,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-shaquille-oneal-a-1",
-            "text": "My rare size and strength made me one of basketball's most dominant centers.",
+            "text": "I won Rookie of the Year and eventually led the league in scoring more than once.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1074,7 +1074,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-2",
-            "text": "I played college basketball in the South before being drafted in the early 1990s.",
+            "text": "I reached the NBA Finals with more than one franchise during my career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1083,7 +1083,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-3",
-            "text": "I was the No. 1 selection in the 1992 NBA Draft.",
+            "text": "I became a Finals MVP several seasons after arriving in the league.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1092,7 +1092,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-4",
-            "text": "My first NBA team was the Orlando Magic.",
+            "text": "I won both the regular-season MVP and Finals MVP awards in the same season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1101,7 +1101,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-5",
-            "text": "I reached the NBA Finals with Orlando in 1995.",
+            "text": "I was the first overall pick in the 1992 NBA Draft after a college career at LSU.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1110,7 +1110,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-6",
-            "text": "I later joined the Los Angeles Lakers and played under Phil Jackson.",
+            "text": "I reached my first Finals with Orlando in 1995.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1119,7 +1119,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-7",
-            "text": "I was named the NBA's regular-season MVP for 1999-2000.",
+            "text": "I signed with the Los Angeles Lakers as a free agent in 1996.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1128,7 +1128,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-8",
-            "text": "I won three consecutive NBA Finals MVP awards during a 2000-02 title run.",
+            "text": "I won three consecutive Finals MVP awards during a title run under Phil Jackson.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1137,7 +1137,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-9",
-            "text": "I moved from Los Angeles to Miami in 2004 and later won the 2006 championship.",
+            "text": "After a move to Miami, I won another championship alongside Dwyane Wade in 2006.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1146,7 +1146,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-a-10",
-            "text": "My nicknames included Shaq and Diesel, and I won four NBA titles.",
+            "text": "Known as Shaq and Diesel, I won four championships as a dominant center.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1160,7 +1160,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-shaquille-oneal-b-1",
-            "text": "My NBA career began with a young franchise before a move to one of the league's most famous teams.",
+            "text": "I won an NBA scoring title before I captured my first championship.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1169,7 +1169,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-2",
-            "text": "I was selected to fifteen NBA All-Star teams.",
+            "text": "I made fifteen All-Star teams while playing for multiple franchises.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1178,7 +1178,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-3",
-            "text": "I won two NBA scoring titles during my career.",
+            "text": "I won Rookie of the Year and eventually earned an NBA regular-season MVP.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1187,7 +1187,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-4",
-            "text": "I played alongside a young Kobe Bryant in one of the league's most famous superstar pairings.",
+            "text": "I reached the championship series with my original team before changing clubs.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1196,7 +1196,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-5",
-            "text": "In the 2000 NBA Finals, I averaged 38 points and 16.7 rebounds.",
+            "text": "I averaged 38 points and nearly 17 rebounds per game in the 2000 Finals.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1205,7 +1205,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-6",
-            "text": "I won three straight championships with the Lakers under coach Phil Jackson.",
+            "text": "My first three titles came with the Lakers and coach Phil Jackson.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1214,7 +1214,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-7",
-            "text": "A 2004 trade sent me to the Heat in exchange for players including Lamar Odom.",
+            "text": "I teamed with Kobe Bryant during an NBA championship three-peat.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1223,7 +1223,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-8",
-            "text": "I won a title with Dwyane Wade after Miami defeated Dallas in the 2006 Finals.",
+            "text": "A 2004 trade sent me to Miami, where I later won a title with Dwyane Wade.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1232,7 +1232,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-9",
-            "text": "Miami retired the No. 32 jersey I wore during my years with the Heat.",
+            "text": "Both Orlando and Miami eventually retired jersey numbers that I wore.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1241,7 +1241,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-shaquille-oneal-b-10",
-            "text": "I was the towering center who became known worldwide simply by my first-name nickname.",
+            "text": "My worldwide nickname was simply Shaq.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1269,7 +1269,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-giannis-antetokounmpo-a-1",
-            "text": "I grew up in Europe in a family that had moved there from Africa.",
+            "text": "I entered the league outside the draft lottery and grew into a franchise centerpiece.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1278,7 +1278,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-2",
-            "text": "My family experienced financial hardship before my basketball career changed our circumstances.",
+            "text": "My game developed from raw potential into a blend of scoring, rebounding and defense.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1287,7 +1287,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-3",
-            "text": "I entered the NBA as a relatively little-known international prospect.",
+            "text": "I was voted Most Improved Player before I won any NBA MVP awards.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1296,7 +1296,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-4",
-            "text": "I was selected fifteenth overall in the 2013 NBA Draft.",
+            "text": "I reached my first All-Star Game several seasons after being drafted.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1305,7 +1305,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-5",
-            "text": "I made my first NBA All-Star appearance in 2017.",
+            "text": "I won the league MVP and Defensive Player of the Year awards in the same season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1314,7 +1314,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-6",
-            "text": "I won consecutive regular-season MVP awards in 2019 and 2020.",
+            "text": "I earned consecutive regular-season MVP awards in 2019 and 2020.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1323,7 +1323,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-7",
-            "text": "I also earned Defensive Player of the Year honors in 2020.",
+            "text": "I was selected fifteenth overall in the 2013 draft after playing basketball in Greece.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1332,7 +1332,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-8",
-            "text": "In the 2021 Finals, I scored 50 points in the championship-clinching sixth game.",
+            "text": "I scored 50 points to clinch the 2021 NBA Finals against Phoenix.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1341,7 +1341,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-9",
-            "text": "I was Finals MVP when Milwaukee ended a 50-year championship drought.",
+            "text": "I was Finals MVP when Milwaukee won its first championship in fifty years.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1350,7 +1350,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-a-10",
-            "text": "My unusual athleticism and Greek background inspired the nickname Greek Freak.",
+            "text": "My athleticism and Greek background inspired the nickname Greek Freak.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1364,7 +1364,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-giannis-antetokounmpo-b-1",
-            "text": "I entered the league as a raw teenage prospect whose growth surprised draft analysts.",
+            "text": "I was considered a developmental prospect rather than an immediate NBA superstar.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1373,7 +1373,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-2",
-            "text": "My rise turned a struggling NBA franchise into a title contender.",
+            "text": "My improvement eventually made me one of the league's best two-way players.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1382,7 +1382,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-3",
-            "text": "I became one of the league's leading two-way forwards.",
+            "text": "My first major NBA individual award recognized how much my game had developed.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1391,7 +1391,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-4",
-            "text": "I won a regular-season MVP before my 26th birthday.",
+            "text": "I was drafted in the middle of the first round rather than among the top prospects.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1400,7 +1400,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-5",
-            "text": "My back-to-back MVP awards came before my first championship.",
+            "text": "I won a regular-season MVP before my twenty-sixth birthday.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1409,7 +1409,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-6",
-            "text": "In the 2021 playoffs, a knee injury raised fears I would miss the rest of the run.",
+            "text": "A knee injury during the 2021 playoffs briefly threatened my team's championship run.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1418,7 +1418,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-7",
-            "text": "I made a memorable recovery block on Deandre Ayton in Game 4 of the 2021 Finals.",
+            "text": "I made a crucial alley-oop block against Deandre Ayton in the 2021 Finals.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1427,7 +1427,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-8",
-            "text": "I helped Milwaukee defeat the Phoenix Suns in six games for the 2021 title.",
+            "text": "I helped Milwaukee beat Phoenix in six games to win the 2021 championship.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1436,7 +1436,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-9",
-            "text": "In the clincher, I added 14 rebounds and five blocks to my 50 points.",
+            "text": "In the clincher I had 50 points, fourteen rebounds and five blocks.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1445,7 +1445,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-giannis-antetokounmpo-b-10",
-            "text": "I was the 2021 Finals MVP after starring for the Milwaukee Bucks.",
+            "text": "I was the 2021 Finals MVP known as the Greek Freak.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1475,7 +1475,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-nikola-jokic-a-1",
-            "text": "I became an NBA star despite being a second-round draft pick.",
+            "text": "I became an NBA All-Star despite being chosen outside the first round of the draft.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1484,7 +1484,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-2",
-            "text": "I developed into a creative, pass-first NBA center after learning the game overseas.",
+            "text": "My game grew around a rare combination of scoring, rebounding and passing.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1493,7 +1493,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-3",
-            "text": "Denver selected me with the 41st pick in the 2014 NBA Draft.",
+            "text": "I became a regular triple-double threat while playing for the team that drafted me.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1502,7 +1502,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-4",
-            "text": "I developed into one of the league's best passing big men.",
+            "text": "I earned league MVP honors before reaching my first NBA Finals.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1511,7 +1511,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-5",
-            "text": "I earned my first NBA regular-season MVP in 2021.",
+            "text": "I won my first regular-season MVP award in 2021.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1520,7 +1520,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-6",
-            "text": "I repeated as league MVP in 2022.",
+            "text": "I repeated as NBA MVP in 2022, still without reaching the Finals.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1529,7 +1529,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-7",
-            "text": "In 2023, I led Denver to its first NBA championship.",
+            "text": "I was drafted forty-first overall in 2014 and became an unusually gifted passing center.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1538,7 +1538,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-8",
-            "text": "I earned the 2023 Finals MVP award after a championship series against Miami.",
+            "text": "I led Denver to its first NBA championship in 2023.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1547,7 +1547,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-9",
-            "text": "I won a third regular-season MVP award in 2024.",
+            "text": "I was named Finals MVP after a championship series against Miami.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1556,7 +1556,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-a-10",
-            "text": "The Denver center whose nickname is the Joker became a three-time NBA MVP.",
+            "text": "The Serbian Denver center nicknamed the Joker won his third MVP award in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1570,7 +1570,7 @@ export const nbaWhoAmIAuthoredIdentities = [
         "clues": [
           {
             "id": "nba-nikola-jokic-b-1",
-            "text": "I reached NBA stardom as an international big man without a high draft position.",
+            "text": "I began my NBA career as a rotation big man instead of an immediate superstar.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1579,7 +1579,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-2",
-            "text": "My scoring, rebounding and passing made triple-doubles a recurring part of my career.",
+            "text": "I became known for combining passing and scoring in ways usually associated with guards.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1588,7 +1588,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-3",
-            "text": "I won consecutive league MVP awards before winning my first title.",
+            "text": "I developed into a multiple-time MVP while remaining with my original franchise.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1597,7 +1597,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-4",
-            "text": "I played my entire NBA career through 2025 with the Denver Nuggets.",
+            "text": "I reached a conference finals before I ever reached the NBA Finals.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1606,7 +1606,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-5",
-            "text": "In the 2023 playoffs, my team beat the Los Angeles Lakers to reach the Finals.",
+            "text": "I won two consecutive league MVP awards before my first championship.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1615,7 +1615,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-6",
-            "text": "My championship run culminated in the 2023 Finals against the Miami Heat.",
+            "text": "In 2023, I helped sweep the Los Angeles Lakers in the Western Conference finals.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1624,7 +1624,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-7",
-            "text": "By January 2025, I had recorded more than 140 NBA triple-doubles.",
+            "text": "By early 2025, I had recorded more than 140 career NBA triple-doubles.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1633,7 +1633,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-8",
-            "text": "I reached 15,000 points, 7,500 rebounds and 5,000 assists in 709 career games.",
+            "text": "I reached 15,000 points, 7,500 rebounds and 5,000 assists in just 709 games.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1642,7 +1642,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-9",
-            "text": "At that January 2025 milestone, I reached the combined totals faster than Larry Bird had.",
+            "text": "I won the 2023 Finals MVP while leading Denver to its first title.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1651,7 +1651,7 @@ export const nbaWhoAmIAuthoredIdentities = [
           },
           {
             "id": "nba-nikola-jokic-b-10",
-            "text": "A Denver center with three MVP trophies became famous for his elite passing vision.",
+            "text": "A Serbian Nuggets center, I became a three-time MVP known as the Joker.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
