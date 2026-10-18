@@ -6,7 +6,7 @@ describe("NBA two-stage welcome",()=>{
   beforeEach(()=>{window.localStorage.clear();document.body.style.overflow=""});
   it("starts with approved artwork and a real CSS-rendered continue button",()=>{
     render(<MemoryRouter><NbaWelcomeTakeover profileId="owner" /></MemoryRouter>);
-    expect(screen.getByRole("img")).toHaveAttribute("src","/assets/nba/basketball-welcome.jpg");
+    expect(screen.getByRole("img")).toHaveAttribute("src","/assets/nba/basketball-welcome.png");
     expect(screen.getByRole("button",{name:/continue/i})).toBeInTheDocument();
     expect(screen.queryByText(/start with nba futures/i)).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button",{name:/continue/i}));
