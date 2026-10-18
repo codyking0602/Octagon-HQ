@@ -208,8 +208,11 @@ export function AppShell() {
       className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${isMlb ? " app-shell--mlb-room" : ""}`}
       data-hq-theme={themeScope}
     >
-      {nbaVisible && identity.profile && (location.pathname === "/" || location.pathname.startsWith("/nba") || location.pathname === "/championship/nba") ? (
-        <NbaWelcomeTakeover key={identity.profile.id} profileId={identity.profile.id} />
+      {nbaVisible && identity.ready && (location.pathname === "/" || location.pathname.startsWith("/nba") || location.pathname === "/championship/nba") ? (
+        <NbaWelcomeTakeover
+          key={`${identity.profile?.id ?? "guest"}:${new URLSearchParams(location.search).get("hq-reveal") === "basketball-2026" ? "launch-link" : "regular"}`}
+          profileId={identity.profile?.id ?? "guest"}
+        />
       ) : null}
       {showMlbWelcome && identity.profile ? (
         <MlbPlayoffsWelcomeTakeover profileId={identity.profile.id} mode={mlbWelcomeMode} />
