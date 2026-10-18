@@ -472,7 +472,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-stephen-curry-a-3",
-            "text": "I was a lottery pick, but five players were selected before me.",
+            "text": "I was a lottery pick, but six players were selected before me.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
