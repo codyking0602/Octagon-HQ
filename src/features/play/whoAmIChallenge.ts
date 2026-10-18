@@ -2,6 +2,7 @@ import type { ChallengeJson } from "../challenges/challengeModel";
 import { getFootballWhoAmIUniverse, getUfcWhoAmIUniverse } from "../games/whoAmIAuthority";
 import { resolveFootballWhoAmIAuthoredSharedRound } from "./footballWhoAmIAuthoredRound";
 import { resolveUfcWhoAmIAuthoredSharedRound } from "./ufcWhoAmIAuthoredRound";
+import { resolveNbaWhoAmIAuthoredSharedRound } from "./nbaWhoAmIAuthoredRound";
 import {
   WHO_AM_I_CLUE_LIMIT,
   type WhoAmICandidate,
@@ -100,7 +101,7 @@ export function whoAmIChallengeGameVersion(sport: WhoAmISport) {
 }
 
 export function whoAmIChallengePath(sport: WhoAmISport) {
-  return sport === "football" ? "/football/who-am-i" : "/play/who-am-i";
+  return sport === "football" ? "/football/who-am-i" : sport === "nba" ? "/nba/who-am-i" : "/play/who-am-i";
 }
 
 function subjectFromCandidate(candidate: WhoAmICandidate): WhoAmISubject {
@@ -162,6 +163,10 @@ export function sharedWhoAmIRound(
     if (authoredRound) return authoredRound;
   }
 
+  if (expectedSport === "nba" && shared.league === "NBA") {
+    return resolveNbaWhoAmIAuthoredSharedRound(shared.answerId, shared.clueIds);
+  }
+
   if (expectedSport === "ufc" && shared.league === "UFC") {
     const authoredRound = resolveUfcWhoAmIAuthoredSharedRound(shared.answerId, shared.clueIds);
     if (authoredRound) return authoredRound;
@@ -218,6 +223,7 @@ export function storedWhoAmIChallengeRound(
   if (
     (expectedSport === "ufc" && league !== "UFC")
     || (expectedSport === "football" && league !== "NFL" && league !== "CFB")
+    || (expectedSport === "nba" && league !== "NBA")
   ) return null;
   if (subjectRows.length < 5 || clueRows.length !== WHO_AM_I_CLUE_LIMIT || !hiddenRow) return null;
 

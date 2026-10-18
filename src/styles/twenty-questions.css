@@ -11,6 +11,10 @@
   --twenty-questions-accent: var(--mlb-green, #2f855f);
 }
 
+.twenty-questions-page[data-sport="nba"] {
+  --twenty-questions-accent: var(--nba-accent, #f2a341);
+}
+
 .who-am-i-page[data-sport="mlb"] .eyebrow {
   color: var(--twenty-questions-accent);
 }
