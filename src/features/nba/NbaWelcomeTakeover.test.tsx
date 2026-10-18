@@ -13,6 +13,21 @@ describe("NBA two-stage welcome",()=>{
     expect(screen.getAllByText(/NBA FUTURES/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("button",{name:/open nba futures/i})).toBeInTheDocument();
   });
+  it("uses a fresh public announcement, without owner-preview label",()=>{
+    expect(nbaWelcomeKey("member")).toContain("2026-public-v1");
+    render(<MemoryRouter><NbaWelcomeTakeover profileId="member" /></MemoryRouter>);
+    fireEvent.click(screen.getByRole("button",{name:/continue/i}));
+    expect(screen.queryByText(/OWNER PREVIEW · NOT PUBLIC/)).not.toBeInTheDocument();
+  });
+  it("reopens the poster from a push deep link even after dismissal",()=>{
+    window.localStorage.setItem(nbaWelcomeKey("member"),"dismissed");
+    render(<MemoryRouter initialEntries={["/?hq-reveal=basketball-2026"]}>
+      <NbaWelcomeTakeover profileId="member" />
+    </MemoryRouter>);
+    expect(screen.getByRole("button",{name:/continue/i})).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button",{name:/continue/i}));
+    expect(screen.getByRole("button",{name:/open nba futures/i})).toBeInTheDocument();
+  });
   it("acknowledges per profile and supports reviewing it again",()=>{
     const r=render(<MemoryRouter><NbaWelcomeTakeover profileId="owner" /></MemoryRouter>);
     fireEvent.click(screen.getByRole("button",{name:/continue/i}));
