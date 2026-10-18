@@ -70,5 +70,14 @@
   --hq-context-accent-border: rgba(var(--mlb-green-rgb), .38);
 }
 
-/* NBA uses the same single sport-context theming owner as other sports. */
-[data-hq-theme="nba"] { --hq-context-accent: #85C7E9; --hq-context-accent-strong: #a8dcf5; --hq-context-accent-rgb: 133, 199, 233; --hq-context-accent-soft: rgba(133,199,233,.16); --hq-context-accent-border: rgba(133,199,233,.48); }
+/* Basketball owns a warm hardwood-orange identity, distinct from football blue. */
+[data-hq-theme="nba"] {
+  --nba-accent: #f2a341;
+  --nba-accent-strong: #ffc471;
+  --hq-context-accent: var(--nba-accent);
+  --hq-context-accent-strong: var(--nba-accent-strong);
+  --hq-context-accent-rgb: 242, 163, 65;
+  --hq-context-accent-contrast: #211307;
+  --hq-context-accent-soft: rgba(242,163,65,.14);
+  --hq-context-accent-border: rgba(242,163,65,.45);
+}
