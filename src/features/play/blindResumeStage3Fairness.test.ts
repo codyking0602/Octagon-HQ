@@ -120,7 +120,11 @@ describe("Stage 3 UFC Blind Resume — full-reveal solvability only", () => {
     const oldCard = createBlindResumeV3Card("stage3-old-casual-seed");
     expect(oldCard.selectionVersion).toBe("legacy");
     expect(createBlindResumeV3Card("stage3-old-casual-seed")).toEqual(oldCard);
-    expect(createBlindResumeRounds(oldCard.roundSet.seed).pairs).toEqual(oldCard.roundSet.pairs);
+    // Card identity exposes the share seed; the canonical internal generation
+    // seed additionally includes Daily runtime/version/day ownership.
+    const oldPublication = buildOfficialDailySetup("blind_resume", "2000-01-01", "stage3-old-casual-seed");
+    const internalSeed = (oldPublication.privateSetupEvidence as { seed: string }).seed;
+    expect(createBlindResumeRounds(internalSeed).pairs).toEqual(oldCard.roundSet.pairs);
 
     // New Daily publication is deliberately disabled until an approved
     // release date. This reserved day still exercises the future Daily owner.
