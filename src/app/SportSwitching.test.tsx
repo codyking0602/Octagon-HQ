@@ -31,7 +31,7 @@ async function sportContext(label: string) {
   return row;
 }
 
-function switchSport(row: HTMLElement, next: "football" | "ufc" | "mlb") {
+function switchSport(row: HTMLElement, next: "football" | "ufc" | "mlb" | "nba") {
   const section = row.textContent?.includes("PICKS") ? "Picks" : "Play";
   fireEvent.change(within(row).getByRole("combobox", { name: "Sport for " + section }), { target: { value: next } });
 }
@@ -40,7 +40,7 @@ async function expectPath(router: ReturnType<typeof renderRoute>, pathname: stri
   await waitFor(() => expect(router.state.location.pathname).toBe(pathname));
 }
 
-function expectThemeScope(theme: "neutral" | "ufc" | "football") {
+function expectThemeScope(theme: "neutral" | "ufc" | "football" | "nba") {
   const shell = document.querySelector(".app-shell");
   expect(shell).toHaveAttribute("data-hq-theme", theme);
   expect(screen.getByRole("navigation", { name: "Primary navigation" })).toHaveAttribute(
@@ -185,5 +185,15 @@ describe("The HQ sport switching", () => {
     expectThemeScope("ufc");
     expect(within(row).queryByRole("group")).not.toBeInTheDocument();
     expect(within(row).queryByRole("button", { name: "Football" })).not.toBeInTheDocument();
+  });
+});
+
+// Public profiles must not have a Basketball sport selector or a bypass route.
+describe("Basketball preview isolation",()=>{
+  it("hides Basketball from the public Picks sport selector",async()=>{
+    const router=renderRoute("/picks");
+    const row=await sportContext("UFC PICKS");
+    expect(within(row).queryByRole("option",{name:"Basketball"})).not.toBeInTheDocument();
+    expect(router.state.location.pathname).toBe("/picks");
   });
 });

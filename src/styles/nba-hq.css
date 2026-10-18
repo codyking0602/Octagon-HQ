@@ -1,0 +1,66 @@
+.nba-hq-page{max-width:900px;margin-inline:auto;padding-bottom:90px;display:grid;gap:12px}
+.nba-hq-hero{padding:18px 16px;border:1px solid #35404a;border-radius:16px;background:linear-gradient(140deg,#182b39,#14191e 68%);color:#f5f7f8}
+.nba-hq-hero .eyebrow{color:#84bcdc}
+.nba-hq-hero h1{font-size:clamp(1.5rem,5.5vw,2.1rem);margin:5px 0}
+.nba-hq-hero p{font-size:.82rem;line-height:1.4;color:#c0cbd3;margin:7px 0}
+.nba-hq-hero>a{display:inline-block;margin-top:12px;font-weight:900;font-size:.7rem;letter-spacing:.03em;color:#b8e2fc}
+.nba-hq-weightline{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}
+.nba-hq-weightline span{padding:6px 8px;border:1px solid #394d59;border-radius:6px;background:#102532;color:#d7e7f1;font-size:.58rem;font-weight:900}
+.nba-hq-notice,.nba-hq-championship{padding:16px;display:grid;gap:10px}
+.nba-hq-notice p,.nba-hq-championship p{font-size:.76rem;color:#aeb9c2;line-height:1.5;margin:0}
+.nba-hq-error{background:#421e28;border:1px solid #a84b61;border-radius:8px;padding:9px 11px;color:#ffdce4;font-size:.77rem}
+.nba-futures-form{display:grid;gap:11px;min-width:0}
+.nba-futures-progress,.nba-futures-section,.nba-futures-save{padding:12px;background:#151a1d;border:1px solid #323d43;border-radius:12px;min-width:0}
+.nba-futures-progress>div:first-child,.nba-futures-section>header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nba-futures-progress strong{font-size:.78rem}
+.nba-futures-progress span,.nba-futures-section>header>span{font-size:.62rem;font-weight:900;color:#91bdcf;white-space:nowrap}
+.nba-futures-progress p,.nba-futures-helper,.nba-futures-source{font-size:.68rem;line-height:1.45;color:#a6afb4;margin:8px 0}
+.nba-futures-track{height:6px;background:#343b40;border-radius:9px;margin-top:9px;overflow:hidden}
+.nba-futures-track span{display:block;height:100%;background:#4ba6d6}
+.nba-futures-section>header h2{font-size:.94rem;line-height:1.2;margin:0}
+.nba-futures-segments{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:10px 0}
+.nba-futures-segments button{border:1px solid #3e4a51;border-radius:7px;background:#21282c;color:#b8c8d0;padding:9px 6px;font-weight:900;font-size:.7rem}
+.nba-futures-segments button.is-active{background:#234a60;border-color:#74bddc;color:white}
+.nba-futures-win-list{display:grid}
+.nba-futures-win-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #30373d;min-height:52px}
+.nba-futures-win-row>div:first-child{display:grid;gap:3px;min-width:0}
+.nba-futures-win-row strong{font-size:.7rem;line-height:1.2}
+.nba-futures-win-row small{color:#aebac1;font-size:.62rem}
+.nba-futures-win-buttons{display:flex;gap:4px;flex-shrink:0}
+.nba-futures-win-buttons button{padding:9px 10px;min-width:66px;border:1px solid #455159;border-radius:7px;background:#252b2f;color:#c9d6db;font-size:.62rem;font-weight:950}
+.nba-futures-win-buttons button.is-selected,.nba-futures-choices button.is-selected{background:#247fae;border-color:#69c5ef;color:#fff}
+.nba-futures-win-buttons button:disabled:not(.is-selected),.nba-futures-choices button:disabled:not(.is-selected){opacity:.38}
+.nba-futures-source a{color:#a7dbf4}
+.nba-futures-teams{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nba-futures-conference h3{font-size:.62rem;color:#a3b9c5;letter-spacing:.12em;margin:9px 0}
+.nba-futures-choices{display:grid;gap:4px}
+.nba-futures-choices button{min-height:35px;border:1px solid #34434b;border-radius:6px;background:#242c30;color:#e0e7eb;font-size:.66rem;font-weight:750;text-align:left;padding:7px 8px;line-height:1.15}
+.nba-futures-section select,.nba-futures-award input{width:100%;margin-top:8px;border:1px solid #43515a;border-radius:7px;background:#222c32;color:#f6f7f8;padding:10px;font-size:.75rem;min-width:0}
+.nba-futures-award{display:grid;grid-template-columns:1fr minmax(0,1.25fr);align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #30383d}
+.nba-futures-award span{display:grid;gap:4px}
+.nba-futures-award strong{font-size:.72rem}
+.nba-futures-award small{color:#9dabb3;font-size:.57rem}
+.nba-futures-award input{margin:0}
+.nba-futures-save{display:grid;gap:8px}
+.nba-futures-save small{font-size:.65rem;color:#a5afb6}
+.nba-home-hq{display:grid;gap:8px}
+.nba-home-hq-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.nba-home-hq-heading h2{font-size:1.05rem;margin:3px 0 0}
+.nba-home-hq-heading>span{font-size:1.45rem}
+.nba-home-futures{display:grid;gap:7px;padding:13px;border:1px solid #3d6379;border-radius:13px;background:linear-gradient(115deg,#152b3b,#172127);color:#f6f9fb;text-decoration:none}
+.nba-home-futures-top,.nba-home-futures-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nba-home-futures-top span{font-size:.62rem;font-weight:950;letter-spacing:.12em}
+.nba-home-futures-top b{font-size:.57rem;background:#236d91;border-radius:5px;padding:4px 6px}
+.nba-home-futures>strong{font-size:1.05rem}
+.nba-home-futures>small{font-size:.68rem;color:#bdcdd5}
+.nba-home-futures-bottom{padding-top:4px;font-size:.59rem;font-weight:900;color:#b7d7e8}
+.nba-home-championship{display:grid;grid-template-columns:1fr auto;gap:3px 8px;padding:11px;border:1px solid #353f46;border-radius:10px;text-decoration:none;color:inherit}
+.nba-home-championship strong{font-size:.74rem}
+.nba-home-championship small{font-size:.59rem;color:#a9b4b9}
+.nba-home-championship>span{grid-row:1/3;grid-column:2;align-self:center}
+.nba-hq-championship h2{font-size:1rem;margin:0}
+.nba-hq-entrants{display:grid;gap:0}
+.nba-hq-entrants h3{font-size:.8rem}
+.nba-hq-entrants>div{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #374047;padding:8px 0;font-size:.72rem}
+.nba-hq-entrants small{font-size:.56rem;color:#b6c4ce}
+@media(max-width:400px){.nba-futures-win-buttons button{min-width:56px;padding:9px 7px}.nba-futures-choices button{font-size:.59rem;padding:7px 5px}.nba-futures-teams{gap:5px}.nba-futures-award{grid-template-columns:1fr}.nba-home-hq-heading h2{font-size:.96rem}}

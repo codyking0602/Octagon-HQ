@@ -201,7 +201,7 @@ describe("BottomNavigation", () => {
   it.each([
     ["play", "/football", "/play", "/mlb"],
     ["picks", "/football/picks", "/picks", "/mlb/picks"],
-  ] as const)("double taps %s through Football, UFC, MLB, then Football without intro videos", (_section, first, second, third) => {
+  ] as const)("double taps %s through Football, UFC, MLB, then Football without intro videos for non-owner users", (_section, first, second, third) => {
     window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
     renderNavigation([first], <LocationProbe />);
     const tab = () => screen.getByRole("link", { name: _section === "play" ? "Play" : "Picks" });

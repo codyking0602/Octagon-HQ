@@ -54,7 +54,7 @@ function Preview({ showMlb = true }: { showMlb?: boolean }) {
       <OwnerChampionshipHome
         streak={11}
         streakLoading={false}
-        showMlb={showMlb}
+        showMlb={showMlb} showNba
         sport={sport}
         onSportChange={setSport}
       />
@@ -92,14 +92,15 @@ describe("Owner Championship Home preview", () => {
     expect(within(cabinet).getByText("2026 CHAMPIONSHIP HEADQUARTERS")).toBeInTheDocument();
     expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("1");
     expect(within(cabinet).getByText("LEAGUE LEAD")).toBeInTheDocument();
-    expect(within(cabinet).getByText("Across 3 championships")).toBeInTheDocument();
+    expect(within(cabinet).getByText("Across 4 championships")).toBeInTheDocument();
     expect(within(cabinet).getByText("HQ DAILY STREAK")).toBeInTheDocument();
     expect(within(cabinet).getByText("11 days")).toBeInTheDocument();
     expect(within(cabinet).getByRole("link", { name: "Open football Championship standings" })).toHaveAttribute("href", "/championship/football?tab=overall");
     expect(within(cabinet).getByRole("link", { name: "Open ufc Championship standings" })).toHaveAttribute("href", "/championship/ufc?tab=overall");
     expect(within(cabinet).getByRole("link", { name: "Open MLB Postseason Championship standings" })).toHaveAttribute("href", "/championship/mlb");
+    expect(within(cabinet).getByRole("link", { name: "Open Basketball Championship" })).toHaveAttribute("href", "/championship/nba");
     const ranks = Array.from(cabinet.querySelectorAll(".home-champ-preview__summary > strong")).map((element) => element.textContent);
-    expect(ranks).toEqual(["#1", "#2", "#3"]);
+    expect(ranks).toEqual(["#1", "#2", "—", "#3"]);
     expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon.is-leading")).toHaveLength(1);
   });
 

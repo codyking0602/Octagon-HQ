@@ -1,0 +1,24 @@
+.nba-welcome{position:fixed;inset:0;z-index:10020;display:flex;justify-content:center;align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;background:#06080d;color:#fff;padding-top:env(safe-area-inset-top)}
+.nba-welcome__poster{position:relative;flex:0 0 auto;width:min(100vw,56.28dvh);aspect-ratio:941/1672;overflow:hidden}
+.nba-welcome__poster>img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.nba-welcome__continue{position:absolute;left:10.3%;top:84.6%;width:78.5%;height:6%;display:flex;align-items:center;justify-content:center;padding:0 9%;border:0;border-radius:30px;background:transparent;color:#15100b;font:inherit;cursor:pointer}
+.nba-welcome__continue span{font-size:clamp(13px,3.5vw,18px);font-weight:950;letter-spacing:.13em}
+.nba-welcome__continue b{position:absolute;right:7%;top:50%;transform:translateY(-54%);font-weight:500;font-size:clamp(27px,6vw,36px);line-height:1}
+.nba-welcome__continue:focus-visible{outline:3px solid #fff;outline-offset:0}
+.nba-welcome__explainer{min-height:calc(100dvh - env(safe-area-inset-top));width:100%;background:radial-gradient(circle at 50% -10%,rgba(212,133,34,.28),transparent 46%),linear-gradient(#151519,#06090d 75%);padding:25px 16px calc(26px + env(safe-area-inset-bottom));display:flex;justify-content:center}
+.nba-welcome__explainer-inner{width:100%;max-width:465px;display:flex;flex-direction:column;gap:11px}
+.nba-welcome__eyebrow{font-size:.66rem;letter-spacing:.14em;font-weight:900;color:#e1b968}
+.nba-welcome__explainer h1{margin:5px 0 0;font-size:clamp(1.8rem,8vw,2.65rem);font-weight:950;letter-spacing:-.04em;line-height:1.06}
+.nba-welcome__explainer h1 em{font-style:normal;color:#e6ab42}
+.nba-welcome__deck{margin:0 0 7px;color:#b9c2cb;font-size:.83rem}
+.nba-welcome__phase{border:1px solid #374049;border-radius:11px;padding:13px;display:grid;grid-template-columns:1fr auto;gap:10px;background:#171b20}
+.nba-welcome__phase.is-current{border-color:#b17e32;background:linear-gradient(110deg,#3a2a1b,#182028)}
+.nba-welcome__phase small{font-size:.61rem;color:#e4ad62;letter-spacing:.08em;font-weight:850}
+.nba-welcome__phase strong{font-size:.99rem;display:block;margin:4px 0;font-weight:950}
+.nba-welcome__phase p{margin:0;color:#c8cdd2;font-size:.73rem;line-height:1.42}
+.nba-welcome__phase>b{font-size:1rem;color:#f0bc66}
+.nba-welcome__actions{display:grid;gap:9px;margin-top:8px}
+.nba-welcome__primary{background:linear-gradient(155deg,#ffcf64,#de9330);color:#211304;padding:15px 10px;border:0;border-radius:11px;font-size:.82rem;font-weight:950;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:16px;cursor:pointer;min-height:48px}
+.nba-welcome__primary span{font-size:1.25rem}
+.nba-welcome__later{background:none;border:0;color:#bec8d1;min-height:38px;font-size:.68rem;font-weight:750;cursor:pointer}
+.nba-welcome__preview-label{text-align:center;font-size:.58rem;letter-spacing:.08em;color:#7d8792}

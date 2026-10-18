@@ -7,21 +7,21 @@ import {
   type PropsWithChildren,
 } from "react";
 
-export type SelectedSport = "ufc" | "football" | "mlb";
+export type SelectedSport = "ufc" | "football" | "mlb" | "nba";
 
 export const SELECTED_SPORT_STORAGE_KEY = "the-hq:selected-sport";
 
-export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "mlb"];
+export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "mlb", "nba"];
 
-export function nextSport(current: SelectedSport, showMlb = true): SelectedSport {
-  const available = SPORT_ORDER.filter((sport) => showMlb || sport !== "mlb");
+export function nextSport(current: SelectedSport, showMlb = true, showNba = true): SelectedSport {
+  const available = SPORT_ORDER.filter((sport) => (showMlb || sport !== "mlb") && (showNba || sport !== "nba"));
   return available[(available.indexOf(current) + 1) % available.length] ?? "football";
 }
 
 const DEFAULT_SPORT: SelectedSport = "football";
 
 function isSelectedSport(value: string | null): value is SelectedSport {
-  return value === "ufc" || value === "football" || value === "mlb";
+  return value === "ufc" || value === "football" || value === "mlb" || value === "nba";
 }
 
 function readPersistedSport(): SelectedSport {

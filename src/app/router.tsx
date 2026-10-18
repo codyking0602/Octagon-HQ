@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, type RouteObject } from "react-router-do
 import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 import { MlbGate } from "../features/mlb/MlbGate";
+import { NbaPreviewGate } from "../features/nba/NbaPreviewGate";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
 const ChampionshipLeaderboardPage = lazy(() => import("../features/home/ChampionshipLeaderboardPage"));
@@ -59,6 +60,9 @@ const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRou
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
 const MlbPlayoffsPage = lazy(() => import("../features/mlb/MlbPlayoffsPage"));
 const MlbPicksPage = lazy(() => import("../features/mlb/MlbPicksPage"));
+const NbaFuturesPage = lazy(() => import("../features/nba/NbaFuturesPage"));
+const NbaPlayPage = lazy(() => import("../features/nba/NbaPlayPage"));
+const NbaChampionshipPage = lazy(() => import("../features/nba/NbaChampionshipPage"));
 const MlbFeaturedChallengePage = lazy(() => import("../features/mlb/MlbFeaturedChallengePage"));
 const MlbSeriesBreakdownPage = lazy(() => import("../features/mlb/MlbSeriesBreakdownPage"));
 const WhatsNewPage = lazy(() => import("../features/whats-new/WhatsNewPage"));
@@ -70,6 +74,7 @@ export const appRoutes: RouteObject[] = [
     errorElement: <AppRouteError />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "championship/nba", element: <NbaPreviewGate><NbaChampionshipPage /></NbaPreviewGate> },
       { path: "championship/:sport", element: <ChampionshipLeaderboardPage /> },
       { path: "fighters-to-watch", element: <ShanesWatchlistPage /> },
       { path: "rankings", element: <RankingsPage /> },
@@ -134,6 +139,8 @@ export const appRoutes: RouteObject[] = [
       { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
       { path: "football/bar-trivia", element: <Navigate to="/football" replace /> },
       { path: "picks", element: <PicksPage /> },
+      { path: "nba", element: <NbaPreviewGate><NbaPlayPage /></NbaPreviewGate> },
+      { path: "nba/picks", element: <NbaPreviewGate><NbaFuturesPage /></NbaPreviewGate> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
       { path: "mlb/challenge", element: <MlbGate fallback="/play"><MlbFeaturedChallengePage /></MlbGate> },
