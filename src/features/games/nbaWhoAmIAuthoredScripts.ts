@@ -1661,7 +1661,7 @@ export const nbaWhoAmIAuthoredIdentities = [
   }
 ] as const satisfies readonly NbaWhoAmIAuthoredIdentity[];
 
-const identitiesById = new Map(nbaWhoAmIAuthoredIdentities.map(identity => [identity.subjectId, identity] as const));
+const identitiesById = new Map<string, NbaWhoAmIAuthoredIdentity>(nbaWhoAmIAuthoredIdentities.map(identity => [identity.subjectId, identity] as const));
 if (identitiesById.size !== nbaWhoAmIAuthoredIdentities.length) {
   throw new Error("NBA Who Am I authored bank contains duplicate player IDs.");
 }
