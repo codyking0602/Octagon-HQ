@@ -159,8 +159,9 @@ create or replace function public.nba_futures_owner_preview_allowed(p_profile uu
 returns boolean language sql stable security definer set search_path = ''
 as $$
   select exists (
-    select 1 from public.profiles
-    where id=p_profile and can_control_picks=true and upper(trim(display_name))='CODY'
+    select 1 from public.profiles profile
+    join public.pick_control_owners owner on owner.profile_id=profile.id
+    where profile.id=p_profile and upper(trim(profile.display_name))='CODY'
   )
 $$;
 
