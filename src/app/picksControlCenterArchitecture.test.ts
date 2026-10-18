@@ -38,7 +38,8 @@ describe("Unified Picks Control Center architecture", () => {
     expect(center).toContain("activeEvent?.status === \"locked\"");
     expect(controlPage).toContain("recordResult");
     expect(controlPage).toContain("correctResult");
-    expect(controlPage).toContain("completeEvent");
+    expect(controlPage).toContain("AUTOMATIC EVENT CLOSE");
+    expect(controlPage).not.toContain("completeEvent(event.eventId)");
   });
 
   it("does not add another repository, Supabase client, provider path, or polling loop", () => {
