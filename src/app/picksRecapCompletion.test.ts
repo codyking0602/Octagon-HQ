@@ -75,20 +75,30 @@ describe("completed Picks event recaps", () => {
     expect(gamrotSalkilldWatchMomentRepair).not.toContain("cron.schedule");
   });
 
-  it("publishes the required YouTube recap through the canonical watch-moment release owner", () => {
-    expect(controlSource).toContain("RECAP URL");
-    expect(controlSource).toContain("PUBLISH EVENT RECAP");
-    expect(controlSource).toContain("final standings will publish");
-    expect(controlSource).toContain("Add the YouTube recap URL before publishing final standings.");
-    expect(controlSource).toContain("youtube.com");
-    expect(controlSource).toContain("youtu.be");
-    expect(controlSource).toContain("setWatchMoments!");
-    expect(controlSource).not.toContain("completeEvent(event.eventId)");
+  it("keeps optional watch moments while UFC automatically finalizes official results", () => {
+    const automaticMigration = readFileSync(
+      "supabase/migrations/202612310308_ufc_picks_auto_completion.sql",
+      "utf8",
+    );
+    const scheduler = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
+    expect(controlSource).toContain("AUTOMATIC FINALIZATION");
+    expect(controlSource).toContain("No video URL is required.");
+    expect(controlSource).not.toContain("RECAP URL");
+    expect(controlSource).not.toContain("PUBLISH EVENT RECAP");
+    expect(controlSource).toContain("repository.completeEvent(event.eventId)");
+    expect(automaticMigration).toContain("alter column recap_video_required set default false");
+    expect(automaticMigration).toContain("set recap_video_required = false");
+    expect(automaticMigration).toContain("private.publish_pick_event_draft_ufc_recap_core");
+    expect(automaticMigration).toContain("public.transition_pick_event(v_event.event_id, 'complete')");
+    expect(automaticMigration).toContain("and pending.result_status = 'pending'");
+    expect(automaticMigration).toContain("and pending.included_in_picks");
+    expect(automaticMigration).toContain("grant execute on function public.finalize_ready_ufc_pick_events()");
+    expect(automaticMigration).not.toContain("cron.schedule");
+    expect(scheduler).toContain('admin.rpc("finalize_ready_ufc_pick_events")');
+    expect(scheduler).toContain('admin.rpc("record_pick_bout_live_states"');
     expect(controlRepositorySource).toContain('client.rpc("set_pick_event_watch_moments"');
     expect(controlRepositorySource).toContain('client.rpc("transition_pick_event"');
-    expect(controlRepositorySource).not.toContain("from(\"pick_events\")");
-    expect(controlCss).toContain(".picks-control-recap-url");
-    expect(controlCss).toContain(".picks-control-recap-preview");
+    expect(controlRepositorySource).not.toContain('from("pick_events")');
     expect(controlCss).toContain("border-left: 3px solid var(--ufc-red)");
   });
 
