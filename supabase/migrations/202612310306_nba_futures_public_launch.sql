@@ -14,4 +14,12 @@ revoke all on function public.nba_futures_owner_preview_allowed(uuid)
 comment on function public.nba_futures_owner_preview_allowed(uuid)
   is 'Backwards-compatible NBA Futures access predicate; public launch allows all signed-in profiles.';
 
+-- First scheduled regular-season tip-off is Celtics at Pistons on October 20,
+-- 2026 at 3:00 PM Eastern / 2:00 PM Central. Lock everyone simultaneously.
+create or replace function public.nba_futures_lock_at(p_season integer)
+returns timestamptz language sql immutable set search_path = '' as $
+  select case when p_season = 2026 then timestamptz '2026-10-20 19:00:00+00' else null end
+$;
+revoke all on function public.nba_futures_lock_at(integer) from public;
+
 notify pgrst, 'reload schema';
