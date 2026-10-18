@@ -23,11 +23,12 @@ const gamrotSalkilldWatchMomentRepair = readFileSync(
 );
 const recapSource = readFileSync("src/features/picks/LatestEventRecap.tsx", "utf8");
 const recapCss = readFileSync("src/styles/picks-event-recap.css", "utf8");
-const controlCss = readFileSync("src/styles/picks-control.css", "utf8");
 const eventAssetsSource = readFileSync("src/features/picks/picksEventAssets.ts", "utf8");
 const shareImageSource = readFileSync("src/features/picks/picksRecapShareImage.ts", "utf8");
 const controlSource = readFileSync("src/features/picks-control/PicksControlPage.tsx", "utf8");
 const controlRepositorySource = readFileSync("src/features/picks-control/pickControlRepository.ts", "utf8");
+const autoCompletionMigration = readFileSync("supabase/migrations/202612310308_ufc_picks_auto_completion.sql", "utf8");
+const monitoringSource = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 
 describe("completed Picks event recaps", () => {
   it("keeps watch moments on the canonical event and existing projection owners", () => {
@@ -75,21 +76,21 @@ describe("completed Picks event recaps", () => {
     expect(gamrotSalkilldWatchMomentRepair).not.toContain("cron.schedule");
   });
 
-  it("publishes the required YouTube recap through the canonical watch-moment release owner", () => {
-    expect(controlSource).toContain("RECAP URL");
-    expect(controlSource).toContain("PUBLISH EVENT RECAP");
-    expect(controlSource).toContain("final standings will publish");
-    expect(controlSource).toContain("Add the YouTube recap URL before publishing final standings.");
-    expect(controlSource).toContain("youtube.com");
-    expect(controlSource).toContain("youtu.be");
-    expect(controlSource).toContain("setWatchMoments!");
-    expect(controlSource).not.toContain("completeEvent(event.eventId)");
+  it("automatically publishes UFC results without requiring a recap video", () => {
+    expect(controlSource).toContain("AUTOMATIC EVENT CLOSE");
+    expect(controlSource).toContain("No video URL or owner action is needed.");
+    expect(controlSource).not.toContain("RECAP URL");
+    expect(controlSource).not.toContain("PUBLISH EVENT RECAP");
+    expect(controlSource).not.toContain("setWatchMoments!");
     expect(controlRepositorySource).toContain('client.rpc("set_pick_event_watch_moments"');
     expect(controlRepositorySource).toContain('client.rpc("transition_pick_event"');
-    expect(controlRepositorySource).not.toContain("from(\"pick_events\")");
-    expect(controlCss).toContain(".picks-control-recap-url");
-    expect(controlCss).toContain(".picks-control-recap-preview");
-    expect(controlCss).toContain("border-left: 3px solid var(--ufc-red)");
+    expect(controlRepositorySource).not.toContain('from("pick_events")');
+    expect(autoCompletionMigration).toContain("set recap_video_required = false");
+    expect(autoCompletionMigration).toContain("create or replace function public.finalize_resolved_ufc_pick_events()");
+    expect(autoCompletionMigration).toContain("perform public.transition_pick_event(v_event.event_id, 'complete')");
+    expect(autoCompletionMigration).toContain("and bout.result_status = 'pending'");
+    expect(autoCompletionMigration).not.toContain("cron.schedule");
+    expect(monitoringSource).toContain('admin.rpc("finalize_resolved_ufc_pick_events")');
   });
 
   it("uses the recap page as the one iPhone-safe scrolling owner without shrinking its sections", () => {
