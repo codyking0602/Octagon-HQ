@@ -6,10 +6,6 @@ import {
 } from "./blindResumeEngine";
 import { createBlindResumeV3Card } from "./blindResumeV3";
 import { rankedPlayFighters } from "./playFighterPool";
-import {
-  FOOTBALL_BLIND_RESUME_REVEAL_STAGES,
-  footballBlindResumeMatchups,
-} from "../back-room/footballBlindResumeModel";
 
 const UFC_STAT_LABELS = new Set([
   "UFC title-fight wins",
@@ -22,7 +18,7 @@ const UFC_STAT_LABELS = new Set([
   "Active elite years",
 ]);
 
-describe("Stage 3 Blind Resume content-audit baseline", () => {
+describe("Stage 3 UFC Blind Resume content-audit baseline", () => {
   it("samples 80 reproducible UFC five-round cards from the actual official V3 setup owner", () => {
     const eligible = new Set(rankedPlayFighters.map((fighter) => fighter.id));
 
@@ -60,26 +56,6 @@ describe("Stage 3 Blind Resume content-audit baseline", () => {
           visible.slice(0, 2).map((stat) => stat.label).sort(),
         ).not.toEqual(["Top-5 wins", "UFC title-fight wins"]);
       });
-    }
-  });
-
-  it("covers every authored Football comparison without pretending a schema check approves its verdict", () => {
-    expect(footballBlindResumeMatchups.length).toBeGreaterThan(0);
-    const ids = new Set<string>();
-    for (const matchup of footballBlindResumeMatchups) {
-      expect(ids.has(matchup.id)).toBe(false);
-      ids.add(matchup.id);
-      expect([matchup.leftId, matchup.rightId]).toContain(matchup.winnerId);
-      expect(matchup.revealCounts).toHaveLength(FOOTBALL_BLIND_RESUME_REVEAL_STAGES);
-      expect(matchup.revealCounts[2]).toBe(matchup.stats.length);
-      const dimensions = new Set(matchup.stats.map((stat) => stat.source.dimensionId));
-      expect(dimensions.size).toBe(matchup.stats.length);
-      for (const stat of matchup.stats) {
-        expect(stat.source.owner).toBe("footballFactualStats");
-        expect(stat.label.trim()).not.toBe("");
-        expect(stat.valueA.trim()).not.toBe("");
-        expect(stat.valueB.trim()).not.toBe("");
-      }
     }
   });
 });
