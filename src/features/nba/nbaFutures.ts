@@ -28,8 +28,8 @@ export const NBA_TEAMS: readonly NbaTeam[] = [
 export const NBA_TEAM_BY_ID = new Map(NBA_TEAMS.map(team => [team.id, team]));
 export const NBA_CHAMPIONSHIP_WEIGHTS = { futures: 15, cup: 10, playoffs: 55, games: 20 } as const;
 export const NBA_FUTURES_POINTS = {
-  winTotals: 30, playoffs: 16, conferenceFinalists: 8, finals: 10,
-  champion: 10, oneSeeds: 4, mvp: 7, dpoy: 4, roy: 4, mip: 3, cup: 4,
+  winTotals: 30, playoffs: 16, conferenceFinalists: 12, finals: 12,
+  champion: 20, mvp: 7, dpoy: 3,
 } as const;
 export const NBA_FUTURES_MAX = Object.values(NBA_FUTURES_POINTS).reduce((a,b)=>a+b,0);
 
@@ -48,10 +48,10 @@ export function emptyNbaFutures(): NbaFuturesPicks {
 }
 export function nbaFuturesProgress(p: NbaFuturesPicks) {
   return Object.keys(p.winTotals).length + p.playoffTeams.length + p.conferenceFinalists.length
-    + p.finalsTeams.length + p.oneSeeds.length
-    + [p.champion,p.mvp,p.dpoy,p.roy,p.mip,p.cupChampion].filter(value=>value.trim().length>0).length;
+    + p.finalsTeams.length
+    + [p.champion,p.mvp,p.dpoy].filter(value=>value.trim().length>0).length;
 }
-export const NBA_FUTURES_SELECTIONS = 30+16+4+2+2+6;
+export const NBA_FUTURES_SELECTIONS = 30+16+4+2+3;
 export function validateNbaFutures(p: NbaFuturesPicks): string[] {
   const errors:string[]=[];
   if(Object.entries(p.winTotals).some(([id,choice])=>!NBA_TEAM_BY_ID.has(id)||!["over","under"].includes(choice)))
@@ -86,8 +86,6 @@ export function isNbaFuturesComplete(p:NbaFuturesPicks):boolean {
     p.conferenceFinalists.filter(id=>NBA_TEAM_BY_ID.get(id)?.conference==="West").length===2 &&
     p.finalsTeams.filter(id=>NBA_TEAM_BY_ID.get(id)?.conference==="East").length===1 &&
     p.finalsTeams.filter(id=>NBA_TEAM_BY_ID.get(id)?.conference==="West").length===1 &&
-    p.oneSeeds.filter(id=>NBA_TEAM_BY_ID.get(id)?.conference==="East").length===1 &&
-    p.oneSeeds.filter(id=>NBA_TEAM_BY_ID.get(id)?.conference==="West").length===1 &&
     validateNbaFutures(p).length===0;
 }
 export type NbaFuturesResults = {
@@ -103,15 +101,11 @@ export function scoreNbaFutures(p:NbaFuturesPicks,r:NbaFuturesResults) {
     winTotals:r.regularWins?NBA_TEAMS.filter(t=>Number.isInteger(r.regularWins?.[t.id])&&
       (p.winTotals[t.id]==="over"?r.regularWins![t.id]>t.line:p.winTotals[t.id]==="under"&&r.regularWins![t.id]<t.line)).length:null,
     playoffs:hits(p.playoffTeams,r.playoffTeams),
-    conferenceFinalists:r.conferenceFinalists?hits(p.conferenceFinalists,r.conferenceFinalists)!*2:null,
-    finals:r.finalsTeams?hits(p.finalsTeams,r.finalsTeams)!*5:null,
-    champion:r.champion===undefined?null:Number(match(p.champion,r.champion))*10,
-    oneSeeds:r.oneSeeds?hits(p.oneSeeds,r.oneSeeds)!*2:null,
+    conferenceFinalists:r.conferenceFinalists?hits(p.conferenceFinalists,r.conferenceFinalists)!*3:null,
+    finals:r.finalsTeams?hits(p.finalsTeams,r.finalsTeams)!*6:null,
+    champion:r.champion===undefined?null:Number(match(p.champion,r.champion))*20,
     mvp:r.mvp===undefined?null:Number(match(p.mvp,r.mvp))*7,
-    dpoy:r.dpoy===undefined?null:Number(match(p.dpoy,r.dpoy))*4,
-    roy:r.roy===undefined?null:Number(match(p.roy,r.roy))*4,
-    mip:r.mip===undefined?null:Number(match(p.mip,r.mip))*3,
-    cup:r.cupChampion===undefined?null:Number(match(p.cupChampion,r.cupChampion))*4,
+    dpoy:r.dpoy===undefined?null:Number(match(p.dpoy,r.dpoy))*3,
   };
   return {scores,earned:Object.values(scores).reduce<number>((sum,n)=>sum+(n??0),0),
     settledMax:Object.entries(scores).reduce((sum,[k,v])=>sum+(v===null?0:k==="winTotals" ? Object.entries(r.regularWins??{}).filter(([id,wins])=>NBA_TEAM_BY_ID.has(id)&&Number.isInteger(wins)&&wins>=0&&wins<=82).length : NBA_FUTURES_POINTS[k as keyof typeof NBA_FUTURES_POINTS]),0)};
