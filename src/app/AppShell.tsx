@@ -170,7 +170,7 @@ export function AppShell() {
   const nbaVisible = canPreviewNba(identity.profile);
   const showMlbWelcome = Boolean(
     identity.profile
-    && (location.pathname === "/" || location.pathname === "/mlb")
+    && (location.pathname === "/mlb" || (location.pathname === "/" && !nbaVisible))
     && (MLB_PLAYOFFS_PUBLIC_ENABLED || identity.profile.canControlPicks === true)
   );
   const mlbWelcomeMode = MLB_PLAYOFFS_PUBLIC_ENABLED ? "launch" : "preview";
