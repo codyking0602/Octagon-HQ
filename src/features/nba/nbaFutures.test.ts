@@ -38,6 +38,14 @@ describe("2026 NBA futures immutable contract",()=>{
     p.conferenceFinalists=[];p.playoffTeams=NBA_TEAMS.filter(t=>t.conference==="East").slice(0,9).map(t=>t.id);
     expect(validateNbaFutures(p)).not.toHaveLength(0);
   });
+  it("scores NBA Finals participants independently from the champion",()=>{
+    const p=emptyNbaFutures();
+    p.finalsTeams=["BOS","DEN"];p.champion="BOS";
+    const result=scoreNbaFutures(p,{finalsTeams:["BOS","DEN"],champion:"DEN"});
+    expect(result.scores.finals).toBe(12);
+    expect(result.scores.champion).toBe(0);
+    expect(result.settledMax).toBe(32);
+  });
   it("does not award points for unresolved facts",()=>{
     const p=emptyNbaFutures();p.winTotals.OKC="over";
     expect(scoreNbaFutures(p,{})).toMatchObject({earned:0,settledMax:0});
