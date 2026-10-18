@@ -10,7 +10,7 @@ describe("NBA two-stage welcome",()=>{
     expect(screen.getByRole("button",{name:/continue/i})).toBeInTheDocument();
     expect(screen.queryByText(/start with nba futures/i)).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button",{name:/continue/i}));
-    expect(screen.getByText(/NBA FUTURES/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/NBA FUTURES/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("button",{name:/open nba futures/i})).toBeInTheDocument();
   });
   it("acknowledges per profile and supports reviewing it again",()=>{

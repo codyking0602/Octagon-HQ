@@ -188,18 +188,12 @@ describe("The HQ sport switching", () => {
   });
 });
 
-// Basketball uses the existing canonical sport selector, not a parallel navigation.
-describe("Basketball sport selection",()=>{
-  it("switches Picks to NBA Futures and Play to Basketball",async()=>{
+// Public profiles must not have a Basketball sport selector or a bypass route.
+describe("Basketball preview isolation",()=>{
+  it("hides Basketball from the public Picks sport selector",async()=>{
     const router=renderRoute("/picks");
-    let row=await sportContext("UFC PICKS");
-    switchSport(row,"nba");
-    await expectPath(router,"/nba/picks");
-    row=await sportContext("NBA PICKS");
-    expectThemeScope("nba");
-    fireEvent.click(screen.getByRole("link",{name:"Play"}));
-    await expectPath(router,"/nba");
-    await sportContext("NBA PLAY");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("nba");
+    const row=await sportContext("UFC PICKS");
+    expect(within(row).queryByRole("option",{name:"Basketball"})).not.toBeInTheDocument();
+    expect(router.state.location.pathname).toBe("/picks");
   });
 });

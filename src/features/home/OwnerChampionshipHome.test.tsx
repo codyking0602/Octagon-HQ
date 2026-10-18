@@ -54,7 +54,7 @@ function Preview({ showMlb = true }: { showMlb?: boolean }) {
       <OwnerChampionshipHome
         streak={11}
         streakLoading={false}
-        showMlb={showMlb}
+        showMlb={showMlb} showNba
         sport={sport}
         onSportChange={setSport}
       />

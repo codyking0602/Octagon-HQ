@@ -171,7 +171,6 @@ declare v_profile uuid:=auth.uid(); v_own jsonb; v_locked boolean; v_entries jso
 begin
   if v_profile is null then raise exception 'sign in required'; end if;
   if not public.nba_futures_owner_preview_allowed(v_profile) then raise exception 'nba_futures_preview_owner_only'; end if;
-  if not public.nba_futures_owner_preview_allowed(v_profile) then raise exception 'nba_futures_preview_owner_only'; end if;
   if p_season <> 2026 or p_season is null then raise exception 'nba_futures_invalid_season'; end if;
   v_locked:=now()>=public.nba_futures_lock_at(p_season);
   select picks into v_own from public.nba_futures_picks
@@ -200,6 +199,7 @@ as $$
 declare v_profile uuid:=auth.uid();
 begin
   if v_profile is null then raise exception 'sign in required'; end if;
+  if not public.nba_futures_owner_preview_allowed(v_profile) then raise exception 'nba_futures_preview_owner_only'; end if;
   if p_season <> 2026 or p_season is null then raise exception 'nba_futures_invalid_season'; end if;
   if now()>=public.nba_futures_lock_at(p_season) then raise exception 'nba_futures_locked'; end if;
   perform public.validate_nba_futures(p_picks);
