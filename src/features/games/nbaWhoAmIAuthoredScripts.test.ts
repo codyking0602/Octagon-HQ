@@ -50,4 +50,33 @@ describe("NBA Who Am I authored A/B scripts", () => {
     expect(canPreviewNbaWhoAmI({ displayName: "Guest", canControlPicks: true })).toBe(false);
     expect(canPreviewNbaWhoAmI({ displayName: "Cody", canControlPicks: false })).toBe(false);
   });
+  it("preserves Football/UFC progressive identity reveal rules for both NBA scripts", () => {
+    const EARLY_FRANCHISE_OR_LOCATION = /\b(?:Denver|Nuggets|Cleveland|Cavaliers|Miami|Heat|Lakers|Golden State|Warriors|Bulls|Chicago|Milwaukee|Bucks|San Antonio|Spurs|Orlando|Magic|Washington|Toronto|Raptors|Utah|Jazz|Phoenix|Suns|Davidson|Wake Forest|LSU|North Carolina|Akron|Serbia|Serbian|Greece|Greek)\b/i;
+    const EARLY_SIGNATURE = /\b(?:Air Jordan|The Admiral|Black Mamba|Greek Freak|The Joker|His Airness|Big Fundamental|Shaq|Diesel|No\. ?\d+|Kareem Abdul-Jabbar|David Robinson|Dwyane Wade|Chris Bosh|Scottie Pippen|Kevin Durant|Phil Jackson|Kobe Bryant|Shaquille O'Neal)\b/i;
+    const EARLY_POSITION = /\b(?:center|point guard|shooting guard|power forward|small forward|frontcourt|big man)\b/i;
+    const EARLY_MILESTONES = /\b(?:\d{4}|\d{2} points|\d{2} wins|first overall|forty-first|fifteenth overall|selected \d+|NBA Draft)\b/i;
+    for (const player of nbaWhoAmIAuthoredIdentities) {
+      for (const scriptId of ["A", "B"] as const) {
+        const script = player.scripts[scriptId];
+        expect(script.clues.slice(0, 4).every(clue =>
+          !EARLY_FRANCHISE_OR_LOCATION.test(clue.text) &&
+          !EARLY_SIGNATURE.test(clue.text) &&
+          !EARLY_POSITION.test(clue.text) &&
+          !EARLY_MILESTONES.test(clue.text)
+        ), `${player.name} script ${scriptId} leaks a hard identity anchor within the first four clues`).toBe(true);
+        expect(script.clues.slice(0, 2).every(clue =>
+          !/\b(?:only|first ever|first player|first unanimous|record-holder|all-time|career leader|three-time MVP)\b/i.test(clue.text)
+        ), `${player.name} script ${scriptId} leads with an ultra-specific record`).toBe(true);
+        expect(script.clues.slice(8).some(clue =>
+          /\b(?:Denver|Nuggets|Cleveland|Miami|Lakers|Golden State|Warriors|Bulls|Chicago|Milwaukee|Bucks|San Antonio|Spurs|Greek|Serbian|Shaq|Air Jordan|Black Mamba|Big Fundamental|Joker|No\. ?\d+)\b/i.test(clue.text)
+        ), `${player.name} script ${scriptId} must finish with a recognizable identity anchor`).toBe(true);
+        const early = script.clues.slice(0, 4).map(clue => clue.text.toLowerCase());
+        expect(new Set(early).size).toBe(4);
+      }
+      const a = player.scripts.A.clues.map(clue => clue.text);
+      const b: string[] = player.scripts.B.clues.map(clue => clue.text);
+      expect(a.filter(text => b.includes(text))).toHaveLength(0);
+    }
+  });
+
 });
