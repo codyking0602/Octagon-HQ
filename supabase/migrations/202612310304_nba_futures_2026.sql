@@ -157,12 +157,12 @@ $$;
 
 create or replace function public.nba_futures_owner_preview_allowed(p_profile uuid)
 returns boolean language sql stable security definer set search_path = ''
-as $
+as $$
   select exists (
     select 1 from public.profiles
     where id=p_profile and can_control_picks=true and upper(trim(display_name))='CODY'
   )
-$;
+$$;
 
 create or replace function public.get_nba_futures(p_season integer)
 returns jsonb language plpgsql stable security definer set search_path = ''
