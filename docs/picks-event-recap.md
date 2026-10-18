@@ -2,7 +2,9 @@
 
 Completed Picks events remain owned by the existing archived history projection and `LatestEventRecap` presentation.
 
-Each `pick_events` row may store zero to five ordered `watch_moments`. The canonical owner mutation is `set_pick_event_watch_moments(event_id, moments)`, restricted to the designated Fight Night Control owner and service role. Each moment contains a title and secure YouTube URL. Events with no moments render no watch section.
+UFC events finalize automatically through the existing Picks lifecycle once all included fights have official results. The existing hourly monitoring wake handles both newly resolved cards and catch-up for a previously graded card. A YouTube recap URL is **not** required for closure, standings, champion declaration, or member recap notifications; unresolved outcomes continue to require official result entry.
+
+Each `pick_events` row may store zero to five **optional** ordered `watch_moments`. The canonical owner mutation is `set_pick_event_watch_moments(event_id, moments)`, restricted to the designated Fight Night Control owner and service role. Each moment contains a title and secure YouTube URL. Events with no moments render no watch section.
 
 The full recap:
 
