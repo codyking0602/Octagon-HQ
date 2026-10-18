@@ -61,21 +61,6 @@ function parseCorrectedResult(value: string): PickBoutResultStatus | null {
   return null;
 }
 
-function normalizedRecapUrl(value: string) {
-  const trimmed = value.trim();
-  if (!trimmed) return null;
-  try {
-    const url = new URL(trimmed);
-    const hostname = url.hostname.toLowerCase().replace(/^www\./, "");
-    if (url.protocol !== "https:" || (hostname !== "youtube.com" && hostname !== "youtu.be")) {
-      return undefined;
-    }
-    return url.toString();
-  } catch {
-    return undefined;
-  }
-}
-
 interface PicksControlPageProps {
   repository?: PickControlRepository | null;
   now?: number;
@@ -94,7 +79,6 @@ export default function PicksControlPage({
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const [recapUrl, setRecapUrl] = useState("");
   const [completedArchiveOpen, setCompletedArchiveOpen] = useState(false);
 
   const loadEvent = useCallback(async (eventId?: string) => {
@@ -127,10 +111,6 @@ export default function PicksControlPage({
     }
     void loadEvent();
   }, [identity.profile, identity.ready, loadEvent, repository]);
-
-  useEffect(() => {
-    setRecapUrl("");
-  }, [event?.eventId]);
 
   const orderedBouts = useMemo(
     () => event?.bouts
@@ -203,34 +183,6 @@ export default function PicksControlPage({
         `Owner confirmed official result correction from ${pickControlResultLabel(bout)} to ${nextLabel}`,
       ),
       `${bout.redFighterName} vs. ${bout.blueFighterName} corrected to ${nextLabel}.`,
-    );
-  }
-
-  function completeEvent() {
-    if (!event || !event.canComplete) return;
-    const watchUrl = normalizedRecapUrl(recapUrl);
-    if (watchUrl === null) {
-      setError("Add the YouTube recap URL before publishing final standings.");
-      return;
-    }
-    if (watchUrl === undefined) {
-      setError("Enter a secure YouTube recap URL (youtube.com or youtu.be).");
-      return;
-    }
-    if (!repository?.setWatchMoments) {
-      setError("Recap URL publishing is not connected on this build.");
-      return;
-    }
-    if (!window.confirm(
-      "Publish this YouTube recap now? This is the final release step: the event will complete, the Picks winner and final standings will publish, and members will receive the recap notification.",
-    )) return;
-    const title = event.subtitle.trim().length >= 3
-      ? event.subtitle.trim().slice(0, 120)
-      : "Must-Watch Moment";
-    void runAction(
-      "complete",
-      () => repository.setWatchMoments!(event.eventId, [{ title, url: watchUrl }]),
-      "Event recap published. Final standings are live.",
     );
   }
 
@@ -471,46 +423,14 @@ export default function PicksControlPage({
         })}
       </section>
 
-      <section className="surface-card picks-control-complete">
+      <section className="surface-card picks-control-complete" aria-live="polite">
         <div>
-          <p className="eyebrow">FINAL STEP</p>
-          <h2>{event.canComplete ? "Publish event recap" : "Complete event"}</h2>
-          {event.canComplete ? (
-            <>
-              <p>All {resolved} active fight results are ready. Add the YouTube recap now; publishing it releases the Picks winner, final standings, and finished recap together.</p>
-              <label className="picks-control-recap-url">
-                <span>RECAP URL</span>
-                <input
-                  aria-label="RECAP URL"
-                  type="url"
-                  inputMode="url"
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  placeholder="https://youtu.be/..."
-                  value={recapUrl}
-                  disabled={Boolean(busyAction)}
-                  onChange={(inputEvent) => setRecapUrl(inputEvent.target.value)}
-                />
-                <small>Required. Final standings stay hidden until this YouTube recap is published.</small>
-              </label>
-              <div className="picks-control-recap-preview" aria-label="Recap publish preview">
-                <span>RECAP PREVIEW</span>
-                <strong>{event.name}</strong>
-                <small>{resolved} FIGHTS GRADED · {recapUrl.trim() ? "1 VIDEO READY" : "VIDEO REQUIRED"} · FINAL STANDINGS RELEASE ON PUBLISH</small>
-              </div>
-            </>
-          ) : (
-            <p>Every active fight must have a winner, draw, no contest, or cancellation before the recap can publish.</p>
-          )}
+          <p className="eyebrow">AUTOMATIC EVENT CLOSE</p>
+          <h2>{event.canComplete ? "All fight results recorded" : "Waiting for final fight results"}</h2>
+          <p>{event.canComplete
+            ? "The event will close automatically on the next monitoring check. Final standings, the winner, and the recap will publish together. No video URL or owner action is needed."
+            : `${resolved} of ${orderedBouts.length} active fights have official results. ESPN results update automatically; unusual outcomes can still be corrected here before the event finalizes.`}</p>
         </div>
-        <button
-          className="primary-action"
-          type="button"
-          disabled={!event.canComplete || Boolean(busyAction)}
-          onClick={completeEvent}
-        >
-          {busyAction === "complete" ? "PUBLISHING RECAP…" : "PUBLISH EVENT RECAP"}
-        </button>
       </section>
 
       {notice ? <p className="picks-control-feedback picks-control-feedback--success" role="status">{notice}</p> : null}
