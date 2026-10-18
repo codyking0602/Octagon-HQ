@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { NBA_POSTER_SRC } from "./nbaPreviewAccess";
+import { useLocation, useNavigate } from "react-router-dom";
+import { NBA_POSTER_SRC, NBA_PUBLIC_ENABLED } from "./nbaPreviewAccess";
 import "../../styles/nba-welcome.css";
 
-export const NBA_WELCOME_PREVIEW_VERSION = "2026-review-v1";
+export const NBA_WELCOME_PREVIEW_VERSION = NBA_PUBLIC_ENABLED ? "2026-public-v1" : "2026-review-v1";
 export const NBA_WELCOME_REOPEN_EVENT = "octagon-hq:nba-welcome:reopen";
 export const nbaWelcomeKey = (profileId: string) =>
   `octagon-hq:nba-welcome:${NBA_WELCOME_PREVIEW_VERSION}:${profileId}`;
 
 export function NbaWelcomeTakeover({ profileId }: { profileId: string }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isLaunchLink = new URLSearchParams(location.search).get("hq-reveal") === "basketball-2026";
   const [step, setStep] = useState<"poster" | "explainer" | "closed">(() => {
-    try { return window.localStorage.getItem(nbaWelcomeKey(profileId)) === "dismissed" ? "closed" : "poster"; }
+    try { return isLaunchLink || window.localStorage.getItem(nbaWelcomeKey(profileId)) !== "dismissed" ? "poster" : "closed"; }
     catch { return "poster"; }
   });
   useEffect(() => {
@@ -30,6 +32,7 @@ export function NbaWelcomeTakeover({ profileId }: { profileId: string }) {
     try { window.localStorage.setItem(nbaWelcomeKey(profileId), "dismissed"); } catch { /* session acknowledgement survives */ }
     setStep("closed");
     if (goToFutures) navigate("/nba/picks");
+    else if (isLaunchLink) navigate("/", { replace: true });
   };
 
   return <div className="nba-welcome" role="dialog" aria-modal="true" aria-label="Basketball HQ introduction">
@@ -65,7 +68,7 @@ export function NbaWelcomeTakeover({ profileId }: { profileId: string }) {
             <button type="button" className="nba-welcome__primary" onClick={() => complete(true)}>OPEN NBA FUTURES <span aria-hidden="true">→</span></button>
             <button type="button" className="nba-welcome__later" onClick={() => complete(false)}>EXPLORE THE HQ LATER</button>
           </div>
-          <small className="nba-welcome__preview-label">OWNER PREVIEW · NOT PUBLIC</small>
+          {!NBA_PUBLIC_ENABLED ? <small className="nba-welcome__preview-label">OWNER PREVIEW · NOT PUBLIC</small> : null}
         </div>
       </div>
     )}

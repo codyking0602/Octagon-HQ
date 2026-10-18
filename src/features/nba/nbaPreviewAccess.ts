@@ -1,7 +1,7 @@
 import type { IdentityProfile } from "../identity/identityModel";
 
-// Basketball is owner-preview-only until the public release is approved.
-export const NBA_PUBLIC_ENABLED = false;
+// Basketball public launch, Oct 2026.
+export const NBA_PUBLIC_ENABLED = true;
 export const NBA_POSTER_SRC = "/assets/nba/basketball-welcome.png";
 
 export function canPreviewNba(profile: Pick<IdentityProfile, "displayName" | "canControlPicks"> | null | undefined) {

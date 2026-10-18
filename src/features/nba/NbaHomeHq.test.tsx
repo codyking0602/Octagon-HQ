@@ -17,7 +17,7 @@ describe("Basketball home hub", () => {
     vi.mocked(loadNbaFutures).mockResolvedValue({
       season: 2026,
       locked: false,
-      lock_at: "2026-10-30T16:00:00Z",
+      lock_at: "2026-10-20T19:00:00Z",
       own: picks,
       participants: 1,
       entries: [],
@@ -35,7 +35,7 @@ describe("Basketball home hub", () => {
     expect(screen.getByText("December · Cup knockout rounds")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Open Basketball Championship" })).toHaveAttribute("href", "/championship/nba");
     expect(screen.getByRole("link", { name: /open futures/i })).toHaveAttribute("href", "/nba/picks");
-    expect(screen.getByRole("button", { name: /replay introduction/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /replay introduction/i })).not.toBeInTheDocument();
   });
 
   it("shows only a compact Futures link in All Sports", async () => {

@@ -199,9 +199,9 @@ describe("BottomNavigation", () => {
 
 
   it.each([
-    ["play", "/football", "/play", "/mlb"],
-    ["picks", "/football/picks", "/picks", "/mlb/picks"],
-  ] as const)("double taps %s through Football, UFC, MLB, then Football without intro videos for non-owner users", (_section, first, second, third) => {
+    ["play", "/football", "/play", "/mlb", "/nba"],
+    ["picks", "/football/picks", "/picks", "/mlb/picks", "/nba/picks"],
+  ] as const)("double taps %s through Football, UFC, MLB, NBA, then Football without intro videos for non-owner users", (_section, first, second, third, fourth) => {
     window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
     renderNavigation([first], <LocationProbe />);
     const tab = () => screen.getByRole("link", { name: _section === "play" ? "Play" : "Picks" });
@@ -213,6 +213,10 @@ describe("BottomNavigation", () => {
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(third + "|plain");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("mlb");
+    fireEvent.click(tab());
+    fireEvent.click(tab());
+    expect(screen.getByTestId("location")).toHaveTextContent(fourth + "|plain");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("nba");
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(first + "|plain");

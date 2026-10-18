@@ -6,7 +6,7 @@ export type Conference = "East" | "West";
 export type WinPick = "over" | "under";
 export type NbaTeam = { id: string; name: string; conference: Conference; line: number };
 export const NBA_SEASON = 2026;
-export const NBA_FUTURES_LOCK_AT = "2026-10-30T16:00:00Z";
+export const NBA_FUTURES_LOCK_AT = "2026-10-20T19:00:00Z";
 export const NBA_FUTURES_LINE_SOURCE = "BetMGM · Oct 13, 2026";
 export const NBA_TEAMS: readonly NbaTeam[] = [
   ["ATL","Atlanta Hawks","East",43.5],["BOS","Boston Celtics","East",51.5],
