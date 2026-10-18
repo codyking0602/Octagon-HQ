@@ -9,7 +9,7 @@ begin
   if (select win_total from public.nba_futures_win_lines where team_id='OKC' and season=2026)<>62.5
     or (select win_total from public.nba_futures_win_lines where team_id='DAL' and season=2026)<>34.5 then
     raise exception 'NBA frozen odds values changed'; end if;
-  if public.nba_futures_lock_at(2026)<>timestamptz '2026-10-30 16:00:00+00' then
+  if public.nba_futures_lock_at(2026)<>timestamptz '2026-10-20 19:00:00+00' then
     raise exception 'NBA Futures lock has moved'; end if;
   perform public.validate_nba_futures('{"winTotals":{"OKC":"over"},"playoffTeams":[],"conferenceFinalists":[],"finalsTeams":[],"oneSeeds":[]}'::jsonb);
   if public.nba_futures_complete('{"winTotals":{}}'::jsonb) then
