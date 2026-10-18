@@ -45,7 +45,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
         "clues": [
           {
             "id": "nba-michael-jordan-a-1",
-            "text": "I entered the league in the mid-1980s after playing college basketball in the ACC.",
+            "text": "I entered the NBA after playing several seasons of college basketball.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -72,7 +72,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-michael-jordan-a-4",
-            "text": "I won my first scoring title while averaging more than 37 points per game.",
+            "text": "I won multiple NBA scoring titles before earning my first championship ring.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -140,7 +140,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
         "clues": [
           {
             "id": "nba-michael-jordan-b-1",
-            "text": "I was born in Brooklyn and grew up in North Carolina.",
+            "text": "I was born on the East Coast and grew up in the southeastern United States.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -149,7 +149,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-michael-jordan-b-2",
-            "text": "I won a college national championship with North Carolina before turning professional.",
+            "text": "I won a college national championship before entering the NBA Draft.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -158,7 +158,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-michael-jordan-b-3",
-            "text": "I scored 63 points in a 1986 playoff game against Boston.",
+            "text": "I once scored more than 60 points in a playoff game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -258,7 +258,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-lebron-james-a-2",
-            "text": "I was selected first overall in 2003 and became Rookie of the Year.",
+            "text": "I won Rookie of the Year after joining a struggling franchise.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -267,7 +267,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-lebron-james-a-3",
-            "text": "I reached my first NBA Finals with an Ohio franchise in 2007.",
+            "text": "I reached the NBA Finals before winning my first regular-season MVP.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -276,7 +276,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-lebron-james-a-4",
-            "text": "I won the league's regular-season MVP award in both 2009 and 2010.",
+            "text": "I won consecutive regular-season MVP awards before earning my first title.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -353,7 +353,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-lebron-james-b-2",
-            "text": "I played at St. Vincent–St. Mary High School in Ohio.",
+            "text": "My high-school basketball career in Ohio drew national attention.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -454,7 +454,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
         "clues": [
           {
             "id": "nba-stephen-curry-a-1",
-            "text": "I played my college basketball at Davidson before entering the NBA.",
+            "text": "I played college basketball outside a major conference before entering the NBA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -463,7 +463,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-stephen-curry-a-2",
-            "text": "I entered the NBA as a first-round draft pick in 2009.",
+            "text": "My first NBA team selected me during the 2009 draft.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -472,7 +472,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-stephen-curry-a-3",
-            "text": "I was selected seventh overall by Golden State in that draft.",
+            "text": "I was a lottery pick, but five players were selected before me.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -481,7 +481,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-stephen-curry-a-4",
-            "text": "I first earned an NBA All-Star selection during the 2013–14 season.",
+            "text": "I first made an NBA All-Star team more than four seasons after I was drafted.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -549,7 +549,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
         "clues": [
           {
             "id": "nba-stephen-curry-b-1",
-            "text": "I spent my college career at a small school in North Carolina.",
+            "text": "I played three seasons of college basketball before turning professional.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -567,7 +567,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-stephen-curry-b-3",
-            "text": "My team met Cleveland in four consecutive NBA Finals between 2015 and 2018.",
+            "text": "My team repeatedly faced the same Eastern Conference opponent in the NBA Finals.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -677,7 +677,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-shaquille-oneal-a-3",
-            "text": "I was selected first overall in the 1992 NBA Draft.",
+            "text": "I entered the NBA as a top-three draft pick in the early 1990s.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -686,7 +686,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-shaquille-oneal-a-4",
-            "text": "I won Rookie of the Year while playing for an expansion-era Florida franchise.",
+            "text": "I won Rookie of the Year for a young NBA franchise.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -754,7 +754,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
         "clues": [
           {
             "id": "nba-shaquille-oneal-b-1",
-            "text": "I starred for LSU and twice earned SEC Player of the Year honors.",
+            "text": "I received major college honors as an interior big man before reaching the NBA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -763,7 +763,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-shaquille-oneal-b-2",
-            "text": "As a rookie, I averaged 23.4 points and 13.9 rebounds per game.",
+            "text": "I averaged more than 20 points and 10 rebounds during my rookie season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -772,7 +772,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-shaquille-oneal-b-3",
-            "text": "My first professional team was the Orlando Magic.",
+            "text": "I started my NBA career with a team that had joined the league only a few years earlier.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -881,7 +881,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-dirk-nowitzki-a-3",
-            "text": "I was selected ninth overall in the 1998 NBA Draft.",
+            "text": "I entered the league as a first-round draft pick in 1998.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -958,7 +958,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
         "clues": [
           {
             "id": "nba-dirk-nowitzki-b-1",
-            "text": "I grew up in Germany before moving to the United States to play professionally.",
+            "text": "I came to the NBA with a reputation for shooting touch unusual in a player my size.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -967,7 +967,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-dirk-nowitzki-b-2",
-            "text": "My NBA rookie season was shortened by a league lockout in 1998–99.",
+            "text": "I arrived in the NBA during the lockout-shortened 1998–99 season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -976,7 +976,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-dirk-nowitzki-b-3",
-            "text": "The Milwaukee Bucks drafted me, but I never played for them.",
+            "text": "My draft rights changed teams before I ever played an NBA game.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1083,7 +1083,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-magic-johnson-a-3",
-            "text": "I won a college national championship in 1979.",
+            "text": "I helped my college team reach the top of the sport before entering the NBA.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1160,7 +1160,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
         "clues": [
           {
             "id": "nba-magic-johnson-b-1",
-            "text": "I attended Michigan State University and played basketball in the Big Ten.",
+            "text": "I played in the Big Ten before entering the NBA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1169,7 +1169,7 @@ export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] =
           },
           {
             "id": "nba-magic-johnson-b-2",
-            "text": "My college team beat Larry Bird's Indiana State team in the NCAA championship game.",
+            "text": "My college team won the national title in a game against another future NBA legend.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
