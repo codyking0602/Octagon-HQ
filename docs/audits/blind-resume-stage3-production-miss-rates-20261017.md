@@ -1,16 +1,10 @@
-# Stage 3 — Blind Resume actual player misses and difficulty calibration
+# Stage 3 — UFC Blind Resume actual player misses and difficulty calibration
 
 **Checked:** October 17, 2026. **Source:** read-only aggregates from the connected Octagon HQ production Supabase project's `private.daily_challenge_attempts`, `private.daily_challenges`, `private.daily_challenge_setups`. **Stage 3 remains open.** This is an editorial measurement, **not** a gameplay release, new difficulty/scoring policy, or signoff.
 
 ## What real players are getting wrong
 
-| Format | Completed official Daily attempts | Unique completing players | Scored rounds | Wrong | Wrong rate |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| UFC Blind Resume **V3** (Aug 18–Oct 16, 2026) | 29 | 5 | 145 | 53 | **36.6%** |
-| Football Blind Resume **V4** (Sep 4 and Sep 7, 2026) | 5 | 4 | 15 | 3 | **20.0%** |
-| Old Football V1/V3 (not comparable) | 2 | 1 | 10 | 8 | 80.0% |
-
-Do **not** mix the legacy five-round Football versions with the current three-round Football version, and do not conflate the UFC five-round score with the Football normalized result. Because the sample contains repeat plays by the same people, 145 UFC rounds are **not** 145 independent users: the five participants contributed 11, 8, 5, 3 and 2 games, respectively. These descriptive outcomes cannot by themselves prove the difficulty change necessary.
+**UFC Blind Resume V3 (August 18–October 16, 2026):** 29 completed Daily attempts, five distinct players, 145 scored comparison picks, **53 wrong (36.6%)**. The five players contributed 11, 8, 5, 3 and 2 games respectively, so 145 choices are **not** 145 independent participants. Repeated choices and nonrandom reveal decisions limit statistical generalization.
 
 ### UFC reveals at the moment players locked
 
@@ -50,7 +44,7 @@ These are candidate holds for **future** publication; no currently published ans
 
 - Review the matchup **as played**: opening two clues, four/six/full reveal, visibility, fighter recognizability, grade/verdict and alternative plausible answers.
 - Assess when people miss because clues point the wrong way; a sufficiently delayed strong clue must make the answer defensible. Prefer *holding/retiring future ambiguous pairs* to padding a large playable pool. No quota to preserve.
-- Separately measure **actual** misconception rate by difficult label, reveal position, model score gap, fighter and pair, and across repeating days; avoid presenting a model score gap as empirical difficulty.
+- Separately measure **actual** misconception rate by difficulty label, reveal position, model score gap, fighter and pair, and across repeating days; avoid presenting a model score gap as empirical difficulty.
 - Consider an explicit evidence-consistency gate on dynamically generated UFC pairs and a difficulty mix calibrated against independent selected-board human review; **no new target wrong-answer percentage has been owner-approved**.
 - Preserve historical published setups, submissions, normalized scores, leaderboards and streaks. Gameplay/scoring changes would require separate review.
 - After substantive editorial fixes, rerun production-equivalent deterministic future Daily boards and inspect rendered ladders; mark Stage 3 complete only with documented case-level dispositions and green exact-head CI.
@@ -77,9 +71,3 @@ SELECT difficulty, count(*) picks,
        round(100.0*count(*) FILTER (WHERE NOT correct)/nullif(count(*),0),1) wrong_pct
 FROM picks GROUP BY difficulty ORDER BY difficulty;
 ```
-
-Football V4 uses `public_result.results` and `reveal_stage` with a three-round contract, and must be queried separately from `public_result.answers` UFC V3. Legacy Football V1/V3 also use five-round `answers` and are not part of Football V4 percentages.
-
-### Security advisory encountered while reading production metadata
-
-An automatic database inventory flagged **66 tables in the `private` schema with RLS disabled**. The scan's generic claim that these are open to API clients was **not verified**: our read-only privilege check found **zero** of these 66 granting `SELECT` or `INSERT` to either `anon` or `authenticated`; the `anon` role also lacks `USAGE` on the `private` schema. No authorization change is requested or applied. Enabling RLS would require a separately planned, tested access-policy rollout (e.g. `ALTER TABLE private.<reviewed_table> ENABLE ROW LEVEL SECURITY;`) to avoid accidentally breaking trusted backend operations.
