@@ -111,6 +111,31 @@ describe("Phase 2 editorial approvals", () => {
     })).toThrow();
   });
 
+  it("reads real GitHub OIDC owner identity without impersonating a Supabase owner", () => {
+    const signed = {
+      player: players[0], game: games[0], selected_at: "2026-10-18T17:00:00Z",
+      selected_by_github_id: "284170760", selected_via: "github-oidc-owner" as const,
+      source_sha: "a".repeat(40),
+    };
+    const pkg = {
+      week_of: "2026-10-20", release_at: "2026-10-20T05:00:00Z",
+      status: "draft", cfb_spotlight: null, nfl_spotlight: null,
+      cfb_game_of_week: null, nfl_game_of_week: null,
+      proposals: { cfb: { players, games } }, choices: { cfb: signed },
+      approved_at: null, ready_at: null, published_at: null,
+      created_at: "2026-10-18T17:00:00Z", updated_at: "2026-10-18T17:00:00Z",
+    };
+    const parsed = footballWeeklyContentPackageSchema.parse(pkg);
+    expect(parsed.choices.cfb?.selected_by).toBeUndefined();
+    expect(parsed.choices.cfb?.selected_by_github_id).toBe("284170760");
+    expect(() => footballWeeklyContentPackageSchema.parse({
+      ...pkg, choices: { cfb: { ...signed, selected_by_github_id: undefined } },
+    })).toThrow();
+    expect(() => footballWeeklyContentPackageSchema.parse({
+      ...pkg, choices: { cfb: { ...signed, selected_by: "00000000-0000-4000-8000-000000000001" } },
+    })).toThrow();
+  });
+
   it("preserves both independent proposal sets and audited selections on read", () => {
     const cfb = { player: players[0], game: games[1], selected_at: "2026-10-11T17:00:00Z",
       selected_by: "00000000-0000-4000-8000-000000000001" };
