@@ -5,7 +5,8 @@ const shell = readFileSync("src/app/AppShell.tsx", "utf8");
 
 describe("MLB welcome takeover route scope", () => {
   it("shows only on Home or the MLB landing page", () => {
-    expect(shell).toContain('location.pathname === "/" || location.pathname === "/mlb"');
+    expect(shell).toContain('location.pathname === "/mlb" || (location.pathname === "/" && !nbaVisible)');
+    // The NBA owner preview takes precedence on Home, without hiding the MLB landing welcome.
     expect(shell).toContain("<MlbPlayoffsWelcomeTakeover");
   });
 
