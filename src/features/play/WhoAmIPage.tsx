@@ -30,7 +30,7 @@ function readRecentSubjectIds(): RecentSubjectIdsByLeague {
   try {
     const parsed = JSON.parse(window.localStorage.getItem(WHO_AM_I_RECENT_SUBJECTS_STORAGE_KEY) ?? "{}") as Record<string, unknown>;
     const recent: RecentSubjectIdsByLeague = {};
-    for (const league of ["UFC", "NFL", "CFB"] as const) {
+    for (const league of ["UFC", "NFL", "CFB", "NBA"] as const) {
       const ids = parsed[league];
       if (Array.isArray(ids)) {
         recent[league] = ids.filter((id): id is string => typeof id === "string").slice(-WHO_AM_I_RECENT_SUBJECT_LIMIT);
@@ -48,6 +48,7 @@ function recentSubjectExclusions(): RecentSubjectExclusions {
     ...(recent.UFC?.length ? { UFC: new Set(recent.UFC) } : {}),
     ...(recent.NFL?.length ? { NFL: new Set(recent.NFL) } : {}),
     ...(recent.CFB?.length ? { CFB: new Set(recent.CFB) } : {}),
+    ...(recent.NBA?.length ? { NBA: new Set(recent.NBA) } : {}),
   };
 }
 
