@@ -57,7 +57,7 @@ export function validateNbaFutures(p: NbaFuturesPicks): string[] {
   if(Object.entries(p.winTotals).some(([id,choice])=>!NBA_TEAM_BY_ID.has(id)||!["over","under"].includes(choice)))
     errors.push("Invalid team or win-total selection.");
   for(const [key,max,perConference] of [
-    ["playoffTeams",16,8],["conferenceFinalists",4,2],["finalsTeams",2,1],["oneSeeds",2,1],
+    ["playoffTeams",16,8],["conferenceFinalists",4,2],["finalsTeams",2,1],
   ] as const){
     const values=p[key];
     if(values.length>max||new Set(values).size!==values.length||values.some(id=>!NBA_TEAM_BY_ID.has(id)))
@@ -72,10 +72,8 @@ export function validateNbaFutures(p: NbaFuturesPicks): string[] {
   };
   subset(p.conferenceFinalists,p.playoffTeams,"Conference finalists");
   subset(p.finalsTeams,p.conferenceFinalists,"Finals teams");
-  subset(p.oneSeeds,p.playoffTeams,"No. 1 seeds");
   if(p.champion&&!p.finalsTeams.includes(p.champion)) errors.push("Champion must be a Finals pick.");
-  if(p.cupChampion&&!NBA_TEAM_BY_ID.has(p.cupChampion)) errors.push("Invalid NBA Cup champion.");
-  if(["mvp","dpoy","roy","mip"].some(k=>p[k as "mvp"].length>120)) errors.push("Award names must be under 120 characters.");
+  if(["mvp","dpoy"].some(k=>p[k as "mvp"].length>120)) errors.push("Award names must be under 120 characters.");
   return errors;
 }
 export function isNbaFuturesComplete(p:NbaFuturesPicks):boolean {
