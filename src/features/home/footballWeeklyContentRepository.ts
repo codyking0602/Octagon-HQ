@@ -80,7 +80,20 @@ const choice = z.strictObject({
   player: footballWeeklyPlayerCandidateSchema,
   game: footballWeeklyGameCandidateSchema,
   selected_at: z.iso.datetime({ offset: true }),
-  selected_by: z.uuid(),
+  // The existing Supabase-owner panel records selected_by (auth.uid()).
+  // The GitHub owner OIDC handoff records a verified GitHub actor instead;
+  // never fabricate an auth user UUID for this identity.
+  selected_by: z.uuid().optional(),
+  selected_by_github_id: z.string().regex(/^[0-9]{1,20}$/).optional(),
+  selected_via: z.literal("github-oidc-owner").optional(),
+  source_sha: z.string().regex(/^[a-f0-9]{40}$/).optional(),
+}).superRefine((item, context) => {
+  const signedGithubChoice = item.selected_via === "github-oidc-owner";
+  if (signedGithubChoice
+    ? Boolean(item.selected_by || !item.selected_by_github_id || !item.source_sha)
+    : Boolean(!item.selected_by || item.selected_by_github_id || item.source_sha)) {
+    context.addIssue({ code: "custom", message: "Owner selection must have exactly one verifiable identity source" });
+  }
 });
 const choiceLists = z.strictObject({ cfb: choice.optional(), nfl: choice.optional() }).default({});
 
