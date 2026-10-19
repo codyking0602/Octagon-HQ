@@ -104,7 +104,9 @@ export const OCT19_NFL_SPORTS_FEUD_MAIN: readonly SportsFeudAuthoredQuestion[] =
         "name": "Kansas City Chiefs",
         "aliases": [
           "Chiefs",
-          "KC"
+          "KC",
+          "Kansas City",
+          "Cheifs"
         ]
       },
       {
@@ -245,7 +247,9 @@ export const OCT19_NFL_SPORTS_FEUD_FAST: Readonly<Record<string, {
       "Nnamdi Asomugha",
       "Shane Lechler",
       "Sebastian Janikowski",
-      "Rodney Hudson"
+      "Rodney Hudson",
+      "Steve Wisniewski",
+      "Jared Cook"
     ]
   },
   "nfl-fast3-08-3": {
