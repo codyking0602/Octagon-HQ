@@ -1,6 +1,10 @@
 import type { NbaWhoAmIAuthoredIdentity } from "./nbaWhoAmIAuthoredScripts";
 
-/** NBA Who Am I — isolated authored modern roster batch 1. No runtime generation. */
+/**
+ * NBA Who Am I: 48 independently authored modern identities for isolated Batch 1.
+ * These static ladders are intentionally not imported by the eight-player preview bank;
+ * integration and roster expansion are handled separately.
+ */
 export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
   {
     "subjectId": "nba:luka-doncic",
@@ -334,7 +338,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-shai-gilgeous-alexander-b-1",
-            "text": "I entered the league as a lottery pick who began my career on a veteran playoff team.",
+            "text": "I earned regular playing time immediately on a veteran playoff team.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -615,7 +619,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-jayson-tatum-b-8",
-            "text": "I was a leading scorer on Boston's record-setting 64-win 2023-24 club.",
+            "text": "I was a leading scorer for Boston's league-best 64-win 2023-24 team.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -979,7 +983,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-joel-embiid-b-1",
-            "text": "I did not play my first official NBA game until more than two years after being drafted.",
+            "text": "I spent my first professional seasons rehabilitating injuries before reaching the court.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1495,7 +1499,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-victor-wembanyama-b-10",
-            "text": "I am San Antonio's towering French No. 1 phenomenon nicknamed Wemby.",
+            "text": "I am San Antonio's No. 1, the towering French phenomenon widely called Wemby.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1624,7 +1628,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-tyrese-haliburton-b-1",
-            "text": "I was not drafted among the first ten selections of my class.",
+            "text": "I arrived with a reputation for quickly reading defenses and making smart passes.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1710,7 +1714,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-tyrese-haliburton-b-10",
-            "text": "I am Indiana's No. 0 passer exchanged for Domantas Sabonis.",
+            "text": "I am the Pacers' No. 0 playmaker who led Indiana to the 2025 NBA Finals.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2269,7 +2273,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-jalen-brunson-b-1",
-            "text": "I entered the league without being a first-round draft pick.",
+            "text": "I had to earn a starting role after entering the league behind an established scorer.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -2570,7 +2574,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-karl-anthony-towns-b-10",
-            "text": "I am the former Minnesota No. 32 star whose initials spell KAT.",
+            "text": "I am the Knicks' high-scoring center known by the initials KAT.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2699,7 +2703,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-anthony-davis-b-1",
-            "text": "I had an unusually strong defensive reputation before my NBA debut.",
+            "text": "I was widely praised for shot blocking before becoming an NBA regular.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -2914,7 +2918,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-damian-lillard-b-1",
-            "text": "I played four seasons of college basketball before becoming an NBA lottery pick.",
+            "text": "I arrived in the league with a reputation as a prolific shooter and late-game scorer.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -3129,7 +3133,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-jimmy-butler-b-1",
-            "text": "I started my professional career without a guaranteed starring role.",
+            "text": "I began my NBA career in a limited bench role and earned minutes through defense.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -4849,7 +4853,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-draymond-green-b-1",
-            "text": "I initially played limited minutes before becoming a regular starter.",
+            "text": "I was asked to contribute energy and defense before becoming a regular starter.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5411,7 +5415,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-pascal-siakam-a-3",
-            "text": "I improved my own self-created scoring after starting as a defense-first player.",
+            "text": "I used quickness and spin moves to score against bigger defenders.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5924,7 +5928,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-ja-morant-b-1",
-            "text": "I became a starter immediately after being drafted near the top.",
+            "text": "I caught attention for spectacular passes and drives before entering the NBA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6784,7 +6788,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-domantas-sabonis-b-1",
-            "text": "I entered the league as the son of a famous international basketball star.",
+            "text": "I earned a larger offensive role after spending my early seasons alongside established scorers.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6870,7 +6874,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-domantas-sabonis-b-10",
-            "text": "I am the Kings' No. 11 frontcourt playmaker and son of Arvydas Sabonis.",
+            "text": "I am the Sacramento No. 11 big whose Hall of Fame father is Arvydas.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6964,7 +6968,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-demar-derozan-a-8",
-            "text": "I hit consecutive game-winning buzzer-beaters on back-to-back dates in 2021-22.",
+            "text": "I averaged almost 28 points in my first season with Chicago.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7026,7 +7030,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-demar-derozan-b-4",
-            "text": "I made several All-Star teams with my original franchise.",
+            "text": "I increased my shot-creation responsibilities while remaining committed to midrange scoring.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7214,7 +7218,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-zach-lavine-b-1",
-            "text": "I first attracted NBA attention with extraordinary leaping ability.",
+            "text": "I began my career known for speed, leaping and above-the-rim finishing.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7475,7 +7479,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-brandon-ingram-b-6",
-            "text": "I grew into an All-Star after arriving in New Orleans.",
+            "text": "I earned All-Star honors in my first Pelicans season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7644,7 +7648,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-rudy-gobert-b-1",
-            "text": "I was not drafted in the lottery but quickly became a defensive specialist.",
+            "text": "I needed time to establish myself as a regular rotation defender.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7973,7 +7977,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-khris-middleton-a-1",
-            "text": "I began my NBA career in a small role before becoming a dependable scorer.",
+            "text": "I developed from a reserve into a reliable perimeter scorer.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8289,7 +8293,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-bradley-beal-b-1",
-            "text": "I had a major offensive role before reaching my mid-twenties.",
+            "text": "I arrived in the NBA as a technically polished shooter.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8335,7 +8339,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-bradley-beal-b-6",
-            "text": "I scored a career-high 60 points in a game against Philadelphia.",
+            "text": "I made my first All-Star team in 2018.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8684,7 +8688,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-jaren-jackson-jr-a-8",
-            "text": "I earned an All-Star selection while anchoring Memphis's frontcourt.",
+            "text": "I made my first NBA All-Star Game in the same season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8775,7 +8779,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-jaren-jackson-jr-b-7",
-            "text": "I won the Defensive Player of the Year award over other elite rim protectors.",
+            "text": "I averaged 3.0 blocks per game during my DPOY campaign.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8970,7 +8974,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-chet-holmgren-b-5",
-            "text": "I recorded 36 points and 10 rebounds in an overtime loss to Golden State as a rookie.",
+            "text": "I scored 36 points in a regular-season game during my first active season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8980,7 +8984,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-chet-holmgren-b-6",
-            "text": "I averaged more than two blocks per game during my first season.",
+            "text": "I made my NBA debut in 2023 after recovering from a foot injury.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9094,7 +9098,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-paolo-banchero-a-6",
-            "text": "I earned an All-Star selection during my second season.",
+            "text": "I earned my first NBA All-Star selection in my second season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9215,7 +9219,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-paolo-banchero-b-8",
-            "text": "I helped Orlando win 47 regular-season games in 2023-24.",
+            "text": "I became an All-Star before my 22nd birthday.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9319,7 +9323,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-franz-wagner-a-7",
-            "text": "I became one of the leading scorers on a rising Eastern Conference team.",
+            "text": "I helped Germany win the 2023 FIBA World Cup.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9749,7 +9753,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-cade-cunningham-a-7",
-            "text": "I earned a first All-Star selection in 2025.",
+            "text": "I was selected to my first NBA All-Star Game in 2025.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9759,7 +9763,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-cade-cunningham-a-8",
-            "text": "I averaged more than nine assists during my 2024-25 breakout.",
+            "text": "I led my team back to the playoffs in 2025.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9830,7 +9834,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-cade-cunningham-b-5",
-            "text": "I averaged over 22 points during the 2023-24 season.",
+            "text": "I returned from surgery to become my team's offensive centerpiece.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -10179,7 +10183,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-alperen-sengun-a-7",
-            "text": "I posted a 45-point, 16-rebound performance against San Antonio.",
+            "text": "I earned my first NBA All-Star selection in 2025.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -10251,7 +10255,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-alperen-sengun-b-4",
-            "text": "I became an offensive hub who could distribute from the high post.",
+            "text": "I increased my scoring role while setting up cutting teammates.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
