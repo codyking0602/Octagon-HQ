@@ -1367,7 +1367,7 @@ export const nbaWhoAmIAuthoredBatch2: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-manu-ginobili-b-4",
-            "text": "I achieved a 20-point-per-game scoring average at my regular-season peak.",
+            "text": "I approached a 20-point-per-game scoring average during my highest-scoring NBA season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -4994,7 +4994,7 @@ export const nbaWhoAmIAuthoredBatch2: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-gordon-hayward-b-3",
-            "text": "I logged significant minutes on several Western playoff teams.",
+            "text": "I logged major minutes on a Western Conference playoff team during my first NBA stop.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5927,7 +5927,7 @@ export const nbaWhoAmIAuthoredBatch2: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-chris-bosh-a-5",
-            "text": "I averaged more than 24 points per game in the 2009–10 season.",
+            "text": "I averaged 24.0 points per game during the 2009–10 season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
