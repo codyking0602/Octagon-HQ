@@ -241,9 +241,11 @@ export function createNbaHitTheNumberPlan(seed: string, boardType: NbaHitNumberB
   const metricId = weighted(NBA_HIT_THE_NUMBER_STAT_CATALOG.map((metric) => ({
     value: metric.id, weight: metric.id.endsWith("ppg") ? 30 : metric.id.endsWith("apg") ? 18 : 17,
   })), random);
-  const eligible = candidateSubjects(metricId, formatId, random);
   const poolSize = NBA_HIT_THE_NUMBER_POOL_SIZE[pickCount];
+  // If a particular theme is too narrow to yield meaningful risk/reward,
+  // change the theme and source pool instead of serving a bad board.
   for (let attempt = 0; attempt < 220; attempt += 1) {
+    const eligible = candidateSubjects(metricId, formatId, random);
     const subjects = candidatePool(eligible.subjects, metricId, poolSize, random);
     if (subjects.length !== poolSize) continue;
     const plan: NbaHitNumberPlan = {
@@ -270,7 +272,7 @@ export function createNbaHitTheNumberPlan(seed: string, boardType: NbaHitNumberB
     plan.target = totals[Math.floor(percentile * (totals.length - 1))]!;
     if (nbaHitTheNumberPlanQuality(plan).passes) return plan;
   }
-  throw new Error("NBA Hit the Number could not create a balanced board.");
+  throw new Error(`NBA Hit the Number could not create a balanced board for ${seed} / ${formatId} / ${metricId}.`);
 }
 export function createNbaHitTheNumberRun(seed = createReplaySeed(NBA_HIT_THE_NUMBER_GAME_ID)): NbaHitNumberRun {
   const plan = createNbaHitTheNumberPlan(seed);
