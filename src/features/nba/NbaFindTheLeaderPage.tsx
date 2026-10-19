@@ -31,8 +31,8 @@ function NbaHeadshot({ candidate, compact = false }: { candidate: NbaLeaderCandi
   const image = nbaFindLeaderHeadshot(candidate);
   useEffect(() => setFailed(false), [image, candidate.id]);
   const initials = candidate.name.split(" ").map(part => part[0]).filter(Boolean).slice(0, 2).join("");
-  return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "")}
-    aria-label={candidate.name + " player portrait"}>
+  return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "") + (candidate.name === "Gail Goodrich" ? " is-editorial" : "")}
+    aria-label={candidate.name + (image && !failed ? " player portrait" : " player initials")}>
     {image && !failed ? <img src={image} alt="" loading="lazy" referrerPolicy="no-referrer"
       onError={() => setFailed(true)} /> : <b aria-hidden="true">{initials || "NBA"}</b>}
   </span>;
