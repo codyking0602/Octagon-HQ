@@ -3,6 +3,7 @@
  * Source: https://github.com/peasant98/TheNBACSV/blob/master/nbaNew.csv
  * Aggregate multi-team TOT rows take precedence; >=45 games required.
  * Inclusion requires identity from the approved 200-player NBA Who Am I bank.
+ * Tim Hardaway Jr. is excluded from the elder Tim Hardaway identity (2014/2017 CSV alias collision).
  * PPG/RPG/APG are one-decimal rounded season totals / games played.
  * Source snapshot is pinned in the repository, never fetched at gameplay time.
  */
@@ -384,7 +385,6 @@ export const NBA_FIND_HISTORICAL_SEASONS: readonly NbaFindHistoricalSeasonRow[] 
   [2014, "Shawn Marion", 76, 10.4, 6.5, 1.6, null],
   [2014, "Stephen Curry", 78, 24.0, 4.3, 8.5, null],
   [2014, "Tim Duncan", 74, 15.1, 9.7, 3.0, null],
-  [2014, "Tim Hardaway", 81, 10.2, 1.5, 0.8, null],
   [2014, "Tony Allen", 55, 9.0, 3.8, 1.7, null],
   [2014, "Tony Parker", 68, 16.7, 2.3, 5.7, null],
   [2014, "Tyson Chandler", 55, 8.7, 9.6, 1.1, null],
@@ -449,7 +449,6 @@ export const NBA_FIND_HISTORICAL_SEASONS: readonly NbaFindHistoricalSeasonRow[] 
   [2017, "Russell Westbrook", 81, 31.6, 10.7, 10.4, 201566],
   [2017, "Serge Ibaka", 79, 14.8, 6.8, 0.9, null],
   [2017, "Stephen Curry", 79, 25.3, 4.5, 6.6, null],
-  [2017, "Tim Hardaway", 79, 14.5, 2.8, 2.3, null],
   [2017, "Tony Allen", 71, 9.1, 5.5, 1.4, null],
   [2017, "Tony Parker", 63, 10.1, 1.8, 4.5, null],
   [2017, "Tyson Chandler", 47, 8.4, 11.5, 0.6, null],
