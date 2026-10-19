@@ -69,7 +69,22 @@ export function nbaHitAvailableSubjectIds(plan:NbaHitPlan,ids:readonly string[])
   if(ids.length>=plan.pickCount)return [];
   if(!plan.slots.length)return plan.subjectIds.filter(id=>!ids.includes(id));
   const slot=plan.slots[ids.length]!;
-  return plan.subjectIds.filter(id=>!ids.includes(id) && nbaHitSlotAccepts(slot,nbaHitSubjectById.get(id)!,plan.statId));
+  return plan.subjectIds.filter(id=>{
+    if(ids.includes(id)||!nbaHitSlotAccepts(slot,nbaHitSubjectById.get(id)!,plan.statId))return false;
+    const unavailable=new Set([...ids,id]);
+    const future=plan.slots.slice(ids.length+1);
+    const canComplete=(index:number):boolean=>{
+      if(index===future.length)return true;
+      for(const other of plan.subjectIds) {
+        if(unavailable.has(other)||!nbaHitSlotAccepts(future[index]!,nbaHitSubjectById.get(other)!,plan.statId))continue;
+        unavailable.add(other);
+        if(canComplete(index+1))return true;
+        unavailable.delete(other);
+      }
+      return false;
+    };
+    return canComplete(0);
+  });
 }
 export function nbaHitResult(plan:NbaHitPlan,ids:readonly string[]):NbaHitResult {
   if(!nbaHitSelectionSatisfies(plan,ids))throw new Error("NBA Hit the Number requires legal four/five distinct selections.");
