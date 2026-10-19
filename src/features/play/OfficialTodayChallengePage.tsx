@@ -82,6 +82,9 @@ export function OfficialTodayChallengeContent({
   onNavigate,
   showMillionaireExit = false,
   onSportsFeudExit,
+  sportsFeudSyncError,
+  onRetrySportsFeud,
+  onRefreshSportsFeud,
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
@@ -92,6 +95,9 @@ export function OfficialTodayChallengeContent({
   onNavigate: (route: string) => void;
   showMillionaireExit?: boolean;
   onSportsFeudExit?: () => void;
+  sportsFeudSyncError?: string | null;
+  onRetrySportsFeud?: () => void;
+  onRefreshSportsFeud?: () => void;
 }) {
   const adapter = todayChallengeAdapter(projection.gameType);
   const blindResumeV3 = projection.gameType === "blind_resume"
@@ -168,6 +174,9 @@ export function OfficialTodayChallengeContent({
           onExit={onSportsFeudExit ?? (showMillionaireExit
             ? () => onNavigate(projection.sport === "football" ? "/football" : "/play")
             : undefined)}
+          resultStatus={sportsFeudSyncError ?? undefined}
+          onRetryResult={onRetrySportsFeud}
+          onRefreshSaved={onRefreshSportsFeud}
         />
       ) : projection.gameType === "average_fan" ? (
         <OfficialAverageFanDailyView
@@ -281,6 +290,9 @@ export default function OfficialTodayChallengePage({
         onAdvance={(action, options) => { void runtime.advance(action, options); }}
         onNavigate={(route) => navigate(route)}
         showMillionaireExit
+        sportsFeudSyncError={runtime.error instanceof Error ? runtime.error.message : null}
+        onRetrySportsFeud={() => { void runtime.retryPending(); }}
+        onRefreshSportsFeud={() => { void runtime.refresh(); }}
       />
     </div>
   );
