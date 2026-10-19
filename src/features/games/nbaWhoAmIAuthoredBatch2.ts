@@ -1768,7 +1768,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-marc-gasol-b-4",
-            "text": "I was a central player in multiple tough playoff series with Oklahoma City.",
+            "text": "I was a central player in multiple bruising series against Western Conference playoff contenders.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2778,7 +2778,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-andre-iguodala-b-4",
-            "text": "I was an important part of the 2012 Olympic gold-medal team.",
+            "text": "I helped an underdog postseason team win a first-round series despite injuries to its opponent.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -3384,7 +3384,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-brook-lopez-b-4",
-            "text": "I appeared in the playoffs for the first time while playing in Brooklyn.",
+            "text": "My first playoff appearance followed several losing seasons with the franchise that drafted me.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -3586,7 +3586,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-al-horford-b-4",
-            "text": "I made two early All-Star appearances with an Atlanta contender.",
+            "text": "I made two early All-Star appearances during my team's emergence as a playoff regular.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -4650,7 +4650,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-kemba-walker-b-10",
-            "text": "I am the Bronx-born Connecticut star remembered for his Big East tournament step-back.",
+            "text": "I am the Bronx-born Connecticut star remembered for my Big East tournament step-back.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -4771,7 +4771,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
         "clues": [
           {
             "id": "nba-victor-oladipo-b-1",
-            "text": "I made the All-Rookie First Team after being drafted.",
+            "text": "My rookie campaign brought an All-Rookie First Team selection.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -5202,7 +5202,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-paul-millsap-b-4",
-            "text": "I averaged nearly nine rebounds per game in a strong season as my role expanded in Utah.",
+            "text": "I averaged nearly nine rebounds per game in a season as my role expanded.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -7893,7 +7893,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-andrew-bogut-b-4",
-            "text": "I was selected to the All-NBA Third Team in 2010.",
+            "text": "I earned All-NBA Third Team recognition as my offensive and defensive impact grew.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8068,7 +8068,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
         "clues": [
           {
             "id": "nba-tyson-chandler-b-1",
-            "text": "I entered the NBA directly from high school.",
+            "text": "I bypassed college and began my professional basketball career as a teenager.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8862,7 +8862,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-brandon-roy-a-10",
-            "text": "I wore No. 7 for Portland and became a three-time All-Star before knee injuries cut short his prime.",
+            "text": "I wore No. 7 for Portland and became a three-time All-Star before knee injuries cut short my prime.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8876,7 +8876,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
         "clues": [
           {
             "id": "nba-brandon-roy-b-1",
-            "text": "I was selected to the NBA All-Rookie First Team.",
+            "text": "My debut NBA season brought All-Rookie First Team recognition.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -9298,7 +9298,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-oj-mayo-b-3",
-            "text": "I made the 2008–09 All-Rookie First Team.",
+            "text": "I made an All-Rookie First Team after a productive debut year.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
