@@ -8065,5 +8065,2681 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
       ]
     }
   }
+},
+{
+  "subjectId": "nba:rick-barry",
+  "name": "Rick Barry",
+  "eraBand": "legacy",
+  "rescueGroup": "wing",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/rick-barry",
+    "stats": "https://www.basketball-reference.com/players/b/barryri01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-rick-barry-a-1",
+          "text": "I developed into an elite professional scorer through aggressive drives and accurate shooting.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-2",
+          "text": "I won major honors while playing in two different professional leagues.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-3",
+          "text": "I used free throws as a dependable part of my offensive production.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-4",
+          "text": "I reached championship series at different stages of my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-5",
+          "text": "I received Rookie of the Year recognition during my first NBA season.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-6",
+          "text": "I led the NCAA in scoring at the University of Miami.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-7",
+          "text": "I led the NBA in scoring before moving to the ABA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-8",
+          "text": "I returned to the Warriors after playing for the Oakland Oaks and New York Nets in the ABA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-9",
+          "text": "I won the 1975 NBA Finals MVP while leading Golden State to a title.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-a-10",
+          "text": "I became famous for shooting free throws underhanded and won the 1969 ABA title.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-rick-barry-b-1",
+          "text": "I was an inventive passer as well as a relentless offensive scorer.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-2",
+          "text": "I maintained high production across multiple major-league stops.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-3",
+          "text": "I received repeated All-League recognition in both the ABA and NBA.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-4",
+          "text": "I experienced a lengthy interruption in my early NBA career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-5",
+          "text": "I could get to the foul line without abandoning perimeter jump shots.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-6",
+          "text": "I played for the San Francisco Warriors before crossing to the ABA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-7",
+          "text": "I led the ABA in scoring and captured an ABA championship with Oakland.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-8",
+          "text": "I won an NBA championship against Washington in a four-game Finals sweep.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-9",
+          "text": "My NBA title came with the 1975 Golden State Warriors and a Finals MVP award.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-rick-barry-b-10",
+          "text": "I was Rick Barry, the distinctive underhand free-throw shooter who starred in both leagues.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:walt-frazier",
+  "name": "Walt Frazier",
+  "eraBand": "legacy",
+  "rescueGroup": "guard",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/walt-frazier",
+    "stats": "https://www.basketball-reference.com/players/f/fraziwa01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-walt-frazier-a-1",
+          "text": "I was known as a disruptive defender who could also guide a productive offense.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-2",
+          "text": "I earned repeated All-Star selections during a strong stretch for my team.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-3",
+          "text": "I regularly matched up with the league's top perimeter players.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-4",
+          "text": "I contributed to two championship runs for the same franchise.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-5",
+          "text": "I was selected to multiple All-NBA and All-Defensive teams.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-6",
+          "text": "I played college basketball at Southern Illinois.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-7",
+          "text": "I earned a reputation for steals before they became an official NBA statistic.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-8",
+          "text": "I recorded 36 points and 19 assists in a championship-clinching Game 7.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-9",
+          "text": "I won the 1970 and 1973 NBA championships with the New York Knicks.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-a-10",
+          "text": "I wore No. 10 and became known as Clyde, a Knicks defensive and playmaking icon.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-walt-frazier-b-1",
+          "text": "I was a lead ballhandler on a team celebrated for moving the ball.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-2",
+          "text": "I built much of my reputation through defensive pressure and composure.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-3",
+          "text": "I was a frequent postseason participant during my prime.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-4",
+          "text": "I earned selection to several NBA All-Star Games.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-5",
+          "text": "I played beside numerous future Hall of Famers in a balanced offense.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-6",
+          "text": "I became an NBA All-Star Game MVP in 1975.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-7",
+          "text": "I played alongside Willis Reed and Bill Bradley in New York.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-8",
+          "text": "I finished my NBA career with the Cleveland Cavaliers.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-9",
+          "text": "My seven All-Defensive First Team selections defined the Knicks' backcourt.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-walt-frazier-b-10",
+          "text": "I was Walt 'Clyde' Frazier and helped bring Manhattan two NBA titles.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:bob-cousy",
+  "name": "Bob Cousy",
+  "eraBand": "legacy",
+  "rescueGroup": "guard",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/bob-cousy",
+    "stats": "https://www.basketball-reference.com/players/c/cousybo01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-bob-cousy-a-1",
+          "text": "I was an imaginative playmaker during the league's formative decades.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-2",
+          "text": "I made numerous All-Star appearances on consistently successful teams.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-3",
+          "text": "I helped change expectations for ballhandling and passing.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-4",
+          "text": "I was an important part of championship teams without being their tallest scorer.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-5",
+          "text": "I won the NBA MVP award during my playing career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-6",
+          "text": "I won a college national championship at Holy Cross.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-7",
+          "text": "I led the NBA in assists eight seasons in a row.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-8",
+          "text": "I played with Bill Russell during the beginning of Boston's title dynasty.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-9",
+          "text": "I won six NBA championships with the Celtics and the 1957 league MVP.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-a-10",
+          "text": "I was nicknamed the Houdini of the Hardwood for my passing and ballhandling.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-bob-cousy-b-1",
+          "text": "I was considered a premier passer long before modern pace-and-space offenses.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-2",
+          "text": "I guided fast breaks with creative control of the basketball.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-3",
+          "text": "I became one of the league's first nationally recognizable stars.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-4",
+          "text": "I received All-NBA First Team honors repeatedly.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-5",
+          "text": "I enjoyed success under a coach famous for encouraging transition play.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-6",
+          "text": "I starred at Holy Cross before joining Red Auerbach in Boston.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-7",
+          "text": "I reached thirteen consecutive NBA All-Star Games.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-8",
+          "text": "I briefly returned to play for the Cincinnati Royals after an earlier retirement.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-9",
+          "text": "I wore No. 14 for six Celtics championship teams.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-cousy-b-10",
+          "text": "My flashy style earned the nickname Houdini of the Hardwood.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:john-havlicek",
+  "name": "John Havlicek",
+  "eraBand": "legacy",
+  "rescueGroup": "wing",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/john-havlicek",
+    "stats": "https://www.basketball-reference.com/players/h/havlijo01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-john-havlicek-a-1",
+          "text": "I built a long career through endurance and movement away from the ball.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-2",
+          "text": "I helped successful teams across more than one generation of teammates.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-3",
+          "text": "I was capable of contributing as both a starter and a reserve.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-4",
+          "text": "I made repeated All-Star appearances and earned recognition for defense.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-5",
+          "text": "I joined the league following a national championship in college.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-6",
+          "text": "I played college basketball for Ohio State.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-7",
+          "text": "I was an important sixth man during an established Boston championship dynasty.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-8",
+          "text": "I later became the Celtics' primary scorer and won the 1974 Finals MVP.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-9",
+          "text": "I won eight NBA championships while playing all sixteen NBA seasons in Boston.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-a-10",
+          "text": "I stole the ball in a famous playoff ending remembered as 'Havlicek stole the ball!'",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-john-havlicek-b-1",
+          "text": "I was valued for playing hard at both ends for every minute.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-2",
+          "text": "I helped a dynasty continue winning as earlier stars retired.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-3",
+          "text": "I could guard opponents while handling major offensive responsibility.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-4",
+          "text": "I accumulated over twenty-six thousand points in my NBA career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-5",
+          "text": "I earned All-Defensive First Team honors five times.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-6",
+          "text": "I was a teammate of Jerry Lucas on Ohio State's 1960 NCAA champions.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-7",
+          "text": "I scored more than one thousand points in sixteen straight NBA seasons.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-8",
+          "text": "I earned Finals MVP honors in a seven-game series against Milwaukee in 1974.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-9",
+          "text": "I wore No. 17 for the Boston Celtics and won eight NBA titles.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-john-havlicek-b-10",
+          "text": "I was nicknamed Hondo and became famous for a late steal against Philadelphia.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:elvin-hayes",
+  "name": "Elvin Hayes",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/elvin-hayes",
+    "stats": "https://www.basketball-reference.com/players/h/hayesel01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-elvin-hayes-a-1",
+          "text": "I became a regular double-double threat through scoring and rebounding.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-2",
+          "text": "I produced immediate offense as a rookie and remained durable for years.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-3",
+          "text": "I earned numerous All-Star appearances across two franchises.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-4",
+          "text": "I was regarded as a skilled shooter from the interior and midrange.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-5",
+          "text": "I won an NBA scoring title in my first professional season.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-6",
+          "text": "I starred at Houston and defeated UCLA in the college 'Game of the Century.'",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-7",
+          "text": "I began my career with the San Diego Rockets before moving to the Bullets.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-8",
+          "text": "I teamed with Wes Unseld on a frontcourt that reached several Finals.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-9",
+          "text": "I led Washington to the 1978 NBA title against Seattle.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-a-10",
+          "text": "I was nicknamed the Big E and helped end UCLA's 47-game winning streak in 1968.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-elvin-hayes-b-1",
+          "text": "I had a reliable turnaround jumper and an imposing rebounding presence.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-2",
+          "text": "I earned All-NBA honors on teams in different cities.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-3",
+          "text": "I played a very large number of NBA games over a lengthy career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-4",
+          "text": "I became one of my era's most consistent scoring leaders.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-5",
+          "text": "I was a twelve-time NBA All-Star.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-6",
+          "text": "I was selected first overall by the San Diego Rockets in 1968.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-7",
+          "text": "I led the league in scoring as a rookie at 28.4 points per game.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-8",
+          "text": "I returned to Houston late in my playing career after a decade with the Bullets.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-9",
+          "text": "I formed Washington's title-winning frontcourt alongside Wes Unseld.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-elvin-hayes-b-10",
+          "text": "I was Elvin 'Big E' Hayes, a Rockets and Bullets star and 1978 champion.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:wes-unseld",
+  "name": "Wes Unseld",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/wes-unseld",
+    "stats": "https://www.basketball-reference.com/players/u/unselwe01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-wes-unseld-a-1",
+          "text": "I earned a reputation for setting the tone with physical rebounding.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-2",
+          "text": "I made excellent passes immediately after collecting defensive rebounds.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-3",
+          "text": "I spent my playing career with one organization through changes of city name.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-4",
+          "text": "I earned major league awards very early in my professional career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-5",
+          "text": "I was part of a championship team during the late 1970s.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-6",
+          "text": "I attended the University of Louisville before entering the NBA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-7",
+          "text": "I became both Rookie of the Year and league MVP in the same season.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-8",
+          "text": "I reached the NBA Finals with Elvin Hayes as my frontcourt teammate.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-9",
+          "text": "I won Finals MVP in 1978 when the Washington Bullets defeated Seattle.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-a-10",
+          "text": "My long outlet passes and No. 41 jersey became hallmarks of the Bullets.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-wes-unseld-b-1",
+          "text": "I played taller and stronger than my listed height would suggest.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-2",
+          "text": "I was regarded as an exceptional position rebounder.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-3",
+          "text": "I contributed through screens, passes and toughness rather than huge scoring totals.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-4",
+          "text": "I helped the same franchise reach several championship series.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-5",
+          "text": "I earned five NBA All-Star selections.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-6",
+          "text": "I played for the Baltimore, Capital and Washington versions of the Bullets.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-7",
+          "text": "I became the league MVP during my rookie year in 1969.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-8",
+          "text": "I collected 13,769 rebounds during my thirteen-year NBA career.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-9",
+          "text": "I was the 1978 NBA Finals MVP for Washington.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-wes-unseld-b-10",
+          "text": "I was Wes Unseld, the Bullets' famous outlet passer who shared the frontcourt with Elvin Hayes.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:bob-pettit",
+  "name": "Bob Pettit",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/bob-pettit",
+    "stats": "https://www.basketball-reference.com/players/p/pettibo01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-bob-pettit-a-1",
+          "text": "I was a relentless interior scorer during the early years of the NBA.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-2",
+          "text": "I earned major individual honors while competing for championships.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-3",
+          "text": "I combined scoring and rebounding throughout a long career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-4",
+          "text": "I made the All-Star Game in every season of my professional career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-5",
+          "text": "I won the league MVP award more than once.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-6",
+          "text": "I starred at Louisiana State before beginning an NBA career.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-7",
+          "text": "I was the first winner of the NBA's regular-season MVP award.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-8",
+          "text": "I scored 50 points in a championship-clinching Finals game.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-9",
+          "text": "I led the St. Louis Hawks to the 1958 NBA title over Boston.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-a-10",
+          "text": "I won the 1956 and 1959 NBA MVP awards and finished with 20,880 points.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-bob-pettit-b-1",
+          "text": "I excelled on the glass while being a consistent scoring leader.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-2",
+          "text": "I played through an era when franchises and the league itself were still growing.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-3",
+          "text": "I won Rookie of the Year at the beginning of my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-4",
+          "text": "I became a favorite for the league's annual All-NBA First Team.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-5",
+          "text": "I was twice the league's season scoring leader.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-6",
+          "text": "I began with the Milwaukee Hawks before their move to St. Louis.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-7",
+          "text": "I reached multiple NBA Finals against Bill Russell's Celtics.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-8",
+          "text": "I scored 50 in the 1958 Finals clincher against Boston.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-9",
+          "text": "I spent my entire eleven-season NBA career with the Hawks.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bob-pettit-b-10",
+          "text": "I became the Hawks' No. 9 legend and the first recipient of the NBA MVP trophy.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:bill-walton",
+  "name": "Bill Walton",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/bill-walton",
+    "stats": "https://www.basketball-reference.com/players/w/waltobi01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-bill-walton-a-1",
+          "text": "I built a reputation around passing, rebounding and team-first play.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-2",
+          "text": "I experienced brilliant stretches as well as significant interruptions from injuries.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-3",
+          "text": "I became a major contributor on a championship team early in my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-4",
+          "text": "I was a highly decorated college basketball player.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-5",
+          "text": "I earned NBA MVP honors despite playing relatively few seasons at full strength.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-6",
+          "text": "I led UCLA to consecutive NCAA championships under John Wooden.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-7",
+          "text": "I won the 1977 NBA championship and Finals MVP with Portland.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-8",
+          "text": "I later reinvented my role as a reserve on a championship team.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-9",
+          "text": "I was the 1978 NBA MVP and 1986 Sixth Man of the Year.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-a-10",
+          "text": "I starred for the Trail Blazers wearing No. 32 and later won a title with Boston.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-bill-walton-b-1",
+          "text": "I elevated an offense through passing from the high post.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-2",
+          "text": "I was a formidable rim protector during my healthy seasons.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-3",
+          "text": "I won awards as both a starter and a bench contributor.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-4",
+          "text": "I had multiple operations related to foot injuries.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-5",
+          "text": "I helped two separate NBA franchises win championships.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-6",
+          "text": "I became the centerpiece of Portland's breakthrough championship in 1977.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-7",
+          "text": "I won two NCAA titles at UCLA while compiling an extraordinary college record.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-8",
+          "text": "I joined Larry Bird's Celtics and won Sixth Man of the Year in 1986.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-9",
+          "text": "I earned the 1977 Finals MVP and 1978 NBA MVP with the Trail Blazers.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-bill-walton-b-10",
+          "text": "I was Bill Walton, the UCLA legend and red-haired passing center.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:robert-parish",
+  "name": "Robert Parish",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/robert-parish",
+    "stats": "https://www.basketball-reference.com/players/p/parisro01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-robert-parish-a-1",
+          "text": "I provided dependable rebounding and scoring across an unusually long career.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-2",
+          "text": "I was a quiet presence on championship-contending teams.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-3",
+          "text": "I earned several All-Star selections without leading the league in points.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-4",
+          "text": "I was a productive interior player with a distinctive high-release shot.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-5",
+          "text": "I remained an NBA contributor into my forties.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-6",
+          "text": "I played collegiately at Centenary in Louisiana.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-7",
+          "text": "I began my NBA career with Golden State before a trade transformed Boston.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-8",
+          "text": "I shared the Celtics' championship frontcourt with Larry Bird and Kevin McHale.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-9",
+          "text": "I played 1,611 NBA regular-season games and won four championships.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-a-10",
+          "text": "I was the Celtics' No. 00, nicknamed the Chief, and later won a title with Chicago.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-robert-parish-b-1",
+          "text": "I built my career on consistency and interior defense.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-2",
+          "text": "I played for multiple NBA teams over more than two decades.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-3",
+          "text": "I was a key starter without needing constant offensive touches.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-4",
+          "text": "I reached the NBA Finals repeatedly during my prime.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-5",
+          "text": "I earned nine NBA All-Star selections.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-6",
+          "text": "I joined Boston in the 1980 trade that also delivered a draft pick used on Kevin McHale.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-7",
+          "text": "I played the first four of my NBA seasons with the Warriors.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-8",
+          "text": "I won NBA titles in 1981, 1984 and 1986 with the Celtics.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-9",
+          "text": "I finished my 21-season NBA career with a championship on the 1997 Bulls.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-robert-parish-b-10",
+          "text": "I wore No. 00 as Robert Parish, the Chief of Boston's famed frontcourt.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:kevin-mchale",
+  "name": "Kevin McHale",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/kevin-mchale",
+    "stats": "https://www.basketball-reference.com/players/m/mchalke01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-kevin-mchale-a-1",
+          "text": "I relied on polished post moves and intelligent footwork to score.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-2",
+          "text": "I helped a team with multiple stars sustain title contention.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-3",
+          "text": "I earned both scoring opportunities and defensive assignments against elite opponents.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-4",
+          "text": "I was a valuable reserve before becoming a regular starter.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-5",
+          "text": "I earned more than one Sixth Man of the Year award.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-6",
+          "text": "I played college basketball for Minnesota before being drafted by Boston.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-7",
+          "text": "I twice won Sixth Man of the Year before becoming a seven-time All-Star.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-8",
+          "text": "I was a central part of the Celtics' frontcourt with Bird and Parish.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-9",
+          "text": "I helped Boston win the 1981, 1984 and 1986 NBA titles.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-a-10",
+          "text": "I wore Celtics No. 32 and made the low-post 'torture chamber' famous.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-kevin-mchale-b-1",
+          "text": "I became a reliable scorer near the basket with an extensive repertoire.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-2",
+          "text": "I played on a series of teams noted for frontcourt depth.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-3",
+          "text": "I was repeatedly recognized as an elite defender.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-4",
+          "text": "I made All-NBA recognition during the prime of my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-5",
+          "text": "I remained with one franchise for my entire NBA career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-6",
+          "text": "I was selected third overall in 1980 after playing at Minnesota.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-7",
+          "text": "I scored 56 points in a Celtics game against Detroit in 1985.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-8",
+          "text": "I was named to six NBA All-Defensive teams.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-9",
+          "text": "I formed one of the NBA's most famous frontcourts with Larry Bird and Robert Parish.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-kevin-mchale-b-10",
+          "text": "I became Boston's No. 32 legend after winning two Sixth Man awards and three championships.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:james-worthy",
+  "name": "James Worthy",
+  "eraBand": "legacy",
+  "rescueGroup": "wing",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/james-worthy",
+    "stats": "https://www.basketball-reference.com/players/w/worthja01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-james-worthy-a-1",
+          "text": "I was highly effective in transition and finishing near the basket.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-2",
+          "text": "I excelled at finding scoring opportunities on loaded offensive teams.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-3",
+          "text": "I contributed to multiple NBA titles over a long career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-4",
+          "text": "I was a frequent All-Star during the 1980s.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-5",
+          "text": "I earned a Finals MVP award for an important postseason performance.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-6",
+          "text": "I won an NCAA championship at North Carolina before entering the NBA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-7",
+          "text": "I was the first overall selection of the 1982 NBA Draft.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-8",
+          "text": "I scored 36 points in a Game 7 Finals victory against Detroit.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-9",
+          "text": "I won three championships as part of the Lakers' Showtime offense.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-a-10",
+          "text": "I was nicknamed Big Game James and wore No. 42 in Los Angeles.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-james-worthy-b-1",
+          "text": "I became known for efficient scoring rather than dominating the ball.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-2",
+          "text": "I was a key option beside a celebrated lead playmaker.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-3",
+          "text": "I regularly elevated my production when playoff stakes increased.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-4",
+          "text": "I developed from college champion into a professional champion.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-5",
+          "text": "I was selected to seven NBA All-Star Games.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-6",
+          "text": "I played for Dean Smith at North Carolina and won the 1982 NCAA championship.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-7",
+          "text": "I played my entire NBA career with the Los Angeles Lakers.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-8",
+          "text": "I recorded a triple-double in Game 7 of the 1988 Finals.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-9",
+          "text": "I was the 1988 NBA Finals MVP for the Lakers.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-james-worthy-b-10",
+          "text": "I was James 'Big Game' Worthy and finished fast breaks with Showtime teammates.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:dennis-johnson",
+  "name": "Dennis Johnson",
+  "eraBand": "legacy",
+  "rescueGroup": "guard",
+  "earlyRotation": "normal",
+  "sources": {
+    "hof": "https://www.hoophall.com/hall-of-famers/dennis-johnson",
+    "stats": "https://www.basketball-reference.com/players/j/johnsde01.html"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-dennis-johnson-a-1",
+          "text": "I played a demanding two-way role on several championship teams.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-2",
+          "text": "I built a reputation as a defender who could handle important assignments.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-3",
+          "text": "I contributed as a reliable passer and timely scorer.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-4",
+          "text": "I won NBA titles with more than one franchise.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-5",
+          "text": "I received multiple All-Defensive selections over my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-6",
+          "text": "I began my NBA career in Seattle before playing for Phoenix and Boston.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-7",
+          "text": "I was Finals MVP in a championship series won by the Seattle SuperSonics.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-8",
+          "text": "I helped Boston win titles in both 1984 and 1986.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-9",
+          "text": "I made the winning layup off Larry Bird's famous 1987 steal against Detroit.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-a-10",
+          "text": "I wore No. 3 for the Celtics and was known as DJ.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-dennis-johnson-b-1",
+          "text": "I could guard dangerous opposing scorers while directing my team's offense.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-2",
+          "text": "I became a respected leader on multiple postseason teams.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-3",
+          "text": "I made the NBA All-Star Game several times.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-4",
+          "text": "I was called upon to take difficult defensive matchups during the playoffs.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-5",
+          "text": "I won three NBA championships during my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-6",
+          "text": "I played at Pepperdine before being drafted by Seattle.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-7",
+          "text": "I was named the 1979 NBA Finals MVP after Seattle defeated Washington.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-8",
+          "text": "I was later traded to the Boston Celtics from Phoenix.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-9",
+          "text": "I partnered with Larry Bird on a critical late-game play against the Pistons.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        },
+        {
+          "id": "nba-dennis-johnson-b-10",
+          "text": "I was Dennis Johnson, a three-time champion and nine-time All-Defensive selection.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "hof",
+            "stats"
+          ]
+        }
+      ]
+    }
+  }
 }
 ];
