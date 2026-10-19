@@ -31,7 +31,7 @@ describe("NBA authored Who Am I 200-player final integration", () => {
      for(const url of Object.values(p.sources)){
        const u=new URL(url);
        expect(u.protocol).toBe("https:");
-       expect(u.hostname).toMatch(/(?:^|\.)(?:nba\.com|hoophall\.com|basketball-reference\.com)$/);
+       expect(u.hostname).toMatch(/(?:^|\.)(?:nba\.com|hoophall\.com|basketball-reference\.com|fiba\.basketball)$/);
      }
      for(const id of ["A","B"] as const){
        scripts++;const clues=p.scripts[id].clues;
