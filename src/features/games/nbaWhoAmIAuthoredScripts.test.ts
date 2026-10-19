@@ -9,8 +9,8 @@ import { whoAmIChallengePath, whoAmIChallengeGameVersion, whoAmIChallengeSetup, 
 const BANDS = ["broad", "broad", "helpful", "helpful", "helpful", "strong", "strong", "strong", "giveaway", "giveaway"];
 
 describe("NBA Who Am I authored A/B scripts", () => {
-  it("contains eight real calibration subjects with two ten-clue scripts each", () => {
-    expect(nbaWhoAmIAuthoredIdentities).toHaveLength(8);
+  it("contains 200 authored subjects with two ten-clue scripts each", () => {
+    expect(nbaWhoAmIAuthoredIdentities).toHaveLength(200);
     const names = new Set<string>();
     const clues = new Set<string>();
     for (const player of nbaWhoAmIAuthoredIdentities) {
