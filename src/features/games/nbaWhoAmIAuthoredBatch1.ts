@@ -1,10 +1,6 @@
 import type { NbaWhoAmIAuthoredIdentity } from "./nbaWhoAmIAuthoredScripts";
 
-/**
- * Isolated modern NBA Who Am I content batch.
- * Forty-eight identities, two independently authored ten-clue paths each.
- * Does not alter the eight calibrated preview identities or runtime engine.
- */
+/** Isolated NBA Who Am I modern batch — 48 identities, independently authored A/B ladders. */
 export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
   {
     "subjectId": "nba:luka-doncic",
@@ -9333,7 +9329,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-franz-wagner-a-8",
-            "text": "I helped Orlando reach the NBA playoffs in 2024 after years away from the postseason.",
+            "text": "I became Orlando's secondary creator alongside Paolo Banchero during a 2024 playoff push.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -10193,7 +10189,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-alperen-sengun-a-8",
-            "text": "I developed into a focal point for Houston as it returned to the playoffs.",
+            "text": "I helped Houston return to the playoffs in 2025 after several losing seasons.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
