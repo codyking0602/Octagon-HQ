@@ -1,10 +1,6 @@
 import type { NbaWhoAmIAuthoredIdentity } from "./nbaWhoAmIAuthoredScripts";
 
-/**
- * NBA Who Am I: 48 independently authored modern identities for isolated Batch 1.
- * These static ladders are intentionally not imported by the eight-player preview bank;
- * integration and roster expansion are handled separately.
- */
+/** Isolated NBA Who Am I modern batch — 48 identities, independently authored A/B ladders. */
 export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
   {
     "subjectId": "nba:luka-doncic",
@@ -3348,7 +3344,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-kyrie-irving-b-1",
-            "text": "I played only a short college season before being selected first overall.",
+            "text": "I spent only one season in college before becoming a young NBA ball handler.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7433,7 +7429,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-brandon-ingram-b-1",
-            "text": "I entered the league as the second overall pick in a draft class.",
+            "text": "I entered the NBA with shooting touch but needed time to adjust to professional defenses.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7863,7 +7859,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-jrue-holiday-b-1",
-            "text": "I began my career as a starting point guard on an Eastern Conference team.",
+            "text": "I began my NBA career as a young backcourt playmaker on an Eastern Conference team.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
