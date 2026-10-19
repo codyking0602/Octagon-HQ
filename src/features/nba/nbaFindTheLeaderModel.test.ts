@@ -18,6 +18,7 @@ describe("NBA Find the Leader factual and gameplay quality", () => {
   it("reuses the approved roster across historical eras without fabricating partial seasons", () => {
     expect(NBA_FIND_HISTORICAL_SEASONS.length).toBeGreaterThan(400);
     expect(new Set(NBA_FIND_HISTORICAL_SEASONS.map(s => s[0])).size).toBeGreaterThan(9);
+    expect(NBA_FIND_HISTORICAL_SEASONS.every(row => row[6] != null)).toBe(true);
     expect(nbaFindLeaderSubjects.some(s => s.season === 2025)).toBe(true);
     expect(nbaFindLeaderSubjects.some(s => s.season === 2026)).toBe(true);
     expect(new Set(nbaFindLeaderSubjects.map(s => s.id)).size).toBe(nbaFindLeaderSubjects.length);
