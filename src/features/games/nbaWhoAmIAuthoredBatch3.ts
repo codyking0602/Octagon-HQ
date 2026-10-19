@@ -190,7 +190,7 @@ const entries: readonly Entry[] = [
       "I shared Rookie of the Year with another future Hall of Famer.",
       "I earned multiple All-NBA honors before chronic injuries interrupted my career.",
       "I could initiate offense while also scoring and rebounding effectively.",
-      "I made the All-NBA First Team during my early Detroit peak.",
+      "I earned the highest All-NBA honor early in my professional career.",
       "I was an NBA All-Star in my first seven eligible seasons.",
       "I missed most of several seasons because of severe ankle problems.",
       "I was a key member of the United States' gold medal team at the 1996 Olympics.",
@@ -795,7 +795,7 @@ const entries: readonly Entry[] = [
       "I scored twenty points during the third quarter of the 1997 NBA All-Star Game.",
       "I played beside Shaquille O'Neal and Kobe Bryant in a championship season.",
       "I won my only NBA championship with the 1999-2000 Lakers.",
-      "I earned the All-Star Game MVP award while starring for Charlotte as an outside shooter."
+      "I was the 1997 All-Star MVP celebrated in Charlotte for my elite outside shooting."
     ]
   },
   {
@@ -824,7 +824,7 @@ const entries: readonly Entry[] = [
       "I joined forces with Alonzo Mourning under Pat Riley in Miami.",
       "I helped the Heat reach the 1997 Eastern Conference finals.",
       "I developed the killer crossover while starring for the Warriors and Heat.",
-      "My trademark UTEP two-step crossover made me famous as a Warriors and Heat star, distinct from my NBA-playing son."
+      "My trademark UTEP Two-Step crossover became famous long before my son entered the NBA."
     ]
   },
   {
@@ -841,7 +841,7 @@ const entries: readonly Entry[] = [
       "I became a primary scorer for the Mavericks before their championship era.",
       "I played alongside Steve Nash and Dirk Nowitzki in Dallas.",
       "I won the 2007 NBA title as a member of the San Antonio Spurs.",
-      "I wore No. 4 for the Dallas Mavericks before winning the title with San Antonio."
+      "I was the Wisconsin product and longtime No. 4 scorer for the Dallas Mavericks."
     ],
     "b": [
       "I was known for consistent scoring and strong midrange offense.",
@@ -1173,7 +1173,7 @@ const entries: readonly Entry[] = [
       "I helped Memphis upset top-seeded San Antonio in the 2011 playoffs.",
       "I became the vocal heart of Memphis's Grit and Grind era.",
       "I wore No. 9 for the Grizzlies and was called the Grindfather.",
-      "I was a former Celtics champion and a Memphis defensive star known as the Grindfather."
+      "I was the former Celtics champion whose Memphis defense earned the nickname Grindfather."
     ]
   },
   {
@@ -1202,7 +1202,7 @@ const entries: readonly Entry[] = [
       "I left Orlando for Toronto as a free agent after a Finals run.",
       "I returned to Orlando before finishing my playing career with the Clippers.",
       "I was a creator on Dwight Howard's 2009 Orlando Magic Finals team.",
-      "I was the Turkish veteran whose playmaking helped lead Dwight Howard's Orlando Magic to the Finals."
+      "I was the Turkish playmaking forward who wore No. 15 for the Orlando Magic."
     ]
   },
   {
@@ -1219,7 +1219,7 @@ const entries: readonly Entry[] = [
       "I starred for Utah during the period after John Stockton and Karl Malone.",
       "I later played for Minnesota and Brooklyn after a long stretch with the Jazz.",
       "My nickname AK-47 matched my initials and No. 47 Utah Jazz jersey.",
-      "I was the Utah Jazz forward from Russia known as AK-47."
+      "I was the Russian Utah Jazz forward whose initials and jersey made me AK-47."
     ],
     "b": [
       "I made NBA All-Defensive teams for versatility as well as rim protection.",
@@ -1260,7 +1260,7 @@ const entries: readonly Entry[] = [
       "I signed with Philadelphia following several Clippers seasons.",
       "I played later NBA seasons with Dallas and Atlanta before returning to Philadelphia.",
       "I averaged 24.7 points per game for the 2005-06 Clippers.",
-      "I was the first pick of the 1999 NBA Draft and became a Clippers All-Star."
+      "I was the first overall selection in 1999 who became a Clippers All-Star."
     ]
   },
   {
@@ -1277,7 +1277,7 @@ const entries: readonly Entry[] = [
       "I helped the Utah Jazz reach the 2007 Western Conference finals.",
       "I later became a major frontcourt contributor for Chicago under Tom Thibodeau.",
       "I formed Utah's signature pick-and-roll partnership with Deron Williams.",
-      "I was the Duke alumnus and Utah Jazz No. 5 frontcourt All-Star."
+      "I was the Duke alumnus and Utah Jazz No. 5 known for scoring and rebounding."
     ],
     "b": [
       "I played a physical interior game and consistently collected rebounds.",
@@ -1289,7 +1289,7 @@ const entries: readonly Entry[] = [
       "I averaged 20.9 points and 11.7 rebounds in the 2006-07 NBA season.",
       "I teamed with Derrick Rose and Joakim Noah on Chicago Bulls playoff teams.",
       "I starred for the Utah Jazz after the Stockton-and-Malone era.",
-      "I was the left-handed Jazz and Bulls big man who wore No. 5."
+      "I was the left-handed scorer who starred for the Jazz and Bulls wearing No. 5."
     ]
   },
   {
@@ -1306,7 +1306,7 @@ const entries: readonly Entry[] = [
       "I went to the Lakers in the deal that sent Shaquille O'Neal to Miami.",
       "I helped the Lakers win championships in both 2009 and 2010.",
       "I won Sixth Man of the Year in 2011 after two titles with Kobe Bryant.",
-      "I was the left-handed Lakers No. 7 forward who won Sixth Man of the Year."
+      "I was the left-handed No. 7 Lakers forward who won the 2011 Sixth Man award."
     ],
     "b": [
       "I entered the league as a lottery pick.",
@@ -1364,7 +1364,7 @@ const entries: readonly Entry[] = [
       "I averaged 29.8 points per game for Detroit in that season.",
       "I was traded from Detroit to Washington for Richard Hamilton.",
       "I reached the 2006 NBA Finals as a Dallas Maverick.",
-      "I was the UNC star who led Detroit's offense before playing with Dirk Nowitzki."
+      "I was the North Carolina star who led Detroit's offense before playing beside Dirk Nowitzki."
     ],
     "b": [
       "I was an explosive offensive player with a long NBA career.",
@@ -1376,7 +1376,7 @@ const entries: readonly Entry[] = [
       "I scored a career-high 57 points in a 2001 game against Chicago.",
       "I later spent several seasons with the Dallas Mavericks.",
       "I led the 2000-01 Pistons with 29.8 points per game.",
-      "I was the former No. 42 Pistons star who later served as a Mavericks reserve."
+      "I was the former No. 42 Pistons scoring star who later came off the Dallas bench."
     ]
   },
   {
@@ -1393,7 +1393,7 @@ const entries: readonly Entry[] = [
       "I replaced Jason Williams as Sacramento's starting point guard.",
       "I hit a late game-winner in Game 5 of the 2002 Western Conference finals.",
       "I played alongside Chris Webber and Peja Stojaković on the 2002 Kings.",
-      "I was the No. 10 Sacramento Kings guard, the son of former NBA player Henry Bibby."
+      "I was the No. 10 Sacramento Kings guard and son of former NBA player Henry Bibby."
     ],
     "b": [
       "I contributed as both a passer and a dangerous outside shooter.",
@@ -1405,12 +1405,11 @@ const entries: readonly Entry[] = [
       "I later played for Atlanta, Washington, Miami and New York.",
       "I hit a pivotal winning shot against the Lakers in the 2002 West finals.",
       "I was the Sacramento guard leading an offense with Chris Webber and Vlade Divac.",
-      "I was the Arizona national champion who wore No. 10 as Sacramento's starting point guard."
+      "I was the Arizona national champion who wore No. 10 for Sacramento's 2002 contender."
     ]
   }
-
 ];
-const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[’\']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const nbaWhoAmIAuthoredBatch3: readonly NbaWhoAmIAuthoredIdentity[] = entries.map((entry) => {
   const slug = normalize(entry.name);
   const sourceIds = entry.history ? ["career", "history"] : ["career"];
@@ -1424,9 +1423,9 @@ export const nbaWhoAmIAuthoredBatch3: readonly NbaWhoAmIAuthoredIdentity[] = ent
   return {
     subjectId: `nba:${slug}`,
     name: entry.name,
-    eraBand: "legacy",
+    eraBand: "legacy" as const,
     rescueGroup: entry.group,
-    earlyRotation: "normal",
+    earlyRotation: "normal" as const,
     sources: {
       career: `https://www.basketball-reference.com/players/${entry.bref[0]}/${entry.bref}.html`,
       ...(entry.history ? { history: entry.history } : {}),
