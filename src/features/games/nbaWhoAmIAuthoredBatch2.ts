@@ -2404,7 +2404,7 @@ export const nbaWhoAmIAuthoredBatch2: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-john-wall-b-7",
-            "text": "A major injury was followed by a move to Houston without playing for a season.",
+            "text": "After a long injury absence, I joined Houston and later sat out an entire NBA season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2511,7 +2511,7 @@ export const nbaWhoAmIAuthoredBatch2: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-gilbert-arenas-a-7",
-            "text": "A knee injury during the 2006–07 stretch disrupted what had been three straight All-Star seasons.",
+            "text": "I suffered a knee injury in 2007 after three consecutive All-Star selections.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -3818,7 +3818,7 @@ export const nbaWhoAmIAuthoredBatch2: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-isaiah-thomas-b-7",
-            "text": "A hip problem derailed what had been an All-NBA scoring run.",
+            "text": "A serious hip injury derailed my run as an All-NBA scorer.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [

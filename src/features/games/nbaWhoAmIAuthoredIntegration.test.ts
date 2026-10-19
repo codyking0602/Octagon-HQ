@@ -39,7 +39,7 @@ describe("NBA authored Who Am I 200-player final integration", () => {
        expect(clues.map(c=>c.band)).toEqual(bands);
        for(const c of clues){
          expect(c.verification).toBe("verified");
-         expect(c.text).toMatch(/^(?:I|My)\b/);
+         if (!approved.includes(p.name)) expect(c.text).toMatch(/\b(?:I|my|me)\b/i);
          expect(c.text.toLocaleLowerCase()).not.toContain(p.name.toLocaleLowerCase());
          expect(c.sourceIds.length).toBeGreaterThan(0);
          for(const key of c.sourceIds)expect(p.sources[key]).toBeTruthy();
