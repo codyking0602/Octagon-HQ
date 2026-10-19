@@ -1020,7 +1020,7 @@ const entries: readonly Entry[] = [
     ],
     "b": [
       "I earned a reputation as a powerful driving finisher for a backcourt star.",
-      "I was selected to two NBA All-Star Games.",
+      "I earned my two All-Star berths before leading a famous postseason upset.",
       "I became a high-volume passer and scorer in the same seasons.",
       "I recorded a notable playoff triple-double during my career.",
       "I starred at UCLA before going third in the 1999 draft.",
