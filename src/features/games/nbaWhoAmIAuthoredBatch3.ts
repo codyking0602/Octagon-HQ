@@ -190,7 +190,7 @@ const entries: readonly Entry[] = [
       "I shared Rookie of the Year with another future Hall of Famer.",
       "I earned multiple All-NBA honors before chronic injuries interrupted my career.",
       "I could initiate offense while also scoring and rebounding effectively.",
-      "I earned the highest All-NBA honor early in my professional career.",
+      "I made the All-NBA First Team during my early-career peak.",
       "I was an NBA All-Star in my first seven eligible seasons.",
       "I missed most of several seasons because of severe ankle problems.",
       "I was a key member of the United States' gold medal team at the 1996 Olympics.",
@@ -482,7 +482,7 @@ const entries: readonly Entry[] = [
     "a": [
       "I earned All-Rookie First Team honors before becoming a perennial All-Star.",
       "I ranked among the league's most efficient high-volume scorers and rebounders.",
-      "I earned multiple All-NBA First Team selections.",
+      "I received repeated All-NBA First Team recognition while anchoring my team's attack.",
       "I led the league in rebounds during one season.",
       "I won an NBA Most Valuable Player award but never an NBA championship.",
       "I earned MVP in 1993 after leaving Philadelphia for Phoenix.",
@@ -672,7 +672,7 @@ const entries: readonly Entry[] = [
       "I was an All-Rookie First Team selection.",
       "I regularly scored more than twenty-five points per game in my prime.",
       "I entered the league as a highly regarded lottery selection.",
-      "I entered the league as a highly regarded lottery selection.",
+      "I spent long stretches as one of the league's highest-volume scorers.",
       "I became the franchise's all-time leading scorer.",
       "I initially refused to play for the Utah Jazz, who had drafted me in 1982.",
       "I ultimately played NBA games for Atlanta, the Clippers, Boston, San Antonio and Orlando.",
@@ -688,7 +688,7 @@ const entries: readonly Entry[] = [
     "group": "big",
     "a": [
       "I became known as one of the league's foremost shot blockers.",
-      "I played in eight NBA All-Star Games.",
+      "I reached eight All-Star Games while anchoring interior defenses.",
       "I earned several All-NBA and All-Defensive selections.",
       "I won the NBA's Defensive Player of the Year award four times.",
       "I was selected fourth overall in the 1991 NBA Draft.",
@@ -776,7 +776,7 @@ const entries: readonly Entry[] = [
     "a": [
       "I developed into an effective high-volume jump shooter.",
       "I became an NBA All-Star in the prime of my career.",
-      "I averaged more than twenty points per game in multiple seasons.",
+      "I produced several seasons above twenty points per game on efficient shooting.",
       "I led the NBA in three-point percentage during one season.",
       "I received All-NBA Second Team honors in 1997.",
       "I was named the 1997 NBA All-Star Game MVP after a major scoring outburst.",
@@ -803,7 +803,7 @@ const entries: readonly Entry[] = [
     "bref": "hardati01",
     "group": "guard",
     "a": [
-      "I was selected to the NBA All-Rookie First Team.",
+      "I joined the All-Rookie First Team before emerging as a perennial assist leader.",
       "I made five NBA All-Star teams during my career.",
       "I earned All-NBA honors in multiple seasons.",
       "I averaged more than ten assists per game in a season.",
@@ -891,7 +891,7 @@ const entries: readonly Entry[] = [
     "group": "wing",
     "a": [
       "I developed into a reliable scorer without relying on heavy three-point volume.",
-      "I earned multiple NBA All-Star selections.",
+      "My ability to score while moving without the ball helped me earn All-Star recognition.",
       "I became particularly effective moving without the ball.",
       "I made three consecutive NBA All-Star teams in my prime.",
       "I was a first-round draft pick in 1999.",
@@ -1009,7 +1009,7 @@ const entries: readonly Entry[] = [
     "a": [
       "I was an explosive scorer and playmaker who earned All-Star selections.",
       "I became one of the league's more dangerous ball thieves.",
-      "I averaged more than twenty points per game in multiple seasons.",
+      "I had multiple seasons with more than twenty points and seven assists per game.",
       "I led the NBA in steals twice.",
       "I was selected third overall in the 1999 NBA Draft.",
       "I began my NBA career with the Charlotte Hornets before moving with the franchise to New Orleans.",
@@ -1240,7 +1240,7 @@ const entries: readonly Entry[] = [
     "group": "big",
     "a": [
       "I became an effective scorer and rebounder immediately after entering the league.",
-      "I earned multiple NBA All-Star selections.",
+      "I reached two NBA All-Star Games while posting frequent double-doubles.",
       "I regularly averaged double-digit rebounds early in my career.",
       "I was named to the All-NBA Second Team.",
       "I shared the Rookie of the Year award for the 1999-2000 season.",
@@ -1253,7 +1253,7 @@ const entries: readonly Entry[] = [
     "b": [
       "I developed into one of the league's most productive double-double players.",
       "I was a regular All-Star contender at my peak.",
-      "I earned an All-Rookie First Team selection.",
+      "I earned All-Rookie honors after entering as a highly regarded prospect.",
       "I made the NBA All-Star team twice during my career.",
       "I led Duke to the 1999 national championship game and was national player of the year.",
       "I won the 2000 Rookie of the Year award after being drafted by Chicago.",
@@ -1356,8 +1356,8 @@ const entries: readonly Entry[] = [
     "group": "wing",
     "a": [
       "I became a high-volume scorer early in my professional career.",
-      "I was selected to multiple NBA All-Star Games.",
-      "I received NBA All-Rookie First Team recognition.",
+      "I spent several seasons scoring more than twenty points per game.",
+      "I was chosen for the All-Rookie First Team in my debut campaign.",
       "I was selected to consecutive All-Star Games at my peak.",
       "I was chosen third overall in the 1995 NBA Draft.",
       "I finished second in NBA scoring during the 2000-01 season.",
@@ -1408,6 +1408,7 @@ const entries: readonly Entry[] = [
       "I was the Arizona national champion who wore No. 10 for Sacramento's 2002 contender."
     ]
   }
+
 ];
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[’\']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const nbaWhoAmIAuthoredBatch3: readonly NbaWhoAmIAuthoredIdentity[] = entries.map((entry) => {
