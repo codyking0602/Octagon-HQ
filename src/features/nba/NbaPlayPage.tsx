@@ -11,8 +11,16 @@ export default function NbaPlayPage(){
       <section className="surface-card nba-hq-notice" aria-label="Owner NBA Who Am I calibration preview">
         <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
         <h2>NBA Who Am I?</h2>
-        <p>Review the first authored NBA player batch before the games launch.</p>
+        <p>Play the complete authored NBA clue bank before the games launch.</p>
         <Link className="primary-action" to="/nba/who-am-i">PLAY NBA WHO AM I →</Link>
+      </section>
+    ) : null}
+    {canPreviewNbaWhoAmI(identity.profile) ? (
+      <section className="surface-card nba-hq-notice" aria-label="Owner NBA Hit the Number preview">
+        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
+        <h2>NBA Hit the Number</h2>
+        <p>The Football game layout and scoring, with NBA per-game stats, four/five picks and curated pools.</p>
+        <Link className="primary-action" to="/nba/hit-the-number">PLAY NBA HIT THE NUMBER →</Link>
       </section>
     ) : null}
     <section className="surface-card nba-hq-notice">
