@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "../play/GameResultActions";
-import { recordLineupCompletion, curatedLineupIdentity } from "../play/lineupModel";
+import { recordLineupCompletion, rememberLineup, curatedLineupIdentity } from "../play/lineupModel";
 import { FootballHitTheNumberPresentation } from "../back-room/FootballHitTheNumberPresentation";
 import { asChallengeJson, challengeRecord, challengeString, footballChallengeUrl } from "../back-room/footballChallengeRuntime";
 import {
@@ -24,7 +24,9 @@ function challengeRun(seed:string|null,challengeId:string):NbaHitRun|null {
   if(!seed)return null;
   try {
     const plan=createNbaHitTheNumberPlan(seed);
-    return {plan,identity:curatedLineupIdentity(NBA_HIT_THE_NUMBER_GAME_ID,challengeId,plan.subjectIds,"nba-challenge")};
+    const identity=curatedLineupIdentity(NBA_HIT_THE_NUMBER_GAME_ID,challengeId,plan.subjectIds,"nba-challenge");
+    rememberLineup(identity,plan.subjectIds);
+    return {plan,identity};
   } catch { return null; }
 }
 function resultPayload(result:NbaHitResult) {
