@@ -15,6 +15,14 @@ export default function NbaPlayPage(){
         <Link className="primary-action" to="/nba/who-am-i">PLAY NBA WHO AM I →</Link>
       </section>
     ) : null}
+    {canPreviewNbaWhoAmI(identity.profile) ? (
+      <section className="surface-card nba-hq-notice" aria-label="Owner NBA Hit the Number calibration preview">
+        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
+        <h2>NBA Hit the Number</h2>
+        <p>Four picks most of the time, five occasionally. Six familiar per-game stats with curated board balance and Football's established gameplay.</p>
+        <Link className="primary-action" to="/nba/hit-the-number">PLAY NBA HIT THE NUMBER →</Link>
+      </section>
+    ) : null}
     <section className="surface-card nba-hq-notice">
       <h2>First up: NBA Futures</h2><p>Make your 30 over/under picks and the rest of your season predictions.</p>
       <Link className="primary-action" to="/nba/picks">OPEN NBA FUTURES →</Link>
