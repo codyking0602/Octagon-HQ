@@ -11,6 +11,26 @@ begin
     raise exception 'NBA frozen odds values changed'; end if;
   if public.nba_futures_lock_at(2026)<>timestamptz '2026-10-20 19:00:00+00' then
     raise exception 'NBA Futures lock has moved'; end if;
+  -- Deadline stays the published Oct 20, but the server does not lock
+  -- automatically. A trusted operator can explicitly set the manual flag.
+  if not exists(select 1 from public.nba_futures_lock_control where season=2026) then
+    raise exception 'NBA manual lock control missing';
+  end if;
+  update public.nba_futures_lock_control set manually_locked=false where season=2026;
+  if public.nba_futures_is_locked(2026) then
+    raise exception 'NBA Futures should stay open until manually locked';
+  end if;
+  update public.nba_futures_lock_control set manually_locked=true where season=2026;
+  if not public.nba_futures_is_locked(2026) then
+    raise exception 'NBA Futures manual close must take effect';
+  end if;
+  if position('now()>=public.nba_futures_lock_at' in
+    pg_get_functiondef('public.save_nba_futures(integer,jsonb)'::regprocedure))>0
+    or position('now()>=public.nba_futures_lock_at' in
+    pg_get_functiondef('public.get_nba_futures(integer)'::regprocedure))>0 then
+    raise exception 'NBA Futures may not check the calendar deadline for permissions';
+  end if;
+  update public.nba_futures_lock_control set manually_locked=false where season=2026;
   perform public.validate_nba_futures('{"winTotals":{"OKC":"over"},"playoffTeams":[],"conferenceFinalists":[],"finalsTeams":[],"oneSeeds":[]}'::jsonb);
   if public.nba_futures_complete('{"winTotals":{}}'::jsonb) then
     raise exception 'incomplete NBA Futures must remain pending'; end if;
@@ -32,4 +52,4 @@ begin
     raise exception '55-pick NBA card should be complete without retired prediction categories'; end if;
 end $$;
 rollback;
-\echo 'NBA Futures 2026 frozen lines, lock and drafts passed.'
+\echo 'NBA Futures 2026 frozen lines, manual lock and drafts passed.'

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { NbaTeamMark,nbaTeamColor } from "./nbaTeamBranding";
 import { useIdentity } from "../identity/IdentityProvider";
 import { NBA_SEASON,NBA_TEAMS,NBA_FUTURES_MAX,NBA_FUTURES_SELECTIONS,
-  NBA_FUTURES_LINE_SOURCE,NBA_FUTURES_LOCK_AT,emptyNbaFutures,
+  NBA_FUTURES_LINE_SOURCE,emptyNbaFutures,
   isNbaFuturesComplete,nbaFuturesProgress,validateNbaFutures,
   type NbaFuturesPicks,type WinPick,type Conference } from "./nbaFutures";
 import { loadNbaFutures,saveNbaFutures,type NbaFuturesSnapshot } from "./nbaFuturesRepository";
@@ -177,7 +177,7 @@ export default function NbaFuturesPage() {
   },[draft,snapshot,persist]);
   const errors=useMemo(()=>draft?validateNbaFutures(draft):[],[draft]);
   const progress=draft?nbaFuturesProgress(draft):0;
-  const locked=(snapshot?.locked??false)||Date.now()>=Date.parse(NBA_FUTURES_LOCK_AT);
+  const locked=snapshot?.locked??false;
   return <div className="page nba-hq-page" data-sport="nba">
     <header className="nba-hq-hero">
       <p className="eyebrow">BASKETBALL HQ · 2026–27</p>
@@ -194,7 +194,7 @@ export default function NbaFuturesPage() {
       <div className="nba-futures-progress">
         <div><strong>{progress}/{NBA_FUTURES_SELECTIONS} PICKS</strong><span>{locked?"LOCKED":saving?"SAVING…":saved?"SAVED ✓":isNbaFuturesComplete(draft)?"ALL PICKS READY":"AUTOSAVES AS YOU PICK"}</span></div>
         <div className="nba-futures-track"><span style={{width:(100*progress/NBA_FUTURES_SELECTIONS)+"%"}} /></div>
-        <p>{locked?"Your saved picks are final.": "Entries lock "+formattedLock(snapshot.lock_at)+". You may revise any pick before the lock."}</p>
+        <p>{locked?"Your saved picks are final.": "Scheduled lock: "+formattedLock(snapshot.lock_at)+". Picks stay editable until HQ officially closes entries."}</p>
       </div>
       <NbaFuturesForm picks={draft} locked={locked} onChange={next=>{setDraft(next);setSaved(false);}}/>
       {errors.length?<p role="alert" className="nba-hq-error">{errors[0]}</p>:null}
