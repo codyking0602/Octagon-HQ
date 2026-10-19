@@ -48,7 +48,7 @@ describe("NBA Who Am I batch 4 — exclusive classic legends", () => {
       expect(Object.keys(player.scripts).sort()).toEqual(["A", "B"]);
       for (const [sourceId, url] of Object.entries(player.sources)) {
         expect(sourceId.length).toBeGreaterThan(0);
-        expect(url).toMatch(/^https:\/\/(?:www\.)?(?:nba\.com|hoophall\.com)\//);
+        expect(url).toMatch(/^https:\/\/(?:www\.)?(?:nba\.com|hoophall\.com|basketball-reference\.com)\//);
       }
       expect(Object.keys(player.sources).length).toBeGreaterThanOrEqual(2);
       for (const scriptId of ["A", "B"] as const) {
