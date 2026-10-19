@@ -959,7 +959,7 @@ export default function FootballTodayChallengePage() {
           onExit={() => navigate("/football")}
           resultStatus={error ?? undefined}
           onRetryResult={() => { void dailyRuntime.retryPending(); }}
-          onRefreshSaved={() => { void dailyRuntime.refresh(); }}
+          onRefreshSaved={() => { void dailyRuntime.recheckSaved(); }}
         />
       </div>
     );
