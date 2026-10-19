@@ -43,6 +43,9 @@ export function challengeSport(challenge: PlayChallenge): PlaySport {
 function canonicalChallengeRoute(challenge: PlayChallenge) {
   // NBA Who Am I shares the authored game and challenge engine, but its full
   // Basketball Games catalog does not go public until after the World Series.
+  if (challenge.gameId === "find-leader" && challenge.gameVersion.startsWith("nba-find-leader-")) {
+    return "/nba/find-leader";
+  }
   if (challenge.gameId === "who-am-i" && challenge.gameVersion.startsWith("nba-who-am-i-")) {
     return "/nba/who-am-i";
   }

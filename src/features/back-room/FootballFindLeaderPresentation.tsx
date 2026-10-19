@@ -59,7 +59,7 @@ export interface FootballFindLeaderPresentationCandidate {
   id: string;
   name: string;
   displayName?: string;
-  season?: number;
+  season?: number | string;
   subtitle: string;
   value?: number;
 }

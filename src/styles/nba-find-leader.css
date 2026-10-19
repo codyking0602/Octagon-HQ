@@ -1,0 +1,29 @@
+.nba-find-leader-page {
+  --football-accent: #f2a341;
+  --football-accent-rgb: 242, 163, 65;
+  --ufc-red-strong: #f2a341;
+}
+.nba-find-leader-page .football-find-card__visual {
+  background: radial-gradient(circle at 50% 65%, rgba(242,163,65,.13), transparent 69%), #181c24;
+}
+.nba-find-leader-page .football-find-card__visual.has-logo {
+  border: 0;
+  box-shadow: none;
+}
+.nba-find-leader-page .football-find-card__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center top;
+  filter: none;
+}
+.nba-find-leader-page .football-find-card__visual > b {
+  font-size: 13px;
+}
+.nba-find-leader-page .football-find-card__season {
+  min-width: max-content;
+  white-space: nowrap;
+}
+.nba-find-leader-page .nba-find-leader-preview {
+  margin-bottom: 12px;
+}
