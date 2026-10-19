@@ -33,6 +33,8 @@ describe("NBA Find the Leader factual and gameplay quality", () => {
     const russell = nbaFindLeaderSubjects.find(s => s.name === "Russell Westbrook" && s.season === 2017);
     expect(jordan?.values).toMatchObject({ points: 35.0, rebounds: 5.5, assists: 5.9 });
     expect(russell?.values).toMatchObject({ points: 31.6, rebounds: 10.7, assists: 10.4 });
+    // The historical CSV calls Tim Hardaway Jr. "Tim Hardaway"; do not bind those seasons to his father.
+    expect(nbaFindLeaderSubjects.some(s => s.name === "Tim Hardaway" && (s.season === 2014 || s.season === 2017))).toBe(false);
   });
   it("generates correct distinct ten-person boards with a sole visible leader", () => {
     for (let index = 0; index < 200; index++) {
