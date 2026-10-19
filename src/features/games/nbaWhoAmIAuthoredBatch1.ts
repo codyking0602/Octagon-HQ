@@ -334,7 +334,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-shai-gilgeous-alexander-b-1",
-            "text": "I earned regular playing time immediately on a veteran playoff team.",
+            "text": "I entered the league on a veteran playoff team but initially played a supporting role.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -2914,7 +2914,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-damian-lillard-b-1",
-            "text": "I arrived in the league with a reputation as a prolific shooter and late-game scorer.",
+            "text": "I entered the league after a full college career rather than as a one-and-done player.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -3344,7 +3344,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-kyrie-irving-b-1",
-            "text": "I spent only one season in college before becoming a young NBA ball handler.",
+            "text": "I had limited college-game experience before taking on NBA starting duties.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6898,7 +6898,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-demar-derozan-a-1",
-            "text": "I developed into a high-volume scorer after entering the NBA as a lottery pick.",
+            "text": "I developed from an athletic slasher into a high-volume scorer.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7429,7 +7429,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-brandon-ingram-b-1",
-            "text": "I entered the NBA with shooting touch but needed time to adjust to professional defenses.",
+            "text": "I entered the league with a slender frame and a polished outside touch.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7859,7 +7859,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-jrue-holiday-b-1",
-            "text": "I began my NBA career as a young backcourt playmaker on an Eastern Conference team.",
+            "text": "I took on playmaking duties very early in my NBA career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -10310,7 +10310,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-alperen-sengun-b-10",
-            "text": "I am Houston's No. 28 offensive hub commonly called Alpi.",
+            "text": "I am the Rockets' No. 28 post passer who once won Turkish league MVP.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
