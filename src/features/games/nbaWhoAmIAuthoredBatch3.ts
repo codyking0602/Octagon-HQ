@@ -2111,7 +2111,238 @@ const entries: readonly Entry[] = [
       "I was the Kings' No. 10 point guard who dueled with the Lakers in 2002."
     ]
   },
-  // NEXT_BATCH
+  {
+    "name": "Hedo Türkoğlu",
+    "bref": "turkohe01",
+    "group": "wing",
+    "a": [
+      "I became a dependable scorer and passer on playoff teams.",
+      "I developed a reputation for making difficult shots late in games.",
+      "I won the NBA's Most Improved Player award.",
+      "I averaged career-best scoring during my award-winning season.",
+      "I was a first-round selection in the 2000 NBA Draft.",
+      "I became a key playmaker on Orlando's deep playoff runs.",
+      "I helped the Magic eliminate LeBron James's Cavaliers in the 2009 conference finals.",
+      "I reached the 2009 NBA Finals with Dwight Howard and Rashard Lewis.",
+      "I was the Turkish forward known as Hedo who played for the Orlando Magic.",
+      "I won Most Improved Player in 2008 wearing No. 15 for Orlando."
+    ],
+    "b": [
+      "I often handled the ball as an unusually tall facilitator.",
+      "I made important contributions to teams with conference-final ambitions.",
+      "I played for several organizations during a long NBA career.",
+      "I was named Most Improved Player after expanding my offensive role.",
+      "I began my NBA career with Sacramento before joining San Antonio.",
+      "I was part of the Kings' rotation behind Chris Webber and Peja Stojaković.",
+      "I left Orlando for Toronto as a free agent after a Finals run.",
+      "I returned to Orlando before finishing my playing career with the Clippers.",
+      "I was a creator on Dwight Howard's 2009 Orlando Magic Finals team.",
+      "I was the Turkish NBA veteran Hedo Türkoğlu, widely recognized in Orlando for my playmaking."
+    ]
+  },
+  {
+    "name": "Andrei Kirilenko",
+    "bref": "kirilan01",
+    "group": "wing",
+    "a": [
+      "I became known for disrupting offenses in several ways at once.",
+      "I was an excellent shot blocker relative to my perimeter defensive responsibilities.",
+      "I earned several NBA All-Defensive selections.",
+      "I was selected to an NBA All-Star Game.",
+      "I led the NBA in blocks per game during the 2004-05 season.",
+      "I recorded multiple five-by-five statistical games involving points, rebounds, assists, steals and blocks.",
+      "I starred for Utah during the period after John Stockton and Karl Malone.",
+      "I later played for Minnesota and Brooklyn after a long stretch with the Jazz.",
+      "My nickname AK-47 matched my initials and No. 47 Utah Jazz jersey.",
+      "I was the Russian Utah Jazz forward known as Andrei Kirilenko or AK-47."
+    ],
+    "b": [
+      "I made NBA All-Defensive teams for versatility as well as rim protection.",
+      "I was capable of filling five statistical categories in a single game.",
+      "I was a key contributor on a conference-final playoff team.",
+      "I led the NBA in blocks in one season.",
+      "I earned an Olympic bronze medal in 2012.",
+      "I helped Russia win EuroBasket gold in 2007 and received tournament MVP.",
+      "I helped the Jazz reach the 2007 Western Conference finals.",
+      "I played under Jerry Sloan during much of my Utah career.",
+      "My No. 47 and the nickname AK-47 were inseparable in Utah.",
+      "I was the Russian-born all-around defender Kirilenko of the Jazz."
+    ]
+  },
+  {
+    "name": "Elton Brand",
+    "bref": "brandel01",
+    "group": "big",
+    "a": [
+      "I became an effective scorer and rebounder immediately after entering the league.",
+      "I earned multiple NBA All-Star selections.",
+      "I regularly averaged double-digit rebounds early in my career.",
+      "I was named to the All-NBA Second Team.",
+      "I shared the Rookie of the Year award for the 1999-2000 season.",
+      "I was the first overall choice in the 1999 NBA Draft.",
+      "I moved from Chicago to the Los Angeles Clippers after only two seasons.",
+      "I helped the Clippers win a playoff series in 2006 while averaging more than twenty-four points.",
+      "I shared Rookie of the Year honors with Steve Francis.",
+      "I was the Duke star Elton Brand who became the Clippers' No. 42 franchise player."
+    ],
+    "b": [
+      "I developed into one of the league's most productive double-double players.",
+      "I was a regular All-Star contender at my peak.",
+      "I earned an All-Rookie First Team selection.",
+      "I was selected for the All-Star Game in 2002 and 2006.",
+      "I led Duke to the 1999 national championship game and was national player of the year.",
+      "I won the 2000 Rookie of the Year award after being drafted by Chicago.",
+      "I signed with Philadelphia following several Clippers seasons.",
+      "I played later NBA seasons with Dallas and Atlanta before returning to Philadelphia.",
+      "I averaged 24.7 points per game for the 2005-06 Clippers.",
+      "I was the first pick of the 1999 NBA Draft, Elton Brand, who became a Clippers All-Star."
+    ]
+  },
+  {
+    "name": "Carlos Boozer",
+    "bref": "boozeca01",
+    "group": "big",
+    "a": [
+      "I built a reputation as a productive rebounder and low-post scorer.",
+      "I became an NBA All-Star more than once.",
+      "I averaged a double-double in multiple seasons.",
+      "I was selected to the All-NBA Third Team.",
+      "I entered the NBA in the second round of the 2002 draft.",
+      "I won an Olympic gold medal with Team USA in 2008.",
+      "I helped the Utah Jazz reach the 2007 Western Conference finals.",
+      "I later became a major frontcourt contributor for Chicago under Tom Thibodeau.",
+      "I formed Utah's signature pick-and-roll partnership with Deron Williams.",
+      "I was the Duke alumnus and Jazz No. 5 power forward Carlos Boozer."
+    ],
+    "b": [
+      "I played a physical interior game and consistently collected rebounds.",
+      "I contributed scoring to teams that routinely qualified for the playoffs.",
+      "I earned two NBA All-Star selections.",
+      "I won two NCAA national championships before entering the NBA.",
+      "I was a member of Duke's 2001 NCAA title team and the 2002 Final Four squad.",
+      "I began with Cleveland before signing with Utah in 2004.",
+      "I averaged 20.9 points and 11.7 rebounds in the 2006-07 NBA season.",
+      "I teamed with Derrick Rose and Joakim Noah on Chicago Bulls playoff teams.",
+      "I starred for the Utah Jazz after the Stockton-and-Malone era.",
+      "I was the left-handed Jazz and Bulls big man Carlos Boozer who wore No. 5."
+    ]
+  },
+  {
+    "name": "Lamar Odom",
+    "bref": "odomla01",
+    "group": "big",
+    "a": [
+      "I was a versatile player who could rebound, handle the ball and pass.",
+      "I earned league recognition for contributions off the bench.",
+      "I routinely helped my teams in several box-score categories.",
+      "I received the NBA Sixth Man of the Year award.",
+      "I was chosen fourth overall in the 1999 NBA Draft.",
+      "I began my career with the Clippers and played one season in Miami.",
+      "I went to the Lakers in the deal that sent Shaquille O'Neal to Miami.",
+      "I helped the Lakers win championships in both 2009 and 2010.",
+      "I won Sixth Man of the Year in 2011 after two titles with Kobe Bryant.",
+      "I was the left-handed Lakers No. 7 forward Lamar Odom."
+    ],
+    "b": [
+      "I entered the league as a lottery pick.",
+      "I was a valuable starter before becoming a reserve on title teams.",
+      "I represented the United States in major international competition.",
+      "I won an Olympic bronze medal with Team USA in 2004.",
+      "I attended Rhode Island for one college season before entering the NBA.",
+      "I averaged a double-double in the Lakers' 2008-09 championship season.",
+      "I was a flexible frontcourt partner to Pau Gasol and Andrew Bynum.",
+      "I was traded to Dallas after helping Los Angeles win two titles.",
+      "I later became the Lakers' 2011 Sixth Man of the Year.",
+      "I was known as LO during my long run as Kobe Bryant's Lakers teammate."
+    ]
+  },
+  {
+    "name": "Metta World Peace",
+    "bref": "artesro01",
+    "group": "wing",
+    "a": [
+      "I earned a reputation as an intensely physical defender.",
+      "I was an NBA All-Star and made several All-Defensive teams.",
+      "I was recognized as one of the league's best individual defensive players.",
+      "I won the NBA Defensive Player of the Year award.",
+      "I was selected in the first round of the 1999 NBA Draft.",
+      "I starred for Indiana but was suspended for the remainder of the 2004-05 season following a notorious incident.",
+      "I later played for Sacramento and Houston before signing with Los Angeles.",
+      "I helped the Lakers win Game 7 of the 2010 Finals against Boston.",
+      "I changed my name from Ron Artest to Metta World Peace in 2011.",
+      "I won the 2010 NBA championship wearing No. 37 for the Lakers and was formerly known as Ron Artest."
+    ],
+    "b": [
+      "I contributed tough defense and secondary scoring during a lengthy career.",
+      "I was selected to the NBA All-Defensive First Team twice.",
+      "I earned an All-NBA Third Team selection.",
+      "I became an NBA champion after years of playoff contention.",
+      "I played college basketball at St. John's before being drafted by Chicago.",
+      "I won the 2004 Defensive Player of the Year award with the Indiana Pacers.",
+      "I was a central figure in the infamous 2004 Malice at the Palace incident.",
+      "I sank a critical three-pointer late in the Lakers' 2010 Finals Game 7 victory.",
+      "I played under the name Ron Artest before formally adopting Metta World Peace.",
+      "I was the Lakers title-winning defender also called Ron Artest and later Metta Sandiford-Artest."
+    ]
+  },
+  {
+    "name": "Jerry Stackhouse",
+    "bref": "stackje01",
+    "group": "wing",
+    "a": [
+      "I became a high-volume scorer early in my professional career.",
+      "I was selected to multiple NBA All-Star Games.",
+      "I received NBA All-Rookie First Team recognition.",
+      "I was selected to consecutive All-Star Games at my peak.",
+      "I was chosen third overall in the 1995 NBA Draft.",
+      "I finished second in NBA scoring during the 2000-01 season.",
+      "I averaged 29.8 points per game for Detroit in that season.",
+      "I was traded from Detroit to Washington for Richard Hamilton.",
+      "I reached the 2006 NBA Finals as a Dallas Maverick.",
+      "I was the UNC star Jerry Stackhouse who led Detroit's offense before playing with Dirk Nowitzki."
+    ],
+    "b": [
+      "I was an explosive offensive player with a long NBA career.",
+      "I remained a useful bench scorer after my peak seasons.",
+      "I earned the NBA's All-Rookie First Team honor.",
+      "I played one college season alongside another future top draft pick.",
+      "I shared the floor at North Carolina with Rasheed Wallace.",
+      "I played for Philadelphia before becoming a 2000s scoring star in Detroit.",
+      "I scored a career-high 57 points in a 2001 game against Chicago.",
+      "I later spent several seasons with the Dallas Mavericks.",
+      "I led the 2000-01 Pistons with 29.8 points per game.",
+      "I was the former No. 42 Pistons star Jerry Stackhouse, later a Mavericks reserve."
+    ]
+  },
+  {
+    "name": "Mike Bibby",
+    "bref": "bibbymi01",
+    "group": "guard",
+    "a": [
+      "I built a long NBA career as a steady offensive organizer.",
+      "I became known for timely jump shots in important games.",
+      "I averaged at least five assists per game in numerous seasons.",
+      "I served as a starting playmaker on successful playoff teams.",
+      "I was the second overall selection in the 1998 NBA Draft.",
+      "I began with Vancouver before moving to Sacramento in a major trade.",
+      "I replaced Jason Williams as Sacramento's starting point guard.",
+      "I hit a late game-winner in Game 5 of the 2002 Western Conference finals.",
+      "I played alongside Chris Webber and Peja Stojaković on the 2002 Kings.",
+      "I was the No. 10 Sacramento Kings guard Mike Bibby, son of former NBA player Henry Bibby."
+    ],
+    "b": [
+      "I contributed as both a passer and a dangerous outside shooter.",
+      "I spent many NBA seasons in the starting lineup without making an All-Star team.",
+      "I was an early lottery selection.",
+      "I won a national championship during my college career.",
+      "I helped Arizona win the 1997 NCAA title as a freshman.",
+      "I was traded from the Grizzlies to the Kings in exchange for Jason Williams in 2001.",
+      "I later played for Atlanta, Washington, Miami and New York.",
+      "I hit a pivotal winning shot against the Lakers in the 2002 West finals.",
+      "I was the Sacramento guard leading an offense with Chris Webber and Vlade Divac.",
+      "I was Arizona national champion Mike Bibby, the Kings' No. 10 point guard."
+    ]
+  },
 ];
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const nbaWhoAmIAuthoredBatch3: readonly NbaWhoAmIAuthoredIdentity[] = entries.map((entry) => {
