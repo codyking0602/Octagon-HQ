@@ -759,7 +759,7 @@ const entries: readonly Entry[] = [
     "b": [
       "I played a particularly physical inside-out offensive style.",
       "I was a two-time NBA All-Star.",
-      "I averaged more than twenty points in each of my first two NBA seasons.",
+      "I averaged at least ten points and ten rebounds during each of my first two NBA seasons.",
       "I earned All-NBA honors before later changing franchises.",
       "I helped win an NCAA national championship in 1990.",
       "I was the 1991 top draft choice after winning national player awards at UNLV.",
@@ -1142,7 +1142,7 @@ const entries: readonly Entry[] = [
       "I played professionally for the Shanghai Sharks before joining the NBA.",
       "I was selected first in the draft without having played college basketball in the United States.",
       "I led the Rockets past Portland in a 2009 playoff series despite persistent foot trouble.",
-      "I appeared in a renowned commercial with fellow NBA star Shaquille O'Neal and became a major global ambassador for the league.",
+      "I scored a career-high 41 points with 16 rebounds and seven assists in a triple-overtime win against Atlanta.",
       "I became the best-known Chinese star ever to play for the Houston Rockets.",
       "I stood 7 feet 6 inches tall and wore No. 11 for Houston."
     ]
@@ -1283,8 +1283,8 @@ const entries: readonly Entry[] = [
       "I played a physical interior game and consistently collected rebounds.",
       "I contributed scoring to teams that routinely qualified for the playoffs.",
       "I earned two NBA All-Star selections.",
-      "I won two NCAA national championships before entering the NBA.",
-      "I was a member of Duke's 2001 NCAA title team and the 2002 Final Four squad.",
+      "I played in two NCAA Final Fours before entering the NBA.",
+      "I won a championship at Duke after reaching the national title game as a freshman.",
       "I began with Cleveland before signing with Utah in 2004.",
       "I averaged 20.9 points and 11.7 rebounds in the 2006-07 NBA season.",
       "I teamed with Derrick Rose and Joakim Noah on Chicago Bulls playoff teams.",
