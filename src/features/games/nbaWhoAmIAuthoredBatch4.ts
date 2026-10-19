@@ -4326,7 +4326,7 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
         },
         {
           "id": "nba-bill-walton-a-6",
-          "text": "I played college basketball for John Wooden at UCLA.",
+          "text": "I won two NCAA championships playing under John Wooden at UCLA.",
           "band": "strong",
           "verification": "verified",
           "sourceIds": [
