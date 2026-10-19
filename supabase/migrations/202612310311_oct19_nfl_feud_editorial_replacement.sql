@@ -159,8 +159,8 @@ begin
 
   v_pack:=jsonb_set(jsonb_set(v_pack,'{entities}',v_entities,false),
     '{id}',to_jsonb(v_pack_id),false);
-  select string_agg(z.q->>'id'||':'||
-    (select string_agg(a.value->>'entityId'||'='||a.value->>'points',',' order by a.n)
+  select string_agg((z.q->>'id')||':'||
+    (select string_agg((a.value->>'entityId')||'='||(a.value->>'points'),',' order by a.n)
        from jsonb_array_elements(z.q->'answers') with ordinality a(value,n)),
      '|' order by z.n) into v_signature
   from jsonb_array_elements((v_pack->'mainBoards')||(v_pack->'fastMoney')) with ordinality z(q,n);
