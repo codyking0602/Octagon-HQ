@@ -1647,6 +1647,238 @@ const entries: readonly Entry[] = [
       "I was the former Celtics champion whose nickname the Grindfather fit Memphis's Grit and Grind era."
     ]
   },
+  {
+    "name": "Ben Wallace",
+    "bref": "wallabe01",
+    "group": "big",
+    "a": [
+      "I became one of the league's premier defenders after arriving as an overlooked prospect.",
+      "I was named to multiple All-Star teams despite modest scoring numbers.",
+      "I earned All-NBA honors largely through my defensive impact.",
+      "I led the league in rebounding more than once.",
+      "I won the Defensive Player of the Year award four times.",
+      "I entered the NBA undrafted and spent time with Washington and Orlando.",
+      "I anchored Detroit's 2004 championship defense against the Lakers.",
+      "I shared the Pistons frontcourt with Rasheed Wallace.",
+      "I was the No. 3 Detroit Pistons center with the famous towering Afro.",
+      "I was nicknamed Big Ben and became the first undrafted Hall of Fame inductee from the modern NBA draft era."
+    ],
+    "b": [
+      "I became a dominant rebounder and shot blocker.",
+      "I earned repeated selections to the NBA All-Defensive First Team.",
+      "I was a four-time All-Star during a stretch of team success.",
+      "I once led the league in blocked shots as well as rebounds.",
+      "I was acquired in a deal involving a former No. 2 draft pick.",
+      "I came from Orlando to Detroit in the sign-and-trade that sent Grant Hill to the Magic.",
+      "I won Defensive Player of the Year in 2002, 2003, 2005 and 2006.",
+      "I helped the Pistons reach consecutive Finals in 2004 and 2005.",
+      "I was the Detroit defender known as Big Ben who helped topple Shaq and Kobe.",
+      "I won the 2004 NBA title wearing No. 3 for Detroit."
+    ]
+  },
+  {
+    "name": "Rasheed Wallace",
+    "bref": "wallara01",
+    "group": "big",
+    "a": [
+      "I was a skilled interior scorer with a dangerous outside shot.",
+      "I was selected to multiple NBA All-Star Games.",
+      "I became a starter on teams that made repeated deep playoff runs.",
+      "I made four NBA All-Star teams over my career.",
+      "I was taken fourth overall in the 1995 NBA Draft.",
+      "I helped Portland reach the 2000 Western Conference finals.",
+      "I briefly played one game for Atlanta during a midseason trade sequence.",
+      "I joined Detroit in 2004 and immediately helped the Pistons win a championship.",
+      "I formed the Pistons' title-winning frontcourt with Ben Wallace.",
+      "I was the outspoken No. 36 Pistons star associated with the phrase 'Ball don't lie.'"
+    ],
+    "b": [
+      "I was a versatile veteran who could score inside or stretch the floor.",
+      "I became an All-Star for more than one franchise.",
+      "I played in the NBA for well over a decade.",
+      "I was named to the 2000 and 2001 All-Star teams.",
+      "I played college basketball for Dean Smith at North Carolina.",
+      "I was a central member of Portland's late-1990s and early-2000s contenders.",
+      "I was traded from the Trail Blazers to Atlanta and then Detroit in February 2004.",
+      "I hit important shots during Detroit's 2004 Finals victory over the Lakers.",
+      "I played for Portland, Detroit, Boston and the New York Knicks.",
+      "I was Detroit's Rasheed 'Sheed' Wallace, famous for shouting 'Ball don't lie.'"
+    ]
+  },
+  {
+    "name": "Baron Davis",
+    "bref": "davisba01",
+    "group": "guard",
+    "a": [
+      "I was an explosive scorer and playmaker who earned All-Star selections.",
+      "I became one of the league's more dangerous ball thieves.",
+      "I averaged more than twenty points per game in multiple seasons.",
+      "I led the NBA in steals twice.",
+      "I was selected third overall in the 1999 NBA Draft.",
+      "I began my NBA career with the Charlotte Hornets before moving with the franchise to New Orleans.",
+      "I later led a lower-seeded team on a stunning first-round playoff upset.",
+      "I helped the eighth-seeded Warriors beat the 67-win Mavericks in 2007.",
+      "I was the leading figure in the Golden State Warriors' 'We Believe' run.",
+      "I was the UCLA guard known as B-Diddy who led the 2007 We Believe Warriors."
+    ],
+    "b": [
+      "I earned a reputation as a powerful driving finisher for a backcourt star.",
+      "I was selected to two NBA All-Star Games.",
+      "I became a high-volume passer and scorer in the same seasons.",
+      "I recorded a notable playoff triple-double during my career.",
+      "I starred at UCLA before going third in the 1999 draft.",
+      "I participated in a 2007 playoff series that shocked Dirk Nowitzki's Dallas.",
+      "I scored 33 points in the Warriors' closeout Game 6 win over Dallas in 2007.",
+      "I joined the Los Angeles Clippers as a free agent in 2008.",
+      "I was Golden State's famous No. 5 during the 'We Believe' playoffs.",
+      "My nickname B-Diddy followed me from the Hornets to the Warriors and Clippers."
+    ]
+  },
+  {
+    "name": "Peja Stojaković",
+    "bref": "stojape01",
+    "group": "wing",
+    "a": [
+      "I developed into one of the league's premier outside shooters.",
+      "I became an All-Star during my most productive seasons.",
+      "I made the All-NBA Second Team once.",
+      "I was selected for three consecutive NBA All-Star Games.",
+      "I finished near the top of league MVP voting in 2004.",
+      "I won the NBA's Three-Point Contest twice.",
+      "I was a central scorer for Sacramento's early-2000s playoff contenders.",
+      "I played for Indiana, New Orleans and Toronto before a final championship run in Dallas.",
+      "I helped Dirk Nowitzki's Mavericks win the 2011 NBA championship.",
+      "I was the Serbian sharpshooter known as Peja, whose Kings jersey was No. 16."
+    ],
+    "b": [
+      "I joined the league after playing professionally overseas.",
+      "I became a high-scoring teammate on a conference-final contender.",
+      "I won a league three-point shooting contest more than once.",
+      "I earned an All-NBA Second Team selection in 2004.",
+      "I was drafted fourteenth overall in 1996 but did not immediately begin my NBA career.",
+      "I played a leading offensive role while Chris Webber missed much of the 2003-04 season.",
+      "I helped Sacramento reach the Western Conference finals against the Lakers in 2002.",
+      "I scored 22 points in a 2011 playoff win for Dallas over the Lakers.",
+      "I was the long-range specialist for the Sacramento Kings alongside Webber and Mike Bibby.",
+      "I am Peja Stojaković, the Kings' No. 16 and a member of Dallas's 2011 title team."
+    ]
+  },
+  {
+    "name": "Jermaine O’Neal",
+    "bref": "onealje01",
+    "group": "big",
+    "a": [
+      "I earned multiple All-NBA honors over a long NBA career.",
+      "I became a reliable scorer, rebounder and rim protector.",
+      "I was chosen for six NBA All-Star Games.",
+      "I earned the Most Improved Player award.",
+      "I was selected directly out of high school in the 1996 NBA Draft.",
+      "I began my career in Portland before finding an expanded role in Indiana.",
+      "I finished third in NBA MVP voting in 2004.",
+      "I was involved in the 2004 Palace brawl while playing for the Pacers.",
+      "I became the Pacers' six-time All-Star and wore No. 7 in Indiana.",
+      "I was Jermaine O'Neal, an Indiana star distinct from Shaquille O'Neal."
+    ],
+    "b": [
+      "I played for several NBA organizations across a lengthy career.",
+      "I became an elite interior scorer after spending early years in a reserve role.",
+      "I earned three All-NBA selections.",
+      "I entered the league at age seventeen.",
+      "I was traded for Dale Davis in a deal between Portland and Indiana.",
+      "I won Most Improved Player in 2002 with the Pacers.",
+      "I helped Indiana post the NBA's best regular-season record in 2003-04.",
+      "I later played for Toronto, Miami, Boston, Phoenix and Golden State.",
+      "I wore No. 7 while starring for the Indiana Pacers during their Reggie Miller era.",
+      "I am the six-time All-Star Jermaine O'Neal, not Shaq."
+    ]
+  },
+  {
+    "name": "Shawn Marion",
+    "bref": "mariosh01",
+    "group": "wing",
+    "a": [
+      "I built a long career on rebounding, transition play and versatile defense.",
+      "I was voted to four NBA All-Star Games.",
+      "I contributed on both ends without needing plays called for me.",
+      "I averaged a double-double in several seasons.",
+      "I earned a spot on the United States Olympic team.",
+      "I became a major member of an offense nicknamed Seven Seconds or Less.",
+      "I starred alongside Steve Nash and Amar'e Stoudemire in Phoenix.",
+      "I won the 2011 NBA championship playing for Dallas.",
+      "I was the high-flying Phoenix Suns No. 31 known as the Matrix.",
+      "I was the Matrix who helped Dirk Nowitzki beat Miami in the 2011 Finals."
+    ],
+    "b": [
+      "I earned NBA All-Rookie Second Team honors.",
+      "I frequently filled the stat sheet in rebounds, steals and blocks.",
+      "I played in the league for sixteen seasons.",
+      "I was selected to four All-Star Games between 2003 and 2007.",
+      "I was drafted ninth overall in 1999.",
+      "I played in Phoenix before moving to Miami, Toronto, Dallas and Cleveland.",
+      "I was named to the 2004 United States Olympic team.",
+      "I took on LeBron James defensively during the 2011 NBA Finals.",
+      "I played with the Phoenix Suns during the Nash and D'Antoni era.",
+      "My unusual shooting form and nickname the Matrix became signatures of my Suns career."
+    ]
+  },
+  {
+    "name": "Yao Ming",
+    "bref": "mingya01",
+    "group": "big",
+    "a": [
+      "I received NBA All-Rookie First Team recognition.",
+      "I earned numerous NBA All-Star selections during a career shortened by injuries.",
+      "I combined touch around the basket with dependable free-throw shooting.",
+      "I was named to eight NBA All-Star teams.",
+      "I earned five All-NBA selections.",
+      "I was the first overall selection in the 2002 NBA Draft.",
+      "I teamed with Tracy McGrady as a franchise centerpiece.",
+      "I helped Houston beat Portland in the 2009 first round for my first NBA playoff series win.",
+      "I was the 7-foot-6 Houston Rockets star who played professionally in China before coming to the NBA.",
+      "I wore No. 11 for the Rockets and was inducted into the Basketball Hall of Fame in 2016."
+    ],
+    "b": [
+      "I became a high-scoring interior player after entering the league from overseas.",
+      "I ranked near the top of All-Star fan voting several times.",
+      "I averaged over twenty points per game during multiple seasons.",
+      "I was a dominant international player before my NBA debut.",
+      "I played professionally for the Shanghai Sharks before joining the NBA.",
+      "I was selected first in the draft without having played college basketball in the United States.",
+      "I led the Rockets past Portland in a 2009 playoff series despite persistent foot trouble.",
+      "I appeared in a renowned commercial with fellow NBA star Shaquille O'Neal and became a major global ambassador for the league.",
+      "I became the best-known Chinese star ever to play for the Houston Rockets.",
+      "I stood 7 feet 6 inches tall and wore No. 11 for Houston."
+    ]
+  },
+  {
+    "name": "Tony Allen",
+    "bref": "allento01",
+    "group": "guard",
+    "a": [
+      "I earned a reputation as one of the NBA's strongest perimeter defenders.",
+      "I contributed valuable minutes for teams with sustained playoff success.",
+      "I was named to multiple NBA All-Defensive teams.",
+      "I was selected to three All-Defensive First Teams.",
+      "I was drafted late in the first round in 2004.",
+      "I won an NBA championship as a supporting player with Boston in 2008.",
+      "I joined Memphis and became the face of a defense-first identity.",
+      "I was one of the 'Grit and Grind' Grizzlies alongside Zach Randolph and Marc Gasol.",
+      "I received praise from Kobe Bryant as a particularly difficult defender.",
+      "I was the Memphis Grizzlies guard nicknamed the Grindfather."
+    ],
+    "b": [
+      "I was known primarily for defending elite opposing scorers.",
+      "I developed into a valuable specialist rather than an All-Star.",
+      "I spent more than a decade in the NBA.",
+      "I earned six NBA All-Defensive selections.",
+      "I played college basketball at Oklahoma State.",
+      "I helped the Celtics win the 2008 title alongside Paul Pierce and Kevin Garnett.",
+      "I helped Memphis upset top-seeded San Antonio in the 2011 playoffs.",
+      "I became the vocal heart of Memphis's Grit and Grind era.",
+      "I wore No. 9 for the Grizzlies and was called the Grindfather.",
+      "I was the former Celtics champion Tony Allen whose Memphis defense became legendary."
+    ]
+  },
   // NEXT_BATCH
 ];
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
