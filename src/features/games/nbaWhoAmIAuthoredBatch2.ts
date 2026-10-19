@@ -1,6 +1,9 @@
 import type { NbaWhoAmIAuthoredIdentity } from "./nbaWhoAmIAuthoredScripts";
 
-/** Independently authored NBA Who Am I batch 2; editorial integration is intentionally separate. */
+/**
+ * NBA Who Am I batch 2: 48 explicitly authored subjects with separate A/B
+ * factual clue paths. This bank remains isolated until central integration.
+ */
 export const nbaWhoAmIAuthoredBatch2 = [
   {
     "subjectId": "nba:carmelo-anthony",
@@ -565,7 +568,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-dwight-howard-b-5",
-            "text": "I scored 40 points in the clinching Game 6 of a conference-finals victory.",
+            "text": "I scored 40 points to clinch a 2009 conference finals victory over Cleveland.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -960,7 +963,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-rajon-rondo-b-4",
-            "text": "I earned two NBA assist titles in consecutive seasons.",
+            "text": "I ranked among the league leaders in assists during separate stretches in Boston and Sacramento.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1014,7 +1017,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-rajon-rondo-b-10",
-            "text": "I won championships with the Celtics in 2008 and Lakers in 2020.",
+            "text": "I became one of the rare players to win championships with both the Celtics and Lakers.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1498,7 +1501,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-pau-gasol-a-7",
-            "text": "I later earned another All-Star selection after joining Chicago.",
+            "text": "I earned two additional NBA All-Star selections while playing for the Chicago Bulls.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1602,7 +1605,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-pau-gasol-b-8",
-            "text": "I was inducted into the Naismith Memorial Basketball Hall of Fame in 2023.",
+            "text": "I entered the Naismith Memorial Basketball Hall of Fame in the class of 2023.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -1795,7 +1798,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-marc-gasol-b-7",
-            "text": "I spent my final NBA season with the Lakers after winning a championship in Toronto.",
+            "text": "I spent the season after my Toronto championship playing for the Los Angeles Lakers.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2288,7 +2291,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-john-wall-a-5",
-            "text": "I averaged at least ten assists per game in three straight seasons from 2014–15 through 2016–17.",
+            "text": "I averaged double-digit assists in three consecutive seasons from 2014–15 through 2016–17.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2297,7 +2300,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-john-wall-a-6",
-            "text": "I had a 40-point playoff performance against Boston in 2017.",
+            "text": "I scored 42 points in a 2017 first-round playoff win that eliminated Atlanta.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2324,7 +2327,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-john-wall-a-9",
-            "text": "I hit a late three-pointer to force Game 7 against Boston in the 2017 playoffs.",
+            "text": "I starred for Washington and hit a go-ahead three late in Game 6 against Boston in 2017.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -2692,7 +2695,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-andre-iguodala-a-5",
-            "text": "I won the 2015 NBA Finals MVP award after moving into the starting lineup.",
+            "text": "I accepted a smaller regular-season role after joining a developing championship contender.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2737,7 +2740,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-andre-iguodala-a-10",
-            "text": "I am the 2015 Finals MVP whose key role came as a Warriors sixth man.",
+            "text": "I earned the 2015 Finals MVP award by defending LeBron James after moving into the Warriors' starting lineup.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -3545,7 +3548,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-al-horford-a-10",
-            "text": "I am the Dominican-born five-time All-Star who finally won a title with the 2024 Celtics.",
+            "text": "I was the Dominican-born five-time All-Star who won a title with Boston in 2024.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -3640,7 +3643,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-al-horford-b-10",
-            "text": "I wore No. 42 for Atlanta and No. 42 for the Celtics during much of my career.",
+            "text": "I wore No. 15 in Atlanta and No. 42 for Boston as a five-time NBA All-Star.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -4959,7 +4962,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-gordon-hayward-a-10",
-            "text": "I nearly won the 2010 NCAA title with Butler on a half-court shot that missed.",
+            "text": "I narrowly missed a half-court heave for Butler against Duke in the 2010 NCAA title game.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5036,7 +5039,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-gordon-hayward-b-8",
-            "text": "I reached the 2010 NCAA championship game under coach Brad Stevens.",
+            "text": "I helped Butler reach the 2010 NCAA championship game under coach Brad Stevens.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5202,7 +5205,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-paul-millsap-b-4",
-            "text": "I averaged nearly nine rebounds per game in a season as my role expanded.",
+            "text": "I gradually added three-point shooting to the physical rebounding game that earned me early minutes.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -5458,7 +5461,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-serge-ibaka-b-10",
-            "text": "I became famous for shot blocking beside Durant and Westbrook and later for the cooking show How Hungry Are You?",
+            "text": "My shot blocking with Durant and Westbrook later gave way to a title in Toronto and a cooking-show career.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5817,7 +5820,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-amare-stoudemire-b-5",
-            "text": "I won NBA Rookie of the Year in 2003 after joining the league directly from high school.",
+            "text": "I earned NBA Rookie of the Year in 2003 after entering the league directly from high school.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6258,7 +6261,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-dwyane-wade-b-8",
-            "text": "I averaged 34.7 points per game in the 2006 Finals against Dallas.",
+            "text": "I averaged 34.7 points per game in the 2006 NBA Finals against Dallas.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6530,7 +6533,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-paul-pierce-a-2",
-            "text": "I earned multiple All-Star selections before reaching the conference finals.",
+            "text": "I became an All-Star while helping a rising team reach the conference finals.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6837,7 +6840,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
         "clues": [
           {
             "id": "nba-kevin-garnett-b-1",
-            "text": "I became an All-Star in my second NBA season after entering the league from high school.",
+            "text": "I made my first NBA All-Star appearance before turning 21.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7007,7 +7010,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-ray-allen-a-7",
-            "text": "I won an NBA championship during my first year with Boston.",
+            "text": "I won my first NBA championship during my first season with Boston.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7376,7 +7379,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-andre-drummond-a-2",
-            "text": "My offensive game emphasized second-chance chances and finishes near the basket.",
+            "text": "My offensive game emphasized putbacks, second-chance points and finishes near the basket.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7884,7 +7887,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-andrew-bogut-b-3",
-            "text": "I averaged a double-double for an extended period with my original club.",
+            "text": "I averaged a double-double in consecutive seasons with my original club.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8027,7 +8030,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-tyson-chandler-a-7",
-            "text": "I made my lone All-Star team in 2013.",
+            "text": "I made my lone NBA All-Star team in 2013.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -8544,7 +8547,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-rudy-gay-b-9",
-            "text": "I was originally drafted by Houston but started my career with the Grizzlies.",
+            "text": "I was drafted by Houston but began my NBA career with the Grizzlies.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -9096,7 +9099,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-andrew-bynum-b-3",
-            "text": "I played a smaller role on my team's first two title runs.",
+            "text": "I played a smaller role on my team's two championship runs.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9289,7 +9292,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-oj-mayo-b-2",
-            "text": "My NBA rookie campaign ranked near the top of my draft class in points per game.",
+            "text": "My NBA rookie campaign was among the highest-scoring in my draft class.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -9361,7 +9364,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-oj-mayo-b-10",
-            "text": "I am the former USC scoring prospect who entered the NBA with the Memphis Grizzlies.",
+            "text": "I was the former USC star whose NBA career began with the Grizzlies after a draft-night trade.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -9500,7 +9503,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-monta-ellis-b-3",
-            "text": "I regularly averaged more than 20 points per game during my prime.",
+            "text": "I regularly averaged more than 20 points per game in my prime.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
