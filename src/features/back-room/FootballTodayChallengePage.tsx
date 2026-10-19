@@ -957,6 +957,9 @@ export default function FootballTodayChallengePage() {
           busy={busy}
           onAdvance={advance}
           onExit={() => navigate("/football")}
+          resultStatus={error ?? undefined}
+          onRetryResult={() => { void dailyRuntime.retryPending(); }}
+          onRefreshSaved={() => { void dailyRuntime.refresh(); }}
         />
       </div>
     );
