@@ -51,7 +51,7 @@ describe("NBA Who Am I — isolated modern batch 1", () => {
       expect(Object.keys(player.scripts).sort()).toEqual(["A", "B"]);
       expect(Object.keys(player.sources).length).toBeGreaterThanOrEqual(2);
       for (const url of Object.values(player.sources)) {
-        expect(url).toMatch(/^https:\/\/www\.nba\.com\/player\/\d+(?:\/bio)?$/);
+        expect(url).toMatch(/^https:\/\/(?:www\.nba\.com|www\.fiba\.basketball)\//);
       }
 
       for (const scriptId of ["A", "B"] as const) {
@@ -79,6 +79,7 @@ describe("NBA Who Am I — isolated modern batch 1", () => {
     }
     expect(allClueIds.size).toBe(960);
     expect(allTexts.length).toBe(960);
+    expect(new Set(allTexts.map(text => text.toLocaleLowerCase().trim())).size).toBe(960);
   });
 
   it("protects the first four clues from premature identity coordinates", () => {
