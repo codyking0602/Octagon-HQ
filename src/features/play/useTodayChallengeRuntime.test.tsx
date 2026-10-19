@@ -286,6 +286,43 @@ describe("useTodayChallengeRuntime", () => {
     expect(result.current.projection?.progressRevision).toBe(2);
   });
 
+  it("rechecks a completed server save without deleting queued player answers first", async () => {
+    const advance = vi.fn<TodayChallengeRepository["advance"]>()
+      .mockRejectedValueOnce(new Error("gateway-1"))
+      .mockRejectedValueOnce(new Error("gateway-2"))
+      .mockRejectedValueOnce(new Error("gateway-3"));
+    const loadToday = vi.fn()
+      .mockResolvedValueOnce(projection(1))
+      .mockResolvedValueOnce(completedProjection(2));
+    const repository = makeRepository(loadToday, advance);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { result } = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
+    act(() => {
+      void result.current.advance({ guess: 60 }, {
+        dedupeKey: "feud-final",
+        optimisticUpdate: optimisticGuess(60),
+      });
+    });
+    await waitFor(() => expect(result.current.pendingActionCount).toBe(1));
+    await waitFor(() => expect(result.current.error).toBeInstanceOf(Error), { timeout: 2500 });
+
+    await act(async () => {
+      await result.current.recheckSaved();
+    });
+
+    expect(loadToday).toHaveBeenCalledTimes(2);
+    expect(advance).toHaveBeenCalledTimes(3);
+    expect(result.current.pendingActionCount).toBe(0);
+    expect(result.current.projection?.officialAttempt?.normalizedScore).toBe(88);
+    expect(result.current.error).toBeNull();
+  });
+
   it("refreshes canonical cross-device state after a stale optimistic revision and drops dependent actions", async () => {
     const loadToday = vi.fn()
       .mockResolvedValueOnce(projection(1))
