@@ -399,7 +399,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-blake-griffin-b-9",
-            "text": "I was a five-time All-NBA selection whose career began at Oklahoma.",
+            "text": "I was a five-time All-NBA selection who starred at Oklahoma before entering the NBA.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -565,7 +565,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-dwight-howard-b-5",
-            "text": "I had a 30-point, 20-rebound game in a conference-finals victory.",
+            "text": "I scored 40 points in the clinching Game 6 of a conference-finals victory.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1795,7 +1795,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-marc-gasol-b-7",
-            "text": "I reunited with a former rival franchise while pursuing another title.",
+            "text": "I spent my final NBA season with the Lakers after winning a championship in Toronto.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -2324,7 +2324,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-john-wall-a-9",
-            "text": "I starred for Washington and hit a Game 6 buzzer-beater against Boston in 2017.",
+            "text": "I hit a late three-pointer to force Game 7 against Boston in the 2017 playoffs.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5036,7 +5036,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-gordon-hayward-b-8",
-            "text": "I reached the NCAA championship game twice under coach Brad Stevens.",
+            "text": "I reached the 2010 NCAA championship game under coach Brad Stevens.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5054,7 +5054,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-gordon-hayward-b-10",
-            "text": "I was the Boston Celtics signing whose first game ended in a gruesome ankle injury.",
+            "text": "I was the former Jazz All-Star whose Boston debut ended with a severe ankle and leg injury.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -5826,7 +5826,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-amare-stoudemire-b-6",
-            "text": "I scored 40 points in a 2010 conference-finals game against the Lakers.",
+            "text": "I scored 42 points against the Lakers in Game 3 of the 2010 West finals.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6548,7 +6548,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-paul-pierce-a-4",
-            "text": "I remained an important postseason scorer well into his thirties.",
+            "text": "I remained an important postseason scorer well into my thirties.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6837,7 +6837,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
         "clues": [
           {
             "id": "nba-kevin-garnett-b-1",
-            "text": "I became an All-Star as a teenager early in my professional career.",
+            "text": "I became an All-Star in my second NBA season after entering the league from high school.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -7543,7 +7543,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-andre-drummond-b-10",
-            "text": "I am the two-time All-Star Andre who starred in Detroit as a dominant rebounder.",
+            "text": "I was a two-time All-Star who won four rebounding titles during my Detroit prime.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -7745,7 +7745,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-deandre-jordan-b-10",
-            "text": "I am the former Texas A&M big man who earned the nickname Lob City and became a Nuggets champion.",
+            "text": "I was the former Texas A&M big man whose alley-oops defined Lob City before a Nuggets title.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8413,7 +8413,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-rudy-gay-a-5",
-            "text": "I earned NBA All-Rookie First Team honors in his debut season.",
+            "text": "I earned NBA All-Rookie First Team honors in my debut season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8728,7 +8728,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-michael-redd-b-7",
-            "text": "I spent his final NBA season with Phoenix after years in Milwaukee.",
+            "text": "I spent my final NBA season with Phoenix after years in Milwaukee.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9589,7 +9589,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
         "clues": [
           {
             "id": "nba-jason-terry-a-1",
-            "text": "I earned meaningful minutes in my first NBA season.",
+            "text": "I earned All-Rookie Second Team honors after my first NBA season.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
