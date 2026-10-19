@@ -10322,5 +10322,4 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
       }
     }
   }
-]
 ] satisfies readonly NbaWhoAmIAuthoredIdentity[];
