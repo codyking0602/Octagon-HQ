@@ -1,6 +1,10 @@
 import type { NbaWhoAmIAuthoredIdentity } from "./nbaWhoAmIAuthoredScripts";
 
-/** Isolated NBA Who Am I modern batch — 48 identities, independently authored A/B ladders. */
+/**
+ * Isolated modern NBA Who Am I content batch.
+ * Forty-eight identities, two independently authored ten-clue paths each.
+ * Does not alter the eight calibrated preview identities or runtime engine.
+ */
 export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
   {
     "subjectId": "nba:luka-doncic",
@@ -1710,7 +1714,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-tyrese-haliburton-b-10",
-            "text": "I am the Pacers' No. 0 playmaker who led Indiana to the 2025 NBA Finals.",
+            "text": "I am the Pacers' No. 0 passer who guided Indiana to the 2025 NBA Finals.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -3801,7 +3805,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-james-harden-b-4",
-            "text": "I posted high assist totals while regularly exceeding 30 points per game.",
+            "text": "I regularly balanced self-created scoring with high-level playmaking for teammates.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -4139,7 +4143,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-paul-george-a-5",
-            "text": "I won the NBA's Most Improved Player award.",
+            "text": "I won the NBA's Most Improved Player award after emerging as an important two-way contributor.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -4748,7 +4752,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-draymond-green-a-1",
-            "text": "I became a versatile defender after entering the league as a second-round pick.",
+            "text": "I became a versatile defender after beginning my NBA career in a reserve role.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6870,7 +6874,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-domantas-sabonis-b-10",
-            "text": "I am the Sacramento No. 11 big whose Hall of Fame father is Arvydas.",
+            "text": "I am the Kings' No. 11 star with a Hall of Fame father, Arvydas.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6898,7 +6902,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-demar-derozan-a-1",
-            "text": "I developed from an athletic slasher into a high-volume scorer.",
+            "text": "I developed from an athletic slasher into a skilled, high-volume NBA scorer.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8009,7 +8013,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-khris-middleton-a-5",
-            "text": "I earned multiple NBA All-Star selections.",
+            "text": "I became a three-time NBA All-Star as Milwaukee developed into a contender.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8074,7 +8078,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-khris-middleton-b-1",
-            "text": "I entered the league as a second-round draft selection.",
+            "text": "I earned more scoring responsibility after beginning my career in a limited role.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -8110,7 +8114,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-khris-middleton-b-5",
-            "text": "I shot 50 percent overall, 40 percent from three and 90 percent at the line in 2019-20.",
+            "text": "I narrowly missed shooting 50 percent from the field, 40 percent on threes and 90 percent at the line in 2019-20.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8120,7 +8124,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-khris-middleton-b-6",
-            "text": "I helped Milwaukee take a 2-0 lead in the 2021 NBA Finals comeback.",
+            "text": "I helped Milwaukee win four straight Finals games after falling behind Phoenix two games to none.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9329,7 +9333,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-franz-wagner-a-8",
-            "text": "I helped Germany win the 2023 FIBA World Cup.",
+            "text": "I helped Orlando reach the NBA playoffs in 2024 after years away from the postseason.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9400,7 +9404,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-franz-wagner-b-5",
-            "text": "I scored 38 points in a 2024 playoff victory against Cleveland.",
+            "text": "I scored 34 points and grabbed 13 rebounds in a 2024 playoff win over Cleveland.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9430,7 +9434,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-franz-wagner-b-8",
-            "text": "I scored 26 points during a decisive 2023 World Cup semifinal victory over the United States.",
+            "text": "I scored 22 points against the United States in the 2023 World Cup semifinal.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9729,7 +9733,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-cade-cunningham-a-5",
-            "text": "I made the NBA All-Rookie first team in 2022.",
+            "text": "I secured All-Rookie first-team recognition after my debut season.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9779,7 +9783,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-cade-cunningham-a-10",
-            "text": "I am the Pistons' No. 2 franchise guard .",
+            "text": "I am Detroit's No. 2 franchise guard and a former first-overall pick.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -10055,7 +10059,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-jalen-williams-b-6",
-            "text": "I averaged more than 19 points during my second season.",
+            "text": "I became a roughly 19-point scorer in my second professional season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -10189,7 +10193,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-alperen-sengun-a-8",
-            "text": "I earned my first NBA All-Star selection in 2025.",
+            "text": "I developed into a focal point for Houston as it returned to the playoffs.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -10310,7 +10314,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-alperen-sengun-b-10",
-            "text": "I am the Rockets' No. 28 post passer who once won Turkish league MVP.",
+            "text": "I am the Rockets' No. 28 former Turkish league MVP nicknamed Alpi.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
