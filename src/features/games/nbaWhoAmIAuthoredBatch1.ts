@@ -36,7 +36,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-luka-doncic-a-3",
-            "text": "I developed into a high-volume pick-and-roll creator with frequent triple-doubles.",
+            "text": "I regularly combined high scoring totals with strong rebounding and passing contributions.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1307,7 +1307,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         "clues": [
           {
             "id": "nba-victor-wembanyama-a-1",
-            "text": "I combined unusual shooting range with high-volume rim protection as a rookie.",
+            "text": "I developed into a major rim protector immediately after reaching the NBA.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1316,7 +1316,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-victor-wembanyama-a-2",
-            "text": "I could handle the ball on the perimeter despite my remarkable height.",
+            "text": "I also worked to expand my scoring range beyond the restricted area.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1325,7 +1325,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-victor-wembanyama-a-3",
-            "text": "I regularly affected shots without always recording a block.",
+            "text": "I learned to use timing and reach rather than chasing every attempted shot.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1334,7 +1334,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-victor-wembanyama-a-4",
-            "text": "I became one of the league's most disruptive defenders immediately.",
+            "text": "I contributed rebounding and disruptive defense while adjusting to NBA physicality.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1417,7 +1417,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-victor-wembanyama-b-2",
-            "text": "I entered the league with exceptionally high expectations for a teenager.",
+            "text": "I was expected to contribute at both ends of the floor as a young player.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -1426,7 +1426,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-victor-wembanyama-b-3",
-            "text": "I stretched the floor while also scoring above the rim.",
+            "text": "I combined finishing near the basket with jumpers from farther outside the paint.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1435,7 +1435,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-victor-wembanyama-b-4",
-            "text": "I produced unusual stat lines combining assists, steals and blocks.",
+            "text": "I used my length to disrupt passing lanes and contest drives into the lane.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -2062,7 +2062,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-donovan-mitchell-b-2",
-            "text": "I won a Slam Dunk Contest early in my professional career.",
+            "text": "I showed explosive finishing ability while becoming a difficult player to keep out of the paint.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -3682,7 +3682,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-james-harden-a-2",
-            "text": "I developed a left-handed isolation game that repeatedly drew fouls.",
+            "text": "I became adept at drawing contact on drives and using footwork to reach the foul line.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -3691,7 +3691,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-james-harden-a-3",
-            "text": "I became one of the league's most dangerous step-back three-point shooters.",
+            "text": "I expanded my scoring repertoire to include contested pull-up three-pointers.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -6125,7 +6125,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-zion-williamson-a-10",
-            "text": "I am New Orleans' No. 1 former Duke phenomenon, known simply as Zion.",
+            "text": "I am New Orleans' No. 1 power finisher, the first overall pick out of Duke in 2019.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6149,7 +6149,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-zion-williamson-b-2",
-            "text": "I missed the beginning of my first NBA season with an injury.",
+            "text": "I had to adapt to missed games and interruptions early in my professional career.",
             "band": "broad",
             "verification": "verified",
             "sourceIds": [
@@ -6656,7 +6656,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-deaaron-fox-b-10",
-            "text": "I am De'Aaron Fox, the fast left-handed guard known as Swipa.",
+            "text": "I won the inaugural Clutch Player of the Year award after restoring Sacramento to the playoffs, then joined San Antonio.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
