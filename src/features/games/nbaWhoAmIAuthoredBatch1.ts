@@ -2589,7 +2589,8 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/203076",
-      "bio": "https://www.nba.com/player/203076/bio"
+      "bio": "https://www.nba.com/player/203076/bio",
+      "trade": "https://www.nba.com/news/2025-26-nba-trade-tracker"
     },
     "scripts": {
       "A": {
@@ -2683,12 +2684,12 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-anthony-davis-a-10",
-            "text": "I am the Lakers' No. 3 champion whose signature nickname is The Brow.",
+            "text": "I won the 2020 Lakers championship wearing No. 3 before later playing for Dallas and Washington.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "profile",
-              "bio"
+              "trade"
             ]
           }
         ]
@@ -2784,12 +2785,12 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-anthony-davis-b-10",
-            "text": "I am also called AD, and I helped the Lakers win the 2020 title.",
+            "text": "I was the Lakers' No. 3 champion called AD before a pair of trades took me to Dallas and Washington.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "profile",
-              "bio"
+              "trade"
             ]
           }
         ]
@@ -5599,7 +5600,8 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1629027",
-      "bio": "https://www.nba.com/player/1629027/bio"
+      "bio": "https://www.nba.com/player/1629027/bio",
+      "trade": "https://www.nba.com/news/hawks-trade-trae-young-to-wizards-for-cj-mccollum-corey-kispert"
     },
     "scripts": {
       "A": {
@@ -5693,12 +5695,12 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-trae-young-a-10",
-            "text": "I am the Hawks' No. 11 star known as Ice Trae.",
+            "text": "I became the Atlanta No. 11 star Ice Trae before a 2026 trade sent me to Washington.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "profile",
-              "bio"
+              "trade"
             ]
           }
         ]
@@ -5794,12 +5796,12 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-trae-young-b-10",
-            "text": "I am the Atlanta No. 11 guard whose nickname is Ice Trae.",
+            "text": "I built my Ice Trae reputation with the Hawks before joining the Wizards in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "profile",
-              "bio"
+              "trade"
             ]
           }
         ]
@@ -8609,7 +8611,8 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1628991",
-      "bio": "https://www.nba.com/player/1628991/bio"
+      "bio": "https://www.nba.com/player/1628991/bio",
+      "trade": "https://www.nba.com/news/jaren-jackson-jr-trade-jazz-2026"
     },
     "scripts": {
       "A": {
@@ -8703,12 +8706,12 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-jaren-jackson-jr-a-10",
-            "text": "I am the Grizzlies' No. 13 star called Triple J, or JJJ.",
+            "text": "I earned the nickname Triple J as Memphis's No. 13 before a 2026 trade to Utah.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "profile",
-              "bio"
+              "trade"
             ]
           }
         ]
@@ -8804,12 +8807,12 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-jaren-jackson-jr-b-10",
-            "text": "I am the No. 13 defensive star called Triple J.",
+            "text": "I won 2023 Defensive Player of the Year with the Grizzlies before being traded to the Jazz in 2026.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
               "profile",
-              "bio"
+              "trade"
             ]
           }
         ]
