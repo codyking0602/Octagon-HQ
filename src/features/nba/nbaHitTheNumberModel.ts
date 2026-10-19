@@ -198,6 +198,9 @@ function candidateSubjects(metricId: NbaHitNumberMetricId, format: NbaHitNumberF
         { label: "All-Time Greats", accept: (s: NbaHitNumberSubject) => s.games >= 600 },
       ]
     : [
+        // This broad, recognizable cohort is a real alternative whenever a
+        // narrower points/playmaking theme cannot produce bad unders AND busts.
+        { label: "2024–25 Notables", accept: (s: NbaHitNumberSubject) => s.games >= 40 },
         { label: "2024–25 Stars", accept: (s: NbaHitNumberSubject) => s.ppg >= 17 },
         { label: "2024–25 Playmakers", accept: (s: NbaHitNumberSubject) => s.apg >= 3.5 },
         { label: "2024–25 Frontcourt", accept: (s: NbaHitNumberSubject) => s.position !== "G" },
