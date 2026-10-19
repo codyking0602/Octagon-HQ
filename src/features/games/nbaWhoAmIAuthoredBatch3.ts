@@ -8,7 +8,7 @@ const entries: readonly Entry[] = [
     "name": "Allen Iverson",
     "bref": "iversal01",
     "group": "guard",
-    "history": "https://www.nba.com/news/history-nba-legend-allen-iverson",
+    "history": "https://www.nba.com/news/archive-75-allen-iverson",
     "a": [
       "I won Rookie of the Year and made the All-Rookie First Team.",
       "I repeatedly ranked among the league leaders in minutes played.",
@@ -96,7 +96,7 @@ const entries: readonly Entry[] = [
     "name": "Steve Nash",
     "bref": "nashst01",
     "group": "guard",
-    "history": "https://www.nba.com/news/history-nba-legend-steve-nash",
+    "history": "https://www.nba.com/news/archive-75-steve-nash",
     "a": [
       "I entered the NBA as a first-round pick but initially saw limited minutes.",
       "I consistently ranked among the league's best free-throw shooters.",
@@ -126,7 +126,7 @@ const entries: readonly Entry[] = [
     "name": "Jason Kidd",
     "bref": "kiddja01",
     "group": "guard",
-    "history": "https://www.nba.com/news/history-nba-legend-jason-kidd",
+    "history": "https://www.nba.com/news/archive-75-jason-kidd",
     "a": [
       "I shared the Rookie of the Year award with another young star.",
       "I earned All-Defensive recognition in many seasons.",
@@ -185,7 +185,7 @@ const entries: readonly Entry[] = [
     "name": "Grant Hill",
     "bref": "hillgr01",
     "group": "wing",
-    "history": "https://www.nba.com/news/history-nba-legend-grant-hill",
+    "history": "https://www.nba.com/news/nba-legends-brunch-david-robinson-grant-hill-honors",
     "a": [
       "I shared Rookie of the Year with another future Hall of Famer.",
       "I earned multiple All-NBA honors before chronic injuries interrupted my career.",
@@ -238,6 +238,245 @@ const entries: readonly Entry[] = [
       "I eventually returned to the school where I played college basketball as head coach.",
       "I was the Memphis State product whose NBA debut came with the Orlando Magic.",
       "My nickname Penny, partnership with Shaq and Lil' Penny commercials defined my first Magic years."
+    ]
+  },
+  {
+    "name": "Chris Webber",
+    "bref": "webbech01",
+    "group": "big",
+    "history": "https://www.nba.com/news/history-nba-legend-chris-webber",
+    "a": [
+      "I was voted Rookie of the Year after my debut season.",
+      "I became a multiple-time All-Star and All-NBA selection.",
+      "I was named to the All-NBA First Team in 2001.",
+      "I helped turn a struggling franchise into a consistent playoff team.",
+      "I was selected first overall in the 1993 NBA Draft.",
+      "I was traded on draft night for another highly touted prospect and draft picks.",
+      "I anchored a team that won 61 games in the 2001-02 regular season.",
+      "I came within a victory of the NBA Finals against the Lakers in 2002.",
+      "I was a leader of the Sacramento Kings' celebrated early-2000s offense.",
+      "I was part of Michigan's Fab Five before becoming the Kings' No. 4."
+    ],
+    "b": [
+      "I was a highly regarded rookie who immediately averaged a double-double.",
+      "I earned five All-Star selections over my NBA career.",
+      "I was a gifted passer for a player of my size.",
+      "I spent time with several franchises before reaching the height of my career.",
+      "I played alongside Jason Williams and later Mike Bibby on a title contender.",
+      "I suffered a serious knee injury during the 2003 postseason.",
+      "I was originally drafted by Orlando, which exchanged my rights for Penny Hardaway.",
+      "I later had a return stint in Golden State before retiring.",
+      "I starred for the Golden State Warriors, Washington Bullets/Wizards and Sacramento Kings.",
+      "I led the Sacramento group with Vlade Divac, Peja Stojaković and Mike Bibby."
+    ]
+  },
+  {
+    "name": "Chris Mullin",
+    "bref": "mullich01",
+    "group": "wing",
+    "history": "https://www.nba.com/news/history-nba-legend-chris-mullin",
+    "a": [
+      "I earned five NBA All-Star selections during my prime.",
+      "I was named to four All-NBA teams.",
+      "I was an elite shooter whose scoring improved markedly after my first seasons.",
+      "I averaged more than twenty-five points per game in several seasons.",
+      "I earned All-NBA First Team honors in 1992.",
+      "I was one of three high-scoring teammates in an offense given a short nickname.",
+      "I won gold as a member of the original 1992 U.S. Olympic Dream Team.",
+      "I played for Indiana late in my career before returning to my first franchise.",
+      "I formed Run TMC with Tim Hardaway and Mitch Richmond at Golden State.",
+      "I was the left-handed St. John's star who wore No. 17 for the Warriors."
+    ],
+    "b": [
+      "I established myself as a dependable scorer after a modest rookie season.",
+      "I could threaten defenders from outside without relying on spectacular athleticism.",
+      "I spent most of my NBA career playing for one franchise.",
+      "I was the seventh overall draft pick in 1985.",
+      "I averaged more than twenty-five points in five straight seasons.",
+      "I won Olympic gold with the United States in both 1984 and 1992.",
+      "I played on a Don Nelson-coached team known for fast-paced offense.",
+      "I reached the 2000 NBA Finals during a later stint with the Pacers.",
+      "I returned to Golden State to finish my playing career in 2001.",
+      "I was the former St. John's Red Storm standout in the Warriors trio Run TMC."
+    ]
+  },
+  {
+    "name": "Reggie Miller",
+    "bref": "millere01",
+    "group": "wing",
+    "history": "https://www.nba.com/news/history-nba-legend-reggie-miller",
+    "a": [
+      "I was selected to five NBA All-Star Games.",
+      "I earned multiple All-NBA Third Team honors.",
+      "I became a premier off-ball shooter and a reliable foul-line scorer.",
+      "I remained a regular playoff participant deep into my career.",
+      "I made the NBA Finals once but did not win a championship.",
+      "I scored 25 points in the fourth quarter of a famous playoff game against New York.",
+      "I scored eight points in roughly nine seconds at Madison Square Garden in 1995.",
+      "I played every NBA season of my career for Indiana.",
+      "I dueled with Spike Lee and the Knicks during the Pacers' playoff runs.",
+      "I wore No. 31 and became the defining long-range shooter of the Indiana Pacers."
+    ],
+    "b": [
+      "I became a franchise's all-time scoring leader.",
+      "I was famous for making big shots late in close games.",
+      "I was named to the All-NBA Third Team three times.",
+      "I entered the league as the eleventh overall pick in 1987.",
+      "I made 2,560 career regular-season three-pointers.",
+      "I reached the 2000 Finals under coach Larry Bird.",
+      "I was a centerpiece of several playoff battles with Michael Jordan's Bulls.",
+      "I retired in 2005 after eighteen seasons in the same uniform.",
+      "I was the UCLA sharpshooter whose older sister Cheryl was also a basketball star.",
+      "I became known as Miller Time while starring for the Indiana Pacers."
+    ]
+  },
+  {
+    "name": "Shawn Kemp",
+    "bref": "kempsh01",
+    "group": "big",
+    "a": [
+      "I developed from a teenage reserve into a perennial All-Star.",
+      "I was a powerful finisher and prolific rebounder in my prime.",
+      "I earned three All-NBA Second Team selections.",
+      "I made six consecutive All-Star teams in the 1990s.",
+      "I reached an NBA Finals but lost to a team built around a historic scorer.",
+      "I helped a club win 64 regular-season games in 1995-96.",
+      "I faced Michael Jordan's Chicago Bulls in the 1996 Finals.",
+      "I later played for Cleveland, Portland and Orlando after my breakout.",
+      "I teamed with Gary Payton on the Seattle SuperSonics.",
+      "My spectacular dunks made me the player nicknamed the Reign Man."
+    ],
+    "b": [
+      "I entered the NBA directly after high school rather than playing college basketball.",
+      "I improved my scoring average across several consecutive early seasons.",
+      "I won a world championship with the United States in 1994.",
+      "I was chosen seventeenth overall in the 1989 NBA Draft.",
+      "I was a major part of a team that won more than fifty games repeatedly.",
+      "I scored twenty or more points per game in two consecutive seasons after a trade.",
+      "I played against Dennis Rodman in an NBA Finals series.",
+      "I was sent from Seattle to Cleveland in a major 1997 trade.",
+      "I was one half of a famous alley-oop partnership with Gary Payton.",
+      "I became famous for my high-flying dunks in Seattle as the Reign Man."
+    ]
+  },
+  {
+    "name": "Gary Payton",
+    "bref": "paytoga01",
+    "group": "guard",
+    "history": "https://www.nba.com/news/history-nba-legend-gary-payton",
+    "a": [
+      "I became a regular All-Star and All-NBA performer.",
+      "I was selected to an NBA All-Defensive First Team in nine consecutive seasons.",
+      "I played in the Finals both in my prime and again near the end of my career.",
+      "I became a league steals leader during my prime.",
+      "I won the 1996 NBA Defensive Player of the Year award.",
+      "I played on the 1996 Finals team that faced Michael Jordan's Bulls.",
+      "I won my only NBA championship with Miami in 2006.",
+      "I partnered with Shawn Kemp for many years in Seattle.",
+      "I was the defensive Seattle guard famously called The Glove.",
+      "I wore No. 20 for the SuperSonics and won the 1996 Defensive Player of the Year."
+    ],
+    "b": [
+      "I was a first-round pick who became a two-way star.",
+      "I contributed scoring, assists and steals for many years.",
+      "I made the All-NBA First Team twice.",
+      "I averaged more than twenty points in multiple seasons.",
+      "I was chosen second overall in the 1990 NBA Draft.",
+      "I won Olympic gold with the United States in 1996 and 2000.",
+      "I played alongside Kobe Bryant and Shaquille O'Neal late in their Lakers partnership.",
+      "I spent seventeen NBA seasons with Seattle, Milwaukee, the Lakers, Boston and Miami.",
+      "I helped the SuperSonics reach the 1996 NBA Finals before winning a ring with the Heat.",
+      "My nickname The Glove reflected my suffocating perimeter defense."
+    ]
+  },
+  {
+    "name": "Patrick Ewing",
+    "bref": "ewingpa01",
+    "group": "big",
+    "history": "https://www.nba.com/news/history-nba-legend-patrick-ewing",
+    "a": [
+      "I earned Rookie of the Year in my first NBA season.",
+      "I collected eleven NBA All-Star selections.",
+      "I was a reliable twenty-point scorer and an imposing shot blocker.",
+      "I earned an All-NBA First Team selection in 1990.",
+      "I helped my club reach the conference finals multiple times.",
+      "I faced Hakeem Olajuwon in a seven-game NBA Finals series.",
+      "I led New York to the 1994 Finals, where Houston prevailed.",
+      "I was selected first in the inaugural NBA draft lottery of 1985.",
+      "I was the longtime New York Knicks cornerstone at Madison Square Garden.",
+      "I wore No. 33 after starring under John Thompson at Georgetown."
+    ],
+    "b": [
+      "I played more than a thousand NBA regular-season games.",
+      "I was selected repeatedly to All-NBA teams.",
+      "I built a reputation for mid-range shooting in addition to rim protection.",
+      "I won Olympic gold at both the 1984 and 1992 Summer Games.",
+      "I played a pivotal role in a famous college national championship.",
+      "I returned from an Achilles injury after missing a team's 1999 Finals run.",
+      "I finished with brief NBA stops in Seattle and Orlando.",
+      "I lost the 1994 Finals to a college rival whose team had once lost to mine.",
+      "I was the Georgetown Hoyas star who won the 1984 NCAA title.",
+      "My No. 33 hangs in the rafters of Madison Square Garden for the Knicks."
+    ]
+  },
+  {
+    "name": "David Robinson",
+    "bref": "robinda01",
+    "group": "big",
+    "history": "https://www.nba.com/news/history-nba-legend-david-robinson",
+    "a": [
+      "I won Rookie of the Year after joining the NBA.",
+      "I combined elite rebounding with outstanding shot blocking.",
+      "I earned the league's Defensive Player of the Year award.",
+      "I won both a rebounding title and a scoring title in my career.",
+      "I earned the 1995 NBA Most Valuable Player award.",
+      "I scored 71 points in the final game of the 1993-94 regular season.",
+      "I served in the U.S. Navy before starting my professional career.",
+      "I won NBA championships in 1999 and 2003 alongside Tim Duncan.",
+      "I played my entire NBA career for the San Antonio Spurs.",
+      "I wore No. 50 and earned the nickname The Admiral."
+    ],
+    "b": [
+      "I was a ten-time NBA All-Star.",
+      "I quickly became one of the league's most versatile interior defenders.",
+      "I earned numerous All-NBA and All-Defensive selections.",
+      "I was selected first overall in a draft but debuted two seasons later.",
+      "I recorded a quadruple-double in a 1994 regular-season game.",
+      "I won the 1992 Defensive Player of the Year award.",
+      "I was part of the 1992 U.S. Olympic Dream Team.",
+      "I won my second NBA championship in my final season.",
+      "I shared the Spurs frontcourt with Tim Duncan as part of the Twin Towers.",
+      "I was the Naval Academy graduate called The Admiral in San Antonio."
+    ]
+  },
+  {
+    "name": "Hakeem Olajuwon",
+    "bref": "olajuha01",
+    "group": "big",
+    "history": "https://www.nba.com/news/history-nba-legend-hakeem-olajuwon",
+    "a": [
+      "I was consistently among the league's top rebounders and shot blockers.",
+      "I was chosen for multiple All-NBA and All-Defensive teams.",
+      "I won the NBA Defensive Player of the Year award more than once.",
+      "I made twelve NBA All-Star appearances.",
+      "I won the regular-season MVP award during a championship season.",
+      "I earned league MVP, Defensive Player of the Year and Finals MVP in the same season.",
+      "I led back-to-back NBA championship runs in 1994 and 1995.",
+      "I led the NBA in career blocks at retirement with 3,830.",
+      "I became the centerpiece of the Houston Rockets' first two championships.",
+      "My famous footwork and Dream Shake gave me the nickname Hakeem the Dream."
+    ],
+    "b": [
+      "I was a dominant scorer even though defense was equally central to my game.",
+      "I became a twelve-time All-NBA selection.",
+      "I developed an extraordinary set of post moves and counter moves.",
+      "I recorded a quadruple-double in 1990.",
+      "I was the first pick of the 1984 NBA Draft ahead of Michael Jordan.",
+      "I played on a college team known as Phi Slama Jama.",
+      "I defeated Patrick Ewing's Knicks in the 1994 Finals.",
+      "I outplayed David Robinson in a 1995 conference final before sweeping Orlando.",
+      "I starred at the University of Houston and was drafted by the Houston Rockets.",
+      "I was the Nigerian-born Rockets legend known for the Dream Shake and No. 34."
     ]
   },
   // NEXT_BATCH
