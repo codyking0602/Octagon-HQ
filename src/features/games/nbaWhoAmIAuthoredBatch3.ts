@@ -479,6 +479,245 @@ const entries: readonly Entry[] = [
       "I was the Nigerian-born Rockets legend known for the Dream Shake and No. 34."
     ]
   },
+  {
+    "name": "Charles Barkley",
+    "bref": "barklch01",
+    "group": "big",
+    "history": "https://www.nba.com/news/history-nba-legend-charles-barkley",
+    "a": [
+      "I made eleven NBA All-Star teams.",
+      "I was a formidable rebounder despite being shorter than many of the players I battled inside.",
+      "I led the NBA in rebounding during the 1986-87 season.",
+      "I was named to the All-NBA First Team five times.",
+      "I won a regular-season MVP award but never an NBA title.",
+      "I won MVP in 1993 after joining a new franchise.",
+      "I led Phoenix to the 1993 Finals against Michael Jordan's Bulls.",
+      "I scored 56 points in a 1994 playoff game against Golden State.",
+      "I starred for Philadelphia, Phoenix and Houston.",
+      "I was the outspoken Dream Team star called the Round Mound of Rebound."
+    ],
+    "b": [
+      "I was a dominant scorer and rebounder over a long career.",
+      "I was a frequent All-NBA selection throughout my prime.",
+      "I became a member of the original U.S. Olympic Dream Team.",
+      "I left my first franchise in a major trade during my prime.",
+      "I was named the 1991 NBA All-Star Game MVP.",
+      "I played alongside Hakeem Olajuwon and Clyde Drexler in Houston late in my career.",
+      "I was the fifth overall pick out of Auburn in the 1984 NBA Draft.",
+      "I was the principal star of the 1992-93 Phoenix Suns.",
+      "I was the MVP who lost the 1993 Finals to the Chicago Bulls.",
+      "I was known as Sir Charles and the Round Mound of Rebound."
+    ]
+  },
+  {
+    "name": "Karl Malone",
+    "bref": "malonka01",
+    "group": "big",
+    "history": "https://www.nba.com/news/history-nba-legend-karl-malone",
+    "a": [
+      "I scored more than twenty points per game in many consecutive seasons.",
+      "I earned multiple All-NBA First Team selections.",
+      "I won two NBA regular-season MVP awards.",
+      "I made fourteen NBA All-Star Games.",
+      "I became one of the most prolific free-throw earners in league history.",
+      "I was named league MVP in 1997 and again in 1999.",
+      "I appeared in consecutive NBA Finals against Chicago in 1997 and 1998.",
+      "I joined the Lakers for a final attempt at a title in 2003-04.",
+      "I formed a long-running pick-and-roll partnership with John Stockton in Utah.",
+      "I wore No. 32 for the Jazz and was famously nicknamed the Mailman."
+    ],
+    "b": [
+      "I was a dependable high-volume scorer and rebounder.",
+      "I had an unusually long run as an elite starter.",
+      "I appeared on eleven consecutive All-NBA First Teams.",
+      "I finished my career with 36,928 regular-season points.",
+      "I entered the league as the thirteenth overall pick in 1985.",
+      "I helped bring my franchise to its first NBA Finals.",
+      "I lost two Finals in consecutive seasons to Michael Jordan's Bulls.",
+      "I played my final NBA season alongside Shaquille O'Neal and Kobe Bryant.",
+      "I was the Louisiana Tech product who spent eighteen seasons with the Utah Jazz.",
+      "My Utah teammate was assist king John Stockton, and my nickname was the Mailman."
+    ]
+  },
+  {
+    "name": "John Stockton",
+    "bref": "stockjo01",
+    "group": "guard",
+    "history": "https://www.nba.com/news/history-nba-legend-john-stockton",
+    "a": [
+      "I played a remarkably long NBA career without changing franchises.",
+      "I became a repeated All-Star and All-NBA selection.",
+      "I led the league in assists for nine consecutive seasons.",
+      "I was an elite ball thief as well as a playmaker.",
+      "I appeared in two consecutive NBA Finals.",
+      "I made a series-winning three-pointer to send my team to the 1997 Finals.",
+      "I finished with 15,806 assists in the NBA regular season.",
+      "I retired as the league's career leader in both assists and steals.",
+      "I ran the Utah Jazz pick-and-roll alongside Karl Malone.",
+      "I was the Gonzaga guard wearing No. 12 for the Jazz."
+    ],
+    "b": [
+      "I was drafted in the first round and gradually earned a starting role.",
+      "I became known for durable, efficient playmaking.",
+      "I was chosen for ten NBA All-Star Games.",
+      "I led the NBA in steals in two different seasons.",
+      "I was selected sixteenth overall in the 1984 NBA Draft.",
+      "I won Olympic gold with the U.S. Dream Team in 1992.",
+      "I played all nineteen NBA seasons for one organization.",
+      "I made back-to-back Finals appearances but was denied by the Bulls.",
+      "My pass to Karl Malone became synonymous with Utah's signature pick-and-roll.",
+      "I was the Utah Jazz's No. 12 and finished with 3,265 steals and 15,806 assists."
+    ]
+  },
+  {
+    "name": "Scottie Pippen",
+    "bref": "pippesc01",
+    "group": "wing",
+    "history": "https://www.nba.com/news/archive-75-scottie-pippen",
+    "a": [
+      "I earned repeated All-Defensive First Team selections.",
+      "I could guard several different kinds of opponents while initiating offense.",
+      "I made seven NBA All-Star teams.",
+      "I was selected to three All-NBA First Teams.",
+      "I finished third in MVP voting while serving as my team's lead star.",
+      "I won consecutive Olympic gold medals with the United States.",
+      "I won six NBA championships alongside Michael Jordan.",
+      "I spent a later career stretch in Houston and Portland.",
+      "I served as the versatile co-star of Chicago's two championship three-peats.",
+      "I wore No. 33 for the Bulls and was Michael Jordan's longtime championship partner."
+    ],
+    "b": [
+      "I was selected to both All-NBA and All-Defensive teams in several seasons.",
+      "I was highly valued for defense, passing and transition play.",
+      "I became the All-Star Game MVP in 1994.",
+      "I was drafted fifth overall in 1987 before a draft-night trade.",
+      "I led the Bulls in major categories during Jordan's first retirement.",
+      "I famously dunked over Patrick Ewing in the 1994 playoffs.",
+      "I helped Portland reach Game 7 of the 2000 Western Conference Finals.",
+      "I played college basketball at the University of Central Arkansas.",
+      "I won six rings with Chicago while defending stars across the league.",
+      "I was the Bulls' No. 33, the fellow Dream Teamer paired with Michael Jordan."
+    ]
+  },
+  {
+    "name": "Dennis Rodman",
+    "bref": "rodmade01",
+    "group": "big",
+    "history": "https://www.nba.com/news/archive-75-dennis-rodman",
+    "a": [
+      "I earned multiple NBA All-Defensive selections.",
+      "I built my value through defense and rebounding more than scoring.",
+      "I won the league's rebounding title in seven consecutive seasons.",
+      "I received the Defensive Player of the Year award twice.",
+      "I won NBA championships with more than one franchise.",
+      "I won my first two titles as part of Detroit's Bad Boys defense.",
+      "I later captured three straight championships with Michael Jordan's Bulls.",
+      "I played for the Spurs between my Detroit and Chicago title runs.",
+      "I became the flamboyant rebounding specialist wearing No. 91 for Chicago.",
+      "My nickname was the Worm, and I won five NBA championships."
+    ],
+    "b": [
+      "I entered the league without a celebrated major-college pedigree.",
+      "I became a rotation player before developing into an elite defender.",
+      "I made two NBA All-Star appearances.",
+      "I led the league in rebounds per game more than any other player in the 1990s.",
+      "I was drafted in the second round in 1986.",
+      "I won Defensive Player of the Year in 1990 and 1991.",
+      "I reached the 1988 Finals before winning rings in 1989 and 1990.",
+      "I was traded from San Antonio to the Bulls in 1995.",
+      "I played alongside Isiah Thomas in Detroit and Michael Jordan in Chicago.",
+      "I was known for dyed hair, the Worm nickname and my Bulls No. 91 jersey."
+    ]
+  },
+  {
+    "name": "Clyde Drexler",
+    "bref": "drexlcl01",
+    "group": "wing",
+    "history": "https://www.nba.com/news/archive-75-clyde-drexler",
+    "a": [
+      "I made ten NBA All-Star teams.",
+      "I was a strong scoring and rebounding contributor from the perimeter.",
+      "I earned five All-NBA selections during my prime.",
+      "I finished second in regular-season MVP voting in 1992.",
+      "I appeared in multiple NBA Finals with different teammates.",
+      "I led Portland to the 1990 and 1992 Finals.",
+      "I reunited with a former college teammate in a midseason trade.",
+      "I won the 1995 NBA championship beside Hakeem Olajuwon in Houston.",
+      "I became a legend with the Trail Blazers before closing my career with the Rockets.",
+      "My soaring finishes earned me the nickname Clyde the Glide."
+    ],
+    "b": [
+      "I was a prolific transition scorer with notable playmaking ability.",
+      "I grew into the star of a team that contended for titles.",
+      "I joined the 1992 United States Olympic Dream Team.",
+      "I was drafted fourteenth overall in 1983.",
+      "I played on the Phi Slama Jama college teams.",
+      "I lost the 1992 Finals to Michael Jordan's Bulls.",
+      "I moved from Portland to Houston during the 1994-95 season.",
+      "I helped the Rockets sweep the Orlando Magic in the 1995 Finals.",
+      "I starred at the University of Houston before a long career wearing No. 22 in Portland.",
+      "I was known as Clyde the Glide with the Blazers and championship-winning Rockets."
+    ]
+  },
+  {
+    "name": "Dominique Wilkins",
+    "bref": "wilkido01",
+    "group": "wing",
+    "history": "https://www.nba.com/news/archive-75-dominique-wilkins",
+    "a": [
+      "I was chosen for nine NBA All-Star Games.",
+      "I became one of the most prolific scorers of my generation.",
+      "I made seven All-NBA teams.",
+      "I won the league scoring title during the 1985-86 season.",
+      "I battled a superstar opponent in a classic seventh game of a playoff series.",
+      "I scored 47 points against Larry Bird's Boston Celtics in Game 7 in 1988.",
+      "I won two NBA Slam Dunk Contest championships.",
+      "I spent twelve seasons starring for the Atlanta Hawks before a major trade.",
+      "I wore No. 21 for Atlanta and was one of the greatest in-game dunkers.",
+      "My high-flying style earned me the nickname the Human Highlight Film."
+    ],
+    "b": [
+      "I became a consistent twenty-point scorer across many seasons.",
+      "I was a two-time winner of a major All-Star weekend competition.",
+      "I played in multiple playoff series against championship-caliber opponents.",
+      "I was selected third overall in the 1982 NBA Draft.",
+      "I was drafted by Utah but traded before making my NBA debut.",
+      "I returned from a torn Achilles tendon to regain elite scoring form.",
+      "I finished a late-career season as a European club champion.",
+      "I left Atlanta for the Los Angeles Clippers in 1994.",
+      "I represented the Hawks in memorable 1985 and 1990 dunk-contest wins.",
+      "I was the Atlanta star called the Human Highlight Film."
+    ]
+  },
+  {
+    "name": "Dikembe Mutombo",
+    "bref": "mutomdi01",
+    "group": "big",
+    "a": [
+      "I earned eight NBA All-Star selections.",
+      "I established myself as an elite rebounder and defender.",
+      "I won the Defensive Player of the Year award four times.",
+      "I led the NBA in blocked shots multiple seasons.",
+      "I won consecutive league rebounding titles late in my prime.",
+      "I helped an eighth-seeded playoff team defeat the top seed.",
+      "I celebrated Denver's 1994 upset of Seattle while clutching the ball on the floor.",
+      "I helped Philadelphia reach the 2001 NBA Finals.",
+      "I became known for wagging a finger after blocking shots.",
+      "I was the Georgetown-trained No. 55 center with the signature finger wag."
+    ],
+    "b": [
+      "I was an All-Defensive standout across several franchises.",
+      "I was known for shot blocking rather than scoring championships.",
+      "I developed into one of the most decorated defensive players in NBA history.",
+      "I entered the NBA as the fourth overall choice in the 1991 draft.",
+      "I won the league's Defensive Player of the Year award in both 1995 and 2001.",
+      "I played in the NBA Finals with Allen Iverson's 76ers.",
+      "I later played for the New Jersey Nets and Houston Rockets.",
+      "I finished with more than three thousand career blocked shots.",
+      "I first rose to fame in the Denver Nuggets' famous 1994 playoff upset.",
+      "My finger wag and the phrase 'No, no, no' became my signature celebration."
+    ]
+  },
   // NEXT_BATCH
 ];
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
