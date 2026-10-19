@@ -32,6 +32,7 @@ const fold = (value: string) => value.normalize("NFKD")
 
 const EARLY_TEAM_LOCATION_SCHOOL = /\b(?:Chicago|Bulls|Lakers|Boston|Celtics|Rockets|Houston|Denver|Nuggets|Toronto|Raptors|Warriors|Golden State|Heat|Miami|Magic|Orlando|Utah|Jazz|Seattle|SuperSonics|Dallas|Mavericks|Phoenix|Suns|Indiana|Pacers|New York|Knicks|Philadelphia|76ers|San Antonio|Spurs|Detroit|Pistons|Sacramento|Kings|Charlotte|Hornets|Grizzlies|Memphis|Minnesota|Timberwolves|Portland|Trail Blazers|Cleveland|Cavaliers|Atlanta|Hawks|Washington|Wizards|Vancouver|Clippers|New Jersey|Nets|Brooklyn|Duke|Georgetown|UCLA|UNLV|Gonzaga|Auburn|Kentucky|Michigan|Arizona|Connecticut|Wisconsin|Oklahoma State|Santa Clara|St\. John's|Virginia Union|Central Arkansas|Naval Academy|Memphis State|Louisiana Tech)\b/i;
 const EARLY_HARD_ANCHOR = /\b(?:point guard|shooting guard|power forward|small forward|center|No\.\s*\d+|first overall|second overall|third overall|fourth overall|fifth overall|sixth overall|seventh overall|eleventh overall|fourteenth overall|seventeenth overall|twenty-first overall|twenty-fourth overall|The Answer|Vinsanity|Air Canada|T-Mac|Stevie Franchise|Grandmama|The Glove|Mailman|The Worm|The Admiral|Dream Shake|Big Ben|AK-47|the Matrix|Grindfather|Miller Time|Run TMC|Boom Dizzle|The Human Highlight Film|Round Mound of Rebound)\b/i;
+const EARLY_DATED_MILESTONE = /\\b(?:19|20)\\d{2}\\b/;
 const EARLY_ONE_OFF_RECORD = /\b(?:only player|only person|first player ever|unanimous MVP|all-time (?:leader|record)|record holder|the first in history)\b/i;
 const STRONG_FINAL_ANCHOR = /\b(?:Bulls|Lakers|Rockets|Nets|76ers|Magic|Raptors|Toronto|Golden State|Knicks|Warriors|SuperSonics|Jazz|Spurs|Heat|Kings|Pacers|Mavericks|Suns|Pistons|Hornets|Grizzlies|Clippers|Trail Blazers|Celtics|Hawks|Georgetown|Duke|Kentucky|Auburn|Arizona|Michigan|Houston|Dallas|Miami|Orlando|Detroit|Chicago|Philadelphia|San Antonio|Sacramento|Memphis|Phoenix|Utah|Denver|No\.\s*\d+|nickname|called|known as|nicknamed|The Answer|T-Mac|AK-47|Grandmama|Dream Shake|Mailman|Grindfather|Big Ben|Miller Time|The Admiral|the Glove|the Worm|Reign Man)\b/i;
 
@@ -43,7 +44,7 @@ describe("NBA Who Am I historical/modern-era batch 3", () => {
     expect(new Set(ids).size).toBe(48);
     expect(new Set(nbaWhoAmIAuthoredBatch3.map(p => fold(p.name))).size).toBe(48);
     expect(ids.every(id => /^nba:[a-z0-9-]+$/.test(id))).toBe(true);
-    expect(ids.some(id => id === "nba:jermaine-oneal")).toBe(true);
+    expect(ids.some(id => id === "nba:jermaine-o-neal")).toBe(true);
     expect(ids.some(id => id === "nba:metta-world-peace")).toBe(true);
     expect(ids.some(id => id === "nba:tim-hardaway")).toBe(true);
     expect(ids).not.toContain("nba:tim-hardaway-jr");
@@ -93,6 +94,7 @@ describe("NBA Who Am I historical/modern-era batch 3", () => {
         const script = player.scripts[id];
         for (const clue of script.clues.slice(0, 4)) {
           expect(EARLY_TEAM_LOCATION_SCHOOL.test(clue.text), `${player.name} ${id}: ${clue.text}`).toBe(false);
+          expect(EARLY_DATED_MILESTONE.test(clue.text), `${player.name} ${id}: early dated anchor: ${clue.text}`).toBe(false);
           expect(EARLY_HARD_ANCHOR.test(clue.text), `${player.name} ${id}: ${clue.text}`).toBe(false);
           expect(/\b(?:Chinese|Nigerian|Serbian|Russian|Turkish|Canadian|French|Lithuanian)\b/i.test(clue.text), `${player.name} ${id}: ${clue.text}`).toBe(false);
         }
