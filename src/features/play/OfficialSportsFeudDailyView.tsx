@@ -167,6 +167,7 @@ export function OfficialSportsFeudDailyView({
   onExit,
   resultStatus,
   onRetryResult,
+  onRefreshSaved,
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
@@ -177,6 +178,7 @@ export function OfficialSportsFeudDailyView({
   onExit?: () => void;
   resultStatus?: string;
   onRetryResult?: () => void;
+  onRefreshSaved?: () => void;
 }) {
   const initial = initialPresentation(projection);
   const [scene, setScene] = useState<Scene>(() => initial.scene);
@@ -324,6 +326,25 @@ export function OfficialSportsFeudDailyView({
       }
     }
   }, [projection.progressRevision, projection.publicState]);
+
+  // A save can finish on another tab, after a transient Edge 546 retry,
+  // or through a refetch that does not increment this component's revision.
+  // Completion is authoritative: never strand a saved run on the locking UI.
+  useEffect(() => {
+    if (!projection.officialAttempt || ["result", "reveal", "fast-recap"].includes(scene)) return;
+    setDisplayState(projection.publicState);
+    pendingKindRef.current = null;
+    fastSessionClosedRef.current = true;
+    if (scene === "fast") {
+      fastInputRef.current?.blur();
+      setFastRevealIndex(0);
+      setFastRevealPhase("answer");
+      setDisplayedFastTotal(0);
+      setScene("reveal");
+    } else {
+      setScene("result");
+    }
+  }, [projection.officialAttempt, projection.publicState, scene]);
 
   useEffect(() => {
     if (scene !== "fast") return undefined;
@@ -582,6 +603,21 @@ export function OfficialSportsFeudDailyView({
       {scene === "main" ? <Host asset={hostAsset} /> : null}
       {onExit ? <HQBackButton onClick={onExit} /> : null}
 
+      {resultStatus && scene !== "result" && (scene !== "fast" || !fastFinishing) ? (
+        <section className="feud-sync-recovery" role="alert">
+          <strong>HAVING TROUBLE SAVING?</strong>
+          <p>{resultStatus}</p>
+          <div>
+            {onRetryResult ? (
+              <button type="button" onClick={onRetryResult}>RETRY SAVE</button>
+            ) : null}
+            {onRefreshSaved ? (
+              <button type="button" onClick={onRefreshSaved}>RECHECK SAVED GAME</button>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="official-feud-intro-title">
           {specialTheme ? (
@@ -732,6 +768,22 @@ export function OfficialSportsFeudDailyView({
             ))}
           </div>
 
+          {fastFinishing && resultStatus ? (
+            <section className="feud-fast-save-recovery" role="alert">
+              <strong>SCORE NOT YET CONFIRMED</strong>
+              <p>{resultStatus}</p>
+              <div className="feud-fast-save-recovery__actions">
+                {onRetryResult ? (
+                  <button type="button" onClick={onRetryResult}>RETRY SAVE</button>
+                ) : null}
+                {onRefreshSaved ? (
+                  <button type="button" onClick={onRefreshSaved}>
+                    RECHECK SAVED GAME
+                  </button>
+                ) : null}
+              </div>
+            </section>
+          ) : null}
           <form className="feud-fast-entry" onSubmit={submitFast}>
             {feedback ? <div className="feud-feedback">{feedback}</div> : null}
             <div className="feud-fast-entry__row">
@@ -844,8 +896,8 @@ export function OfficialSportsFeudDailyView({
             </button>
           ) : null}
           {onExit ? (
-            <button className="feud-primary-button" type="button" onClick={onExit} disabled={busy}>
-              {busy ? "SAVING…" : "CONTINUE"}
+            <button className="feud-primary-button" type="button" onClick={onExit} disabled={busy && !projection.officialAttempt}>
+              {busy && !projection.officialAttempt ? "SAVING…" : "CONTINUE"}
             </button>
           ) : null}
         </section>

@@ -216,4 +216,65 @@ describe("Official Sports Feud Daily mobile locks", () => {
     expect(screen.getByLabelText("Fast Money answer")).toBeDisabled();
   });
 
+  it("exposes a live retry when an Edge compute error stalls the final Fast Money save", () => {
+    const retry = vi.fn();
+    const saved = fastState(5);
+    saved.fast_money.current_question = { id: "fast-5", prompt: "Fast prompt 5" };
+    render(
+      <OfficialSportsFeudDailyView
+        projection={projection({
+          ...saved,
+          fast_money: { ...saved.fast_money, client_pending_complete: true },
+        })}
+        busy={true}
+        onAdvance={vi.fn()}
+        resultStatus="The game server is temporarily busy."
+        onRetryResult={retry}
+        onRefreshSaved={vi.fn()}
+      />,
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("SCORE NOT YET CONFIRMED");
+    fireEvent.click(screen.getByRole("button", { name: "RETRY SAVE" }));
+    expect(retry).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("button", { name: "RECHECK SAVED GAME" })).not.toBeDisabled();
+  });
+
+  it("leaves the locking screen when an official result arrives without a new revision", () => {
+    const first = projection({
+      ...fastState(5),
+      fast_money: { ...fastState(5).fast_money, client_pending_complete: true },
+    }, 13);
+    const { rerender } = render(
+      <OfficialSportsFeudDailyView
+        projection={first}
+        busy={true}
+        onAdvance={vi.fn()}
+      />,
+    );
+    expect(screen.getByText("LOCKING OFFICIAL SCORE…")).toBeInTheDocument();
+    rerender(
+      <OfficialSportsFeudDailyView
+        projection={{
+          ...first,
+          officialAttempt: {
+            nativeScore: 83,
+            normalizedScore: 83,
+            completedAt: "2026-10-19T20:11:41Z",
+            publicResult: { main_points: 60, fast_money_points: 23 },
+          },
+          publicState: {
+            ...first.publicState,
+            phase: "complete",
+            complete: true,
+            fast_money: { ...(first.publicState.fast_money as Record<string, unknown>), client_pending_complete: false },
+          },
+        }}
+        busy={false}
+        onAdvance={vi.fn()}
+      />,
+    );
+    expect(screen.getByRole("region", { name: "Fast Money results reveal" })).toBeInTheDocument();
+    expect(screen.queryByText("LOCKING OFFICIAL SCORE…")).not.toBeInTheDocument();
+  });
+
 });

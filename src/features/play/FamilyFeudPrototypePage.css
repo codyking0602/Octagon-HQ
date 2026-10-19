@@ -2941,3 +2941,41 @@ body.family-feud-prototype-active {
     right: -32% !important;
   }
 }
+
+
+/* Keep daily-sync recovery inside the full-screen Feud portal, rather than
+   hiding it behind the portal's 100000 stacking context. */
+.feud-sync-recovery,
+.feud-fast-save-recovery {
+  position: absolute;
+  z-index: 40;
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  margin-inline: auto;
+  max-width: 530px;
+  padding: 14px;
+  border: 1px solid rgba(255, 229, 140, 0.45);
+  border-radius: 14px;
+  background: rgba(2, 12, 34, 0.97);
+  color: #fff;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
+  text-align: center;
+}
+.feud-sync-recovery strong,
+.feud-fast-save-recovery strong { color: var(--feud-gold-bright); font-size: 0.88rem; }
+.feud-sync-recovery p,
+.feud-fast-save-recovery p { margin: 7px 0 12px; font-size: 0.83rem; line-height: 1.4; }
+.feud-sync-recovery div,
+.feud-fast-save-recovery__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
+.feud-sync-recovery button,
+.feud-fast-save-recovery button {
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 229, 140, 0.55);
+  border-radius: 10px;
+  background: #173e7a;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}

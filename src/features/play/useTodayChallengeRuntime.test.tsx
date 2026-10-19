@@ -218,6 +218,38 @@ describe("useTodayChallengeRuntime", () => {
     expect(result.current.error).toBeNull();
   });
 
+  it("survives repeated Edge 546 limits using the same idempotent action", async () => {
+    const resourceLimit = () => new TodayChallengeRepositoryError(
+      "DAILY_RUNTIME_BUSY",
+      "The game server is temporarily busy.",
+    );
+    const advance = vi.fn<TodayChallengeRepository["advance"]>()
+      .mockRejectedValueOnce(resourceLimit())
+      .mockRejectedValueOnce(resourceLimit())
+      .mockRejectedValueOnce(resourceLimit())
+      .mockResolvedValueOnce(projection(2, [50, 60]));
+    const repository = makeRepository(vi.fn().mockResolvedValue(projection(1)), advance);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { result } = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(result.current.projection).not.toBeNull());
+    await act(async () => {
+      await result.current.advance({ guess: 60 }, {
+        dedupeKey: "compute-limit-step",
+        optimisticUpdate: optimisticGuess(60),
+      });
+    });
+    expect(advance).toHaveBeenCalledTimes(4);
+    expect(new Set(advance.mock.calls.map((call) => call[2])).size).toBe(1);
+    expect(result.current.pendingActionCount).toBe(0);
+    expect(result.current.projection?.progressRevision).toBe(2);
+    expect(result.current.error).toBeNull();
+  }, 10_000);
+
   it("keeps a failed transient action queued for explicit retry", async () => {
     const advance = vi.fn<TodayChallengeRepository["advance"]>()
       .mockRejectedValueOnce(new Error("offline-1"))
@@ -252,6 +284,43 @@ describe("useTodayChallengeRuntime", () => {
     expect(advance).toHaveBeenCalledTimes(4);
     expect(advance.mock.calls[3]![2]).toBe(actionId);
     expect(result.current.projection?.progressRevision).toBe(2);
+  });
+
+  it("rechecks a completed server save without deleting queued player answers first", async () => {
+    const advance = vi.fn<TodayChallengeRepository["advance"]>()
+      .mockRejectedValueOnce(new Error("gateway-1"))
+      .mockRejectedValueOnce(new Error("gateway-2"))
+      .mockRejectedValueOnce(new Error("gateway-3"));
+    const loadToday = vi.fn()
+      .mockResolvedValueOnce(projection(1))
+      .mockResolvedValueOnce(completedProjection(2));
+    const repository = makeRepository(loadToday, advance);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { result } = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
+    act(() => {
+      void result.current.advance({ guess: 60 }, {
+        dedupeKey: "feud-final",
+        optimisticUpdate: optimisticGuess(60),
+      });
+    });
+    await waitFor(() => expect(result.current.pendingActionCount).toBe(1));
+    await waitFor(() => expect(result.current.error).toBeInstanceOf(Error), { timeout: 2500 });
+
+    await act(async () => {
+      await result.current.recheckSaved();
+    });
+
+    expect(loadToday).toHaveBeenCalledTimes(2);
+    expect(advance).toHaveBeenCalledTimes(3);
+    expect(result.current.pendingActionCount).toBe(0);
+    expect(result.current.projection?.officialAttempt?.normalizedScore).toBe(88);
+    expect(result.current.error).toBeNull();
   });
 
   it("refreshes canonical cross-device state after a stale optimistic revision and drops dependent actions", async () => {
