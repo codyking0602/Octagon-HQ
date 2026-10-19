@@ -1,7 +1,8 @@
 import { describe,expect,it } from "vitest";
 import { readFileSync } from "node:fs";
 import { NBA_TEAMS,NBA_FUTURES_MAX,NBA_FUTURES_POINTS,NBA_FUTURES_SELECTIONS,NBA_CHAMPIONSHIP_WEIGHTS,
-  emptyNbaFutures,nbaFuturesProgress,validateNbaFutures,isNbaFuturesComplete,scoreNbaFutures } from "./nbaFutures";
+  emptyNbaFutures,nbaFuturesProgress,validateNbaFutures,isNbaFuturesComplete,scoreNbaFutures,
+  NBA_FUTURES_LOCK_AT } from "./nbaFutures";
 describe("2026 NBA futures immutable contract",()=>{
   it("has 30 unique teams and authentic half-win lines",()=>{
     expect(NBA_TEAMS).toHaveLength(30);
@@ -17,6 +18,13 @@ describe("2026 NBA futures immutable contract",()=>{
     for(const [,id,name,conference,value] of lines){
       expect(NBA_TEAMS.find(t=>t.id===id)).toMatchObject({id,name,conference,line:Number(value)});
     }
+  });
+  it("displays the scheduled date but never auto-locks the form in the browser",()=>{
+    expect(NBA_FUTURES_LOCK_AT).toBe("2026-10-20T19:00:00Z");
+    const page=readFileSync("src/features/nba/NbaFuturesPage.tsx","utf8");
+    expect(page).toContain("const locked=snapshot?.locked??false;");
+    expect(page).not.toContain("Date.now()>=Date.parse(NBA_FUTURES_LOCK_AT)");
+    expect(page).toContain("Scheduled lock:");
   });
   it("has the approved season weights and 100 Futures points",()=>{
     expect(NBA_CHAMPIONSHIP_WEIGHTS).toEqual({futures:15,cup:10,playoffs:55,games:20});
