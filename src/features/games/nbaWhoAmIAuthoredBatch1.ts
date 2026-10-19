@@ -15481,5 +15481,2585 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         ]
       }
     }
+  },
+  {
+    "subjectId": "nba:jrue-holiday",
+    "name": "Jrue Holiday",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/201950",
+      "bio": "https://www.nba.com/player/201950/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-jrue-holiday-a-1",
+            "text": "I entered the NBA as a young backcourt playmaker.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-2",
+            "text": "I became known for defending elite guards with strength and anticipation.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-3",
+            "text": "I contributed scoring while prioritizing control of the offense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-4",
+            "text": "I developed into a reliable veteran leader on playoff teams.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-5",
+            "text": "I became an All-Star with more than one franchise.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-6",
+            "text": "I won multiple All-Defensive first-team selections.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-7",
+            "text": "I made a critical steal and alley-oop pass late in the 2021 Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-8",
+            "text": "I won NBA titles in 2021 and 2024 with different teams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-9",
+            "text": "I played at UCLA and became an All-Star with Philadelphia and New Orleans.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-a-10",
+            "text": "I am Jrue Holiday, the defensive guard who helped the Bucks and Celtics win titles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-jrue-holiday-b-1",
+            "text": "I began my career as a starting point guard on an Eastern Conference team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-2",
+            "text": "I became highly respected for physical on-ball defense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-3",
+            "text": "I improved as an off-ball shooter while playing alongside other stars.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-4",
+            "text": "I regularly took the most difficult opposing guard assignment.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-5",
+            "text": "I won the NBA Teammate of the Year award in 2020.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-6",
+            "text": "I joined Milwaukee in 2020 to play with Giannis Antetokounmpo.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-7",
+            "text": "I later joined Boston and won another championship in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-8",
+            "text": "I played a central defensive role in the Celtics' 64-win title season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-9",
+            "text": "I was a 2009 first-round pick from UCLA who played for the 76ers and Pelicans.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jrue-holiday-b-10",
+            "text": "I am Jrue Holiday, a champion with both the 2021 Bucks and 2024 Celtics.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:khris-middleton",
+    "name": "Khris Middleton",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/203114",
+      "bio": "https://www.nba.com/player/203114/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-khris-middleton-a-1",
+            "text": "I began my NBA career in a small role before becoming a dependable scorer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-2",
+            "text": "I developed an accurate midrange game and steady three-point shooting.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-3",
+            "text": "I often generated difficult baskets without relying on exceptional speed.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-4",
+            "text": "I became a trusted late-game option on a contending roster.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-5",
+            "text": "I earned multiple NBA All-Star selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-6",
+            "text": "I scored 40 points in an NBA Finals victory.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-7",
+            "text": "I hit a game-winning overtime jumper against Miami in the 2021 playoffs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-8",
+            "text": "I won a championship alongside a two-time league MVP.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-9",
+            "text": "I was drafted by Detroit before finding success with the Milwaukee Bucks.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-a-10",
+            "text": "I am Khris Middleton, the No. 22 Bucks championship wing beside Giannis.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-khris-middleton-b-1",
+            "text": "I entered the league as a second-round draft selection.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-2",
+            "text": "I steadily earned more touches as his outside shot improved.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-3",
+            "text": "I became comfortable in isolation from the wing and elbow.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-4",
+            "text": "I could defend larger perimeter scorers while providing steady offense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-5",
+            "text": "I shot 50 percent overall, 40 percent from three and 90 percent at the line in 2019-20.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-6",
+            "text": "I helped Milwaukee take a 2-0 lead in the 2021 NBA Finals comeback.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-7",
+            "text": "I scored 38 points in a 2021 playoff victory over Brooklyn.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-8",
+            "text": "I made the crucial basket in Game 6 of the 2021 Finals against Phoenix.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-9",
+            "text": "I played college basketball at Texas A&M and was traded from Detroit to Milwaukee.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-khris-middleton-b-10",
+            "text": "I am Khris Middleton, the former Bucks No. 22 and 2021 NBA champion.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:bradley-beal",
+    "name": "Bradley Beal",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/203078",
+      "bio": "https://www.nba.com/player/203078/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-bradley-beal-a-1",
+            "text": "I entered the NBA as a perimeter shooter with advanced scoring touch.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-2",
+            "text": "I learned to create more shots off the dribble as his role expanded.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-3",
+            "text": "I developed into an excellent catch-and-shoot and pull-up scorer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-4",
+            "text": "I frequently carried large offensive workloads without much frontcourt scoring help.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-5",
+            "text": "I earned three All-Star appearances in four seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-6",
+            "text": "I averaged more than 30 points in back-to-back seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-7",
+            "text": "I finished second in the NBA scoring race in 2020-21.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-8",
+            "text": "I formed a scoring backcourt with Russell Westbrook for one season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-9",
+            "text": "I was drafted third overall from Florida by the Washington Wizards.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-a-10",
+            "text": "I am Bradley Beal, Washington's former No. 3 shooting star later traded to Phoenix.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-bradley-beal-b-1",
+            "text": "I had a major offensive role before reaching my mid-twenties.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-2",
+            "text": "I used off-ball movement and sharp cuts to find scoring chances.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-3",
+            "text": "I became an adept passer from the perimeter as his scoring duties grew.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-4",
+            "text": "I developed into a reliable isolation scorer on teams built around his offense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-5",
+            "text": "I made the All-NBA third team in 2021.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-6",
+            "text": "I scored a career-high 60 points in a game against Philadelphia.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-7",
+            "text": "I played alongside John Wall during repeated Washington playoff runs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-8",
+            "text": "I joined Devin Booker and Kevin Durant on the Phoenix Suns in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-9",
+            "text": "I spent his first 11 seasons with the Wizards after being selected from Florida.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bradley-beal-b-10",
+            "text": "I am Bradley Beal, former Wizards No. 3 and three-time All-Star scorer.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:mikal-bridges",
+    "name": "Mikal Bridges",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1628969",
+      "bio": "https://www.nba.com/player/1628969/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-mikal-bridges-a-1",
+            "text": "I established myself as a high-energy perimeter defender early in my career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-2",
+            "text": "I guarded multiple offensive roles while improving his outside shooting.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-3",
+            "text": "I became known for rarely missing games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-4",
+            "text": "I developed into a more assertive scoring option after a trade.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-5",
+            "text": "I finished second in Defensive Player of the Year voting in 2022.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-6",
+            "text": "I helped a team reach the NBA Finals in 2021.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-7",
+            "text": "I averaged more than 26 points after moving to Brooklyn in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-8",
+            "text": "I joined a large group of former college teammates in New York.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-9",
+            "text": "I won two NCAA championships at Villanova before Phoenix acquired me on draft night.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-a-10",
+            "text": "I am the former Suns and Nets ironman who became Knicks No. 25 Mikal Bridges.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-mikal-bridges-b-1",
+            "text": "I entered the NBA on a team building toward playoff contention.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-2",
+            "text": "I provided reliable defense without requiring many offensive possessions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-3",
+            "text": "I developed an effective catch-and-shoot jumper from the corners.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-4",
+            "text": "I earned more chances to create from the midrange.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-5",
+            "text": "I started every game during his first five NBA seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-6",
+            "text": "I was a central part of the 2023 trade package that brought Kevin Durant to Phoenix.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-7",
+            "text": "I became a featured scoring option for the Brooklyn Nets.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-8",
+            "text": "I reunited with Villanova teammates Jalen Brunson and Josh Hart on the Knicks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-9",
+            "text": "I played for Villanova's 2016 and 2018 national championship teams.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-mikal-bridges-b-10",
+            "text": "I am Mikal Bridges, the Knicks wing nicknamed the Warden for my defense.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:jaren-jackson-jr",
+    "name": "Jaren Jackson Jr.",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1628991",
+      "bio": "https://www.nba.com/player/1628991/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-jaren-jackson-jr-a-1",
+            "text": "I entered the NBA as a long defender capable of protecting the rim.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-2",
+            "text": "I combined shot blocking with the ability to shoot from outside.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-3",
+            "text": "I often guarded in space rather than staying entirely near the basket.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-4",
+            "text": "I developed into an important scoring option on a young playoff team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-5",
+            "text": "I made the All-Defensive first team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-6",
+            "text": "I led the league in blocked shots for the 2021-22 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-7",
+            "text": "I won NBA Defensive Player of the Year in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-8",
+            "text": "I earned an All-Star selection while anchoring Memphis's frontcourt.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-9",
+            "text": "I played one season at Michigan State before Memphis drafted me fourth.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-a-10",
+            "text": "I am the Grizzlies' No. 13 star called Triple J, or JJJ.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-jaren-jackson-jr-b-1",
+            "text": "I became a full-time NBA starter when I was still a teenager.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-2",
+            "text": "I drew attention for blocking shots without sacrificing perimeter mobility.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-3",
+            "text": "I could stretch the floor beyond the arc as a frontcourt scorer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-4",
+            "text": "I became an important complement to a high-scoring athletic guard.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-5",
+            "text": "I averaged three blocks per game during his 2022-23 award season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-6",
+            "text": "I was named to the 2023 NBA All-Star team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-7",
+            "text": "I won the Defensive Player of the Year award over other elite rim protectors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-8",
+            "text": "I helped Memphis finish second in the Western Conference in 2022-23.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-9",
+            "text": "I was the Michigan State big drafted by the Memphis Grizzlies in 2018.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jaren-jackson-jr-b-10",
+            "text": "I am Jaren Jackson Jr., the No. 13 defensive star called Triple J.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:chet-holmgren",
+    "name": "Chet Holmgren",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1631096",
+      "bio": "https://www.nba.com/player/1631096/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-chet-holmgren-a-1",
+            "text": "I entered the NBA with unusual shooting range for a rim protector.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-2",
+            "text": "I became comfortable handling the ball and making plays on the move.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-3",
+            "text": "I could contest shots with outstanding length while avoiding frequent fouls.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-4",
+            "text": "I scored efficiently as a pick-and-pop and transition option.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-5",
+            "text": "I missed his intended rookie season after a foot injury.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-6",
+            "text": "I finished second in Rookie of the Year voting in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-7",
+            "text": "I made the 2024 All-Rookie first team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-8",
+            "text": "I became a central defensive figure in a young Western Conference contender.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-9",
+            "text": "I played at Gonzaga before Oklahoma City selected me second overall.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-a-10",
+            "text": "I am the Thunder's No. 7 center who won a 2025 championship alongside SGA.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-chet-holmgren-b-1",
+            "text": "I arrived in the NBA as a very tall prospect with guard-like skills.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-2",
+            "text": "I could stretch the court while also deterring drives at the rim.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-3",
+            "text": "I often finished shots with soft touch instead of relying on raw strength.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-4",
+            "text": "I played a major defensive role once I made my NBA debut.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-5",
+            "text": "I recorded 36 points and 10 rebounds in an overtime loss to Golden State as a rookie.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-6",
+            "text": "I averaged more than two blocks per game during his first season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-7",
+            "text": "I helped Oklahoma City earn the top seed in the West in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-8",
+            "text": "I reached the NBA Finals with the Thunder in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-9",
+            "text": "I was a Gonzaga Bulldog and the No. 2 pick in the 2022 draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chet-holmgren-b-10",
+            "text": "I am Chet Holmgren, Oklahoma City's No. 7 shot-blocking stretch big.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:paolo-banchero",
+    "name": "Paolo Banchero",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1631094",
+      "bio": "https://www.nba.com/player/1631094/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-paolo-banchero-a-1",
+            "text": "I became a leading scorer immediately after arriving in the NBA.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-2",
+            "text": "I used his strength and coordination to create shots in the half court.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-3",
+            "text": "I combined face-up attacks with effective passing from the forward spots.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-4",
+            "text": "I drew fouls by attacking mismatches in the paint.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-5",
+            "text": "I won NBA Rookie of the Year in 2023.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-6",
+            "text": "I earned an All-Star selection during his second season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-7",
+            "text": "I scored 38 points in a decisive playoff game against Cleveland.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-8",
+            "text": "I led a young Orlando team back to the playoffs in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-9",
+            "text": "I played at Duke before Orlando took me first overall in 2022.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-a-10",
+            "text": "I am the Magic's No. 5 franchise forward Paolo Banchero.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-paolo-banchero-b-1",
+            "text": "I was physically ready to handle many offensive possessions as a teenager.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-2",
+            "text": "I built a scoring game around drives and footwork from the elbows.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-3",
+            "text": "I displayed passing instincts unusual for a first-year forward.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-4",
+            "text": "I often attacked defenders from the top of the key.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-5",
+            "text": "I became the first Magic Rookie of the Year since Mike Miller.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-6",
+            "text": "I averaged more than 22 points in his second season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-7",
+            "text": "I scored 39 points in Game 5 against Cleveland in the 2024 playoffs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-8",
+            "text": "I helped Orlando win 47 regular-season games in 2023-24.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-9",
+            "text": "I was the No. 1 pick out of Duke in the 2022 NBA Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paolo-banchero-b-10",
+            "text": "I am Orlando's No. 5 Paolo Banchero, the Magic's young star forward.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:franz-wagner",
+    "name": "Franz Wagner",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1630532",
+      "bio": "https://www.nba.com/player/1630532/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-franz-wagner-a-1",
+            "text": "I entered the league as an efficient scorer who could make plays for teammates.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-2",
+            "text": "I developed into a useful wing defender while taking larger offensive roles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-3",
+            "text": "I attacked closeouts with long strides and confident finishing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-4",
+            "text": "I added more shot creation as the offense began to rely on me.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-5",
+            "text": "I made the NBA All-Rookie first team in 2022.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-6",
+            "text": "I averaged more than 19 points during his second season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-7",
+            "text": "I became one of the leading scorers on a rising Eastern Conference team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-8",
+            "text": "I helped Germany win the 2023 FIBA World Cup.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-9",
+            "text": "I played at Michigan before being selected eighth overall by Orlando.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-a-10",
+            "text": "I am the Magic's No. 22 German wing and brother of Moritz Wagner.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-franz-wagner-b-1",
+            "text": "I was comfortable attacking the basket without dominating the ball as a rookie.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-2",
+            "text": "I developed dependable passing skills out of drives.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-3",
+            "text": "I contributed to both transition scoring and team defense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-4",
+            "text": "I became a strong offensive partner for a young franchise forward.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-5",
+            "text": "I scored 38 points in a 2024 playoff victory against Cleveland.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-6",
+            "text": "I won FIBA World Cup gold with Germany in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-7",
+            "text": "I helped Orlando reach the postseason in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-8",
+            "text": "I scored 26 points during a decisive 2023 World Cup semifinal victory over the United States.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-9",
+            "text": "I played two seasons at Michigan before joining the Orlando Magic.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-franz-wagner-b-10",
+            "text": "I am Franz Wagner, Orlando's No. 22 and younger brother of Mo Wagner.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:evan-mobley",
+    "name": "Evan Mobley",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1630596",
+      "bio": "https://www.nba.com/player/1630596/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-evan-mobley-a-1",
+            "text": "I entered the NBA with unusual defensive mobility for a tall player.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-2",
+            "text": "I protected the rim while also switching onto perimeter scorers.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-3",
+            "text": "I contributed to offense through cuts, rolls and soft finishes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-4",
+            "text": "I became a key defender on a rapidly improving team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-5",
+            "text": "I was chosen to the NBA All-Rookie first team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-6",
+            "text": "I made the 2023 All-Defensive first team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-7",
+            "text": "I finished third in Defensive Player of the Year voting in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-8",
+            "text": "I won the NBA Defensive Player of the Year award in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-9",
+            "text": "I played at USC before Cleveland drafted me third overall in 2021.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-a-10",
+            "text": "I am the Cavaliers' No. 4 frontcourt star Evan Mobley.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-evan-mobley-b-1",
+            "text": "I was widely praised for defense in his first NBA season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-2",
+            "text": "I could challenge shots near the rim without being trapped in the paint.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-3",
+            "text": "I combined rebounding with efficient close-range offense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-4",
+            "text": "I became a powerful part of a two-big lineup.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-5",
+            "text": "I finished second in Rookie of the Year voting in 2022.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-6",
+            "text": "I played alongside Jarrett Allen in one of the East's best defenses.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-7",
+            "text": "I helped Cleveland win a playoff series in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-8",
+            "text": "I became an NBA All-Star in the 2024-25 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-9",
+            "text": "I starred at USC before the Cavaliers made me the No. 3 pick.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-evan-mobley-b-10",
+            "text": "I am Evan Mobley, Cleveland's No. 4 shot-blocking and switching big.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:cade-cunningham",
+    "name": "Cade Cunningham",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1630595",
+      "bio": "https://www.nba.com/player/1630595/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-cade-cunningham-a-1",
+            "text": "I entered the NBA expected to run an offense from the perimeter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-2",
+            "text": "I combined patient dribbling with the ability to see passes over defenders.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-3",
+            "text": "I developed into a strong midrange and pick-and-roll playmaker.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-4",
+            "text": "I gradually raised his efficiency as his team's roster improved.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-5",
+            "text": "I made the NBA All-Rookie first team in 2022.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-6",
+            "text": "I recorded multiple triple-doubles despite playing on a rebuilding team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-7",
+            "text": "I earned a first All-Star selection in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-8",
+            "text": "I averaged more than nine assists during his 2024-25 breakout.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-9",
+            "text": "I played at Oklahoma State before Detroit made me first overall in 2021.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-a-10",
+            "text": "I am the Pistons' No. 2 franchise guard Cade Cunningham.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-cade-cunningham-b-1",
+            "text": "I played college basketball for only one season before turning professional.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-2",
+            "text": "I became the primary creator immediately on a young roster.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-3",
+            "text": "I used size and pacing rather than pure quickness to reach the paint.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-4",
+            "text": "I mixed scoring bursts with double-digit-assist games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-5",
+            "text": "I averaged over 22 points during the 2023-24 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-6",
+            "text": "I helped his team dramatically improve its win total in 2024-25.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-7",
+            "text": "I led Detroit to its first playoff appearance since 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-8",
+            "text": "I earned All-NBA third-team honors in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-9",
+            "text": "I was Oklahoma State's star guard and the first pick for the Pistons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-cade-cunningham-b-10",
+            "text": "I am Cade Cunningham, Detroit's No. 2 lead guard and 2025 All-Star.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:jalen-williams",
+    "name": "Jalen Williams",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1631114",
+      "bio": "https://www.nba.com/player/1631114/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-jalen-williams-a-1",
+            "text": "I entered the NBA as a polished all-around perimeter player.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-2",
+            "text": "I contributed timely cuts, drives and passes from the wing.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-3",
+            "text": "I became effective defending several types of opponents.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-4",
+            "text": "I steadily grew into a larger scoring role on a young contender.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-5",
+            "text": "I made the NBA All-Rookie first team in 2023.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-6",
+            "text": "I became a secondary scoring and playmaking option alongside a league MVP.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-7",
+            "text": "I earned his first All-Star and All-NBA honors in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-8",
+            "text": "I helped his team win its first championship in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-9",
+            "text": "I played at Santa Clara before Oklahoma City selected me twelfth in 2022.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-a-10",
+            "text": "I am the Thunder's No. 8 wing nicknamed J-Dub.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-jalen-williams-b-1",
+            "text": "I came to the NBA after spending three seasons in college.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-2",
+            "text": "I developed an efficient, versatile attack without always taking the most shots.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-3",
+            "text": "I could handle difficult defensive assignments as a long wing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-4",
+            "text": "I played a major role in turning a rebuilding roster into a top seed.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-5",
+            "text": "I finished second in Rookie of the Year voting in 2023.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-6",
+            "text": "I averaged more than 19 points during his second season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-7",
+            "text": "I was selected to the 2025 All-Defensive second team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-8",
+            "text": "I played a leading role beside Shai Gilgeous-Alexander in a title run.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-9",
+            "text": "I came from Santa Clara and joined Chet Holmgren with the Thunder.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jalen-williams-b-10",
+            "text": "I am Jalen Williams, Oklahoma City's No. 8 known as J-Dub.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:alperen-sengun",
+    "name": "Alperen Şengün",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1630578",
+      "bio": "https://www.nba.com/player/1630578/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-alperen-sengun-a-1",
+            "text": "I became an inventive passer from the post early in my NBA career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-2",
+            "text": "I used spins, fakes and footwork more than explosive leaping.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-3",
+            "text": "I found cutters and open shooters from positions near the paint.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-4",
+            "text": "I grew into a frequent double-double threat.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-5",
+            "text": "I averaged more than five assists in a breakout season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-6",
+            "text": "I became one of the leading scorers on a young defensive-minded club.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-7",
+            "text": "I posted a 45-point, 16-rebound performance against San Antonio.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-8",
+            "text": "I earned my first NBA All-Star selection in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-9",
+            "text": "I won the Turkish league MVP before Houston drafted me in 2021.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-a-10",
+            "text": "I am the Rockets' No. 28 playmaking center Alperen Şengün.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-alperen-sengun-b-1",
+            "text": "I entered the NBA with professional experience overseas.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-2",
+            "text": "I impressed teammates with creative interior passing.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-3",
+            "text": "I used unusual pivot moves and deceptive releases around taller opponents.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-4",
+            "text": "I became an offensive hub who could distribute from the high post.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-5",
+            "text": "I recorded a triple-double while still in his early twenties.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-6",
+            "text": "I averaged over 20 points during the 2023-24 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-7",
+            "text": "I led Houston's offense as the team returned to the 2025 playoffs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-8",
+            "text": "I made the Western Conference All-Star team in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-9",
+            "text": "I was the Turkish big traded to the Rockets on draft night in 2021.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-alperen-sengun-b-10",
+            "text": "I am Alperen Şengün, the Houston No. 28 nicknamed Baby Jokić.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] satisfies readonly NbaWhoAmIAuthoredIdentity[];
