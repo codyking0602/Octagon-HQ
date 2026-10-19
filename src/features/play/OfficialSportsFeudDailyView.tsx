@@ -603,6 +603,21 @@ export function OfficialSportsFeudDailyView({
       {scene === "main" ? <Host asset={hostAsset} /> : null}
       {onExit ? <HQBackButton onClick={onExit} /> : null}
 
+      {resultStatus && scene !== "result" && (scene !== "fast" || !fastFinishing) ? (
+        <section className="feud-sync-recovery" role="alert">
+          <strong>HAVING TROUBLE SAVING?</strong>
+          <p>{resultStatus}</p>
+          <div>
+            {onRetryResult ? (
+              <button type="button" onClick={onRetryResult}>RETRY SAVE</button>
+            ) : null}
+            {onRefreshSaved ? (
+              <button type="button" onClick={onRefreshSaved}>RECHECK SAVED GAME</button>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="official-feud-intro-title">
           {specialTheme ? (
