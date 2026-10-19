@@ -11,6 +11,7 @@ import { CFB_SPORTS_FEUD_FAST_3 } from "./cfbSportsFeudFast3";
 import { CFB_SPORTS_FEUD_FAST_4 } from "./cfbSportsFeudFast4";
 import { CFB_SPORTS_FEUD_FAST_5 } from "./cfbSportsFeudFast5";
 import { NFL_SPORTS_FEUD_MAIN } from "./nflSportsFeudMain";
+import { OCT19_NFL_SPORTS_FEUD_MAIN, OCT19_NFL_SPORTS_FEUD_FAST } from "./oct19NflSportsFeudQuality";
 import { NFL_SPORTS_FEUD_FAST_1 } from "./nflSportsFeudFast1";
 import { NFL_SPORTS_FEUD_FAST_2 } from "./nflSportsFeudFast2";
 import { NFL_SPORTS_FEUD_FAST_3 } from "./nflSportsFeudFast3";
@@ -412,8 +413,11 @@ export function buildSportsFeudPack(
   const entities: FamilyFeudEntity[] = [];
   const useSep24UfcPrototype = domain === "ufc" && day === "2026-09-24";
   const themedPack = footballThemedSportsFeudPackForDay(domain, day);
-  const authoredMain = themedPack
-    ? themedPack.main
+  const oct19Nfl = domain === "nfl" && day === "2026-10-19";
+  const authoredMain = oct19Nfl
+    ? OCT19_NFL_SPORTS_FEUD_MAIN
+    : themedPack
+      ? themedPack.main
     : useSep24UfcPrototype
       ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main
       : domain === "ufc" && day === "2026-10-10"
@@ -421,11 +425,30 @@ export function buildSportsFeudPack(
         // but replace the ambiguous classic-fights second board with finishes.
         ? [selectMain(domain, day)[0]!, UFC_SPORTS_FEUD_MAIN.find((q) => q.id === "ufc-main-19-1")!]
         : selectMain(domain, day);
-  const authoredFast = themedPack
-    ? themedPack.fastMoney
-    : useSep24UfcPrototype
-      ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney
-      : selectFast(domain, day, authoredMain);
+  const authoredFast = oct19Nfl
+    ? ["nfl-fast4-10-5", "nfl-fast5-10-2", "nfl-fast1-09-4",
+       "nfl-fast2-09-1", "nfl-fast3-08-3"].map((id) => {
+        const original = NFL_FAST.find((question) => question.id === id);
+        if (!original) throw new Error("Missing locked Oct 19 NFL Fast Money question " + id);
+        const patch = OCT19_NFL_SPORTS_FEUD_FAST[id];
+        return patch
+          ? {
+              ...original,
+              prompt: patch.prompt,
+              alsoAcceptedAnswers: [
+                ...(original.alsoAcceptedAnswers ?? []),
+                ...patch.additionalAccepted.map((name) => ({ name,
+                  aliases: id === "nfl-fast5-10-2" ? [name.split(" ").at(-1)!] : [],
+                })),
+              ],
+            }
+          : original;
+      })
+    : themedPack
+      ? themedPack.fastMoney
+      : useSep24UfcPrototype
+        ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney
+        : selectFast(domain, day, authoredMain);
   const main = authoredMain.map((question) =>
     materializeQuestion(domain, question, MAIN_POINTS, entities));
   const fast = authoredFast.map((question) =>
