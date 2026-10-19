@@ -259,8 +259,7 @@ export const OCT19_NFL_SPORTS_FEUD_FAST: Readonly<Record<string, {
       "Jeremy Shockey",
       "Todd Heap",
       "Delanie Walker",
-      "Benjamin Watson",
-      "Kellen Winslow II"
+      "Benjamin Watson"
     ]
   }
 };
