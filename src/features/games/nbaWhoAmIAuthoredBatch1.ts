@@ -225,7 +225,8 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1628983",
-      "bio": "https://www.nba.com/player/1628983/bio"
+      "bio": "https://www.nba.com/player/1628983/bio",
+      "title2025": "https://www.nba.com/news/starting-5-june-23-2025"
     },
     "scripts": {
       "A": {
@@ -303,8 +304,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "title2025"
             ]
           },
           {
@@ -404,8 +404,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "title2025"
             ]
           },
           {
@@ -7965,7 +7964,9 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/203114",
-      "bio": "https://www.nba.com/player/203114/bio"
+      "bio": "https://www.nba.com/player/203114/bio",
+      "finals2021": "https://www.nba.com/news/inside-the-box-score-2021-nba-finals-game-4",
+      "finalsClincher": "https://www.nba.com/news/inside-the-box-score-2021-nba-finals-game-6"
     },
     "scripts": {
       "A": {
@@ -8023,8 +8024,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "finals2021"
             ]
           },
           {
@@ -8124,8 +8124,8 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "finals2021",
+              "finalsClincher"
             ]
           },
           {
@@ -8144,8 +8144,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "finalsClincher"
             ]
           },
           {
@@ -8825,7 +8824,8 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1631096",
-      "bio": "https://www.nba.com/player/1631096/bio"
+      "bio": "https://www.nba.com/player/1631096/bio",
+      "title2025": "https://www.nba.com/news/season-review-2024-25"
     },
     "scripts": {
       "A": {
@@ -8903,8 +8903,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "title2025"
             ]
           },
           {
@@ -9255,7 +9254,9 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1630532",
-      "bio": "https://www.nba.com/player/1630532/bio"
+      "bio": "https://www.nba.com/player/1630532/bio",
+      "worldCup": "https://www.fiba.basketball/en/history/201-fiba-basketball-world-cup/208182/players/227403-franz-wagner",
+      "playoffGame": "https://www.nba.com/game/cle-vs-orl-0042300134"
     },
     "scripts": {
       "A": {
@@ -9323,8 +9324,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "worldCup"
             ]
           },
           {
@@ -9404,8 +9404,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "playoffGame"
             ]
           },
           {
@@ -9414,8 +9413,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "worldCup"
             ]
           },
           {
@@ -9434,8 +9432,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "worldCup"
             ]
           },
           {
@@ -9470,7 +9467,8 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1630596",
-      "bio": "https://www.nba.com/player/1630596/bio"
+      "bio": "https://www.nba.com/player/1630596/bio",
+      "dpoy2025": "https://www.nba.com/news/history-defensive-player-of-the-year-winners"
     },
     "scripts": {
       "A": {
@@ -9548,8 +9546,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "dpoy2025"
             ]
           },
           {
@@ -9649,8 +9646,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "dpoy2025"
             ]
           },
           {
@@ -9685,7 +9681,9 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1630595",
-      "bio": "https://www.nba.com/player/1630595/bio"
+      "bio": "https://www.nba.com/player/1630595/bio",
+      "turnaround": "https://www.nba.com/pistons/news/season-rewind-all-nba-campaign-elevates-cunningham-to-elite",
+      "allstar2025": "https://www.nba.com/pistons/news/cade-cunningham-named-to-eastern-conference-all-star-team"
     },
     "scripts": {
       "A": {
@@ -9753,8 +9751,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "allstar2025"
             ]
           },
           {
@@ -9763,8 +9760,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "turnaround"
             ]
           },
           {
@@ -9854,8 +9850,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "turnaround"
             ]
           },
           {
@@ -9864,8 +9859,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "turnaround"
             ]
           },
           {
@@ -9900,7 +9894,9 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1631114",
-      "bio": "https://www.nba.com/player/1631114/bio"
+      "bio": "https://www.nba.com/player/1631114/bio",
+      "finalsGame5": "https://www.nba.com/news/thunder-pacers-takeaways-game-5-2025-nba-finals",
+      "title2025": "https://www.nba.com/news/season-review-2024-25"
     },
     "scripts": {
       "A": {
@@ -9978,8 +9974,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "title2025"
             ]
           },
           {
@@ -10079,8 +10074,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "title2025"
             ]
           },
           {
@@ -10115,7 +10109,8 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
     "earlyRotation": "normal",
     "sources": {
       "profile": "https://www.nba.com/player/1630578",
-      "bio": "https://www.nba.com/player/1630578/bio"
+      "bio": "https://www.nba.com/player/1630578/bio",
+      "allstar2025": "https://www.nba.com/news/nba-all-star-faq-2025"
     },
     "scripts": {
       "A": {
@@ -10183,8 +10178,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "allstar2025"
             ]
           },
           {
@@ -10294,8 +10288,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
-              "profile",
-              "bio"
+              "allstar2025"
             ]
           },
           {
