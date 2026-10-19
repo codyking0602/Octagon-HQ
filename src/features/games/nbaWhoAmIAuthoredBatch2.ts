@@ -4,7 +4,7 @@ import type { NbaWhoAmIAuthoredIdentity } from "./nbaWhoAmIAuthoredScripts";
  * NBA Who Am I batch 2: 48 explicitly authored subjects with separate A/B
  * factual clue paths. This bank remains isolated until central integration.
  */
-export const nbaWhoAmIAuthoredBatch2 = [
+export const nbaWhoAmIAuthoredBatch2: readonly NbaWhoAmIAuthoredIdentity[] = [
   {
     "subjectId": "nba:carmelo-anthony",
     "name": "Carmelo Anthony",
@@ -972,7 +972,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
           },
           {
             "id": "nba-rajon-rondo-b-5",
-            "text": "One playoff series featured a 20-assist game from me.",
+            "text": "I delivered double-digit assists in multiple playoff triple-doubles.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -9779,4 +9779,4 @@ export const nbaWhoAmIAuthoredBatch2 = [
       }
     }
   }
-] satisfies readonly NbaWhoAmIAuthoredIdentity[];
+];
