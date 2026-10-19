@@ -1411,7 +1411,7 @@ const entries: readonly Entry[] = [
 
 ];
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[’\']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-export const nbaWhoAmIAuthoredBatch3: readonly NbaWhoAmIAuthoredIdentity[] = entries.map((entry) => {
+export const nbaWhoAmIAuthoredBatch3: readonly NbaWhoAmIAuthoredIdentity[] = entries.map((entry): NbaWhoAmIAuthoredIdentity => {
   const slug = normalize(entry.name);
   const sourceIds = entry.history ? ["career", "history"] : ["career"];
   const clues = (script: "A" | "B", lines: readonly string[]) => lines.map((line, index) => ({
