@@ -143,7 +143,7 @@ const entries: readonly Entry[] = [
       "I played nearly two decades at the NBA level.",
       "I regularly contributed rebounds despite being best known as a playmaker.",
       "I entered the league as a high lottery pick.",
-      "I started my professional career by sharing an award with Grant Hill.",
+      "I shared a major rookie honor rather than winning it alone.",
       "I won two Olympic gold medals with the United States.",
       "I spent notable stretches with Dallas, Phoenix and New Jersey.",
       "I returned to Dallas in a midseason trade before its title run.",
@@ -202,7 +202,7 @@ const entries: readonly Entry[] = [
       "I was an All-Rookie First Team pick.",
       "I developed into one of the league's best all-around playmakers.",
       "I recorded many triple-doubles early in my NBA career.",
-      "I received more All-Star fan votes than any other player as a rookie.",
+      "I became an All-Star starter during my rookie season.",
       "I entered the league as the third overall selection in 1994.",
       "I led the league in triple-doubles in the 1995-96 season.",
       "I was named to five All-NBA teams during my prime.",
@@ -244,7 +244,6 @@ const entries: readonly Entry[] = [
     "name": "Chris Webber",
     "bref": "webbech01",
     "group": "big",
-    "history": "https://www.nba.com/news/history-nba-legend-chris-webber",
     "a": [
       "I was voted Rookie of the Year after my debut season.",
       "I became a multiple-time All-Star and All-NBA selection.",
@@ -274,7 +273,6 @@ const entries: readonly Entry[] = [
     "name": "Chris Mullin",
     "bref": "mullich01",
     "group": "wing",
-    "history": "https://www.nba.com/news/history-nba-legend-chris-mullin",
     "a": [
       "I earned five NBA All-Star selections during my prime.",
       "I was named to four All-NBA teams.",
@@ -304,7 +302,6 @@ const entries: readonly Entry[] = [
     "name": "Reggie Miller",
     "bref": "millere01",
     "group": "wing",
-    "history": "https://www.nba.com/news/history-nba-legend-reggie-miller",
     "a": [
       "I was selected to five NBA All-Star Games.",
       "I earned multiple All-NBA Third Team honors.",
@@ -363,7 +360,6 @@ const entries: readonly Entry[] = [
     "name": "Gary Payton",
     "bref": "paytoga01",
     "group": "guard",
-    "history": "https://www.nba.com/news/history-nba-legend-gary-payton",
     "a": [
       "I became a regular All-Star and All-NBA performer.",
       "I was selected to an NBA All-Defensive First Team in nine consecutive seasons.",
@@ -593,7 +589,8 @@ const entries: readonly Entry[] = [
       "I helped Portland reach a conference final against the Lakers in 2000.",
       "I won six championships alongside Michael Jordan and coach Phil Jackson in Chicago.",
       "I became the famous No. 33 Chicago Bulls partner to Jordan."
-    ]
+    ],
+    "history": "https://www.nba.com/news/archive-75-scottie-pippen"
   },
   {
     "name": "Dennis Rodman",
@@ -622,7 +619,8 @@ const entries: readonly Entry[] = [
       "I joined Chicago as a rebounding specialist before its 72-win season.",
       "I starred on the Pistons' Bad Boys and then the Bulls' second three-peat.",
       "My dyed hair and No. 91 Bulls jersey helped make Dennis 'the Worm' Rodman unmistakable."
-    ]
+    ],
+    "history": "https://www.nba.com/news/archive-75-dennis-rodman"
   },
   {
     "name": "Clyde Drexler",
@@ -651,7 +649,8 @@ const entries: readonly Entry[] = [
       "I left Portland to win the 1995 title with the Rockets.",
       "I starred for the Portland Trail Blazers before returning home to Houston.",
       "I was the graceful star nicknamed Clyde the Glide."
-    ]
+    ],
+    "history": "https://www.nba.com/news/archive-75-clyde-drexler"
   },
   {
     "name": "Dominique Wilkins",
@@ -680,7 +679,8 @@ const entries: readonly Entry[] = [
       "I also spent time playing professionally in Greece and Italy.",
       "I became best known for explosive dunks wearing No. 21 for the Atlanta Hawks.",
       "I became an Atlanta icon nicknamed the Human Highlight Film."
-    ]
+    ],
+    "history": "https://www.nba.com/news/archive-75-dominique-wilkins"
   },
   {
     "name": "Dikembe Mutombo",
@@ -853,7 +853,7 @@ const entries: readonly Entry[] = [
       "I watched Dallas reach the 2006 NBA Finals the season after I left for San Antonio.",
       "I helped San Antonio beat Cleveland in the 2007 Finals.",
       "I was part of Dallas's early-2000s offensive trio with Nash and Nowitzki.",
-      "I was the former Suns draft pick who won the 2007 NBA championship with San Antonio."
+      "I was the former Wisconsin star who became an All-Star in Dallas and an NBA champion with San Antonio."
     ]
   },
   {
@@ -970,7 +970,8 @@ const entries: readonly Entry[] = [
       "I helped the Pistons reach consecutive Finals in 2004 and 2005.",
       "I was the Detroit defender known as Big Ben who helped topple Shaq and Kobe.",
       "I was Detroit's Afro-wearing, undrafted champion known as Big Ben."
-    ]
+    ],
+    "history": "https://www.nba.com/watch/video/ben-wallace-career-retrospective"
   },
   {
     "name": "Rasheed Wallace",
@@ -998,7 +999,7 @@ const entries: readonly Entry[] = [
       "I was traded from the Trail Blazers to Atlanta and then Detroit in February 2004.",
       "I hit important shots during Detroit's 2004 Finals victory over the Lakers.",
       "I played for Portland, Detroit, Boston and the New York Knicks.",
-      "I was Detroit's Rasheed 'Sheed' Wallace, famous for shouting 'Ball don't lie.'"
+      "I was the big man known as Sheed and for the phrase 'Ball don't lie.'"
     ]
   },
   {
@@ -1073,7 +1074,7 @@ const entries: readonly Entry[] = [
       "I finished third in NBA MVP voting in 2004.",
       "I was involved in the 2004 Palace brawl while playing for the Pacers.",
       "I became the Pacers' six-time All-Star and wore No. 7 in Indiana.",
-      "I was Indiana's No. 7 All-Star center, distinct from Shaquille O'Neal."
+      "I became the No. 7 Indiana star whose surname I shared with Shaquille despite no family connection."
     ],
     "b": [
       "I played for several NBA organizations across a lengthy career.",
@@ -1085,7 +1086,7 @@ const entries: readonly Entry[] = [
       "I helped Indiana post the NBA's best regular-season record in 2003-04.",
       "I later played for Toronto, Miami, Boston, Phoenix and Golden State.",
       "I wore No. 7 while starring for the Indiana Pacers during their Reggie Miller era.",
-      "I was the six-time Pacers All-Star who wore No. 7 and shared a surname with Shaquille."
+      "My six All-Star selections came with Indiana, not with Shaquille O'Neal's teams."
     ]
   },
   {
@@ -1333,7 +1334,7 @@ const entries: readonly Entry[] = [
       "I starred for Indiana but was suspended for the remainder of the 2004-05 season following a notorious incident.",
       "I later played for Sacramento and Houston before signing with Los Angeles.",
       "I helped the Lakers win Game 7 of the 2010 Finals against Boston.",
-      "I was formerly known as Ron Artest before taking a name expressing compassion and peace.",
+      "I legally adopted a new three-word name years after becoming famous as Ron Artest.",
       "I won a 2010 title with the Lakers after playing for Indiana under the name Ron Artest."
     ],
     "b": [
@@ -1345,8 +1346,8 @@ const entries: readonly Entry[] = [
       "I won the 2004 Defensive Player of the Year award with the Indiana Pacers.",
       "I was a central figure in the infamous 2004 Malice at the Palace incident.",
       "I sank a critical three-pointer late in the Lakers' 2010 Finals Game 7 victory.",
-      "I legally renamed myself after starring for Indiana as Ron Artest.",
-      "I wore No. 37 as a Lakers champion after making my name in Indiana as Ron Artest."
+      "I changed my legal name in 2011 after playing as Ron Artest.",
+      "I won a Lakers championship under my old surname and later became known by a three-word name."
     ]
   },
   {
@@ -1407,7 +1408,6 @@ const entries: readonly Entry[] = [
       "I was Arizona national champion Mike Bibby, the Kings' No. 10 point guard."
     ]
   }
-
 ];
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const nbaWhoAmIAuthoredBatch3: readonly NbaWhoAmIAuthoredIdentity[] = entries.map((entry) => {
