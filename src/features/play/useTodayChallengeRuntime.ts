@@ -239,7 +239,7 @@ export function useTodayChallengeRuntime({
 
         let next: TodayChallengeProjection | null = null;
         let failure: unknown = null;
-        for (let attempt = 0; attempt < 3; attempt += 1) {
+        for (let attempt = 0; attempt < 5; attempt += 1) {
           try {
             next = await repository.advance(base, item.action, item.id);
             failure = null;
@@ -247,8 +247,15 @@ export function useTodayChallengeRuntime({
           } catch (error) {
             failure = error;
             if (error instanceof TodayChallengeRepositoryError && error.stale) break;
-            if (!retryableDailyError(error) || attempt >= 2) break;
-            await delay(attempt === 0 ? 120 : 420);
+            const computeLimit = error instanceof TodayChallengeRepositoryError
+              && error.code === "DAILY_RUNTIME_BUSY";
+            // Edge HTTP 546 can clear after several seconds. Keep the same
+            // client_action_id while backing off; other errors retain the
+            // existing three-attempt limit and manual retry behavior.
+            if (!retryableDailyError(error) || attempt >= (computeLimit ? 4 : 2)) break;
+            await delay(computeLimit
+              ? [400, 900, 1800, 3000][attempt]!
+              : (attempt === 0 ? 120 : 420));
           }
         }
 
