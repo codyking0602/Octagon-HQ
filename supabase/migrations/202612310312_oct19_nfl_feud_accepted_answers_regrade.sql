@@ -263,13 +263,8 @@ begin
         where id=v_attempt.id and normalized_score=v_attempt.normalized_score;
         get diagnostics v_rows=row_count;
         if v_rows<>1 then raise exception 'Official attempt regrade affected % rows',v_rows; end if;
-        update private.daily_challenge_history set
-          native_score=v_score,normalized_score=v_score,
-          public_result=public_result||jsonb_build_object('score',v_score,
-            'main_points',v_main,'fast_money_points',v_fast_score,'score_correction',v_tag)
-        where daily_challenge_id=v_day and profile_id=v_attempt.profile_id;
-        get diagnostics v_rows=row_count;
-        if v_rows<>1 then raise exception 'History regrade affected % rows',v_rows; end if;
+        -- private.daily_challenge_history is a UNION ALL view over official attempts;
+        -- correcting this official row updates leaderboards automatically.
       end if;
     end loop;
   exception when others then
