@@ -1,5 +1,5 @@
 import { hitTheNumberBoardQualityScore, hitTheNumberScore } from "../play/hitTheNumberEngine";
-import { createReplaySeed, replayLineupIdentity, seededLineupRandom, shuffleLineup, type PlayLineupIdentity } from "../play/lineupModel";
+import { createReplaySeed, replayLineupIdentity, rememberLineup, seededLineupRandom, shuffleLineup, type PlayLineupIdentity } from "../play/lineupModel";
 import { nbaHitSubjects, nbaHitSubjectsFor, nbaHitSubjectById, nbaHitValue, NBA_HIT_STAT_CATALOG, type NbaHitSubject, type NbaHitStat } from "./nbaHitTheNumberStats";
 
 export const NBA_HIT_THE_NUMBER_GAME_ID = "nba-hit-the-number";
@@ -203,7 +203,10 @@ export function createNbaHitTheNumberPlan(seed:string):NbaHitPlan {
   throw new Error("NBA Hit the Number could not generate a balanced playable board.");
 }
 export function createNbaHitTheNumberRun(seed=createReplaySeed(NBA_HIT_THE_NUMBER_GAME_ID)):NbaHitRun {
-  return {plan:createNbaHitTheNumberPlan(seed),identity:replayLineupIdentity(NBA_HIT_THE_NUMBER_GAME_ID,seed)};
+  const plan=createNbaHitTheNumberPlan(seed);
+  const identity=replayLineupIdentity(NBA_HIT_THE_NUMBER_GAME_ID,seed);
+  rememberLineup(identity,plan.subjectIds);
+  return {plan,identity};
 }
 export function formatNbaHitNumber(value:number) {return value.toFixed(1);}
 export const nbaHitStatCount=NBA_HIT_STAT_CATALOG.length;
