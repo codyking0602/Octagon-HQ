@@ -63,6 +63,8 @@ function materializedNflQuestions() {
     const pack = buildSportsFeudPack("nfl", addDays("2026-09-23", offset));
     assertFamilyFeudPack(pack);
     for (const question of [...pack.mainBoards, ...pack.fastMoney]) {
+      // The Oct 19 editorial hotfix is separately tested without changing the 350-question canonical bank contract.
+      if (question.id.startsWith("nfl-oct19-")) continue;
       if (!found.has(question.id)) found.set(question.id, { pack, question });
     }
   }
