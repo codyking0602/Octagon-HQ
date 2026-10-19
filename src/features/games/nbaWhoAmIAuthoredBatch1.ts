@@ -5161,5 +5161,2585 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         ]
       }
     }
+  },
+  {
+    "subjectId": "nba:anthony-davis",
+    "name": "Anthony Davis",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/203076",
+      "bio": "https://www.nba.com/player/203076/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-anthony-davis-a-1",
+            "text": "I was an immediate contributor as a shot-blocker when I entered the NBA.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-2",
+            "text": "I paired rebounding with an expanding array of face-up scoring moves.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-3",
+            "text": "I became a frequent target for lobs and quick passes near the basket.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-4",
+            "text": "I developed into an elite defender capable of switching onto perimeter players.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-5",
+            "text": "I led the NBA in blocks during multiple seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-6",
+            "text": "I became a perennial All-Star and All-NBA selection.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-7",
+            "text": "I scored 59 points and grabbed 20 rebounds in a single game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-8",
+            "text": "I was an essential two-way force on a 2020 championship team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-9",
+            "text": "I won a national championship at Kentucky before going first overall in 2012.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-a-10",
+            "text": "I am the Lakers' No. 3 champion whose signature nickname is The Brow.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-anthony-davis-b-1",
+            "text": "I had an unusually strong defensive reputation before my NBA debut.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-2",
+            "text": "I was expected to anchor both ends of the court despite being a young player.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-3",
+            "text": "I grew from a rim-running finisher into a versatile jump shooter.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-4",
+            "text": "I frequently posted large block and rebound totals in big games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-5",
+            "text": "I was named to the NBA's 75th Anniversary Team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-6",
+            "text": "I made the 2020 All-NBA first team while playing next to an all-time star.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-7",
+            "text": "I hit a buzzer-beating three against Denver in the 2020 Western Conference Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-8",
+            "text": "I became a champion after a trade from New Orleans.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-9",
+            "text": "I played for the New Orleans Pelicans before teaming with LeBron in Los Angeles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-anthony-davis-b-10",
+            "text": "I am Anthony Davis, also called AD, and I helped the Lakers win the 2020 title.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:damian-lillard",
+    "name": "Damian Lillard",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/203081",
+      "bio": "https://www.nba.com/player/203081/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-damian-lillard-a-1",
+            "text": "I became a lead scoring guard almost immediately after entering the league.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-2",
+            "text": "I developed range well beyond the standard three-point arc.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-3",
+            "text": "I created late-game shots off high ball screens and isolations.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-4",
+            "text": "I combined scoring with playmaking in repeated postseason appearances.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-5",
+            "text": "I was named Rookie of the Year in my first professional season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-6",
+            "text": "I scored 50 points in a playoff game that ended with a dramatic buzzer-beater.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-7",
+            "text": "I became one of the few players to score 71 in a regular-season game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-8",
+            "text": "I won back-to-back NBA Three-Point Contests.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-9",
+            "text": "I played college basketball at Weber State before Portland drafted me sixth.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-a-10",
+            "text": "I am No. 0, the Trail Blazers icon behind the phrase Dame Time.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-damian-lillard-b-1",
+            "text": "I played four seasons of college basketball before becoming an NBA lottery pick.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-2",
+            "text": "I hit tough pull-up shots from exceptionally long distances.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-3",
+            "text": "I quickly became the primary offensive option on a playoff contender.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-4",
+            "text": "I earned multiple All-NBA honors as my scoring increased.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-5",
+            "text": "I eliminated Houston with a series-ending three-pointer in 2014.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-6",
+            "text": "I waved goodbye to Oklahoma City after a decisive 2019 playoff three.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-7",
+            "text": "I guided Portland to the 2019 Western Conference Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-8",
+            "text": "I joined Milwaukee to partner with Giannis Antetokounmpo in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-9",
+            "text": "I built my fame with the Trail Blazers and hit an iconic shot over Paul George.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-damian-lillard-b-10",
+            "text": "I am Damian Lillard, the No. 0 guard known for Dame Time and Logo Lillard.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:jimmy-butler",
+    "name": "Jimmy Butler",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/202710",
+      "bio": "https://www.nba.com/player/202710/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-jimmy-butler-a-1",
+            "text": "I entered the NBA as a defense-oriented reserve on a contending team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-2",
+            "text": "I earned more scoring responsibility after establishing myself on defense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-3",
+            "text": "I developed a patient, physical offensive approach that drew free throws.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-4",
+            "text": "I became especially effective creating offense at the end of close games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-5",
+            "text": "I won the NBA's Most Improved Player award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-6",
+            "text": "I became a multiple-time All-Star with several All-Defensive selections.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-7",
+            "text": "I led an underdog team through the Eastern Conference playoffs in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-8",
+            "text": "I reached the NBA Finals as a leading scorer in both 2020 and 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-9",
+            "text": "I began with the Chicago Bulls before becoming Miami's playoff leader.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-a-10",
+            "text": "I am the star called Jimmy Buckets, famous for Heat Culture.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-jimmy-butler-b-1",
+            "text": "I started my professional career without a guaranteed starring role.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-2",
+            "text": "I gained a reputation for guarding top perimeter players.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-3",
+            "text": "I could initiate offense despite not being a high-volume three-point shooter.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-4",
+            "text": "I built a postseason identity around pressure defense and midrange scoring.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-5",
+            "text": "I played for Chicago, Minnesota and Philadelphia before moving again.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-6",
+            "text": "I recorded a 40-point triple-double in the 2020 NBA Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-7",
+            "text": "I scored 56 points against Milwaukee in a 2023 playoff game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-8",
+            "text": "I was Eastern Conference Finals MVP in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-9",
+            "text": "I was drafted from Marquette and became the face of the Miami Heat's Finals runs.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-jimmy-butler-b-10",
+            "text": "I am Jimmy Butler, the No. 22 playoff star known as Jimmy Buckets.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:kyrie-irving",
+    "name": "Kyrie Irving",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/202681",
+      "bio": "https://www.nba.com/player/202681/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-kyrie-irving-a-1",
+            "text": "I entered the league as a gifted scorer with an advanced dribble.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-2",
+            "text": "I could finish around much taller defenders with either hand.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-3",
+            "text": "I routinely created difficult layups through footwork and spin.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-4",
+            "text": "I became an explosive one-on-one scorer with reliable outside shooting.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-5",
+            "text": "I won Rookie of the Year and later became an All-Star Game MVP.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-6",
+            "text": "I scored 57 points against San Antonio in a 2015 game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-7",
+            "text": "I became a champion after hitting a decisive late three in Game 7.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-8",
+            "text": "I played an important role on a 2016 team that overcame a 3-1 Finals deficit.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-9",
+            "text": "I was the first pick from Duke and made my name with the Cleveland Cavaliers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-a-10",
+            "text": "I am the No. 2 guard whose 2016 Finals three helped LeBron and Cleveland win.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-kyrie-irving-b-1",
+            "text": "I played only a short college season before being selected first overall.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-2",
+            "text": "I built a reputation for one of basketball's most creative handles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-3",
+            "text": "I became comfortable using floaters and contested jumpers as a smaller scorer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-4",
+            "text": "I earned All-NBA honors with multiple different franchises.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-5",
+            "text": "I competed in three straight NBA Finals during my early championship years.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-6",
+            "text": "I left Cleveland and went on to play in Boston and Brooklyn.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-7",
+            "text": "I paired with Luka Dončić for a Dallas Finals appearance in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-8",
+            "text": "I represented the United States at the 2016 Olympics and won gold.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-9",
+            "text": "I was LeBron James's backcourt partner for the Cavaliers' historic 2016 title.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kyrie-irving-b-10",
+            "text": "I am Kyrie Irving, nicknamed Uncle Drew, famous for my Game 7 Finals shot.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:kevin-durant",
+    "name": "Kevin Durant",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/201142",
+      "bio": "https://www.nba.com/player/201142/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-kevin-durant-a-1",
+            "text": "I became an elite scorer early in my NBA career despite a slender frame.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-2",
+            "text": "I developed a nearly unblockable jumper using my combination of height and touch.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-3",
+            "text": "I could score efficiently from three-point range, the midrange and the foul line.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-4",
+            "text": "I became a dominant half-court offensive option on several contenders.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-5",
+            "text": "I won four scoring titles in a five-season span.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-6",
+            "text": "I captured the 2014 NBA Most Valuable Player award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-7",
+            "text": "I won two consecutive NBA championships and Finals MVP awards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-8",
+            "text": "I hit a famous transition three over LeBron James in the 2017 Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-9",
+            "text": "I played my rookie season for Seattle before becoming Oklahoma City's star.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-a-10",
+            "text": "I am KD, the former Thunder and Warriors No. 35 whose two Finals MVPs came in Golden State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-kevin-durant-b-1",
+            "text": "I entered the league after a single collegiate season as a prolific scorer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-2",
+            "text": "I rapidly went from promising rookie to one of the most efficient offensive players.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-3",
+            "text": "I used high-release jump shots against almost any defender.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-4",
+            "text": "I won scoring titles before my first championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-5",
+            "text": "I earned an MVP award after a season averaging 32 points.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-6",
+            "text": "I shared the court with Russell Westbrook and James Harden early in my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-7",
+            "text": "I signed with the 73-win Warriors in 2016.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-8",
+            "text": "I led Golden State in scoring during its 2017 and 2018 Finals victories.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-9",
+            "text": "I played at Texas before being drafted second overall by the Seattle SuperSonics.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kevin-durant-b-10",
+            "text": "I am Kevin Durant, known as KD, a two-time Finals MVP for the Warriors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:james-harden",
+    "name": "James Harden",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/201935",
+      "bio": "https://www.nba.com/player/201935/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-james-harden-a-1",
+            "text": "I entered the NBA contributing efficient scoring off the bench.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-2",
+            "text": "I developed a left-handed isolation game that repeatedly drew fouls.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-3",
+            "text": "I became one of the league's most dangerous step-back three-point shooters.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-4",
+            "text": "I paired high scoring totals with increasingly sophisticated playmaking.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-5",
+            "text": "I won Sixth Man of the Year before becoming a perennial All-Star.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-6",
+            "text": "I led the league in assists as well as multiple scoring titles.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-7",
+            "text": "I received the 2018 NBA Most Valuable Player award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-8",
+            "text": "I averaged more than 36 points per game in 2018-19.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-9",
+            "text": "I played college basketball at Arizona State before Oklahoma City drafted me third.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-a-10",
+            "text": "I am Houston's former No. 13 MVP, widely known as The Beard.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-james-harden-b-1",
+            "text": "I began my NBA career in a talented young backcourt rather than as its primary star.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-2",
+            "text": "I became a centerpiece of a new offense following a major trade.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-3",
+            "text": "I relied heavily on drives, free throws and off-the-dribble threes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-4",
+            "text": "I posted high assist totals while regularly exceeding 30 points per game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-5",
+            "text": "I was part of Oklahoma City's run to the 2012 NBA Finals.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-6",
+            "text": "I won three consecutive NBA scoring titles with Houston.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-7",
+            "text": "I guided the Rockets to a 65-win season and the 2018 West finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-8",
+            "text": "I later played alongside Durant and Irving in Brooklyn.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-9",
+            "text": "I was the third pick of the Thunder in 2009 and an MVP for the Rockets.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-james-harden-b-10",
+            "text": "I am James Harden, the left-handed former Houston No. 13 nicknamed The Beard.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:kawhi-leonard",
+    "name": "Kawhi Leonard",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/202695",
+      "bio": "https://www.nba.com/player/202695/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-kawhi-leonard-a-1",
+            "text": "I made a name initially by defending opposing stars rather than dominating the ball.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-2",
+            "text": "I became an efficient isolation scorer with an especially reliable midrange jumper.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-3",
+            "text": "I used outstanding hands and timing to generate steals.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-4",
+            "text": "I steadily evolved from role player to primary option.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-5",
+            "text": "I won consecutive Defensive Player of the Year awards.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-6",
+            "text": "I won NBA Finals MVP with two different franchises.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-7",
+            "text": "I made one of the most famous Game 7 buzzer-beaters in playoff history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-8",
+            "text": "I led Toronto to its first NBA championship in 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-9",
+            "text": "I played at San Diego State and began my NBA career in San Antonio.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-a-10",
+            "text": "I am the player called The Klaw who won Finals MVP with the Spurs and Raptors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-kawhi-leonard-b-1",
+            "text": "I entered the league as a relatively quiet, defense-focused prospect.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-2",
+            "text": "I improved my shooting and ball handling over several seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-3",
+            "text": "I often guarded the best opposing perimeter scorer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-4",
+            "text": "I became an All-NBA first-team selection and league MVP finalist.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-5",
+            "text": "I won my first championship against Miami in 2014.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-6",
+            "text": "I became the first player to win Finals MVP in both conferences.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-7",
+            "text": "I hit a four-bounce series-winning jumper against Philadelphia.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-8",
+            "text": "I joined the Los Angeles Clippers after winning Toronto's 2019 title.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-9",
+            "text": "I was traded to the Spurs on draft night after being selected from San Diego State.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-kawhi-leonard-b-10",
+            "text": "I am Kawhi Leonard, the No. 2 star nicknamed The Klaw.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:paul-george",
+    "name": "Paul George",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/202331",
+      "bio": "https://www.nba.com/player/202331/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-paul-george-a-1",
+            "text": "I became known as an athletic two-way scorer after entering the league.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-2",
+            "text": "I defended strong perimeter players while increasing my own offensive workload.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-3",
+            "text": "I became a high-volume three-point shooter as my game matured.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-4",
+            "text": "I earned repeated All-Star and All-NBA selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-5",
+            "text": "I won the NBA's Most Improved Player award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-6",
+            "text": "I led a contender in several deep Eastern Conference playoff series.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-7",
+            "text": "I returned to All-Star form after a major leg injury.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-8",
+            "text": "I finished third in 2019 MVP and Defensive Player of the Year voting.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-9",
+            "text": "I began with the Indiana Pacers before starring for Oklahoma City and the Clippers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-a-10",
+            "text": "I am the No. 13 wing called PG-13 who led Indiana's duels against Miami.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-paul-george-b-1",
+            "text": "I began my career as a defense-first prospect outside the highest lottery picks.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-2",
+            "text": "I gradually earned greater responsibility for perimeter shot creation.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-3",
+            "text": "I mixed contested jumpers with transition finishes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-4",
+            "text": "I spent much of my career guarding elite wings.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-5",
+            "text": "I led the NBA in steals per game during the 2018-19 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-6",
+            "text": "I helped Indiana reach back-to-back conference finals in 2013 and 2014.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-7",
+            "text": "I became an eight-time NBA All-Star by 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-8",
+            "text": "I was traded to the Clippers in a deal that sent Shai Gilgeous-Alexander away.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-9",
+            "text": "I played college basketball at Fresno State and was drafted by Indiana.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-paul-george-b-10",
+            "text": "I am Paul George, also called PG-13, the former Pacers No. 24 turned No. 13 star.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:russell-westbrook",
+    "name": "Russell Westbrook",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/201566",
+      "bio": "https://www.nba.com/player/201566/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-russell-westbrook-a-1",
+            "text": "I attacked defenses with unusual speed and force from the backcourt.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-2",
+            "text": "I filled the box score through rebounding as well as scoring.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-3",
+            "text": "I consistently pushed the tempo after securing defensive rebounds.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-4",
+            "text": "I became a prolific driver and passer in transition.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-5",
+            "text": "I led the league in scoring for more than one season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-6",
+            "text": "I earned the NBA Most Valuable Player award in 2017.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-7",
+            "text": "I averaged a triple-double across multiple full seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-8",
+            "text": "I broke Oscar Robertson's career triple-double record.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-9",
+            "text": "I was drafted fourth out of UCLA and became a star with Oklahoma City.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-a-10",
+            "text": "I am the Thunder's former No. 0 star nicknamed Brodie.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-russell-westbrook-b-1",
+            "text": "I began playing behind other young scoring stars before taking on more offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-2",
+            "text": "I rarely hesitated to attack the rim in early offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-3",
+            "text": "I produced unusually high assist and rebound totals for a guard.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-4",
+            "text": "I earned several All-NBA first-team selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-5",
+            "text": "I reached the 2012 NBA Finals with Kevin Durant and James Harden.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-6",
+            "text": "I became the first player since Oscar Robertson to average a triple-double for a season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-7",
+            "text": "I averaged triple-doubles for three straight seasons from 2016-17 through 2018-19.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-8",
+            "text": "I won two NBA scoring titles while with Oklahoma City.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-9",
+            "text": "I played at UCLA before the Seattle SuperSonics franchise drafted me in 2008.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-russell-westbrook-b-10",
+            "text": "I am Russell Westbrook, the No. 0 triple-double legend and 2017 MVP.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:chris-paul",
+    "name": "Chris Paul",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/101108",
+      "bio": "https://www.nba.com/player/101108/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-chris-paul-a-1",
+            "text": "I became an elite playmaker soon after arriving in the NBA.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-2",
+            "text": "I controlled half-court offense with careful passing and ball-screen decisions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-3",
+            "text": "I generated steals with anticipation while remaining an efficient scorer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-4",
+            "text": "I frequently finished among the leaders in both assists and steals.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-5",
+            "text": "I won Rookie of the Year and became a repeated All-NBA honoree.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-6",
+            "text": "I led the league in assists five times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-7",
+            "text": "I helped a team reach the NBA Finals for the first time in 2021.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-8",
+            "text": "I helped turn a young Phoenix lineup into a contender in the West.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-9",
+            "text": "I was selected fourth overall from Wake Forest and began with New Orleans.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-a-10",
+            "text": "I am CP3, the Point God who starred with the Hornets, Clippers and Suns.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-chris-paul-b-1",
+            "text": "I excelled as a floor general rather than depending on above-the-rim scoring.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-2",
+            "text": "I paired midrange jumpers with precise passes to rolling teammates.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-3",
+            "text": "I quickly established myself as an All-Defensive guard.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-4",
+            "text": "I became known for protecting the ball while producing large assist totals.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-5",
+            "text": "I led the NBA in steals six times.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-6",
+            "text": "I was part of the Los Angeles Clippers era called Lob City.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-7",
+            "text": "I guided Houston to a 65-win season alongside James Harden.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-8",
+            "text": "I reached my first Finals as a member of the Phoenix Suns.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-9",
+            "text": "I played at Wake Forest and began my NBA career with the New Orleans Hornets.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-chris-paul-b-10",
+            "text": "I am Chris Paul, also called CP3 and the Point God.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:draymond-green",
+    "name": "Draymond Green",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/203110",
+      "bio": "https://www.nba.com/player/203110/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-draymond-green-a-1",
+            "text": "I became a versatile defender after entering the league as a second-round pick.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-2",
+            "text": "I contributed to offense through passing rather than high-volume scoring.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-3",
+            "text": "I guarded players of several sizes in switching defensive schemes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-4",
+            "text": "I became adept at triggering fast breaks after defensive rebounds.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-5",
+            "text": "I made multiple All-Defensive teams as a small-ball frontcourt player.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-6",
+            "text": "I was named Defensive Player of the Year in 2017.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-7",
+            "text": "I became a four-time NBA champion.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-8",
+            "text": "I produced a near triple-double in Game 7 of the 2016 Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-9",
+            "text": "I played at Michigan State before Golden State drafted me in round two.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-a-10",
+            "text": "I am the Warriors' No. 23 defensive leader beside Curry and Thompson.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-draymond-green-b-1",
+            "text": "I initially played limited minutes before becoming a regular starter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-2",
+            "text": "I developed into a skilled facilitator from the top of the key.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-3",
+            "text": "I often made major defensive contributions without scoring many points.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-4",
+            "text": "I became essential to lineups that prioritized quick passes and spacing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-5",
+            "text": "I helped a team win 73 regular-season games.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-6",
+            "text": "I led the league in steals during the 2016-17 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-7",
+            "text": "I became a central defender for four Warriors championship teams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-8",
+            "text": "I often operated as the passer on the famous Curry-Green pick-and-roll.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-9",
+            "text": "I was a Michigan State Spartan and became the Warriors' versatile frontcourt organizer.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-draymond-green-b-10",
+            "text": "I am Draymond Green, the Golden State No. 23 nicknamed Dray.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:klay-thompson",
+    "name": "Klay Thompson",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/202691",
+      "bio": "https://www.nba.com/player/202691/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-klay-thompson-a-1",
+            "text": "I became known for shooting effectively without needing many dribbles.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-2",
+            "text": "I developed into a strong perimeter defender on a championship contender.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-3",
+            "text": "I excelled at catch-and-shoot threes coming off screens.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-4",
+            "text": "I could score quickly in short bursts with exceptional shot preparation.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-5",
+            "text": "I helped set an NBA record for regular-season wins.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-6",
+            "text": "I scored 37 points in a single quarter.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-7",
+            "text": "I made 14 three-pointers in a regular-season game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-8",
+            "text": "I helped win four championships alongside an elite shooting backcourt partner.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-9",
+            "text": "I played at Washington State before Golden State selected me eleventh.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-a-10",
+            "text": "I am the No. 11 Splash Brother who played with Stephen Curry on the Warriors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-klay-thompson-b-1",
+            "text": "I entered the league as a shooting specialist and added defensive responsibility.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-2",
+            "text": "I became a scoring threat despite rarely dominating the ball.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-3",
+            "text": "I was trusted to guard difficult perimeter matchups in playoff series.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-4",
+            "text": "I earned multiple All-Star selections as part of a long-running contender.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-5",
+            "text": "I scored 60 points while playing fewer than 30 minutes in a game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-6",
+            "text": "I sank 11 three-pointers in a playoff game against Oklahoma City.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-7",
+            "text": "I missed two full NBA seasons following major leg injuries.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-8",
+            "text": "I returned and helped Golden State win the 2022 championship.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-9",
+            "text": "I was one half of the Warriors' Splash Brothers before joining Dallas.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-klay-thompson-b-10",
+            "text": "I am Klay Thompson, the celebrated No. 11 shooter famous for Game 6 Klay.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] satisfies readonly NbaWhoAmIAuthoredIdentity[];
