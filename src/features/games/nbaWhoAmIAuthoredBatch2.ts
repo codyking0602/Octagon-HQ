@@ -5673,7 +5673,7 @@ export const nbaWhoAmIAuthoredBatch2 = [
   },
   {
     "subjectId": "nba:amare-stoudemire",
-    "name": "Amar'e Stoudemire",
+    "name": "Amar’e Stoudemire",
     "eraBand": "legacy",
     "rescueGroup": "big",
     "earlyRotation": "normal",
