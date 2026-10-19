@@ -49,6 +49,9 @@ function canonicalChallengeRoute(challenge: PlayChallenge) {
   if (challenge.gameId === "find-leader" && challenge.gameVersion.startsWith("nba-find-leader-")) {
     return "/nba/find-the-leader";
   }
+  if (challenge.gameId === "higher-lower" && challenge.gameVersion.startsWith("nba-higher-lower-")) {
+    return "/nba/higher-lower";
+  }
   try {
     return playGameDefinition(challenge.gameId, challengeSport(challenge)).route;
   } catch {

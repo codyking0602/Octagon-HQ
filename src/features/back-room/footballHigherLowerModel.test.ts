@@ -30,11 +30,10 @@ describe("Football Higher or Lower", () => {
     expect(new Set(first.questions.map((question) => question.id)).size).toBe(FOOTBALL_HIGHER_LOWER_QUESTION_COUNT);
   });
 
-  it.each(["NFL", "CFB", "MIXED"] as const)("locks the approved difficulty, answer, category, and reuse rules for %s", (scope) => {
+  it.each(["NFL", "CFB", "MIXED"] as const)("locks the approved difficulty, category, and reuse rules for %s", (scope) => {
     const { board, difficulties } = boardShape(scope);
     expect(difficulties).toEqual({ approachable: 3, competitive: 5, tough: 2 });
-    expect(board.questions.filter((question) => question.answer === "higher")).toHaveLength(5);
-    expect(board.questions.filter((question) => question.answer === "lower")).toHaveLength(5);
+    expect(board.questions.every(question => question.answer === (question.hidden.value > question.known.value ? "higher" : "lower"))).toBe(true);
     expect(new Set(board.questions.map((question) => question.category)).size)
       .toBeGreaterThanOrEqual(scope === "CFB" ? 3 : 5);
     expect(board.questions.filter((question) => question.category === "career").length).toBeLessThanOrEqual(2);
@@ -44,6 +43,14 @@ describe("Football Higher or Lower", () => {
     for (let index = 1; index < board.questions.length; index += 1) {
       expect(board.questions[index]!.category).not.toBe(board.questions[index - 1]!.category);
     }
+  });
+
+  it("does not enforce a predictable five-and-five answer quota", () => {
+    const counts = new Set(Array.from({ length: 25 }, (_, index) =>
+      createFootballHigherLowerBoard("unpredictable-directions-" + index, "NFL")
+        .questions.filter(question => question.answer === "higher").length));
+    expect(counts.size).toBeGreaterThan(2);
+    expect([...counts].some(count => count !== 5)).toBe(true);
   });
 
   it("keeps Mixed exactly five NFL and five CFB without three straight from one sport", () => {

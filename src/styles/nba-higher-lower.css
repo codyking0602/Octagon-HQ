@@ -1,0 +1,92 @@
+.nba-higher-lower {
+  --hl-team-primary: #d88b2a;
+  --hl-team-secondary: #efc98a;
+}
+.nba-higher-lower .higher-lower-card {
+  min-height: 278px;
+  background: linear-gradient(155deg, #2c241c 0%, #172029 65%, #101923 100%);
+}
+.nba-higher-lower .higher-lower-card__identity {
+  display: block;
+  min-height: 26px;
+  text-align: center;
+}
+.nba-higher-lower .higher-lower-card__identity > span:last-child {
+  display: block;
+  overflow: visible;
+  color: #efcb92;
+  font-size: .67rem;
+  font-weight: 850;
+  line-height: 1.3;
+  text-overflow: clip;
+  white-space: normal;
+}
+.nba-higher-lower-portrait {
+  display: grid;
+  place-items: end center;
+  height: 100px;
+  margin: 3px auto 0;
+  overflow: hidden;
+}
+.nba-higher-lower-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+.nba-higher-lower-portrait b {
+  display: grid;
+  place-items: center;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  color: #e9cfaa;
+}
+.nba-higher-lower .higher-lower-card h3 {
+  margin-top: 2px;
+  min-height: 48px;
+  overflow-wrap: anywhere;
+  font-size: clamp(.93rem, 4.3vw, 1.32rem);
+}
+.nba-higher-lower .higher-lower-card > strong {
+  min-height: 65px;
+  margin-top: 4px;
+  color: #faf6ed;
+}
+.nba-higher-lower-preview {
+  padding: 8px 10px;
+  margin: 0 0 9px;
+  border: 1px solid rgba(227,162,72,.35);
+  border-radius: 9px;
+  color: #f2c783;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .035em;
+  text-align: center;
+}
+.nba-higher-lower .higher-lower-review__matchup b,
+.nba-higher-lower .higher-lower-review__context {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 520px) {
+  .nba-higher-lower .higher-lower-card {
+    min-height: 252px;
+    padding: 8px 6px;
+  }
+  .nba-higher-lower-portrait { height: 78px; }
+  .nba-higher-lower .higher-lower-card__identity > span:last-child {
+    font-size: .60rem;
+  }
+  .nba-higher-lower .higher-lower-card h3 {
+    min-height: 49px;
+    font-size: clamp(.84rem, 3.8vw, 1.08rem);
+    line-height: 1.1;
+  }
+  .nba-higher-lower .higher-lower-card > strong { min-height: 60px; font-size: clamp(1.8rem, 9vw, 2.7rem); }
+  .nba-higher-lower .higher-lower-review__matchup b { font-size: .67rem; line-height: 1.2; }
+  .nba-higher-lower .higher-lower-review__context { font-size: .57rem; line-height: 1.3; }
+}

@@ -1,5 +1,5 @@
 import {
-  createReplaySeed, dailyLineupIdentity, dailyLineupSeed, recordLineupCompletion,
+  dailyLineupIdentity, dailyLineupSeed, recordLineupCompletion,
   seededLineupRandom, selectReplayLineup, shuffleLineup,
   type PlayLineupIdentity,
 } from "../play/lineupModel";
@@ -196,7 +196,9 @@ const pairsByCategoryAndDifficulty = new Map<string, Pair[]>();
 for (const spec of specs) {
   for (const pair of candidatePairs(spec)) {
     const group = pair.category + ":" + pair.difficulty;
-    pairsByCategoryAndDifficulty.set(group, [...(pairsByCategoryAndDifficulty.get(group) ?? []), pair]);
+    const groupRows = pairsByCategoryAndDifficulty.get(group);
+    if (groupRows) groupRows.push(pair);
+    else pairsByCategoryAndDifficulty.set(group, [pair]);
   }
 }
 function formatValue(value: number, category: NbaHigherLowerCategory) {
