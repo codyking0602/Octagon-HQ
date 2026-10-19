@@ -218,6 +218,38 @@ describe("useTodayChallengeRuntime", () => {
     expect(result.current.error).toBeNull();
   });
 
+  it("survives repeated Edge 546 limits using the same idempotent action", async () => {
+    const resourceLimit = () => new TodayChallengeRepositoryError(
+      "DAILY_RUNTIME_BUSY",
+      "The game server is temporarily busy.",
+    );
+    const advance = vi.fn<TodayChallengeRepository["advance"]>()
+      .mockRejectedValueOnce(resourceLimit())
+      .mockRejectedValueOnce(resourceLimit())
+      .mockRejectedValueOnce(resourceLimit())
+      .mockResolvedValueOnce(projection(2, [50, 60]));
+    const repository = makeRepository(vi.fn().mockResolvedValue(projection(1)), advance);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { result } = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(result.current.projection).not.toBeNull());
+    await act(async () => {
+      await result.current.advance({ guess: 60 }, {
+        dedupeKey: "compute-limit-step",
+        optimisticUpdate: optimisticGuess(60),
+      });
+    });
+    expect(advance).toHaveBeenCalledTimes(4);
+    expect(new Set(advance.mock.calls.map((call) => call[2])).size).toBe(1);
+    expect(result.current.pendingActionCount).toBe(0);
+    expect(result.current.projection?.progressRevision).toBe(2);
+    expect(result.current.error).toBeNull();
+  }, 10_000);
+
   it("keeps a failed transient action queued for explicit retry", async () => {
     const advance = vi.fn<TodayChallengeRepository["advance"]>()
       .mockRejectedValueOnce(new Error("offline-1"))
