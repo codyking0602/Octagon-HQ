@@ -10741,5 +10741,2693 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
       ]
     }
   }
+},
+{
+  "subjectId": "nba:gail-goodrich",
+  "name": "Gail Goodrich",
+  "eraBand": "legacy",
+  "rescueGroup": "guard",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/gail-goodrich",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-gail-goodrich-a-1",
+          "text": "I developed into a polished left-handed scorer and playmaker.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-2",
+          "text": "I contributed to championship teams at more than one level of basketball.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-3",
+          "text": "I earned multiple All-Star selections during my professional prime.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-4",
+          "text": "I was a reliable shooter on a fast-paced Western Conference team.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-5",
+          "text": "I won an NBA title after years of deep playoff runs.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-6",
+          "text": "I played college basketball for John Wooden at UCLA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-7",
+          "text": "I began in Los Angeles, spent time in Phoenix, then returned to the Lakers.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-8",
+          "text": "I led the Lakers in scoring during their 1971-72 championship season.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-9",
+          "text": "I won the 1972 NBA championship on a team with Jerry West and Wilt Chamberlain.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-a-10",
+          "text": "I wore No. 25 in Los Angeles and later played for the New Orleans Jazz.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-gail-goodrich-b-1",
+          "text": "I combined reliable midrange shooting with confident offensive movement.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-2",
+          "text": "I played important roles before becoming a team scoring leader.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-3",
+          "text": "I was selected to five NBA All-Star Games.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-4",
+          "text": "I became a champion during a record-breaking regular season.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-5",
+          "text": "I continued playing for another franchise after winning my title.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-6",
+          "text": "I scored 42 points in the 1965 NCAA championship game for UCLA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-7",
+          "text": "I spent two seasons with the Phoenix Suns after an expansion draft.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-8",
+          "text": "I was part of a Lakers team that won 33 consecutive games.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-9",
+          "text": "I was the left-handed scoring guard of the 1972 champion Lakers.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-gail-goodrich-b-10",
+          "text": "I was Gail Goodrich, whose departure for the Jazz led to major draft compensation.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:connie-hawkins",
+  "name": "Connie Hawkins",
+  "eraBand": "legacy",
+  "rescueGroup": "wing",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/connie-hawkins",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-connie-hawkins-a-1",
+          "text": "I built a reputation around graceful, high-flying finishes.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-2",
+          "text": "I overcame obstacles before establishing my professional basketball career.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-3",
+          "text": "I was a crowd favorite for creative above-the-rim offense.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-4",
+          "text": "I played in multiple professional leagues before reaching the NBA.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-5",
+          "text": "I earned major league MVP honors outside the NBA.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-6",
+          "text": "I spent several years with the Harlem Globetrotters before becoming an ABA star.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-7",
+          "text": "I won the 1968 ABA championship and ABA MVP award with Pittsburgh.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-8",
+          "text": "I was selected to the All-NBA First Team in my first NBA season.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-9",
+          "text": "I became a star for the Phoenix Suns after an ABA title with the Pipers.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-a-10",
+          "text": "I was nicknamed the Hawk and inspired future aerial stars like Julius Erving.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-connie-hawkins-b-1",
+          "text": "I used large hands and athletic leaps to make spectacular scoring plays.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-2",
+          "text": "I became an influential basketball figure despite starting in lesser-known leagues.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-3",
+          "text": "I developed a reputation as a playground legend before my NBA tenure.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-4",
+          "text": "I established an identity as both a scorer and creative passer.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-5",
+          "text": "I earned All-Star recognition in the ABA and NBA.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-6",
+          "text": "I was named MVP of the short-lived American Basketball League with Pittsburgh.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-7",
+          "text": "I played for the Minnesota Pipers after winning a title in Pittsburgh.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-8",
+          "text": "I joined the Suns and helped transform their early years in the NBA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-9",
+          "text": "I was the 1968 ABA MVP and 1970 All-NBA First Team selection.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-connie-hawkins-b-10",
+          "text": "I was Connie 'the Hawk' Hawkins, a famed Brooklyn playground talent.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:artis-gilmore",
+  "name": "Artis Gilmore",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/artis-gilmore",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-artis-gilmore-a-1",
+          "text": "I controlled the paint with rebounding, efficiency and physical strength.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-2",
+          "text": "I built a long professional career after starring in a different major league.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-3",
+          "text": "I earned All-Star recognition in more than one basketball league.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-4",
+          "text": "I was unusually efficient with shots near the basket.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-5",
+          "text": "I won an MVP award before joining the NBA.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-6",
+          "text": "I played for Jacksonville University and reached the NCAA title game.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-7",
+          "text": "I won ABA Rookie of the Year and ABA MVP with the Kentucky Colonels.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-8",
+          "text": "I won the 1975 ABA championship before the NBA-ABA merger.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-9",
+          "text": "I entered the NBA with the Chicago Bulls and later played in San Antonio.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-a-10",
+          "text": "I was the 7-foot-2 A-Train and finished with a record-setting career field-goal percentage.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-artis-gilmore-b-1",
+          "text": "I combined shot blocking with reliable rebounding and close-range scoring.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-2",
+          "text": "I dominated inside during the final years of the ABA.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-3",
+          "text": "I continued making All-Star teams after changing leagues.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-4",
+          "text": "I earned a reputation for durable, consistent frontcourt production.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-5",
+          "text": "I led his league in field-goal percentage several times.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-6",
+          "text": "I won the ABA title with the Kentucky Colonels in 1975.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-7",
+          "text": "I joined the Chicago Bulls through the 1976 ABA dispersal draft.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-8",
+          "text": "I later formed a San Antonio frontcourt with George Gervin as a teammate.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-9",
+          "text": "I entered the Hall of Fame in 2011 after ABA and NBA careers.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-artis-gilmore-b-10",
+          "text": "I was Artis Gilmore, the A-Train who starred for Kentucky and Chicago.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:dan-issel",
+  "name": "Dan Issel",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/dan-issel",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-dan-issel-a-1",
+          "text": "I established myself as a tireless scorer and rebounder.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-2",
+          "text": "I enjoyed a long career that crossed major professional leagues.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-3",
+          "text": "I maintained strong offensive production after a league merger.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-4",
+          "text": "I earned repeated All-Star honors before and after changing teams.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-5",
+          "text": "I began my professional career in the ABA.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-6",
+          "text": "I played college basketball for Kentucky under Adolph Rupp.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-7",
+          "text": "I won an ABA title with the Kentucky Colonels in 1975.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-8",
+          "text": "I moved to Denver as the ABA approached its final season.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-9",
+          "text": "I spent a decade in the NBA with the Denver Nuggets after the merger.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-a-10",
+          "text": "I was nicknamed the Horse and scored more than 27,000 combined ABA/NBA points.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-dan-issel-b-1",
+          "text": "I became famous for rugged play and dependable scoring.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-2",
+          "text": "I remained a productive professional far beyond my rookie season.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-3",
+          "text": "I was a regular All-Star in a league that later ceased operating.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-4",
+          "text": "I later established myself as a leader on an NBA franchise.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-5",
+          "text": "I collected an ABA Rookie of the Year award.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-6",
+          "text": "I won the 1971 ABA Rookie of the Year honor with the Colonels.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-7",
+          "text": "I played alongside Artis Gilmore for Kentucky's ABA championship team.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-8",
+          "text": "I joined David Thompson in Denver before the ABA-NBA merger.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-9",
+          "text": "I was the Nuggets' longtime No. 44 and later served as a coach.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-dan-issel-b-10",
+          "text": "I was Dan Issel, Kentucky's college star and Denver's durable Hall of Fame scorer.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:david-thompson",
+  "name": "David Thompson",
+  "eraBand": "legacy",
+  "rescueGroup": "wing",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/david-thompson",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-david-thompson-a-1",
+          "text": "I combined explosive leaping ability with soft perimeter shooting.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-2",
+          "text": "I emerged as a major star before and after a league merger.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-3",
+          "text": "I drew huge crowds with an exciting above-the-rim game.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-4",
+          "text": "I earned All-Star recognition in more than one professional league.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-5",
+          "text": "I became an NBA scoring-title challenger during the late 1970s.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-6",
+          "text": "I led North Carolina State to the 1974 NCAA championship.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-7",
+          "text": "I began my professional career with Denver when it was an ABA franchise.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-8",
+          "text": "I scored 73 points in an NBA game against Detroit in 1978.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-9",
+          "text": "I was nicknamed Skywalker and inspired Michael Jordan's aerial style.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-a-10",
+          "text": "My 73-point finish lost the scoring race to George Gervin's 63-point finale.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-david-thompson-b-1",
+          "text": "I was an exceptional jumper who could also hit long shots.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-2",
+          "text": "I reached professional stardom shortly after a college championship.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-3",
+          "text": "I made an impact in the ABA before the merger with the NBA.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-4",
+          "text": "I produced some of the highest-scoring single games of my era.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-5",
+          "text": "I won an NBA All-Star Game MVP award.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-6",
+          "text": "I was a three-time first-team All-American at NC State.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-7",
+          "text": "I was selected first overall by Atlanta in the 1975 NBA draft but chose the ABA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-8",
+          "text": "I won ABA Rookie of the Year with the Denver Nuggets.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-9",
+          "text": "I scored 73 points in 1978 and wore No. 33 in Denver.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-david-thompson-b-10",
+          "text": "I was David 'Skywalker' Thompson, star of NC State's 1974 title.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:sidney-moncrief",
+  "name": "Sidney Moncrief",
+  "eraBand": "legacy",
+  "rescueGroup": "guard",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/sidney-moncrief",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-sidney-moncrief-a-1",
+          "text": "I was a two-way player who consistently defended top opponents.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-2",
+          "text": "I helped make a small-market team a regular postseason contender.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-3",
+          "text": "I was selected to several All-Star games during my prime.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-4",
+          "text": "I earned All-NBA honors while handling difficult perimeter assignments.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-5",
+          "text": "I became known for sustained defensive excellence.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-6",
+          "text": "I played college basketball at Arkansas and reached the 1978 Final Four.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-7",
+          "text": "I was an important part of Milwaukee teams coached by Don Nelson.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-8",
+          "text": "I won the NBA Defensive Player of the Year award in 1983 and 1984.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-9",
+          "text": "I was the first winner of the NBA's Defensive Player of the Year award.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-a-10",
+          "text": "I wore No. 4 for the Bucks and earned five All-Star selections.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-sidney-moncrief-b-1",
+          "text": "I was praised for hard work and discipline on both ends of the court.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-2",
+          "text": "I contributed scoring as well as lockdown perimeter defense.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-3",
+          "text": "I led consistent playoff teams without reaching the NBA Finals.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-4",
+          "text": "I was repeatedly chosen for All-NBA and All-Defensive teams.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-5",
+          "text": "I played a major role in a team's Eastern Conference playoff runs.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-6",
+          "text": "I was drafted fifth overall in 1979 by the Milwaukee Bucks.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-7",
+          "text": "I was selected to the All-NBA First Team in 1983.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-8",
+          "text": "I received five consecutive All-Star selections in the 1980s.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-9",
+          "text": "I won back-to-back Defensive Player of the Year awards to begin the award's history.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-sidney-moncrief-b-10",
+          "text": "I was Sidney Moncrief, one of Milwaukee's defining defensive guards.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:maurice-cheeks",
+  "name": "Maurice Cheeks",
+  "eraBand": "legacy",
+  "rescueGroup": "guard",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/maurice-cheeks",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-maurice-cheeks-a-1",
+          "text": "I was a careful distributor who valued controlling possession.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-2",
+          "text": "I became renowned for quick hands and perimeter defense.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-3",
+          "text": "I spent many seasons as a key starter on strong playoff teams.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-4",
+          "text": "I made multiple All-Star and All-Defensive teams.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-5",
+          "text": "I earned a championship ring in the early 1980s.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-6",
+          "text": "I played college basketball at West Texas State before the NBA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-7",
+          "text": "I joined Philadelphia and helped lead repeated trips to the Finals.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-8",
+          "text": "I won a championship alongside Julius Erving and Moses Malone.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-9",
+          "text": "I was the starting point guard for the 1983 Philadelphia 76ers.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-a-10",
+          "text": "I wore No. 10 and ended my career among the NBA's all-time steals leaders.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-maurice-cheeks-b-1",
+          "text": "I created offense through efficient decisions rather than high shot volume.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-2",
+          "text": "I was valued for staying in front of opponents on defense.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-3",
+          "text": "I earned repeated recognition as one of the league's best defenders.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-4",
+          "text": "I played for several teams late in my career after a long first stop.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-5",
+          "text": "I became a four-time NBA All-Star.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-6",
+          "text": "I was drafted in the second round in 1978 by Philadelphia.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-7",
+          "text": "I led the 76ers in assists in several seasons.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-8",
+          "text": "I made five NBA All-Defensive First Teams.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-9",
+          "text": "I helped the 76ers sweep the Lakers in the 1983 Finals.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-maurice-cheeks-b-10",
+          "text": "I was Maurice Cheeks, longtime Philadelphia No. 10 and later NBA coach.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:jack-sikma",
+  "name": "Jack Sikma",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/jack-sikma",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-jack-sikma-a-1",
+          "text": "I became an effective rebounder with an unusually skilled shooting touch.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-2",
+          "text": "I was important to a championship team early in my career.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-3",
+          "text": "I earned multiple All-Star nods during a long professional career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-4",
+          "text": "I found ways to score away from the basket against bigger opponents.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-5",
+          "text": "I remained productive with two different NBA teams.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-6",
+          "text": "I played college basketball at Illinois Wesleyan.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-7",
+          "text": "I helped Seattle win its first NBA championship in 1979.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-8",
+          "text": "I later became a frontcourt veteran with the Milwaukee Bucks.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-9",
+          "text": "I earned seven NBA All-Star selections and wore No. 43.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-a-10",
+          "text": "My pivot move became known as the Sikma move with the SuperSonics.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-jack-sikma-b-1",
+          "text": "I combined inside rebounding with an effective face-up jump shot.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-2",
+          "text": "I was a consistent starter for more than a decade.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-3",
+          "text": "I was respected for fundamentals and positioning against taller opponents.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-4",
+          "text": "I adjusted my shooting range as the professional game changed.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-5",
+          "text": "I won a title with a franchise that later relocated.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-6",
+          "text": "I contributed to Seattle's 1978 Finals run before its 1979 victory.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-7",
+          "text": "I was traded to Milwaukee in 1986 after nine seasons with Seattle.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-8",
+          "text": "I became unusually adept at three-point shooting for a late-career center.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-9",
+          "text": "I won the 1979 NBA championship alongside Dennis Johnson and Gus Williams.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-jack-sikma-b-10",
+          "text": "I was the SuperSonics' No. 43, Jack Sikma, whose footwork move bears his name.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:mark-aguirre",
+  "name": "Mark Aguirre",
+  "eraBand": "legacy",
+  "rescueGroup": "wing",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.nba.com/mavs/news/no-matter-who-got-them-to-the-finish-line-pistons-had-it-all-with-aguirre-thomas",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-mark-aguirre-a-1",
+          "text": "I became a high-volume scorer with a strong midrange game.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-2",
+          "text": "I transitioned from primary option to contributor on a balanced contender.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-3",
+          "text": "I was selected to multiple NBA All-Star teams.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-4",
+          "text": "I helped lead a younger franchise deep into the playoffs.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-5",
+          "text": "I eventually won more than one NBA championship.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-6",
+          "text": "I played college basketball at DePaul before entering the NBA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-7",
+          "text": "I was drafted first overall by the Dallas Mavericks in 1981.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-8",
+          "text": "I reached the 1988 Western Conference Finals with Dallas.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-9",
+          "text": "I joined the Detroit Pistons in a trade for Adrian Dantley.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-a-10",
+          "text": "I won the 1989 and 1990 NBA titles alongside Isiah Thomas in Detroit.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-mark-aguirre-b-1",
+          "text": "I scored effectively with strength, body control and tough jumpers.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-2",
+          "text": "I was once the top scoring option for an emerging NBA franchise.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-3",
+          "text": "I reached conference finals while facing an eventual championship team.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-4",
+          "text": "I earned All-Star recognition in three different seasons.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-5",
+          "text": "I played a major role for both a rising and a title-winning franchise.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-6",
+          "text": "I was a college All-American at DePaul.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-7",
+          "text": "I averaged nearly 30 points during the 1983-84 NBA season.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-8",
+          "text": "I moved to Detroit in February 1989 during a championship run.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-9",
+          "text": "I was Dallas's first No. 1 overall pick and later a two-time Pistons champion.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-mark-aguirre-b-10",
+          "text": "I was Mark Aguirre, traded for Adrian Dantley before the Bad Boys titles.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:terry-cummings",
+  "name": "Terry Cummings",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.nba.com/bucks/features/mb-jabari-parker-dynamic-deuce",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-terry-cummings-a-1",
+          "text": "I was an effective midrange scorer and rebounder across many NBA seasons.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-2",
+          "text": "I made an immediate impact as a young professional player.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-3",
+          "text": "I earned recognition on All-Star and All-NBA teams.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-4",
+          "text": "I scored efficiently without needing to dominate the ball.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-5",
+          "text": "I maintained a productive NBA career across several franchises.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-6",
+          "text": "I played college basketball at DePaul before joining the NBA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-7",
+          "text": "I was the Rookie of the Year for the San Diego Clippers in 1983.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-8",
+          "text": "I became a two-time All-Star while playing for Milwaukee.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-9",
+          "text": "I was named to the 1985 All-NBA Second Team with the Bucks.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-a-10",
+          "text": "I finished with 19,460 NBA points and played for the Clippers, Bucks and Spurs.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-terry-cummings-b-1",
+          "text": "I relied on footwork and a powerful frame as an interior scorer.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-2",
+          "text": "I played long enough to become a valuable veteran contributor.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-3",
+          "text": "I earned multiple league honors despite changing teams during my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-4",
+          "text": "I was once among the better scoring forwards in the Eastern Conference.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-5",
+          "text": "I was recognized for an exceptional rookie season.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-6",
+          "text": "I averaged more than 23 points and 10 rebounds as a rookie.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-7",
+          "text": "I was traded from San Diego to Milwaukee in 1984.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-8",
+          "text": "I played later in my career for San Antonio, Seattle and other teams.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-9",
+          "text": "I won the 1983 Rookie of the Year award and made Bucks All-Star teams.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-terry-cummings-b-10",
+          "text": "I was Terry Cummings, the DePaul star who became a leading Milwaukee scorer.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:alvin-robertson",
+  "name": "Alvin Robertson",
+  "eraBand": "legacy",
+  "rescueGroup": "guard",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.nba.com/news/history-all-nba-teams",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-alvin-robertson-a-1",
+          "text": "I made an outsized impact through pressure defense and steals.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-2",
+          "text": "I contributed scoring and playmaking without being known chiefly as a shooter.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-3",
+          "text": "I earned All-Star recognition while guarding dangerous opponents.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-4",
+          "text": "I collected league honors for both defense and overall improvement.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-5",
+          "text": "I had one of the NBA's most unusual statistical performances.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-6",
+          "text": "I played college basketball at Arkansas before entering the NBA.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-7",
+          "text": "I won NBA Defensive Player of the Year and Most Improved Player in 1986.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-8",
+          "text": "I recorded a quadruple-double with ten steals for San Antonio.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-9",
+          "text": "I scored the first basket in Toronto Raptors franchise history in 1995.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-a-10",
+          "text": "I was Alvin Robertson, the Spurs guard who posted a points-rebounds-assists-steals quadruple-double.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-alvin-robertson-b-1",
+          "text": "I was known for aggressive on-ball defense and a high steal rate.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-2",
+          "text": "I emerged as a regular All-Star while playing in the Southwest.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-3",
+          "text": "I earned All-NBA and All-Defensive recognition during my peak.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-4",
+          "text": "I continued playing for new franchises in the latter years of my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-5",
+          "text": "I led the NBA in steals per game multiple times.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-6",
+          "text": "I was drafted by the Spurs in 1984 and later played for Milwaukee.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-7",
+          "text": "I made the All-NBA Second Team in the 1985-86 season.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-8",
+          "text": "I recorded ten steals against Phoenix during a 1986 quadruple-double.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-9",
+          "text": "I played for the expansion Toronto Raptors in their inaugural NBA game.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-alvin-robertson-b-10",
+          "text": "I remain the guard remembered for a rare quadruple-double that used steals, not blocks.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
+},
+{
+  "subjectId": "nba:ralph-sampson",
+  "name": "Ralph Sampson",
+  "eraBand": "legacy",
+  "rescueGroup": "big",
+  "earlyRotation": "normal",
+  "sources": {
+    "profile": "https://www.hoophall.com/hall-of-famers/ralph-sampson",
+    "allNba": "https://www.nba.com/news/history-all-nba-teams",
+    "history": "https://www.nba.com/news/history-season-recaps-index"
+  },
+  "scripts": {
+    "A": {
+      "id": "A",
+      "clues": [
+        {
+          "id": "nba-ralph-sampson-a-1",
+          "text": "I combined exceptional height with unusual mobility and ball skills.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-2",
+          "text": "I emerged as an acclaimed prospect before entering the NBA.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-3",
+          "text": "I earned immediate recognition while helping turn a team into a contender.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-4",
+          "text": "I had several All-Star seasons before injuries limited my career.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-5",
+          "text": "I received both rookie honors and an All-Star Game MVP.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-6",
+          "text": "I won three consecutive Naismith college player of the year awards at Virginia.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-7",
+          "text": "I was selected first overall in the 1983 NBA draft by Houston.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-8",
+          "text": "I formed the Twin Towers with Hakeem Olajuwon.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-9",
+          "text": "I hit a dramatic buzzer-beater against the Lakers in the 1986 Western finals.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-a-10",
+          "text": "I was the 7-foot-4 Rockets No. 50 who reached the 1986 NBA Finals.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "id": "B",
+      "clues": [
+        {
+          "id": "nba-ralph-sampson-b-1",
+          "text": "I was a rare athlete whose size did not prevent agile open-court play.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-2",
+          "text": "I earned major college awards before an impressive professional start.",
+          "band": "broad",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-3",
+          "text": "I was an NBA All-Star in each of my first four seasons.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-4",
+          "text": "I helped a young Western Conference franchise make a Finals appearance.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-5",
+          "text": "I battled recurring injuries that shortened my period of dominance.",
+          "band": "helpful",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-6",
+          "text": "I won the 1984 NBA Rookie of the Year award.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-7",
+          "text": "I captured the MVP award at the 1985 NBA All-Star Game.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-8",
+          "text": "I helped Houston upset the Showtime Lakers in the 1986 playoffs.",
+          "band": "strong",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-9",
+          "text": "I was a member of Houston's Twin Towers with Hakeem Olajuwon.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        },
+        {
+          "id": "nba-ralph-sampson-b-10",
+          "text": "I wore Rockets No. 50 and made three straight college player-of-the-year seasons famous.",
+          "band": "giveaway",
+          "verification": "verified",
+          "sourceIds": [
+            "profile",
+            "history"
+          ]
+        }
+      ]
+    }
+  }
 }
 ];
