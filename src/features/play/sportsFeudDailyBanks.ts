@@ -453,6 +453,26 @@ export function buildSportsFeudPack(
     materializeQuestion(domain, question, MAIN_POINTS, entities));
   const fast = authoredFast.map((question) =>
     materializeQuestion(domain, question, FAST_POINTS, entities));
+  if (oct19Nfl) {
+    // Preserve all previously ranked Raiders' scores: move Maxx into the
+    // five-point slot alongside Tim Brown, and retain Gene Upshaw at one point
+    // as an off-board accepted answer. Entity IDs remain stable for regrades.
+    const raiders = fast[3]!;
+    const maxx = entities.find((e) => e.id.startsWith("nfl-fast2-09-1:") && e.displayName === "Maxx Crosby")?.id;
+    const gene = entities.find((e) => e.id.startsWith("nfl-fast2-09-1:") && e.displayName === "Gene Upshaw")?.id;
+    if (!maxx || !gene || raiders.answers[7]?.entityId !== gene ||
+        !raiders.alsoAcceptedEntityIds?.includes(maxx)) {
+      throw new Error("Oct 19 Raiders Fast Money identities changed before editorial regrade.");
+    }
+    raiders.answers = [
+      ...raiders.answers.slice(0, 4),
+      { entityId: maxx, points: 5 },
+      ...raiders.answers.slice(4, 7),
+    ];
+    raiders.alsoAcceptedEntityIds = [
+      ...raiders.alsoAcceptedEntityIds.filter((id) => id !== maxx), gene,
+    ];
+  }
   return {
     id: `${SPORTS_FEUD_BANK_VERSION}-${domain}-${day}-${main.map((q) => q.id).join("-")}`,
     sport: domain === "ufc" ? "ufc" : "football",
