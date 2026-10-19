@@ -350,6 +350,24 @@ export function useTodayChallengeRuntime({
       setSyncError(null);
       await drainQueueRef.current();
     },
+    // Inspect the authoritative result before dropping any unsynced answers.
+    // A server-side save may have succeeded even when the Edge response failed.
+    recheckSaved: async () => {
+      if (!repository) return;
+      setSyncError(null);
+      try {
+        const saved = await repository.loadToday();
+        publishOfficialProjection(saved);
+        if (saved.officialAttempt) {
+          discardQueue(saved);
+        } else {
+          rebuildOptimisticProjection(saved);
+          if (queueRef.current.length) await drainQueueRef.current();
+        }
+      } catch (failure) {
+        setSyncError(failure);
+      }
+    },
     refresh: async () => {
       setSyncError(null);
       discardQueue(null);
