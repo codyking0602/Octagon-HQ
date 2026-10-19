@@ -963,7 +963,7 @@ export const nbaWhoAmIAuthoredBatch2: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-rajon-rondo-b-4",
-            "text": "I ranked among the league leaders in assists during separate stretches in Boston and Sacramento.",
+            "text": "I ranked among the league leaders in assists during distinct periods of my career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
