@@ -35,12 +35,14 @@ function resultPayload(result:NbaHitResult) {
       name:nbaHitSubjectById.get(s.subjectId)?.name??s.subjectId,value:s.value}))};
 }
 function NbaPlayerMark({subjectId,className}:{subjectId:string;className:string}) {
+  const [failedId,setFailedId]=useState<string|null>(null);
   const subject=nbaHitSubjectById.get(subjectId);
   if(!subject)return null;
   const src=nbaHitHeadshot(subject);
-  if(!src) return <span className={className} aria-hidden="true" style={{display:"grid",placeItems:"center",
+  if(!src || failedId===subjectId) return <span className={className} aria-hidden="true" style={{display:"grid",placeItems:"center",
     background:"rgba(242,163,65,.15)",fontSize:".65rem",fontWeight:900}}>NBA</span>;
   return <img alt="" className={className} src={src} loading="lazy" referrerPolicy="no-referrer"
+    onError={()=>setFailedId(subjectId)}
     style={{objectFit:"contain",objectPosition:"center top",background:"rgba(255,255,255,.08)"}} />;
 }
 export default function NbaHitTheNumberPage() {

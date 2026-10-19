@@ -36,6 +36,10 @@ describe("NBA Hit the Number approved game contract",()=>{
       }
     }
   });
+  it("uses canonical historical NBA IDs for classic player photos",()=>{
+    expect(nbaHitSubjectById.get("career:Kareem Abdul-Jabbar")?.nbaId).toBe(76003);
+    expect(nbaHitSubjectById.get("career:Magic Johnson")?.nbaId).toBe(77142);
+  });
   it("generates diversified boards, preserving exact shared Bob Barker scoring",()=>{
     const foundFormats=new Set<string>(),foundStats=new Set<string>(),foundPicks=new Set<number>();
     for(let i=0;i<90;i++){
