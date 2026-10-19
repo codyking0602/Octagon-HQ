@@ -5908,7 +5908,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-ja-morant-a-10",
-            "text": "I am the Grizzlies' No. 12 high-flying guard named .",
+            "text": "I am Memphis's No. 12 high-flying guard and the 2020 Rookie of the Year.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6123,7 +6123,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-zion-williamson-a-10",
-            "text": "I am the Pelicans' No. 1 former Duke sensation named .",
+            "text": "I am New Orleans' No. 1 former Duke phenomenon, known simply as Zion.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -8488,7 +8488,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-mikal-bridges-a-10",
-            "text": "I am the former Suns and Nets ironman who became Knicks No. 25 .",
+            "text": "I am the former Suns and Nets ironman who became New York's No. 25.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -9133,7 +9133,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-paolo-banchero-a-10",
-            "text": "I am the Magic's No. 5 franchise forward .",
+            "text": "I am the Magic's No. 5 franchise forward drafted first overall from Duke.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -9310,7 +9310,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-franz-wagner-a-6",
-            "text": "I averaged more than 19 points during my second season.",
+            "text": "I averaged more than 18 points per game in my second NBA season.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -9561,7 +9561,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-evan-mobley-a-10",
-            "text": "I am the Cavaliers' No. 4 frontcourt star .",
+            "text": "I am Cleveland's No. 4 defensive star who won 2025 DPOY.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
