@@ -759,10 +759,10 @@ export function OfficialSportsFeudDailyView({
               <p>{resultStatus}</p>
               <div className="feud-fast-save-recovery__actions">
                 {onRetryResult ? (
-                  <button type="button" onClick={onRetryResult} disabled={busy}>RETRY SAVE</button>
+                  <button type="button" onClick={onRetryResult}>RETRY SAVE</button>
                 ) : null}
                 {onRefreshSaved ? (
-                  <button type="button" onClick={onRefreshSaved} disabled={busy}>
+                  <button type="button" onClick={onRefreshSaved}>
                     RECHECK SAVED GAME
                   </button>
                 ) : null}
