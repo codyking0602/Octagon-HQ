@@ -7741,5 +7741,2585 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
         ]
       }
     }
+  },
+  {
+    "subjectId": "nba:bam-adebayo",
+    "name": "Bam Adebayo",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1628389",
+      "bio": "https://www.nba.com/player/1628389/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-bam-adebayo-a-1",
+            "text": "I established myself through defense before becoming a major scorer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-2",
+            "text": "I was comfortable switching onto smaller players far from the rim.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-3",
+            "text": "I developed into an unusually skilled passer from the frontcourt.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-4",
+            "text": "I frequently helped run handoff actions for shooters.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-5",
+            "text": "I became a regular NBA All-Defensive selection.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-6",
+            "text": "I finished near the top of Defensive Player of the Year voting.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-7",
+            "text": "I blocked a potential game-winning dunk in the 2020 Eastern Conference Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-8",
+            "text": "I reached the NBA Finals with Miami in 2020 and 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-9",
+            "text": "I spent one season at Kentucky before being drafted fourteenth by the Heat.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-a-10",
+            "text": "I am the Miami No. 13 center known to fans as Bam.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-bam-adebayo-b-1",
+            "text": "I entered the league as an athletic defensive prospect.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-2",
+            "text": "I grew into a reliable rebounder and offensive facilitator.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-3",
+            "text": "I could defend guards on the perimeter and still protect the paint.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-4",
+            "text": "I formed strong handoff combinations with teammates.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-5",
+            "text": "I earned an NBA All-Star selection in 2020.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-6",
+            "text": "I won Olympic gold with the United States in Tokyo.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-7",
+            "text": "I returned to win another Olympic gold medal in Paris.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-8",
+            "text": "I became a core leader for Miami's repeated deep postseason runs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-9",
+            "text": "I was born Edrice and adopted the basketball nickname Bam.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-bam-adebayo-b-10",
+            "text": "I am the Heat's No. 13 defensive anchor alongside Jimmy Butler during two Finals trips.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:pascal-siakam",
+    "name": "Pascal Siakam",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1627783",
+      "bio": "https://www.nba.com/player/1627783/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-pascal-siakam-a-1",
+            "text": "I entered the league as a high-energy contributor.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-2",
+            "text": "I gradually developed a face-up scoring game built around spins.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-3",
+            "text": "I used quickness to score against larger defenders.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-4",
+            "text": "I became a stronger outside shooting threat as my role grew.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-5",
+            "text": "I received the NBA Most Improved Player award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-6",
+            "text": "I earned All-NBA honors after taking on a larger offensive role.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-7",
+            "text": "I scored 32 points in my first NBA Finals game in 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-8",
+            "text": "I won a championship with Toronto before becoming a leading scorer.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-9",
+            "text": "I played college basketball at New Mexico State before the Raptors drafted me.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-a-10",
+            "text": "I am the former Raptors No. 43 star known as Spicy P.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-pascal-siakam-b-1",
+            "text": "I spent time in the developmental league early in my professional career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-2",
+            "text": "I improved as a transition finisher and defender.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-3",
+            "text": "I gradually became a frequent isolation and post-up option.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-4",
+            "text": "I made multiple All-Star teams after initially being a role player.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-5",
+            "text": "I won the 2017 NBA G League Finals MVP award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-6",
+            "text": "I joined a title-winning starting lineup with Kawhi Leonard.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-7",
+            "text": "I was traded to Indiana during the 2023-24 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-8",
+            "text": "I helped lead the Pacers to the 2025 NBA Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-9",
+            "text": "I was born in Cameroon and began my NBA career in Toronto.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-pascal-siakam-b-10",
+            "text": "I am the No. 43 forward the Pacers acquired from the Raptors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:trae-young",
+    "name": "Trae Young",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1629027",
+      "bio": "https://www.nba.com/player/1629027/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-trae-young-a-1",
+            "text": "I quickly became a high-volume pick-and-roll creator.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-2",
+            "text": "I routinely shot from several feet behind the three-point line.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-3",
+            "text": "I drew fouls while keeping teammates involved as a passer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-4",
+            "text": "I often forced defenses to choose between a floater and a lob pass.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-5",
+            "text": "I became an NBA All-Star while still in my early twenties.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-6",
+            "text": "I averaged more than nine assists in several seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-7",
+            "text": "I scored 48 points in an Eastern Conference Finals game in 2021.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-8",
+            "text": "I helped lead an unexpected run through the East in 2021.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-9",
+            "text": "I played at Oklahoma before Atlanta traded for me on 2018 draft night.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-a-10",
+            "text": "I am the Hawks' No. 11 guard nicknamed Ice Trae.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-trae-young-b-1",
+            "text": "I had major offensive responsibilities as a rookie.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-2",
+            "text": "I became known for taking exceptionally long pull-up threes.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-3",
+            "text": "I developed a precise passing connection with rim-running teammates.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-4",
+            "text": "I frequently produced games with double-digit assists.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-5",
+            "text": "I was selected as an All-Star starter in 2020.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-6",
+            "text": "I scored 32 points at Madison Square Garden in a 2021 playoff win.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-7",
+            "text": "I helped eliminate the top-seeded Philadelphia 76ers in seven games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-8",
+            "text": "I earned an All-NBA third-team selection in 2022.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-9",
+            "text": "I was the fifth overall pick sent to Atlanta in the Luka Dončić swap.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-trae-young-b-10",
+            "text": "I am the deep-shooting Hawks playmaker famous for silencing Knicks crowds.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:ja-morant",
+    "name": "Ja Morant",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1629630",
+      "bio": "https://www.nba.com/player/1629630/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-ja-morant-a-1",
+            "text": "I made explosive drives a centerpiece of my offense from the beginning.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-2",
+            "text": "I regularly created assists after collapsing the paint.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-3",
+            "text": "I became known for unusual elevation around the rim.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-4",
+            "text": "I played with a fearless attacking style against bigger defenders.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-5",
+            "text": "I won NBA Rookie of the Year in 2020.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-6",
+            "text": "I became a first-time All-Star and All-NBA honoree in 2022.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-7",
+            "text": "I won the league's Most Improved Player award in 2022.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-8",
+            "text": "I led my team to a second-round playoff appearance in 2022.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-9",
+            "text": "I played college basketball at Murray State before going second overall.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-a-10",
+            "text": "I am Memphis's No. 12 high-flying guard.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-ja-morant-b-1",
+            "text": "I gained national attention after an outstanding college tournament performance.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-2",
+            "text": "I immediately became a leading offensive initiator in the NBA.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-3",
+            "text": "I relied on sudden acceleration and creative finishing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-4",
+            "text": "I created highlight dunks while also setting up teammates.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-5",
+            "text": "I made a game-winning layup against Minnesota in the 2022 playoffs.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-6",
+            "text": "I helped Memphis earn one of the West's top seeds.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-7",
+            "text": "I scored 47 points in a 2022 playoff game against Golden State.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-8",
+            "text": "I won the 2019-20 NBA Rookie of the Year award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-9",
+            "text": "I was drafted second overall by the Memphis Grizzlies in 2019.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-ja-morant-b-10",
+            "text": "I am the No. 12 Grizzlies guard known for spectacular airborne finishes.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:zion-williamson",
+    "name": "Zion Williamson",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1629627",
+      "bio": "https://www.nba.com/player/1629627/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-zion-williamson-a-1",
+            "text": "I entered the NBA with an unusually powerful combination of strength and leaping.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-2",
+            "text": "I did most of my early scoring near the rim.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-3",
+            "text": "I became one of the league's most efficient paint scorers.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-4",
+            "text": "I attacked left-handed off quick cuts and drives.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-5",
+            "text": "I made the All-Rookie first team despite missing part of my debut season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-6",
+            "text": "I became an NBA All-Star in my second professional season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-7",
+            "text": "I averaged 27 points per game in 2020-21.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-8",
+            "text": "I was selected first overall in the 2019 NBA Draft.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-9",
+            "text": "I played one celebrated college season at Duke before joining New Orleans.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-a-10",
+            "text": "I am the Pelicans' No. 1 high-flying forward known simply as Zion.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-zion-williamson-b-1",
+            "text": "I drew enormous attention for powerful dunks before entering the NBA.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-2",
+            "text": "I missed the beginning of my rookie season because of a knee issue.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-3",
+            "text": "I immediately scored with exceptional efficiency around the basket.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-4",
+            "text": "I produced many high-scoring nights without relying on threes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-5",
+            "text": "I scored 22 points in my long-awaited NBA debut.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-6",
+            "text": "I earned an All-Star selection in 2021.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-7",
+            "text": "I led a Pelicans offense during several postseason pushes.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-8",
+            "text": "I reached the 2024 play-in tournament before a hamstring injury.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-9",
+            "text": "I was the Duke freshman picked first by the New Orleans Pelicans.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zion-williamson-b-10",
+            "text": "I am the explosive No. 1 forward whose first name is Zion.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:lamelo-ball",
+    "name": "LaMelo Ball",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1630163",
+      "bio": "https://www.nba.com/player/1630163/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-lamelo-ball-a-1",
+            "text": "I brought flashy passing and deep shooting into the NBA.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-2",
+            "text": "I often pushed the pace after grabbing rebounds.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-3",
+            "text": "I created shots with creative ball-handling and quick passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-4",
+            "text": "I became a regular triple-double threat when healthy.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-5",
+            "text": "I won the NBA Rookie of the Year award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-6",
+            "text": "I was selected to my first NBA All-Star Game in 2022.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-7",
+            "text": "I produced a triple-double during my first professional season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-8",
+            "text": "I became the leading creator for Charlotte's offense.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-9",
+            "text": "I played professionally in Australia before the 2020 NBA Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-a-10",
+            "text": "I am the Hornets' No. 1 point guard and Lonzo Ball's younger brother.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-lamelo-ball-b-1",
+            "text": "I played professional basketball overseas before entering the league.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-2",
+            "text": "I was immediately trusted to make difficult passes.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-3",
+            "text": "I combined long-distance three-point attempts with transition playmaking.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-4",
+            "text": "I earned a starting role quickly as a young guard.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-5",
+            "text": "I was named to the NBA All-Rookie first team in 2021.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-6",
+            "text": "I joined an All-Star roster in only my second NBA season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-7",
+            "text": "I recorded multiple triple-doubles as a Charlotte playmaker.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-8",
+            "text": "I was selected third overall in the 2020 NBA Draft.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-9",
+            "text": "I played for the Illawarra Hawks before joining the Hornets.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-lamelo-ball-b-10",
+            "text": "I am the No. 1 Charlotte guard from the Ball basketball family.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:deaaron-fox",
+    "name": "De’Aaron Fox",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1628368",
+      "bio": "https://www.nba.com/player/1628368/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-deaaron-fox-a-1",
+            "text": "I used elite straight-line speed to pressure defenders.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-2",
+            "text": "I became a dangerous scorer in transition.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-3",
+            "text": "I improved his finishing around the basket and short pull-ups.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-4",
+            "text": "I took on late-game scoring duties as my offense matured.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-5",
+            "text": "I developed into a 20-point-per-game scoring threat.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-6",
+            "text": "I was named to the 2023 NBA All-Star Game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-7",
+            "text": "I won the inaugural NBA Clutch Player of the Year award.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-8",
+            "text": "I helped end a franchise's 16-season playoff drought in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-9",
+            "text": "I played at Kentucky before Sacramento drafted me fifth overall.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-a-10",
+            "text": "I am the former Kings No. 5 guard known as Swipa.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-deaaron-fox-b-1",
+            "text": "I arrived in the NBA as one of the fastest young ball handlers.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-2",
+            "text": "I became a lead scorer while also running the offense.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-3",
+            "text": "I created transition baskets after defensive rebounds and steals.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-4",
+            "text": "I added a dependable midrange shot alongside his quick first step.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-5",
+            "text": "I earned an All-NBA third-team selection in 2023.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-6",
+            "text": "I formed a highly productive partnership with Domantas Sabonis.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-7",
+            "text": "I helped Sacramento take Golden State to seven games in 2023.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-8",
+            "text": "I was traded to San Antonio in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-9",
+            "text": "I was a Kentucky guard who helped give the Kings their first playoff berth since 2006.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-deaaron-fox-b-10",
+            "text": "I am the quick No. 5 star who moved from Sacramento to the Spurs.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:domantas-sabonis",
+    "name": "Domantas Sabonis",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1627734",
+      "bio": "https://www.nba.com/player/1627734/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-domantas-sabonis-a-1",
+            "text": "I became known for screening and excellent frontcourt passing.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-2",
+            "text": "I regularly finished possessions with strong rebounding.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-3",
+            "text": "I helped run offenses through handoffs and high-post actions.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-4",
+            "text": "I created scoring chances for cutters from the elbow.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-5",
+            "text": "I became a multiple-time NBA All-Star.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-6",
+            "text": "I earned All-NBA recognition as a leading rebounder and passer.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-7",
+            "text": "I led the league in rebounding during the 2022-23 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-8",
+            "text": "I helped power one of the NBA's highest-rated offenses.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-9",
+            "text": "I played at Gonzaga before beginning my career in Oklahoma City.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-a-10",
+            "text": "I am the Kings' No. 11 big man and the son of Arvydas Sabonis.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-domantas-sabonis-b-1",
+            "text": "I entered the league after being drafted in the first round.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-2",
+            "text": "I developed into a frequent double-double producer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-3",
+            "text": "I set effective screens while often finding teammates with passes.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-4",
+            "text": "I became an offensive focal point despite not being a high-volume three-point shooter.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-5",
+            "text": "I earned All-Star selections with the Indiana Pacers.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-6",
+            "text": "I was traded to Sacramento in exchange for Tyrese Haliburton.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-7",
+            "text": "I helped the Kings return to the playoffs after a long drought.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-8",
+            "text": "I led the NBA in rebounds per game in consecutive seasons.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-9",
+            "text": "I was born in Portland while my Hall of Fame father played in the NBA.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-domantas-sabonis-b-10",
+            "text": "I am Domantas's father's son, the No. 11 Sacramento star named Sabonis.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:demar-derozan",
+    "name": "DeMar DeRozan",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/201942",
+      "bio": "https://www.nba.com/player/201942/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-demar-derozan-a-1",
+            "text": "I built a scoring game around drives and midrange jumpers.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-2",
+            "text": "I did not depend on high three-point volume to score.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-3",
+            "text": "I made repeated trips to the free-throw line.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-4",
+            "text": "I steadily took on more offensive responsibility over time.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-5",
+            "text": "I earned multiple NBA All-Star selections.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-6",
+            "text": "I became an All-NBA honoree with more than one team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-7",
+            "text": "I formed an All-Star backcourt pairing with Kyle Lowry.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-8",
+            "text": "I averaged almost 28 points in his first season with Chicago.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-9",
+            "text": "I was selected ninth overall out of USC by Toronto in 2009.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-a-10",
+            "text": "I am the former Raptors and Bulls No. 11 midrange specialist.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-demar-derozan-b-1",
+            "text": "I played many seasons as my franchise's primary scorer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-2",
+            "text": "I attacked off the dribble with footwork and pump fakes.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-3",
+            "text": "I developed into an effective passer as my career continued.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-4",
+            "text": "I made an All-NBA first team in 2018.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-5",
+            "text": "I was traded to San Antonio for Kawhi Leonard in 2018.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-6",
+            "text": "I spent time mentoring younger Spurs teammates.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-7",
+            "text": "I joined the Bulls and became a frequent late-game scorer.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-8",
+            "text": "I moved to Sacramento in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-9",
+            "text": "I began with the Toronto Raptors before starring with the Spurs and Chicago.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-demar-derozan-b-10",
+            "text": "I am DeRozan, the veteran Compton-born master of midrange scoring.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:zach-lavine",
+    "name": "Zach LaVine",
+    "eraBand": "modern",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/203897",
+      "bio": "https://www.nba.com/player/203897/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-zach-lavine-a-1",
+            "text": "I entered the league as a spectacular above-the-rim finisher.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-2",
+            "text": "I developed into a strong three-point shooter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-3",
+            "text": "I created offense with step-backs and drives.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-4",
+            "text": "I grew into a high-volume scorer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-5",
+            "text": "I won back-to-back NBA Slam Dunk Contests.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-6",
+            "text": "I became an NBA All-Star in 2021.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-7",
+            "text": "I made a second All-Star team the following season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-8",
+            "text": "I won Olympic gold with the United States in 2021.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-9",
+            "text": "I played at UCLA before Minnesota drafted me in 2014.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-a-10",
+            "text": "I am the former Bulls No. 8 high-flyer with two dunk contest titles.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-zach-lavine-b-1",
+            "text": "I was drafted outside the top ten of my class.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-2",
+            "text": "I became an increasingly efficient perimeter shooter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-3",
+            "text": "I could finish powerful dunks in half-court and transition.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-4",
+            "text": "I carried a substantial offensive load on a rebuilding team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-5",
+            "text": "I was traded to Chicago in the Jimmy Butler deal.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-6",
+            "text": "I scored 49 points against Charlotte in 2019.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-7",
+            "text": "I shared the floor with DeMar DeRozan and Nikola Vučević.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-8",
+            "text": "I moved to Sacramento during the 2024-25 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-9",
+            "text": "I began with the Timberwolves before becoming a Bulls All-Star.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-zach-lavine-b-10",
+            "text": "I am the two-time dunk champion who wore No. 8 in Chicago.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:brandon-ingram",
+    "name": "Brandon Ingram",
+    "eraBand": "modern",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/1627742",
+      "bio": "https://www.nba.com/player/1627742/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-brandon-ingram-a-1",
+            "text": "I entered the league with a slim build and a high-release jumper.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-2",
+            "text": "I relied on midrange shooting and long strides.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-3",
+            "text": "I developed his ability to create shots off the dribble.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-4",
+            "text": "I gradually assumed a major scoring role.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-5",
+            "text": "I earned a first NBA All-Star selection in 2020.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-6",
+            "text": "I won Most Improved Player in 2020.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-7",
+            "text": "I became a consistent 20-point scorer.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-8",
+            "text": "I led a young team in a competitive first-round series in 2022.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-9",
+            "text": "I played one season at Duke before being picked second by the Lakers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-a-10",
+            "text": "I am the former Pelicans No. 14 wing moved in the Anthony Davis trade.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-brandon-ingram-b-1",
+            "text": "I made an All-Rookie team after entering the league.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-2",
+            "text": "I developed into a strong isolation scorer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-3",
+            "text": "I could pass over defenders thanks to an unusually high release.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-4",
+            "text": "I improved his free-throw shooting significantly.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-5",
+            "text": "I was traded from Los Angeles to New Orleans in 2019.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-6",
+            "text": "I earned All-Star honors in his first Pelicans season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-7",
+            "text": "I scored 30 or more in multiple playoff games against Phoenix.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-8",
+            "text": "I was traded to Toronto in 2025.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-9",
+            "text": "I was the second overall pick of the 2016 NBA Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-brandon-ingram-b-10",
+            "text": "I am the long-armed scorer nicknamed BI who wore No. 14 for New Orleans.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:rudy-gobert",
+    "name": "Rudy Gobert",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.nba.com/player/203497",
+      "bio": "https://www.nba.com/player/203497/bio"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-rudy-gobert-a-1",
+            "text": "I built my NBA value through rebounding and rim protection.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-2",
+            "text": "I rarely needed many offensive touches to affect games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-3",
+            "text": "I became highly effective as a lob finisher.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-4",
+            "text": "I discouraged drives with length and shot-blocking timing.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-5",
+            "text": "I led the NBA in blocked shots in 2016-17.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-6",
+            "text": "I earned multiple All-NBA selections primarily on defensive impact.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-7",
+            "text": "I was named Defensive Player of the Year four times.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-8",
+            "text": "I helped lead a team to the 2024 Western Conference Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-9",
+            "text": "I was a first-round pick from France who began with the Utah Jazz.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-a-10",
+            "text": "I am the Timberwolves' No. 27 defender called the Stifle Tower.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-rudy-gobert-b-1",
+            "text": "I entered the league without being a lottery pick.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-2",
+            "text": "I developed into a consistent double-double producer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-3",
+            "text": "I specialized in screens, rebounds and protecting the restricted area.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-4",
+            "text": "I routinely finished near the top of the league in field-goal percentage.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-5",
+            "text": "I won my first Defensive Player of the Year award in 2018.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-6",
+            "text": "I became a key member of Utah's playoff teams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-7",
+            "text": "I was traded to Minnesota in a blockbuster 2022 deal.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-8",
+            "text": "I won my fourth DPOY award in 2024.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-9",
+            "text": "I represented France on the silver-medal 2024 Olympic team.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          },
+          {
+            "id": "nba-rudy-gobert-b-10",
+            "text": "I am the towering No. 27 French center nicknamed the Stifle Tower.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile",
+              "bio"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] satisfies readonly NbaWhoAmIAuthoredIdentity[];
