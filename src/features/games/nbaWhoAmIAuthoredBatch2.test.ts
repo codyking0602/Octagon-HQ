@@ -22,7 +22,7 @@ describe("NBA Who Am I — isolated Batch 2 authored identities", () => {
   it("has exactly the assigned 48 names and excludes the eight live calibration subjects", () => {
     expect(nbaWhoAmIAuthoredBatch2).toHaveLength(48);
     expect(nbaWhoAmIAuthoredBatch2.map(p => p.name).sort()).toEqual([...ROSTER].sort());
-    const baseline = new Set(nbaWhoAmIAuthoredIdentities.map(p => p.subjectId));
+    const baseline = new Set<string>(nbaWhoAmIAuthoredIdentities.map(p => p.subjectId));
     const ids = nbaWhoAmIAuthoredBatch2.map(p => p.subjectId);
     expect(new Set(ids).size).toBe(48);
     expect(ids.every(id => id.startsWith("nba:") && !baseline.has(id))).toBe(true);
