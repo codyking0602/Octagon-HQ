@@ -41,9 +41,9 @@ const seasonSubjects: NbaHitSubject[] = SEASON_STATS.map(([endYear,name,games,po
   season: endYear, scope: "season", role: role === "C" ? "C" : role === "G" ? "G" : "F",
   nbaId, values: {points,rebounds,assists},
 }));
-const careerSubjects: NbaHitSubject[] = CAREER_STATS.map(([name,points,rebounds,assists,nbaId])=>({
+const CAREER_GUARDS = new Set(["Michael Jordan","Kobe Bryant","Magic Johnson","Oscar Robertson","Jerry West","John Stockton","Allen Iverson","Dwyane Wade","Steve Nash","Ray Allen","Reggie Miller","Isiah Thomas","Vince Carter","Clyde Drexler"]);\nconst CAREER_CENTERS = new Set(["Tim Duncan","Shaquille O\'Neal","Kareem Abdul-Jabbar","Bill Russell","Wilt Chamberlain","Hakeem Olajuwon","Patrick Ewing","David Robinson","Dwight Howard","Moses Malone"]);\nconst careerSubjects: NbaHitSubject[] = CAREER_STATS.map(([name,points,rebounds,assists,nbaId])=>({
   id: `career:${name}`, name, subtitle: "NBA regular-season career",
-  season: null, scope: "career", role: "F", nbaId,
+  season: null, scope: "career", role: CAREER_GUARDS.has(name) ? "G" : CAREER_CENTERS.has(name) ? "C" : "F", nbaId,
   values: {points,rebounds,assists},
 }));
 export const nbaHitSubjects: readonly NbaHitSubject[] = [...seasonSubjects,...careerSubjects];
