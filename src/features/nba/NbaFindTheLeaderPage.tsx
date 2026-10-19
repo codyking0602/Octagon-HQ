@@ -7,9 +7,9 @@ import { recordLineupCompletion } from "../play/lineupModel";
 import { FootballFindLeaderPresentation } from "../back-room/FootballFindLeaderPresentation";
 import { asChallengeJson, challengeRecord, challengeString, footballChallengeUrl } from "../back-room/footballChallengeRuntime";
 import {
-  createNbaFindLeaderBoard, createNbaFindLeaderChallenge, createNbaFindLeaderDailyPreview,
+  createNbaFindLeaderChallenge, createNbaFindLeaderDailyPreview,
   createNbaFindLeaderRun, formatNbaFindLeaderValue, nbaFindLeaderHeadshot,
-  NBA_FIND_LEADER_GAME_ID, type NbaLeaderBoard, type NbaLeaderCandidate, type NbaLeaderRun,
+  type NbaLeaderBoard, type NbaLeaderCandidate, type NbaLeaderRun,
 } from "./nbaFindTheLeaderModel";
 import "../../styles/football-find-leader.css";
 import "../../styles/nba-find-the-leader.css";
