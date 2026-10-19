@@ -819,7 +819,7 @@ const entries: readonly Entry[] = [
       "I was regularly among the league's assist leaders in my prime.",
       "I helped a team become a major Eastern Conference contender.",
       "I won an Olympic gold medal with Team USA.",
-      "I earned All-NBA First Team honors once and Second Team honors three times.",
+      "I scored 32 points as Golden State eliminated San Antonio in a 1991 playoff series.",
       "I scored 32 points in a 1991 playoff win against the Lakers.",
       "I joined forces with Alonzo Mourning under Pat Riley in Miami.",
       "I helped the Heat reach the 1997 Eastern Conference finals.",
@@ -938,7 +938,7 @@ const entries: readonly Entry[] = [
       "I played for Boston, Toronto, Denver and Minnesota before moving to Detroit.",
       "I became the starting leader on the Pistons' defensive-minded championship team.",
       "I returned to Denver and helped the Nuggets reach the 2009 Western Conference finals.",
-      "I scored 27 points in the clinching Game 5 of the 2004 Finals.",
+      "I scored 14 points with six assists in the title-clinching Game 5 against the Lakers in 2004.",
       "I was known as Mr. Big Shot while playing alongside the two Wallaces in Detroit.",
       "My 2004 Finals MVP came while I guided the Pistons past Shaq and Kobe's Lakers."
     ]
@@ -1025,7 +1025,7 @@ const entries: readonly Entry[] = [
       "I recorded a notable playoff triple-double during my career.",
       "I starred at UCLA before going third in the 1999 draft.",
       "I participated in a 2007 playoff series that shocked Dirk Nowitzki's Dallas.",
-      "I scored 33 points in the Warriors' closeout Game 6 win over Dallas in 2007.",
+      "I scored 20 points on an injured hamstring as the Warriors closed out Dallas in Game 6 in 2007.",
       "I joined the Los Angeles Clippers as a free agent in 2008.",
       "I was Golden State's famous No. 5 during the 'We Believe' playoffs.",
       "My nickname B-Diddy followed me from the Hornets to the Warriors and Clippers."
