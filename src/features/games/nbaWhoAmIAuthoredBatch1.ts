@@ -493,7 +493,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-jayson-tatum-a-6",
-            "text": "I scored 50 points in a Game 7 playoff victory.",
+            "text": "I scored 51 points in a Game 7 playoff victory.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -5766,7 +5766,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-trae-young-b-7",
-            "text": "I scored 41 points in a playoff victory at Madison Square Garden.",
+            "text": "I scored 36 points in a playoff closeout victory at Madison Square Garden.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -6310,7 +6310,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-lamelo-ball-a-7",
-            "text": "I averaged more than eight assists per game in 2023-24.",
+            "text": "I averaged eight assists per game in 2023-24.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7385,7 +7385,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-brandon-ingram-a-7",
-            "text": "I averaged more than 27 points during the 2022 NBA playoffs.",
+            "text": "I averaged 27 points per game in the 2022 NBA playoffs.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -7580,7 +7580,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-rudy-gobert-a-5",
-            "text": "I won multiple NBA rebounding and blocks titles.",
+            "text": "I led the NBA in blocked shots in 2016-17 and became one of its top rebounders.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -8541,7 +8541,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-mikal-bridges-b-5",
-            "text": "I started every game during my first five NBA seasons.",
+            "text": "I appeared in every possible regular-season game across my first five NBA seasons.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
