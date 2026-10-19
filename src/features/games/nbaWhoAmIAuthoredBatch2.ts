@@ -9699,5 +9699,2430 @@ export const nbaWhoAmIAuthoredBatch2 = [
       ]
     }
   }
-}
+},
+  {
+    "subjectId": "nba:andre-drummond",
+    "name": "Andre Drummond",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/d/drumman01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-andre-drummond-a-1",
+            "text": "I became a dependable NBA rebounder almost immediately.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-2",
+            "text": "My offensive game emphasized second-chance chances and finishes near the basket.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-3",
+            "text": "I earned multiple All-Star selections despite rarely taking jump shots.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-4",
+            "text": "I recorded frequent 20-rebound games during my prime.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-5",
+            "text": "I led the NBA in rebounds per game in four seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-6",
+            "text": "I made an All-NBA Third Team in 2016.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-7",
+            "text": "I was traded in the middle of a season after years anchoring the same frontcourt.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-8",
+            "text": "I later played for the Lakers, 76ers, Nets and Bulls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-9",
+            "text": "I was Detroit's longtime rebounding leader after being picked ninth in 2012.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-a-10",
+            "text": "I was the Pistons' No. 0 center who led the league in rebounding four times.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-andre-drummond-b-1",
+            "text": "I was selected to the NBA All-Rookie Second Team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-2",
+            "text": "I became one of the league's leading offensive rebounders.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-3",
+            "text": "I averaged double-digit boards in almost every season of my early career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-4",
+            "text": "I earned an All-Star berth while playing for a rebuilding franchise.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-5",
+            "text": "I averaged more than 16 rebounds per game in 2017–18.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-6",
+            "text": "I won consecutive rebounding titles late in my original-team tenure.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-7",
+            "text": "I was moved to Cleveland in 2020 and later joined title hopefuls.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-8",
+            "text": "I spent my first eight NBA seasons in Detroit.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-9",
+            "text": "I attended Connecticut before being selected in the 2012 lottery by the Pistons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andre-drummond-b-10",
+            "text": "I am the two-time All-Star Andre who starred in Detroit as a dominant rebounder.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:deandre-jordan",
+    "name": "DeAndre Jordan",
+    "eraBand": "modern",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/j/jordade01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-deandre-jordan-a-1",
+            "text": "I entered the NBA with exceptional size and leaping ability.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-2",
+            "text": "My shot attempts were concentrated near the rim.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-3",
+            "text": "I earned All-Defensive recognition while helping a frequent playoff contender.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-4",
+            "text": "I became known for finishing lobs rather than creating jump shots.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-5",
+            "text": "I led the NBA in field-goal percentage for several seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-6",
+            "text": "I won back-to-back rebounding titles in 2014 and 2015.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-7",
+            "text": "I verbally agreed to join Dallas in 2015 before re-signing with his original team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-8",
+            "text": "I was named an NBA All-Star in 2017 and later won a title as a reserve.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-9",
+            "text": "I was the Clippers' Lob City center alongside Chris Paul and Blake Griffin.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-a-10",
+            "text": "I wore No. 6 during the Los Angeles Clippers' Lob City era and won the 2023 title with Denver.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-deandre-jordan-b-1",
+            "text": "I was selected in the second round but developed into a top interior defender.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-2",
+            "text": "I regularly scored through putbacks, screens and alley-oops.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-3",
+            "text": "I became one of the NBA's best defensive rebounders.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-4",
+            "text": "I was selected to an All-NBA First Team during my prime.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-5",
+            "text": "I grabbed more than 15 rebounds per game in consecutive seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-6",
+            "text": "I later played for Dallas, New York and Brooklyn after years with one franchise.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-7",
+            "text": "I won my first NBA championship with the 2022–23 Nuggets.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-8",
+            "text": "I famously changed course during free agency after an apparent Mavericks agreement.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-9",
+            "text": "My high-flying years came on the Clippers alongside Blake Griffin and Chris Paul.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-deandre-jordan-b-10",
+            "text": "I am the former Texas A&M big man who earned the nickname Lob City and became a Nuggets champion.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:andrew-bogut",
+    "name": "Andrew Bogut",
+    "eraBand": "legacy",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/b/bogutan01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-andrew-bogut-a-1",
+            "text": "I became a reliable interior passer and defender after entering the league.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-2",
+            "text": "I made a major defensive impact on a contender after changing franchises.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-3",
+            "text": "I earned All-NBA recognition before ever winning a championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-4",
+            "text": "I used positioning and screens as much as scoring to help his teams.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-5",
+            "text": "I led the NBA in blocked shots per game during the 2010–11 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-6",
+            "text": "I experienced a serious arm injury during an earlier stint with Milwaukee.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-7",
+            "text": "I helped a rising Western contender win its first title in decades.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-8",
+            "text": "I started at center for Golden State's 2015 championship team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-9",
+            "text": "I was drafted first overall in 2005 from Utah by the Milwaukee Bucks.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-a-10",
+            "text": "I was the Australian No. 12 center whose screening and rim protection helped the Warriors win in 2015.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-andrew-bogut-b-1",
+            "text": "I came to the NBA after a celebrated college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-2",
+            "text": "I developed into a skilled passing center rather than a perimeter scorer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-3",
+            "text": "I averaged a double-double for an extended period with my original club.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-4",
+            "text": "I was selected to the All-NBA Third Team in 2010.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-5",
+            "text": "I was traded to a West Coast team as part of a deal involving Monta Ellis.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-6",
+            "text": "I was a starter on the 2015 NBA champion Warriors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-7",
+            "text": "A knee injury sidelined me late in the 2016 Finals against Cleveland.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-8",
+            "text": "I later returned to Australia and starred with the Sydney Kings.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-9",
+            "text": "I became the NBA's first Australian-born No. 1 overall draft pick in 2005.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bogut-b-10",
+            "text": "I protected the paint alongside Stephen Curry and Draymond Green during Golden State's first title run.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:tyson-chandler",
+    "name": "Tyson Chandler",
+    "eraBand": "legacy",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/c/chandty01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-tyson-chandler-a-1",
+            "text": "I became a respected rebounder and defender over a long career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-2",
+            "text": "I received more praise for defense than for creating my own baskets.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-3",
+            "text": "I played major playoff roles for several different franchises.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-4",
+            "text": "I was a dependable alley-oop target and offensive rebounder.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-5",
+            "text": "I won the NBA Defensive Player of the Year award in 2012.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-6",
+            "text": "I was a crucial defensive starter on a surprise championship team.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-7",
+            "text": "I made his lone All-Star team in 2013.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-8",
+            "text": "I later played for Phoenix, Los Angeles and Houston.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-9",
+            "text": "I was the defensive anchor beside Dirk Nowitzki on Dallas's 2011 championship team.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-a-10",
+            "text": "I wore No. 6 for the Mavericks title run and won DPOY the next year with the Knicks.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-tyson-chandler-b-1",
+            "text": "I entered the NBA directly from high school.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-2",
+            "text": "My main strengths included rim protection and finishing inside.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-3",
+            "text": "I played more than a thousand NBA games across many seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-4",
+            "text": "I earned All-Defensive honors and one All-NBA selection.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-5",
+            "text": "I helped a veteran team beat a heavily favored new star trio in the Finals.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-6",
+            "text": "I was part of a New York club that won 54 games in 2012–13.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-7",
+            "text": "I earned an Olympic gold medal with the United States in 2012.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-8",
+            "text": "I had previously played alongside Chris Paul on the New Orleans Hornets.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-9",
+            "text": "I won a championship with the 2011 Mavericks and DPOY with the 2012 Knicks.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-tyson-chandler-b-10",
+            "text": "I was selected second overall in 2001 and became an elite NBA defensive center.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:luol-deng",
+    "name": "Luol Deng",
+    "eraBand": "legacy",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/d/denglu01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-luol-deng-a-1",
+            "text": "I built a reputation for durability and defending opposing wings.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-2",
+            "text": "I regularly played heavy minutes for a playoff contender.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-3",
+            "text": "I averaged more than 15 points during several seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-4",
+            "text": "I earned an All-Defensive selection while acting as an important secondary scorer.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-5",
+            "text": "I made consecutive NBA All-Star teams in 2012 and 2013.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-6",
+            "text": "I helped reach the Eastern Conference finals in 2011.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-7",
+            "text": "A midseason trade eventually ended my long stint with my first club.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-8",
+            "text": "I later played for Cleveland, Miami, the Lakers and Minnesota.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-9",
+            "text": "I was the longtime Bulls forward alongside Derrick Rose and Joakim Noah.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-a-10",
+            "text": "I was born in South Sudan, grew up partly in Britain and starred for Chicago wearing No. 9.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-luol-deng-b-1",
+            "text": "I became an NBA starter during my first professional season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-2",
+            "text": "I contributed through midrange scoring, rebounding and difficult defensive assignments.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-3",
+            "text": "I was repeatedly among the league leaders in minutes played.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-4",
+            "text": "I reached several playoff series during a strong defensive team era.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-5",
+            "text": "I played for Great Britain at the 2012 London Olympics.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-6",
+            "text": "I was named to the NBA All-Defensive Second Team in 2012.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-7",
+            "text": "I reached the 2016 Eastern Conference semifinals with Miami.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-8",
+            "text": "I played one college season at Duke before being selected seventh overall in 2004.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-9",
+            "text": "I became a two-time All-Star with Tom Thibodeau's Chicago Bulls.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-luol-deng-b-10",
+            "text": "I was the British-raised, South Sudanese-born No. 9 Bulls wing known for relentless minutes.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:rudy-gay",
+    "name": "Rudy Gay",
+    "eraBand": "legacy",
+    "rescueGroup": "wing",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/g/gayru01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-rudy-gay-a-1",
+            "text": "I developed into a reliable scorer who created shots on the perimeter.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-2",
+            "text": "I became a consistent contributor for several franchises without an All-Star selection.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-3",
+            "text": "I combined drives and midrange attempts with occasional explosive dunks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-4",
+            "text": "I averaged around twenty points per game during much of his prime.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-5",
+            "text": "I earned NBA All-Rookie First Team honors in his debut season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-6",
+            "text": "I was traded during a season when my former club later reached the conference finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-7",
+            "text": "I spent several years as Sacramento's leading scoring option.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-8",
+            "text": "I also played for Toronto and San Antonio after starting in Memphis.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-9",
+            "text": "I was a Grizzlies scorer traded to Toronto in 2013 before joining the Kings.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-a-10",
+            "text": "I was drafted eighth in 2006 after playing at UConn and became known for high-flying wing scoring.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-rudy-gay-b-1",
+            "text": "I scored more than eighteen points per game in multiple seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-2",
+            "text": "I played a role on teams that were still building toward playoff contention.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-3",
+            "text": "I frequently finished near the top of my teams' scoring lists.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-4",
+            "text": "I earned All-Rookie First Team honors despite entering the NBA in a strong draft class.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-5",
+            "text": "I became a key scorer on the early Zach Randolph–Marc Gasol Memphis teams.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-6",
+            "text": "A shoulder injury kept me out of Memphis's 2011 upset of the Spurs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-7",
+            "text": "I was sent to Toronto early in 2013, then moved to Sacramento that December.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-8",
+            "text": "I contributed as a veteran rotation player for the Spurs later in my career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-9",
+            "text": "I was originally drafted by Houston but started his career with the Grizzlies.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-rudy-gay-b-10",
+            "text": "I am the former Connecticut standout who spent prime scoring years with Memphis and Sacramento.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:michael-redd",
+    "name": "Michael Redd",
+    "eraBand": "legacy",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/r/reddmi01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-michael-redd-a-1",
+            "text": "I broke into the NBA as a reserve before becoming a leading scorer.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-2",
+            "text": "I built a career around accurate left-handed jump shooting.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-3",
+            "text": "I became an All-Star during a stretch of strong individual offense.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-4",
+            "text": "I regularly averaged more than twenty points per game during his prime.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-5",
+            "text": "I earned All-NBA Third Team honors in 2004.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-6",
+            "text": "I averaged 26.7 points per game in 2006–07.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-7",
+            "text": "I scored a career-high 57 points in a 2006 game against Utah.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-8",
+            "text": "Repeated knee injuries eventually disrupted my scoring career.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-9",
+            "text": "I was Milwaukee's star left-handed shooter who won Olympic gold in 2008.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-a-10",
+            "text": "I wore No. 22 for the Bucks and reached the 2004 All-Star Game.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-michael-redd-b-1",
+            "text": "I was selected outside the first round after a strong college career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-2",
+            "text": "My offensive improvement made me a focal point for a franchise.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-3",
+            "text": "I excelled at quick-release catch-and-shoot three-pointers.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-4",
+            "text": "I achieved an All-Star berth despite rarely making deep playoff runs.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-5",
+            "text": "I helped the Bucks return to the playoffs in 2004.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-6",
+            "text": "I participated on the United States team that won gold in Beijing in 2008.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-7",
+            "text": "I spent his final NBA season with Phoenix after years in Milwaukee.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-8",
+            "text": "I became one of the highest-scoring second-round picks of my era.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-9",
+            "text": "I was drafted from Ohio State in 2000 and became the Bucks' No. 22 shooting star.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-michael-redd-b-10",
+            "text": "I am the left-handed Milwaukee scorer who once put up 57 against the Jazz.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:brandon-roy",
+    "name": "Brandon Roy",
+    "eraBand": "legacy",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/r/roybr01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-brandon-roy-a-1",
+            "text": "I became a franchise's lead perimeter scorer early in his career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-2",
+            "text": "I earned praise for patience and calm control of late possessions.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-3",
+            "text": "I developed into a multiple-time All-Star without winning a title.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-4",
+            "text": "I made All-NBA teams before persistent knee problems limited his career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-5",
+            "text": "I won NBA Rookie of the Year in the 2006–07 season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-6",
+            "text": "I earned an All-NBA Second Team selection in 2009.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-7",
+            "text": "I led a dramatic fourth-quarter playoff comeback in 2011 despite damaged knees.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-8",
+            "text": "I briefly returned for five games with Minnesota in the 2012–13 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-9",
+            "text": "I was the Portland Trail Blazers star who scored 18 fourth-quarter points against Dallas in 2011.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-a-10",
+            "text": "I wore No. 7 for Portland and became a three-time All-Star before knee injuries cut short his prime.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-brandon-roy-b-1",
+            "text": "I was selected to the NBA All-Rookie First Team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-2",
+            "text": "My breakthrough as a closer came while a young team was rebuilding.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-3",
+            "text": "I often ran the offense from the perimeter and shot well from midrange.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-4",
+            "text": "I was voted to three consecutive NBA All-Star teams.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-5",
+            "text": "I helped Portland return to the playoffs in 2009.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-6",
+            "text": "I played only 47 regular-season games in 2010–11 due in part to injuries.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-7",
+            "text": "I scored 24 points in Game 4 against Dallas after his team trailed by 23.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-8",
+            "text": "Degenerative knee issues led me to announce retirement in 2011.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-9",
+            "text": "I played college basketball at Washington before being traded on draft night to Portland.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-brandon-roy-b-10",
+            "text": "I am the 2007 Rookie of the Year known as B-Roy who led the Trail Blazers.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:andrew-bynum",
+    "name": "Andrew Bynum",
+    "eraBand": "legacy",
+    "rescueGroup": "big",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/b/bynuman01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-andrew-bynum-a-1",
+            "text": "I entered the NBA directly from high school at a very young age.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-2",
+            "text": "I grew into a productive interior scorer and rebounder.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-3",
+            "text": "I became an important starter for a perennial championship contender.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-4",
+            "text": "I earned All-NBA honors after previously winning multiple titles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-5",
+            "text": "I was part of championship teams in both 2009 and 2010.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-6",
+            "text": "I was named an NBA All-Star for the first time in 2012.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-7",
+            "text": "I grabbed 30 rebounds in a regular-season game against San Antonio.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-8",
+            "text": "I was traded to Philadelphia in 2012 but never played a game for the 76ers.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-9",
+            "text": "I was the Lakers' young starting center alongside Kobe Bryant and Pau Gasol.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-a-10",
+            "text": "I was selected tenth overall in 2005 and became an All-Star Lakers big man.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-andrew-bynum-b-1",
+            "text": "I made my NBA debut at 18, then the youngest player to appear in a league game.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-2",
+            "text": "I developed strong low-post footwork and defensive rebounding skills.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-3",
+            "text": "I played a smaller role on his team's first two title runs.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-4",
+            "text": "I eventually averaged more than 18 points per game in an All-Star season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-5",
+            "text": "I recorded a 10-block playoff triple-double in 2012 against Denver.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-6",
+            "text": "I made the All-NBA Second Team following the 2011–12 season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-7",
+            "text": "A knee injury kept me from ever debuting for the team that acquired me in a major trade.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-8",
+            "text": "I later appeared briefly for Cleveland and Indiana.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-9",
+            "text": "I won two NBA titles as the Lakers' center beside Bryant and Gasol.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-andrew-bynum-b-10",
+            "text": "I was the 2005 high-school draft pick who went to Philadelphia in the Dwight Howard blockbuster.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:o-j-mayo",
+    "name": "O.J. Mayo",
+    "eraBand": "legacy",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/m/mayooj01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-o-j-mayo-a-1",
+            "text": "I entered the NBA with a reputation as a scoring prospect.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-2",
+            "text": "I immediately earned a starting role as a rookie.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-3",
+            "text": "I made an All-Rookie team after a productive debut campaign.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-4",
+            "text": "I was primarily valued for perimeter scoring rather than rebounding.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-5",
+            "text": "I averaged 18.5 points per game in my rookie season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-6",
+            "text": "My scoring role decreased as my original team developed into a playoff contender.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-7",
+            "text": "I spent one season with Dallas before signing with Milwaukee.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-8",
+            "text": "I appeared for Memphis in the 2011 playoff upset of San Antonio.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-9",
+            "text": "My draft-night rights went from Minnesota to Memphis in the deal involving Kevin Love.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-a-10",
+            "text": "I was the USC shooting guard taken third overall in the 2008 draft and traded for Love.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-o-j-mayo-b-1",
+            "text": "I was a heralded high-school scorer before my college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-2",
+            "text": "My NBA rookie campaign was among the highest-scoring in his class.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-3",
+            "text": "I made the 2008–09 All-Rookie First Team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-4",
+            "text": "I played in the postseason as a reserve on a team built around big men.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-5",
+            "text": "I reached double-digit scoring averages during every season with Memphis.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-6",
+            "text": "I moved to Dallas as a free agent in 2012 and started 82 games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-7",
+            "text": "I played my final NBA seasons for the Milwaukee Bucks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-8",
+            "text": "I shared a Grizzlies roster with Zach Randolph, Marc Gasol and Mike Conley.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-9",
+            "text": "I was selected third in 2008 before Memphis acquired my rights from Minnesota.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-o-j-mayo-b-10",
+            "text": "I am O.J. Mayo, the former USC star whose NBA career began with the Grizzlies.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:monta-ellis",
+    "name": "Monta Ellis",
+    "eraBand": "legacy",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/e/ellismo01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-monta-ellis-a-1",
+            "text": "I entered the league with exceptional speed and an aggressive scoring style.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-2",
+            "text": "I developed into a high-minute starter after an initially small role.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-3",
+            "text": "I earned an individual improvement award early in my career.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-4",
+            "text": "I consistently attacked off the dribble and pushed the pace.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-5",
+            "text": "I averaged more than 25 points per game in 2009–10.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-6",
+            "text": "I won the NBA Most Improved Player award in 2007.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-7",
+            "text": "A midseason trade exchanged me for an established Australian center.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-8",
+            "text": "I later became a leading scorer for Dallas in the 2014 playoffs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-9",
+            "text": "I was part of Golden State's 2007 We Believe upset of top-seeded Dallas.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-a-10",
+            "text": "I was the high-school-to-NBA guard whose Warriors fans chanted Monta Have It All.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-monta-ellis-b-1",
+            "text": "I was a second-round pick who quickly exceeded expectations.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-2",
+            "text": "My game relied on pull-up shooting, acrobatic finishes and speed.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-3",
+            "text": "I regularly averaged more than 20 points per game in his prime.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-4",
+            "text": "I was a featured scorer for a team with a young Stephen Curry.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-5",
+            "text": "I scored a career-high 48 points against Oklahoma City in 2012.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-6",
+            "text": "I was traded from Golden State to Milwaukee in the deal for Andrew Bogut.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-7",
+            "text": "I later spent seasons with Dallas and Indiana.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-8",
+            "text": "My breakout began under Don Nelson during the Warriors' 2007 playoff run.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-9",
+            "text": "I wore No. 8 during my signature Golden State scoring years.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-monta-ellis-b-10",
+            "text": "I was the 2007 Most Improved Player who starred for the Warriors before Curry's rise.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "subjectId": "nba:jason-terry",
+    "name": "Jason Terry",
+    "eraBand": "legacy",
+    "rescueGroup": "guard",
+    "earlyRotation": "normal",
+    "sources": {
+      "profile": "https://www.basketball-reference.com/players/t/terryja01.html"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "nba-jason-terry-a-1",
+            "text": "I earned meaningful minutes in my first NBA season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-2",
+            "text": "I became known for confident long-range shooting and quick scoring off the bench.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-3",
+            "text": "I provided a steady secondary scoring option over many seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-4",
+            "text": "I won Sixth Man of the Year before capturing an NBA championship.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-5",
+            "text": "I received the 2009 Sixth Man of the Year award.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-6",
+            "text": "I spent a long initial stretch with Atlanta before moving to a title contender.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-7",
+            "text": "I scored 27 points off the bench in the deciding game of the 2011 Finals.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-8",
+            "text": "I won a title after his team defeated the Miami Big Three in six games.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-9",
+            "text": "I was the Mavericks veteran who backed up Dirk Nowitzki during the 2011 title run.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-a-10",
+            "text": "I wore No. 31 and became known as The Jet for my airplane-wing celebration.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "nba-jason-terry-b-1",
+            "text": "I won a college national championship before beginning my NBA career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-2",
+            "text": "I played in more than 1,400 NBA regular-season games.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-3",
+            "text": "I developed into one of the era's leading three-point makers.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-4",
+            "text": "I helped a title contender with both starting and reserve scoring roles.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-5",
+            "text": "I averaged nearly twenty points per game during one season in Dallas.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-6",
+            "text": "I was named Sixth Man of the Year as a Maverick in 2008–09.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-7",
+            "text": "I played for Boston, Brooklyn, Houston and Milwaukee after my peak years.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-8",
+            "text": "I won the 1997 NCAA championship with Arizona before being drafted in 1999.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-9",
+            "text": "I was a key backcourt scorer for Dallas against Miami in the 2011 Finals.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          },
+          {
+            "id": "nba-jason-terry-b-10",
+            "text": "My nickname was The Jet, and I celebrated big threes by spreading my arms like wings.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "profile"
+            ]
+          }
+        ]
+      }
+    }
+  }
+
 ] satisfies readonly NbaWhoAmIAuthoredIdentity[];
