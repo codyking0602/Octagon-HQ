@@ -292,7 +292,7 @@ export default function OfficialTodayChallengePage({
         showMillionaireExit
         sportsFeudSyncError={runtime.error instanceof Error ? runtime.error.message : null}
         onRetrySportsFeud={() => { void runtime.retryPending(); }}
-        onRefreshSportsFeud={() => { void runtime.refresh(); }}
+        onRefreshSportsFeud={() => { void runtime.recheckSaved(); }}
       />
     </div>
   );
