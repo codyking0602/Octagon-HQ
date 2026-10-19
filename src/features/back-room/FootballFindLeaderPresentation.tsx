@@ -60,6 +60,8 @@ export interface FootballFindLeaderPresentationCandidate {
   name: string;
   displayName?: string;
   season?: number;
+  /** NBA season shown in full (e.g. 2016–17); Football still uses the integer year. */
+  seasonLabel?: string;
   subtitle: string;
   value?: number;
 }
@@ -71,7 +73,7 @@ export interface FootballFindLeaderPresentationCandidate {
  */
 export function footballFindLeaderVisibleIdentity(candidate: FootballFindLeaderPresentationCandidate) {
   if (candidate.season != null) {
-    return { displayName: candidate.displayName ?? candidate.name, season: candidate.season };
+    return { displayName: candidate.displayName ?? candidate.name, season: candidate.seasonLabel ?? candidate.season };
   }
   const suffix = /^(.*?)\s+((?:19|20)\d{2})$/.exec(candidate.name);
   if (suffix) return { displayName: candidate.displayName ?? suffix[1]!, season: Number(suffix[2]) };
@@ -159,6 +161,7 @@ export function FootballFindLeaderPresentation({
               <span>
                 <small>GROUP LEADER</small>
                 <strong>{leader.name}</strong>
+                {leader.seasonLabel ? <small>{leader.seasonLabel}</small> : null}
                 {showCandidateContext ? <em>{leader.subtitle}</em> : null}
                 <b>{formatValue(leader.value)} {shortLabel}</b>
               </span>
@@ -180,7 +183,7 @@ export function FootballFindLeaderPresentation({
                 <em>{index + 1}</em>
                 <span className="football-find-order__identity">
                   <strong>{candidate.displayName ?? candidate.name}</strong>
-                  {candidate.season != null ? <small>{candidate.season}</small> : null}
+                  {candidate.season != null ? <small>{candidate.seasonLabel ?? candidate.season}</small> : null}
                 </span>
                 <b>{candidate.id === result.fatalId ? "LEADER" : "SAFE"}</b>
               </article>
@@ -190,7 +193,7 @@ export function FootballFindLeaderPresentation({
             <footer>
               <span>LEFT STANDING</span>
               <strong>{leader.displayName ?? leader.name}</strong>
-              {leader.season != null ? <small>{leader.season}</small> : null}
+              {leader.season != null ? <small>{leader.seasonLabel ?? leader.season}</small> : null}
             </footer>
           ) : null}
         </section>
@@ -203,6 +206,7 @@ export function FootballFindLeaderPresentation({
                 <em>{footballFindLeaderRankLabel(revealed, index)}</em>
                 <span>
                   <strong>{candidate.name}</strong>
+                  {candidate.seasonLabel ? <small>{candidate.seasonLabel}</small> : null}
                   {showCandidateContext ? <small>{candidate.subtitle}</small> : null}
                 </span>
                 <b>{formatValue(candidate.value)}<small>{shortLabel || statLabel}</small></b>

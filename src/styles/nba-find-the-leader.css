@@ -1,0 +1,31 @@
+/* NBA-specific imagery only: Football Find the Leader spacing and layout remain unchanged. */
+.nba-find-leader-page .nba-find-card__photo {
+  background: radial-gradient(circle at 50% 37%, rgba(242, 163, 65, .17), transparent 72%), #17191e;
+  border: 1px solid rgba(242, 163, 65, .22);
+}
+.nba-find-leader-page .nba-find-card__photo img {
+  display: block;
+  object-fit: contain;
+  object-position: center top;
+  width: 100%;
+  height: 100%;
+  filter: none;
+}
+.nba-find-leader-page .nba-find-card__photo > b {
+  border-color: rgba(242, 163, 65, .3);
+  background: rgba(242, 163, 65, .08);
+}
+.nba-find-preview-label {
+  margin: 0 0 12px;
+  padding: 9px 12px;
+  border: 1px solid rgba(242, 163, 65, .22);
+  border-radius: 10px;
+  color: #d5b68d;
+  background: rgba(242, 163, 65, .07);
+  font-size: 11px;
+  font-weight: 750;
+}
+@media (max-width: 640px) {
+  .nba-find-preview-label { margin-bottom: 8px; font-size: 10px; }
+  .nba-find-leader-page .nba-find-card__photo img { object-fit: contain; object-position: center top; }
+}

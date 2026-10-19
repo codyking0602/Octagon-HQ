@@ -56,6 +56,7 @@ const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const NbaWhoAmIPage = lazy(() => import("../features/play/NbaWhoAmIPage"));
 const NbaHitTheNumberPage = lazy(() => import("../features/nba/NbaHitTheNumberPage"));
+const NbaFindTheLeaderPage = lazy(() => import("../features/nba/NbaFindTheLeaderPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
 const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
@@ -145,6 +146,7 @@ export const appRoutes: RouteObject[] = [
       { path: "nba", element: <NbaPreviewGate><NbaPlayPage /></NbaPreviewGate> },
       { path: "nba/who-am-i", element: <NbaWhoAmIOwnerGate><NbaWhoAmIPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/hit-the-number", element: <NbaWhoAmIOwnerGate><NbaHitTheNumberPage /></NbaWhoAmIOwnerGate> },
+      { path: "nba/find-the-leader", element: <NbaWhoAmIOwnerGate><NbaFindTheLeaderPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/picks", element: <NbaPreviewGate><NbaFuturesPage /></NbaPreviewGate> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
