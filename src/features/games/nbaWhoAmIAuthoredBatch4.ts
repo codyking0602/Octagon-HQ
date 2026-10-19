@@ -2027,7 +2027,9 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
   "sources": {
     "profile": "https://www.hoophall.com/hall-of-famers/moses-malone",
     "allNba": "https://www.nba.com/news/history-all-nba-teams",
-    "history": "https://www.nba.com/news/history-season-recaps-index"
+    "history": "https://www.nba.com/news/history-season-recaps-index",
+    "rocketsNumbers": "https://www.nba.com/team/1610612745/historic-roster",
+    "sixersNumbers": "https://www.nba.com/sixers/history/76ers-retired-numbers"
   },
   "scripts": {
     "A": {
@@ -2220,12 +2222,12 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
         },
         {
           "id": "nba-moses-malone-b-9",
-          "text": "I wore No. 2 in Houston and No. 2 for Philadelphia's 1983 champions.",
+          "text": "I wore No. 24 for Houston and No. 2 for Philadelphia's 1983 champions.",
           "band": "giveaway",
           "verification": "verified",
           "sourceIds": [
-            "profile",
-            "history"
+            "rocketsNumbers",
+            "sixersNumbers"
           ]
         },
         {
@@ -3596,7 +3598,8 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
   "sources": {
     "profile": "https://www.hoophall.com/hall-of-famers/elvin-hayes",
     "allNba": "https://www.nba.com/news/history-all-nba-teams",
-    "history": "https://www.nba.com/news/history-season-recaps-index"
+    "history": "https://www.nba.com/news/history-season-recaps-index",
+    "rocketsNumbers": "https://www.nba.com/team/1610612745/historic-roster"
   },
   "scripts": {
     "A": {
@@ -3694,12 +3697,12 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
         },
         {
           "id": "nba-elvin-hayes-a-10",
-          "text": "I was the Big E, who starred for the Rockets and Bullets wearing No. 11.",
+          "text": "I wore No. 44 with Houston and No. 11 as a Washington Bullets champion.",
           "band": "giveaway",
           "verification": "verified",
           "sourceIds": [
-            "profile",
-            "history"
+            "rocketsNumbers",
+            "profile"
           ]
         }
       ]
