@@ -11,7 +11,7 @@ export const NBA_HIT_FORMAT_WEIGHTS = [
 ] as const;
 export type NbaHitFormatId = typeof NBA_HIT_FORMAT_WEIGHTS[number]["value"];
 export type NbaHitBoardType = "random-pool";
-export interface NbaHitSlot { id:string; label:string; role?: "G"|"F"|"C"; threshold?:number; }
+export interface NbaHitSlot { id:string; label:string; role?: "G"|"F"|"C"; frontcourt?:boolean; threshold?:number; }
 export interface NbaHitPlan {
   seed:string; version: typeof NBA_HIT_THE_NUMBER_VERSION;
   boardType:NbaHitBoardType; statId:NbaHitStat; metricLabel:string;
@@ -40,7 +40,7 @@ function chooseWeighted<T>(options:readonly {value:T;weight:number}[],rand:()=>n
   return options[options.length-1]!.value;
 }
 export function nbaHitSlotAccepts(slot:NbaHitSlot,subject:NbaHitSubject,statId:NbaHitStat) {
-  return (slot.role==null || slot.role===subject.role) && (slot.threshold==null || nbaHitValue(subject,statId)>=slot.threshold);
+  return (slot.role==null || slot.role===subject.role) && (!slot.frontcourt || subject.role!=="G") && (slot.threshold==null || nbaHitValue(subject,statId)>=slot.threshold);
 }
 function slotsFor(formatId:NbaHitFormatId,count:4|5,pool:readonly NbaHitSubject[],statId:NbaHitStat):NbaHitSlot[] {
   if(formatId==="classic" || formatId==="themed-lineup")return [];
@@ -54,7 +54,7 @@ function slotsFor(formatId:NbaHitFormatId,count:4|5,pool:readonly NbaHitSubject[
   const top=values[Math.floor(values.length*.66)]!;
   return [{id:"star",label:"Stat Star",threshold:top},
     {id:"backcourt",label:"Backcourt",role:"G"},
-    {id:"frontcourt",label:"Frontcourt"},
+    {id:"frontcourt",label:"Frontcourt",frontcourt:true},
     wildcard,...(count===5?[{id:"wildcard-two",label:"Wild Card"}]:[])];
 }
 export function nbaHitSelectionSatisfies(plan:NbaHitPlan,ids:readonly string[]) {
