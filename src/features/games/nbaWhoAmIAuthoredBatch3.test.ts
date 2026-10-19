@@ -44,7 +44,7 @@ describe("NBA Who Am I historical/modern-era batch 3", () => {
     expect(new Set(ids).size).toBe(48);
     expect(new Set(nbaWhoAmIAuthoredBatch3.map(p => fold(p.name))).size).toBe(48);
     expect(ids.every(id => /^nba:[a-z0-9-]+$/.test(id))).toBe(true);
-    expect(ids.some(id => id === "nba:jermaine-o-neal")).toBe(true);
+    expect(ids.some(id => id === "nba:jermaine-oneal")).toBe(true);
     expect(ids.some(id => id === "nba:metta-world-peace")).toBe(true);
     expect(ids.some(id => id === "nba:tim-hardaway")).toBe(true);
     expect(ids).not.toContain("nba:tim-hardaway-jr");
