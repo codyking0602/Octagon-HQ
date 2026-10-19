@@ -45,6 +45,8 @@ describe("October 19 NFL Sports Feud editorial replacement", () => {
     expect(lookup(0, "Jets")).toBe("New York Jets");
     expect(lookup(0, "Commanders")).toBe("Washington Commanders");
     expect(lookup(1, "Steelers")).toBe("Pittsburgh Steelers");
+    expect(lookup(1, "Kansas City")).toBe("Kansas City Chiefs");
+    expect(lookup(1, "Cheifs")).toBe("Kansas City Chiefs");
     expect(lookup(1, "Seahawks")).toBe("Seattle Seahawks");
     expect(lookup(1, "Eagles")).toBe("Philadelphia Eagles");
     expect(matchFamilyFeudAnswer(pack, pack.mainBoards[0]!, "Seattle Seahawks").status)
@@ -55,9 +57,24 @@ describe("October 19 NFL Sports Feud editorial replacement", () => {
     expect(lookup(1, "Bengals", true)).toBe("Cincinnati Bengals");
     expect(lookup(2, "Jason Taylor", true)).toBe("Jason Taylor");
     expect(lookup(3, "Maxx Crosby", true)).toBe("Maxx Crosby");
+    expect(lookup(3, "Steve Wisniewski", true)).toBe("Steve Wisniewski");
+    expect(lookup(3, "Jared Cook", true)).toBe("Jared Cook");
     expect(lookup(4, "Jason Witten", true)).toBe("Jason Witten");
     expect(lookup(0, "NFC East", true)).toBe("NFC East");
     expect(pack.fastMoney.map((q) => q.answers[0]!.points)).toEqual([8, 8, 8, 8, 8]);
+  });
+
+  it("promotes Maxx without diminishing Howie Long or retiring Gene Upshaw", () => {
+    const raiders = pack.fastMoney[3]!;
+    const byName = (name: string) => pack.entities.find((e) =>
+      e.displayName === name && e.id.startsWith(raiders.id + ":"))!.id;
+    const points = (name: string) => raiders.answers.find((a) =>
+      a.entityId === byName(name))?.points ?? (raiders.alsoAcceptedEntityIds?.includes(byName(name)) ? 1 : 0);
+    expect(points("Maxx Crosby")).toBe(5);
+    expect(points("Howie Long")).toBe(4);
+    expect(points("Gene Upshaw")).toBe(1);
+    expect(raiders.answers).toHaveLength(8);
+    expect(raiders.alsoAcceptedEntityIds).toContain(byName("Gene Upshaw"));
   });
 
   it("preserves the official published setup/scoring structure", () => {
