@@ -60,7 +60,7 @@ function seasonLabel(endYear: number) {
   return String(endYear - 1) + "–" + String(endYear).slice(-2);
 }
 function normalizedName(name: string) {
-  return name.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 const currentByName = new Map<string, NbaHitSubject>();
 for (const subject of nbaHitSubjects) {
@@ -74,7 +74,7 @@ const historical: NbaLeaderSubject[] = NBA_FIND_HISTORICAL_SEASONS.map(([year, n
   values: { points, rebounds, assists },
 }));
 const recent: NbaLeaderSubject[] = nbaHitSubjects.filter(s => s.scope === "season").flatMap(s => {
-  const games = Number(s.subtitle.match(/(\\d+) GP/)?.[1] ?? 0);
+  const games = Number(s.subtitle.match(/(\d+) GP/)?.[1] ?? 0);
   if (games < 45 || s.season == null) return [];
   return [{
     id: "season:" + s.season + ":" + normalizedName(s.name), name: s.name, season: s.season,
