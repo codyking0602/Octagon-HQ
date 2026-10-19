@@ -950,6 +950,238 @@ const entries: readonly Entry[] = [
       "I wore No. 55 while starring at Georgetown and in the NBA."
     ]
   },
+  {
+    "name": "Alonzo Mourning",
+    "bref": "mournal01",
+    "group": "big",
+    "a": [
+      "I made seven NBA All-Star teams.",
+      "I became a perennial All-Defensive candidate and feared rim protector.",
+      "I led the NBA in blocked shots in consecutive seasons.",
+      "I earned All-NBA First Team recognition in 1999.",
+      "I won Defensive Player of the Year in two straight seasons.",
+      "I was diagnosed with a serious kidney disorder during my career.",
+      "I underwent a kidney transplant in 2003 before returning to the NBA.",
+      "I won the 2006 championship as a reserve alongside Dwyane Wade and Shaquille O'Neal.",
+      "I was a longtime Miami Heat star after beginning with the Charlotte Hornets.",
+      "My nickname was Zo, and I wore No. 33 in Miami."
+    ],
+    "b": [
+      "I played for more than one franchise yet became most identified with one.",
+      "I was among the league's best shot blockers for years.",
+      "I finished as runner-up in MVP voting in 1999.",
+      "I made the All-NBA Second Team in 2000.",
+      "I was selected second overall in the 1992 NBA Draft.",
+      "I partnered with Larry Johnson during the early years of an expansion franchise.",
+      "I was traded from Charlotte to Miami in 1995.",
+      "I returned to basketball after a kidney transplant.",
+      "I starred at Georgetown before becoming a defensive mainstay for the Miami Heat.",
+      "I was called Zo and won my first ring with the 2006 Heat."
+    ]
+  },
+  {
+    "name": "Larry Johnson",
+    "bref": "johnsla02",
+    "group": "big",
+    "a": [
+      "I earned NBA Rookie of the Year honors.",
+      "I became a multiple-time All-Star early in my career.",
+      "I posted prolific points-and-rebounds totals in my first NBA seasons.",
+      "I was selected to the All-NBA Second Team in 1993.",
+      "I battled a back injury that changed my style of play.",
+      "I was the first overall pick in the 1991 NBA Draft.",
+      "I played with Alonzo Mourning on the young Charlotte Hornets.",
+      "I hit a memorable four-point play against Indiana in the 1999 playoffs.",
+      "I later reached the 1999 NBA Finals with the New York Knicks.",
+      "My Converse advertising alter ego was the grandmother known as Grandmama."
+    ],
+    "b": [
+      "I had an immediate impact on an expanding NBA franchise.",
+      "I was known for strength, athleticism and rebounding early on.",
+      "I made consecutive major league honors during my first seasons.",
+      "I was chosen to play in the 1993 and 1995 NBA All-Star Games.",
+      "I won the 1990 NCAA championship before entering the NBA.",
+      "I played on a celebrated UNLV college team coached by Jerry Tarkanian.",
+      "I was traded from Charlotte to New York in 1996.",
+      "I helped an eighth-seeded team make the 1999 NBA Finals.",
+      "I starred first for the Hornets and later for the Knicks.",
+      "My nickname Grandmama came from the Converse commercials I made as a Charlotte star."
+    ]
+  },
+  {
+    "name": "Glen Rice",
+    "bref": "ricegl01",
+    "group": "wing",
+    "a": [
+      "I became a reliable outside shooter and prolific scorer.",
+      "I was selected for three NBA All-Star Games.",
+      "I led my team in scoring during multiple seasons.",
+      "I won the All-Star Game MVP award in 1997.",
+      "I won an NBA three-point contest.",
+      "I was drafted fourth overall by Miami in 1989.",
+      "I was traded to Charlotte in a deal for Alonzo Mourning.",
+      "I joined the Lakers before their three-peat and won the title in 2000.",
+      "I won the NCAA championship at Michigan before playing for the Miami Heat and Hornets.",
+      "I became an NBA champion with Shaquille O'Neal and Kobe Bryant on the 2000 Lakers."
+    ],
+    "b": [
+      "I developed into an All-Star after several productive seasons.",
+      "I scored efficiently from beyond the arc during my prime.",
+      "I was the 1989 NCAA tournament's Most Outstanding Player.",
+      "I made my first NBA All-Star appearance in 1996.",
+      "I helped win Michigan's first men's basketball national championship.",
+      "I scored 26 points as the MVP of the 1997 All-Star Game.",
+      "I was acquired by Los Angeles in a trade involving Eddie Jones and Elden Campbell.",
+      "I played in the 2000 Finals against Indiana.",
+      "I starred in Miami and Charlotte before becoming a Lakers champion.",
+      "I was the sharpshooting Michigan Wolverine who won the 1997 All-Star MVP."
+    ]
+  },
+  {
+    "name": "Tim Hardaway",
+    "bref": "hardati01",
+    "group": "guard",
+    "a": [
+      "I earned five NBA All-Star selections.",
+      "I was selected to multiple All-NBA teams during my prime.",
+      "I was named to the All-NBA First Team in 1997.",
+      "I became a high-volume assist producer early in my career.",
+      "I was a centerpiece of a three-player, high-scoring offensive trio.",
+      "I helped Miami reach the Eastern Conference Finals in 1997.",
+      "I played alongside Alonzo Mourning under coach Pat Riley.",
+      "I spent my early career with Golden State before a 1996 trade to Miami.",
+      "I teamed with Mitch Richmond and Chris Mullin on the Warriors' Run TMC.",
+      "My signature crossover was called the UTEP Two-Step."
+    ],
+    "b": [
+      "I entered the NBA as a mid-first-round draft pick.",
+      "I built a reputation for creative ball handling and shot creation.",
+      "I made the All-Rookie First Team.",
+      "I recorded repeated seasons of more than nine assists per game.",
+      "I was chosen fourteenth overall in the 1989 NBA Draft.",
+      "I won Olympic gold with the United States in 2000.",
+      "I finished fourth in the league MVP voting in 1997.",
+      "I was part of Miami's bruising late-1990s playoff battles with New York.",
+      "I was the original Tim Hardaway from the Warriors and Heat, not my NBA-playing son.",
+      "I was the Run TMC guard whose crossover became the UTEP Two-Step."
+    ]
+  },
+  {
+    "name": "Michael Finley",
+    "bref": "finlemi01",
+    "group": "wing",
+    "a": [
+      "I earned two NBA All-Star selections.",
+      "I developed into an effective volume scorer and reliable long-range shooter.",
+      "I spent more than a decade as a starter.",
+      "I recorded several seasons averaging more than twenty points.",
+      "I was selected twenty-first overall in the 1995 NBA Draft.",
+      "I was included in a trade that sent Jason Kidd to Phoenix.",
+      "I was part of a talented Dallas trio with Dirk Nowitzki and Steve Nash.",
+      "I joined San Antonio after leaving Dallas in 2005.",
+      "I won the 2007 NBA championship with the Spurs.",
+      "I was the No. 4 Mavericks scorer who shared the floor with Nowitzki and Nash."
+    ],
+    "b": [
+      "I was selected to the NBA All-Rookie First Team.",
+      "I gradually grew into an All-Star after a trade early in my career.",
+      "I regularly played heavy minutes at my peak.",
+      "I became an All-Star in 2000 and 2001.",
+      "I started my NBA career with Phoenix before a move to Dallas.",
+      "I scored more than twenty points a game in the 1999-2000 season.",
+      "I played alongside Tim Duncan, Tony Parker and Manu Ginóbili later in my career.",
+      "I helped San Antonio beat Cleveland in the 2007 Finals.",
+      "I starred at Wisconsin before becoming a leading Dallas Mavericks scorer.",
+      "I was Michael Finley, the former Suns draft pick who became a 2007 Spurs champion."
+    ]
+  },
+  {
+    "name": "Antoine Walker",
+    "bref": "walkean02",
+    "group": "big",
+    "a": [
+      "I became an NBA All-Star on three occasions.",
+      "I was a prolific rebounder and willing three-point shooter.",
+      "I averaged more than twenty points per game in multiple seasons.",
+      "I helped my team reach a conference final in the early 2000s.",
+      "I was a first-round pick in 1996.",
+      "I was the teammate of Paul Pierce during Boston's 2002 playoff run.",
+      "I played for Dallas before returning briefly to Boston.",
+      "I joined Miami and won the 2006 NBA championship.",
+      "I was the former Kentucky champion known for scoring and shooting threes for the Celtics.",
+      "My signature celebration was a shoulder shimmy after a big shot."
+    ],
+    "b": [
+      "I entered the league with considerable expectations after college success.",
+      "I was regularly involved as both a scorer and playmaker.",
+      "I earned All-Star selections in 1998, 2002 and 2003.",
+      "I averaged more than eight rebounds over several seasons.",
+      "I won the 1996 NCAA national championship with Kentucky.",
+      "I was the sixth overall selection of the Boston Celtics that year.",
+      "I was traded to Dallas in 2003 and later played in Atlanta.",
+      "I became a starter for the 2006 championship-winning Miami Heat.",
+      "I wore No. 8 while forming a star partnership with Paul Pierce in Boston.",
+      "I was the Celtics star known for the shimmy and later a Miami Heat champion."
+    ]
+  },
+  {
+    "name": "Richard Hamilton",
+    "bref": "hamilri01",
+    "group": "wing",
+    "a": [
+      "I made three consecutive NBA All-Star teams.",
+      "I was renowned for constant movement and midrange jump shooting.",
+      "I won an NBA championship as a starting player.",
+      "I was a leading scorer on a team with multiple outstanding defenders.",
+      "I entered the NBA as the seventh overall pick in 1999.",
+      "I was traded for Jerry Stackhouse in 2002.",
+      "I helped defeat a star-studded Lakers team in the 2004 NBA Finals.",
+      "I reached six straight conference finals while playing for Detroit.",
+      "I was the masked scoring specialist for the championship-era Pistons.",
+      "My nickname was Rip, and I wore a protective face mask through much of my Detroit career."
+    ],
+    "b": [
+      "I won a national championship before entering professional basketball.",
+      "I earned multiple All-Star selections only after a change of teams.",
+      "I became famous for running defenders through screens.",
+      "I was named the Final Four Most Outstanding Player in 1999.",
+      "I played my first NBA seasons for Washington.",
+      "I shared a 2004 championship starting lineup with Chauncey Billups and Ben Wallace.",
+      "I played against San Antonio in the 2005 NBA Finals.",
+      "I finished my career with the Chicago Bulls after leaving Detroit.",
+      "I won the 1999 NCAA title at Connecticut and the 2004 NBA title with the Pistons.",
+      "I was the masked Pistons shooter nicknamed Rip Hamilton."
+    ]
+  },
+  {
+    "name": "Chauncey Billups",
+    "bref": "billuch01",
+    "group": "guard",
+    "a": [
+      "I had several early-career stops before establishing myself as an All-Star.",
+      "I was respected for shooting and guiding organized half-court offenses.",
+      "I made five straight NBA All-Star teams in the later part of my career.",
+      "I received All-NBA Second Team recognition in 2006.",
+      "I won a Finals MVP award.",
+      "I joined Detroit as a free agent in 2002.",
+      "I led a balanced Pistons team past the Lakers in the 2004 NBA Finals.",
+      "I later returned to Denver and reached the 2009 Western Conference Finals.",
+      "I was the No. 1 point guard of Detroit's 2004 championship team.",
+      "My clutch reputation earned me the nickname Mr. Big Shot."
+    ],
+    "b": [
+      "I developed into a leader after changing teams multiple times.",
+      "I earned a reputation for steady decision-making in big games.",
+      "I was a first-round pick who found his best form well after his debut.",
+      "I was named to NBA All-Defensive teams during my prime.",
+      "I was chosen third overall in the 1997 NBA Draft.",
+      "I played college basketball at Colorado.",
+      "I won the 2004 Finals MVP award for a team that had no dominant single scorer.",
+      "I shared Detroit's title-winning backcourt with Richard Hamilton.",
+      "I won a championship against Kobe Bryant and Shaquille O'Neal with the Pistons.",
+      "I was the Colorado-born guard called Mr. Big Shot who led Detroit in 2004."
+    ]
+  },
   // NEXT_BATCH
 ];
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
