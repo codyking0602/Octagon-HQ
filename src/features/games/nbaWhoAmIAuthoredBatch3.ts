@@ -43,7 +43,7 @@ const entries: readonly Entry[] = [
       "I made the All-NBA team more than once during my career.",
       "I developed into an effective long-range shooter after building a reputation for explosive finishing.",
       "I played in eight NBA All-Star Games.",
-      "I helped an international Olympic team win gold with the United States.",
+      "I won Olympic gold with the United States men's national basketball team.",
       "I competed in NBA games across four different decades.",
       "I played a record 22 NBA seasons before retiring.",
       "I was traded from Toronto to New Jersey and paired with Jason Kidd.",
@@ -54,7 +54,7 @@ const entries: readonly Entry[] = [
       "I earned an All-Rookie First Team selection.",
       "I played substantial minutes off the bench late in a lengthy career.",
       "I helped my team reach a conference semifinal in my third NBA season.",
-      "I was selected fifth in the draft before my rights were dealt on draft night.",
+      "I entered the league as a lottery selection following a college career.",
       "I made the All-NBA Second Team in 2001.",
       "I famously dueled Allen Iverson in a seven-game 2001 playoff series.",
       "I hit a game-winning corner three for Dallas against San Antonio in the 2014 playoffs.",
@@ -87,7 +87,7 @@ const entries: readonly Entry[] = [
       "I was selected ninth overall in the 1997 NBA Draft.",
       "I began my NBA career playing alongside cousin Vince Carter in Toronto.",
       "I became a star after moving from Toronto to Orlando.",
-      "I joined San Antonio late in the 2013 playoffs and reached the NBA Finals without appearing in a Finals game.",
+      "I joined San Antonio during the 2013 playoffs and was on a team that reached the Finals.",
       "I was the Magic scorer who wore No. 1 during my two scoring-title seasons.",
       "My nickname T-Mac followed me from Orlando to the Houston Rockets."
     ]
@@ -113,7 +113,7 @@ const entries: readonly Entry[] = [
       "I made the All-NBA team in several different seasons.",
       "I was better known for creating shots than for volume scoring.",
       "I was a member of eight NBA All-Star teams.",
-      "I was selected in the middle of the first round in 1996.",
+      "I was a first-round pick who found a bigger role several seasons into my career.",
       "I shared the floor with a future league MVP before becoming one myself.",
       "I played beside Dirk Nowitzki and Michael Finley for Dallas.",
       "I returned to the franchise that had drafted me as a free agent in 2004.",
@@ -142,7 +142,7 @@ const entries: readonly Entry[] = [
     "b": [
       "I played nearly two decades at the NBA level.",
       "I regularly contributed rebounds despite being best known as a playmaker.",
-      "I was chosen second overall in my draft class.",
+      "I entered the league as a high lottery pick.",
       "I started my professional career by sharing an award with Grant Hill.",
       "I won two Olympic gold medals with the United States.",
       "I spent notable stretches with Dallas, Phoenix and New Jersey.",
@@ -172,7 +172,7 @@ const entries: readonly Entry[] = [
       "I emerged as a team's offensive leader right out of the draft.",
       "I could contribute on the glass despite my backcourt role.",
       "I averaged more than twenty points per game in multiple seasons.",
-      "I was an All-Star in 2002, 2003 and 2004.",
+      "I was selected to three straight All-Star Games.",
       "I shared the 2000 Rookie of the Year honor with Elton Brand.",
       "I starred in Houston before moving to Orlando and later New York.",
       "I reunited briefly with the Rockets late in my NBA career.",
@@ -190,7 +190,7 @@ const entries: readonly Entry[] = [
       "I shared Rookie of the Year with another future Hall of Famer.",
       "I earned multiple All-NBA honors before chronic injuries interrupted my career.",
       "I could initiate offense while also scoring and rebounding effectively.",
-      "I made the All-NBA First Team in 1997.",
+      "I made the All-NBA First Team during my early Detroit peak.",
       "I was an NBA All-Star in my first seven eligible seasons.",
       "I missed most of several seasons because of severe ankle problems.",
       "I was a key member of the United States' gold medal team at the 1996 Olympics.",
@@ -231,7 +231,7 @@ const entries: readonly Entry[] = [
       "I immediately became a valued contributor as a rookie.",
       "I could score and distribute the ball at an All-NBA level.",
       "I helped eliminate a defending champion in a playoff series.",
-      "I was picked third overall in the 1993 NBA Draft.",
+      "I arrived in the NBA as a highly anticipated lottery selection.",
       "I entered the league through a draft-night trade involving Chris Webber.",
       "I won Olympic gold with the United States in 1996.",
       "I later spent several seasons with the Phoenix Suns after leaving my first team.",
@@ -248,7 +248,7 @@ const entries: readonly Entry[] = [
     "a": [
       "I was voted Rookie of the Year after my debut season.",
       "I became a multiple-time All-Star and All-NBA selection.",
-      "I was named to the All-NBA First Team in 2001.",
+      "I earned All-NBA First Team honors after developing into a franchise centerpiece.",
       "I helped turn a struggling franchise into a consistent playoff team.",
       "I was selected first overall in the 1993 NBA Draft.",
       "I was traded on draft night for another highly touted prospect and draft picks.",
@@ -291,7 +291,7 @@ const entries: readonly Entry[] = [
       "I established myself as a dependable scorer after a modest rookie season.",
       "I could threaten defenders from outside without relying on spectacular athleticism.",
       "I spent most of my NBA career playing for one franchise.",
-      "I was the seventh overall draft pick in 1985.",
+      "I entered the league as an early first-round selection.",
       "I averaged more than twenty-five points in five straight seasons.",
       "I won Olympic gold with the United States in both 1984 and 1992.",
       "I played on a Don Nelson-coached team known for fast-paced offense.",
@@ -321,7 +321,7 @@ const entries: readonly Entry[] = [
       "I became a franchise's all-time scoring leader.",
       "I was famous for making big shots late in close games.",
       "I was named to the All-NBA Third Team three times.",
-      "I entered the league as the eleventh overall pick in 1987.",
+      "I was drafted just outside the top ten picks.",
       "I made 2,560 career regular-season three-pointers.",
       "I reached the 2000 Finals under coach Larry Bird.",
       "I was a centerpiece of several playoff battles with Michael Jordan's Bulls.",
@@ -349,13 +349,13 @@ const entries: readonly Entry[] = [
     "b": [
       "I entered the NBA directly after high school rather than playing college basketball.",
       "I improved my scoring average across several consecutive early seasons.",
-      "I won a world championship with the United States in 1994.",
-      "I was chosen seventeenth overall in the 1989 NBA Draft.",
+      "I won an international gold medal representing the United States.",
+      "I entered the NBA as a teenager after an unconventional path.",
       "I was a major part of a team that won more than fifty games repeatedly.",
       "I scored twenty or more points per game in two consecutive seasons after a trade.",
       "I played against Dennis Rodman in an NBA Finals series.",
       "I was sent from Seattle to Cleveland in a major 1997 trade.",
-      "I was one half of a famous alley-oop partnership with Gary Payton.",
+      "I formed a celebrated alley-oop partnership with Gary Payton in Seattle.",
       "I became famous for my high-flying dunks in Seattle as the Reign Man."
     ]
   },
@@ -398,7 +398,7 @@ const entries: readonly Entry[] = [
       "I earned Rookie of the Year in my first NBA season.",
       "I collected eleven NBA All-Star selections.",
       "I was a reliable twenty-point scorer and an imposing shot blocker.",
-      "I earned an All-NBA First Team selection in 1990.",
+      "I earned an All-NBA First Team selection during my prime.",
       "I helped my club reach the conference finals multiple times.",
       "I faced Hakeem Olajuwon in a seven-game NBA Finals series.",
       "I led New York to the 1994 Finals, where Houston prevailed.",
@@ -410,7 +410,7 @@ const entries: readonly Entry[] = [
       "I played more than a thousand NBA regular-season games.",
       "I was selected repeatedly to All-NBA teams.",
       "I built a reputation for mid-range shooting in addition to rim protection.",
-      "I won Olympic gold at both the 1984 and 1992 Summer Games.",
+      "I won Olympic gold twice with the United States.",
       "I played a pivotal role in a famous college national championship.",
       "I returned from an Achilles injury after missing a team's 1999 Finals run.",
       "I finished with brief NBA stops in Seattle and Orlando.",
@@ -440,7 +440,7 @@ const entries: readonly Entry[] = [
       "I was a ten-time NBA All-Star.",
       "I quickly became one of the league's most versatile interior defenders.",
       "I earned numerous All-NBA and All-Defensive selections.",
-      "I was selected first overall in a draft but debuted two seasons later.",
+      "I spent two seasons serving in the military before debuting in the NBA.",
       "I recorded a quadruple-double in a 1994 regular-season game.",
       "I won the 1992 Defensive Player of the Year award.",
       "I was part of the 1992 U.S. Olympic Dream Team.",
@@ -470,252 +470,13 @@ const entries: readonly Entry[] = [
       "I was a dominant scorer even though defense was equally central to my game.",
       "I became a twelve-time All-NBA selection.",
       "I developed an extraordinary set of post moves and counter moves.",
-      "I recorded a quadruple-double in 1990.",
+      "I recorded one of the rare quadruple-doubles in NBA history.",
       "I was the first pick of the 1984 NBA Draft ahead of Michael Jordan.",
       "I played on a college team known as Phi Slama Jama.",
       "I defeated Patrick Ewing's Knicks in the 1994 Finals.",
       "I outplayed David Robinson in a 1995 conference final before sweeping Orlando.",
       "I starred at the University of Houston and was drafted by the Houston Rockets.",
       "I was the Nigerian-born Rockets legend known for the Dream Shake and No. 34."
-    ]
-  },
-  {
-    "name": "Charles Barkley",
-    "bref": "barklch01",
-    "group": "big",
-    "history": "https://www.nba.com/news/history-nba-legend-charles-barkley",
-    "a": [
-      "I made eleven NBA All-Star teams.",
-      "I was a formidable rebounder despite being shorter than many of the players I battled inside.",
-      "I led the NBA in rebounding during the 1986-87 season.",
-      "I was named to the All-NBA First Team five times.",
-      "I won a regular-season MVP award but never an NBA title.",
-      "I won MVP in 1993 after joining a new franchise.",
-      "I led Phoenix to the 1993 Finals against Michael Jordan's Bulls.",
-      "I scored 56 points in a 1994 playoff game against Golden State.",
-      "I starred for Philadelphia, Phoenix and Houston.",
-      "I was the outspoken Dream Team star called the Round Mound of Rebound."
-    ],
-    "b": [
-      "I was a dominant scorer and rebounder over a long career.",
-      "I was a frequent All-NBA selection throughout my prime.",
-      "I became a member of the original U.S. Olympic Dream Team.",
-      "I left my first franchise in a major trade during my prime.",
-      "I was named the 1991 NBA All-Star Game MVP.",
-      "I played alongside Hakeem Olajuwon and Clyde Drexler in Houston late in my career.",
-      "I was the fifth overall pick out of Auburn in the 1984 NBA Draft.",
-      "I was the principal star of the 1992-93 Phoenix Suns.",
-      "I was the MVP who lost the 1993 Finals to the Chicago Bulls.",
-      "I was known as Sir Charles and the Round Mound of Rebound."
-    ]
-  },
-  {
-    "name": "Karl Malone",
-    "bref": "malonka01",
-    "group": "big",
-    "history": "https://www.nba.com/news/history-nba-legend-karl-malone",
-    "a": [
-      "I scored more than twenty points per game in many consecutive seasons.",
-      "I earned multiple All-NBA First Team selections.",
-      "I won two NBA regular-season MVP awards.",
-      "I made fourteen NBA All-Star Games.",
-      "I became one of the most prolific free-throw earners in league history.",
-      "I was named league MVP in 1997 and again in 1999.",
-      "I appeared in consecutive NBA Finals against Chicago in 1997 and 1998.",
-      "I joined the Lakers for a final attempt at a title in 2003-04.",
-      "I formed a long-running pick-and-roll partnership with John Stockton in Utah.",
-      "I wore No. 32 for the Jazz and was famously nicknamed the Mailman."
-    ],
-    "b": [
-      "I was a dependable high-volume scorer and rebounder.",
-      "I had an unusually long run as an elite starter.",
-      "I appeared on eleven consecutive All-NBA First Teams.",
-      "I finished my career with 36,928 regular-season points.",
-      "I entered the league as the thirteenth overall pick in 1985.",
-      "I helped bring my franchise to its first NBA Finals.",
-      "I lost two Finals in consecutive seasons to Michael Jordan's Bulls.",
-      "I played my final NBA season alongside Shaquille O'Neal and Kobe Bryant.",
-      "I was the Louisiana Tech product who spent eighteen seasons with the Utah Jazz.",
-      "My Utah teammate was assist king John Stockton, and my nickname was the Mailman."
-    ]
-  },
-  {
-    "name": "John Stockton",
-    "bref": "stockjo01",
-    "group": "guard",
-    "history": "https://www.nba.com/news/history-nba-legend-john-stockton",
-    "a": [
-      "I played a remarkably long NBA career without changing franchises.",
-      "I became a repeated All-Star and All-NBA selection.",
-      "I led the league in assists for nine consecutive seasons.",
-      "I was an elite ball thief as well as a playmaker.",
-      "I appeared in two consecutive NBA Finals.",
-      "I made a series-winning three-pointer to send my team to the 1997 Finals.",
-      "I finished with 15,806 assists in the NBA regular season.",
-      "I retired as the league's career leader in both assists and steals.",
-      "I ran the Utah Jazz pick-and-roll alongside Karl Malone.",
-      "I was the Gonzaga guard wearing No. 12 for the Jazz."
-    ],
-    "b": [
-      "I was drafted in the first round and gradually earned a starting role.",
-      "I became known for durable, efficient playmaking.",
-      "I was chosen for ten NBA All-Star Games.",
-      "I led the NBA in steals in two different seasons.",
-      "I was selected sixteenth overall in the 1984 NBA Draft.",
-      "I won Olympic gold with the U.S. Dream Team in 1992.",
-      "I played all nineteen NBA seasons for one organization.",
-      "I made back-to-back Finals appearances but was denied by the Bulls.",
-      "My pass to Karl Malone became synonymous with Utah's signature pick-and-roll.",
-      "I was the Utah Jazz's No. 12 and finished with 3,265 steals and 15,806 assists."
-    ]
-  },
-  {
-    "name": "Scottie Pippen",
-    "bref": "pippesc01",
-    "group": "wing",
-    "history": "https://www.nba.com/news/archive-75-scottie-pippen",
-    "a": [
-      "I earned repeated All-Defensive First Team selections.",
-      "I could guard several different kinds of opponents while initiating offense.",
-      "I made seven NBA All-Star teams.",
-      "I was selected to three All-NBA First Teams.",
-      "I finished third in MVP voting while serving as my team's lead star.",
-      "I won consecutive Olympic gold medals with the United States.",
-      "I won six NBA championships alongside Michael Jordan.",
-      "I spent a later career stretch in Houston and Portland.",
-      "I served as the versatile co-star of Chicago's two championship three-peats.",
-      "I wore No. 33 for the Bulls and was Michael Jordan's longtime championship partner."
-    ],
-    "b": [
-      "I was selected to both All-NBA and All-Defensive teams in several seasons.",
-      "I was highly valued for defense, passing and transition play.",
-      "I became the All-Star Game MVP in 1994.",
-      "I was drafted fifth overall in 1987 before a draft-night trade.",
-      "I led the Bulls in major categories during Jordan's first retirement.",
-      "I famously dunked over Patrick Ewing in the 1994 playoffs.",
-      "I helped Portland reach Game 7 of the 2000 Western Conference Finals.",
-      "I played college basketball at the University of Central Arkansas.",
-      "I won six rings with Chicago while defending stars across the league.",
-      "I was the Bulls' No. 33, the fellow Dream Teamer paired with Michael Jordan."
-    ]
-  },
-  {
-    "name": "Dennis Rodman",
-    "bref": "rodmade01",
-    "group": "big",
-    "history": "https://www.nba.com/news/archive-75-dennis-rodman",
-    "a": [
-      "I earned multiple NBA All-Defensive selections.",
-      "I built my value through defense and rebounding more than scoring.",
-      "I won the league's rebounding title in seven consecutive seasons.",
-      "I received the Defensive Player of the Year award twice.",
-      "I won NBA championships with more than one franchise.",
-      "I won my first two titles as part of Detroit's Bad Boys defense.",
-      "I later captured three straight championships with Michael Jordan's Bulls.",
-      "I played for the Spurs between my Detroit and Chicago title runs.",
-      "I became the flamboyant rebounding specialist wearing No. 91 for Chicago.",
-      "My nickname was the Worm, and I won five NBA championships."
-    ],
-    "b": [
-      "I entered the league without a celebrated major-college pedigree.",
-      "I became a rotation player before developing into an elite defender.",
-      "I made two NBA All-Star appearances.",
-      "I led the league in rebounds per game more than any other player in the 1990s.",
-      "I was drafted in the second round in 1986.",
-      "I won Defensive Player of the Year in 1990 and 1991.",
-      "I reached the 1988 Finals before winning rings in 1989 and 1990.",
-      "I was traded from San Antonio to the Bulls in 1995.",
-      "I played alongside Isiah Thomas in Detroit and Michael Jordan in Chicago.",
-      "I was known for dyed hair, the Worm nickname and my Bulls No. 91 jersey."
-    ]
-  },
-  {
-    "name": "Clyde Drexler",
-    "bref": "drexlcl01",
-    "group": "wing",
-    "history": "https://www.nba.com/news/archive-75-clyde-drexler",
-    "a": [
-      "I made ten NBA All-Star teams.",
-      "I was a strong scoring and rebounding contributor from the perimeter.",
-      "I earned five All-NBA selections during my prime.",
-      "I finished second in regular-season MVP voting in 1992.",
-      "I appeared in multiple NBA Finals with different teammates.",
-      "I led Portland to the 1990 and 1992 Finals.",
-      "I reunited with a former college teammate in a midseason trade.",
-      "I won the 1995 NBA championship beside Hakeem Olajuwon in Houston.",
-      "I became a legend with the Trail Blazers before closing my career with the Rockets.",
-      "My soaring finishes earned me the nickname Clyde the Glide."
-    ],
-    "b": [
-      "I was a prolific transition scorer with notable playmaking ability.",
-      "I grew into the star of a team that contended for titles.",
-      "I joined the 1992 United States Olympic Dream Team.",
-      "I was drafted fourteenth overall in 1983.",
-      "I played on the Phi Slama Jama college teams.",
-      "I lost the 1992 Finals to Michael Jordan's Bulls.",
-      "I moved from Portland to Houston during the 1994-95 season.",
-      "I helped the Rockets sweep the Orlando Magic in the 1995 Finals.",
-      "I starred at the University of Houston before a long career wearing No. 22 in Portland.",
-      "I was known as Clyde the Glide with the Blazers and championship-winning Rockets."
-    ]
-  },
-  {
-    "name": "Dominique Wilkins",
-    "bref": "wilkido01",
-    "group": "wing",
-    "history": "https://www.nba.com/news/archive-75-dominique-wilkins",
-    "a": [
-      "I was chosen for nine NBA All-Star Games.",
-      "I became one of the most prolific scorers of my generation.",
-      "I made seven All-NBA teams.",
-      "I won the league scoring title during the 1985-86 season.",
-      "I battled a superstar opponent in a classic seventh game of a playoff series.",
-      "I scored 47 points against Larry Bird's Boston Celtics in Game 7 in 1988.",
-      "I won two NBA Slam Dunk Contest championships.",
-      "I spent twelve seasons starring for the Atlanta Hawks before a major trade.",
-      "I wore No. 21 for Atlanta and was one of the greatest in-game dunkers.",
-      "My high-flying style earned me the nickname the Human Highlight Film."
-    ],
-    "b": [
-      "I became a consistent twenty-point scorer across many seasons.",
-      "I was a two-time winner of a major All-Star weekend competition.",
-      "I played in multiple playoff series against championship-caliber opponents.",
-      "I was selected third overall in the 1982 NBA Draft.",
-      "I was drafted by Utah but traded before making my NBA debut.",
-      "I returned from a torn Achilles tendon to regain elite scoring form.",
-      "I finished a late-career season as a European club champion.",
-      "I left Atlanta for the Los Angeles Clippers in 1994.",
-      "I represented the Hawks in memorable 1985 and 1990 dunk-contest wins.",
-      "I was the Atlanta star called the Human Highlight Film."
-    ]
-  },
-  {
-    "name": "Dikembe Mutombo",
-    "bref": "mutomdi01",
-    "group": "big",
-    "a": [
-      "I earned eight NBA All-Star selections.",
-      "I established myself as an elite rebounder and defender.",
-      "I won the Defensive Player of the Year award four times.",
-      "I led the NBA in blocked shots multiple seasons.",
-      "I won consecutive league rebounding titles late in my prime.",
-      "I helped an eighth-seeded playoff team defeat the top seed.",
-      "I celebrated Denver's 1994 upset of Seattle while clutching the ball on the floor.",
-      "I helped Philadelphia reach the 2001 NBA Finals.",
-      "I became known for wagging a finger after blocking shots.",
-      "I was the Georgetown-trained No. 55 center with the signature finger wag."
-    ],
-    "b": [
-      "I was an All-Defensive standout across several franchises.",
-      "I was known for shot blocking rather than scoring championships.",
-      "I developed into one of the most decorated defensive players in NBA history.",
-      "I entered the NBA as the fourth overall choice in the 1991 draft.",
-      "I won the league's Defensive Player of the Year award in both 1995 and 2001.",
-      "I played in the NBA Finals with Allen Iverson's 76ers.",
-      "I later played for the New Jersey Nets and Houston Rockets.",
-      "I finished with more than three thousand career blocked shots.",
-      "I first rose to fame in the Denver Nuggets' famous 1994 playoff upset.",
-      "My finger wag and the phrase 'No, no, no' became my signature celebration."
     ]
   },
   {
@@ -824,8 +585,8 @@ const entries: readonly Entry[] = [
     "b": [
       "I became a seven-time NBA All-Star.",
       "I often guarded opposing perimeter stars while facilitating my team's offense.",
-      "I was originally drafted by one franchise and traded immediately to another.",
-      "I was named MVP of the 1994 NBA All-Star Game.",
+      "I helped lead a team during an extended absence by its biggest scorer.",
+      "I was involved in a draft-night trade early in my professional career.",
       "I earned a place on the original 1992 U.S. Olympic Dream Team.",
       "I played college basketball at Central Arkansas before being selected fifth in the 1987 draft.",
       "I posted a famous triple-double in Game 6 of the 1992 Finals.",
@@ -882,8 +643,8 @@ const entries: readonly Entry[] = [
     "b": [
       "I was a first-round draft pick outside the lottery's very top selections.",
       "I became known for finishing fast breaks spectacularly.",
-      "I was named to the NBA's 50th and 75th anniversary teams.",
-      "I appeared in a Finals series against the Bad Boy Pistons.",
+      "I was named to the NBA's fiftieth anniversary team.",
+      "I was a first-round pick outside the very top of the draft.",
       "I averaged more than twenty points per game across multiple seasons.",
       "I played on the original U.S. Olympic Dream Team in 1992.",
       "I lost the 1992 NBA Finals to Michael Jordan's Chicago Bulls.",
@@ -900,7 +661,7 @@ const entries: readonly Entry[] = [
       "I made multiple All-NBA teams thanks to consistently elite scoring.",
       "I played in nine NBA All-Star Games during my career.",
       "I finished in the NBA's top three scorers in multiple seasons.",
-      "I won a league scoring title during the 1980s.",
+      "I won a league scoring title during the middle of my career.",
       "I twice won the NBA Slam Dunk Contest.",
       "I scored 47 points in Game 7 of a 1988 playoff series but my team lost to Boston.",
       "I returned to elite NBA play after a ruptured Achilles tendon.",
@@ -912,13 +673,13 @@ const entries: readonly Entry[] = [
       "I was an All-Rookie First Team selection.",
       "I regularly scored more than twenty-five points per game in my prime.",
       "I was selected third overall in my NBA draft.",
-      "I starred in an unforgettable duel with Larry Bird in a playoff Game 7.",
+      "I entered the league as a highly regarded lottery selection.",
       "I became the franchise's all-time leading scorer.",
       "I initially refused to play for the Utah Jazz, who had drafted me in 1982.",
       "I ultimately played NBA games for Atlanta, the Clippers, Boston, San Antonio and Orlando.",
       "I also spent time playing professionally in Greece and Italy.",
       "I became best known for explosive dunks wearing No. 21 for the Atlanta Hawks.",
-      "The Human Highlight Film was my lasting nickname."
+      "I became an Atlanta icon nicknamed the Human Highlight Film."
     ]
   },
   {
@@ -941,245 +702,13 @@ const entries: readonly Entry[] = [
       "I consistently ranked near the league lead in rebounds and blocked shots.",
       "I was selected to multiple All-Defensive First Teams.",
       "I played NBA basketball into my forties.",
-      "I earned an NBA rebounding title in two seasons.",
+      "I earned an NBA rebounding title in two different seasons.",
       "I became a four-time Defensive Player of the Year winner.",
       "I played for Denver, Atlanta, Philadelphia, New Jersey, New York and Houston.",
       "I became the first player to win Defensive Player of the Year four times.",
       "I played alongside Allen Iverson in the 2001 Finals against the Lakers.",
       "I was the Congolese Hall of Famer who made the finger wag famous with Denver and Atlanta.",
       "I wore No. 55 while starring at Georgetown and in the NBA."
-    ]
-  },
-  {
-    "name": "Alonzo Mourning",
-    "bref": "mournal01",
-    "group": "big",
-    "a": [
-      "I made seven NBA All-Star teams.",
-      "I became a perennial All-Defensive candidate and feared rim protector.",
-      "I led the NBA in blocked shots in consecutive seasons.",
-      "I earned All-NBA First Team recognition in 1999.",
-      "I won Defensive Player of the Year in two straight seasons.",
-      "I was diagnosed with a serious kidney disorder during my career.",
-      "I underwent a kidney transplant in 2003 before returning to the NBA.",
-      "I won the 2006 championship as a reserve alongside Dwyane Wade and Shaquille O'Neal.",
-      "I was a longtime Miami Heat star after beginning with the Charlotte Hornets.",
-      "My nickname was Zo, and I wore No. 33 in Miami."
-    ],
-    "b": [
-      "I played for more than one franchise yet became most identified with one.",
-      "I was among the league's best shot blockers for years.",
-      "I finished as runner-up in MVP voting in 1999.",
-      "I made the All-NBA Second Team in 2000.",
-      "I was selected second overall in the 1992 NBA Draft.",
-      "I partnered with Larry Johnson during the early years of an expansion franchise.",
-      "I was traded from Charlotte to Miami in 1995.",
-      "I returned to basketball after a kidney transplant.",
-      "I starred at Georgetown before becoming a defensive mainstay for the Miami Heat.",
-      "I was called Zo and won my first ring with the 2006 Heat."
-    ]
-  },
-  {
-    "name": "Larry Johnson",
-    "bref": "johnsla02",
-    "group": "big",
-    "a": [
-      "I earned NBA Rookie of the Year honors.",
-      "I became a multiple-time All-Star early in my career.",
-      "I posted prolific points-and-rebounds totals in my first NBA seasons.",
-      "I was selected to the All-NBA Second Team in 1993.",
-      "I battled a back injury that changed my style of play.",
-      "I was the first overall pick in the 1991 NBA Draft.",
-      "I played with Alonzo Mourning on the young Charlotte Hornets.",
-      "I hit a memorable four-point play against Indiana in the 1999 playoffs.",
-      "I later reached the 1999 NBA Finals with the New York Knicks.",
-      "My Converse advertising alter ego was the grandmother known as Grandmama."
-    ],
-    "b": [
-      "I had an immediate impact on an expanding NBA franchise.",
-      "I was known for strength, athleticism and rebounding early on.",
-      "I made consecutive major league honors during my first seasons.",
-      "I was chosen to play in the 1993 and 1995 NBA All-Star Games.",
-      "I won the 1990 NCAA championship before entering the NBA.",
-      "I played on a celebrated UNLV college team coached by Jerry Tarkanian.",
-      "I was traded from Charlotte to New York in 1996.",
-      "I helped an eighth-seeded team make the 1999 NBA Finals.",
-      "I starred first for the Hornets and later for the Knicks.",
-      "My nickname Grandmama came from the Converse commercials I made as a Charlotte star."
-    ]
-  },
-  {
-    "name": "Glen Rice",
-    "bref": "ricegl01",
-    "group": "wing",
-    "a": [
-      "I became a reliable outside shooter and prolific scorer.",
-      "I was selected for three NBA All-Star Games.",
-      "I led my team in scoring during multiple seasons.",
-      "I won the All-Star Game MVP award in 1997.",
-      "I won an NBA three-point contest.",
-      "I was drafted fourth overall by Miami in 1989.",
-      "I was traded to Charlotte in a deal for Alonzo Mourning.",
-      "I joined the Lakers before their three-peat and won the title in 2000.",
-      "I won the NCAA championship at Michigan before playing for the Miami Heat and Hornets.",
-      "I became an NBA champion with Shaquille O'Neal and Kobe Bryant on the 2000 Lakers."
-    ],
-    "b": [
-      "I developed into an All-Star after several productive seasons.",
-      "I scored efficiently from beyond the arc during my prime.",
-      "I was the 1989 NCAA tournament's Most Outstanding Player.",
-      "I made my first NBA All-Star appearance in 1996.",
-      "I helped win Michigan's first men's basketball national championship.",
-      "I scored 26 points as the MVP of the 1997 All-Star Game.",
-      "I was acquired by Los Angeles in a trade involving Eddie Jones and Elden Campbell.",
-      "I played in the 2000 Finals against Indiana.",
-      "I starred in Miami and Charlotte before becoming a Lakers champion.",
-      "I was the sharpshooting Michigan Wolverine who won the 1997 All-Star MVP."
-    ]
-  },
-  {
-    "name": "Tim Hardaway",
-    "bref": "hardati01",
-    "group": "guard",
-    "a": [
-      "I earned five NBA All-Star selections.",
-      "I was selected to multiple All-NBA teams during my prime.",
-      "I was named to the All-NBA First Team in 1997.",
-      "I became a high-volume assist producer early in my career.",
-      "I was a centerpiece of a three-player, high-scoring offensive trio.",
-      "I helped Miami reach the Eastern Conference Finals in 1997.",
-      "I played alongside Alonzo Mourning under coach Pat Riley.",
-      "I spent my early career with Golden State before a 1996 trade to Miami.",
-      "I teamed with Mitch Richmond and Chris Mullin on the Warriors' Run TMC.",
-      "My signature crossover was called the UTEP Two-Step."
-    ],
-    "b": [
-      "I entered the NBA as a mid-first-round draft pick.",
-      "I built a reputation for creative ball handling and shot creation.",
-      "I made the All-Rookie First Team.",
-      "I recorded repeated seasons of more than nine assists per game.",
-      "I was chosen fourteenth overall in the 1989 NBA Draft.",
-      "I won Olympic gold with the United States in 2000.",
-      "I finished fourth in the league MVP voting in 1997.",
-      "I was part of Miami's bruising late-1990s playoff battles with New York.",
-      "I was the original Tim Hardaway from the Warriors and Heat, not my NBA-playing son.",
-      "I was the Run TMC guard whose crossover became the UTEP Two-Step."
-    ]
-  },
-  {
-    "name": "Michael Finley",
-    "bref": "finlemi01",
-    "group": "wing",
-    "a": [
-      "I earned two NBA All-Star selections.",
-      "I developed into an effective volume scorer and reliable long-range shooter.",
-      "I spent more than a decade as a starter.",
-      "I recorded several seasons averaging more than twenty points.",
-      "I was selected twenty-first overall in the 1995 NBA Draft.",
-      "I was included in a trade that sent Jason Kidd to Phoenix.",
-      "I was part of a talented Dallas trio with Dirk Nowitzki and Steve Nash.",
-      "I joined San Antonio after leaving Dallas in 2005.",
-      "I won the 2007 NBA championship with the Spurs.",
-      "I was the No. 4 Mavericks scorer who shared the floor with Nowitzki and Nash."
-    ],
-    "b": [
-      "I was selected to the NBA All-Rookie First Team.",
-      "I gradually grew into an All-Star after a trade early in my career.",
-      "I regularly played heavy minutes at my peak.",
-      "I became an All-Star in 2000 and 2001.",
-      "I started my NBA career with Phoenix before a move to Dallas.",
-      "I scored more than twenty points a game in the 1999-2000 season.",
-      "I played alongside Tim Duncan, Tony Parker and Manu Ginóbili later in my career.",
-      "I helped San Antonio beat Cleveland in the 2007 Finals.",
-      "I starred at Wisconsin before becoming a leading Dallas Mavericks scorer.",
-      "I was Michael Finley, the former Suns draft pick who became a 2007 Spurs champion."
-    ]
-  },
-  {
-    "name": "Antoine Walker",
-    "bref": "walkean02",
-    "group": "big",
-    "a": [
-      "I became an NBA All-Star on three occasions.",
-      "I was a prolific rebounder and willing three-point shooter.",
-      "I averaged more than twenty points per game in multiple seasons.",
-      "I helped my team reach a conference final in the early 2000s.",
-      "I was a first-round pick in 1996.",
-      "I was the teammate of Paul Pierce during Boston's 2002 playoff run.",
-      "I played for Dallas before returning briefly to Boston.",
-      "I joined Miami and won the 2006 NBA championship.",
-      "I was the former Kentucky champion known for scoring and shooting threes for the Celtics.",
-      "My signature celebration was a shoulder shimmy after a big shot."
-    ],
-    "b": [
-      "I entered the league with considerable expectations after college success.",
-      "I was regularly involved as both a scorer and playmaker.",
-      "I earned All-Star selections in 1998, 2002 and 2003.",
-      "I averaged more than eight rebounds over several seasons.",
-      "I won the 1996 NCAA national championship with Kentucky.",
-      "I was the sixth overall selection of the Boston Celtics that year.",
-      "I was traded to Dallas in 2003 and later played in Atlanta.",
-      "I became a starter for the 2006 championship-winning Miami Heat.",
-      "I wore No. 8 while forming a star partnership with Paul Pierce in Boston.",
-      "I was the Celtics star known for the shimmy and later a Miami Heat champion."
-    ]
-  },
-  {
-    "name": "Richard Hamilton",
-    "bref": "hamilri01",
-    "group": "wing",
-    "a": [
-      "I made three consecutive NBA All-Star teams.",
-      "I was renowned for constant movement and midrange jump shooting.",
-      "I won an NBA championship as a starting player.",
-      "I was a leading scorer on a team with multiple outstanding defenders.",
-      "I entered the NBA as the seventh overall pick in 1999.",
-      "I was traded for Jerry Stackhouse in 2002.",
-      "I helped defeat a star-studded Lakers team in the 2004 NBA Finals.",
-      "I reached six straight conference finals while playing for Detroit.",
-      "I was the masked scoring specialist for the championship-era Pistons.",
-      "My nickname was Rip, and I wore a protective face mask through much of my Detroit career."
-    ],
-    "b": [
-      "I won a national championship before entering professional basketball.",
-      "I earned multiple All-Star selections only after a change of teams.",
-      "I became famous for running defenders through screens.",
-      "I was named the Final Four Most Outstanding Player in 1999.",
-      "I played my first NBA seasons for Washington.",
-      "I shared a 2004 championship starting lineup with Chauncey Billups and Ben Wallace.",
-      "I played against San Antonio in the 2005 NBA Finals.",
-      "I finished my career with the Chicago Bulls after leaving Detroit.",
-      "I won the 1999 NCAA title at Connecticut and the 2004 NBA title with the Pistons.",
-      "I was the masked Pistons shooter nicknamed Rip Hamilton."
-    ]
-  },
-  {
-    "name": "Chauncey Billups",
-    "bref": "billuch01",
-    "group": "guard",
-    "a": [
-      "I had several early-career stops before establishing myself as an All-Star.",
-      "I was respected for shooting and guiding organized half-court offenses.",
-      "I made five straight NBA All-Star teams in the later part of my career.",
-      "I received All-NBA Second Team recognition in 2006.",
-      "I won a Finals MVP award.",
-      "I joined Detroit as a free agent in 2002.",
-      "I led a balanced Pistons team past the Lakers in the 2004 NBA Finals.",
-      "I later returned to Denver and reached the 2009 Western Conference Finals.",
-      "I was the No. 1 point guard of Detroit's 2004 championship team.",
-      "My clutch reputation earned me the nickname Mr. Big Shot."
-    ],
-    "b": [
-      "I developed into a leader after changing teams multiple times.",
-      "I earned a reputation for steady decision-making in big games.",
-      "I was a first-round pick who found his best form well after his debut.",
-      "I was named to NBA All-Defensive teams during my prime.",
-      "I was chosen third overall in the 1997 NBA Draft.",
-      "I played college basketball at Colorado.",
-      "I won the 2004 Finals MVP award for a team that had no dominant single scorer.",
-      "I shared Detroit's title-winning backcourt with Richard Hamilton.",
-      "I won a championship against Kobe Bryant and Shaquille O'Neal with the Pistons.",
-      "I was the Colorado-born guard called Mr. Big Shot who led Detroit in 2004."
     ]
   },
   {
@@ -1201,8 +730,8 @@ const entries: readonly Entry[] = [
     "b": [
       "I was drafted near the top of the first round and immediately contributed.",
       "I averaged at least twenty points in several of my early seasons.",
-      "I became a seven-time NBA All-Star.",
-      "I was selected second overall in the 1992 NBA Draft.",
+      "I earned All-NBA honors during my peak.",
+      "I earned All-NBA First Team honors during a deep playoff stretch.",
       "I received All-NBA First Team honors in 1999.",
       "I began my NBA career with the Charlotte Hornets before joining Miami.",
       "I battled the Knicks in a series of bitter late-1990s playoffs.",
@@ -1263,7 +792,7 @@ const entries: readonly Entry[] = [
       "I was a key college scorer on a national championship team.",
       "I helped Michigan win the 1989 NCAA title and was named the Final Four Most Outstanding Player.",
       "I was traded from the Heat to Charlotte in a deal involving Alonzo Mourning.",
-      "I scored 26 points in the third quarter of the 1997 All-Star Game.",
+      "I scored twenty points during the third quarter of the 1997 NBA All-Star Game.",
       "I played beside Shaquille O'Neal and Kobe Bryant in a championship season.",
       "I won my only NBA championship with the 1999-2000 Lakers.",
       "I was the 1997 All-Star MVP Glen Rice, famous in Charlotte for my outside shooting."
@@ -1294,7 +823,7 @@ const entries: readonly Entry[] = [
       "I scored 32 points in a 1991 playoff win against the Lakers.",
       "I joined forces with Alonzo Mourning under Pat Riley in Miami.",
       "I helped the Heat reach the 1997 Eastern Conference finals.",
-      "I began my career wearing No. 10 with Golden State and later wore No. 10 in Miami.",
+      "I developed the killer crossover while starring for the Warriors and Heat.",
       "My trademark UTEP two-step crossover earned me recognition long before Tim Hardaway Jr. reached the NBA."
     ]
   },
@@ -1306,7 +835,7 @@ const entries: readonly Entry[] = [
       "I earned an All-Rookie First Team spot early in my career.",
       "I was a durable scorer who regularly played heavy minutes.",
       "I became a two-time NBA All-Star.",
-      "I made his first All-Star team while playing beside a future MVP.",
+      "I made my first All-Star team while playing beside a future MVP.",
       "I began my career as a first-round selection in 1995.",
       "I was traded from Phoenix to Dallas as part of a deal involving Jason Kidd.",
       "I became a primary scorer for the Mavericks before their championship era.",
@@ -1318,13 +847,13 @@ const entries: readonly Entry[] = [
       "I was known for consistent scoring and strong midrange offense.",
       "I eventually became a useful veteran shooter on a championship club.",
       "I was chosen for the All-Star Game in consecutive seasons.",
-      "I was drafted twenty-first overall and traded after my rookie year.",
+      "I was drafted late in the first round and traded after my rookie year.",
       "I started my NBA career with the Phoenix Suns.",
       "I averaged a career-high 22.6 points in the 1999-2000 season.",
-      "I reached the 2006 NBA Finals with Dallas but had already left the team.",
+      "I watched Dallas reach the 2006 NBA Finals the season after I left for San Antonio.",
       "I helped San Antonio beat Cleveland in the 2007 Finals.",
       "I was part of Dallas's early-2000s offensive trio with Nash and Nowitzki.",
-      "I spent nine seasons with the Mavericks and won a ring with the Spurs."
+      "I was the former Suns draft pick who won the 2007 NBA championship with San Antonio."
     ]
   },
   {
@@ -1351,7 +880,7 @@ const entries: readonly Entry[] = [
       "I won the 1996 NCAA championship as a Kentucky Wildcat.",
       "I developed an unconventional outside shot despite playing many minutes in the frontcourt.",
       "I reached the 2002 conference finals with the Celtics and Paul Pierce.",
-      "I averaged 12.2 points in the 2006 playoffs en route to an NBA title with Miami.",
+      "I played an important bench role in the 2006 playoffs en route to an NBA title with Miami.",
       "I wore No. 8 for Boston and was recognized for my shoulder-shaking shimmy.",
       "I was the Celtics' Antoine 'Toine' Walker before winning a Heat championship."
     ]
@@ -1418,239 +947,6 @@ const entries: readonly Entry[] = [
     "name": "Ben Wallace",
     "bref": "wallabe01",
     "group": "big",
-    "history": "https://www.nba.com/watch/video/ben-wallace-career-retrospective",
-    "a": [
-      "I became an All-Star despite entering the league undrafted.",
-      "I was valued far more for defense and rebounding than scoring.",
-      "I earned multiple All-Defensive First Team selections.",
-      "I was the league's leading rebounder in more than one season.",
-      "I won the Defensive Player of the Year award four times.",
-      "I was a starting member of the 2004 NBA championship team.",
-      "I helped Detroit upset a Lakers roster featuring four future Hall of Famers.",
-      "I played beside Rasheed Wallace on the Pistons' interior defense.",
-      "I was the undrafted defensive cornerstone called Big Ben in Detroit.",
-      "My No. 3 Pistons jersey was retired after four Defensive Player of the Year awards."
-    ],
-    "b": [
-      "I worked my way from the fringes of the NBA into a starting role.",
-      "I was known for limiting opposing stars without needing plays run for me.",
-      "I was named an NBA All-Star four times.",
-      "I led the NBA in blocks during the 2001-02 season.",
-      "I began my career with Washington before playing in Orlando.",
-      "I played college basketball at Virginia Union after attending a junior college.",
-      "I reached consecutive NBA Finals with Detroit in 2004 and 2005.",
-      "I later played for Chicago and Cleveland before returning to the Pistons.",
-      "I won the 2004 championship alongside Chauncey Billups and Richard Hamilton.",
-      "I was the iconic afro-wearing, undrafted center known as Big Ben Wallace."
-    ]
-  },
-  {
-    "name": "Rasheed Wallace",
-    "bref": "wallara01",
-    "group": "big",
-    "a": [
-      "I was selected to four NBA All-Star Games.",
-      "I was a versatile scorer who could shoot from distance and defend inside.",
-      "I played in several deep postseason runs.",
-      "I was a strong contributor to a championship roster.",
-      "I was drafted fourth overall in 1995.",
-      "I helped Portland reach the 2000 Western Conference Finals.",
-      "I played one game for Atlanta in 2004 before being moved again.",
-      "I won the 2004 NBA championship shortly after arriving in Detroit.",
-      "I formed the Pistons' championship front line with Ben Wallace.",
-      "My catchphrase was 'Ball don't lie,' and fans called me Sheed."
-    ],
-    "b": [
-      "I earned the NBA All-Rookie Second Team honor.",
-      "I competed in the playoffs with different title-contending teams.",
-      "I could score in the post while also spacing the floor.",
-      "I made the All-Star team for more than one franchise.",
-      "I spent most of my first decade in Portland.",
-      "I was part of the Trail Blazers team that lost Game 7 to the Lakers in 2000.",
-      "I was traded twice within days during the 2003-04 season.",
-      "I reached the 2010 NBA Finals with Boston after my title years in Detroit.",
-      "I wore No. 36 during the Pistons' 2004 championship run.",
-      "I was Rasheed 'Sheed' Wallace, known for 'Ball don't lie' in Detroit."
-    ]
-  },
-  {
-    "name": "Baron Davis",
-    "bref": "davisba01",
-    "group": "guard",
-    "a": [
-      "I earned two NBA All-Star selections.",
-      "I was an attacking playmaker who also produced high steal totals.",
-      "I led the NBA in steals in more than one season.",
-      "I was chosen third overall in the 1999 NBA Draft.",
-      "I became known for explosive transition dunks as well as assists.",
-      "I helped an eighth-seeded team upset a top seed in the playoffs.",
-      "I was the central star of Golden State's 2007 We Believe run.",
-      "I made a famous poster dunk over Andrei Kirilenko during the 2007 playoffs.",
-      "I starred for Charlotte and New Orleans before joining the Warriors.",
-      "My high-energy Warriors persona earned me the nickname Boom Dizzle."
-    ],
-    "b": [
-      "I made an All-Rookie First Team.",
-      "I established myself as a scorer and creator in the backcourt.",
-      "I averaged more than seven assists in several NBA seasons.",
-      "I played in back-to-back All-Star Games early in my career.",
-      "I played college basketball at UCLA before turning pro.",
-      "I became a franchise leader after the Hornets relocated to New Orleans.",
-      "I signed with the Los Angeles Clippers after my playoff breakthrough.",
-      "I finished my NBA career after stints in Cleveland and New York.",
-      "I led the Warriors past the top-seeded Mavericks in 2007.",
-      "I was the No. 5 Golden State playmaker of the We Believe upset."
-    ]
-  },
-  {
-    "name": "Peja Stojaković",
-    "bref": "stojape01",
-    "group": "wing",
-    "a": [
-      "I became an NBA All-Star three times.",
-      "I developed into one of the league's most dangerous perimeter shooters.",
-      "I was chosen for an All-NBA Second Team.",
-      "I finished among the top five of league MVP voting.",
-      "I won two consecutive NBA three-point contests.",
-      "I played a pivotal role in a team that challenged the Lakers in the 2002 playoffs.",
-      "I later joined a championship team as a veteran long-range specialist.",
-      "I won the 2011 NBA Finals with Dirk Nowitzki's Dallas Mavericks.",
-      "I starred for Sacramento during its early-2000s run with Chris Webber and Vlade Divac.",
-      "My No. 16 was retired by the Kings after a career known for three-point shooting."
-    ],
-    "b": [
-      "I was selected in the first round but did not immediately enter the NBA.",
-      "I built my career around a quick and accurate shooting release.",
-      "I earned an All-NBA selection during my highest-scoring season.",
-      "I averaged more than twenty-four points per game in a season.",
-      "I was drafted fourteenth overall in 1996.",
-      "I played professionally in Greece before joining Sacramento.",
-      "I later played for Indiana and New Orleans before my final NBA season.",
-      "I helped Dallas eliminate the defending champion Lakers in 2011.",
-      "I was part of the Sacramento Kings team that lost a seven-game 2002 West final.",
-      "I was the Serbian sharpshooter nicknamed Peja on both the Kings and Mavericks."
-    ]
-  },
-  {
-    "name": "Jermaine O'Neal",
-    "bref": "onealje01",
-    "group": "big",
-    "a": [
-      "I became a six-time NBA All-Star after starting as a reserve.",
-      "I was a strong rebounder and shot blocker in my prime.",
-      "I earned three All-NBA selections.",
-      "I won the league's Most Improved Player award.",
-      "I finished third in regular-season MVP voting in 2004.",
-      "I entered the league directly from high school as a teenager.",
-      "I broke out after a trade from Portland to Indiana.",
-      "I played a major role in the Pacers' Eastern Conference Finals appearance in 2004.",
-      "I wore No. 7 as the face of the early-2000s Indiana Pacers.",
-      "I was Jermaine O'Neal, not my fellow NBA star Shaquille O'Neal."
-    ],
-    "b": [
-      "I developed more slowly than my eventual All-Star reputation suggests.",
-      "I built my success on interior scoring and defensive presence.",
-      "I became an All-Star in six consecutive seasons.",
-      "I made the All-NBA Second Team in 2004.",
-      "I was selected seventeenth overall in the 1996 NBA Draft.",
-      "I spent the beginning of my professional career behind established veterans in Portland.",
-      "I became a central figure on a Pacers team coached by Rick Carlisle.",
-      "I was one of the players suspended after the 2004 Malice at the Palace.",
-      "I later played for Miami, Toronto, Boston, Phoenix and Golden State.",
-      "My greatest NBA years came in Indiana, where I wore No. 7 and won Most Improved Player."
-    ]
-  },
-  {
-    "name": "Shawn Marion",
-    "bref": "mariosh01",
-    "group": "wing",
-    "a": [
-      "I was chosen for four NBA All-Star Games.",
-      "I was prized for versatile defense, rebounding and finishing in transition.",
-      "I earned an All-NBA Third Team selection in my prime.",
-      "I regularly recorded double-doubles while guarding multiple positions.",
-      "I became a cornerstone of a rapid-paced offense.",
-      "I played with Steve Nash and Amar'e Stoudemire on a prominent Phoenix team.",
-      "I was traded from Phoenix to Miami in the 2008 Shaquille O'Neal deal.",
-      "I defended LeBron James during Dallas's 2011 championship run.",
-      "I won the 2011 NBA title alongside Dirk Nowitzki.",
-      "My nickname was the Matrix, and I was a mainstay of the Seven Seconds or Less Suns."
-    ],
-    "b": [
-      "I was a first-round draft pick who soon became a regular starter.",
-      "I was an athletic rebounder with a notably unconventional jump shot.",
-      "I made four All-Star appearances during the 2000s.",
-      "I recorded more than ten rebounds per game in several seasons.",
-      "I was chosen ninth overall in the 1999 NBA Draft.",
-      "I played at UNLV before beginning my professional career.",
-      "I was selected for the 2004 U.S. Olympic team.",
-      "I played for Toronto and Miami between my Phoenix and Dallas years.",
-      "I was an essential defensive wing for the 2011 Dallas Mavericks.",
-      "I was the Phoenix Suns star known as the Matrix before winning with Dallas."
-    ]
-  },
-  {
-    "name": "Yao Ming",
-    "bref": "mingya01",
-    "group": "big",
-    "a": [
-      "I became an NBA All-Star immediately after entering the league.",
-      "I developed a reliable midrange touch and soft shooting form for a very tall player.",
-      "I received multiple All-NBA selections.",
-      "I was limited by significant foot and ankle injuries in later seasons.",
-      "I was selected first overall in the 2002 NBA Draft.",
-      "I made eight NBA All-Star teams despite an injury-shortened career.",
-      "I led my team past Portland in a first-round playoff series in 2009.",
-      "I formed a Houston Rockets star partnership with Tracy McGrady.",
-      "I was the 7-foot-6 Rockets star who arrived from the Shanghai Sharks.",
-      "I became the first Chinese player selected No. 1 overall in the NBA Draft."
-    ],
-    "b": [
-      "I was selected for the NBA All-Rookie First Team.",
-      "I combined post scoring, shot blocking and accurate free throws.",
-      "I earned five All-NBA selections.",
-      "I repeatedly ranked among the highest vote-getters for All-Star starting spots.",
-      "I began my NBA career after playing professionally in Asia.",
-      "I won multiple domestic league honors with the Shanghai Sharks.",
-      "I spent my entire NBA career with the Houston Rockets.",
-      "I retired after persistent injuries following the 2010-11 season.",
-      "I represented China internationally and stood 7 feet 6 inches tall.",
-      "I wore No. 11 for Houston and entered the Basketball Hall of Fame in 2016."
-    ]
-  },
-  {
-    "name": "Tony Allen",
-    "bref": "allento01",
-    "group": "guard",
-    "a": [
-      "I entered the NBA as a first-round pick and earned a championship early in my career.",
-      "I became most valuable as a defender rather than a primary scorer.",
-      "I received six NBA All-Defensive team selections.",
-      "I was an important perimeter stopper for multiple playoff teams.",
-      "I was selected twenty-fifth overall in the 2004 NBA Draft.",
-      "I won the 2008 NBA championship as a Boston Celtics reserve.",
-      "I joined Memphis in 2010 and helped build its defense-first identity.",
-      "I helped Memphis reach its first Western Conference Finals in 2013.",
-      "I was known as the Grindfather on the Grizzlies' Grit and Grind teams.",
-      "I was the No. 9 Memphis defensive ace who called himself the Grindfather."
-    ],
-    "b": [
-      "I was an athletic defender with an important role on successful clubs.",
-      "I earned All-Defensive First Team honors in multiple seasons.",
-      "I was not known for leading my teams in scoring.",
-      "I became a vital part of a team built on physical, deliberate basketball.",
-      "I played college basketball at Oklahoma State before the NBA.",
-      "I won a title alongside Paul Pierce, Kevin Garnett and Ray Allen.",
-      "I formed a defensive partnership with Marc Gasol after leaving Boston.",
-      "I drew difficult matchups against top Western Conference perimeter stars.",
-      "I played on Memphis teams with Mike Conley and Zach Randolph.",
-      "I was the former Celtics champion whose nickname the Grindfather fit Memphis's Grit and Grind era."
-    ]
-  },
-  {
-    "name": "Ben Wallace",
-    "bref": "wallabe01",
-    "group": "big",
     "a": [
       "I became one of the league's premier defenders after arriving as an overlooked prospect.",
       "I was named to multiple All-Star teams despite modest scoring numbers.",
@@ -1673,7 +969,7 @@ const entries: readonly Entry[] = [
       "I won Defensive Player of the Year in 2002, 2003, 2005 and 2006.",
       "I helped the Pistons reach consecutive Finals in 2004 and 2005.",
       "I was the Detroit defender known as Big Ben who helped topple Shaq and Kobe.",
-      "I won the 2004 NBA title wearing No. 3 for Detroit."
+      "I was Detroit's Afro-wearing, undrafted champion known as Big Ben."
     ]
   },
   {
@@ -1758,9 +1054,9 @@ const entries: readonly Entry[] = [
       "I was drafted fourteenth overall in 1996 but did not immediately begin my NBA career.",
       "I played a leading offensive role while Chris Webber missed much of the 2003-04 season.",
       "I helped Sacramento reach the Western Conference finals against the Lakers in 2002.",
-      "I scored 22 points in a 2011 playoff win for Dallas over the Lakers.",
+      "I hit six three-pointers in a 2011 Dallas playoff victory over the Lakers.",
       "I was the long-range specialist for the Sacramento Kings alongside Webber and Mike Bibby.",
-      "I am Peja Stojaković, the Kings' No. 16 and a member of Dallas's 2011 title team."
+      "I became the Sacramento Kings' No. 16 sharpshooter and a Dallas championship veteran."
     ]
   },
   {
@@ -1777,7 +1073,7 @@ const entries: readonly Entry[] = [
       "I finished third in NBA MVP voting in 2004.",
       "I was involved in the 2004 Palace brawl while playing for the Pacers.",
       "I became the Pacers' six-time All-Star and wore No. 7 in Indiana.",
-      "I was Jermaine O'Neal, an Indiana star distinct from Shaquille O'Neal."
+      "I was Indiana's No. 7 All-Star center, distinct from Shaquille O'Neal."
     ],
     "b": [
       "I played for several NBA organizations across a lengthy career.",
@@ -1789,7 +1085,7 @@ const entries: readonly Entry[] = [
       "I helped Indiana post the NBA's best regular-season record in 2003-04.",
       "I later played for Toronto, Miami, Boston, Phoenix and Golden State.",
       "I wore No. 7 while starring for the Indiana Pacers during their Reggie Miller era.",
-      "I am the six-time All-Star Jermaine O'Neal, not Shaq."
+      "I was the six-time Pacers All-Star who wore No. 7 and shared a surname with Shaquille."
     ]
   },
   {
@@ -1884,238 +1180,6 @@ const entries: readonly Entry[] = [
     "bref": "turkohe01",
     "group": "wing",
     "a": [
-      "I developed from a supporting player into a crucial offensive creator.",
-      "I became known for ball handling and playmaking despite my height.",
-      "I averaged more than nineteen points per game in my best scoring season.",
-      "I earned the NBA's Most Improved Player award.",
-      "I developed a reputation for making difficult late-game shots.",
-      "I won Most Improved Player in the 2007-08 season.",
-      "I reached the 2009 NBA Finals alongside Dwight Howard.",
-      "I played important roles in Orlando's victories over Boston and Cleveland during that Finals run.",
-      "I became the versatile Turkish forward who helped lead the Orlando Magic to the Finals.",
-      "I wore No. 15 for Orlando and became the Magic's celebrated Hedo."
-    ],
-    "b": [
-      "I entered the NBA as a mid-first-round pick.",
-      "I was a long-range threat who could also direct the offense.",
-      "I had a long career with both starting and reserve roles.",
-      "I became one of the league's best-known oversized playmakers.",
-      "I was selected sixteenth overall by Sacramento in the 2000 NBA Draft.",
-      "I spent time with San Antonio before joining Orlando.",
-      "I also played for Toronto, Phoenix and the Los Angeles Clippers.",
-      "I helped eliminate LeBron James's Cavaliers in the 2009 Eastern Conference Finals.",
-      "I was a key partner of Dwight Howard during Orlando's 2009 championship bid.",
-      "I was the Turkish Magic playmaker nicknamed Hedo who won Most Improved Player."
-    ]
-  },
-  {
-    "name": "Andrei Kirilenko",
-    "bref": "kirilan01",
-    "group": "big",
-    "a": [
-      "I became an NBA All-Star despite not being a first-option scorer.",
-      "I was especially valued for defense, rim protection and versatile passing.",
-      "I made several NBA All-Defensive teams.",
-      "I led the league in blocked shots in a season.",
-      "I was a rare contributor capable of filling every column in a box score.",
-      "I recorded multiple five-by-five games involving points, rebounds, assists, steals and blocks.",
-      "I played the first decade of my NBA career with Utah.",
-      "I later spent seasons with Minnesota and Brooklyn.",
-      "I was the Russian-born Jazz star whose jersey number matched the initials AK.",
-      "My initials and No. 47 jersey produced the nickname AK-47."
-    ],
-    "b": [
-      "I entered the NBA after already gaining experience in professional basketball overseas.",
-      "I became known for disruptive help defense and shot blocking.",
-      "I earned All-NBA recognition during my peak.",
-      "I was selected twenty-fourth overall in the 1999 NBA Draft.",
-      "I made the 2004 NBA All-Star team.",
-      "I played professionally for CSKA Moscow both before and after NBA stops.",
-      "I helped Utah reach the 2007 Western Conference Finals.",
-      "I led the NBA with 3.3 blocks per game in 2004-05.",
-      "I played much of my NBA career for the Utah Jazz while wearing No. 47.",
-      "I was Andrei Kirilenko, the Swiss-army-knife defender called AK-47."
-    ]
-  },
-  {
-    "name": "Elton Brand",
-    "bref": "brandel01",
-    "group": "big",
-    "a": [
-      "I won the NBA Rookie of the Year award in my debut season.",
-      "I regularly posted double-doubles in points and rebounds.",
-      "I became a two-time NBA All-Star.",
-      "I was named to the All-NBA Second Team.",
-      "I was selected first overall in the 1999 NBA Draft.",
-      "I was traded after two seasons in exchange for the draft rights to Tyson Chandler.",
-      "I led the Clippers to the second round of the 2006 playoffs.",
-      "I averaged 24.7 points per game in 2005-06, my peak scoring season.",
-      "I was the No. 42 cornerstone for the Los Angeles Clippers.",
-      "I shared the 2000 Rookie of the Year award with Steve Francis after starring at Duke."
-    ],
-    "b": [
-      "I earned an All-Rookie First Team selection.",
-      "I developed a reputation for inside scoring and dependable rebounding.",
-      "I produced more than twenty points per game in multiple seasons.",
-      "I helped break a franchise's long postseason drought.",
-      "I left Duke after being named national college player of the year.",
-      "I began my NBA career with the Chicago Bulls.",
-      "I joined Philadelphia as a major free-agent signing in 2008.",
-      "I later played for Dallas and Atlanta before returning to Philadelphia.",
-      "I was the star big man of the Clippers' 2006 postseason run.",
-      "I was the first overall selection in 1999 and shared Rookie of the Year with Steve Francis."
-    ]
-  },
-  {
-    "name": "Carlos Boozer",
-    "bref": "boozeca01",
-    "group": "big",
-    "a": [
-      "I developed from a second-round pick into an NBA All-Star.",
-      "I was a dependable scorer and rebounder in the paint.",
-      "I made consecutive All-Star Games.",
-      "I repeatedly averaged a double-double in his prime.",
-      "I played in the 2008 Olympics with the gold-medal-winning U.S. team.",
-      "I joined Utah as a free agent after beginning his NBA career in Cleveland.",
-      "I helped the Jazz reach the 2007 Western Conference Finals.",
-      "I formed a pick-and-roll tandem with Deron Williams.",
-      "I became the Utah Jazz's No. 5 scorer and rebounder of the late 2000s.",
-      "I was a Duke national champion who later starred for Utah and Chicago."
-    ],
-    "b": [
-      "I was selected for the NBA All-Rookie Second Team.",
-      "I was known for a reliable midrange jumper in addition to low-post scoring.",
-      "I was an NBA All-Star twice.",
-      "I contributed major rebounding totals through several playoff appearances.",
-      "I was drafted thirty-fifth overall in 2002.",
-      "I won the 2001 NCAA national championship at Duke.",
-      "I signed with Chicago in 2010 after six seasons with Utah.",
-      "I played his final NBA season as a Los Angeles Laker.",
-      "I helped Utah build around a partnership with Deron Williams.",
-      "I was the former Cavaliers second-rounder who wore No. 5 for the Jazz."
-    ]
-  },
-  {
-    "name": "Lamar Odom",
-    "bref": "odomla01",
-    "group": "big",
-    "a": [
-      "I was selected to the NBA All-Rookie First Team.",
-      "I gained a reputation for handling the ball and passing unusually well for my size.",
-      "I could fill several positions and contribute to many statistical categories.",
-      "I won the NBA Sixth Man of the Year award.",
-      "I made two consecutive NBA Finals appearances that ended in championships.",
-      "I was selected fourth overall in the 1999 NBA Draft.",
-      "I moved from Miami to the Lakers in the 2004 trade for Shaquille O'Neal.",
-      "I won championship rings with Kobe Bryant and Pau Gasol in 2009 and 2010.",
-      "I spent his most celebrated seasons wearing No. 7 with the Los Angeles Lakers.",
-      "I was the versatile Lakers sixth man who won the 2011 Sixth Man award."
-    ],
-    "b": [
-      "I became an immediate starter after entering the NBA.",
-      "I stood out as a rebounder and playmaker rather than a pure scoring specialist.",
-      "I won an Olympic bronze medal before later becoming an NBA champion.",
-      "I developed a key bench role on a perennial contender.",
-      "I began my professional career with the Los Angeles Clippers.",
-      "I played for Miami in the season before Shaquille O'Neal joined the Heat.",
-      "I helped the Lakers beat Orlando in the 2009 Finals and Boston in 2010.",
-      "I left Los Angeles in 2011 for a difficult short stint in Dallas.",
-      "I was a leading supporting player for Kobe Bryant during the Lakers' second two-peat-era championship run.",
-      "I wore No. 7 for the Lakers and was named the NBA's 2011 Sixth Man of the Year."
-    ]
-  },
-  {
-    "name": "Metta World Peace",
-    "bref": "artesro01",
-    "group": "wing",
-    "a": [
-      "I developed into one of the NBA's most difficult one-on-one defenders.",
-      "I was selected to an NBA All-Star Game.",
-      "I received several All-Defensive team honors.",
-      "I won the NBA's Defensive Player of the Year award.",
-      "I was a central player in a notorious altercation during a regular-season game.",
-      "I was suspended following the 2004 Malice at the Palace in Detroit.",
-      "I helped the Lakers win the 2010 NBA championship.",
-      "I scored 20 points in Game 7 of the 2010 Finals against Boston.",
-      "I played under the name Ron Artest before legally changing my name to Metta World Peace.",
-      "I was the Lakers' championship defender formerly known as Ron Artest."
-    ],
-    "b": [
-      "I entered the NBA as a first-round selection and quickly established my defensive value.",
-      "I could match up with elite scorers and also contribute from long range.",
-      "I was voted to the All-NBA Third Team once.",
-      "I was the league's top defensive player in the 2003-04 season.",
-      "I was selected sixteenth overall in the 1999 NBA Draft.",
-      "I played for Chicago and Indiana before later stops in Sacramento and Houston.",
-      "I joined Kobe Bryant and Pau Gasol on the Lakers in 2009.",
-      "I made a crucial three-pointer late in Game 7 of the 2010 Finals.",
-      "I adopted the name Metta World Peace in 2011 after playing as Ron Artest.",
-      "I was known as Ron Artest with the Pacers and Metta World Peace with the Lakers."
-    ]
-  },
-  {
-    "name": "Jerry Stackhouse",
-    "bref": "stackje01",
-    "group": "wing",
-    "a": [
-      "I became a two-time NBA All-Star.",
-      "I was a high-volume scorer through the prime of my career.",
-      "I averaged more than twenty-five points per game in multiple seasons.",
-      "I placed second in the league's scoring race in a season.",
-      "I was selected third overall in the 1995 NBA Draft.",
-      "I scored a career-high 57 points against Chicago in 2001.",
-      "I was dealt to Washington in a trade for Richard Hamilton.",
-      "I helped Dallas reach the 2006 NBA Finals.",
-      "I was the prolific early-2000s Detroit Pistons scorer before their 2004 championship.",
-      "I was the former North Carolina star whose 2000-01 season produced nearly 30 points per game."
-    ],
-    "b": [
-      "I earned NBA All-Rookie First Team recognition.",
-      "I became a primary offensive option after a trade early in my career.",
-      "I played more than fifteen NBA seasons.",
-      "I was an NBA All-Star in both 2000 and 2001.",
-      "I began my professional career with Philadelphia.",
-      "I played college basketball at North Carolina before turning pro.",
-      "I led the NBA in total points scored in the 2000-01 season.",
-      "I came off the bench during Dallas's run to the 2006 Finals.",
-      "I played for Detroit and Washington before a long Mavericks stretch.",
-      "I was the former Tar Heel who averaged 29.8 points for the 2000-01 Pistons."
-    ]
-  },
-  {
-    "name": "Mike Bibby",
-    "bref": "bibbymi01",
-    "group": "guard",
-    "a": [
-      "I became a starting NBA playmaker early in my professional career.",
-      "I built a reputation for reliable outside shooting and late-game poise.",
-      "I made regular playoff appearances with a high-scoring team.",
-      "I was chosen second overall in the 1998 NBA Draft.",
-      "I began my NBA career with the Vancouver Grizzlies.",
-      "I was traded for Jason Williams in 2001.",
-      "I hit a late game-winning jumper against the Lakers in Game 5 of the 2002 West finals.",
-      "I partnered with Chris Webber and Peja Stojaković in Sacramento.",
-      "I was the Kings' No. 10 guard during their memorable 2002 playoff run.",
-      "I won the 1997 NCAA championship at Arizona before becoming the Sacramento Kings' floor leader."
-    ],
-    "b": [
-      "I immediately entered an NBA team's regular rotation.",
-      "I was known for running a polished offense and making perimeter shots.",
-      "I averaged more than five assists per game in several seasons.",
-      "I played on a team that came within one game of reaching the Finals.",
-      "I helped Arizona win a national college championship as a freshman.",
-      "I played the first part of my NBA career for the Grizzlies.",
-      "I helped Sacramento post a 61-win record in 2001-02.",
-      "I later played for Atlanta, Washington, Miami and New York.",
-      "I lost the 2011 NBA Finals with Miami to Dallas.",
-      "I was the Kings' No. 10 point guard who dueled with the Lakers in 2002."
-    ]
-  },
-  {
-    "name": "Hedo Türkoğlu",
-    "bref": "turkohe01",
-    "group": "wing",
-    "a": [
       "I became a dependable scorer and passer on playoff teams.",
       "I developed a reputation for making difficult shots late in games.",
       "I won the NBA's Most Improved Player award.",
@@ -2166,7 +1230,7 @@ const entries: readonly Entry[] = [
       "I helped the Jazz reach the 2007 Western Conference finals.",
       "I played under Jerry Sloan during much of my Utah career.",
       "My No. 47 and the nickname AK-47 were inseparable in Utah.",
-      "I was the Russian-born all-around defender Kirilenko of the Jazz."
+      "I was the Utah Jazz's all-purpose defender known as AK-47."
     ]
   },
   {
@@ -2269,8 +1333,8 @@ const entries: readonly Entry[] = [
       "I starred for Indiana but was suspended for the remainder of the 2004-05 season following a notorious incident.",
       "I later played for Sacramento and Houston before signing with Los Angeles.",
       "I helped the Lakers win Game 7 of the 2010 Finals against Boston.",
-      "I changed my name from Ron Artest to Metta World Peace in 2011.",
-      "I won the 2010 NBA championship wearing No. 37 for the Lakers and was formerly known as Ron Artest."
+      "I was formerly known as Ron Artest before taking a name expressing compassion and peace.",
+      "I won a 2010 title with the Lakers after playing for Indiana under the name Ron Artest."
     ],
     "b": [
       "I contributed tough defense and secondary scoring during a lengthy career.",
@@ -2281,8 +1345,8 @@ const entries: readonly Entry[] = [
       "I won the 2004 Defensive Player of the Year award with the Indiana Pacers.",
       "I was a central figure in the infamous 2004 Malice at the Palace incident.",
       "I sank a critical three-pointer late in the Lakers' 2010 Finals Game 7 victory.",
-      "I played under the name Ron Artest before formally adopting Metta World Peace.",
-      "I was the Lakers title-winning defender also called Ron Artest and later Metta Sandiford-Artest."
+      "I legally renamed myself after starring for Indiana as Ron Artest.",
+      "I wore No. 37 as a Lakers champion after making my name in Indiana as Ron Artest."
     ]
   },
   {
@@ -2342,7 +1406,8 @@ const entries: readonly Entry[] = [
       "I was the Sacramento guard leading an offense with Chris Webber and Vlade Divac.",
       "I was Arizona national champion Mike Bibby, the Kings' No. 10 point guard."
     ]
-  },
+  }
+
 ];
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const nbaWhoAmIAuthoredBatch3: readonly NbaWhoAmIAuthoredIdentity[] = entries.map((entry) => {
