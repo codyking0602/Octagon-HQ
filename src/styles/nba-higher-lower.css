@@ -3,6 +3,8 @@
   --hl-team-secondary: #efc98a;
 }
 .nba-higher-lower .higher-lower-card {
+  --hl-team-primary: #d88b2a;
+  --hl-team-secondary: #efc98a;
   min-height: 278px;
   background: linear-gradient(155deg, #2c241c 0%, #172029 65%, #101923 100%);
 }
