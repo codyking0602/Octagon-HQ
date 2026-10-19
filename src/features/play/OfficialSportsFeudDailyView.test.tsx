@@ -266,7 +266,7 @@ describe("Official Sports Feud Daily mobile locks", () => {
             ...first.publicState,
             phase: "complete",
             complete: true,
-            fast_money: { ...first.publicState.fast_money as object, client_pending_complete: false },
+            fast_money: { ...(first.publicState.fast_money as Record<string, unknown>), client_pending_complete: false },
           },
         }}
         busy={false}
