@@ -1,4 +1,8 @@
 import type { WhoAmIClueBand, WhoAmIEraBand } from "./whoAmIEngine";
+import { nbaWhoAmIAuthoredBatch1 } from "./nbaWhoAmIAuthoredBatch1";
+import { nbaWhoAmIAuthoredBatch2 } from "./nbaWhoAmIAuthoredBatch2";
+import { nbaWhoAmIAuthoredBatch3 } from "./nbaWhoAmIAuthoredBatch3";
+import { nbaWhoAmIAuthoredBatch4 } from "./nbaWhoAmIAuthoredBatch4";
 
 export type NbaWhoAmIAuthoredScriptId = "A" | "B";
 export interface NbaWhoAmIAuthoredClue {
@@ -25,7 +29,7 @@ export interface NbaWhoAmIAuthoredIdentity {
  * No runtime clue generation, no duplication of game engine or scoring logic.
  * Expand after owner clue-quality review; do not treat this pilot as the launch bank.
  */
-export const nbaWhoAmIAuthoredIdentities = [
+const approvedNbaWhoAmICalibration = [
   {
     "subjectId": "nba:michael-jordan",
     "name": "Michael Jordan",
@@ -1668,6 +1672,15 @@ export const nbaWhoAmIAuthoredIdentities = [
     }
   }
 ] as const satisfies readonly NbaWhoAmIAuthoredIdentity[];
+
+/** Original approved eight followed by four disjoint authored batches of 48. */
+export const nbaWhoAmIAuthoredIdentities: readonly NbaWhoAmIAuthoredIdentity[] = [
+  ...approvedNbaWhoAmICalibration,
+  ...nbaWhoAmIAuthoredBatch1,
+  ...nbaWhoAmIAuthoredBatch2,
+  ...nbaWhoAmIAuthoredBatch3,
+  ...nbaWhoAmIAuthoredBatch4,
+];
 
 const identitiesById = new Map<string, NbaWhoAmIAuthoredIdentity>(nbaWhoAmIAuthoredIdentities.map(identity => [identity.subjectId, identity] as const));
 if (identitiesById.size !== nbaWhoAmIAuthoredIdentities.length) {
