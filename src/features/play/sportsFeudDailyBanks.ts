@@ -437,7 +437,9 @@ export function buildSportsFeudPack(
               prompt: patch.prompt,
               alsoAcceptedAnswers: [
                 ...(original.alsoAcceptedAnswers ?? []),
-                ...patch.additionalAccepted.map((name) => ({ name })),
+                ...patch.additionalAccepted.map((name) => ({ name,
+                  aliases: id === "nfl-fast5-10-2" ? [name.split(" ").at(-1)!] : [],
+                })),
               ],
             }
           : original;
