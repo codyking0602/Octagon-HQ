@@ -67,7 +67,7 @@ describe("NBA Who Am I — isolated modern batch 1", () => {
           allTexts.push(clue.text);
           expect(clue.text).toMatch(/^(?:I|My)\b/);
           expect(clue.text).not.toMatch(/\b(?:his|her)\b/i);
-          expect(clue.text.toLocaleLowerCase()).not.toContain(player.name.toLocaleLowerCase());
+          expect(clue.text.toLocaleLowerCase().replace(/[’\u0027]/g, "")).not.toContain(player.name.toLocaleLowerCase().replace(/[’\u0027]/g, ""));
           expect(clue.verification).toBe("verified");
           expect(clue.sourceIds.length).toBeGreaterThan(0);
           for (const sourceId of clue.sourceIds) {
