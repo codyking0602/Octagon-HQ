@@ -5,6 +5,7 @@ import {
   buildNbaFindLeaderBoard, createNbaFindLeaderBoard,
   createNbaFindLeaderChallenge, createNbaFindLeaderDailyPreview,
   formatNbaFindLeaderValue, nbaFindLeaderAudit, nbaFindLeaderSubjects,
+  nbaFindLeaderDefinitionWeight, nbaFindLeaderHeadshot,
 } from "./nbaFindTheLeaderModel";
 
 describe("NBA Find the Leader factual and gameplay quality", () => {
@@ -53,6 +54,31 @@ describe("NBA Find the Leader factual and gameplay quality", () => {
         expect(row.seasonLabel, seed).toMatch(/^\d{4}–\d{2}$/);
       }
     }
+  });
+  it("makes modern seasons the everyday experience, with classic boards as throwbacks", () => {
+    expect(nbaFindLeaderDefinitionWeight(NBA_FIND_LEADER_DEFINITIONS.find(d => d.id === "season:2025:assists")!))
+      .toBeGreaterThan(10 * nbaFindLeaderDefinitionWeight(NBA_FIND_LEADER_DEFINITIONS.find(d => d.id === "season:1972:assists")!));
+    const boards = Array.from({ length: 240 }, (_, i) => createNbaFindLeaderBoard("modern-mix-" + i));
+    const oldSeasons = boards.filter(b => /^season:(1972|1977|1982|1988):/.test(b.definitionId));
+    const modernSeasons = boards.filter(b => /^season:(1993|1996|2001|2006|2011|2014|2017|2025|2026):/.test(b.definitionId) ||
+      /^season:(nineties|millennium|twenty-tens|recent):/.test(b.definitionId));
+    expect(oldSeasons.length).toBeLessThan(40);
+    expect(modernSeasons.length).toBeGreaterThan(110);
+    for (const board of boards) {
+      expect(board.question).not.toContain("player-season");
+      expect(new Set(board.candidates.map(c => c.subtitle)).size).toBe(1);
+      expect(board.candidates[0]?.subtitle).toBe("NBA regular season");
+      const year = /^season:(\d{4}):/.exec(board.definitionId)?.[1];
+      if (year) expect(board.question).toContain((Number(year)-1) + "–" + year.slice(-2));
+    }
+  });
+  it("uses verified player photos and fixes the Gail Goodrich silhouette", () => {
+    expect(nbaFindLeaderHeadshot({ name: "Gail Goodrich", nbaId: 76832 }))
+      .toBe("https://cdn.nba.com/manage/2021/08/GettyImages-1148261504.jpg");
+    expect(nbaFindLeaderHeadshot({ name: "John Havlicek", nbaId: 76970 }))
+      .toBe("https://cdn.nba.com/headshots/nba/latest/1040x760/76970.png");
+    expect(nbaFindLeaderHeadshot({ name: "Kareem Abdul-Jabbar", nbaId: 76003 }))
+      .toBe("https://cdn.nba.com/headshots/nba/latest/1040x760/76003.png");
   });
   it("supports deterministic owner daily previews and identical challenge reconstructions", () => {
     const daily = createNbaFindLeaderDailyPreview("2026-10-19");

@@ -29,3 +29,67 @@
   .nba-find-preview-label { margin-bottom: 8px; font-size: 10px; }
   .nba-find-leader-page .nba-find-card__photo img { object-fit: contain; object-position: center top; }
 }
+
+/* NBA cards: the season remains visible, but never steals room from the name.
+   These rules are scoped to NBA so the established Football treatment is intact. */
+.nba-find-leader-page .football-find-card__copy > small { display: none; }
+.nba-find-leader-page .football-find-card__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.nba-find-leader-page .football-find-card__identity strong {
+  display: block;
+  width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: unset;
+}
+.nba-find-leader-page .football-find-card__season { flex-shrink: 0; }
+.nba-find-leader-page .nba-find-card__photo.is-editorial img {
+  object-fit: cover;
+  object-position: center 25%;
+}
+@media (max-width: 640px) {
+  .nba-find-leader-page .football-find-card {
+    height: auto;
+    min-height: 80px;
+  }
+  .nba-find-leader-page .football-find-card__identity { gap: 3px; }
+  .nba-find-leader-page .football-find-card__identity strong {
+    font-size: clamp(10px, 2.85vw, 12px);
+    line-height: 1.1;
+  }
+  .nba-find-leader-page .football-find-card__season {
+    padding: 2px 5px;
+    font-size: 8px;
+  }
+  .nba-find-leader-page .nba-find-card__photo.is-editorial img {
+    object-fit: cover;
+    object-position: center 25%;
+  }
+}
+
+/* Carry the same full-name rule into the post-game ranking and reveal. */
+.nba-find-leader-page .football-find-order__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.nba-find-leader-page .football-find-order__identity strong,
+.nba-find-leader-page .football-find-order footer > strong,
+.nba-find-leader-page .football-find-reveal article > span strong {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+.nba-find-leader-page .football-find-order footer {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.nba-find-leader-page .football-find-order footer > small {
+  grid-column: 2;
+  justify-self: end;
+}

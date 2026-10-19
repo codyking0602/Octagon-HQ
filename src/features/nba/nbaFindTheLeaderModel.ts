@@ -4,7 +4,7 @@ import {
   shuffleLineup, stableLineupHash, type PlayLineupHistory, type PlayLineupIdentity,
 } from "../play/lineupModel";
 import { selectFindLeaderCompetition } from "../play/findLeaderCompetition";
-import { nbaHitHeadshot, nbaHitSubjects, type NbaHitSubject } from "./nbaHitTheNumberStats";
+import { nbaHitSubjects, type NbaHitSubject } from "./nbaHitTheNumberStats";
 import { NBA_FIND_HISTORICAL_SEASONS } from "./nbaFindTheLeaderHistoricalSeasons";
 
 export const NBA_FIND_LEADER_GAME_ID = "nba-find-leader";
@@ -107,7 +107,9 @@ function definition(metric: NbaLeaderMetric, scope: NbaLeaderScope, group: strin
   return {
     id: scope + ":" + group + ":" + metric, metric, scope, group, category,
     question: scope === "career" ? "Who averaged the most " + stat + " per game in their NBA career?"
-      : "Which player-season averaged the most " + stat + " per game?",
+      : /^\d{4}$/.test(group)
+        ? "Who averaged the most " + stat + " per game in the " + seasonLabel(Number(group)) + " NBA season?"
+        : "Who averaged the most " + stat + " per game in the seasons shown?",
     context, shortLabel,
   };
 }
@@ -118,7 +120,7 @@ export const NBA_FIND_LEADER_DEFINITIONS: readonly NbaLeaderDefinition[] = [
     definition(m, "career", "guards", "GUARD CAREERS"),
     definition(m, "career", "frontcourt", "FRONTCOURT CAREERS"),
   ]),
-  ...years.flatMap(year => metrics.map(m => definition(m, "season", String(year), seasonLabel(year).toUpperCase() + " NBA SEASON"))),
+  ...years.flatMap(year => metrics.map(m => definition(m, "season", String(year), "SINGLE-SEASON " + metricShort[m]))),
   ...eraGroups.flatMap(era => metrics.map(m => definition(m, "season", era.id, era.label.toUpperCase()))),
 ];
 function subjectsFor(def: NbaLeaderDefinition, seed: string): NbaLeaderSubject[] {
@@ -166,7 +168,8 @@ export function buildNbaFindLeaderBoard(def: NbaLeaderDefinition, seed: string):
     const rows: NbaLeaderCandidate[] = selected.map(s => ({
       id: s.id, name: s.name, displayName: s.name,
       ...(s.season != null ? { season: s.season, seasonLabel: s.seasonLabel } : {}),
-      subtitle: s.subtitle, value: getValue(s), nbaId: s.nbaId,
+      // The badge is the full season identity. Do not duplicate the year and games on every card or reveal row.
+      subtitle: "NBA regular season", value: getValue(s), nbaId: s.nbaId,
     }));
     const leader = rows.find(r => r.id === option.leader.id)!;
     if (!validBoard(leader, rows)) continue;
@@ -178,10 +181,34 @@ export function buildNbaFindLeaderBoard(def: NbaLeaderDefinition, seed: string):
   }
   return null;
 }
+/**
+ * Most casual boards should invite basketball knowledge from the 1990s onward.
+ * Keep the 1970s/1980s in the rotation, but as occasional throwback boards.
+ * This only weights the question category; the ten-player competitive selector,
+ * stat integrity and same-board challenge reconstruction stay unchanged.
+ */
+export function nbaFindLeaderDefinitionWeight(def: NbaLeaderDefinition): number {
+  if (def.scope === "career") return def.group === "all" ? 9 : 6;
+  const season = Number(def.group);
+  if (Number.isInteger(season)) {
+    if (season < 1980) return 0.5;
+    if (season < 1990) return 2;
+    if (season < 2000) return 6;
+    if (season < 2010) return 8;
+    if (season < 2020) return 11;
+    return 17;
+  }
+  return ({ classic: 1, nineties: 6, millennium: 9, "twenty-tens": 12, recent: 17 } as Record<string,number>)[def.group] ?? 1;
+}
+
 export function createNbaFindLeaderBoard(seed: string, history?: PlayLineupHistory): NbaLeaderBoard {
   const previous = history?.lastLineup?.find(id => id.startsWith("question:"))?.slice(9) ?? "";
-  const random = seededLineupRandom(NBA_FIND_LEADER_VERSION, seed, "definitions");
-  const candidates = shuffleLineup(NBA_FIND_LEADER_DEFINITIONS, random);
+  const random = seededLineupRandom(NBA_FIND_LEADER_VERSION, seed, "definitions-weighted");
+  // Weighted sampling *without replacement* maintains deterministic fallback
+  // when a statistically valid 10-player board cannot be constructed.
+  const candidates = NBA_FIND_LEADER_DEFINITIONS.map(def => ({
+    def, order: -Math.log(Math.max(random(), Number.EPSILON)) / nbaFindLeaderDefinitionWeight(def),
+  })).sort((a, b) => a.order - b.order).map(item => item.def);
   const eligible = candidates.filter(def => def.id !== previous);
   for (const def of [...eligible, ...candidates.filter(d => d.id === previous)]) {
     const board = buildNbaFindLeaderBoard(def, seed);
@@ -217,7 +244,14 @@ export function createNbaFindLeaderChallenge(seed: string, definitionId: string,
     type: "curated", challengeId: NBA_FIND_LEADER_GAME_ID + ":challenge:" + challengeId,
     replayBehavior: "same-curated-challenge" } };
 }
+// Use an NBA-hosted, player-identified editorial photo when the NBA historical
+// headshot CDN displays a generic silhouette. Do not substitute a lookalike.
+const VERIFIED_NBA_PORTRAIT_OVERRIDES: Readonly<Record<string, string>> = {
+  "gailgoodrich": "https://cdn.nba.com/manage/2021/08/GettyImages-1148261504.jpg",
+};
 export function nbaFindLeaderHeadshot(candidate: Pick<NbaLeaderCandidate,"name"|"nbaId">) {
+  const override = VERIFIED_NBA_PORTRAIT_OVERRIDES[normalizedName(candidate.name)];
+  if (override) return override;
   const id = candidate.nbaId ?? currentByName.get(normalizedName(candidate.name))?.nbaId ?? null;
   return id == null ? null : "https://cdn.nba.com/headshots/nba/latest/1040x760/" + id + ".png";
 }
