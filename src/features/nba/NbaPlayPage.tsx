@@ -23,6 +23,17 @@ export default function NbaPlayPage(){
         <Link className="primary-action" to="/nba/hit-the-number">PLAY NBA HIT THE NUMBER →</Link>
       </section>
     ) : null}
+    {canPreviewNbaWhoAmI(identity.profile) ? (
+      <section className="surface-card nba-hq-notice" aria-label="NBA Find the Leader owner preview">
+        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
+        <h2>NBA Find the Leader</h2>
+        <p>Eliminate nine players to find the leader. NBA legends, eras and season averages.</p>
+        <div className="nba-find-preview-actions">
+          <Link className="primary-action" to="/nba/find-the-leader">PLAY CASUAL →</Link>
+          <Link className="secondary-action" to="/nba/find-the-leader?mode=daily">DAILY PREVIEW →</Link>
+        </div>
+      </section>
+    ) : null}
     <section className="surface-card nba-hq-notice">
       <h2>First up: NBA Futures</h2><p>Make your 30 over/under picks and the rest of your season predictions.</p>
       <Link className="primary-action" to="/nba/picks">OPEN NBA FUTURES →</Link>
