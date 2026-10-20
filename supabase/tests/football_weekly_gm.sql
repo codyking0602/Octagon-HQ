@@ -7,6 +7,8 @@ declare
   v_started jsonb;
   v_next jsonb;
   v_state jsonb;
+  v_young jsonb;
+  v_young_state jsonb;
   v_bad boolean := false;
   v_count integer;
 begin
@@ -31,7 +33,23 @@ begin
     'roster',jsonb_build_array(jsonb_build_object('slot','QB','playerId','DAL|QB|dakprescott','acquired','draft')),
     'finalRoster','[]'::jsonb,'resolvedSeasons','[]'::jsonb
   );
+  -- The previous week's Josh Allen cannot be accepted as this week's assigned elite QB.
+  v_bad := false;
+  begin
+    perform public.save_my_football_weekly_gm('elite',v_started->>'seed',
+      jsonb_set(v_state,'{roster,0,playerId}','"BUF|QB|joshallen"'::jsonb),false,null);
+  exception when others then v_bad := sqlerrm like '%assigned quarterback%'; end;
+  if not v_bad then raise exception 'October 20 accepted last week\'s Josh Allen'; end if;
+
   perform public.save_my_football_weekly_gm('elite',v_started->>'seed',v_state,false,null);
+  v_young:=public.start_my_football_weekly_gm('young');
+  v_young_state:=jsonb_build_object(
+    'version','football-gm-v11-seeded-development',
+    'seed',v_young->>'seed','phase','draft','spinIndex',1,
+    'roster',jsonb_build_array(jsonb_build_object('slot','QB','playerId','ATL|QB|michaelpenix','acquired','draft')),
+    'finalRoster','[]'::jsonb,'resolvedSeasons','[]'::jsonb
+  );
+  perform public.save_my_football_weekly_gm('young',v_young->>'seed',v_young_state,false,null);
   v_initial:=public.get_my_football_weekly_gm();
   if v_initial->'attempts'->'elite'->'state'->>'phase'<>'draft' then
     raise exception 'Official GM draft progress was not saved';
@@ -47,7 +65,7 @@ begin
   if not v_bad then raise exception 'Unfinished GM draft was accepted as complete'; end if;
   select count(*) into v_count from private.football_weekly_gm_attempts
     where week_start=date '2026-10-20' and profile_id=v_player;
-  if v_count<>1 then raise exception 'More than one official attempt was created'; end if;
+  if v_count<>2 then raise exception 'The two official attempts were not created correctly'; end if;
   if has_table_privilege('authenticated','private.football_weekly_gm_attempts','SELECT') or
     has_function_privilege('anon','public.start_my_football_weekly_gm(text)','EXECUTE') then
     raise exception 'Official weekly persistence is exposed to unauthorized API roles';
