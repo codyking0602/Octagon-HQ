@@ -27,7 +27,7 @@ describe("UFC 333 fight-week readiness", () => {
       ["Petr Yan","petr-yan"], ["Merab Dvalishvili","merab-dvalishvili"],
       ["Nikita Krylov","nikita-krylov"], ["Abdul Rakhman Yakhyaev","abdulrakhman-yakhyaev"],
     ]) {
-      expect(getUfcStatsSnapshotFighter(name)?.record).toMatch(/^\\d+-\\d+-/);
+      expect(getUfcStatsSnapshotFighter(name)?.record).toMatch(/^\d+-\d+-/);
       expect(migration).toContain(slug);
     }
     const red = getUfcStatsSnapshotFighter("Petr Yan")!;
