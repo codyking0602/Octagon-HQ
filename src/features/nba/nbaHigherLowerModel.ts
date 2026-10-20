@@ -267,8 +267,15 @@ function buildAttempt(seed: string, attempt: number) {
       && (counts.get(pair.key) ?? 0) < 2
     );
     if (!eligible.length) return null;
-    // Sample from every valid matchup, rather than taking fixed offsets from sorted stats.
-    const pair = eligible[Math.floor(random() * eligible.length)]!;
+    // Draw a metric before a matchup. Points/assists/rebounds have hundreds of
+    // historical combinations; sampling all pairs together would almost never
+    // surface threes, All-NBA, or the draft. Favor metrics not used on this board.
+    const keys = [...new Set(eligible.map(pair => pair.key))];
+    const fewest = Math.min(...keys.map(key => counts.get(key) ?? 0));
+    const rotated = keys.filter(key => (counts.get(key) ?? 0) === fewest);
+    const metricKey = rotated[Math.floor(random() * rotated.length)]!;
+    const metricPairs = eligible.filter(pair => pair.key === metricKey);
+    const pair = metricPairs[Math.floor(random() * metricPairs.length)]!;
     const direction: NbaHigherLowerChoice = random() < 0.5 ? "higher" : "lower";
     questions.push(toQuestion(pair, direction));
     usedPeople.add(pair.left.key);
