@@ -15,7 +15,7 @@ export const NBA_HIGHER_LOWER_EDITORIAL_PHOTOS: Readonly<Record<string, string>>
   timhardaway: "https://cdn.nba.com/teams/uploads/sites/1610612744/2022/09/hardaway-1920.jpg",
 };
 export function nbaHigherLowerPortraitSource(subject: Pick<NbaHigherLowerSubject,"name"|"nbaId">) {
-  const key = subject.name.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const key = subject.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g, "");
   return NBA_HIGHER_LOWER_EDITORIAL_PHOTOS[key]
     ?? nbaFindLeaderHeadshot(subject);
 }

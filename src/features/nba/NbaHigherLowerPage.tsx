@@ -105,7 +105,7 @@ export default function NbaHigherLowerPage() {
     if (!board || result) return;
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     // Covers any nested scrolling region without scrolling the HQ shell away.
-    boardHeaderRef.current?.scrollIntoView({ block: "start", behavior: "instant" });
+    boardHeaderRef.current?.scrollIntoView?.({ block: "start", behavior: "instant" });
   }, [index, board?.seed, Boolean(result)]);
   useEffect(() => {
     if (!board || result) return;
