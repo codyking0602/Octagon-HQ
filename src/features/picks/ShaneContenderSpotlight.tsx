@@ -1,9 +1,13 @@
 import { shanesWatchlist, type ShaneWatchFighter } from "../home/shanesWatchlist";
 import type { PickBout } from "./picksModel";
+import { canonicalUfcFighterSlug } from "./canonicalUfcFighterSlug";
 import "../../styles/picks-shane-contender.css";
 
 export function shaneContendersForBout(bout: PickBout): ShaneWatchFighter[] {
-  const fighterSlugs = new Set([bout.redFighterSlug, bout.blueFighterSlug]);
+  const fighterSlugs = new Set([
+    canonicalUfcFighterSlug(bout.redFighterSlug),
+    canonicalUfcFighterSlug(bout.blueFighterSlug),
+  ]);
   return shanesWatchlist.fighters.filter((fighter) => fighterSlugs.has(fighter.id));
 }
 

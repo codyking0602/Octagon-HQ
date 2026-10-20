@@ -164,6 +164,15 @@ const rosasSpotlight: PickEventSpotlight = {
 afterEach(cleanup);
 
 describe("Shane Contender Fight Spotlight treatment", () => {
+  it("recognizes the published UFC 333 Yakhyaev spelling as Shane’s #3 fighter", () => {
+    const bout = { ...normalBout, blueFighterSlug: "abdulrakhman-yakhyaev", blueFighterName: "Abdul Rakhman Yakhyaev" };
+    const spotlight = { ...normalSpotlight, boutId: bout.boutId, blue: { ...normalSpotlight.blue, fighterSlug: bout.blueFighterSlug } };
+    render(<MemoryRouter><MainEventSpotlight bout={bout} spotlight={spotlight} /></MemoryRouter>);
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
+    expect(screen.getByText(shanesWatchlist.fighters.find((fighter) => fighter.rank === 3)!.whyOnBoard)).toBeInTheDocument();
+  });
+
   it("wires Bilal Hasan directly to an editorial Spotlight with his current Shane rank badge", () => {
     const bilal = shanesWatchlist.fighters.find((fighter) => fighter.id === "bilal-hasan");
     expect(bilal).toBeDefined();

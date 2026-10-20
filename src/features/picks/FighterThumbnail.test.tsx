@@ -18,6 +18,11 @@ describe("runtime fighter media", () => {
 });
 
 describe("fighterThumbnailPath", () => {
+  it("recovers Abdul Rakhman Yakhyaev’s canonical thumb from the UFC 333 card slug", () => {
+    expect(fighterThumbnailPath("abdulrakhman-yakhyaev"))
+      .toBe("/assets/fighters/abdul-rakhman-yakhyaev-thumb.webp");
+  });
+
   it("resolves Jan Błachowicz's canonical ASCII asset", () => {
     expect(fighterThumbnailPath("jan-blachowicz"))
       .toBe("/assets/fighters/jan-blachowicz-thumb.webp");
@@ -157,6 +162,14 @@ describe("fighterThumbnailPath", () => {
 });
 
 describe("Shane contender fighter-tile treatment", () => {
+  it("keeps Yakhyaev’s current #3 gold badge when UFC.com removes his middle-name hyphen", () => {
+    render(<FighterThumbnail name="Abdul Rakhman Yakhyaev" slug="abdulrakhman-yakhyaev" />);
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
+    expect(screen.getByAltText("", { exact: true })).toHaveAttribute(
+      "src", "/assets/fighters/abdul-rakhman-yakhyaev-thumb.webp",
+    );
+  });
+
   it("marks Bilal Hasan's thumbnail with the canonical #4 Shane badge", () => {
     render(<FighterThumbnail name="Bilal Hasan" slug="bilal-hasan" />);
 

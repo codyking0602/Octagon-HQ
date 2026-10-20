@@ -6,7 +6,33 @@ export type UfcStatsSnapshotFighter = Omit<SpotlightStatsFighter, "fighterSlug">
 // owner-authored Spotlights. UFCStats values are used when available; UFC
 // newcomers can carry known profile metadata with null rate stats so Spotlight
 // creation stays deterministic and does not depend on UFCStats uptime.
+// UFC 333 researched fighter profile vitals (UFC.com, checked October 20, 2026).
+// Rate stats are intentionally null rather than speculative; paired editorial is researched.
 const fighters: Record<string, UfcStatsSnapshotFighter> = {
+  "petr yan": {
+    name: "Petr Yan", record: "20-5-0", dob: "1993-02-11",
+    height: "5' 7\\\"", reach: "67\\\"", stance: "Switch",
+    slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+    takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+  },
+  "merab dvalishvili": {
+    name: "Merab Dvalishvili", record: "21-5-0", dob: "1991-01-10",
+    height: "5' 6\\\"", reach: "68\\\"", stance: "Orthodox",
+    slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+    takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+  },
+  "nikita krylov": {
+    name: "Nikita Krylov", record: "31-12-0", dob: "1992-03-07",
+    height: "6' 3\\\"", reach: "77.5\\\"", stance: "Orthodox",
+    slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+    takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+  },
+  "abdul rakhman yakhyaev": {
+    name: "Abdul Rakhman Yakhyaev", record: "10-0-0", dob: "2001-01-03",
+    height: "6' 2\\\"", reach: "78\\\"", stance: "Orthodox",
+    slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+    takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+  },
   "islam makhachev": {
     name: "Islam Makhachev",
     record: "28-1-0",

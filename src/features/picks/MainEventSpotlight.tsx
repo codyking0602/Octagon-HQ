@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
+import { canonicalUfcFighterSlug } from "./canonicalUfcFighterSlug";
 import {
   ShaneContenderBadge,
   ShaneContenderSpotlightSection,
@@ -259,10 +260,11 @@ function spotlightForBout(bout: PickBout, configured?: PickEventSpotlight | null
 }
 
 function fighterPhotoPath(slug: string) {
-  return spotlightPhotoBySlug.get(slug)
-    ?? remoteSpotlightPhotoBySlug.get(slug)
-    ?? profilePhotoBySlug.get(slug)
-    ?? fighterThumbnailPath(slug);
+  const canonicalSlug = canonicalUfcFighterSlug(slug);
+  return spotlightPhotoBySlug.get(canonicalSlug)
+    ?? remoteSpotlightPhotoBySlug.get(canonicalSlug)
+    ?? profilePhotoBySlug.get(canonicalSlug)
+    ?? fighterThumbnailPath(canonicalSlug);
 }
 
 function SpotlightPhoto({ fighter }: { fighter: SpotlightFighter }) {
@@ -324,10 +326,15 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const hasTale = Boolean(
-    data?.red.record && data.red.age && data.red.height && data.red.reach && data.red.stance
-    && data.blue.record && data.blue.age && data.blue.height && data.blue.reach && data.blue.stance,
+    [data?.red, data?.blue].every((fighter) =>
+      fighter && [fighter.record, fighter.age, fighter.height, fighter.reach, fighter.stance]
+        .every((value) => Boolean(value?.trim()) && value !== "--"),
+    ),
   );
-  const hasEdges = Boolean(data?.red.edges.length || data?.blue.edges.length);
+  const hasEdges = Boolean(
+    data?.red.edges.some((edge) => edge !== "No UFCStats sample yet")
+    || data?.blue.edges.some((edge) => edge !== "No UFCStats sample yet"),
+  );
 
   useEffect(() => {
     if (!open) return undefined;

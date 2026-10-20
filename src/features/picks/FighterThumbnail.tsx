@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getSupabaseClient } from "../../lib/supabase";
 import { shanesWatchlist } from "../home/shanesWatchlist";
+import { canonicalUfcFighterSlug } from "./canonicalUfcFighterSlug";
 import { ShaneContenderBadge } from "./ShaneContenderSpotlight";
 
 const thumbnailModules = import.meta.glob<{ default: string }>(
@@ -89,7 +90,7 @@ async function loadRuntimeFighterMedia() {
 
 
 export function fighterRemotePhotoPath(slug: string) {
-  const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
+  const canonicalSlug = canonicalUfcFighterSlug(thumbnailSlugAliases.get(slug) ?? slug);
   return remotePhotoBySlug.get(canonicalSlug) ?? null;
 }
 
@@ -103,7 +104,7 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
   const staticSource = fighterThumbnailPath(canonicalSlug);
   const [runtimeSource, setRuntimeSource] = useState(() => runtimePhotoBySlug.get(canonicalSlug) ?? null);
   const [failedSources, setFailedSources] = useState<Set<string>>(() => new Set());
-  const shaneContender = shanesWatchlist.fighters.find((fighter) => fighter.id === slug) ?? null;
+  const shaneContender = shanesWatchlist.fighters.find((fighter) => fighter.id === canonicalSlug) ?? null;
   const source = staticSource && !failedSources.has(staticSource)
     ? staticSource
     : runtimeSource && !failedSources.has(runtimeSource)

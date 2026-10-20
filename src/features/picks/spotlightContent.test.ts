@@ -266,6 +266,39 @@ describe("fight Spotlight content", () => {
     expectThreeQualitativeEdges(spotlight.blue.edges);
   });
 
+  it("never generates generic Yan–Dvalishvili trilogy copy despite missing UFC rate samples", () => {
+    const noRates = (slug: string, name: string) => ({
+      fighterSlug: slug, name, record: "20-5-0", dob: "1993-02-11",
+      height: "5' 7\\\"", reach: "67\\\"", stance: "Switch",
+      slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+      takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+    });
+    const data = buildPickSpotlightContent({
+      boutId: "main-petr-yan-merab-dvalishvili", eventStartsAt: "2026-10-24T18:00:00Z",
+      red: noRates("petr-yan", "Petr Yan"), blue: noRates("merab-dvalishvili", "Merab Dvalishvili"),
+    });
+    expect(data.preview).toContain("series tied 1–1");
+    expect(data.red.edges).toHaveLength(3);
+    expect(data.blue.edges).toHaveLength(3);
+    expect(data.red.edges).not.toContain("No UFCStats sample yet");
+  });
+
+  it("provides a sourced Krylov–Yakhyaev scouting report and YouTube spotlight", () => {
+    const noRates = (slug: string, name: string) => ({
+      fighterSlug: slug, name, record: "10-0-0", dob: "2001-01-03",
+      height: "6' 2\\\"", reach: "78\\\"", stance: "Orthodox",
+      slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+      takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+    });
+    const data = buildPickSpotlightContent({
+      boutId: "prelim-nikita-krylov-abdulrakhman-yakhyaev", eventStartsAt: "2026-10-24T18:00:00Z",
+      red: noRates("nikita-krylov", "Nikita Krylov"), blue: noRates("abdulrakhman-yakhyaev", "Abdul Rakhman Yakhyaev"),
+    });
+    expect(data.preview).toContain("eight-second knockout");
+    expect(data.blue.edges).toHaveLength(3);
+    expect(data.watchSpotlights[0]?.url).toMatch(/^https:\/\/youtube.com\/shorts\//);
+  });
+
   it("uses placeholders only when UFCStats does not publish a tale field", () => {
     const sparse = buildPickSpotlightContent({
       boutId: "sparse-fight",

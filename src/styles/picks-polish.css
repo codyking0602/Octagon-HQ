@@ -73,6 +73,10 @@
   background-size: cover, contain, cover;
 }
 
+.picks-event-hero:not(.has-poster) .picks-event-hero__poster {
+  min-height: 58px;
+}
+
 .picks-event-hero:not(.has-poster) .picks-event-hero__poster::before {
   position: absolute;
   inset: 0;
@@ -137,11 +141,11 @@
 }
 
 .picks-event-hero__copy > strong {
-  overflow: hidden;
+  overflow-wrap: anywhere;
   font-size: clamp(15px, 4.5vw, 20px);
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.2;
+  text-wrap: balance;
+  white-space: normal;
 }
 
 .picks-event-hero.has-poster .picks-event-hero__copy h2 {

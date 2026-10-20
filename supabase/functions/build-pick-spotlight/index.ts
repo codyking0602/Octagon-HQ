@@ -35,23 +35,16 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 }
 
 function loadFighter(name: string, fighterSlug: string): SpotlightStatsFighter {
-  const snapshot = getUfcStatsSnapshotFighter(name);
-  const fighter = snapshot ?? {
-    name,
-    record: "--",
-    dob: null,
-    height: "--",
-    reach: "--",
-    stance: "--",
-    slpm: null,
-    strikingAccuracy: null,
-    sapm: null,
-    strikingDefense: null,
-    takedownAverage: null,
-    takedownAccuracy: null,
-    takedownDefense: null,
-    submissionAverage: null,
-  };
+  const fighter = getUfcStatsSnapshotFighter(name);
+  // Never create a polished-looking published Spotlight with fictitious "--"
+  // fighter vitals or "stay adaptable" placeholder editorial.
+  if (!fighter || !fighter.record || !fighter.dob
+    || [fighter.height, fighter.reach, fighter.stance].some((value) => !value || value === "--")) {
+    throw new SpotlightBuildError(
+      "SPOTLIGHT_RESEARCH_REQUIRED",
+      `Verified UFCStats fighter profiles are missing for ${name}. Prepare reviewed fighter facts before building this Spotlight.`,
+    );
+  }
   return { ...fighter, fighterSlug, name };
 }
 
@@ -166,6 +159,14 @@ Deno.serve(async (request) => {
       blue,
     });
 
+    if ([spotlight.red, spotlight.blue].some((fighter) =>
+      fighter.edges.some((edge) => edge === "No UFCStats sample yet"))
+      || /stay adaptable and impose the better phase|key is who imposes the better phase/i.test(spotlight.preview)) {
+      throw new SpotlightBuildError(
+        "SPOTLIGHT_EDITORIAL_REVIEW_REQUIRED",
+        "This matchup still lacks a researched preview or meaningful fighter edges. Complete editorial review before publishing.",
+      );
+    }
     return json({ spotlight, deployment_sha: DEPLOYED_SOURCE_SHA });
   } catch (error) {
     const known = error instanceof SpotlightBuildError;

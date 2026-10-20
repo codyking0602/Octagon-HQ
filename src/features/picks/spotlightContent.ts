@@ -245,6 +245,30 @@ function matchupKey(red: SpotlightStatsFighter, blue: SpotlightStatsFighter) {
 function matchupEditorial(red: SpotlightStatsFighter, blue: SpotlightStatsFighter): EditorialMatchup | null {
   const slugs = new Set([red.fighterSlug, blue.fighterSlug]);
 
+  if (slugs.has("petr-yan") && slugs.has("merab-dvalishvili")) {
+    return {
+      preview: "With their series tied 1–1, champion Petr Yan must punish entries with precise boxing, body work and takedown defense. Merab Dvalishvili won their first meeting with relentless wrestling pressure; Yan took the 2025 rematch by disrupting that rhythm. The trilogy hinges on fence position, mat returns and how much clean striking space Yan can create.",
+      edgesBySlug: new Map([
+        ["petr-yan", ["Championship boxing and body attacks", "Defensive wrestling in the rematch", "Five-round tactical adjustments"]],
+        ["merab-dvalishvili", ["Relentless chain wrestling", "Elite pace and repeated shots", "Clinch control and mat returns"]],
+      ]),
+    };
+  }
+
+  if (slugs.has("nikita-krylov") && (slugs.has("abdulrakhman-yakhyaev") || slugs.has("abdul-rakhman-yakhyaev"))) {
+    return {
+      preview: "Nikita Krylov brings 43 professional fights, dangerous submissions and experience against ranked UFC opposition. Unbeaten Abdul Rakhman Yakhyaev is 3–0 in the UFC with three first-round finishes, including an eight-second knockout. Krylov needs to survive the initial rush and create longer exchanges; Yakhyaev gets his toughest test of whether the early finishing threat holds up against a seasoned veteran.",
+      edgesBySlug: new Map([
+        ["nikita-krylov", ["Experienced submission threat", "Long UFC résumé", "Striking and grappling versatility"]],
+        ["abdulrakhman-yakhyaev", ["Unbeaten 10–0 record", "Three first-round UFC finishes", "Explosive wrestling and submission attacks"]],
+        ["abdul-rakhman-yakhyaev", ["Unbeaten 10–0 record", "Three first-round UFC finishes", "Explosive wrestling and submission attacks"]],
+      ]),
+      watchSpotlights: [{ fighterSlug: "abdulrakhman-yakhyaev", url: "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N" }],
+    };
+  }
+
+
+
   if (slugs.has("jean-silva") && slugs.has("jose-miguel-delgado")) {
     return {
       preview: "Jean Silva wants to force a pressure fight where his power and pace can break Delgado down. Jose Miguel Delgado brings the longer frame, switch-stance looks, and dangerous counters; the key is whether he can punish Silva’s entries.",
