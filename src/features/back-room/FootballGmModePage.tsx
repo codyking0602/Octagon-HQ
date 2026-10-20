@@ -1534,7 +1534,9 @@ export default function FootballGmModePage({
     if (weeklyRun) {
       const persisted = weeklyRun.savedState ? parsePersistedRun(weeklyRun.savedState) : null;
       if (persisted && persisted.seed === weeklyRun.seed) return persisted;
-      const qbId = weeklyRun.scenario === "elite" ? "BUF|QB|joshallen" : "NYG|QB|jaxsondart";
+      const qbId = weeklyRun.seed.startsWith("weekly-gm:2026-10-20:")
+        ? (weeklyRun.scenario === "elite" ? "DAL|QB|dakprescott" : "ATL|QB|michaelpenix")
+        : (weeklyRun.scenario === "elite" ? "BUF|QB|joshallen" : "NYG|QB|jaxsondart");
       return { ...initialRun(weeklyRun.seed, weeklyRun.legacyFreeAgency ? "legacy" : "three-plus-one"), phase: "draft", spinIndex: 1,
         roster: [{ slot: "QB", playerId: qbId, acquired: "draft" }] };
     }
