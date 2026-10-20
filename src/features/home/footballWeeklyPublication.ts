@@ -116,7 +116,7 @@ export function parsePublishedFootballWeek(raw: unknown): PublishedFootballWeek 
 // A 15s refresh makes a page already open at midnight update without a reload.
 export function usePublishedFootballWeek(): PublishedFootballWeek | null | undefined {
   const [client] = useState(() => getSupabaseClient());
-  const [published, setPublished] = useState<PublishedFootballWeek | null | undefined>(undefined);
+  const [published, setPublished] = useState<PublishedFootballWeek | null | undefined>(() => client ? undefined : null);
   useEffect(() => {
     if (!client) { setPublished(null); return undefined; }
     let active = true;
