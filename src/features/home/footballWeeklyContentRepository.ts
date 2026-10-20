@@ -118,8 +118,9 @@ export function activeFootballEditorialTuesday(now = new Date()): string {
   }).formatToParts(now);
   const get = (name: string) => pieces.find((p) => p.type === name)?.value ?? "";
   const day = new Date(Date.UTC(Number(get("year")),Number(get("month")) - 1,Number(get("day")),12));
-  const shift = get("weekday") === "Mon" && Number(get("hour")) >= 22
-    ? 1 : -(day.getUTCDay() - 2 + 7) % 7;
+  const weekday = day.getUTCDay();
+  const shift = weekday === 0 || weekday === 1
+    ? 2 - weekday : -((weekday - 2 + 7) % 7);
   day.setUTCDate(day.getUTCDate() + shift);
   return day.toISOString().slice(0,10);
 }
