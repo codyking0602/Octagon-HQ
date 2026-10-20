@@ -16,19 +16,19 @@ begin
   perform public.register_unclaimed_pin_profile(v_player,'GM WEEKLY TEST','GW');
   update private.football_weekly_gm_events
     set opens_at=now()-interval '1 day',closes_at=now()+interval '1 day'
-    where week_start=date '2026-10-13';
+    where week_start=date '2026-10-20';
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_player::text,true);
   v_started:=public.start_my_football_weekly_gm('elite');
   v_next:=public.start_my_football_weekly_gm('elite');
   if v_started->>'seed' is distinct from v_next->>'seed' or
-    position('weekly-gm:2026-10-13:elite:' in v_started->>'seed')<>1 then
+    position('weekly-gm:2026-10-20:elite:' in v_started->>'seed')<>1 then
     raise exception 'Weekly attempt was rerolled on restart: %, %',v_started,v_next;
   end if;
   v_state:=jsonb_build_object(
     'version','football-gm-v11-seeded-development',
     'seed',v_started->>'seed','phase','draft','spinIndex',1,
-    'roster',jsonb_build_array(jsonb_build_object('slot','QB','playerId','BUF|QB|joshallen','acquired','draft')),
+    'roster',jsonb_build_array(jsonb_build_object('slot','QB','playerId','DAL|QB|dakprescott','acquired','draft')),
     'finalRoster','[]'::jsonb,'resolvedSeasons','[]'::jsonb
   );
   perform public.save_my_football_weekly_gm('elite',v_started->>'seed',v_state,false,null);
@@ -46,7 +46,7 @@ begin
   exception when others then v_bad:=true; end;
   if not v_bad then raise exception 'Unfinished GM draft was accepted as complete'; end if;
   select count(*) into v_count from private.football_weekly_gm_attempts
-    where week_start=date '2026-10-13' and profile_id=v_player;
+    where week_start=date '2026-10-20' and profile_id=v_player;
   if v_count<>1 then raise exception 'More than one official attempt was created'; end if;
   if has_table_privilege('authenticated','private.football_weekly_gm_attempts','SELECT') or
     has_function_privilege('anon','public.start_my_football_weekly_gm(text)','EXECUTE') then
