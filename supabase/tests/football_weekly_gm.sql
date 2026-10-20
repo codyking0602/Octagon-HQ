@@ -54,6 +54,7 @@ begin
   if v_initial->'attempts'->'elite'->'state'->>'phase'<>'draft' then
     raise exception 'Official GM draft progress was not saved';
   end if;
+  v_bad:=false;
   begin
     perform public.save_my_football_weekly_gm('elite','wrong-seed',v_state,false,null);
   exception when others then v_bad:=true; end;
