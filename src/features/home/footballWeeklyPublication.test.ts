@@ -68,6 +68,9 @@ describe("public Football weekly release projection", () => {
     expect(match[0]?.headerAssetPath).toContain("game-header.webp");
     expect(match[0]?.keyMatchups).toHaveLength(3);
     expect(match[0]?.unitEdges).toHaveLength(2);
+    expect(match[0]?.compact?.leagueLabel).toBe("CFB");
+    expect(match[0]?.compact?.things).toHaveLength(3);
+    expect(match[0]?.compact?.bottomLine).toHaveLength(1);
     // Real Picks displays school + mascot (the owner selects the school name).
     const fullNames = {
       ...event, bouts: [{ ...event.bouts[0],
@@ -107,6 +110,7 @@ describe("public Football weekly release projection", () => {
     } as unknown as PickEvent;
     const weekly = publishedFootballMatchupsForEvent(event, projected);
     expect(weekly).toHaveLength(1);
+    expect(weekly[0]?.compact?.leagueLabel).toBe("NFL");
     const compact: FootballMatchupBreakdown = {
       ...weekly[0]!,
       id: "2026-patriots-bears-week7",
