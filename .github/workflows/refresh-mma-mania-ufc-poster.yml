@@ -1,0 +1,98 @@
+name: Refresh MMA Mania UFC Poster
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Poster archives sometimes publish after Tuesday: check each weekday.
+    - cron: "17 12 * * 1-5"
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ufc-mma-mania-poster-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Read live UFC event and verify MMA Mania poster
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: node scripts/refresh-mma-mania-ufc-poster.mjs
+
+      - name: Create focused editorial PR, exact-head validate and publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ledger=src/features/picks/ufcMmaManiaWeeklyPosters.json
+          if git diff --quiet -- "$ledger"; then
+            echo "No new source-verified MMA Mania poster."
+            exit 0
+          fi
+          branch="automation/ufc-poster-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add -- "$ledger"
+          git commit -m "Publish verified MMA Mania UFC fight-week poster"
+          head_sha=$(git rev-parse HEAD)
+          git push origin "$branch"
+          gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$branch" \
+            --title "Publish verified MMA Mania UFC event poster" \
+            --body "Automatic verified source: MMA Mania UFC Posters archive. Exact event identity, headliners, publisher image domain, dimensions and Tuesday fight-week time gate validated. No synthetic artwork."
+          pr_number=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --state open --json number --jq '.[0].number')
+          if [ -z "$pr_number" ]; then
+            echo "Poster publisher PR creation failed."
+            exit 1
+          fi
+          gh workflow run validate.yml --repo "$GITHUB_REPOSITORY" --ref "$branch"
+          run_id=""
+          for attempt in $(seq 1 36); do
+            run_id=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow validate.yml \
+              --branch "$branch" --event workflow_dispatch --limit 10 \
+              --json databaseId,headSha \
+              --jq ".[] | select(.headSha == \"$head_sha\") | .databaseId" | head -n 1)
+            if [ -n "$run_id" ]; then break; fi
+            sleep 5
+          done
+          test -n "$run_id" || { echo "Exact poster validation never started."; exit 1; }
+          gh run watch "$run_id" --repo "$GITHUB_REPOSITORY" --exit-status
+          actual_head=$(gh pr view "$pr_number" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq '.headRefOid')
+          test "$actual_head" = "$head_sha" || { echo "Poster PR head moved; refusing merge."; exit 1; }
+          gh pr merge "$pr_number" --repo "$GITHUB_REPOSITORY" --merge --match-head-commit "$head_sha"
+          merged_sha=$(gh pr view "$pr_number" --repo "$GITHUB_REPOSITORY" --json mergeCommit --jq '.mergeCommit.oid')
+          test -n "$merged_sha"
+          # A main push triggers production deployment. Confirm the merged
+          # commit actually reached production; later main SHAs may be descendants.
+          for attempt in $(seq 1 36); do
+            live_sha=$(curl -fsSL --retry 1 \
+              "https://octagon.hq-app.workers.dev/deployment.json?poster-check=${attempt}" \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d);process.stdin.on("end",()=>{try{process.stdout.write(JSON.parse(s).sha||"")}catch{}})' || true)
+            if [ -n "$live_sha" ]; then
+              state=$(gh api "repos/$GITHUB_REPOSITORY/compare/$merged_sha...$live_sha" --jq .status 2>/dev/null || true)
+              if [ "$state" = ahead ] || [ "$state" = identical ]; then
+                echo "Verified poster production deployment: $live_sha"
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          echo "Verified poster merged but not yet confirmed in production."
+          exit 1
