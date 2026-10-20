@@ -438,8 +438,8 @@ export function FootballHq({
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? standingLabel(standing.rank, standings) : "";
   const matchupBreakdowns = event ? [
-    ...publishedFootballMatchupsForEvent(event, published),
-    ...footballMatchupBreakdownsForEvent(event).filter((staticBreakdown) => !publishedFootballMatchupsForEvent(event, published).some((current) =>
+    ...publishedFootballMatchupsForEvent(event, published ?? null),
+    ...footballMatchupBreakdownsForEvent(event).filter((staticBreakdown) => !publishedFootballMatchupsForEvent(event, published ?? null).some((current) =>
       current.teams.every((team) => staticBreakdown.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase())))),
   ] : [];
   const featuredMatchups = event ? matchupBreakdowns.flatMap((breakdown) => {
@@ -505,13 +505,15 @@ export function FootballHq({
 
       {dailyChallenge}
 
-      <PlayerSpotlight
-        spotlight={activeSpotlight}
-        photoSource={activeSpotlightPhoto}
-        memorial={memorial}
-        canManagePhoto={!memorial && canManagePlayerPhoto}
-        onManagePhoto={memorial ? undefined : onManagePlayerPhoto}
-      />
+      <div style={{ opacity: published === undefined && !memorial ? 0 : 1 }}>
+        <PlayerSpotlight
+          spotlight={activeSpotlight}
+          photoSource={activeSpotlightPhoto}
+          memorial={memorial}
+          canManagePhoto={!memorial && canManagePlayerPhoto}
+          onManagePhoto={memorial ? undefined : onManagePlayerPhoto}
+        />
+      </div>
 
       {featuredMatchups.length ? (
         <section className="football-hq-games" aria-label="Football Games of the Week">

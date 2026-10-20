@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   createFootballWeeklyContentRepository,
-  nextFootballEditorialTuesday,
+  activeFootballEditorialTuesday,
   type FootballWeeklyContentPackage,
   type FootballWeeklyContentRepository,
 } from "../home/footballWeeklyContentRepository";
@@ -26,7 +26,7 @@ export default function FootballWeeklyEditorialControl({
   const [repository] = useState<FootballWeeklyContentRepository | null>(() => (
     suppliedRepository === undefined ? createFootballWeeklyContentRepository() : suppliedRepository
   ));
-  const [weekOf] = useState(() => nextFootballEditorialTuesday(now));
+  const [weekOf] = useState(() => activeFootballEditorialTuesday(now));
   const [content, setContent] = useState<FootballWeeklyContentPackage | null>(null);
   const [selections, setSelections] = useState<Record<Sport, PendingSelection>>({
     cfb: { playerId: "", gameId: "" }, nfl: { playerId: "", gameId: "" },
@@ -87,7 +87,7 @@ export default function FootballWeeklyEditorialControl({
       const verification = await verifyFootballWeeklyMedia(content, sport);
       const next = await repository.armEditorial(weekOf, sport, verification);
       setContent(next);
-      setNotice(sport.toUpperCase() + " verified and armed for Tuesday 12:00 AM Central.");
+      setNotice(sport.toUpperCase() + " verified and armed for Tuesday 8 AM or the next valid publication check.");
     } catch (nextError) {
       setError(errorText(nextError));
     } finally {
@@ -101,9 +101,9 @@ export default function FootballWeeklyEditorialControl({
         <div>
           <p className="eyebrow">FOOTBALL WEEKLY EDITORIAL</p>
           <h2>Approve featured content</h2>
-          <p>Week of {weekOf} · Tuesday midnight Central</p>
+          <p>Week of {weekOf} · Tuesday 8 AM Central target</p>
         </div>
-        <span className="football-editorial__status">DRAFT ONLY</span>
+        <span className="football-editorial__status">{content?.production.cfb?.published_at || content?.production.nfl?.published_at ? "LIVE THIS WEEK" : "EDITORIAL STATUS"}</span>
       </div>
       <p className="football-editorial__explain">
         Choose one featured player and one Game of the Week for each sport.
@@ -120,7 +120,7 @@ export default function FootballWeeklyEditorialControl({
           <div className="football-editorial__sport" key={sport}>
             <div className="football-editorial__sport-heading">
               <h3>{sport === "cfb" ? "College Football" : "NFL"}</h3>
-              <span>{content?.production[sport]?.ready_at ? "ARMED FOR MIDNIGHT" : content?.production[sport] ? "EDITORIAL PREPARED" : saved ? "SELECTIONS SAVED" : candidates ? "READY TO SELECT" : "AWAITING RECOMMENDATIONS"}</span>
+              <span>{content?.production[sport]?.ready_at ? content.production[sport]?.published_at ? "LIVE" : "ARMED" : content?.production[sport] ? "EDITORIAL PREPARED" : saved ? "SELECTIONS SAVED" : candidates ? "READY TO SELECT" : "AWAITING RECOMMENDATIONS"}</span>
             </div>
             {candidates ? (
               <>
@@ -173,13 +173,13 @@ export default function FootballWeeklyEditorialControl({
                   <>
                     <p className="football-editorial__saved">
                       {content.production[sport]?.ready_at
-                        ? "Prepared images verified. Automatic Central-midnight activation armed."
-                        : "Editorial prepared. Artwork must be verified before midnight activation."}
+                        ? "Prepared art verified. Publishes at 8 AM Central or when ready afterward."
+                        : "Editorial prepared. Artwork verification and safe publishing remain pending."}
                     </p>
                     {!content.production[sport]?.ready_at ? (
                       <button className="secondary-action football-editorial__save" type="button"
                         disabled={Boolean(busy)} onClick={() => void arm(sport)}>
-                        {busy === sport ? "VERIFYING…" : "VERIFY ART & ARM MIDNIGHT"}
+                        {busy === sport ? "VERIFYING…" : "VERIFY ART & ARM"}
                       </button>
                     ) : null}
                   </>
@@ -194,8 +194,7 @@ export default function FootballWeeklyEditorialControl({
         );
       }) : null}
       <p className="football-editorial__footnote">
-        Tuesday 12:00 AM Central is the locked future release time. Phase 2 saves choices only;
-        image preparation and publication follow in later phases.
+        Tuesday 8:00 AM Central is the release target; verified late content may follow. Both sports publish independently.
       </p>
     </section>
   );

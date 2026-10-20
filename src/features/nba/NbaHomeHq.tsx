@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NBA_WELCOME_REOPEN_EVENT } from "./NbaWelcomeTakeover";
 import { NBA_PUBLIC_ENABLED } from "./nbaPreviewAccess";
-import { NBA_FUTURES_SELECTIONS, NBA_FUTURES_LOCK_AT, emptyNbaFutures, nbaFuturesProgress } from "./nbaFutures";
+import { NBA_FUTURES_SELECTIONS, emptyNbaFutures, nbaFuturesProgress } from "./nbaFutures";
 import { loadNbaFutures } from "./nbaFuturesRepository";
 import "../../styles/nba-hq.css";
 
 export function NbaHomeHq({ signedIn, compact = false }: { signedIn: boolean; compact?: boolean }) {
   const [count, setCount] = useState<number | null>(null);
-  const [locked, setLocked] = useState(Date.now() >= Date.parse(NBA_FUTURES_LOCK_AT));
+  const [locked, setLocked] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -21,7 +21,7 @@ export function NbaHomeHq({ signedIn, compact = false }: { signedIn: boolean; co
       setCount(snapshot.own
         ? nbaFuturesProgress({ ...emptyNbaFutures(), ...snapshot.own })
         : 0);
-      setLocked(snapshot.locked || Date.now() >= Date.parse(NBA_FUTURES_LOCK_AT));
+      setLocked(snapshot.locked);
     }).catch(() => {
       if (mounted) setCount(null);
     });

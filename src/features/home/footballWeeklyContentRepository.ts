@@ -110,6 +110,22 @@ export function nextFootballEditorialTuesday(now = new Date()): string {
 }
 
 
+/** Keep the active Tuesday visible until Monday night, when the next menu opens. */
+export function activeFootballEditorialTuesday(now = new Date()): string {
+  const pieces = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", hourCycle: "h23", weekday: "short",
+  }).formatToParts(now);
+  const get = (name: string) => pieces.find((p) => p.type === name)?.value ?? "";
+  const day = new Date(Date.UTC(Number(get("year")),Number(get("month")) - 1,Number(get("day")),12));
+  const weekday = day.getUTCDay();
+  const shift = weekday === 0 || weekday === 1
+    ? 2 - weekday : -((weekday - 2 + 7) % 7);
+  day.setUTCDate(day.getUTCDate() + shift);
+  return day.toISOString().slice(0,10);
+}
+
+
 const editorialText = z.string().trim().min(35);
 const editorialBattle = z.strictObject({
   title: z.string().trim().min(1), body: editorialText, edge: z.string().trim().min(1),

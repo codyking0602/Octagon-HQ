@@ -114,20 +114,22 @@ export function parsePublishedFootballWeek(raw: unknown): PublishedFootballWeek 
 
 // The database alone decides exactly when an armed week becomes visible.
 // A 15s refresh makes a page already open at midnight update without a reload.
-export function usePublishedFootballWeek(): PublishedFootballWeek | null {
+export function usePublishedFootballWeek(): PublishedFootballWeek | null | undefined {
   const [client] = useState(() => getSupabaseClient());
-  const [published, setPublished] = useState<PublishedFootballWeek | null>(null);
+  const [published, setPublished] = useState<PublishedFootballWeek | null | undefined>(() => client ? undefined : null);
   useEffect(() => {
-    if (!client) return undefined;
+    if (!client) { setPublished(null); return undefined; }
     let active = true;
     async function refresh() {
       const { data, error } = await client!.rpc("get_live_football_weekly_editorial");
-      if (error || !active) return;
+      if (!active) return;
+      if (error) { setPublished((previous) => previous ?? null); return; }
       try {
         const next = parsePublishedFootballWeek(data);
         if (active) setPublished(next);
       } catch {
-        // Keep the existing published content if the new projection is malformed.
+        // Retain valid published data; resolve initial loading without displaying stale content.
+        if (active) setPublished((previous) => previous ?? null);
       }
     }
     void refresh();

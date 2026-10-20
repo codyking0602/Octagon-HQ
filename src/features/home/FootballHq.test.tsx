@@ -4,6 +4,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { FootballHq, footballHqTeamPresentationFor, footballSpotlightKindAt } from "./FootballHq";
 
+// These legacy presentation tests intentionally exercise the static fallback
+// when no published weekly editorial is available.
+vi.mock("./footballWeeklyPublication", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./footballWeeklyPublication")>();
+  return { ...actual, usePublishedFootballWeek: () => null };
+});
+
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
