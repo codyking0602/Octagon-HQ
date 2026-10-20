@@ -14,11 +14,12 @@ describe("multi-fight Picks Spotlight ownership", () => {
     expect(setup).not.toMatch(/slice\(0,\s*[123]\)|maxSpotlight|spotlightLimit/i);
   });
 
-  it("keeps UFCStats snapshot enrichment read-only, owner gated, and safe on an unseeded fighter", () => {
+  it("keeps UFCStats snapshot enrichment read-only, owner gated, and rejects unresearched fighters", () => {
     expect(builder).toContain('owner.rpc("get_pick_event_setup")');
     expect(builder).toContain("getUfcStatsSnapshotFighter");
-    expect(builder).toContain("const fighter = snapshot ?? {");
-    expect(builder).not.toContain("UFCSTATS_SNAPSHOT_FIGHTER_NOT_FOUND");
+    expect(builder).toContain("SPOTLIGHT_RESEARCH_REQUIRED");
+    expect(builder).toContain("SPOTLIGHT_EDITORIAL_REVIEW_REQUIRED");
+    expect(builder).not.toContain("const fighter = snapshot ?? {");
     expect(builder).not.toContain("fetchUfcStatsHtml");
     expect(builder).not.toMatch(/stage_pick_event_draft|publish_pick_event_draft|from\("pick_events"\)|insert\(|update\(/);
   });
