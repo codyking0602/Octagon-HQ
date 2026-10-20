@@ -95,12 +95,12 @@ export function fighterRemotePhotoPath(slug: string) {
 }
 
 export function fighterThumbnailPath(slug: string) {
-  const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
+  const canonicalSlug = canonicalUfcFighterSlug(thumbnailSlugAliases.get(slug) ?? slug);
   return fighterRemotePhotoPath(canonicalSlug) ?? thumbnailBySlug.get(canonicalSlug) ?? null;
 }
 
 export function FighterThumbnail({ name, slug }: { name: string; slug: string }) {
-  const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
+  const canonicalSlug = canonicalUfcFighterSlug(thumbnailSlugAliases.get(slug) ?? slug);
   const staticSource = fighterThumbnailPath(canonicalSlug);
   const [runtimeSource, setRuntimeSource] = useState(() => runtimePhotoBySlug.get(canonicalSlug) ?? null);
   const [failedSources, setFailedSources] = useState<Set<string>>(() => new Set());
