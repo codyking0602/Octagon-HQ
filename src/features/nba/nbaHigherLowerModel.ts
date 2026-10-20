@@ -214,6 +214,22 @@ for (const spec of specs) {
     else pairsByCategoryAndDifficulty.set(group, [pair]);
   }
 }
+/** All unique player identities that can appear in any eligible NBA board
+ * (not only the 100 sample boards used by prior tests).
+ * Used for exhaustive remote photo verification, not gameplay selection.
+ */
+export const NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS: readonly Readonly<{ name: string; nbaId: number | null }>[] = (() => {
+  const people = new Map<string, { name: string; nbaId: number | null }>();
+  for (const pairs of pairsByCategoryAndDifficulty.values()) {
+    for (const pair of pairs) {
+      for (const row of [pair.left, pair.right]) {
+        if (!people.has(row.key)) people.set(row.key, { name: row.name, nbaId: row.nbaId });
+      }
+    }
+  }
+  return [...people.values()].sort((a, b) => a.name.localeCompare(b.name));
+})();
+
 function formatValue(value: number, category: NbaHigherLowerCategory) {
   return category === "career" || category === "season" ? value.toFixed(1) : String(value);
 }

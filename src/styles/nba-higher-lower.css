@@ -5,7 +5,7 @@
 .nba-higher-lower .higher-lower-card {
   --hl-team-primary: #d88b2a;
   --hl-team-secondary: #efc98a;
-  min-height: 294px;
+  min-height: 324px;
   background: linear-gradient(155deg, #2c241c 0%, #1e1c1a 65%, #151616 100%);
 }
 .nba-higher-lower .higher-lower-card__identity {
@@ -28,21 +28,17 @@
   display: grid;
   place-items: end center;
   width: 100%;
-  height: 128px;
+  height: 156px;
   margin: 1px auto 0;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 72%, rgba(233, 162, 71, .12), transparent 68%);
-  /* Fade the actual shoulder line, not only the PNG's transparent padding. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 61%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 61%, transparent 100%);
+  background: transparent;
 }
 .nba-higher-lower-portrait img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: center bottom;
-  transform: translateY(12px) scale(1.18);
-  transform-origin: center bottom;
+  object-position: center center;
+  transform: none;
 }
 .nba-higher-lower-portrait b {
   display: grid;
@@ -163,10 +159,10 @@
 }
 @media (max-width: 520px) {
   .nba-higher-lower .higher-lower-card {
-    min-height: 276px;
+    min-height: 302px;
     padding: 8px 6px;
   }
-  .nba-higher-lower-portrait { height: 110px; }
+  .nba-higher-lower-portrait { height: 136px; }
   .nba-higher-lower .higher-lower-card__identity > span:last-child {
     font-size: .60rem;
   }
@@ -253,8 +249,8 @@
 }
 
 .nba-higher-lower-portrait.is-editorial img {
-  object-fit: cover;
-  object-position: center 32%;
+  object-fit: contain;
+  object-position: center center;
   transform: none;
 }
 .nba-higher-lower .higher-lower-game-header {
