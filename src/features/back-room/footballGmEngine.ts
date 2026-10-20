@@ -553,6 +553,9 @@ export function footballGmProjectedGradeForPlayer(
   year: 1 | 2 | 3,
   seed?: string,
 ) {
+  // Week-scoped featured QB projections are fixed; standard solo/H2H development stays seeded.
+  if (year > 1 && seed?.startsWith("weekly-gm:2026-10-20:elite:") && player.id === "DAL|QB|dakprescott") return 89;
+  if (year > 1 && seed?.startsWith("weekly-gm:2026-10-20:young:") && player.id === "ATL|QB|michaelpenix") return 83;
   // Weekly Featured's assigned QB has a fixed, transparent development result.
   // Other players and all Casual GM seeds retain the authored random model.
   if (year > 1 && seed?.startsWith("weekly-gm:2026-10-13:elite:") && player.id === "BUF|QB|joshallen") return player.currentGrade;
