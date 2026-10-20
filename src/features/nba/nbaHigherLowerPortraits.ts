@@ -5,13 +5,13 @@ import type { NbaHigherLowerSubject } from "./nbaHigherLowerModel";
  * Player-identified editorial photographs for NBA historical headshots that
  * return a generic gray silhouette with HTTP 200 (so img.onerror never fires).
  *
- * Odom: US Magazine's 2010s Lakers portrait via Yahoo's image CDN.
+ * Odom: Lakers-uniform portrait identified as Lamar Odom (Legit.ng sports).
  * Hardaway: Golden State Warriors Hall-of-Fame portrait (NBA-hosted).
  * Both are independently identified by the publishing articles, not guessed
  * from jersey numbers, positional similarity, or a different player's ID.
  */
 export const NBA_HIGHER_LOWER_EDITORIAL_PHOTOS: Readonly<Record<string, string>> = {
-  lamarodom: "https://s.yimg.com/lo/mysterio/api/de665c0b6051542112123e980c2cab7ed2d7b4e3be1b299bf45560ba52749b92/lightyear_networkapi/resizefill_w976%3Bquality_80%3Bformat_webp/https%3A/media.zenfs.com/en/us_magazine_896/1ffcd4045a3b62e2c5b8da15cdd5b217",
+  lamarodom: "https://cdn.legit.ng/images/1120/8b381781755bce3c.jpeg?v=1",
   timhardaway: "https://cdn.nba.com/teams/uploads/sites/1610612744/2022/09/hardaway-1920.jpg",
 };
 export function nbaHigherLowerPortraitSource(subject: Pick<NbaHigherLowerSubject,"name"|"nbaId">) {
