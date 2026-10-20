@@ -21,6 +21,9 @@ describe("NBA-only replay actions and sport accents", () => {
   it("uses bronze and charcoal without changing Football's styling", () => {
     expect(higherLower).toContain('--hl-blue: #e9a84b');
     expect(higherLower).toContain('background: #644322');
-    expect(higherLower).toContain('transform: translateY(12px) scale(1.18)');
+    expect(higherLower).toContain('transform: none');
+    expect(higherLower).toContain('object-position: center center');
+    expect(higherLower).not.toContain('translateY(12px)');
+    expect(higherLower).not.toContain('mask-image');
   });
 });
