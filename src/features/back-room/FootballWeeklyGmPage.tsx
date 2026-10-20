@@ -23,9 +23,14 @@ function auctionRevealAlreadySeen() {
   }
 }
 
-const scenarios: { id: WeeklyGmScenario; title: string; quarterback: string; development: string }[] = [
+const OCT13_SCENARIOS: { id: WeeklyGmScenario; title: string; quarterback: string; development: string }[] = [
   { id: "elite", title: "ELITE FRANCHISE", quarterback: "Josh Allen", development: "Steady development" },
   { id: "young", title: "YOUNG FRANCHISE", quarterback: "Jaxson Dart", development: "Guaranteed breakout" },
+];
+
+const OCT20_SCENARIOS: typeof OCT13_SCENARIOS = [
+  { id: "elite", title: "VETERAN CHALLENGE", quarterback: "Dak Prescott", development: "Guaranteed 92 → 89 OVR · regression" },
+  { id: "young", title: "RISING FRANCHISE", quarterback: "Michael Penix Jr.", development: "Guaranteed 78 → 83 OVR · progression" },
 ];
 
 export default function FootballWeeklyGmPage({ preview = false }: { preview?: boolean } = {}) {
@@ -111,6 +116,8 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   if (preview && !identity.ready) return <div className="page football-gm-page"><section className="surface-card">Loading owner GM preview…</section></div>;
   if (preview && !isOwner) return <div className="page football-gm-page"><section className="surface-card"><h1>OWNER-ONLY PLAYTEST</h1><p>This production test is reserved for the Octagon HQ owner.</p><Link to="/football/weekly-gm">Weekly GM Championship</Link></section></div>;
 
+  const isOct20Week = !preview && state?.week_start === "2026-10-20";
+  const scenarios = isOct20Week ? OCT20_SCENARIOS : OCT13_SCENARIOS;
   const attempt = playing ? state?.attempts[playing] : null;
   if (playing && state && attempt && state.status === "active") {
     return (
@@ -118,7 +125,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         <div className="page football-gm-page">
           <section className="surface-card" style={{ padding: 16, marginBottom: 12 }}>
             <button type="button" onClick={() => { setPlaying(null); void refresh().catch(() => {}); }}>← WEEKLY CHAMPIONSHIP</button>
-            <h2>{playing === "elite" ? "JOSH ALLEN" : "JAXSON DART"} · {preview ? "LIVE OWNER TEST" : "OFFICIAL RUN"}</h2>
+            <h2>{scenarios.find((scenario) => scenario.id === playing)?.quarterback.toUpperCase()} · {preview ? "LIVE OWNER TEST" : "OFFICIAL RUN"}</h2>
             <p>{preview ? "Real production gameplay, scoring, saves, and result screens. Test attempts stay outside the official standings." : "One official attempt · Six random wheel spins · The usual three-year franchise."}</p>
             {error ? <p role="alert">{error}</p> : null}
           </section>
@@ -152,7 +159,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
       {error ? <button type="button" onClick={() => void refresh().catch((failure: unknown) => setError(String(failure)))}>RETRY</button> : null}
     </section></div>
   );
-  if (!preview && showAuctionReveal && lastAuction) {
+  if (!preview && state.week_start === "2026-10-13" && showAuctionReveal && lastAuction) {
     const winner = lastAuction.standings.find((entry) => entry.is_winner)
       ?? lastAuction.standings.find((entry) => entry.rank === 1);
     return (
@@ -186,11 +193,11 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         <Link to={preview ? "/football/weekly-gm" : "/football"}>← {preview ? "OFFICIAL GM WEEK" : "FOOTBALL HQ"}</Link>
         <p className="eyebrow">{preview ? "OWNER PLAYTEST · REAL PRODUCTION ENGINE" : "WEEKLY FEATURED · CHAMPIONSHIP 10%"}</p>
         <h1>{preview ? "TEST THE FULL WEEKLY GM" : "NFL GM CHAMPIONSHIP"}</h1>
-        <p className="football-weekly-gm__summary">{preview ? "Real GM mechanics and saves · test entries do not count." : "October 13–19 · Two official three-season runs · $150M cap · Six random spins per franchise."}</p>
+        <p className="football-weekly-gm__summary">{preview ? "Real GM mechanics and saves · test entries do not count." : (isOct20Week ? "October 20–26" : "October 13–19") + " · Two official three-season runs · $150M cap · Six random spins per franchise."}</p>
         {!preview && isOwner && state.status === "upcoming" ? <p><Link to="/football/weekly-gm-test">OWNER-ONLY: PLAY THE REAL COMPETITION NOW ↗</Link></p> : null}
         {!preview ? (
           <p>
-            {lastAuction ? (
+            {lastAuction && !isOct20Week ? (
               <button type="button" onClick={() => { setShowAuctionReveal(true); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
                 VIEW OCT 6–12 AUCTION RESULTS · WHEEL · COLLECTIONS · ALL GRADES ↗
               </button>
@@ -199,8 +206,8 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         ) : null}
         <p className="football-weekly-gm__progress"><strong>{myTotal.toFixed(1)} / 200</strong><span>{Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</span></p>
         <small>{preview ? "Owner-only production playtest · Test data never enters championship standings · Closes Tuesday at 12:00 AM Central" :
-          state.status === "upcoming" ? "Opens Tuesday, October 13 at midnight Central" :
-          state.status === "closed" ? "Competition closed · Final results" : "Closes Monday, October 19 at 11:59 PM Central"}</small>
+          state.status === "upcoming" ? (isOct20Week ? "Opens Tuesday, October 20 at midnight Central" : "Opens Tuesday, October 13 at midnight Central") :
+          state.status === "closed" ? "Competition closed · Final results" : (isOct20Week ? "Closes Monday, October 26 at 11:59 PM Central" : "Closes Monday, October 19 at 11:59 PM Central")}</small>
         {preview ? <p><button type="button" disabled={busy} onClick={() => {
           if (!window.confirm("Reset both owner test franchises? This permanently clears only your test attempts. Official Weekly GM is unaffected.")) return;
           setBusy(true);

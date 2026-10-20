@@ -27,3 +27,26 @@ describe("Weekly NFL GM October 13 launch contract", () => {
     expect(footballGmProjectedGradeForPlayer(allen, 1, eliteSeed)).toBe(allen.currentGrade);
   });
 });
+
+describe("Weekly NFL GM October 20 Dak / Penix rollover", () => {
+  it("preserves each quarterback's actual Year 1 authority and fixes only his featured future", () => {
+    const dak = footballGmPlayerById("DAL|QB|dakprescott");
+    const penix = footballGmPlayerById("ATL|QB|michaelpenix");
+    expect(dak?.currentGrade).toBe(92);
+    expect(penix?.currentGrade).toBe(78);
+    expect(dak?.gameContract).toBe("3YR");
+    expect(penix?.gameContract).toBe("1YR");
+    if (!dak || !penix) return;
+    const veteranSeed = "weekly-gm:2026-10-20:elite:fixture:gmdev1";
+    const youngSeed = "weekly-gm:2026-10-20:young:fixture:gmdev1";
+
+    expect(footballGmProjectedGradeForPlayer(dak, 1, veteranSeed)).toBe(92);
+    expect(footballGmProjectedGradeForPlayer(penix, 1, youngSeed)).toBe(78);
+    for (const year of [2, 3] as const) {
+      expect(footballGmProjectedGradeForPlayer(dak, year, veteranSeed)).toBe(89);
+      expect(footballGmProjectedGradeForPlayer(penix, year, youngSeed)).toBe(83);
+    }
+    expect(footballGmProjectedGradeForPlayer(penix, 2, veteranSeed)).not.toBe(83);
+    expect(footballGmProjectedGradeForPlayer(dak, 2, youngSeed)).not.toBe(89);
+  });
+});

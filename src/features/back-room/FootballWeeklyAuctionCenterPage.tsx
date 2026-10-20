@@ -19,7 +19,7 @@ type CenterTab = "week" | "results";
 function gmFeaturedWeek(now = new Date()) {
   const time = now.getTime();
   return time >= Date.parse("2026-10-13T05:00:00Z")
-    && time < Date.parse("2026-10-20T05:00:00Z");
+    && time < Date.parse("2026-10-27T05:00:00Z");
 }
 
 function subjectLabel(subjectKey: FootballWeeklyFinal["subject_key"] | "cfb-best-teams-since-2000") {
