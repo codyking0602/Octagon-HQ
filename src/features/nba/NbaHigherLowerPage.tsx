@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-higher-lower.css";
 import "../../styles/nba-higher-lower.css";
@@ -6,7 +6,7 @@ import "../../styles/nba-game-actions.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { asChallengeJson, challengeRecord, footballChallengeUrl } from "../back-room/footballChallengeRuntime";
-import { nbaFindLeaderHeadshot } from "./nbaFindTheLeaderModel";
+import { nbaHigherLowerIsGenericSilhouette, nbaHigherLowerPortraitSource } from "./nbaHigherLowerPortraits";
 import {
   NBA_HIGHER_LOWER_VERSION, createNbaHigherLowerBoard, createNbaHigherLowerRun,
   createNbaHigherLowerDailyPreview, nbaHigherLowerAnswerIsCorrect,
@@ -44,12 +44,17 @@ function reviewContext(question: NbaHigherLowerQuestion): string | null {
 }
 function NbaPortrait({ subject }: { subject: NbaHigherLowerSubject }) {
   const [failed, setFailed] = useState(false);
-  const url = nbaFindLeaderHeadshot({ name: subject.name, nbaId: subject.nbaId });
+  const url = nbaHigherLowerPortraitSource(subject);
+  const editorial = url != null && !url.includes("/headshots/nba/latest/");
   useEffect(() => setFailed(false), [url, subject.name]);
   const initials = subject.name.split(/\s+/).map(part => part[0]).filter(Boolean).slice(0, 2).join("");
-  return <span className="nba-higher-lower-portrait" role="img" aria-label={subject.name + " portrait"}>
+  return <span className={"nba-higher-lower-portrait" + (editorial ? " is-editorial" : "")} role="img" aria-label={subject.name + " portrait"}>
     {url && !failed
-      ? <img src={url} alt="" loading="eager" referrerPolicy="no-referrer" onError={() => setFailed(true)} />
+      ? <img src={url} alt="" loading="eager" referrerPolicy="no-referrer"
+          onError={() => setFailed(true)}
+          onLoad={event => {
+            if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true);
+          }} />
       : <b aria-hidden="true">{initials || "NBA"}</b>}
   </span>;
 }
@@ -82,6 +87,7 @@ export default function NbaHigherLowerPage() {
   const [result, setResult] = useState<Result | null>(null);
   const [status, setStatus] = useState("");
   const timerStartedAt = useRef<number | null>(null);
+  const boardHeaderRef = useRef<HTMLElement | null>(null);
   const accumulatedMs = useRef(0);
 
   useEffect(() => {
@@ -93,6 +99,14 @@ export default function NbaHigherLowerPage() {
     if (match.code || board || !sharedSeed) return;
     setBoard(createNbaHigherLowerBoard(sharedSeed));
   }, [match.code, board, sharedSeed]);
+  // A new question must never inherit the previous question's iPhone scroll
+  // position and hide its heading under the sticky HQ navigation.
+  useLayoutEffect(() => {
+    if (!board || result) return;
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    // Covers any nested scrolling region without scrolling the HQ shell away.
+    boardHeaderRef.current?.scrollIntoView({ block: "start", behavior: "instant" });
+  }, [index, board?.seed, Boolean(result)]);
   useEffect(() => {
     if (!board || result) return;
     accumulatedMs.current = 0;
@@ -235,7 +249,7 @@ export default function NbaHigherLowerPage() {
       <span>PROFILE CHALLENGE</span><strong>{match.creator.displayName} sent this exact NBA Higher or Lower board.</strong>
       <small>Same questions and order. Accuracy first; time only breaks a tie.</small>
     </section>}
-    <section className="higher-lower-game-header">
+    <section className="higher-lower-game-header" ref={boardHeaderRef}>
       <button type="button" onClick={() => navigate("/nba")} aria-label="Back to NBA HQ">←</button>
       <div><small>NBA · QUESTION {index + 1} OF 10</small><strong>HIGHER OR LOWER</strong></div>
       <span>{answers.filter(row => row.correct).length}/{answers.length}</span>
