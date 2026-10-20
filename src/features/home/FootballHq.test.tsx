@@ -2,7 +2,8 @@ import { act, cleanup, fireEvent, render, screen, within } from "@testing-librar
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
-import { FootballHq, footballHqTeamPresentationFor, footballSpotlightKindAt } from "./FootballHq";
+import { parsePublishedFootballWeek } from "./footballWeeklyPublication";
+import { FootballHq, featuredGameForBreakdown, footballHqTeamPresentationFor, footballSpotlightKindAt } from "./FootballHq";
 
 // These legacy presentation tests intentionally exercise the static fallback
 // when no published weekly editorial is available.
@@ -141,6 +142,57 @@ const summary: PickSummary = {
   lockBonus: 2,
   totalPoints: 10,
 };
+
+describe("weekly owner-selected Games of the Week", () => {
+  it("binds both published CFB and NFL feature IDs to the real slate, never another game", () => {
+    const paragraph = "A verified tactical summary of this week's featured matchup.";
+    const makeSport = (kind: "cfb" | "nfl") => ({
+      week_of: "2026-10-20",
+      release_at: "2026-10-20T13:00:00Z",
+      spotlight: {
+        name: kind === "cfb" ? "Bear Bachmeier" : "Caleb Williams",
+        team: kind === "cfb" ? "BYU" : "Chicago Bears", position: "QB",
+        stats: [1,2,3,4].map(n => ({ value: String(n), label: "STAT " + n })),
+        result: "W", measurements: "6ft", team_color: "#112233",
+        highlight_url: "https://youtu.be/verified",
+        photo_source: "https://a.espncdn.com/i/headshots/nfl/players/full/4431611.png",
+        photo_kind: "portrait" as const,
+        photo_asset_path: "/assets/football/weekly/2026-10-20/" + kind + "/spotlight.webp",
+      },
+      game: {
+        away_team: kind === "cfb" ? "Ole Miss" : "New England Patriots",
+        home_team: kind === "cfb" ? "Texas" : "Chicago Bears",
+        kickoff_at: kind === "cfb" ? "2026-10-24T23:30:00Z" : "2026-10-23T00:15:00Z",
+        header_asset_path: "/assets/football/weekly/2026-10-20/" + kind + "/game-header.webp",
+        header_photo_sources: ["https://seatgeekimages.com/matchup/current/1/2/600x600.jpg"],
+      },
+      breakdown: {
+        setup: [paragraph, paragraph],
+        things: [1,2,3].map(i => ({ title: "Battle " + i, body: paragraph, edge: "EVEN" })),
+        paths_to_win: ["A","B"].map(team => ({ team, body: paragraph })),
+        players_to_watch: ["A","B"].map(team => ({
+          team, players: [1,2,3].map(i => ({ name: "Player " + i, position: "QB", body: paragraph })),
+        })),
+        unit_edges: [1,2].map(i => ({ title: "Unit " + i, body: paragraph, edge: "EVEN" })),
+      },
+    });
+    const published = { cfb: makeSport("cfb"), nfl: makeSport("nfl") };
+    const actual = { ...event, bouts: [
+      { ...event.bouts[0]!, boutId: "nfl-week7-patriots-bears", weightClass: "NFL ATS",
+        redFighterName: "Chicago Bears", redFighterSlug: "chicago-bears",
+        blueFighterName: "New England Patriots", blueFighterSlug: "new-england-patriots",
+        homeTeamSlug: "chicago-bears", awayTeamSlug: "new-england-patriots", locksAt: "2026-10-23T00:15:00Z" },
+      { ...event.bouts[1]!, boutId: "cfb-ole-miss-at-texas", weightClass: "COLLEGE-FOOTBALL ATS",
+        redFighterName: "Texas Longhorns", redFighterSlug: "texas-longhorns",
+        blueFighterName: "Ole Miss Rebels", blueFighterSlug: "ole-miss-rebels",
+        homeTeamSlug: "texas-longhorns", awayTeamSlug: "ole-miss-rebels", locksAt: "2026-10-24T23:30:00Z" },
+    ] };
+    const parsed = parsePublishedFootballWeek(published);
+    expect(featuredGameForBreakdown(actual, "weekly-2026-10-20-cfb", parsed)?.boutId).toBe("cfb-ole-miss-at-texas");
+    expect(featuredGameForBreakdown(actual, "weekly-2026-10-20-nfl", parsed)?.boutId).toBe("nfl-week7-patriots-bears");
+    expect(featuredGameForBreakdown(actual, "weekly-2026-10-20-nfl", null)).toBeNull();
+  });
+});
 
 describe("Football HQ team logo presentation", () => {
   it("uses the opposite meaningful team color when available and white only for explicit silhouette exceptions", () => {
