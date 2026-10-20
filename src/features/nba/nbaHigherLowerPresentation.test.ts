@@ -25,8 +25,11 @@ describe("NBA Higher or Lower owner-preview integration", () => {
     expect(pageSource).toContain("question.hidden.context");
     expect(pageSource).toContain('document.addEventListener("visibilitychange"');
     expect(styles).toContain("object-fit: contain");
-    expect(styles).toContain("transform: translateY(12px) scale(1.18)");
-    expect(styles).toContain("mask-image: linear-gradient");
+    expect(styles).toContain("transform: none");
+    expect(styles).toContain("height: 136px");
+    expect(styles).not.toContain("translateY(12px)");
+    expect(styles).not.toContain("mask-image");
+    expect(styles).toContain("object-position: center center");
     expect(styles).toContain("scroll-margin-top");
     expect(styles).toContain(".nba-higher-lower-portrait.is-editorial img");
     expect(pageSource).toContain("reviewContext(question)");

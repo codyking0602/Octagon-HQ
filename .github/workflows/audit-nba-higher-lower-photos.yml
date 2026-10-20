@@ -1,0 +1,48 @@
+name: Audit NBA Higher or Lower Portraits
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - "src/features/nba/nbaHigherLower*"
+      - "src/features/nba/NbaHigherLower*"
+      - "src/styles/nba-higher-lower.css"
+      - "scripts/audit_nba_higher_lower_photos.py"
+      - ".github/workflows/audit-nba-higher-lower-photos.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-photos:
+    name: Full NBA player portrait coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Enumerate every possible eligible NBA player
+        run: NBA_PHOTO_AUDIT=1 npx vitest run src/features/nba/nbaHigherLowerPhotoManifest.test.ts
+      - name: Download and inspect every eligible photo
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python scripts/audit_nba_higher_lower_photos.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-higher-lower-photo-audit
+          path: |
+            nba-photo-audit-manifest.json
+            nba-photo-audit-report.json
+          retention-days: 7

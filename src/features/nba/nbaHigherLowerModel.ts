@@ -4,6 +4,7 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import { nbaFindLeaderSubjects, type NbaLeaderSubject } from "./nbaFindTheLeaderModel";
+import { NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS } from "./nbaHigherLowerPortraits";
 import {
   NBA_HIGHER_LOWER_2025_THREES, NBA_HIGHER_LOWER_ALL_NBA,
   NBA_HIGHER_LOWER_ALL_STAR_SELECTIONS, NBA_HIGHER_LOWER_DRAFT,
@@ -191,6 +192,10 @@ function candidatePairs(spec: Spec): Pair[] {
       const left = sorted[i]!, right = sorted[j]!;
       const gap = right.value - left.value;
       if (left.key === right.key || gap < spec.minGap - 1e-8 || gap > spec.maxGap + 1e-8) continue;
+      // Never render an NBA-CDN HTTP-200 stock silhouette as a player photo.
+      // The full remote photo audit found these names share an identical image.
+      if (NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS.has(left.key)
+        || NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS.has(right.key)) continue;
       // Comparing a player's career peak to someone else's decline is rarely
       // a useful basketball question. Within-season eras stay reasonably near.
       if (spec.category === "season" && left.season != null && right.season != null
@@ -214,6 +219,22 @@ for (const spec of specs) {
     else pairsByCategoryAndDifficulty.set(group, [pair]);
   }
 }
+/** All unique player identities that can appear in any eligible NBA board
+ * (not only the 100 sample boards used by prior tests).
+ * Used for exhaustive remote photo verification, not gameplay selection.
+ */
+export const NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS: readonly Readonly<{ name: string; nbaId: number | null }>[] = (() => {
+  const people = new Map<string, { name: string; nbaId: number | null }>();
+  for (const pairs of pairsByCategoryAndDifficulty.values()) {
+    for (const pair of pairs) {
+      for (const row of [pair.left, pair.right]) {
+        if (!people.has(row.key)) people.set(row.key, { name: row.name, nbaId: row.nbaId });
+      }
+    }
+  }
+  return [...people.values()].sort((a, b) => a.name.localeCompare(b.name));
+})();
+
 function formatValue(value: number, category: NbaHigherLowerCategory) {
   return category === "career" || category === "season" ? value.toFixed(1) : String(value);
 }

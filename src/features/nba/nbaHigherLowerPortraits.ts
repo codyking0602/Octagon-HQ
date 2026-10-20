@@ -10,6 +10,39 @@ import type { NbaHigherLowerSubject } from "./nbaHigherLowerModel";
  * Both are independently identified by the publishing articles, not guessed
  * from jersey numbers, positional similarity, or a different player's ID.
  */
+/** Verified on 2026-10-19 by fetching and pixel-auditing EVERY eligible photo.
+ * These 24 NBA person IDs served the exact same silhouette image, although
+ * the requests returned HTTP 200. Do not put them into a headshot game until
+ * a player-identified editorial override is sourced and pixel-verified.
+ * Kept in the shared NBA stats/data bank (no data deletion).
+ */
+export const NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS: ReadonlySet<string> = new Set([
+  "alexenglish",
+  "alvinrobertson",
+  "andreikirilenko",
+  "andrewbynum",
+  "carlosboozer",
+  "danissel",
+  "davidthompson",
+  "dennisjohnson",
+  "glenrice",
+  "jacksikma",
+  "jasonkidd",
+  "jermaineoneal",
+  "jerrystackhouse",
+  "larryjohnson",
+  "markaguirre",
+  "mauricecheeks",
+  "michaelfinley",
+  "michaelredd",
+  "patrickewing",
+  "ralphsampson",
+  "richardhamilton",
+  "shawnmarion",
+  "sidneymoncrief",
+  "terrycummings",
+]);
+
 export const NBA_HIGHER_LOWER_EDITORIAL_PHOTOS: Readonly<Record<string, string>> = {
   lamarodom: "https://cdn.legit.ng/images/1120/8b381781755bce3c.jpeg?v=1",
   timhardaway: "https://cdn.nba.com/teams/uploads/sites/1610612744/2022/09/hardaway-1920.jpg",
