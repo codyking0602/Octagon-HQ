@@ -88,7 +88,7 @@ export const MLB_OWNER_PLAYER_SPOTLIGHT = {
     { label: "HR", value: "42" },
     { label: "RBI", value: "101" },
     { label: "AVG", value: ".276" },
-    { label: "OPS", value: ".884" },
+    { label: "OPS", value: ".885" },
   ],
   meta: "WORLD SERIES WEEK · ALCS GAME 6 TWO-RUN HOMER",
   profileUrl: "https://www.mlb.com/player/junior-caminero-691406",
