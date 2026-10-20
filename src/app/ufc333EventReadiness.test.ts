@@ -6,7 +6,7 @@ import { buildPickSpotlightContent } from "../features/picks/spotlightContent";
 import { reviewedOfficialUfcEventBanner } from "../features/picks/ufcMmaManiaPoster";
 import type { PickEvent } from "../features/picks/picksModel";
 
-const migration = readFileSync("supabase/migrations/202612310303_ufc333_event_readiness.sql", "utf8");
+const migration = readFileSync("supabase/migrations/202612310316_ufc333_event_readiness.sql", "utf8");
 describe("UFC 333 fight-week readiness", () => {
   it("guards source-verified emergency odds without clobbering canonical monitoring", () => {
     expect(migration.match(/UPDATE public.pick_bouts b SET/g)).toHaveLength(3);

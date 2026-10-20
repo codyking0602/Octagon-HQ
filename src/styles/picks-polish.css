@@ -1052,3 +1052,22 @@
     padding: 10px;
   }
 }
+
+/* Approved partner artwork without lettering needs the actual event title.
+   Publisher posters with their own event typography retain the locked design. */
+.picks-event-hero.has-poster.is-art-only .picks-event-hero__copy h2 {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  letter-spacing: -.035em;
+}
+.picks-event-hero.has-poster.is-art-only .picks-event-hero__copy > strong {
+  display: block;
+  overflow-wrap: break-word;
+  white-space: normal;
+}

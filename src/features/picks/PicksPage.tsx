@@ -139,7 +139,9 @@ export default function PicksPage() {
   const cardOddsMeta = orderedBouts
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
-  const eventPoster = reviewedMmaManiaPoster(activeEvent) ?? reviewedOfficialUfcEventBanner(activeEvent) ?? pickEventPoster(activeEvent);
+  const officialUfcBanner = reviewedOfficialUfcEventBanner(activeEvent);
+  const eventPoster = reviewedMmaManiaPoster(activeEvent) ?? officialUfcBanner ?? pickEventPoster(activeEvent);
+  const artOnlyPoster = Boolean(officialUfcBanner && eventPoster === officialUfcBanner);
   const numberedUfcEvent = Boolean(
     activeEvent?.sport !== "football" && activeEvent?.name.match(/^UFC\s+\d+\b/i),
   );
@@ -188,7 +190,7 @@ export default function PicksPage() {
       {activeEvent && activeLifecycle ? (
         <>
           <section
-            className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}${numberedUfcEvent ? " is-numbered-event" : ""}`}
+            className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}${artOnlyPoster ? " is-art-only" : ""}${numberedUfcEvent ? " is-numbered-event" : ""}`}
             aria-labelledby="picks-event-title"
           >
             <div className="picks-event-hero__poster" aria-hidden="true">
