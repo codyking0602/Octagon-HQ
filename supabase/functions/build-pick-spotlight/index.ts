@@ -36,6 +36,9 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 
 function loadFighter(name: string, fighterSlug: string): SpotlightStatsFighter {
   const snapshot = getUfcStatsSnapshotFighter(name);
+  if (!snapshot) {
+    throw new SpotlightBuildError("SPOTLIGHT_STATS_UNAVAILABLE", `Verified fighter data for ${name} is not prepared. Keep this Spotlight in review rather than publishing blank stats and generic copy.`);
+  }
   const fighter = snapshot ?? {
     name,
     record: "--",
