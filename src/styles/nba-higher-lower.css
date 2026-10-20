@@ -256,3 +256,9 @@
 .nba-higher-lower .higher-lower-game-header {
   scroll-margin-top: calc(78px + env(safe-area-inset-top, 0px));
 }
+
+.nba-higher-lower-photo-credits { margin: 10px 2px 20px; color: #aaa196; font-size: .65rem; line-height: 1.5; }
+.nba-higher-lower-photo-credits summary { display: inline-block; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.nba-higher-lower-photo-credits ul { margin: 8px 0; padding-left: 18px; }
+.nba-higher-lower-photo-credits li { margin: 4px 0; }
+.nba-higher-lower-photo-credits a { color: #eec38a; }

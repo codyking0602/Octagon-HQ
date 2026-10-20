@@ -6,7 +6,7 @@ import "../../styles/nba-game-actions.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { asChallengeJson, challengeRecord, footballChallengeUrl } from "../back-room/footballChallengeRuntime";
-import { nbaHigherLowerIsGenericSilhouette, nbaHigherLowerPortraitSource } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerIsGenericSilhouette, nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit } from "./nbaHigherLowerPortraits";
 import {
   NBA_HIGHER_LOWER_VERSION, createNbaHigherLowerBoard, createNbaHigherLowerRun,
   createNbaHigherLowerDailyPreview, nbaHigherLowerAnswerIsCorrect,
@@ -57,6 +57,21 @@ function NbaPortrait({ subject }: { subject: NbaHigherLowerSubject }) {
           }} />
       : <b aria-hidden="true">{initials || "NBA"}</b>}
   </span>;
+}
+function NbaPhotoCredits({ subjects }: { subjects: NbaHigherLowerSubject[] }) {
+  const credits = [...new Map(subjects.flatMap(subject => {
+    const credit = nbaHigherLowerPortraitCredit(subject);
+    return credit ? [[credit.name, credit] as const] : [];
+  })).values()];
+  if (!credits.length) return null;
+  return <details className="nba-higher-lower-photo-credits">
+    <summary>Historical photo credits</summary>
+    <ul>{credits.map(credit => <li key={credit.name}>
+      {credit.name}: {credit.author} · {credit.license} ·
+      <a href={credit.source} target="_blank" rel="noopener noreferrer">image source</a>
+      {credit.licenseUrl && <> · <a href={credit.licenseUrl} target="_blank" rel="noopener noreferrer">license</a></>}
+    </li>)}</ul>
+  </details>;
 }
 function ResultActions({ onReplay, onAllGames, status }: {
   onReplay: () => void; onAllGames: () => void; status: string;
@@ -239,6 +254,7 @@ export default function NbaHigherLowerPage() {
       })}
     </section>
     <ResultActions onReplay={newBoard} onAllGames={() => navigate("/nba")} status={status} />
+    <NbaPhotoCredits subjects={board.questions.flatMap(q => [q.known, q.hidden])} />
   </main>;
 
   const question = board.questions[index]!;
@@ -282,6 +298,7 @@ export default function NbaHigherLowerPage() {
         className={revealed && question.answer === "lower" ? "is-answer" : revealed === "lower" ? "is-miss" : ""}
         onClick={() => answer("lower")}><b>↓</b><span>LOWER</span></button>
     </section>
+    <NbaPhotoCredits subjects={[question.known, question.hidden]} />
     <div className={"higher-lower-feedback" + (revealed ? " is-visible" : "")} role="status">
       {revealed && <><strong>{correct ? "CORRECT" : "MISS"}</strong>
         <span>{question.hidden.formattedValue} is {question.answer} than {question.known.formattedValue}.</span></>}

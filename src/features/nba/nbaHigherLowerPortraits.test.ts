@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nbaHigherLowerPortraitSource, NBA_HIGHER_LOWER_EDITORIAL_PHOTOS, NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerPortraitSource, NBA_HIGHER_LOWER_EDITORIAL_PHOTOS, NBA_HIGHER_LOWER_RESTORED_PORTRAITS, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
 import { nbaFindLeaderSubjects } from "./nbaFindTheLeaderModel";
 import { NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS, NBA_HIGHER_LOWER_METRIC_KEYS, createNbaHigherLowerBoard } from "./nbaHigherLowerModel";
 
@@ -12,6 +12,23 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
     expect(odom).not.toContain("headshots/nba/latest/");
     expect(hardaway).toContain("cdn.nba.com/teams/uploads/");
     expect(nbaHigherLowerPortraitSource({name:"Tim Hardaway Jr.",nbaId:203501})).not.toBe(hardaway);
+  });
+  it("restores all 24 former silhouette players with identifiable sources and photo credits", () => {
+    const originals = Object.values(NBA_HIGHER_LOWER_RESTORED_PORTRAITS);
+    expect(originals).toHaveLength(24);
+    const urls = new Set<string>();
+    for (const original of originals) {
+      expect(original.name.length).toBeGreaterThan(5);
+      expect(original.url.startsWith("https://")).toBe(true);
+      expect(original.source.startsWith("https://")).toBe(true);
+      expect(original.author.length).toBeGreaterThan(2);
+      expect(original.license.length).toBeGreaterThan(2);
+      if (original.license.startsWith("CC ")) expect(original.licenseUrl).toContain("creativecommons.org");
+      expect(urls.has(original.url)).toBe(false);
+      urls.add(original.url);
+    }
+    expect(originals.filter(x => x.url.includes("wikimedia.org"))).toHaveLength(23);
+    expect(originals.find(x => x.name === "Terry Cummings")?.source).toContain("legendsofbasketball.com");
   });
   it("all sampled subjects resolve a correctly named, player-ID-bound photo URL or an explicit missing-photo fallback", () => {
     const seen = new Set<string>();
@@ -33,15 +50,14 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
   });
   it("exposes the entire eligible player pool for full image-content auditing", () => {
     const people = NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS;
-    expect(people.length).toBeGreaterThan(100);
-    expect(NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS.size).toBe(24);
-    expect(people.every(x => !NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS.has(
-      x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g,"")
-    ))).toBe(true);
+    expect(people.length).toBe(184);
+    expect(Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)).toHaveLength(24);
+    const eligible = new Set(people.map(x => x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g,"")));
+    for (const key of Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)) expect(eligible.has(key)).toBe(true);
     expect(new Set(people.map(x => x.name)).size).toBe(people.length);
     expect(people.some(x => x.name === "Lamar Odom")).toBe(true);
-    expect(people.some(x => x.name === "Jason Kidd")).toBe(false);
-    expect(people.some(x => x.name === "Patrick Ewing")).toBe(false);
+    expect(people.some(x => x.name === "Jason Kidd")).toBe(true);
+    expect(people.some(x => x.name === "Patrick Ewing")).toBe(true);
     expect(people.some(x => x.name === "Tim Hardaway")).toBe(true);
   });
   it("detects a successfully loaded flat gray silhouette instead of treating it as a photograph", () => {
