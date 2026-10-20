@@ -189,7 +189,7 @@ describe("weekly owner-selected Games of the Week", () => {
     ] };
     const parsed = parsePublishedFootballWeek(published);
     expect(featuredGameForBreakdown(actual, "weekly-2026-10-20-cfb", parsed)?.boutId).toBe("cfb-ole-miss-at-texas");
-    expect(featuredGameForBreakdown(actual, "weekly-2026-10-20-nfl", parsed)?.boutId).toBe("nfl-week7-patriots-bears");
+    expect(featuredGameForBreakdown(actual, "2026-patriots-bears-week7", parsed)?.boutId).toBe("nfl-week7-patriots-bears");
     expect(featuredGameForBreakdown(actual, "weekly-2026-10-20-nfl", null)).toBeNull();
   });
 });
