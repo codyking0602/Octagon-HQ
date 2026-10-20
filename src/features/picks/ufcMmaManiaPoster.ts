@@ -105,7 +105,7 @@ export function reviewedOfficialUfcEventBanner(event: PickEvent | null) {
   if (Math.abs(Date.parse(event.startsAt) - Date.parse("2026-10-24T18:00:00Z")) > 86_400_000) return null;
   return {
     source: "https://visitabudhabi.ae/en/events/ufc",
-    src: "https://visitabudhabi.ae/-/media/project/vad/platinum-events/ufc-in-abu-dhabi/hero-banner/ufc333-2026_tos_vad_website-banner_3000x2000_not-text.jpg?rev=-1",
-    aspectRatio: "3000 / 2000",
+    src: "https://visitabudhabi.ae/-/media/project/vad/platinum-events/ufc-in-abu-dhabi/hero-banner/ufc-26-oct-05.jpg?rev=8267cd3bfb3d4f8596d8f430697fcaf4",
+    aspectRatio: "1000 / 744",
   };
 }
