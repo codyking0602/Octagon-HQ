@@ -17,6 +17,10 @@ begin
   update private.football_weekly_gm_events
     set opens_at=now()-interval '1 day',closes_at=now()+interval '1 day'
     where week_start=date '2026-10-13';
+  -- Explicitly close the later event within this isolated rollback fixture.
+  update private.football_weekly_gm_events
+    set opens_at=now()-interval '2 days', closes_at=now()-interval '1 day'
+    where week_start=date '2026-10-20';
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_player::text,true);
   v_started:=public.start_my_football_weekly_gm('elite');
@@ -32,8 +36,11 @@ begin
     'finalRoster','[]'::jsonb,'resolvedSeasons','[]'::jsonb
   );
   perform public.save_my_football_weekly_gm('elite',v_started->>'seed',v_state,false,null);
-  v_initial:=public.get_my_football_weekly_gm();
-  if v_initial->'attempts'->'elite'->'state'->>'phase'<>'draft' then
+  -- The Oct 13 historical record stays writable inside this rollback test,
+  -- even after the current week advances to Oct 20.
+  select state into v_initial from private.football_weekly_gm_attempts
+  where week_start=date '2026-10-13' and profile_id=v_player and scenario='elite';
+  if v_initial->>'phase'<>'draft' then
     raise exception 'Official GM draft progress was not saved';
   end if;
   begin
