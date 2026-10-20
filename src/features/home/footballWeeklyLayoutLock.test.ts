@@ -6,11 +6,14 @@ function source(path: string) {
 }
 
 describe("Football weekly editorial must not reshape approved UI next Tuesday", () => {
-  it("renders featured art in an eight-second Picks carousel, never twice in Home or breakdowns", () => {
+  it("renders locked-ratio CSS matchup headers in an eight-second Picks carousel, not duplicate publisher art", () => {
     const picks = source("../picks/FootballPicksPage.tsx");
     const home = source("./FootballHq.tsx");
     const modal = source("../picks/FootballMatchupBreakdowns.tsx");
-    expect(picks).toContain("matchupBreakdowns.filter((game) => Boolean(game.headerAssetPath))");
+    expect(picks).toContain("const weeklyHeroes = useMemo(() => matchupBreakdowns");
+    expect(picks).toContain("football-picks-weekly-slide");
+    expect(source("../../styles/football-picks.css")).toContain(".football-picks-hero.has-weekly-art { aspect-ratio: 16 / 9;");
+    expect(source("../../styles/football-picks.css")).toContain("@media(prefers-reduced-motion:reduce)");
     expect(picks).toContain("}, 8000)");
     expect(picks).toContain("football-picks-hero__empty");
     expect(home).not.toContain("football-hq-game-row__art");
