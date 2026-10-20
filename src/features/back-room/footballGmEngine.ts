@@ -557,6 +557,10 @@ export function footballGmProjectedGradeForPlayer(
   // Other players and all Casual GM seeds retain the authored random model.
   if (year > 1 && seed?.startsWith("weekly-gm:2026-10-13:elite:") && player.id === "BUF|QB|joshallen") return player.currentGrade;
   if (year > 1 && seed?.startsWith("weekly-gm:2026-10-13:young:") && player.id === "NYG|QB|jaxsondart") return Math.min(99, player.currentGrade + 4);
+  // October 20–26: fixed modest veteran regression and young-QB progression,
+  // for Years 2 and 3 only. Casual and the previous week remain unchanged.
+  if (year > 1 && seed?.startsWith("weekly-gm:2026-10-20:elite:") && player.id === "DAL|QB|dakprescott") return 89;
+  if (year > 1 && seed?.startsWith("weekly-gm:2026-10-20:young:") && player.id === "ATL|QB|michaelpenix") return 83;
   const marketPosition = player.marketPosition;
   return projectWheelFootballGmGrade({
     currentGrade: player.currentGrade,
