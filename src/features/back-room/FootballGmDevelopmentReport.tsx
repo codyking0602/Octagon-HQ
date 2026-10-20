@@ -6,10 +6,10 @@ import {
   type FootballGmRosterEntry,
 } from "./footballGmEngine";
 import { footballGmAdjustedSalaryForPlayer } from "./footballGmStrategy";
-import { footballGmDevelopmentResult } from "./footballGmScouting";
+import { footballGmDevelopmentResultForPlayer } from "./footballGmScouting";
 
-function developmentLabel(change: number) {
-  const outcome = footballGmDevelopmentResult(change);
+function developmentLabel(player: NonNullable<ReturnType<typeof footballGmPlayerById>>, change: number, seed: string) {
+  const outcome = footballGmDevelopmentResultForPlayer(player, change, seed);
   const label = outcome === "HELD STEADY" ? "STEADY" : outcome;
   const tone = outcome === "BREAKOUT" ? "breakout"
     : outcome === "IMPROVED" ? "improved"
@@ -39,7 +39,7 @@ export function FootballGmDevelopmentReport({
           const player = footballGmPlayerById(entry.playerId);
           if (!player) return null;
           const change = footballGmProjectedGradeForPlayer(player, 2, seed) - player.currentGrade;
-          const outcome = developmentLabel(change);
+          const outcome = developmentLabel(player, change, seed);
           const salary = footballGmAdjustedSalaryForPlayer(player, 2, seed, {});
           return (
             <div className="football-gm__development-player" key={entry.playerId}>
