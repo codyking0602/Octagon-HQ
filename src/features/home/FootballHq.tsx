@@ -5,7 +5,7 @@ import { footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMe
 import { footballTeamAssets } from "../back-room/footballSubjectAssets";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
 import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreakdowns";
-import { footballPublishedSpotlight, mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "./footballWeeklyPublication";
+import { footballPublishedSpotlight, mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek, type PublishedFootballWeek } from "./footballWeeklyPublication";
 import { footballDateTimeLabel } from "../picks/footballTime";
 import { footballSpotlightForDisplay } from "./footballSpotlightPresentation";
 import { footballTeamSportsReferenceUrl } from "./footballTeamSportsReference";
@@ -106,9 +106,14 @@ function isCollegeGame(weightClass: string) {
   return value.includes("COLLEGE") || value === "CFB";
 }
 
-function featuredGameForBreakdown(event: PickEvent, breakdownId: string) {
-  return event.bouts.find((game) => footballMatchupBreakdownsForEvent({ ...event, bouts: [game] })
-    .some((breakdown) => breakdown.id === breakdownId)) ?? null;
+function featuredGameForBreakdown(event: PickEvent, breakdownId: string, published: PublishedFootballWeek | null) {
+  return event.bouts.find((game) => {
+    const isolated = { ...event, bouts: [game] };
+    return mergeFootballWeeklyMatchupBreakdowns(
+      publishedFootballMatchupsForEvent(isolated, published),
+      footballMatchupBreakdownsForEvent(isolated),
+    ).some((breakdown) => breakdown.id === breakdownId);
+  }) ?? null;
 }
 
 function normalizeTeamIdentity(value: string) {
@@ -165,6 +170,16 @@ function featuredGameTeamLabel(fullName: string, canonicalName: string) {
     return { name: full.slice(0, lastSpace), nickname: full.slice(lastSpace + 1) };
   }
   return { name: full, nickname: "" };
+}
+
+/** Retain both parts of the club identity, not only the server's primary color.
+ * Conservative defaults keep historically approved single-color spotlights intact. */
+function playerSpotlightSecondaryColor(spotlight: FootballPlayerSpotlight): string {
+  const team = spotlight.team.toLowerCase();
+  if (team.includes("chicago bears")) return "#C83803";
+  if (team.includes("new england patriots")) return "#C60C30";
+  if (team === "byu" || team.includes("byu cougars")) return "#FFFFFF";
+  return spotlight.teamColor;
 }
 
 function PlayerSpotlight({
@@ -237,7 +252,10 @@ function PlayerSpotlight({
     <article
       className={`football-player-spotlight${memorial ? " football-player-spotlight--memorial" : ""}`}
       aria-label={memorial ? "In memory of Mike Ditka" : "Football Player Spotlight"}
-      style={{ "--player-team-color": spotlight.teamColor } as CSSProperties}
+      style={{
+        "--player-team-color": spotlight.teamColor,
+        "--player-team-secondary": playerSpotlightSecondaryColor(spotlight),
+      } as CSSProperties}
     >
       {media}
       <div className="football-player-spotlight__copy">
@@ -442,7 +460,7 @@ export function FootballHq({
     footballMatchupBreakdownsForEvent(event),
   ) : [];
   const featuredMatchups = event ? matchupBreakdowns.flatMap((breakdown) => {
-    const game = featuredGameForBreakdown(event, breakdown.id);
+    const game = featuredGameForBreakdown(event, breakdown.id, published ?? null);
     return game ? [{ breakdown, game }] : [];
   }) : [];
   const season = event?.season ?? history?.season ?? new Date().getFullYear();
