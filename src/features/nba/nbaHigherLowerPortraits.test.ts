@@ -13,6 +13,23 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
     expect(hardaway).toContain("cdn.nba.com/teams/uploads/");
     expect(nbaHigherLowerPortraitSource({name:"Tim Hardaway Jr.",nbaId:203501})).not.toBe(hardaway);
   });
+  it("restores all 24 former silhouette players with identifiable sources and photo credits", () => {
+    const originals = Object.values(NBA_HIGHER_LOWER_RESTORED_PORTRAITS);
+    expect(originals).toHaveLength(24);
+    const urls = new Set<string>();
+    for (const original of originals) {
+      expect(original.name.length).toBeGreaterThan(5);
+      expect(original.url.startsWith("https://")).toBe(true);
+      expect(original.source.startsWith("https://")).toBe(true);
+      expect(original.author.length).toBeGreaterThan(2);
+      expect(original.license.length).toBeGreaterThan(2);
+      if (original.license.startsWith("CC ")) expect(original.licenseUrl).toContain("creativecommons.org");
+      expect(urls.has(original.url)).toBe(false);
+      urls.add(original.url);
+    }
+    expect(originals.filter(x => x.url.includes("wikimedia.org"))).toHaveLength(23);
+    expect(originals.find(x => x.name === "Terry Cummings")?.source).toContain("legendsofbasketball.com");
+  });
   it("all sampled subjects resolve a correctly named, player-ID-bound photo URL or an explicit missing-photo fallback", () => {
     const seen = new Set<string>();
     for (let i = 0; i < 100; i++) {
