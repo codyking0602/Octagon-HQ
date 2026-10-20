@@ -98,3 +98,79 @@
 .football-picks-hero__image { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .football-picks-hero__empty { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 6px; color: #ced8e2; text-align: center; padding: 16px; font-size: .7rem; }
 .football-picks-hero__empty strong { color: #8ebce6; letter-spacing: .12em; }
+
+
+/* Featured editorial headers are genuine team identities rendered with CSS.
+   Square publisher thumbnails remain audit evidence, never letterboxed banners. */
+.football-picks-hero.has-weekly-art { aspect-ratio: 16 / 9; min-height: 0; background: #0a1018; }
+.football-picks-weekly-slide {
+  position: absolute; inset: 0; display: grid; grid-template-rows: auto minmax(0,1fr) auto;
+  padding: clamp(9px,2.2vw,19px) clamp(12px,3vw,26px);
+  overflow: hidden; isolation: isolate;
+  color: #fff; opacity: 0; visibility: hidden;
+  transition: opacity .7s ease, visibility .7s;
+  background: linear-gradient(112deg,
+    var(--weekly-hero-away) 0 47%, var(--weekly-hero-home) 53% 100%);
+}
+.football-picks-weekly-slide.is-active { opacity: 1; visibility: visible; }
+.football-picks-weekly-slide::before {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:
+    linear-gradient(111deg,transparent 0 44.5%,rgba(255,255,255,.12) 45% 45.8%,rgba(0,0,0,.68) 46.2% 49%,rgba(255,255,255,.1) 50%,transparent 51%),
+    radial-gradient(ellipse at 16% 80%,color-mix(in srgb,var(--weekly-hero-away-accent) 60%,transparent),transparent 59%),
+    radial-gradient(ellipse at 84% 18%,color-mix(in srgb,var(--weekly-hero-home-accent) 55%,transparent),transparent 58%),
+    linear-gradient(180deg,rgba(0,0,0,.14),transparent 48%,rgba(0,0,0,.5));
+}
+.football-picks-weekly-slide::after {
+  content:""; position:absolute; inset:-40% -65%; z-index:3; pointer-events:none;
+  background:linear-gradient(110deg,transparent 43%,rgba(255,255,255,.2) 50%,transparent 57%);
+  transform:translate3d(-50%,0,0); opacity:0;
+}
+.football-picks-weekly-slide.is-active::after { animation:football-weekly-header-sheen 8s ease-in-out infinite; }
+.football-picks-weekly-slide__eyebrow,.football-picks-weekly-slide__footer {
+  position:relative; z-index:2; justify-self:center;
+  max-width:100%; color:#eff4f9;
+  font-size:clamp(8px,1.6vw,12px); font-weight:900; letter-spacing:.14em; text-align:center;
+  text-shadow:0 1px 8px #000b;
+}
+.football-picks-weekly-slide__matchup {
+  position:relative; z-index:2; display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  min-height:0; align-items:center; gap:clamp(18px,5vw,48px);
+}
+.football-picks-weekly-slide__team {
+  display:grid; align-items:center; align-content:center; justify-items:center; gap:clamp(3px,1.2vw,9px);
+  min-width:0; min-height:0; height:100%; text-align:center;
+}
+.football-picks-weekly-slide__team img {
+  width:min(52%,120px); height:clamp(42px,11vw,130px); max-height:69%;
+  object-fit:contain; filter:drop-shadow(0 8px 15px #0008);
+}
+.football-picks-weekly-slide__initials { font-size:clamp(26px,7vw,65px); text-shadow:0 4px 16px #000a; }
+.football-picks-weekly-slide__team-name {
+  max-width:100%; overflow-wrap:anywhere; font-size:clamp(9px,2.1vw,18px);
+  font-weight:950; line-height:1.13; letter-spacing:.02em; text-shadow:0 1px 8px #000a;
+}
+.football-picks-weekly-slide__versus {
+  position:absolute; left:50%; top:47%; transform:translate(-50%,-50%);
+  display:grid; place-items:center; width:clamp(27px,5vw,47px); height:clamp(27px,5vw,47px);
+  border:1px solid #ffffff62; border-radius:50%; background:#0c1325d9;
+  color:#e7ecf5; font-size:clamp(10px,1.6vw,15px); font-weight:950; box-shadow:0 3px 13px #0008;
+}
+.football-picks-hero:not(.has-weekly-art) .football-picks-hero__image { object-fit:contain; }
+@keyframes football-weekly-header-sheen {
+  0%,55% { transform:translate3d(-50%,0,0); opacity:0; }
+  60% { opacity:.65; }
+  78% { transform:translate3d(50%,0,0); opacity:.2; }
+  85%,100% { transform:translate3d(50%,0,0); opacity:0; }
+}
+@media (max-width:520px) {
+ .football-picks-weekly-slide { padding:9px 8px; }
+ .football-picks-weekly-slide__matchup { gap:22px; }
+ .football-picks-weekly-slide__team img { width:min(70%,85px); height:65px; }
+ .football-picks-weekly-slide__team-name { font-size:clamp(10px,2.7vw,13px); }
+ .football-picks-weekly-slide__eyebrow,.football-picks-weekly-slide__footer { font-size:8px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .football-picks-weekly-slide { transition:none; }
+ .football-picks-weekly-slide.is-active::after { animation:none; }
+}
