@@ -33,6 +33,18 @@ describe("MLB series breakdown content", () => {
     expect(feature?.hqRead).toContain("Brewers earned the home field");
   });
 
+  it("publishes the 2026 Rays-Brewers World Series feature", () => {
+    const feature = resolveMlbSeriesBreakdownContent("ws", false);
+    expect(feature?.series).toContain("103-59");
+    expect(feature?.decisions).toHaveLength(3);
+    expect(feature?.decisions.map((decision) => decision.title)).toEqual([
+      "Home-field advantage",
+      "Pitching versus pressure",
+      "Young stars on the biggest stage",
+    ]);
+    expect(feature?.hqRead).toContain("first championship");
+  });
+
   it("preserves the archived Division Series feature and publishes NLCS", () => {
     expect(resolveMlbSeriesBreakdownContent("al-ds-2", false)).toBe(
       MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS["al-ds-2"],
