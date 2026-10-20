@@ -243,6 +243,12 @@ def main():
         if im.getchannel("A").getextrema() == (255, 255):
             fail("background removal produced no visible transparency")
 
+    if spec.get("force_background_removal"):
+        try:
+            im = remove(im).convert("RGBA")
+        except Exception as exc:
+            fail(f"second background removal failed: {exc}")
+
     if image_looks_like_silhouette(im):
         fail("source image looks like a placeholder/silhouette rather than a fighter photo")
 
