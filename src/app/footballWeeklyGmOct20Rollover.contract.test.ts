@@ -5,6 +5,8 @@ const page = readFileSync("src/features/back-room/FootballWeeklyGmPage.tsx", "ut
 const solo = readFileSync("src/features/back-room/FootballGmModePage.tsx", "utf8");
 const engine = readFileSync("src/features/back-room/footballGmEngine.ts", "utf8");
 const migration = readFileSync("supabase/migrations/202612310314_weekly_gm_oct20_dak_penix.sql", "utf8");
+const playHome = readFileSync("src/features/play/PlayV2Page.tsx", "utf8");
+const auctionCenter = readFileSync("src/features/back-room/FootballWeeklyAuctionCenterPage.tsx", "utf8");
 
 describe("October 20 official Weekly GM rollover", () => {
   it("names the current matchup and retains original historical/owner preview labels", () => {
@@ -27,6 +29,13 @@ describe("October 20 official Weekly GM rollover", () => {
     expect(engine).toContain('seed?.startsWith("weekly-gm:2026-10-13:young:")');
     expect(engine).toContain('seed?.startsWith("weekly-gm:2026-10-20:elite:")');
     expect(engine).toContain('seed?.startsWith("weekly-gm:2026-10-20:young:")');
+  });
+
+  it("links the October 20–26 Featured card to Weekly GM instead of the auction", () => {
+    expect(playHome).toContain('Date.parse("2026-10-27T05:00:00Z")');
+    expect(playHome).toContain("Dak Prescott + Michael Penix Jr.");
+    expect(playHome).toContain('gmWeek ? "/football/weekly-gm" : "/football/weekly-auction"');
+    expect(auctionCenter).toContain('Date.parse("2026-10-27T05:00:00Z")');
   });
 
   it("creates the exact Central-time event and enforces Dak/Penix on the server", () => {
