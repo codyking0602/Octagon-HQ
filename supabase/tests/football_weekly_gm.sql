@@ -39,7 +39,7 @@ begin
     perform public.save_my_football_weekly_gm('elite',v_started->>'seed',
       jsonb_set(v_state,'{roster,0,playerId}','"BUF|QB|joshallen"'::jsonb),false,null);
   exception when others then v_bad := sqlerrm like '%assigned quarterback%'; end;
-  if not v_bad then raise exception 'October 20 accepted last week\'s Josh Allen'; end if;
+  if not v_bad then raise exception 'October 20 accepted last week''s Josh Allen'; end if;
 
   perform public.save_my_football_weekly_gm('elite',v_started->>'seed',v_state,false,null);
   v_young:=public.start_my_football_weekly_gm('young');
