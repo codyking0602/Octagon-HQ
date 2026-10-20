@@ -95,6 +95,34 @@ describe("FootballMatchupBreakdowns", () => {
     );
   });
 
+  it("makes the full CFB team logo, ranking and record a clickable 2026 school link", async () => {
+    const compact = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-alabama-mississippi-state")!;
+    const cfb = {
+      ...compact, id: "weekly-2026-10-20-cfb", title: "Ole Miss at Texas",
+      teams: [
+        { name: "Ole Miss", aliases: ["ole-miss"], rank: 7, record: "5-1",
+          sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/mississippi/2026.html" },
+        { name: "Texas", aliases: ["texas"], rank: 19, record: "4-2",
+          sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/texas/2026.html" },
+      ] as typeof compact.teams,
+      compact: { ...compact.compact!, rankingSource: "AP" as const },
+    };
+    window.history.replaceState({}, "", "/football/picks?matchup=weekly-2026-10-20-cfb");
+    render(<FootballMatchupBreakdowns breakdowns={[cfb]} />);
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveTextContent("AP #7");
+    expect(dialog).toHaveTextContent("AP #19");
+    const oleMiss = screen.getByRole("link", { name: "Ole Miss" });
+    const texas = screen.getByRole("link", { name: "Texas" });
+    expect(oleMiss).toHaveAttribute("href", "https://www.sports-reference.com/cfb/schools/mississippi/2026.html");
+    expect(texas).toHaveAttribute("href", "https://www.sports-reference.com/cfb/schools/texas/2026.html");
+    expect(oleMiss).toHaveTextContent("5-1");
+    expect(texas).toHaveTextContent("4-2");
+    expect(oleMiss.querySelector(".football-matchup-breakdown-feature-team__logo")).toBeInTheDocument();
+    expect(texas.querySelector(".football-matchup-breakdown-feature-team__logo")).toBeInTheDocument();
+    expect(oleMiss).toHaveAttribute("target", "_blank");
+  });
+
   it("opens the current 49ers-Seahawks compact sheet with linked teams, players and logo pills", async () => {
     window.history.replaceState({}, "", "/football/picks?matchup=2026-49ers-seahawks");
     render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
