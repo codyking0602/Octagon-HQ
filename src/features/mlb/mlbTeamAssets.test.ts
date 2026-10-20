@@ -19,19 +19,19 @@ describe("MLB team visual assets", () => {
     expect(mlbTeamAssetByName("Los Angeles Dodgers")?.abbreviation).toBe("LAD");
   });
 
-  it("ships the verified Gavin Williams ALDS Game 5 spotlight", () => {
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.name).toBe("Gavin Williams");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.team).toBe("Cleveland Guardians");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.teamColor).toBe("#E50022");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.photoUrl).toContain("/people/668909/headshot/");
+  it("ships the approved Junior Caminero World Series spotlight with the supplied YouTube Short", () => {
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.name).toBe("Junior Caminero");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.team).toBe("Tampa Bay Rays");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.teamColor).toBe("#092C5C");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.photoUrl).toContain("/people/691406/headshot/");
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.stats).toEqual([
-      { label: "K", value: "12" },
-      { label: "IP", value: "6.0" },
-      { label: "H", value: "1" },
-      { label: "R", value: "0" },
+      { label: "HR", value: "42" },
+      { label: "RBI", value: "101" },
+      { label: "AVG", value: ".276" },
+      { label: "OPS", value: ".884" },
     ]);
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.meta).toContain("2026 ALDS GAME 5");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.profileUrl).toContain("baseball-reference.com/players/w/williga01.shtml");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toBe("https://youtube.com/shorts/2hCQQ8GjrXE?is=Zh0UXfg_FOz1WGrO");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.meta).toContain("WORLD SERIES WEEK");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.profileUrl).toBe("https://www.mlb.com/player/junior-caminero-691406");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toBe("https://youtube.com/shorts/RkF6yhjVT3A?is=vDeytklWLWBCVU6b");
   });
 });
