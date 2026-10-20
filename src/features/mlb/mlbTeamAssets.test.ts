@@ -28,7 +28,7 @@ describe("MLB team visual assets", () => {
       { label: "HR", value: "42" },
       { label: "RBI", value: "101" },
       { label: "AVG", value: ".276" },
-      { label: "OPS", value: ".884" },
+      { label: "OPS", value: ".885" },
     ]);
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.meta).toContain("WORLD SERIES WEEK");
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.profileUrl).toBe("https://www.mlb.com/player/junior-caminero-691406");
