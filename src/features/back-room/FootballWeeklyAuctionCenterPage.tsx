@@ -19,7 +19,7 @@ type CenterTab = "week" | "results";
 function gmFeaturedWeek(now = new Date()) {
   const time = now.getTime();
   return time >= Date.parse("2026-10-13T05:00:00Z")
-    && time < Date.parse("2026-10-20T05:00:00Z");
+    && time < Date.parse("2026-10-27T05:00:00Z");
 }
 
 function subjectLabel(subjectKey: FootballWeeklyFinal["subject_key"] | "cfb-best-teams-since-2000") {
@@ -57,6 +57,7 @@ export default function FootballWeeklyAuctionCenterPage() {
   const owner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
   const impostorWindow = hqImpostorV1Window();
   const gmWeek = gmFeaturedWeek();
+  const gmWeekLabel = Date.now() >= Date.parse("2026-10-20T05:00:00Z") ? "OCT 20–26" : "OCT 13–19";
   const repository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [tab, setTab] = useState<CenterTab>(gmWeek ? "results" : "week");
   const [state, setState] = useState<FootballWeeklyAuctionState | null>(null);
@@ -193,7 +194,7 @@ export default function FootballWeeklyAuctionCenterPage() {
           <section className="football-weekly-auction-center__current surface-card">
             <div className="football-weekly-auction-center__current-title">
               <div>
-                <small>OCT 13–19 · FEATURED CHALLENGE</small>
+                <small>{gmWeekLabel} · FEATURED CHALLENGE</small>
                 <strong>NFL GM CHAMPIONSHIP</strong>
               </div>
               <span>THIS WEEK</span>
