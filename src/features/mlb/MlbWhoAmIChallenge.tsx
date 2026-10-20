@@ -130,10 +130,11 @@ export default function MlbWhoAmIChallenge({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function completedResult(nextState: JsonRecord): MlbPlayChallengeResult {
+  function completedResult(nextState: JsonRecord, finalSubmission: JsonRecord): MlbPlayChallengeResult {
     const completedRounds = records(nextState.completed_rounds);
     const score = Number(nextState.score ?? 0);
     const revealRounds = records(publication.revealSetup.rounds);
+    const finalRounds = records(finalSubmission.rounds);
     const roundScores = completedRounds.map((round) => Number(round.score ?? 0));
 
     return {
@@ -155,6 +156,10 @@ export default function MlbWhoAmIChallenge({
             revealed_count: Number(round.revealed_count ?? 0),
             wrong_guesses: Number(round.wrong_guesses ?? 0),
             recovery_wrong_guesses: Number(round.recovery_wrong_guesses ?? 0),
+            // Retain the exact completed picks for the shared UFC/Football replay.
+            natural_guesses: Array.isArray(finalRounds[index]?.natural_guesses) ? finalRounds[index]!.natural_guesses : [],
+            recovery_choices: Array.isArray(finalRounds[index]?.recovery_choices) ? finalRounds[index]!.recovery_choices : [],
+            recovery_guesses: Array.isArray(finalRounds[index]?.recovery_guesses) ? finalRounds[index]!.recovery_guesses : [],
             identity: {
               id: String(identity.id ?? ""),
               name: String(identity.name ?? ""),
@@ -212,7 +217,7 @@ export default function MlbWhoAmIChallenge({
     setRevision((value) => value + 1);
 
     if (next.complete) {
-      const result = completedResult(next.publicState);
+      const result = completedResult(next.publicState, record(next.finalSubmission));
       setPendingResult(result);
       setAttempt({
         nativeScore: result.rawScore,
