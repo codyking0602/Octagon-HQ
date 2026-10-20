@@ -25,7 +25,7 @@ begin
     where season = 2026
       and public_enabled = true
       and field_ready = true
-      and current_round = 'championship_series'
+      and current_round = 'world_series'
       and bracket_lock_at = timestamptz '2026-09-29 12:00:00-05'
       and jsonb_array_length(coalesce(bracket_template -> 'teams', '[]'::jsonb)) = 12
       and jsonb_array_length(coalesce(bracket_template -> 'nodes', '[]'::jsonb)) = 11
@@ -65,11 +65,11 @@ begin
 
   if (select count(*) from public.mlb_playoff_series
       where season = 2026 and round = 'championship_series'
-        and status = 'scheduled' and winner_team_id is null
+        and status = 'complete' and winner_team_id is not null
         and picks_lock_at = timestamptz '2026-10-11 19:00:00-05'
         and team_a_moneyline is not null and team_b_moneyline is not null
         and jsonb_array_length(schedule) = 7) <> 2 then
-    raise exception 'ALCS/NLCS or their frozen lines/7pm CT lock missing';
+    raise exception 'ALCS/NLCS settlement or their original frozen odds missing';
   end if;
 
   if not exists (
@@ -84,6 +84,31 @@ begin
        and team_a_moneyline = 140 and team_b_moneyline = -170
   ) then
     raise exception '2026 LCS official matchups, starts or DraftKings lines drifted';
+  end if;
+
+  if not exists (
+    select 1 from public.mlb_playoff_series
+    where series_id = 'al-cs' and winner_team_id = 'tb' and status = 'complete'
+      and series_score = 'TB 4–2 CLE'
+  ) or not exists (
+    select 1 from public.mlb_playoff_series
+    where series_id = 'nl-cs' and winner_team_id = 'mil' and status = 'complete'
+      and series_score = 'MIL 4–0 LAD'
+  ) then
+    raise exception '2026 MLB League Championship winners/scores drifted';
+  end if;
+
+  if (select count(*) from public.mlb_playoff_series
+      where season = 2026 and round = 'world_series'
+        and series_id = 'ws' and status = 'scheduled'
+        and team_a_id = 'tb' and team_b_id = 'mil'
+        and winner_team_id is null
+        and starts_at = timestamptz '2026-10-23 19:00:00-05'
+        and picks_lock_at = timestamptz '2026-10-23 19:00:00-05'
+        and team_a_moneyline = 135 and team_b_moneyline = -155
+        and odds_source like '%frozen Oct 19%'
+        and jsonb_array_length(schedule) = 7) <> 1 then
+    raise exception '2026 World Series field, frozen prices or lock drifted';
   end if;
 
   if (select featured_challenge ->> 'route' from public.mlb_playoff_seasons where season = 2026) <> '/mlb/challenge' then
