@@ -79,6 +79,19 @@ describe("MLB Who Am I production challenge", () => {
       rawScore: 98,
       gameType: "who_am_i",
     }));
+    const saved = recordResult.mock.calls[0]![0] as {
+      resultDetail: { rounds: Array<{ natural_guesses: string[]; recovery_choices: string[]; recovery_guesses: string[] }> };
+    };
+    expect(saved.resultDetail.rounds).toHaveLength(2);
+    expect(saved.resultDetail.rounds[0]!.natural_guesses).toEqual([
+      MLB_WHO_AM_I_PRODUCTION_ROUNDS[0].hiddenSubject.id,
+    ]);
+    expect(saved.resultDetail.rounds[1]!.natural_guesses).toEqual([
+      MLB_WHO_AM_I_PRODUCTION_ROUNDS[1].hiddenSubject.id,
+    ]);
+    expect(saved.resultDetail.rounds[0]!.recovery_choices).toEqual([]);
+    expect(saved.resultDetail.rounds[1]!.recovery_guesses).toEqual([]);
+
     await waitFor(() => expect(reloadOverview).toHaveBeenCalledTimes(1));
   });
 });
