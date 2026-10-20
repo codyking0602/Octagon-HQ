@@ -106,7 +106,7 @@ function isCollegeGame(weightClass: string) {
   return value.includes("COLLEGE") || value === "CFB";
 }
 
-function featuredGameForBreakdown(event: PickEvent, breakdownId: string, published: PublishedFootballWeek | null) {
+export function featuredGameForBreakdown(event: PickEvent, breakdownId: string, published: PublishedFootballWeek | null) {
   return event.bouts.find((game) => {
     const isolated = { ...event, bouts: [game] };
     return mergeFootballWeeklyMatchupBreakdowns(
