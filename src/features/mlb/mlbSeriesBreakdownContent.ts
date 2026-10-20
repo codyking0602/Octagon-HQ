@@ -21,9 +21,41 @@ export type MlbSeriesBreakdownContent = {
 
 /**
  * Keep published series analysis available after each round advances.
- * The current featured League Championship Series is Dodgers-Brewers.
+ * The current featured World Series is Rays-Brewers.
  */
 export const MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS: Readonly<Record<string, MlbSeriesBreakdownContent>> = {
+  "ws": {
+    series:
+      "Two first-time championship hopefuls meet in the Fall Classic. Milwaukee earned home-field advantage after a 103-win season and a four-game NLCS sweep; Tampa Bay came through a six-game ALCS against Cleveland. Both clubs now have their first World Series title in sight.",
+    decisions: [
+      {
+        title: "Milwaukee gets the opening edge",
+        body: [
+          {
+            text: "The Brewers host Games 1 and 2 before the series moves to Tampa Bay. Their regular-season record and sweep of the Dodgers earned the home-field advantage, but the Rays have already won high-pressure elimination games.",
+          },
+        ],
+      },
+      {
+        title: "Young October stars",
+        body: [
+          {
+            text: "Tampa Bay's Junior Caminero launched 42 regular-season homers and a two-run shot in the ALCS clincher. Milwaukee counters with dynamic outfielder Jackson Chourio, giving the series two dangerous young hitters.",
+          },
+        ],
+      },
+      {
+        title: "The seven-game test",
+        body: [
+          {
+            text: "Milwaukee's bullpen and defense helped finish the NLCS without a loss. Tampa Bay won three straight to close out Cleveland. Who can keep run prevention and timely hitting together across a longer series?",
+          },
+        ],
+      },
+    ],
+    hqRead:
+      "The Brewers have home field and the stronger regular-season record, while the Rays carry momentum from three consecutive ALCS wins. In a first-title matchup, avoiding early mistakes matters more than the name on the uniform.",
+  },
   "nl-cs": {
     series:
       "The National League's two 100-win clubs meet again for the pennant. Milwaukee won 103 games and took the 2026 head-to-head series 4-3, but Los Angeles swept the Brewers in last October's NLCS. Both earned this rematch with four-game Division Series wins.",
