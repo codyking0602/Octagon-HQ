@@ -12,6 +12,11 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
     const modal = source("../picks/FootballMatchupBreakdowns.tsx");
     expect(picks).toContain("const weeklyHeroes = useMemo(() => matchupBreakdowns");
     expect(picks).toContain("football-picks-weekly-slide");
+    expect(picks).toContain("href={team.href}");
+    expect(picks).toContain("team.record");
+    expect(picks).toContain("team.rank");
+    expect(picks).toContain("featured.rankingSource");
+    expect(source("../../styles/football-picks.css")).toContain("a.football-picks-weekly-slide__team:focus-visible");
     expect(source("../../styles/football-picks.css")).toContain(".football-picks-hero.has-weekly-art { aspect-ratio: 16 / 9;");
     expect(source("../../styles/football-picks.css")).toContain("@media(prefers-reduced-motion:reduce)");
     expect(picks).toContain("}, 8000)");
