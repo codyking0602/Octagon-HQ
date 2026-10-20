@@ -53,6 +53,18 @@ export function publishedFootballMatchup(
     kickoffAt: item.game.kickoff_at,
     headerAssetPath: item.game.header_asset_path,
     teams: [{ name: away, aliases: [away] }, { name: home, aliases: [home] }],
+    // Both sports use the existing approved 3-things / bottom-line compact sheet.
+    // Keep full researched six-section proof below for audit and other consumers.
+    compact: {
+      leagueLabel: sport === "cfb" ? "CFB" : "NFL",
+      setup: [{ text: proof.setup[0] ?? "" }],
+      things: [
+        { title: proof.things[0]!.title, body: [{ text: proof.things[0]!.body }] },
+        { title: proof.things[1]!.title, body: [{ text: proof.things[1]!.body }] },
+        { title: proof.things[2]!.title, body: [{ text: proof.things[2]!.body }] },
+      ],
+      bottomLine: [{ text: proof.paths_to_win.map((path) => path.team + ": " + path.body).join("  ·  ") }],
+    },
     setup: proof.setup,
     keyMatchups: proof.things,
     pathsToWin: [proof.paths_to_win[0]!, proof.paths_to_win[1]!],
