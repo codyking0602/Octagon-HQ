@@ -361,15 +361,15 @@ function matchupEditorial(red: SpotlightStatsFighter, blue: SpotlightStatsFighte
       ]),
     };
   }
-  if (slugs.has("nikita-krylov") && slugs.has("abdul-rakhman-yakhyaev")) {
+  if (slugs.has("nikita-krylov") && slugs.has("abdulrakhman-yakhyaev")) {
     return {
       preview: "Krylov is the far more experienced UFC light heavyweight, with dangerous finishing skills standing and on the mat. Undefeated Yakhyaev has finished his first three UFC opponents in round one, including an eight-second knockout; Krylov needs to survive the early blitz and make the prospect navigate a longer, more complicated fight.",
       edgesBySlug: new Map([
         ["nikita-krylov", ["Veteran UFC experience against elite opponents", "Versatile striking and submission arsenal", "Experience in extended and difficult fights"]],
-        ["abdul-rakhman-yakhyaev", ["Explosive first-round finishing pace", "Powerful takedowns and top-game submissions", "Unbeaten professional record"]],
+        ["abdulrakhman-yakhyaev", ["Explosive first-round finishing pace", "Powerful takedowns and top-game submissions", "Unbeaten professional record"]],
       ]),
       watchSpotlights: [{
-        fighterSlug: "abdul-rakhman-yakhyaev",
+        fighterSlug: "abdulrakhman-yakhyaev",
         url: "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
       }],
     };
