@@ -167,6 +167,14 @@ body.main-event-spotlight-open {
   filter: drop-shadow(0 15px 18px rgba(0, 0, 0, .48));
 }
 
+/* Fine-tune approved portrait crops after the shared 626×800 transparent-asset
+   framing. Only the documented Volk cutout is lower-framed; all others retain
+   their source-preserving default. */
+.main-event-spotlight__fighter[data-fighter-slug="alexander-volkanovski"] .main-event-spotlight__photo img {
+  transform: translateY(12px) scale(.92);
+  transform-origin: center bottom;
+}
+
 .main-event-spotlight__photo-fallback {
   display: grid;
   place-items: center;

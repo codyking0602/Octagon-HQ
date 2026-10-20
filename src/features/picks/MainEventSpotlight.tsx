@@ -289,7 +289,7 @@ function SpotlightPhoto({ fighter }: { fighter: SpotlightFighter }) {
 
 function FighterHero({ fighter, corner }: { fighter: SpotlightFighter; corner: "red" | "blue" }) {
   return (
-    <div className={`main-event-spotlight__fighter is-${corner}`}>
+    <div className={`main-event-spotlight__fighter is-${corner}`} data-fighter-slug={fighter.slug}>
       <div className="main-event-spotlight__photo"><SpotlightPhoto fighter={fighter} /></div>
       <div className="main-event-spotlight__fighter-copy">
         <h3>{fighter.name}</h3>
