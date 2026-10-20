@@ -25,7 +25,7 @@ if (!event?.name || !event?.subtitle || !event?.starts_at) {
 }
 const startsAt = new Date(event.starts_at);
 if (!Number.isFinite(startsAt.valueOf())) throw new Error("Invalid event date");
-const fighters = String(event.subtitle).split(/\\s+vs\\.?\\s+/i).map((name) => name.trim().split(/\\s+/).at(-1));
+const fighters = String(event.subtitle).split(/\s+vs\.?\s+/i).map((name) => name.trim().split(/\s+/).at(-1));
 if (fighters.length !== 2 || fighters.some((part) => !part || part.length < 3)) {
   throw new Error("The next UFC event has no safe pair of headliner surnames.");
 }
@@ -43,17 +43,17 @@ function decodeEntities(value) {
     .replace(/&#39;|&#x27;/gi, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 }
 function meta(html, key) {
-  for (const tag of html.match(/<meta\\s+[^>]*>/gi) ?? []) {
-    const isMatch = new RegExp(`(?:property|name)=["']${key.replaceAll(":", "\\:")}["']`, "i").test(tag);
+  for (const tag of html.match(/<meta\s+[^>]*>/gi) ?? []) {
+    const isMatch = new RegExp(`(?:property|name)=["']${key}["']`, "i").test(tag);
     if (!isMatch) continue;
     return decodeEntities(tag.match(/content=["']([^"']+)["']/i)?.[1] ?? "");
   }
   return "";
 }
 function cleanText(html) {
-  return decodeEntities(html.replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi, " ")
-    .replace(/<style\\b[^>]*>[\\s\\S]*?<\\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ").replace(/\\s+/g, " ").toLowerCase());
+  return decodeEntities(html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").toLowerCase());
 }
 function chicagoParts(ms) {
   const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago",
@@ -82,7 +82,7 @@ const archiveHtml = await getHtml(archive);
 const articleLinks = [...archiveHtml.matchAll(/href=["']([^"']+)["']/gi)]
   .map((match) => decodeEntities(match[1]))
   .map((value) => { try { return new URL(value, archive).href; } catch { return ""; } })
-  .filter((url) => /^https:\/\/www\\.mmamania\\.com\//i.test(url) && /poster|ufc-3\\d\\d/i.test(url))
+  .filter((url) => /^https:\/\/www\.mmamania\.com\//i.test(url) && /poster|ufc-3\d\d/i.test(url))
   .filter((url) => !url.includes("/ufc-strikeforce-posters?"))
   .filter((url, i, values) => values.indexOf(url) === i)
   .slice(0, 15);
@@ -94,13 +94,13 @@ for (const url of articleLinks) {
   catch (error) { console.warn(String(error)); continue; }
   const body = cleanText(html);
   const title = meta(html, "og:title").toLowerCase();
-  const identity = String(event.name).toLowerCase().replace(/\\s+/g, " ");
+  const identity = String(event.name).toLowerCase().replace(/\s+/g, " ");
   const editorialMatch = title.includes(identity) || fighters.every((name) => title.includes(name.toLowerCase()));
   if (!editorialMatch || !body.includes("poster") || !fighters.every((name) => body.includes(name.toLowerCase()))) continue;
   const sourceImage = meta(html, "og:image");
   let image;
   try { image = new URL(sourceImage); } catch { continue; }
-  if (image.protocol !== "https:" || image.hostname !== "platform.mmamania.com" || !/\\.(jpe?g|png|webp)$/i.test(image.pathname)) continue;
+  if (image.protocol !== "https:" || image.hostname !== "platform.mmamania.com" || !/\.(jpe?g|png|webp)$/i.test(image.pathname)) continue;
   const width = Number(meta(html, "og:image:width"));
   const height = Number(meta(html, "og:image:height"));
   const ratio = Number.isFinite(width / height) && width >= 600 && height >= 300 && width / height >= 1.2 && width / height <= 2.5
