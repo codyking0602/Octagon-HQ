@@ -86,6 +86,21 @@ describe("football matchup breakdowns", () => {
     ]);
   });
 
+  it("binds the current Patriots at Bears Thursday matchup to the published slate", () => {
+    const event = footballEvent([[
+      "chicago-bears", "Chicago Bears", "new-england-patriots", "New England Patriots",
+    ]]);
+    const matching = footballMatchupBreakdownsForEvent(event);
+    expect(matching.map((item) => item.id)).toEqual(["2026-patriots-bears-week7"]);
+    expect(matching[0].kickoffAt).toBe("2026-10-23T00:15:00Z");
+    expect(matching[0].compact?.leagueLabel).toBe("NFL");
+    expect(matching[0].teams.map((team) => team.record)).toEqual(["4–2", "4–2"]);
+    expect(matching[0].compact?.things).toHaveLength(3);
+    expect(matching[0].keyMatchups).toHaveLength(3);
+    expect(matching[0].playersToWatch?.every((group) => group.players.length === 3)).toBe(true);
+    expect(matching[0].headerAssetPath).toBeUndefined();
+  });
+
   it("uses the compact NFL treatment for Chiefs-Raiders with 2026 team links", () => {
     const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-chiefs-raiders");
     expect(breakdown?.title).toBe("Chiefs at Raiders");
