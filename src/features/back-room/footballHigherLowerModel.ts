@@ -786,10 +786,10 @@ function difficultyPattern(random: () => number) {
 }
 
 function answerPattern(random: () => number) {
-  return shuffleLineup<FootballHigherLowerChoice>([
-    "higher", "higher", "higher", "higher", "higher",
-    "lower", "lower", "lower", "lower", "lower",
-  ], random);
+  // Independent answers: an exact five-and-five quota leaks the last question's
+  // answer to anyone who keeps count. The question order must never predict it.
+  return Array.from({ length: FOOTBALL_HIGHER_LOWER_QUESTION_COUNT },
+    (): FootballHigherLowerChoice => random() < 0.5 ? "higher" : "lower");
 }
 
 function modernityPattern(random: () => number) {

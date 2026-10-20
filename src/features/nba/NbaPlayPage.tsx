@@ -34,6 +34,17 @@ export default function NbaPlayPage(){
         </div>
       </section>
     ) : null}
+    {canPreviewNbaWhoAmI(identity.profile) ? (
+      <section className="surface-card nba-hq-notice" aria-label="NBA Higher or Lower owner preview">
+        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
+        <h2>NBA Higher or Lower</h2>
+        <p>Ten fresh NBA comparisons — scoring averages, threes, All-Stars, All-NBA and draft.</p>
+        <div className="nba-find-preview-actions">
+          <Link className="primary-action" to="/nba/higher-lower">PLAY CASUAL →</Link>
+          <Link className="secondary-action" to="/nba/higher-lower?mode=daily">DAILY PREVIEW →</Link>
+        </div>
+      </section>
+    ) : null}
     <section className="surface-card nba-hq-notice">
       <h2>First up: NBA Futures</h2><p>Make your 30 over/under picks and the rest of your season predictions.</p>
       <Link className="primary-action" to="/nba/picks">OPEN NBA FUTURES →</Link>
