@@ -505,15 +505,15 @@ export function FootballHq({
 
       {dailyChallenge}
 
-      {published === undefined && !memorial
-        ? <section className="surface-card" role="status" aria-live="polite">Loading this week's Player Spotlight…</section>
-        : <PlayerSpotlight
-            spotlight={activeSpotlight}
-            photoSource={activeSpotlightPhoto}
-            memorial={memorial}
-            canManagePhoto={!memorial && canManagePlayerPhoto}
-            onManagePhoto={memorial ? undefined : onManagePlayerPhoto}
-          />}
+      <div style={{ opacity: published === undefined && !memorial ? 0 : 1 }}>
+        <PlayerSpotlight
+          spotlight={activeSpotlight}
+          photoSource={activeSpotlightPhoto}
+          memorial={memorial}
+          canManagePhoto={!memorial && canManagePlayerPhoto}
+          onManagePhoto={memorial ? undefined : onManagePlayerPhoto}
+        />
+      </div>
 
       {featuredMatchups.length ? (
         <section className="football-hq-games" aria-label="Football Games of the Week">
