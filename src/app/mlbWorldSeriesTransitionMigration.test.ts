@@ -13,8 +13,8 @@ describe("2026 MLB World Series rollover", () => {
     expect(migration).toContain("winner_team_id = result.winner_id");
     expect(migration).toContain("v_brackets");
     expect(migration).toContain("v_round_picks");
-    expect(migration).not.toMatch(/(?:update|delete from)\\s+public\\.mlb_playoff_brackets\\b/i);
-    expect(migration).not.toMatch(/(?:update|delete from)\\s+public\\.mlb_playoff_round_picks\\b/i);
+    expect(migration).not.toMatch(/(?:update|delete from)\s+public\.mlb_playoff_brackets\b/i);
+    expect(migration).not.toMatch(/(?:update|delete from)\s+public\.mlb_playoff_round_picks\b/i);
   });
 
   it("opens one World Series with truthful dates and frozen DraftKings series odds", () => {
