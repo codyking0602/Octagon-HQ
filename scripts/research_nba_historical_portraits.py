@@ -2,6 +2,8 @@
 """One-off candidate discovery; NEVER publish image without per-person verification."""
 import concurrent.futures
 import json
+import html
+import re
 import urllib.parse
 import urllib.request
 from urllib.error import HTTPError
@@ -30,8 +32,27 @@ def task(name):
     base="https://en.wikipedia.org/api/rest_v1/page/summary/"+urllib.parse.quote(title)
     j=fetch(base)
     t=j.get("thumbnail",{})
+    imageurl=t.get("source")
+    meta={}
+    if imageurl and "wikimedia.org" in imageurl:
+        fname=urllib.parse.unquote(urllib.parse.urlsplit(imageurl).path.rsplit("/",1)[-1])
+        if "px-" in fname:
+            fname=fname.split("px-",1)[-1]
+        api="https://commons.wikimedia.org/w/api.php?"
+        q=urllib.parse.urlencode({"action":"query","format":"json","titles":"File:"+fname,
+              "prop":"imageinfo","iiprop":"extmetadata"})
+        info=fetch(api+q)
+        pages=(info.get("query") or {}).get("pages") or {}
+        for page in pages.values():
+            data=page.get("imageinfo") or []
+            if data:
+                raw=data[0].get("extmetadata",{})
+                for key in ["LicenseShortName","LicenseUrl","Artist","Credit","AttributionRequired"]:
+                    value=(raw.get(key) or {}).get("value","")
+                    meta[key]=re.sub("<[^>]*>", " ",html.unescape(value)).strip()[:250]
     return dict(name=name,title=title,description=j.get("description"),summary=(j.get("extract") or "")[:145],
-                thumbnail=t.get("source"),original=(j.get("originalimage") or {}).get("source"),error=j.get("error") or j.get("title") if not t else None)
+                thumbnail=imageurl,original=(j.get("originalimage") or {}).get("source"),metadata=meta,
+                error=j.get("error") or j.get("title") if not t else None)
 with concurrent.futures.ThreadPoolExecutor(max_workers=7) as pool:
     rows=list(pool.map(task,names))
 print("WIKIPEDIA_CANDIDATES_BEGIN")
