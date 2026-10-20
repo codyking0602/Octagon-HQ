@@ -42,8 +42,8 @@ export const footballWeeklyGameSchema = z.strictObject({
   ranking_source: z.enum(["AP", "CFP"]).optional(),
   home_rank: z.number().int().min(1).max(25).nullable().optional(),
   away_rank: z.number().int().min(1).max(25).nullable().optional(),
-  home_record: z.string().regex(/^\\d{1,2}-\\d{1,2}$/).optional(),
-  away_record: z.string().regex(/^\\d{1,2}-\\d{1,2}$/).optional(),
+  home_record: z.string().regex(/^\d{1,2}-\d{1,2}$/).optional(),
+  away_record: z.string().regex(/^\d{1,2}-\d{1,2}$/).optional(),
 }).refine((game) => game.home_team !== game.away_team, "Featured opponents must differ");
 
 export const footballWeeklyDraftPatchSchema = z.strictObject({
