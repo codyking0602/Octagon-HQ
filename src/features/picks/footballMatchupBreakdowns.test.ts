@@ -146,9 +146,16 @@ describe("football matchup breakdowns", () => {
     for (const breakdown of FOOTBALL_MATCHUP_BREAKDOWNS) {
       if (breakdown.compact) {
         expect(breakdown.compact.things).toHaveLength(3);
-        expect(breakdown.pathsToWin).toBeUndefined();
-        expect(breakdown.playersToWatch).toBeUndefined();
-        expect(breakdown.unitEdges).toBeUndefined();
+        if (breakdown.id === "2026-patriots-bears-week7") {
+          // This current-week compact card additionally ships its complete HQ analysis.
+          expect(breakdown.pathsToWin).toHaveLength(2);
+          expect(breakdown.playersToWatch).toHaveLength(2);
+          expect(breakdown.unitEdges).toHaveLength(2);
+        } else {
+          expect(breakdown.pathsToWin).toBeUndefined();
+          expect(breakdown.playersToWatch).toBeUndefined();
+          expect(breakdown.unitEdges).toBeUndefined();
+        }
       } else {
         expect(breakdown.keyMatchups).toHaveLength(3);
         expect(breakdown.pathsToWin).toHaveLength(2);
