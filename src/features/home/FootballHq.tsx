@@ -5,7 +5,7 @@ import { footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMe
 import { footballTeamAssets } from "../back-room/footballSubjectAssets";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
 import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreakdowns";
-import { footballPublishedSpotlight, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "./footballWeeklyPublication";
+import { footballPublishedSpotlight, mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "./footballWeeklyPublication";
 import { footballDateTimeLabel } from "../picks/footballTime";
 import { footballSpotlightForDisplay } from "./footballSpotlightPresentation";
 import { footballTeamSportsReferenceUrl } from "./footballTeamSportsReference";
@@ -437,11 +437,10 @@ export function FootballHq({
   const standings = picksSeasonStandings(history, "football");
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? standingLabel(standing.rank, standings) : "";
-  const matchupBreakdowns = event ? [
-    ...publishedFootballMatchupsForEvent(event, published ?? null),
-    ...footballMatchupBreakdownsForEvent(event).filter((staticBreakdown) => !publishedFootballMatchupsForEvent(event, published ?? null).some((current) =>
-      current.teams.every((team) => staticBreakdown.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase())))),
-  ] : [];
+  const matchupBreakdowns = event ? mergeFootballWeeklyMatchupBreakdowns(
+    publishedFootballMatchupsForEvent(event, published ?? null),
+    footballMatchupBreakdownsForEvent(event),
+  ) : [];
   const featuredMatchups = event ? matchupBreakdowns.flatMap((breakdown) => {
     const game = featuredGameForBreakdown(event, breakdown.id);
     return game ? [{ breakdown, game }] : [];
