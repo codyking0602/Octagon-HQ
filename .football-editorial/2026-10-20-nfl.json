@@ -80,5 +80,141 @@
   "selection": {
     "player_id": "caleb-williams",
     "game_id": "patriots-at-bears"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Caleb Williams",
+      "team": "Chicago Bears",
+      "position": "QB",
+      "stats": [
+        {
+          "value": "305",
+          "label": "PASS YDS"
+        },
+        {
+          "value": "83.3%",
+          "label": "COMP %"
+        },
+        {
+          "value": "1",
+          "label": "PASS TD"
+        },
+        {
+          "value": "111.2",
+          "label": "QB RTG"
+        }
+      ],
+      "result": "AT ATLANTA · W 31–23",
+      "measurements": "6'1\" · 226 LB",
+      "team_color": "#0B162A",
+      "highlight_url": "https://www.youtube.com/watch?v=THLXEdxS1hw",
+      "photo_source": "https://a.espncdn.com/i/headshots/nfl/players/full/4431611.png",
+      "photo_kind": "portrait",
+      "photo_asset_path": "/assets/football/weekly/2026-10-20/nfl/spotlight.webp"
+    },
+    "game": {
+      "home_team": "Chicago Bears",
+      "away_team": "New England Patriots",
+      "kickoff_at": "2026-10-22T19:15:00-05:00",
+      "header_asset_path": "/assets/football/weekly/2026-10-20/nfl/game-header.webp",
+      "header_photo_sources": [
+        "https://seatgeekimages.com/matchup/v3_3362f95b/2085/2082/600x600.jpg"
+      ]
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.patriots.com/news/game-preview-patriots-at-bears-nfl-week-7",
+        "https://www.chicagobears.com/team/players-roster/caleb-williams/",
+        "https://www.chicagobears.com/",
+        "https://www.nfl.com/games/patriots-at-bears-2026-reg-7?tab=preview"
+      ],
+      "breakdown": {
+        "setup": [
+          "Chicago and New England enter Thursday Night Football at 4–2 each. Caleb Williams returned for the Bears against Atlanta and completed 30 of 36 passes for 305 yards and a touchdown in a 31–23 victory, while the Patriots beat the Jets 26–19 for their third straight win.",
+          "Early-down efficiency should decide how comfortable both quarterbacks feel. Chicago averages a league-leading 160.7 rushing yards per game, but New England allows just 91.8; the Bears defense also holds opposing runners to 90.5 per game. Neither team can rely on an easy ground-game advantage."
+        ],
+        "things": [
+          {
+            "title": "Bears rushing attack versus Patriots run defense",
+            "body": "D'Andre Swift and Chicago's offensive line power the NFL's leading rushing attack at 160.7 yards per game. New England allows only 91.8 rushing yards per game. If the Patriots win early downs with their front, they can reserve more defenders for Williams' passing lanes.",
+            "edge": "EVEN"
+          },
+          {
+            "title": "Williams' protection versus New England's pressure",
+            "body": "In his return at Atlanta, Williams completed 83.3 percent of his attempts and posted a 111.2 passer rating. Against New England's sixth-ranked total defense, the Bears need sharp protection calls and rhythm throws so the short week does not turn into a string of long-yardage downs.",
+            "edge": "EVEN"
+          },
+          {
+            "title": "Drake Maye versus Chicago's balanced defense",
+            "body": "Maye leads a Patriots passing attack producing 243.5 yards per game. Chicago allows 211.8 passing yards and 90.5 rushing yards per game. The Bears must limit Maye's second-reaction throws without giving up easy underneath completions or escape lanes.",
+            "edge": "EVEN"
+          }
+        ],
+        "paths_to_win": [
+          {
+            "team": "New England Patriots",
+            "body": "Slow Chicago's run game without continually adding extra defenders to the box. Force Williams into long third downs and protect the ball. On offense, keep Maye ahead of the chains with efficient early-down execution and quick answers against the Bears' pass rush."
+          },
+          {
+            "team": "Chicago Bears",
+            "body": "Create manageable downs with Swift, keep Williams in the efficient rhythm he showed at Atlanta, and finish drives. Defensively, contain Maye's movement and make New England sustain possessions against a unit that has been particularly difficult to run on."
+          }
+        ],
+        "players_to_watch": [
+          {
+            "team": "New England Patriots",
+            "players": [
+              {
+                "name": "Drake Maye",
+                "position": "QB",
+                "body": "His pocket decisions and ability to extend plays drive New England's offense; Chicago must contain him without surrendering coverage."
+              },
+              {
+                "name": "Rhamondre Stevenson",
+                "position": "RB",
+                "body": "Efficient carries on first and second down could keep Maye out of predictable passing situations against Chicago's defense."
+              },
+              {
+                "name": "Hunter Henry",
+                "position": "TE",
+                "body": "An important short and intermediate receiving option when the Bears take away explosive passes outside."
+              }
+            ]
+          },
+          {
+            "team": "Chicago Bears",
+            "players": [
+              {
+                "name": "Caleb Williams",
+                "position": "QB",
+                "body": "Coming off 305 passing yards and an 83.3-percent completion performance in his return from injury, he faces a top-ten defense on a short week."
+              },
+              {
+                "name": "D'Andre Swift",
+                "position": "RB",
+                "body": "The Bears need his early-down production to sustain the league-leading run-game identity against New England's stout front."
+              },
+              {
+                "name": "Colston Loveland",
+                "position": "TE",
+                "body": "An intermediate target who can give Williams a release when New England squeezes throwing windows outside."
+              }
+            ]
+          }
+        ],
+        "unit_edges": [
+          {
+            "title": "PATRIOTS OFFENSE vs. BEARS DEFENSE",
+            "edge": "EVEN",
+            "body": "Maye's passing and improvisation give New England multiple ways to move the ball, but Chicago's seventh-ranked total defense has limited both rushing and passing production."
+          },
+          {
+            "title": "BEARS OFFENSE vs. PATRIOTS DEFENSE",
+            "edge": "EVEN",
+            "body": "Chicago's league-best running-game average meets New England's eighth-ranked run defense; keeping Williams protected and effective when passing is required could swing the matchup."
+          }
+        ]
+      }
+    }
   }
 }
