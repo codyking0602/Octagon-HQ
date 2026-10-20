@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-higher-lower.css";
 import "../../styles/nba-higher-lower.css";
+import "../../styles/nba-game-actions.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { asChallengeJson, challengeRecord, footballChallengeUrl } from "../back-room/footballChallengeRuntime";

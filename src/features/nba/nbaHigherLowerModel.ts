@@ -164,7 +164,7 @@ const specs: readonly Spec[] = [
   { key: "career-rebounds", category: "career", label: "Career Rebounds Per Game", rows: careerRows("rebounds", 4.5), minGap: 0.8, maxGap: 3.3 },
   { key: "season-points", category: "season", label: "Season Points Per Game", rows: seasonRows("points", 17), minGap: 1.8, maxGap: 6.0 },
   { key: "season-assists", category: "season", label: "Season Assists Per Game", rows: seasonRows("assists", 4.3), minGap: 0.7, maxGap: 2.7 },
-  { key: "season-rebounds", category: "season", label: "Season Rebounds Per Game", rows: seasonRows("rebounds", 6.0), minGap: 0.8, maxGap: 3.5 },
+  { key: "season-rebounds", category: "season", label: "Season Rebounds Per Game", rows: seasonRows("rebounds", 6.0), minGap: 0.8, maxGap: 2.6 },
   { key: "season-threes", category: "season", label: "Season 3-Pointers Made Per Game", rows: threeRows, minGap: 0.4, maxGap: 1.3 },
   { key: "all-star", category: "awards", label: "NBA All-Star Selections", rows: supplementRows("all-star", NBA_HIGHER_LOWER_ALL_STAR_SELECTIONS, "THROUGH 2025–26"), minGap: 2, maxGap: 5 },
   { key: "all-nba", category: "awards", label: "All-NBA Team Selections", rows: supplementRows("all-nba", NBA_HIGHER_LOWER_ALL_NBA, "THROUGH 2025–26"), minGap: 2, maxGap: 5 },
@@ -194,7 +194,7 @@ function candidatePairs(spec: Spec): Pair[] {
       // Comparing a player's career peak to someone else's decline is rarely
       // a useful basketball question. Within-season eras stay reasonably near.
       if (spec.category === "season" && left.season != null && right.season != null
-        && Math.abs(left.season - right.season) > 12) continue;
+        && Math.abs(left.season - right.season) > 7) continue;
       result.push({
         key: spec.key, category: spec.category, label: spec.label,
         difficulty: pairDifficulty(spec, left.value, right.value), modern: left.modern && right.modern,
@@ -246,6 +246,17 @@ function categoryPattern(random: () => number): NbaHigherLowerCategory[] {
     ...Array.from({ length: draftCount }, () => "draft" as const),
   ], random);
 }
+// Keep occasional lesser-known early-era subjects without letting them dominate
+// historical comparisons. Iconic pre-1985 anchors remain normally eligible.
+const earlyEraIcons = new Set([
+  "jerrywest", "kareemabduljabbar", "wiltchamberlain", "oscarrobertson",
+  "magicjohnson", "larrybird", "petemaravich", "waltfrazier",
+  "johnhavlicek", "billwalton", "juliuserving", "mosesmalone",
+  "georgegervin", "rickbarry", "elvinhayes", "billrussell",
+]);
+function deepEarlyEra(row: Row) {
+  return row.season != null && row.season < 1985 && !earlyEraIcons.has(row.key);
+}
 function buildAttempt(seed: string, attempt: number) {
   const random = seededLineupRandom(NBA_HIGHER_LOWER_VERSION, seed, attempt);
   const categories = categoryPattern(random);
@@ -275,7 +286,9 @@ function buildAttempt(seed: string, attempt: number) {
     const rotated = keys.filter(key => (counts.get(key) ?? 0) === fewest);
     const metricKey = rotated[Math.floor(random() * rotated.length)]!;
     const metricPairs = eligible.filter(pair => pair.key === metricKey);
-    const pair = metricPairs[Math.floor(random() * metricPairs.length)]!;
+    const iconicPairs = metricPairs.filter(pair => !deepEarlyEra(pair.left) && !deepEarlyEra(pair.right));
+    const candidates = iconicPairs.length && random() < 0.9 ? iconicPairs : metricPairs;
+    const pair = candidates[Math.floor(random() * candidates.length)]!;
     const direction: NbaHigherLowerChoice = random() < 0.5 ? "higher" : "lower";
     questions.push(toQuestion(pair, direction));
     usedPeople.add(pair.left.key);

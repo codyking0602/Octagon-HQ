@@ -6,7 +6,7 @@
   --hl-team-primary: #d88b2a;
   --hl-team-secondary: #efc98a;
   min-height: 294px;
-  background: linear-gradient(155deg, #2c241c 0%, #172029 65%, #101923 100%);
+  background: linear-gradient(155deg, #2c241c 0%, #1e1c1a 65%, #151616 100%);
 }
 .nba-higher-lower .higher-lower-card__identity {
   display: block;
@@ -38,8 +38,8 @@
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-  transform: scale(1.28);
-  transform-origin: center 85%;
+  transform: translateY(12px) scale(1.18);
+  transform-origin: center bottom;
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
 }
@@ -189,4 +189,64 @@
   .nba-higher-lower .higher-lower-review > div > strong,
   .nba-higher-lower .higher-lower-review > div > em { font-size: .55rem; }
   .nba-higher-lower-intro__highlights span { font-size: .56rem; padding: 6px; }
+}
+/* Basketball palette for the existing Football layout: charcoal, bronze and amber. */
+.nba-higher-lower {
+  --hl-blue: #e9a84b;
+  --hl-deep: #151515;
+  --hl-panel: #22201e;
+  --hl-line: rgba(226, 163, 83, .25);
+  --hl-muted: #b1aaa1;
+}
+.nba-higher-lower :is(
+  .higher-lower-hero, .higher-lower-setup, .higher-lower-rules,
+  .higher-lower-result, .higher-lower-review, .higher-lower-loading,
+  .higher-lower-game-header, .higher-lower-stat-label,
+  .higher-lower-matchup, .higher-lower-controls
+) {
+  border-color: var(--hl-line);
+  background: linear-gradient(145deg, #24211f, #16191a 72%, #141414);
+}
+.nba-higher-lower :is(.higher-lower-hero, .higher-lower-result)::after {
+  background: radial-gradient(circle, rgba(231, 154, 52, .14), transparent 66%);
+}
+.nba-higher-lower .higher-lower-game-header small,
+.nba-higher-lower .higher-lower-stat-label small,
+.nba-higher-lower .higher-lower-review__question > small,
+.nba-higher-lower .higher-lower-review > header {
+  color: #cf9e69;
+}
+.nba-higher-lower .higher-lower-game-header > span,
+.nba-higher-lower .higher-lower-result > strong,
+.nba-higher-lower .higher-lower-review__matchup em {
+  color: #f4bc70;
+}
+.nba-higher-lower .higher-lower-progress i {
+  background: linear-gradient(90deg, #b8752c, #efb35b);
+}
+.nba-higher-lower .higher-lower-card.is-hidden > strong {
+  color: #f1ba71;
+}
+.nba-higher-lower .higher-lower-vs {
+  border-color: #171717;
+  background: #644322;
+  color: #f8dcac;
+}
+.nba-higher-lower .higher-lower-controls button {
+  border-color: rgba(238, 175, 94, .30);
+  background: rgba(164, 101, 37, .13);
+  color: #f6dbb6;
+}
+.nba-higher-lower .higher-lower-controls button.is-answer {
+  border-color: rgba(91, 219, 143, .7);
+  background: rgba(42, 155, 91, .2);
+  color: #b8ffd2;
+}
+.nba-higher-lower .higher-lower-controls button.is-miss {
+  border-color: rgba(244, 102, 102, .7);
+  background: rgba(173, 48, 48, .18);
+  color: #ffc4c4;
+}
+.nba-higher-lower .higher-lower-review__matchup > i {
+  color: #b68b59;
 }
