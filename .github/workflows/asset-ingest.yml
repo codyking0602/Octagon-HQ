@@ -68,7 +68,7 @@ jobs:
           echo "head_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Open or reuse asset PR
-        if: steps.commit.outputs.generated == 'true' && github.ref_name != 'fix/ufc333-spotlight-readiness-mobile-20261020'
+        if: steps.commit.outputs.generated == 'true'
         id: pr
         shell: bash
         env:
@@ -95,7 +95,7 @@ jobs:
           echo "number=$pr_number" >> "$GITHUB_OUTPUT"
 
       - name: Validate exact generated head
-        if: steps.commit.outputs.generated == 'true' && github.ref_name != 'fix/ufc333-spotlight-readiness-mobile-20261020'
+        if: steps.commit.outputs.generated == 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -127,7 +127,7 @@ jobs:
           fi
 
       - name: Merge validated asset PR
-        if: steps.commit.outputs.generated == 'true' && github.ref_name != 'fix/ufc333-spotlight-readiness-mobile-20261020'
+        if: steps.commit.outputs.generated == 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -144,7 +144,7 @@ jobs:
           gh pr merge "$PR_NUMBER"             --repo "$GITHUB_REPOSITORY"             --merge             --match-head-commit "$EXPECTED_SHA"
 
       - name: Deploy merged fighter asset
-        if: steps.commit.outputs.generated == 'true' && github.ref_name != 'fix/ufc333-spotlight-readiness-mobile-20261020'
+        if: steps.commit.outputs.generated == 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
