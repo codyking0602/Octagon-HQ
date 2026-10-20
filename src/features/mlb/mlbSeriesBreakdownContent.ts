@@ -21,9 +21,35 @@ export type MlbSeriesBreakdownContent = {
 
 /**
  * Keep published series analysis available after each round advances.
- * The current featured League Championship Series is Dodgers-Brewers.
+ * The current featured World Series is Rays-Brewers.
  */
 export const MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS: Readonly<Record<string, MlbSeriesBreakdownContent>> = {
+  ws: {
+    series:
+      "For the first time, the World Series will crown either Tampa Bay or Milwaukee. The Brewers finished with MLB's best record at 103-59 and earned home field; the 98-win Rays survived a six-game ALCS against Cleveland. The Brewers won two of three meetings with Tampa Bay during the regular season.",
+    decisions: [
+      {
+        title: "Home-field advantage",
+        body: [
+          { text: "Milwaukee opens with Games 1 and 2 at American Family Field and also hosts Games 6 and 7, if necessary. Its 103-win regular season secured that edge." },
+        ],
+      },
+      {
+        title: "Pitching versus pressure",
+        body: [
+          { text: "Tampa Bay's stingy pitching and defense face a Brewers offense built on walks, contact and constant traffic. Drew Rasmussen and Jacob Misiorowski are slated for Game 1." },
+        ],
+      },
+      {
+        title: "Young stars on the biggest stage",
+        body: [
+          { text: "Junior Caminero slugged 42 regular-season home runs and delivered a two-run ALCS Game 6 blast. Milwaukee counters with Jackson Chourio and a deep, balanced lineup." },
+        ],
+      },
+    ],
+    hqRead:
+      "The Brewers have the regular-season résumé, rested rotation and home-field advantage. The Rays bring sharp run prevention, an October-tested bullpen and Caminero's power. Both are chasing the first championship in franchise history.",
+  },
   "nl-cs": {
     series:
       "The National League's two 100-win clubs meet again for the pennant. Milwaukee won 103 games and took the 2026 head-to-head series 4-3, but Los Angeles swept the Brewers in last October's NLCS. Both earned this rematch with four-game Division Series wins.",
