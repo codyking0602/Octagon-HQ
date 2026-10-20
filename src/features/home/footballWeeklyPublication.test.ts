@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { PickEvent } from "../picks/picksModel";
+import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
 import {
   footballPublishedSpotlight,
+  mergeFootballWeeklyMatchupBreakdowns,
   parsePublishedFootballWeek,
   publishedFootballMatchupsForEvent,
 } from "./footballWeeklyPublication";
@@ -66,6 +68,9 @@ describe("public Football weekly release projection", () => {
     expect(match[0]?.headerAssetPath).toContain("game-header.webp");
     expect(match[0]?.keyMatchups).toHaveLength(3);
     expect(match[0]?.unitEdges).toHaveLength(2);
+    expect(match[0]?.compact?.leagueLabel).toBe("CFB");
+    expect(match[0]?.compact?.things).toHaveLength(3);
+    expect(match[0]?.compact?.bottomLine).toHaveLength(1);
     // Real Picks displays school + mascot (the owner selects the school name).
     const fullNames = {
       ...event, bouts: [{ ...event.bouts[0],
@@ -83,6 +88,51 @@ describe("public Football weekly release projection", () => {
     expect(publishedFootballMatchupsForEvent({
       ...event, bouts: [{ ...event.bouts[0], locksAt: "2026-10-24T21:00:00Z" }],
     }, item)).toHaveLength(0);
+  });
+
+  it("keeps an authored compact Patriots–Bears breakdown but preserves deployed SeatGeek art", () => {
+    const nfl = {
+      ...sport,
+      week_of: "2026-10-20",
+      spotlight: { ...sport.spotlight, name: "Caleb Williams", team: "Chicago Bears",
+        photo_asset_path: "/assets/football/weekly/2026-10-20/nfl/spotlight.webp" },
+      game: { ...sport.game, away_team: "New England Patriots", home_team: "Chicago Bears",
+        kickoff_at: "2026-10-23T00:15:00Z",
+        header_asset_path: "/assets/football/weekly/2026-10-20/nfl/game-header.webp" },
+    };
+    const projected = parsePublishedFootballWeek({ cfb: null, nfl });
+    const event = {
+      sport: "football", startsAt: "2026-10-23T00:15:00Z",
+      bouts: [{ redFighterSlug: "chicago-bears", blueFighterSlug: "new-england-patriots",
+        redFighterName: "Chicago Bears", blueFighterName: "New England Patriots",
+        homeTeamSlug: "chicago-bears", awayTeamSlug: "new-england-patriots",
+        locksAt: "2026-10-23T00:15:00Z" }],
+    } as unknown as PickEvent;
+    const weekly = publishedFootballMatchupsForEvent(event, projected);
+    expect(weekly).toHaveLength(1);
+    expect(weekly[0]?.compact?.leagueLabel).toBe("NFL");
+    const compact: FootballMatchupBreakdown = {
+      ...weekly[0]!,
+      id: "2026-patriots-bears-week7",
+      compact: { leagueLabel: "NFL" as const, things: [
+        { title: "Ground game", body: [{ text: paragraph }] },
+        { title: "Pressure", body: [{ text: paragraph }] },
+        { title: "Play action", body: [{ text: paragraph }] },
+      ], setup: [{ text: paragraph }], bottomLine: [{ text: paragraph }] },
+      headerAssetPath: undefined,
+    };
+    const merged = mergeFootballWeeklyMatchupBreakdowns(weekly, [compact]);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]?.id).toBe("2026-patriots-bears-week7");
+    expect(merged[0]?.compact?.leagueLabel).toBe("NFL");
+    expect(merged[0]?.headerAssetPath).toBe(nfl.game.header_asset_path);
+    expect(merged[0]?.playersToWatch).toHaveLength(2);
+
+    // A similarly named but different week is never deduplicated.
+    const nextWeek = { ...compact, kickoffAt: "2026-11-12T00:15:00Z" };
+    const separate = mergeFootballWeeklyMatchupBreakdowns(weekly, [nextWeek]);
+    expect(separate).toHaveLength(2);
+    expect(separate[0]?.id).toBe(weekly[0]?.id);
   });
 
   it("rejects incomplete or unexpected live Spotlight and editorial contracts", () => {

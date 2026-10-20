@@ -53,6 +53,18 @@ export function publishedFootballMatchup(
     kickoffAt: item.game.kickoff_at,
     headerAssetPath: item.game.header_asset_path,
     teams: [{ name: away, aliases: [away] }, { name: home, aliases: [home] }],
+    // Both sports use the existing approved 3-things / bottom-line compact sheet.
+    // Keep full researched six-section proof below for audit and other consumers.
+    compact: {
+      leagueLabel: sport === "cfb" ? "CFB" : "NFL",
+      setup: [{ text: proof.setup[0] ?? "" }],
+      things: [
+        { title: proof.things[0]!.title, body: [{ text: proof.things[0]!.body }] },
+        { title: proof.things[1]!.title, body: [{ text: proof.things[1]!.body }] },
+        { title: proof.things[2]!.title, body: [{ text: proof.things[2]!.body }] },
+      ],
+      bottomLine: [{ text: proof.paths_to_win.map((path) => path.team + ": " + path.body).join("  ·  ") }],
+    },
     setup: proof.setup,
     keyMatchups: proof.things,
     pathsToWin: [proof.paths_to_win[0]!, proof.paths_to_win[1]!],
@@ -106,6 +118,39 @@ export function publishedFootballMatchupsForEvent(
     if (matched) output.push(publishedFootballMatchup(sport, week));
   }
   return output;
+}
+
+/** Keep the already-approved compact authored breakdown when a weekly
+ * publication covers the exact same matchup. Carry its genuinely verified
+ * weekly SeatGeek art across, rather than dropping either the compact
+ * treatment or the real image. The current published week still controls
+ * whether this match is eligible to be shown. */
+export function mergeFootballWeeklyMatchupBreakdowns(
+  weekly: FootballMatchupBreakdown[],
+  authored: FootballMatchupBreakdown[],
+): FootballMatchupBreakdown[] {
+  function sameContest(a: FootballMatchupBreakdown, b: FootballMatchupBreakdown): boolean {
+    const aKick = Date.parse(a.kickoffAt ?? "");
+    const bKick = Date.parse(b.kickoffAt ?? "");
+    return Number.isFinite(aKick) && Number.isFinite(bKick)
+      && Math.abs(aKick - bKick) < 36 * 60 * 60 * 1000
+      && a.teams.length === b.teams.length
+      && a.teams.every((team) => b.teams.some((other) => normTeam(team.name) === normTeam(other.name)));
+  }
+  const used = new Set<number>();
+  const results = weekly.map((published) => {
+    const approved = authored.findIndex((candidate, index) =>
+      !used.has(index) && Boolean(candidate.compact) && sameContest(published, candidate));
+    if (approved < 0) return published;
+    used.add(approved);
+    return { ...authored[approved]!, headerAssetPath: published.headerAssetPath ?? authored[approved]!.headerAssetPath };
+  });
+  for (const [index, candidate] of authored.entries()) {
+    if (!used.has(index) && !results.some((existing) => sameContest(existing, candidate))) {
+      results.push(candidate);
+    }
+  }
+  return results;
 }
 
 export function parsePublishedFootballWeek(raw: unknown): PublishedFootballWeek {
