@@ -27,11 +27,11 @@ function chicagoParts(now: Date) {
   return { year: Number(get("year")), month: Number(get("month")),
     day: Number(get("day")), weekday: get("weekday"), hour: Number(get("hour")) };
 }
-function nextTuesday(now: Date) {
+function currentEditorialTuesday(now: Date) {
   const p = chicagoParts(now);
   const noon = new Date(Date.UTC(p.year, p.month - 1, p.day, 12));
-  const delta = (2 - noon.getUTCDay() + 7) % 7 || 7;
-  noon.setUTCDate(noon.getUTCDate() + delta);
+  const delta = p.weekday === "Mon" ? 1 : (noon.getUTCDay() - 2 + 7) % 7;
+  noon.setUTCDate(noon.getUTCDate() + (p.weekday === "Mon" ? delta : -delta));
   return noon.toISOString().slice(0, 10);
 }
 const baseUrl = "https://octagon.hq-app.workers.dev";
@@ -88,10 +88,10 @@ Deno.serve(async (request) => {
 
   const now = new Date();
   const local = chicagoParts(now);
-  if (local.weekday !== "Mon" || local.hour < 22) {
-    return response({ status: "noop", reason: "outside Monday preparation window" });
+  if (local.weekday === "Mon" && local.hour < 22) {
+    return response({ status: "noop", reason: "next editorial week is not yet open" });
   }
-  const week = nextTuesday(now);
+  const week = currentEditorialTuesday(now);
   const { data: packageRow, error } = await admin.from("football_weekly_content_packages")
     .select("week_of,status,choices,production,cfb_spotlight,nfl_spotlight,cfb_game_of_week,nfl_game_of_week")
     .eq("week_of", week).maybeSingle();
