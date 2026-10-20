@@ -1,0 +1,13 @@
+{
+  "source_page_url": "https://www.ufc.com.br/athlete/farman-hasanov",
+  "fighter_name": "Farman Hasanov",
+  "destination": "public/assets/fighters/farman-hasanov-thumb.webp",
+  "kind": "thumb",
+  "crop": [
+    0,
+    0,
+    1,
+    0.55
+  ],
+  "force_background_removal": true
+}
