@@ -12,10 +12,11 @@ describe("Fight Spotlight fighter photo assets", () => {
   });
 
   it("prefers the dedicated Spotlight photo while preserving the existing profile and thumbnail chain", () => {
-    const spotlightIndex = spotlight.indexOf("spotlightPhotoBySlug.get(slug)");
-    const profileIndex = spotlight.indexOf("profilePhotoBySlug.get(slug)");
-    const thumbnailIndex = spotlight.indexOf("fighterThumbnailPath(slug)");
+    const spotlightIndex = spotlight.indexOf("spotlightPhotoBySlug.get(canonicalSlug)");
+    const profileIndex = spotlight.indexOf("profilePhotoBySlug.get(canonicalSlug)");
+    const thumbnailIndex = spotlight.indexOf("fighterThumbnailPath(canonicalSlug)");
 
+    expect(spotlight).toContain("canonicalUfcFighterSlug(slug)");
     expect(spotlightIndex).toBeGreaterThan(-1);
     expect(profileIndex).toBeGreaterThan(spotlightIndex);
     expect(thumbnailIndex).toBeGreaterThan(profileIndex);
