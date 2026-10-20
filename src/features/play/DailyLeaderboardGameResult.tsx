@@ -827,6 +827,7 @@ function WhoAmILeaderboardResult({
 }) {
   const rounds = buildWhoAmILeaderboardRounds(projection, resultDetail);
   const score = projection.officialAttempt?.normalizedScore ?? 0;
+  const legacyGuessHistoryUnavailable = resultDetail.guess_history_unavailable === true;
   const naturalSolves = rounds.filter((round) => round.outcome === "natural").length;
   const recoverySolves = rounds.filter((round) => round.outcome === "recovered").length;
   const totalMisses = rounds.reduce(
@@ -849,6 +850,10 @@ function WhoAmILeaderboardResult({
           <div><dt>Total misses</dt><dd>{totalMisses}</dd></div>
         </dl>
       </section>
+
+      {legacyGuessHistoryUnavailable ? (
+        <p className="leaderboard-whoami-empty">Earlier MLB results did not save individual guesses or Recovery Board picks. Scores, identities, and revealed clues are preserved.</p>
+      ) : null}
 
       <div className="leaderboard-whoami-rounds">
         {rounds.map((round) => {
@@ -895,7 +900,7 @@ function WhoAmILeaderboardResult({
                       ))}
                     </div>
                   ) : (
-                    <p className="leaderboard-whoami-empty">No natural guess was recorded.</p>
+                    <p className="leaderboard-whoami-empty">{legacyGuessHistoryUnavailable ? "Individual guesses were not saved for this game." : "No natural guess was recorded."}</p>
                   )}
                 </section>
 
