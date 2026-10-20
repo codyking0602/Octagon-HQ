@@ -85,9 +85,9 @@ describe("public Football/UFC Play 2.0 release", () => {
     });
     preview("football");
     const hub = screen.getByTestId("play-v2-hub");
-    // The featured weekly game rotates on October 13; the archive remains independently accessible.
+    // The featured Weekly GM continues through October 26; the archive remains independently accessible.
     const inGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z")
-      && Date.now() < Date.parse("2026-10-20T05:00:00Z");
+      && Date.now() < Date.parse("2026-10-27T05:00:00Z");
     expect(within(hub).getByRole("region", { name: "Weekly Featured Championship" }))
       .toHaveTextContent(inGmWeek ? "NFL GM Championship" : "Auction Center");
     expect(within(hub).getByRole("link", { name: /open current weekly/i }))
