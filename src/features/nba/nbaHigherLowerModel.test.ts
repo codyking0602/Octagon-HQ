@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   createNbaHigherLowerBoard, createNbaHigherLowerDailyPreview,
-  NBA_HIGHER_LOWER_VERSION, NBA_HIGHER_LOWER_METRIC_KEYS,
+  NBA_HIGHER_LOWER_VERSION, NBA_HIGHER_LOWER_METRIC_KEYS, NBA_HIGHER_LOWER_GAP_BOUNDS,
   nbaHigherLowerAnswerIsCorrect, parseNbaHigherLowerBoard,
 } from "./nbaHigherLowerModel";
 
@@ -52,6 +52,34 @@ describe("NBA Higher or Lower factual boards", () => {
     expect(higherCounts.size).toBeGreaterThan(3);
     expect([...higherCounts].some(count => count !== 5)).toBe(true);
   });
+  it("rejects runaway stat mismatches and meaningless tenths over a broad replay audit", () => {
+    const seen = new Set<string>();
+    const categoryFrequency = new Map<string, number>();
+    for (let i = 0; i < 120; i++) {
+      const board = createNbaHigherLowerBoard("recalibrated-nba-audit-" + i);
+      for (const question of board.questions) {
+        const bounds = NBA_HIGHER_LOWER_GAP_BOUNDS[question.metricKey]!;
+        const difference = Math.abs(question.known.value - question.hidden.value);
+        expect(difference, question.id).toBeGreaterThanOrEqual(bounds.min - 1e-8);
+        expect(difference, question.id).toBeLessThanOrEqual(bounds.max + 1e-8);
+        if (question.category === "season") {
+          expect(Math.abs(question.known.season! - question.hidden.season!)).toBeLessThanOrEqual(12);
+        }
+        if (question.category === "awards" || question.category === "draft") {
+          expect(question.difficulty).not.toBe("approachable");
+        }
+        categoryFrequency.set(question.metricKey, (categoryFrequency.get(question.metricKey) ?? 0) + 1);
+        seen.add(question.id);
+        expect(question.known.name === "Mike Conley" && question.hidden.name === "Russell Westbrook"
+          && question.metricKey === "season-assists" && difference > 3).toBe(false);
+        expect(question.known.name === "Steve Francis" && question.hidden.name === "Kobe Bryant"
+          && question.metricKey === "season-points" && difference > 10).toBe(false);
+      }
+    }
+    expect(seen.size).toBeGreaterThan(500);
+    expect(categoryFrequency.size).toBeGreaterThanOrEqual(9);
+  });
+
   it("includes three pointers, honors, and NBA draft choices as curated metrics", () => {
     expect(NBA_HIGHER_LOWER_METRIC_KEYS).toEqual(expect.arrayContaining([
       "season-threes", "all-star", "all-nba", "draft",
