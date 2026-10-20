@@ -26,6 +26,7 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
 import { mlbSportsFeudProductionConfig } from "./mlbSportsFeudProduction";
 import { mlbBarTriviaResultProjection } from "./mlbBarTriviaResult";
+import { mlbWhoAmIResultProjection } from "./mlbWhoAmILeaderboardResult";
 import "../../styles/play-landing-shared.css";
 import "../../styles/today-challenge-hub.css";
 import "../../styles/daily-leaderboard-result-page.css";
@@ -650,6 +651,9 @@ function MlbPlayResultDetail({
     : 0;
   const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
+  const sharedWhoAmI = isWhoAmI
+    ? mlbWhoAmIResultProjection(entry, challengeKey, challengeDate)
+    : null;
   const sharedSportsFeud = isSportsFeud
     ? sharedSportsFeudResult(entry, challengeKey, challengeDate)
     : null;
@@ -688,6 +692,10 @@ function MlbPlayResultDetail({
       </div>
 
   );
+
+  if (sharedWhoAmI) {
+    return renderSharedResult(sharedWhoAmI);
+  }
 
   if (isSportsFeud && sharedSportsFeud) {
     return renderSharedResult(sharedSportsFeud);
