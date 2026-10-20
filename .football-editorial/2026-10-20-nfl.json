@@ -1,0 +1,80 @@
+{
+  "week_of": "2026-10-20",
+  "sport": "nfl",
+  "candidates": {
+    "players": [
+      {
+        "id": "jalen-ramsey",
+        "name": "Jalen Ramsey",
+        "team": "Pittsburgh Steelers",
+        "position": "DB",
+        "summary": "Delivered 10 tackles, four tackles for loss and two sacks in Pittsburgh's 26–19 overtime comeback against Tampa Bay."
+      },
+      {
+        "id": "caleb-williams",
+        "name": "Caleb Williams",
+        "team": "Chicago Bears",
+        "position": "QB",
+        "summary": "Completed 30 of 36 passes for 305 yards and a touchdown as Chicago beat Atlanta 31–23."
+      },
+      {
+        "id": "cj-stroud",
+        "name": "C.J. Stroud",
+        "team": "Houston Texans",
+        "position": "QB",
+        "summary": "Passed for 312 yards and three touchdowns in Houston's 34–31 last-second win over Jacksonville in London."
+      },
+      {
+        "id": "jordan-love",
+        "name": "Jordan Love",
+        "team": "Green Bay Packers",
+        "position": "QB",
+        "summary": "Threw for 276 yards and added passing and rushing touchdowns in Green Bay's 23–13 win over Dallas."
+      },
+      {
+        "id": "travis-hunter-jr",
+        "name": "Travis Hunter Jr.",
+        "team": "Jacksonville Jaguars",
+        "position": "WR/CB",
+        "summary": "Recorded an interception and a receiving touchdown in Jacksonville's 34–31 loss to Houston, a rare two-way feat."
+      }
+    ],
+    "games": [
+      {
+        "id": "chiefs-at-seahawks",
+        "home_team": "Seattle Seahawks",
+        "away_team": "Kansas City Chiefs",
+        "kickoff_at": "2026-10-25T19:20:00-05:00",
+        "summary": "Sunday-night matchup featuring unbeaten Kansas City visiting Seattle after the Seahawks' narrow loss in Denver."
+      },
+      {
+        "id": "packers-at-lions",
+        "home_team": "Detroit Lions",
+        "away_team": "Green Bay Packers",
+        "kickoff_at": "2026-10-25T15:25:00-05:00",
+        "summary": "NFC North showdown with Green Bay coming off its 23–13 victory over Dallas."
+      },
+      {
+        "id": "patriots-at-bears",
+        "home_team": "Chicago Bears",
+        "away_team": "New England Patriots",
+        "kickoff_at": "2026-10-22T19:15:00-05:00",
+        "summary": "Thursday-night meeting of 4–2 teams after Chicago beat Atlanta and New England defeated the Jets."
+      },
+      {
+        "id": "bengals-at-ravens",
+        "home_team": "Baltimore Ravens",
+        "away_team": "Cincinnati Bengals",
+        "kickoff_at": "2026-10-25T12:00:00-05:00",
+        "summary": "AFC North rivalry as Baltimore looks to rebound from its 13–10 defeat at Cleveland."
+      },
+      {
+        "id": "cowboys-at-eagles",
+        "home_team": "Philadelphia Eagles",
+        "away_team": "Dallas Cowboys",
+        "kickoff_at": "2026-10-26T19:15:00-05:00",
+        "summary": "Monday-night NFC East rivalry between teams seeking to recover from Week 6 losses."
+      }
+    ]
+  }
+}
