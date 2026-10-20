@@ -40,6 +40,12 @@ export function footballGmDevelopmentResult(delta: number): FootballGmDevelopmen
   return "HELD STEADY";
 }
 
+/** Curated Weekly GM Dak scenario is explicitly a regular regression, not a major collapse. */
+export function footballGmDevelopmentResultForPlayer(player: FootballGmPlayer, delta: number, seed?: string): FootballGmDevelopmentResult {
+  if (seed?.startsWith("weekly-gm:2026-10-20:elite:") && player.id === "DAL|QB|dakprescott") return "REGRESSED";
+  return footballGmDevelopmentResult(delta);
+}
+
 export function footballGmScoutingSnapshot(player: FootballGmPlayer, year: 1 | 2 | 3, seed?: string) {
   const grade = footballGmProjectedGradeForPlayer(player, year, seed);
   const odds = year === 3 ? null : footballGmDevelopmentOdds({
@@ -54,7 +60,7 @@ export function footballGmScoutingSnapshot(player: FootballGmPlayer, year: 1 | 2
   // players all have a profile; fallback retains a neutral, honest scout read.
   const outlook = odds ? footballGmOutlookFromOdds(odds) : year === 3 ? null : "STEADY";
   const development = year === 2
-    ? footballGmDevelopmentResult(grade - player.currentGrade) : null;
+    ? footballGmDevelopmentResultForPlayer(player, grade - player.currentGrade, seed) : null;
   return { tier: footballGmTalentTier(grade), outlook, development };
 }
 
