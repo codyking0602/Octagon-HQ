@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { footballGmPlayerById, footballGmProjectedGradeForPlayer } from "./footballGmEngine";
+import { footballGmDevelopmentResultForPlayer } from "./footballGmScouting";
 import { footballWeeklyGmScenarioForWeek, footballWeeklyGmWeekLabel } from "./footballWeeklyGmScenarios";
 
 describe("Oct 20 NFL Weekly GM: date-scoped Dak vs Penix", () => {
@@ -24,6 +25,8 @@ describe("Oct 20 NFL Weekly GM: date-scoped Dak vs Penix", () => {
     const youngSeed = "weekly-gm:2026-10-20:young:player-b:gmdev1";
     expect(footballGmProjectedGradeForPlayer(dak,1,eliteSeed)).toBe(92);
     expect(footballGmProjectedGradeForPlayer(penix,1,youngSeed)).toBe(78);
+    expect(footballGmDevelopmentResultForPlayer(dak,-3,eliteSeed)).toBe("REGRESSED");
+    expect(footballGmDevelopmentResultForPlayer(penix,5,youngSeed)).toBe("BREAKOUT");
     for (const year of [2,3] as const) {
       expect(footballGmProjectedGradeForPlayer(dak,year,eliteSeed)).toBe(89);
       expect(footballGmProjectedGradeForPlayer(penix,year,youngSeed)).toBe(83);
