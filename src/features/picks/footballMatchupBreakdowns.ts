@@ -703,6 +703,123 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
     },
   },
   {
+    id: "2026-patriots-bears-week7",
+    title: "Patriots at Bears",
+    venue: "Soldier Field · Chicago",
+    kickoffAt: "2026-10-23T00:15:00Z",
+    teams: [
+      {
+        name: "New England Patriots",
+        aliases: ["new-england-patriots", "new-england", "patriots", "ne-patriots", "ne"],
+        record: "4–2",
+        sportsReferenceUrl: "https://www.pro-football-reference.com/teams/nwe/2026.htm",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/nfl/500/ne.png",
+        themeColor: "#002244",
+      },
+      {
+        name: "Chicago Bears",
+        aliases: ["chicago-bears", "chicago", "bears", "chi"],
+        record: "4–2",
+        sportsReferenceUrl: "https://www.pro-football-reference.com/teams/chi/2026.htm",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png",
+        themeColor: "#0B162A",
+      },
+    ],
+    compact: {
+      leagueLabel: "NFL",
+      setup: [
+        { text: "Both teams enter Thursday night at 4–2, but their paths here look different: New England brings a three-game winning streak under Drake Maye, while Caleb Williams just returned from a three-game injury absence to lead Chicago past Atlanta 31–23. Chicago leads the league at 160.7 rushing yards per game; the Patriots bring a top-ten total defense and a serious challenge to that rhythm." },
+      ],
+      things: [
+        {
+          title: "Chicago's rushing attack vs. New England's front",
+          body: [
+            { text: "The Bears average 160.7 rushing yards per game", emphasis: true },
+            { text: ", best in the NFL entering Week 7, while the Patriots allow 91.8. D'Andre Swift and the offensive line need to create manageable second downs; if New England forces longer passing situations, its coverage can challenge Williams without constantly loading the box." },
+          ],
+        },
+        {
+          title: "Maye vs. the Bears' coverage structure",
+          body: [
+            { text: "Drake Maye", href: "https://www.patriots.com/team/players-roster/drake-maye/", emphasis: true },
+            { text: " has helped steady a Patriots offense averaging 243.5 passing yards per game. Chicago allows 211.8 through the air and just 90.5 on the ground. The key is whether Maye can win from the pocket when Chicago limits easy run looks and keeps him from extending plays." },
+          ],
+        },
+        {
+          title: "Williams after the comeback",
+          body: [
+            { text: "Caleb Williams", href: "https://www.espn.com/nfl/player/_/id/4431611/caleb-williams", emphasis: true },
+            { text: " completed 30 of 36 passes for 305 yards and a touchdown in his return against Atlanta. New England will offer more resistance than the Falcons did: Chicago must protect his rhythm, use motion and quick outlets, and resist turning a short-week matchup into a succession of difficult third downs." },
+          ],
+        },
+      ],
+      bottomLine: [
+        { text: "Chicago's best route is to own early downs with Swift and let Williams operate on schedule. New England's is to contain that ground game, force passing situations and trust Maye to finish drives against a Bears defense that has been difficult to run on. Both teams have legitimate paths, but controlling the line of scrimmage should dictate which quarterback gets the easier night." },
+      ],
+    },
+    setup: [
+      "Two 4–2 teams meet under the Thursday-night lights at Soldier Field. Chicago comes off Caleb Williams' return against Atlanta, a 31–23 win in which he completed 30 of 36 passes for 305 yards and a touchdown. New England has won three straight with Drake Maye leading a balanced offense.",
+      "This is a physical clash of strengths rather than a pure quarterback shootout. Chicago's 160.7 rushing yards per game lead the league, but New England gives up only 91.8 on the ground; the Bears defense allows just 90.5 rushing yards itself. Whichever offense keeps second down manageable should have the clearer route to sustained drives.",
+    ],
+    keyMatchups: [
+      {
+        title: "Chicago's backs and offensive line vs. New England's run defense",
+        body: "Chicago has made the ground game an organizing principle of its offense. Swift's ability to create positive first downs matters against a New England unit allowing just 91.8 rushing yards per game. If the Patriots win early downs without heavy safety help, they can dedicate more coverage resources to Williams.",
+        edge: "Even",
+      },
+      {
+        title: "Caleb Williams vs. the Patriots' coverage and pressure",
+        body: "Williams was decisive in his return, completing 83.3 percent of his attempts at Atlanta with a 111.2 passer rating. The short turnaround tests his ability to stay in structure against a top-ten total defense rather than relying on extended plays. Chicago needs clean protection calls and quick answers to pressure.",
+        edge: "Even",
+      },
+      {
+        title: "Drake Maye vs. Chicago's disciplined front",
+        body: "New England averages 243.5 passing yards per game, but Chicago pairs strong coverage production with a run defense yielding just 90.5 yards per game. Maye's movement can create openings; the Bears' challenge is to pressure without opening escape routes or leaving receivers uncovered on second-reaction plays.",
+        edge: "Even",
+      },
+    ],
+    pathsToWin: [
+      {
+        team: "New England Patriots",
+        body: "Hold Swift and the Bears' ground game below its usual production, use four-man pressure to keep Williams behind the chains, and make Maye comfortable in the quick game. New England does not need a barrage of big plays if it wins possession quality and red-zone execution.",
+      },
+      {
+        team: "Chicago Bears",
+        body: "Keep the rushing attack credible, let Williams distribute on schedule, and finish drives instead of settling for field goals. Defensively, Chicago must contain Maye's movement and force New England to sustain long drives against a unit that has been hard to run on.",
+      },
+    ],
+    playersToWatch: [
+      {
+        team: "New England Patriots",
+        players: [
+          { name: "Drake Maye", position: "QB", body: "His decision-making and ability to extend plays drive the Patriots' offense. Chicago will try to keep him in the pocket and force patient progressions." },
+          { name: "Rhamondre Stevenson", position: "RB", body: "New England needs efficient early-down carries to avoid asking Maye to throw into predictable passing looks all night." },
+          { name: "Hunter Henry", position: "TE", body: "A valuable underneath and middle-of-field target when Chicago's coverage takes away longer-developing routes." },
+        ],
+      },
+      {
+        team: "Chicago Bears",
+        players: [
+          { name: "Caleb Williams", position: "QB", body: "Fresh off an 83.3-percent completion game at Atlanta, he now faces a tougher defense on a short week." },
+          { name: "D'Andre Swift", position: "RB", body: "Chicago's rushing identity runs through him. Strong early-down gains can open the full passing menu." },
+          { name: "Colston Loveland", position: "TE", body: "His ability to settle into intermediate windows gives Williams an option when New England crowds the line or takes away quick throws outside." },
+        ],
+      },
+    ],
+    unitEdges: [
+      {
+        title: "PATRIOTS OFFENSE vs. BEARS DEFENSE",
+        edge: "EVEN",
+        body: "Maye's passing efficiency and movement give New England solutions, but Chicago has the defensive balance to make the Patriots earn yards on the ground and through the air.",
+      },
+      {
+        title: "BEARS OFFENSE vs. PATRIOTS DEFENSE",
+        edge: "EVEN",
+        body: "Chicago's top-ranked rushing attack is a real advantage in many matchups. New England's strong run defense reduces it, leaving Williams' protection and short-week decision-making as the swing factors.",
+      },
+    ],
+  },
+  {
     id: "2026-georgia-alabama",
     title: "Georgia at Alabama",
     venue: "Bryant-Denny Stadium · Tuscaloosa",
