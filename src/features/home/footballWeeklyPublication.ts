@@ -108,6 +108,39 @@ export function publishedFootballMatchupsForEvent(
   return output;
 }
 
+/** Keep the already-approved compact authored breakdown when a weekly
+ * publication covers the exact same matchup. Carry its genuinely verified
+ * weekly SeatGeek art across, rather than dropping either the compact
+ * treatment or the real image. The current published week still controls
+ * whether this match is eligible to be shown. */
+export function mergeFootballWeeklyMatchupBreakdowns(
+  weekly: FootballMatchupBreakdown[],
+  authored: FootballMatchupBreakdown[],
+): FootballMatchupBreakdown[] {
+  function sameContest(a: FootballMatchupBreakdown, b: FootballMatchupBreakdown): boolean {
+    const aKick = Date.parse(a.kickoffAt ?? "");
+    const bKick = Date.parse(b.kickoffAt ?? "");
+    return Number.isFinite(aKick) && Number.isFinite(bKick)
+      && Math.abs(aKick - bKick) < 36 * 60 * 60 * 1000
+      && a.teams.length === b.teams.length
+      && a.teams.every((team) => b.teams.some((other) => normTeam(team.name) === normTeam(other.name)));
+  }
+  const used = new Set<number>();
+  const results = weekly.map((published) => {
+    const approved = authored.findIndex((candidate, index) =>
+      !used.has(index) && Boolean(candidate.compact) && sameContest(published, candidate));
+    if (approved < 0) return published;
+    used.add(approved);
+    return { ...authored[approved]!, headerAssetPath: published.headerAssetPath ?? authored[approved]!.headerAssetPath };
+  });
+  for (const [index, candidate] of authored.entries()) {
+    if (!used.has(index) && !results.some((existing) => sameContest(existing, candidate))) {
+      results.push(candidate);
+    }
+  }
+  return results;
+}
+
 export function parsePublishedFootballWeek(raw: unknown): PublishedFootballWeek {
   return publishedSchema.parse(raw);
 }
