@@ -343,6 +343,33 @@ const fighters: Record<string, UfcStatsSnapshotFighter> = {
     slpm: 6.36, strikingAccuracy: 58, sapm: 4.99, strikingDefense: 56,
     takedownAverage: 0, takedownAccuracy: 0, takedownDefense: 50, submissionAverage: 0,
   },
+  // UFC 333 (24 Oct 2026): official UFC athlete records, plus published
+  // UFCStats profile vitals. Do not synthesize unverified rate statistics.
+  "petr yan": {
+    name: "Petr Yan", record: "20-5-0", dob: "1993-02-11",
+    height: "5' 7\"", reach: "67\"", stance: "Switch",
+    slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+    takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+  },
+  "merab dvalishvili": {
+    name: "Merab Dvalishvili", record: "21-5-0", dob: "1991-01-10",
+    height: "5' 6\"", reach: "68\"", stance: "Orthodox",
+    slpm: 4.42, strikingAccuracy: null, sapm: 2.8, strikingDefense: 54,
+    takedownAverage: 5.97, takedownAccuracy: null, takedownDefense: 76, submissionAverage: 0.35,
+  },
+  "nikita krylov": {
+    name: "Nikita Krylov", record: "31-12-0", dob: null,
+    height: "6' 3\"", reach: "77.5\"", stance: "Orthodox",
+    slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+    takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+  },
+  "abdul rakhman yakhyaev": {
+    name: "Abdul Rakhman Yakhyaev", record: "10-0-0", dob: "2001-01-03",
+    height: "6' 2\"", reach: "78\"", stance: "Orthodox",
+    slpm: null, strikingAccuracy: null, sapm: null, strikingDefense: null,
+    takedownAverage: null, takedownAccuracy: null, takedownDefense: null, submissionAverage: null,
+  },
+
 };
 
 function normalizeName(value: string) {

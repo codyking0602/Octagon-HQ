@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSupabaseClient } from "../../lib/supabase";
-import { shanesWatchlist } from "../home/shanesWatchlist";
-import { ShaneContenderBadge } from "./ShaneContenderSpotlight";
+import { ShaneContenderBadge, shaneContenderForSlug } from "./ShaneContenderSpotlight";
 
 const thumbnailModules = import.meta.glob<{ default: string }>(
   "/public/assets/fighters/*-thumb.{webp,png,jpg,jpeg}",
@@ -20,6 +19,7 @@ const thumbnailSlugAliases = new Map([
   ["jan-błachowicz", "jan-blachowicz"],
   ["alexandre-pantoja", "alex-pantoja"],
   ["bobby-green", "king-green"],
+  ["abdulrakhman-yakhyaev", "abdul-rakhman-yakhyaev"],
 ]);
 
 const remotePhotoBySlug = new Map([
@@ -103,7 +103,7 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
   const staticSource = fighterThumbnailPath(canonicalSlug);
   const [runtimeSource, setRuntimeSource] = useState(() => runtimePhotoBySlug.get(canonicalSlug) ?? null);
   const [failedSources, setFailedSources] = useState<Set<string>>(() => new Set());
-  const shaneContender = shanesWatchlist.fighters.find((fighter) => fighter.id === slug) ?? null;
+  const shaneContender = shaneContenderForSlug(slug);
   const source = staticSource && !failedSources.has(staticSource)
     ? staticSource
     : runtimeSource && !failedSources.has(runtimeSource)

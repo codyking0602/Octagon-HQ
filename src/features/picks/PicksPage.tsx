@@ -19,7 +19,8 @@ import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { pickEventPoster } from "./picksEventAssets";
-import { reviewedMmaManiaPoster } from "./ufcMmaManiaPoster";
+import { reviewedMmaManiaPoster, reviewedOfficialUfcEventBanner } from "./ufcMmaManiaPoster";
+import { shaneContenderForSlug } from "./ShaneContenderSpotlight";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
@@ -138,7 +139,9 @@ export default function PicksPage() {
   const cardOddsMeta = orderedBouts
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
-  const eventPoster = reviewedMmaManiaPoster(activeEvent) ?? pickEventPoster(activeEvent);
+  const officialUfcBanner = reviewedOfficialUfcEventBanner(activeEvent);
+  const eventPoster = reviewedMmaManiaPoster(activeEvent) ?? officialUfcBanner ?? pickEventPoster(activeEvent);
+  const artOnlyPoster = Boolean(officialUfcBanner && eventPoster === officialUfcBanner);
   const numberedUfcEvent = Boolean(
     activeEvent?.sport !== "football" && activeEvent?.name.match(/^UFC\s+\d+\b/i),
   );
@@ -187,7 +190,7 @@ export default function PicksPage() {
       {activeEvent && activeLifecycle ? (
         <>
           <section
-            className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}${numberedUfcEvent ? " is-numbered-event" : ""}`}
+            className={`surface-card picks-event-hero${eventPoster ? " has-poster" : ""}${artOnlyPoster ? " is-art-only" : ""}${numberedUfcEvent ? " is-numbered-event" : ""}`}
             aria-labelledby="picks-event-title"
           >
             <div className="picks-event-hero__poster" aria-hidden="true">
@@ -338,6 +341,7 @@ export default function PicksPage() {
                         >
                           <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
                           <span style={fighterNameStyle(bout.redFighterName, isMainEvent)}>{bout.redFighterName}</span>
+                          {shaneContenderForSlug(bout.redFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
                           <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
                           {redChoiceLabel ? <em>{redChoiceLabel}</em> : null}
                         </button>
@@ -351,6 +355,7 @@ export default function PicksPage() {
                         >
                           <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
                           <span style={fighterNameStyle(bout.blueFighterName, isMainEvent)}>{bout.blueFighterName}</span>
+                          {shaneContenderForSlug(bout.blueFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
                           <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
                           {blueChoiceLabel ? <em>{blueChoiceLabel}</em> : null}
                         </button>

@@ -140,6 +140,7 @@ body.main-event-spotlight-open {
   grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr);
   align-items: end;
   min-height: 270px;
+  overflow: hidden;
 }
 
 .main-event-spotlight__fighter {
@@ -160,6 +161,7 @@ body.main-event-spotlight-open {
 
 .main-event-spotlight__photo img {
   display: block;
+  width: 100%;
   max-width: 100%;
   height: 100%;
   object-fit: contain;

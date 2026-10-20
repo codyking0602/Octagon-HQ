@@ -349,6 +349,32 @@ function matchupEditorial(red: SpotlightStatsFighter, blue: SpotlightStatsFighte
     };
   }
 
+  // UFC 333 has two title fights, not just a main event, and a featured
+  // Shane's Contender Series prospect on the prelims. Editorial researched
+  // against UFC athlete profiles and the actual Yan-Dvalishvili trilogy.
+  if (slugs.has("petr-yan") && slugs.has("merab-dvalishvili")) {
+    return {
+      preview: "Yan and Dvalishvili are tied 1-1 after Merab's pressure-wrestling win in 2023 and Yan's five-round title-winning response at UFC 323. Yan needs to keep his boxing combinations flowing while defending the fence; Merab must revive his relentless takedown pace and turn long exchanges into control.",
+      edgesBySlug: new Map([
+        ["petr-yan", ["Sharp combination boxing and body attacks", "Proven five-round title-fight adjustments", "Improved defensive wrestling in the rematch"]],
+        ["merab-dvalishvili", ["Elite takedown volume and chain wrestling", "Relentless conditioning and pace", "Cage pressure and positional control"]],
+      ]),
+    };
+  }
+  if (slugs.has("nikita-krylov") && slugs.has("abdulrakhman-yakhyaev")) {
+    return {
+      preview: "Krylov is the far more experienced UFC light heavyweight, with dangerous finishing skills standing and on the mat. Undefeated Yakhyaev has finished his first three UFC opponents in round one, including an eight-second knockout; Krylov needs to survive the early blitz and make the prospect navigate a longer, more complicated fight.",
+      edgesBySlug: new Map([
+        ["nikita-krylov", ["Veteran UFC experience against elite opponents", "Versatile striking and submission arsenal", "Experience in extended and difficult fights"]],
+        ["abdulrakhman-yakhyaev", ["Explosive first-round finishing pace", "Powerful takedowns and top-game submissions", "Unbeaten professional record"]],
+      ]),
+      watchSpotlights: [{
+        fighterSlug: "abdulrakhman-yakhyaev",
+        url: "https://youtube.com/shorts/k5En_QDBACA?is=KeKmxuwmh7N1yb1N",
+      }],
+    };
+  }
+
   return null;
 }
 

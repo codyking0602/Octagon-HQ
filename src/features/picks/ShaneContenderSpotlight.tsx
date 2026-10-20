@@ -2,9 +2,17 @@ import { shanesWatchlist, type ShaneWatchFighter } from "../home/shanesWatchlist
 import type { PickBout } from "./picksModel";
 import "../../styles/picks-shane-contender.css";
 
+// The UFC importer uses "abdulrakhman"; Shane's existing prospect and
+// canonical fighter assets use "abdul-rakhman". Preserve that identity.
+export function shaneContenderForSlug(slug: string): ShaneWatchFighter | null {
+  const canonical = slug === "abdulrakhman-yakhyaev" ? "abdul-rakhman-yakhyaev" : slug;
+  return shanesWatchlist.fighters.find((fighter) => fighter.id === canonical) ?? null;
+}
+
 export function shaneContendersForBout(bout: PickBout): ShaneWatchFighter[] {
   const fighterSlugs = new Set([bout.redFighterSlug, bout.blueFighterSlug]);
-  return shanesWatchlist.fighters.filter((fighter) => fighterSlugs.has(fighter.id));
+  return shanesWatchlist.fighters.filter((fighter) => fighterSlugs.has(fighter.id)
+    || (fighter.id === "abdul-rakhman-yakhyaev" && fighterSlugs.has("abdulrakhman-yakhyaev")));
 }
 
 export function ShaneContenderBadge({ fighters }: { fighters: ShaneWatchFighter[] }) {
