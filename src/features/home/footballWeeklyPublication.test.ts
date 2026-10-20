@@ -109,7 +109,7 @@ describe("public Football weekly release projection", () => {
     const compact = {
       ...weekly[0]!,
       id: "2026-patriots-bears-week7",
-      compact: { leagueLabel: "NFL", things: [
+      compact: { leagueLabel: "NFL" as const, things: [
         { title: "Ground game", body: [{ text: paragraph }] },
         { title: "Pressure", body: [{ text: paragraph }] },
         { title: "Play action", body: [{ text: paragraph }] },
