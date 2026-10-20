@@ -102,7 +102,7 @@ export default function FootballPicksPage() {
     return { outcomes, wins, losses, pushes, settled: wins + losses + pushes };
   }, [games, picks.selections, picks.footballLocks]);
   const matchupBreakdowns = useMemo(() => {
-    const current = publishedFootballMatchupsForEvent(event, published);
+    const current = publishedFootballMatchupsForEvent(event, published ?? null);
     const legacy = footballMatchupBreakdownsForEvent(event).filter((old) => !current.some((recent) =>
       recent.teams.every((team) => old.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase()))));
     return [...current, ...legacy];
