@@ -21,6 +21,12 @@ describe("NBA Higher or Lower owner-preview integration", () => {
     expect(pageSource).toContain("question.hidden.context");
     expect(pageSource).toContain('document.addEventListener("visibilitychange"');
     expect(styles).toContain("object-fit: contain");
+    expect(styles).toContain("transform: scale(1.28)");
+    expect(styles).toContain("mask-image: linear-gradient");
+    expect(pageSource).toContain("reviewContext(question)");
+    expect(pageSource).toContain("nba-higher-lower-intro__highlights");
+    expect(pageSource).not.toContain("3/5/2");
+    expect(pageSource).not.toContain('className="higher-lower-rules"');
     expect(styles).toContain("overflow-wrap: anywhere");
   });
   it("keeps frozen challenge snapshots and NBA-specific result navigation", () => {

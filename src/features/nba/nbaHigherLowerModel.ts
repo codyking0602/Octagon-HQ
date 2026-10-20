@@ -60,6 +60,7 @@ interface Spec {
   label: string;
   category: NbaHigherLowerCategory;
   minGap: number;
+  maxGap: number;
   rows: readonly Row[];
   note?: string;
 }
@@ -156,22 +157,31 @@ const threeRows: Row[] = NBA_HIGHER_LOWER_2025_THREES.flatMap(([name, value]) =>
   }];
 });
 const specs: readonly Spec[] = [
-  { key: "career-points", category: "career", label: "Career Points Per Game", rows: careerRows("points", 14), minGap: 1.0 },
-  { key: "career-assists", category: "career", label: "Career Assists Per Game", rows: careerRows("assists", 3.0), minGap: 0.5 },
-  { key: "career-rebounds", category: "career", label: "Career Rebounds Per Game", rows: careerRows("rebounds", 4.5), minGap: 0.6 },
-  { key: "season-points", category: "season", label: "Season Points Per Game", rows: seasonRows("points", 17), minGap: 1.0 },
-  { key: "season-assists", category: "season", label: "Season Assists Per Game", rows: seasonRows("assists", 4.3), minGap: 0.5 },
-  { key: "season-rebounds", category: "season", label: "Season Rebounds Per Game", rows: seasonRows("rebounds", 6.0), minGap: 0.6 },
-  { key: "season-threes", category: "season", label: "Season 3-Pointers Made Per Game", rows: threeRows, minGap: 0.3 },
-  { key: "all-star", category: "awards", label: "NBA All-Star Selections", rows: supplementRows("all-star", NBA_HIGHER_LOWER_ALL_STAR_SELECTIONS, "THROUGH 2025–26"), minGap: 2 },
-  { key: "all-nba", category: "awards", label: "All-NBA Team Selections", rows: supplementRows("all-nba", NBA_HIGHER_LOWER_ALL_NBA, "THROUGH 2025–26"), minGap: 2 },
-  { key: "draft", category: "draft", label: "NBA Draft Overall Pick Number", rows: draftRows, minGap: 3, note: "Higher number means a later draft selection." },
+  // A fan should have a meaningful basketball comparison, not a trivial statistical gulf
+  // or an unresolvable tenth-of-a-point coin flip. Bounds are metric-specific.
+  { key: "career-points", category: "career", label: "Career Points Per Game", rows: careerRows("points", 14), minGap: 1.7, maxGap: 5.0 },
+  { key: "career-assists", category: "career", label: "Career Assists Per Game", rows: careerRows("assists", 3.0), minGap: 0.7, maxGap: 2.4 },
+  { key: "career-rebounds", category: "career", label: "Career Rebounds Per Game", rows: careerRows("rebounds", 4.5), minGap: 0.8, maxGap: 3.3 },
+  { key: "season-points", category: "season", label: "Season Points Per Game", rows: seasonRows("points", 17), minGap: 1.8, maxGap: 6.0 },
+  { key: "season-assists", category: "season", label: "Season Assists Per Game", rows: seasonRows("assists", 4.3), minGap: 0.7, maxGap: 2.7 },
+  { key: "season-rebounds", category: "season", label: "Season Rebounds Per Game", rows: seasonRows("rebounds", 6.0), minGap: 0.8, maxGap: 3.5 },
+  { key: "season-threes", category: "season", label: "Season 3-Pointers Made Per Game", rows: threeRows, minGap: 0.4, maxGap: 1.3 },
+  { key: "all-star", category: "awards", label: "NBA All-Star Selections", rows: supplementRows("all-star", NBA_HIGHER_LOWER_ALL_STAR_SELECTIONS, "THROUGH 2025–26"), minGap: 2, maxGap: 5 },
+  { key: "all-nba", category: "awards", label: "All-NBA Team Selections", rows: supplementRows("all-nba", NBA_HIGHER_LOWER_ALL_NBA, "THROUGH 2025–26"), minGap: 2, maxGap: 5 },
+  { key: "draft", category: "draft", label: "NBA Draft Overall Pick Number", rows: draftRows, minGap: 3, maxGap: 13, note: "Higher number means a later draft selection." },
 ];
 export const NBA_HIGHER_LOWER_METRIC_KEYS = specs.map(spec => spec.key);
+export const NBA_HIGHER_LOWER_GAP_BOUNDS: Readonly<Record<string, Readonly<{ min: number; max: number }>>> =
+  Object.fromEntries(specs.map(({ key, minGap, maxGap }) => [key, { min: minGap, max: maxGap }]));
 
-function pairDifficulty(left: number, right: number): NbaHigherLowerDifficulty {
-  const relativeGap = Math.abs(left - right) / Math.max(Math.abs(left), Math.abs(right), 1);
-  return relativeGap <= 0.16 ? "tough" : relativeGap <= 0.34 ? "competitive" : "approachable";
+function pairDifficulty(spec: Spec, left: number, right: number): NbaHigherLowerDifficulty {
+  const difference = Math.abs(left - right);
+  // Draft position and honors are knowledge questions, not naturally easy just
+  // because their counts or pick numbers differ by a few units.
+  if (spec.category === "draft") return difference <= 6 ? "tough" : "competitive";
+  if (spec.category === "awards") return difference <= 2 ? "tough" : "competitive";
+  const relativeGap = difference / Math.max(Math.abs(left), Math.abs(right), 1);
+  return relativeGap <= 0.14 ? "tough" : relativeGap <= 0.25 ? "competitive" : "approachable";
 }
 function candidatePairs(spec: Spec): Pair[] {
   const sorted = [...spec.rows].sort((a, b) => a.value - b.value);
@@ -179,12 +189,15 @@ function candidatePairs(spec: Spec): Pair[] {
   for (let i = 0; i < sorted.length; i++) {
     for (let j = i + 1; j < sorted.length; j++) {
       const left = sorted[i]!, right = sorted[j]!;
-      if (left.key === right.key || right.value - left.value < spec.minGap - 1e-8) continue;
-      const gap = (right.value - left.value) / Math.max(right.value, 1);
-      if (gap > 0.72) continue;
+      const gap = right.value - left.value;
+      if (left.key === right.key || gap < spec.minGap - 1e-8 || gap > spec.maxGap + 1e-8) continue;
+      // Comparing a player's career peak to someone else's decline is rarely
+      // a useful basketball question. Within-season eras stay reasonably near.
+      if (spec.category === "season" && left.season != null && right.season != null
+        && Math.abs(left.season - right.season) > 12) continue;
       result.push({
         key: spec.key, category: spec.category, label: spec.label,
-        difficulty: pairDifficulty(left.value, right.value), modern: left.modern && right.modern,
+        difficulty: pairDifficulty(spec, left.value, right.value), modern: left.modern && right.modern,
         ...(spec.note ? { note: spec.note } : {}),
         left, right,
       });
@@ -254,8 +267,15 @@ function buildAttempt(seed: string, attempt: number) {
       && (counts.get(pair.key) ?? 0) < 2
     );
     if (!eligible.length) return null;
-    // Sample from every valid matchup, rather than taking fixed offsets from sorted stats.
-    const pair = eligible[Math.floor(random() * eligible.length)]!;
+    // Draw a metric before a matchup. Points/assists/rebounds have hundreds of
+    // historical combinations; sampling all pairs together would almost never
+    // surface threes, All-NBA, or the draft. Favor metrics not used on this board.
+    const keys = [...new Set(eligible.map(pair => pair.key))];
+    const fewest = Math.min(...keys.map(key => counts.get(key) ?? 0));
+    const rotated = keys.filter(key => (counts.get(key) ?? 0) === fewest);
+    const metricKey = rotated[Math.floor(random() * rotated.length)]!;
+    const metricPairs = eligible.filter(pair => pair.key === metricKey);
+    const pair = metricPairs[Math.floor(random() * metricPairs.length)]!;
     const direction: NbaHigherLowerChoice = random() < 0.5 ? "higher" : "lower";
     questions.push(toQuestion(pair, direction));
     usedPeople.add(pair.left.key);

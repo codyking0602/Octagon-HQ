@@ -10,7 +10,7 @@ import {
   NBA_HIGHER_LOWER_VERSION, createNbaHigherLowerBoard, createNbaHigherLowerRun,
   createNbaHigherLowerDailyPreview, nbaHigherLowerAnswerIsCorrect,
   parseNbaHigherLowerBoard, recordLineupCompletion,
-  type NbaHigherLowerBoard, type NbaHigherLowerChoice, type NbaHigherLowerSubject,
+  type NbaHigherLowerBoard, type NbaHigherLowerQuestion, type NbaHigherLowerChoice, type NbaHigherLowerSubject,
 } from "./nbaHigherLowerModel";
 import type { PlayLineupIdentity } from "../play/lineupModel";
 
@@ -29,6 +29,17 @@ function formatTime(ms: number) {
   const seconds = ms / 1000;
   return seconds < 60 ? seconds.toFixed(1) + " sec"
     : Math.floor(seconds / 60) + ":" + (seconds % 60).toFixed(1).padStart(4, "0");
+}
+function reviewContext(question: NbaHigherLowerQuestion): string | null {
+  if (question.category === "career" || question.category === "awards") return null;
+  if (question.category === "season") {
+    const season = (year?: number) => year == null ? "" : (year - 1) + "–" + String(year).slice(-2);
+    const known = season(question.known.season), hidden = season(question.hidden.season);
+    return known === hidden ? known : known + " vs " + hidden;
+  }
+  const known = question.known.context.replace(" NBA DRAFT", "");
+  const hidden = question.hidden.context.replace(" NBA DRAFT", "");
+  return known === hidden ? known + " NBA Draft" : known + " vs " + hidden + " NBA Draft";
 }
 function NbaPortrait({ subject }: { subject: NbaHigherLowerSubject }) {
   const [failed, setFailed] = useState(false);
@@ -175,18 +186,16 @@ export default function NbaHigherLowerPage() {
     </section></main>;
   }
   if (!board) return <main className={shell} style={nbaTheme}>
-    <section className="higher-lower-hero">
-      <p className="eyebrow">NBA · OWNER-ONLY PLAYTEST</p>
+    <section className="higher-lower-hero nba-higher-lower-intro">
+      <p className="eyebrow">NBA · OWNER PREVIEW</p>
       <h1>HIGHER OR LOWER</h1>
-      <strong>Ten NBA comparisons. Basketball knowledge wins.</strong>
-      <p>Choose whether the hidden number is higher or lower. Each question stands alone. One point per correct answer, with completion time as the challenge tiebreaker.</p>
+      <p className="nba-higher-lower-intro__copy">Ten quick comparisons. Know the player, make the call.</p>
+      <div className="nba-higher-lower-intro__highlights" aria-label="Game rules">
+        <span>10 QUESTIONS</span><span>EASY TO TOUGH</span><span>ACCURACY FIRST</span>
+      </div>
+      <p className="nba-higher-lower-intro__topics">Career &amp; season stats · 3-pointers · Honors · Draft picks</p>
+      <button className="higher-lower-start" type="button" onClick={newBoard}>START NBA BOARD</button>
     </section>
-    <section className="higher-lower-rules">
-      <header><span>1</span><div><small>YOUR BOARD</small><strong>Career, seasons, 3-pointers, honors and draft picks</strong></div></header>
-      <div><p><b>10</b><span>fresh comparisons</span></p><p><b>3/5/2</b><span>difficulty mix</span></p>
-        <p><b>TIME</b><span>only breaks ties</span></p></div>
-    </section>
-    <button className="higher-lower-start" type="button" onClick={newBoard}>START NBA BOARD</button>
   </main>;
 
   if (result) return <main className={shell} style={nbaTheme}>
@@ -197,7 +206,7 @@ export default function NbaHigherLowerPage() {
       <p>Accuracy comes first. Time only decides a tied head-to-head challenge.</p>
     </section>
     <section className="higher-lower-review">
-      <header><span>QUESTION + FINAL NUMBERS</span><strong>YOUR CALL</strong><em>ANSWER</em></header>
+      <header><span>QUESTION · FINAL NUMBERS</span><strong>YOUR PICK</strong><em>ANSWER</em></header>
       {board.questions.map((question, number) => {
         const call = result.answers[number];
         return <div key={question.id} className={call?.correct ? "is-correct" : "is-wrong"}>
@@ -208,7 +217,7 @@ export default function NbaHigherLowerPage() {
               <i aria-hidden="true">→</i>
               <span><b>{question.hidden.name}</b><em>{question.hidden.formattedValue}</em></span>
             </span>
-            <span className="higher-lower-review__context">{question.known.context} vs {question.hidden.context}</span>
+            {reviewContext(question) && <span className="higher-lower-review__context">{reviewContext(question)}</span>}
           </span>
           <strong>{call?.choice.toUpperCase() ?? "—"}</strong><em>{question.answer.toUpperCase()}</em>
         </div>;
