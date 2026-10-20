@@ -4,6 +4,7 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import { nbaFindLeaderSubjects, type NbaLeaderSubject } from "./nbaFindTheLeaderModel";
+import { NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS } from "./nbaHigherLowerPortraits";
 import {
   NBA_HIGHER_LOWER_2025_THREES, NBA_HIGHER_LOWER_ALL_NBA,
   NBA_HIGHER_LOWER_ALL_STAR_SELECTIONS, NBA_HIGHER_LOWER_DRAFT,
@@ -191,6 +192,10 @@ function candidatePairs(spec: Spec): Pair[] {
       const left = sorted[i]!, right = sorted[j]!;
       const gap = right.value - left.value;
       if (left.key === right.key || gap < spec.minGap - 1e-8 || gap > spec.maxGap + 1e-8) continue;
+      // Never render an NBA-CDN HTTP-200 stock silhouette as a player photo.
+      // The full remote photo audit found these names share an identical image.
+      if (NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS.has(left.key)
+        || NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS.has(right.key)) continue;
       // Comparing a player's career peak to someone else's decline is rarely
       // a useful basketball question. Within-season eras stay reasonably near.
       if (spec.category === "season" && left.season != null && right.season != null
