@@ -5,10 +5,10 @@ Phase 1: canonical storage for the CFB/NFL Player Spotlight + Game of the Week s
 ## Timing (locked)
 
 - One row per Tuesday, keyed by the DATE week_of.
-- **Tuesday at 12:00 AM America/Chicago**, precisely when Monday becomes Tuesday, is the future activation instant.
-- The server derives release_at from week_of::timestamp AT TIME ZONE 'America/Chicago'; the UTC instant changes between CST and CDT.
+- **Tuesday at 8:00 AM America/Chicago** is the target activation instant. Only owner-approved content with fully deployed, verified art appears, and a sport verified later in its editorial week may publish late without bypassing checks.
+- The server derives release_at from (week_of::timestamp + interval '8 hours') AT TIME ZONE 'America/Chicago'; the UTC instant changes between CST and CDT.
 - The **single enabled Football Weekly Content monitoring task** runs Sunday **8:00 AM Central** (five CFB Spotlight + five CFB GOTW recommendations), and Monday **10:30 PM Central** (five NFL Spotlight + five NFL GOTW recommendations, factoring in Monday Night Football). Owner chooses one of each; nothing is auto-selected. This leaves at most 90 minutes before Tuesday midnight, so do not bypass approvals or verification when too late.
-- If production is not valid and ready at midnight, retain the last approved live material. Do not silently switch content later on Tuesday or publish partial assets.
+- If production is not valid and ready at the Tuesday 8 AM target, retain the last approved live material for that sport; after independent verification of all media and editorial, allow the approved sport to go live later in the same editorial week. Never publish partial assets.
 
 ## Locked Home Top Games team links
 
@@ -67,15 +67,15 @@ Prepared content is not automatically proof of asset existence: the later Phase 
 
 Runtime owner panel shows EDITORIAL PREPARED only after the authoritative database confirmation, not after an unverified chat reply. The content preparation task must use the owner-authenticated RPC or a narrowly scoped authorized connector operation and verify the stored package; never claim a write succeeded without a receipt.
 
-## Phase 4 — Automatic Tuesday midnight release
+## Phase 4 — Tuesday 8 AM target with verified late catch-up
 
 The canonical table and owner choices remain the only editorial source of truth. A sport must finish Phase 3 production and have its actual WebP art deployed before it can be armed. The guarded arm_football_weekly_editorial RPC validates the owner-selected player, exact game/kickoff, four stats and sourced breakdown against the prepared package; confirms canonical artwork paths and a production SHA receipt; then locks that sport's contents.
 
-One automatic readiness worker, supabase/functions/football-weekly-publisher, uses the EXISTING database-owned scheduler token and private service-role credentials. Every five minutes Monday 10–11:59 PM America/Chicago it inspects only owner-selected, fully prepared packages; fetches real live 720×900 Spotlight and 1600×900 GOTW WebP files; verifies the container, dimensions and live frontend deployment SHA; and arms only the corresponding sport. Missing files, wrong dimensions or authorization errors are deferred, never published. No impersonation of a Pics owner or extra weekly approval.
+One automatic readiness worker, supabase/functions/football-weekly-publisher, uses the EXISTING database-owned scheduler token and private service-role credentials. Every five minutes throughout the editorial week it inspects only owner-selected, fully prepared packages; fetches real live 720×900 Spotlight and 1600×900 GOTW WebP files; verifies the container, dimensions and live frontend deployment SHA; and arms only the corresponding sport. Missing files, wrong dimensions or authorization errors are deferred, never published. No impersonation of a Pics owner or extra weekly approval.
 
-**The release instant is entirely server-time-gated.** Public get_live_football_weekly_editorial returns a sport only once its ready_at exists AND its Tuesday week_of at 12:00 AM America/Chicago is no later than database now(). No cron timing or client clock can expose content early; an already-open Home/Picks page polls every 15 seconds. The minute cron performs the subsequent status/published_at audit update only.
+**The release instant is entirely server-time-gated.** Public get_live_football_weekly_editorial returns a sport only once its ready_at exists AND its Tuesday week_of at 8:00 AM America/Chicago is no later than database now(). No cron timing or client clock can expose content early; an already-open Home/Picks page polls every 15 seconds. The minute cron performs the subsequent status/published_at audit update only.
 
-CFB and NFL advance independently. If CFB is armed at midnight and NFL is not, only the new CFB goes live; NFL keeps its most recent eligible published week. If neither is ready, the existing manual/last published presentation remains in place. No arming after the midnight deadline, no half-finished content and no delayed Tuesday evening surprise publication.
+CFB and NFL advance independently. If CFB is verified at 8 AM and NFL is not, only the new CFB goes live; NFL keeps its most recent eligible published week. If neither is ready, the existing manual/last published presentation remains in place. No arming after the midnight deadline, no half-finished content and no delayed Tuesday evening surprise publication.
 
 Existing Home Player Spotlight and six-section Football matchup renderer are reused. Published games enter the established featured-matchup display only if the current Football Picks event includes that same matchup/kickoff. Game-of-the-Week artwork appears in the Football Picks carousel (approximately eight-second rotation), not Home or the breakdown modal. The Home card uses compact legible team marks and names. The setup and bottom line discuss game dynamics, not kickoff times, citations, images, or winner predictions. Event-wide manually curated header galleries and manually authored legacy content are preserved.
 
@@ -87,8 +87,8 @@ First real Monday-night cycle must be observed before claiming that the entire w
 
 ## October 13 automation readiness
 
-- Sunday 8 AM Central: exactly five CFB Spotlight player candidates and five CFB GOTW candidates; Monday 10 PM Central: exactly five NFL Spotlight players and five NFL games. Research from real verified recent performance and upcoming schedules, and request owner selection of one in each category; never invent/auto-select the owner choices.
+- Monday 10:30 PM Central: exactly five CFB and five NFL Spotlight candidates, plus five CFB and five NFL GOTW candidates, delivered together. Research from real verified recent performance and upcoming schedules, and request owner selection of one in each category; never invent/auto-select the owner choices.
 - Once chosen, research and prepare both sports independently: the Spotlight with four nonredundant game-specific stats, full result and measurements, and ESPN-sourced verified photo; the GOTW with concise neutral analysis and a real verified SeatGeek publisher graphic. Avoid kickoff/network/source credits in setup and bottom line, and never predict winners.
-- Both assets must be ingested, visually reviewed, committed on the generated head, pass full validation, merged, and verified live before Monday-night arming. No redundant graphics in Home or the modal: published art is shown only in Football Picks' eight-second gallery.
-- The existing database-owned publication scheduler checks every five minutes on Monday night and the public RPC releases armed CFB/NFL independently at exactly Tuesday 12:00 AM America/Chicago, with DST handled by the database. Missed owner selection or failed image verification holds the previous approved sport instead of publishing placeholders or rejected artwork.
+- Both assets must be ingested, visually reviewed, committed on the generated head, pass full validation, merged, and verified live before automatic verified arming. No redundant graphics in Home or the modal: published art is shown only in Football Picks' eight-second gallery.
+- The existing database-owned publication scheduler checks every five minutes through the week and the public RPC releases CFB/NFL independently no earlier than Tuesday 8:00 AM America/Chicago, including verified late completions, with DST handled by the database. Missed owner selection or failed image verification holds the previous approved sport instead of publishing placeholders or rejected artwork.
 - **Do not claim complete end-to-end automation until an actual Monday-night publication cycle has succeeded.** The five suggestions are automated; selecting them remains the owner's decision. Production support for approved publisher artwork does not guarantee a publisher has released a usable graphic that week.
