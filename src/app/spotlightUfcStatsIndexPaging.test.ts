@@ -32,11 +32,13 @@ describe("UFCStats Spotlight snapshot", () => {
     expect(builder).not.toContain("fighter-details");
   });
 
-  it("does not hard-fail a future card because a fighter has not been seeded into the snapshot yet", () => {
-    expect(builder).not.toContain("UFCSTATS_SNAPSHOT_FIGHTER_NOT_FOUND");
-    expect(builder).toContain('record: "--"');
-    expect(builder).toContain("strikingAccuracy: null");
-    expect(builder).toContain("takedownDefense: null");
+  it("requires researched fighter vitals before building a publishable Spotlight", () => {
+    // The pure text generator is still null-safe for unseeded people, but the
+    // owner-only publishing endpoint must reject empty facts/editorial rather
+    // than silently author an all-dash Spotlight on a future card.
+    expect(builder).toContain("SPOTLIGHT_RESEARCH_REQUIRED");
+    expect(builder).toContain("SPOTLIGHT_EDITORIAL_REVIEW_REQUIRED");
+    expect(builder).not.toContain('record: "--"');
 
     const noSample = {
       name: "Future UFC Fighter",
