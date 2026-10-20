@@ -64,6 +64,7 @@ import {
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
 import { FootballGmDevelopmentReport } from "./FootballGmDevelopmentReport";
 import { FOOTBALL_GM_DEVELOPMENT_SEED_TAG } from "./wheelFootballGmEconomy";
+import { footballWeeklyGmScenarioForWeek } from "./footballWeeklyGmScenarios";
 import { footballGmRepriceLabel, footballGmScoutingSnapshot, footballGmTalentTier } from "./footballGmScouting";
 import {
   FOOTBALL_GM_SOLO_QUARTERBACKS,
@@ -1517,6 +1518,7 @@ export default function FootballGmModePage({
   standalone?: boolean;
   weeklyRun?: {
     scenario: "elite" | "young";
+    weekStart: string;
     seed: string;
     savedState: PersistedRun | null;
     save: (state: PersistedRun, score: number | null) => Promise<void>;
@@ -1534,7 +1536,7 @@ export default function FootballGmModePage({
     if (weeklyRun) {
       const persisted = weeklyRun.savedState ? parsePersistedRun(weeklyRun.savedState) : null;
       if (persisted && persisted.seed === weeklyRun.seed) return persisted;
-      const qbId = weeklyRun.scenario === "elite" ? "BUF|QB|joshallen" : "NYG|QB|jaxsondart";
+      const qbId = footballWeeklyGmScenarioForWeek(weeklyRun.weekStart, weeklyRun.scenario).playerId;
       return { ...initialRun(weeklyRun.seed, weeklyRun.legacyFreeAgency ? "legacy" : "three-plus-one"), phase: "draft", spinIndex: 1,
         roster: [{ slot: "QB", playerId: qbId, acquired: "draft" }] };
     }
