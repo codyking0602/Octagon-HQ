@@ -19,7 +19,8 @@ import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { pickEventPoster } from "./picksEventAssets";
-import { reviewedMmaManiaPoster } from "./ufcMmaManiaPoster";
+import { reviewedMmaManiaPoster, reviewedOfficialUfcEventBanner } from "./ufcMmaManiaPoster";
+import { shanesWatchlist } from "../home/shanesWatchlist";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
@@ -138,7 +139,7 @@ export default function PicksPage() {
   const cardOddsMeta = orderedBouts
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
-  const eventPoster = reviewedMmaManiaPoster(activeEvent) ?? pickEventPoster(activeEvent);
+  const eventPoster = reviewedMmaManiaPoster(activeEvent) ?? reviewedOfficialUfcEventBanner(activeEvent) ?? pickEventPoster(activeEvent);
   const numberedUfcEvent = Boolean(
     activeEvent?.sport !== "football" && activeEvent?.name.match(/^UFC\s+\d+\b/i),
   );
@@ -338,6 +339,7 @@ export default function PicksPage() {
                         >
                           <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
                           <span style={fighterNameStyle(bout.redFighterName, isMainEvent)}>{bout.redFighterName}</span>
+                          {shanesWatchlist.fighters.find((fighter) => fighter.id === bout.redFighterSlug) ? <small className="pick-choice__shane-badge">SHANE\u2019S CONTENDER SERIES</small> : null}
                           <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
                           {redChoiceLabel ? <em>{redChoiceLabel}</em> : null}
                         </button>
@@ -351,6 +353,7 @@ export default function PicksPage() {
                         >
                           <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
                           <span style={fighterNameStyle(bout.blueFighterName, isMainEvent)}>{bout.blueFighterName}</span>
+                          {shanesWatchlist.fighters.find((fighter) => fighter.id === bout.blueFighterSlug) ? <small className="pick-choice__shane-badge">SHANE\u2019S CONTENDER SERIES</small> : null}
                           <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
                           {blueChoiceLabel ? <em>{blueChoiceLabel}</em> : null}
                         </button>
