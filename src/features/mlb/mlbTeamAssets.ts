@@ -79,18 +79,18 @@ export function mlbTeamColor(
 }
 
 export const MLB_OWNER_PLAYER_SPOTLIGHT = {
-  name: "Gavin Williams",
-  team: "Cleveland Guardians",
-  position: "SP",
-  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/668909/headshot/67/current",
-  teamColor: "#E50022",
+  name: "Junior Caminero",
+  team: "Tampa Bay Rays",
+  position: "3B",
+  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/691406/headshot/67/current",
+  teamColor: "#092C5C",
   stats: [
-    { label: "K", value: "12" },
-    { label: "IP", value: "6.0" },
-    { label: "H", value: "1" },
-    { label: "R", value: "0" },
+    { label: "HR", value: "42" },
+    { label: "RBI", value: "101" },
+    { label: "AVG", value: ".276" },
+    { label: "R", value: "100" },
   ],
-  meta: "2026 ALDS GAME 5 · 12 K IN SIX SCORELESS INNINGS",
-  profileUrl: "https://www.baseball-reference.com/players/w/williga01.shtml",
-  highlightUrl: "https://youtube.com/shorts/2hCQQ8GjrXE?is=Zh0UXfg_FOz1WGrO",
+  meta: "2026 WORLD SERIES · TWO-RUN ALCS CLINCHER",
+  profileUrl: "https://www.baseball-reference.com/players/c/caminju01.shtml",
+  highlightUrl: "https://youtube.com/shorts/RkF6yhjVT3A?is=vDeytklWLWBCVU6b",
 } as const;
