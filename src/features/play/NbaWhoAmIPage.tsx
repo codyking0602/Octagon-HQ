@@ -1,3 +1,4 @@
+import "../../styles/nba-game-actions.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";

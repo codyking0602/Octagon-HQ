@@ -63,7 +63,7 @@ describe("NBA Higher or Lower factual boards", () => {
         expect(difference, question.id).toBeGreaterThanOrEqual(bounds.min - 1e-8);
         expect(difference, question.id).toBeLessThanOrEqual(bounds.max + 1e-8);
         if (question.category === "season") {
-          expect(Math.abs(question.known.season! - question.hidden.season!)).toBeLessThanOrEqual(12);
+          expect(Math.abs(question.known.season! - question.hidden.season!)).toBeLessThanOrEqual(7);
         }
         if (question.category === "awards" || question.category === "draft") {
           expect(question.difficulty).not.toBe("approachable");
@@ -78,6 +78,32 @@ describe("NBA Higher or Lower factual boards", () => {
     }
     expect(seen.size).toBeGreaterThan(500);
     expect(categoryFrequency.size).toBeGreaterThanOrEqual(9);
+  });
+
+  it("keeps rebound comparisons thoughtful and early-era deep cuts occasional", () => {
+    let deepHistorical = 0;
+    let historicalSubjects = 0;
+    const iconic = new Set([
+      "Jerry West", "Kareem Abdul-Jabbar", "Wilt Chamberlain", "Oscar Robertson",
+      "Magic Johnson", "Larry Bird", "Pete Maravich", "Walt Frazier",
+      "John Havlicek", "Bill Walton", "Julius Erving", "Moses Malone",
+      "George Gervin", "Rick Barry", "Elvin Hayes", "Bill Russell",
+    ]);
+    for (let i = 0; i < 100; i++) {
+      const board = createNbaHigherLowerBoard("nba-legacy-recognition-" + i);
+      for (const q of board.questions) {
+        if (q.metricKey === "season-rebounds") {
+          expect(Math.abs(q.known.value - q.hidden.value)).toBeLessThanOrEqual(2.6 + 1e-8);
+        }
+        for (const player of [q.known, q.hidden]) {
+          if (player.season == null || player.season >= 1985) continue;
+          historicalSubjects++;
+          if (!iconic.has(player.name)) deepHistorical++;
+        }
+      }
+    }
+    expect(historicalSubjects).toBeGreaterThan(0);
+    expect(deepHistorical).toBeLessThan(historicalSubjects * 0.4);
   });
 
   it("includes three pointers, honors, and NBA draft choices as curated metrics", () => {

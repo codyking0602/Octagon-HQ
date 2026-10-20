@@ -13,6 +13,7 @@ import {
 } from "./nbaFindTheLeaderModel";
 import "../../styles/football-find-leader.css";
 import "../../styles/nba-find-the-leader.css";
+import "../../styles/nba-game-actions.css";
 
 type Result = { score: number; perfect: boolean; fatalId: string | null };
 const nbaTheme = {
