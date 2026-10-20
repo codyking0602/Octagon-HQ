@@ -150,7 +150,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
       {error ? <button type="button" onClick={() => void refresh().catch((failure: unknown) => setError(String(failure)))}>RETRY</button> : null}
     </section></div>
   );
-  if (!preview && showAuctionReveal && lastAuction) {
+  if (!preview && state.week_start === "2026-10-13" && showAuctionReveal && lastAuction) {
     const winner = lastAuction.standings.find((entry) => entry.is_winner)
       ?? lastAuction.standings.find((entry) => entry.rank === 1);
     return (
@@ -188,7 +188,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         {!preview && isOwner && state.status === "upcoming" ? <p><Link to="/football/weekly-gm-test">OWNER-ONLY: PLAY THE REAL COMPETITION NOW ↗</Link></p> : null}
         {!preview ? (
           <p>
-            {lastAuction ? (
+            {lastAuction && state.week_start === "2026-10-13" ? (
               <button type="button" onClick={() => { setShowAuctionReveal(true); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
                 VIEW OCT 6–12 AUCTION RESULTS · WHEEL · COLLECTIONS · ALL GRADES ↗
               </button>
@@ -198,7 +198,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         <p className="football-weekly-gm__progress"><strong>{myTotal.toFixed(1)} / 200</strong><span>{Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</span></p>
         <small>{preview ? "Owner-only production playtest · Test data never enters championship standings · Closes Tuesday at 12:00 AM Central" :
           state.status === "upcoming" ? `Opens ${footballWeeklyGmWeekLabel(state.week_start)} · Tuesday at midnight Central` :
-          state.status === "closed" ? "Competition closed · Final results" : `Closes Monday, ${footballWeeklyGmWeekLabel(state.week_start).split("–").at(-1)} at 11:59 PM Central`}</small>
+          state.status === "closed" ? "Competition closed · Final results" : `Closes Monday at 11:59 PM Central · ${footballWeeklyGmWeekLabel(state.week_start)}`}</small>
         {preview ? <p><button type="button" disabled={busy} onClick={() => {
           if (!window.confirm("Reset both owner test franchises? This permanently clears only your test attempts. Official Weekly GM is unaffected.")) return;
           setBusy(true);
