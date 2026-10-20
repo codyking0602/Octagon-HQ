@@ -16,6 +16,7 @@ const fighterPhotoModules = import.meta.glob<{ default: string }>(
 const spotlightPhotoSlugAliases = new Map([
   ["ian-garry", "ian-machado-garry"],
   ["alex-pantoja", "alexandre-pantoja"],
+  ["abdul-rakhman-yakhyaev", "abdulrakhman-yakhyaev"],
 ]);
 
 const spotlightPhotoBySlug = new Map(
@@ -324,8 +325,10 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const hasTale = Boolean(
-    data?.red.record && data.red.age && data.red.height && data.red.reach && data.red.stance
-    && data.blue.record && data.blue.age && data.blue.height && data.blue.reach && data.blue.stance,
+    data && [data.red, data.blue].every((fighter) => (
+      [fighter.record, fighter.age, fighter.height, fighter.reach, fighter.stance]
+        .every((value) => value && value !== "--")
+    )),
   );
   const hasEdges = Boolean(data?.red.edges.length || data?.blue.edges.length);
 
