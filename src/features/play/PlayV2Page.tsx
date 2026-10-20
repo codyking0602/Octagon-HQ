@@ -339,16 +339,20 @@ function MatchupsCompact({ sport }: { sport: PlaySport }) {
 }
 
 function WeeklyCurrent({}: Record<string, never>) {
+  const now = Date.now();
+  const gmFeatured = now >= Date.parse("2026-10-13T05:00:00Z")
+    && now < Date.parse("2026-10-27T05:00:00Z");
+  const gmSecondWeek = now >= Date.parse("2026-10-20T05:00:00Z");
   return (
     <section className="play-v2__weekly" aria-label="Weekly Featured Championship">
       <div className="play-v2__section-top">
         <span><span aria-hidden="true">🏆 </span> WEEKLY FEATURED</span>
         <span>FOOTBALL</span>
       </div>
-      <h2>{new Date().getTime() >= new Date("2026-10-13T05:00:00Z").getTime() && new Date().getTime() < new Date("2026-10-20T05:00:00Z").getTime() ? "NFL GM Championship" : "Auction Center"}</h2>
-      <p>{new Date().getTime() >= new Date("2026-10-13T05:00:00Z").getTime() && new Date().getTime() < new Date("2026-10-20T05:00:00Z").getTime() ? "Two official franchises · Josh Allen + Jaxson Dart · 200 points." : "Make your picks in this week’s featured football auction."}</p>
+      <h2>{gmFeatured ? "NFL GM Championship" : "Auction Center"}</h2>
+      <p>{gmFeatured ? gmSecondWeek ? "Two official franchises · Dak Prescott + Michael Penix Jr. · 200 points." : "Two official franchises · Josh Allen + Jaxson Dart · 200 points." : "Make your picks in this week’s featured football auction."}</p>
       <div className="play-v2__weekly-actions">
-        <Link to={new Date().getTime() >= new Date("2026-10-13T05:00:00Z").getTime() && new Date().getTime() < new Date("2026-10-20T05:00:00Z").getTime() ? "/football/weekly-gm" : "/football/weekly-auction"}>OPEN CURRENT WEEKLY →</Link>
+        <Link to={gmFeatured ? "/football/weekly-gm" : "/football/weekly-auction"}>OPEN CURRENT WEEKLY →</Link>
         <Link to="/championship/football?tab=play">PLAY STANDINGS ↗</Link>
       </div>
     </section>
