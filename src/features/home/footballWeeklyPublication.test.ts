@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PickEvent } from "../picks/picksModel";
+import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
 import {
   footballPublishedSpotlight,
   mergeFootballWeeklyMatchupBreakdowns,
@@ -106,7 +107,7 @@ describe("public Football weekly release projection", () => {
     } as unknown as PickEvent;
     const weekly = publishedFootballMatchupsForEvent(event, projected);
     expect(weekly).toHaveLength(1);
-    const compact = {
+    const compact: FootballMatchupBreakdown = {
       ...weekly[0]!,
       id: "2026-patriots-bears-week7",
       compact: { leagueLabel: "NFL" as const, things: [
