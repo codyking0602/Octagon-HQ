@@ -5,7 +5,7 @@ import { FootballFuturesCard } from "./FootballFuturesCard";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { footballLockAllowance, gradeFootballAts, type AtsOutcome } from "./footballPicksScoring";
 import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
-import { publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "../home/footballWeeklyPublication";
+import { mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "../home/footballWeeklyPublication";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
@@ -102,10 +102,10 @@ export default function FootballPicksPage() {
     return { outcomes, wins, losses, pushes, settled: wins + losses + pushes };
   }, [games, picks.selections, picks.footballLocks]);
   const matchupBreakdowns = useMemo(() => {
-    const current = publishedFootballMatchupsForEvent(event, published ?? null);
-    const legacy = footballMatchupBreakdownsForEvent(event).filter((old) => !current.some((recent) =>
-      recent.teams.every((team) => old.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase()))));
-    return [...current, ...legacy];
+    return mergeFootballWeeklyMatchupBreakdowns(
+      publishedFootballMatchupsForEvent(event, published ?? null),
+      footballMatchupBreakdownsForEvent(event),
+    );
   }, [event, published]);
   // Featured weekly matchup art is owned by Picks, not Home or the breakdown modal.
   // Event-level headers remain the fallback for weeks without approved editorial.
