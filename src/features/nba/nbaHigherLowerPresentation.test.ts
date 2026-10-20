@@ -16,13 +16,19 @@ describe("NBA Higher or Lower owner-preview integration", () => {
   });
   it("reuses football presentation, correct portraits, season labels and active timer", () => {
     expect(pageSource).toContain('import "../../styles/football-higher-lower.css"');
-    expect(pageSource).toContain("nbaFindLeaderHeadshot");
+    expect(pageSource).toContain("nbaHigherLowerPortraitSource");
+    expect(pageSource).toContain("nbaHigherLowerIsGenericSilhouette");
+    expect(pageSource).toContain('ref={boardHeaderRef}');
+    expect(pageSource).toContain("useLayoutEffect");
+    expect(pageSource).toContain("scrollIntoView");
     expect(pageSource).toContain("question.known.context");
     expect(pageSource).toContain("question.hidden.context");
     expect(pageSource).toContain('document.addEventListener("visibilitychange"');
     expect(styles).toContain("object-fit: contain");
     expect(styles).toContain("transform: translateY(12px) scale(1.18)");
     expect(styles).toContain("mask-image: linear-gradient");
+    expect(styles).toContain("scroll-margin-top");
+    expect(styles).toContain(".nba-higher-lower-portrait.is-editorial img");
     expect(pageSource).toContain("reviewContext(question)");
     expect(pageSource).toContain("nba-higher-lower-intro__highlights");
     expect(pageSource).not.toContain("3/5/2");

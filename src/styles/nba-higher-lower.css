@@ -32,6 +32,9 @@
   margin: 1px auto 0;
   overflow: hidden;
   background: radial-gradient(ellipse at 50% 72%, rgba(233, 162, 71, .12), transparent 68%);
+  /* Fade the actual shoulder line, not only the PNG's transparent padding. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 61%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 61%, transparent 100%);
 }
 .nba-higher-lower-portrait img {
   width: 100%;
@@ -40,8 +43,6 @@
   object-position: center bottom;
   transform: translateY(12px) scale(1.18);
   transform-origin: center bottom;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
 }
 .nba-higher-lower-portrait b {
   display: grid;
@@ -249,4 +250,13 @@
 }
 .nba-higher-lower .higher-lower-review__matchup > i {
   color: #b68b59;
+}
+
+.nba-higher-lower-portrait.is-editorial img {
+  object-fit: cover;
+  object-position: center 32%;
+  transform: none;
+}
+.nba-higher-lower .higher-lower-game-header {
+  scroll-margin-top: calc(78px + env(safe-area-inset-top, 0px));
 }
