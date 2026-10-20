@@ -1,0 +1,12 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/renato-moicano",
+  "fighter_name": "Renato Moicano",
+  "destination": "public/assets/fighters/renato-moicano-thumb.webp",
+  "kind": "thumb",
+  "crop": [
+    0,
+    0,
+    1,
+    0.55
+  ]
+}

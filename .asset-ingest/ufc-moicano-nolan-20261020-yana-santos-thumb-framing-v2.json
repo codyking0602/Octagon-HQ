@@ -1,0 +1,12 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/yana-santos",
+  "fighter_name": "Yana Santos",
+  "destination": "public/assets/fighters/yana-santos-thumb.webp",
+  "kind": "thumb",
+  "crop": [
+    0,
+    0,
+    1,
+    0.55
+  ]
+}
