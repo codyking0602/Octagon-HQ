@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nbaHigherLowerPortraitSource, NBA_HIGHER_LOWER_EDITORIAL_PHOTOS, NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerPortraitSource, NBA_HIGHER_LOWER_EDITORIAL_PHOTOS, NBA_HIGHER_LOWER_RESTORED_PORTRAITS, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
 import { nbaFindLeaderSubjects } from "./nbaFindTheLeaderModel";
 import { NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS, NBA_HIGHER_LOWER_METRIC_KEYS, createNbaHigherLowerBoard } from "./nbaHigherLowerModel";
 
@@ -33,15 +33,14 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
   });
   it("exposes the entire eligible player pool for full image-content auditing", () => {
     const people = NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS;
-    expect(people.length).toBeGreaterThan(100);
-    expect(NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS.size).toBe(24);
-    expect(people.every(x => !NBA_HIGHER_LOWER_UNVERIFIED_PHOTO_KEYS.has(
-      x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g,"")
-    ))).toBe(true);
+    expect(people.length).toBe(184);
+    expect(Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)).toHaveLength(24);
+    const eligible = new Set(people.map(x => x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g,"")));
+    for (const key of Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)) expect(eligible.has(key)).toBe(true);
     expect(new Set(people.map(x => x.name)).size).toBe(people.length);
     expect(people.some(x => x.name === "Lamar Odom")).toBe(true);
-    expect(people.some(x => x.name === "Jason Kidd")).toBe(false);
-    expect(people.some(x => x.name === "Patrick Ewing")).toBe(false);
+    expect(people.some(x => x.name === "Jason Kidd")).toBe(true);
+    expect(people.some(x => x.name === "Patrick Ewing")).toBe(true);
     expect(people.some(x => x.name === "Tim Hardaway")).toBe(true);
   });
   it("detects a successfully loaded flat gray silhouette instead of treating it as a photograph", () => {
