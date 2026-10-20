@@ -137,11 +137,12 @@
 }
 
 .picks-event-hero__copy > strong {
-  overflow: hidden;
+  display: block;
+  min-width: 0;
+  overflow-wrap: break-word;
   font-size: clamp(15px, 4.5vw, 20px);
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.15;
+  white-space: normal;
 }
 
 .picks-event-hero.has-poster .picks-event-hero__copy h2 {
