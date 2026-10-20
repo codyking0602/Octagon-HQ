@@ -42,6 +42,13 @@ function expectNeutralHome() {
   expect(screen.queryByRole("group", { name: /sport/i })).not.toBeInTheDocument();
 }
 
+// These legacy presentation tests intentionally exercise the static fallback
+// when no published weekly editorial is available.
+vi.mock("./footballWeeklyPublication", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./footballWeeklyPublication")>();
+  return { ...actual, usePublishedFootballWeek: () => null };
+});
+
 describe("The HQ universal Home foundation", () => {
   it("renders the approved football-season Home hierarchy without standalone feed sections", async () => {
     const router = renderHome();
