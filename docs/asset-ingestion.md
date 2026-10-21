@@ -62,3 +62,33 @@ Football **Game of the Week headers** now use only original owner-approved SeatG
 The source must be a real publicly served `https://seatgeekimages.com/matchup/...` image representing those two teams. The processor preserves the full artwork and adds only neutral side padding as necessary for a 1600×900 WebP; it never crops team logos, invents player images, or composites unrelated ESPN portraits. The manifest's publisher source URL must be stored as the **single** `header_photo_sources` entry in the canonical prepared GOTW package. The generated WebP must be reviewed, pass exact-head green, be deployed and verified on production **before** the owner-selected editorial can be armed. If artwork is unavailable or cannot be used, fail closed and retain the previous approved material.
 
 Production art is shown only in Football Picks' roughly eight-second carousel. The Tuesday midnight Central release remains a database time gate, independent for NFL and CFB. Image-asset deployment alone never publishes the weekly package.
+
+## Owner-provided weekly matchup art (preferred over SeatGeek)
+
+For an explicitly owner-approved **NFL or CFB Game of the Week**, keep the existing
+SeatGeek `game-header.webp` as a verified fallback; owner artwork is an optional
+independent enhancement, never a precondition for Tuesday 8 AM Central publication.
+
+When Cody supplies an image in chat, verify it belongs to the actual selected
+matchup. Convert the supplied bytes to a reviewed, non-stretched 16:9 WebP with
+the owner's preferred crop/padding. Commit it through a focused green PR to
+`public/assets/football/weekly/YYYY-MM-DD/<sport>/owner-header-<revision>.webp`.
+Use a new revisioned filename for each replacement so browsers never cache the
+previous graphic. Binary user-supplied photos are committed via GitHub's binary
+blob/tree API, **not** through the text-file API and not as a fake publisher URL.
+
+Add just one exact `week_of` / `sport` / `away_team` / `home_team` record to
+`src/features/home/footballWeeklyHeaderOverrides.json` with `asset_path`
+pointing to that checked-in immutable WebP. No record means the existing verified
+SeatGeek `header_asset_path` displays automatically; a browser failure to load
+the owner file also falls back to SeatGeek, then the established CSS identity
+header. The override never changes published database rows, owner selection,
+Spotlight media or videos, full analysis, rankings, Picks, or the Tuesday schedule.
+It can be deployed **after** the package publishes via the normal green-head
+GitHub PR and Cloudflare release; no backend republish or new cron is needed.
+
+The resolver refuses mismatched game/week/sport or paths outside that exact
+weekly public assets folder. The 16:9 eight-second hero keeps accessible team
+links and rank/record pills. Football HQ's compact featured-game layout remains
+untouched. When an owner image has not been provided, do not delay publication
+or generate fake athlete imagery; keep SeatGeek.

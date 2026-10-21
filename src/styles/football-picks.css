@@ -193,6 +193,51 @@ a.football-picks-weekly-slide__team:active { background: rgba(255,255,255,.15); 
  .football-picks-weekly-slide__team-name { font-size:clamp(10px,2.7vw,13px); }
  .football-picks-weekly-slide__eyebrow,.football-picks-weekly-slide__footer { font-size:8px; }
 }
+
+/* Owner-provided art wins; the verified SeatGeek image is the automatic
+   fallback. Keep the entire 16:9 panel, eight-second rotation and mobile links. */
+.football-picks-weekly-slide__art {
+  position:absolute; inset:0; z-index:0; display:block;
+  width:100%; height:100%; object-fit:contain;
+  background:#0a1018; pointer-events:none;
+}
+.football-picks-weekly-slide.has-owner-image .football-picks-weekly-slide__art { object-fit:cover; }
+.football-picks-weekly-slide.has-image::before {
+  z-index:1;
+  background:linear-gradient(180deg,rgba(3,7,14,.62),transparent 23%,transparent 55%,rgba(3,7,14,.84) 100%);
+}
+.football-picks-weekly-slide.has-image .football-picks-weekly-slide__matchup {
+  align-self:end; align-items:end; gap:clamp(7px,2vw,16px);
+  margin-bottom:4px;
+}
+.football-picks-weekly-slide.has-image .football-picks-weekly-slide__team {
+  display:flex; flex-flow:row wrap; justify-content:center; align-content:center;
+  gap:4px 7px; min-height:34px; height:auto;
+  padding:5px 8px; border:1px solid #ffffff55; border-radius:10px;
+  background:rgba(8,14,24,.79);
+  backdrop-filter:blur(5px); box-shadow:0 3px 12px #0006;
+}
+.football-picks-weekly-slide.has-image .football-picks-weekly-slide__team img {
+  width:clamp(19px,3.5vw,26px); height:clamp(19px,3.5vw,26px);
+  max-height:none; flex:none;
+}
+.football-picks-weekly-slide.has-image .football-picks-weekly-slide__team-name {
+  font-size:clamp(9px,2vw,13px);
+}
+.football-picks-weekly-slide.has-image .football-picks-weekly-slide__team-meta {
+  flex-basis:100%; font-size:clamp(8px,1.7vw,10px);
+}
+.football-picks-weekly-slide.has-image .football-picks-weekly-slide__versus { display:none; }
+@media (max-width:520px) {
+  .football-picks-weekly-slide.has-image .football-picks-weekly-slide__team {
+    padding:4px 5px; min-height:28px; gap:2px 4px;
+  }
+  .football-picks-weekly-slide.has-image .football-picks-weekly-slide__team img {
+    width:20px; height:20px;
+  }
+  .football-picks-weekly-slide.has-image .football-picks-weekly-slide__team-name { font-size:10px; }
+}
+
 @media(prefers-reduced-motion:reduce) {
  .football-picks-weekly-slide { transition:none; }
  .football-picks-weekly-slide.is-active::after { animation:none; }
