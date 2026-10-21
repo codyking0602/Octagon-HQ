@@ -442,7 +442,7 @@ const NBA_EDITORIAL_MOMENTS: readonly (readonly Omit<Fact, "id">[])[] = [
       "subject": "Stephen Curry"
     },
     {
-      "prompt": "Which Canadian franchise won its first NBA championship in 2019?",
+      "prompt": "Which franchise won its first NBA championship in 2019?",
       "correct": "Toronto Raptors",
       "wrong": [
         "Vancouver Grizzlies",
@@ -890,7 +890,7 @@ const NBA_EDITORIAL_MOMENTS: readonly (readonly Omit<Fact, "id">[])[] = [
 ];
 
 function makeFact(level:number, number:number):Fact{
-  const index=number%5, group=Math.floor(number/5), salt=level*5+number;
+  const index=number%5, group=Math.floor(number/5);
   const m=pickRow(mvps,level,index+group*4,number);
   const f=pickRow(finalsMvps,level,index+group*5,number);
   const series=pickRow(finals,level,index+group*6,number);
@@ -928,23 +928,9 @@ function makeFact(level:number, number:number):Fact{
     return {id:`nba-mil-q${level}-finalist-${series.year}`,prompt:`Which team did the ${series.winner} defeat in the ${series.year} NBA Finals?`,
       correct:series.loser,wrong:nearTeams(series.year,series.loser),
       explanation:`The ${series.winner} won the ${series.year} title by defeating the ${series.loser}.`,
-      statSheet:`The losing finalist represented the other conference from the ${series.winner}.`,source:NBA_FINALS_SOURCE,category:"finals-matchups",year:series.year,subject:series.loser};
+      statSheet:`The losing finalist represented the ${new Set(["Boston Celtics","Brooklyn Nets","New Jersey Nets","Chicago Bulls","Cleveland Cavaliers","Detroit Pistons","Indiana Pacers","Miami Heat","Milwaukee Bucks","New York Knicks","Orlando Magic","Philadelphia 76ers","Toronto Raptors","Washington Wizards","Charlotte Hornets","Atlanta Hawks"]).has(series.winner) ? "Western" : "Eastern"} Conference.`,source:NBA_FINALS_SOURCE,category:"finals-matchups",year:series.year,subject:series.loser};
   }
-  // Comparisons are deterministic, season-anchored and deliberately close.
-  const subject=d;
-  const eventRows=[...drafts];
-  // Events remain distinct and the draft year is hidden in the choices.
-  const other=eventRows.filter(x=>x.year!==subject.year && x.name!==subject.name)
-    .sort((a,b)=>Math.abs(a.year-subject.year)-Math.abs(b.year-subject.year)||a.year-b.year).slice(0,3);
-  const ordered=[subject,...other].sort((a,b)=>a.year-b.year);
-  const first=ordered[0]!;
-  return {id:`nba-mil-q${level}-first-draft-${subject.year}`,
-    prompt:"Which of these No. 1 overall NBA Draft selections happened earliest?",
-    correct:first.name,
-    wrong:ordered.slice(1).map(x=>x.name),
-    explanation:`${first.name} was drafted No. 1 by the ${first.team} in ${first.year}, before the other three selections.`,
-    statSheet:`The earliest selection took place in the ${era(first.year)}.`,source:NBA_DRAFT_SOURCE,
-    category:"chronology",year:first.year,subject:first.name};
+  throw new Error("NBA Millionaire category unsupported");
 }
 
 function makeQuestion(level:number,index:number):NbaMillionaireQuestion {
