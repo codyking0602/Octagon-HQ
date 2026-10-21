@@ -62,7 +62,7 @@ export const NBA_MILLIONAIRE_STAT_SHEETS: readonly (readonly string[])[] = [
   "This No. 1 selection joined a Cleveland team rebuilding after a star departure.",
   "This award was presented to a veteran wing added to Golden State's starting lineup.",
   "The 2004 series ended in five games despite Los Angeles being heavily favored.",
-  "The picking franchise was still known as the Hornets, before its Pelicans rebrand.",
+  "The selecting franchise adopted a new nickname in 2013.",
   "The rookie winner played his first season for San Antonio.",
   "The Finals featured a five-game victory over Dallas.",
   "The award-winning guard led Philadelphia to the 2001 NBA Finals."
