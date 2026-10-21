@@ -6,21 +6,27 @@ function source(path: string) {
 }
 
 describe("Football weekly editorial must not reshape approved UI next Tuesday", () => {
-  it("preserves compact image-first or CSS-fallback headers in the eight-second Picks carousel", () => {
+  it("shows existing owner-uploaded Picks header gallery first, with bare SeatGeek images as fallback", () => {
     const picks = source("../picks/FootballPicksPage.tsx");
     const home = source("./FootballHq.tsx");
     const modal = source("../picks/FootballMatchupBreakdowns.tsx");
     expect(picks).toContain("const weeklyHeroes = useMemo(() => matchupBreakdowns");
-    expect(picks).toContain("football-picks-weekly-slide");
+    expect(picks).toContain("const posters = useMemo(() => pickEventPosters(event)");
+    expect(picks).toContain("const showOwnerGallery = usablePosters.length > 0;");
+    expect(picks).toContain("const visibleWeeklyHeroes = showOwnerGallery ? [] : weeklyHeroes;");
     expect(picks).toContain("usableFootballWeeklyHeaderArtwork");
     expect(picks).toContain("football-picks-weekly-slide__art");
-    expect(picks).toContain("failedWeeklyHeaderSources");
-    expect(source("../../styles/football-picks.css")).toContain(".football-picks-weekly-slide.has-owner-image");
-    expect(picks).toContain("href={team.href}");
-    expect(picks).toContain("team.record");
-    expect(picks).toContain("team.rank");
-    expect(picks).toContain("featured.rankingSource");
-    expect(source("../../styles/football-picks.css")).toContain("a.football-picks-weekly-slide__team:focus-visible");
+    expect(picks).toContain("onError={() => setFailedPosterSources");
+    expect(picks).toContain("onError={() => setFailedWeeklyHeaderSources");
+    const heroStart = picks.indexOf('          <section className={`football-picks-hero');
+    const heroEnd = picks.indexOf("{matchupBreakdowns.length || event.canControl", heroStart);
+    const hero = picks.slice(heroStart, heroEnd);
+    expect(hero).toContain("showOwnerGallery && usablePosters.map");
+    expect(hero).toContain("visibleWeeklyHeroes.map");
+    expect(hero).not.toContain("football-picks-weekly-slide__team");
+    expect(hero).not.toContain("football-picks-weekly-slide__eyebrow");
+    expect(hero).not.toContain("football-picks-weekly-slide__footer");
+    expect(hero).not.toContain("football-picks-weekly-slide__versus");
     expect(source("../../styles/football-picks.css")).toContain(".football-picks-hero.has-weekly-art { aspect-ratio: 16 / 9;");
     expect(source("../../styles/football-picks.css")).toContain("@media(prefers-reduced-motion:reduce)");
     expect(picks).toContain("}, 8000)");

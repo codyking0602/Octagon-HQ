@@ -92,3 +92,21 @@ weekly public assets folder. The 16:9 eight-second hero keeps accessible team
 links and rank/record pills. Football HQ's compact featured-game layout remains
 untouched. When an owner image has not been provided, do not delay publication
 or generate fake athlete imagery; keep SeatGeek.
+
+## Football Picks owner-uploaded gallery priority (October 20 fix)
+
+The owner control center can already upload 1–4 images to the public
+`pick-event-headers` Supabase Storage bucket, recorded on the existing PickEvent
+as `header_storage_path` and natural dimensions. **These uploaded Picks images
+always win** over the weekly publisher's SeatGeek art, and appear as image-only
+slides in their stored gallery order. This path works after publication without
+new asset PRs or owner-header JSON changes: it is the canonical existing owner
+upload UI. Never suppress `pickEventPosters(event)` because matching weekly
+breakdowns exist. Do not display extra overlay pills, names, marks, ranks,
+records, time, or duplicate `THE HQ` lettering on the Picks image; Cody's
+finished artwork already contains all of it. Keep the existing 16:9, eight-second
+carousel. If a gallery image fails, skip it; if none loads, render the verified
+weekly SeatGeek images without any text overlays, retaining a CSS-only empty
+background as last resort. This affects Picks' image header only—rank/record,
+Sports Reference team links and editorial data remain in Football HQ and the
+Game Breakdown, not superimposed on custom Picks artwork.
