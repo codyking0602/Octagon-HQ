@@ -1,4 +1,5 @@
 import { nbaMillionaireRun } from "./nbaMillionaireBank";
+import { createNbaMillionaireRun } from "../nba/nbaMillionaireBank";
 import {
   MILLIONAIRE_LEVELS,
   MILLIONAIRE_MONEY_BY_LEVEL,
@@ -45,6 +46,7 @@ export const MILLIONAIRE_BASE_PTS = {
 } as const;
 
 export const MILLIONAIRE_HOSTS: Record<MillionaireLeague, readonly [string, string, string]> = {
+  nba: ["/assets/millionaire/Nba1.png", "/assets/millionaire/Nba2.png", "/assets/millionaire/Nba3.png"],
   cfb: [
     "/assets/millionaire/Cfb1.png",
     "/assets/millionaire/Cfb2.png",
