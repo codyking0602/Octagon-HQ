@@ -88,7 +88,7 @@ function createRandom(seed: number): () => number {
 function toRuntime(fact: NbaMillionaireFact, levelIndex: number, random: () => number): MillionaireRuntimeQuestion {
   const level = MILLIONAIRE_LEVELS[levelIndex]!;
   const shuffled = [fact.answer, ...fact.distractors].map((text) => ({ text, sort: random() })).sort((a, b) => a.sort - b.sort);
-  const choices = shuffled.map((row, index) => ({ id: MILLIONAIRE_CHOICE_IDS[index]!, text: row.text })) as MillionaireRuntimeQuestion["choices"];
+  const choices = shuffled.map((row, index) => ({ id: MILLIONAIRE_CHOICE_IDS[index]!, text: row.text })) as unknown as MillionaireRuntimeQuestion["choices"];
   const correctChoiceId = choices.find((choice) => choice.text === fact.answer)!.id;
   const wrongIds = choices.filter((choice) => choice.id !== correctChoiceId).map((choice) => choice.id);
   const survivor = wrongIds[Math.floor(random() * wrongIds.length)]!;
