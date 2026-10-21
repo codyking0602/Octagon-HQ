@@ -1,6 +1,7 @@
 import { MILLIONAIRE_CHOICE_IDS, MILLIONAIRE_LEVELS, MILLIONAIRE_MONEY_BY_LEVEL, type MillionaireChoiceId, type MillionaireRuntimeQuestion } from "../games/millionaireAuthority";
 import type { MillionaireRun } from "../games/millionaireEngine";
 import { nbaMillionaireEarly } from "./nbaMillionaireEarly";
+import { NBA_MILLIONAIRE_STAT_SHEETS } from "./nbaMillionaireStatSheets";
 import { nbaMillionaireQ3 } from "./nbaMillionaireQ3";
 import { nbaMillionaireQ4 } from "./nbaMillionaireQ4";
 import { nbaMillionaireQ5 } from "./nbaMillionaireQ5";
@@ -27,6 +28,7 @@ export type NbaMillionaireFact = {
   answer: string;
   distractors: readonly [string, string, string];
   explanation: string;
+  statSheet: string;
   category: string;
   era: string;
   source: NbaSource;
@@ -51,11 +53,13 @@ function parseFact(line: string, level: number, index: number): NbaMillionaireFa
       !(source in NBA_MILLIONAIRE_SOURCES) || new Set([answer, wrong1, wrong2, wrong3]).size !== 4) {
     throw new Error(`Invalid NBA Millionaire options/metadata Q${level + 1} #${index + 1}`);
   }
+  const statSheet = NBA_MILLIONAIRE_STAT_SHEETS[level]?.[index];
+  if (!statSheet || statSheet.length < 25) throw new Error(`NBA Millionaire missing Stat Sheet Q${level + 1} #${index + 1}`);
   return {
     id: `nba-millionaire-q${level + 1}-${String(index + 1).padStart(2, "0")}`,
     prompt, answer,
     distractors: [wrong1, wrong2, wrong3],
-    explanation, category, era, source: source as NbaSource,
+    explanation, statSheet, category, era, source: source as NbaSource,
   };
 }
 
@@ -95,12 +99,11 @@ function toRuntime(fact: NbaMillionaireFact, levelIndex: number, random: () => n
   const survivors = MILLIONAIRE_CHOICE_IDS.filter((id) => id === correctChoiceId || id === survivor) as [MillionaireChoiceId, MillionaireChoiceId];
   const removals = MILLIONAIRE_CHOICE_IDS.filter((id) => !survivors.includes(id)) as [MillionaireChoiceId, MillionaireChoiceId];
   const finalQuestion = level === "Q8";
-  const extraHint = fact.distractors[Math.floor(random() * fact.distractors.length)]!;
   return {
     id: fact.id, sport: "nba", level, money: MILLIONAIRE_MONEY_BY_LEVEL[level],
     type: fact.category, prompt: fact.prompt, choices, correctChoiceId,
     explanation: fact.explanation,
-    statSheet: finalQuestion ? null : `NBA HISTORY FILE · ${fact.era}. ${extraHint} is not the correct answer.`,
+    statSheet: finalQuestion ? null : fact.statSheet,
     fiftyFifty: { survivorChoiceIds: survivors, removalChoiceIds: removals },
     lifelineCompatibility: { fiftyFifty: !finalQuestion, statSheet: !finalQuestion, doubleDip: !finalQuestion },
   };
