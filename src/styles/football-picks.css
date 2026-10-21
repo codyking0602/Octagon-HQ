@@ -242,3 +242,7 @@ a.football-picks-weekly-slide__team:active { background: rgba(255,255,255,.15); 
  .football-picks-weekly-slide { transition:none; }
  .football-picks-weekly-slide.is-active::after { animation:none; }
 }
+
+/* Picks headers are complete artwork. Do not crop an owner-uploaded design or
+   overlay duplicate labels. The existing 16:9 carousel/transition stays intact. */
+.football-picks-hero.has-weekly-art .football-picks-hero__image { object-fit: contain; }

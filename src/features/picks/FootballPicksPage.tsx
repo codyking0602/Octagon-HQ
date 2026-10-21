@@ -4,7 +4,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import { FootballFuturesCard } from "./FootballFuturesCard";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { footballLockAllowance, gradeFootballAts, type AtsOutcome } from "./footballPicksScoring";
-import { footballMatchupBreakdownsForEvent, type FootballMatchupBreakdown } from "./footballMatchupBreakdowns";
+import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 import { mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "../home/footballWeeklyPublication";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
@@ -13,32 +13,8 @@ import { pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 import { usePicks } from "./PicksProvider";
 import { pickEventPosters } from "./picksEventAssets";
-import { footballWeeklySuperteamIdentity } from "../back-room/footballWeeklySuperteamVisualIdentity";
+import { chooseFootballPicksHeroImages } from "./footballPicksHeroSelection";
 import { resolveFootballWeeklyHeaderArtwork, usableFootballWeeklyHeaderArtwork } from "../home/footballWeeklyHeaderOverrides";
-
-// Featured weekly headers use responsive CSS, not upscaled square SeatGeek tiles.
-// Actual source images remain in the verified weekly asset ledger and breakdown.
-const WEEKLY_HERO_COLORS: Readonly<Record<string, readonly [string, string]>> = {
-  "New England Patriots": ["#002244", "#C60C30"],
-  "Chicago Bears": ["#0B162A", "#C83803"],
-  "Ole Miss": ["#14213D", "#CE1126"],
-  "Texas": ["#BF5700", "#FFFFFF"],
-};
-
-function weeklyHeroIdentity(team: FootballMatchupBreakdown["teams"][number]) {
-  const current = footballWeeklySuperteamIdentity(team.name);
-  const colors = WEEKLY_HERO_COLORS[team.name];
-  return {
-    name: team.name,
-    logo: team.logoUrl ?? current.logoSrc,
-    code: current.code,
-    href: team.sportsReferenceUrl ?? null,
-    record: team.record ?? null,
-    rank: team.rank ?? null,
-    primary: colors?.[0] ?? team.themeColor ?? current.primary,
-    accent: colors?.[1] ?? current.secondary,
-  };
-}
 
 function gameLineLabel(bout: PickBout) {
   const spread = bout.frozenSpreadHome;
@@ -133,25 +109,26 @@ export default function FootballPicksPage() {
       footballMatchupBreakdownsForEvent(event),
     );
   }, [event, published]);
-  // Real weekly games become compact, properly proportioned CSS-led headers.
-  // Never stretch or crop the square publisher art to fill a widescreen banner.
+  // Explicit owner uploads in Picks are authoritative. The published weekly
+  // SeatGeek (or separately approved owner asset) supplies the fallback only.
+  // Headers are finished graphics: no duplicate matchup pills or text overlays.
   const weeklyHeroes = useMemo(() => matchupBreakdowns
     .filter((game) => Boolean(game.headerAssetPath))
     .map((game) => ({
       id: game.id,
-      title: game.title,
-      away: weeklyHeroIdentity(game.teams[0]),
-      home: weeklyHeroIdentity(game.teams[1]),
-      rankingSource: game.compact?.rankingSource ?? null,
-      kickoff: game.kickoffAt,
       artwork: resolveFootballWeeklyHeaderArtwork(game),
     })), [matchupBreakdowns]);
-  const posters = useMemo(() => weeklyHeroes.length ? [] : pickEventPosters(event), [weeklyHeroes.length, event]);
+  const posters = useMemo(() => pickEventPosters(event), [event]);
   const [failedPosterSources, setFailedPosterSources] = useState<string[]>([]);
   const [failedWeeklyHeaderSources, setFailedWeeklyHeaderSources] = useState<string[]>([]);
-  const usablePosters = posters.filter((image) => !failedPosterSources.includes(image.src));
-  const poster = usablePosters[0] ?? null;
-  const slideCount = weeklyHeroes.length || usablePosters.length;
+  const weeklyFallbacks = weeklyHeroes
+    .map((game) => usableFootballWeeklyHeaderArtwork(game.artwork, failedWeeklyHeaderSources))
+    .filter((src): src is string => Boolean(src));
+  const { images: heroImages, fromGallery } = chooseFootballPicksHeroImages(
+    posters, weeklyFallbacks, failedPosterSources,
+  );
+  const poster = heroImages[0] ?? null;
+  const slideCount = heroImages.length;
   const hasHero = slideCount > 0;
   const [activePosterIndex, setActivePosterIndex] = useState(0);
   const spreadSources = Array.from(new Set(games
@@ -168,7 +145,7 @@ export default function FootballPicksPage() {
 
   useEffect(() => {
     setActivePosterIndex(0);
-  }, [event?.eventId, event?.headerStoragePath, weeklyHeroes.map((game) => game.id).join("|")]);
+  }, [event?.eventId, event?.headerStoragePath, posters.map((image) => image.src).join("|"), weeklyHeroes.map((game) => game.id).join("|")]);
 
   useEffect(() => {
     if (slideCount < 2) return undefined;
@@ -271,62 +248,27 @@ export default function FootballPicksPage() {
 
       {event ? (
         <>
-          <section className={`football-picks-hero${hasHero ? " has-poster" : ""}${weeklyHeroes.length ? " has-weekly-art" : ""}`}
-            aria-label={`${event.name} featured game artwork`}>
-            {weeklyHeroes.map((featured, index) => {
-              const artSrc = usableFootballWeeklyHeaderArtwork(featured.artwork, failedWeeklyHeaderSources);
-              const isOwnerArt = artSrc != null && artSrc === featured.artwork.primary && featured.artwork.ownerProvided;
-              return (
-              <div key={featured.id}
-                className={`football-picks-weekly-slide${index === (activePosterIndex % weeklyHeroes.length) ? " is-active" : ""}${artSrc ? " has-image" : ""}${isOwnerArt ? " has-owner-image" : ""}`}
-                style={{
-                  "--weekly-hero-away": featured.away.primary,
-                  "--weekly-hero-away-accent": featured.away.accent,
-                  "--weekly-hero-home": featured.home.primary,
-                  "--weekly-hero-home-accent": featured.home.accent,
-                } as CSSProperties}
-                aria-hidden={index !== (activePosterIndex % weeklyHeroes.length)}>
-                {artSrc ? <img className="football-picks-weekly-slide__art" src={artSrc}
-                  alt="" loading={index === 0 ? "eager" : "lazy"}
-                  onError={() => setFailedWeeklyHeaderSources((current) => current.includes(artSrc) ? current : [...current, artSrc])} /> : null}
-                <span className="football-picks-weekly-slide__eyebrow">THE HQ · GAME OF THE WEEK</span>
-                <div className="football-picks-weekly-slide__matchup">
-                  {[featured.away, featured.home].map((team) => {
-                    const contents = (
-                      <>
-                        {team.logo ? <img src={team.logo} alt="" loading="lazy" /> :
-                          <strong className="football-picks-weekly-slide__initials">{team.code}</strong>}
-                        <strong className="football-picks-weekly-slide__team-name">{team.name}</strong>
-                        {(team.record || (featured.rankingSource && team.rank != null)) ? (
-                          <span className="football-picks-weekly-slide__team-meta">
-                            {featured.rankingSource && team.rank != null ? `${featured.rankingSource} #${team.rank}` : null}
-                            {featured.rankingSource && team.rank != null && team.record ? " · " : null}
-                            {team.record}
-                          </span>
-                        ) : null}
-                      </>
-                    );
-                    return team.href ? (
-                      <a className="football-picks-weekly-slide__team" key={team.name}
-                        href={team.href} aria-label={team.name} target="_blank" rel="noopener noreferrer"
-                        title={`Open ${team.name} ${event.season} season on Sports Reference`}>
-                        {contents}
-                      </a>
-                    ) : <div className="football-picks-weekly-slide__team" key={team.name}>{contents}</div>;
-                  })}
-                  <span className="football-picks-weekly-slide__versus">VS</span>
-                </div>
-                <span className="football-picks-weekly-slide__footer">{featured.kickoff ? footballDateTimeLabel(featured.kickoff) : "FEATURED MATCHUP"}</span>
-              </div>
-              );
-            })}
-            {!weeklyHeroes.length && usablePosters.map((image, index) => (
-              <img key={image.src} className={`football-picks-hero__image${index === (activePosterIndex % usablePosters.length) ? " is-active" : ""}`}
-                src={image.src} alt="Featured football matchup artwork" loading={index === 0 ? "eager" : "lazy"}
-                onError={() => setFailedPosterSources((current) => current.includes(image.src) ? current : [...current, image.src])} />
-            ))}
-            {!hasHero ? <div className="football-picks-hero__empty"><strong>THIS WEEK’S FOOTBALL</strong><span>Featured matchup artwork is being prepared.</span></div> : null}
-          </section>
+          {hasHero ? (
+            <section className="football-picks-hero has-poster has-weekly-art"
+              aria-label={`${event.name} featured game artwork`}>
+              {heroImages.map((image, index) => (
+                <img
+                  key={image.src}
+                  className={`football-picks-hero__image${index === (activePosterIndex % slideCount) ? " is-active" : ""}`}
+                  src={image.src}
+                  alt={`Game of the Week graphic ${index + 1} of ${slideCount}`}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  onError={() => {
+                    if (fromGallery) {
+                      setFailedPosterSources((current) => current.includes(image.src) ? current : [...current, image.src]);
+                    } else {
+                      setFailedWeeklyHeaderSources((current) => current.includes(image.src) ? current : [...current, image.src]);
+                    }
+                  }}
+                />
+              ))}
+            </section>
+          ) : null}
 
           {matchupBreakdowns.length || event.canControl ? (
             <div className="football-picks-owner-tools">
