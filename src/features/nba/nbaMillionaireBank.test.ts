@@ -85,7 +85,7 @@ describe("NBA Millionaire authored 240-question owner-review bank", () => {
         // Even at Q6, the user gets a familiar player/franchise question,
         // not an obscure yearly reserve/defensive award.
         expect(["dpoy", "sixth"]).not.toContain(source!.source);
-        if (index <= 4 && Number(source!.id.split("-")[3]) <= 4) earlyFromAccessibleBank += 1;
+        if (index <= 4 && Number(source!.id.split("-")[2]?.slice(1)) <= 4) earlyFromAccessibleBank += 1;
       }
       expect(run[7]!.id).toMatch(/^nba-millionaire-q8-/);
       expect(run[0]!.id).toMatch(/^nba-millionaire-q1-/);
