@@ -41,6 +41,21 @@ function rows<T>(data: string, make: (v: string[]) => T): T[] {
   return data.trim().split("\n").map(row => make(row.split("|").map(v => v.trim())));
 }
 const mvps: Award[] = rows(`
+1980|Kareem Abdul-Jabbar|Los Angeles Lakers
+1981|Julius Erving|Philadelphia 76ers
+1982|Moses Malone|Houston Rockets
+1983|Moses Malone|Philadelphia 76ers
+1984|Larry Bird|Boston Celtics
+1985|Larry Bird|Boston Celtics
+1986|Larry Bird|Boston Celtics
+1987|Magic Johnson|Los Angeles Lakers
+1988|Michael Jordan|Chicago Bulls
+1989|Magic Johnson|Los Angeles Lakers
+1990|Magic Johnson|Los Angeles Lakers
+1991|Michael Jordan|Chicago Bulls
+1992|Michael Jordan|Chicago Bulls
+1993|Charles Barkley|Phoenix Suns
+1994|Hakeem Olajuwon|Houston Rockets
 1995|David Robinson|San Antonio Spurs
 1996|Michael Jordan|Chicago Bulls
 1997|Karl Malone|Utah Jazz
@@ -75,6 +90,21 @@ const mvps: Award[] = rows(`
 2026|Shai Gilgeous-Alexander|Oklahoma City Thunder
 `,([year,name,team])=>({year:Number(year),name,team}));
 const finalsMvps: Award[] = rows(`
+1980|Magic Johnson|Los Angeles Lakers
+1981|Cedric Maxwell|Boston Celtics
+1982|Magic Johnson|Los Angeles Lakers
+1983|Moses Malone|Philadelphia 76ers
+1984|Larry Bird|Boston Celtics
+1985|Kareem Abdul-Jabbar|Los Angeles Lakers
+1986|Larry Bird|Boston Celtics
+1987|Magic Johnson|Los Angeles Lakers
+1988|James Worthy|Los Angeles Lakers
+1989|Joe Dumars|Detroit Pistons
+1990|Isiah Thomas|Detroit Pistons
+1991|Michael Jordan|Chicago Bulls
+1992|Michael Jordan|Chicago Bulls
+1993|Michael Jordan|Chicago Bulls
+1994|Hakeem Olajuwon|Houston Rockets
 1995|Hakeem Olajuwon|Houston Rockets
 1996|Michael Jordan|Chicago Bulls
 1997|Michael Jordan|Chicago Bulls
@@ -109,6 +139,21 @@ const finalsMvps: Award[] = rows(`
 2026|Jalen Brunson|New York Knicks
 `,([year,name,team])=>({year:Number(year),name,team}));
 const finals: Finals[] = rows(`
+1980|Los Angeles Lakers|Philadelphia 76ers
+1981|Boston Celtics|Houston Rockets
+1982|Los Angeles Lakers|Philadelphia 76ers
+1983|Philadelphia 76ers|Los Angeles Lakers
+1984|Boston Celtics|Los Angeles Lakers
+1985|Los Angeles Lakers|Boston Celtics
+1986|Boston Celtics|Houston Rockets
+1987|Los Angeles Lakers|Boston Celtics
+1988|Los Angeles Lakers|Detroit Pistons
+1989|Detroit Pistons|Los Angeles Lakers
+1990|Detroit Pistons|Portland Trail Blazers
+1991|Chicago Bulls|Los Angeles Lakers
+1992|Chicago Bulls|Portland Trail Blazers
+1993|Chicago Bulls|Phoenix Suns
+1994|Houston Rockets|New York Knicks
 1995|Houston Rockets|Orlando Magic
 1996|Chicago Bulls|Seattle SuperSonics
 1997|Chicago Bulls|Utah Jazz
@@ -143,6 +188,21 @@ const finals: Finals[] = rows(`
 2026|New York Knicks|San Antonio Spurs
 `,([year,winner,loser])=>({year:Number(year),winner,loser}));
 const drafts: Draft[] = rows(`
+1980|Joe Barry Carroll|Golden State Warriors
+1981|Mark Aguirre|Dallas Mavericks
+1982|James Worthy|Los Angeles Lakers
+1983|Ralph Sampson|Houston Rockets
+1984|Hakeem Olajuwon|Houston Rockets
+1985|Patrick Ewing|New York Knicks
+1986|Brad Daugherty|Cleveland Cavaliers
+1987|David Robinson|San Antonio Spurs
+1988|Danny Manning|Los Angeles Clippers
+1989|Pervis Ellison|Sacramento Kings
+1990|Derrick Coleman|New Jersey Nets
+1991|Larry Johnson|Charlotte Hornets
+1992|Shaquille O'Neal|Orlando Magic
+1993|Chris Webber|Orlando Magic
+1994|Glenn Robinson|Milwaukee Bucks
 1995|Joe Smith|Golden State Warriors
 1996|Allen Iverson|Philadelphia 76ers
 1997|Tim Duncan|San Antonio Spurs
@@ -177,7 +237,7 @@ const drafts: Draft[] = rows(`
 2026|AJ Dybantsa|Washington Wizards
 `,([year,name,team])=>({year:Number(year),name,team}));
 
-function era(year: number) { return year < 2000 ? "1990s" : year < 2010 ? "2000s" : year < 2020 ? "2010s" : "2020s"; }
+function era(year: number) { return year < 1990 ? "1980s" : year < 2000 ? "1990s" : year < 2010 ? "2000s" : year < 2020 ? "2010s" : "2020s"; }
 const allNames = [...new Set([...mvps,...finalsMvps,...drafts].map(row=>row.name))];
 const allTeams = [...new Set([...mvps,...finalsMvps,...drafts].map(row=>row.team).concat(finals.flatMap(row=>[row.winner,row.loser])))];
 function plausible(answer: string, rows: readonly string[], index: number): string[] {
@@ -194,18 +254,26 @@ function nearTeams(year:number, correct:string):string[]{
   const options=[...new Set(candidates)].filter(x=>x!==correct);
   return [...options,...allTeams.filter(x=>x!==correct && !options.includes(x))].slice(0,3);
 }
-function pickRow<T extends {year:number}>(all: T[], level: number, index: number):T{
-  // Tier 1-2 skew recent and recognizable, late tiers add historical depth.
-  const floor = level<=2?2011:level<=4?2003:1995;
-  const eligible = all.filter(item=>item.year>=floor);
-  return eligible[(index*7+level*3)%eligible.length]!;
+function targetEra(level:number,number:number):[number,number]{
+  // Every tier retains varied eras. Overall targets: ~10% 1980s,
+  // 20% 1990s, 20% 2000s, 25% 2010s and 25% 2020s.
+  const weights=level<=2?[1,2,3,10,14]:level<=4?[2,5,6,9,8]:level<=6?[4,7,7,7,5]:[5,10,8,5,2];
+  let slot=(number*11+level*7)%30;
+  const ranges:[[number,number],number][]=[[[1980,1989],weights[0]!],[[1990,1999],weights[1]!],[[2000,2009],weights[2]!],[[2010,2019],weights[3]!],[[2020,2026],weights[4]!]];
+  for(const [bounds,count] of ranges){if(slot<count)return bounds;slot-=count;}
+  throw new Error("NBA Millionaire era sampling exhausted");
+}
+function pickRow<T extends {year:number}>(all: T[], level: number, index: number, number:number):T{
+  const [first,last]=targetEra(level,number);
+  const eligible=all.filter(item=>item.year>=first&&item.year<=last);
+  return eligible[(index*(first===2020?5:7)+level*3)%eligible.length]!;
 }
 function makeFact(level:number, number:number):Fact{
   const index=number%5, group=Math.floor(number/5), salt=level*5+number;
-  const m=pickRow(mvps,level,index+group*4);
-  const f=pickRow(finalsMvps,level,index+group*5);
-  const series=pickRow(finals,level,index+group*6);
-  const d=pickRow(drafts,level,index+group*3);
+  const m=pickRow(mvps,level,index+group*4,number);
+  const f=pickRow(finalsMvps,level,index+group*5,number);
+  const series=pickRow(finals,level,index+group*6,number);
+  const d=pickRow(drafts,level,index+group*3,number);
   if(group===0){
     return {id:`nba-mil-q${level}-champ-${series.year}`,prompt:`Which franchise won the ${series.year} NBA championship?`,
       correct:series.winner,wrong:nearTeams(series.year,series.winner),
@@ -237,17 +305,17 @@ function makeFact(level:number, number:number):Fact{
       statSheet:`The losing finalist represented the other conference from the ${series.winner}.`,source:NBA_FINALS_SOURCE,category:"finals-matchups",year:series.year,subject:series.loser};
   }
   // Comparisons are deterministic, season-anchored and deliberately close.
-  const anchor=level<=3?2013:level<=5?2006:1996;
-  const eventRows = [...drafts].filter(x=>x.year>=anchor);
-  const subject=eventRows[(salt*3)%eventRows.length]!;
+  const subject=d;
+  const eventRows=[...drafts];
+  // Events remain distinct and the draft year is hidden in the choices.
   const other=eventRows.filter(x=>x.year!==subject.year && x.name!==subject.name)
     .sort((a,b)=>Math.abs(a.year-subject.year)-Math.abs(b.year-subject.year)||a.year-b.year).slice(0,3);
   const ordered=[subject,...other].sort((a,b)=>a.year-b.year);
   const first=ordered[0]!;
   return {id:`nba-mil-q${level}-first-draft-${subject.year}`,
     prompt:"Which of these No. 1 overall NBA Draft selections happened earliest?",
-    correct:`${first.name} (${first.team})`,
-    wrong:ordered.slice(1).map(x=>`${x.name} (${x.team})`),
+    correct:first.name,
+    wrong:ordered.slice(1).map(x=>x.name),
     explanation:`${first.name} was drafted No. 1 by the ${first.team} in ${first.year}, before the other three selections.`,
     statSheet:`The earliest selection took place in the ${era(first.year)}.`,source:NBA_DRAFT_SOURCE,
     category:"chronology",year:first.year,subject:first.name};
