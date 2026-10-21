@@ -147,7 +147,7 @@ export function validateMillionaireQuestion(question: MillionaireQuestionAuthori
   const levelNumber = MILLIONAIRE_LEVELS.indexOf(question.level) + 1;
 
   if (!nonEmpty(question.id)) errors.push("id must be non-empty");
-  if (question.sport !== "ufc" && question.sport !== "football" && question.sport !== "nba") errors.push("sport must be ufc, football, or nba");
+  if (question.sport !== "ufc" && question.sport !== "football" && question.sport !== "nba" && question.sport !== "nba") errors.push("sport must be ufc, football, or nba");
   if (!MILLIONAIRE_LEVELS.includes(question.level)) errors.push("level must be Q1 through Q8");
   if (question.money !== MILLIONAIRE_MONEY_BY_LEVEL[question.level]) errors.push("money must match the locked level ladder");
   if (!nonEmpty(question.type)) errors.push("type must be non-empty");
