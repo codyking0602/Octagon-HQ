@@ -20,10 +20,16 @@ describe("NBA Millionaire authored 240-question owner-review bank", () => {
         expect(new Set([item.answer, ...item.distractors]).size).toBe(4);
         expect(item.prompt.length).toBeGreaterThan(18);
         expect(item.explanation.length).toBeGreaterThan(18);
+        expect(item.statSheet.length).toBeGreaterThan(24);
+        expect(item.statSheet.toLowerCase()).not.toContain(item.answer.toLowerCase());
+        expect(item.statSheet).not.toMatch(/is not the correct answer|eliminat(?:e|ion)/i);
         expect(NBA_MILLIONAIRE_SOURCES[item.source]).toMatch(/^https:\/\/www\.nba\.com\//);
       }
     }
     expect(new Set(all.map(row => row.category)).size).toBeGreaterThanOrEqual(4);
+    const title2025 = NBA_MILLIONAIRE_QUESTION_BANK[0]?.find(row => row.prompt.includes("2025 NBA championship"));
+    expect(title2025?.statSheet).toContain("seven games");
+    expect(title2025?.statSheet).not.toMatch(/Pacers is not the correct answer/i);
   });
 
   it("builds valid eight-question runs with protected lifelines and correct money ladder", () => {
