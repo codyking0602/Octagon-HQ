@@ -17,7 +17,7 @@ type DailyQuestionSeed = {
 
 const IDS = ["A", "B", "C", "D"] as const;
 
-const BANKS: Record<Exclude<MillionaireLeague, "mlb">, readonly (readonly DailyQuestionSeed[])[]> = {
+const BANKS: Record<Exclude<MillionaireLeague, "mlb" | "nba">, readonly (readonly DailyQuestionSeed[])[]> = {
   "cfb": [
     [
       {
@@ -3014,7 +3014,7 @@ function runtimeQuestion(
 export const MILLIONAIRE_DAILY_RUN_COUNT = 10;
 
 export function millionaireDailyRun(league: MillionaireLeague, runIndex: number): MillionaireRun {
-  if (league === "mlb") {
+  if (league === "mlb" || league === "nba") {
     throw new Error("MLB Millionaire owner review does not use the Daily question bank.");
   }
   const normalized = ((runIndex % MILLIONAIRE_DAILY_RUN_COUNT) + MILLIONAIRE_DAILY_RUN_COUNT)
