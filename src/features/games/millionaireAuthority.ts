@@ -2,7 +2,7 @@ import type { PlaySport } from "../play/playRegistry";
 
 export const MILLIONAIRE_GAME_ID = "millionaire" as const;
 export type MillionaireGameId = typeof MILLIONAIRE_GAME_ID;
-export type MillionaireSport = PlaySport;
+export type MillionaireSport = PlaySport | "nba";
 
 export const MILLIONAIRE_LEVELS = ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"] as const;
 export type MillionaireLevel = (typeof MILLIONAIRE_LEVELS)[number];
@@ -147,7 +147,7 @@ export function validateMillionaireQuestion(question: MillionaireQuestionAuthori
   const levelNumber = MILLIONAIRE_LEVELS.indexOf(question.level) + 1;
 
   if (!nonEmpty(question.id)) errors.push("id must be non-empty");
-  if (question.sport !== "ufc" && question.sport !== "football") errors.push("sport must be ufc or football");
+  if (question.sport !== "ufc" && question.sport !== "football" && question.sport !== "nba" && question.sport !== "nba") errors.push("sport must be ufc, football, or nba");
   if (!MILLIONAIRE_LEVELS.includes(question.level)) errors.push("level must be Q1 through Q8");
   if (question.money !== MILLIONAIRE_MONEY_BY_LEVEL[question.level]) errors.push("money must match the locked level ladder");
   if (!nonEmpty(question.type)) errors.push("type must be non-empty");
