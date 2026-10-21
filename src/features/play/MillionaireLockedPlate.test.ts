@@ -84,6 +84,20 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(dailySource).toContain("}, remainingDelay);");
   });
 
+
+  it("displays long UFC Daily Q8 options in full without clipping in Daily or Casual", () => {
+    expect(dailySource).toContain('String(choice.text ?? "").length > 28 ? "is-long-answer" : undefined');
+    expect(pageSource).toContain('choice.text.length > 28 ? "is-long-answer" : undefined');
+    const answerRule = fixedCss.match(/\.millionaire-shell--fixed-stage \.millionaire-answers span \{([^}]+)\}/)?.[1];
+    expect(answerRule).toContain("white-space: normal;");
+    expect(answerRule).toContain("text-overflow: clip;");
+    expect(answerRule).toContain("overflow-wrap: anywhere;");
+    expect(answerRule).toContain("overflow: visible;");
+    const longAnswerRule = fixedCss.match(/\.millionaire-shell--fixed-stage \.millionaire-answers span\.is-long-answer \{([^}]+)\}/)?.[1];
+    expect(longAnswerRule).toContain("font-size: 21px;");
+    expect(longAnswerRule).toContain("text-align: center;");
+  });
+
   it("does not hide CFB Q1 answer text on the first render", () => {
     const refineCss = readFileSync("src/features/play/MillionairePortraitRefine.css", "utf8");
     expect(refineCss).not.toContain("millionaire-shell--cfb.millionaire-shell--q1.millionaire-shell--answering .millionaire-answers span");
