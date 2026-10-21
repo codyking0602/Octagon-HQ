@@ -4,11 +4,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useIdentity } from "../identity/IdentityProvider";
 import { usePicks } from "./PicksProvider";
 import FootballPicksPage from "./FootballPicksPage";
+import { pickEventPosters } from "./picksEventAssets";
 
 vi.mock("../identity/IdentityProvider", () => ({ useIdentity: vi.fn() }));
 vi.mock("./PicksProvider", () => ({ usePicks: vi.fn() }));
 vi.mock("./GroupPickProgress", () => ({ GroupPickProgress: () => <div>Who has picked</div> }));
 vi.mock("./GroupPickReveal", () => ({ GroupPickReveal: () => null }));
+vi.mock("./picksEventAssets", () => ({ pickEventPosters: vi.fn(() => []) }));
 
 const setPick = vi.fn(async () => undefined);
 const setFootballLock = vi.fn(async () => undefined);
@@ -41,17 +43,18 @@ describe("FootballPicksPage", () => {
   beforeEach(() => {
     setPick.mockClear();
     setFootballLock.mockClear();
+    vi.mocked(pickEventPosters).mockReturnValue([]);
     vi.mocked(useIdentity).mockReturnValue({ profile: { id: "me" }, openDialog: vi.fn() } as never);
     vi.mocked(usePicks).mockReturnValue(runtime() as never);
   });
 
   it("keeps event artwork clean and makes every Football Picks time explicitly Central", () => {
     const { container } = render(<FootballPicksPage />);
-    const hero = screen.getByLabelText("Football Week 1 featured game artwork");
+    const hero = screen.queryByLabelText("Football Week 1 featured game artwork");
     const slate = screen.getByLabelText("This week’s football games");
     const provenance = screen.getByText(/ATS ODDS · THE ODDS API · FROZEN/);
 
-    expect(hero).toHaveTextContent("Featured matchup artwork is being prepared.");
+    expect(hero).not.toBeInTheDocument(); // No blank image cards or redundant overlay text when art is absent.
     expect(screen.queryByText("FOOTBALL PICKS · WEEKLY ATS")).not.toBeInTheDocument();
     expect(screen.queryByText("Opening weekend")).not.toBeInTheDocument();
     expect(provenance).toHaveTextContent("Sep 1, 7:00 AM CT");
@@ -67,6 +70,26 @@ describe("FootballPicksPage", () => {
       "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
     ]);
     expect(screen.getByText("Who has picked")).toBeInTheDocument();
+  });
+
+  it("shows both persisted owner gallery graphics in Picks without additional pills, logos or text", () => {
+    const urls = [
+      "https://storage.test/pick-event-headers/football-picks-2026-10-20/event-header-gallery-2-1",
+      "https://storage.test/pick-event-headers/football-picks-2026-10-20/event-header-gallery-2-2",
+    ];
+    vi.mocked(pickEventPosters).mockReturnValue(urls.map((src) => ({ src, aspectRatio: "1672 / 941" })));
+    const { container } = render(<FootballPicksPage />);
+    const hero = screen.getByLabelText("Football Week 1 featured game artwork");
+    const images = Array.from(hero.querySelectorAll<HTMLImageElement>("img"));
+    expect(images.map((image) => image.src)).toEqual(urls);
+    expect(images[0]).toHaveClass("is-active");
+    expect(hero.querySelector("a,button,.football-picks-weekly-slide__team")).toBeNull();
+    expect(hero).not.toHaveTextContent("GAME OF THE WEEK");
+    expect(hero).not.toHaveTextContent("VS");
+    expect(hero).not.toHaveTextContent("THU");
+    expect(container.querySelector(".football-picks-hero")).toHaveClass("has-weekly-art");
+    // Actual Picks team controls and matchup analysis still exist below the art.
+    expect(screen.getByRole("button", { name: "Texas Longhorns HOME" })).toBeInTheDocument();
   });
 
   it("names the away team when the stored home spread makes the visitor the favorite", () => {
@@ -109,7 +132,7 @@ describe("FootballPicksPage", () => {
     fireEvent.click(screen.getByText("OWNER TOOLS ⚙"));
     const manageLink = screen.getByRole("link", { name: /MANAGE HEADERS/ });
 
-    expect(hero).not.toContainElement(manageLink);
+    expect(hero).toBeNull(); // The header is optional when there is no art; controls remain separate.
     expect(manageLink).toHaveAttribute(
       "href",
       "/picks/control?sport=football&event=football-week-1#header",
