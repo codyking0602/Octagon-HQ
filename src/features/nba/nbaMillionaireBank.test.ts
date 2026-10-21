@@ -70,6 +70,30 @@ describe("NBA Millionaire authored 240-question owner-review bank", () => {
     expect(createNbaMillionaireRun("next-day")).not.toEqual(a);
   });
 
+  it("keeps Q3–Q6 about recognizable NBA facts rather than specialist Sixth Man and DPOY award years", () => {
+    const byId = new Map(NBA_MILLIONAIRE_QUESTION_BANK.flat().map(fact => [fact.id, fact]));
+    const seenBoards = new Set<string>();
+    let earlyFromAccessibleBank = 0;
+    for (let attempt = 0; attempt < 300; attempt++) {
+      const run = createNbaMillionaireRun(`fan-ladder-${attempt}`);
+      expect(new Set(run.map(question => question.id)).size).toBe(8);
+      seenBoards.add(run.map(question => question.id).join("|"));
+      for (let index = 2; index <= 5; index++) {
+        const source = byId.get(run[index]!.id);
+        expect(source).toBeDefined();
+        expect(["mvp", "finals", "champ", "draft", "rookie"]).toContain(source!.source);
+        // Even at Q6, the user gets a familiar player/franchise question,
+        // not an obscure yearly reserve/defensive award.
+        expect(["dpoy", "sixth"]).not.toContain(source!.source);
+        if (index <= 4 && Number(source!.id.split("-")[3]) <= 4) earlyFromAccessibleBank += 1;
+      }
+      expect(run[7]!.id).toMatch(/^nba-millionaire-q8-/);
+      expect(run[0]!.id).toMatch(/^nba-millionaire-q1-/);
+    }
+    expect(seenBoards.size).toBe(300);
+    expect(earlyFromAccessibleBank).toBeGreaterThan(300);
+  });
+
   it("shares Football's exact jackpot/walk-away scoring and does not start official Daily scoring", () => {
     const board=createNbaMillionaireRun("nba-scoring");
     let state=createMillionaireState(board);
