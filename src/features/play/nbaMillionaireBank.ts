@@ -237,7 +237,7 @@ const drafts: Draft[] = rows(`
 2026|AJ Dybantsa|Washington Wizards
 `,([year,name,team])=>({year:Number(year),name,team}));
 
-function era(year: number) { return year < 1990 ? "1980s" : year < 2000 ? "1990s" : year < 2010 ? "2000s" : year < 2020 ? "2010s" : "2020s"; }
+function era(year: number) { return year < 1980 ? "classics" : year < 1990 ? "1980s" : year < 2000 ? "1990s" : year < 2010 ? "2000s" : year < 2020 ? "2010s" : "2020s"; }
 const allNames = [...new Set([...mvps,...finalsMvps,...drafts].map(row=>row.name))];
 const allTeams = [...new Set([...mvps,...finalsMvps,...drafts].map(row=>row.team).concat(finals.flatMap(row=>[row.winner,row.loser])))];
 function plausible(answer: string, rows: readonly string[], index: number): string[] {
@@ -268,12 +268,638 @@ function pickRow<T extends {year:number}>(all: T[], level: number, index: number
   const eligible=all.filter(item=>item.year>=first&&item.year<=last);
   return eligible[(index*(first===2020?5:7)+level*3)%eligible.length]!;
 }
+// Carefully authored NBA moments supplement: five subject-diverse questions
+// per tier, with individual NBA historical source pointers and explanations.
+const NBA_EDITORIAL_MOMENTS: readonly (readonly Omit<Fact, "id">[])[] = [
+  [
+    {
+      "prompt": "Which NBA star scored 81 points against Toronto in 2006?",
+      "correct": "Kobe Bryant",
+      "wrong": [
+        "Tracy McGrady",
+        "Allen Iverson",
+        "Vince Carter"
+      ],
+      "explanation": "Kobe Bryant scored 81 points for the Lakers against the Raptors on January 22, 2006.",
+      "statSheet": "It happened in a Los Angeles Lakers home game.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2000s",
+      "category": "iconic-moments",
+      "year": 2006,
+      "subject": "Kobe Bryant"
+    },
+    {
+      "prompt": "Who scored a record 100 points in a 1962 NBA game?",
+      "correct": "Wilt Chamberlain",
+      "wrong": [
+        "Bill Russell",
+        "Elgin Baylor",
+        "Jerry West"
+      ],
+      "explanation": "Wilt Chamberlain scored 100 for the Philadelphia Warriors against the New York Knicks in March 1962.",
+      "statSheet": "He was a dominant center for the Philadelphia Warriors.",
+      "source": "https://www.nba.com/news/history-all-time-records",
+      "category": "records",
+      "year": 1962,
+      "subject": "Wilt Chamberlain"
+    },
+    {
+      "prompt": "Which team did LeBron James win his first NBA championship with in 2012?",
+      "correct": "Miami Heat",
+      "wrong": [
+        "Cleveland Cavaliers",
+        "Los Angeles Lakers",
+        "San Antonio Spurs"
+      ],
+      "explanation": "LeBron James claimed his first NBA championship with the Miami Heat in the 2012 NBA Finals.",
+      "statSheet": "Dwyane Wade was one of his teammates on the title team.",
+      "source": "https://www.nba.com/news/history-nba-champions",
+      "category": "careers",
+      "year": 2012,
+      "subject": "Miami Heat"
+    },
+    {
+      "prompt": "Which franchise won all six of Michael Jordan's NBA championships?",
+      "correct": "Chicago Bulls",
+      "wrong": [
+        "Washington Wizards",
+        "Los Angeles Lakers",
+        "Boston Celtics"
+      ],
+      "explanation": "Michael Jordan led Chicago to six NBA titles, with two separate three-peats in the 1990s.",
+      "statSheet": "The team was coached by Phil Jackson during both three-peats.",
+      "source": "https://www.nba.com/news/history-nba-champions",
+      "category": "dynasties",
+      "year": 1998,
+      "subject": "Chicago Bulls"
+    },
+    {
+      "prompt": "Which team won its first NBA title with Nikola Jokic in 2023?",
+      "correct": "Denver Nuggets",
+      "wrong": [
+        "Phoenix Suns",
+        "Milwaukee Bucks",
+        "Minnesota Timberwolves"
+      ],
+      "explanation": "Nikola Jokic and the Denver Nuggets won their first NBA championship in 2023.",
+      "statSheet": "They defeated the Miami Heat in the championship series.",
+      "source": "https://www.nba.com/news/history-nba-champions",
+      "category": "franchises",
+      "year": 2023,
+      "subject": "Denver Nuggets"
+    }
+  ],
+  [
+    {
+      "prompt": "Michael Jordan's famous 1989 playoff buzzer-beater, 'The Shot,' eliminated which team?",
+      "correct": "Cleveland Cavaliers",
+      "wrong": [
+        "Detroit Pistons",
+        "New York Knicks",
+        "Atlanta Hawks"
+      ],
+      "explanation": "Michael Jordan hit 'The Shot' over Craig Ehlo to beat Cleveland in Game 5 of the 1989 first round.",
+      "statSheet": "Craig Ehlo defended the shot as the Bulls advanced.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-1980s",
+      "category": "iconic-moments",
+      "year": 1989,
+      "subject": "Cleveland Cavaliers"
+    },
+    {
+      "prompt": "Which team lost the 2016 NBA Finals after holding a 3-1 series lead?",
+      "correct": "Golden State Warriors",
+      "wrong": [
+        "San Antonio Spurs",
+        "Oklahoma City Thunder",
+        "Toronto Raptors"
+      ],
+      "explanation": "Golden State took a 3-1 Finals lead before Cleveland completed the historic comeback.",
+      "statSheet": "The losing team had won 73 regular-season games.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2010s",
+      "category": "playoff-history",
+      "year": 2016,
+      "subject": "Golden State Warriors"
+    },
+    {
+      "prompt": "Kevin Garnett joined Boston's championship-bound Big Three after leaving which team?",
+      "correct": "Minnesota Timberwolves",
+      "wrong": [
+        "Brooklyn Nets",
+        "Phoenix Suns",
+        "Detroit Pistons"
+      ],
+      "explanation": "Boston acquired Kevin Garnett from Minnesota in 2007 and won the championship in 2008.",
+      "statSheet": "The player had previously won NBA MVP in 2004.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2000s",
+      "category": "trades",
+      "year": 2007,
+      "subject": "Minnesota Timberwolves"
+    },
+    {
+      "prompt": "Who hit the famous late three-pointer that forced overtime in Game 6 of the 2013 Finals?",
+      "correct": "Ray Allen",
+      "wrong": [
+        "Shane Battier",
+        "Mario Chalmers",
+        "Mike Miller"
+      ],
+      "explanation": "Ray Allen's corner three tied Game 6 against the Spurs and kept Miami's title hopes alive.",
+      "statSheet": "He had won a title with Boston before joining Miami.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2010s",
+      "category": "finals-moments",
+      "year": 2013,
+      "subject": "Ray Allen"
+    },
+    {
+      "prompt": "Which Rockets guard won NBA MVP for the 2017-18 season?",
+      "correct": "James Harden",
+      "wrong": [
+        "Chris Paul",
+        "Russell Westbrook",
+        "Eric Gordon"
+      ],
+      "explanation": "James Harden won the NBA's 2017-18 regular-season MVP while playing for Houston.",
+      "statSheet": "The winner was known for his step-back three-pointer.",
+      "source": "https://www.nba.com/news/history-mvp-award-winners",
+      "category": "awards",
+      "year": 2018,
+      "subject": "James Harden"
+    }
+  ],
+  [
+    {
+      "prompt": "Who became the first unanimous NBA regular-season MVP in 2016?",
+      "correct": "Stephen Curry",
+      "wrong": [
+        "LeBron James",
+        "Kevin Durant",
+        "Kawhi Leonard"
+      ],
+      "explanation": "Stephen Curry received every first-place MVP vote for his 2015-16 season with Golden State.",
+      "statSheet": "His team set a then-record with 73 regular-season wins.",
+      "source": "https://www.nba.com/news/history-mvp-award-winners",
+      "category": "awards-history",
+      "year": 2016,
+      "subject": "Stephen Curry"
+    },
+    {
+      "prompt": "Which Canadian franchise won its first NBA championship in 2019?",
+      "correct": "Toronto Raptors",
+      "wrong": [
+        "Vancouver Grizzlies",
+        "Montreal Royals",
+        "Ottawa Nationals"
+      ],
+      "explanation": "The Toronto Raptors won the 2019 NBA championship, the first in their franchise history.",
+      "statSheet": "Kawhi Leonard earned Finals MVP for the champion.",
+      "source": "https://www.nba.com/news/history-nba-champions",
+      "category": "franchises",
+      "year": 2019,
+      "subject": "Toronto Raptors"
+    },
+    {
+      "prompt": "Stephen Curry earned his first NBA Finals MVP award in which year?",
+      "correct": "2022",
+      "wrong": [
+        "2015",
+        "2016",
+        "2017"
+      ],
+      "explanation": "Stephen Curry won his first NBA Finals MVP in 2022, following the Warriors' title win over Boston.",
+      "statSheet": "His team defeated the Celtics in six games.",
+      "source": "https://www.nba.com/news/history-finals-mvp-winners",
+      "category": "finals-mvp",
+      "year": 2022,
+      "subject": "2022"
+    },
+    {
+      "prompt": "Which team won the 2020 NBA title inside the Orlando playoff bubble?",
+      "correct": "Los Angeles Lakers",
+      "wrong": [
+        "Miami Heat",
+        "Boston Celtics",
+        "Denver Nuggets"
+      ],
+      "explanation": "The Los Angeles Lakers beat the Miami Heat in the 2020 NBA Finals in the Orlando bubble.",
+      "statSheet": "LeBron James was the Finals MVP.",
+      "source": "https://www.nba.com/news/history-nba-champions",
+      "category": "championship",
+      "year": 2020,
+      "subject": "Los Angeles Lakers"
+    },
+    {
+      "prompt": "Who won the NBA Rookie of the Year award for the 2017-18 season?",
+      "correct": "Ben Simmons",
+      "wrong": [
+        "Donovan Mitchell",
+        "Jayson Tatum",
+        "Lonzo Ball"
+      ],
+      "explanation": "Ben Simmons was named the 2017-18 NBA Rookie of the Year with Philadelphia.",
+      "statSheet": "He made his NBA debut in 2017 after missing his first season due to injury.",
+      "source": "https://www.nba.com/history",
+      "category": "rookie-awards",
+      "year": 2018,
+      "subject": "Ben Simmons"
+    }
+  ],
+  [
+    {
+      "prompt": "Which team drafted Dirk Nowitzki ninth overall in 1998 before trading his rights to Dallas?",
+      "correct": "Milwaukee Bucks",
+      "wrong": [
+        "Boston Celtics",
+        "Phoenix Suns",
+        "Toronto Raptors"
+      ],
+      "explanation": "Milwaukee selected Dirk Nowitzki at No. 9 in 1998 before trading his rights to the Mavericks.",
+      "statSheet": "The player went on to spend his NBA career in Dallas.",
+      "source": "https://www.nba.com/news/history-draft",
+      "category": "draft-trades",
+      "year": 1998,
+      "subject": "Milwaukee Bucks"
+    },
+    {
+      "prompt": "Which team originally selected Kobe Bryant in the 1996 NBA Draft?",
+      "correct": "Charlotte Hornets",
+      "wrong": [
+        "Los Angeles Lakers",
+        "Philadelphia 76ers",
+        "New Jersey Nets"
+      ],
+      "explanation": "Charlotte selected Kobe Bryant 13th in the 1996 draft and traded his rights to the Lakers.",
+      "statSheet": "The selection came directly out of high school.",
+      "source": "https://www.nba.com/news/history-draft",
+      "category": "draft-trades",
+      "year": 1996,
+      "subject": "Charlotte Hornets"
+    },
+    {
+      "prompt": "LeBron James passed which legend as the NBA's all-time regular-season scoring leader in 2023?",
+      "correct": "Kareem Abdul-Jabbar",
+      "wrong": [
+        "Karl Malone",
+        "Wilt Chamberlain",
+        "Michael Jordan"
+      ],
+      "explanation": "LeBron James surpassed Kareem Abdul-Jabbar's longtime career regular-season points record in February 2023.",
+      "statSheet": "The previous leader had starred for Milwaukee and the Lakers.",
+      "source": "https://www.nba.com/news/history-all-time-records",
+      "category": "records",
+      "year": 2023,
+      "subject": "Kareem Abdul-Jabbar"
+    },
+    {
+      "prompt": "How many regular-season games did the 2015-16 Golden State Warriors win?",
+      "correct": "73",
+      "wrong": [
+        "72",
+        "70",
+        "74"
+      ],
+      "explanation": "Golden State won 73 games in 2015-16, breaking Chicago's 72-win regular-season record.",
+      "statSheet": "The previous best had been set by the 1995-96 Bulls.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2010s",
+      "category": "records",
+      "year": 2016,
+      "subject": "73"
+    },
+    {
+      "prompt": "The 2011 Dallas Mavericks defeated which team to win Dirk Nowitzki's first championship?",
+      "correct": "Miami Heat",
+      "wrong": [
+        "Boston Celtics",
+        "Oklahoma City Thunder",
+        "Los Angeles Lakers"
+      ],
+      "explanation": "Dallas beat Miami in six games in the 2011 NBA Finals, with Dirk Nowitzki winning Finals MVP.",
+      "statSheet": "Dallas faced LeBron James and Dwyane Wade in the championship series.",
+      "source": "https://www.nba.com/news/history-nba-champions",
+      "category": "finals-matchups",
+      "year": 2011,
+      "subject": "Miami Heat"
+    }
+  ],
+  [
+    {
+      "prompt": "Who won the 2017 NBA MVP after averaging a triple-double for the season?",
+      "correct": "Russell Westbrook",
+      "wrong": [
+        "James Harden",
+        "Stephen Curry",
+        "Chris Paul"
+      ],
+      "explanation": "Russell Westbrook won the 2016-17 MVP after averaging a triple-double for Oklahoma City.",
+      "statSheet": "He had remained with the Thunder after Kevin Durant's departure.",
+      "source": "https://www.nba.com/news/history-mvp-award-winners",
+      "category": "records",
+      "year": 2017,
+      "subject": "Russell Westbrook"
+    },
+    {
+      "prompt": "Which Bulls superstar won both MVP and Defensive Player of the Year in 1988?",
+      "correct": "Michael Jordan",
+      "wrong": [
+        "Scottie Pippen",
+        "Dennis Rodman",
+        "Horace Grant"
+      ],
+      "explanation": "Michael Jordan won both the regular-season MVP and Defensive Player of the Year awards for 1987-88.",
+      "statSheet": "He was also the NBA scoring champion that season.",
+      "source": "https://www.nba.com/history",
+      "category": "awards-history",
+      "year": 1988,
+      "subject": "Michael Jordan"
+    },
+    {
+      "prompt": "Which Spurs star won consecutive regular-season MVP awards in 2002 and 2003?",
+      "correct": "Tim Duncan",
+      "wrong": [
+        "David Robinson",
+        "Tony Parker",
+        "Manu Ginobili"
+      ],
+      "explanation": "Tim Duncan won the 2001-02 and 2002-03 MVP awards while leading San Antonio.",
+      "statSheet": "The winner also took home Finals MVP in 2003.",
+      "source": "https://www.nba.com/news/history-mvp-award-winners",
+      "category": "awards-history",
+      "year": 2003,
+      "subject": "Tim Duncan"
+    },
+    {
+      "prompt": "The 1995 Orlando Magic fell to which team in Shaquille O'Neal's first NBA Finals?",
+      "correct": "Houston Rockets",
+      "wrong": [
+        "Chicago Bulls",
+        "New York Knicks",
+        "San Antonio Spurs"
+      ],
+      "explanation": "Houston swept Orlando in the 1995 Finals to repeat as NBA champion.",
+      "statSheet": "The winning center was Hakeem Olajuwon.",
+      "source": "https://www.nba.com/news/history-nba-champions",
+      "category": "playoff-history",
+      "year": 1995,
+      "subject": "Houston Rockets"
+    },
+    {
+      "prompt": "Which team had a 27-game winning streak during the 2012-13 NBA season?",
+      "correct": "Miami Heat",
+      "wrong": [
+        "Chicago Bulls",
+        "San Antonio Spurs",
+        "Oklahoma City Thunder"
+      ],
+      "explanation": "Miami won 27 consecutive games in 2012-13 before the streak ended against Chicago.",
+      "statSheet": "LeBron James was in his third season with the team.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2010s",
+      "category": "records",
+      "year": 2013,
+      "subject": "Miami Heat"
+    }
+  ],
+  [
+    {
+      "prompt": "Who scored 71 points for San Antonio against the Clippers in 1994?",
+      "correct": "David Robinson",
+      "wrong": [
+        "Tim Duncan",
+        "Shaquille O'Neal",
+        "Hakeem Olajuwon"
+      ],
+      "explanation": "David Robinson scored 71 against the Clippers on April 24, 1994, winning the scoring race.",
+      "statSheet": "His nickname was The Admiral.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-1990s",
+      "category": "scoring-records",
+      "year": 1994,
+      "subject": "David Robinson"
+    },
+    {
+      "prompt": "Michael Jordan made his 1989 series-winning 'The Shot' over which Cavaliers defender?",
+      "correct": "Craig Ehlo",
+      "wrong": [
+        "Mark Price",
+        "Ron Harper",
+        "Larry Nance"
+      ],
+      "explanation": "Craig Ehlo was guarding Michael Jordan when he hit the Game 5 winner in Cleveland in 1989.",
+      "statSheet": "The play eliminated the Cavaliers in the first round.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-1980s",
+      "category": "iconic-moments",
+      "year": 1989,
+      "subject": "Craig Ehlo"
+    },
+    {
+      "prompt": "Who set the NBA single-game record by making 14 three-pointers in 2018?",
+      "correct": "Klay Thompson",
+      "wrong": [
+        "Stephen Curry",
+        "Damian Lillard",
+        "James Harden"
+      ],
+      "explanation": "Klay Thompson hit 14 three-pointers against Chicago in October 2018.",
+      "statSheet": "He was a member of Golden State's Splash Brothers.",
+      "source": "https://www.nba.com/news/history-all-time-records",
+      "category": "shooting-records",
+      "year": 2018,
+      "subject": "Klay Thompson"
+    },
+    {
+      "prompt": "Which Warriors player was on the receiving end of LeBron James' famous 2016 Finals Game 7 block?",
+      "correct": "Andre Iguodala",
+      "wrong": [
+        "Harrison Barnes",
+        "Draymond Green",
+        "Shaun Livingston"
+      ],
+      "explanation": "LeBron James chased down Andre Iguodala to make his famous Game 7 block in the 2016 Finals.",
+      "statSheet": "The stop occurred late in a tie game in Oakland.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2010s",
+      "category": "finals-moments",
+      "year": 2016,
+      "subject": "Andre Iguodala"
+    },
+    {
+      "prompt": "Which player arrived in Boston from Seattle to complete the 2007-08 Celtics Big Three?",
+      "correct": "Ray Allen",
+      "wrong": [
+        "Paul Pierce",
+        "Rajon Rondo",
+        "Eddie House"
+      ],
+      "explanation": "Ray Allen joined Boston via trade from Seattle in 2007, alongside Kevin Garnett's arrival.",
+      "statSheet": "He was already an elite three-point shooter before becoming a champion.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2000s",
+      "category": "trades",
+      "year": 2007,
+      "subject": "Ray Allen"
+    }
+  ],
+  [
+    {
+      "prompt": "Who scored eight points in nine seconds for Indiana against the Knicks in the 1995 playoffs?",
+      "correct": "Reggie Miller",
+      "wrong": [
+        "Jalen Rose",
+        "Mark Jackson",
+        "Rik Smits"
+      ],
+      "explanation": "Reggie Miller stunned New York with eight points in nine seconds in the 1995 Eastern Conference semifinals.",
+      "statSheet": "The iconic sequence came at Madison Square Garden.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-1990s",
+      "category": "playoff-moments",
+      "year": 1995,
+      "subject": "Reggie Miller"
+    },
+    {
+      "prompt": "Which coach passed Red Auerbach by winning his 10th NBA title as head coach in 2009?",
+      "correct": "Phil Jackson",
+      "wrong": [
+        "Pat Riley",
+        "Gregg Popovich",
+        "Larry Brown"
+      ],
+      "explanation": "Phil Jackson won his tenth championship as a head coach with the Lakers in 2009.",
+      "statSheet": "He had previously won six titles coaching Chicago.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2000s",
+      "category": "coaching-history",
+      "year": 2009,
+      "subject": "Phil Jackson"
+    },
+    {
+      "prompt": "Which Golden State reserve won NBA Finals MVP in 2015?",
+      "correct": "Andre Iguodala",
+      "wrong": [
+        "Shaun Livingston",
+        "David Lee",
+        "Leandro Barbosa"
+      ],
+      "explanation": "Andre Iguodala was named 2015 Finals MVP in Golden State's title victory over Cleveland.",
+      "statSheet": "He moved into the starting lineup during the series.",
+      "source": "https://www.nba.com/news/history-finals-mvp-winners",
+      "category": "finals-mvp",
+      "year": 2015,
+      "subject": "Andre Iguodala"
+    },
+    {
+      "prompt": "The Spurs' celebrated 2014 team-passing title run ended with a Finals win over whom?",
+      "correct": "Miami Heat",
+      "wrong": [
+        "Oklahoma City Thunder",
+        "Cleveland Cavaliers",
+        "Indiana Pacers"
+      ],
+      "explanation": "San Antonio beat Miami in the 2014 Finals, playing the fluid team basketball for which the Spurs were known.",
+      "statSheet": "The opponent had defeated San Antonio one year earlier.",
+      "source": "https://www.nba.com/news/history-nba-champions",
+      "category": "championship",
+      "year": 2014,
+      "subject": "Miami Heat"
+    },
+    {
+      "prompt": "Which team handed the 2000-01 Lakers their only playoff loss?",
+      "correct": "Philadelphia 76ers",
+      "wrong": [
+        "San Antonio Spurs",
+        "Sacramento Kings",
+        "Portland Trail Blazers"
+      ],
+      "explanation": "Philadelphia won Game 1 of the 2001 NBA Finals; the Lakers finished the playoffs 15-1.",
+      "statSheet": "Allen Iverson famously stepped over Tyronn Lue in that victory.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-2000s",
+      "category": "playoff-history",
+      "year": 2001,
+      "subject": "Philadelphia 76ers"
+    }
+  ],
+  [
+    {
+      "prompt": "Who was the only NBA Finals MVP from the losing team, earning the award in 1969?",
+      "correct": "Jerry West",
+      "wrong": [
+        "Elgin Baylor",
+        "John Havlicek",
+        "Wilt Chamberlain"
+      ],
+      "explanation": "Jerry West was awarded the inaugural Finals MVP even though the Lakers lost the 1969 Finals to Boston.",
+      "statSheet": "He starred for Los Angeles during the Bill Russell era.",
+      "source": "https://www.nba.com/news/history-finals-mvp-winners",
+      "category": "awards-history",
+      "year": 1969,
+      "subject": "Jerry West"
+    },
+    {
+      "prompt": "Which 1981 NBA Finals MVP never made an NBA All-Star team?",
+      "correct": "Cedric Maxwell",
+      "wrong": [
+        "Larry Bird",
+        "Kevin McHale",
+        "Robert Parish"
+      ],
+      "explanation": "Cedric Maxwell won the 1981 Finals MVP for Boston despite never being selected as an NBA All-Star.",
+      "statSheet": "The champion was the Boston Celtics.",
+      "source": "https://www.nba.com/news/history-finals-mvp-winners",
+      "category": "finals-mvp",
+      "year": 1981,
+      "subject": "Cedric Maxwell"
+    },
+    {
+      "prompt": "Who won NBA MVP, Defensive Player of the Year and Finals MVP in the 1993-94 season?",
+      "correct": "Hakeem Olajuwon",
+      "wrong": [
+        "David Robinson",
+        "Michael Jordan",
+        "Patrick Ewing"
+      ],
+      "explanation": "Hakeem Olajuwon captured all three major individual honors while winning Houston's 1994 championship.",
+      "statSheet": "He played center for the Rockets.",
+      "source": "https://www.nba.com/history",
+      "category": "award-combinations",
+      "year": 1994,
+      "subject": "Hakeem Olajuwon"
+    },
+    {
+      "prompt": "Which 1995 NBA champion entered the playoffs as the Western Conference's No. 6 seed?",
+      "correct": "Houston Rockets",
+      "wrong": [
+        "San Antonio Spurs",
+        "Phoenix Suns",
+        "Orlando Magic"
+      ],
+      "explanation": "Houston won the 1995 title as a sixth seed, its second straight championship.",
+      "statSheet": "Hakeem Olajuwon won Finals MVP.",
+      "source": "https://www.nba.com/news/history-nba-top-moments-1990s",
+      "category": "championship-history",
+      "year": 1995,
+      "subject": "Houston Rockets"
+    },
+    {
+      "prompt": "Which rookie famously played center in the Lakers' 1980 Finals-clinching Game 6?",
+      "correct": "Magic Johnson",
+      "wrong": [
+        "Michael Cooper",
+        "Norm Nixon",
+        "Jamaal Wilkes"
+      ],
+      "explanation": "Rookie Magic Johnson played center with Kareem Abdul-Jabbar out and led Los Angeles to the title.",
+      "statSheet": "He earned Finals MVP as a rookie.",
+      "source": "https://www.nba.com/history",
+      "category": "finals-moments",
+      "year": 1980,
+      "subject": "Magic Johnson"
+    }
+  ]
+];
+
 function makeFact(level:number, number:number):Fact{
   const index=number%5, group=Math.floor(number/5), salt=level*5+number;
   const m=pickRow(mvps,level,index+group*4,number);
   const f=pickRow(finalsMvps,level,index+group*5,number);
   const series=pickRow(finals,level,index+group*6,number);
   const d=pickRow(drafts,level,index+group*3,number);
+  if(group===5){
+    const moment=NBA_EDITORIAL_MOMENTS[level-1]?.[index];
+    if(!moment)throw new Error("NBA Millionaire editorial question missing");
+    return {...moment,id:`nba-mil-q${level}-editorial-${index+1}`};
+  }
   if(group===0){
     return {id:`nba-mil-q${level}-champ-${series.year}`,prompt:`Which franchise won the ${series.year} NBA championship?`,
       correct:series.winner,wrong:nearTeams(series.year,series.winner),
