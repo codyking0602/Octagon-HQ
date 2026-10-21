@@ -1,4 +1,3 @@
-import { nbaMillionaireRun } from "./nbaMillionaireBank";
 import { createNbaMillionaireRun } from "../nba/nbaMillionaireBank";
 import {
   MILLIONAIRE_LEVELS,
@@ -61,11 +60,6 @@ export const MILLIONAIRE_HOSTS: Record<MillionaireLeague, readonly [string, stri
     "/assets/millionaire/Ufc1.png",
     "/assets/millionaire/Ufc2.png",
     "/assets/millionaire/Ufc3.png",
-  ],
-  nba: [
-    "/assets/millionaire/Nba1.png",
-    "/assets/millionaire/Nba2.png",
-    "/assets/millionaire/Nba3.png",
   ],
   mlb: [
     "/assets/millionaire/1mlb.webp",
@@ -336,7 +330,7 @@ const mlbSeeds: readonly QuestionSeed[] = [
 const seedsByLeague: Record<Exclude<MillionaireLeague, "nba">, readonly QuestionSeed[]> = { cfb: cfbSeeds, nfl: nflSeeds, ufc: ufcSeeds, mlb: mlbSeeds };
 
 export function millionaireCasualRun(league: MillionaireLeague): MillionaireRun {
-  if (league === "nba") return nbaMillionaireRun("nba-millionaire-default");
+  if (league === "nba") return createNbaMillionaireRun("nba-millionaire-default");
   return seedsByLeague[league].map((seed, index) => question(league, index, seed)) as unknown as MillionaireRun;
 }
 
