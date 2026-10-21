@@ -28,6 +28,6 @@ export const nbaMillionaireQ8 = [
 "Who was NBA Finals MVP in 1972 for the Lakers?|Wilt Chamberlain|Jerry West|Gail Goodrich|Elgin Baylor|Chamberlain earned Finals MVP in Los Angeles' 1972 title run.|awards|1970s|finals",
 "Who won the NBA's 1968–69 regular-season MVP?|Wes Unseld|Bill Russell|Wilt Chamberlain|Oscar Robertson|Unseld earned MVP in his rookie year with Baltimore.|awards|1960s|mvp",
 "Who was first overall in the 1983 NBA Draft?|Ralph Sampson|Clyde Drexler|Isiah Thomas|Dale Ellis|Houston selected Ralph Sampson first in 1983.|draft|1980s|draft",
-"Who won the 1980–81 NBA Finals MVP?|Cedric Maxwell|Larry Bird|Robert Parish|Moses Malone|Maxwell was Finals MVP in Boston's 1981 title run.|awards|1980s|finals",
+"Who was the 1969–70 NBA Finals MVP?|Willis Reed|Walt Frazier|Jerry West|Dave DeBusschere|Reed was Finals MVP when New York beat the Lakers in 1970.|awards|1980s|finals",
 "Who was the 1992–93 NBA Sixth Man of the Year?|Clifford Robinson|Detlef Schrempf|Toni Kukoč|Ricky Pierce|Robinson won the sixth man award with Portland in 1993.|awards|1990s|sixth",
 ] as const;
