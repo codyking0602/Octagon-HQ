@@ -66,7 +66,7 @@ export const NBA_MILLIONAIRE_STAT_SHEETS: readonly (readonly string[])[] = [
   "The rookie winner played his first season for San Antonio.",
   "The Finals featured a five-game victory over Dallas.",
   "The award-winning guard led Philadelphia to the 2001 NBA Finals."
-],,
+],
 [
   "The MVP was a Chicago point guard and the youngest winner in league history.",
   "The winner completed a comeback from a 3–1 Finals deficit.",
