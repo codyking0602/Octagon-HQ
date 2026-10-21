@@ -28,7 +28,7 @@ describe("Football weekly editorial must not reshape approved UI next Tuesday", 
     expect(source("../../styles/football-picks.css")).toContain(".football-picks-hero.has-weekly-art { aspect-ratio: 16 / 9;");
     expect(source("../../styles/football-picks.css")).toContain("@media(prefers-reduced-motion:reduce)");
     expect(picks).toContain("}, 8000)");
-    expect(picks).toContain("football-picks-hero__empty");
+    expect(picks).not.toContain("football-picks-hero__empty"); // No noisy blank header when art is absent.
     expect(home).not.toContain("football-hq-game-row__art");
     expect(modal).not.toContain("football-matchup-breakdown-weekly-art");
     expect(source("./HomePage.tsx")).not.toContain("home-ufc-poster");
