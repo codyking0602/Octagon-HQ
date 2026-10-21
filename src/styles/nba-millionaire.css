@@ -84,7 +84,11 @@
  * Future NBA host assets retain the ordinary dynamic title/ladder rendering.
  * Do not change photo assets, stage scale, safe-area layout or outer matte.
  */
-.millionaire-shell--nba.millionaire-shell--template-fallback .millionaire-title {
+/* Retain the live "NBA DAILY" label; the fallback plate already prints "MILLIONAIRE". */
+.millionaire-shell--nba.millionaire-shell--template-fallback .millionaire-title strong {
+  visibility: hidden !important;
+}
+.millionaire-shell--nba.millionaire-shell--template-fallback .millionaire-title::after {
   display: none !important;
 }
 .millionaire-shell--nba.millionaire-shell--template-fallback .millionaire-stage-canvas::after {
