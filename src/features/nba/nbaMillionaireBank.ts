@@ -1,6 +1,5 @@
 import { MILLIONAIRE_CHOICE_IDS, MILLIONAIRE_LEVELS, MILLIONAIRE_MONEY_BY_LEVEL, type MillionaireChoiceId, type MillionaireRuntimeQuestion } from "../games/millionaireAuthority";
 import type { MillionaireRun } from "../games/millionaireEngine";
-import { millionaireCentralDateKey } from "../play/MillionaireCasualModel";
 import { nbaMillionaireEarly } from "./nbaMillionaireEarly";
 import { nbaMillionaireQ3 } from "./nbaMillionaireQ3";
 import { nbaMillionaireQ4 } from "./nbaMillionaireQ4";
@@ -146,6 +145,11 @@ export function nextNbaMillionaireCasualRun(): MillionaireRun {
   } catch { /* No persistence required to play. */ }
   return run;
 }
-export function nbaMillionaireDailyPreviewRun(dateKey = millionaireCentralDateKey()): MillionaireRun {
+function chicagoDateKey(): string {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date());
+  const part = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
+  return [part("year"),part("month"),part("day")].join("-");
+}
+export function nbaMillionaireDailyPreviewRun(dateKey = chicagoDateKey()): MillionaireRun {
   return createNbaMillionaireRun(`daily-${dateKey}`);
 }
