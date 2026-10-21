@@ -2,6 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { canPreviewNbaWhoAmI } from "../nba/NbaWhoAmIOwnerGate";
+import { nbaMillionaireRun } from "./nbaMillionaireBank";
+import { createReplaySeed, loadLineupHistory, replayLineupIdentity, rememberLineup, recordLineupCompletion } from "./lineupModel";
 import { MILLIONAIRE_LEVELS, type MillionaireChoiceId } from "../games/millionaireAuthority";
 import {
   advanceMillionaireRuntime,
@@ -23,6 +26,7 @@ import {
   millionaireLeagueLabel,
   millionaireMoneyLabel,
   millionaireHostAsset,
+  millionaireCentralDateKey,
   millionaireTimeLabel,
   millionaireTimeoutTransition,
   type MillionaireLeague,
@@ -32,6 +36,7 @@ import "./MillionaireCasualPolish.css";
 import "./MillionairePortrait.css";
 import "./MillionairePortraitRefine.css";
 import "./MillionaireFixedStage.css";
+import "../../styles/nba-millionaire.css";
 
 export type MillionaireCasualActionRecord =
   | { type: "answer"; choiceId: MillionaireChoiceId }
@@ -51,7 +56,8 @@ export type MillionaireCasualSettledResult = {
 };
 
 type MillionaireCasualPageProps = {
-  scope: "ufc" | "football" | "mlb";
+  scope: "ufc" | "football" | "mlb" | "nba";
+  dailyPreview?: boolean;
   onSettled?: (result: MillionaireCasualSettledResult) => void;
   runOverride?: MillionaireRun;
   accessMode?: "owner-review" | "production";
@@ -204,12 +210,14 @@ function MillionaireGame({
   onChangeLeague,
   onSettled,
   runOverride,
+  onReplay,
 }: {
   league: MillionaireLeague;
   onBack: () => void;
   onChangeLeague?: () => void;
   onSettled?: (result: MillionaireCasualSettledResult) => void;
   runOverride?: MillionaireRun;
+  onReplay?: () => void;
 }) {
   const run = useMemo(() => runOverride ?? millionaireCasualRun(league), [league, runOverride]);
   const [gameState, setGameState] = useState<MillionaireState>(() => createMillionaireState(run));
@@ -347,6 +355,7 @@ function MillionaireGame({
   }
 
   function restart() {
+    if (league === "nba" && onReplay) { onReplay(); return; }
     timerIds.current.forEach((id) => window.clearTimeout(id));
     timerIds.current = [];
     timeoutQueued.current = false;
@@ -374,7 +383,12 @@ function MillionaireGame({
         className="millionaire-stage-canvas"
         style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
       >
-      <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
+      <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true"
+        onError={(event) => {
+          if (league !== "nba") return;
+          const fallback = "/assets/millionaire/wide_cinematic_game_show_studio_template_dark_bl_1.png";
+          if (!event.currentTarget.src.endsWith(fallback)) event.currentTarget.src = fallback;
+        }} />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
@@ -472,16 +486,30 @@ export default function MillionaireCasualPage({
   scope,
   onSettled,
   runOverride,
+  dailyPreview = false,
   accessMode = "owner-review",
 }: MillionaireCasualPageProps) {
   const identity = useIdentity();
   const navigate = useNavigate();
   const [footballLeague, setFootballLeague] = useState<"nfl" | "cfb" | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
-  const backRoute = scope === "ufc" ? "/play" : scope === "mlb" ? "/mlb" : "/football";
+  const [nbaSeed, setNbaSeed] = useState(() => createReplaySeed("nba-millionaire"));
+  const nbaDay = millionaireCentralDateKey();
+  const nbaRun = useMemo(() => {
+    if (scope !== "nba") return null;
+    if (dailyPreview) return nbaMillionaireRun(`nba-daily-preview:${nbaDay}`);
+    return nbaMillionaireRun(nbaSeed, loadLineupHistory("nba-millionaire", "casual").recentItemIds);
+  }, [scope, nbaSeed, dailyPreview, nbaDay]);
+  useEffect(() => {
+    if (scope !== "nba" || dailyPreview || !nbaRun) return;
+    rememberLineup(replayLineupIdentity("nba-millionaire", nbaSeed, "casual"), nbaRun.map(q => q.id));
+  }, [scope, nbaSeed, dailyPreview, nbaRun]);
+  const backRoute = scope === "ufc" ? "/play" : scope === "mlb" ? "/mlb" : scope === "nba" ? "/nba" : "/football";
 
   const productionAccess = accessMode === "production" && scope === "mlb";
-  if (!identity.profile || (!productionAccess && !identity.profile.canControlPicks)) {
+  if (!identity.profile || (scope === "nba"
+    ? !canPreviewNbaWhoAmI(identity.profile)
+    : (!productionAccess && !identity.profile.canControlPicks))) {
     return <Navigate to={backRoute} replace />;
   }
 
@@ -489,17 +517,21 @@ export default function MillionaireCasualPage({
   if (scope === "football" && footballLeague === null) {
     content = <LeagueChooser onChoose={(league) => { setFootballLeague(league); setGameStarted(false); }} onBack={() => navigate(backRoute)} />;
   } else {
-    const league: MillionaireLeague = scope === "ufc" ? "ufc" : scope === "mlb" ? "mlb" : footballLeague!;
+    const league: MillionaireLeague = scope === "ufc" ? "ufc" : scope === "mlb" ? "mlb" : scope === "nba" ? "nba" : footballLeague!;
     const introBack = scope === "football" ? () => setFootballLeague(null) : () => navigate(backRoute);
     const changeLeague = scope === "football" ? () => { setGameStarted(false); setFootballLeague(null); } : undefined;
     content = gameStarted
       ? <MillionaireGame
-          key={league}
+          key={league === "nba" ? `${league}-${dailyPreview ? "daily" : nbaSeed}` : league}
           league={league}
           onBack={() => navigate(backRoute)}
           onChangeLeague={changeLeague}
-          onSettled={onSettled}
-          runOverride={runOverride}
+          onSettled={(result) => {
+            if (scope === "nba" && !dailyPreview) recordLineupCompletion(replayLineupIdentity("nba-millionaire", nbaSeed, "casual"), result);
+            onSettled?.(result);
+          }}
+          onReplay={scope === "nba" && !dailyPreview ? () => setNbaSeed(createReplaySeed("nba-millionaire")) : undefined}
+          runOverride={runOverride ?? nbaRun ?? undefined}
         />
       : <MillionaireRulesIntro league={league} onStart={() => setGameStarted(true)} onBack={introBack} />;
   }
