@@ -5,6 +5,7 @@ import {
   footballPublishedSpotlight,
   mergeFootballWeeklyMatchupBreakdowns,
   parsePublishedFootballWeek,
+  publishedFootballMatchup,
   publishedFootballMatchupsForEvent,
 } from "./footballWeeklyPublication";
 
@@ -51,6 +52,48 @@ describe("public Football weekly release projection", () => {
     expect(spotlight.teamColor).toBe("#008435");
     expect(spotlight.highlightUrl).toContain("youtu.be");
     expect(spotlight.stats).toHaveLength(4);
+  });
+
+  it("restores verified AP rankings, records and season-correct team links on live Ole Miss–Texas", () => {
+    const week = parsePublishedFootballWeek({ cfb: {
+      ...sport, week_of: "2026-10-20",
+      game: { ...sport.game, away_team: "Ole Miss", home_team: "Texas",
+        kickoff_at: "2026-10-24T23:30:00Z",
+        header_asset_path: "/assets/football/weekly/2026-10-20/cfb/game-header.webp" },
+    }, nfl: null });
+    const game = publishedFootballMatchup("cfb", week.cfb!);
+    expect(game.compact?.leagueLabel).toBe("CFB");
+    expect(game.compact?.rankingSource).toBe("AP");
+    expect(game.teams[0]).toMatchObject({
+      name: "Ole Miss", rank: 7, record: "5-1",
+      sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/mississippi/2026.html",
+    });
+    expect(game.teams[1]).toMatchObject({
+      name: "Texas", rank: 19, record: "4-2",
+      sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/texas/2026.html",
+    });
+  });
+
+  it("never carries current-week AP rankings into a future matchup, and consumes sourced future data", () => {
+    const nextWeek = parsePublishedFootballWeek({ cfb: {
+      ...sport, week_of: "2026-10-27",
+      game: { ...sport.game, away_team: "Ole Miss", home_team: "Texas",
+        kickoff_at: "2026-10-31T23:30:00Z",
+        header_asset_path: "/assets/football/weekly/2026-10-27/cfb/game-header.webp" },
+    }, nfl: null }).cfb!;
+    const unknown = publishedFootballMatchup("cfb", nextWeek);
+    expect(unknown.compact?.rankingSource).toBeUndefined();
+    expect(unknown.teams.map((team) => team.rank)).toEqual([undefined, undefined]);
+    expect(unknown.teams.map((team) => team.record)).toEqual([undefined, undefined]);
+    const sourced = publishedFootballMatchup("cfb", {
+      ...nextWeek, game: { ...nextWeek.game,
+        away_rank: 4, home_rank: null, away_record: "6-1", home_record: "4-3",
+        ranking_source: "AP",
+      },
+    });
+    expect(sourced.compact?.rankingSource).toBe("AP");
+    expect(sourced.teams[0]).toMatchObject({ rank: 4, record: "6-1" });
+    expect(sourced.teams[1]).toMatchObject({ rank: null, record: "4-3" });
   });
 
   it("only attaches published GOTW breakdown when exact matchup and kickoff are on the Picks event", () => {

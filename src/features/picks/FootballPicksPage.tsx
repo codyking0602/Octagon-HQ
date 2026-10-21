@@ -31,6 +31,9 @@ function weeklyHeroIdentity(team: FootballMatchupBreakdown["teams"][number]) {
     name: team.name,
     logo: team.logoUrl ?? current.logoSrc,
     code: current.code,
+    href: team.sportsReferenceUrl ?? null,
+    record: team.record ?? null,
+    rank: team.rank ?? null,
     primary: colors?.[0] ?? team.themeColor ?? current.primary,
     accent: colors?.[1] ?? current.secondary,
   };
@@ -138,6 +141,7 @@ export default function FootballPicksPage() {
       title: game.title,
       away: weeklyHeroIdentity(game.teams[0]),
       home: weeklyHeroIdentity(game.teams[1]),
+      rankingSource: game.compact?.rankingSource ?? null,
       kickoff: game.kickoffAt,
     })), [matchupBreakdowns]);
   const posters = useMemo(() => weeklyHeroes.length ? [] : pickEventPosters(event), [weeklyHeroes.length, event]);
@@ -278,13 +282,29 @@ export default function FootballPicksPage() {
                 aria-hidden={index !== (activePosterIndex % weeklyHeroes.length)}>
                 <span className="football-picks-weekly-slide__eyebrow">THE HQ · GAME OF THE WEEK</span>
                 <div className="football-picks-weekly-slide__matchup">
-                  {[featured.away, featured.home].map((team) => (
-                    <div className="football-picks-weekly-slide__team" key={team.name}>
-                      {team.logo ? <img src={team.logo} alt="" loading="lazy" /> :
-                        <strong className="football-picks-weekly-slide__initials">{team.code}</strong>}
-                      <strong className="football-picks-weekly-slide__team-name">{team.name}</strong>
-                    </div>
-                  ))}
+                  {[featured.away, featured.home].map((team) => {
+                    const contents = (
+                      <>
+                        {team.logo ? <img src={team.logo} alt="" loading="lazy" /> :
+                          <strong className="football-picks-weekly-slide__initials">{team.code}</strong>}
+                        <strong className="football-picks-weekly-slide__team-name">{team.name}</strong>
+                        {(team.record || (featured.rankingSource && team.rank != null)) ? (
+                          <span className="football-picks-weekly-slide__team-meta">
+                            {featured.rankingSource && team.rank != null ? `${featured.rankingSource} #${team.rank}` : null}
+                            {featured.rankingSource && team.rank != null && team.record ? " · " : null}
+                            {team.record}
+                          </span>
+                        ) : null}
+                      </>
+                    );
+                    return team.href ? (
+                      <a className="football-picks-weekly-slide__team" key={team.name}
+                        href={team.href} aria-label={team.name} target="_blank" rel="noopener noreferrer"
+                        title={`Open ${team.name} ${event.season} season on Sports Reference`}>
+                        {contents}
+                      </a>
+                    ) : <div className="football-picks-weekly-slide__team" key={team.name}>{contents}</div>;
+                  })}
                   <span className="football-picks-weekly-slide__versus">VS</span>
                 </div>
                 <span className="football-picks-weekly-slide__footer">{featured.kickoff ? footballDateTimeLabel(featured.kickoff) : "FEATURED MATCHUP"}</span>

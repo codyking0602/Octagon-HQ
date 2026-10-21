@@ -74,15 +74,13 @@ function CompactMatchupHeader({
     const logoSrc = team.logoUrl ?? identity.logoSrc;
     const rankLabel = rankingSource && team.rank != null ? `${rankingSource} #${team.rank}` : null;
 
-    return (
-      <div className={`football-matchup-breakdown-feature-team is-${side}`}>
+    const contents = (
+      <>
         <span className="football-matchup-breakdown-feature-team__logo" aria-hidden="true">
           {logoSrc ? <img src={logoSrc} alt="" /> : <b>{identity.code}</b>}
         </span>
         <div>
-          {team.sportsReferenceUrl ? (
-            <a href={team.sportsReferenceUrl} target="_blank" rel="noreferrer">{team.name}</a>
-          ) : <strong>{team.name}</strong>}
+          <strong>{team.name}</strong>
           {rankLabel || team.record ? (
             <span>
               {rankLabel ? <b>{rankLabel}</b> : null}
@@ -91,8 +89,14 @@ function CompactMatchupHeader({
             </span>
           ) : null}
         </div>
-      </div>
+      </>
     );
+    const teamClass = `football-matchup-breakdown-feature-team is-${side}`;
+    // Make the entire club identity (logo, team, rank and record) tappable.
+    return team.sportsReferenceUrl
+      ? <a className={teamClass} href={team.sportsReferenceUrl} aria-label={team.name}
+          target="_blank" rel="noopener noreferrer">{contents}</a>
+      : <div className={teamClass}>{contents}</div>;
   }
 
   return (

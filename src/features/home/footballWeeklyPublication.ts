@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import { footballTeamSchoolMetadata, footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMetadata";
+import { footballTeamSportsReferenceUrl } from "./footballTeamSportsReference";
 import {
   footballWeeklyPreparedGameSchema,
   footballWeeklyPreparedSpotlightSchema,
@@ -39,6 +40,21 @@ export function footballPublishedSpotlight(item: PublishedFootballSport): Footba
   };
 }
 
+/** Current-week AP snapshot from the Oct 18, 2026 NCAA/AP Top 25 poll.
+ * https://www.ncaa.com/news/football/article/2026-10-18/miami-rises-no-1-texas-and-alabama-plummet-latest-ap-poll
+ * Exact date AND both team identities are required to avoid leaking stale polls
+ * into a future matchup. New weeks carry verified ranks/records in the canonical
+ * prepared game, with no inference or fabricated 'NR' labels. */
+const VERIFIED_OCT20_CFB = {
+  week: "2026-10-20",
+  away: "Ole Miss",
+  home: "Texas",
+  awayRank: 7,
+  homeRank: 19,
+  awayRecord: "5-1",
+  homeRecord: "4-2",
+} as const;
+
 export function publishedFootballMatchup(
   sport: FootballSpotlightKind,
   item: PublishedFootballSport,
@@ -46,17 +62,42 @@ export function publishedFootballMatchup(
   const away = item.game.away_team;
   const home = item.game.home_team;
   const proof = item.breakdown;
+  const season = Number(item.week_of.slice(0, 4));
+  const game = item.game;
+  const verifiedOct20 = sport === "cfb"
+    && item.week_of === VERIFIED_OCT20_CFB.week
+    && normTeam(away) === normTeam(VERIFIED_OCT20_CFB.away)
+    && normTeam(home) === normTeam(VERIFIED_OCT20_CFB.home);
+  const awayRank = game.away_rank === undefined
+    ? (verifiedOct20 ? VERIFIED_OCT20_CFB.awayRank : undefined) : game.away_rank;
+  const homeRank = game.home_rank === undefined
+    ? (verifiedOct20 ? VERIFIED_OCT20_CFB.homeRank : undefined) : game.home_rank;
+  const awayRecord = game.away_record ?? (verifiedOct20 ? VERIFIED_OCT20_CFB.awayRecord : undefined);
+  const homeRecord = game.home_record ?? (verifiedOct20 ? VERIFIED_OCT20_CFB.homeRecord : undefined);
+  const rankSource = sport === "cfb" && (awayRank != null || homeRank != null)
+    ? game.ranking_source ?? (verifiedOct20 ? "AP" : undefined)
+    : undefined;
   return {
     id: "weekly-" + item.week_of + "-" + sport,
     title: away + " at " + home,
     venue: "",
     kickoffAt: item.game.kickoff_at,
     headerAssetPath: item.game.header_asset_path,
-    teams: [{ name: away, aliases: [away] }, { name: home, aliases: [home] }],
+    teams: [
+      {
+        name: away, aliases: [away], rank: awayRank, record: awayRecord,
+        sportsReferenceUrl: footballTeamSportsReferenceUrl(away, sport === "cfb" ? "CFB" : "NFL", season) ?? undefined,
+      },
+      {
+        name: home, aliases: [home], rank: homeRank, record: homeRecord,
+        sportsReferenceUrl: footballTeamSportsReferenceUrl(home, sport === "cfb" ? "CFB" : "NFL", season) ?? undefined,
+      },
+    ],
     // Both sports use the existing approved 3-things / bottom-line compact sheet.
     // Keep full researched six-section proof below for audit and other consumers.
     compact: {
       leagueLabel: sport === "cfb" ? "CFB" : "NFL",
+      rankingSource: rankSource,
       setup: [{ text: proof.setup[0] ?? "" }],
       things: [
         { title: proof.things[0]!.title, body: [{ text: proof.things[0]!.body }] },

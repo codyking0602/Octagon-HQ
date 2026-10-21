@@ -37,6 +37,13 @@ export const footballWeeklyGameSchema = z.strictObject({
   header_storage_path: z.string().trim().min(1).optional(),
   header_asset_path: z.string().trim().min(1).optional(),
   header_photo_sources: z.array(z.url()).max(4).optional(),
+  // Sourced pregame snapshot for compact featured headers. Nullable rankings
+  // mean genuinely unranked, not #0. Never infer records from a Picks spread.
+  ranking_source: z.enum(["AP", "CFP"]).optional(),
+  home_rank: z.number().int().min(1).max(25).nullable().optional(),
+  away_rank: z.number().int().min(1).max(25).nullable().optional(),
+  home_record: z.string().regex(/^\d{1,2}-\d{1,2}$/).optional(),
+  away_record: z.string().regex(/^\d{1,2}-\d{1,2}$/).optional(),
 }).refine((game) => game.home_team !== game.away_team, "Featured opponents must differ");
 
 export const footballWeeklyDraftPatchSchema = z.strictObject({
