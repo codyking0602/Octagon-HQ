@@ -77,34 +77,27 @@
   }
 }
 /*
- * The owner-preview host PNGs have not been supplied yet. The preserved
- * fallback studio plate already includes the NBA DAILY / MILLIONAIRE title
- * and a decorative (obsolete-score) money ladder. Avoid drawing the second
- * title and obscure only that baked-in ladder behind the LIVE scoring ladder.
- * Future NBA host assets retain the ordinary dynamic title/ladder rendering.
- * Do not change photo assets, stage scale, safe-area layout or outer matte.
+ * The temporary NBA studio photo already has its title and prize ladder
+ * printed into the artwork. Align the *live* money/point ladder exactly over
+ * the one on the plate (stage units: 1600 × 900), rather than adding a huge
+ * solid/blurred masking rectangle to the studio.
+ *
+ * These adjustments apply ONLY while the missing NBA host image falls back
+ * to that existing photo. Do not alter the host assets, matte, viewport
+ * scaling, Football stage, or any game rules.
  */
-/* Retain the live "NBA DAILY" label; the fallback plate already prints "MILLIONAIRE". */
 .millionaire-shell--nba.millionaire-shell--template-fallback .millionaire-title strong {
   visibility: hidden !important;
 }
 .millionaire-shell--nba.millionaire-shell--template-fallback .millionaire-title::after {
   display: none !important;
 }
-.millionaire-shell--nba.millionaire-shell--template-fallback .millionaire-stage-canvas::after {
-  content: "";
-  position: absolute;
-  z-index: 19;
-  left: 1178px;
-  top: 114px;
-  width: 422px;
-  height: 540px;
-  pointer-events: none;
-  background: linear-gradient(90deg, rgba(2,12,29,.92), rgba(2,10,25,.99));
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
-}
 .millionaire-shell--nba.millionaire-shell--template-fallback .millionaire-ladder {
+  /* Overlay the photographed ladder's exact right-hand slot. */
+  left: 1262px;
+  top: 116px;
+  width: 338px;
+  height: 480px;
   z-index: 22;
   background: #031225;
 }
