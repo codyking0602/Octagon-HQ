@@ -119,7 +119,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
   const run = useMemo(() => millionaireCasualRun(league), [league]);
 
   return (
-    <div className="millionaire-shell millionaire-shell--rules">
+    <div className={`millionaire-shell millionaire-shell--rules millionaire-shell--${league}`}>
       <StudioBackdrop />
       <HQMark onClick={onBack} />
       <section className="millionaire-rules" aria-labelledby="millionaire-rules-title">
