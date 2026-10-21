@@ -6,12 +6,16 @@ function source(path: string) {
 }
 
 describe("Football weekly editorial must not reshape approved UI next Tuesday", () => {
-  it("renders locked-ratio CSS matchup headers in an eight-second Picks carousel, not duplicate publisher art", () => {
+  it("preserves compact image-first or CSS-fallback headers in the eight-second Picks carousel", () => {
     const picks = source("../picks/FootballPicksPage.tsx");
     const home = source("./FootballHq.tsx");
     const modal = source("../picks/FootballMatchupBreakdowns.tsx");
     expect(picks).toContain("const weeklyHeroes = useMemo(() => matchupBreakdowns");
     expect(picks).toContain("football-picks-weekly-slide");
+    expect(picks).toContain("usableFootballWeeklyHeaderArtwork");
+    expect(picks).toContain("football-picks-weekly-slide__art");
+    expect(picks).toContain("failedWeeklyHeaderSources");
+    expect(source("../../styles/football-picks.css")).toContain(".football-picks-weekly-slide.has-owner-image");
     expect(picks).toContain("href={team.href}");
     expect(picks).toContain("team.record");
     expect(picks).toContain("team.rank");
