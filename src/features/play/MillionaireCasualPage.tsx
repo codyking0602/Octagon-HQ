@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { canPreviewNbaWhoAmI } from "../nba/NbaWhoAmIOwnerGate";
-import { nbaMillionaireRun } from "./nbaMillionaireBank";
+import { createNbaMillionaireRun } from "../nba/nbaMillionaireBank";
 import { createReplaySeed, loadLineupHistory, replayLineupIdentity, rememberLineup, recordLineupCompletion } from "./lineupModel";
 import { MILLIONAIRE_LEVELS, type MillionaireChoiceId } from "../games/millionaireAuthority";
 import {
@@ -497,8 +497,8 @@ export default function MillionaireCasualPage({
   const nbaDay = millionaireCentralDateKey();
   const nbaRun = useMemo(() => {
     if (scope !== "nba") return null;
-    if (dailyPreview) return nbaMillionaireRun(`nba-daily-preview:${nbaDay}`);
-    return nbaMillionaireRun(nbaSeed, loadLineupHistory("nba-millionaire", "casual").recentItemIds);
+    if (dailyPreview) return createNbaMillionaireRun(`nba-daily-preview:${nbaDay}`);
+    return createNbaMillionaireRun(nbaSeed, loadLineupHistory("nba-millionaire", "casual").entries.flatMap(entry => entry.itemIds));
   }, [scope, nbaSeed, dailyPreview, nbaDay]);
   useEffect(() => {
     if (scope !== "nba" || dailyPreview || !nbaRun) return;
