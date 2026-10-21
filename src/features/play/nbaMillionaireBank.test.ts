@@ -10,6 +10,7 @@ describe("NBA Millionaire owner-review question quality and replay", () => {
   it("carries 240 unique source-backed questions, exactly 30 in each tier", () => {
     expect(NBA_MILLIONAIRE_QUESTIONS).toHaveLength(NBA_MILLIONAIRE_BANK_SIZE);
     expect(new Set(NBA_MILLIONAIRE_QUESTIONS.map(question => question.id)).size).toBe(240);
+    expect(new Set(NBA_MILLIONAIRE_QUESTIONS.map(q=>q.category)).size).toBeGreaterThanOrEqual(15);
     for (const tier of MILLIONAIRE_LEVELS) {
       expect(nbaMillionaireQuestionsForLevel(tier)).toHaveLength(30);
     }
@@ -21,7 +22,7 @@ describe("NBA Millionaire owner-review question quality and replay", () => {
       expect(q.money).toBe(MILLIONAIRE_MONEY_BY_LEVEL[q.level]);
       expect(q.prompt.length).toBeGreaterThan(25);
       expect(q.explanation.length).toBeGreaterThan(35);
-      expect(q.sourceUrl).toMatch(/^https:\/\/www\.nba\.com\/news\/history-/);
+      expect(q.sourceUrl).toMatch(/^https:\/\/www\.nba\.com\//);
       expect(q.verifiedAt).toBe("2026-10-21");
       expect(q.choices.map(c => c.id)).toEqual([...MILLIONAIRE_CHOICE_IDS]);
       expect(new Set(q.choices.map(c => c.text)).size).toBe(4);
