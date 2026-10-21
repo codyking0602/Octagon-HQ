@@ -1,5 +1,5 @@
 export const WHEEL_FOOTBALL_AP_TOP_25_SEASON = 2026 as const;
-export const WHEEL_FOOTBALL_AP_TOP_25_POLL_DATE = "2026-10-04" as const;
+export const WHEEL_FOOTBALL_AP_TOP_25_POLL_DATE = "2026-10-18" as const;
 export const WHEEL_FOOTBALL_AP_TOP_25_SOURCE_URL =
   "https://apnews.com/article/7db03c4123afa589863a8b53f4db520c";
 
