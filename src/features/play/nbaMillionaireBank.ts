@@ -335,7 +335,7 @@ function makeQuestion(level:number,index:number):NbaMillionaireQuestion {
   return {
     id:fact.id,sport:"nba",level:levelId,money:MILLIONAIRE_MONEY_BY_LEVEL[levelId],
     type:fact.category,prompt:fact.prompt,
-    choices:MILLIONAIRE_CHOICE_IDS.map((id,idx)=>({id,text:shuffled[idx]!})) as NbaMillionaireQuestion["choices"],
+    choices:MILLIONAIRE_CHOICE_IDS.map((id,idx)=>({id,text:shuffled[idx]!})) as unknown as NbaMillionaireQuestion["choices"],
     correctChoiceId, explanation:fact.explanation,statSheet:level===8?null:fact.statSheet,
     fiftyFifty:{survivorChoiceIds:[correctChoiceId,other],removalChoiceIds:removal as ["A"|"B"|"C"|"D","A"|"B"|"C"|"D"]},
     lifelineCompatibility:{fiftyFifty:level!==8,statSheet:level!==8,doubleDip:level!==8},
@@ -375,7 +375,7 @@ export function nbaMillionaireRun(seed:string,recentQuestionIds:readonly string[
     const other=MILLIONAIRE_CHOICE_IDS.find(id=>id!==correctChoiceId)!;
     const removal=MILLIONAIRE_CHOICE_IDS.filter(id=>id!==correctChoiceId && id!==other);
     return {...base,
-      choices:MILLIONAIRE_CHOICE_IDS.map((id,idx)=>({id,text:choices[idx]!})) as NbaMillionaireQuestion["choices"],
+      choices:MILLIONAIRE_CHOICE_IDS.map((id,idx)=>({id,text:choices[idx]!})) as unknown as NbaMillionaireQuestion["choices"],
       correctChoiceId,
       fiftyFifty:{survivorChoiceIds:[correctChoiceId,other] as [typeof correctChoiceId,typeof other],
         removalChoiceIds:removal as [typeof correctChoiceId,typeof other]},
