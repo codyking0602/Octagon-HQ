@@ -14,7 +14,7 @@ import {
   type MillionaireTransitionResult,
 } from "../games/millionaireEngine";
 
-export type MillionaireLeague = "ufc" | "nfl" | "cfb" | "mlb";
+export type MillionaireLeague = "ufc" | "nfl" | "cfb" | "mlb" | "nba";
 
 export const MILLIONAIRE_TIME_BANK_MS = 120_000;
 
@@ -325,7 +325,7 @@ const mlbSeeds: readonly QuestionSeed[] = [
   },
 ];
 
-const seedsByLeague: Record<MillionaireLeague, readonly QuestionSeed[]> = { cfb: cfbSeeds, nfl: nflSeeds, ufc: ufcSeeds, mlb: mlbSeeds };
+const seedsByLeague: Record<Exclude<MillionaireLeague, "nba">, readonly QuestionSeed[]> = { cfb: cfbSeeds, nfl: nflSeeds, ufc: ufcSeeds, mlb: mlbSeeds };
 
 export function millionaireCasualRun(league: MillionaireLeague): MillionaireRun {
   return seedsByLeague[league].map((seed, index) => question(league, index, seed)) as unknown as MillionaireRun;
