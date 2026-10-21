@@ -109,21 +109,53 @@ function toRuntime(fact: NbaMillionaireFact, levelIndex: number, random: () => n
   };
 }
 
+/**
+ * NBA fan-accessibility ladder. Keep the authored 30-per-tier inventory and
+ * the EXACT Football game mechanics, but draw a wider, more recognizable set
+ * in the first six rounds. NBA award minutiae (DPOY/Sixth Man) and older
+ * obscurities belong primarily at Q7/Q8, not in the opening half of a game.
+ *
+ * The original bank tiers remain editorial difficulty metadata; the actual
+ * money/score tier is always assigned by toRuntime(targetLevel).
+ */
+const APPROACHABLE_CATEGORIES = new Set<NbaSource>(["mvp", "finals", "champ", "draft", "rookie"]);
+const FAMILIAR_CATEGORIES = new Set<NbaSource>(["mvp", "finals", "champ", "draft"]);
+const LEVEL_SELECTIONS: readonly (readonly { sourceLevel: number; bias: number }[])[] = [
+  [{ sourceLevel: 0, bias: 0 }], // Q1: welcoming NBA names, teams and nicknames
+  [{ sourceLevel: 1, bias: 0 }], // Q2: familiar modern stars and milestones
+  [{ sourceLevel: 1, bias: 0 }, { sourceLevel: 2, bias: 8 }], // Q3: average fan
+  [{ sourceLevel: 2, bias: 0 }, { sourceLevel: 3, bias: 6 }], // Q4: accessible
+  [{ sourceLevel: 2, bias: 12 }, { sourceLevel: 3, bias: 0 }, { sourceLevel: 4, bias: 9 }], // Q5: moderate
+  [{ sourceLevel: 3, bias: 0 }, { sourceLevel: 4, bias: 7 }, { sourceLevel: 5, bias: 17 }], // Q6: moderate+
+  [{ sourceLevel: 5, bias: 0 }, { sourceLevel: 6, bias: 7 }], // Q7: serious fan
+  [{ sourceLevel: 7, bias: 0 }], // Q8: million-dollar history
+];
+
 /** Pure: equal seeds make equal boards; recent casual IDs are excluded when possible. */
 export function createNbaMillionaireRun(seed: string, recentIds: readonly string[] = []): MillionaireRun {
-  const random = createRandom(stringSeed(`nba-millionaire-v1:${seed}`));
+  const random = createRandom(stringSeed(`nba-millionaire-v2:${seed}`));
   const recent = new Set(recentIds);
   const chosen: NbaMillionaireFact[] = [];
-  for (const level of NBA_MILLIONAIRE_QUESTION_BANK) {
-    const ranked = level.map((fact) => {
-      const alreadySeen = recent.has(fact.id) ? 1000 : 0;
-      const sameAnswer = chosen.some((other) => other.answer === fact.answer) ? 80 : 0;
-      const categoryRepetition = chosen.filter((other) => other.category === fact.category).length * 14;
-      const eraRepetition = chosen.filter((other) => other.era === fact.era).length * 8;
-      return { fact, rank: alreadySeen + sameAnswer + categoryRepetition + eraRepetition + random() * 25 };
-    });
+  for (let targetLevel = 0; targetLevel < MILLIONAIRE_LEVELS.length; targetLevel += 1) {
+    const choices = LEVEL_SELECTIONS[targetLevel]!;
+    const accessible = targetLevel === 2 || targetLevel === 3
+      ? APPROACHABLE_CATEGORIES
+      : targetLevel === 4 || targetLevel === 5 ? FAMILIAR_CATEGORIES : null;
+    const ranked = choices.flatMap(({ sourceLevel, bias }) =>
+      NBA_MILLIONAIRE_QUESTION_BANK[sourceLevel]!
+        .filter(fact => !accessible || accessible.has(fact.source))
+        .filter(fact => !chosen.some(other => other.id === fact.id))
+        .map(fact => {
+          const alreadySeen = recent.has(fact.id) ? 1000 : 0;
+          const sameAnswer = chosen.some(other => other.answer === fact.answer) ? 80 : 0;
+          const categoryRepetition = chosen.filter(other => other.category === fact.category).length * 14;
+          const eraRepetition = chosen.filter(other => other.era === fact.era).length * 8;
+          return { fact, rank: alreadySeen + sameAnswer + categoryRepetition + eraRepetition + bias + random() * 25 };
+        }),
+    );
     ranked.sort((a, b) => a.rank - b.rank);
-    chosen.push(ranked[0]!.fact);
+    if (!ranked[0]) throw new Error(`NBA Millionaire tier ${targetLevel + 1} has no eligible questions`);
+    chosen.push(ranked[0].fact);
   }
   return chosen.map((fact, index) => toRuntime(fact, index, random)) as unknown as MillionaireRun;
 }
