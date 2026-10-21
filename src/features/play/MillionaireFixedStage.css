@@ -602,17 +602,27 @@ body.millionaire-daily-active .bottom-nav {
   line-height: 1;
 }
 
+/* Keep the entire option visible, including multi-name sequences on the Q8 board.
+   This fixed-stage rule covers both Casual and official Daily in every league. */
 .millionaire-shell--fixed-stage .millionaire-answers span {
   position: relative;
   z-index: 3;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  text-overflow: clip;
   color: #fff;
   font-size: 27px;
   font-weight: 760;
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 1.08;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.millionaire-shell--fixed-stage .millionaire-answers span.is-long-answer {
+  font-size: 21px;
+  line-height: 1.12;
+  text-align: center;
 }
 
 .millionaire-shell--fixed-stage .millionaire-answers button:not(:disabled):active {

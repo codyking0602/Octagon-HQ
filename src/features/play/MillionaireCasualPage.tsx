@@ -472,7 +472,7 @@ function MillionaireGame({
               const correct = phase === "revealed" && choice.id === correctChoiceId;
               const wrong = (phase === "revealed" && selected && answerOutcome === "wrong" && choice.id !== correctChoiceId) || doubleDipFlashChoiceId === choice.id;
               const className = [removed ? "is-removed" : "", doubleDipSpent ? "is-double-dip-spent" : "", selected && phase === "locked" ? "is-selected" : "", correct ? "is-correct" : "", wrong ? "is-wrong" : ""].filter(Boolean).join(" ");
-              return <button key={choice.id} type="button" className={className} disabled={phase !== "answering" || removed || doubleDipSpent || walkPromptOpen || eliminationPromptOpen} onClick={() => answer(choice.id)}><b>{choice.id}</b><span>{choice.text}</span></button>;
+              return <button key={choice.id} type="button" className={className} disabled={phase !== "answering" || removed || doubleDipSpent || walkPromptOpen || eliminationPromptOpen} onClick={() => answer(choice.id)}><b>{choice.id}</b><span className={choice.text.length > 28 ? "is-long-answer" : undefined}>{choice.text}</span></button>;
             })}
           </div>
         </>

@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { millionaireDailyRun } from "./millionaireDailyQuestionBank";
 
 const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "utf8");
 const dailySource = readFileSync("src/features/play/OfficialMillionaireDailyView.tsx", "utf8");
@@ -82,6 +83,39 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(dailySource).toContain("performance.now() - answerFeedback.lockedAt");
     expect(dailySource).toContain("Math.max(0, revealDelay - elapsedSinceLock)");
     expect(dailySource).toContain("}, remainingDelay);");
+  });
+
+  it("displays long UFC Daily Q8 options in full without clipping in Daily or Casual", () => {
+    expect(dailySource).toContain('String(choice.text ?? "").length > 28 ? "is-long-answer" : undefined');
+    expect(pageSource).toContain('choice.text.length > 28 ? "is-long-answer" : undefined');
+    const answerRule = fixedCss.match(/\.millionaire-shell--fixed-stage \.millionaire-answers span \{([^}]+)\}/)?.[1];
+    expect(answerRule).toContain("white-space: normal;");
+    expect(answerRule).toContain("text-overflow: clip;");
+    expect(answerRule).toContain("overflow-wrap: anywhere;");
+    expect(answerRule).toContain("overflow: visible;");
+    const longAnswerRule = fixedCss.match(/\.millionaire-shell--fixed-stage \.millionaire-answers span\.is-long-answer \{([^}]+)\}/)?.[1];
+    expect(longAnswerRule).toContain("font-size: 21px;");
+    expect(longAnswerRule).toContain("text-align: center;");
+  });
+
+  it("preserves October 21's Q8 answer sequences and guards future authored answer lengths", () => {
+    const finalQuestion = millionaireDailyRun("ufc", 4)[7]!;
+    expect(finalQuestion.prompt).toContain("bantamweight championship");
+    expect(finalQuestion.choices.map((choice) => choice.text).sort()).toEqual([
+      "Barao - Cruz - Dillashaw - Garbrandt - Cruz",
+      "Cruz - Barao - Dillashaw - Cruz - Garbrandt",
+      "Cruz - Barao - Garbrandt - Dillashaw - Cruz",
+      "Cruz - Dillashaw - Barao - Cruz - Garbrandt",
+    ]);
+    for (const league of ["ufc", "cfb", "nfl"] as const) {
+      for (let runIndex = 0; runIndex < 10; runIndex += 1) {
+        for (const question of millionaireDailyRun(league, runIndex)) {
+          for (const choice of question.choices) {
+            expect(choice.text.length).toBeLessThanOrEqual(72);
+          }
+        }
+      }
+    }
   });
 
   it("does not hide CFB Q1 answer text on the first render", () => {

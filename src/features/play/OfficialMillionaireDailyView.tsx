@@ -481,7 +481,7 @@ export function OfficialMillionaireDailyView({
                     disabled={Boolean(answerFeedback) || busy || walkPromptOpen || eliminationPromptOpen || removed || spent}
                     onClick={() => answer(id)}
                   >
-                    <b>{id}</b><span>{String(choice.text ?? "")}</span>
+                    <b>{id}</b><span className={String(choice.text ?? "").length > 28 ? "is-long-answer" : undefined}>{String(choice.text ?? "")}</span>
                   </button>
                 );
               })}
