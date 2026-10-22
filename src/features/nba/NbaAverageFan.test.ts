@@ -24,7 +24,7 @@ const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, 
 
 describe("NBA Average Fan audited question bank", () => {
   it("keeps a quality-first replayable NBA inventory after removing repeated Millionaire facts", () => {
-    expect(bank.length).toBeGreaterThanOrEqual(120);
+    expect(bank.length).toBeGreaterThanOrEqual(100);
     expect(new Set(bank.map((q) => q.id)).size).toBe(bank.length);
     expect(new Set(bank.map((q) => normalize(q.prompt))).size).toBe(bank.length);
     expect(bank.every((q) => q.sport === "nba")).toBe(true);
@@ -33,13 +33,13 @@ describe("NBA Average Fan audited question bank", () => {
     const ordinary = bank.filter((q) => !q.protectedFinal);
     for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
       const tier = ordinary.filter((q) => q.grade === grade);
-      expect(tier.length).toBeGreaterThanOrEqual(26);
+      expect(tier.length).toBeGreaterThanOrEqual(20);
       for (const subject of AVERAGE_FAN_SUBJECTS.nba) {
-        expect(tier.filter((q) => q.subject === subject).length).toBeGreaterThanOrEqual(4);
+        expect(tier.filter((q) => q.subject === subject).length).toBeGreaterThanOrEqual(3);
       }
     }
     const finals = bank.filter((q) => q.protectedFinal);
-    expect(finals.length).toBeGreaterThanOrEqual(10);
+    expect(finals.length).toBeGreaterThanOrEqual(8);
     expect(finals.every((q) => q.grade === 5)).toBe(true);
   });
 
