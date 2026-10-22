@@ -23,7 +23,7 @@ describe("Average Fan opening stage presentation contract", () => {
     expect(pageSource).toContain('className="average-fan-intro-stage__button average-fan-intro-stage__button--rules"');
     expect(pageSource).toContain("<strong>START</strong>");
     expect(pageSource).toContain("<strong>HOW TO PLAY</strong>");
-    expect(pageSource).toContain('onClick={() => setScene("sport-select")}');
+    expect(pageSource).toContain('onClick={() => setScene(lockedSport ? "fan-select" : "sport-select")}');
     expect(pageSource).toContain("onClick={() => setRulesOpen(true)}");
     expect(pageCss).not.toContain("object-fit: fill");
     expect(pageCss).toMatch(/\.average-fan-intro--plate \{[\s\S]*?height: 100lvh;[\s\S]*?min-height: 100lvh;/);
@@ -37,7 +37,7 @@ describe("Average Fan opening stage presentation contract", () => {
     expect(pageSource).toContain('label: "NFL"');
     expect(pageSource).toContain('label: "COLLEGE FOOTBALL"');
     expect(pageSource).toContain('setScene("fan-select")');
-    expect(pageSource).toContain('onBack={() => setScene("sport-select")}');
+    expect(pageSource).toContain('onBack={() => setScene(lockedSport ? "intro" : "sport-select")}');
     expect(pageCss).toContain(".average-fan-sport-panel");
   });
 
@@ -54,7 +54,7 @@ describe("Average Fan opening stage presentation contract", () => {
 
   it("preserves the existing HQ exit behavior", () => {
     expect(pageSource).toContain('className="average-fan-exit"');
-    expect(pageSource).toContain('const exitRoute = casualSport === "ufc" ? "/play" : "/football";');
+    expect(pageSource).toContain('const exitRoute = casualSport === "nba" ? "/nba" : casualSport === "ufc" ? "/play" : "/football";');
     expect(pageSource).toContain("onClick={() => navigate(exitRoute)}");
     expect(pageSource).toContain("‹ HQ");
   });
