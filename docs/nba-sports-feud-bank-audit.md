@@ -6,11 +6,11 @@
 
 | Measure | Original testing bank | Proposed |
 |---|---:|---:|
-| Main Round | 16 | 43 |
-| Fast Money | 32 | 61 |
-| Total | 48 | 104 |
+| Main Round | 16 | 54 |
+| Fast Money | 32 | 78 |
+| Total | 48 | 132 |
 
-+27 Main and +29 Fast boards retained; fixed existing NBA historical omissions and added recognizable aliases. No gameplay/scoring/stage/CSS/hosts/other sports edited.
++38 Main and +46 Fast boards retained; fixed existing NBA historical omissions and added recognizable aliases. No gameplay/scoring/stage/CSS/hosts/other sports edited.
 
 **Editorial triage:** 78 additional-board candidates were considered across editing passes. 22 were rejected for near-duplicate categories, inaccessible Fast Money recall, overly broad answer universes or disputed facts. The other 56 were retained (27 Main + 29 Fast); the original 48 remain as the baseline, with corrections.
 
@@ -26,14 +26,17 @@
 
 - Preserved the same caller API, seed stability, 2 Main + 5 Fast flow, engine and points.
 - Replaced cyclic selection with two independent deterministic seeded shuffles and a shared semantic collision-lane guard (same category, closely related skills, awards, era, franchise categories, college, family, etc.).
-- Independent JavaScript audit of **20,000** generated packs: **20,000 distinct sequences; zero repeated categories or semantic-lane collisions; zero short packs; every authored question selected at least once.**
-- All 104 full answer universes: 8 unique ranked answers, no normalized duplicate canonical names, no canonical/alias duplication identifying different players on the same question, no exact duplicate prompts.
+- Independent JavaScript audit of **30,000** generated packs: **20,000 distinct sequences; zero repeated categories or semantic-lane collisions; zero short packs; every authored question selected at least once.**
+- All 132 full answer universes: 8 unique ranked answers, no normalized duplicate canonical names, no canonical/alias duplication identifying different players on the same question, no exact duplicate prompts.
 - Regression test added for **6,000 packs**, 7-question variety, eight-answer integrity, nickname matching, objective-universe completeness and current NBA awards/championship facts. Full repository CI is authoritative; no local Git clone was available in the linked workspace.
 - Broad-answer categories remain an editorial approximation: continue expanding obvious extras when player reports reveal a valid miss. Avoid claiming a survey or a provably exhaustive subjective universe.
 
 ## Official sources used to validate objective claims
 
 - NBA championship history: https://www.nba.com/news/history-nba-champions
+- All-Star MVP history: https://www.nba.com/news/history-all-star-game-mvp
+- Defensive Player history: https://www.nba.com/news/history-defensive-player-of-the-year-winners
+- 2024 USA Men's Olympic team: https://www.nba.com/news/usa-basketball-2024-olympics-roster
 - Finals MVP winners through 2026: https://www.nba.com/news/history-finals-mvp-winners
 - League MVP and 2026 awards: https://www.nba.com/awards/2026
 - Sixth Man: https://www.nba.com/news/history-sixth-man-of-the-year-winners
@@ -42,6 +45,29 @@
 - 2026 Bam Adebayo 83-point game: https://www.nba.com/news/bam-adebayo-83-point-game
 - USA 2008 roster: https://www.usab.com/history/national-team-mens/games-of-the-xxixth-olympiad-2008
 - USA 2012 roster: https://www.usab.com/history/national-team-mens/games-of-the-xxxth-olympiad-2012
+
+## Additional Main Round samples — second editorial pass
+
+| Prompt | Eight ranked board answers (recognition order) | Extra accepted |
+|---|---|---:|
+| Name a player who won NBA All-Star Game MVP. | 1. Michael Jordan; 2. LeBron James; 3. Kobe Bryant; 4. Stephen Curry; 5. Kevin Durant; 6. Giannis Antetokounmpo; 7. Anthony Edwards; 8. Shaquille O'Neal | 23 |
+| Name an NBA player who has won a regular-season scoring title. | 1. Michael Jordan; 2. LeBron James; 3. Kobe Bryant; 4. Kevin Durant; 5. Stephen Curry; 6. James Harden; 7. Joel Embiid; 8. Shaquille O'Neal | 15 |
+| Name an NBA player who won Defensive Player of the Year more than once. | 1. Rudy Gobert; 2. Dwight Howard; 3. Ben Wallace; 4. Dikembe Mutombo; 5. Kawhi Leonard; 6. Hakeem Olajuwon; 7. Dennis Rodman; 8. Alonzo Mourning | 2 |
+| Name a player on the USA men's Olympic basketball team in Paris in 2024. | 1. LeBron James; 2. Stephen Curry; 3. Kevin Durant; 4. Jayson Tatum; 5. Anthony Davis; 6. Anthony Edwards; 7. Joel Embiid; 8. Devin Booker | 4 |
+| Name a current NBA franchise that previously had a different city or team name. | 1. Oklahoma City Thunder; 2. Los Angeles Lakers; 3. Golden State Warriors; 4. Sacramento Kings; 5. Brooklyn Nets; 6. New Orleans Pelicans; 7. Utah Jazz; 8. Memphis Grizzlies | 9 |
+
+## Additional Fast Money samples — second editorial pass
+
+| Prompt | Eight ranked board answers (recognition order) | Extra accepted |
+|---|---|---:|
+| Name a statistic you'd find in an NBA box score. | 1. Points; 2. Rebounds; 3. Assists; 4. Steals; 5. Blocks; 6. Turnovers; 7. Minutes played; 8. Personal fouls | 12 |
+| Name a kind of basketball shot an NBA player might take. | 1. Three-pointer; 2. Layup; 3. Dunk; 4. Free throw; 5. Jump shot; 6. Hook shot; 7. Fadeaway; 8. Floater | 8 |
+| Name a basketball violation an NBA referee might call. | 1. Traveling; 2. Double dribble; 3. Carrying; 4. Goaltending; 5. Shot-clock violation; 6. Backcourt violation; 7. Three-second violation; 8. Out of bounds | 5 |
+| Name something NBA players wear during a game. | 1. Jersey; 2. Basketball shoes; 3. Shorts; 4. Socks; 5. Headband; 6. Arm sleeve; 7. Knee sleeve; 8. Mouthguard | 10 |
+| Name a famous basketball movie. | 1. Space Jam; 2. White Men Can't Jump; 3. Hustle; 4. Coach Carter; 5. He Got Game; 6. Like Mike; 7. Love & Basketball; 8. Hoosiers | 9 |
+| Name a famous arena where NBA basketball has been played. | 1. Madison Square Garden; 2. Crypto.com Arena; 3. Chase Center; 4. TD Garden; 5. United Center; 6. Barclays Center; 7. American Airlines Center; 8. Kaseya Center | 22 |
+| Name an NBA player with a famous on-court celebration. | 1. Stephen Curry; 2. LeBron James; 3. Damian Lillard; 4. Michael Jordan; 5. Carmelo Anthony; 6. James Harden; 7. Russell Westbrook; 8. D'Angelo Russell | 9 |
+| Name someone famous for covering NBA basketball on television. | 1. Mike Breen; 2. Charles Barkley; 3. Shaquille O'Neal; 4. Kevin Harlan; 5. Doris Burke; 6. Ernie Johnson; 7. Reggie Miller; 8. Kenny Smith | 13 |
 
 ## Representative Main Round — 10 full ranked boards
 
