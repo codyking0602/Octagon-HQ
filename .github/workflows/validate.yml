@@ -68,6 +68,9 @@ jobs:
           python -m pip install --disable-pip-version-check pillow
           python -m unittest scripts/test_football_editorial_assets.py
 
+      - name: Preview NBA Millionaire clean-host studio (temporary)
+        run: python scripts/tmp_preview_nba_studio.py
+
       - name: Typecheck
         id: typecheck
         run: npm run typecheck 2>&1 | tee typecheck.log
