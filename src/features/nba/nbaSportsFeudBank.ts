@@ -1,6 +1,7 @@
 import type { FamilyFeudEntity, FamilyFeudEntityKind, FamilyFeudPack, FamilyFeudQuestion } from "../games/familyFeudEngine";
 import { assertFamilyFeudPack, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
 import { NBA_SPORTS_FEUD_MAIN_ADDITIONS, NBA_SPORTS_FEUD_FAST_ADDITIONS } from "./nbaSportsFeudExpansion";
+import { NBA_SPORTS_FEUD_MAIN_ROUND2, NBA_SPORTS_FEUD_FAST_ROUND2 } from "./nbaSportsFeudExpansionRound2";
 
 /**
  * NBA Sports Feud editorial bank, v1.
@@ -1455,6 +1456,68 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     }
   ],
   "alias": {
+    "Crypto.com Arena": ["Staples Center","Staples","Crypto Arena"],
+    "Madison Square Garden": ["MSG","The Garden"],
+    "American Airlines Center": ["AAC","Dallas arena"],
+    "Kaseya Center": ["FTX Arena","American Airlines Arena","Miami arena","Amway Center Miami"],
+    "Kia Center": ["Amway Center","Orlando arena"],
+    "Rocket Arena": ["Rocket Mortgage FieldHouse","Quicken Loans Arena","Gund Arena"],
+    "Mortgage Matchup Center": ["Footprint Center","Talking Stick Resort Arena","US Airways Center"],
+    "Basketball shoes": ["Sneakers","Basketball sneakers","Shoes"],
+    "Jersey": ["Uniform","Shirt","Basketball jersey"],
+    "Shorts": ["Basketball shorts"],
+    "Headband": ["Head band"],
+    "Arm sleeve": ["Shooting sleeve","Compression sleeve"],
+    "Knee sleeve": ["Knee pad"],
+    "Mouthguard": ["Mouth guard"],
+    "Three-pointer": ["3 pointer","3pt","3 point shot","Three point shot"],
+    "Layup": ["Lay up","Finger roll layup"],
+    "Free throw": ["Foul shot"],
+    "Jump shot": ["Jumper","Jumpshot"],
+    "Hook shot": ["Skyhook"],
+    "Fadeaway": ["Fadeaway jumper"],
+    "Floater": ["Runner","Floater shot"],
+    "Traveling": ["Travel","Travelling"],
+    "Double dribble": ["Double dribbling"],
+    "Carrying": ["Carry","Palming the ball"],
+    "Goaltending": ["Goal tending","Goaltend"],
+    "Shot-clock violation": ["Shot clock","24 second violation","24 seconds"],
+    "Backcourt violation": ["Over and back","Back court"],
+    "Three-second violation": ["Three seconds","3 second violation","Illegal defense three seconds"],
+    "Eight-second violation": ["8 seconds","8 second violation"],
+    "Out of bounds": ["Stepping out","Out of bounds violation"],
+    "Rebounds": ["Reb","Boards","Rebounds per game","RPG"],
+    "Points": ["Pts","Scoring","Points per game","PPG"],
+    "Assists": ["Ast","Dimes","Assists per game","APG"],
+    "Steals": ["Stl","Steals per game","SPG"],
+    "Blocks": ["Blk","Blocked shots","BPG"],
+    "Turnovers": ["Turnover","TO"],
+    "Minutes played": ["Minutes","MP","MIN"],
+    "Personal fouls": ["Fouls","PF"],
+    "Field goals made": ["FGM"],
+    "Three-pointers made": ["3PM"],
+    "Free throws made": ["FTM"],
+    "Three-point line": ["3 point line","Three point arc","3pt line"],
+    "Half-court line": ["Midcourt line","Half court line"],
+    "Free-throw line": ["Charity stripe","Foul line"],
+    "Center-court logo": ["NBA court logo","Center logo"],
+    "Paint": ["The key","Key","Lane"],
+    "Baseline": ["Endline","End line"],
+    "Sideline": ["Side line"],
+    "Restricted-area arc": ["Restricted circle","No charge semicircle"],
+    "Dribbling": ["Ball handling"],
+    "Passing": ["Pass"],
+    "Shooting": ["Shot practice"],
+    "Defense": ["Defending"],
+    "Free throws": ["Free-throw shooting","Foul shooting"],
+    "Rebounding": ["Rebound practice"],
+    "Layups": ["Layup practice"],
+    "Footwork": ["Movement"],
+    "Space Jam": ["Spacejam"],
+    "White Men Can't Jump": ["White Men Cannot Jump"],
+    "Love & Basketball": ["Love and Basketball"],
+    "Semi-Pro": ["Semi Pro"],
+    "Richard Hamilton": ["Rip Hamilton","Rip"],
     "Jimmy Butler": ["Jimmy Buckets"],
     "Paul George": ["PG13", "PG-13"],
     "Kevin Garnett": ["KG","The Big Ticket"],
@@ -1753,8 +1816,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
 };
 
 // Keep tested questions, supplement only with editorially approved additions.
-BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS);
-BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS);
+BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS, ...NBA_SPORTS_FEUD_MAIN_ROUND2);
+BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS, ...NBA_SPORTS_FEUD_FAST_ROUND2);
 
 export const NBA_SPORTS_FEUD_MAIN = BANK.main;
 export const NBA_SPORTS_FEUD_FAST = BANK.fast;
@@ -1768,12 +1831,21 @@ function hash(value: string) {
 export function nbaSportsFeudEditorialLane(category: string) {
   if (/(?:-stars|-players|-legends|-champs)$/.test(category) ||
       category === "lebron-teammates" || category === "clippers-stars") return "franchise-associations";
-  if (["champion-franchises","finalists","conference-teams","animal-teams"].includes(category)) return "team-facts";
+  if (["champion-franchises","finalists","conference-teams","animal-teams","franchise-history"].includes(category)) return "team-facts";
   if (["finals-mvp","mvp-winners","defensive-awards","rookie-of-the-year","sixth-man-award",
     "most-improved","all-stars","dunk-winners","three-point-contest"].includes(category)) return "awards";
   if (["head-coaches","coach-awards","former-player-coaches"].includes(category)) return "coaches";
   if (["nba-eras","olympic-rosters","college-nba-stars","family-connections","draft-history",
     "unusual-size"].includes(category)) return category;
+  if (["box-score-stats","shot-types","basketball-rules","basketball-equipment",
+    "court-features","basketball-practice"].includes(category)) return "basketball-basics";
+  if (["player-appearance","basketball-style"].includes(category)) return "player-appearance";
+  if (["team-colors","franchise-history"].includes(category)) return "team-branding";
+  if (["athletic-strength","athletic-speed","free-throw-struggles"].includes(category)) return "player-physical-traits";
+  if (["championship-coaches","head-coaches","coach-awards","former-player-coaches"].includes(category)) return "nba-coaching";
+  if (["scoring-champions","allstar-game-mvps"].includes(category)) return "awards";
+  if (["assists-title-stars","assist-leaders"].includes(category)) return "playmaking-style";
+  if (["basketball-movies","nba-arenas","player-culture"].includes(category)) return "basketball-culture";
   if (["point-guards","guard-positions","forward-positions","great-bigs"].includes(category)) return "player-positions";
   if (["basketball-style","nba-culture"].includes(category)) return "basketball-culture";
   if (["trash-talk","nba-personalities"].includes(category)) return "player-personality";
