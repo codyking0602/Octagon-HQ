@@ -1,5 +1,6 @@
 import type { FamilyFeudEntity, FamilyFeudEntityKind, FamilyFeudPack, FamilyFeudQuestion } from "../games/familyFeudEngine";
 import { assertFamilyFeudPack, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
+import { NBA_SPORTS_FEUD_MAIN_ADDITIONS, NBA_SPORTS_FEUD_FAST_ADDITIONS } from "./nbaSportsFeudExpansion";
 
 /**
  * NBA Sports Feud editorial bank, v1.
@@ -30,7 +31,7 @@ import { assertFamilyFeudPack, normalizeFamilyFeudInput } from "../games/familyF
 type Authored = { id: string; category: string; prompt: string; kind: FamilyFeudEntityKind;
   answers: readonly string[]; extras: readonly string[] };
 
-export const NBA_SPORTS_FEUD_BANK_VERSION = "nba-sports-feud-v1" as const;
+export const NBA_SPORTS_FEUD_BANK_VERSION = "nba-sports-feud-v2" as const;
 export const NBA_SPORTS_FEUD_MAIN_POINTS = [10, 8, 7, 5, 5, 4, 4, 3] as const;
 export const NBA_SPORTS_FEUD_FAST_POINTS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
 
@@ -79,7 +80,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Cedric Maxwell",
         "Dennis Johnson",
         "Jo Jo White",
-        "Wes Unseld"
+        "Wes Unseld",
+        "Jalen Brunson"
       ]
     },
     {
@@ -106,7 +108,10 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Denver Nuggets",
         "Philadelphia 76ers",
         "New York Knicks",
-        "Portland Trail Blazers"
+        "Portland Trail Blazers",
+        "Sacramento Kings",
+        "Atlanta Hawks",
+        "Washington Wizards"
       ]
     },
     {
@@ -199,7 +204,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "San Antonio Spurs",
         "Philadelphia 76ers",
         "Detroit Pistons",
-        "Orlando Magic"
+        "Orlando Magic",
+        "New York Knicks"
       ]
     },
     {
@@ -488,7 +494,17 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Dirk Nowitzki",
         "Kevin Love",
         "Paul Pierce",
-        "Eric Gordon"
+        "Eric Gordon",
+        "Tyler Herro",
+        "Joe Harris",
+        "Peja Stojakovic",
+        "Kyle Korver",
+        "Steve Kerr",
+        "Marco Belinelli",
+        "Jason Kapono",
+        "Quentin Richardson",
+        "James Jones",
+        "Glen Rice"
       ]
     }
   ],
@@ -554,7 +570,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Kevin Durant",
         "Trae Young",
-        "Paul George"
+        "Paul George",
+        "Buddy Hield",
+        "Devin Booker",
+        "Tyler Herro",
+        "Luka Doncic",
+        "Jayson Tatum",
+        "Desmond Bane",
+        "Kon Knueppel",
+        "Seth Curry"
       ]
     },
     {
@@ -634,7 +658,16 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "David Robinson",
         "Dwight Howard",
-        "Yao Ming"
+        "Yao Ming",
+        "Victor Wembanyama",
+        "Anthony Davis",
+        "Rudy Gobert",
+        "Karl-Anthony Towns",
+        "Ben Wallace",
+        "Marc Gasol",
+        "DeMarcus Cousins",
+        "Brook Lopez",
+        "Kristaps Porzingis"
       ]
     },
     {
@@ -800,7 +833,14 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Nikola Jokic",
         "Paul Pierce",
         "Charles Barkley",
-        "Dwyane Wade"
+        "Dwyane Wade",
+        "Wilt Chamberlain",
+        "Julius Erving",
+        "Magic Johnson",
+        "Damian Lillard",
+        "Kawhi Leonard",
+        "Russell Westbrook",
+        "Victor Wembanyama"
       ]
     },
     {
@@ -1235,7 +1275,16 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Anthony Edwards",
         "Zach LaVine",
-        "Kobe Bryant"
+        "Kobe Bryant",
+        "Shaquille O'Neal",
+        "Dwight Howard",
+        "Shawn Kemp",
+        "Julius Erving",
+        "Jason Richardson",
+        "Russell Westbrook",
+        "Mac McClung",
+        "Derrick Jones Jr.",
+        "Spud Webb"
       ]
     },
     {
@@ -1327,6 +1376,26 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     }
   ],
   "alias": {
+    "Los Angeles Clippers": ["Clippers","LA Clippers","LAC"],
+    "Brooklyn Nets": ["Nets","BKN"],
+    "Sacramento Kings": ["Kings"],
+    "Utah Jazz": ["Jazz"],
+    "Washington Wizards": ["Wizards"],
+    "Orlando Magic": ["Magic"],
+    "Portland Trail Blazers": ["Blazers","Trail Blazers"],
+    "Seattle SuperSonics": ["Sonics","Supersonics","Seattle Sonics"],
+    "Houston Rockets": ["Rockets"],
+    "Jalen Brunson": ["Brunson"],
+    "Cooper Flagg": ["Flagg"],
+    "Bronny James": ["Bronny"],
+    "Anthony Edwards": ["Ant-Man","Ant Man"],
+    "Karl-Anthony Towns": ["KAT","Karl Anthony Towns"],
+    "De'Aaron Fox": ["Deaaron Fox"],
+    "Jaren Jackson Jr.": ["JJJ"],
+    "Klay Thompson": ["Klay"],
+    "Paolo Banchero": ["Paolo"],
+    "Nickeil Alexander-Walker": ["NAW"],
+    "J.J. Redick": ["JJ Redick"],
     "LeBron James": [
       "LeBron",
       "King James"
@@ -1584,6 +1653,10 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
   }
 };
 
+// Keep tested questions, supplement only with editorially approved additions.
+BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS);
+BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS);
+
 export const NBA_SPORTS_FEUD_MAIN = BANK.main;
 export const NBA_SPORTS_FEUD_FAST = BANK.fast;
 
@@ -1592,24 +1665,51 @@ function hash(value: string) {
   for (const char of value) { h ^= char.charCodeAt(0); h = Math.imul(h, 16777619); }
   return h >>> 0;
 }
+/** Near-identical prompts must not coexist in a seven-question run. */
+function editorialLane(category: string) {
+  if (/(?:-stars|-players|-legends|-champs)$/.test(category) ||
+      category === "lebron-teammates" || category === "clippers-stars") return "franchise-associations";
+  if (["champion-franchises","finalists","conference-teams","animal-teams"].includes(category)) return "team-facts";
+  if (["finals-mvp","mvp-winners","defensive-awards","rookie-of-the-year","sixth-man-award",
+    "most-improved","coach-awards","all-stars","dunk-winners","three-point-contest"].includes(category)) return "awards";
+  if (["nba-eras","olympic-rosters","college-nba-stars","family-connections","draft-history",
+    "unusual-size"].includes(category)) return category;
+  // Closely related skills may be included only once across the playthrough.
+  if (["passing","ball-handlers","triple-doubles","clutch-shots","signature-moves"].includes(category)) return "playmaking-style";
+  if (["dunking","post-scoring","famous-scorers","midrange-shooting","three-point-shooting"].includes(category)) return "scoring-style";
+  if (["rebounding","shot-blockers","famous-defenders","hustle-players"].includes(category)) return "defense-and-boards";
+  return category;
+}
+
+function seededShuffle<T>(values: readonly T[], seed: number): T[] {
+  const array = [...values];
+  let state = seed || 0x6d2b79f5;
+  for (let i = array.length - 1; i > 0; i--) {
+    state ^= state << 13; state ^= state >>> 17; state ^= state << 5;
+    const j = (state >>> 0) % (i + 1);
+    [array[i], array[j]] = [array[j]!, array[i]!];
+  }
+  return array;
+}
+
 function pickQuestions(seed: string) {
-  const first = hash(seed + "|main") % BANK.main.length;
-  const main = [BANK.main[first]!];
-  for (let i = 1; i < BANK.main.length; i++) {
-    const q = BANK.main[(first + i) % BANK.main.length]!;
-    if (q.category !== main[0]!.category) { main.push(q); break; }
+  const seenCategories = new Set<string>();
+  const seenLanes = new Set<string>();
+  function choose(pool: readonly Authored[], count: number, salt: string) {
+    const selected: Authored[] = [];
+    for (const question of seededShuffle(pool, hash(seed + salt))) {
+      const lane = editorialLane(question.category);
+      if (seenCategories.has(question.category) || seenLanes.has(lane)) continue;
+      selected.push(question);
+      seenCategories.add(question.category);
+      seenLanes.add(lane);
+      if (selected.length === count) break;
+    }
+    if (selected.length !== count) throw new Error("NBA Sports Feud: insufficient distinct editorial topics.");
+    return selected;
   }
-  if (main.length !== 2) throw new Error("NBA Sports Feud requires two distinct main categories.");
-  const excluded = new Set(main.map(q => q.category));
-  const fast: Authored[] = [];
-  const start = hash(seed + "|fast") % BANK.fast.length;
-  // Coprime step visits all questions, so every seed can assemble five topics.
-  for (let i = 0; i < BANK.fast.length && fast.length < 5; i++) {
-    const q = BANK.fast[(start + 13 * i) % BANK.fast.length]!;
-    if (!excluded.has(q.category)) { fast.push(q); excluded.add(q.category); }
-  }
-  if (fast.length !== 5) throw new Error("NBA Sports Feud requires five distinct Fast Money topics.");
-  return { main, fast };
+  return { main: choose(BANK.main, 2, "|main"),
+    fast: choose(BANK.fast, 5, "|fast") };
 }
 
 function makeQuestion(authored: Authored, ladder: readonly number[], entities: FamilyFeudEntity[]): FamilyFeudQuestion {
