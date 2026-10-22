@@ -65,6 +65,10 @@ describe("NBA Average Fan audited question bank", () => {
       "Which team did Michael Jordan lead to six NBA titles in the 1990s?",
       "Who won the regular-season NBA MVP award in 1993 as a Phoenix Sun?",
       "Which NBA Finals MVP was awarded to a player on the losing team in 1969?",
+      "Which NBA franchise was home to the early-1990s trio known as Run TMC?",
+      "Which NBA franchise became famous for the mid-2000s Seven Seconds or Less offense?",
+      "Which early-1990s Charlotte Hornets star was nicknamed Grandmama?",
+      "Which Hall of Fame center made the Dream Shake a signature post move?",
     ];
     for (const prompt of retiredFacts) expect(bank.some((q) => q.prompt === prompt), prompt).toBe(false);
   });
@@ -79,7 +83,7 @@ describe("NBA Average Fan audited question bank", () => {
       "Which Cleveland guard defended Michael Jordan's famous 1989 playoff-winning shot?",
       "Who caught Kobe Bryant's famous alley-oop in the Lakers' 2000 West finals Game 7 comeback?",
       "Who made the chasedown block on Andre Iguodala late in Game 7 of the 2016 Finals?",
-      "Which New York Knicks forward made a controversial four-point play against Indiana in the 1999 East finals?",
+      "Which Pacers star scored eight points in 8.9 seconds against the Knicks in the 1995 playoffs?",
       "Which season was the first to use the three-point line in the NBA?",
     ];
     for (const prompt of namedMoments) {
