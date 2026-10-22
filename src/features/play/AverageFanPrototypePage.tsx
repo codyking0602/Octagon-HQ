@@ -3,6 +3,7 @@ import { flushSync } from "react-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   AVERAGE_FAN_PLAYABLE_GRADES,
+  AVERAGE_FAN_NBA_FANS,
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_SUBJECTS,
   averageFanAnswersMatch,
@@ -46,6 +47,7 @@ export const FAN_LABELS: Record<AverageFanFan, string> = {
   lib: "LIB",
   tyler: "TYLER",
   troy: "TROY",
+  nnamdi: "NNAMDI",
 };
 
 const AVERAGE_FAN_OPENING_STAGE_WIDTH = 1672;
@@ -53,7 +55,7 @@ const AVERAGE_FAN_OPENING_STAGE_HEIGHT = 941;
 const AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH = 1536;
 const AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT = 864;
 export const AVERAGE_FAN_GAMEPLAY_STAGE_SRC = "/assets/average-fan/average-fan-gameplay-stage.png";
-const AVERAGE_FAN_PORTRAITS: Record<AverageFanFan, string> = {
+const AVERAGE_FAN_PORTRAITS: Partial<Record<AverageFanFan, string>> = {
   shane: "/assets/average-fan/average-fan-shane.png",
   cody: "/assets/average-fan/average-fan-cody.png",
   // The two source files were named opposite their pictured identities.
@@ -291,7 +293,9 @@ function FanCard({
       aria-label={`Select ${FAN_LABELS[fan]}`}
       aria-pressed={selected}
       onClick={onSelect}
-    />
+    >
+      {fan === "nnamdi" ? <span className="average-fan-card__pending"><strong>NNAMDI</strong><small>PORTRAIT PENDING</small></span> : null}
+    </button>
   );
 }
 
@@ -414,7 +418,7 @@ export function FanSelector({
         />
 
         <div className="average-fan-card-grid" aria-label="Fans">
-          {FAN_ORDER.map((fan) => (
+          {(sport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER).map((fan) => (
             <FanCard
               key={fan}
               fan={fan}
@@ -456,12 +460,9 @@ export function FanSelector({
 export function GameplayFanDesk({ fan }: { fan: AverageFanFan }) {
   return (
     <aside className="average-fan-game-fan" aria-label={`${FAN_LABELS[fan]} at the fan desk`}>
-      <img
-        className="average-fan-game-fan__portrait"
-        src={AVERAGE_FAN_PORTRAITS[fan]}
-        alt=""
-        aria-hidden="true"
-      />
+      {AVERAGE_FAN_PORTRAITS[fan]
+        ? <img className="average-fan-game-fan__portrait" src={AVERAGE_FAN_PORTRAITS[fan]} alt="" aria-hidden="true" />
+        : <div className="average-fan-game-fan__portrait average-fan-game-fan__portrait--pending" aria-hidden="true"><span>NNAMDI</span></div>}
       <div className="average-fan-game-fan__desk-mask" aria-hidden="true" />
       <strong className="average-fan-game-fan__name">{FAN_LABELS[fan]}</strong>
     </aside>
@@ -1142,7 +1143,8 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
     : "ufc");
   const reviewGameplay = searchParams.get("screen") === "gameplay";
   const requestedFan = searchParams.get("fan") as AverageFanFan | null;
-  const reviewFan = requestedFan && FAN_ORDER.includes(requestedFan) ? requestedFan : "cody";
+  const eligibleFans: readonly AverageFanFan[] = initialSport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER;
+  const reviewFan = requestedFan && eligibleFans.includes(requestedFan) ? requestedFan : "cody";
   const [scene, setScene] = useState<PrototypeScene>(() => reviewGameplay ? "game" : "intro");
   const [casualSport, setCasualSport] = useState<"nfl" | "cfb" | "ufc" | "nba">(initialSport);
   const [randomSeed] = useState(() => Math.random().toString(36).slice(2));
