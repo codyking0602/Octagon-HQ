@@ -1853,8 +1853,9 @@ export function nbaSportsFeudEditorialLane(category: string) {
   if (["arena-concessions","nba-game-sights","nba-game-sounds","nba-halftime-show","nba-intro-show",
       "nba-game-pregame","nba-locker-room"].includes(category)) return "arena-experience";
   if (["nba-fan-fashion","nba-fan-reactions","nba-fan-boo-reasons","nba-fan-collectibles"].includes(category)) return "nba-fan-experience";
-  if (["nba-game-workers","nba-scoreboard-details","nba-tv-elements"].includes(category)) return "nba-broadcast-experience";
-  if (["nba-stoppage-reasons","nba-foul-types","nba-possession-mistakes","nba-official-actions"].includes(category)) return "nba-referee-rules";
+  if (category === "nba-scoreboard-details") return "basketball-basics";
+  if (["nba-game-workers","nba-tv-elements"].includes(category)) return "nba-broadcast-experience";
+  if (["nba-stoppage-reasons","nba-foul-types","nba-possession-mistakes","nba-official-actions"].includes(category)) return "basketball-basics";
   if (["nba-sideline-coaching","nba-substitution-reasons"].includes(category)) return "nba-coaching";
   if (["nba-free-throw-routine","nba-ball-handling-moves","nba-defensive-plays",
       "nba-court-hardware"].includes(category)) return "basketball-basics";
