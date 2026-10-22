@@ -1071,6 +1071,46 @@
     inset 0 0 18px rgba(255, 213, 75, 0.18);
 }
 
+/* NBA-only placeholder: the approved photographic plate bakes Troy into slot five.
+   Mask only that slot until the provided Nnamdi portrait is available. */
+.average-fan-card--nnamdi {
+  left: 201px;
+  top: 628px;
+  width: 241px;
+  height: 199px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #17283a, #07121f);
+  color: #f4f7fb;
+}
+.average-fan-card__pending {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+.average-fan-card__pending strong { font-size: 30px; font-weight: 950; letter-spacing: .09em; }
+.average-fan-card__pending small { font-size: 12px; font-weight: 750; letter-spacing: .08em; opacity: .82; }
+.average-fan-game-fan__portrait--pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  bottom: 108px;
+  border-radius: 18px;
+  background: linear-gradient(140deg, #1b2b3d, #0a1422);
+  box-shadow: inset 0 0 0 2px rgba(250,255,255,.12);
+}
+.average-fan-game-fan__portrait--pending span {
+  font: 950 28px Arial, sans-serif;
+  letter-spacing: .07em;
+  color: white;
+}
+
 /* Report card owns the newly opened board space. */
 .average-fan-report {
   position: absolute;
