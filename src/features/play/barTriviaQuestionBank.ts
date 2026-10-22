@@ -1,5 +1,6 @@
 import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
+import { BAR_TRIVIA_OCT22_VERIFIED_EVENTS } from "./barTriviaCurrentEventsOct22";
 import { BAR_TRIVIA_EASY_EXPANSION, BAR_TRIVIA_EASY_QUESTION_IDS } from "./barTriviaEasyCalibration";
 import { BAR_TRIVIA_EASY_EXPANSION_2 } from "./barTriviaEasyExpansion2";
 import { BAR_TRIVIA_NFL_EVERGREEN_EXPANSION } from "./barTriviaEvergreenNfl";
@@ -118,6 +119,7 @@ const RAW_BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   ...BAR_TRIVIA_EASY_EXPANSION,
   ...BAR_TRIVIA_EASY_EXPANSION_2,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
+  ...BAR_TRIVIA_OCT22_VERIFIED_EVENTS,
 ];
 
 
