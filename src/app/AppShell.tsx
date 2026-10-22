@@ -159,7 +159,7 @@ export function AppShell() {
   const isPlayGame = Boolean(gameTitle);
   const isFootballGame = Boolean(footballGameTitle);
   const isMillionaireGame = location.pathname === "/play/millionaire" || location.pathname === "/football/millionaire";
-  const isAverageFanGame = location.pathname === "/play/average-fan" || location.pathname === "/play/average-fan-preview";
+  const isAverageFanGame = location.pathname === "/play/average-fan" || location.pathname === "/play/average-fan-preview" || location.pathname === "/nba/average-fan";
   const isMlbGame = location.pathname === "/mlb/challenge";
   const isMlbSeries = location.pathname.startsWith("/mlb/series/");
   const isGame = isPlayGame || isFootballGame || isMillionaireGame || isAverageFanGame || isMlbGame || isMlbSeries;
