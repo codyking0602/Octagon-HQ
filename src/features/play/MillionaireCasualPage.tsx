@@ -532,7 +532,7 @@ export default function MillionaireCasualPage({
     const changeLeague = scope === "football" ? () => { setGameStarted(false); setFootballLeague(null); } : undefined;
     content = gameStarted
       ? <MillionaireGame
-          key={league === "nba" ? `${league}-${dailyPreview ? "daily" : nbaSeed}` : league}
+          key={league === "nba" ? `${league}-${dailyPreview ? "daily" : nbaSeed}-host-${nbaHostNumber ?? 0}` : league}
           league={league}
           onBack={() => navigate(backRoute)}
           onChangeLeague={changeLeague}
@@ -540,9 +540,9 @@ export default function MillionaireCasualPage({
             if (scope === "nba" && !dailyPreview) recordLineupCompletion(replayLineupIdentity("nba-millionaire", nbaSeed, "casual"), result);
             onSettled?.(result);
           }}
-          onReplay={scope === "nba" && !dailyPreview ? () => {
+          onReplay={scope === "nba" ? () => {
             setNbaHostNumber(nextNbaMillionaireHostNumber(window.localStorage));
-            setNbaSeed(createReplaySeed("nba-millionaire"));
+            if (!dailyPreview) setNbaSeed(createReplaySeed("nba-millionaire"));
           } : undefined}
           nbaHostNumber={nbaHostNumber}
           runOverride={runOverride ?? nbaRun ?? undefined}
