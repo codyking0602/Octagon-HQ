@@ -13,6 +13,7 @@ vi.mock("../identity/IdentityProvider", () => ({
 
 import FamilyFeudPrototypePage from "../play/FamilyFeudPrototypePage";
 import { buildNbaSportsFeudPack } from "./nbaSportsFeudBank";
+import { sportsFeudCentralDateKey } from "../play/sportsFeudPresentation";
 
 function mount(query = "") {
   return render(<MemoryRouter initialEntries={["/nba/sports-feud" + query]}>
@@ -58,14 +59,11 @@ describe("NBA Sports Feud reused immersive presentation", () => {
   it("keeps daily preview deterministic and does not submit a leaderboard score", () => {
     mount("?mode=daily");
     expect(screen.getByText("NBA HQ · OWNER DAILY PREVIEW")).toBeInTheDocument();
-    const expected = buildNbaSportsFeudPack("daily:" + new Intl.DateTimeFormat("en-CA", {
-      timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
-    }).format(new Date()));
-    // The score and board always come from the same frozen seed used by Casual,
-    // not a second Daily gameplay or a hidden publishing pathway.
+    const expected = buildNbaSportsFeudPack("daily:" + sportsFeudCentralDateKey());
+    // This local preview reads the same bank and stage without a second Daily backend.
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
     expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-scene", "main");
-    expect(buildNbaSportsFeudPack(expected.id.split(":").slice(1).join(":"))).toEqual(expected);
+    expect(screen.getByText(expected.mainBoards[0]!.prompt)).toBeInTheDocument();
   });
 
   it("shows all main-board answers after three strikes, advances to Fast Money, and reveals a result", () => {
