@@ -43,7 +43,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource).toContain('className="millionaire-nba-host"');
     expect(pageSource).toContain('league === "nba" ? MILLIONAIRE_NBA_STUDIO_ASSET');
     expect(nbaCss).not.toContain("template-fallback");
-    expect(nbaCss).not.toMatch(/\.millionaire-shell--nba[^\n{]*\.millionaire-ladder/);
+    // A missed-rung marker is allowed, but NBA must never reposition or hide the shared ladder.\n    expect(nbaCss).not.toMatch(/\.millionaire-shell--nba[^\n{]*\.millionaire-ladder\s*\{/);\n    expect(nbaCss).toMatch(/\.millionaire-ladder > div\.is-missed/);
     expect(nbaCss).not.toContain("visibility: hidden !important");
   });
 
@@ -104,7 +104,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
   it("keeps all changing content live in React", () => {
     expect(pageSource).toContain("`${millionaireLeagueLabel(league)} DAILY`");
     expect(pageSource).toContain('league === "mlb" ? "MLB PLAYOFF CHALLENGE"');
-    expect(pageSource).toContain("millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)");
+    expect(pageSource).toContain("millionaireMoneyLabel(nbaMoneyRunEnded ? (gameState.finalMoney ?? 0) : (currentQuestion?.money ?? gameState.currentMoney))");
     expect(pageSource).toContain("millionaireTimeLabel(timeRemainingMs)");
     expect(pageSource).toContain("{currentQuestion?.prompt}");
     expect(pageSource).toContain("{choice.text}");
