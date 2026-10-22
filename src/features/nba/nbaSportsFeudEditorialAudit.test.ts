@@ -26,15 +26,15 @@ function accepted(id: string, group: "main" | "fast", guess: string) {
 
 describe("NBA Feud expanded question-bank editorial integrity", () => {
   it("has eight distinctive ranked names and valid extras on all curated questions", () => {
-    expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(43);
-    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(61);
+    expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(54);
+    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(78);
     expect(new Set(ALL.map(q => q.id)).size).toBe(ALL.length);
     expect(new Set(ALL.map(q => normalizeFamilyFeudInput(q.prompt))).size).toBe(ALL.length);
     for (const q of ALL) {
       const universe = [...q.answers, ...q.extras].map(normalizeFamilyFeudInput);
       expect(q.answers, q.id).toHaveLength(8);
       expect(new Set(universe).size, q.id).toBe(universe.length);
-      expect(q.kind, q.id).toMatch(/^(person|team)$/);
+      expect(q.kind, q.id).toMatch(/^(person|team|other)$/);
       expect(q.prompt.length, q.id).toBeLessThan(150);
     }
   });
