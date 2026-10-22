@@ -1,4 +1,4 @@
-import { AVERAGE_FAN_CONTENT_BANKS } from "../games/averageFanContentBanks";
+import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionBoardTopics } from "../games/averageFanContentBanks";
 import {
   AVERAGE_FAN_BOARD_QUESTION_COUNT,
   AVERAGE_FAN_PLAYABLE_GRADES,
@@ -70,6 +70,13 @@ export function buildAverageFanCasualBoard(
         )),
         `${seed}|grade-${grade}|pick-${gradeSelected.length}`,
       ).sort((left, right) => {
+        if (sport === "nba") {
+          const usedTopics = new Set([...selected, ...gradeSelected].flatMap(averageFanQuestionBoardTopics));
+          const overlap = (question: AverageFanQuestion) => averageFanQuestionBoardTopics(question)
+            .filter((topic) => usedTopics.has(topic)).length;
+          const collisionDelta = overlap(left) - overlap(right);
+          if (collisionDelta) return collisionDelta;
+        }
         const subjectDelta = (subjectCounts.get(left.subject) ?? 0)
           - (subjectCounts.get(right.subject) ?? 0);
         if (subjectDelta !== 0) return subjectDelta;
@@ -111,8 +118,14 @@ export function buildAverageFanCasualBoard(
   }
 
   const evergreenFinals = finalEligible.filter((question) => question.contentType === "evergreen");
+  const eligibleFinals = evergreenFinals.length ? evergreenFinals : finalEligible;
+  const boardTopics = new Set(selected.flatMap(averageFanQuestionBoardTopics));
+  const nonoverlappingFinals = sport === "nba"
+    ? eligibleFinals.filter((question) => averageFanQuestionBoardTopics(question)
+        .every((topic) => !boardTopics.has(topic)))
+    : [];
   const finalQuestion = rankCandidates(
-    evergreenFinals.length ? evergreenFinals : finalEligible,
+    nonoverlappingFinals.length ? nonoverlappingFinals : eligibleFinals,
     `${seed}|final`,
   )[0];
   if (!finalQuestion) {
