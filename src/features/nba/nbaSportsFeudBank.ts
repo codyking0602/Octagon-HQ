@@ -221,11 +221,12 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Joel Embiid",
         "Donovan Mitchell",
         "Devin Booker",
-        "David Thompson"
+        "Bam Adebayo"
       ],
       "extras": [
         "Elgin Baylor",
-        "David Robinson"
+        "David Robinson",
+        "David Thompson"
       ]
     },
     {
@@ -1376,6 +1377,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     }
   ],
   "alias": {
+    "Bam Adebayo": ["Bam"],
     "Los Angeles Clippers": ["Clippers","LA Clippers","LAC"],
     "Brooklyn Nets": ["Nets","BKN"],
     "Sacramento Kings": ["Kings"],
