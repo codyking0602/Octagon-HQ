@@ -1834,15 +1834,16 @@ export function nbaSportsFeudEditorialLane(category: string) {
   if (["champion-franchises","finalists","conference-teams","animal-teams","franchise-history"].includes(category)) return "team-facts";
   if (["finals-mvp","mvp-winners","defensive-awards","rookie-of-the-year","sixth-man-award",
     "most-improved","all-stars","dunk-winners","three-point-contest"].includes(category)) return "awards";
-  if (["head-coaches","coach-awards","former-player-coaches"].includes(category)) return "coaches";
+  if (["head-coaches","coach-awards","former-player-coaches","championship-coaches"].includes(category)) return "coaches";
+  if (["international-stars","international-hall-legends"].includes(category)) return "international-nba";
   if (["nba-eras","olympic-rosters","college-nba-stars","family-connections","draft-history",
     "unusual-size"].includes(category)) return category;
   if (["box-score-stats","shot-types","basketball-rules","basketball-equipment",
     "court-features","basketball-practice"].includes(category)) return "basketball-basics";
   if (["player-appearance","basketball-style"].includes(category)) return "player-appearance";
   if (["team-colors","franchise-history"].includes(category)) return "team-branding";
-  if (["athletic-strength","athletic-speed","free-throw-struggles"].includes(category)) return "player-physical-traits";
-  if (["championship-coaches","head-coaches","coach-awards","former-player-coaches"].includes(category)) return "nba-coaching";
+  if (["athletic-strength","athletic-speed"].includes(category)) return "player-physical-traits";
+  if (["championship-coaches","head-coaches","coach-awards","former-player-coaches"].includes(category)) return "coaches";
   if (["scoring-champions","allstar-game-mvps"].includes(category)) return "awards";
   if (["assists-title-stars","assist-leaders"].includes(category)) return "playmaking-style";
   if (["basketball-movies","nba-arenas","player-culture"].includes(category)) return "basketball-culture";
@@ -1852,7 +1853,7 @@ export function nbaSportsFeudEditorialLane(category: string) {
   // Closely related skills may be included only once across the playthrough.
   if (["passing","ball-handlers","triple-doubles","clutch-shots"].includes(category)) return "playmaking-style";
   if (["dunking","post-scoring","famous-scorers","midrange-shooting","three-point-shooting",
-    "stepback-shooting","finishing-at-rim","free-throw-shooting","signature-moves"].includes(category)) return "scoring-style";
+    "stepback-shooting","finishing-at-rim","free-throw-shooting","free-throw-struggles","signature-moves"].includes(category)) return "scoring-style";
   if (["rebounding","shot-blockers","famous-defenders","hustle-players"].includes(category)) return "defense-and-boards";
   return category;
 }
