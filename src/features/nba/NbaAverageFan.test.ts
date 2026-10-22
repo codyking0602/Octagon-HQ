@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_FANS,
+  AVERAGE_FAN_NBA_FANS,
   AVERAGE_FAN_PLAYABLE_GRADES,
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_SUBJECTS,
@@ -115,7 +116,11 @@ describe("NBA Average Fan retained gameplay and safe owner preview", () => {
   });
 
   it("retains fan strength equality, lifeline accuracy, and canonical 0–100 scoring", () => {
-    for (const fan of AVERAGE_FAN_FANS) {
+    expect(AVERAGE_FAN_NBA_FANS).toHaveLength(5);
+    expect(AVERAGE_FAN_NBA_FANS).toContain("nnamdi");
+    expect(AVERAGE_FAN_NBA_FANS).not.toContain("troy");
+    expect(AVERAGE_FAN_FANS).toContain("troy");
+    for (const fan of AVERAGE_FAN_NBA_FANS) {
       const row = AVERAGE_FAN_REPORT_CARDS.nba[fan];
       expect(Object.keys(row).sort()).toEqual([...AVERAGE_FAN_SUBJECTS.nba].sort());
       expect(averageFanFanAccuracy(bank.find((q) => q.grade === 2)!, fan)).toBeGreaterThan(60);
@@ -139,6 +144,8 @@ describe("NBA Average Fan retained gameplay and safe owner preview", () => {
     expect(lobby).toContain('to="/nba/average-fan"');
     expect(lobby).toContain('to="/nba/average-fan?mode=daily"');
     expect(prototype).toContain('lockedSport ? "fan-select" : "sport-select"');
+    expect(prototype).toContain('sport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER');
+    expect(prototype).toContain("average-fan-card__pending");
     expect(prototype).toContain('const exitRoute = casualSport === "nba" ? "/nba"');
     expect(prototype).toContain('const AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH = 1536;');
     expect(prototype).toContain('const AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT = 864;');
