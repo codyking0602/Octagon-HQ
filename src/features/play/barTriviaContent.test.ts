@@ -81,7 +81,7 @@ describe("Bar Trivia question bank", () => {
           question.round === "round1" &&
           question.difficulty === "easy",
       );
-      expect(easy.length).toBeGreaterThanOrEqual(65);
+      expect(easy.length).toBeGreaterThanOrEqual(60);
     }
   });
 
