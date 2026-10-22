@@ -36,12 +36,20 @@ import {
   SPORTS_FEUD_MAIN_STAGE_ASSET,
   sportsFeudHostAsset,
   sportsFeudCentralDateKey,
+  nbaSportsFeudHostAsset,
   type SportsFeudHostSport,
 } from "./sportsFeudPresentation";
 import "./FamilyFeudPrototypePage.css";
 import "./SportsFeudRevealPass.css";
 
 type PrototypeScope = "ufc" | "football" | "nba";
+
+let nbaHostCursor = 0;
+function nextNbaHostIndex() {
+  const index = nbaHostCursor;
+  nbaHostCursor = (nbaHostCursor + 1) % 3;
+  return index;
+}
 
 interface FamilyFeudPrototypePageProps {
   scope: PrototypeScope;
@@ -140,6 +148,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
   const [nbaSeed, setNbaSeed] = useState(() => nbaDaily
     ? "daily:" + sportsFeudCentralDateKey()
     : "casual:" + Math.random().toString(36).slice(2));
+  const [nbaHostIndex, setNbaHostIndex] = useState(0);
   const pack = useMemo(() => {
     if (scope === "nba") return buildNbaSportsFeudPack(nbaSeed);
     if (!qaReplayDay) return familyFeudPrototypePack(scope);
@@ -171,10 +180,9 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
   const exitRoute = scope === "nba" ? "/nba" : scope === "football" ? "/football" : "/play";
   const hqName = scope === "nba" ? "NBA HQ" : scope === "football" ? "FOOTBALL HQ" : "UFC HQ";
   const hostSport: SportsFeudHostSport = scope === "ufc" ? "ufc" : "nfl";
-  // Reuse existing transparent NBA host assets without changing Millionaire's stage.
-  const hostAsset = useMemo(() => scope === "nba"
-    ? "/assets/millionaire/NBA " + (1 + ([...nbaSeed].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 3)) + ".webp"
-    : sportsFeudHostAsset(hostSport), [scope, hostSport, nbaSeed]);
+  const hostAsset = scope === "nba"
+    ? nbaSportsFeudHostAsset(nbaHostIndex)
+    : sportsFeudHostAsset(hostSport);
   const score = familyFeudScore(pack, state);
 
   useEffect(() => {
@@ -372,6 +380,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
   }
 
   function startGame() {
+    if (scope === "nba") setNbaHostIndex(nextNbaHostIndex());
     if (scope === "nba" && !nbaDaily && scene === "result") {
       setNbaSeed("casual:" + Math.random().toString(36).slice(2));
     }
