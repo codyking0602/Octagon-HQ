@@ -1127,34 +1127,35 @@ export function AverageFanGame({
     </div>
   );}
 
-export default function AverageFanPrototypePage() {
+export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { lockedSport?: "nba"; previewSeed?: string } = {}) {
   useAverageFanScreenLock();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const openingStageScale = useAverageFanOpeningStageScale();
   const requestedSport = searchParams.get("sport");
-  const initialSport = requestedSport === "nfl" || requestedSport === "cfb" || requestedSport === "ufc"
+  const initialSport = lockedSport ?? (requestedSport === "nfl" || requestedSport === "cfb" || requestedSport === "ufc"
     ? requestedSport
-    : "ufc";
+    : "ufc");
   const reviewGameplay = searchParams.get("screen") === "gameplay";
   const requestedFan = searchParams.get("fan") as AverageFanFan | null;
   const reviewFan = requestedFan && FAN_ORDER.includes(requestedFan) ? requestedFan : "cody";
   const [scene, setScene] = useState<PrototypeScene>(() => reviewGameplay ? "game" : "intro");
-  const [casualSport, setCasualSport] = useState<"nfl" | "cfb" | "ufc">(initialSport);
+  const [casualSport, setCasualSport] = useState<"nfl" | "cfb" | "ufc" | "nba">(initialSport);
+  const [randomSeed] = useState(() => Math.random().toString(36).slice(2));
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>(() => reviewGameplay ? reviewFan : "shane");
   const [reviewQuestionEnabled, setReviewQuestionEnabled] = useState(reviewGameplay);
   const [gameKey, setGameKey] = useState(0);
   const [rulesOpen, setRulesOpen] = useState(false);
   const casualBoard = useMemo(
-    () => buildAverageFanCasualBoard(casualSport, `${casualSport}-owner-casual-${gameKey}`),
-    [casualSport, gameKey],
+    () => buildAverageFanCasualBoard(casualSport, previewSeed ?? `${casualSport}-owner-casual-${lockedSport ? randomSeed + "-" : ""}${gameKey}`),
+    [casualSport, gameKey, lockedSport, previewSeed, randomSeed],
   );
   const casualQuestions = casualBoard.questions;
   const casualFinal = casualBoard.finalQuestion;
   const reviewQuestion = casualQuestions.find((question) => question.format === "four-choice" && question.grade === 3)
     ?? casualQuestions.find((question) => question.format === "four-choice")
     ?? casualQuestions[0]!;
-  const exitRoute = casualSport === "ufc" ? "/play" : "/football";
+  const exitRoute = casualSport === "nba" ? "/nba" : casualSport === "ufc" ? "/play" : "/football";
 
   if (scene === "sport-select") {
     return (
@@ -1173,7 +1174,7 @@ export default function AverageFanPrototypePage() {
     return (
       <FanSelector
         sport={casualSport}
-        onBack={() => setScene("sport-select")}
+        onBack={() => setScene(lockedSport ? "intro" : "sport-select")}
         onConfirm={(fan) => {
           setSelectedFan(fan);
           setReviewQuestionEnabled(false);
@@ -1219,7 +1220,7 @@ export default function AverageFanPrototypePage() {
           <button
             className="average-fan-intro-stage__button average-fan-intro-stage__button--start"
             type="button"
-            onClick={() => setScene("sport-select")}
+            onClick={() => setScene(lockedSport ? "fan-select" : "sport-select")}
           >
             <span aria-hidden="true">▶</span>
             <strong>START</strong>
