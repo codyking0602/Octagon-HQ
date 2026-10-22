@@ -68,6 +68,34 @@ jobs:
           python -m pip install --disable-pip-version-check pillow
           python -m unittest scripts/test_football_editorial_assets.py
 
+      - name: Preview Millionaire studio and NBA host assets for fixed-stage integration
+        run: |
+          python - <<'PY'
+          import base64, io
+          from PIL import Image, ImageOps, ImageDraw
+          from pathlib import Path
+          paths = [
+            "Nfl1.png", "Cfb1.png", "millionaire-locked-reference.png",
+            "wide_cinematic_game_show_studio_template_dark_bl_1.png",
+            "wide_cinematic_studio_shot_of_a_game_show_set_with.png",
+            "millionaire-locked-reference.webp",
+            "NBA 1.webp", "NBA 2.webp", "NBA 3.webp",
+          ]
+          canvas = Image.new("RGB", (320 * 3, 220 * 3), "#111826")
+          pen = ImageDraw.Draw(canvas)
+          for i, filename in enumerate(paths):
+            pic = Image.open(Path("public/assets/millionaire") / filename).convert("RGBA")
+            pic.thumbnail((314, 182))
+            x, y = (i % 3) * 320, (i // 3) * 220
+            host = Image.new("RGBA", (320, 188), "#1c2939")
+            host.alpha_composite(pic, ((320 - pic.width)//2, (188-pic.height)//2))
+            canvas.paste(host.convert("RGB"), (x, y))
+            pen.text((x + 5, y + 192), filename[:36], fill="white")
+          out = io.BytesIO()
+          canvas.save(out, format="WEBP", quality=32)
+          print("MILLIONAIRE_ASSET_PREVIEW_BASE64=" + base64.b64encode(out.getvalue()).decode())
+          PY
+
       - name: Typecheck
         id: typecheck
         run: npm run typecheck 2>&1 | tee typecheck.log
