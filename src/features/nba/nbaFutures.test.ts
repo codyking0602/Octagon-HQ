@@ -26,6 +26,20 @@ describe("2026 NBA futures immutable contract",()=>{
     expect(page).not.toContain("Date.now()>=Date.parse(NBA_FUTURES_LOCK_AT)");
     expect(page).toContain("Scheduled lock:");
   });
+  it("reveals other members' complete or partial cards only after server lock",()=>{
+    const migration=readFileSync("supabase/migrations/202612310319_nba_futures_locked_reveal.sql","utf8");
+    expect(migration).toContain("if v_locked then");
+    expect(migration).toContain("'picks',p.picks");
+    expect(migration).toContain("p.profile_id<>v_profile");
+    expect(migration).toContain("else\n    v_entries:='[]'::jsonb");
+    expect(migration).toContain("public.nba_futures_is_locked(p_season)");
+    const page=readFileSync("src/features/nba/NbaFuturesPage.tsx","utf8");
+    expect(page).toContain('className="nba-futures-group-entry"');
+    expect(page).toContain('entry.complete?"55/55 COMPLETE":progress+"/55 · INCOMPLETE"');
+    expect(page).toContain("RevealedNbaFuturesPicks");
+    expect(page).toContain("{locked?<section");
+    expect(page).toContain("snapshot.entries.map(");
+  });
   it("has the approved season weights and 100 Futures points",()=>{
     expect(NBA_CHAMPIONSHIP_WEIGHTS).toEqual({futures:15,cup:10,playoffs:55,games:20});
     expect(NBA_FUTURES_MAX).toBe(100);
