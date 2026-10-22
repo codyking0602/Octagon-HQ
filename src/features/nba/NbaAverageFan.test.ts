@@ -200,6 +200,7 @@ describe("NBA Average Fan retained gameplay and safe owner preview", () => {
   it("keeps owner-only routing, NBA navigation, and the locked landscape presentation", () => {
     const router = readFileSync("src/app/router.tsx", "utf8");
     const lobby = readFileSync("src/features/nba/NbaPlayPage.tsx", "utf8");
+    const shell = readFileSync("src/app/AppShell.tsx", "utf8");
     const prototype = readFileSync("src/features/play/AverageFanPrototypePage.tsx", "utf8");
     const css = readFileSync("src/features/play/AverageFanPrototypePage.css", "utf8");
     const official = readFileSync("src/features/play/averageFanDailyRuntime.ts", "utf8");
@@ -207,6 +208,16 @@ describe("NBA Average Fan retained gameplay and safe owner preview", () => {
     expect(router).toContain('path: "nba/average-fan", element: <NbaWhoAmIOwnerGate><NbaAverageFanPage /></NbaWhoAmIOwnerGate>');
     expect(lobby).toContain('to="/nba/average-fan"');
     expect(lobby).toContain('to="/nba/average-fan?mode=daily"');
+    // Both Casual and date-seeded Daily previews share the same pathname.
+    // The canonical immersive-game predicate must also suppress header, bottom nav and pull-to-refresh.
+    const immersivePredicate = shell.match(/const isAverageFanGame = ([^;]+);/)?.[1];
+    expect(immersivePredicate).toContain('location.pathname === "/nba/average-fan"');
+    expect(immersivePredicate).toContain('location.pathname === "/play/average-fan"');
+    expect(immersivePredicate).toContain('location.pathname === "/play/average-fan-preview"');
+    expect(shell).toContain('const isGame = isPlayGame || isFootballGame || isMillionaireGame || isAverageFanGame');
+    expect(shell).toContain('isMillionaireGame || isAverageFanGame ? null : isMlbSeries');
+    expect(shell).toContain('{isAverageFanGame ? (');
+    expect(shell).toContain('isBackRoom || isMillionaireGame || isAverageFanGame ? null : <BottomNavigation');
     expect(prototype).toContain('lockedSport ? "fan-select" : "sport-select"');
     expect(prototype).toContain('sport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER');
     expect(prototype).toContain("average-fan-card__pending");
