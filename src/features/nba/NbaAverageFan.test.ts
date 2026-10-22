@@ -121,7 +121,20 @@ describe("NBA Average Fan audited question bank", () => {
       expect(event.expiresAt).toBeTruthy();
       expect(event.grade).toBeGreaterThan(2);
     }
-    // No NBA current-event ingestion or official NBA Daily publication is active in this preview PR.
+    // A separate vetted NBA editorial pipeline is required before any story can enter the bank.
+    const example = { ...bank[0]!, id: "nba-unverified-event", sport: "nba" as const,
+      grade: 3 as const, contentType: "current-event" as const,
+      expiresAt: "2026-11-01T12:00:00.000Z" };
+    expect(validateAverageFanQuestion(example)).toContain("NBA current events require a sourceId");
+    expect(validateAverageFanQuestion(example)).toContain("NBA current events require an HTTPS sourceUrl");
+    expect(validateAverageFanQuestion(example)).toContain("NBA current events require a valid verifiedAt");
+
+    const vetted = { ...example, sourceId: "nba-2026-story-example",
+      sourceUrl: "https://www.nba.com/news", verifiedAt: "2026-10-22T12:00:00.000Z" };
+    expect(validateAverageFanQuestion(vetted)).toEqual([]);
+    expect(validateAverageFanQuestion({ ...vetted, grade: 2 })).toContain("NBA current events must not appear in 2nd Grade");
+
+    // NBA Daily is not officially published; no verified current-event candidates exist yet.
     expect(events).toHaveLength(0);
   });
 
