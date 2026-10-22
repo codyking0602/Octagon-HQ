@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_FANS,
+  AVERAGE_FAN_NBA_FANS,
   AVERAGE_FAN_FORMATS,
   AVERAGE_FAN_PLAYABLE_GRADES,
   AVERAGE_FAN_REPORT_CARDS,
@@ -218,6 +219,8 @@ describe("Average Fan canonical question contract", () => {
 describe("Average Fan report-card intelligence", () => {
   it("locks the five v1 fans and their authored report cards", () => {
     expect(AVERAGE_FAN_FANS).toEqual(["cody", "shane", "troy", "tyler", "lib"]);
+    expect(AVERAGE_FAN_NBA_FANS).toEqual(["cody", "shane", "nnamdi", "tyler", "lib"]);
+    expect(AVERAGE_FAN_REPORT_CARDS.nba.nnamdi).toEqual({ Players: "B-", Teams: "A-", "NBA History": "B+", "Basketball IQ": "A" });
     expect(AVERAGE_FAN_REPORT_CARDS.ufc.shane).toEqual({
       Fighters: "A+",
       Fights: "B+",
@@ -228,17 +231,18 @@ describe("Average Fan report-card intelligence", () => {
 
   it("keeps every displayed fan equally strong overall while preserving subject differences", () => {
     for (const sport of Object.keys(AVERAGE_FAN_SUBJECTS) as AverageFanSport[]) {
-      const totals = AVERAGE_FAN_FANS.map((fan) => {
+      const activeFans = sport === "nba" ? AVERAGE_FAN_NBA_FANS : AVERAGE_FAN_FANS;
+      const totals = activeFans.map((fan) => {
         const row = AVERAGE_FAN_REPORT_CARDS[sport][fan] as Record<string, keyof typeof AVERAGE_FAN_REPORT_GRADE_MODIFIER>;
         return AVERAGE_FAN_SUBJECTS[sport]
           .map((subject) => AVERAGE_FAN_REPORT_GRADE_MODIFIER[row[subject]!])
           .reduce<number>((sum, value) => sum + value, 0);
       });
       expect(new Set(totals)).toEqual(new Set([11]));
-      const profiles = AVERAGE_FAN_FANS.map((fan) => JSON.stringify(AVERAGE_FAN_REPORT_CARDS[sport][fan]));
-      expect(new Set(profiles).size).toBe(AVERAGE_FAN_FANS.length);
+      const profiles = activeFans.map((fan) => JSON.stringify((AVERAGE_FAN_REPORT_CARDS[sport] as Record<string, unknown>)[fan]));
+      expect(new Set(profiles).size).toBe(activeFans.length);
 
-      for (const fan of AVERAGE_FAN_FANS) {
+      for (const fan of activeFans) {
         const modifiers = AVERAGE_FAN_SUBJECTS[sport].map((subject) =>
           averageFanCenteredSubjectModifier(sport, fan, subject)
         );
