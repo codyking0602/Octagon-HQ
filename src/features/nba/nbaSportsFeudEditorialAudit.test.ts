@@ -198,4 +198,5 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
     expect(distinctSequences.size).toBe(20_000);
     expect(auditedAliasQuestions.size).toBe(ALL.length);
     for (const q of ALL) expect(frequencies.get("nba-feud-" + q.id) ?? 0, q.id).toBeGreaterThan(0);
-  }, 120_000);});
+  }, 120_000);
+});
