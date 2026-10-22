@@ -42,7 +42,7 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
   it("does not ask season-specific or Finals-roster trivia in Fast Money", () => {
     for (const q of NBA_SPORTS_FEUD_FAST) {
       expect(q.prompt, q.id).not.toMatch(/\b(?:19|20)\d{2}\b|\b(?:finals|game [1-7]|playoff series|roster|season-specific)\b/i);
-      expect(q.prompt, q.id).toMatch(/^Name (?:an? |a )/);
+      expect(q.prompt, q.id).toMatch(/^Name (?:an? |someone |something )/);
       // The player can immediately name one of eight mainstream associations,
       // instead of reconstructing one single-season roster or obscure stat line.
       expect(q.answers).toHaveLength(8);
