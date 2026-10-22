@@ -399,7 +399,7 @@ export function FanSelector({
   const stageScale = useAverageFanOpeningStageScale();
   const rows = useMemo(() => {
     const subjects = AVERAGE_FAN_SUBJECTS[sport];
-    const report = AVERAGE_FAN_REPORT_CARDS[sport][selectedFan] as Record<string, AverageFanReportGrade>;
+    const report = (AVERAGE_FAN_REPORT_CARDS[sport] as Record<string, Record<string, AverageFanReportGrade>>)[selectedFan]!;
     return subjects.map((subject) => ({ subject, grade: report[subject] }));
   }, [selectedFan, sport]);
 
