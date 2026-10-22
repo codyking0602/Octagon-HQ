@@ -12,7 +12,7 @@
 
 +38 Main and +46 Fast boards retained; fixed existing NBA historical omissions and added recognizable aliases. No gameplay/scoring/stage/CSS/hosts/other sports edited.
 
-**Editorial triage:** 78 additional-board candidates were considered across editing passes. 22 were rejected for near-duplicate categories, inaccessible Fast Money recall, overly broad answer universes or disputed facts. The other 56 were retained (27 Main + 29 Fast); the original 48 remain as the baseline, with corrections.
+**Editorial triage:** 109 additional-board candidates were considered across two editing passes. **25 rejected** for near-duplicate categories, inaccessible Fast Money recall, overly broad answer universes, or unsupported/disputed factual claims; **84 retained** (38 Main + 46 Fast). The original 48 testing questions remain as the baseline, with factual and alias corrections. Quality—not the previous 350-question aspiration—determined the count.
 
 **Scoring unchanged:** Main ranked ladder 10/8/7/5/5/4/4/3, Fast ranked ladder 8/7/6/5/4/3/2/1. Main off-board correct answers 2; Fast off-board correct answers 1. Rankings are **editorial predictions of recognition, not survey results.**
 
@@ -25,8 +25,8 @@
 ## Selection and static audits
 
 - Preserved the same caller API, seed stability, 2 Main + 5 Fast flow, engine and points.
-- Replaced cyclic selection with two independent deterministic seeded shuffles and a shared semantic collision-lane guard (same category, closely related skills, awards, era, franchise categories, college, family, etc.).
-- Independent JavaScript audit of **30,000** generated packs: **20,000 distinct sequences; zero repeated categories or semantic-lane collisions; zero short packs; every authored question selected at least once.**
+- Replaced cyclic selection with two independent deterministic seeded shuffles and a shared semantic collision-lane guard (same category, closely related skills, awards, eras, franchises, colleges, family, coaches, international legends, basketball fundamentals).
+- Independent JavaScript audit of **25,000** generated packs: **25,000 distinct sequences; zero repeated categories or semantic-lane collisions; zero short packs; every authored question selected at least once.**
 - All 132 full answer universes: 8 unique ranked answers, no normalized duplicate canonical names, no canonical/alias duplication identifying different players on the same question, no exact duplicate prompts.
 - Regression test added for **6,000 packs**, 7-question variety, eight-answer integrity, nickname matching, objective-universe completeness and current NBA awards/championship facts. Full repository CI is authoritative; no local Git clone was available in the linked workspace.
 - Broad-answer categories remain an editorial approximation: continue expanding obvious extras when player reports reveal a valid miss. Avoid claiming a survey or a provably exhaustive subjective universe.
