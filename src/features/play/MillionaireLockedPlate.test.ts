@@ -1,12 +1,49 @@
 import { readFileSync } from "node:fs";
+import { MILLIONAIRE_HOSTS, MILLIONAIRE_NBA_SAFE_HOST_ASSET, millionaireHostAsset } from "./MillionaireCasualModel";
 import { describe, expect, it } from "vitest";
 import { millionaireDailyRun } from "./millionaireDailyQuestionBank";
 
 const pageSource = readFileSync("src/features/play/MillionaireCasualPage.tsx", "utf8");
 const dailySource = readFileSync("src/features/play/OfficialMillionaireDailyView.tsx", "utf8");
 const fixedCss = readFileSync("src/features/play/MillionaireFixedStage.css", "utf8");
+const nbaCss = readFileSync("src/styles/nba-millionaire.css", "utf8");
 
 describe("Millionaire fixed-stage presentation contract", () => {
+  it("uses an existing, already-approved NFL stage image for every NBA host slot", () => {
+    expect(MILLIONAIRE_NBA_SAFE_HOST_ASSET).toBe("/assets/millionaire/Nfl1.png");
+    expect(MILLIONAIRE_NBA_SAFE_HOST_ASSET).toBe(MILLIONAIRE_HOSTS.nfl[0]);
+    expect(MILLIONAIRE_HOSTS.nba).toEqual(Array(3).fill(MILLIONAIRE_NBA_SAFE_HOST_ASSET));
+    for (const date of ["2026-10-21", "2026-10-22", "2026-10-23"]) {
+      expect(millionaireHostAsset("nba", date)).toBe(MILLIONAIRE_NBA_SAFE_HOST_ASSET);
+    }
+    const image = readFileSync(`public${MILLIONAIRE_NBA_SAFE_HOST_ASSET}`);
+    expect(Array.from(image.subarray(0, 8))).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
+    expect(image.byteLength).toBeGreaterThan(100_000);
+  });
+
+  it("never restores the baked-title/baked-ladder NBA photo or its CSS masking workarounds", () => {
+    expect(pageSource).not.toContain("wide_cinematic_game_show_studio_template_dark_bl_1.png");
+    expect(pageSource).not.toContain("templateFallbackActive");
+    expect(pageSource).not.toContain("millionaire-shell--template-fallback");
+    expect(pageSource).toContain("event.currentTarget.src = MILLIONAIRE_NBA_SAFE_HOST_ASSET");
+    expect(nbaCss).not.toContain("template-fallback");
+    expect(nbaCss).not.toMatch(/\.millionaire-shell--nba[^\n{]*\.millionaire-ladder/);
+    expect(nbaCss).not.toContain("visibility: hidden !important");
+  });
+
+  it("renders one live title and one live ladder on the same 1600x900 stage as NFL/UFC", () => {
+    expect(pageSource.match(/<header className="millionaire-title"/g)).toHaveLength(1);
+    expect(pageSource.match(/<aside className="millionaire-ladder"/g)).toHaveLength(1);
+    expect(pageSource).toContain('className="millionaire-stage-canvas"');
+    expect(pageSource).toContain('className="millionaire-stage-background"');
+    expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);');
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-ladder \{[\s\S]*?left: 1196px;[\s\S]*?top: 116px;/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-question \{[\s\S]*?left: 266px;[\s\S]*?top: 510px;/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-answers \{[\s\S]*?left: 252px;[\s\S]*?top: 650px;/);
+    expect(pageSource).toContain("Math.min(viewportWidth / MILLIONAIRE_STAGE_WIDTH, viewportHeight / MILLIONAIRE_STAGE_HEIGHT)");
+    expect(fixedCss).toContain("background: #000 !important;");
+  });
+
   it("uses the uploaded composed MLB stage plate exactly like the existing sport plates", () => {
     expect(pageSource).toContain('const MILLIONAIRE_MLB_STAGE_PLATE = "/assets/millionaire/ABD98D28-955F-4D95-B067-89E3D512952C.png";');
     expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);');
