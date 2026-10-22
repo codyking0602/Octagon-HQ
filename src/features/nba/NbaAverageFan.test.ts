@@ -43,6 +43,53 @@ describe("NBA Average Fan audited question bank", () => {
     expect(finals.every((q) => q.grade === 5)).toBe(true);
   });
 
+  it("preserves the editorial grade calibration and protects against returning to Millionaire award trivia", () => {
+    const gradeOf = (prompt: string) => bank.find((q) => q.prompt === prompt)?.grade;
+    const calibrated: Array<[string, number]> = [
+      ["An NBA game has four regulation quarters of 12 minutes each.", 2],
+      ["The NBA regular season typically includes 82 games per team.", 2],
+      ["Which 2000s-era NBA icon was nicknamed T-Mac?", 3],
+      ["What does a flagrant 2 foul typically trigger for the offending player?", 3],
+      ["How many free throws are normally awarded for a shooting foul on a missed three-point attempt?", 3],
+      ["Giannis Antetokounmpo won the 2017 Most Improved Player award.", 4],
+      ["What is a stretch five?", 4],
+      ["Which No. 8 seed eliminated top-seeded San Antonio in the 2011 first round?", 5],
+      ["In pick-and-roll defense, what does drop coverage generally ask the screener's defender to do?", 5],
+      ["In NBA defensive terminology, what is the goal of ICE coverage on a side pick-and-roll?", 5],
+    ];
+    for (const [prompt, grade] of calibrated) expect(gradeOf(prompt), prompt).toBe(grade);
+    const retiredFacts = [
+      "Which 76ers icon was nicknamed The Answer?",
+      "Which current NBA star is widely called the Joker?",
+      "Who received the 2023 regular-season NBA MVP award?",
+      "Which team did Michael Jordan lead to six NBA titles in the 1990s?",
+      "Who won the regular-season NBA MVP award in 1993 as a Phoenix Sun?",
+      "Which NBA Finals MVP was awarded to a player on the losing team in 1969?",
+    ];
+    for (const prompt of retiredFacts) expect(bank.some((q) => q.prompt === prompt), prompt).toBe(false);
+  });
+
+  it("keeps choice pills short and specific NBA moment sources tied to their questions", () => {
+    for (const question of bank) {
+      for (const choice of question.choices ?? []) {
+        expect(choice.length, `${question.id}: ${choice}`).toBeLessThanOrEqual(45);
+      }
+    }
+    const namedMoments = [
+      "Which Cleveland guard defended Michael Jordan's famous 1989 playoff-winning shot?",
+      "Who caught Kobe Bryant's famous alley-oop in the Lakers' 2000 West finals Game 7 comeback?",
+      "Who made the chasedown block on Andre Iguodala late in Game 7 of the 2016 Finals?",
+      "Which New York Knicks forward made a controversial four-point play against Indiana in the 1999 East finals?",
+      "Which season was the first to use the three-point line in the NBA?",
+    ];
+    for (const prompt of namedMoments) {
+      const q = bank.find((item) => item.prompt === prompt);
+      expect(q?.sourceUrl, prompt).toMatch(/^https:\/\/www\.nba\.com\//);
+      expect(q?.sourceUrl, prompt).not.toBe("https://www.nba.com/history");
+      expect(q?.sourceUrl, prompt).not.toBe("https://www.nba.com/news/history-season-recaps-index");
+    }
+  });
+
   it("validates every answer, choice, short-answer miss, alias, and explanation", () => {
     for (const q of bank) {
       expect(validateAverageFanQuestion(q), q.id).toEqual([]);
