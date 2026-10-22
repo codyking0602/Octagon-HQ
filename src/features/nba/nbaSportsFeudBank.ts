@@ -529,7 +529,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Wilt Chamberlain",
         "Anthony Davis",
-        "Lamar Odom"
+        "Lamar Odom",
+        "Elgin Baylor",
+        "George Mikan",
+        "Gail Goodrich",
+        "Derek Fisher",
+        "Robert Horry",
+        "Michael Cooper",
+        "Byron Scott",
+        "Rick Fox"
       ]
     },
     {
@@ -551,7 +559,18 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Sam Jones",
         "Jaylen Brown",
         "Ray Allen",
-        "Rajon Rondo"
+        "Rajon Rondo",
+        "Marcus Smart",
+        "Al Horford",
+        "Derrick White",
+        "Antoine Walker",
+        "Robert Parish",
+        "Dave Cowens",
+        "Isaiah Thomas",
+        "Tom Heinsohn",
+        "Dennis Johnson",
+        "Bill Walton",
+        "Jrue Holiday"
       ]
     },
     {
@@ -622,7 +641,13 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Tyler Herro",
         "Goran Dragic",
-        "Udonis Haslem"
+        "Udonis Haslem",
+        "Kevin Love",
+        "Duncan Robinson",
+        "Terry Rozier",
+        "Kyle Lowry",
+        "Andrew Wiggins",
+        "Norman Powell"
       ]
     },
     {
@@ -690,7 +715,16 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Andre Iguodala",
         "Jordan Poole",
-        "Latrell Sprewell"
+        "Latrell Sprewell",
+        "Jimmy Butler",
+        "Chris Paul",
+        "Monta Ellis",
+        "David Lee",
+        "DeMarcus Cousins",
+        "Tim Hardaway",
+        "Stephen Jackson",
+        "Jonathan Kuminga",
+        "Nate Thurmond"
       ]
     },
     {
@@ -732,7 +766,18 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "John Starks",
         "David Lee",
-        "Kristaps Porzingis"
+        "Kristaps Porzingis",
+        "Karl-Anthony Towns",
+        "Mikal Bridges",
+        "Josh Hart",
+        "OG Anunoby",
+        "Julius Randle",
+        "Derrick Rose",
+        "Jeremy Lin",
+        "Stephon Marbury",
+        "Latrell Sprewell",
+        "Tyson Chandler",
+        "J.R. Smith"
       ]
     },
     {
@@ -850,7 +895,17 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Oscar Robertson",
         "Jerry West",
         "George Gervin",
-        "Dominique Wilkins"
+        "Dominique Wilkins",
+        "James Harden",
+        "Derrick Rose",
+        "Carmelo Anthony",
+        "Paul George",
+        "Jimmy Butler",
+        "Jayson Tatum",
+        "Chris Paul",
+        "Anthony Davis",
+        "Trae Young",
+        "Jalen Brunson"
       ]
     },
     {
@@ -910,7 +965,16 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Mark Aguirre",
         "Rolando Blackman",
         "Jalen Brunson",
-        "Kristaps Porzingis"
+        "Kristaps Porzingis",
+        "Cooper Flagg",
+        "Klay Thompson",
+        "Anthony Davis",
+        "PJ Washington",
+        "Dereck Lively II",
+        "Daniel Gafford",
+        "Shawn Marion",
+        "JJ Barea",
+        "Vince Carter"
       ]
     },
     {
@@ -1098,7 +1162,9 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "RJ Barrett",
         "Bruce Brown",
         "Immanuel Quickley",
-        "Andrea Bargnani"
+        "Andrea Bargnani",
+        "Brandon Ingram",
+        "Jakob Poeltl"
       ]
     },
     {
@@ -1389,6 +1455,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     }
   ],
   "alias": {
+    "Jimmy Butler": ["Jimmy Buckets"],
+    "Paul George": ["PG13", "PG-13"],
     "Kevin Garnett": ["KG","The Big Ticket"],
     "Paul Pierce": ["The Truth"],
     "David Robinson": ["The Admiral"],
