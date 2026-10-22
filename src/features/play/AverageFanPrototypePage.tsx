@@ -231,7 +231,7 @@ function StudioProps() {
   );
 }
 
-export function RulesModal({ onClose }: { onClose: () => void }) {
+export function RulesModal({ onClose, sportLocked = false }: { onClose: () => void; sportLocked?: boolean }) {
   return (
     <div className="average-fan-rules-backdrop" role="presentation" onMouseDown={onClose}>
       <section
@@ -245,7 +245,7 @@ export function RulesModal({ onClose }: { onClose: () => void }) {
         <p>HOW TO PLAY</p>
         <h2 id="average-fan-rules-title">ARE YOU SMARTER THAN AN AVERAGE FAN?</h2>
         <div className="average-fan-rules__grid">
-          <article><b>1</b><span><strong>Pick your sport and fan.</strong> Your fan is locked for the whole run.</span></article>
+          <article><b>1</b><span><strong>{sportLocked ? "Pick your fan." : "Pick your sport and fan."}</strong> Your fan is locked for the whole run.</span></article>
           <article><b>2</b><span><strong>Work the board.</strong> Choose any of the 8 subject tiles from 2nd through 5th Grade.</span></article>
           <article><b>3</b><span><strong>Use your help.</strong> Peek, Copy and Save are each available once.</span></article>
           <article><b>4</b><span><strong>Finish strong.</strong> An unsaved miss ends the money run, but you keep playing for HQ points and the Final.</span></article>
@@ -1249,7 +1249,7 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
         ‹ HQ
       </button>
 
-      {rulesOpen ? <RulesModal onClose={() => setRulesOpen(false)} /> : null}
+      {rulesOpen ? <RulesModal onClose={() => setRulesOpen(false)} sportLocked={Boolean(lockedSport)} /> : null}
     </div>
   );
 }
