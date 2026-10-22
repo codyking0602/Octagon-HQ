@@ -26,6 +26,7 @@ import {
   millionaireLeagueLabel,
   millionaireMoneyLabel,
   millionaireHostAsset,
+  nextNbaMillionaireHostNumber,
   MILLIONAIRE_NBA_SAFE_HOST_ASSET,
   millionaireCentralDateKey,
   millionaireTimeLabel,
@@ -212,6 +213,7 @@ function MillionaireGame({
   onSettled,
   runOverride,
   onReplay,
+  nbaHostNumber,
 }: {
   league: MillionaireLeague;
   onBack: () => void;
@@ -219,6 +221,7 @@ function MillionaireGame({
   onSettled?: (result: MillionaireCasualSettledResult) => void;
   runOverride?: MillionaireRun;
   onReplay?: () => void;
+  nbaHostNumber?: number | null;
 }) {
   const run = useMemo(() => runOverride ?? millionaireCasualRun(league), [league, runOverride]);
   const [gameState, setGameState] = useState<MillionaireState>(() => createMillionaireState(run));
@@ -242,7 +245,8 @@ function MillionaireGame({
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
   const stageScale = useMillionaireStageScale();
-  const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);
+  const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : league === "nba" ? MILLIONAIRE_NBA_SAFE_HOST_ASSET : millionaireHostAsset(league);
+  const nbaHostAsset = league === "nba" ? millionaireHostAsset("nba", undefined, nbaHostNumber ?? 1) : null;
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
   function schedule(callback: () => void, delay: number) {
@@ -298,7 +302,9 @@ function MillionaireGame({
       return;
     }
     setPhase("answering");
-    setEliminationPromptOpen(firstElimination);
+    // NBA owner-review runs must never stop at a money-ladder miss: Q7 flows straight to Q8.
+    // Football/UFC retain their existing explicit Finish the Board acknowledgement.
+    setEliminationPromptOpen(league !== "nba" && firstElimination);
     setWalkPromptOpen(!firstElimination && millionaireCanWalkAway(result.state));
   }
 
@@ -391,6 +397,7 @@ function MillionaireGame({
             event.currentTarget.src = MILLIONAIRE_NBA_SAFE_HOST_ASSET;
           }
         } : undefined} />
+      {nbaHostAsset ? <div className="millionaire-nba-host-stage" aria-hidden="true"><img className="millionaire-nba-host" src={nbaHostAsset} alt="" /></div> : null}
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
@@ -496,6 +503,7 @@ export default function MillionaireCasualPage({
   const [footballLeague, setFootballLeague] = useState<"nfl" | "cfb" | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [nbaSeed, setNbaSeed] = useState(() => createReplaySeed("nba-millionaire"));
+  const [nbaHostNumber, setNbaHostNumber] = useState<number | null>(null);
   const nbaDay = millionaireCentralDateKey();
   const nbaRun = useMemo(() => {
     if (scope !== "nba") return null;
@@ -524,7 +532,7 @@ export default function MillionaireCasualPage({
     const changeLeague = scope === "football" ? () => { setGameStarted(false); setFootballLeague(null); } : undefined;
     content = gameStarted
       ? <MillionaireGame
-          key={league === "nba" ? `${league}-${dailyPreview ? "daily" : nbaSeed}` : league}
+          key={league === "nba" ? `${league}-${dailyPreview ? "daily" : nbaSeed}-host-${nbaHostNumber ?? 0}` : league}
           league={league}
           onBack={() => navigate(backRoute)}
           onChangeLeague={changeLeague}
@@ -532,10 +540,17 @@ export default function MillionaireCasualPage({
             if (scope === "nba" && !dailyPreview) recordLineupCompletion(replayLineupIdentity("nba-millionaire", nbaSeed, "casual"), result);
             onSettled?.(result);
           }}
-          onReplay={scope === "nba" && !dailyPreview ? () => setNbaSeed(createReplaySeed("nba-millionaire")) : undefined}
+          onReplay={scope === "nba" ? () => {
+            setNbaHostNumber(nextNbaMillionaireHostNumber(window.localStorage));
+            if (!dailyPreview) setNbaSeed(createReplaySeed("nba-millionaire"));
+          } : undefined}
+          nbaHostNumber={nbaHostNumber}
           runOverride={runOverride ?? nbaRun ?? undefined}
         />
-      : <MillionaireRulesIntro league={league} onStart={() => setGameStarted(true)} onBack={introBack} />;
+      : <MillionaireRulesIntro league={league} onStart={() => {
+          if (scope === "nba") setNbaHostNumber(nextNbaMillionaireHostNumber(window.localStorage));
+          setGameStarted(true);
+        }} onBack={introBack} />;
   }
 
   return createPortal(content, document.body);

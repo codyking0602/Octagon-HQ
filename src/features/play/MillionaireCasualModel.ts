@@ -47,8 +47,11 @@ export const MILLIONAIRE_BASE_PTS = {
 export const MILLIONAIRE_NBA_SAFE_HOST_ASSET = "/assets/millionaire/Nfl1.png";
 
 export const MILLIONAIRE_HOSTS: Record<MillionaireLeague, readonly [string, string, string]> = {
-  // Temporary: switch these three entries to Nba1/2/3.png only after the files are uploaded.
-  nba: [MILLIONAIRE_NBA_SAFE_HOST_ASSET, MILLIONAIRE_NBA_SAFE_HOST_ASSET, MILLIONAIRE_NBA_SAFE_HOST_ASSET],
+  nba: [
+    "/assets/millionaire/NBA 1.webp",
+    "/assets/millionaire/NBA 2.webp",
+    "/assets/millionaire/NBA 3.webp",
+  ],
   cfb: [
     "/assets/millionaire/Cfb1.png",
     "/assets/millionaire/Cfb2.png",
@@ -89,8 +92,20 @@ export function millionaireHostNumber(league: MillionaireLeague, dateKey = milli
   return ((epochDay + offset) % 3 + 3) % 3 + 1;
 }
 
-export function millionaireHostAsset(league: MillionaireLeague, dateKey?: string) {
-  return MILLIONAIRE_HOSTS[league][millionaireHostNumber(league, dateKey) - 1];
+export const NBA_MILLIONAIRE_HOST_ROTATION_KEY = "octagon:nba-millionaire:host-next-v1";
+
+/** One new NBA host per started playthrough, including PLAY AGAIN, across reloads. */
+export function nextNbaMillionaireHostNumber(storage: Pick<Storage, "getItem" | "setItem"> | null): number {
+  const last = Number(storage?.getItem(NBA_MILLIONAIRE_HOST_ROTATION_KEY) ?? 0);
+  const next = Number.isInteger(last) && last >= 1 && last <= 3 ? (last % 3) + 1 : 1;
+  try { storage?.setItem(NBA_MILLIONAIRE_HOST_ROTATION_KEY, String(next)); } catch { /* private browsing */ }
+  return next;
+}
+
+export function millionaireHostAsset(league: MillionaireLeague, dateKey?: string, nbaPlaythroughHost?: number) {
+  const number = league === "nba" && nbaPlaythroughHost && nbaPlaythroughHost >= 1 && nbaPlaythroughHost <= 3
+    ? nbaPlaythroughHost : millionaireHostNumber(league, dateKey);
+  return MILLIONAIRE_HOSTS[league][number - 1];
 }
 
 export function millionaireLeagueLabel(league: MillionaireLeague) {
