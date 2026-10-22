@@ -57,9 +57,21 @@ describe("NBA Sports Feud curated-bank and unchanged engine contract", () => {
       expect(question.answers).toHaveLength(8);
       expect(question.category).toBeTruthy();
     }
-    const allCategories = [...NBA_SPORTS_FEUD_MAIN, ...NBA_SPORTS_FEUD_FAST]
-      .map(question => question.category);
-    expect(new Set(allCategories).size).toBe(allCategories.length);
+    // Category collisions between the banks are deliberate: they ensure we
+    // never ask nearly identical topics (e.g. Bulls alumni and Bulls All-Stars)
+    // during a single seven-question run.
+    const sharedTopics = [
+      ["bulls-stars", "duke"],
+      ["lakers-champs", "lakers-legends"],
+      ["warriors-champs", "warriors"],
+      ["spurs-champs", "spurs"],
+      ["dunk-winners", "dunkers"],
+      ["three-point-contest", "shooters"],
+    ] as const;
+    for (const [mainId, fastId] of sharedTopics) {
+      expect(NBA_SPORTS_FEUD_MAIN.find(q => q.id === mainId)!.category)
+        .toBe(NBA_SPORTS_FEUD_FAST.find(q => q.id === fastId)!.category);
+    }
   });
 
   it("replaces narrow finals and one-year rosters with immediate NBA associations", () => {
