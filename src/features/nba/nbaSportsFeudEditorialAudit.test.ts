@@ -86,6 +86,30 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
     expect(accepted("wolves-alumni", "fast", "KAT")).toBe("Karl-Anthony Towns");
   });
 
+
+  it("accepts second-pass basketball terms, venue renames and bounded history", () => {
+    expect(accepted("allstar-game-mvps", "main", "Steph")).toBe("Stephen Curry");
+    expect(accepted("multiple-dpoy", "main", "Sidney Moncrief")).toBe("Sidney Moncrief");
+    expect(accepted("usa-paris-2024", "main", "Derrick White")).toBe("Derrick White");
+    expect(accepted("assists-title-stars", "main", "Joker")).toBe("Nikola Jokic");
+    expect(accepted("basketball-stat-box", "fast", "PTS")).toBe("Points");
+    expect(accepted("basketball-stat-box", "fast", "Reb")).toBe("Rebounds");
+    expect(accepted("basketball-shot-types", "fast", "Jumper")).toBe("Jump shot");
+    expect(accepted("basketball-violations", "fast", "Palming")).toBe("Carrying");
+    expect(accepted("basketball-violations", "fast", "Travel")).toBe("Traveling");
+    expect(accepted("basketball-worn-gear", "fast", "Sneakers")).toBe("Basketball shoes");
+    expect(accepted("basketball-court-gear", "fast", "3pt line")).toBe("Three-point line");
+    expect(accepted("nba-arenas", "fast", "MSG")).toBe("Madison Square Garden");
+    expect(accepted("nba-arenas", "fast", "Staples Center")).toBe("Crypto.com Arena");
+    expect(accepted("nba-arenas", "fast", "Wells Fargo Center")).toBe("Xfinity Mobile Arena");
+    for (const [id, size] of [
+      ["multiple-dpoy", 10], ["usa-paris-2024", 12],
+    ] as const) {
+      const q = NBA_SPORTS_FEUD_MAIN.find(v => v.id === id)!;
+      expect(q.answers.length + q.extras.length, id).toBe(size);
+    }
+  });
+
   it("runs 6,000 complete varied seven-question seeds and checks alias collisions", () => {
     const frequencies = new Map<string, number>();
     const distinctSequences = new Set<string>();
