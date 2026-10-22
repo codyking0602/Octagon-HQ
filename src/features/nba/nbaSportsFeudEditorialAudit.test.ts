@@ -76,6 +76,13 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
     expect(accepted("number-one-picks", "main", "Hakeem")).toBe("Hakeem Olajuwon");
     expect(accepted("fast-free-throws", "fast", "Steph")).toBe("Stephen Curry");
     expect(accepted("nets-alumni", "fast", "KD")).toBe("Kevin Durant");
+    expect(accepted("lakers-legends", "fast", "Elgin Baylor")).toBe("Elgin Baylor");
+    expect(accepted("celtics-legends", "fast", "Marcus Smart")).toBe("Marcus Smart");
+    expect(accepted("heat", "fast", "Duncan Robinson")).toBe("Duncan Robinson");
+    expect(accepted("warriors", "fast", "Jimmy Butler")).toBe("Jimmy Butler");
+    expect(accepted("knicks", "fast", "Karl-Anthony Towns")).toBe("Karl-Anthony Towns");
+    expect(accepted("mavericks", "fast", "Cooper Flagg")).toBe("Cooper Flagg");
+    expect(accepted("nicknames", "fast", "PG13")).toBe("Paul George");
     expect(accepted("wolves-alumni", "fast", "KAT")).toBe("Karl-Anthony Towns");
   });
 
