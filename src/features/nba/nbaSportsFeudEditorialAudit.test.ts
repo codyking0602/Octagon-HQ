@@ -4,6 +4,7 @@ import {
   NBA_SPORTS_FEUD_MAIN,
   NBA_SPORTS_FEUD_FAST,
   buildNbaSportsFeudPack,
+  nbaSportsFeudEditorialLane,
 } from "./nbaSportsFeudBank";
 
 const ALL = [...NBA_SPORTS_FEUD_MAIN, ...NBA_SPORTS_FEUD_FAST];
@@ -91,6 +92,7 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
       expect(new Set(ids).size).toBe(7);
       const categories = ids.map(id => ALL.find(q => "nba-feud-" + q.id === id)!.category);
       expect(new Set(categories).size).toBe(7);
+      expect(new Set(categories.map(nbaSportsFeudEditorialLane)).size).toBe(7);
       distinctSequences.add(ids.join("|"));
       for (const question of questions) {
         frequencies.set(question.id, (frequencies.get(question.id) ?? 0) + 1);
