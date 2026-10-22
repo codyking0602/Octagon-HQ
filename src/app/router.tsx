@@ -151,6 +151,7 @@ export const appRoutes: RouteObject[] = [
       { path: "nba/find-the-leader", element: <NbaWhoAmIOwnerGate><NbaFindTheLeaderPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/higher-lower", element: <NbaWhoAmIOwnerGate><NbaHigherLowerPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/millionaire", element: <NbaWhoAmIOwnerGate><NbaMillionairePage /></NbaWhoAmIOwnerGate> },
+      { path: "nba/sports-feud", element: <NbaWhoAmIOwnerGate><FamilyFeudPrototypePage scope="nba" /></NbaWhoAmIOwnerGate> },
       { path: "nba/picks", element: <NbaPreviewGate><NbaFuturesPage /></NbaPreviewGate> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
