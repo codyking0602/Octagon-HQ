@@ -11,6 +11,17 @@ export const SPORTS_FEUD_FAST_MONEY_STAGE_ASSET = "/assets/sports-feud-fast-mone
 
 export const SPORTS_FEUD_MLB_HOST = "/assets/MLB.webp";
 
+// Dedicated NBA Sports Feud uploads. Never reuse or change NBA Millionaire hosts.
+export const NBA_SPORTS_FEUD_HOST_ASSETS = [
+  "/assets/sports-feud/nba-host-1.png",
+  "/assets/sports-feud/nba-host-2.webp",
+  "/assets/sports-feud/nba-host-3.webp",
+] as const;
+
+export function nbaSportsFeudHostAsset(index: number) {
+  return NBA_SPORTS_FEUD_HOST_ASSETS[((Math.trunc(index) % 3) + 3) % 3]!;
+}
+
 export const SPORTS_FEUD_HOSTS: Record<SportsFeudRotatingHostSport, readonly [string, string, string]> = {
   ufc: ["/assets/1ufc.png", "/assets/2ufc.png", "/assets/3ufc.png"],
   nfl: ["/assets/1nfl.png", "/assets/2nfl.png", "/assets/3nfl.png"],
