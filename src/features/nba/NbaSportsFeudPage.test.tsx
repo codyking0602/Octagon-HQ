@@ -53,7 +53,7 @@ describe("NBA Sports Feud reused immersive presentation", () => {
     expect(document.querySelector('img[src="/assets/sports-feud-main-stage.png"]')).toBeInTheDocument();
     expect(document.querySelector('img[src="/assets/sports-feud-fast-money-stage.png"]')).toBeInTheDocument();
     expect(document.querySelector(".feud-fast-host-asset")?.getAttribute("src"))
-      .toMatch(/^\/assets\/millionaire\/NBA [123]\.webp$/);
+      .toMatch(/^\/assets\/sports-feud\/nba-host-[123]\.(?:png|webp)$/);
   });
 
   it("keeps daily preview deterministic and does not submit a leaderboard score", () => {
@@ -69,6 +69,7 @@ describe("NBA Sports Feud reused immersive presentation", () => {
   it("shows all main-board answers after three strikes, advances to Fast Money, and reveals a result", () => {
     mount();
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
+    const firstHost = document.querySelector(".feud-fast-host-asset")?.getAttribute("src");
     threeStrikes("bad-first");
     expect(screen.getByText("3 STRIKES — BOARD CLOSED")).toBeInTheDocument();
     expect(document.querySelectorAll(".feud-round-answer")).toHaveLength(8);
@@ -90,6 +91,10 @@ describe("NBA Sports Feud reused immersive presentation", () => {
     expect(screen.getByText("FINAL RESULT")).toBeInTheDocument();
     expect(screen.getByText("/100")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "NEW BOARD" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "NEW BOARD" }));
+    const nextHost = document.querySelector(".feud-fast-host-asset")?.getAttribute("src");
+    expect(nextHost).toMatch(/^\/assets\/sports-feud\/nba-host-[123]\.(?:png|webp)$/);
+    expect(nextHost).not.toBe(firstHost);
   });
 
   it("keeps the locked responsive stage and mobile controls rather than a second NBA layout", () => {
