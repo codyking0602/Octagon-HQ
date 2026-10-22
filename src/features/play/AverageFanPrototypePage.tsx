@@ -310,6 +310,8 @@ function averageFanSubjectIcon(subject: string) {
     "Octagon IQ": "⬡",
     "MLB History": "⌛",
     "Baseball IQ": "⬡",
+    "NBA History": "⌛",
+    "Basketball IQ": "⬡",
   };
   return icons[subject] ?? "•";
 }
@@ -329,6 +331,8 @@ function averageFanSubjectTone(subject: string) {
     "Octagon IQ": "purple",
     "MLB History": "gold",
     "Baseball IQ": "purple",
+    "NBA History": "gold",
+    "Basketball IQ": "purple",
   };
   return tones[subject] ?? "blue";
 }
