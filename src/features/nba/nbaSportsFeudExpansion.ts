@@ -106,7 +106,7 @@ export const NBA_SPORTS_FEUD_MAIN_ADDITIONS: NbaFeudEditorialQuestion[] = [
     "Hakeem Olajuwon|Allen Iverson|Derrick Rose|Blake Griffin|Karl-Anthony Towns|Anthony Edwards|John Wall|Cade Cunningham|Paolo Banchero|Cooper Flagg|Yao Ming|Chris Webber|Andrew Wiggins|Ben Simmons|Kenyon Martin|Deandre Ayton|Andrea Bargnani|Greg Oden|Andrew Bogut"),
   q("ringless-legends","ringless-legends","Name a famous retired NBA star who never won an NBA championship.",
     "Charles Barkley|Allen Iverson|Steve Nash|Karl Malone|John Stockton|Patrick Ewing|Reggie Miller|Carmelo Anthony",
-    "Vince Carter|Tracy McGrady|Dominique Wilkins|Chris Webber|Yao Ming|Dikembe Mutombo|Shawn Kemp|Penny Hardaway|Gilbert Arenas|Elgin Baylor|Pete Maravich|Grant Hill|LaMarcus Aldridge|George Gervin"),
+    "Vince Carter|Tracy McGrady|Dominique Wilkins|Chris Webber|Yao Ming|Dikembe Mutombo|Shawn Kemp|Penny Hardaway|Gilbert Arenas|Pete Maravich|Grant Hill|LaMarcus Aldridge|George Gervin"),
   q("signature-moves","signature-moves","Name an NBA player famous for a signature move or shot.",
     "Kareem Abdul-Jabbar|Michael Jordan|Hakeem Olajuwon|Dirk Nowitzki|Stephen Curry|James Harden|Kobe Bryant|Allen Iverson",
     "Tim Duncan|Manu Ginobili|LeBron James|Nikola Jokic|Tony Parker|Jamal Crawford|Kyrie Irving|Dwyane Wade|Carmelo Anthony|Damian Lillard"),
