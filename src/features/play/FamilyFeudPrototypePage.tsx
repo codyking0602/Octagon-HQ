@@ -6,7 +6,7 @@ import {
 } from "react";
 import type { CSSProperties, FormEvent } from "react";
 import { createPortal } from "react-dom";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   FAMILY_FEUD_BOARD_ANSWER_COUNT,
@@ -30,16 +30,26 @@ import {
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import { familyFeudPrototypePack } from "./familyFeudPrototypePacks";
 import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
+import { buildNbaSportsFeudPack } from "../nba/nbaSportsFeudBank";
 import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
   sportsFeudHostAsset,
+  sportsFeudCentralDateKey,
+  nbaSportsFeudHostAsset,
   type SportsFeudHostSport,
 } from "./sportsFeudPresentation";
 import "./FamilyFeudPrototypePage.css";
 import "./SportsFeudRevealPass.css";
 
-type PrototypeScope = "ufc" | "football";
+type PrototypeScope = "ufc" | "football" | "nba";
+
+let nbaHostCursor = 0;
+function nextNbaHostIndex() {
+  const index = nbaHostCursor;
+  nbaHostCursor = (nbaHostCursor + 1) % 3;
+  return index;
+}
 
 interface FamilyFeudPrototypePageProps {
   scope: PrototypeScope;
@@ -133,11 +143,18 @@ function FastMoneyHost({ asset }: { asset: string }) {
 
 function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototypePageProps) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nbaDaily = scope === "nba" && searchParams.get("mode") === "daily";
+  const [nbaSeed, setNbaSeed] = useState(() => nbaDaily
+    ? "daily:" + sportsFeudCentralDateKey()
+    : "casual:" + Math.random().toString(36).slice(2));
+  const [nbaHostIndex, setNbaHostIndex] = useState(0);
   const pack = useMemo(() => {
+    if (scope === "nba") return buildNbaSportsFeudPack(nbaSeed);
     if (!qaReplayDay) return familyFeudPrototypePack(scope);
     if (scope !== "ufc") throw new Error("Sports Feud QA replay is currently UFC-only.");
     return buildSportsFeudPack("ufc", qaReplayDay);
-  }, [qaReplayDay, scope]);
+  }, [qaReplayDay, scope, nbaSeed]);
   const [state, setState] = useState<FamilyFeudState>(() => createFamilyFeudState());
   const [scene, setScene] = useState<PrototypeScene>("intro");
   const [answer, setAnswer] = useState("");
@@ -160,10 +177,12 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
   const fastInputRef = useRef<HTMLInputElement>(null);
   const shouldRestoreMainInputRef = useRef(false);
 
-  const exitRoute = scope === "football" ? "/football" : "/play";
-  const hqName = scope === "football" ? "FOOTBALL HQ" : "UFC HQ";
+  const exitRoute = scope === "nba" ? "/nba" : scope === "football" ? "/football" : "/play";
+  const hqName = scope === "nba" ? "NBA HQ" : scope === "football" ? "FOOTBALL HQ" : "UFC HQ";
   const hostSport: SportsFeudHostSport = scope === "ufc" ? "ufc" : "nfl";
-  const hostAsset = useMemo(() => sportsFeudHostAsset(hostSport), [hostSport]);
+  const hostAsset = scope === "nba"
+    ? nbaSportsFeudHostAsset(nbaHostIndex)
+    : sportsFeudHostAsset(hostSport);
   const score = familyFeudScore(pack, state);
 
   useEffect(() => {
@@ -361,6 +380,10 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
   }
 
   function startGame() {
+    if (scope === "nba") setNbaHostIndex(nextNbaHostIndex());
+    if (scope === "nba" && !nbaDaily && scene === "result") {
+      setNbaSeed("casual:" + Math.random().toString(36).slice(2));
+    }
     setState(createFamilyFeudState());
     setDisplayBoardIndex(0);
     setBoardReview(false);
@@ -507,12 +530,15 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
 
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="feud-intro-title">
-          <div className="feud-intro__eyebrow">{qaReplayDay ? `${hqName} · OWNER QA REPLAY` : `${hqName} · DAILY CHALLENGE`}</div>
+          <div className="feud-intro__eyebrow">{scope === "nba"
+            ? `${hqName} · OWNER ${nbaDaily ? "DAILY" : "CASUAL"} PREVIEW`
+            : qaReplayDay ? `${hqName} · OWNER QA REPLAY` : `${hqName} · DAILY CHALLENGE`}</div>
           <Brand />
           <h1 id="feud-intro-title">Clear the board.</h1>
           <p>{qaReplayDay
             ? `Replay the ${qaReplayDay} UFC question set against the repaired answer bank. This run is local QA only and writes no Daily result or leaderboard score.`
             : "Find four good HQ answers before three strikes. Then finish five Fast Money prompts."}</p>
+          {scope === "nba" ? <p>Editorial HQ rankings, not survey results. This preview does not submit a Daily or leaderboard score.</p> : null}
           <div className="feud-intro__rules">
             <span><b>2</b> BOARDS</span>
             <span><b>4</b> ANSWERS EACH</span>
@@ -812,7 +838,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
             <p><span>MAIN BOARDS</span><strong>{score.main}/{FAMILY_FEUD_MAIN_RAW_MAX}</strong></p>
             <p><span>FAST MONEY</span><strong>{score.fastMoney}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong></p>
           </div>
-          <button className="feud-primary-button" type="button" onClick={startGame}>PLAY AGAIN</button>
+          <button className="feud-primary-button" type="button" onClick={startGame}>{scope === "nba" && !nbaDaily ? "NEW BOARD" : "PLAY AGAIN"}</button>
           <button className="feud-secondary-button" type="button" onClick={() => navigate(exitRoute)}>EXIT TO HQ</button>
         </section>
       ) : null}
@@ -824,7 +850,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
 
 export default function FamilyFeudPrototypePage({ scope, qaReplayDay }: FamilyFeudPrototypePageProps) {
   const identity = useIdentity();
-  const exitRoute = scope === "football" ? "/football" : "/play";
+  const exitRoute = scope === "nba" ? "/nba" : scope === "football" ? "/football" : "/play";
 
   if (!identity.ready) return null;
   if (!isFamilyFeudPrototypeOwner(identity.profile)) {
