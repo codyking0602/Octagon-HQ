@@ -26,6 +26,7 @@ import {
   millionaireLeagueLabel,
   millionaireMoneyLabel,
   millionaireHostAsset,
+  MILLIONAIRE_NBA_SAFE_HOST_ASSET,
   millionaireCentralDateKey,
   millionaireTimeLabel,
   millionaireTimeoutTransition,
@@ -228,7 +229,6 @@ function MillionaireGame({
   const [reveal, setReveal] = useState<RevealState>(null);
   const [statSheetOpen, setStatSheetOpen] = useState(false);
   const [statSheetText, setStatSheetText] = useState("");
-  const [templateFallbackActive, setTemplateFallbackActive] = useState(false);
   const [walkPromptOpen, setWalkPromptOpen] = useState(false);
   const [eliminationPromptOpen, setEliminationPromptOpen] = useState(false);
   const timerIds = useRef<number[]>([]);
@@ -379,20 +379,18 @@ function MillionaireGame({
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
 
   return (
-    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league}${templateFallbackActive ? " millionaire-shell--template-fallback" : ""} millionaire-shell--${level.toLowerCase()} millionaire-shell--${phase}${gameState.firstMissQuestionIndex !== null ? " millionaire-shell--eliminated" : ""}`}>
+    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--${phase}${gameState.firstMissQuestionIndex !== null ? " millionaire-shell--eliminated" : ""}`}>
       <div
         className="millionaire-stage-canvas"
         style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
       >
       <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true"
-        onError={(event) => {
-          if (league !== "nba") return;
-          const fallback = "/assets/millionaire/wide_cinematic_game_show_studio_template_dark_bl_1.png";
-          if (!event.currentTarget.src.endsWith(fallback)) {
-            setTemplateFallbackActive(true);
-            event.currentTarget.src = fallback;
+        onError={league === "nba" ? (event) => {
+          // A future missing NBA host can only fall back to the proven clean NFL studio.
+          if (!event.currentTarget.src.endsWith(MILLIONAIRE_NBA_SAFE_HOST_ASSET)) {
+            event.currentTarget.src = MILLIONAIRE_NBA_SAFE_HOST_ASSET;
           }
-        }} />
+        } : undefined} />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
