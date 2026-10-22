@@ -314,6 +314,17 @@ export function validateAverageFanQuestion(question: AverageFanQuestion): string
     }
   }
 
+  // NBA current events must be separately vetted before entering the preview bank.
+  // This authoring gate does NOT activate NBA's official Daily publisher or a live news feed.
+  if (question.sport === "nba" && question.contentType === "current-event") {
+    if (!nonEmpty(question.sourceId)) errors.push("NBA current events require a sourceId");
+    if (!question.sourceUrl?.startsWith("https://")) errors.push("NBA current events require an HTTPS sourceUrl");
+    if (!question.verifiedAt || Number.isNaN(Date.parse(question.verifiedAt))) {
+      errors.push("NBA current events require a valid verifiedAt");
+    }
+    if (question.grade === 2) errors.push("NBA current events must not appear in 2nd Grade");
+  }
+
   if (question.format === "short-answer") {
     if (question.choices) errors.push("short-answer questions must not define choices");
     if (!question.fanMisses || question.fanMisses.length < 1 || question.fanMisses.length > 3) {
