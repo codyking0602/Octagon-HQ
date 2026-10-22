@@ -113,6 +113,10 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
 
   it("accepts recognisable NBA culture, pairings and obvious Fast Money language", () => {
     expect(accepted("two-k-covers", "main", "Wemby")).toBe("Victor Wembanyama");
+    expect(accepted("two-k-covers", "main", "D Wade")).toBe("Dwyane Wade");
+    expect(accepted("two-k-covers", "main", "Dirk")).toBe("Dirk Nowitzki");
+    expect(accepted("two-k-covers", "main", "Kareem")).toBe("Kareem Abdul-Jabbar");
+    expect(accepted("space-jam-cast", "main", "Sharone Wright")).toBe("Sharone Wright");
     expect(accepted("space-jam-cast", "main", "Muggsy Bogues")).toBe("Muggsy Bogues");
     expect(accepted("famous-duos", "main", "Kobe and Shaq"))
       .toBe("Shaquille O'Neal and Kobe Bryant");
