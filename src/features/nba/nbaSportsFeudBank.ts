@@ -1461,7 +1461,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     "American Airlines Center": ["AAC","Dallas arena"],
     "Kaseya Center": ["FTX Arena","American Airlines Arena","Miami arena"],
     "Kia Center": ["Amway Center","Orlando arena"],
-    "Rocket Arena": ["Rocket Mortgage FieldHouse","Quicken Loans Arena","Gund Arena"],
+    "Rocket Arena": ["Rocket Mortgage FieldHouse","Quicken Loans Arena","Gund Arena"]
+    ,"Xfinity Mobile Arena": ["Wells Fargo Center","Wells Fargo Arena","Philadelphia arena"],
     "Mortgage Matchup Center": ["Footprint Center","Talking Stick Resort Arena","US Airways Center"],
     "Basketball shoes": ["Sneakers","Basketball sneakers","Shoes"],
     "Jersey": ["Uniform","Shirt","Basketball jersey"],
@@ -1479,7 +1480,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     "Floater": ["Runner","Floater shot"],
     "Traveling": ["Travel","Travelling"],
     "Double dribble": ["Double dribbling"],
-    "Carrying": ["Carry","Palming the ball"],
+    "Carrying": ["Carry","Palming the ball","Palming"],
     "Goaltending": ["Goal tending","Goaltend"],
     "Shot-clock violation": ["Shot clock","24 second violation","24 seconds"],
     "Backcourt violation": ["Over and back","Back court"],
@@ -1832,6 +1833,7 @@ export function nbaSportsFeudEditorialLane(category: string) {
   if (/(?:-stars|-players|-legends|-champs)$/.test(category) ||
       category === "lebron-teammates" || category === "clippers-stars") return "franchise-associations";
   if (["champion-franchises","finalists","conference-teams","animal-teams","franchise-history"].includes(category)) return "team-facts";
+  if (["championship-coaches","head-coaches","coach-awards","former-player-coaches"].includes(category)) return "nba-coaching";
   if (["finals-mvp","mvp-winners","defensive-awards","rookie-of-the-year","sixth-man-award",
     "most-improved","all-stars","dunk-winners","three-point-contest"].includes(category)) return "awards";
   if (["head-coaches","coach-awards","former-player-coaches","championship-coaches"].includes(category)) return "coaches";
