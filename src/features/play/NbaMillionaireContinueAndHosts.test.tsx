@@ -59,7 +59,8 @@ describe("NBA Millionaire money-run elimination and full-board recovery", () => 
     fireEvent.click(screen.getByRole("button", { name: /start game/i }));
     const first = document.body.querySelector<HTMLImageElement>(".millionaire-nba-host");
     expect(first?.getAttribute("src")).toBe("/assets/millionaire/NBA 1.webp");
-    expect(document.body.querySelector(".millionaire-stage-background")?.getAttribute("src")).toBe("/assets/millionaire/Nfl1.png");
+    expect(document.body.querySelector(".millionaire-stage-background")?.getAttribute("src")).toBe("/assets/millionaire/nba-clean-studio.webp");
+    expect(document.body.querySelector(".millionaire-nba-host-stage")).toBeNull();
     for (let index = 0; index < 8; index++) {
       const btns = [...document.body.querySelectorAll<HTMLButtonElement>(".millionaire-answers button")];
       const key = run[index]!.correctChoiceId;
