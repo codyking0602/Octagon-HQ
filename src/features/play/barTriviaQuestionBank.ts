@@ -1,4 +1,5 @@
-import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
+import { barTriviaDifficultyForRound, barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
+import { BAR_TRIVIA_EDITORIAL_RETIREMENTS, BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES } from "./barTriviaEditorialCuration";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
 import { BAR_TRIVIA_EASY_EXPANSION, BAR_TRIVIA_EASY_QUESTION_IDS } from "./barTriviaEasyCalibration";
 import { BAR_TRIVIA_EASY_EXPANSION_2 } from "./barTriviaEasyExpansion2";
@@ -124,6 +125,11 @@ const RAW_BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
 function calibrateBarTriviaDifficulty(question: BarTriviaQuestion): BarTriviaQuestion {
   if (question.contentType !== "evergreen") return question;
 
+  const reviewedRound = BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES[question.id];
+  if (reviewedRound) {
+    return { ...question, round: reviewedRound, difficulty: barTriviaDifficultyForRound(reviewedRound) };
+  }
+
   if (BAR_TRIVIA_EASY_QUESTION_IDS.has(question.id)) {
     return { ...question, round: "round1", difficulty: "easy" };
   }
@@ -136,4 +142,6 @@ function calibrateBarTriviaDifficulty(question: BarTriviaQuestion): BarTriviaQue
 }
 
 export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] =
-  RAW_BAR_TRIVIA_QUESTION_BANK.map(calibrateBarTriviaDifficulty);
+  RAW_BAR_TRIVIA_QUESTION_BANK
+    .filter((question) => !(question.id in BAR_TRIVIA_EDITORIAL_RETIREMENTS))
+    .map(calibrateBarTriviaDifficulty);
