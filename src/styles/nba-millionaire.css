@@ -92,3 +92,22 @@
   pointer-events: none;
   user-select: none;
 }
+
+/* Once NBA's money run is lost, retain the earned checkpoint instead of
+   moving the highlighted cash ladder through recovery questions. */
+.millionaire-shell--nba.millionaire-shell--eliminated .millionaire-stakes > strong {
+  opacity: 1;
+  text-decoration: none;
+}
+.millionaire-shell--nba.millionaire-shell--fixed-stage .millionaire-ladder > div.is-missed {
+  background: rgba(119, 25, 39, 0.20);
+}
+.millionaire-shell--nba.millionaire-shell--fixed-stage .millionaire-ladder > div.is-missed::before {
+  content: "";
+  display: block !important;
+  position: absolute;
+  z-index: 1;
+  inset: 3px;
+  border: 2px solid rgba(252, 103, 118, 0.85);
+  border-radius: 2px;
+}
