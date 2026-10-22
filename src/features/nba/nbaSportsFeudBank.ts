@@ -469,7 +469,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     {
       "id": "heat",
       "category": "heat-stars",
-      "prompt": "Name an NBA star associated with the Miami Heat.",
+      "prompt": "Name an NBA player associated with the Miami Heat.",
       "kind": "person",
       "answers": [
         "Dwyane Wade",
@@ -879,8 +879,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "James Harden",
         "Chris Paul",
         "Dwyane Wade",
-        "Carmelo Anthony",
-        "Russell Westbrook"
+        "Carmelo Anthony"
       ]
     },
     {
@@ -1055,7 +1054,9 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "Chef Curry"
     ],
     "Kevin Durant": [
-      "KD"
+      "KD",
+      "Slim Reaper",
+      "Durantula"
     ],
     "Nikola Jokic": [
       "Jokic",
