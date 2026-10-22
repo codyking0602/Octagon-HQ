@@ -2265,7 +2265,7 @@ export function averageFanQuestionBoardTopics(question: AverageFanQuestion) {
     topics.push("cfb:topic-family:rivalries-and-trophies");
   }
   if (question.sport === "nba" && /finals|championship|title/.test(prompt)) {
-    const year = /\\b(?:19|20)\\d{2}\\b/.exec(prompt)?.[0];
+    const year = /\b(?:19|20)\d{2}\b/.exec(prompt)?.[0];
     if (year) topics.push(`nba:championship-season:${year}`);
   }
   return topics;
