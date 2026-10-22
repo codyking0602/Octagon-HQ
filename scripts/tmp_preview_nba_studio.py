@@ -11,6 +11,12 @@ right = raw.crop((w // 2, 0, w, h))
 empty = Image.new("RGB", (w,h))
 empty.paste(ImageOps.mirror(right), (0,0))
 empty.paste(right, (w//2,0))
+studio_bytes = io.BytesIO()
+empty.save(studio_bytes,format="WEBP",quality=85,method=5)
+studio_b64=base64.b64encode(studio_bytes.getvalue()).decode()
+print(f"NBA_CLEAN_STUDIO_BYTES={len(studio_bytes.getvalue())}",flush=True)
+for start in range(0,len(studio_b64),40000):
+    print(f"NBA_CLEAN_STUDIO_CHUNK={start//40000}:{studio_b64[start:start+40000]}",flush=True)
 cards=[empty]
 for i in range(1,4):
     host=Image.open(root / f"NBA {i}.webp").convert("RGBA")
