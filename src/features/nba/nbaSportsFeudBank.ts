@@ -205,7 +205,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Philadelphia 76ers",
         "Detroit Pistons",
         "Orlando Magic",
-        "New York Knicks"
+        "New York Knicks",
+        "Brooklyn Nets"
       ]
     },
     {
@@ -841,7 +842,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Damian Lillard",
         "Kawhi Leonard",
         "Russell Westbrook",
-        "Victor Wembanyama"
+        "Victor Wembanyama",
+        "Gary Payton",
+        "Dennis Rodman",
+        "Joel Embiid",
+        "Jason Terry",
+        "Oscar Robertson",
+        "Jerry West",
+        "George Gervin",
+        "Dominique Wilkins"
       ]
     },
     {
@@ -1380,6 +1389,21 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     }
   ],
   "alias": {
+    "Kevin Garnett": ["KG","The Big Ticket"],
+    "Paul Pierce": ["The Truth"],
+    "David Robinson": ["The Admiral"],
+    "Gary Payton": ["The Glove"],
+    "Dennis Rodman": ["The Worm"],
+    "Tim Duncan": ["Big Fundamental"],
+    "Joel Embiid": ["The Process"],
+    "Jason Terry": ["The Jet"],
+    "Jason Williams": ["White Chocolate"],
+    "Oscar Robertson": ["The Big O"],
+    "Jerry West": ["The Logo"],
+    "George Gervin": ["The Iceman"],
+    "Shawn Kemp": ["The Reign Man"],
+    "Dominique Wilkins": ["Human Highlight Film"],
+    "Trae Young": ["Ice Trae"],
     "Bam Adebayo": ["Bam"],
     "Los Angeles Clippers": ["Clippers","LA Clippers","LAC"],
     "Brooklyn Nets": ["Nets","BKN"],
@@ -1542,6 +1566,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     ],
     "Los Angeles Lakers": [
       "Lakers",
+      "LAL",
       "LA Lakers",
       "L.A. Lakers"
     ],
@@ -1597,13 +1622,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     ],
     "Minnesota Timberwolves": [
       "Timberwolves",
-      "Wolves"
+      "Wolves",
+      "T-Wolves"
     ],
     "Memphis Grizzlies": [
       "Grizzlies"
     ],
     "New Orleans Pelicans": [
-      "Pelicans"
+      "Pelicans",
+      "Pels"
     ],
     "Charlotte Hornets": [
       "Hornets"
