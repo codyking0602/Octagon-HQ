@@ -124,6 +124,7 @@ describe("NBA Average Fan audited question bank", () => {
     // A separate vetted NBA editorial pipeline is required before any story can enter the bank.
     const example = { ...bank[0]!, id: "nba-unverified-event", sport: "nba" as const,
       grade: 3 as const, contentType: "current-event" as const,
+      sourceId: undefined, sourceUrl: undefined, verifiedAt: undefined,
       expiresAt: "2026-11-01T12:00:00.000Z" };
     expect(validateAverageFanQuestion(example)).toContain("NBA current events require a sourceId");
     expect(validateAverageFanQuestion(example)).toContain("NBA current events require an HTTPS sourceUrl");
