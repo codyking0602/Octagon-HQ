@@ -14,6 +14,7 @@ import {
 import { createUfcWhoAmIRound } from "../games/ufcWhoAmIAuthority";
 import {
   FIND_LEADER_DAILY_CONTENT_VERSION,
+  findLeaderDailyContentVersionForDay,
   buildFindLeaderBoard,
   dailyFindLeaderBoard,
   findLeaderQuestions,
@@ -293,7 +294,7 @@ function secondFindLeaderBoard(day: string) {
       `${OFFICIAL_DAILY_RUNTIME_VERSION}|find-leader|${day}|game-2|${offset}`,
       day,
     );
-    if (board) return { ...board, version: FIND_LEADER_DAILY_CONTENT_VERSION };
+    if (board) return { ...board, version: findLeaderDailyContentVersionForDay(day) };
   }
   return null;
 }
