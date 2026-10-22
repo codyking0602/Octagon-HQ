@@ -31,91 +31,148 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     {
       "id": "fmvp",
       "category": "finals-mvp",
-      "prompt": "Name a player who won NBA Finals MVP from 2011 through 2025.",
+      "prompt": "Name an NBA player who has won Finals MVP.",
       "kind": "person",
       "answers": [
+        "Michael Jordan",
         "LeBron James",
+        "Kobe Bryant",
         "Stephen Curry",
+        "Shaquille O'Neal",
         "Kevin Durant",
-        "Nikola Jokic",
+        "Tim Duncan",
+        "Nikola Jokic"
+      ],
+      "extras": [
         "Giannis Antetokounmpo",
         "Kawhi Leonard",
         "Dirk Nowitzki",
-        "Jaylen Brown"
-      ],
-      "extras": [
+        "Jaylen Brown",
         "Andre Iguodala",
-        "Shai Gilgeous-Alexander"
+        "Shai Gilgeous-Alexander",
+        "Dwyane Wade",
+        "Paul Pierce",
+        "Magic Johnson",
+        "Larry Bird",
+        "Kareem Abdul-Jabbar",
+        "James Worthy",
+        "Hakeem Olajuwon",
+        "Tony Parker",
+        "Chauncey Billups",
+        "Moses Malone",
+        "Rick Barry",
+        "Joe Dumars",
+        "Isiah Thomas",
+        "Willis Reed",
+        "Bill Walton",
+        "Jerry West",
+        "John Havlicek",
+        "Cedric Maxwell",
+        "Dennis Johnson",
+        "Jo Jo White",
+        "Wes Unseld"
       ]
     },
     {
       "id": "champions",
       "category": "champion-franchises",
-      "prompt": "Name an NBA team that won a championship from 2000 through 2025.",
+      "prompt": "Name an NBA team that has won an NBA championship.",
       "kind": "team",
       "answers": [
         "Los Angeles Lakers",
         "Golden State Warriors",
         "Boston Celtics",
+        "Chicago Bulls",
         "San Antonio Spurs",
         "Miami Heat",
         "Cleveland Cavaliers",
-        "Dallas Mavericks",
-        "Denver Nuggets"
+        "Dallas Mavericks"
       ],
       "extras": [
         "Milwaukee Bucks",
         "Toronto Raptors",
         "Detroit Pistons",
-        "Oklahoma City Thunder"
+        "Oklahoma City Thunder",
+        "Houston Rockets",
+        "Denver Nuggets",
+        "Philadelphia 76ers",
+        "New York Knicks",
+        "Portland Trail Blazers",
+        "Washington Wizards",
+        "Sacramento Kings"
       ]
     },
     {
       "id": "mvp",
       "category": "regular-season-mvp",
-      "prompt": "Name an NBA regular-season MVP winner from 2010 through 2025.",
+      "prompt": "Name an NBA player who has won regular-season MVP.",
       "kind": "person",
       "answers": [
+        "Michael Jordan",
         "LeBron James",
         "Stephen Curry",
         "Nikola Jokic",
         "Giannis Antetokounmpo",
+        "Kobe Bryant",
         "Kevin Durant",
-        "James Harden",
-        "Russell Westbrook",
-        "Derrick Rose"
+        "Shaquille O'Neal"
       ],
       "extras": [
+        "James Harden",
+        "Russell Westbrook",
+        "Derrick Rose",
         "Joel Embiid",
-        "Shai Gilgeous-Alexander"
+        "Shai Gilgeous-Alexander",
+        "Tim Duncan",
+        "Magic Johnson",
+        "Larry Bird",
+        "Kareem Abdul-Jabbar",
+        "Charles Barkley",
+        "Dirk Nowitzki",
+        "Steve Nash",
+        "Allen Iverson",
+        "Kevin Garnett",
+        "Karl Malone",
+        "Wilt Chamberlain",
+        "Bill Russell",
+        "Moses Malone"
       ]
     },
     {
       "id": "paris24",
-      "category": "usa-2024",
-      "prompt": "Name a player on the USA men's basketball team at the 2024 Paris Olympics.",
+      "category": "clippers-stars",
+      "prompt": "Name a well-known NBA player who has played for the LA Clippers.",
       "kind": "person",
       "answers": [
-        "LeBron James",
-        "Stephen Curry",
-        "Kevin Durant",
-        "Jayson Tatum",
-        "Joel Embiid",
-        "Anthony Edwards",
-        "Anthony Davis",
-        "Devin Booker"
+        "Kawhi Leonard",
+        "Blake Griffin",
+        "Chris Paul",
+        "James Harden",
+        "Paul George",
+        "DeAndre Jordan",
+        "Lou Williams",
+        "Norman Powell"
       ],
       "extras": [
-        "Jrue Holiday",
-        "Bam Adebayo",
-        "Derrick White",
-        "Tyrese Haliburton"
+        "Russell Westbrook",
+        "Jamal Crawford",
+        "JJ Redick",
+        "Elton Brand",
+        "Baron Davis",
+        "Eric Gordon",
+        "Shai Gilgeous-Alexander",
+        "Ivica Zubac",
+        "Bob McAdoo",
+        "Terance Mann",
+        "Reggie Jackson",
+        "John Wall",
+        "Marcus Morris Sr."
       ]
     },
     {
       "id": "finalists",
       "category": "finalists",
-      "prompt": "Name an NBA team that reached the Finals between 2015 and 2025.",
+      "prompt": "Name an NBA team that has reached the Finals since 2000.",
       "kind": "team",
       "answers": [
         "Golden State Warriors",
@@ -131,7 +188,11 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Milwaukee Bucks",
         "Phoenix Suns",
         "Oklahoma City Thunder",
-        "Indiana Pacers"
+        "Indiana Pacers",
+        "San Antonio Spurs",
+        "Philadelphia 76ers",
+        "Detroit Pistons",
+        "Orlando Magic"
       ]
     },
     {
@@ -224,24 +285,28 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "london12",
-      "category": "usa-2012",
-      "prompt": "Name a player on the USA men's basketball team at the 2012 London Olympics.",
+      "category": "magic-stars",
+      "prompt": "Name a well-known player who has played for the Orlando Magic.",
       "kind": "person",
       "answers": [
-        "LeBron James",
-        "Kobe Bryant",
-        "Kevin Durant",
-        "Carmelo Anthony",
-        "Chris Paul",
-        "Russell Westbrook",
-        "James Harden",
-        "Anthony Davis"
+        "Shaquille O'Neal",
+        "Dwight Howard",
+        "Tracy McGrady",
+        "Penny Hardaway",
+        "Paolo Banchero",
+        "Franz Wagner",
+        "Jalen Suggs",
+        "Vince Carter"
       ],
       "extras": [
-        "Kevin Love",
-        "Deron Williams",
-        "Tyson Chandler",
-        "Andre Iguodala"
+        "Nikola Vucevic",
+        "Rashard Lewis",
+        "Hedo Turkoglu",
+        "Aaron Gordon",
+        "Grant Hill",
+        "Jameer Nelson",
+        "Dennis Scott",
+        "Evan Fournier"
       ]
     },
     {
@@ -651,44 +716,62 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "duke",
-      "category": "duke-stars",
-      "prompt": "Name an NBA player who also played college basketball at Duke.",
+      "category": "bulls-players",
+      "prompt": "Name a famous NBA player who played for the Chicago Bulls.",
       "kind": "person",
       "answers": [
-        "Kyrie Irving",
-        "Jayson Tatum",
-        "Zion Williamson",
-        "Paolo Banchero",
-        "Brandon Ingram",
-        "Grant Hill",
-        "JJ Redick",
-        "Cooper Flagg"
+        "Michael Jordan",
+        "Scottie Pippen",
+        "Derrick Rose",
+        "Jimmy Butler",
+        "Dennis Rodman",
+        "DeMar DeRozan",
+        "Zach LaVine",
+        "Pau Gasol"
       ],
       "extras": [
-        "RJ Barrett",
-        "Wendell Carter Jr.",
-        "Jahlil Okafor"
+        "Joakim Noah",
+        "Artis Gilmore",
+        "Horace Grant",
+        "Alex Caruso",
+        "Nikola Vucevic",
+        "Luol Deng",
+        "Dwyane Wade",
+        "Rajon Rondo",
+        "Ben Wallace",
+        "Kirk Hinrich"
       ]
     },
     {
       "id": "top-picks",
-      "category": "number-one-picks",
-      "prompt": "Name a star who was drafted No. 1 overall in the NBA Draft.",
+      "category": "point-guards",
+      "prompt": "Name a famous NBA point guard.",
       "kind": "person",
       "answers": [
-        "LeBron James",
-        "Shaquille O'Neal",
-        "Tim Duncan",
+        "Stephen Curry",
+        "Magic Johnson",
+        "Chris Paul",
         "Kyrie Irving",
-        "Anthony Davis",
-        "Dwight Howard",
-        "Derrick Rose",
-        "Anthony Edwards"
+        "Russell Westbrook",
+        "Ja Morant",
+        "Steve Nash",
+        "John Stockton"
       ],
       "extras": [
-        "Victor Wembanyama",
-        "Blake Griffin",
-        "John Wall"
+        "Derrick Rose",
+        "Tony Parker",
+        "Jason Kidd",
+        "Damian Lillard",
+        "Isiah Thomas",
+        "Tyrese Haliburton",
+        "Jalen Brunson",
+        "Trae Young",
+        "LaMelo Ball",
+        "De'Aaron Fox",
+        "Kemba Walker",
+        "Rajon Rondo",
+        "Jamal Murray",
+        "Shai Gilgeous-Alexander"
       ]
     },
     {
@@ -715,23 +798,40 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "scorers-2000s",
-      "category": "scoring-2000s",
-      "prompt": "Name a star known for big scoring games during the 2000s.",
+      "category": "famous-scorers",
+      "prompt": "Name an NBA player famous for scoring a lot of points.",
       "kind": "person",
       "answers": [
-        "Kobe Bryant",
-        "Allen Iverson",
-        "Tracy McGrady",
-        "Carmelo Anthony",
         "LeBron James",
-        "Dwyane Wade",
-        "Dirk Nowitzki",
-        "Vince Carter"
+        "Michael Jordan",
+        "Kobe Bryant",
+        "Stephen Curry",
+        "Kevin Durant",
+        "Shaquille O'Neal",
+        "Luka Doncic",
+        "James Harden"
       ],
       "extras": [
-        "Gilbert Arenas",
-        "Shaquille O'Neal",
-        "Kevin Durant"
+        "Wilt Chamberlain",
+        "Kareem Abdul-Jabbar",
+        "Dirk Nowitzki",
+        "Joel Embiid",
+        "Devin Booker",
+        "Nikola Jokic",
+        "Dwyane Wade",
+        "Damian Lillard",
+        "Tracy McGrady",
+        "Allen Iverson",
+        "Carmelo Anthony",
+        "Giannis Antetokounmpo",
+        "Kyrie Irving",
+        "Russell Westbrook",
+        "Jayson Tatum",
+        "Anthony Edwards",
+        "Shai Gilgeous-Alexander",
+        "Donovan Mitchell",
+        "Paul George",
+        "Karl-Anthony Towns"
       ]
     },
     {
@@ -819,103 +919,155 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "sixth",
-      "category": "sixth-man-award",
-      "prompt": "Name a player who won NBA Sixth Man of the Year.",
+      "category": "lebron-teammates",
+      "prompt": "Name an NBA player who has played alongside LeBron James.",
       "kind": "person",
       "answers": [
-        "Lou Williams",
-        "Jamal Crawford",
-        "Manu Ginobili",
-        "James Harden",
-        "Tyler Herro",
+        "Dwyane Wade",
+        "Anthony Davis",
+        "Kyrie Irving",
+        "Chris Bosh",
+        "Kevin Love",
         "J.R. Smith",
-        "Eric Gordon",
-        "Malcolm Brogdon"
+        "Ray Allen",
+        "Russell Westbrook"
       ],
       "extras": [
-        "Bobby Portis",
-        "Jordan Clarkson",
-        "Montrezl Harrell"
+        "Tristan Thompson",
+        "Alex Caruso",
+        "Shaquille O'Neal",
+        "Kyle Kuzma",
+        "Rajon Rondo",
+        "Dwight Howard",
+        "Austin Reaves",
+        "D'Angelo Russell",
+        "Lonzo Ball",
+        "Bronny James",
+        "Shane Battier",
+        "Udonis Haslem",
+        "Carmelo Anthony",
+        "Zydrunas Ilgauskas",
+        "Mo Williams",
+        "Jae Crowder",
+        "Larry Hughes",
+        "Mike Miller",
+        "Mario Chalmers",
+        "Jared Dudley"
       ]
     },
     {
       "id": "finals24",
-      "category": "finals-2024",
-      "prompt": "Name a player who appeared in the 2024 NBA Finals.",
+      "category": "cavaliers-stars",
+      "prompt": "Name a famous NBA player who has played for the Cleveland Cavaliers.",
       "kind": "person",
       "answers": [
-        "Jayson Tatum",
-        "Jaylen Brown",
-        "Luka Doncic",
+        "LeBron James",
         "Kyrie Irving",
-        "Jrue Holiday",
-        "Derrick White",
-        "Dereck Lively II",
-        "Kristaps Porzingis"
+        "Donovan Mitchell",
+        "Darius Garland",
+        "Kevin Love",
+        "Evan Mobley",
+        "Jarrett Allen",
+        "Tristan Thompson"
       ],
       "extras": [
-        "Al Horford",
-        "P.J. Washington",
-        "Daniel Gafford"
+        "J.R. Smith",
+        "Shaquille O'Neal",
+        "Dwyane Wade",
+        "Andre Drummond",
+        "Caris LeVert",
+        "Larry Nance Jr.",
+        "Iman Shumpert",
+        "Matthew Dellavedova",
+        "Mark Price",
+        "Zydrunas Ilgauskas",
+        "Anderson Varejao",
+        "Isaiah Thomas",
+        "Ricky Rubio",
+        "Mo Williams",
+        "Kyle Korver"
       ]
     },
     {
       "id": "finals23",
-      "category": "finals-2023",
-      "prompt": "Name a player who appeared in the 2023 NBA Finals.",
+      "category": "nuggets-stars",
+      "prompt": "Name a famous NBA player who has played for the Denver Nuggets.",
       "kind": "person",
       "answers": [
         "Nikola Jokic",
         "Jamal Murray",
-        "Jimmy Butler",
-        "Bam Adebayo",
+        "Carmelo Anthony",
         "Aaron Gordon",
         "Michael Porter Jr.",
-        "Kentavious Caldwell-Pope",
-        "Kyle Lowry"
+        "Allen Iverson",
+        "Russell Westbrook",
+        "DeAndre Jordan"
       ],
       "extras": [
         "Bruce Brown",
-        "Caleb Martin",
-        "Max Strus"
+        "Kentavious Caldwell-Pope",
+        "Ty Lawson",
+        "Danilo Gallinari",
+        "J.R. Smith",
+        "Chauncey Billups",
+        "Nene",
+        "Andre Miller",
+        "Kenneth Faried",
+        "Christian Braun"
       ]
     },
     {
       "id": "bubble",
-      "category": "lakers-2020",
-      "prompt": "Name a member of the Lakers' 2020 championship team.",
+      "category": "raptors-stars",
+      "prompt": "Name a famous NBA player who has played for the Toronto Raptors.",
       "kind": "person",
       "answers": [
-        "LeBron James",
-        "Anthony Davis",
-        "Kentavious Caldwell-Pope",
-        "Alex Caruso",
-        "Kyle Kuzma",
-        "Rajon Rondo",
-        "Dwight Howard",
-        "Danny Green"
+        "Vince Carter",
+        "Kawhi Leonard",
+        "DeMar DeRozan",
+        "Kyle Lowry",
+        "Chris Bosh",
+        "Pascal Siakam",
+        "Scottie Barnes",
+        "Fred VanVleet"
       ],
       "extras": [
-        "JaVale McGee",
-        "Markieff Morris"
+        "Tracy McGrady",
+        "Serge Ibaka",
+        "OG Anunoby",
+        "Marc Gasol",
+        "Danny Green",
+        "Jonas Valanciunas",
+        "RJ Barrett",
+        "Bruce Brown",
+        "Immanuel Quickley",
+        "Andrea Bargnani"
       ]
     },
     {
       "id": "allstar10",
-      "category": "ten-allstars",
-      "prompt": "Name a player selected to at least 10 NBA All-Star Games.",
+      "category": "all-stars",
+      "prompt": "Name a famous NBA All-Star.",
       "kind": "person",
       "answers": [
         "LeBron James",
-        "Kevin Durant",
         "Stephen Curry",
-        "Kobe Bryant",
         "Michael Jordan",
+        "Kobe Bryant",
+        "Kevin Durant",
+        "Giannis Antetokounmpo",
         "Shaquille O'Neal",
-        "Dirk Nowitzki",
-        "Tim Duncan"
+        "Jayson Tatum"
       ],
       "extras": [
+        "Luka Doncic",
+        "Nikola Jokic",
+        "Anthony Edwards",
+        "Shai Gilgeous-Alexander",
+        "Kyrie Irving",
+        "Damian Lillard",
+        "Joel Embiid",
+        "Devin Booker",
         "James Harden",
         "Chris Paul",
         "Dwyane Wade",
@@ -935,87 +1087,127 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Patrick Ewing",
         "David Robinson",
         "Hakeem Olajuwon",
-        "Giannis Antetokounmpo"
+        "Dirk Nowitzki",
+        "Tim Duncan",
+        "Russell Westbrook",
+        "Jaylen Brown",
+        "Jimmy Butler",
+        "Kawhi Leonard",
+        "Anthony Davis",
+        "Paul George",
+        "Donovan Mitchell",
+        "Ja Morant",
+        "Zion Williamson",
+        "LaMelo Ball"
       ]
     },
     {
       "id": "cavs16",
-      "category": "cavs-2016",
-      "prompt": "Name a member of Cleveland's 2016 NBA championship team.",
+      "category": "rockets-stars",
+      "prompt": "Name an NBA star who has played for the Houston Rockets.",
       "kind": "person",
       "answers": [
-        "LeBron James",
-        "Kyrie Irving",
-        "Kevin Love",
-        "J.R. Smith",
-        "Tristan Thompson",
-        "Richard Jefferson",
-        "Iman Shumpert",
-        "Matthew Dellavedova"
+        "James Harden",
+        "Hakeem Olajuwon",
+        "Yao Ming",
+        "Chris Paul",
+        "Tracy McGrady",
+        "Russell Westbrook",
+        "Dwight Howard",
+        "Clyde Drexler"
       ],
       "extras": [
-        "Channing Frye",
-        "Timofey Mozgov"
+        "Charles Barkley",
+        "Steve Francis",
+        "Alperen Sengun",
+        "Jalen Green",
+        "Fred VanVleet",
+        "Jabari Smith Jr.",
+        "Moses Malone",
+        "Ralph Sampson",
+        "Jeremy Lin",
+        "Dillon Brooks",
+        "Carmelo Anthony"
       ]
     },
     {
       "id": "mavs11",
-      "category": "mavs-2011",
-      "prompt": "Name a member of Dallas's 2011 NBA championship team.",
+      "category": "suns-stars",
+      "prompt": "Name an NBA star who has played for the Phoenix Suns.",
       "kind": "person",
       "answers": [
-        "Dirk Nowitzki",
-        "Jason Kidd",
-        "Jason Terry",
-        "Tyson Chandler",
-        "J.J. Barea",
-        "Shawn Marion",
-        "Peja Stojakovic",
-        "DeShawn Stevenson"
+        "Devin Booker",
+        "Kevin Durant",
+        "Steve Nash",
+        "Charles Barkley",
+        "Chris Paul",
+        "Amar'e Stoudemire",
+        "Shaquille O'Neal",
+        "Bradley Beal"
       ],
       "extras": [
-        "Brian Cardinal",
-        "Brendan Haywood"
+        "Mikal Bridges",
+        "Deandre Ayton",
+        "Shawn Marion",
+        "Goran Dragic",
+        "Eric Bledsoe",
+        "Grayson Allen",
+        "Raja Bell",
+        "Jusuf Nurkic",
+        "Grant Hill"
       ]
     },
     {
       "id": "celtics08",
-      "category": "celtics-2008",
-      "prompt": "Name a member of Boston's 2008 NBA championship team.",
+      "category": "bucks-stars",
+      "prompt": "Name an NBA star who has played for the Milwaukee Bucks.",
       "kind": "person",
       "answers": [
-        "Kevin Garnett",
-        "Paul Pierce",
+        "Giannis Antetokounmpo",
+        "Damian Lillard",
+        "Khris Middleton",
+        "Jrue Holiday",
+        "Kareem Abdul-Jabbar",
         "Ray Allen",
-        "Rajon Rondo",
-        "Kendrick Perkins",
-        "James Posey",
-        "Glen Davis",
-        "Eddie House"
+        "Brook Lopez",
+        "Michael Redd"
       ],
       "extras": [
-        "Tony Allen",
-        "Leon Powe"
+        "Oscar Robertson",
+        "Bobby Portis",
+        "Malcolm Brogdon",
+        "Eric Bledsoe",
+        "Glenn Robinson",
+        "Brandon Jennings",
+        "Andrew Bogut",
+        "Jabari Parker",
+        "Terry Cummings"
       ]
     },
     {
       "id": "pistons04",
-      "category": "pistons-2004",
-      "prompt": "Name a member of Detroit's 2004 NBA championship team.",
+      "category": "pistons-stars",
+      "prompt": "Name an NBA player associated with the Detroit Pistons.",
       "kind": "person",
       "answers": [
-        "Chauncey Billups",
+        "Cade Cunningham",
+        "Isiah Thomas",
         "Ben Wallace",
-        "Richard Hamilton",
+        "Chauncey Billups",
         "Rasheed Wallace",
-        "Tayshaun Prince",
-        "Mehmet Okur",
-        "Lindsey Hunter",
-        "Corliss Williamson"
+        "Richard Hamilton",
+        "Grant Hill",
+        "Joe Dumars"
       ],
       "extras": [
-        "Mike James",
-        "Elden Campbell"
+        "Blake Griffin",
+        "Andre Drummond",
+        "Tayshaun Prince",
+        "Jaden Ivey",
+        "Jalen Duren",
+        "Dennis Rodman",
+        "Jerry Stackhouse",
+        "Kentavious Caldwell-Pope"
       ]
     },
     {
@@ -1061,8 +1253,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "coaches",
-      "category": "champion-coaches",
-      "prompt": "Name a head coach who won an NBA championship since 2000.",
+      "category": "head-coaches",
+      "prompt": "Name a famous NBA head coach.",
       "kind": "person",
       "answers": [
         "Phil Jackson",
@@ -1070,33 +1262,60 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Gregg Popovich",
         "Erik Spoelstra",
         "Doc Rivers",
-        "Michael Malone",
-        "Nick Nurse",
-        "Joe Mazzulla"
-      ],
-      "extras": [
-        "Mike Budenholzer",
         "Tyronn Lue",
         "Rick Carlisle",
-        "Larry Brown"
+        "Pat Riley"
+      ],
+      "extras": [
+        "Nick Nurse",
+        "Michael Malone",
+        "Joe Mazzulla",
+        "Ime Udoka",
+        "Mike D'Antoni",
+        "Larry Brown",
+        "Red Auerbach",
+        "Jason Kidd",
+        "Mike Brown",
+        "Tom Thibodeau",
+        "Steve Nash",
+        "Frank Vogel",
+        "Billy Donovan",
+        "Darvin Ham"
       ]
     },
     {
       "id": "rookies",
-      "category": "recent-roy",
-      "prompt": "Name an NBA Rookie of the Year winner from 2018 through 2025.",
+      "category": "rookie-of-the-year",
+      "prompt": "Name an NBA player who won Rookie of the Year.",
       "kind": "person",
       "answers": [
+        "LeBron James",
+        "Michael Jordan",
         "Victor Wembanyama",
         "Luka Doncic",
+        "Kyrie Irving",
+        "Kevin Durant",
+        "Derrick Rose",
+        "Allen Iverson"
+      ],
+      "extras": [
         "Ja Morant",
         "LaMelo Ball",
         "Paolo Banchero",
         "Scottie Barnes",
         "Ben Simmons",
-        "Stephon Castle"
-      ],
-      "extras": []
+        "Stephon Castle",
+        "Shaquille O'Neal",
+        "Tim Duncan",
+        "Chris Paul",
+        "Damian Lillard",
+        "Karl-Anthony Towns",
+        "Blake Griffin",
+        "Vince Carter",
+        "Chris Webber",
+        "Tyreke Evans",
+        "Brandon Roy"
+      ]
     }
   ],
   "alias": {
@@ -1324,6 +1543,26 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "J.R. Rider",
       "JR Rider",
       "Isiah Rider"
+    ],
+    "Penny Hardaway": [
+      "Anfernee Hardaway",
+      "Penny"
+    ],
+    "Anderson Varejao": [
+      "Anderson Varejão",
+      "Varejao"
+    ],
+    "Amar'e Stoudemire": [
+      "Amare Stoudemire",
+      "STAT"
+    ],
+    "Alperen Sengun": [
+      "Alperen Şengün",
+      "Sengun"
+    ],
+    "Nene": [
+      "Nenê",
+      "Nene Hilario"
     ]
   }
 };
