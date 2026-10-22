@@ -7,12 +7,12 @@
 | Measure | Original testing bank | Proposed |
 |---|---:|---:|
 | Main Round | 16 | 43 |
-| Fast Money | 32 | 62 |
-| Total | 48 | 105 |
+| Fast Money | 32 | 61 |
+| Total | 48 | 104 |
 
-+27 Main and +30 Fast boards retained; fixed existing NBA historical omissions and added recognizable aliases. No gameplay/scoring/stage/CSS/hosts/other sports edited.
++27 Main and +29 Fast boards retained; fixed existing NBA historical omissions and added recognizable aliases. No gameplay/scoring/stage/CSS/hosts/other sports edited.
 
-**Editorial triage:** 65 initial additional-board ideas (30 Main + 35 Fast). Removed 21 during review due to near-identical category/skills, inaccessible Fast Money recall, excessively broad uncheckable answer universes, or subjective answers. Replaced rejected topics with a smaller, more varied set. Final additional boards: 27+30=57.
+**Editorial triage:** 65 initial additional-board ideas (30 Main + 35 Fast). Removed 21 during review due to near-identical category/skills, inaccessible Fast Money recall, excessively broad uncheckable answer universes, or subjective answers. Replaced rejected topics with a smaller, more varied set. Final additional boards: 27+29=56.
 
 **Scoring unchanged:** Main ranked ladder 10/8/7/5/5/4/4/3, Fast ranked ladder 8/7/6/5/4/3/2/1. Main off-board correct answers 2; Fast off-board correct answers 1. Rankings are **editorial predictions of recognition, not survey results.**
 
