@@ -1,0 +1,111 @@
+import type { NbaFeudEditorialQuestion } from "./nbaSportsFeudExpansion";
+
+/**
+ * Second editorial pass: expand with recognisable history and true Feud-style
+ * basketball associations instead of another block of identical team rosters.
+ *
+ * Objective checks (2026 cut-off):
+ * NBA awards: nba.com/news/history-all-star-game-mvp,
+ * nba.com/news/history-defensive-player-of-the-year-winners,
+ * nba.com/news/history-mvp-award-winners.
+ * Team USA: usab.com/teams/5x5-mens-olympics.
+ * Other names are editorial mainstream associations, not survey results.
+ */
+function q(
+  id: string, category: string, prompt: string,
+  ranked: string, accepted: string,
+  kind: "person" | "team" | "other" = "person",
+): NbaFeudEditorialQuestion {
+  return { id, category, prompt, kind,
+    answers: ranked.split("|"), extras: accepted ? accepted.split("|") : [] };
+}
+
+export const NBA_SPORTS_FEUD_MAIN_ROUND2: NbaFeudEditorialQuestion[] = [
+  q("allstar-game-mvps","allstar-game-mvps","Name a player who won NBA All-Star Game MVP.",
+    "Michael Jordan|LeBron James|Kobe Bryant|Stephen Curry|Kevin Durant|Giannis Antetokounmpo|Anthony Edwards|Shaquille O'Neal",
+    "Damian Lillard|Jayson Tatum|Kawhi Leonard|Anthony Davis|Russell Westbrook|Kyrie Irving|Chris Paul|Dwyane Wade|Allen Iverson|Tim Duncan|Kevin Garnett|Scottie Pippen|Magic Johnson|Larry Bird|Charles Barkley|Karl Malone|John Stockton|Isiah Thomas|Julius Erving|Wilt Chamberlain|Bill Russell|Oscar Robertson|Bob Pettit"),
+  q("scoring-title-stars","scoring-champions","Name an NBA player who has won a regular-season scoring title.",
+    "Michael Jordan|LeBron James|Kobe Bryant|Kevin Durant|Stephen Curry|James Harden|Joel Embiid|Shaquille O'Neal",
+    "Allen Iverson|Carmelo Anthony|Russell Westbrook|Luka Doncic|Shai Gilgeous-Alexander|Tracy McGrady|Dwyane Wade|David Robinson|Dominique Wilkins|George Gervin|Kareem Abdul-Jabbar|Wilt Chamberlain|Jerry West|Pete Maravich|Bob McAdoo"),
+  q("assists-title-stars","assist-leaders","Name a player who led the NBA in assists per game for a season.",
+    "Magic Johnson|John Stockton|Chris Paul|Steve Nash|Russell Westbrook|James Harden|Tyrese Haliburton|Jason Kidd",
+    "Rajon Rondo|Trae Young|LeBron James|Nikola Jokic|Isiah Thomas|Oscar Robertson|Mark Jackson|Andre Miller|Kevin Porter|Tiny Archibald|Rod Strickland"),
+  q("multiple-dpoy","defensive-awards","Name an NBA player who won Defensive Player of the Year more than once.",
+    "Rudy Gobert|Dwight Howard|Ben Wallace|Dikembe Mutombo|Kawhi Leonard|Hakeem Olajuwon|Dennis Rodman|Alonzo Mourning",
+    "Mark Eaton|Sidney Moncrief"),
+  q("champion-coaches","championship-coaches","Name an NBA head coach who won an NBA championship.",
+    "Phil Jackson|Steve Kerr|Gregg Popovich|Pat Riley|Erik Spoelstra|Doc Rivers|Tyronn Lue|Rick Carlisle",
+    "Michael Malone|Joe Mazzulla|Nick Nurse|Mike Budenholzer|Larry Brown|Rudy Tomjanovich|Chuck Daly|Red Auerbach|K.C. Jones|Bill Russell|Bill Sharman|Paul Westhead|Billy Cunningham|Dick Motta|Lenny Wilkens|Jack Ramsay|Frank Vogel"),
+  q("one-team-careers","one-franchise-legends","Name a famous retired NBA star who spent his entire career with one NBA franchise.",
+    "Kobe Bryant|Tim Duncan|Dirk Nowitzki|Magic Johnson|Larry Bird|John Stockton|Reggie Miller|David Robinson",
+    "Udonis Haslem|Isiah Thomas|Joe Dumars|Yao Ming|Bill Russell|Bob Cousy|Kevin McHale|Sam Jones|John Havlicek|George Mikan|Jerry West|Elgin Baylor|Manu Ginobili|Bob Pettit|Rik Smits"),
+  q("usa-paris-2024","olympic-rosters","Name a player on the USA men's Olympic basketball team in Paris in 2024.",
+    "LeBron James|Stephen Curry|Kevin Durant|Jayson Tatum|Anthony Davis|Anthony Edwards|Joel Embiid|Devin Booker",
+    "Bam Adebayo|Jrue Holiday|Tyrese Haliburton|Derrick White"),
+  q("draft-night-swaps","draft-night-swaps","Name a well-known NBA player traded on draft night before playing his first NBA game.",
+    "Kobe Bryant|Luka Doncic|Trae Young|Kawhi Leonard|Dirk Nowitzki|Shai Gilgeous-Alexander|Donovan Mitchell|Vince Carter",
+    "Chris Webber|Kevin Love|LaMarcus Aldridge|Pau Gasol|Stephon Marbury|Antawn Jamison|Rajon Rondo"),
+  q("multiple-title-teams","multiple-title-teams","Name an NBA player who won championships with at least two different teams.",
+    "LeBron James|Shaquille O'Neal|Kawhi Leonard|Robert Horry|Ray Allen|Rajon Rondo|Jrue Holiday|Danny Green",
+    "John Salley|Horace Grant|Kentavious Caldwell-Pope|JaVale McGee|Patrick McCaw|James Jones|J.R. Smith|Alex Caruso"),
+  q("franchise-renames","franchise-history","Name a current NBA franchise that previously had a different city or team name.",
+    "Oklahoma City Thunder|Los Angeles Lakers|Golden State Warriors|Sacramento Kings|Brooklyn Nets|New Orleans Pelicans|Utah Jazz|Memphis Grizzlies",
+    "Washington Wizards|Charlotte Hornets|Los Angeles Clippers|Atlanta Hawks|Detroit Pistons|Philadelphia 76ers|San Antonio Spurs|Denver Nuggets|Houston Rockets","team"),
+  q("international-hall-legends","international-hall-legends","Name a retired NBA Hall of Famer who was born outside the United States.",
+    "Dirk Nowitzki|Yao Ming|Manu Ginobili|Tony Parker|Pau Gasol|Steve Nash|Hakeem Olajuwon|Dikembe Mutombo",
+    "Arvydas Sabonis|Vlade Divac|Drazen Petrovic|Toni Kukoc|Sarunas Marciulionis|Dino Radja|Patrick Ewing|Dominique Wilkins"),
+];
+
+export const NBA_SPORTS_FEUD_FAST_ROUND2: NbaFeudEditorialQuestion[] = [
+  q("basketball-stat-box","box-score-stats","Name a statistic you'd find in an NBA box score.",
+    "Points|Rebounds|Assists|Steals|Blocks|Turnovers|Minutes played|Personal fouls",
+    "Field goals made|Field goals attempted|Three-pointers made|Three-pointers attempted|Free throws made|Free throws attempted|Field-goal percentage|Three-point percentage|Free-throw percentage|Plus/minus|Offensive rebounds|Defensive rebounds","other"),
+  q("basketball-shot-types","shot-types","Name a kind of basketball shot an NBA player might take.",
+    "Three-pointer|Layup|Dunk|Free throw|Jump shot|Hook shot|Fadeaway|Floater",
+    "Bank shot|Tip-in|Alley-oop|Half-court shot|Putback|Step-back jumper|Finger roll|Midrange jumper","other"),
+  q("basketball-violations","basketball-rules","Name a basketball violation an NBA referee might call.",
+    "Traveling|Double dribble|Carrying|Goaltending|Shot-clock violation|Backcourt violation|Three-second violation|Out of bounds",
+    "Eight-second violation|Five-second violation|Lane violation|Basket interference|Kicked ball","other"),
+  q("basketball-worn-gear","basketball-equipment","Name something NBA players wear during a game.",
+    "Jersey|Basketball shoes|Shorts|Socks|Headband|Arm sleeve|Knee sleeve|Mouthguard",
+    "Wristband|Ankle brace|Protective mask|Protective goggles|Tights|Compression shirt|Finger tape|Elbow sleeve|Knee brace|Athletic tape","other"),
+  q("basketball-court-gear","court-features","Name something you'd see marked on an NBA basketball court.",
+    "Three-point line|Half-court line|Free-throw line|Center-court logo|Paint|Baseline|Sideline|Center circle",
+    "Restricted-area arc|Free-throw circle|Lane lines|Coach's box|Hash marks","other"),
+  q("basketball-practice","basketball-practice","Name a basketball skill an NBA player practices.",
+    "Shooting|Dribbling|Passing|Defense|Free throws|Rebounding|Layups|Footwork",
+    "Dunking|Ball screens|Post moves|Conditioning|Shot blocking|Three-point shooting|Pick-and-roll play|Finishing at the rim","other"),
+  q("basketball-movies","basketball-movies","Name a famous basketball movie.",
+    "Space Jam|White Men Can't Jump|Hustle|Coach Carter|He Got Game|Like Mike|Love & Basketball|Hoosiers",
+    "Uncle Drew|Blue Chips|Glory Road|Thunderstruck|Semi-Pro|The Basketball Diaries|The Way Back|Above the Rim|Air","other"),
+  q("nba-arenas","nba-arenas","Name a famous arena where NBA basketball has been played.",
+    "Madison Square Garden|Crypto.com Arena|Chase Center|TD Garden|United Center|Barclays Center|American Airlines Center|Kaseya Center",
+    "Ball Arena|Intuit Dome|Golden 1 Center|Scotiabank Arena|Mortgage Matchup Center|Rocket Arena|FedExForum|Frost Bank Center|Target Center|Fiserv Forum|Moda Center|Gainbridge Fieldhouse|Xfinity Mobile Arena|State Farm Arena|Little Caesars Arena|Smoothie King Center|Delta Center|Spectrum Center|Paycom Center|Toyota Center|Capital One Arena|Kia Center","other"),
+  q("famous-celebrations","celebrations","Name an NBA player with a famous on-court celebration.",
+    "Stephen Curry|LeBron James|Damian Lillard|Michael Jordan|Carmelo Anthony|James Harden|Russell Westbrook|D'Angelo Russell",
+    "Trae Young|Joel Embiid|Kobe Bryant|Shaquille O'Neal|Anthony Edwards|Giannis Antetokounmpo|Dwyane Wade|Draymond Green|Kyrie Irving"),
+  q("masked-players","player-appearance","Name an NBA player remembered for wearing a protective face mask.",
+    "Richard Hamilton|LeBron James|Kyrie Irving|Joel Embiid|Kobe Bryant|Russell Westbrook|Jaylen Brown|Chris Paul",
+    "Dwyane Wade|Anthony Davis|Paul George|Bradley Beal|Carmelo Anthony|Jimmy Butler","person"),
+  q("big-strong-players","athletic-strength","Name an NBA player known for being physically strong.",
+    "Shaquille O'Neal|LeBron James|Giannis Antetokounmpo|Zion Williamson|Dwight Howard|Karl Malone|Ben Wallace|Steven Adams",
+    "Charles Barkley|David Robinson|Wilt Chamberlain|Anthony Edwards|Julius Randle|Jaren Jackson Jr.|Draymond Green|Joel Embiid|P.J. Tucker|Nikola Jokic|DeMarcus Cousins"),
+  q("fast-players","athletic-speed","Name an NBA player famous for quickness or speed.",
+    "Allen Iverson|Ja Morant|De'Aaron Fox|Russell Westbrook|John Wall|Derrick Rose|Tyrese Maxey|Dwyane Wade",
+    "Tony Parker|Stephen Curry|LeBron James|Kyrie Irving|Giannis Antetokounmpo|Trae Young|Dennis Schroder|Donovan Mitchell|Kemba Walker|Devin Harris","person"),
+  q("struggling-free-throws","free-throw-struggles","Name an NBA player known for struggling at the free-throw line.",
+    "Shaquille O'Neal|Dwight Howard|Ben Wallace|Andre Drummond|DeAndre Jordan|Giannis Antetokounmpo|Wilt Chamberlain|Rudy Gobert",
+    "Steven Adams|Clint Capela|Joakim Noah|Tristan Thompson|Javale McGee|Dikembe Mutombo|Chris Dudley","person"),
+  q("famous-nba-voices","nba-media","Name someone famous for covering NBA basketball on television.",
+    "Mike Breen|Charles Barkley|Shaquille O'Neal|Kevin Harlan|Doris Burke|Ernie Johnson|Reggie Miller|Kenny Smith",
+    "Stephen A. Smith|Richard Jefferson|J.J. Redick|Ian Eagle|Brian Anderson|Hubie Brown|Mark Jackson|Jeff Van Gundy|Stan Van Gundy|Kendrick Perkins|Bill Walton|Bob Costas|Grant Hill","person"),
+  q("red-nba-uniforms","team-colors","Name an NBA team strongly associated with red uniforms.",
+    "Chicago Bulls|Miami Heat|Houston Rockets|Toronto Raptors|Portland Trail Blazers|Atlanta Hawks|Cleveland Cavaliers|Washington Wizards",
+    "Detroit Pistons|Los Angeles Clippers|Philadelphia 76ers","team"),
+  q("blue-nba-uniforms","team-colors","Name an NBA team strongly associated with blue uniforms.",
+    "Golden State Warriors|Dallas Mavericks|Oklahoma City Thunder|New York Knicks|Denver Nuggets|Minnesota Timberwolves|Orlando Magic|Detroit Pistons",
+    "Memphis Grizzlies|Indiana Pacers|Philadelphia 76ers|Los Angeles Clippers|Utah Jazz|New Orleans Pelicans","team"),
+  q("nba-commercial-stars","player-culture","Name an NBA player famous for appearing in commercials.",
+    "Michael Jordan|LeBron James|Stephen Curry|Shaquille O'Neal|Charles Barkley|Kobe Bryant|Kevin Durant|Chris Paul",
+    "Giannis Antetokounmpo|James Harden|Dwyane Wade|Carmelo Anthony|Anthony Edwards|Jayson Tatum|Kyrie Irving|Damian Lillard|Nikola Jokic|Jimmy Butler|Anthony Davis|Luka Doncic","person"),
+];

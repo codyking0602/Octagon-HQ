@@ -1,5 +1,7 @@
 import type { FamilyFeudEntity, FamilyFeudEntityKind, FamilyFeudPack, FamilyFeudQuestion } from "../games/familyFeudEngine";
 import { assertFamilyFeudPack, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
+import { NBA_SPORTS_FEUD_MAIN_ADDITIONS, NBA_SPORTS_FEUD_FAST_ADDITIONS } from "./nbaSportsFeudExpansion";
+import { NBA_SPORTS_FEUD_MAIN_ROUND2, NBA_SPORTS_FEUD_FAST_ROUND2 } from "./nbaSportsFeudExpansionRound2";
 
 /**
  * NBA Sports Feud editorial bank, v1.
@@ -30,7 +32,7 @@ import { assertFamilyFeudPack, normalizeFamilyFeudInput } from "../games/familyF
 type Authored = { id: string; category: string; prompt: string; kind: FamilyFeudEntityKind;
   answers: readonly string[]; extras: readonly string[] };
 
-export const NBA_SPORTS_FEUD_BANK_VERSION = "nba-sports-feud-v1" as const;
+export const NBA_SPORTS_FEUD_BANK_VERSION = "nba-sports-feud-v2" as const;
 export const NBA_SPORTS_FEUD_MAIN_POINTS = [10, 8, 7, 5, 5, 4, 4, 3] as const;
 export const NBA_SPORTS_FEUD_FAST_POINTS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
 
@@ -79,7 +81,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Cedric Maxwell",
         "Dennis Johnson",
         "Jo Jo White",
-        "Wes Unseld"
+        "Wes Unseld",
+        "Jalen Brunson"
       ]
     },
     {
@@ -106,7 +109,10 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Denver Nuggets",
         "Philadelphia 76ers",
         "New York Knicks",
-        "Portland Trail Blazers"
+        "Portland Trail Blazers",
+        "Sacramento Kings",
+        "Atlanta Hawks",
+        "Washington Wizards"
       ]
     },
     {
@@ -199,7 +205,9 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "San Antonio Spurs",
         "Philadelphia 76ers",
         "Detroit Pistons",
-        "Orlando Magic"
+        "Orlando Magic",
+        "New York Knicks",
+        "Brooklyn Nets"
       ]
     },
     {
@@ -215,11 +223,12 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Joel Embiid",
         "Donovan Mitchell",
         "Devin Booker",
-        "David Thompson"
+        "Bam Adebayo"
       ],
       "extras": [
         "Elgin Baylor",
-        "David Robinson"
+        "David Robinson",
+        "David Thompson"
       ]
     },
     {
@@ -488,7 +497,17 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Dirk Nowitzki",
         "Kevin Love",
         "Paul Pierce",
-        "Eric Gordon"
+        "Eric Gordon",
+        "Tyler Herro",
+        "Joe Harris",
+        "Peja Stojakovic",
+        "Kyle Korver",
+        "Steve Kerr",
+        "Marco Belinelli",
+        "Jason Kapono",
+        "Quentin Richardson",
+        "James Jones",
+        "Glen Rice"
       ]
     }
   ],
@@ -511,7 +530,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Wilt Chamberlain",
         "Anthony Davis",
-        "Lamar Odom"
+        "Lamar Odom",
+        "Elgin Baylor",
+        "George Mikan",
+        "Gail Goodrich",
+        "Derek Fisher",
+        "Robert Horry",
+        "Michael Cooper",
+        "Byron Scott",
+        "Rick Fox"
       ]
     },
     {
@@ -533,7 +560,18 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Sam Jones",
         "Jaylen Brown",
         "Ray Allen",
-        "Rajon Rondo"
+        "Rajon Rondo",
+        "Marcus Smart",
+        "Al Horford",
+        "Derrick White",
+        "Antoine Walker",
+        "Robert Parish",
+        "Dave Cowens",
+        "Isaiah Thomas",
+        "Tom Heinsohn",
+        "Dennis Johnson",
+        "Bill Walton",
+        "Jrue Holiday"
       ]
     },
     {
@@ -554,7 +592,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Kevin Durant",
         "Trae Young",
-        "Paul George"
+        "Paul George",
+        "Buddy Hield",
+        "Devin Booker",
+        "Tyler Herro",
+        "Luka Doncic",
+        "Jayson Tatum",
+        "Desmond Bane",
+        "Kon Knueppel",
+        "Seth Curry"
       ]
     },
     {
@@ -596,7 +642,13 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Tyler Herro",
         "Goran Dragic",
-        "Udonis Haslem"
+        "Udonis Haslem",
+        "Kevin Love",
+        "Duncan Robinson",
+        "Terry Rozier",
+        "Kyle Lowry",
+        "Andrew Wiggins",
+        "Norman Powell"
       ]
     },
     {
@@ -634,7 +686,16 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "David Robinson",
         "Dwight Howard",
-        "Yao Ming"
+        "Yao Ming",
+        "Victor Wembanyama",
+        "Anthony Davis",
+        "Rudy Gobert",
+        "Karl-Anthony Towns",
+        "Ben Wallace",
+        "Marc Gasol",
+        "DeMarcus Cousins",
+        "Brook Lopez",
+        "Kristaps Porzingis"
       ]
     },
     {
@@ -655,7 +716,16 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Andre Iguodala",
         "Jordan Poole",
-        "Latrell Sprewell"
+        "Latrell Sprewell",
+        "Jimmy Butler",
+        "Chris Paul",
+        "Monta Ellis",
+        "David Lee",
+        "DeMarcus Cousins",
+        "Tim Hardaway",
+        "Stephen Jackson",
+        "Jonathan Kuminga",
+        "Nate Thurmond"
       ]
     },
     {
@@ -697,7 +767,18 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "John Starks",
         "David Lee",
-        "Kristaps Porzingis"
+        "Kristaps Porzingis",
+        "Karl-Anthony Towns",
+        "Mikal Bridges",
+        "Josh Hart",
+        "OG Anunoby",
+        "Julius Randle",
+        "Derrick Rose",
+        "Jeremy Lin",
+        "Stephon Marbury",
+        "Latrell Sprewell",
+        "Tyson Chandler",
+        "J.R. Smith"
       ]
     },
     {
@@ -800,7 +881,32 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Nikola Jokic",
         "Paul Pierce",
         "Charles Barkley",
-        "Dwyane Wade"
+        "Dwyane Wade",
+        "Wilt Chamberlain",
+        "Julius Erving",
+        "Magic Johnson",
+        "Damian Lillard",
+        "Kawhi Leonard",
+        "Russell Westbrook",
+        "Victor Wembanyama",
+        "Gary Payton",
+        "Dennis Rodman",
+        "Joel Embiid",
+        "Jason Terry",
+        "Oscar Robertson",
+        "Jerry West",
+        "George Gervin",
+        "Dominique Wilkins",
+        "James Harden",
+        "Derrick Rose",
+        "Carmelo Anthony",
+        "Paul George",
+        "Jimmy Butler",
+        "Jayson Tatum",
+        "Chris Paul",
+        "Anthony Davis",
+        "Trae Young",
+        "Jalen Brunson"
       ]
     },
     {
@@ -860,7 +966,16 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Mark Aguirre",
         "Rolando Blackman",
         "Jalen Brunson",
-        "Kristaps Porzingis"
+        "Kristaps Porzingis",
+        "Cooper Flagg",
+        "Klay Thompson",
+        "Anthony Davis",
+        "PJ Washington",
+        "Dereck Lively II",
+        "Daniel Gafford",
+        "Shawn Marion",
+        "JJ Barea",
+        "Vince Carter"
       ]
     },
     {
@@ -1048,7 +1163,9 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "RJ Barrett",
         "Bruce Brown",
         "Immanuel Quickley",
-        "Andrea Bargnani"
+        "Andrea Bargnani",
+        "Brandon Ingram",
+        "Jakob Poeltl"
       ]
     },
     {
@@ -1105,7 +1222,10 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Donovan Mitchell",
         "Ja Morant",
         "Zion Williamson",
-        "LaMelo Ball"
+        "LaMelo Ball",
+        "Cade Cunningham",
+        "Tyrese Maxey",
+        "Paolo Banchero"
       ]
     },
     {
@@ -1235,7 +1355,16 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Anthony Edwards",
         "Zach LaVine",
-        "Kobe Bryant"
+        "Kobe Bryant",
+        "Shaquille O'Neal",
+        "Dwight Howard",
+        "Shawn Kemp",
+        "Julius Erving",
+        "Jason Richardson",
+        "Russell Westbrook",
+        "Mac McClung",
+        "Derrick Jones Jr.",
+        "Spud Webb"
       ]
     },
     {
@@ -1327,6 +1456,111 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     }
   ],
   "alias": {
+    "Crypto.com Arena": ["Staples Center","Staples","Crypto Arena"],
+    "Madison Square Garden": ["MSG","The Garden"],
+    "American Airlines Center": ["AAC","Dallas arena"],
+    "Kaseya Center": ["FTX Arena","American Airlines Arena","Miami arena"],
+    "Kia Center": ["Amway Center","Orlando arena"],
+    "Rocket Arena": ["Rocket Mortgage FieldHouse","Quicken Loans Arena","Gund Arena"],
+    "Xfinity Mobile Arena": ["Wells Fargo Center","Wells Fargo Arena","Philadelphia arena"],
+    "Mortgage Matchup Center": ["Footprint Center","Talking Stick Resort Arena","US Airways Center"],
+    "TD Garden": ["FleetCenter","Boston TD Garden"],
+    "Paycom Center": ["Chesapeake Energy Arena","Ford Center Oklahoma City"],
+    "Spectrum Center": ["Time Warner Cable Arena","Charlotte Bobcats Arena"],
+    "State Farm Arena": ["Philips Arena","Atlanta Hawks Arena"],
+    "Basketball shoes": ["Sneakers","Basketball sneakers","Shoes"],
+    "Jersey": ["Uniform","Shirt","Basketball jersey"],
+    "Shorts": ["Basketball shorts"],
+    "Headband": ["Head band"],
+    "Arm sleeve": ["Shooting sleeve","Compression sleeve"],
+    "Knee sleeve": ["Knee pad"],
+    "Mouthguard": ["Mouth guard"],
+    "Three-pointer": ["3 pointer","3pt","3 point shot","Three point shot"],
+    "Layup": ["Lay up","Finger roll layup"],
+    "Free throw": ["Foul shot"],
+    "Jump shot": ["Jumper","Jumpshot"],
+    "Hook shot": ["Skyhook"],
+    "Fadeaway": ["Fadeaway jumper"],
+    "Floater": ["Runner","Floater shot"],
+    "Traveling": ["Travel","Travelling"],
+    "Double dribble": ["Double dribbling"],
+    "Carrying": ["Carry","Palming the ball","Palming"],
+    "Goaltending": ["Goal tending","Goaltend"],
+    "Shot-clock violation": ["Shot clock","24 second violation","24 seconds"],
+    "Backcourt violation": ["Over and back","Back court"],
+    "Three-second violation": ["Three seconds","3 second violation","Illegal defense three seconds"],
+    "Eight-second violation": ["8 seconds","8 second violation"],
+    "Out of bounds": ["Stepping out","Out of bounds violation"],
+    "Rebounds": ["Reb","Boards","Rebounds per game","RPG"],
+    "Points": ["Pts","Scoring","Points per game","PPG"],
+    "Assists": ["Ast","Dimes","Assists per game","APG"],
+    "Steals": ["Stl","Steals per game","SPG"],
+    "Blocks": ["Blk","Blocked shots","BPG"],
+    "Turnovers": ["Turnover","TO"],
+    "Minutes played": ["Minutes","MP","MIN"],
+    "Personal fouls": ["Fouls","PF"],
+    "Field goals made": ["FGM"],
+    "Three-pointers made": ["3PM"],
+    "Free throws made": ["FTM"],
+    "Three-point line": ["3 point line","Three point arc","3pt line"],
+    "Half-court line": ["Midcourt line","Half court line"],
+    "Free-throw line": ["Charity stripe","Foul line"],
+    "Center-court logo": ["NBA court logo","Center logo"],
+    "Paint": ["The key","Key","Lane"],
+    "Baseline": ["Endline","End line"],
+    "Sideline": ["Side line"],
+    "Restricted-area arc": ["Restricted circle","No charge semicircle"],
+    "Dribbling": ["Ball handling"],
+    "Passing": ["Pass"],
+    "Shooting": ["Shot practice"],
+    "Defense": ["Defending"],
+    "Free throws": ["Free-throw shooting","Foul shooting"],
+    "Rebounding": ["Rebound practice"],
+    "Layups": ["Layup practice"],
+    "Footwork": ["Movement"],
+    "Space Jam": ["Spacejam"],
+    "White Men Can't Jump": ["White Men Cannot Jump"],
+    "Love & Basketball": ["Love and Basketball"],
+    "Semi-Pro": ["Semi Pro"],
+    "Basketball movies": ["Hoops movies"],
+    "Richard Hamilton": ["Rip Hamilton","Rip"],
+    "Jimmy Butler": ["Jimmy Buckets"],
+    "Paul George": ["PG13", "PG-13"],
+    "Kevin Garnett": ["KG","The Big Ticket"],
+    "Paul Pierce": ["The Truth"],
+    "David Robinson": ["The Admiral"],
+    "Gary Payton": ["The Glove"],
+    "Dennis Rodman": ["The Worm"],
+    "Tim Duncan": ["Big Fundamental"],
+    "Joel Embiid": ["The Process"],
+    "Jason Terry": ["The Jet"],
+    "Jason Williams": ["White Chocolate"],
+    "Oscar Robertson": ["The Big O"],
+    "Jerry West": ["The Logo"],
+    "George Gervin": ["The Iceman"],
+    "Shawn Kemp": ["The Reign Man"],
+    "Dominique Wilkins": ["Human Highlight Film"],
+    "Trae Young": ["Ice Trae"],
+    "Bam Adebayo": ["Bam"],
+    "Los Angeles Clippers": ["Clippers","LA Clippers","LAC"],
+    "Brooklyn Nets": ["Nets","BKN"],
+    "Sacramento Kings": ["Kings"],
+    "Utah Jazz": ["Jazz"],
+    "Washington Wizards": ["Wizards"],
+    "Orlando Magic": ["Magic"],
+    "Portland Trail Blazers": ["Blazers","Trail Blazers"],
+    "Seattle SuperSonics": ["Sonics","Supersonics","Seattle Sonics"],
+    "Houston Rockets": ["Rockets"],
+    "Cooper Flagg": ["Flagg"],
+    "Bronny James": ["Bronny"],
+    "Anthony Edwards": ["Ant-Man","Ant Man"],
+    "Karl-Anthony Towns": ["KAT","Karl Anthony Towns"],
+    "De'Aaron Fox": ["Deaaron Fox"],
+    "Jaren Jackson Jr.": ["JJJ"],
+    "Klay Thompson": ["Klay"],
+    "Paolo Banchero": ["Paolo"],
+    "Nickeil Alexander-Walker": ["NAW"],
+    "J.J. Redick": ["JJ Redick"],
     "LeBron James": [
       "LeBron",
       "King James"
@@ -1469,6 +1703,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     ],
     "Los Angeles Lakers": [
       "Lakers",
+      "LAL",
       "LA Lakers",
       "L.A. Lakers"
     ],
@@ -1524,13 +1759,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     ],
     "Minnesota Timberwolves": [
       "Timberwolves",
-      "Wolves"
+      "Wolves",
+      "T-Wolves"
     ],
     "Memphis Grizzlies": [
       "Grizzlies"
     ],
     "New Orleans Pelicans": [
-      "Pelicans"
+      "Pelicans",
+      "Pels"
     ],
     "Charlotte Hornets": [
       "Hornets"
@@ -1584,6 +1821,10 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
   }
 };
 
+// Keep tested questions, supplement only with editorially approved additions.
+BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS, ...NBA_SPORTS_FEUD_MAIN_ROUND2);
+BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS, ...NBA_SPORTS_FEUD_FAST_ROUND2);
+
 export const NBA_SPORTS_FEUD_MAIN = BANK.main;
 export const NBA_SPORTS_FEUD_FAST = BANK.fast;
 
@@ -1592,24 +1833,67 @@ function hash(value: string) {
   for (const char of value) { h ^= char.charCodeAt(0); h = Math.imul(h, 16777619); }
   return h >>> 0;
 }
+/** Near-identical prompts must not coexist in a seven-question run. */
+export function nbaSportsFeudEditorialLane(category: string) {
+  if (/(?:-stars|-players|-legends|-champs)$/.test(category) ||
+      category === "lebron-teammates" || category === "clippers-stars") return "franchise-associations";
+  if (["champion-franchises","finalists","conference-teams","animal-teams","franchise-history"].includes(category)) return "team-facts";
+  if (["championship-coaches","head-coaches","coach-awards","former-player-coaches"].includes(category)) return "nba-coaching";
+  if (["finals-mvp","mvp-winners","defensive-awards","rookie-of-the-year","sixth-man-award",
+    "most-improved","all-stars","dunk-winners","three-point-contest"].includes(category)) return "awards";
+  if (["head-coaches","coach-awards","former-player-coaches","championship-coaches"].includes(category)) return "coaches";
+  if (["international-stars","international-hall-legends"].includes(category)) return "international-nba";
+  if (["nba-eras","olympic-rosters","college-nba-stars","family-connections","draft-history",
+    "unusual-size"].includes(category)) return category;
+  if (["box-score-stats","shot-types","basketball-rules","basketball-equipment",
+    "court-features","basketball-practice"].includes(category)) return "basketball-basics";
+  if (["player-appearance","basketball-style"].includes(category)) return "player-appearance";
+  if (["team-colors","franchise-history"].includes(category)) return "team-branding";
+  if (["athletic-strength","athletic-speed"].includes(category)) return "player-physical-traits";
+  if (["championship-coaches","head-coaches","coach-awards","former-player-coaches"].includes(category)) return "coaches";
+  if (["scoring-champions","allstar-game-mvps"].includes(category)) return "awards";
+  if (["assists-title-stars","assist-leaders"].includes(category)) return "playmaking-style";
+  if (["basketball-movies","nba-arenas","player-culture"].includes(category)) return "basketball-culture";
+  if (["point-guards","guard-positions","forward-positions","great-bigs"].includes(category)) return "player-positions";
+  if (["basketball-style","nba-culture"].includes(category)) return "basketball-culture";
+  if (["trash-talk","nba-personalities"].includes(category)) return "player-personality";
+  // Closely related skills may be included only once across the playthrough.
+  if (["passing","ball-handlers","triple-doubles","clutch-shots"].includes(category)) return "playmaking-style";
+  if (["dunking","post-scoring","famous-scorers","midrange-shooting","three-point-shooting",
+    "stepback-shooting","finishing-at-rim","free-throw-shooting","free-throw-struggles","signature-moves"].includes(category)) return "scoring-style";
+  if (["rebounding","shot-blockers","famous-defenders","hustle-players"].includes(category)) return "defense-and-boards";
+  return category;
+}
+
+function seededShuffle<T>(values: readonly T[], seed: number): T[] {
+  const array = [...values];
+  let state = seed || 0x6d2b79f5;
+  for (let i = array.length - 1; i > 0; i--) {
+    state ^= state << 13; state ^= state >>> 17; state ^= state << 5;
+    const j = (state >>> 0) % (i + 1);
+    [array[i], array[j]] = [array[j]!, array[i]!];
+  }
+  return array;
+}
+
 function pickQuestions(seed: string) {
-  const first = hash(seed + "|main") % BANK.main.length;
-  const main = [BANK.main[first]!];
-  for (let i = 1; i < BANK.main.length; i++) {
-    const q = BANK.main[(first + i) % BANK.main.length]!;
-    if (q.category !== main[0]!.category) { main.push(q); break; }
+  const seenCategories = new Set<string>();
+  const seenLanes = new Set<string>();
+  function choose(pool: readonly Authored[], count: number, salt: string) {
+    const selected: Authored[] = [];
+    for (const question of seededShuffle(pool, hash(seed + salt))) {
+      const lane = nbaSportsFeudEditorialLane(question.category);
+      if (seenCategories.has(question.category) || seenLanes.has(lane)) continue;
+      selected.push(question);
+      seenCategories.add(question.category);
+      seenLanes.add(lane);
+      if (selected.length === count) break;
+    }
+    if (selected.length !== count) throw new Error("NBA Sports Feud: insufficient distinct editorial topics.");
+    return selected;
   }
-  if (main.length !== 2) throw new Error("NBA Sports Feud requires two distinct main categories.");
-  const excluded = new Set(main.map(q => q.category));
-  const fast: Authored[] = [];
-  const start = hash(seed + "|fast") % BANK.fast.length;
-  // Coprime step visits all questions, so every seed can assemble five topics.
-  for (let i = 0; i < BANK.fast.length && fast.length < 5; i++) {
-    const q = BANK.fast[(start + 13 * i) % BANK.fast.length]!;
-    if (!excluded.has(q.category)) { fast.push(q); excluded.add(q.category); }
-  }
-  if (fast.length !== 5) throw new Error("NBA Sports Feud requires five distinct Fast Money topics.");
-  return { main, fast };
+  return { main: choose(BANK.main, 2, "|main"),
+    fast: choose(BANK.fast, 5, "|fast") };
 }
 
 function makeQuestion(authored: Authored, ladder: readonly number[], entities: FamilyFeudEntity[]): FamilyFeudQuestion {
