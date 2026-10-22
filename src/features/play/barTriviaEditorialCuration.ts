@@ -72,6 +72,7 @@ export const BAR_TRIVIA_EDITORIAL_RETIREMENTS: Readonly<Record<string, BarTrivia
   "cfb-r2-victory-bell-trophy-year": "weak-or-obscure",
   // UFC
   // same-fact-in-millionaire
+  "ufc-final-ufc205-opponent": "same-fact-in-millionaire",
   "ufc-easy2-aldo-13": "same-fact-in-millionaire",
   "ufc-r1-cejudo-dj": "same-fact-in-millionaire",
   "ufc-r1-khabib-final": "same-fact-in-millionaire",
@@ -111,6 +112,8 @@ export const BAR_TRIVIA_EDITORIAL_RETIREMENTS: Readonly<Record<string, BarTrivia
   "ufc-easy-stylebender": "same-fact-in-millionaire",
   "ufc-r1-first-strawweight-champ": "same-fact-in-millionaire",
   // same-fact-within-bar-trivia
+  "ufc-r1-first-canada-city": "same-fact-within-bar-trivia",
+  "ufc-r2-california-kid": "same-fact-within-bar-trivia",
   "ufc-r3-hof-hendo-shogun-event": "same-fact-within-bar-trivia",
   "ufc-r1-first-australia-city": "same-fact-within-bar-trivia",
   "ufc-r3-moreno-title-event": "same-fact-within-bar-trivia",
