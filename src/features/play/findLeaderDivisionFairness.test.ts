@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
-import { buildFindLeaderBoard, findLeaderQuestions } from "./findLeaderEngine";
+import {
+  buildFindLeaderBoard,
+  dailyFindLeaderBoard,
+  findLeaderDailyContentVersionForDay,
+  findLeaderQuestions,
+} from "./findLeaderEngine";
 import { deriveUfcCareerStats } from "./ufcCareerStats";
 
 const divisionDefinitions = findLeaderQuestions.filter((question) => question.scope?.division);
@@ -15,6 +20,17 @@ function divisionStats(slug: string, division: string) {
 }
 
 describe("UFC Find the Leader divisional statistical integrity", () => {
+  it("preserves the published October 22 heavyweight board and all older daily versions", () => {
+    const october22 = dailyFindLeaderBoard("2026-10-22")!;
+    expect(october22.definitionId).toBe("heavyweight-ufc-finishes-all-time");
+    expect(october22.leaderId).toBe("jon-jones");
+    expect(october22.leaderValue).toBe(12);
+    expect(october22.version).toBe("find-leader-daily-v2");
+    expect(october22.statLabel).toBe("UFC finishes by a heavyweight");
+    expect(findLeaderDailyContentVersionForDay("2026-10-23")).toBe("find-leader-daily-v3-division-bout-scoped");
+  });
+
+
   it("audits all eight weight-class-filtered questions, not just today's heavyweight board", () => {
     expect(divisionDefinitions).toHaveLength(8);
     for (const question of divisionDefinitions) {
