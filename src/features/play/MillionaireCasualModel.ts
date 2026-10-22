@@ -44,8 +44,11 @@ export const MILLIONAIRE_BASE_PTS = {
   Q8: 100,
 } as const;
 
+export const MILLIONAIRE_NBA_SAFE_HOST_ASSET = "/assets/millionaire/Nfl1.png";
+
 export const MILLIONAIRE_HOSTS: Record<MillionaireLeague, readonly [string, string, string]> = {
-  nba: ["/assets/millionaire/Nba1.png", "/assets/millionaire/Nba2.png", "/assets/millionaire/Nba3.png"],
+  // Temporary: switch these three entries to Nba1/2/3.png only after the files are uploaded.
+  nba: [MILLIONAIRE_NBA_SAFE_HOST_ASSET, MILLIONAIRE_NBA_SAFE_HOST_ASSET, MILLIONAIRE_NBA_SAFE_HOST_ASSET],
   cfb: [
     "/assets/millionaire/Cfb1.png",
     "/assets/millionaire/Cfb2.png",
