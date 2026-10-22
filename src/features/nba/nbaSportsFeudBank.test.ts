@@ -90,6 +90,29 @@ describe("NBA Sports Feud curated-bank and unchanged engine contract", () => {
     expect(accepted.state.mainBoards[accepted.state.mainBoardIndex]!.strikes).toBe(0);
   });
 
+  it("accepts the complete bounded 1992 Dream Team roster, not only the eight top-ranked names", () => {
+    const pack = findSeed("dream92", "main");
+    const roster = [
+      "Michael Jordan", "Magic Johnson", "Larry Bird", "Charles Barkley",
+      "Scottie Pippen", "Karl Malone", "John Stockton", "Patrick Ewing",
+      "David Robinson", "Chris Mullin", "Clyde Drexler", "Christian Laettner",
+    ];
+    const question = pack.mainBoards.find(q => q.id === "nba-feud-dream92")!;
+    expect(question.candidateIds).toHaveLength(12);
+    for (const name of roster) expect(matchedEntity(pack, "dream92", name)).toBe(name);
+  });
+
+  it("accepts recent and less obvious factual award, dunk, and 70-point answers", () => {
+    expect(matchedEntity(findSeed("dpoy", "main"), "dpoy", "Wemby"))
+      .toBe("Victor Wembanyama");
+    expect(matchedEntity(findSeed("dunk-winners", "main"), "dunk-winners", "Keshad Johnson"))
+      .toBe("Keshad Johnson");
+    expect(matchedEntity(findSeed("seventy", "main"), "seventy", "David Robinson"))
+      .toBe("David Robinson");
+    expect(matchedEntity(findSeed("multi-mvp", "main"), "multi-mvp", "SGA"))
+      .toBe("Shai Gilgeous-Alexander");
+  });
+
   it("does not award ambiguous player first names or a repeat guess", () => {
     const pack = findSeed("celtics-legends", "fast");
     const question = pack.fastMoney.find(q => q.id === "nba-feud-celtics-legends")!;
