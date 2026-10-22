@@ -1697,7 +1697,7 @@ function hash(value: string) {
   return h >>> 0;
 }
 /** Near-identical prompts must not coexist in a seven-question run. */
-function editorialLane(category: string) {
+export function nbaSportsFeudEditorialLane(category: string) {
   if (/(?:-stars|-players|-legends|-champs)$/.test(category) ||
       category === "lebron-teammates" || category === "clippers-stars") return "franchise-associations";
   if (["champion-franchises","finalists","conference-teams","animal-teams"].includes(category)) return "team-facts";
@@ -1705,9 +1705,13 @@ function editorialLane(category: string) {
     "most-improved","coach-awards","all-stars","dunk-winners","three-point-contest"].includes(category)) return "awards";
   if (["nba-eras","olympic-rosters","college-nba-stars","family-connections","draft-history",
     "unusual-size"].includes(category)) return category;
+  if (["point-guards","guard-positions","forward-positions","great-bigs"].includes(category)) return "player-positions";
+  if (["basketball-style","nba-culture"].includes(category)) return "basketball-culture";
+  if (["trash-talk","nba-personalities"].includes(category)) return "player-personality";
   // Closely related skills may be included only once across the playthrough.
-  if (["passing","ball-handlers","triple-doubles","clutch-shots","signature-moves"].includes(category)) return "playmaking-style";
-  if (["dunking","post-scoring","famous-scorers","midrange-shooting","three-point-shooting"].includes(category)) return "scoring-style";
+  if (["passing","ball-handlers","triple-doubles","clutch-shots"].includes(category)) return "playmaking-style";
+  if (["dunking","post-scoring","famous-scorers","midrange-shooting","three-point-shooting",
+    "stepback-shooting","finishing-at-rim","free-throw-shooting","signature-moves"].includes(category)) return "scoring-style";
   if (["rebounding","shot-blockers","famous-defenders","hustle-players"].includes(category)) return "defense-and-boards";
   return category;
 }
@@ -1729,7 +1733,7 @@ function pickQuestions(seed: string) {
   function choose(pool: readonly Authored[], count: number, salt: string) {
     const selected: Authored[] = [];
     for (const question of seededShuffle(pool, hash(seed + salt))) {
-      const lane = editorialLane(question.category);
+      const lane = nbaSportsFeudEditorialLane(question.category);
       if (seenCategories.has(question.category) || seenLanes.has(lane)) continue;
       selected.push(question);
       seenCategories.add(question.category);
