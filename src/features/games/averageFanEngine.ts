@@ -7,12 +7,14 @@ import {
 export const AVERAGE_FAN_GAME_ID = "average-fan" as const;
 export const AVERAGE_FAN_CONTENT_VERSION = "average-fan-v4" as const;
 export const AVERAGE_FAN_FANS = ["cody", "shane", "troy", "tyler", "lib"] as const;
+/** NBA replaces Troy with Nnamdi; Football, UFC and MLB retain their approved five. */
+export const AVERAGE_FAN_NBA_FANS = ["cody", "shane", "nnamdi", "tyler", "lib"] as const;
 export const AVERAGE_FAN_GRADES = [1, 2, 3, 4, 5] as const;
 export const AVERAGE_FAN_PLAYABLE_GRADES = [2, 3, 4, 5] as const;
 export const AVERAGE_FAN_BOARD_QUESTION_COUNT = 8 as const;
 export const AVERAGE_FAN_FORMATS = ["short-answer", "four-choice", "true-false"] as const;
 
-export type AverageFanFan = (typeof AVERAGE_FAN_FANS)[number];
+export type AverageFanFan = (typeof AVERAGE_FAN_FANS)[number] | (typeof AVERAGE_FAN_NBA_FANS)[number];
 export type AverageFanGrade = (typeof AVERAGE_FAN_GRADES)[number];
 export type AverageFanPlayableGrade = (typeof AVERAGE_FAN_PLAYABLE_GRADES)[number];
 export type AverageFanQuestionFormat = (typeof AVERAGE_FAN_FORMATS)[number];
@@ -57,7 +59,7 @@ export const AVERAGE_FAN_REPORT_GRADE_MODIFIER = {
 
 type ReportCards = {
   [S in AverageFanSport]: Record<
-    AverageFanFan,
+    S extends "nba" ? (typeof AVERAGE_FAN_NBA_FANS)[number] : (typeof AVERAGE_FAN_FANS)[number],
     Record<(typeof AVERAGE_FAN_SUBJECTS)[S][number], AverageFanReportGrade>
   >;
 };
@@ -89,7 +91,7 @@ export const AVERAGE_FAN_REPORT_CARDS = {
   nba: {
     cody: { Players: "A", Teams: "B+", "NBA History": "A-", "Basketball IQ": "B-" },
     shane: { Players: "A+", Teams: "B+", "NBA History": "A-", "Basketball IQ": "C+" },
-    troy: { Players: "B+", Teams: "A", "NBA History": "B-", "Basketball IQ": "A-" },
+    nnamdi: { Players: "B-", Teams: "A-", "NBA History": "B+", "Basketball IQ": "A" },
     tyler: { Players: "B", Teams: "B", "NBA History": "A", "Basketball IQ": "A-" },
     lib: { Players: "A-", Teams: "A", "NBA History": "B-", "Basketball IQ": "B+" },
   },
@@ -209,7 +211,10 @@ function tolerantShortAnswerMatch(candidate: string, accepted: string) {
 }
 
 function reportRow(sport: AverageFanSport, fan: AverageFanFan) {
-  return AVERAGE_FAN_REPORT_CARDS[sport][fan] as Record<string, AverageFanReportGrade>;
+  const cards = AVERAGE_FAN_REPORT_CARDS[sport] as Record<string, Record<string, AverageFanReportGrade>>;
+  const row = cards[fan];
+  if (!row) throw new Error(`Average Fan ${fan} is not eligible for ${sport}.`);
+  return row;
 }
 
 function subjectList(sport: AverageFanSport) {
