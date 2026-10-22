@@ -397,7 +397,7 @@ function MillionaireGame({
             event.currentTarget.src = MILLIONAIRE_NBA_SAFE_HOST_ASSET;
           }
         } : undefined} />
-      {nbaHostAsset ? <img className="millionaire-nba-host" src={nbaHostAsset} alt="" aria-hidden="true" /> : null}
+      {nbaHostAsset ? <div className="millionaire-nba-host-stage" aria-hidden="true"><img className="millionaire-nba-host" src={nbaHostAsset} alt="" /></div> : null}
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
