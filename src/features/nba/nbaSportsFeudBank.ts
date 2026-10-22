@@ -1387,7 +1387,6 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     "Portland Trail Blazers": ["Blazers","Trail Blazers"],
     "Seattle SuperSonics": ["Sonics","Supersonics","Seattle Sonics"],
     "Houston Rockets": ["Rockets"],
-    "Jalen Brunson": ["Brunson"],
     "Cooper Flagg": ["Flagg"],
     "Bronny James": ["Bronny"],
     "Anthony Edwards": ["Ant-Man","Ant Man"],
