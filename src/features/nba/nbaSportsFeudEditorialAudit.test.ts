@@ -116,6 +116,8 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
     expect(accepted("two-k-covers", "main", "D Wade")).toBe("Dwyane Wade");
     expect(accepted("two-k-covers", "main", "Dirk")).toBe("Dirk Nowitzki");
     expect(accepted("two-k-covers", "main", "Kareem")).toBe("Kareem Abdul-Jabbar");
+    expect(accepted("two-k-covers", "main", "Vince Carter")).toBe("Vince Carter");
+    expect(accepted("two-k-covers", "main", "Carmelo Anthony")).toBe("Carmelo Anthony");
     expect(accepted("space-jam-cast", "main", "Sharone Wright")).toBe("Sharone Wright");
     expect(accepted("space-jam-cast", "main", "Muggsy Bogues")).toBe("Muggsy Bogues");
     expect(accepted("famous-duos", "main", "Kobe and Shaq"))
