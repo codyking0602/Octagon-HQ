@@ -23,7 +23,7 @@ function q(
 export const NBA_SPORTS_FEUD_MAIN_ROUND2: NbaFeudEditorialQuestion[] = [
   q("allstar-game-mvps","allstar-game-mvps","Name a player who won NBA All-Star Game MVP.",
     "Michael Jordan|LeBron James|Kobe Bryant|Stephen Curry|Kevin Durant|Giannis Antetokounmpo|Anthony Edwards|Shaquille O'Neal",
-    "Damian Lillard|Jayson Tatum|Kawhi Leonard|Anthony Davis|Russell Westbrook|Kyrie Irving|Chris Paul|Dwyane Wade|Allen Iverson|Tim Duncan|Kevin Garnett|Scottie Pippen|Magic Johnson|Larry Bird|Charles Barkley|Karl Malone|John Stockton|Isiah Thomas|Julius Erving|Wilt Chamberlain|Bill Russell|Oscar Robertson|Bob Pettit|Carmelo Anthony"),
+    "Damian Lillard|Jayson Tatum|Kawhi Leonard|Anthony Davis|Russell Westbrook|Kyrie Irving|Chris Paul|Dwyane Wade|Allen Iverson|Tim Duncan|Kevin Garnett|Scottie Pippen|Magic Johnson|Larry Bird|Charles Barkley|Karl Malone|John Stockton|Isiah Thomas|Julius Erving|Wilt Chamberlain|Bill Russell|Oscar Robertson|Bob Pettit"),
   q("scoring-title-stars","scoring-champions","Name an NBA player who has won a regular-season scoring title.",
     "Michael Jordan|LeBron James|Kobe Bryant|Kevin Durant|Stephen Curry|James Harden|Joel Embiid|Shaquille O'Neal",
     "Allen Iverson|Carmelo Anthony|Russell Westbrook|Luka Doncic|Shai Gilgeous-Alexander|Tracy McGrady|Dwyane Wade|David Robinson|Dominique Wilkins|George Gervin|Kareem Abdul-Jabbar|Wilt Chamberlain|Jerry West|Pete Maravich|Bob McAdoo"),
