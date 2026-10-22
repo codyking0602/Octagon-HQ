@@ -18,8 +18,8 @@ import {
   isUfcCareerWin,
 } from "./ufcCareerStats";
 
-const VERSION = "find-leader-v5-20260819-plausible-decoys";
-export const FIND_LEADER_DAILY_CONTENT_VERSION = "find-leader-daily-v2" as const;
+const VERSION = "find-leader-v6-20261022-division-bout-scoped";
+export const FIND_LEADER_DAILY_CONTENT_VERSION = "find-leader-daily-v3-division-bout-scoped" as const;
 const DAILY_ANCHOR = "2026-07-16";
 const NO_REPEAT_SELECTIONS = 14;
 const RANKED_TIERS = new Set(["champion-level", "top-five", "top-ten", "ranked"]);
@@ -221,14 +221,14 @@ export const findLeaderQuestions: readonly FindLeaderQuestionDefinition[] = [
   q("women-title-fight-wins-all-time", "Which woman has the most UFC title-fight wins?", "women’s UFC title-fight wins", "TITLE WINS", "title-fight-wins", "filtered", { scope: { board: "women" } }),
   q("champions-ufc-wins-all-time", "Which UFC champion has the most UFC wins?", "UFC wins by a UFC champion", "CHAMPION WINS", "wins", "filtered", { scope: { championsOnly: true } }),
   q("champions-ufc-finishes-all-time", "Which UFC champion has the most UFC finishes?", "UFC finishes by a UFC champion", "CHAMPION FINISHES", "finishes", "filtered", { scope: { championsOnly: true } }),
-  q("lightweight-ufc-wins-all-time", "Who has the most UFC wins among lightweights?", "UFC wins by a lightweight", "LIGHTWEIGHT WINS", "wins", "filtered", { scope: { division: "Lightweight" } }),
-  q("lightweight-ufc-finishes-all-time", "Who has the most UFC finishes among lightweights?", "UFC finishes by a lightweight", "LIGHTWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Lightweight" } }),
-  q("welterweight-ufc-wins-all-time", "Who has the most UFC wins among welterweights?", "UFC wins by a welterweight", "WELTERWEIGHT WINS", "wins", "filtered", { scope: { division: "Welterweight" } }),
-  q("welterweight-ufc-finishes-all-time", "Who has the most UFC finishes among welterweights?", "UFC finishes by a welterweight", "WELTERWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Welterweight" } }),
-  q("middleweight-ufc-wins-all-time", "Who has the most UFC wins among middleweights?", "UFC wins by a middleweight", "MIDDLEWEIGHT WINS", "wins", "filtered", { scope: { division: "Middleweight" } }),
-  q("heavyweight-ufc-finishes-all-time", "Who has the most UFC finishes among heavyweights?", "UFC finishes by a heavyweight", "HEAVYWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Heavyweight" } }),
-  q("bantamweight-ufc-wins-all-time", "Who has the most UFC wins among bantamweights?", "UFC wins by a bantamweight", "BANTAMWEIGHT WINS", "wins", "filtered", { scope: { division: "Bantamweight" } }),
-  q("featherweight-ufc-finishes-all-time", "Who has the most UFC finishes among featherweights?", "UFC finishes by a featherweight", "FEATHERWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Featherweight" } }),
+  q("lightweight-ufc-wins-all-time", "Who has the most UFC wins among lightweights?", "UFC wins at lightweight", "LIGHTWEIGHT WINS", "wins", "filtered", { scope: { division: "Lightweight" } }),
+  q("lightweight-ufc-finishes-all-time", "Who has the most UFC finishes among lightweights?", "UFC finishes at lightweight", "LIGHTWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Lightweight" } }),
+  q("welterweight-ufc-wins-all-time", "Who has the most UFC wins among welterweights?", "UFC wins at welterweight", "WELTERWEIGHT WINS", "wins", "filtered", { scope: { division: "Welterweight" } }),
+  q("welterweight-ufc-finishes-all-time", "Who has the most UFC finishes among welterweights?", "UFC finishes at welterweight", "WELTERWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Welterweight" } }),
+  q("middleweight-ufc-wins-all-time", "Who has the most UFC wins among middleweights?", "UFC wins at middleweight", "MIDDLEWEIGHT WINS", "wins", "filtered", { scope: { division: "Middleweight" } }),
+  q("heavyweight-ufc-finishes-all-time", "Who has the most UFC finishes among heavyweights?", "UFC finishes at heavyweight", "HEAVYWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Heavyweight" } }),
+  q("bantamweight-ufc-wins-all-time", "Who has the most UFC wins among bantamweights?", "UFC wins at bantamweight", "BANTAMWEIGHT WINS", "wins", "filtered", { scope: { division: "Bantamweight" } }),
+  q("featherweight-ufc-finishes-all-time", "Who has the most UFC finishes among featherweights?", "UFC finishes at featherweight", "FEATHERWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Featherweight" } }),
 ] as const;
 
 const fighterPresentation = new Map(allTime.map((fighter) => [fighter.name, fighter]));
@@ -265,9 +265,10 @@ function matchesScope(input: RankingInputFighter, definition: FindLeaderQuestion
   if (scope.board && input.board !== scope.board) return false;
   if (scope.championsOnly && !hasTitleWin(input)) return false;
   if (scope.division) {
+    // Eligibility and scoring must use bouts ACTUALLY contested in the division.
+    // Career identity labels are not evidence that all career wins happened there.
     const wanted = normalized(scope.division);
-    const divisions = [input.facts.identity.primaryDivision, ...input.facts.identity.secondaryDivisions].map(normalized);
-    if (!divisions.includes(wanted)) return false;
+    if (!input.facts.fights.some((fight) => normalized(fight.division) === wanted)) return false;
   }
   return true;
 }
@@ -368,7 +369,11 @@ function bounceBackWins(fights: readonly CanonicalFight[]) {
 
 function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestionDefinition) {
   if (!matchesScope(input, definition)) return null;
-  const fights = input.facts.fights.filter((fight) => inWindow(fight, definition));
+  const scopedDivision = normalized(definition.scope?.division);
+  const fights = input.facts.fights.filter((fight) =>
+    inWindow(fight, definition)
+    && (!scopedDivision || normalized(fight.division) === scopedDivision)
+  );
   const wins = fights.filter(isCountedWin);
   const finishWins = wins.filter(isFinish);
   const stats = deriveUfcCareerStats(fights, "scoring");
@@ -485,7 +490,9 @@ export function buildFindLeaderBoard(
     day,
     definitionId: definition.id,
     question: `Who leads this group in ${definition.statLabel.replace(/^all-time\s+/i, "")}?`,
-    context: `Highest ${definition.statLabel} among the ten fighters shown. The overall UFC record holder does not have to appear.`,
+    context: definition.scope?.division
+      ? `Highest ${definition.statLabel} among the ten fighters shown. Only bouts contested at ${definition.scope.division.toLowerCase()} count; fights in other divisions do not.`
+      : `Highest ${definition.statLabel} among the ten fighters shown. The overall UFC record holder does not have to appear.`,
     statLabel: definition.statLabel,
     shortLabel: definition.shortLabel,
     family: definition.family,
