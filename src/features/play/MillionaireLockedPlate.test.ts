@@ -9,16 +9,22 @@ const fixedCss = readFileSync("src/features/play/MillionaireFixedStage.css", "ut
 const nbaCss = readFileSync("src/styles/nba-millionaire.css", "utf8");
 
 describe("Millionaire fixed-stage presentation contract", () => {
-  it("uses an existing, already-approved NFL stage image for every NBA host slot", () => {
+  it("keeps the approved clean NFL studio plate while loading all three real transparent NBA hosts", () => {
     expect(MILLIONAIRE_NBA_SAFE_HOST_ASSET).toBe("/assets/millionaire/Nfl1.png");
     expect(MILLIONAIRE_NBA_SAFE_HOST_ASSET).toBe(MILLIONAIRE_HOSTS.nfl[0]);
-    expect(MILLIONAIRE_HOSTS.nba).toEqual(Array(3).fill(MILLIONAIRE_NBA_SAFE_HOST_ASSET));
-    for (const date of ["2026-10-21", "2026-10-22", "2026-10-23"]) {
-      expect(millionaireHostAsset("nba", date)).toBe(MILLIONAIRE_NBA_SAFE_HOST_ASSET);
+    expect(MILLIONAIRE_HOSTS.nba).toEqual([
+      "/assets/millionaire/NBA 1.webp",
+      "/assets/millionaire/NBA 2.webp",
+      "/assets/millionaire/NBA 3.webp",
+    ]);
+    for (const host of MILLIONAIRE_HOSTS.nba) {
+      const image = readFileSync(`public${host}`);
+      expect(image.subarray(0, 4).toString("ascii")).toBe("RIFF");
+      expect(image.subarray(8, 12).toString("ascii")).toBe("WEBP");
+      expect(image.byteLength).toBeGreaterThan(100_000);
     }
-    const image = readFileSync(`public${MILLIONAIRE_NBA_SAFE_HOST_ASSET}`);
-    expect(Array.from(image.subarray(0, 8))).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
-    expect(image.byteLength).toBeGreaterThan(100_000);
+    const stage = readFileSync(`public${MILLIONAIRE_NBA_SAFE_HOST_ASSET}`);
+    expect(Array.from(stage.subarray(0, 8))).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
   });
 
   it("never restores the baked-title/baked-ladder NBA photo or its CSS masking workarounds", () => {
@@ -26,6 +32,8 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource).not.toContain("templateFallbackActive");
     expect(pageSource).not.toContain("millionaire-shell--template-fallback");
     expect(pageSource).toContain("event.currentTarget.src = MILLIONAIRE_NBA_SAFE_HOST_ASSET");
+    expect(pageSource).toContain('className="millionaire-nba-host"');
+    expect(pageSource).toContain('league === "nba" ? MILLIONAIRE_NBA_SAFE_HOST_ASSET');
     expect(nbaCss).not.toContain("template-fallback");
     expect(nbaCss).not.toMatch(/\.millionaire-shell--nba[^\n{]*\.millionaire-ladder/);
     expect(nbaCss).not.toContain("visibility: hidden !important");
@@ -34,6 +42,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
   it("renders one live title and one live ladder on the same 1600x900 stage as NFL/UFC", () => {
     expect(pageSource.match(/<header className="millionaire-title"/g)).toHaveLength(1);
     expect(pageSource.match(/<aside className="millionaire-ladder"/g)).toHaveLength(1);
+    expect(pageSource.match(/className="millionaire-nba-host"/g)).toHaveLength(1);
     expect(pageSource).toContain('className="millionaire-stage-canvas"');
     expect(pageSource).toContain('className="millionaire-stage-background"');
     expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);');
