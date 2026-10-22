@@ -27,7 +27,7 @@
 - Preserved the same caller API, seed stability, 2 Main + 5 Fast flow, engine and points.
 - Replaced cyclic selection with two independent deterministic seeded shuffles and a shared semantic collision-lane guard (same category, closely related skills, awards, era, franchise categories, college, family, etc.).
 - Independent JavaScript audit of **20,000** generated packs: **20,000 distinct sequences; zero repeated categories or semantic-lane collisions; zero short packs; every authored question selected at least once.**
-- All 105 full answer universes: 8 unique ranked answers, no normalized duplicate canonical names, no canonical/alias duplication identifying different players on the same question, no exact duplicate prompts.
+- All 104 full answer universes: 8 unique ranked answers, no normalized duplicate canonical names, no canonical/alias duplication identifying different players on the same question, no exact duplicate prompts.
 - Regression test added for **6,000 packs**, 7-question variety, eight-answer integrity, nickname matching, objective-universe completeness and current NBA awards/championship facts. Full repository CI is authoritative; no local Git clone was available in the linked workspace.
 - Broad-answer categories remain an editorial approximation: continue expanding obvious extras when player reports reveal a valid miss. Avoid claiming a survey or a provably exhaustive subjective universe.
 
