@@ -19,7 +19,11 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.useRealTimers(); });
 
 describe("NBA Millionaire money-run elimination and full-board recovery", () => {
-  it.each([5, 6])("continues automatically after a Q%i money miss and plays the final question", (missIndex) => {
+  it.each([
+    { missIndex: 0, lockedMoney: 0 },
+    { missIndex: 5, lockedMoney: 5_000 },
+    { missIndex: 6, lockedMoney: 100_000 },
+  ])("stops NBA's money ladder at Q$missIndex, shows Finish the Board, then completes Q8", ({ missIndex, lockedMoney }) => {
     const run = createNbaMillionaireRun("nba-finish-the-board-ui-" + missIndex);
     const settled = vi.fn();
     render(<MemoryRouter><MillionaireCasualPage scope="nba" runOverride={run} onSettled={settled} /></MemoryRouter>);
@@ -31,15 +35,32 @@ describe("NBA Millionaire money-run elimination and full-board recovery", () => 
       expect(getAnswers()).toHaveLength(4);
       const correct = run[index]!.correctChoiceId;
       const wrong = ids.find((id) => id !== correct)!;
-      const choice = index === missIndex ? wrong : correct;
-      fireEvent.click(getAnswers()[ids.indexOf(choice)]!);
-      act(() => {
-        vi.advanceTimersByTime(MILLIONAIRE_REVEAL_DELAY_MS[run[index]!.level] + MILLIONAIRE_ANSWER_REVEAL_HOLD_MS + 50);
-      });
+      fireEvent.click(getAnswers()[ids.indexOf(index === missIndex ? wrong : correct)]!);
+      act(() => vi.advanceTimersByTime(MILLIONAIRE_REVEAL_DELAY_MS[run[index]!.level] + MILLIONAIRE_ANSWER_REVEAL_HOLD_MS + 50));
+
+      if (index === missIndex) {
+        expect(settled).not.toHaveBeenCalled();
+        expect(screen.getByRole("region", { name: "Millionaire run ended" }).textContent).toContain("Your money run is over");
+        const continueButton = screen.getByRole("button", { name: /finish the board/i });
+        expect(getAnswers().every(button => button.disabled)).toBe(true);
+        expect(document.body.querySelectorAll(".millionaire-ladder .is-missed")).toHaveLength(1);
+        expect(document.body.querySelectorAll(".millionaire-ladder .is-current")).toHaveLength(0);
+        expect(screen.getByLabelText("Locked winnings — money run ended").textContent).toContain(
+          lockedMoney === 100_000 ? "$100,000" : lockedMoney === 5_000 ? "$5,000" : "$0",
+        );
+        // The prompt is an acknowledgement, not a result: recovery starts only on click.
+        fireEvent.click(continueButton);
+        expect(document.body.querySelector(".millionaire-elimination")).toBeNull();
+      } else if (index > missIndex && index < 7) {
+        expect(document.body.querySelectorAll(".millionaire-ladder .is-missed")).toHaveLength(1);
+        expect(document.body.querySelectorAll(".millionaire-ladder .is-current")).toHaveLength(0);
+        expect(screen.getByLabelText("Locked winnings — money run ended").textContent).toContain(
+          lockedMoney === 100_000 ? "$100,000" : lockedMoney === 5_000 ? "$5,000" : "$0",
+        );
+      }
       if (index < 7) {
         expect(settled).not.toHaveBeenCalled();
         expect(document.body.querySelector(".millionaire-results")).toBeNull();
-        expect(document.body.querySelector(".millionaire-elimination")).toBeNull();
       }
     }
 
@@ -48,7 +69,7 @@ describe("NBA Millionaire money-run elimination and full-board recovery", () => 
       outcome: "lost",
       completedQuestions: 7,
       firstMissQuestion: missIndex + 1,
-      finalMoney: missIndex === 6 ? 100_000 : 5_000,
+      finalMoney: lockedMoney,
     });
     expect(document.body.querySelector(".millionaire-results")).toBeTruthy();
   });
