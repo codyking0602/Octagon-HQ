@@ -130,6 +130,61 @@ function NbaFuturesForm({picks,locked,onChange}:{
     </FuturesSection>
   </>;
 }
+// Football Futures reveals submitted cards by member once the season closes.
+// NBA uses the same details/summary drill-down with a compact, read-only card.
+function RevealedTeams({ids}:{ids:readonly string[]}) {
+  const teams=NBA_TEAMS.filter(team=>ids.includes(team.id));
+  return <div className="nba-futures-reveal-teamlist">
+    {teams.length?teams.map(team=><span className="nba-futures-reveal-chip" key={team.id}>
+      <NbaTeamMark team={team}/><span>{team.name}</span>
+    </span>):<span className="nba-futures-reveal-empty">Not picked</span>}
+  </div>;
+}
+function RevealedNbaFuturesPicks({picks}:{picks:NbaFuturesPicks}) {
+  return <div className="nba-futures-reveal-card" data-testid="revealed-nba-futures">
+    <section className="nba-futures-reveal-block">
+      <h3>30-TEAM WIN TOTALS</h3>
+      <div className="nba-futures-reveal-wins">
+        {(["East","West"] as const).map(conference=><div key={conference}>
+          <h4>{conference.toUpperCase()}</h4>
+          {NBA_TEAMS.filter(team=>team.conference===conference && picks.winTotals[team.id]).map(team=>
+            <div className="nba-futures-reveal-win" key={team.id}>
+              <NbaTeamMark team={team}/><span>{team.name}<small>{team.line} WINS</small></span>
+              <b>{picks.winTotals[team.id].toUpperCase()}</b>
+            </div>)}
+          {!NBA_TEAMS.some(team=>team.conference===conference && picks.winTotals[team.id])?
+            <p className="nba-futures-reveal-empty">No selections</p>:null}
+        </div>)}
+      </div>
+    </section>
+    <div className="nba-futures-reveal-grid">
+      <section className="nba-futures-reveal-block"><h3>16 PLAYOFF TEAMS</h3><RevealedTeams ids={picks.playoffTeams}/></section>
+      <section className="nba-futures-reveal-block"><h3>CONFERENCE FINALS</h3><RevealedTeams ids={picks.conferenceFinalists}/></section>
+      <section className="nba-futures-reveal-block"><h3>NBA FINALS</h3><RevealedTeams ids={picks.finalsTeams}/></section>
+      <section className="nba-futures-reveal-block"><h3>NBA CHAMPION</h3>
+        {picks.champion?<RevealedTeams ids={[picks.champion]}/>:<p className="nba-futures-reveal-empty">Not picked</p>}
+      </section>
+      <section className="nba-futures-reveal-block"><h3>SEASON AWARDS</h3>
+        <div className="nba-futures-reveal-awards">
+          <span>MVP <strong>{picks.mvp||"Not picked"}</strong></span>
+          <span>DPOY <strong>{picks.dpoy||"Not picked"}</strong></span>
+        </div>
+      </section>
+    </div>
+  </div>;
+}
+function NbaFuturesGroupEntry({entry}:{entry:NbaFuturesSnapshot["entries"][number]}) {
+  const picks={...emptyNbaFutures(),...entry.picks};
+  const progress=nbaFuturesProgress(picks);
+  return <details className="nba-futures-group-entry">
+    <summary>
+      <strong>{entry.display_name}</strong>
+      <span>{entry.complete?"55/55 COMPLETE":progress+"/55 · INCOMPLETE"}</span>
+      <b>VIEW PICKS</b>
+    </summary>
+    <div className="nba-futures-group-entry-body"><RevealedNbaFuturesPicks picks={picks}/></div>
+  </details>;
+}
 export default function NbaFuturesPage() {
   const identity=useIdentity();
   const [snapshot,setSnapshot]=useState<NbaFuturesSnapshot|null>(null);
@@ -198,6 +253,12 @@ export default function NbaFuturesPage() {
       </div>
       <NbaFuturesForm picks={draft} locked={locked} onChange={next=>{setDraft(next);setSaved(false);}}/>
       {errors.length?<p role="alert" className="nba-hq-error">{errors[0]}</p>:null}
+      {locked?<section className="nba-futures-reveal" aria-label="Other players NBA Futures">
+        <header><strong>GROUP FUTURES</strong><span>{snapshot.entries.length} REVEALED</span></header>
+        <p>Entries are locked. Open a player's name to see their saved predictions.</p>
+        {snapshot.entries.map(entry=><NbaFuturesGroupEntry key={entry.profile_id} entry={entry}/>)}
+        {!snapshot.entries.length?<p>No other submitted NBA Futures cards are available.</p>:null}
+      </section>:null}
       <div className="nba-futures-save">
         <button className="primary-action" type="button" disabled={locked||saving||errors.length>0}
           onClick={()=>persist(draft)}>{locked?"PICKS LOCKED":"SAVE MY FUTURES PICKS"}</button>
