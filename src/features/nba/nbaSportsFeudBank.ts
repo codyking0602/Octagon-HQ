@@ -1703,6 +1703,7 @@ export function nbaSportsFeudEditorialLane(category: string) {
   if (["champion-franchises","finalists","conference-teams","animal-teams"].includes(category)) return "team-facts";
   if (["finals-mvp","mvp-winners","defensive-awards","rookie-of-the-year","sixth-man-award",
     "most-improved","coach-awards","all-stars","dunk-winners","three-point-contest"].includes(category)) return "awards";
+  if (["head-coaches","coach-awards","former-player-coaches"].includes(category)) return "coaches";
   if (["nba-eras","olympic-rosters","college-nba-stars","family-connections","draft-history",
     "unusual-size"].includes(category)) return category;
   if (["point-guards","guard-positions","forward-positions","great-bigs"].includes(category)) return "player-positions";
