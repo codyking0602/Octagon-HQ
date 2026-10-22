@@ -27,7 +27,7 @@ import {
   millionaireMoneyLabel,
   millionaireHostAsset,
   nextNbaMillionaireHostNumber,
-  MILLIONAIRE_NBA_SAFE_HOST_ASSET,
+  MILLIONAIRE_NBA_STUDIO_ASSET,
   millionaireCentralDateKey,
   millionaireTimeLabel,
   millionaireTimeoutTransition,
@@ -245,7 +245,7 @@ function MillionaireGame({
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
   const stageScale = useMillionaireStageScale();
-  const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : league === "nba" ? MILLIONAIRE_NBA_SAFE_HOST_ASSET : millionaireHostAsset(league);
+  const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : league === "nba" ? MILLIONAIRE_NBA_STUDIO_ASSET : millionaireHostAsset(league);
   const nbaHostAsset = league === "nba" ? millionaireHostAsset("nba", undefined, nbaHostNumber ?? 1) : null;
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
@@ -390,14 +390,8 @@ function MillionaireGame({
         className="millionaire-stage-canvas"
         style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
       >
-      <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true"
-        onError={league === "nba" ? (event) => {
-          // A future missing NBA host can only fall back to the proven clean NFL studio.
-          if (!event.currentTarget.src.endsWith(MILLIONAIRE_NBA_SAFE_HOST_ASSET)) {
-            event.currentTarget.src = MILLIONAIRE_NBA_SAFE_HOST_ASSET;
-          }
-        } : undefined} />
-      {nbaHostAsset ? <div className="millionaire-nba-host-stage" aria-hidden="true"><img className="millionaire-nba-host" src={nbaHostAsset} alt="" /></div> : null}
+      <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
+      {nbaHostAsset ? <img className="millionaire-nba-host" src={nbaHostAsset} alt="" aria-hidden="true" /> : null}
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
