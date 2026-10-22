@@ -352,7 +352,8 @@ export const NBA_SPORTS_FEUD_ROUND3_ALIASES: Record<string, string[]> = {
   ],
   "Shot-clock violation": [
     "24 second violation",
-    "24-second violation"
+    "24-second violation",
+    "Shot clock"
   ],
   "Between-the-legs dribble": [
     "Between legs",
@@ -403,5 +404,49 @@ export const NBA_SPORTS_FEUD_ROUND3_ALIASES: Record<string, string[]> = {
   ],
   "Confetti": [
     "Confetti falling"
+  ],
+  "Soda": [
+    "Coke",
+    "Cola",
+    "Pepsi",
+    "Pop",
+    "Soft drink",
+    "Soft drinks",
+    "Fountain drink"
+  ],
+  "Hot dog": [
+    "Hotdog",
+    "Hot dogs"
+  ],
+  "French fries": [
+    "Fries"
+  ],
+  "Water bottles": [
+    "Bottled water"
+  ],
+  "Fan festival": [
+    "Fan fest"
+  ],
+  "Trading cards": [
+    "Basketball cards",
+    "Sports cards",
+    "Player cards"
+  ],
+  "Autographs": [
+    "Signatures",
+    "Signed items"
+  ],
+  "Signed photos": [
+    "Autographed photos"
+  ],
+  "Draft board": [
+    "Big board"
+  ],
+  "Draft clock": [
+    "Pick clock"
+  ],
+  "Bad pass": [
+    "Errant pass",
+    "Poor pass"
   ]
 };
