@@ -18,9 +18,27 @@ import {
   isUfcCareerWin,
 } from "./ufcCareerStats";
 
+// Published daily boards are immutable. Future divisional counts use a new
+// ruleset while historical boards retain their exact seed, pool and wording.
 const VERSION = "find-leader-v5-20260819-plausible-decoys";
+const FUTURE_VERSION = "find-leader-v6-20261023-division-bout-scoped";
 export const FIND_LEADER_DAILY_CONTENT_VERSION = "find-leader-daily-v2" as const;
+const FUTURE_DAILY_CONTENT_VERSION = "find-leader-daily-v3-division-bout-scoped" as const;
+const DIVISION_RULES_START_DAY = "2026-10-23";
 const DAILY_ANCHOR = "2026-07-16";
+
+function usesDivisionBoutScoring(day: string) {
+  return day >= DIVISION_RULES_START_DAY;
+}
+
+function versionForDay(day: string) {
+  return usesDivisionBoutScoring(day) ? FUTURE_VERSION : VERSION;
+}
+
+export function findLeaderDailyContentVersionForDay(day: string) {
+  return usesDivisionBoutScoring(day) ? FUTURE_DAILY_CONTENT_VERSION : FIND_LEADER_DAILY_CONTENT_VERSION;
+}
+
 const NO_REPEAT_SELECTIONS = 14;
 const RANKED_TIERS = new Set(["champion-level", "top-five", "top-ten", "ranked"]);
 const TOP_FIVE_TIERS = new Set(["champion-level", "top-five"]);
@@ -221,14 +239,14 @@ export const findLeaderQuestions: readonly FindLeaderQuestionDefinition[] = [
   q("women-title-fight-wins-all-time", "Which woman has the most UFC title-fight wins?", "women’s UFC title-fight wins", "TITLE WINS", "title-fight-wins", "filtered", { scope: { board: "women" } }),
   q("champions-ufc-wins-all-time", "Which UFC champion has the most UFC wins?", "UFC wins by a UFC champion", "CHAMPION WINS", "wins", "filtered", { scope: { championsOnly: true } }),
   q("champions-ufc-finishes-all-time", "Which UFC champion has the most UFC finishes?", "UFC finishes by a UFC champion", "CHAMPION FINISHES", "finishes", "filtered", { scope: { championsOnly: true } }),
-  q("lightweight-ufc-wins-all-time", "Who has the most UFC wins among lightweights?", "UFC wins by a lightweight", "LIGHTWEIGHT WINS", "wins", "filtered", { scope: { division: "Lightweight" } }),
-  q("lightweight-ufc-finishes-all-time", "Who has the most UFC finishes among lightweights?", "UFC finishes by a lightweight", "LIGHTWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Lightweight" } }),
-  q("welterweight-ufc-wins-all-time", "Who has the most UFC wins among welterweights?", "UFC wins by a welterweight", "WELTERWEIGHT WINS", "wins", "filtered", { scope: { division: "Welterweight" } }),
-  q("welterweight-ufc-finishes-all-time", "Who has the most UFC finishes among welterweights?", "UFC finishes by a welterweight", "WELTERWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Welterweight" } }),
-  q("middleweight-ufc-wins-all-time", "Who has the most UFC wins among middleweights?", "UFC wins by a middleweight", "MIDDLEWEIGHT WINS", "wins", "filtered", { scope: { division: "Middleweight" } }),
-  q("heavyweight-ufc-finishes-all-time", "Who has the most UFC finishes among heavyweights?", "UFC finishes by a heavyweight", "HEAVYWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Heavyweight" } }),
-  q("bantamweight-ufc-wins-all-time", "Who has the most UFC wins among bantamweights?", "UFC wins by a bantamweight", "BANTAMWEIGHT WINS", "wins", "filtered", { scope: { division: "Bantamweight" } }),
-  q("featherweight-ufc-finishes-all-time", "Who has the most UFC finishes among featherweights?", "UFC finishes by a featherweight", "FEATHERWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Featherweight" } }),
+  q("lightweight-ufc-wins-all-time", "Who has the most UFC wins among lightweights?", "UFC wins at lightweight", "LIGHTWEIGHT WINS", "wins", "filtered", { scope: { division: "Lightweight" } }),
+  q("lightweight-ufc-finishes-all-time", "Who has the most UFC finishes among lightweights?", "UFC finishes at lightweight", "LIGHTWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Lightweight" } }),
+  q("welterweight-ufc-wins-all-time", "Who has the most UFC wins among welterweights?", "UFC wins at welterweight", "WELTERWEIGHT WINS", "wins", "filtered", { scope: { division: "Welterweight" } }),
+  q("welterweight-ufc-finishes-all-time", "Who has the most UFC finishes among welterweights?", "UFC finishes at welterweight", "WELTERWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Welterweight" } }),
+  q("middleweight-ufc-wins-all-time", "Who has the most UFC wins among middleweights?", "UFC wins at middleweight", "MIDDLEWEIGHT WINS", "wins", "filtered", { scope: { division: "Middleweight" } }),
+  q("heavyweight-ufc-finishes-all-time", "Who has the most UFC finishes among heavyweights?", "UFC finishes at heavyweight", "HEAVYWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Heavyweight" } }),
+  q("bantamweight-ufc-wins-all-time", "Who has the most UFC wins among bantamweights?", "UFC wins at bantamweight", "BANTAMWEIGHT WINS", "wins", "filtered", { scope: { division: "Bantamweight" } }),
+  q("featherweight-ufc-finishes-all-time", "Who has the most UFC finishes among featherweights?", "UFC finishes at featherweight", "FEATHERWEIGHT FINISHES", "finishes", "filtered", { scope: { division: "Featherweight" } }),
 ] as const;
 
 const fighterPresentation = new Map(allTime.map((fighter) => [fighter.name, fighter]));
@@ -259,15 +277,20 @@ function hasTitleWin(input: RankingInputFighter) {
   return input.facts.fights.some((fight) => isCountedWin(fight) && isTitleFight(fight));
 }
 
-function matchesScope(input: RankingInputFighter, definition: FindLeaderQuestionDefinition) {
+function matchesScope(input: RankingInputFighter, definition: FindLeaderQuestionDefinition, day: string) {
   const scope = definition.scope;
   if (!scope) return true;
   if (scope.board && input.board !== scope.board) return false;
   if (scope.championsOnly && !hasTitleWin(input)) return false;
   if (scope.division) {
     const wanted = normalized(scope.division);
-    const divisions = [input.facts.identity.primaryDivision, ...input.facts.identity.secondaryDivisions].map(normalized);
-    if (!divisions.includes(wanted)) return false;
+    if (usesDivisionBoutScoring(day)) {
+      if (!input.facts.fights.some((fight) => normalized(fight.division) === wanted)) return false;
+    } else {
+      // Preserve the legacy eligibility behind completed Daily snapshots.
+      const divisions = [input.facts.identity.primaryDivision, ...input.facts.identity.secondaryDivisions].map(normalized);
+      if (!divisions.includes(wanted)) return false;
+    }
   }
   return true;
 }
@@ -366,9 +389,13 @@ function bounceBackWins(fights: readonly CanonicalFight[]) {
   )).length;
 }
 
-function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestionDefinition) {
-  if (!matchesScope(input, definition)) return null;
-  const fights = input.facts.fights.filter((fight) => inWindow(fight, definition));
+function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestionDefinition, day: string) {
+  if (!matchesScope(input, definition, day)) return null;
+  const scopedDivision = usesDivisionBoutScoring(day) ? normalized(definition.scope?.division) : "";
+  const fights = input.facts.fights.filter((fight) =>
+    inWindow(fight, definition)
+    && (!scopedDivision || normalized(fight.division) === scopedDivision)
+  );
   const wins = fights.filter(isCountedWin);
   const finishWins = wins.filter(isFinish);
   const stats = deriveUfcCareerStats(fights, "scoring");
@@ -432,9 +459,9 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
 
 type ScoredFindLeaderRow = { input: RankingInputFighter; value: number };
 
-function scoredPool(definition: FindLeaderQuestionDefinition): ScoredFindLeaderRow[] {
+function scoredPool(definition: FindLeaderQuestionDefinition, day: string): ScoredFindLeaderRow[] {
   return canonicalRankingInputs.fighters
-    .map((input) => ({ input, value: scoreFighter(input, definition) }))
+    .map((input) => ({ input, value: scoreFighter(input, definition, day) }))
     .filter((row): row is ScoredFindLeaderRow => Number.isFinite(row.value))
     .sort((left, right) => right.value - left.value || left.input.fighter.localeCompare(right.input.fighter));
 }
@@ -448,9 +475,9 @@ const ufcCompetitionConfig = {
   compareLeaderTie: (left: ScoredFindLeaderRow, right: ScoredFindLeaderRow) => left.input.fighter.localeCompare(right.input.fighter),
 };
 
-function playableFindLeaderDefinitions() {
+function playableFindLeaderDefinitions(day: string) {
   return findLeaderQuestions.filter((definition) => {
-    const pool = scoredPool(definition);
+    const pool = scoredPool(definition, day);
     return pool.length >= 10 && viableCompetitiveLeaders(pool, ufcCompetitionConfig, false).length > 0;
   });
 }
@@ -471,8 +498,9 @@ export function buildFindLeaderBoard(
   seed: string,
   day = centralDay(),
 ): FindLeaderBoard | null {
-  const random = seededLineupRandom(VERSION, seed, definition.id);
-  const pool = scoredPool(definition);
+  const version = versionForDay(day);
+  const random = seededLineupRandom(version, seed, definition.id);
+  const pool = scoredPool(definition, day);
   if (pool.length < 10) return null;
   const option = selectFindLeaderCompetition(pool, random, ufcCompetitionConfig);
   if (!option) return null;
@@ -480,13 +508,18 @@ export function buildFindLeaderBoard(
   if (challengers.length !== 9) return null;
   const selected = [option.leader, ...challengers];
   const candidates = shuffleLineup(selected.map((row) => candidateFor(row.input, row.value)), random);
+  const statLabel = definition.scope?.division && !usesDivisionBoutScoring(day)
+    ? definition.statLabel.replace(/ at (lightweight|welterweight|middleweight|heavyweight|bantamweight|featherweight)$/i, " by a $1")
+    : definition.statLabel;
   return {
-    version: VERSION,
+    version,
     day,
     definitionId: definition.id,
-    question: `Who leads this group in ${definition.statLabel.replace(/^all-time\s+/i, "")}?`,
-    context: `Highest ${definition.statLabel} among the ten fighters shown. The overall UFC record holder does not have to appear.`,
-    statLabel: definition.statLabel,
+    question: `Who leads this group in ${statLabel.replace(/^all-time\s+/i, "")}?`,
+    context: definition.scope?.division && usesDivisionBoutScoring(day)
+      ? `Highest ${statLabel} among the ten fighters shown. Only bouts contested at ${definition.scope.division.toLowerCase()} count; fights in other divisions do not.`
+      : `Highest ${statLabel} among the ten fighters shown. The overall UFC record holder does not have to appear.`,
+    statLabel,
     shortLabel: definition.shortLabel,
     family: definition.family,
     leaderId: option.leader.input.presentation.slug,
@@ -497,7 +530,7 @@ export function buildFindLeaderBoard(
 
 export function findLeaderCompetitionAudit() {
   return findLeaderQuestions.map((definition) => {
-    const pool = scoredPool(definition);
+    const pool = scoredPool(definition, DAILY_ANCHOR);
     const board = buildFindLeaderBoard(definition, `competition-audit|${definition.id}`, DAILY_ANCHOR);
     const nonRecordLeaderAvailable = viableCompetitiveLeaders(pool, ufcCompetitionConfig, true).length > 0;
     if (!board) {
@@ -567,15 +600,19 @@ export function centralDay(date = new Date()) {
 export function scheduledFindLeaderDefinition(day = centralDay()) {
   const target = Math.max(0, dayNumber(day) - dayNumber(DAILY_ANCHOR));
   const history: string[] = [];
-  const available = playableFindLeaderDefinitions();
+  const historical = playableFindLeaderDefinitions(DAILY_ANCHOR);
+  const future = usesDivisionBoutScoring(day) ? playableFindLeaderDefinitions(day) : historical;
   let selected: FindLeaderQuestionDefinition | null = null;
   for (let slot = 0; slot <= target; slot += 1) {
+    const slotDay = new Date((dayNumber(DAILY_ANCHOR) + slot) * 86_400_000).toISOString().slice(0, 10);
+    const available = usesDivisionBoutScoring(slotDay) ? future : historical;
+    const version = versionForDay(slotDay);
     const recent = new Set(history.slice(-NO_REPEAT_SELECTIONS));
     const family = FAMILY_CYCLE[slot % FAMILY_CYCLE.length];
     const preferred = available.filter((definition) => definition.family === family && !recent.has(definition.id));
     const fresh = available.filter((definition) => !recent.has(definition.id));
     const candidates = preferred.length ? preferred : fresh.length ? fresh : available;
-    selected = [...candidates].sort((left, right) => stableLineupHash(`${VERSION}|${slot}|${left.id}`) - stableLineupHash(`${VERSION}|${slot}|${right.id}`))[0] ?? null;
+    selected = [...candidates].sort((left, right) => stableLineupHash(`${version}|${slot}|${left.id}`) - stableLineupHash(`${version}|${slot}|${right.id}`))[0] ?? null;
     if (selected) history.push(selected.id);
   }
   return selected;
@@ -584,7 +621,7 @@ export function scheduledFindLeaderDefinition(day = centralDay()) {
 export function dailyFindLeaderBoard(day = centralDay()) {
   const definition = scheduledFindLeaderDefinition(day);
   const board = definition ? buildFindLeaderBoard(definition, dailyLineupSeed(day), day) : null;
-  return board ? { ...board, version: FIND_LEADER_DAILY_CONTENT_VERSION } : null;
+  return board ? { ...board, version: findLeaderDailyContentVersionForDay(day) } : null;
 }
 
 export function findLeaderAudit() {
