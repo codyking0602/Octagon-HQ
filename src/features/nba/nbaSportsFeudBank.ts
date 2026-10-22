@@ -150,7 +150,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "David Thompson"
       ],
       "extras": [
-        "Elgin Baylor"
+        "Elgin Baylor",
+        "David Robinson"
       ]
     },
     {
@@ -175,7 +176,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Moses Malone",
         "Steve Nash",
         "Bill Russell",
-        "Bob Pettit"
+        "Bob Pettit",
+        "Shai Gilgeous-Alexander"
       ]
     },
     {
@@ -196,7 +198,28 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "extras": [
         "Dominique Wilkins",
         "Jason Richardson",
-        "Spud Webb"
+        "Spud Webb",
+        "Keshad Johnson",
+        "Obi Toppin",
+        "Anfernee Simons",
+        "Derrick Jones Jr.",
+        "Hamidou Diallo",
+        "Donovan Mitchell",
+        "Glenn Robinson III",
+        "John Wall",
+        "Terrence Ross",
+        "Jeremy Evans",
+        "Gerald Green",
+        "Josh Smith",
+        "Fred Jones",
+        "Desmond Mason",
+        "Brent Barry",
+        "Harold Miner",
+        "Isaiah Rider",
+        "Cedric Ceballos",
+        "Dee Brown",
+        "Kenny Walker",
+        "Larry Nance"
       ]
     },
     {
@@ -222,27 +245,25 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       ]
     },
     {
-      "id": "nba75",
-      "category": "nba-75",
-      "prompt": "Name a player selected for the NBA's 75th Anniversary Team.",
+      "id": "dream92",
+      "category": "dream-team-1992",
+      "prompt": "Name a member of the USA men's 1992 Olympic Dream Team.",
       "kind": "person",
       "answers": [
         "Michael Jordan",
-        "Kobe Bryant",
-        "LeBron James",
-        "Stephen Curry",
-        "Shaquille O'Neal",
-        "Tim Duncan",
+        "Magic Johnson",
         "Larry Bird",
-        "Magic Johnson"
+        "Charles Barkley",
+        "Scottie Pippen",
+        "Karl Malone",
+        "John Stockton",
+        "Patrick Ewing"
       ],
       "extras": [
-        "Kevin Durant",
-        "Dwyane Wade",
-        "Dirk Nowitzki",
-        "Allen Iverson",
-        "Kareem Abdul-Jabbar",
-        "Charles Barkley"
+        "David Robinson",
+        "Chris Mullin",
+        "Clyde Drexler",
+        "Christian Laettner"
       ]
     },
     {
@@ -265,7 +286,21 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Joakim Noah",
         "Tyson Chandler",
         "Kevin Garnett",
-        "David Robinson"
+        "David Robinson",
+        "Victor Wembanyama",
+        "Evan Mobley",
+        "Jaren Jackson Jr.",
+        "Marcus Smart",
+        "Gary Payton",
+        "Dennis Rodman",
+        "Michael Jordan",
+        "Alonzo Mourning",
+        "Metta World Peace",
+        "Marcus Camby",
+        "Mark Eaton",
+        "Michael Cooper",
+        "Alvin Robertson",
+        "Sidney Moncrief"
       ]
     },
     {
@@ -308,7 +343,12 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Derek Fisher",
         "Robert Horry",
         "Rick Fox",
-        "Lamar Odom"
+        "Lamar Odom",
+        "Wilt Chamberlain",
+        "Jerry West",
+        "Rajon Rondo",
+        "Dwight Howard",
+        "Alex Caruso"
       ]
     },
     {
@@ -879,7 +919,23 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "James Harden",
         "Chris Paul",
         "Dwyane Wade",
-        "Carmelo Anthony"
+        "Carmelo Anthony",
+        "Kareem Abdul-Jabbar",
+        "Bill Russell",
+        "Magic Johnson",
+        "Larry Bird",
+        "Charles Barkley",
+        "Karl Malone",
+        "John Stockton",
+        "Kevin Garnett",
+        "Allen Iverson",
+        "Chris Bosh",
+        "Paul Pierce",
+        "Ray Allen",
+        "Patrick Ewing",
+        "David Robinson",
+        "Hakeem Olajuwon",
+        "Giannis Antetokounmpo"
       ]
     },
     {
@@ -1259,6 +1315,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
       "76ers",
       "Sixers",
       "Philly"
+    ],
+    "Metta World Peace": [
+      "Ron Artest",
+      "Metta"
+    ],
+    "Isaiah Rider": [
+      "J.R. Rider",
+      "JR Rider",
+      "Isiah Rider"
     ]
   }
 };
