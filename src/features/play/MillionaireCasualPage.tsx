@@ -248,6 +248,7 @@ function MillionaireGame({
   const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : league === "nba" ? MILLIONAIRE_NBA_STUDIO_ASSET : millionaireHostAsset(league);
   const nbaHostAsset = league === "nba" ? millionaireHostAsset("nba", undefined, nbaHostNumber ?? 1) : null;
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
+  const nbaMoneyRunEnded = league === "nba" && gameState.firstMissQuestionIndex !== null;
 
   function schedule(callback: () => void, delay: number) {
     const id = window.setTimeout(() => {
@@ -302,9 +303,8 @@ function MillionaireGame({
       return;
     }
     setPhase("answering");
-    // NBA owner-review runs must never stop at a money-ladder miss: Q7 flows straight to Q8.
-    // Football/UFC retain their existing explicit Finish the Board acknowledgement.
-    setEliminationPromptOpen(league !== "nba" && firstElimination);
+    // All leagues acknowledge the first miss before continuing to score through Q8.
+    setEliminationPromptOpen(firstElimination);
     setWalkPromptOpen(!firstElimination && millionaireCanWalkAway(result.state));
   }
 
@@ -394,7 +394,7 @@ function MillionaireGame({
       {nbaHostAsset ? <img className="millionaire-nba-host" src={nbaHostAsset} alt="" aria-hidden="true" /> : null}
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
-      <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
+      <section className="millionaire-stakes" aria-label={nbaMoneyRunEnded ? "Locked winnings — money run ended" : `Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(nbaMoneyRunEnded ? (gameState.finalMoney ?? 0) : (currentQuestion?.money ?? gameState.currentMoney))}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
       <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}><div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div></div>
 
       <aside className="millionaire-lifelines" aria-label="Lifelines">
@@ -418,10 +418,11 @@ function MillionaireGame({
           const completed = gameState.firstMissQuestionIndex === null
             ? index < gameState.currentQuestionIndex
             : index < gameState.firstMissQuestionIndex;
-          const current = index === gameState.currentQuestionIndex && gameState.status === "playing";
+          const current = !nbaMoneyRunEnded && index === gameState.currentQuestionIndex && gameState.status === "playing";
+          const missed = nbaMoneyRunEnded && index === gameState.firstMissQuestionIndex;
           const checkpoint = ladderLevel === "Q3" || ladderLevel === "Q6";
           return (
-            <div key={ladderLevel} className={`${current ? "is-current" : ""}${completed ? " is-complete" : ""}${checkpoint ? " is-checkpoint" : ""}`}>
+            <div key={ladderLevel} className={`${current ? "is-current" : ""}${completed ? " is-complete" : ""}${missed ? " is-missed" : ""}${checkpoint ? " is-checkpoint" : ""}`}>
               <b>{index + 1}</b><strong>{millionaireMoneyLabel(run[index]!.money)}</strong><span>{MILLIONAIRE_BASE_PTS[ladderLevel]} PTS</span>{checkpoint ? <small>CHECKPOINT</small> : null}
             </div>
           );
