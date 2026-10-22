@@ -104,6 +104,11 @@ export const BAR_TRIVIA_EDITORIAL_RETIREMENTS: Readonly<Record<string, BarTrivia
   "ufc-r1-khabib-eagle": "same-fact-in-millionaire",
   "ufc-r3-ronda-awarded": "same-fact-in-millionaire",
   "ufc-easy2-first-womens-champ": "same-fact-in-millionaire",
+  "ufc-r1-serra-tuf4": "same-fact-in-millionaire",
+  "ufc-r2-ufc83-main": "same-fact-in-millionaire",
+  "ufc-r3-serra-upset-event": "same-fact-in-millionaire",
+  "ufc-easy2-weidman-silva": "same-fact-in-millionaire",
+  "ufc-easy-stylebender": "same-fact-in-millionaire",
   // same-fact-within-bar-trivia
   "ufc-r3-hof-hendo-shogun-event": "same-fact-within-bar-trivia",
   "ufc-r1-first-australia-city": "same-fact-within-bar-trivia",
