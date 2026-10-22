@@ -233,7 +233,7 @@ describe("Average Fan report-card intelligence", () => {
     for (const sport of Object.keys(AVERAGE_FAN_SUBJECTS) as AverageFanSport[]) {
       const activeFans = sport === "nba" ? AVERAGE_FAN_NBA_FANS : AVERAGE_FAN_FANS;
       const totals = activeFans.map((fan) => {
-        const row = AVERAGE_FAN_REPORT_CARDS[sport][fan] as Record<string, keyof typeof AVERAGE_FAN_REPORT_GRADE_MODIFIER>;
+        const row = (AVERAGE_FAN_REPORT_CARDS[sport] as Record<string, Record<string, keyof typeof AVERAGE_FAN_REPORT_GRADE_MODIFIER>>)[fan]!;
         return AVERAGE_FAN_SUBJECTS[sport]
           .map((subject) => AVERAGE_FAN_REPORT_GRADE_MODIFIER[row[subject]!])
           .reduce<number>((sum, value) => sum + value, 0);
