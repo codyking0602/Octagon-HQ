@@ -57,7 +57,7 @@ These were explicitly reviewed and excluded rather than stretched into filler:
 - NBA awards and league history: https://www.nba.com/history/awards
 - 2026 awards: https://www.nba.com/awards/2026
 - Warner Bros original Space Jam cast imagery: https://www.spacejam.com/1996/cmp/jamcentral/photos/nba1.html
-- NBA 2K cover chronology: https://www.sportingnews.com/ca/nba/news/nba-2k27-cover-victor-wembanyama-2026-video-game/f19afffba9049517a88dfcfc
+- NBA 2K standard/special edition cover records (publisher): https://newsroom.2k.com/news/welcome-to-the-next-anthony-davis-and-dwyane-wade-unveiled-as-iconic-cover-stars-for-nbar-2k20 and https://newsroom.2k.com/news/anyone-anywhere-nbar-2k22-features-luka-doncic-and-nba-scoring-legends-kareem-abdul-jabbar-dirk-nowitzki-and-kevin-durant-as-cover-athletes
 - NBA historical news and draft profiles: https://www.nba.com/history
 - NBA rulebook: https://official.nba.com/rulebook/
 
@@ -65,8 +65,8 @@ These were explicitly reviewed and excluded rather than stretched into filler:
 
 | Prompt | Eight ranked answers (editorial recognition order) | Off-board accepted |
 |---|---|---:|
-| Name an NBA player who has appeared on an NBA 2K cover. | 1. Michael Jordan; 2. Kobe Bryant; 3. LeBron James; 4. Stephen Curry; 5. Shaquille O'Neal; 6. Kevin Durant; 7. Giannis Antetokounmpo; 8. Allen Iverson | 19 |
-| Name an NBA player who appeared in either Space Jam movie. | 1. Michael Jordan; 2. LeBron James; 3. Charles Barkley; 4. Anthony Davis; 5. Damian Lillard; 6. Klay Thompson; 7. Patrick Ewing; 8. Larry Bird | 16 |
+| Name an NBA player who has appeared on an NBA 2K cover. | 1. Michael Jordan; 2. Kobe Bryant; 3. LeBron James; 4. Stephen Curry; 5. Shaquille O'Neal; 6. Kevin Durant; 7. Giannis Antetokounmpo; 8. Allen Iverson | 28 |
+| Name an NBA player who appeared in either Space Jam movie. | 1. Michael Jordan; 2. LeBron James; 3. Charles Barkley; 4. Anthony Davis; 5. Damian Lillard; 6. Klay Thompson; 7. Patrick Ewing; 8. Larry Bird | 19 |
 | Name a famous NBA teammate duo. | 1. Michael Jordan and Scottie Pippen; 2. Shaquille O'Neal and Kobe Bryant; 3. Stephen Curry and Klay Thompson; 4. LeBron James and Dwyane Wade; 5. John Stockton and Karl Malone; 6. Magic Johnson and Kareem Abdul-Jabbar; 7. Tim Duncan and Tony Parker; 8. Jayson Tatum and Jaylen Brown | 12 |
 | Name an NBA star whose trade became major basketball news. | 1. Luka Doncic; 2. Anthony Davis; 3. Kevin Durant; 4. Kyrie Irving; 5. James Harden; 6. Damian Lillard; 7. Kawhi Leonard; 8. Carmelo Anthony | 17 |
 | Name an NBA player widely remembered as a draft steal. | 1. Nikola Jokic; 2. Manu Ginobili; 3. Draymond Green; 4. Jimmy Butler; 5. Giannis Antetokounmpo; 6. Kawhi Leonard; 7. Isaiah Thomas; 8. Tony Parker | 15 |
