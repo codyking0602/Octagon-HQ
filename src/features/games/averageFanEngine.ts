@@ -16,20 +16,22 @@ export type AverageFanFan = (typeof AVERAGE_FAN_FANS)[number];
 export type AverageFanGrade = (typeof AVERAGE_FAN_GRADES)[number];
 export type AverageFanPlayableGrade = (typeof AVERAGE_FAN_PLAYABLE_GRADES)[number];
 export type AverageFanQuestionFormat = (typeof AVERAGE_FAN_FORMATS)[number];
-export type AverageFanSport = "nfl" | "cfb" | "ufc" | "mlb";
+export type AverageFanSport = "nfl" | "cfb" | "ufc" | "mlb" | "nba";
 
 export const AVERAGE_FAN_SUBJECTS = {
   nfl: ["Players", "Teams", "NFL History", "X’s & O’s"],
   cfb: ["Players", "Programs", "Traditions", "CFB History"],
   ufc: ["Fighters", "Fights", "Championships", "Octagon IQ"],
   mlb: ["Players", "Teams", "MLB History", "Baseball IQ"],
+  nba: ["Players", "Teams", "NBA History", "Basketball IQ"],
 } as const;
 
 export type AverageFanSubject =
   | (typeof AVERAGE_FAN_SUBJECTS.nfl)[number]
   | (typeof AVERAGE_FAN_SUBJECTS.cfb)[number]
   | (typeof AVERAGE_FAN_SUBJECTS.ufc)[number]
-  | (typeof AVERAGE_FAN_SUBJECTS.mlb)[number];
+  | (typeof AVERAGE_FAN_SUBJECTS.mlb)[number]
+  | (typeof AVERAGE_FAN_SUBJECTS.nba)[number];
 
 export type AverageFanReportGrade = "A+" | "A" | "A-" | "B+" | "B" | "B-" | "C+" | "C";
 
@@ -83,6 +85,13 @@ export const AVERAGE_FAN_REPORT_CARDS = {
     troy: { Fighters: "B+", Fights: "A", Championships: "B-", "Octagon IQ": "A-" },
     tyler: { Fighters: "A-", Fights: "B+", Championships: "A", "Octagon IQ": "B-" },
     lib: { Fighters: "A-", Fights: "A", Championships: "B+", "Octagon IQ": "B-" },
+  },
+  nba: {
+    cody: { Players: "A", Teams: "B+", "NBA History": "A-", "Basketball IQ": "B-" },
+    shane: { Players: "A+", Teams: "B+", "NBA History": "A-", "Basketball IQ": "C+" },
+    troy: { Players: "B+", Teams: "A", "NBA History": "B-", "Basketball IQ": "A-" },
+    tyler: { Players: "B", Teams: "B", "NBA History": "A", "Basketball IQ": "A-" },
+    lib: { Players: "A-", Teams: "A", "NBA History": "B-", "Basketball IQ": "B+" },
   },
   mlb: {
     cody: { Players: "A", Teams: "B+", "MLB History": "A-", "Baseball IQ": "B-" },
