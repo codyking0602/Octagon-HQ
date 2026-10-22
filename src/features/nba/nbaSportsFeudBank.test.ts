@@ -48,6 +48,42 @@ describe("NBA Sports Feud curated-bank and unchanged engine contract", () => {
     }
   });
 
+  it("keeps all 32 Fast Money prompts answerable without season-roster or Finals recall", () => {
+    const narrowTrivia = /\\b(?:19|20)\\d{2}\\b|\\b(?:finals|playoff series|game [1-7]|championship roster)\\b/i;
+    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(32);
+    for (const question of NBA_SPORTS_FEUD_FAST) {
+      expect(question.prompt).not.toMatch(narrowTrivia);
+      expect(question.prompt).toMatch(/^Name (?:an? |a |a famous |a well-known )/);
+      expect(question.answers).toHaveLength(8);
+      expect(question.category).toBeTruthy();
+    }
+    const allCategories = [...NBA_SPORTS_FEUD_MAIN, ...NBA_SPORTS_FEUD_FAST]
+      .map(question => question.category);
+    expect(new Set(allCategories).size).toBe(allCategories.length);
+  });
+
+  it("replaces narrow finals and one-year rosters with immediate NBA associations", () => {
+    const examples: ReadonlyArray<[string, string]> = [
+      ["finals24", "Kyrie Irving"],
+      ["finals23", "Nikola Jokic"],
+      ["bubble", "Kawhi Leonard"],
+      ["cavs16", "James Harden"],
+      ["mavs11", "Devin Booker"],
+      ["celtics08", "Giannis"],
+      ["pistons04", "Cade Cunningham"],
+      ["duke", "Michael Jordan"],
+      ["top-picks", "Steph"],
+      ["sixth", "D-Wade"],
+      ["rookies", "Cooper Flagg"],
+    ];
+    for (const [id, answer] of examples) {
+      const pack = findSeed(id, "fast");
+      const result = matchedEntity(pack, id, answer);
+      expect(result, `${id} should accept ${answer}`).not.toMatch(/^(ambiguous|unrecognized|empty)$/);
+      expect(result).toBeTruthy();
+    }
+  });
+
   it("selects two main boards and five varied fast prompts on a reproducible seed", () => {
     for (let i = 0; i < 96; i++) {
       const seed = "2026-11-" + i;
