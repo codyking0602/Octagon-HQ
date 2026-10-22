@@ -2,6 +2,9 @@ import type { FamilyFeudEntity, FamilyFeudEntityKind, FamilyFeudPack, FamilyFeud
 import { assertFamilyFeudPack, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
 import { NBA_SPORTS_FEUD_MAIN_ADDITIONS, NBA_SPORTS_FEUD_FAST_ADDITIONS } from "./nbaSportsFeudExpansion";
 import { NBA_SPORTS_FEUD_MAIN_ROUND2, NBA_SPORTS_FEUD_FAST_ROUND2 } from "./nbaSportsFeudExpansionRound2";
+import { NBA_SPORTS_FEUD_MAIN_ROUND3 } from "./nbaSportsFeudExpansionRound3Main";
+import { NBA_SPORTS_FEUD_FAST_ROUND3 } from "./nbaSportsFeudExpansionRound3Fast";
+import { NBA_SPORTS_FEUD_ROUND3_ALIASES } from "./nbaSportsFeudExpansionRound3Aliases";
 
 /**
  * NBA Sports Feud editorial bank, v1.
@@ -1822,8 +1825,11 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
 };
 
 // Keep tested questions, supplement only with editorially approved additions.
-BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS, ...NBA_SPORTS_FEUD_MAIN_ROUND2);
-BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS, ...NBA_SPORTS_FEUD_FAST_ROUND2);
+BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS, ...NBA_SPORTS_FEUD_MAIN_ROUND2, ...NBA_SPORTS_FEUD_MAIN_ROUND3);
+BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS, ...NBA_SPORTS_FEUD_FAST_ROUND2, ...NBA_SPORTS_FEUD_FAST_ROUND3);
+for (const [name, aliases] of Object.entries(NBA_SPORTS_FEUD_ROUND3_ALIASES)) {
+  BANK.alias[name] = [...new Set([...(BANK.alias[name] ?? []), ...aliases])];
+}
 
 export const NBA_SPORTS_FEUD_MAIN = BANK.main;
 export const NBA_SPORTS_FEUD_FAST = BANK.fast;
@@ -1835,6 +1841,25 @@ function hash(value: string) {
 }
 /** Near-identical prompts must not coexist in a seven-question run. */
 export function nbaSportsFeudEditorialLane(category: string) {
+  // Third-pass lanes keep intuitive variations from repeating inside one run.
+  if (["nba-video-games","nba-film-cameos","courtside-celebrities"].includes(category)) return "basketball-culture";
+  if (["nba-player-duos","nba-team-era-nicknames"].includes(category)) return "iconic-nba-pairings";
+  if (["nba-trade-history","draft-night-swaps"].includes(category)) return "nba-trades";
+  if (["nba-draft-value","draft-history"].includes(category)) return "nba-draft-history";
+  if (category === "nba-award-types") return "awards";
+  if (category === "nba-iconic-rivalries") return "nba-playoff-history";
+  if (category === "nba-executives") return "nba-coaching";
+  if (category === "nba-geography") return "team-facts";
+  if (["arena-concessions","nba-game-sights","nba-game-sounds","nba-halftime-show","nba-intro-show",
+      "nba-game-pregame","nba-locker-room"].includes(category)) return "arena-experience";
+  if (["nba-fan-fashion","nba-fan-reactions","nba-fan-boo-reasons","nba-fan-collectibles"].includes(category)) return "nba-fan-experience";
+  if (category === "nba-scoreboard-details") return "basketball-basics";
+  if (["nba-game-workers","nba-tv-elements"].includes(category)) return "nba-broadcast-experience";
+  if (["nba-stoppage-reasons","nba-foul-types","nba-possession-mistakes","nba-official-actions"].includes(category)) return "basketball-basics";
+  if (["nba-sideline-coaching","nba-substitution-reasons"].includes(category)) return "nba-coaching";
+  if (["nba-free-throw-routine","nba-ball-handling-moves","nba-defensive-plays",
+      "nba-court-hardware"].includes(category)) return "basketball-basics";
+  if (["nba-allstar-weekend","nba-draft-rituals","nba-title-celebrations"].includes(category)) return "nba-special-events";
   if (/(?:-stars|-players|-legends|-champs)$/.test(category) ||
       category === "lebron-teammates" || category === "clippers-stars") return "franchise-associations";
   if (["champion-franchises","finalists","conference-teams","animal-teams","franchise-history"].includes(category)) return "team-facts";

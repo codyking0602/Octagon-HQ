@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertFamilyFeudPack, matchFamilyFeudAnswer, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
+import { matchFamilyFeudAnswer, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
 import {
   NBA_SPORTS_FEUD_MAIN,
   NBA_SPORTS_FEUD_FAST,
@@ -26,8 +26,8 @@ function accepted(id: string, group: "main" | "fast", guess: string) {
 
 describe("NBA Feud expanded question-bank editorial integrity", () => {
   it("has eight distinctive ranked names and valid extras on all curated questions", () => {
-    expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(54);
-    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(78);
+    expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(65);
+    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(105);
     expect(new Set(ALL.map(q => q.id)).size).toBe(ALL.length);
     expect(new Set(ALL.map(q => normalizeFamilyFeudInput(q.prompt))).size).toBe(ALL.length);
     for (const q of ALL) {
@@ -110,25 +110,81 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
     }
   });
 
-  it("runs 6,000 complete varied seven-question seeds and checks alias collisions", () => {
+
+  it("accepts recognisable NBA culture, pairings and obvious Fast Money language", () => {
+    expect(accepted("two-k-covers", "main", "Wemby")).toBe("Victor Wembanyama");
+    expect(accepted("two-k-covers", "main", "D Wade")).toBe("Dwyane Wade");
+    expect(accepted("two-k-covers", "main", "Dirk")).toBe("Dirk Nowitzki");
+    expect(accepted("two-k-covers", "main", "Kareem")).toBe("Kareem Abdul-Jabbar");
+    expect(accepted("two-k-covers", "main", "Vince Carter")).toBe("Vince Carter");
+    expect(accepted("two-k-covers", "main", "Carmelo Anthony")).toBe("Carmelo Anthony");
+    expect(accepted("space-jam-cast", "main", "Sharone Wright")).toBe("Sharone Wright");
+    expect(accepted("space-jam-cast", "main", "Muggsy Bogues")).toBe("Muggsy Bogues");
+    expect(accepted("famous-duos", "main", "Kobe and Shaq"))
+      .toBe("Shaquille O'Neal and Kobe Bryant");
+    expect(accepted("famous-duos", "main", "Klay and Steph"))
+      .toBe("Stephen Curry and Klay Thompson");
+    expect(accepted("named-nba-eras", "main", "Heatles")).toBe("Big Three Heat");
+    expect(accepted("nba-award-labels", "main", "MVP")).toBe("Most Valuable Player");
+    expect(accepted("multi-franchise-states", "main", "Kings")).toBe("Sacramento Kings");
+    expect(accepted("arena-food", "fast", "coke")).toBe("Soda");
+    expect(accepted("fan-gear", "fast", "baseball cap")).toBe("Team hat");
+    expect(accepted("basketball-hardware", "fast", "rim")).toBe("Hoop");
+    expect(accepted("before-free-throw", "fast", "bounce twice")).toBe("Dribble the ball");
+    expect(accepted("nba-allstar-events", "fast", "3 point contest"))
+      .toBe("Three-Point Contest");
+    expect(accepted("nba-scoreboard", "fast", "quarter")).toBe("Quarter");
+    expect(accepted("nba-fan-collect", "fast", "signed photos")).toBe("Signed photos");
+  });
+
+  it("keeps new bounded and subjective boards distinct from previous questions", () => {
+    const thirdPassMain = [
+      "two-k-covers","space-jam-cast","famous-duos","blockbuster-trades","draft-steals",
+      "named-nba-eras","nba-award-labels","nba-courtside-fans","jordan-playoff-rivals",
+      "former-players-execs","multi-franchise-states",
+    ];
+    const thirdPassFast = [
+      "arena-food","arena-sights","arena-sounds","fan-gear","big-shot-crowd","crowd-boos",
+      "nba-halftime","nba-introductions","nba-game-jobs","nba-scoreboard","nba-locker",
+      "nba-whistle","common-fouls","turnover-reasons","ref-on-court","coach-shouts",
+      "nba-subs","before-free-throw","dribble-moves","defense-actions","nba-allstar-events",
+      "nba-draft-night","nba-championship-party","nba-tv-broadcast","basketball-hardware",
+      "nba-pregame","nba-fan-collect",
+    ];
+    expect(thirdPassMain).toHaveLength(11);
+    expect(thirdPassFast).toHaveLength(27);
+    expect(NBA_SPORTS_FEUD_MAIN.filter(q => thirdPassMain.includes(q.id))).toHaveLength(11);
+    expect(NBA_SPORTS_FEUD_FAST.filter(q => thirdPassFast.includes(q.id))).toHaveLength(27);
+    expect(NBA_SPORTS_FEUD_MAIN.length + NBA_SPORTS_FEUD_FAST.length).toBe(170);
+  });
+
+  it("runs 20,000 complete varied seven-question seeds and checks alias collisions", () => {
     const frequencies = new Map<string, number>();
     const distinctSequences = new Set<string>();
-    for (let i = 0; i < 6_000; i++) {
+    const auditedAliasQuestions = new Set<string>();
+    const byId = new Map(ALL.map(q => ["nba-feud-" + q.id, q]));
+    for (let i = 0; i < 20_000; i++) {
       const seed = "nba-feud-audit-" + i;
+      // The pack constructor itself calls assertFamilyFeudPack; do not run
+      // the expensive validation a second time on every seeded trial.
       const pack = buildNbaSportsFeudPack(seed);
-      expect(() => assertFamilyFeudPack(pack)).not.toThrow();
       const questions = [...pack.mainBoards, ...pack.fastMoney];
       expect(questions).toHaveLength(7);
       const ids = questions.map(q => q.id);
       expect(new Set(ids).size).toBe(7);
-      const categories = ids.map(id => ALL.find(q => "nba-feud-" + q.id === id)!.category);
+      const categories = ids.map(id => byId.get(id)!.category);
       expect(new Set(categories).size).toBe(7);
       expect(new Set(categories.map(nbaSportsFeudEditorialLane)).size).toBe(7);
       distinctSequences.add(ids.join("|"));
       for (const question of questions) {
         frequencies.set(question.id, (frequencies.get(question.id) ?? 0) + 1);
+        // A question's candidate universe never varies by seed. Validate its
+        // canonical names and aliases once, rather than 20,000 times.
+        if (auditedAliasQuestions.has(question.id)) continue;
+        auditedAliasQuestions.add(question.id);
         const tokens = new Map<string, string>();
-        for (const entity of pack.entities.filter(e => question.candidateIds.includes(e.id))) {
+        const candidates = new Set(question.candidateIds);
+        for (const entity of pack.entities.filter(e => candidates.has(e.id))) {
           for (const label of [entity.displayName, ...(entity.aliases ?? [])]) {
             const key = normalizeFamilyFeudInput(label);
             const prior = tokens.get(key);
@@ -139,8 +195,8 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
         }
       }
     }
-    expect(distinctSequences.size).toBe(6_000);
-    // No dead questions across the full pool, even after semantic collisions.
+    expect(distinctSequences.size).toBe(20_000);
+    expect(auditedAliasQuestions.size).toBe(ALL.length);
     for (const q of ALL) expect(frequencies.get("nba-feud-" + q.id) ?? 0, q.id).toBeGreaterThan(0);
-  });
+  }, 120_000);
 });
