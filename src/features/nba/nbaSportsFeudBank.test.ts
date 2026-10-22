@@ -18,7 +18,7 @@ import {
 } from "./nbaSportsFeudBank";
 
 function findSeed(questionId: string, side: "main" | "fast") {
-  for (let i = 0; i < 256; i++) {
+  for (let i = 0; i < 2048; i++) {
     const seed = "quality-" + i;
     const pack = buildNbaSportsFeudPack(seed);
     const questions = side === "main" ? pack.mainBoards : pack.fastMoney;
@@ -36,8 +36,8 @@ function matchedEntity(pack: ReturnType<typeof buildNbaSportsFeudPack>, question
 
 describe("NBA Sports Feud curated-bank and unchanged engine contract", () => {
   it("maintains a substantial, distinct authored pool and editorial scoring ladders", () => {
-    expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(16);
-    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(32);
+    expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(43);
+    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(62);
     expect(NBA_SPORTS_FEUD_MAIN_POINTS.slice(0, 4).reduce((a, b) => a + b, 0)).toBe(30);
     expect(NBA_SPORTS_FEUD_FAST_POINTS[0]).toBe(8);
     for (const question of [...NBA_SPORTS_FEUD_MAIN, ...NBA_SPORTS_FEUD_FAST]) {
@@ -48,9 +48,9 @@ describe("NBA Sports Feud curated-bank and unchanged engine contract", () => {
     }
   });
 
-  it("keeps all 32 Fast Money prompts answerable without season-roster or Finals recall", () => {
-    const narrowTrivia = /\\b(?:19|20)\\d{2}\\b|\\b(?:finals|playoff series|game [1-7]|championship roster)\\b/i;
-    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(32);
+  it("keeps all 62 Fast Money prompts answerable without season-roster or Finals recall", () => {
+    const narrowTrivia = /\b(?:19|20)\d{2}\b|\b(?:finals|playoff series|game [1-7]|championship roster)\b/i;
+    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(62);
     for (const question of NBA_SPORTS_FEUD_FAST) {
       expect(question.prompt).not.toMatch(narrowTrivia);
       expect(question.prompt).toMatch(/^Name (?:an? |a |a famous |a well-known )/);
