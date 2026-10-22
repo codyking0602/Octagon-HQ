@@ -6,6 +6,8 @@ import {
   MILLIONAIRE_TIME_BANK_MS,
   millionaireCasualRun,
   millionaireHostAsset,
+  nextNbaMillionaireHostNumber,
+  NBA_MILLIONAIRE_HOST_ROTATION_KEY,
   millionaireHostNumber,
   millionaireTimeLabel,
   millionaireTimeoutTransition,
@@ -84,6 +86,22 @@ describe("Millionaire private casual runtime", () => {
     ];
     expect(new Set(numbers.slice(0, 3))).toEqual(new Set([1, 2, 3]));
     expect(numbers[3]).toBe(numbers[0]);
+  });
+
+  it("rotates real NBA hosts on successive playthrough starts, even on the same day", () => {
+    const saved = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => saved.get(key) ?? null,
+      setItem: (key: string, value: string) => { saved.set(key, value); },
+    };
+    const slots = Array.from({ length: 7 }, () => nextNbaMillionaireHostNumber(storage));
+    expect(slots).toEqual([1, 2, 3, 1, 2, 3, 1]);
+    expect(saved.get(NBA_MILLIONAIRE_HOST_ROTATION_KEY)).toBe("1");
+    expect(slots.slice(0, 3).map(slot => millionaireHostAsset("nba", "2026-10-21", slot))).toEqual([
+      "/assets/millionaire/NBA 1.webp",
+      "/assets/millionaire/NBA 2.webp",
+      "/assets/millionaire/NBA 3.webp",
+    ]);
   });
 
   it("uses the approved sport-scoped background hosts including the MLB owner plate", () => {
