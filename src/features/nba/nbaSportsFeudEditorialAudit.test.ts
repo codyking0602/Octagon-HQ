@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertFamilyFeudPack, matchFamilyFeudAnswer, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
+import { matchFamilyFeudAnswer, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
 import {
   NBA_SPORTS_FEUD_MAIN,
   NBA_SPORTS_FEUD_FAST,
