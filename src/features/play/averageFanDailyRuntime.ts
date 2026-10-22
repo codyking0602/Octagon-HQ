@@ -12,7 +12,6 @@ import {
   scoreAverageFanFinal,
   type AverageFanFan,
   type AverageFanQuestion,
-  type AverageFanSport,
 } from "../games/averageFanEngine";
 import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionBoardTopics } from "../games/averageFanContentBanks";
 import { stableLineupHash } from "./lineupModel";
