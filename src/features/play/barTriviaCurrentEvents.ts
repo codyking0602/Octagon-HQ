@@ -680,7 +680,7 @@ export const BAR_TRIVIA_CURRENT_EVENT_QUESTIONS: readonly BarTriviaQuestion[] = 
     difficulty: "easy",
     category: "Canadian Main Events",
     prompt: "Which Canadian welterweight stopped Joaquin Buckley with a knee at UFC Edmonton in October 2026?",
-    choices: ["Mike Malott", "Rory MacDonald", "Kyle Nelson", "Jasmine Jasudavicius"],
+    choices: ["Mike Malott", "Rory MacDonald", "Aiemann Zahabi", "Charles Jourdain"],
     answer: "Mike Malott",
     explanation: "Mike Malott knocked out Joaquin Buckley in the second round of the Edmonton main event.",
     contentType: "current-event",
