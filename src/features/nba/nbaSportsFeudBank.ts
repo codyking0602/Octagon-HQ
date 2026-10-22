@@ -1459,7 +1459,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     "Crypto.com Arena": ["Staples Center","Staples","Crypto Arena"],
     "Madison Square Garden": ["MSG","The Garden"],
     "American Airlines Center": ["AAC","Dallas arena"],
-    "Kaseya Center": ["FTX Arena","American Airlines Arena","Miami arena","Amway Center Miami"],
+    "Kaseya Center": ["FTX Arena","American Airlines Arena","Miami arena"],
     "Kia Center": ["Amway Center","Orlando arena"],
     "Rocket Arena": ["Rocket Mortgage FieldHouse","Quicken Loans Arena","Gund Arena"],
     "Mortgage Matchup Center": ["Footprint Center","Talking Stick Resort Arena","US Airways Center"],
