@@ -8,11 +8,20 @@ import { assertFamilyFeudPack, normalizeFamilyFeudInput } from "../games/familyF
  * familiar stars / teams first, then less immediate but clearly correct answers.
  * The fixed HQ ladders preserve the Football/UFC Sports Feud scoring contract.
  *
- * Objective award, roster, and championship claims have been checked against
- * NBA history pages: nba.com/news/history-nba-champions,
- * nba.com/news/history-finals-mvp-winners, and
- * nba.com/news/history-mvp-award-winners. Each question defines its own
- * answer universe to avoid cross-question identity collisions.
+ * Testing-bank editorial gate (Oct 2026):
+ * - Fast Money asks questions an average NBA fan can immediately understand
+ *   and answer without remembering a single Finals, exact roster year, or
+ *   specialist statistical cutoff. No calendar-year/season clues in Fast Money.
+ * - Eight ranked examples emphasize highly recognizable answers. Other
+ *   defensible answers, spelling variants, and nicknames remain valid.
+ * - Main rounds may include a smaller number of challenging topics.
+ * - Rankings are editorial recognition judgments, never fabricated survey data.
+ *
+ * Objective award and championship claims use official NBA history pages:
+ * nba.com/news/history-rookie-of-the-year-winners,
+ * nba.com/news/history-nba-champions, nba.com/news/history-finals-mvp-winners,
+ * and nba.com/news/history-mvp-award-winners.
+ * Each question defines its own answer universe for collision-safe matching.
  *
  * Main boards show four correct guesses, not necessarily the four top ranks.
  * Any of the eight ranked answers can fill a slot; lower-ranked valid answers
@@ -97,9 +106,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Denver Nuggets",
         "Philadelphia 76ers",
         "New York Knicks",
-        "Portland Trail Blazers",
-        "Washington Wizards",
-        "Sacramento Kings"
+        "Portland Trail Blazers"
       ]
     },
     {
@@ -1314,7 +1321,8 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Vince Carter",
         "Chris Webber",
         "Tyreke Evans",
-        "Brandon Roy"
+        "Brandon Roy",
+        "Cooper Flagg"
       ]
     }
   ],
@@ -1563,6 +1571,15 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     "Nene": [
       "Nenê",
       "Nene Hilario"
+    ],
+    "Tyronn Lue": [
+      "Ty Lue"
+    ],
+    "Isiah Thomas": [
+      "Zeke"
+    ],
+    "Mike D'Antoni": [
+      "Mike Dantoni"
     ]
   }
 };
