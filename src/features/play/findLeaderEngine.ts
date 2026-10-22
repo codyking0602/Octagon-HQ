@@ -18,7 +18,7 @@ import {
   isUfcCareerWin,
 } from "./ufcCareerStats";
 
-const VERSION = "find-leader-v6-20261022-division-bout-scoped";
+// Keep the established lineup seed stable so historical published Daily boards\n// remain reproducible; the new content version identifies corrected future rounds.\nconst VERSION = "find-leader-v5-20260819-plausible-decoys";
 export const FIND_LEADER_DAILY_CONTENT_VERSION = "find-leader-daily-v3-division-bout-scoped" as const;
 const DAILY_ANCHOR = "2026-07-16";
 const NO_REPEAT_SELECTIONS = 14;
