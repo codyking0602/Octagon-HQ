@@ -84,7 +84,11 @@ jobs:
           canvas = Image.new("RGB", (320 * 3, 220 * 3), "#111826")
           pen = ImageDraw.Draw(canvas)
           for i, filename in enumerate(paths):
-            pic = Image.open(Path("public/assets/millionaire") / filename).convert("RGBA")
+            try:
+              pic = Image.open(Path("public/assets/millionaire") / filename).convert("RGBA")
+            except Exception as e:
+              print("HOST_PREVIEW_SKIPPED=" + filename + ": " + str(e))
+              continue
             pic.thumbnail((314, 182))
             x, y = (i % 3) * 320, (i // 3) * 220
             host = Image.new("RGBA", (320, 188), "#1c2939")
