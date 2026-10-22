@@ -13,6 +13,8 @@ import {
   validateAverageFanQuestion,
 } from "../games/averageFanEngine";
 import { nbaAverageFanQuestionBank } from "../games/nbaAverageFanBank";
+import { NBA_MILLIONAIRE_QUESTION_BANK } from "./nbaMillionaireBank";
+import { NBA_SPORTS_FEUD_MAIN, NBA_SPORTS_FEUD_FAST } from "./nbaSportsFeudBank";
 import { averageFanQuestionBoardTopics } from "../games/averageFanContentBanks";
 import { buildAverageFanCasualBoard } from "../play/averageFanCasualBoard";
 import { nbaAverageFanChicagoDay, nbaAverageFanPreviewSeed } from "./NbaAverageFanPage";
@@ -21,8 +23,8 @@ const bank = nbaAverageFanQuestionBank;
 const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
 describe("NBA Average Fan audited question bank", () => {
-  it("contains a durable, balanced 150+ question inventory with four grades and protected Finals", () => {
-    expect(bank.length).toBeGreaterThanOrEqual(150);
+  it("keeps a quality-first replayable NBA inventory after removing repeated Millionaire facts", () => {
+    expect(bank.length).toBeGreaterThanOrEqual(120);
     expect(new Set(bank.map((q) => q.id)).size).toBe(bank.length);
     expect(new Set(bank.map((q) => normalize(q.prompt))).size).toBe(bank.length);
     expect(bank.every((q) => q.sport === "nba")).toBe(true);
@@ -31,13 +33,13 @@ describe("NBA Average Fan audited question bank", () => {
     const ordinary = bank.filter((q) => !q.protectedFinal);
     for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
       const tier = ordinary.filter((q) => q.grade === grade);
-      expect(tier.length).toBeGreaterThanOrEqual(30);
+      expect(tier.length).toBeGreaterThanOrEqual(26);
       for (const subject of AVERAGE_FAN_SUBJECTS.nba) {
-        expect(tier.filter((q) => q.subject === subject).length).toBeGreaterThanOrEqual(6);
+        expect(tier.filter((q) => q.subject === subject).length).toBeGreaterThanOrEqual(4);
       }
     }
     const finals = bank.filter((q) => q.protectedFinal);
-    expect(finals.length).toBeGreaterThanOrEqual(12);
+    expect(finals.length).toBeGreaterThanOrEqual(10);
     expect(finals.every((q) => q.grade === 5)).toBe(true);
   });
 
@@ -69,11 +71,59 @@ describe("NBA Average Fan audited question bank", () => {
     const finals = bank.filter((q) => q.protectedFinal);
     const uniqueFacts = new Set(finals.map((q) => `${normalize(q.answer)}|${normalize(q.prompt)}`));
     expect(uniqueFacts.size).toBe(finals.length);
-    expect(finals.filter((q) => /2004 NBA Finals MVP/i.test(q.prompt))).toHaveLength(1);
+    expect(finals.filter((q) => /2004 NBA Finals MVP/i.test(q.prompt))).toHaveLength(0);
     expect(finals.filter((q) => /1971 Milwaukee Bucks defeat|Milwaukee sweep/i.test(q.prompt))).toHaveLength(0);
     expect(bank.find((q) => /led the NBA in scoring at age 37/i.test(q.prompt))).toBeUndefined();
   });
 });
+
+
+  it("guards NBA Average Fan from repeated locked Millionaire facts and identical Sports Feud prompts", () => {
+    const normalizeFact = (value: string) => normalize(value)
+      .replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+    const stop = new Set(["which", "the", "with", "this", "that", "played", "name", "award",
+      "season", "from", "when", "what", "player", "team", "game", "were", "regular", "finals"]);
+    const words = (prompt: string) => new Set(normalizeFact(prompt).split(" ").filter((word) =>
+      word.length >= 4 && !stop.has(word)));
+    const millionaire = NBA_MILLIONAIRE_QUESTION_BANK.flat();
+    const feud = [...NBA_SPORTS_FEUD_MAIN, ...NBA_SPORTS_FEUD_FAST];
+    const overlap: string[] = [];
+    for (const q of bank) {
+      const prompt = normalizeFact(q.prompt);
+      const tokens = words(q.prompt);
+      for (const other of millionaire) {
+        const otherPrompt = normalizeFact(other.prompt);
+        if (prompt === otherPrompt) {
+          overlap.push(`${q.id} repeats Millionaire ${other.id}`);
+          continue;
+        }
+        if (normalizeFact(q.answer) !== normalizeFact(other.answer)) continue;
+        const otherTokens = words(other.prompt);
+        const union = new Set([...tokens, ...otherTokens]);
+        const shared = [...tokens].filter((word) => otherTokens.has(word)).length;
+        if (union.size && shared / union.size >= 0.37) {
+          overlap.push(`${q.id} repeats Millionaire ${other.id}`);
+        }
+      }
+      for (const other of feud) {
+        if (prompt === normalizeFact(other.prompt)) overlap.push(`${q.id} repeats Sports Feud ${other.id}`);
+      }
+    }
+    expect(overlap).toEqual([]);
+  });
+
+  it("keeps the NBA content evergreen until verified current events can be added without cross-game reuse", () => {
+    const events = bank.filter((q) => q.contentType === "current-event");
+    for (const event of events) {
+      expect(event.sourceId).toBeTruthy();
+      expect(event.sourceUrl).toMatch(/^https:\/\//);
+      expect(event.verifiedAt).toBeTruthy();
+      expect(event.expiresAt).toBeTruthy();
+      expect(event.grade).toBeGreaterThan(2);
+    }
+    // No NBA current-event ingestion or official NBA Daily publication is active in this preview PR.
+    expect(events).toHaveLength(0);
+  });
 
 describe("NBA Average Fan retained gameplay and safe owner preview", () => {
   it("builds 128 seeded Casual boards with two questions per grade and a separate Final", () => {
