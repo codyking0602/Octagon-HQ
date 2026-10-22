@@ -45,7 +45,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource.match(/className="millionaire-nba-host"/g)).toHaveLength(1);
     expect(pageSource).toContain('className="millionaire-stage-canvas"');
     expect(pageSource).toContain('className="millionaire-stage-background"');
-    expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);');
+    expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : league === "nba" ? MILLIONAIRE_NBA_SAFE_HOST_ASSET : millionaireHostAsset(league);');
     expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-ladder \{[\s\S]*?left: 1196px;[\s\S]*?top: 116px;/);
     expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-question \{[\s\S]*?left: 266px;[\s\S]*?top: 510px;/);
     expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-answers \{[\s\S]*?left: 252px;[\s\S]*?top: 650px;/);
@@ -55,7 +55,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
 
   it("uses the uploaded composed MLB stage plate exactly like the existing sport plates", () => {
     expect(pageSource).toContain('const MILLIONAIRE_MLB_STAGE_PLATE = "/assets/millionaire/ABD98D28-955F-4D95-B067-89E3D512952C.png";');
-    expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);');
+    expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : league === "nba" ? MILLIONAIRE_NBA_SAFE_HOST_ASSET : millionaireHostAsset(league);');
     expect(pageSource).toContain('className="millionaire-stage-background"');
     expect(pageSource).not.toContain("millionaire-stage-host-slot");
     expect(pageSource).not.toContain("millionaire-stage-host");
