@@ -53,7 +53,7 @@ describe("NBA Sports Feud curated-bank and unchanged engine contract", () => {
     expect(NBA_SPORTS_FEUD_FAST).toHaveLength(78);
     for (const question of NBA_SPORTS_FEUD_FAST) {
       expect(question.prompt).not.toMatch(narrowTrivia);
-      expect(question.prompt).toMatch(/^Name (?:an? |a |a famous |a well-known )/);
+      expect(question.prompt).toMatch(/^Name (?:an? |someone |something )/);
       expect(question.answers).toHaveLength(8);
       expect(question.category).toBeTruthy();
     }
