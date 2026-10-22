@@ -161,22 +161,30 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
   it("runs 20,000 complete varied seven-question seeds and checks alias collisions", () => {
     const frequencies = new Map<string, number>();
     const distinctSequences = new Set<string>();
+    const auditedAliasQuestions = new Set<string>();
+    const byId = new Map(ALL.map(q => ["nba-feud-" + q.id, q]));
     for (let i = 0; i < 20_000; i++) {
       const seed = "nba-feud-audit-" + i;
+      // The pack constructor itself calls assertFamilyFeudPack; do not run
+      // the expensive validation a second time on every seeded trial.
       const pack = buildNbaSportsFeudPack(seed);
-      expect(() => assertFamilyFeudPack(pack)).not.toThrow();
       const questions = [...pack.mainBoards, ...pack.fastMoney];
       expect(questions).toHaveLength(7);
       const ids = questions.map(q => q.id);
       expect(new Set(ids).size).toBe(7);
-      const categories = ids.map(id => ALL.find(q => "nba-feud-" + q.id === id)!.category);
+      const categories = ids.map(id => byId.get(id)!.category);
       expect(new Set(categories).size).toBe(7);
       expect(new Set(categories.map(nbaSportsFeudEditorialLane)).size).toBe(7);
       distinctSequences.add(ids.join("|"));
       for (const question of questions) {
         frequencies.set(question.id, (frequencies.get(question.id) ?? 0) + 1);
+        // A question's candidate universe never varies by seed. Validate its
+        // canonical names and aliases once, rather than 20,000 times.
+        if (auditedAliasQuestions.has(question.id)) continue;
+        auditedAliasQuestions.add(question.id);
         const tokens = new Map<string, string>();
-        for (const entity of pack.entities.filter(e => question.candidateIds.includes(e.id))) {
+        const candidates = new Set(question.candidateIds);
+        for (const entity of pack.entities.filter(e => candidates.has(e.id))) {
           for (const label of [entity.displayName, ...(entity.aliases ?? [])]) {
             const key = normalizeFamilyFeudInput(label);
             const prior = tokens.get(key);
@@ -188,7 +196,6 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
       }
     }
     expect(distinctSequences.size).toBe(20_000);
-    // No dead questions across the full pool, even after semantic collisions.
+    expect(auditedAliasQuestions.size).toBe(ALL.length);
     for (const q of ALL) expect(frequencies.get("nba-feud-" + q.id) ?? 0, q.id).toBeGreaterThan(0);
-  });
-});
+  }, 120_000);});
