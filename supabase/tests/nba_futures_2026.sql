@@ -31,6 +31,17 @@ begin
     raise exception 'NBA Futures may not check the calendar deadline for permissions';
   end if;
   update public.nba_futures_lock_control set manually_locked=false where season=2026;
+  -- After lock, response includes other members' saved predictions, not just
+  -- their names; before lock the RPC still returns no opponent entries.
+  if position('''picks'',p.picks' in
+    pg_get_functiondef('public.get_nba_futures(integer)'::regprocedure)) = 0
+    or position('p.profile_id<>v_profile' in
+    pg_get_functiondef('public.get_nba_futures(integer)'::regprocedure)) = 0
+    or position('if v_locked then' in
+    pg_get_functiondef('public.get_nba_futures(integer)'::regprocedure)) = 0
+  then
+    raise exception 'NBA locked members must be revealable only after the server lock';
+  end if;
   perform public.validate_nba_futures('{"winTotals":{"OKC":"over"},"playoffTeams":[],"conferenceFinalists":[],"finalsTeams":[],"oneSeeds":[]}'::jsonb);
   if public.nba_futures_complete('{"winTotals":{}}'::jsonb) then
     raise exception 'incomplete NBA Futures must remain pending'; end if;

@@ -3,7 +3,7 @@ import { NBA_SEASON, type NbaFuturesPicks, type NbaTeam } from "./nbaFutures";
 
 export type NbaFuturesSnapshot = {
   season:number; locked:boolean; lock_at:string; own:NbaFuturesPicks|null;
-  participants:number; entries:{profile_id:string;display_name:string;complete:boolean}[];
+  participants:number; entries:{profile_id:string;display_name:string;complete:boolean;picks:NbaFuturesPicks}[];
   lines:NbaTeam[];
 };
 export async function loadNbaFutures():Promise<NbaFuturesSnapshot> {
