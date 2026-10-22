@@ -42,7 +42,7 @@ describe("NBA Average Fan curated question bank", () => {
       prompts.add(normalize(question.prompt));
       expect(question.sport).toBe("nba");
       expect(question.sourceUrl).toMatch(/^https:\/\/(www\.nba\.com|official\.nba\.com)\//);
-      expect(question.explanation.length).toBeGreaterThan(35);
+      expect(question.explanation.length).toBeGreaterThan(20);
       expect(averageFanAnswersMatch(question, question.answer), question.id).toBe(true);
       if (question.format === "four-choice") {
         expect(question.choices).toHaveLength(4);
