@@ -111,7 +111,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "mvp",
-      "category": "regular-season-mvp",
+      "category": "mvp-winners",
       "prompt": "Name an NBA player who has won regular-season MVP.",
       "kind": "person",
       "answers": [
@@ -204,7 +204,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "seventy",
-      "category": "seventy-point-games",
+      "category": "famous-scorers",
       "prompt": "Name a player who scored at least 70 points in a single NBA game.",
       "kind": "person",
       "answers": [
@@ -224,7 +224,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "multi-mvp",
-      "category": "multiple-mvps",
+      "category": "mvp-winners",
       "prompt": "Name an NBA player who won the regular-season MVP award at least twice.",
       "kind": "person",
       "answers": [
@@ -250,7 +250,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "dunk-winners",
-      "category": "dunk-contest",
+      "category": "dunking",
       "prompt": "Name a player who won the NBA Slam Dunk Contest.",
       "kind": "person",
       "answers": [
@@ -377,7 +377,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "bulls-stars",
-      "category": "bulls-allstars",
+      "category": "bulls-players",
       "prompt": "Name a player who made an NBA All-Star team while playing for the Chicago Bulls.",
       "kind": "person",
       "answers": [
@@ -398,7 +398,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "lakers-champs",
-      "category": "lakers-champions",
+      "category": "lakers-players",
       "prompt": "Name a player who won an NBA championship with the Lakers.",
       "kind": "person",
       "answers": [
@@ -425,7 +425,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "warriors-champs",
-      "category": "warriors-champions",
+      "category": "warriors-players",
       "prompt": "Name a player who won an NBA title with Golden State from 2015 through 2022.",
       "kind": "person",
       "answers": [
@@ -448,7 +448,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "spurs-champs",
-      "category": "spurs-champions",
+      "category": "spurs-players",
       "prompt": "Name a player who won an NBA title with the Spurs between 1999 and 2014.",
       "kind": "person",
       "answers": [
@@ -469,7 +469,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "three-point-contest",
-      "category": "three-point-winners",
+      "category": "three-point-shooting",
       "prompt": "Name a player who has won the NBA Three-Point Contest.",
       "kind": "person",
       "answers": [
@@ -495,7 +495,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
   "fast": [
     {
       "id": "lakers-legends",
-      "category": "lakers-legends",
+      "category": "lakers-players",
       "prompt": "Name a Lakers legend.",
       "kind": "person",
       "answers": [
@@ -538,7 +538,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "shooters",
-      "category": "three-point-shooters",
+      "category": "three-point-shooting",
       "prompt": "Name an NBA player famous for shooting threes.",
       "kind": "person",
       "answers": [
@@ -639,7 +639,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "warriors",
-      "category": "warriors-stars",
+      "category": "warriors-players",
       "prompt": "Name a star who played for the Golden State Warriors.",
       "kind": "person",
       "answers": [
@@ -885,7 +885,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "spurs",
-      "category": "spurs-stars",
+      "category": "spurs-players",
       "prompt": "Name a star who played for the San Antonio Spurs.",
       "kind": "person",
       "answers": [
@@ -1219,7 +1219,7 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
     },
     {
       "id": "dunkers",
-      "category": "famous-dunkers",
+      "category": "dunking",
       "prompt": "Name an NBA player known for spectacular dunks.",
       "kind": "person",
       "answers": [
