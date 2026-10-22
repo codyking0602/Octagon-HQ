@@ -50,7 +50,7 @@
 | 1 | Name an NBA team in the Eastern Conference. | 1. Boston Celtics; 2. New York Knicks; 3. Chicago Bulls; 4. Miami Heat; 5. Milwaukee Bucks; 6. Cleveland Cavaliers; 7. Philadelphia 76ers; 8. Indiana Pacers | 7 |
 | 2 | Name an NBA franchise that has never won an NBA championship. | 1. Los Angeles Clippers; 2. Phoenix Suns; 3. Minnesota Timberwolves; 4. Brooklyn Nets; 5. Orlando Magic; 6. Indiana Pacers; 7. Utah Jazz; 8. Charlotte Hornets | 2 |
 | 3 | Name a team that won an NBA championship between 2010 and 2026. | 1. Los Angeles Lakers; 2. Golden State Warriors; 3. Miami Heat; 4. Boston Celtics; 5. Cleveland Cavaliers; 6. Dallas Mavericks; 7. San Antonio Spurs; 8. Milwaukee Bucks | 4 |
-| 4 | Name an NBA player who won Sixth Man of the Year. | 1. Jamal Crawford; 2. Lou Williams; 3. James Harden; 4. Manu Ginobili; 5. Jason Terry; 6. Tyler Herro; 7. Naz Reid; 8. J.R. Smith | 26 |
+| 4 | Name an NBA player who won Sixth Man of the Year. | 1. Jamal Crawford; 2. Lou Williams; 3. James Harden; 4. Manu Ginobili; 5. Jason Terry; 6. Tyler Herro; 7. Naz Reid; 8. J.R. Smith | 29 |
 | 5 | Name a player on the USA men's 2008 Olympic basketball team. | 1. Kobe Bryant; 2. LeBron James; 3. Dwyane Wade; 4. Carmelo Anthony; 5. Chris Paul; 6. Dwight Howard; 7. Chris Bosh; 8. Jason Kidd | 4 |
 | 6 | Name a famous NBA player who played at Duke. | 1. Kyrie Irving; 2. Jayson Tatum; 3. Zion Williamson; 4. Paolo Banchero; 5. Brandon Ingram; 6. Grant Hill; 7. JJ Redick; 8. RJ Barrett | 14 |
 | 7 | Name an NBA player whose father also played in the NBA. | 1. Stephen Curry; 2. Kobe Bryant; 3. Klay Thompson; 4. Jalen Brunson; 5. Bronny James; 6. Domantas Sabonis; 7. Gary Payton II; 8. Austin Rivers | 14 |
