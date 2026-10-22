@@ -50,6 +50,11 @@ export function buildAverageFanCasualBoard(
   ));
   const selected: AverageFanQuestion[] = [];
   const subjectCounts = new Map<string, number>();
+  const topicCache = sport === "nba"
+    ? new Map(bank.map((question) => [question.id, averageFanQuestionBoardTopics(question)] as const))
+    : null;
+  const topicsFor = (question: AverageFanQuestion) => topicCache?.get(question.id)
+    ?? averageFanQuestionBoardTopics(question);
 
   for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
     const gradeSelected: AverageFanQuestion[] = [];
@@ -62,6 +67,9 @@ export function buildAverageFanCasualBoard(
     }
 
     while (gradeSelected.length < 2) {
+      const usedTopics = sport === "nba"
+        ? new Set([...selected, ...gradeSelected].flatMap(topicsFor))
+        : null;
       const candidates = rankCandidates(
         boardPool.filter((question) => (
           question.grade === grade
@@ -70,9 +78,8 @@ export function buildAverageFanCasualBoard(
         )),
         `${seed}|grade-${grade}|pick-${gradeSelected.length}`,
       ).sort((left, right) => {
-        if (sport === "nba") {
-          const usedTopics = new Set([...selected, ...gradeSelected].flatMap(averageFanQuestionBoardTopics));
-          const overlap = (question: AverageFanQuestion) => averageFanQuestionBoardTopics(question)
+        if (usedTopics) {
+          const overlap = (question: AverageFanQuestion) => topicsFor(question)
             .filter((topic) => usedTopics.has(topic)).length;
           const collisionDelta = overlap(left) - overlap(right);
           if (collisionDelta) return collisionDelta;
@@ -119,9 +126,9 @@ export function buildAverageFanCasualBoard(
 
   const evergreenFinals = finalEligible.filter((question) => question.contentType === "evergreen");
   const eligibleFinals = evergreenFinals.length ? evergreenFinals : finalEligible;
-  const boardTopics = new Set(selected.flatMap(averageFanQuestionBoardTopics));
+  const boardTopics = new Set(selected.flatMap(topicsFor));
   const nonoverlappingFinals = sport === "nba"
-    ? eligibleFinals.filter((question) => averageFanQuestionBoardTopics(question)
+    ? eligibleFinals.filter((question) => topicsFor(question)
         .every((topic) => !boardTopics.has(topic)))
     : [];
   const finalQuestion = rankCandidates(
