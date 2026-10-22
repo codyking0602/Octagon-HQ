@@ -69,7 +69,7 @@ describe("NBA Average Fan audited question bank", () => {
     const uniqueFacts = new Set(finals.map((q) => `${normalize(q.answer)}|${normalize(q.prompt)}`));
     expect(uniqueFacts.size).toBe(finals.length);
     expect(finals.filter((q) => /2004 NBA Finals MVP/i.test(q.prompt))).toHaveLength(1);
-    expect(finals.filter((q) => /1971 Milwaukee Bucks defeat|Milwaukee sweep/i.test(q.prompt))).toHaveLength(1);
+    expect(finals.filter((q) => /1971 Milwaukee Bucks defeat|Milwaukee sweep/i.test(q.prompt))).toHaveLength(0);
     expect(bank.find((q) => /led the NBA in scoring at age 37/i.test(q.prompt))).toBeUndefined();
   });
 });
