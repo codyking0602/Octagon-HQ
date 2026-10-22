@@ -17,10 +17,9 @@ import {
   averageFanAnswersMatch,
   validateAverageFanQuestion,
   type AverageFanQuestion,
-  type AverageFanSport,
 } from "./averageFanEngine";
 
-const sports: readonly Exclude<AverageFanSport, "mlb">[] = ["nfl", "cfb", "ufc"];
+const sports: readonly ("nfl" | "cfb" | "ufc")[] = ["nfl", "cfb", "ufc"];
 
 function normalizedHumanInput(value: string) {
   return value
