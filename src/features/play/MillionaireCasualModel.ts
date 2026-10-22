@@ -44,7 +44,8 @@ export const MILLIONAIRE_BASE_PTS = {
   Q8: 100,
 } as const;
 
-export const MILLIONAIRE_NBA_SAFE_HOST_ASSET = "/assets/millionaire/Nfl1.png";
+/** Approved empty Millionaire stage composed from the existing arena photograph, without an NFL host. */
+export const MILLIONAIRE_NBA_STUDIO_ASSET = "/assets/millionaire/nba-clean-studio.webp";
 
 export const MILLIONAIRE_HOSTS: Record<MillionaireLeague, readonly [string, string, string]> = {
   nba: [
