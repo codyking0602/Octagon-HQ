@@ -12,7 +12,6 @@ import {
   scoreAverageFanFinal,
   type AverageFanFan,
   type AverageFanQuestion,
-  type AverageFanSport,
 } from "../games/averageFanEngine";
 import { AVERAGE_FAN_CONTENT_BANKS, averageFanQuestionBoardTopics } from "../games/averageFanContentBanks";
 import { stableLineupHash } from "./lineupModel";
@@ -26,7 +25,8 @@ export const AVERAGE_FAN_DAILY_CONTENT_VERSION = "average-fan-daily-v3" as const
 export const AVERAGE_FAN_DAILY_SCORING_VERSION = "average-fan-score-v2" as const;
 
 type AverageFanDailyScope = "ufc" | "football";
-type AverageFanDailySport = Exclude<AverageFanSport, "mlb">;
+// Official Daily publication remains Football/UFC only; NBA currently has an owner-local preview.
+type AverageFanDailySport = "nfl" | "cfb" | "ufc";
 type JsonRecord = Record<string, unknown>;
 
 interface AverageFanPublicationHistoryRow {

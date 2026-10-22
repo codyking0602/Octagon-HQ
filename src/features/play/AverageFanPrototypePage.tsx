@@ -3,6 +3,7 @@ import { flushSync } from "react-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   AVERAGE_FAN_PLAYABLE_GRADES,
+  AVERAGE_FAN_NBA_FANS,
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_SUBJECTS,
   averageFanAnswersMatch,
@@ -46,6 +47,7 @@ export const FAN_LABELS: Record<AverageFanFan, string> = {
   lib: "LIB",
   tyler: "TYLER",
   troy: "TROY",
+  nnamdi: "NNAMDI",
 };
 
 const AVERAGE_FAN_OPENING_STAGE_WIDTH = 1672;
@@ -53,7 +55,7 @@ const AVERAGE_FAN_OPENING_STAGE_HEIGHT = 941;
 const AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH = 1536;
 const AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT = 864;
 export const AVERAGE_FAN_GAMEPLAY_STAGE_SRC = "/assets/average-fan/average-fan-gameplay-stage.png";
-const AVERAGE_FAN_PORTRAITS: Record<AverageFanFan, string> = {
+const AVERAGE_FAN_PORTRAITS: Partial<Record<AverageFanFan, string>> = {
   shane: "/assets/average-fan/average-fan-shane.png",
   cody: "/assets/average-fan/average-fan-cody.png",
   // The two source files were named opposite their pictured identities.
@@ -231,7 +233,7 @@ function StudioProps() {
   );
 }
 
-export function RulesModal({ onClose }: { onClose: () => void }) {
+export function RulesModal({ onClose, sportLocked = false }: { onClose: () => void; sportLocked?: boolean }) {
   return (
     <div className="average-fan-rules-backdrop" role="presentation" onMouseDown={onClose}>
       <section
@@ -245,7 +247,7 @@ export function RulesModal({ onClose }: { onClose: () => void }) {
         <p>HOW TO PLAY</p>
         <h2 id="average-fan-rules-title">ARE YOU SMARTER THAN AN AVERAGE FAN?</h2>
         <div className="average-fan-rules__grid">
-          <article><b>1</b><span><strong>Pick your sport and fan.</strong> Your fan is locked for the whole run.</span></article>
+          <article><b>1</b><span><strong>{sportLocked ? "Pick your fan." : "Pick your sport and fan."}</strong> Your fan is locked for the whole run.</span></article>
           <article><b>2</b><span><strong>Work the board.</strong> Choose any of the 8 subject tiles from 2nd through 5th Grade.</span></article>
           <article><b>3</b><span><strong>Use your help.</strong> Peek, Copy and Save are each available once.</span></article>
           <article><b>4</b><span><strong>Finish strong.</strong> An unsaved miss ends the money run, but you keep playing for HQ points and the Final.</span></article>
@@ -291,7 +293,9 @@ function FanCard({
       aria-label={`Select ${FAN_LABELS[fan]}`}
       aria-pressed={selected}
       onClick={onSelect}
-    />
+    >
+      {fan === "nnamdi" ? <span className="average-fan-card__pending"><strong>NNAMDI</strong><small>PORTRAIT PENDING</small></span> : null}
+    </button>
   );
 }
 
@@ -310,6 +314,8 @@ function averageFanSubjectIcon(subject: string) {
     "Octagon IQ": "⬡",
     "MLB History": "⌛",
     "Baseball IQ": "⬡",
+    "NBA History": "⌛",
+    "Basketball IQ": "⬡",
   };
   return icons[subject] ?? "•";
 }
@@ -329,6 +335,8 @@ function averageFanSubjectTone(subject: string) {
     "Octagon IQ": "purple",
     "MLB History": "gold",
     "Baseball IQ": "purple",
+    "NBA History": "gold",
+    "Basketball IQ": "purple",
   };
   return tones[subject] ?? "blue";
 }
@@ -391,7 +399,7 @@ export function FanSelector({
   const stageScale = useAverageFanOpeningStageScale();
   const rows = useMemo(() => {
     const subjects = AVERAGE_FAN_SUBJECTS[sport];
-    const report = AVERAGE_FAN_REPORT_CARDS[sport][selectedFan] as Record<string, AverageFanReportGrade>;
+    const report = (AVERAGE_FAN_REPORT_CARDS[sport] as Record<string, Record<string, AverageFanReportGrade>>)[selectedFan]!;
     return subjects.map((subject) => ({ subject, grade: report[subject] }));
   }, [selectedFan, sport]);
 
@@ -410,7 +418,7 @@ export function FanSelector({
         />
 
         <div className="average-fan-card-grid" aria-label="Fans">
-          {FAN_ORDER.map((fan) => (
+          {(sport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER).map((fan) => (
             <FanCard
               key={fan}
               fan={fan}
@@ -452,12 +460,9 @@ export function FanSelector({
 export function GameplayFanDesk({ fan }: { fan: AverageFanFan }) {
   return (
     <aside className="average-fan-game-fan" aria-label={`${FAN_LABELS[fan]} at the fan desk`}>
-      <img
-        className="average-fan-game-fan__portrait"
-        src={AVERAGE_FAN_PORTRAITS[fan]}
-        alt=""
-        aria-hidden="true"
-      />
+      {AVERAGE_FAN_PORTRAITS[fan]
+        ? <img className="average-fan-game-fan__portrait" src={AVERAGE_FAN_PORTRAITS[fan]} alt="" aria-hidden="true" />
+        : <div className="average-fan-game-fan__portrait average-fan-game-fan__portrait--pending" aria-hidden="true"><span>NNAMDI</span></div>}
       <div className="average-fan-game-fan__desk-mask" aria-hidden="true" />
       <strong className="average-fan-game-fan__name">{FAN_LABELS[fan]}</strong>
     </aside>
@@ -1127,34 +1132,36 @@ export function AverageFanGame({
     </div>
   );}
 
-export default function AverageFanPrototypePage() {
+export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { lockedSport?: "nba"; previewSeed?: string } = {}) {
   useAverageFanScreenLock();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const openingStageScale = useAverageFanOpeningStageScale();
   const requestedSport = searchParams.get("sport");
-  const initialSport = requestedSport === "nfl" || requestedSport === "cfb" || requestedSport === "ufc"
+  const initialSport = lockedSport ?? (requestedSport === "nfl" || requestedSport === "cfb" || requestedSport === "ufc"
     ? requestedSport
-    : "ufc";
+    : "ufc");
   const reviewGameplay = searchParams.get("screen") === "gameplay";
   const requestedFan = searchParams.get("fan") as AverageFanFan | null;
-  const reviewFan = requestedFan && FAN_ORDER.includes(requestedFan) ? requestedFan : "cody";
+  const eligibleFans: readonly AverageFanFan[] = initialSport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER;
+  const reviewFan = requestedFan && eligibleFans.includes(requestedFan) ? requestedFan : "cody";
   const [scene, setScene] = useState<PrototypeScene>(() => reviewGameplay ? "game" : "intro");
-  const [casualSport, setCasualSport] = useState<"nfl" | "cfb" | "ufc">(initialSport);
+  const [casualSport, setCasualSport] = useState<"nfl" | "cfb" | "ufc" | "nba">(initialSport);
+  const [randomSeed] = useState(() => Math.random().toString(36).slice(2));
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>(() => reviewGameplay ? reviewFan : "shane");
   const [reviewQuestionEnabled, setReviewQuestionEnabled] = useState(reviewGameplay);
   const [gameKey, setGameKey] = useState(0);
   const [rulesOpen, setRulesOpen] = useState(false);
   const casualBoard = useMemo(
-    () => buildAverageFanCasualBoard(casualSport, `${casualSport}-owner-casual-${gameKey}`),
-    [casualSport, gameKey],
+    () => buildAverageFanCasualBoard(casualSport, previewSeed ?? `${casualSport}-owner-casual-${lockedSport ? randomSeed + "-" : ""}${gameKey}`),
+    [casualSport, gameKey, lockedSport, previewSeed, randomSeed],
   );
   const casualQuestions = casualBoard.questions;
   const casualFinal = casualBoard.finalQuestion;
   const reviewQuestion = casualQuestions.find((question) => question.format === "four-choice" && question.grade === 3)
     ?? casualQuestions.find((question) => question.format === "four-choice")
     ?? casualQuestions[0]!;
-  const exitRoute = casualSport === "ufc" ? "/play" : "/football";
+  const exitRoute = casualSport === "nba" ? "/nba" : casualSport === "ufc" ? "/play" : "/football";
 
   if (scene === "sport-select") {
     return (
@@ -1173,7 +1180,7 @@ export default function AverageFanPrototypePage() {
     return (
       <FanSelector
         sport={casualSport}
-        onBack={() => setScene("sport-select")}
+        onBack={() => setScene(lockedSport ? "intro" : "sport-select")}
         onConfirm={(fan) => {
           setSelectedFan(fan);
           setReviewQuestionEnabled(false);
@@ -1219,7 +1226,7 @@ export default function AverageFanPrototypePage() {
           <button
             className="average-fan-intro-stage__button average-fan-intro-stage__button--start"
             type="button"
-            onClick={() => setScene("sport-select")}
+            onClick={() => setScene(lockedSport ? "fan-select" : "sport-select")}
           >
             <span aria-hidden="true">▶</span>
             <strong>START</strong>
@@ -1244,7 +1251,7 @@ export default function AverageFanPrototypePage() {
         ‹ HQ
       </button>
 
-      {rulesOpen ? <RulesModal onClose={() => setRulesOpen(false)} /> : null}
+      {rulesOpen ? <RulesModal onClose={() => setRulesOpen(false)} sportLocked={Boolean(lockedSport)} /> : null}
     </div>
   );
 }
