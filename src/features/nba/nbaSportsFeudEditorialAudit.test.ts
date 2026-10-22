@@ -26,7 +26,7 @@ function accepted(id: string, group: "main" | "fast", guess: string) {
 describe("NBA Feud expanded question-bank editorial integrity", () => {
   it("has eight distinctive ranked names and valid extras on all curated questions", () => {
     expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(43);
-    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(62);
+    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(61);
     expect(new Set(ALL.map(q => q.id)).size).toBe(ALL.length);
     expect(new Set(ALL.map(q => normalizeFamilyFeudInput(q.prompt))).size).toBe(ALL.length);
     for (const q of ALL) {
@@ -74,7 +74,6 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
     expect(accepted("duke-alumni", "main", "Flagg")).toBe("Cooper Flagg");
     expect(accepted("number-one-picks", "main", "Hakeem")).toBe("Hakeem Olajuwon");
     expect(accepted("fast-free-throws", "fast", "Steph")).toBe("Stephen Curry");
-    expect(accepted("fast-left-handers", "fast", "Brunson")).toBe("Jalen Brunson");
     expect(accepted("nets-alumni", "fast", "KD")).toBe("Kevin Durant");
     expect(accepted("wolves-alumni", "fast", "KAT")).toBe("Karl-Anthony Towns");
   });
