@@ -11,14 +11,14 @@ The audit screened all Bar Trivia source entries and the 240 static NFL/CFB/UFC 
 
 | New Daily lineup decision | NFL | CFB | UFC | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Same historical fact already asked in Millionaire | 10 | 7 | 32 | 49 |
+| Same historical fact already asked in Millionaire | 10 | 7 | 37 | 54 |
 | Duplicate/near-duplicate fact inside Bar Trivia | 5 | 0 | 10 | 15 |
 | Prompt or answer itself gives away the answer | 2 | 5 | 1 | 8 |
 | Weak, unmemorable or arbitrary detail | 7 | 12 | 9 | 28 |
 | Niche older news still eligible | 0 | 0 | 2 | 2 |
-| **Retired from future selection** | **24** | **24** | **54** | **102** |
+| **Retired from future selection** | **24** | **24** | **59** | **107** |
 | **Existing questions regraded** | **4** | **11** | **5** | **20** |
-| **Remaining selectable inventory** | **236** | **236** | **325** | **797** |
+| **Remaining selectable inventory** | **236** | **236** | **320** | **792** |
 
 Retirements, reason codes and round overrides are explicitly enumerated in `src/features/play/barTriviaEditorialCuration.ts`. Source definitions are not deleted: publication references and archival reveal evidence continue to work. No filler replacements are introduced to restore a previous number. Tests use minimum viable pool depths, not historical quota targets.
 
@@ -32,7 +32,7 @@ Retirements, reason codes and round overrides are explicitly enumerated in `src/
 
 - **NFL vs Millionaire:** David Tyree Helmet Catch; first 50-TD passing season; the first QB to start Super Bowls for two franchises; Franco Harris Immaculate Reception; Stefon Diggs Minneapolis Miracle; Malcolm Butler goal-line interception.
 - **CFB vs Millionaire:** Auburn's 2010 Heisman QB; inaugural CFP winner; Larry Coker's Miami championship; 2004 unbeaten Auburn team missing the BCS final; first BCS and last BCS champions.
-- **UFC vs Millionaire:** McGregor's 13-second Aldo knockout; Khabib's 29–0 record/final opponent; first simultaneous double champion; Cejudo ending Demetrious Johnson's reign; Amanda Nunes as first female simultaneous champ; Diaz submitting McGregor at UFC 196.
+- **UFC vs Millionaire:** McGregor's 13-second Aldo knockout; Khabib's 29–0 record/final opponent; first simultaneous double champion; Cejudo ending Demetrious Johnson's reign; Amanda Nunes as first female simultaneous champ; Diaz submitting McGregor at UFC 196; Matt Serra's win over GSP, Weidman's first Silva victory, and Adesanya's Stylebender nickname.
 - **Inside Bar Trivia:** Philly Special team, cold-weather Super Bowl site, UFC Fight Island island, Bisping–Rockhold, Moreno–Figueiredo, UFC history questions restating the same championship outcomes in different rounds.
 
 Previous Average Fan Stage 2 audit already retired several Bar Trivia same-fact copies; that protection exists but **does not certify** every dynamic player template or other game. Sports Feud permits broad associations and survey topics; a shared player's identity alone was *not* grounds for removing a valid Bar Trivia question.
