@@ -1146,7 +1146,10 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
         "Donovan Mitchell",
         "Ja Morant",
         "Zion Williamson",
-        "LaMelo Ball"
+        "LaMelo Ball",
+        "Cade Cunningham",
+        "Tyrese Maxey",
+        "Paolo Banchero"
       ]
     },
     {
