@@ -1,3 +1,4 @@
+import { nbaAverageFanQuestionBank } from "./nbaAverageFanBank";
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { ufcFactualLedgerSubjects, type UfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { stableLineupHash } from "../play/lineupModel";
@@ -2186,6 +2187,7 @@ export const AVERAGE_FAN_CONTENT_BANKS = {
   nfl: averageFanNflQuestionBank,
   cfb: averageFanCfbQuestionBank,
   ufc: averageFanUfcQuestionBank,
+  nba: nbaAverageFanQuestionBank,
 } as const;
 
 /**
@@ -2194,7 +2196,8 @@ export const AVERAGE_FAN_CONTENT_BANKS = {
  * not a manually maintained list of current celebrity names. The matcher uses
  * whole normalized names so two different people who share a surname remain distinct.
  */
-const AVERAGE_FAN_NAMED_TOPICS: Record<"nfl" | "cfb" | "ufc", readonly string[]> = {
+const AVERAGE_FAN_NAMED_TOPICS: Record<Exclude<AverageFanSport, "mlb">, readonly string[]> = {
+  nba: ["LeBron James", "Stephen Curry", "Kobe Bryant", "Michael Jordan", "Nikola Jokic", "Giannis Antetokounmpo", "Luka Doncic", "Allen Iverson", "Dirk Nowitzki", "Shaquille O\u0027Neal", "Tim Duncan", "Dwyane Wade", "Kevin Durant", "Russell Westbrook", "James Harden", "Kawhi Leonard", "Jaylen Brown", "Jayson Tatum", "Larry Bird", "Magic Johnson", "Charles Barkley", "Hakeem Olajuwon", "Wilt Chamberlain", "Kareem Abdul-Jabbar", "Steve Nash", "Gary Payton", "Paul Pierce", "Tony Parker", "Jerry West", "Moses Malone", "Golden State Warriors", "Los Angeles Lakers", "Boston Celtics", "Chicago Bulls", "Miami Heat", "Dallas Mavericks", "San Antonio Spurs", "Detroit Pistons", "New York Knicks", "Cleveland Cavaliers", "Milwaukee Bucks", "Denver Nuggets", "Toronto Raptors"],
   nfl: unique([
     ...footballPlayers("NFL").map((player) => player.name),
     ...Object.values(NFL_TEAM_NAMES),
