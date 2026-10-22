@@ -80,7 +80,7 @@ export const NBA_SPORTS_FEUD_FAST_ROUND2: NbaFeudEditorialQuestion[] = [
     "Uncle Drew|Blue Chips|Glory Road|Thunderstruck|Semi-Pro|The Basketball Diaries|The Way Back|Above the Rim|Air","other"),
   q("nba-arenas","nba-arenas","Name a famous arena where NBA basketball has been played.",
     "Madison Square Garden|Crypto.com Arena|Chase Center|TD Garden|United Center|Barclays Center|American Airlines Center|Kaseya Center",
-    "Ball Arena|Intuit Dome|Golden 1 Center|Scotiabank Arena|Mortgage Matchup Center|Rocket Arena|FedExForum|Frost Bank Center|Target Center|Fiserv Forum|Moda Center|Gainbridge Fieldhouse|Wells Fargo Center|Little Caesars Arena|Smoothie King Center|Delta Center|Spectrum Center|Paycom Center|Toyota Center|Capital One Arena|Kia Center","other"),
+    "Ball Arena|Intuit Dome|Golden 1 Center|Scotiabank Arena|Mortgage Matchup Center|Rocket Arena|FedExForum|Frost Bank Center|Target Center|Fiserv Forum|Moda Center|Gainbridge Fieldhouse|Xfinity Mobile Arena|State Farm Arena|Little Caesars Arena|Smoothie King Center|Delta Center|Spectrum Center|Paycom Center|Toyota Center|Capital One Arena|Kia Center","other"),
   q("famous-celebrations","celebrations","Name an NBA player with a famous on-court celebration.",
     "Stephen Curry|LeBron James|Damian Lillard|Michael Jordan|Carmelo Anthony|James Harden|Russell Westbrook|D'Angelo Russell",
     "Trae Young|Joel Embiid|Kobe Bryant|Shaquille O'Neal|Anthony Edwards|Giannis Antetokounmpo|Dwyane Wade|Draymond Green|Kyrie Irving"),
