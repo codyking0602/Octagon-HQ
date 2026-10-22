@@ -2264,6 +2264,10 @@ export function averageFanQuestionBoardTopics(question: AverageFanQuestion) {
       || /play for which/.test(prompt) || /which programs play/.test(prompt))) {
     topics.push("cfb:topic-family:rivalries-and-trophies");
   }
+  if (question.sport === "nba" && /finals|championship|title/.test(prompt)) {
+    const year = /\\b(?:19|20)\\d{2}\\b/.exec(prompt)?.[0];
+    if (year) topics.push(`nba:championship-season:${year}`);
+  }
   return topics;
 }
 
