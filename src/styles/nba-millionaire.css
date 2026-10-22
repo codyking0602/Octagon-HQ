@@ -76,3 +76,53 @@
       linear-gradient(180deg,#1c1a18,#29201b 55%,#0d0e0f) !important;
   }
 }
+
+/*
+ * The uploaded NBA WebPs are transparent, seated hosts (not studio plates).
+ * Reuse the established Millionaire host bay geometry. The shared 1600x900
+ * fixed-stage positions for title, ladder, timer, questions and answers remain
+ * owned by MillionaireFixedStage.css, exactly as in Football/UFC.
+ */
+.millionaire-shell--nba.millionaire-shell--fixed-stage .millionaire-nba-host-stage {
+  z-index: 6;
+  left: 12.4%;
+  bottom: 27.4%;
+  width: 31.8%;
+  height: 61.5%;
+  overflow: hidden;
+  background: #01040b;
+  box-shadow:
+    -28px 0 56px rgba(2, 28, 71, 0.82),
+    28px 0 56px rgba(2, 28, 71, 0.82),
+    0 24px 34px rgba(0, 0, 0, 0.42);
+  pointer-events: none;
+}
+
+.millionaire-shell--nba.millionaire-shell--fixed-stage .millionaire-nba-host {
+  position: absolute;
+  inset: auto auto -1.5% -7%;
+  width: 114%;
+  height: 105%;
+  object-fit: cover;
+  object-position: center 38%;
+  pointer-events: none;
+}
+
+.millionaire-shell--nba.millionaire-shell--fixed-stage .millionaire-nba-host-stage::before,
+.millionaire-shell--nba.millionaire-shell--fixed-stage .millionaire-nba-host-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: 11%;
+  pointer-events: none;
+}
+.millionaire-shell--nba.millionaire-shell--fixed-stage .millionaire-nba-host-stage::before {
+  left: 0;
+  background: linear-gradient(90deg, #01040b, transparent);
+}
+.millionaire-shell--nba.millionaire-shell--fixed-stage .millionaire-nba-host-stage::after {
+  right: 0;
+  background: linear-gradient(270deg, #01040b, transparent);
+}
