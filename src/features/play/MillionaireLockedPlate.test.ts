@@ -27,7 +27,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource).not.toContain("millionaire-shell--template-fallback");
     expect(pageSource).toContain("event.currentTarget.src = MILLIONAIRE_NBA_SAFE_HOST_ASSET");
     expect(nbaCss).not.toContain("template-fallback");
-    expect(nbaCss).not.toMatch(/\\.millionaire-shell--nba[^\\n{]*\\.millionaire-ladder/);
+    expect(nbaCss).not.toMatch(/\.millionaire-shell--nba[^\n{]*\.millionaire-ladder/);
     expect(nbaCss).not.toContain("visibility: hidden !important");
   });
 
@@ -37,9 +37,9 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource).toContain('className="millionaire-stage-canvas"');
     expect(pageSource).toContain('className="millionaire-stage-background"');
     expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);');
-    expect(fixedCss).toMatch(/\\.millionaire-shell--fixed-stage \\.millionaire-ladder \\{[\\s\\S]*?left: 1196px;[\\s\\S]*?top: 116px;/);
-    expect(fixedCss).toMatch(/\\.millionaire-shell--fixed-stage \\.millionaire-question \\{[\\s\\S]*?left: 266px;[\\s\\S]*?top: 510px;/);
-    expect(fixedCss).toMatch(/\\.millionaire-shell--fixed-stage \\.millionaire-answers \\{[\\s\\S]*?left: 252px;[\\s\\S]*?top: 650px;/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-ladder \{[\s\S]*?left: 1196px;[\s\S]*?top: 116px;/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-question \{[\s\S]*?left: 266px;[\s\S]*?top: 510px;/);
+    expect(fixedCss).toMatch(/\.millionaire-shell--fixed-stage \.millionaire-answers \{[\s\S]*?left: 252px;[\s\S]*?top: 650px;/);
     expect(pageSource).toContain("Math.min(viewportWidth / MILLIONAIRE_STAGE_WIDTH, viewportHeight / MILLIONAIRE_STAGE_HEIGHT)");
     expect(fixedCss).toContain("background: #000 !important;");
   });
