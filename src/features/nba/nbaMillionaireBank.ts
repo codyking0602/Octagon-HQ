@@ -141,7 +141,13 @@ export function createNbaMillionaireRun(
   const recent = new Set(recentIds);
   const chosen: NbaMillionaireFact[] = [];
   for (let targetLevel = 0; targetLevel < MILLIONAIRE_LEVELS.length; targetLevel += 1) {
-    const choices = LEVEL_SELECTIONS[targetLevel]!;
+    // Official Daily reserves each authored source tier for its matching
+    // difficulty level. All eight tiers have at least 20 eligible questions,
+    // so twenty complete boards remain repeat-free without cannibalizing the
+    // Q4–Q6 supply. Casual retains the intentionally broader accessible mix.
+    const choices = options.strictNoRepeats
+      ? [{ sourceLevel: targetLevel, bias: 0 }]
+      : LEVEL_SELECTIONS[targetLevel]!;
     const accessible = targetLevel === 2 || targetLevel === 3
       ? APPROACHABLE_CATEGORIES
       : targetLevel === 4 || targetLevel === 5 ? FAMILIAR_CATEGORIES : null;
