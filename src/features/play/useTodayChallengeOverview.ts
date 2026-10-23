@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { PlaySport } from "./playRegistry";
+import type { TodayChallengeSport } from "./todayChallengeRepository";
 import {
   createTodayChallengeRepository,
   loadHqDailyChallengeStreak,
@@ -10,7 +10,7 @@ import {
 
 export const todayChallengeStandingsQueryKey = (
   profileId: string,
-  sport: PlaySport = "ufc",
+  sport: TodayChallengeSport = "ufc",
 ) => [
   "daily-challenge-standings",
   sport,
@@ -26,7 +26,7 @@ export const todayChallengeLeaderboardQueryKey = (
   profileId: string,
   day: string,
   scheduleVersion: string,
-  sport: PlaySport = "ufc",
+  sport: TodayChallengeSport = "ufc",
 ) => [
   "today-challenge-leaderboard",
   sport,
@@ -46,7 +46,7 @@ export function useTodayChallengeOverview({
   enabled: boolean;
   projection: TodayChallengeProjection | null;
   repository?: TodayChallengeRepository | null;
-  sport?: PlaySport;
+  sport?: TodayChallengeSport;
 }) {
   const repository = useMemo(
     () => suppliedRepository === undefined

@@ -73,6 +73,7 @@ const GAME_LABELS = {
   sports_feud: "SPORTS FEUD",
   bar_trivia: "BAR TRIVIA",
   average_fan: "AVERAGE FAN",
+  higher_lower: "HIGHER OR LOWER",
 } as const;
 
 type JsonRecord = Record<string, unknown>;
