@@ -22,6 +22,7 @@ import {
   submitFamilyFeudFastMoneyAnswer,
   submitFamilyFeudMainAnswer,
   timeoutFamilyFeudFastMoney,
+  type FamilyFeudPack,
   type FamilyFeudOutcome,
   type FamilyFeudRankedAnswer,
   type FamilyFeudState,
@@ -31,6 +32,7 @@ import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import { familyFeudPrototypePack } from "./familyFeudPrototypePacks";
 import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
 import { buildNbaSportsFeudPack } from "../nba/nbaSportsFeudBank";
+import { claimNbaCasualFeudPack } from "../nba/nbaSportsFeudRotation";
 import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
@@ -143,18 +145,23 @@ function FastMoneyHost({ asset }: { asset: string }) {
 
 function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototypePageProps) {
   const navigate = useNavigate();
+  const { profile } = useIdentity();
   const [searchParams] = useSearchParams();
   const nbaDaily = scope === "nba" && searchParams.get("mode") === "daily";
-  const [nbaSeed, setNbaSeed] = useState(() => nbaDaily
+  const [nbaSeed] = useState(() => nbaDaily
     ? "daily:" + sportsFeudCentralDateKey()
     : "casual:" + Math.random().toString(36).slice(2));
   const [nbaHostIndex, setNbaHostIndex] = useState(0);
+  const [nbaCasualPack, setNbaCasualPack] = useState<FamilyFeudPack | null>(null);
+  const [nbaClaiming, setNbaClaiming] = useState(false);
+  const nbaClaimInFlight = useRef(false);
+  const [nbaClaimError, setNbaClaimError] = useState("");
   const pack = useMemo(() => {
-    if (scope === "nba") return buildNbaSportsFeudPack(nbaSeed);
+    if (scope === "nba") return nbaCasualPack && !nbaDaily ? nbaCasualPack : buildNbaSportsFeudPack(nbaSeed);
     if (!qaReplayDay) return familyFeudPrototypePack(scope);
     if (scope !== "ufc") throw new Error("Sports Feud QA replay is currently UFC-only.");
     return buildSportsFeudPack("ufc", qaReplayDay);
-  }, [qaReplayDay, scope, nbaSeed]);
+  }, [qaReplayDay, scope, nbaSeed, nbaCasualPack, nbaDaily]);
   const [state, setState] = useState<FamilyFeudState>(() => createFamilyFeudState());
   const [scene, setScene] = useState<PrototypeScene>("intro");
   const [answer, setAnswer] = useState("");
@@ -379,11 +386,29 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
     setScene("reveal");
   }
 
-  function startGame() {
-    if (scope === "nba") setNbaHostIndex(nextNbaHostIndex());
-    if (scope === "nba" && !nbaDaily && scene === "result") {
-      setNbaSeed("casual:" + Math.random().toString(36).slice(2));
+  async function startGame() {
+    if (nbaClaimInFlight.current) return;
+    if (scope === "nba" && !nbaDaily) {
+      if (!profile?.id) {
+        setNbaClaimError("Sign in to keep your question rotation between devices.");
+        return;
+      }
+      nbaClaimInFlight.current = true;
+      setNbaClaiming(true);
+      setNbaClaimError("");
+      try {
+        // Reserve before showing the board. An interrupted run stays consumed.
+        const nextPack = await claimNbaCasualFeudPack();
+        setNbaCasualPack(nextPack);
+      } catch {
+        setNbaClaimError("Couldn't reserve a fresh NBA board. Try again.");
+        return;
+      } finally {
+        nbaClaimInFlight.current = false;
+        setNbaClaiming(false);
+      }
     }
+    if (scope === "nba") setNbaHostIndex(nextNbaHostIndex());
     setState(createFamilyFeudState());
     setDisplayBoardIndex(0);
     setBoardReview(false);
@@ -544,7 +569,8 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
             <span><b>4</b> ANSWERS EACH</span>
             <span><b>0:50</b> FAST MONEY</span>
           </div>
-          <button className="feud-primary-button" type="button" onClick={startGame}>{qaReplayDay ? "REPLAY SEPT 24 FEUD" : "PLAY SPORTS FEUD"}</button>
+          {nbaClaimError ? <p role="alert">{nbaClaimError}</p> : null}
+          <button className="feud-primary-button" type="button" onClick={startGame} disabled={nbaClaiming}>{qaReplayDay ? "REPLAY SEPT 24 FEUD" : "PLAY SPORTS FEUD"}</button>
         </section>
       ) : null}
 
@@ -838,7 +864,8 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
             <p><span>MAIN BOARDS</span><strong>{score.main}/{FAMILY_FEUD_MAIN_RAW_MAX}</strong></p>
             <p><span>FAST MONEY</span><strong>{score.fastMoney}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong></p>
           </div>
-          <button className="feud-primary-button" type="button" onClick={startGame}>{scope === "nba" && !nbaDaily ? "NEW BOARD" : "PLAY AGAIN"}</button>
+          {nbaClaimError ? <p role="alert">{nbaClaimError}</p> : null}
+          <button className="feud-primary-button" type="button" onClick={startGame} disabled={nbaClaiming}>{scope === "nba" && !nbaDaily ? "NEW BOARD" : "PLAY AGAIN"}</button>
           <button className="feud-secondary-button" type="button" onClick={() => navigate(exitRoute)}>EXIT TO HQ</button>
         </section>
       ) : null}
