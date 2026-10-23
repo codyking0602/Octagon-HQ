@@ -30,6 +30,8 @@ on:
       - "supabase/migrations/202612310220_average_fan_four_grade_calibration.sql"
       - "supabase/migrations/202612310221_average_fan_review_cleanup.sql"
       - "supabase/tests/average_fan_daily_launch.sql"
+      - "supabase/migrations/202612310323_nba_48_hour_streaks.sql"
+      - "supabase/tests/nba_daily_48_hour_streaks.sql"
       - "src/features/play/*SportsFeud*"
       - "src/features/games/familyFeudEngine.ts"
       - "src/features/play/footballDailyPublicationMillionaire.ts"
@@ -237,6 +239,10 @@ jobs:
       - name: Execute Average Fan Daily launch and scoring proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/average_fan_daily_launch.sql
+
+      - name: Verify NBA 48-hour official streak and game averages
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/nba_daily_48_hour_streaks.sql
 
       - name: Execute persisted Football Daily runtime proof
         shell: bash
@@ -450,6 +456,7 @@ jobs:
           require_remote_migration "202612310164"
           require_remote_migration "202612310220"
           require_remote_migration "202612310221"
+          require_remote_migration "202612310323"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
