@@ -9,7 +9,7 @@ import {
   footballSpecialDailyStyle,
   footballSpecialDailyThemeForDay,
 } from "./footballSpecialDailyTheme";
-import { dailyTwoGameLeaderboardPublicState } from "./DailyTwoGameStatus";
+import { dailyTwoGameLeaderboardPublicState, dailyTwoGameSeriesState } from "./DailyTwoGameStatus";
 import {
   dailyRankKeepComboStage,
   isDailyRankKeepCombo,
@@ -61,6 +61,8 @@ function dayLabel(day: string) {
 
 function gameProgress(projection: TodayChallengeProjection) {
   const state = projection.publicState;
+  const twoGame = dailyTwoGameSeriesState(projection);
+  if (twoGame) return twoGame.complete ? "TWO GAMES COMPLETE" : `GAME ${twoGame.gameNumber} OF 2`;
   const comboStage = dailyRankKeepComboStage(projection);
   if (comboStage === 1) {
     const placed = Array.isArray(state.slots) ? state.slots.filter(Boolean).length : 0;
