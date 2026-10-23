@@ -144,18 +144,6 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Average Fan score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
-  higher_lower: {
-    gameType: "higher_lower",
-    gameId: "higher-lower",
-    title: "Higher or Lower",
-    dailyRoute: "/nba/today",
-    casualRoute: "/nba/higher-lower",
-    cta: "Make the comparison",
-    instructions: "Compare ten NBA seasons and legends. Make every higher or lower call count.",
-    footballInstructions: "Compare ten NBA seasons and legends.",
-    nativeResultLabel: "Correct comparisons",
-    nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
-  },
   who_am_i: {
     gameType: "who_am_i",
     gameId: "who-am-i",
@@ -168,14 +156,31 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Who Am I score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
-} as const satisfies Record<DailyGameType, TodayChallengeAdapter>;
+} as const satisfies Record<OfficialDailyGameType, TodayChallengeAdapter>;
 
-export function todayChallengeAdapter(gameType: DailyGameType | string | undefined) {
+// NBA Higher or Lower is official Daily-only; it is not a UFC/Football
+// canonical rotation member and must not alter their eleven-game catalog.
+export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
+  gameType: "higher_lower",
+  gameId: "higher-lower",
+  title: "Higher or Lower",
+  dailyRoute: "/nba/today",
+  casualRoute: "/nba/higher-lower",
+  cta: "Make the comparison",
+  instructions: "Compare ten NBA seasons and legends. Make every higher or lower call count.",
+  footballInstructions: "Compare ten NBA seasons and legends.",
+  nativeResultLabel: "Correct comparisons",
+  nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
+};
+
+export function todayChallengeAdapter(gameType: DailyGameType | string | undefined): TodayChallengeAdapter | null {
+  if (gameType === "higher_lower") return NBA_HIGHER_LOWER_DAILY_ADAPTER;
   if (!gameType || !(gameType in TODAY_CHALLENGE_ADAPTERS)) return null;
-  return TODAY_CHALLENGE_ADAPTERS[gameType as DailyGameType];
+  return TODAY_CHALLENGE_ADAPTERS[gameType as OfficialDailyGameType];
 }
 
 export function todayChallengeGameDefinition(gameType: DailyGameType | string | undefined) {
+  if (gameType === "higher_lower") return null;
   const adapter = todayChallengeAdapter(gameType);
   return adapter ? playGameDefinition(adapter.gameId) : null;
 }
