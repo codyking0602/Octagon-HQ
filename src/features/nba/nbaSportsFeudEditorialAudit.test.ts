@@ -26,8 +26,8 @@ function accepted(id: string, group: "main" | "fast", guess: string) {
 
 describe("NBA Feud expanded question-bank editorial integrity", () => {
   it("has eight distinctive ranked names and valid extras on all curated questions", () => {
-    expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(65);
-    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(105);
+    expect(NBA_SPORTS_FEUD_MAIN).toHaveLength(71);
+    expect(NBA_SPORTS_FEUD_FAST).toHaveLength(130);
     expect(new Set(ALL.map(q => q.id)).size).toBe(ALL.length);
     expect(new Set(ALL.map(q => normalizeFamilyFeudInput(q.prompt))).size).toBe(ALL.length);
     for (const q of ALL) {
@@ -155,7 +155,7 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
     expect(thirdPassFast).toHaveLength(27);
     expect(NBA_SPORTS_FEUD_MAIN.filter(q => thirdPassMain.includes(q.id))).toHaveLength(11);
     expect(NBA_SPORTS_FEUD_FAST.filter(q => thirdPassFast.includes(q.id))).toHaveLength(27);
-    expect(NBA_SPORTS_FEUD_MAIN.length + NBA_SPORTS_FEUD_FAST.length).toBe(170);
+    expect(NBA_SPORTS_FEUD_MAIN.length + NBA_SPORTS_FEUD_FAST.length).toBe(201);
   });
 
   it("runs 20,000 complete varied seven-question seeds and checks alias collisions", () => {
