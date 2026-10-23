@@ -158,6 +158,40 @@ describe("NBA Feud expanded question-bank editorial integrity", () => {
     expect(NBA_SPORTS_FEUD_MAIN.length + NBA_SPORTS_FEUD_FAST.length).toBe(201);
   });
 
+  it("preserves six editorial Main and 25 accessible Fast boards with natural fan synonyms", () => {
+    const round4Main = [
+      "national-teams", "ncaa-nba-winners", "three-ring-legends",
+      "nba-team-rivalries", "last-dance-players", "distinctive-looks",
+    ];
+    const round4Fast = [
+      "passing-varieties", "nba-timeout-huddle", "nba-gym-bag",
+      "mascot-activities", "nba-crowd-chants", "nba-bench-actions",
+      "nba-absence", "jersey-details", "nba-player-celebrate",
+      "nba-promotional-giveaways", "nba-offense-plays", "nba-offseason",
+      "nba-roadtrips", "nba-press-conferences", "nba-film-study",
+      "nba-injury-body-parts", "nba-how-fans-follow", "nba-signed-items",
+      "nba-retirement-work", "nba-coach-tools", "nba-rookie-adjustments",
+      "nba-title-ring", "nba-watch-party", "nba-pre-game-arrival", "nba-postgame",
+    ];
+    expect(NBA_SPORTS_FEUD_MAIN.filter(q => round4Main.includes(q.id))).toHaveLength(6);
+    expect(NBA_SPORTS_FEUD_FAST.filter(q => round4Fast.includes(q.id))).toHaveLength(25);
+    expect(accepted("national-teams", "main", "Wemby")).toBe("Victor Wembanyama");
+    expect(accepted("nba-team-rivalries", "main", "Celtics and Lakers"))
+      .toBe("Los Angeles Lakers and Boston Celtics");
+    expect(accepted("ncaa-nba-winners", "main", "Jalen Brunson")).toBe("Jalen Brunson");
+    expect(accepted("three-ring-legends", "main", "Udonis Haslem")).toBe("Udonis Haslem");
+    expect(accepted("passing-varieties", "fast", "no look")).toBe("No-look pass");
+    expect(accepted("nba-crowd-chants", "fast", "MVP MVP")).toBe("MVP");
+    expect(accepted("nba-coach-tools", "fast", "stat sheet")).toBe("Score sheet");
+    expect(accepted("nba-how-fans-follow", "fast", "Livestream")).toBe("Stream the game");
+    expect(accepted("nba-title-ring", "fast", "Larry O'Brien trophy")).toBe("NBA trophy");
+    for (const q of NBA_SPORTS_FEUD_FAST.filter(v => round4Fast.includes(v.id))) {
+      expect(q.prompt).not.toMatch(/\\b(?:19|20)\\d{2}\\b|\\bfinals lineup\\b|\\broster\\b/i);
+      expect(q.answers).toHaveLength(8);
+      expect(q.extras.length).toBeGreaterThanOrEqual(5);
+    }
+  });
+
   it("runs 20,000 complete varied seven-question seeds and checks alias collisions", () => {
     const frequencies = new Map<string, number>();
     const distinctSequences = new Set<string>();
