@@ -1351,7 +1351,7 @@ Deno.serve(async (request) => {
       const action = requiredRecord(body.action, "Football daily action");
       // Game 2 is already saved; avoid loading the full rules engine just to
       // acknowledge its persisted handoff (a source of Edge CPU-limit errors).
-      let advanced = advanceWavelengthHandoff(context, action);
+      let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, action);
       if (!advanced) {
         const advanceFootballRuntime = context.gameType === "average_fan"
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
@@ -1411,7 +1411,7 @@ Deno.serve(async (request) => {
       return safeError(409, "STALE_PROGRESS", "Official daily progress changed on another device. Refresh and continue from the latest state.");
     }
 
-    let advanced = advanceWavelengthHandoff(context, body.action);
+    let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, body.action);
     if (!advanced) {
       const advanceUfcRuntime = context.gameType === "average_fan"
         ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
