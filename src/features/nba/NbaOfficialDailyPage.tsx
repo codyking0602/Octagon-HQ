@@ -256,7 +256,7 @@ export default function NbaOfficialDailyPage() {
   </section></div>;
   if (params.get("view") === "leaderboard") return <div className="page nba-official-daily" data-sport="nba">
     <button type="button" className="nba-official-daily__back" onClick={() => navigate("/nba")}>← NBA PLAY</button>
-    <TodayChallengeHub sport="nba" />
+    <TodayChallengeHub sport="nba" initialPanel="leaderboard" />
   </div>;
   if (!runtime.projection) return <div className="page nba-official-daily" data-sport="nba">
     <section className="nba-official-daily__message" role="status">
