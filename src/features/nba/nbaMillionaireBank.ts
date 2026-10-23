@@ -132,7 +132,11 @@ const LEVEL_SELECTIONS: readonly (readonly { sourceLevel: number; bias: number }
 ];
 
 /** Pure: equal seeds make equal boards; recent casual IDs are excluded when possible. */
-export function createNbaMillionaireRun(seed: string, recentIds: readonly string[] = []): MillionaireRun {
+export function createNbaMillionaireRun(
+  seed: string,
+  recentIds: readonly string[] = [],
+  options: { strictNoRepeats?: boolean } = {},
+): MillionaireRun {
   const random = createRandom(stringSeed(`nba-millionaire-v2:${seed}`));
   const recent = new Set(recentIds);
   const chosen: NbaMillionaireFact[] = [];
@@ -145,6 +149,7 @@ export function createNbaMillionaireRun(seed: string, recentIds: readonly string
       NBA_MILLIONAIRE_QUESTION_BANK[sourceLevel]!
         .filter(fact => !accessible || accessible.has(fact.source))
         .filter(fact => !chosen.some(other => other.id === fact.id))
+        .filter(fact => !options.strictNoRepeats || !recent.has(fact.id))
         .map(fact => {
           const alreadySeen = recent.has(fact.id) ? 1000 : 0;
           const sameAnswer = chosen.some(other => other.answer === fact.answer) ? 80 : 0;

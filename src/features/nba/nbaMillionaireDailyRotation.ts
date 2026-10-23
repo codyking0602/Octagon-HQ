@@ -12,14 +12,26 @@ function buildCycle(cycle: number) {
   const used = new Set<string>();
   const result: MillionaireRun[] = [];
   for (let index = 0; index < NBA_MILLIONAIRE_UNIQUE_APPEARANCES; index++) {
-    const run = createNbaMillionaireRun(
-      `nba-official-millionaire-v1|${cycle}|${index}`,
-      [...used],
-    );
-    for (const question of run) {
-      if (used.has(question.id)) {
-        throw new Error("NBA Millionaire Daily cannot repeat a question within the 20-run window.");
+    // Official Daily needs actual exclusions rather than the soft reuse
+    // penalty employed by replayable Casual. Retry distinct seeds to avoid
+    // taking a scarce late-tier question needed by a later question.
+    let run: MillionaireRun | null = null;
+    for (let attempt = 0; attempt < 64; attempt++) {
+      try {
+        run = createNbaMillionaireRun(
+          `nba-official-millionaire-v2|${cycle}|${index}|${attempt}`,
+          [...used], { strictNoRepeats: true },
+        );
+        break;
+      } catch (error) {
+        if (!(error instanceof Error) || !error.message.includes("no eligible questions")) throw error;
       }
+    }
+    if (!run) {
+      throw new Error("NBA Millionaire lacks unique qualifying questions for appearance " + index + ".");
+    }
+    for (const question of run) {
+      if (used.has(question.id)) throw new Error("NBA Millionaire strict question exclusion failed.");
       used.add(question.id);
     }
     result.push(run);
