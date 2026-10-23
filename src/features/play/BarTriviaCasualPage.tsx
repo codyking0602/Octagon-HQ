@@ -15,6 +15,7 @@ import {
   type BarTriviaState,
 } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
+import { NBA_BAR_TRIVIA_QUESTION_BANK } from "../nba/nbaBarTriviaQuestionBank";
 import {
   BarTriviaGameView,
   type BarTriviaScene,
@@ -80,7 +81,7 @@ export default function BarTriviaCasualPage({
   ownerNote?: string | null;
 }) {
   const navigate = useNavigate();
-  const fixedLeague: BarTriviaLeague | null = scope === "ufc" ? "ufc" : scope === "mlb" ? "mlb" : null;
+  const fixedLeague: BarTriviaLeague | null = scope === "ufc" ? "ufc" : scope === "mlb" ? "mlb" : scope === "nba" ? "nba" : null;
   const [league, setLeague] = useState<BarTriviaLeague | null>(fixedLeague);
   const [scene, setScene] = useState<BarTriviaScene>(scope === "football" ? "league" : "intro");
   const [run, setRun] = useState<readonly BarTriviaQuestion[]>([]);
@@ -89,7 +90,7 @@ export default function BarTriviaCasualPage({
   const [wagerDraft, setWagerDraft] = useState(BAR_TRIVIA_MAX_WAGER);
   const [settled, setSettled] = useState(false);
 
-  const backRoute = scope === "ufc" ? "/play" : scope === "mlb" ? "/mlb" : "/football";
+  const backRoute = scope === "ufc" ? "/play" : scope === "mlb" ? "/mlb" : scope === "nba" ? "/nba" : "/football";
   const displayedIndex = lastResult ? Math.max(0, state.index - 1) : state.index;
   const question = run[displayedIndex] ?? null;
 
@@ -98,6 +99,7 @@ export default function BarTriviaCasualPage({
     cfb: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "cfb").length,
     ufc: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "ufc").length,
     mlb: runOverride?.length ?? 0,
+    nba: NBA_BAR_TRIVIA_QUESTION_BANK.length,
   }), [runOverride]);
 
   function selectLeague(nextLeague: BarTriviaLeague) {
