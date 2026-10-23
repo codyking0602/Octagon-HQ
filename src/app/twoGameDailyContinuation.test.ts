@@ -30,7 +30,8 @@ describe("permanent two-game Daily handoff", () => {
     expect(edgeRuntime).toContain("context = await continueTwoGameWithoutIntermission(admin, context, profileId)");
     expect(
       edgeRuntime.match(/context = await continueTwoGameWithoutIntermission\(admin, context, profileId\)/g),
-    ).toHaveLength(2);
+    ).toHaveLength(3);
+    expect(edgeRuntime).toContain("async function handleNbaDaily");
   });
 
   it("repairs every stranded approved two-game Daily without resetting Game 1", () => {
