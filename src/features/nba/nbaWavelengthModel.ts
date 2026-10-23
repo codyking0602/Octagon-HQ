@@ -219,7 +219,7 @@ export function auditNbaWavelengthCatalog() {
     categories.add(clue.category);
     eras.add(clue.era);
     if (seen.has(clue.id)) failures.push("duplicate ID " + clue.id);
-    if (!clue.text.includes(clue.subject) && clue.subject !== "Stephen Curry" && clue.subject !== "Kevin Durant") {
+    if (!clue.text.includes(clue.subject)) {
       failures.push("subject missing from wording " + clue.id);
     }
     if (!Number.isInteger(clue.rating) || clue.rating < 1 || clue.rating > 100) {
