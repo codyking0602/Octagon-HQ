@@ -13,7 +13,7 @@ import {
 } from "../games/barTriviaEngine";
 import "./BarTriviaCasualPage.css";
 
-export type BarTriviaScope = "football" | "ufc" | "mlb";
+export type BarTriviaScope = "football" | "ufc" | "mlb" | "nba";
 export type BarTriviaScene = "league" | "intro" | "round-intro" | "question" | "wager" | "result";
 export type BarTriviaDisplayQuestion = Omit<BarTriviaQuestion, "answer" | "explanation"> & {
   answer?: string;
@@ -24,11 +24,15 @@ function leagueLabel(league: BarTriviaLeague) {
   if (league === "nfl") return "NFL";
   if (league === "cfb") return "COLLEGE FOOTBALL";
   if (league === "mlb") return "MLB";
+  if (league === "nba") return "NBA";
   return "UFC";
 }
 
 function roundDeckCopy(league: BarTriviaLeague, index: number) {
   if (index === 0) {
+    if (league === "nba") {
+      return "Start with familiar basketball, classic teams and the language of the game.";
+    }
     if (league === "ufc") {
       return "Start broad. Fighters, moments, and the stuff every fight fan should know.";
     }
@@ -38,10 +42,12 @@ function roundDeckCopy(league: BarTriviaLeague, index: number) {
     return "Start broad. Teams, traditions, and the stuff every football fan should know.";
   }
   if (index === 3) {
+    if (league === "nba") return "Now the NBA history and playoff calls demand a little more knowledge.";
     return league === "mlb"
       ? "Still accessible, but now you need the famous records, numbers, and baseball history."
       : "The obvious stuff is gone. Time for traditions, oddities, nicknames, and history.";
   }
+  if (league === "nba") return "Three genuinely tough basketball calls before Last Call.";
   return league === "mlb"
     ? "The baseball bar finally gets tougher. Three real calls before Last Call."
     : "Three tougher calls before Last Call.";
@@ -73,7 +79,7 @@ export function BarTriviaGameView({
   lastResult,
   selectedChoice = null,
   wagerDraft,
-  availableCounts = { nfl: 0, cfb: 0, ufc: 0, mlb: 0 },
+  availableCounts = { nfl: 0, cfb: 0, ufc: 0, mlb: 0, nba: 0 },
   onBack,
   onSelectLeague,
   onStart,
@@ -134,7 +140,7 @@ export function BarTriviaGameView({
     <main className="bar-trivia" data-league={league ?? scope}>
       <div className="bar-trivia__ambient" aria-hidden="true" />
       <button className="bar-trivia__back" type="button" onClick={onBack}>
-        ‹ {scope === "ufc" ? "UFC HQ" : scope === "mlb" ? "MLB PLAY" : "FOOTBALL HQ"}
+        ‹ {scope === "ufc" ? "UFC HQ" : scope === "mlb" ? "MLB PLAY" : scope === "nba" ? "NBA HQ" : "FOOTBALL HQ"}
       </button>
 
       {scene === "league" ? (
