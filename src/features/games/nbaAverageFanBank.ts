@@ -54,7 +54,7 @@ const NBA_AVERAGE_FAN_SOURCE_OVERRIDES: Readonly<Record<string, string>> = {
   "Which Clippers star made the winning layup against San Antonio in 2015's Game 7 first-round thriller?": "https://www.nba.com/news/history-season-review-2014-15",
   "Which Knicks center had 24 points and 22 rebounds in the 1994 East finals Game 7 against Indiana?": "https://www.nba.com/news/legendary-moments-history-patrick-ewing-new-york-knicks-finals-1994",
   "Who made the running, one-handed buzzer-beater that beat Toronto in Game 3 of the 2018 East semifinals?": "https://www.nba.com/news/horry-scale-lebron-james-floats-game-winner-game-3-toronto-raptors-buzzer",
-  "Which current NBA franchise once played as the Tri-Cities Blackhawks?": "https://www.nba.com/hawks/history",
+  "Which current NBA franchise once played as the Tri-Cities Blackhawks?": "https://www.nba.com/hawks/tags/hawks-history",
   "Which team swept Kobe Bryant's Lakers in the 2011 Western Conference semifinals?": "https://www.nba.com/news/history-season-review-2010-11",
   "Who was head coach of the Detroit Pistons when they upset the Lakers in the 2004 Finals?": "https://www.nba.com/news/history-season-review-2003-04",
   "How many playoff games did the 2017 champion Warriors lose during their postseason run?": "https://www.nba.com/news/history-season-review-2016-17",
