@@ -22,3 +22,7 @@ export function nbaAverageFanRotationFinals(
     }
     return false;
   }
+  for(const r of boards.map((_,i)=>i).sort((a,b)=>allowed[a]!.length-allowed[b]!.length))
+    if(!assign(r,new Set()))throw Error("No nonoverlapping NBA Finals assignment.");
+  return boards.map((_,r)=>finals[owners.indexOf(r)]!);
+}
