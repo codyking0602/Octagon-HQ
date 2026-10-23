@@ -105,6 +105,6 @@ describe("NBA Bar Trivia quality and Daily owner preview", () => {
     expect(landing).toContain('bar_trivia: "/nba/bar-trivia"');
     expect(landing).toContain("Daily Test Catalog");
     expect(schedule.slice(schedule.indexOf('NBA_CASUAL_GAME_TYPES = ['), schedule.indexOf('] as const satisfies'))).not.toContain('"bar_trivia"');
-    expect(landing).not.toContain("PLAY CASUAL");
+    expect(landing).toContain("NBA_CASUAL_GAME_TYPES");
   });
 });
