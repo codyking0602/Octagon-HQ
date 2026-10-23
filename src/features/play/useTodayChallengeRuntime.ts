@@ -6,7 +6,7 @@ import {
   type TodayChallengeProjection,
   type TodayChallengeRepository,
 } from "./todayChallengeRepository";
-import type { PlaySport } from "./playRegistry";
+import type { TodayChallengeSport } from "./todayChallengeRepository";
 import {
   todayChallengeLeaderboardQueryKey,
   todayChallengeStandingsQueryKey,
@@ -14,7 +14,7 @@ import {
 
 export const todayChallengeRuntimeQueryKey = (
   profileId: string,
-  sport: PlaySport = "ufc",
+  sport: TodayChallengeSport = "ufc",
 ) => [
   "today-challenge-runtime",
   sport,
@@ -113,7 +113,7 @@ export function useTodayChallengeRuntime({
   profileId: string;
   enabled: boolean;
   repository?: TodayChallengeRepository | null;
-  sport?: PlaySport;
+  sport?: TodayChallengeSport;
 }) {
   const queryClient = useQueryClient();
   const repository = useMemo(
