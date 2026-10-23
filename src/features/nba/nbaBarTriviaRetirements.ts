@@ -108,5 +108,13 @@ export const NBA_BAR_TRIVIA_RETIRED_IDS = new Set<string>([
   "nba-bt-f2-001",
   "nba-bt-f2-002",
   "nba-bt-f2-005",
-  "nba-bt-f2-007"
+  "nba-bt-f2-007",
+  "nba-bt-e-019",
+  "nba-bt-e-033",
+  "nba-bt-e-037",
+  "nba-bt-m-049",
+  "nba-bt-m2-003",
+  "nba-bt-h-016",
+  "nba-bt-h-023",
+  "nba-bt-h-034"
 ]);
