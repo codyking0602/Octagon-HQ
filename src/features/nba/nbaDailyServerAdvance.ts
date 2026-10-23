@@ -36,7 +36,7 @@ function clue(id:string){
 function publicClue(id:string){
   const item=clue(id);return{id:item.id,category:item.category,text:item.text};
 }
-function wavelength(context:OfficialDailyRuntimeContext,action:R):OfficialDailyAdvanceResult{
+function wavelength(context:NbaOfficialDailyRuntimeContext,action:R):OfficialDailyAdvanceResult{
   const target=num(context.privateSetupEvidence.target,1,100,"target");
   const seed=String(context.privateSetupEvidence.seed??"");
   if(!seed)throw new Error("Missing NBA Wavelength seed.");
@@ -63,7 +63,7 @@ function wavelength(context:OfficialDailyRuntimeContext,action:R):OfficialDailyA
     complete,finalSubmission:complete?{guesses:newGuesses}:null,
   };
 }
-function hit(context:OfficialDailyRuntimeContext,action:R):OfficialDailyAdvanceResult{
+function hit(context:NbaOfficialDailyRuntimeContext,action:R):OfficialDailyAdvanceResult{
   const plan=record(context.privateSetupEvidence.plan,"Hit Number plan") as unknown as NbaHitPlan;
   const allowed=new Set(strings(context.privateSetupEvidence.fighter_ids));
   if(plan.subjectIds.length!==allowed.size)throw new Error("Hit Number plan mismatch.");
@@ -93,7 +93,7 @@ function hit(context:OfficialDailyRuntimeContext,action:R):OfficialDailyAdvanceR
   return{submissionState:{selected_ids:next,final_submission:complete?{selected_ids:next}:null},
     publicState:state,complete,finalSubmission:complete?{selected_ids:next}:null};
 }
-function higher(context:OfficialDailyRuntimeContext,action:R):OfficialDailyAdvanceResult{
+function higher(context:NbaOfficialDailyRuntimeContext,action:R):OfficialDailyAdvanceResult{
   const evidence=record(context.privateSetupEvidence.board,"Higher or Lower board") as unknown as NbaHigherLowerBoard;
   const state=context.publicState;
   const index=num(state.index,0,9,"Higher Lower index");
