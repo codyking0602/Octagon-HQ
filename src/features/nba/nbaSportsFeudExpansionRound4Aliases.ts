@@ -275,6 +275,10 @@ export const NBA_FEUD_ROUND4_ALIASES: Record<string, string[]> = {
   "Opponent tendencies": [
     "Scouting report"
   ],
+  "Injury": ["Hurt", "Injured", "Hurt himself", "Got hurt"],
+  "Illness": ["Sick", "Sickness"],
+  "Basketball": ["Ball", "Basketball ball"],
+  "Ankle injury": ["Sprained ankle", "Ankle sprain"],
   "Achilles tendon": [
     "Achilles"
   ],
