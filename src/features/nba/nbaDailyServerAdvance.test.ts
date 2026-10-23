@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { buildNbaServerDailyPublication } from "./nbaDailyServerPublication";
-import { advanceNbaOfficialDailyRuntime } from "./nbaDailyServerAdvance";
-import type { OfficialDailyRuntimeContext } from "../play/todaysChallengeRuntime";
+import { advanceNbaOfficialDailyRuntime, type NbaOfficialDailyRuntimeContext } from "./nbaDailyServerAdvance";
 
-function context(day:string,game:Parameters<typeof buildNbaServerDailyPublication>[2]):OfficialDailyRuntimeContext {
+function context(day:string,game:Parameters<typeof buildNbaServerDailyPublication>[2]):NbaOfficialDailyRuntimeContext {
   const published=buildNbaServerDailyPublication(day,"nba-daily-regular-v1",game);
   return {
     gameType:game,

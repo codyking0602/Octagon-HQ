@@ -100,8 +100,7 @@ export type OfficialDailyGameType =
   | "millionaire"
   | "sports_feud"
   | "bar_trivia"
-  | "average_fan"
-  | "higher_lower";
+  | "average_fan";
 
 export const OFFICIAL_DAILY_RUNTIME_VERSION = "official-daily-runtime-v1";
 export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;

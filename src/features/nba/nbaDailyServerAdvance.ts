@@ -12,7 +12,8 @@ import { nbaWavelengthClues } from "./nbaWavelengthCatalog";
 import { nbaHitAvailableSubjectIds, nbaHitSelectionSatisfies, type NbaHitPlan } from "./nbaHitTheNumberModel";
 import type { NbaHigherLowerBoard, NbaHigherLowerChoice } from "./nbaHigherLowerModel";
 import { nbaHigherLowerPublicQuestion } from "./nbaHigherLowerDailyPublication";
-import type { OfficialDailyAdvanceResult, OfficialDailyRuntimeContext } from "../play/todaysChallengeRuntime";
+import type { OfficialDailyAdvanceResult, OfficialDailyRuntimeContext, OfficialDailyGameType } from "../play/todaysChallengeRuntime";
+export type NbaOfficialDailyRuntimeContext = Omit<OfficialDailyRuntimeContext, "gameType"> & { gameType: OfficialDailyGameType | "higher_lower" };
 
 type R=Record<string,unknown>;
 function record(value:unknown,label:string):R{
@@ -115,15 +116,15 @@ function higher(context:OfficialDailyRuntimeContext,action:R):OfficialDailyAdvan
     complete,finalSubmission:final,
   };
 }
-function single(context:OfficialDailyRuntimeContext,action:unknown):OfficialDailyAdvanceResult{
+function single(context:NbaOfficialDailyRuntimeContext,action:unknown):OfficialDailyAdvanceResult{
   const a=record(action,"NBA Daily action");
   switch(context.gameType){
-    case "average_fan":return advanceAverageFanDailyRuntime(context,a);
-    case "sports_feud":return advanceFamilyFeudDailyRuntime(context,a);
-    case "millionaire":return advanceMillionaireDailyRuntime(context,a);
-    case "who_am_i":return advanceCanonicalWhoAmIDailyRuntime(context,a);
-    case "bar_trivia":return advanceBarTriviaDailyRuntime(context,a);
-    case "find_leader":return advanceFootballOfficialDailyRuntime(context,a);
+    case "average_fan":return advanceAverageFanDailyRuntime(context as OfficialDailyRuntimeContext,a);
+    case "sports_feud":return advanceFamilyFeudDailyRuntime(context as OfficialDailyRuntimeContext,a);
+    case "millionaire":return advanceMillionaireDailyRuntime(context as OfficialDailyRuntimeContext,a);
+    case "who_am_i":return advanceCanonicalWhoAmIDailyRuntime(context as OfficialDailyRuntimeContext,a);
+    case "bar_trivia":return advanceBarTriviaDailyRuntime(context as OfficialDailyRuntimeContext,a);
+    case "find_leader":return advanceFootballOfficialDailyRuntime(context as OfficialDailyRuntimeContext,a);
     case "wavelength":return wavelength(context,a);
     case "hit_the_number":return hit(context,a);
     case "higher_lower":return higher(context,a);
@@ -154,9 +155,9 @@ function childScore(context:OfficialDailyRuntimeContext,result:OfficialDailyAdva
   }
   throw new Error("Unsupported NBA two-game scorer.");
 }
-export function advanceNbaOfficialDailyRuntime(context:OfficialDailyRuntimeContext,action:unknown):OfficialDailyAdvanceResult{
+export function advanceNbaOfficialDailyRuntime(context:NbaOfficialDailyRuntimeContext,action:unknown):OfficialDailyAdvanceResult{
   if(isTwoGameDailyContext(context)&&context.gameType!=="find_leader"){
-    return advanceTwoGameDailyRuntime(context,action,single,childScore);
+    return advanceTwoGameDailyRuntime(context as OfficialDailyRuntimeContext,action,single,childScore);
   }
   return single(context,action);
 }
