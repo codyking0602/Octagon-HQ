@@ -83,6 +83,17 @@ export default function NbaPlayPage(){
         <Link className="primary-action" to="/nba/bar-trivia?mode=daily">TEST NBA BAR TRIVIA →</Link>
       </section>
     ) : null}
+    {canPreviewNbaWhoAmI(identity.profile) ? (
+      <section className="surface-card nba-hq-notice" aria-label="NBA Wavelength owner preview">
+        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
+        <h2>NBA Wavelength</h2>
+        <p>Find two hidden numbers with four adaptive basketball clues each. Only final guesses score. Unranked Daily preview.</p>
+        <div className="nba-find-preview-actions">
+          <Link className="primary-action" to="/nba/wavelength">PLAY CASUAL →</Link>
+          <Link className="secondary-action" to="/nba/wavelength?mode=daily">DAILY PREVIEW →</Link>
+        </div>
+      </section>
+    ) : null}
     <section className="surface-card nba-hq-notice">
       <h2>First up: NBA Futures</h2><p>Make your 30 over/under picks and the rest of your season predictions.</p>
       <Link className="primary-action" to="/nba/picks">OPEN NBA FUTURES →</Link>

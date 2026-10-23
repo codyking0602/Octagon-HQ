@@ -1,0 +1,138 @@
+/* NBA-only styling for the existing approved Wavelength game shell. */
+.nba-wavelength-page {
+  --wavelength-accent: #eaa24c;
+  --wavelength-accent-strong: #ffca80;
+  --wavelength-accent-rgb: 234, 162, 76;
+  width: min(100%, 840px);
+  margin-inline: auto;
+  padding-bottom: 5rem;
+  min-width: 0;
+  gap: 10px;
+}
+.nba-wavelength-preview-label,
+.nba-wavelength-game-count {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .055em;
+}
+.nba-wavelength-preview-label {
+  color: #d7a968;
+  flex-wrap: wrap;
+  padding: 2px 1px;
+  font-size: 9px;
+}
+.nba-wavelength-preview-label span:last-child { color: #aea598; }
+.nba-wavelength-game-count {
+  padding: 10px 12px;
+  border: 1px solid rgba(234, 162, 76, .24);
+  border-radius: 12px;
+  background: linear-gradient(115deg, rgba(234, 162, 76, .10), rgba(16, 18, 21, .78));
+}
+.nba-wavelength-game-count > span { color: #ffca80; }
+.nba-wavelength-game-count > strong { white-space: nowrap; color: #f2ebe2; }
+.nba-wavelength-page .wavelength-clue--hero {
+  min-height: clamp(170px, 25vh, 235px);
+  overflow-wrap: anywhere;
+  border-color: rgba(234, 162, 76, .32);
+  background: radial-gradient(circle at 95% 0%, rgba(234, 162, 76, .20), transparent 45%), #151617;
+}
+.nba-wavelength-page .wavelength-clue--hero h1 {
+  font-size: clamp(25px, 6.4vw, 39px);
+  line-height: 1.11;
+}
+.nba-wavelength-page .wavelength-clue__descriptor {
+  display: block;
+  font-size: clamp(12px, 2.8vw, 15px);
+  font-weight: 550;
+  line-height: 1.35;
+  letter-spacing: normal;
+  color: #dec9ac;
+  margin-top: 13px;
+}
+.nba-wavelength-page .wavelength-topline span { color: #ffca80; }
+.nba-wavelength-page .wavelength-guess-panel .primary-action,
+.nba-wavelength-page .nba-wavelength-intermission .primary-action,
+.nba-wavelength-page .nba-wavelength-series-result .primary-action {
+  background: linear-gradient(115deg, #e59a41, #f5c47d);
+  border: 1px solid #f4bb73;
+  color: #1e1408;
+  font-weight: 950;
+}
+.nba-wavelength-page .wavelength-guess-panel,
+.nba-wavelength-page .wavelength-intro { min-width: 0; }
+.nba-wavelength-page .wavelength-path { max-width: 100%; }
+.nba-wavelength-page .football-wavelength-reveal article span {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.nba-wavelength-page .football-wavelength-reveal article strong {
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.nba-wavelength-intermission,
+.nba-wavelength-series-result {
+  display: grid;
+  gap: 11px;
+  padding: clamp(14px, 4vw, 21px);
+  border: 1px solid rgba(234, 162, 76, .28);
+  border-radius: 17px;
+  background: linear-gradient(145deg, rgba(234, 162, 76, .12), #171819 73%);
+  text-align: center;
+}
+.nba-wavelength-intermission p,
+.nba-wavelength-series-result p { margin: 0; font-size: 12px; line-height: 1.5; color: #d0c9c0; }
+.nba-wavelength-intermission .eyebrow,
+.nba-wavelength-series-result .eyebrow { color: #ffca80; }
+.nba-wavelength-intermission .primary-action { width: 100%; min-height: 46px; }
+.nba-wavelength-series-score {
+  font-size: clamp(62px, 17vw, 84px);
+  letter-spacing: -.07em;
+  line-height: 1;
+  color: #f7f0e5;
+}
+.nba-wavelength-series-score small {
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: 0;
+  color: #c3b7a8;
+}
+.nba-wavelength-scores,
+.nba-wavelength-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.nba-wavelength-scores span {
+  display: grid;
+  gap: 2px;
+  padding: 11px;
+  border-radius: 12px;
+  border: 1px solid rgba(234, 162, 76, .2);
+  font-size: 10px;
+  color: #c8b6a1;
+}
+.nba-wavelength-scores b { font-size: 25px; color: #fff5e8; }
+.nba-wavelength-actions button {
+  min-width: 0;
+  min-height: 46px;
+  font-size: 11px;
+  padding-inline: 7px;
+}
+.nba-wavelength-actions .find-secondary-action {
+  border: 1px solid rgba(234, 162, 76, .36);
+  background: #282522;
+  color: #ffcf90;
+}
+@media (max-width: 390px) {
+  .nba-wavelength-page { padding-inline: 0; gap: 8px; }
+  .nba-wavelength-preview-label { font-size: 8px; }
+  .nba-wavelength-game-count { padding: 9px; font-size: 9px; }
+  .nba-wavelength-page .wavelength-clue--hero { padding: 17px; }
+  .nba-wavelength-page .wavelength-clue--hero h1 { font-size: clamp(24px, 7vw, 29px); }
+  .nba-wavelength-page .football-wavelength-final-numbers strong {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+  }
+}
