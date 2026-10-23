@@ -41,7 +41,8 @@ declare
   v_row public.nba_feud_casual_rotation%rowtype;
 begin
   if v_user is null then raise exception 'nba_feud_sign_in_required'; end if;
-  if cardinality(p_main) <> 2 or cardinality(p_fast) <> 5
+  if p_main is null or p_fast is null
+    or cardinality(p_main) <> 2 or cardinality(p_fast) <> 5
     or array_position(p_main, null) is not null
     or array_position(p_fast, null) is not null
     or (select count(distinct x) from unnest(p_main) x) <> 2
