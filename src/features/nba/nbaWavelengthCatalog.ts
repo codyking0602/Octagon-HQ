@@ -5,8 +5,8 @@
  * not substitutes for skill ratings. Stable NBA-era reference points intentionally include weak,
  * ordinary, strong, elite and iconic examples. No projected 2026 performance.
  */
-export const NBA_WAVELENGTH_CATALOG_VERSION = "nba-wavelength-catalog-v2" as const;
-export const NBA_WAVELENGTH_CALIBRATION_VERSION = "nba-wavelength-calibration-v2" as const;
+export const NBA_WAVELENGTH_CATALOG_VERSION = "nba-wavelength-catalog-v3" as const;
+export const NBA_WAVELENGTH_CALIBRATION_VERSION = "nba-wavelength-calibration-v3" as const;
 
 export type NbaWavelengthCategory =
   | "CAREER LEGACY"
@@ -41,7 +41,10 @@ export interface NbaWavelengthCatalogClue {
   id: string;
   subject: string;
   category: NbaWavelengthCategory;
+  /** Exactly one plainly rated attribute, used in gameplay and result reveals. */
   text: string;
+  /** Context and rationale retained for editorial audits, never shown as a second clue. */
+  editorialNote: string;
   rating: number;
   era: NbaWavelengthEra;
 }
@@ -94,10 +97,10 @@ export const NBA_WAVELENGTH_BANDS = [
 ] as const;
 
 /**
- * The wording carries the trait's evidence or limitation: do NOT blindly apply
- * an overall GOAT tier to shooting, passing, defense or playoff performance.
- * Subject identities are canonical across categories so a round cannot show
- * the same person twice under different traits.
+ * Each seed's original evidence remains an internal editorial note. On-screen
+ * language deliberately names a SINGLE trait, with no pre-rated judgment or
+ * explanatory paragraph that reverses the direction of the user's guess.
+ * Subject identities remain canonical across categories.
  */
 const groups: readonly SeedGroup[] = [
   group("CAREER LEGACY", "legacy", [
@@ -538,12 +541,73 @@ const groups: readonly SeedGroup[] = [
   ]),
 ];
 
+
+/**
+ * One literal rating target per clue, matching the UFC/Football presentation.
+ * Low numbers mean little strength on that POSITIVE attribute, never "very
+ * unwilling" or "very bad". The contextual editorial notes stay separate.
+ *
+ * The category is already part of the final reveal, but the playing text
+ * names it too, so a player never has to decode a second question below.
+ */
+const NBA_WAVELENGTH_POSITIVE_ATTRIBUTE: Record<NbaWavelengthCategory, string> = {
+  "CAREER LEGACY": "NBA career legacy",
+  "PEAK DOMINANCE": "dominance at his NBA peak",
+  "SCORING THREAT": "NBA scoring ability",
+  "OUTSIDE SHOOTING": "outside shooting ability",
+  "PLAYMAKING": "NBA playmaking",
+  "DEFENSIVE IMPACT": "NBA defensive impact",
+  "EXPLOSIVE ATHLETICISM": "NBA explosiveness",
+  "CLUTCH SHOTMAKING": "late-game shotmaking",
+  "PLAYOFF RÉSUMÉ": "NBA playoff résumé",
+  "SHOWMANSHIP": "on-court showmanship",
+  "VILLAIN REPUTATION": "NBA villain reputation",
+  "CULTURAL INFLUENCE": "influence on basketball culture",
+  "HOME-COURT HEAT": "home-crowd atmosphere",
+  "RIVALRY HEAT": "rivalry intensity",
+  "BALL HANDLING": "ball-handling ability",
+  "REBOUNDING": "NBA rebounding",
+  "RIM PROTECTION": "rim protection",
+  "MIDRANGE TOUCH": "midrange shooting ability",
+  "AT-THE-RIM FINISHING": "finishing at the rim",
+  "BASKETBALL IQ": "basketball decision-making",
+  "TRASH TALK": "on-court trash talk",
+  "NBA MOMENT IMPACT": "lasting impact on NBA history",
+  "FRANCHISE TRADITION": "NBA franchise tradition",
+  "DRAFT HYPE": "hype before the NBA draft",
+  "DUO IMPACT": "impact as an NBA duo",
+};
+
+// Events, teams, and named rivalries are kept exactly identified, including
+// their season/era, with a single attributed dimension instead of a second
+// lower explanatory question.
+const NBA_WAVELENGTH_NONPERSON_CATEGORIES: ReadonlySet<NbaWavelengthCategory> = new Set([
+  "HOME-COURT HEAT",
+  "RIVALRY HEAT",
+  "NBA MOMENT IMPACT",
+  "FRANCHISE TRADITION",
+  "DUO IMPACT",
+]);
+
+export function nbaWavelengthCluePrompt(
+  category: NbaWavelengthCategory,
+  subject: string,
+): string {
+  const attribute = NBA_WAVELENGTH_POSITIVE_ATTRIBUTE[category];
+  if (NBA_WAVELENGTH_NONPERSON_CATEGORIES.has(category)) {
+    return subject + " — " + attribute;
+  }
+  const possessive = subject.endsWith("s") ? subject + "'" : subject + "'s";
+  return possessive + " " + attribute;
+}
+
 export const nbaWavelengthClues: readonly NbaWavelengthCatalogClue[] = groups.flatMap(
-  ({ category, prefix, rows }) => rows.map(([slug, subject, text, rating, era]) => ({
+  ({ category, prefix, rows }) => rows.map(([slug, subject, editorialNote, rating, era]) => ({
     id: "nba-wl-" + prefix + "-" + slug,
     subject,
     category,
-    text,
+    text: nbaWavelengthCluePrompt(category, subject),
+    editorialNote,
     rating,
     era,
   })),

@@ -85,6 +85,7 @@ export function FootballWavelengthPresentation({
   }
 
   if (!clue) return null;
+  const descriptor = clueDescriptor(clue.category);
 
   return (
     <>
@@ -105,7 +106,7 @@ export function FootballWavelengthPresentation({
       <section className="wavelength-clue wavelength-clue--hero" aria-live="polite">
         <h1>
           {clue.text}
-          <span className="wavelength-clue__descriptor">{clueDescriptor(clue.category)}</span>
+          {descriptor ? <span className="wavelength-clue__descriptor">{descriptor}</span> : null}
         </h1>
       </section>
 

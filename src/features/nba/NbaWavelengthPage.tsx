@@ -9,7 +9,6 @@ import {
 import { recordLineupCompletion } from "../play/lineupModel";
 import {
   nbaWavelengthCategoryLabel,
-  nbaWavelengthClueDescriptor,
 } from "./nbaWavelengthCatalog";
 import {
   createNbaWavelengthCasualBoard,
@@ -28,7 +27,9 @@ const presentationCopy = {
   progressAriaLabel: "NBA Wavelength four-clue progress",
   guessAriaLabel: "NBA Wavelength guess from 1 to 100",
   categoryLabel: nbaWavelengthCategoryLabel,
-  clueDescriptor: nbaWavelengthClueDescriptor,
+  // The clue itself identifies the rated attribute. Do not show a second
+  // question underneath that can contradict the apparent rating direction.
+  clueDescriptor: () => "",
   disclosure: WAVELENGTH_OPINION_DISCLOSURE
     + " Ratings apply to the named dimension alone. Fame and basketball skill are not interchangeable.",
 };
