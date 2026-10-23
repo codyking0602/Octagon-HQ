@@ -15,6 +15,7 @@ const portraitPaths = [
   "public/assets/average-fan/average-fan-lib.png",
   "public/assets/average-fan/average-fan-tyler.png",
   "public/assets/average-fan/average-fan-troy.png",
+  "public/assets/average-fan/average-fan-nnamdi.png",
 ] as const;
 
 function paeth(a: number, b: number, c: number) {

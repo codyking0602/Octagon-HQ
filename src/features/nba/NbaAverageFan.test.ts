@@ -239,7 +239,8 @@ describe("NBA Average Fan retained gameplay and safe owner preview", () => {
   it("retains fan strength equality, lifeline accuracy, and canonical 0–100 scoring", () => {
     expect(AVERAGE_FAN_NBA_FANS).toHaveLength(5);
     expect(AVERAGE_FAN_NBA_FANS).toContain("nnamdi");
-    expect(AVERAGE_FAN_NBA_FANS).not.toContain("troy");
+    expect(AVERAGE_FAN_NBA_FANS).toContain("troy");
+    expect(AVERAGE_FAN_NBA_FANS).not.toContain("lib");
     expect(AVERAGE_FAN_FANS).toContain("troy");
     for (const fan of AVERAGE_FAN_NBA_FANS) {
       const row = AVERAGE_FAN_REPORT_CARDS.nba[fan];
@@ -286,7 +287,9 @@ describe("NBA Average Fan retained gameplay and safe owner preview", () => {
     expect(shell).toContain('isBackRoom || isMillionaireGame || isAverageFanGame ? null : <BottomNavigation');
     expect(prototype).toContain('lockedSport ? "fan-select" : "sport-select"');
     expect(prototype).toContain('sport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER');
-    expect(prototype).toContain("average-fan-card__pending");
+    expect(prototype).toContain("average-fan-card__nnamdi");
+    expect(prototype).toContain("/assets/average-fan/average-fan-nnamdi.png");
+    expect(prototype).not.toContain("PORTRAIT PENDING");
     expect(prototype).toContain('const exitRoute = casualSport === "nba" ? "/nba"');
     expect(prototype).toContain('const AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH = 1536;');
     expect(prototype).toContain('const AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT = 864;');

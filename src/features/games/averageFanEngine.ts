@@ -7,8 +7,8 @@ import {
 export const AVERAGE_FAN_GAME_ID = "average-fan" as const;
 export const AVERAGE_FAN_CONTENT_VERSION = "average-fan-v4" as const;
 export const AVERAGE_FAN_FANS = ["cody", "shane", "troy", "tyler", "lib"] as const;
-/** NBA replaces Troy with Nnamdi; Football, UFC and MLB retain their approved five. */
-export const AVERAGE_FAN_NBA_FANS = ["cody", "shane", "nnamdi", "tyler", "lib"] as const;
+/** NBA replaces Lib with Nnamdi; Football, UFC and MLB retain their approved five. */
+export const AVERAGE_FAN_NBA_FANS = ["cody", "shane", "nnamdi", "tyler", "troy"] as const;
 export const AVERAGE_FAN_GRADES = [1, 2, 3, 4, 5] as const;
 export const AVERAGE_FAN_PLAYABLE_GRADES = [2, 3, 4, 5] as const;
 export const AVERAGE_FAN_BOARD_QUESTION_COUNT = 8 as const;
@@ -93,7 +93,7 @@ export const AVERAGE_FAN_REPORT_CARDS = {
     shane: { Players: "A+", Teams: "B+", "NBA History": "A-", "Basketball IQ": "C+" },
     nnamdi: { Players: "B-", Teams: "A-", "NBA History": "B+", "Basketball IQ": "A" },
     tyler: { Players: "B", Teams: "B", "NBA History": "A", "Basketball IQ": "A-" },
-    lib: { Players: "A-", Teams: "A", "NBA History": "B-", "Basketball IQ": "B+" },
+    troy: { Players: "B+", Teams: "A", "NBA History": "B-", "Basketball IQ": "A-" },
   },
   mlb: {
     cody: { Players: "A", Teams: "B+", "MLB History": "A-", "Baseball IQ": "B-" },

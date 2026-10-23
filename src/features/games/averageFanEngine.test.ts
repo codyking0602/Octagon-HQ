@@ -219,7 +219,9 @@ describe("Average Fan canonical question contract", () => {
 describe("Average Fan report-card intelligence", () => {
   it("locks the five v1 fans and their authored report cards", () => {
     expect(AVERAGE_FAN_FANS).toEqual(["cody", "shane", "troy", "tyler", "lib"]);
-    expect(AVERAGE_FAN_NBA_FANS).toEqual(["cody", "shane", "nnamdi", "tyler", "lib"]);
+    expect(AVERAGE_FAN_NBA_FANS).toEqual(["cody", "shane", "nnamdi", "tyler", "troy"]);
+    expect(AVERAGE_FAN_NBA_FANS).not.toContain("lib");
+    expect(AVERAGE_FAN_REPORT_CARDS.nba.troy).toEqual({ Players: "B+", Teams: "A", "NBA History": "B-", "Basketball IQ": "A-" });
     expect(AVERAGE_FAN_REPORT_CARDS.nba.nnamdi).toEqual({ Players: "B-", Teams: "A-", "NBA History": "B+", "Basketball IQ": "A" });
     expect(AVERAGE_FAN_REPORT_CARDS.ufc.shane).toEqual({
       Fighters: "A+",

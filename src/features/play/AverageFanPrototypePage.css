@@ -1071,44 +1071,49 @@
     inset 0 0 18px rgba(255, 213, 75, 0.18);
 }
 
-/* NBA-only placeholder: the approved photographic plate bakes Troy into slot five.
-   Mask only that slot until the provided Nnamdi portrait is available. */
+/* NBA-only replacement for Lib's portrait baked into the approved selector plate.
+   Only the single Lib slot is covered; Troy and all other sports stay untouched. */
 .average-fan-card--nnamdi {
-  left: 201px;
-  top: 628px;
-  width: 241px;
-  height: 199px;
+  left: 204px;
+  top: 414px;
+  width: 239px;
+  height: 207px;
   overflow: hidden;
-  background: linear-gradient(145deg, #17283a, #07121f);
+  background: linear-gradient(160deg, #294056, #101c2b);
   color: #f4f7fb;
 }
-.average-fan-card__pending {
-  display: flex;
+.average-fan-card__nnamdi {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: block;
+}
+.average-fan-card__nnamdi img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  text-align: center;
+  object-fit: cover;
+  object-position: center 22%;
 }
-.average-fan-card__pending strong { font-size: 30px; font-weight: 950; letter-spacing: .09em; }
-.average-fan-card__pending small { font-size: 12px; font-weight: 750; letter-spacing: .08em; opacity: .82; }
-.average-fan-game-fan__portrait--pending {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 250px;
-  bottom: 108px;
-  border-radius: 18px;
-  background: linear-gradient(140deg, #1b2b3d, #0a1422);
-  box-shadow: inset 0 0 0 2px rgba(250,255,255,.12);
+.average-fan-card__nnamdi::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 52px;
+  background: linear-gradient(0deg, rgba(6, 13, 22, .96), rgba(6, 13, 22, 0));
 }
-.average-fan-game-fan__portrait--pending span {
-  font: 950 28px Arial, sans-serif;
+.average-fan-card__nnamdi strong {
+  position: absolute;
+  z-index: 1;
+  bottom: 9px;
+  left: 0;
+  width: 100%;
+  color: #fff;
+  font: 950 23px/1 Arial, Helvetica, sans-serif;
   letter-spacing: .07em;
-  color: white;
+  text-align: center;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, .82);
 }
 
 /* Report card owns the newly opened board space. */

@@ -63,6 +63,7 @@ const AVERAGE_FAN_PORTRAITS: Partial<Record<AverageFanFan, string>> = {
   lib: "/assets/average-fan/average-fan-tyler.png",
   tyler: "/assets/average-fan/average-fan-lib.png",
   troy: "/assets/average-fan/average-fan-troy.png",
+  nnamdi: "/assets/average-fan/average-fan-nnamdi.png",
 };
 
 // iOS landscape can report a smaller dynamic viewport than the usable stage; size the fixed scene against lvh.
@@ -295,7 +296,12 @@ function FanCard({
       aria-pressed={selected}
       onClick={onSelect}
     >
-      {fan === "nnamdi" ? <span className="average-fan-card__pending"><strong>NNAMDI</strong><small>PORTRAIT PENDING</small></span> : null}
+      {fan === "nnamdi" ? (
+        <span className="average-fan-card__nnamdi">
+          <img src="/assets/average-fan/average-fan-nnamdi.png" alt="" aria-hidden="true" />
+          <strong>NNAMDI</strong>
+        </span>
+      ) : null}
     </button>
   );
 }
