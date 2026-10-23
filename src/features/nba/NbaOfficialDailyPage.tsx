@@ -11,7 +11,7 @@ import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
 import { OfficialBarTriviaDailyView } from "../play/OfficialBarTriviaDailyView";
 import {
   DailyTwoGamePresentationIntermission, DailyTwoGameStatus,
-  dailyTwoGameActiveScore, dailyTwoGamePresentationIntermissionState,
+  dailyTwoGamePresentationIntermissionState,
   dailyTwoGameSeriesState,
 } from "../play/DailyTwoGameStatus";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
