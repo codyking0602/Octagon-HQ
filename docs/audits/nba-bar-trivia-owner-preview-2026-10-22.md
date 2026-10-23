@@ -10,11 +10,11 @@ The NBA-specific selection exception eliminates the existing shared selector's *
 
 | Difficulty | Surviving | Needed for 20 official Daily appearances | Shortfall |
 |---|---:|---:|---:|
-| Round 1 — accessible | 35 | 60 | 25 |
-| Round 2 — moderate | 36 | 60 | 24 |
-| Round 3 — difficult | 38 | 60 | 22 |
+| Round 1 — accessible | 34 | 60 | 26 |
+| Round 2 — moderate | 33 | 60 | 27 |
+| Round 3 — difficult | 35 | 60 | 25 |
 | Last Call | 16 | 20 | 4 |
-| **Total** | **125** | **200** | **75** |
+| **Total** | **118** | **200** | **82** |
 
 The minimum actual full no-repeat capacity is **11 ten-question Daily appearances**. The deterministic appearance index shares a board across users; the same index preserves the same answers and Double Round for replay. Cycles then restart with independently seeded order. These counts are honest quality floors, not launch targets. **Do not enable official Daily scheduling at this point.**
 
@@ -27,7 +27,7 @@ The minimum actual full no-repeat capacity is **11 ten-question Daily appearance
 
 ## Rejection criteria and representative cuts
 
-Authored source rows are reviewed before inclusion. Two stages of editorial retirement cover **108 unique exclusions** after initial row-format screening; malformed input rows are discarded before source files were written. Exact prompt uniqueness alone is insufficient: we compared meaning and answers with NBA Average Fan, NBA Millionaire, and Sports Feud, and screened known NBA historical anchors.
+Authored source rows are reviewed before inclusion. Two stages of editorial retirement cover **116 unique exclusions** after initial row-format screening; malformed input rows are discarded before source files were written. Exact prompt uniqueness alone is insufficient: we compared meaning and answers with NBA Average Fan, NBA Millionaire, and Sports Feud, and screened known NBA historical anchors.
 
 Examples:
 - **Exact cross-game facts:** Vancouver Grizzlies-to-Memphis; Rochester Royals-to-Sacramento; Minneapolis Lakers-to-Los Angeles; Fort Wayne Pistons-to-Detroit; Kobe drafted by Charlotte; Steve Kerr's 1997 Finals clincher; Ray Allen's 2013 Finals three; Reggie Miller's 8 points in 9 seconds; the 2002 Robert Horry Kings buzzer-beater; the 2019 Kawhi playoff buzzer-beater; the ABA-NBA 1976 merger.
