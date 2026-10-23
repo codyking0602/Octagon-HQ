@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { MatchupsCompact } from "../play/PlayV2Page";
+import TodayChallengeHub from "../play/TodayChallengeHub";
+import { createTodayChallengeRepository } from "../play/todayChallengeRepository";
 import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
 import {
   NBA_CASUAL_GAME_TYPES, NBA_DAILY_GAME_LABELS, NBA_DAILY_WEIGHTS,
@@ -54,6 +57,17 @@ export default function NbaPlayPage() {
   const ownerPreview = nbaOwnerPreviewDaily(day);
   const featured = published ? slot?.gameType : owner ? ownerPreview ?? slot?.gameType : null;
   const [showOwnerCatalog, setShowOwnerCatalog] = useState(false);
+  const repository = useMemo(() => createTodayChallengeRepository(undefined, "nba"), []);
+  const history = useQuery({
+    queryKey: ["nba", "official-daily-history", profile?.id ?? "signed-out"],
+    queryFn: () => repository!.loadHistory(),
+    enabled: published && Boolean(profile?.id) && Boolean(repository),
+    refetchOnMount: "always",
+  });
+  const savedScores = (history.data ?? []).map(row => row.normalizedScore).filter(Number.isFinite);
+  const completed = savedScores.length;
+  const average = completed ? Math.round(savedScores.reduce((sum, score) => sum + score, 0) / completed) : null;
+  const best = completed ? Math.max(...savedScores) : null;
 
   return <div className="page play-v2 nba-games-hub" data-sport="nba" data-testid="nba-play-v2-hub">
     <header className="play-v2__heading">
@@ -61,6 +75,7 @@ export default function NbaPlayPage() {
     </header>
 
     <section className="play-v2__daily" aria-label="Today's Challenge" data-sport="nba">
+      {published ? <TodayChallengeHub sport="nba" /> : <>
       <div className="play-v2__section-top">
         <span>TODAY'S CHALLENGE</span>
         <span className="play-v2__daily-status">{published ? "OFFICIAL DAILY" : owner ? "OWNER PREVIEW" : "NOV 1 LAUNCH"}</span>
@@ -95,6 +110,7 @@ export default function NbaPlayPage() {
         </div>
         <p className="play-v2__muted">NBA Futures and the championship remain available separately.</p>
       </>}
+      </>}
     </section>
 
     <section className="play-v2__performance" aria-label="Your Play Performance">
@@ -103,11 +119,11 @@ export default function NbaPlayPage() {
         <span className="nba-games-hub__pending-label">OFFICIAL SCORES ONLY</span>
       </div>
       <div className="play-v2__metrics">
-        <div><span>DAILY AVERAGE</span><strong>—</strong><small>/100</small></div>
-        <div><span>COMPLETED</span><strong>—</strong><small>official games</small></div>
-        <div><span>PERSONAL BEST</span><strong>—</strong><small>/100</small></div>
+        <div><span>DAILY AVERAGE</span><strong>{published && average !== null ? average : "—"}</strong><small>/100</small></div>
+        <div><span>COMPLETED</span><strong>{published ? completed : "—"}</strong><small>official games</small></div>
+        <div><span>PERSONAL BEST</span><strong>{published && best !== null ? best : "—"}</strong><small>/100</small></div>
       </div>
-      <p className="play-v2__muted">Your NBA scores will appear here after official Daily results are enabled. Private previews do not count.</p>
+      {!published ? <p className="play-v2__muted">Your NBA scores will appear here after official Daily results are enabled. Private previews do not count.</p> : null}
     </section>
 
     {profile ? <MatchupsCompact sport="nba" /> : (
