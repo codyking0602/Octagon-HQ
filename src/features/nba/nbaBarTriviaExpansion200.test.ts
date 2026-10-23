@@ -34,6 +34,8 @@ describe("NBA Bar Trivia four-month editorial expansion", () => {
       expect(q.contentType).toBe("evergreen");
       expect(q.explanation.length).toBeGreaterThan(48);
       expect(q.sourceUrl).toMatch(/^https:\/\/www\.nba\.com\//);
+      expect(q.sourceUrl).not.toBe("https://www.nba.com/history");
+      expect(q.sourceUrl).not.toBe("https://www.nba.com/news");
       expect(q.choices).toHaveLength(4);
       expect(q.choices).toContain(q.answer);
       expect(new Set(q.choices.map(canonical)).size).toBe(4);
