@@ -26,6 +26,7 @@ import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
   sportsFeudHostAsset,
+  nbaSportsFeudHostAsset,
   type SportsFeudHostSport,
 } from "./sportsFeudPresentation";
 import "./FamilyFeudPrototypePage.css";
@@ -209,13 +210,18 @@ export function OfficialSportsFeudDailyView({
   const baseViewportHeightRef = useRef(0);
 
   const setup = projection.publicSetup;
-  const domain = String(setup.presentation_domain ?? (projection.sport === "football" ? "nfl" : "ufc")) as SportsFeudHostSport;
+  const domain = String(setup.presentation_domain ?? (projection.sport === "nba" ? "nba" : projection.sport === "football" ? "nfl" : "ufc")) as SportsFeudHostSport | "nba";
   const hqName = domain === "mlb" ? "MLB HQ" : domain === "cfb" ? "CFB HQ" : domain === "nfl" ? "NFL HQ" : domain === "nba" ? "NBA HQ" : "UFC HQ";
   const challengeLabel = domain === "mlb" ? "PLAYOFF CHALLENGE" : "DAILY CHALLENGE";
-  const hostAsset = useMemo(
-    () => sportsFeudHostAsset(domain, projection.centralDay),
-    [domain, projection.centralDay],
-  );
+  const hostAsset = useMemo(() => {
+    if (domain === "nba") {
+      const day = Date.parse(projection.centralDay + "T12:00:00Z");
+      const first = Date.parse("2026-11-01T12:00:00Z");
+      const publicationIndex = Math.max(0, Math.floor((day - first) / 172_800_000));
+      return nbaSportsFeudHostAsset(publicationIndex);
+    }
+    return sportsFeudHostAsset(domain, projection.centralDay);
+  }, [domain, projection.centralDay]);
 
   useEffect(() => {
     const root = document.documentElement;
