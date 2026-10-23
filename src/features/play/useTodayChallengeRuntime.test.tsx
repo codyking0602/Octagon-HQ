@@ -250,6 +250,39 @@ describe("useTodayChallengeRuntime", () => {
     expect(result.current.error).toBeNull();
   }, 10_000);
 
+  it("rechecks an already-saved Wavelength transition after exhausted server resource limits", async () => {
+    const busy = () => new TodayChallengeRepositoryError(
+      "DAILY_RUNTIME_BUSY",
+      "The game server is temporarily busy.",
+    );
+    const advance = vi.fn<TodayChallengeRepository["advance"]>().mockRejectedValue(busy());
+    const loadToday = vi.fn()
+      .mockResolvedValueOnce(projection(1))
+      .mockResolvedValueOnce(projection(2, [50, 60]));
+    const repository = makeRepository(loadToday, advance);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { result } = renderHook(() => useTodayChallengeRuntime({
+      profileId: "profile-one",
+      enabled: true,
+      repository,
+    }), { wrapper: wrapper(client) });
+
+    await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
+    let pending!: Promise<TodayChallengeProjection | null>;
+    act(() => {
+      pending = result.current.advance(
+        { type: "next_game" },
+        { dedupeKey: "wavelength-handoff" },
+      );
+    });
+    await expect(pending).resolves.toMatchObject({ progressRevision: 2 });
+    await waitFor(() => expect(result.current.pendingActionCount).toBe(0));
+    expect(advance).toHaveBeenCalledTimes(5);
+    expect(new Set(advance.mock.calls.map((call) => call[2])).size).toBe(1);
+    expect(loadToday).toHaveBeenCalledTimes(2);
+    expect(result.current.error).toBeNull();
+  }, 15_000);
+
   it("keeps a failed transient action queued for explicit retry", async () => {
     const advance = vi.fn<TodayChallengeRepository["advance"]>()
       .mockRejectedValueOnce(new Error("offline-1"))

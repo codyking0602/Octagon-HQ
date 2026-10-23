@@ -577,6 +577,12 @@ jobs:
 
       - name: Install production WebKit proof harness
         run: |
+          # GitHub's Ubuntu Azure package mirror has stalled WebKit dependency
+          # downloads until the 25-minute job timeout. Use Ubuntu's official
+          # archive mirror while preserving the full dependency installation.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i 's#http://azure.archive.ubuntu.com/ubuntu#http://archive.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
+          fi
           npm install --no-save --ignore-scripts playwright@1.56.1
           npx playwright install --with-deps webkit
 
