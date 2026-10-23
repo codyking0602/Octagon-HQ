@@ -101,8 +101,10 @@ describe("NBA Bar Trivia quality and Daily owner preview", () => {
     const uploadedPortrait = readFileSync("public/images/bar-trivia/nba-bar-trivia-bg.png");
     expect(uploadedPortrait.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");
     const landing = readFileSync("src/features/nba/NbaPlayPage.tsx", "utf8");
-    const entry = landing.split('aria-label="NBA Bar Trivia owner Daily preview"')[1]?.slice(0, 750) ?? "";
-    expect(entry).toContain("DAILY ONLY");
-    expect(entry).not.toContain("PLAY CASUAL");
+    const schedule = readFileSync("src/features/nba/nbaDailySchedule.ts", "utf8");
+    expect(landing).toContain('bar_trivia: "/nba/bar-trivia"');
+    expect(landing).toContain("Daily Test Catalog");
+    expect(schedule.slice(schedule.indexOf('NBA_CASUAL_GAME_TYPES = ['), schedule.indexOf('] as const satisfies'))).not.toContain('"bar_trivia"');
+    expect(landing).not.toContain("PLAY CASUAL");
   });
 });
