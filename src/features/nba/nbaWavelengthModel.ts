@@ -14,6 +14,7 @@ import {
   NBA_WAVELENGTH_CALIBRATION_VERSION,
   NBA_WAVELENGTH_CATALOG_VERSION,
   nbaWavelengthClues,
+  nbaWavelengthCluePrompt,
   type NbaWavelengthCatalogClue,
   type NbaWavelengthCategory,
   type NbaWavelengthEra,
