@@ -16,6 +16,7 @@ const gameTypeSchema = z.enum([
   "sports_feud",
   "bar_trivia",
   "average_fan",
+  "higher_lower",
 ]);
 const attemptSchema = z.object({
   native_score: z.coerce.number().int(),
@@ -43,6 +44,12 @@ const projectionSchema = z.object({ ...projectionFields, id: z.string().uuid() }
 const footballProjectionSchema = z.object({
   ...projectionFields,
   sport: z.literal("football"),
+  id: z.string().uuid(),
+  action_history: z.array(jsonRecordSchema).default([]),
+});
+const nbaProjectionSchema = z.object({
+  ...projectionFields,
+  sport: z.literal("nba"),
   id: z.string().uuid(),
   action_history: z.array(jsonRecordSchema).default([]),
 });
@@ -123,9 +130,11 @@ const standingsSchema = z.object({
   entries: z.array(standingsEntrySchema),
 });
 
+export type TodayChallengeSport = PlaySport | "nba";
+
 export interface TodayChallengeProjection {
   available: true;
-  sport?: PlaySport;
+  sport?: TodayChallengeSport;
   id: string;
   centralDay: string;
   scheduleVersion: string;
@@ -201,6 +210,7 @@ export interface TodayChallengeStandingsEntry {
     millionaire: number | null;
     sportsFeud?: number | null;
     barTrivia?: number | null;
+    higherLower?: number | null;
   };
   isCurrentUser: boolean;
   weeklyRank: number;
@@ -300,6 +310,15 @@ function projectionFromRow(row: z.infer<typeof projectionSchema>): TodayChalleng
 
 export function parseTodayChallengeProjection(value: unknown): TodayChallengeProjection {
   return projectionFromRow(projectionSchema.parse(value));
+}
+
+export function parseNbaTodayChallengeProjection(value: unknown): TodayChallengeProjection {
+  const row = nbaProjectionSchema.parse(value);
+  return {
+    ...projectionFromRow(row),
+    sport: "nba",
+    actionHistory: row.action_history,
+  };
 }
 
 export function parseFootballTodayChallengeProjection(value: unknown): TodayChallengeProjection {
@@ -426,7 +445,7 @@ function parseOfficialHistory(value: unknown): TodayChallengeHistoryRow[] {
 
 export function createTodayChallengeRepository(
   suppliedClient?: TodayChallengeClient | null,
-  sport: PlaySport = "ufc",
+  sport: TodayChallengeSport = "ufc",
 ): TodayChallengeRepository | null {
   const client = suppliedClient === undefined
     ? getSupabaseClient() as unknown as TodayChallengeClient | null
@@ -434,7 +453,9 @@ export function createTodayChallengeRepository(
   if (!client) return null;
   const parseProjection = sport === "football"
     ? parseFootballTodayChallengeProjection
-    : parseTodayChallengeProjection;
+    : sport === "nba"
+      ? parseNbaTodayChallengeProjection
+      : parseTodayChallengeProjection;
 
   return {
     async loadToday() {
@@ -512,6 +533,7 @@ export function createTodayChallengeRepository(
             millionaire: entry.game_averages.millionaire ?? null,
             sportsFeud: entry.game_averages.sports_feud ?? null,
             barTrivia: entry.game_averages.bar_trivia ?? null,
+            higherLower: entry.game_averages.higher_lower ?? null,
           },
           isCurrentUser: entry.is_current_user,
         })),
