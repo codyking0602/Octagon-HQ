@@ -137,7 +137,7 @@ export const NBA_FEUD_ROUND4_ALIASES: Record<string, string[]> = {
     "Water"
   ],
   "Extra shirt": [
-    "Shirt"
+    "Change of clothes"
   ],
   "Throw T-shirts": [
     "T shirt cannon",
