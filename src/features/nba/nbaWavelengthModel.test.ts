@@ -39,7 +39,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
   it("includes a meaningful share of clearly named NBA culture and rivalry references", () => {
     const cultural = new Set(["SHOWMANSHIP", "VILLAIN REPUTATION", "CULTURAL INFLUENCE", "HOME-COURT HEAT", "RIVALRY HEAT"]);
     const culture = nbaWavelengthClues.filter(clue => cultural.has(clue.category));
-    expect(culture).toHaveLength(56);
+    expect(culture).toHaveLength(94);
     expect(culture.length / nbaWavelengthClues.length).toBeGreaterThan(.12);
     expect(culture.length / nbaWavelengthClues.length).toBeLessThan(.2);
     for (const category of cultural) {
@@ -78,8 +78,8 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(nbaWavelengthClues.length).toBe(581);
   });
 
-  it("presents a single unambiguous positive attribute for every one of 386 clues", () => {
-    expect(nbaWavelengthClues).toHaveLength(386);
+  it("presents a single unambiguous positive attribute for every one of 581 clues", () => {
+    expect(nbaWavelengthClues).toHaveLength(581);
     for (const clue of nbaWavelengthClues) {
       expect(clue.text).toBe(nbaWavelengthCluePrompt(clue.category, clue.subject));
       expect(clue.text).toContain(clue.subject);
