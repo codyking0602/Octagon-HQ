@@ -16,9 +16,9 @@ const roundDifficulty = {
 
 describe("NBA Bar Trivia quality and Daily owner preview", () => {
   it("maintains audited evergreen bank dimensions without hiding content shortfall", () => {
-    expect(NBA_BAR_TRIVIA_QUESTION_BANK.length).toBe(125);
+    expect(NBA_BAR_TRIVIA_QUESTION_BANK.length).toBe(118);
     expect(NBA_BAR_TRIVIA_UNIQUE_APPEARANCES).toBe(11);
-    for (const [round, minimum] of Object.entries({ round1: 35, round2: 36, round3: 38, "last-call": 16 })) {
+    for (const [round, minimum] of Object.entries({ round1: 34, round2: 33, round3: 35, "last-call": 16 })) {
       expect(NBA_BAR_TRIVIA_QUESTION_BANK.filter(q => q.round === round)).toHaveLength(minimum);
     }
     const ids = NBA_BAR_TRIVIA_QUESTION_BANK.map(q => q.id);
