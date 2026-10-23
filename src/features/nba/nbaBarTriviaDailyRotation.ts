@@ -13,10 +13,10 @@ import { NBA_BAR_TRIVIA_QUESTION_BANK } from "./nbaBarTriviaQuestionBank";
  * Publisher integration will supply this from the NBA Daily schedule after
  * owner approval; preview does not write official attempts or score.
  *
- * Curated inventory currently guarantees 11 complete appearances without
+ * Curated inventory guarantees 20 complete appearances without
  * reusing a question. Do not inflate this value without new reviewed content.
  */
-export const NBA_BAR_TRIVIA_UNIQUE_APPEARANCES = 11;
+export const NBA_BAR_TRIVIA_UNIQUE_APPEARANCES = 20;
 
 export interface NbaBarTriviaDailyBoard {
   questions: readonly BarTriviaQuestion[];
@@ -29,7 +29,7 @@ function buildCycle(cycle: number): readonly NbaBarTriviaDailyBoard[] {
   const used = new Set<string>();
   const result: NbaBarTriviaDailyBoard[] = [];
   for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot += 1) {
-    const random = seededLineupRandom("nba-bar-trivia-daily-preview-v1", String(cycle), String(slot), "questions");
+    const random = seededLineupRandom("nba-bar-trivia-daily-preview-v2-200", String(cycle), String(slot), "questions");
     const questions = buildBarTriviaRun(NBA_BAR_TRIVIA_QUESTION_BANK, "nba", {
       random,
       recentQuestionIds: [...used],
