@@ -1159,7 +1159,7 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
     () => lockedSport === "nba" && !previewSeed && rotationCursor
       ? buildNbaAverageFanRotationBoard(rotationCursor.seed, rotationCursor.cursor)
       : buildAverageFanCasualBoard(casualSport, previewSeed ?? `${casualSport}-owner-casual-${lockedSport ? randomSeed + "-" : ""}${gameKey}`),
-    [casualSport, gameKey, lockedSport, previewSeed, randomSeed],
+    [casualSport, gameKey, lockedSport, previewSeed, randomSeed, rotationCursor],
   );
   const casualQuestions = casualBoard.questions;
   const casualFinal = casualBoard.finalQuestion;
