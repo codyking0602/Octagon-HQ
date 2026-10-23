@@ -47,7 +47,7 @@ Ranking order is a recognition-first editorial judgment **not a survey result**.
 | Name a kind of pass an NBA player might throw. | 1. Bounce pass; 2. Chest pass; 3. No-look pass; 4. Overhead pass; 5. Behind-the-back pass; 6. Alley-oop pass; 7. Outlet pass; 8. Lob pass | 12 |
 | Name something an NBA player might put in a gym bag. | 1. Basketball shoes; 2. Jersey; 3. Water bottle; 4. Towel; 5. Headphones; 6. Socks; 7. Phone; 8. Shorts | 12 |
 | Name something NBA fans might chant during a game. | 1. Defense; 2. MVP; 3. Let's go team; 4. Airball; 5. Ref you suck; 6. Beat LA; 7. Three; 8. We want more | 6 |
-| Name a reason an NBA player might miss a game. | 1. Ankle injury; 2. Knee injury; 3. Illness; 4. Suspension; 5. Rest; 6. Personal reasons; 7. Back injury; 8. Concussion | 11 |
+| Name a reason an NBA player might miss a game. | 1. Injury; 2. Illness; 3. Suspension; 4. Rest; 5. Personal reasons; 6. Concussion; 7. Family emergency; 8. Travel issue | 12 |
 | Name something an NBA player might do after hitting a big shot. | 1. Raise arms; 2. High-five teammates; 3. Flex; 4. Yell; 5. Fist pump; 6. Point to crowd; 7. Dance; 8. Chest bump | 11 |
 | Name an offensive basketball play an NBA team might run. | 1. Pick-and-roll; 2. Fast break; 3. Isolation; 4. Post-up; 5. Alley-oop; 6. Give-and-go; 7. Backdoor cut; 8. Drive-and-kick | 8 |
 | Name something NBA players might do on a road trip. | 1. Fly on team plane; 2. Stay in a hotel; 3. Eat together; 4. Practice; 5. Watch film; 6. Sleep; 7. Play video games; 8. Travel by bus | 10 |
