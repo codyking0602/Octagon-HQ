@@ -225,7 +225,13 @@ export function auditNbaWavelengthCatalog() {
     if (!Number.isInteger(clue.rating) || clue.rating < 1 || clue.rating > 100) {
       failures.push("out-of-range rating " + clue.id);
     }
-    if (!clue.text.includes("—")) failures.push("missing context " + clue.id);
+    // On-screen text is one focused attribute; explanations remain in editorialNote.
+    if (!clue.editorialNote.includes(" — ") || !clue.editorialNote.includes(clue.subject)) {
+      failures.push("missing editorial context " + clue.id);
+    }
+    if (clue.text !== nbaWavelengthCluePrompt(clue.category, clue.subject)) {
+      failures.push("ambiguous playing prompt " + clue.id);
+    }
     seen.add(clue.id);
   }
   return {

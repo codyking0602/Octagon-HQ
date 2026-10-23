@@ -46,7 +46,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
       const rows = culture.filter(clue => clue.category === category);
       expect(rows.length).toBeGreaterThanOrEqual(11);
       expect(new Set(rows.map(row => row.subject)).size).toBe(rows.length);
-      expect(rows.every(row => row.text.includes(" — "))).toBe(true);
+      expect(rows.every(row => row.editorialNote.includes(" — "))).toBe(true);
     }
     const byCategory = new Map<string, number[]>();
     for (const clue of nbaWavelengthClues) {
