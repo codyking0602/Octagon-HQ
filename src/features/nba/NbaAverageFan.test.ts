@@ -273,9 +273,10 @@ describe("NBA Average Fan retained gameplay and safe owner preview", () => {
     const official = readFileSync("src/features/play/averageFanDailyRuntime.ts", "utf8");
 
     expect(router).toContain('path: "nba/average-fan", element: <NbaWhoAmIOwnerGate><NbaAverageFanPage /></NbaWhoAmIOwnerGate>');
-    expect(lobby).toContain('to="/nba/average-fan"');
-    expect(lobby).toContain('to="/nba/average-fan?mode=daily"');
-    // Both Casual and date-seeded Daily previews share the same pathname.
+    expect(lobby).toContain('average_fan: "/nba/average-fan"');
+    expect(lobby).toContain("Daily Test Catalog");
+    expect(lobby).toContain("previewRoute(game)");
+    // Owner rehearsals and date-seeded Daily previews share the same pathname.
     // The canonical immersive-game predicate must also suppress header, bottom nav and pull-to-refresh.
     const immersivePredicate = shell.match(/const isAverageFanGame = ([^;]+);/)?.[1];
     expect(immersivePredicate).toContain('location.pathname === "/nba/average-fan"');
