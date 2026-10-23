@@ -1,10 +1,12 @@
 import "../../styles/nba-game-actions.css";
+import "../../styles/nba-owner-daily.css";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "../play/GameResultActions";
-import { recordLineupCompletion, rememberLineup, curatedLineupIdentity } from "../play/lineupModel";
+import { recordLineupCompletion, rememberLineup, curatedLineupIdentity, dailyLineupIdentity } from "../play/lineupModel";
+import { nbaCentralDay } from "./nbaDailySchedule";
 import { FootballHitTheNumberPresentation } from "../back-room/FootballHitTheNumberPresentation";
 import { asChallengeJson, challengeRecord, challengeString, footballChallengeUrl } from "../back-room/footballChallengeRuntime";
 import {
@@ -57,7 +59,14 @@ export default function NbaHitTheNumberPage() {
   const challengeId=profile.challenge?.code??`nba-shared:${seedFromUrl??""}`;
   const sharedRun=useMemo(()=>challengeRun(seedFromProfile??seedFromUrl,challengeId),
     [seedFromProfile,seedFromUrl,challengeId]);
-  const [run,setRun]=useState<NbaHitRun>(()=>sharedRun??createNbaHitTheNumberRun());
+  const daily = params.get("mode")==="daily" && !sharedRun && !profile.code;
+  const ownerDay=nbaCentralDay();
+  const dailyRun=useMemo<NbaHitRun|null>(()=> {
+    if (!daily) return null;
+    const identity=dailyLineupIdentity(NBA_HIT_THE_NUMBER_GAME_ID,ownerDay,"owner-preview");
+    return {plan:createNbaHitTheNumberPlan(identity.seed),identity};
+  },[daily,ownerDay]);
+  const [run,setRun]=useState<NbaHitRun>(()=>sharedRun??dailyRun??createNbaHitTheNumberRun());
   const [selected,setSelected]=useState<string[]>([]);
   const [result,setResult]=useState<NbaHitResult|null>(null);
   const [shareStatus,setShareStatus]=useState("");
@@ -86,13 +95,13 @@ export default function NbaHitTheNumberPage() {
     });
   }
   function newBoard(){
-    setRun(createNbaHitTheNumberRun());setSelected([]);setResult(null);setShareStatus("");
+    setRun(dailyRun??createNbaHitTheNumberRun());setSelected([]);setResult(null);setShareStatus("");
     window.scrollTo({top:0,behavior:"smooth"});
   }
   function finish(){
     if(result||!valid)return;
     const graded=nbaHitResult(plan,selected);
-    recordLineupCompletion(run.identity,{...resultPayload(graded),statId:plan.statId,
+    if (!daily) recordLineupCompletion(run.identity,{...resultPayload(graded),statId:plan.statId,
       version:NBA_HIT_THE_NUMBER_VERSION,formatId:plan.formatId,selectedIds:[...selected]});
     if(profile.isRecipient&&profile.challenge?.responderResult===null) {
       profile.submitResult(asChallengeJson(resultPayload(graded)));
@@ -115,16 +124,22 @@ export default function NbaHitTheNumberPage() {
     });
     setShareStatus(status);
   }
-  const resultActions=result?<GameResultActions
+  const resultActions=result ? daily ? <div className="game-result-actions-wrap">
+    <div className="game-result-actions">
+      <button className="find-secondary-action" type="button" onClick={newBoard}>REPLAY PREVIEW</button>
+      <button className="find-secondary-action" type="button" onClick={()=>navigate("/nba")}>ALL NBA GAMES</button>
+    </div>
+  </div> : <GameResultActions
     onChallenge={()=>void challengeSomeone()}
     onReplay={isShared?()=>{setSelected([]);setResult(null)}:newBoard}
     onAllGames={()=>navigate("/nba")}
     replayLabel={isShared?"REPLAY CHALLENGE":"NEW BOARD"}
     status={shareStatus}
-  />:null;
+  /> : null;
   return <div className="page hit-number-page football-hit-number-page nba-hit-number-page"
     data-sport="nba" data-game="hit-the-number" data-format-id={plan.formatId}
     data-challenge-id={run.identity.challengeId} style={nbaTheme}>
+    {daily ? <p className="nba-hit-owner-daily" role="status">NBA DAILY · OWNER PREVIEW · NOT RANKED · NO OFFICIAL SCORE</p> : null}
     {profile.creator?<section className="challenge-game-banner">
       <span>PROFILE CHALLENGE</span>
       <strong>{profile.creator.displayName} sent this exact NBA Hit the Number board.</strong>
@@ -138,7 +153,7 @@ export default function NbaHitTheNumberPage() {
       availableIds={progressive&&!result?available:plan.subjectIds}
       values={result?Object.fromEntries(plan.subjectIds.map(id=>[id,nbaHitValue(nbaHitSubjectById.get(id)!,plan.statId)])):undefined}
       result={result} formatValue={formatNbaHitNumber}
-      onBack={()=>navigate("/nba")} onNewBoard={!result&&!isShared?newBoard:null}
+      onBack={()=>navigate("/nba")} onNewBoard={!result&&!isShared&&!daily?newBoard:null}
       onToggle={toggle} onRewind={index=>{if(!result&&progressive)setSelected(selected.slice(0,index));}}
       onLock={valid?finish:null} resultActions={resultActions}
       renderSubjectMark={(id,className)=><NbaPlayerMark subjectId={id} className={className}/>}
