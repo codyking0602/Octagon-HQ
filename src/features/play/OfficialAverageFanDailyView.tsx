@@ -61,7 +61,7 @@ function question(value: unknown, fallbackSport: AverageFanSport): AverageFanQue
     : undefined;
   return {
     id: row.id,
-    sport: row.sport === "nfl" || row.sport === "cfb" || row.sport === "ufc"
+    sport: row.sport === "nfl" || row.sport === "cfb" || row.sport === "ufc" || row.sport === "nba"
       ? row.sport
       : fallbackSport,
     grade: grade as 1 | 2 | 3 | 4 | 5,
@@ -98,7 +98,7 @@ function resolvedQuestions(value: unknown, sport: AverageFanSport): ResolvedQues
 
 function sportFromProjection(projection: TodayChallengeProjection): AverageFanSport {
   const value = projection.publicSetup.sport;
-  return value === "nfl" || value === "cfb" || value === "ufc" ? value : "ufc";
+  return value === "nfl" || value === "cfb" || value === "ufc" || value === "nba" ? value : "ufc";
 }
 
 export function OfficialAverageFanDailyView({
