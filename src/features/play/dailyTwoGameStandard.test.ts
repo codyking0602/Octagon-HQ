@@ -14,6 +14,7 @@ import { buildFootballDailyPersistenceSetup as buildFootballWavelengthDaily } fr
 import { buildFootballDailyPersistenceSetup as buildFootballFindLeaderDaily } from "./footballDailyPublicationFindLeader";
 import { buildFootballDailyPersistenceSetup as buildFootballHitNumberDaily } from "./footballDailyPublicationHitNumber";
 import { advanceFootballOfficialDailyRuntime } from "./footballTodayChallengeAdvanceRuntime";
+import { advanceWavelengthHandoff } from "../../../supabase/functions/daily-challenge-runtime/twoGameWavelengthHandoff";
 
 function record(value: unknown) {
   return value as Record<string, unknown>;
@@ -118,6 +119,12 @@ describe("two-game Daily standard", () => {
     expect(record(context.publicState.active_round).guesses).toEqual([]);
 
     const acknowledged = advanceFootballOfficialDailyRuntime(context, { type: "next_game" });
+    expect(advanceWavelengthHandoff(context, { type: "next_game" })).toEqual(acknowledged);
+    expect(() => advanceWavelengthHandoff(context, { guess: 50 })).toThrow(/handoff/);
+    expect(advanceWavelengthHandoff({
+      ...context,
+      publicState: { ...context.publicState, handoff_pending: false },
+    }, { type: "next_game" })).toBeNull();
     expect(acknowledged.complete).toBe(false);
     expect(acknowledged.publicState.round_index).toBe(1);
     expect(acknowledged.publicState.handoff_pending).toBe(false);
