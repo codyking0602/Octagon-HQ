@@ -72,10 +72,11 @@ export default function NbaWhoAmIPage() {
     {daily ? <section className="nba-whoami-owner-daily" role="status" aria-label="NBA Who Am I private Daily rehearsal">
       <strong>NBA DAILY · OWNER PREVIEW · GAME {dailyRoundIndex + 1} OF 2</strong>
       <span>Private test · not ranked · no official result is saved</span>
-      {dailyRoundIndex === 0 && dailyScores[0] !== null ? <button type="button" onClick={() => setDailyRoundIndex(1)}>NEXT GAME →</button> : null}
+      {dailyRoundIndex === 0 && dailyScores[0] !== null ? <button type="button" onClick={() => { setDailyRoundIndex(1); window.scrollTo({ top: 0, behavior: "smooth" }); }}>NEXT GAME →</button> : null}
       {dailyRoundIndex === 1 && dailyScores[1] !== null ? <strong>
         TWO-GAME PREVIEW AVERAGE: {Math.round((dailyScores[0]! + dailyScores[1]!) / 2)}/100
       </strong> : null}
+      {dailyRoundIndex === 1 && dailyScores[1] !== null ? <button type="button" onClick={() => navigate("/nba")}>ALL NBA GAMES →</button> : null}
     </section> : null}
     <WhoAmIPage
     key={daily ? "nba-owner-daily-" + day + "-" + dailyRoundIndex : "nba-casual"}
