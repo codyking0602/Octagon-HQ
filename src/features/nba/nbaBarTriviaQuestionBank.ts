@@ -2,11 +2,15 @@ import type { BarTriviaQuestion } from "../games/barTriviaEngine";
 import { NBA_BAR_TRIVIA_EASY } from "./nbaBarTriviaEasy";
 import { NBA_BAR_TRIVIA_EASY_SUPPLEMENT } from "./nbaBarTriviaEasySupplement";
 import { NBA_BAR_TRIVIA_EASY_CULTURE } from "./nbaBarTriviaEasyCulture";
+import { NBA_BAR_TRIVIA_EASY_200 } from "./nbaBarTriviaEasy200";
 import { NBA_BAR_TRIVIA_MEDIUM } from "./nbaBarTriviaMedium";
 import { NBA_BAR_TRIVIA_MEDIUM_SUPPLEMENT } from "./nbaBarTriviaMediumSupplement";
+import { NBA_BAR_TRIVIA_MEDIUM_200 } from "./nbaBarTriviaMedium200";
 import { NBA_BAR_TRIVIA_HARD } from "./nbaBarTriviaHard";
+import { NBA_BAR_TRIVIA_HARD_200 } from "./nbaBarTriviaHard200";
 import { NBA_BAR_TRIVIA_LAST_CALL } from "./nbaBarTriviaLastCall";
 import { NBA_BAR_TRIVIA_LAST_CALL_SUPPLEMENT } from "./nbaBarTriviaLastCallSupplement";
+import { NBA_BAR_TRIVIA_LAST_CALL_200 } from "./nbaBarTriviaLastCall200";
 import { NBA_BAR_TRIVIA_RETIRED_IDS } from "./nbaBarTriviaRetirements";
 
 /**
@@ -18,11 +22,15 @@ const authored: readonly BarTriviaQuestion[] = [
   ...NBA_BAR_TRIVIA_EASY,
   ...NBA_BAR_TRIVIA_EASY_SUPPLEMENT,
   ...NBA_BAR_TRIVIA_EASY_CULTURE,
+  ...NBA_BAR_TRIVIA_EASY_200,
   ...NBA_BAR_TRIVIA_MEDIUM,
   ...NBA_BAR_TRIVIA_MEDIUM_SUPPLEMENT,
+  ...NBA_BAR_TRIVIA_MEDIUM_200,
   ...NBA_BAR_TRIVIA_HARD,
+  ...NBA_BAR_TRIVIA_HARD_200,
   ...NBA_BAR_TRIVIA_LAST_CALL,
   ...NBA_BAR_TRIVIA_LAST_CALL_SUPPLEMENT,
+  ...NBA_BAR_TRIVIA_LAST_CALL_200,
 ];
 
 export const NBA_BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] =
