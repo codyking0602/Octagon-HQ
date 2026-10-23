@@ -1830,8 +1830,10 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
 // Keep tested questions, supplement only with editorially approved additions.
 BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS, ...NBA_SPORTS_FEUD_MAIN_ROUND2, ...NBA_SPORTS_FEUD_MAIN_ROUND3, ...NBA_FEUD_MAIN_ROUND4);
 BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS, ...NBA_SPORTS_FEUD_FAST_ROUND2, ...NBA_SPORTS_FEUD_FAST_ROUND3, ...NBA_FEUD_FAST_ROUND4);
-for (const [name, aliases] of Object.entries({ ...NBA_SPORTS_FEUD_ROUND3_ALIASES, ...NBA_FEUD_ROUND4_ALIASES })) {
-  BANK.alias[name] = [...new Set([...(BANK.alias[name] ?? []), ...aliases])];
+for (const additions of [NBA_SPORTS_FEUD_ROUND3_ALIASES, NBA_FEUD_ROUND4_ALIASES]) {
+  for (const [name, aliases] of Object.entries(additions)) {
+    BANK.alias[name] = [...new Set([...(BANK.alias[name] ?? []), ...aliases])];
+  }
 }
 
 export const NBA_SPORTS_FEUD_MAIN = BANK.main;
