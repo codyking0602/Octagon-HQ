@@ -1,4 +1,8 @@
 import { assertAverageFanQuestion, type AverageFanQuestion, type AverageFanGrade } from "./averageFanEngine";
+import { NBA_AVERAGE_FAN_EASY_ADDITIONS } from "./nbaAverageFanFourMonthEasy";
+import { NBA_AVERAGE_FAN_GRADE_4_ADDITIONS } from "./nbaAverageFanFourMonthGrade4";
+import { NBA_AVERAGE_FAN_GRADE_5_ADDITIONS } from "./nbaAverageFanFourMonthGrade5";
+import { NBA_AVERAGE_FAN_FINAL_ADDITIONS } from "./nbaAverageFanFourMonthFinals";
 
 /** Individually authored, evergreen NBA trivia. No external generated player records or live rosters. */
 const RAW: Record<string, string> = {
@@ -45,10 +49,19 @@ const NBA_AVERAGE_FAN_SOURCE_OVERRIDES: Readonly<Record<string, string>> = {
   "Who scored a playoff-record 63 points against Boston in 1986?": "https://www.nba.com/news/history-top-moments-jordan-63-playoffs"
 };
 
-/** Tilde columns: subject, prompt, answer, three distractors/misses, format, explanation, optional slash-separated aliases. */
+/** Append-only expansion preserves existing question IDs. */
+const NBA_FOUR_MONTH_ADDITIONS: Readonly<Record<string, readonly string[]>> = {
+  "2": NBA_AVERAGE_FAN_EASY_ADDITIONS["2"],
+  "3": NBA_AVERAGE_FAN_EASY_ADDITIONS["3"],
+  "4": NBA_AVERAGE_FAN_GRADE_4_ADDITIONS,
+  "5": NBA_AVERAGE_FAN_GRADE_5_ADDITIONS,
+  final: NBA_AVERAGE_FAN_FINAL_ADDITIONS,
+};
+
+/** Tilde columns: subject, prompt, answer, three distractors/misses, format, explanation, aliases, official source URL. */
 export const nbaAverageFanQuestionBank: readonly AverageFanQuestion[] = Object.entries(RAW).flatMap(([bucket, source]) =>
-  source.split("\n").filter(Boolean).map((line, index) => {
-    const [subject, prompt, answer, wrongOne, wrongTwo, wrongThree, format, explanation, aliasField] = line.split("~");
+  [...source.split("\n").filter(Boolean), ...NBA_FOUR_MONTH_ADDITIONS[bucket]!].map((line, index) => {
+    const [subject, prompt, answer, wrongOne, wrongTwo, wrongThree, format, explanation, aliasField, sourceOverride] = line.split("~");
     const grade = (bucket === "final" ? 5 : Number(bucket)) as AverageFanGrade;
     const id = `average-fan:nba:${bucket}:${String(index + 1).padStart(2, "0")}`;
     const choices = format === "C"
@@ -70,7 +83,7 @@ export const nbaAverageFanQuestionBank: readonly AverageFanQuestion[] = Object.e
       contentType: "evergreen",
       difficultyNudge: grade <= 2 ? -2 : grade === 3 ? -1 : grade === 4 ? 0 : bucket === "final" ? 3 : 2,
       protectedFinal: bucket === "final",
-      sourceUrl: NBA_AVERAGE_FAN_SOURCE_OVERRIDES[prompt]
+      sourceUrl: sourceOverride || NBA_AVERAGE_FAN_SOURCE_OVERRIDES[prompt]
         ?? (prompt.includes("three different franchises")
         ? "https://www.nba.com/news/19-playoff-stats-lebron-james-2026-playoffs"
         : prompt.includes("four straight All-Star Games")
