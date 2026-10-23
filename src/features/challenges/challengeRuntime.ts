@@ -52,6 +52,9 @@ function canonicalChallengeRoute(challenge: PlayChallenge) {
   if (challenge.gameId === "higher-lower" && challenge.gameVersion.startsWith("nba-higher-lower-")) {
     return "/nba/higher-lower";
   }
+  if (challenge.gameId === "hit-the-number" && challenge.gameVersion.startsWith("nba-hit-the-number-")) {
+    return "/nba/hit-the-number";
+  }
   try {
     return playGameDefinition(challenge.gameId, challengeSport(challenge)).route;
   } catch {
