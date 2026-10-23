@@ -31,7 +31,7 @@ describe("NBA Wavelength owner-only presentation", () => {
     expect(view.container.querySelector(".wavelength-page--nba")).toBeInTheDocument();
     expect(screen.getByText("Find the hidden 1–100 number.")).toBeInTheDocument();
     expect(screen.getByText("Each clue reacts to your last guess. Only your fourth guess scores.")).toBeInTheDocument();
-    expect(screen.getByRole("slider", { name: "NBA Wavelength guess from 1 to 100" })).toHaveValue("50");
+    expect((screen.getByRole("slider", { name: "NBA Wavelength guess from 1 to 100" }) as HTMLInputElement).value).toBe("50");
     expect(screen.getByText("GAME 1 OF 2")).toBeInTheDocument();
     finishGame();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
@@ -45,11 +45,11 @@ describe("NBA Wavelength owner-only presentation", () => {
     mount();
     const slider = screen.getByRole("slider", { name: "NBA Wavelength guess from 1 to 100" });
     fireEvent.change(slider, { target: { value: "91" } });
-    expect(slider).toHaveValue("91");
+    expect((slider as HTMLInputElement).value).toBe("91");
     finishGame();
     fireEvent.click(screen.getByRole("button", { name: "START GAME 2 →" }));
     expect(screen.getByText("GAME 2 OF 2")).toBeInTheDocument();
-    expect(screen.getByRole("slider", { name: "NBA Wavelength guess from 1 to 100" })).toHaveValue("50");
+    expect((screen.getByRole("slider", { name: "NBA Wavelength guess from 1 to 100" }) as HTMLInputElement).value).toBe("50");
     finishGame();
     expect(screen.getByLabelText("NBA Wavelength preview average")).toBeInTheDocument();
     expect(screen.getByText("Both games count equally. Only each game's fourth guess is scored.")).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe("NBA Wavelength owner-only presentation", () => {
     expect(window.localStorage.getItem("octagon-hq:play-lineup-history:v1")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "REPLAY TODAY" }));
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(opening);
-    expect(screen.getByRole("slider", { name: "NBA Wavelength guess from 1 to 100" })).toHaveValue("50");
+    expect((screen.getByRole("slider", { name: "NBA Wavelength guess from 1 to 100" }) as HTMLInputElement).value).toBe("50");
   });
 
   it("has owner-only routes and does not enroll the NBA in the official Daily schedule", async () => {
