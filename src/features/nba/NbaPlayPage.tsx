@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { createTodayChallengeRepository } from "../play/todayChallengeRepository";
+import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { MatchupsCompact } from "../play/PlayV2Page";
@@ -54,6 +57,24 @@ export default function NbaPlayPage() {
   const ownerPreview = nbaOwnerPreviewDaily(day);
   const featured = published ? slot?.gameType : owner ? ownerPreview ?? slot?.gameType : null;
   const [showOwnerCatalog, setShowOwnerCatalog] = useState(false);
+  const signedIn = status === "ready" && Boolean(profile?.id);
+  const dailyRepository = useMemo(() => createTodayChallengeRepository(undefined, "nba"), []);
+  const official = useTodayChallengeOverview({
+    profileId: profile?.id ?? "signed-out",
+    enabled: published && signedIn,
+    projection: null,
+    repository: dailyRepository,
+    sport: "nba",
+  });
+  const history = useQuery({
+    queryKey: ["nba-daily-history", profile?.id ?? "signed-out"],
+    queryFn: () => dailyRepository!.loadHistory(),
+    enabled: published && signedIn && Boolean(dailyRepository),
+  });
+  const myStanding = official.standings?.entries.find(row => row.isCurrentUser) ?? null;
+  const best = history.data?.length
+    ? Math.max(...history.data.map(row => row.normalizedScore))
+    : null;
 
   return <div className="page play-v2 nba-games-hub" data-sport="nba" data-testid="nba-play-v2-hub">
     <header className="play-v2__heading">
@@ -76,10 +97,10 @@ export default function NbaPlayPage() {
           <span className="play-v2__daily-arrow" aria-hidden="true">↗</span>
         </div>
         <div className="play-v2__daily-actions">
-          <button type="button" onClick={() => navigate(published ? NBA_GAME_ROUTES[featured] : previewRoute(featured))}>
+          <button type="button" onClick={() => navigate(published ? "/nba/today" : previewRoute(featured))}>
             {published ? "PLAY TODAY" : "TEST GAME"} →
           </button>
-          <button type="button" disabled={!published} title={!published ? "Official NBA standings are not active yet." : undefined}>
+          <button type="button" onClick={() => navigate("/nba/standings")} disabled={!published} title={!published ? "Official NBA standings are not active yet." : undefined}>
             TODAY'S STANDINGS ↗
           </button>
         </div>
@@ -103,11 +124,11 @@ export default function NbaPlayPage() {
         <span className="nba-games-hub__pending-label">OFFICIAL SCORES ONLY</span>
       </div>
       <div className="play-v2__metrics">
-        <div><span>DAILY AVERAGE</span><strong>—</strong><small>/100</small></div>
-        <div><span>COMPLETED</span><strong>—</strong><small>official games</small></div>
-        <div><span>PERSONAL BEST</span><strong>—</strong><small>/100</small></div>
+        <div><span>DAILY AVERAGE</span><strong>{published && myStanding ? Math.round(myStanding.averageScore) : "—"}</strong><small>/100</small></div>
+        <div><span>COMPLETED</span><strong>{published && myStanding ? myStanding.played : "—"}</strong><small>official games</small></div>
+        <div><span>PERSONAL BEST</span><strong>{published && best !== null ? best : "—"}</strong><small>/100</small></div>
       </div>
-      <p className="play-v2__muted">Your NBA scores will appear here after official Daily results are enabled. Private previews do not count.</p>
+      <p className="play-v2__muted">{published ? "Official scores are saved to your HQ profile. Preview games never count." : "Your NBA scores will appear here after official Daily results are enabled. Private previews do not count."}</p>
     </section>
 
     {profile ? <MatchupsCompact sport="nba" /> : (
