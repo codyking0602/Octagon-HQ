@@ -23,7 +23,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(audit.distinctSubjects).toBeGreaterThan(170);
     expect(audit.categories).toBe(25);
     expect(audit.eras).toBe(4);
-    expect(NBA_WAVELENGTH_CATEGORY_ANCHORS).toHaveLength(14);
+    expect(NBA_WAVELENGTH_CATEGORY_ANCHORS).toHaveLength(25);
     expect(new Set(NBA_WAVELENGTH_CATEGORY_ANCHORS.map(row => row.category)).size).toBe(25);
     expect(NBA_WAVELENGTH_BANDS[0].min).toBe(1);
     expect(NBA_WAVELENGTH_BANDS.at(-1)?.max).toBe(100);
