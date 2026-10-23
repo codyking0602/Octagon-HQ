@@ -9,7 +9,7 @@
   --two-game-accent: #ff3131;
 }
 
-.daily-two-game-result--football {
+.daily-two-game-result--nba {\n  --two-game-accent: #f2a341;\n}\n\n.daily-two-game-result--football {
   --two-game-accent: #8fc8f2;
 }
 
