@@ -2,11 +2,13 @@ import { describe, expect, it } from "vitest";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 
 describe("Bar Trivia question bank", () => {
-  it("ships a complete seed set for all three sports and every round", () => {
+  it("keeps usable quality-first depth for all three sports and every round", () => {
     const targets = {
-      nfl: { total: 200, round1: 75, round2: 60, round3: 55, lastCall: 20 },
-      cfb: { total: 200, round1: 75, round2: 60, round3: 60, lastCall: 20 },
-      ufc: { total: 320, round1: 75, round2: 90, round3: 85, lastCall: 30 },
+      // Safety floors support ten-question runs; keep/cut editorial decisions
+      // must not be reversed just to satisfy historic quantity quotas.
+      nfl: { total: 140, round1: 55, round2: 35, round3: 25, lastCall: 10 },
+      cfb: { total: 140, round1: 55, round2: 30, round3: 25, lastCall: 10 },
+      ufc: { total: 220, round1: 55, round2: 50, round3: 35, lastCall: 15 },
     } as const;
 
     for (const league of ["nfl", "cfb", "ufc"] as const) {
@@ -42,8 +44,10 @@ describe("Bar Trivia question bank", () => {
   it("gives every current-event question an explicit eligibility window and verifiable source", () => {
     const currentEvents = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.contentType === "current-event");
     expect(currentEvents.length).toBeGreaterThanOrEqual(30);
+    // Current-event facts expire; retiring weak articles is better than
+    // keeping a fixed quota of weak/unrecognizable news.
     for (const league of ["nfl", "cfb", "ufc"] as const) {
-      expect(currentEvents.filter((question) => question.league === league).length).toBeGreaterThanOrEqual(10);
+      expect(currentEvents.filter((question) => question.league === league).length).toBeGreaterThanOrEqual(5);
     }
 
     for (const question of currentEvents) {
@@ -77,7 +81,7 @@ describe("Bar Trivia question bank", () => {
           question.round === "round1" &&
           question.difficulty === "easy",
       );
-      expect(easy.length).toBeGreaterThanOrEqual(75);
+      expect(easy.length).toBeGreaterThanOrEqual(60);
     }
   });
 

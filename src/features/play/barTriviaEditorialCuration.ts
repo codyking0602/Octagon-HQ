@@ -1,0 +1,166 @@
+import type { BarTriviaRound } from "../games/barTriviaEngine";
+
+/**
+ * Editorial curation of NEW Bar Trivia Daily lineups only.
+ * Authored source rows remain intact for historical published setup/result evidence.
+ * See docs/audits/bar-trivia-cross-sport-2026-10-22.md.
+ */
+export type BarTriviaRetirementReason =
+  | "same-fact-in-millionaire"
+  | "same-fact-within-bar-trivia"
+  | "answer-giveaway"
+  | "weak-or-obscure"
+  | "stale-niche-current-event";
+
+export const BAR_TRIVIA_EDITORIAL_RETIREMENTS: Readonly<Record<string, BarTriviaRetirementReason>> = {
+  // NFL
+  // same-fact-in-millionaire
+  "nfl-r1-helmet-catch-player": "same-fact-in-millionaire",
+  "nfl-r3-first-50-pass-td": "same-fact-in-millionaire",
+  "nfl-r3-first-super-bowl-two-teams-qb": "same-fact-in-millionaire",
+  "nfl-r3-music-city": "same-fact-in-millionaire",
+  "nfl-easy-minneapolis-miracle": "same-fact-in-millionaire",
+  "nfl-r1-first-2000-rusher": "same-fact-in-millionaire",
+  "nfl-r1-immaculate-reception-player": "same-fact-in-millionaire",
+  "nfl-easy2-butler-interception": "same-fact-in-millionaire",
+  "nfl-easy2-holmes-catch": "same-fact-in-millionaire",
+  "nfl-r3-first-defensive-mvp": "same-fact-in-millionaire",
+  // answer-giveaway
+  "nfl-r1-bear-down": "answer-giveaway",
+  "nfl-r3-ickey-shuffle": "answer-giveaway",
+  // same-fact-within-bar-trivia
+  "nfl-easy2-philly-special-team": "same-fact-within-bar-trivia",
+  "nfl-r3-first-cold-weather-outdoor-sb": "same-fact-within-bar-trivia",
+  "nfl-final-first-cold-weather-sb-venue": "same-fact-within-bar-trivia",
+  "nfl-r3-black-hole": "same-fact-within-bar-trivia",
+  "nfl-r3-first-super-bowl-home-team": "same-fact-within-bar-trivia",
+  // weak-or-obscure
+  "nfl-r3-president-at-game": "weak-or-obscure",
+  "nfl-r2-thirty-second-clock": "weak-or-obscure",
+  "nfl-r2-ref-wireless-mics": "weak-or-obscure",
+  "nfl-r2-first-11-10-game": "weak-or-obscure",
+  "nfl-r2-first-national-radio-game": "weak-or-obscure",
+  "nfl-r2-radio-helmet-standard-year": "weak-or-obscure",
+  "nfl-r2-first-league-president": "weak-or-obscure",
+  // CFB
+  // same-fact-in-millionaire
+  "cfb-r1-first-cfp-champion": "same-fact-in-millionaire",
+  "cfb-r3-2001-miami-coach": "same-fact-in-millionaire",
+  "cfb-r3-2010-auburn-heisman": "same-fact-in-millionaire",
+  "cfb-r3-first-bcs-champion": "same-fact-in-millionaire",
+  "cfb-r2-2004-auburn-left-out": "same-fact-in-millionaire",
+  "cfb-r3-last-bcs-champ": "same-fact-in-millionaire",
+  "cfb-r3-1997-split-title": "same-fact-in-millionaire",
+  // answer-giveaway
+  "cfb-easy-we-are": "answer-giveaway",
+  "cfb-easy2-bulldogs": "answer-giveaway",
+  "cfb-r2-choke-at-doak": "answer-giveaway",
+  "cfb-final-victory-bell-first-winner": "answer-giveaway",
+  "cfb-r3-beamer-ball": "answer-giveaway",
+  // weak-or-obscure
+  "cfb-r2-traveler-debut-opponent": "weak-or-obscure",
+  "cfb-r2-osceola-first-opponent": "weak-or-obscure",
+  "cfb-r2-reck-football-debut": "weak-or-obscure",
+  "cfb-r2-grove-size": "weak-or-obscure",
+  "cfb-r2-heisman-tv-debut": "weak-or-obscure",
+  "cfb-r2-rose-first-color-coast": "weak-or-obscure",
+  "cfb-r2-first-heisman-finalists": "weak-or-obscure",
+  "cfb-r2-victory-bell-weight": "weak-or-obscure",
+  "cfb-r2-army-navy-first-winner": "weak-or-obscure",
+  "cfb-r2-army-mule-origin-year": "weak-or-obscure",
+  "cfb-r2-rose-first-national-tv": "weak-or-obscure",
+  "cfb-r2-victory-bell-trophy-year": "weak-or-obscure",
+  // UFC
+  // same-fact-in-millionaire
+  "ufc-final-ufc205-opponent": "same-fact-in-millionaire",
+  "ufc-easy2-aldo-13": "same-fact-in-millionaire",
+  "ufc-r1-cejudo-dj": "same-fact-in-millionaire",
+  "ufc-r1-khabib-final": "same-fact-in-millionaire",
+  "ufc-easy2-khabib-record": "same-fact-in-millionaire",
+  "ufc-r1-garbrandt-cruz": "same-fact-in-millionaire",
+  "ufc-r1-first-womens-featherweight-champ": "same-fact-in-millionaire",
+  "ufc-r1-edgar-penn": "same-fact-in-millionaire",
+  "ufc-easy2-diaz-mcgregor": "same-fact-in-millionaire",
+  "ufc-r2-first-city": "same-fact-in-millionaire",
+  "ufc-r3-bisping-title-event": "same-fact-in-millionaire",
+  "ufc-r3-hof-adesanya-gastelum-event": "same-fact-in-millionaire",
+  "ufc-r2-miocic-werdum": "same-fact-in-millionaire",
+  "ufc-r1-first-women": "same-fact-in-millionaire",
+  "ufc-r2-double-champ": "same-fact-in-millionaire",
+  "ufc-r1-gsp-first-title-hughes": "same-fact-in-millionaire",
+  "ufc-r1-volkanovski-holloway": "same-fact-in-millionaire",
+  "ufc-r1-silva-franklin": "same-fact-in-millionaire",
+  "ufc-r1-joanna-esparza": "same-fact-in-millionaire",
+  "ufc-r1-woodley-lawler": "same-fact-in-millionaire",
+  "ufc-easy2-gsp-canada": "same-fact-in-millionaire",
+  "ufc-r1-thug-rose": "same-fact-in-millionaire",
+  "ufc-r2-first-female-double-champ": "same-fact-in-millionaire",
+  "ufc-r1-bisping-title-opponent": "same-fact-in-millionaire",
+  "ufc-r1-oliveira-chandler": "same-fact-in-millionaire",
+  "ufc-r1-holloway-aldo": "same-fact-in-millionaire",
+  "ufc-r1-nunes-tate": "same-fact-in-millionaire",
+  "ufc-r1-first-china-champion": "same-fact-in-millionaire",
+  "ufc-r1-bones": "same-fact-in-millionaire",
+  "ufc-r1-blessed": "same-fact-in-millionaire",
+  "ufc-r1-khabib-eagle": "same-fact-in-millionaire",
+  "ufc-r3-ronda-awarded": "same-fact-in-millionaire",
+  "ufc-easy2-first-womens-champ": "same-fact-in-millionaire",
+  "ufc-r1-serra-tuf4": "same-fact-in-millionaire",
+  "ufc-r2-ufc83-main": "same-fact-in-millionaire",
+  "ufc-r3-serra-upset-event": "same-fact-in-millionaire",
+  "ufc-easy2-weidman-silva": "same-fact-in-millionaire",
+  "ufc-easy-stylebender": "same-fact-in-millionaire",
+  "ufc-r1-first-strawweight-champ": "same-fact-in-millionaire",
+  // same-fact-within-bar-trivia
+  "ufc-r1-first-canada-city": "same-fact-within-bar-trivia",
+  "ufc-r2-california-kid": "same-fact-within-bar-trivia",
+  "ufc-r3-hof-hendo-shogun-event": "same-fact-within-bar-trivia",
+  "ufc-r1-first-australia-city": "same-fact-within-bar-trivia",
+  "ufc-r3-moreno-title-event": "same-fact-within-bar-trivia",
+  "ufc-r3-newton-title-event": "same-fact-within-bar-trivia",
+  "ufc-r3-bustamante-debut-opponent": "same-fact-within-bar-trivia",
+  "ufc-r2-jones-gus-event": "same-fact-within-bar-trivia",
+  "ufc-r3-hof-hughes-trigg-event": "same-fact-within-bar-trivia",
+  "ufc-r2-first-fight-island-ppv": "same-fact-within-bar-trivia",
+  "ufc-r2-mighty-mouse": "same-fact-within-bar-trivia",
+  "ufc-r2-hof-first-event": "same-fact-within-bar-trivia",
+  // weak-or-obscure
+  "ufc-final-first-event-year": "weak-or-obscure",
+  "ufc-r2-ufc100-technical-event-number": "weak-or-obscure",
+  "ufc-r3-hof-mask-wing": "weak-or-obscure",
+  "ufc-r3-hof-gracie-wing": "weak-or-obscure",
+  "ufc-r3-hof-modern-bisping": "weak-or-obscure",
+  "ufc-r3-first-mexico-city": "weak-or-obscure",
+  "ufc-r3-ufc193-venue-name": "weak-or-obscure",
+  "ufc-r2-hof-contributors-purpose": "weak-or-obscure",
+  "ufc-r2-hof-fight-purpose": "weak-or-obscure",
+  // answer-giveaway
+  "ufc-r3-miocic-dc-trilogy": "answer-giveaway",
+  // stale-niche-current-event
+  "ufc-current-2026-09-26-akylbek-tuf-dq": "stale-niche-current-event",
+  "ufc-current-2026-09-26-tina-black-tuf": "stale-niche-current-event",
+};
+
+/** Regrade selected facts without changing game rounds or score values. */
+export const BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES: Readonly<Record<string, BarTriviaRound>> = {
+  "cfb-r3-bowden-program": "round2",
+  "cfb-r3-osborne-program": "round2",
+  "cfb-r3-switzer-program": "round2",
+  "cfb-r3-ralphie": "round2",
+  "cfb-r3-houndstooth-bryant": "round2",
+  "cfb-r3-head-ball-coach": "round2",
+  "cfb-r2-2013-title-catch": "round3",
+  "cfb-r2-2016-title-catch": "round3",
+  "cfb-r2-1988-nd-miami": "round3",
+  "cfb-r2-1966-game-century": "round3",
+  "cfb-r2-2010-dyer-run": "round3",
+  "nfl-r2-radio-helmet-quarterback": "round3",
+  "nfl-r2-1998-thanksgiving-coin": "round3",
+  "nfl-r2-1998-thanksgiving-moss-opponent": "round3",
+  "nfl-r3-helmet-catch-opponent": "round2",
+  "ufc-r3-el-guapo": "round2",
+  "ufc-r3-the-natural": "round2",
+  "ufc-r3-du-plessis-first-sa": "round2",
+  "ufc-r2-ufc5-superfight": "round3",
+  "ufc-r2-rousey-carmouche-city": "round3",
+};
