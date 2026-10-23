@@ -5,6 +5,9 @@ import { NBA_SPORTS_FEUD_MAIN_ROUND2, NBA_SPORTS_FEUD_FAST_ROUND2 } from "./nbaS
 import { NBA_SPORTS_FEUD_MAIN_ROUND3 } from "./nbaSportsFeudExpansionRound3Main";
 import { NBA_SPORTS_FEUD_FAST_ROUND3 } from "./nbaSportsFeudExpansionRound3Fast";
 import { NBA_SPORTS_FEUD_ROUND3_ALIASES } from "./nbaSportsFeudExpansionRound3Aliases";
+import { NBA_FEUD_MAIN_ROUND4 } from "./nbaSportsFeudExpansionRound4Main";
+import { NBA_FEUD_FAST_ROUND4 } from "./nbaSportsFeudExpansionRound4Fast";
+import { NBA_FEUD_ROUND4_ALIASES } from "./nbaSportsFeudExpansionRound4Aliases";
 
 /**
  * NBA Sports Feud editorial bank, v1.
@@ -1825,9 +1828,9 @@ const BANK: { main: Authored[]; fast: Authored[]; alias: Record<string, string[]
 };
 
 // Keep tested questions, supplement only with editorially approved additions.
-BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS, ...NBA_SPORTS_FEUD_MAIN_ROUND2, ...NBA_SPORTS_FEUD_MAIN_ROUND3);
-BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS, ...NBA_SPORTS_FEUD_FAST_ROUND2, ...NBA_SPORTS_FEUD_FAST_ROUND3);
-for (const [name, aliases] of Object.entries(NBA_SPORTS_FEUD_ROUND3_ALIASES)) {
+BANK.main.push(...NBA_SPORTS_FEUD_MAIN_ADDITIONS, ...NBA_SPORTS_FEUD_MAIN_ROUND2, ...NBA_SPORTS_FEUD_MAIN_ROUND3, ...NBA_FEUD_MAIN_ROUND4);
+BANK.fast.push(...NBA_SPORTS_FEUD_FAST_ADDITIONS, ...NBA_SPORTS_FEUD_FAST_ROUND2, ...NBA_SPORTS_FEUD_FAST_ROUND3, ...NBA_FEUD_FAST_ROUND4);
+for (const [name, aliases] of Object.entries({ ...NBA_SPORTS_FEUD_ROUND3_ALIASES, ...NBA_FEUD_ROUND4_ALIASES })) {
   BANK.alias[name] = [...new Set([...(BANK.alias[name] ?? []), ...aliases])];
 }
 
@@ -1841,6 +1844,24 @@ function hash(value: string) {
 }
 /** Near-identical prompts must not coexist in a seven-question run. */
 export function nbaSportsFeudEditorialLane(category: string) {
+  // Round 4 uses the established lane guard, not a second selector.
+  if (["nba-international-rosters"].includes(category)) return "international-nba";
+  if (["nba-college-champions"].includes(category)) return "college-nba-stars";
+  if (["nba-multiple-rings"].includes(category)) return "championship-history";
+  if (["nba-team-rivalries"].includes(category)) return "nba-playoff-history";
+  if (["nba-player-fashion"].includes(category)) return "player-appearance";
+  if (["basketball-passing-varieties"].includes(category)) return "playmaking-style";
+  if (["nba-timeout-huddle","nba-player-bench","nba-coach-equipment"].includes(category)) return "nba-coaching";
+  if (["nba-personal-equipment","nba-jersey-details","nba-offense-actions"].includes(category)) return "basketball-basics";
+  if (["nba-mascot-activities","nba-fan-chants","nba-promos","nba-game-day-fans","nba-fan-watch-party"].includes(category)) return "nba-fan-experience";
+  if (["nba-game-absence","nba-injury-body-parts"].includes(category)) return "nba-player-health";
+  if (["nba-player-celebrations"].includes(category)) return "nba-special-events";
+  if (["nba-offseason-activities","nba-team-travel","nba-after-playing","nba-rookie-life"].includes(category)) return "nba-player-life";
+  if (["nba-press-room","nba-fan-media"].includes(category)) return "nba-broadcast-experience";
+  if (["nba-film-study"].includes(category)) return "nba-coaching";
+  if (["nba-autographs"].includes(category)) return "nba-fan-experience";
+  if (["nba-championship-rings"].includes(category)) return "nba-special-events";
+  if (["nba-after-game"].includes(category)) return "arena-experience";
   // Third-pass lanes keep intuitive variations from repeating inside one run.
   if (["nba-video-games","nba-film-cameos","courtside-celebrities"].includes(category)) return "basketball-culture";
   if (["nba-player-duos","nba-team-era-nicknames"].includes(category)) return "iconic-nba-pairings";
