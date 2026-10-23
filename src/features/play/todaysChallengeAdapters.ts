@@ -1,7 +1,7 @@
 import { playGameDefinition, type PlayGameId } from "./playRegistry";
 import type { OfficialDailyGameType } from "./todaysChallengeRuntime";
 
-export type DailyGameType = OfficialDailyGameType;
+export type DailyGameType = OfficialDailyGameType | "higher_lower";
 
 export interface OfficialAttempt {
   nativeScore: number;
@@ -143,6 +143,18 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     footballInstructions: "Choose a fan, work all 10 football grade-and-subject tiles, then decide whether to bank your HQ score or play the Final.",
     nativeResultLabel: "Average Fan score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
+  },
+  higher_lower: {
+    gameType: "higher_lower",
+    gameId: "higher-lower",
+    title: "Higher or Lower",
+    dailyRoute: "/nba/today",
+    casualRoute: "/nba/higher-lower",
+    cta: "Make the comparison",
+    instructions: "Compare ten NBA seasons and legends. Make every higher or lower call count.",
+    footballInstructions: "Compare ten NBA seasons and legends.",
+    nativeResultLabel: "Correct comparisons",
+    nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
   },
   who_am_i: {
     gameType: "who_am_i",
