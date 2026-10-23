@@ -1,4 +1,8 @@
 export const nbaAverageFanExpansionG5 = [
 "Players~Which Rockets big man hit the twisting buzzer-beater that eliminated the Lakers in the 1986 West finals?~Ralph Sampson~Hakeem Olajuwon~Kareem Abdul-Jabbar~Otis Thorpe~C~Ralph Sampson's improbable jumper in Game 5 sent Houston to the 1986 NBA Finals.~~classic80",
 "Players~Which Celtics forward intercepted an Isiah Thomas inbound pass late in the 1987 East finals?~Larry Bird~Kevin McHale~Robert Parish~Dennis Johnson~C~Larry Bird intercepted Thomas's pass and found Dennis Johnson for the winning basket in Game 5.~~classic80",
+  "Players~Which Lakers guard hit the winner with 0.4 seconds left against San Antonio in the 2004 playoffs?~Derek Fisher~Kobe Bryant~Gary Payton~Rick Fox~C~Derek Fisher's catch-and-shoot jumper beat the Spurs in Game 5 of the 2004 conference semifinals.~~classic00",
+  "Players~Which Pistons defender blocked Reggie Miller's layup late in Game 2 of the 2004 East finals?~Tayshaun Prince~Ben Wallace~Chauncey Billups~Rasheed Wallace~C~Pistons forward Tayshaun Prince chased down Reggie Miller for a pivotal block in 2004.~~classic00",
+  "Teams~Which franchise featured the original 1980s Twin Towers of Hakeem Olajuwon and Ralph Sampson?~Houston Rockets~San Antonio Spurs~Denver Nuggets~Dallas Mavericks~C~Olajuwon and Sampson formed the Twin Towers frontcourt for Houston in the mid-1980s.~~classic80",
+  "Teams~Which franchise lost to Boston in the famous triple-overtime Game 5 of the 1976 Finals?~Phoenix Suns~Portland Trail Blazers~Golden State Warriors~Milwaukee Bucks~C~Phoenix lost an unforgettable three-overtime thriller to Boston in Game 5 of the 1976 Finals.~~classic70",
 ] as const;
