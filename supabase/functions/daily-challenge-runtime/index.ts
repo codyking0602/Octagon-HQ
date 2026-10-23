@@ -94,6 +94,17 @@ type FootballPublicationRuntimeModule = {
 type FootballAdvanceRuntimeModule = {
   advanceFootballOfficialDailyRuntime: DailyAdvanceRuntime;
 };
+type NbaPublicationRuntimeModule = {
+  buildNbaServerDailyPublication: (
+    day: string, scheduleVersion: string, gameType: string, history?: unknown
+  ) => JsonRecord;
+};
+type NbaAdvanceRuntimeModule = {
+  advanceNbaOfficialDailyRuntime: DailyAdvanceRuntime;
+};
+// Never open NBA Daily merely because November 1 arrives. The frontend and
+// leaderboard adapter must pass the exact-head release verification first.
+const NBA_DAILY_EDGE_RELEASE_READY = false;
 
 type AverageFanRuntimeModule = {
   buildAverageFanDailySetup: (
@@ -109,6 +120,8 @@ let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
+let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
+let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
 
 function loadUfcRuntime() {
   if (!ufcRuntimePromise) {
@@ -129,6 +142,19 @@ function loadFootballAdvanceRuntime() {
     footballAdvanceRuntimePromise = import("./football-advance.generated.mjs") as Promise<FootballAdvanceRuntimeModule>;
   }
   return footballAdvanceRuntimePromise;
+}
+
+function loadNbaPublicationRuntime() {
+  if (!nbaPublicationRuntimePromise) {
+    nbaPublicationRuntimePromise = import("./nba-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  }
+  return nbaPublicationRuntimePromise;
+}
+function loadNbaAdvanceRuntime() {
+  if (!nbaAdvanceRuntimePromise) {
+    nbaAdvanceRuntimePromise = import("./nba-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  }
+  return nbaAdvanceRuntimePromise;
 }
 
 function loadAverageFanRuntime() {
@@ -649,6 +675,102 @@ async function materializeFootballToday(admin: SupabaseClient, at?: string) {
     gameType: publicationGame,
     created: true,
   };
+}
+
+async function materializeNbaToday(admin: SupabaseClient, at?: string) {
+  const response = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: "nba",
+    ...(at ? { p_at: at } : {}),
+  });
+  if (response.error) throw new Error("NBA scheduled Daily identity is unavailable.");
+  const request = requiredRecord(response.data, "NBA daily materialization request");
+  const day = requiredString(request.central_day, "NBA Central publication day");
+  const scheduleVersion = requiredString(request.schedule_version, "NBA Daily schedule version");
+  const gameType = requiredString(request.expected_game, "NBA Daily scheduled game");
+  if (request.required !== true) {
+    return {
+      dailyChallengeId: requiredString(request.daily_challenge_id, "NBA published daily id"),
+      centralDay: day,
+      scheduleVersion,
+      gameType: requiredString(request.published_game, "NBA published Daily game"),
+      created: false,
+    };
+  }
+  const publishedSetup = (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(
+    day, scheduleVersion, gameType,
+  );
+  if (publishedSetup.scheduleVersion !== scheduleVersion || publishedSetup.gameType !== gameType) {
+    throw new Error("NBA Daily publication differs from the locked 28-slot calendar.");
+  }
+  const responsePublished = await admin.rpc("publish_daily_challenge_setup", {
+    p_central_day: day,
+    p_schedule_version: scheduleVersion,
+    p_game_type: gameType,
+    p_setup_key: requiredString(publishedSetup.setupKey, "NBA daily setup key"),
+    p_content_version: requiredString(publishedSetup.contentVersion, "NBA daily content version"),
+    p_scoring_version: requiredString(publishedSetup.scoringVersion, "NBA daily scoring version"),
+    p_public_setup: requiredRecord(publishedSetup.publicSetup, "NBA daily public setup"),
+    p_reveal_setup: requiredRecord(publishedSetup.revealSetup, "NBA daily answer reveal"),
+    p_private_setup_evidence: requiredRecord(publishedSetup.privateSetupEvidence, "NBA private setup evidence"),
+    p_private_grading_evidence: requiredRecord(publishedSetup.privateGradingEvidence, "NBA private scoring evidence"),
+    p_fallback_reason: null,
+  });
+  if (responsePublished.error) throw new Error("NBA canonical daily publication was rejected.");
+  const saved = requiredRecord(responsePublished.data, "NBA published daily setup");
+  return {
+    dailyChallengeId: requiredString(saved.id, "NBA published daily id"),
+    centralDay: day, scheduleVersion, gameType, created: true,
+  };
+}
+
+async function handleNbaDaily(
+  admin: SupabaseClient, userClient: SupabaseClient,
+  profileId: string, body: JsonRecord,
+) {
+  // A release must be explicitly enabled after public UX, championship and
+  // every leaderboard drill-down are verified. Never expose incomplete Daily.
+  if (!NBA_DAILY_EDGE_RELEASE_READY) {
+    return safeError(503, "NBA_DAILY_NOT_LAUNCHED", "NBA official Daily is not available yet.");
+  }
+  const materialized = await materializeNbaToday(admin);
+  let context = await getContext(admin, materialized.dailyChallengeId, profileId);
+  context = await finalizePending(userClient, admin, context, profileId);
+  context = await continueTwoGameWithoutIntermission(admin, context, profileId);
+  const payload = () => json({ ...publicPayload(context), sport: "nba" });
+  if (body.mode === "get-today" || body.mode === undefined) return payload();
+  if (body.mode !== "advance") return safeError(400, "INVALID_MODE", "NBA Daily action mode is invalid.");
+  const clientActionId = requestedClientActionId(body);
+  if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) return payload();
+  if (asRecord(context.official_attempt)) return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "NBA official Daily is complete.");
+  const requestedId = typeof body.daily_challenge_id === "string" ? body.daily_challenge_id : materialized.dailyChallengeId;
+  if (requestedId !== materialized.dailyChallengeId) {
+    return safeError(409, "DAILY_IDENTITY_CHANGED", "The NBA Daily board has changed.");
+  }
+  if (!Number.isInteger(body.revision) || Number(body.revision) !== Number(context.progress_revision)) {
+    return safeError(409, "STALE_PROGRESS", "NBA Daily progress changed on another device. Refresh and continue.");
+  }
+  const action = requiredRecord(body.action, "NBA Daily action");
+  const advanced = (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
+  const history = footballActionHistory(context);
+  const nextSubmissionState = submissionStateWithClientActionId({
+    ...advanced.submissionState, action_history: [...history, action],
+  }, dailyClientActionIds(context), clientActionId);
+  const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+    p_daily_challenge_id: materialized.dailyChallengeId,
+    p_profile_id: profileId,
+    p_expected_revision: Number(context.progress_revision),
+    p_submission_state: nextSubmissionState,
+    p_public_state: advanced.publicState,
+  });
+  if (saved.error) {
+    if (saved.error.code === "40001") {
+      return safeError(409, "STALE_PROGRESS", "NBA Daily progress changed on another device. Refresh and continue.");
+    }
+    throw new Error("NBA official Daily progress could not be persisted.");
+  }
+  context = await getContext(admin, materialized.dailyChallengeId, profileId);
+  context = await finalizePending(userClient, admin, context, profileId);
+  return payload();
 }
 
 async function getContext(admin: SupabaseClient, dailyChallengeId: string, profileId: string) {
@@ -1253,6 +1375,14 @@ Deno.serve(async (request) => {
       }
 
       const scheduledSport = body.sport == null ? "ufc" : body.sport;
+      if (scheduledSport === "nba") {
+        if (!NBA_DAILY_EDGE_RELEASE_READY) {
+          return safeError(503, "NBA_DAILY_NOT_LAUNCHED", "NBA scheduled Daily is gated until release verification.");
+        }
+        const materialized = await materializeNbaToday(admin);
+        return json({ status: materialized.created ? "materialized" : "already_materialized",
+          sport: "nba", ...materialized, deployment_sha: DEPLOYED_SOURCE_SHA });
+      }
       if (scheduledSport !== "ufc" && scheduledSport !== "football") {
         return safeError(400, "INVALID_SPORT", "Scheduled daily materialization sport must be UFC or Football.");
       }
@@ -1304,6 +1434,10 @@ Deno.serve(async (request) => {
       auth: { autoRefreshToken: false, persistSession: false },
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
+
+    if (body.sport === "nba") {
+      return handleNbaDaily(admin, userClient, profileId, body);
+    }
 
     const ownerPreviewResponse = await ownerAverageFanPreview(admin, profileId, body);
     if (ownerPreviewResponse) return ownerPreviewResponse;
