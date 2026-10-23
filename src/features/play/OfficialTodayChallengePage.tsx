@@ -29,9 +29,10 @@ import {
   todayChallengeAdapter,
   type DailyGameType,
 } from "./todaysChallengeAdapters";
-import type {
-  TodayChallengeProjection,
-  TodayChallengeRepository,
+import {
+  TodayChallengeRepositoryError,
+  type TodayChallengeProjection,
+  type TodayChallengeRepository,
 } from "./todayChallengeRepository";
 import {
   useTodayChallengeRuntime,
@@ -47,13 +48,17 @@ function errorMessage(error: unknown) {
 }
 
 function RuntimeStatus({ error, onRefresh }: { error: unknown; onRefresh?: () => void }) {
-  return error ? (
+  if (!error) return null;
+  const serverBusy = error instanceof TodayChallengeRepositoryError && error.code === "DAILY_RUNTIME_BUSY";
+  return (
     <section className="official-daily-status is-error" role="status">
-      <strong>Progress needs a refresh</strong>
-      <p>{errorMessage(error)}</p>
-      {onRefresh ? <button type="button" onClick={onRefresh}>REFRESH OFFICIAL GAME</button> : null}
+      <strong>{serverBusy ? "Reconnecting your game" : "Progress needs a refresh"}</strong>
+      <p>{serverBusy
+        ? "The game server is temporarily busy. Your saved progress is protected while we retry."
+        : errorMessage(error)}</p>
+      {onRefresh ? <button type="button" onClick={onRefresh}>{serverBusy ? "RETRY CONNECTION" : "REFRESH OFFICIAL GAME"}</button> : null}
     </section>
-  ) : null;
+  );
 }
 
 export function officialDailyGameAllowsCasualReplay(gameType: DailyGameType) {
@@ -283,7 +288,7 @@ export default function OfficialTodayChallengePage({
 
   return (
     <div className="official-daily-page">
-      <RuntimeStatus error={runtime.error} onRefresh={() => { void runtime.refresh(); }} />
+      <RuntimeStatus error={runtime.error} onRefresh={() => { void runtime.recheckSaved(); }} />
       <OfficialTodayChallengeContent
         projection={runtime.projection}
         busy={runtime.busy}
