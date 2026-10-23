@@ -302,6 +302,8 @@ export function buildFamilyFeudDailySetup(
       pack_id: pack.id,
       presentation_domain: pack.sport === "mlb"
         ? "mlb"
+        : pack.sport === "nba"
+          ? "nba"
         : pack.id.includes("-cfb-")
           ? "cfb"
           : pack.id.includes("-nfl-")

@@ -1,0 +1,58 @@
+import { describe, expect, it } from "vitest";
+import {
+  NBA_SERVER_READY_GAME_TYPES, buildNbaServerDailyPublication, nbaDailyGameAppearance,
+} from "./nbaDailyServerPublication";
+import { NBA_DAILY_WEIGHTED_CYCLE, nbaRegularSeasonDaily } from "./nbaDailySchedule";
+import { advanceFamilyFeudDailyRuntime } from "../play/familyFeudDailyRuntime";
+
+describe("NBA server-authored Daily publication foundation", () => {
+  it("computes appearance ordinals from published every-other-day game slots", () => {
+    expect(nbaDailyGameAppearance("2026-11-01", "average_fan")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-11-03", "sports_feud")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-11-13", "bar_trivia")).toBe(0);
+    expect(() => nbaDailyGameAppearance("2026-11-02", "average_fan")).toThrow();
+    expect(() => nbaDailyGameAppearance("2026-11-01", "sports_feud")).toThrow();
+    let num = 0;
+    for (let index = 0; index < 80; index++) {
+      const day = new Date(Date.UTC(2026, 10, 1 + index * 2)).toISOString().slice(0, 10);
+      const game = nbaRegularSeasonDaily(day)?.gameType;
+      if (game === "sports_feud") {
+        expect(nbaDailyGameAppearance(day, game)).toBe(num++);
+      }
+    }
+    expect(NBA_DAILY_WEIGHTED_CYCLE).toHaveLength(28);
+  });
+
+  it("constructs a private NBA Average Fan board without leaking answers", () => {
+    const published = buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v1", "average_fan");
+    expect(published.publicSetup.sport).toBe("nba");
+    expect(published.publicSetup.board).toHaveLength(8);
+    expect(published.privateSetupEvidence.questions).toHaveLength(8);
+    expect(JSON.stringify(published.publicSetup)).not.toContain('"answer":');
+    expect(JSON.stringify(published.revealSetup)).toContain('"answer":');
+  });
+
+  it("uses the existing Sports Feud grader with immutable NBA private evidence", () => {
+    const published = buildNbaServerDailyPublication("2026-11-03", "nba-daily-regular-v1", "sports_feud");
+    expect(published.publicSetup.sport).toBe("nba");
+    expect(published.publicSetup.presentation_domain).toBe("nba");
+    expect(published.privateSetupEvidence.pack).toBeTruthy();
+    expect(JSON.stringify(published.publicSetup)).not.toContain('"accepted_answers"');
+    expect(() => advanceFamilyFeudDailyRuntime({
+      setupKey: published.setupKey,
+      publicSetup: published.publicSetup,
+      privateSetupEvidence: published.privateSetupEvidence,
+      submissionState: {},
+    }, { type: "answer", answer: "unrecognizable made-up answer" })).not.toThrow();
+  });
+
+  it("reuses the canonical Bar Trivia server scorer and answer reveal boundary", () => {
+    const published = buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v1", "bar_trivia");
+    expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia"]);
+    expect(published.publicSetup.league).toBe("nba");
+    expect(published.privateSetupEvidence.questions).toHaveLength(10);
+    expect(published.revealSetup.questions).toHaveLength(10);
+    expect(JSON.stringify(published.publicSetup)).not.toContain('"answer":');
+    expect(JSON.stringify(published.revealSetup)).toContain('"answer":');
+  });
+});
