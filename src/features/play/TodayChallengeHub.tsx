@@ -270,11 +270,11 @@ function DailyLeaderboard({
   );
 }
 
-export default function TodayChallengeHub({ sport = "ufc" }: { sport?: TodayChallengeSport }) {
+export default function TodayChallengeHub({ sport = "ufc", initialPanel = "challenge" }: { sport?: TodayChallengeSport; initialPanel?: "challenge" | "leaderboard" }) {
   const identity = useIdentity();
   const navigate = useNavigate();
   const carouselRef = useRef<HTMLDivElement>(null);
-  const [panel, setPanel] = useState<"challenge" | "leaderboard">("challenge");
+  const [panel, setPanel] = useState<"challenge" | "leaderboard">(initialPanel);
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const profileId = identity.profile?.id ?? "signed-out";
   const runtime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport });
@@ -285,6 +285,13 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: TodayChal
     sport,
   });
   const projection = runtime.projection;
+  // A direct STANDINGS link should open the second carousel panel, not the game.
+  // UFC and Football keep their established challenge-first default.
+  useEffect(() => {
+    if (initialPanel !== "leaderboard" || !projection?.id || !carouselRef.current) return;
+    carouselRef.current.scrollLeft = carouselRef.current.clientWidth;
+    setPanel("leaderboard");
+  }, [initialPanel, projection?.id]);
   const specialTheme = sport === "football" && projection
     ? footballSpecialDailyThemeForDay(projection.centralDay)
     : null;
