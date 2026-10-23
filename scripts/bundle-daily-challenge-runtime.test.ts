@@ -36,6 +36,21 @@ describe("daily challenge runtime bundle prerequisites", () => {
     }
   });
 
+  it("bundles all nine NBA publication and grading sources, without exposing a public release", () => {
+    expect(bundlerSource).toContain('fileName: "nba-publication.generated.mjs"');
+    expect(bundlerSource).toContain('fileName: "nba-advance.generated.mjs"');
+    expect(bundlerSource).toContain('requiredExports: ["advanceNbaOfficialDailyRuntime"]');
+    expect(bundlerSource).toContain('generatedRuntime.buildNbaServerDailyPublication(');
+    for (const [day,game] of [
+      ["2026-11-01","average_fan"],["2026-11-03","sports_feud"],
+      ["2026-11-05","millionaire"],["2026-11-07","who_am_i"],
+      ["2026-11-09","find_leader"],["2026-11-11","wavelength"],
+      ["2026-11-13","bar_trivia"],["2026-11-15","hit_the_number"],
+      ["2026-11-17","higher_lower"],
+    ]) {
+      expect(bundlerSource).toContain(`{ day: "${day}", gameType: "${game}" }`);
+    }
+  });
   it("executes every generated Football publication artifact before deployment can accept it", () => {
     expect(bundlerSource).toContain("pathToFileURL(output).href");
     expect(bundlerSource).toContain("generatedRuntime.buildFootballDailyPersistenceSetup(");
