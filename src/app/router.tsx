@@ -71,6 +71,7 @@ const MlbPlayoffsPage = lazy(() => import("../features/mlb/MlbPlayoffsPage"));
 const MlbPicksPage = lazy(() => import("../features/mlb/MlbPicksPage"));
 const NbaFuturesPage = lazy(() => import("../features/nba/NbaFuturesPage"));
 const NbaPlayPage = lazy(() => import("../features/nba/NbaPlayPage"));
+const NbaOfficialDailyPage = lazy(() => import("../features/nba/NbaOfficialDailyPage"));
 const NbaChampionshipPage = lazy(() => import("../features/nba/NbaChampionshipPage"));
 const MlbFeaturedChallengePage = lazy(() => import("../features/mlb/MlbFeaturedChallengePage"));
 const MlbSeriesBreakdownPage = lazy(() => import("../features/mlb/MlbSeriesBreakdownPage"));
@@ -149,6 +150,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/bar-trivia", element: <Navigate to="/football" replace /> },
       { path: "picks", element: <PicksPage /> },
       { path: "nba", element: <NbaPreviewGate><NbaPlayPage /></NbaPreviewGate> },
+      { path: "nba/today", element: <NbaPreviewGate><NbaOfficialDailyPage /></NbaPreviewGate> },
       { path: "nba/who-am-i", element: <NbaWhoAmIOwnerGate><NbaWhoAmIPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/hit-the-number", element: <NbaWhoAmIOwnerGate><NbaHitTheNumberPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/find-the-leader", element: <NbaWhoAmIOwnerGate><NbaFindTheLeaderPage /></NbaWhoAmIOwnerGate> },
