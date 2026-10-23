@@ -14,3 +14,11 @@ export function nbaAverageFanRotationFinals(
     return finals.map((q,i)=>({q,i})).filter(x =>
       averageFanQuestionBoardTopics(x.q).every(t=>!seen.has(t))).map(x=>x.i);
   });
+  function assign(r:number, tried:Set<number>):boolean {
+    for(const i of allowed[r]!) {
+      if(tried.has(i))continue;
+      tried.add(i);
+      if(owners[i]===-1||assign(owners[i]!,tried)){owners[i]=r;return true;}
+    }
+    return false;
+  }
