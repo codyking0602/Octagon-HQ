@@ -9,3 +9,8 @@ export function nbaAverageFanRotationFinals(
     stableLineupHash(seed+a.id)-stableLineupHash(seed+b.id));
   if (finals.length < 20) throw Error("Need 20 NBA Finals.");
   const owners = finals.map(()=>-1);
+  const allowed = boards.map(board => {
+    const seen = new Set(board.flatMap(averageFanQuestionBoardTopics));
+    return finals.map((q,i)=>({q,i})).filter(x =>
+      averageFanQuestionBoardTopics(x.q).every(t=>!seen.has(t))).map(x=>x.i);
+  });
