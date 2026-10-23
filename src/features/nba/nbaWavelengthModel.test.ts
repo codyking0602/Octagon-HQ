@@ -19,7 +19,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
   it("uses distinct bounded editorial ratings, explicit traits and multiple NBA eras", () => {
     const audit = auditNbaWavelengthCatalog();
     expect(audit.failures).toEqual([]);
-    expect(audit.entries).toBe(380);
+    expect(audit.entries).toBe(386);
     expect(audit.distinctSubjects).toBeGreaterThan(170);
     expect(audit.categories).toBe(25);
     expect(audit.eras).toBe(4);
@@ -60,7 +60,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
 
   it("keeps every original NBA Wavelength clue while adding clear categories with independent scales", () => {
     const expanded = ["BALL HANDLING", "REBOUNDING", "RIM PROTECTION", "MIDRANGE TOUCH",
-      "AT-THE-RIM FINISHING", "BASKETBALL IQ", "TRASH TALK", "ICONIC MOMENTS",
+      "AT-THE-RIM FINISHING", "BASKETBALL IQ", "TRASH TALK", "NBA MOMENT IMPACT",
       "FRANCHISE TRADITION", "DRAFT HYPE", "DUO IMPACT"];
     for (const category of expanded) {
       const rows = nbaWavelengthClues.filter(clue => clue.category === category);
@@ -74,7 +74,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(nbaWavelengthClues.find(row => row.id === "nba-wl-villain-bill-laimbeer")?.rating).toBe(100);
     expect(nbaWavelengthClues.find(row => row.id === "nba-wl-duo-jordan-pippen")?.rating).toBe(100);
     expect(nbaWavelengthClues.find(row => row.id === "nba-wl-hype-lebron-james")?.rating).toBe(100);
-    expect(nbaWavelengthClues.length).toBe(380);
+    expect(nbaWavelengthClues.length).toBe(386);
   });
 
   it("does not conflate overall greatness with shooting, defense or playmaking", () => {

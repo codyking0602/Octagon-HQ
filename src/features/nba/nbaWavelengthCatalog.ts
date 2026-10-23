@@ -30,7 +30,7 @@ export type NbaWavelengthCategory =
   | "AT-THE-RIM FINISHING"
   | "BASKETBALL IQ"
   | "TRASH TALK"
-  | "ICONIC MOMENTS"
+  | "NBA MOMENT IMPACT"
   | "FRANCHISE TRADITION"
   | "DRAFT HYPE"
   | "DUO IMPACT";
@@ -76,7 +76,7 @@ export const NBA_WAVELENGTH_CATEGORY_ANCHORS = [
   { category: "AT-THE-RIM FINISHING", question: "At peak NBA form, how effectively did this player turn drives and catches near the basket into scores?", low: "Limited close-range creation", middle: "Useful NBA finisher", high: "Historically unstoppable near the rim" },
   { category: "BASKETBALL IQ", question: "At NBA peak, how well did this player anticipate the game, read situations and make decisions?", low: "Frequently forced low-percentage decisions", middle: "Mostly sound situational reads", high: "Historic court awareness and decision-making" },
   { category: "TRASH TALK", question: "How intense and memorable was this player's NBA on-court verbal sparring and taunting?", low: "Rarely engaged in trash talk", middle: "Occasional competitive barbs", high: "Legendary NBA trash-talker" },
-  { category: "ICONIC MOMENTS", question: "How enduring and recognizable is this specific NBA moment in the league's collective memory?", low: "Mostly a footnote to NBA history", middle: "Memorable to fans of the era", high: "Defining NBA moment" },
+  { category: "NBA MOMENT IMPACT", question: "How much of a lasting mark did this specific NBA event leave on basketball history?", low: "Recognizable event with little league-wide legacy", middle: "Memorable NBA highlight or milestone", high: "Defining NBA moment" },
   { category: "FRANCHISE TRADITION", question: "How rich and established is this NBA franchise's overall historical identity, longevity and tradition?", low: "Shorter or thinner historical résumé", middle: "Recognizable multi-era identity", high: "Defining cornerstone of NBA history" },
   { category: "DRAFT HYPE", question: "Before his NBA debut, how intense were the expectations and attention surrounding this prospect?", low: "Little pre-draft fanfare", middle: "Credible first-round expectations", high: "Generational prospect anticipation" },
   { category: "DUO IMPACT", question: "How effective and memorable was this specific pair when sharing the NBA court in the stated seasons?", low: "Big names without cohesive success together", middle: "Good but limited partnership", high: "All-time NBA pairing" },
@@ -441,12 +441,12 @@ const groups: readonly SeedGroup[] = [
     ["draymond-green", "Draymond Green", "Draymond Green — nonstop arguing, needling and verbal confrontations", 92, "modern"],
     ["patrick-beverley", "Patrick Beverley", "Patrick Beverley — relentless chatter aimed at rattling scorers", 93, "modern"],
     ["reggie-miller", "Reggie Miller", "Reggie Miller — animated Knicks taunts, including exchanges with Spike Lee", 96, "eighties-nineties"],
-    ["gary-payton", "Gary Payton", "Gary Payton — relentless verbal battles with opposing guards earned him the Glove nickname", 99, "eighties-nineties"],
+    ["gary-payton", "Gary Payton", "Gary Payton — famous for nonstop jawing while guarding opposing stars", 99, "eighties-nineties"],
     ["michael-jordan", "Michael Jordan", "Michael Jordan — used pointed verbal challenges to fuel his matchups", 98, "eighties-nineties"],
     ["kevin-garnett", "Kevin Garnett", "Kevin Garnett — famous nonstop verbal intimidation on defense", 100, "two-thousands"],
     ["larry-bird", "Larry Bird", "Larry Bird — famously predicted and taunted opponents before big shots", 100, "classic"],
   ]),
-  group("ICONIC MOMENTS", "moment", [
+  group("NBA MOMENT IMPACT", "moment", [
     ["rose-50-2018", "Derrick Rose's 50-point game (2018)", "Derrick Rose's 50-point game (2018) — emotional Minnesota comeback performance", 65, "modern"],
     ["lebron-toronto-2018", "LeBron James' Toronto fadeaways (2018)", "LeBron James' Toronto fadeaways (2018) — memorable playoff scoring against the Raptors", 76, "modern"],
     ["deandre-brandon-knight", "DeAndre Jordan's dunk over Brandon Knight (2013)", "DeAndre Jordan's dunk over Brandon Knight (2013) — viral lob finish", 78, "modern"],
@@ -463,6 +463,12 @@ const groups: readonly SeedGroup[] = [
     ["kawhi-bounce", "Kawhi Leonard's four-bounce winner (2019)", "Kawhi Leonard's four-bounce winner (2019) — Game 7 buzzer beater against Philadelphia", 100, "modern"],
     ["ray-allen-shot", "Ray Allen's corner three (2013 Finals)", "Ray Allen's corner three (2013 Finals) — tied Game 6 and saved Miami's title bid", 100, "modern"],
     ["lebron-block", "LeBron James' chase-down block (2016 Finals)", "LeBron James' chase-down block (2016 Finals) — iconic Game 7 stop on Andre Iguodala", 100, "modern"],
+    ["wemby-debut", "Victor Wembanyama's NBA debut (2023)", "Victor Wembanyama's NBA debut (2023) — first regular-season game against Dallas", 28, "modern"],
+    ["lebron-debut", "LeBron James' NBA debut (2003)", "LeBron James' NBA debut (2003) — enormous spotlight on an 18-year-old in Sacramento", 48, "two-thousands"],
+    ["first-in-season", "Lakers' first In-Season Tournament title (2023)", "Lakers' first In-Season Tournament title (2023) — a notable start to the new NBA event", 54, "modern"],
+    ["booker-70", "Devin Booker's 70-point game (2017)", "Devin Booker's 70-point game (2017) — historic individual output in a Phoenix loss", 57, "modern"],
+    ["wemby-five-by-five", "Victor Wembanyama's five-by-five (2024)", "Victor Wembanyama's five-by-five (2024) — rare rookie stat line with five each in five categories", 59, "modern"],
+    ["curry-allstar", "Stephen Curry's 16 All-Star threes (2022)", "Stephen Curry's 16 All-Star threes (2022) — extraordinary shooting in an exhibition showcase", 61, "modern"],
     ["jordan-last-shot", "Michael Jordan's final Bulls shot (1998 Finals)", "Michael Jordan's final Bulls shot (1998 Finals) — championship-clinching jumper over Bryon Russell", 100, "eighties-nineties"],
   ]),
   group("FRANCHISE TRADITION", "franchise", [

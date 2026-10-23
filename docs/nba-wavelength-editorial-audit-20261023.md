@@ -8,9 +8,9 @@ The NBA catalog and its calibration version are independently frozen as `nba-wav
 
 ## Content inventory
 
-- **25 distinct categories; 380 individually curated editorial references** (the original 192 are retained without deletion; 188 are added).
+- **25 distinct categories; 386 individually curated editorial references** (the original 192 are retained without deletion; 194 are added).
 - Core basketball skills: ball handling, rebounding, rim protection, midrange jump shooting, finishing at the rim, IQ, outside shooting, scoring, playmaking, athleticism, defense, clutch shots, peak control.
-- Broader NBA life: showmanship, trash talk, villain reputation, global cultural influence, defined iconic moments, franchise tradition, historical rivalries, home-court atmosphere, draft hype, and famous NBA duos.
+- Broader NBA life: showmanship, trash talk, villain reputation, global cultural influence, defined specific NBA moments, franchise tradition, historical rivalries, home-court atmosphere, draft hype, and famous NBA duos.
 - Categories intentionally ask different questions. Midrange means **inside-the-arc jump shots**; outside shooting includes the perimeter; finishing rates touch/power near the hoop and **not** max vertical leap. Rim protection is a basket-specific defensive skill, not an automatic copy of overall defense. Trash talk means **verbal taunts**, villain reputation means the antagonist perception.
 - NBA history ranges from Russell/Bird/Magic to active modern players, with recognizable references as the default and some deeper basketball history. No forced 70/30 round slots, no category or subject repeats within a four-clue round.
 - Some categories have no truly defensible 1–10 real-world example. A modern partnership's floor does not need to be artificially rated 1 to satisfy a target distribution.
@@ -54,19 +54,19 @@ The generator chooses from a high-quality fixed bank rather than fabricating var
 
 - **Fine-grained disagreement:** a 79 versus 82 editorial rating is not provable to the point; the visible interpretation emphasizes bands and category meaning. Owner review should flag any specific suspect comparison before final sign-off.
 - **Era weighting:** classic-era references are fewer than modern references. This is intentional for recognizability but worth monitoring during Daily sampling.
-- **Repeat horizon:** 380 rated references do not mean 380 unique NBA questions per day. At two games of four clues, repeated references eventually occur; theoretical combination counts are not a substitute for authored inventory.
+- **Repeat horizon:** 386 rated references do not mean 386 unique NBA questions per day. At two games of four clues, repeated references eventually occur; theoretical combination counts are not a substitute for authored inventory.
 - **Daily publication:** deterministic owner preview is ready to review, **but no actual official NBA Daily publication/server-owned grading** is activated in this PR. Production integration requires a separate later release and backend/reveal verification.
 
 ## Owner review focus added 2026-10-23
 
-- **Expanded owner-test bank:** 380 references across 25 categories. The earlier 200 cap was lifted by the owner; original entries were preserved.
+- **Expanded owner-test bank:** 386 references across 25 categories. The earlier 200 cap was lifted by the owner; original entries were preserved.
 - **Recognizability:** target roughly 70% recognizable-to-engaged-fans and 30% deeper basketball history across the experience, not one forced historical slot per round. Do not equate historical era with obscurity; Magic Johnson and Michael Jordan are mainstream anchors.
 - **Subjectivity:** rating controversy is welcome when the dimension is plain; basketball popularity never changes shooting, defense or playmaking ratings. Rivalries and atmosphere rate the stated *period*, not today’s standings or general market size.
 - **Distribution:** each new culture category includes low, middle and high references where defensible. Home-court intensity naturally begins at 22, not a fake 1; the other categories collectively cover the rest of the 1–100 target scale. All rounds retain four distinct categories and distinct identities.
 - **Clarity examples:** “Kawhi Leonard — reserved on-court celebrations” describes showmanship. “Sacramento Kings (2002 ARCO Arena) — legendary cowbell-fueled playoff noise” rates a defined crowd and season. “Bulls vs Pistons (late 1980s) — Jordan Rules” is an identifiable rivalry anchor. No abstract “offensive chaos” or context-free culture jargon.
 - **Owner playtest:** the 56 new editorial judgments have not received owner sign-off; there is no claim that a numerical opinion is an objective fact. No public rollout or merge is authorized.
 
-## Additional 188 references, 11 categories (owner-approved expansion)
+## Additional 194 references, 11 categories (owner-approved expansion)
 
 | Category | Count | Low anchor | Strong anchor |
 |---|---:|---|---|
@@ -77,9 +77,13 @@ The generator chooses from a high-quality fixed bank rather than fabricating var
 | AT-THE-RIM FINISHING | 16 | Seth Curry (18) | Shaquille O'Neal (100) |
 | BASKETBALL IQ | 16 | Nick Young (24) | Chris Paul (100) |
 | TRASH TALK | 16 | Kawhi Leonard (4) | Kevin Garnett (100) |
-| ICONIC MOMENTS | 17 | Derrick Rose's 50-point game (2018) (65) | Kawhi Leonard's four-bounce winner (2019) (100) |
+| NBA MOMENT IMPACT | 17 | Derrick Rose's 50-point game (2018) (65) | Kawhi Leonard's four-bounce winner (2019) (100) |
 | FRANCHISE TRADITION | 23 | New Orleans Pelicans (9) | Los Angeles Lakers (100) |
 | DRAFT HYPE | 17 | Ben Wallace (3) | LeBron James (100) |
 | DUO IMPACT | 19 | LeBron James and Russell Westbrook (2021–23 Lakers) (21) | Michael Jordan and Scottie Pippen (1990s Bulls) (100) |
 
 Owner has authorized production publication strictly to **test behind the existing NBA owner gate**. This is still an unranked NBA Daily sandbox with no official NBA leaderboard/streak/attempt backend writes; the public game remains gated.
+
+### Calibration follow-up: NBA moments
+
+The moment category is called **NBA Moment Impact**, not “Iconic Moments”: a reference being mentioned must not automatically imply a rating above 65. Six recognizably framed but less league-defining events anchor the 28–61 range. The remaining landmark Finals shots and historical performances properly remain high. We did not fabricate 1–10 moments merely to complete a numerical grid.
