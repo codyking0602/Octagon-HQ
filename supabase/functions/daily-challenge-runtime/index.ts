@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.110.7";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 import { advancePersistedBlindResumeV3 } from "./blindResumeAdvance.ts";
+import { advanceWavelengthHandoff } from "./twoGameWavelengthHandoff.ts";
 
 type OfficialDailyGameType =
   | "find_leader"
@@ -1347,15 +1348,20 @@ Deno.serve(async (request) => {
         return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state.");
       }
 
-      const advanceFootballRuntime = context.gameType === "average_fan"
-        ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
-        : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
-      context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
-      const history = footballActionHistory(context);
       const action = requiredRecord(body.action, "Football daily action");
-      const advanced = isDailyCombo(context)
-        ? advanceDailyCombo(context, action, advanceFootballRuntime)
-        : advanceFootballRuntime(context, action);
+      // Game 2 is already saved; avoid loading the full rules engine just to
+      // acknowledge its persisted handoff (a source of Edge CPU-limit errors).
+      let advanced = advanceWavelengthHandoff(context, action);
+      if (!advanced) {
+        const advanceFootballRuntime = context.gameType === "average_fan"
+          ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
+          : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
+        context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
+        advanced = isDailyCombo(context)
+          ? advanceDailyCombo(context, action, advanceFootballRuntime)
+          : advanceFootballRuntime(context, action);
+      }
+      const history = footballActionHistory(context);
       const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
         p_daily_challenge_id: materialized.dailyChallengeId,
         p_profile_id: profileId,
@@ -1405,14 +1411,17 @@ Deno.serve(async (request) => {
       return safeError(409, "STALE_PROGRESS", "Official daily progress changed on another device. Refresh and continue from the latest state.");
     }
 
-    const advanceUfcRuntime = context.gameType === "average_fan"
-      ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
-      : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
-        ? advancePersistedBlindResumeV3
-        : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
-    const advanced = isDailyCombo(context)
-      ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
-      : advanceUfcRuntime(context, body.action);
+    let advanced = advanceWavelengthHandoff(context, body.action);
+    if (!advanced) {
+      const advanceUfcRuntime = context.gameType === "average_fan"
+        ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
+        : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
+          ? advancePersistedBlindResumeV3
+          : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
+      advanced = isDailyCombo(context)
+        ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
+        : advanceUfcRuntime(context, body.action);
+    }
 
     // Keep the full choice sequence for new UFC Millionaire replays. Older
     // in-progress runs cannot acquire a truthful history retroactively.
