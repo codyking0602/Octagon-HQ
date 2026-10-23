@@ -19,16 +19,16 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
   it("uses distinct bounded editorial ratings, explicit traits and multiple NBA eras", () => {
     const audit = auditNbaWavelengthCatalog();
     expect(audit.failures).toEqual([]);
-    expect(audit.entries).toBe(192);
-    expect(audit.distinctSubjects).toBeGreaterThan(95);
-    expect(audit.categories).toBe(14);
+    expect(audit.entries).toBe(380);
+    expect(audit.distinctSubjects).toBeGreaterThan(170);
+    expect(audit.categories).toBe(25);
     expect(audit.eras).toBe(4);
     expect(NBA_WAVELENGTH_CATEGORY_ANCHORS).toHaveLength(14);
-    expect(new Set(NBA_WAVELENGTH_CATEGORY_ANCHORS.map(row => row.category)).size).toBe(14);
+    expect(new Set(NBA_WAVELENGTH_CATEGORY_ANCHORS.map(row => row.category)).size).toBe(25);
     expect(NBA_WAVELENGTH_BANDS[0].min).toBe(1);
     expect(NBA_WAVELENGTH_BANDS.at(-1)?.max).toBe(100);
     expect(new Set(nbaWavelengthClues.map(row => row.id)).size).toBe(nbaWavelengthClues.length);
-    expect(new Set(nbaWavelengthClues.map(row => row.category)).size).toBe(14);
+    expect(new Set(nbaWavelengthClues.map(row => row.category)).size).toBe(25);
     const subjectCategory = new Set(nbaWavelengthClues.map(row => row.subject + "|" + row.category));
     expect(subjectCategory.size).toBe(nbaWavelengthClues.length);
     expect(nbaWavelengthClues.filter(row => row.rating <= 30).length).toBeGreaterThan(20);
@@ -39,8 +39,8 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     const cultural = new Set(["SHOWMANSHIP", "VILLAIN REPUTATION", "CULTURAL INFLUENCE", "HOME-COURT HEAT", "RIVALRY HEAT"]);
     const culture = nbaWavelengthClues.filter(clue => cultural.has(clue.category));
     expect(culture).toHaveLength(56);
-    expect(culture.length / nbaWavelengthClues.length).toBeGreaterThan(.25);
-    expect(culture.length / nbaWavelengthClues.length).toBeLessThan(.35);
+    expect(culture.length / nbaWavelengthClues.length).toBeGreaterThan(.12);
+    expect(culture.length / nbaWavelengthClues.length).toBeLessThan(.2);
     for (const category of cultural) {
       const rows = culture.filter(clue => clue.category === category);
       expect(rows.length).toBeGreaterThanOrEqual(11);
@@ -51,11 +51,30 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     for (const clue of nbaWavelengthClues) {
       byCategory.set(clue.category, [...(byCategory.get(clue.category) ?? []), clue.rating]);
     }
-    expect(byCategory.size).toBe(14);
+    expect(byCategory.size).toBe(25);
     for (const values of byCategory.values()) {
       expect(Math.min(...values)).toBeLessThanOrEqual(50);
       expect(Math.max(...values)).toBeGreaterThanOrEqual(90);
     }
+  });
+
+  it("keeps every original NBA Wavelength clue while adding clear categories with independent scales", () => {
+    const expanded = ["BALL HANDLING", "REBOUNDING", "RIM PROTECTION", "MIDRANGE TOUCH",
+      "AT-THE-RIM FINISHING", "BASKETBALL IQ", "TRASH TALK", "ICONIC MOMENTS",
+      "FRANCHISE TRADITION", "DRAFT HYPE", "DUO IMPACT"];
+    for (const category of expanded) {
+      const rows = nbaWavelengthClues.filter(clue => clue.category === category);
+      expect(rows.length).toBeGreaterThanOrEqual(15);
+      expect(Math.min(...rows.map(row => row.rating))).toBeLessThanOrEqual(65);
+      expect(Math.max(...rows.map(row => row.rating))).toBeGreaterThanOrEqual(90);
+      expect(NBA_WAVELENGTH_CATEGORY_ANCHORS.find(item => item.category === category)?.question).toBeTruthy();
+      expect(new Set(rows.map(row => row.subject)).size).toBe(rows.length);
+    }
+    expect(nbaWavelengthClues.find(row => row.id === "nba-wl-shooting-shaq")?.rating).toBe(3);
+    expect(nbaWavelengthClues.find(row => row.id === "nba-wl-villain-bill-laimbeer")?.rating).toBe(100);
+    expect(nbaWavelengthClues.find(row => row.id === "nba-wl-duo-jordan-pippen")?.rating).toBe(100);
+    expect(nbaWavelengthClues.find(row => row.id === "nba-wl-hype-lebron-james")?.rating).toBe(100);
+    expect(nbaWavelengthClues.length).toBe(380);
   });
 
   it("does not conflate overall greatness with shooting, defense or playmaking", () => {
@@ -122,7 +141,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(Math.min(...targets)).toBeLessThanOrEqual(3);
     expect(Math.max(...targets)).toBeGreaterThanOrEqual(98);
     expect(new Set(targets).size).toBeGreaterThan(92);
-    expect(categoryCounts.size).toBe(14);
+    expect(categoryCounts.size).toBe(25);
     for (const count of categoryCounts.values()) expect(count).toBeGreaterThan(10);
   });
 
