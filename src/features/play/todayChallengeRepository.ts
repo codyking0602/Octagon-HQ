@@ -534,7 +534,7 @@ export function createTodayChallengeRepository(
             millionaire: entry.game_averages.millionaire ?? null,
             sportsFeud: entry.game_averages.sports_feud ?? null,
             barTrivia: entry.game_averages.bar_trivia ?? null,
-            higherLower: entry.game_averages.higher_lower ?? null,
+            ...(sport === "nba" ? { higherLower: entry.game_averages.higher_lower ?? null } : {}),
           },
           isCurrentUser: entry.is_current_user,
         })),
