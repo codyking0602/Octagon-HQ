@@ -1208,6 +1208,7 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
           if (lockedSport === "nba" && !previewSeed && rotationCursor) advanceNbaAverageFanCursor(rotationCursor);
         }}
         onRestart={() => {
+          if (lockedSport === "nba" && !previewSeed) setRotationCursor(readNbaAverageFanCursor());
           setReviewQuestionEnabled(false);
           setGameKey((value) => value + 1);
           setScene("fan-select");
