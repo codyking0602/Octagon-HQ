@@ -31,8 +31,7 @@ const NBA_CASUAL_GAME_META: Record<(typeof NBA_CASUAL_GAME_TYPES)[number], { ico
 };
 
 function previewRoute(game: NbaDailyGame) {
-  // Who Am I and Hit the Number have no official Daily preview adapter yet.
-  return NBA_GAME_ROUTES[game] + (game === "who_am_i" || game === "hit_the_number" ? "" : "?mode=daily");
+  return NBA_GAME_ROUTES[game] + "?mode=daily";
 }
 
 const dailyGameOrder: readonly NbaDailyGame[] = [

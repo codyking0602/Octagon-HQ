@@ -82,6 +82,8 @@ interface WhoAmIPageProps {
   onAllGames?: () => void;
   onComplete?: (round: WhoAmIRound, result: WhoAmICompletedResult) => void;
   onRoundShown?: (round: WhoAmIRound) => void;
+  /** Used only by locked two-round Daily previews; all Casual games keep replay. */
+  disableReplay?: boolean;
 }
 
 export default function WhoAmIPage({
@@ -93,6 +95,7 @@ export default function WhoAmIPage({
   onAllGames,
   onComplete,
   onRoundShown,
+  disableReplay = false,
 }: WhoAmIPageProps) {
   const [round, setRound] = useState<WhoAmIRound>(() => initialRound ?? createRound(recentSubjectExclusions()));
   const [phase, setPhase] = useState<Phase>("start");
@@ -363,7 +366,7 @@ export default function WhoAmIPage({
       onEnterRecovery={() => openRescue()}
       onRecoveryGuess={submitRescueGuess}
       onToggleReview={() => setReviewCluesOpen((open) => !open)}
-      onReplay={resetRound}
+      onReplay={disableReplay ? undefined : resetRound}
     />
   );
 }

@@ -1,5 +1,9 @@
 import "../../styles/nba-game-actions.css";
+import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { nbaCentralDay } from "../nba/nbaDailySchedule";
+import { nbaWhoAmIDailyPreviewRounds } from "./nbaWhoAmIDailyPreview";
+import "../../styles/nba-owner-daily.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { WhoAmIRound } from "../games/whoAmIEngine";
@@ -20,11 +24,16 @@ export default function NbaWhoAmIPage() {
   const [searchParams] = useSearchParams();
   const { beginChallenge } = usePlayChallenges();
   const profileMatch = useProfileChallengeMatch("who-am-i");
+  const day = nbaCentralDay();
+  const daily = searchParams.get("mode") === "daily" && !profileMatch.code && !searchParams.has("subject");
+  const dailyRounds = useMemo(() => nbaWhoAmIDailyPreviewRounds(day), [day]);
+  const [dailyRoundIndex, setDailyRoundIndex] = useState(0);
+  const [dailyScores, setDailyScores] = useState<(number | null)[]>([null, null]);
   const challengeRound = profileMatch.challenge
     ? storedWhoAmIChallengeRound(profileMatch.challenge.setup, "nba")
     : null;
   const sharedRound = profileMatch.code ? null : sharedWhoAmIRound(searchParams, "nba");
-  const initialRound = challengeRound ?? sharedRound;
+  const initialRound = challengeRound ?? sharedRound ?? (daily ? dailyRounds[dailyRoundIndex] : null);
 
   async function challengeSomeone(round: WhoAmIRound, result: WhoAmICompletedResult) {
     return beginChallenge({
@@ -59,14 +68,31 @@ export default function NbaWhoAmIPage() {
     </section></div>;
   }
 
-  return <WhoAmIPage
+  return <>
+    {daily ? <section className="nba-whoami-owner-daily" role="status" aria-label="NBA Who Am I private Daily rehearsal">
+      <strong>NBA DAILY · OWNER PREVIEW · GAME {dailyRoundIndex + 1} OF 2</strong>
+      <span>Private test · not ranked · no official result is saved</span>
+      {dailyRoundIndex === 0 && dailyScores[0] !== null ? <button type="button" onClick={() => setDailyRoundIndex(1)}>NEXT GAME →</button> : null}
+      {dailyRoundIndex === 1 && dailyScores[1] !== null ? <strong>
+        TWO-GAME PREVIEW AVERAGE: {Math.round((dailyScores[0]! + dailyScores[1]!) / 2)}/100
+      </strong> : null}
+    </section> : null}
+    <WhoAmIPage
+    key={daily ? "nba-owner-daily-" + day + "-" + dailyRoundIndex : "nba-casual"}
     sport="nba"
     initialRound={initialRound ?? undefined}
     challengeFrom={profileMatch.creator?.displayName}
-    onChallenge={challengeSomeone}
+    onChallenge={daily ? undefined : challengeSomeone}
     onAllGames={() => navigate("/nba")}
-    onComplete={recordChallengeResult}
-    onRoundShown={rememberNbaWhoAmIAuthoredCasualRound}
-    createRound={(excluded) => createNbaWhoAmIAuthoredCasualRound(Math.random, excluded.NBA)}
-  />;
+    onComplete={daily ? (_round, result) => {
+      setDailyScores(previous => {
+        if (previous[dailyRoundIndex] !== null) return previous;
+        const next = [...previous]; next[dailyRoundIndex] = result.score; return next;
+      });
+    } : recordChallengeResult}
+    onRoundShown={daily ? undefined : rememberNbaWhoAmIAuthoredCasualRound}
+    createRound={(excluded) => daily ? dailyRounds[dailyRoundIndex] : createNbaWhoAmIAuthoredCasualRound(Math.random, excluded.NBA)}
+    disableReplay={daily}
+  />
+  </>;
 }
