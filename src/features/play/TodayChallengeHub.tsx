@@ -16,7 +16,7 @@ import {
 } from "./DailyRankKeepComboStatus";
 import { OfficialTodayChallengeContent } from "./OfficialTodayChallengePage";
 import OwnerTomorrowAverageFanPreviewEntry from "./OwnerTomorrowAverageFanPreviewEntry";
-import type { PlaySport } from "./playRegistry";
+import type { TodayChallengeSport } from "./todayChallengeRepository";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
 import {
   TodayChallengeRepositoryError,
@@ -36,6 +36,11 @@ const FootballTodayChallengeResult = lazy(() =>
 const DailyTwoGameLeaderboardResult = lazy(() =>
   import("./DailyTwoGameLeaderboardResult").then((module) => ({
     default: module.DailyTwoGameLeaderboardResult,
+  })),
+);
+const NbaHigherLowerLeaderboardResult = lazy(() =>
+  import("../nba/NbaHigherLowerLeaderboardResult").then((module) => ({
+    default: module.NbaHigherLowerLeaderboardResult,
   })),
 );
 
@@ -107,6 +112,10 @@ function gameProgress(projection: TodayChallengeProjection) {
       return state.complete === true
         ? "AVERAGE FAN COMPLETE"
         : `${Array.isArray(state.resolved) ? state.resolved.length : 0}/10 CLEARED`;
+    case "higher_lower":
+      return state.complete === true
+        ? "HIGHER OR LOWER COMPLETE"
+        : `Q${Math.min(10, Number(state.index ?? 0) + 1)} OF 10`;
   }
 }
 
@@ -119,7 +128,7 @@ export function DailyAnswerDetail({
   entry: TodayChallengeLeaderboard["entries"][number];
   projection: TodayChallengeProjection;
   onClose: () => void;
-  sport: PlaySport;
+  sport: TodayChallengeSport;
 }) {
   const navigate = useNavigate();
   const specialTheme = sport === "football"
@@ -153,8 +162,8 @@ export function DailyAnswerDetail({
           <span className="today-hub-official-result__identity-copy">
             <strong>{entry.displayName}</strong>
             <small>#{entry.rank} · {entry.normalizedScore}/100</small>
-            <Link className="today-hub-official-result__full-stats"
-              to={memberProfilePath(entry.displayName) + "/play-stats/" + sport}>FULL {sport.toUpperCase()} STATS ↗</Link>
+            {sport !== "nba" ? <Link className="today-hub-official-result__full-stats"
+              to={memberProfilePath(entry.displayName) + "/play-stats/" + sport}>FULL {sport.toUpperCase()} STATS ↗</Link> : null}
           </span>
         </span>
       </header>
@@ -163,14 +172,24 @@ export function DailyAnswerDetail({
         style={specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined}
       >
         {specialTheme ? <FootballSpecialDailyHubMark theme={specialTheme} /> : null}
-        {(sport === "ufc" || sport === "football")
-          && (entry.gameType === "find_leader" || entry.gameType === "wavelength" || entry.gameType === "hit_the_number")
+        {(entry.gameType === "find_leader" || entry.gameType === "wavelength" || entry.gameType === "hit_the_number")
           && record(entry.publicResult.daily_series).format_version === "daily-two-game-average-v1" ? (
           <Suspense fallback={<p className="today-hub-empty">Loading two-game result…</p>}>
             <DailyTwoGameLeaderboardResult
               projection={resultProjection}
               resultDetail={entry.resultDetail}
-              sport={sport === "football" ? "football" : "ufc"}
+              sport={sport}
+            />
+          </Suspense>
+        ) : sport === "nba" && entry.gameType === "higher_lower" ? (
+          <Suspense fallback={<p className="today-hub-empty">Loading NBA comparison results…</p>}>
+            <NbaHigherLowerLeaderboardResult
+              detail={{
+                unlocked: Boolean(resultProjection.officialAttempt),
+                normalizedScore: entry.normalizedScore,
+                answers: entry.resultDetail.answers,
+                revealQuestions: entry.resultDetail.reveal_questions,
+              }}
             />
           </Suspense>
         ) : entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" || entry.gameType === "bar_trivia" || entry.gameType === "average_fan" ? (
@@ -207,7 +226,7 @@ function DailyLeaderboard({
   leaderboard: TodayChallengeLeaderboard | null;
   projection: TodayChallengeProjection;
   loading: boolean;
-  sport: PlaySport;
+  sport: TodayChallengeSport;
 }) {
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const selectedEntry = leaderboard?.entries.find((entry) => entry.profileId === selectedProfileId) ?? null;
@@ -251,7 +270,7 @@ function DailyLeaderboard({
   );
 }
 
-export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport }) {
+export default function TodayChallengeHub({ sport = "ufc" }: { sport?: TodayChallengeSport }) {
   const identity = useIdentity();
   const navigate = useNavigate();
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -351,7 +370,7 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   const cta = combo
     ? dailyRankKeepComboStage(projection) === 2 ? "CONTINUE PART 2" : "START PART 1"
     : adapter.cta.toUpperCase();
-  const dailyRoute = sport === "football" ? "/football/today" : adapter.dailyRoute;
+  const dailyRoute = sport === "football" ? "/football/today" : sport === "nba" ? "/nba/today" : adapter.dailyRoute;
 
   const showPanel = (nextPanel: "challenge" | "leaderboard") => {
     const carousel = carouselRef.current;
@@ -424,12 +443,12 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
         </div>
       </div>
 
-      <OwnerTomorrowAverageFanPreviewEntry
+      {sport !== "nba" ? <OwnerTomorrowAverageFanPreviewEntry
         enabled={identity.profile?.canControlPicks === true}
         sport={sport}
         centralDay={projection.centralDay}
         onNavigate={navigate}
-      />
+      /> : null}
 
       <div className="today-hub__pager" aria-label="Today’s Challenge carousel controls">
         <button
