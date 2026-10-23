@@ -11,6 +11,10 @@ import { buildNbaSportsFeudDailyPack } from "./nbaSportsFeudDailyRotation";
 import { buildNbaBarTriviaDailyBoard } from "./nbaBarTriviaDailyRotation";
 import { buildNbaOfficialMillionaireRun } from "./nbaMillionaireDailyRotation";
 import { buildNbaMillionaireDailySetup } from "../play/millionaireDailyRuntime";
+import { buildNbaWhoAmIOfficialRounds } from "./nbaWhoAmIDailyRotation";
+import { buildTwoRoundWhoAmIDailyPublication } from "../play/whoAmITwoRoundDailyRuntime";
+import { OFFICIAL_SCORE_CONTRACT_VERSION } from "../play/officialScoreContract";
+import { buildNbaFindLeaderDailyPublication } from "./nbaFindLeaderDailyPublication";
 
 /**
  * Publication-only foundation using the existing canonical server graders.
@@ -18,7 +22,7 @@ import { buildNbaMillionaireDailySetup } from "../play/millionaireDailyRuntime";
  * authenticated Daily runtime and the remaining six games are wired.
  */
 export const NBA_SERVER_READY_GAME_TYPES = [
-  "average_fan", "sports_feud", "bar_trivia", "millionaire",
+  "average_fan", "sports_feud", "bar_trivia", "millionaire", "who_am_i", "find_leader",
 ] as const satisfies readonly NbaDailyGame[];
 
 export const NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION = "nba-bar-trivia-server-v1";
@@ -85,7 +89,14 @@ export function buildNbaServerDailyPublication(
 ) {
   if (!scheduleVersion.trim()) throw new Error("NBA Daily schedule version is required.");
   const ordinal = nbaDailyGameAppearance(day, gameType);
-  const publication = gameType === "millionaire"
+  const publication = gameType === "find_leader"
+    ? buildNbaFindLeaderDailyPublication(day, scheduleVersion, ordinal)
+    : gameType === "who_am_i"
+    ? buildTwoRoundWhoAmIDailyPublication(
+        buildNbaWhoAmIOfficialRounds(ordinal),
+        day, scheduleVersion, "nba-official-daily-v1", OFFICIAL_SCORE_CONTRACT_VERSION,
+      )
+    : gameType === "millionaire"
     ? buildNbaMillionaireDailySetup(day, scheduleVersion, ordinal, buildNbaOfficialMillionaireRun(ordinal))
     : gameType === "average_fan"
     ? buildAverageFanDailySetup("nba", day, scheduleVersion, publicationHistory)

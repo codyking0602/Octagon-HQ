@@ -5,6 +5,7 @@ import {
 import { NBA_DAILY_WEIGHTED_CYCLE, nbaRegularSeasonDaily } from "./nbaDailySchedule";
 import { advanceFamilyFeudDailyRuntime } from "../play/familyFeudDailyRuntime";
 import { buildNbaOfficialMillionaireRun } from "./nbaMillionaireDailyRotation";
+import { buildNbaWhoAmIOfficialRounds } from "./nbaWhoAmIDailyRotation";
 
 describe("NBA server-authored Daily publication foundation", () => {
   it("computes appearance ordinals from published every-other-day game slots", () => {
@@ -63,9 +64,41 @@ describe("NBA server-authored Daily publication foundation", () => {
     expect(seen.size).toBe(160);
   }, 120_000);
 
+  it("builds two unique NBA Who Am I rounds per official appearance", () => {
+    const published = buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v1", "who_am_i");
+    expect(published.publicSetup.sport).toBe("nba");
+    expect(published.publicSetup.round_count).toBe(2);
+    expect(JSON.stringify(published.publicSetup)).not.toContain('"hidden_subject_id"');
+    const seen = new Set<string>();
+    for (let appearance = 0; appearance < 20; appearance++) {
+      const [first, second] = buildNbaWhoAmIOfficialRounds(appearance);
+      for (const entry of [first, second]) {
+        expect(entry.round.clues).toHaveLength(10);
+        expect(entry.round.league).toBe("NBA");
+        expect(seen.has(entry.round.hiddenSubject.id)).toBe(false);
+        seen.add(entry.round.hiddenSubject.id);
+      }
+    }
+    expect(seen.size).toBe(40);
+  });
+
+  it("provides two NBA Find the Leader boards with distinct categories and visible season identity", () => {
+    const publication = buildNbaServerDailyPublication("2026-11-09", "nba-daily-regular-v1", "find_leader");
+    expect(publication.publicSetup.sport).toBe("nba");
+    expect(publication.publicSetup.round_count).toBe(2);
+    const rounds = publication.publicSetup.rounds as Record<string, unknown>[];
+    expect(rounds).toHaveLength(2);
+    expect(rounds.every(round => (round.candidates as unknown[]).length === 10)).toBe(true);
+    expect((publication.revealSetup.rounds as unknown[]).length).toBe(2);
+    expect(JSON.stringify(publication.publicSetup)).not.toContain('"leader_id":');
+    expect(JSON.stringify(publication.revealSetup)).toContain('"leader_id":');
+    const seasons = rounds.flatMap(round => (round.candidates as Record<string, unknown>[]).filter(c => c.season != null));
+    for (const row of seasons) expect(String(row.season_label)).toMatch(/[0-9]{2}/);
+  });
+
   it("reuses the canonical Bar Trivia server scorer and answer reveal boundary", () => {
     const published = buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v1", "bar_trivia");
-    expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia", "millionaire"]);
+    expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia", "millionaire", "who_am_i", "find_leader"]);
     expect(published.publicSetup.league).toBe("nba");
     expect(published.privateSetupEvidence.questions).toHaveLength(10);
     expect(published.revealSetup.questions).toHaveLength(10);
