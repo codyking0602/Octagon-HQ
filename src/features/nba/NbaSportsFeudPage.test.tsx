@@ -56,7 +56,7 @@ describe("NBA Sports Feud reused immersive presentation", () => {
     expect(screen.getByText("NBA HQ · OWNER CASUAL PREVIEW")).toBeInTheDocument();
     expect(screen.getByText(/not survey results/i)).toBeInTheDocument();
     expect(screen.getByText(/does not submit a Daily or leaderboard score/i)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
+    await startCasual();
     const root = document.querySelector(".family-feud-prototype");
     expect(root).toHaveAttribute("data-scope", "nba");
     expect(root).toHaveAttribute("data-scene", "main");
@@ -73,7 +73,7 @@ describe("NBA Sports Feud reused immersive presentation", () => {
     expect(screen.getByText("NBA HQ · OWNER DAILY PREVIEW")).toBeInTheDocument();
     const expected = buildNbaSportsFeudPack("daily:" + sportsFeudCentralDateKey());
     // This local preview reads the same bank and stage without a second Daily backend.
-    await startCasual();
+    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
     expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-scene", "main");
     expect(screen.getByText(expected.mainBoards[0]!.prompt)).toBeInTheDocument();
   });
@@ -118,7 +118,7 @@ describe("NBA Sports Feud reused immersive presentation", () => {
     expect(css).toMatch(/@media \(max-height: 700px\)/);
     expect(css).toContain(".feud-answer-entry__row");
     mount();
-    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
+    await startCasual();
     const stage = document.querySelector(".family-feud-prototype");
     expect(stage).toHaveClass("family-feud-prototype");
     expect(stage).toHaveAttribute("data-scope", "nba");
