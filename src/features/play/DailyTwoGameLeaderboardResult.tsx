@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { footballWavelengthClues } from "../back-room/footballWavelengthModel";
+import { nbaWavelengthClues } from "../nba/nbaWavelengthCatalog";
 import { getPlayFighter } from "./playFighterPool";
 import { HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
 import { HitTheNumberPickBreakdown } from "./HitTheNumberPickBreakdown";
@@ -8,7 +9,7 @@ import { wavelengthClues } from "./wavelengthEngine";
 import "./DailyTwoGameLeaderboardResult.css";
 
 type JsonRecord = Record<string, unknown>;
-type Sport = "ufc" | "football";
+type Sport = "ufc" | "football" | "nba";
 
 function record(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -164,6 +165,7 @@ function FindLeaderRoundDetail({
 
 const ufcWavelengthById = new Map(wavelengthClues.map((clue) => [clue.id, clue]));
 const footballWavelengthById = new Map(footballWavelengthClues.map((clue) => [clue.id, clue]));
+const nbaWavelengthById = new Map(nbaWavelengthClues.map((clue) => [clue.id, clue]));
 
 function WavelengthRoundDetail({
   sport,
@@ -177,7 +179,7 @@ function WavelengthRoundDetail({
   const guesses = numbers(result.guesses);
   const target = Number(detail.target);
   const finalGuess = guesses.at(-1);
-  const clueMap = sport === "football" ? footballWavelengthById : ufcWavelengthById;
+  const clueMap = sport === "football" ? footballWavelengthById : sport === "nba" ? nbaWavelengthById : ufcWavelengthById;
   const clues = strings(detail.clue_ids).map((id) => clueMap.get(id)).filter(Boolean);
 
   return (
@@ -243,7 +245,7 @@ function HitNumberRoundDetail({
       value: typeof rawValue === "number" && Number.isFinite(rawValue) ? rawValue : null,
     };
   });
-  const statId = String(setup.statId ?? "");
+  const statId = String(setup.statId ?? setup.metric_id ?? "");
   const metricLabel = typeof setup.metric_label === "string"
     ? setup.metric_label
     : HIT_THE_NUMBER_STATS.find((stat) => stat.id === statId)?.label ?? "STAT CONTRIBUTIONS";
