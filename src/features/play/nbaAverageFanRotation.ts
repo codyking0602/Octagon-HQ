@@ -19,7 +19,7 @@ export function parseNbaAverageFanRotation(raw: string | null): NbaAverageFanRot
       return { ...EMPTY_ROTATION, questionIds: [] };
     }
     const { games, questionIds } = parsed as Record<string, unknown>;
-    if (!Number.isInteger(games) || typeof games !== "number" || games < 0
+    if (typeof games !== "number" || !Number.isInteger(games) || games < 0
       || games > NBA_AVERAGE_FAN_ROTATION_GAMES || !Array.isArray(questionIds)
       || questionIds.length !== games * 9 || questionIds.some((id) => typeof id !== "string")
       || new Set(questionIds).size !== questionIds.length) {
