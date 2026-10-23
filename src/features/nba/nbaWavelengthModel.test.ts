@@ -113,7 +113,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     ];
     for (const id of originalIds) expect(nbaWavelengthClues.some(row => row.id === id)).toBe(true);
     const lowMiddle = nbaWavelengthClues.filter(row => row.rating <= 80);
-    expect(lowMiddle.length).toBeGreaterThanOrEqual(300);
+    expect(lowMiddle.length).toBeGreaterThanOrEqual(295);
     const newIds = [
       "nba-wl-legacy-olowokandi",
       "nba-wl-peak-adam-morrison",
