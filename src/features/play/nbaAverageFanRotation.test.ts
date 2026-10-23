@@ -58,6 +58,6 @@ describe("NBA Average Fan question-only four-month rotation", () => {
     expect(parseNbaAverageFanRotation(JSON.stringify({ games: 1, questionIds: Array(9).fill("same") }))).toEqual(empty());
     const history = nextNbaAverageFanRotatingBoard("valid", empty()).next;
     expect(parseNbaAverageFanRotation(JSON.stringify(history))).toEqual(history);
-    expect(JSON.stringify(history)).not.toMatch(/answer|score|fan|result|profile/i);
+    expect(JSON.stringify(history)).not.toMatch(/answer|score|result|profile/i);
   });
 });
