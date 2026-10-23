@@ -1,6 +1,7 @@
 import type { BarTriviaQuestion } from "../games/barTriviaEngine";
 import { NBA_BAR_TRIVIA_EASY } from "./nbaBarTriviaEasy";
 import { NBA_BAR_TRIVIA_EASY_SUPPLEMENT } from "./nbaBarTriviaEasySupplement";
+import { NBA_BAR_TRIVIA_EASY_CULTURE } from "./nbaBarTriviaEasyCulture";
 import { NBA_BAR_TRIVIA_MEDIUM } from "./nbaBarTriviaMedium";
 import { NBA_BAR_TRIVIA_MEDIUM_SUPPLEMENT } from "./nbaBarTriviaMediumSupplement";
 import { NBA_BAR_TRIVIA_HARD } from "./nbaBarTriviaHard";
@@ -16,6 +17,7 @@ import { NBA_BAR_TRIVIA_RETIRED_IDS } from "./nbaBarTriviaRetirements";
 const authored: readonly BarTriviaQuestion[] = [
   ...NBA_BAR_TRIVIA_EASY,
   ...NBA_BAR_TRIVIA_EASY_SUPPLEMENT,
+  ...NBA_BAR_TRIVIA_EASY_CULTURE,
   ...NBA_BAR_TRIVIA_MEDIUM,
   ...NBA_BAR_TRIVIA_MEDIUM_SUPPLEMENT,
   ...NBA_BAR_TRIVIA_HARD,
