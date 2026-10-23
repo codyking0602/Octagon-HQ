@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import routerSource from "../../app/router.tsx?raw";
 import nbaHqSource from "./NbaPlayPage.tsx?raw";
+import { NBA_CASUAL_GAME_TYPES, NBA_DAILY_WEIGHTED_CYCLE } from "./nbaDailySchedule";
 import pageSource from "./NbaHigherLowerPage.tsx?raw";
 import modelSource from "./nbaHigherLowerModel.ts?raw";
 import styles from "../../styles/nba-higher-lower.css?raw";
@@ -9,8 +10,11 @@ import challengeRuntime from "../challenges/challengeRuntime.ts?raw";
 describe("NBA Higher or Lower owner-preview integration", () => {
   it("keeps play and daily preview owner-only, off public Daily scoring", () => {
     expect(routerSource).toContain('path: "nba/higher-lower", element: <NbaWhoAmIOwnerGate>');
-    expect(nbaHqSource).toContain('to="/nba/higher-lower?mode=daily"');
-    expect(nbaHqSource).toContain("canPreviewNbaWhoAmI(identity.profile)");
+    expect(nbaHqSource).toContain('higher_lower: "/nba/higher-lower"');
+    expect(nbaHqSource).toContain('previewRoute(game)');
+    expect(nbaHqSource).toContain("canPreviewNbaWhoAmI(profile)");
+    expect(NBA_DAILY_WEIGHTED_CYCLE).toContain("higher_lower");
+    expect(NBA_CASUAL_GAME_TYPES).toContain("higher_lower");
     expect(pageSource).toContain("No Daily leaderboard score is submitted.");
     expect(pageSource).not.toContain("daily_challenge_run");
   });

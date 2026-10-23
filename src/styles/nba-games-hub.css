@@ -1,0 +1,25 @@
+.nba-games-hub{gap:10px}
+.nba-games-hub__featured,.nba-games-hub__section,.nba-games-hub__footer{padding:14px;display:grid;gap:9px;min-width:0}
+.nba-games-hub__featured{border-color:#805a34;background:linear-gradient(145deg,#2b231d,#171c20 72%)}
+.nba-games-hub__topline,.nba-games-hub__section-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nba-games-hub__topline span,.nba-games-hub__section-heading small,.nba-games-hub__eyebrow,.nba-games-hub__footer small{font-size:.59rem;letter-spacing:.07em;font-weight:900;color:#ebb777}
+.nba-games-hub__topline span:last-child{color:#bfc5cc;text-align:right}
+.nba-games-hub__featured h2{font-size:clamp(1.25rem,4vw,1.75rem);line-height:1.15;margin:0}
+.nba-games-hub__section-heading h2{font-size:1.02rem;line-height:1.1;margin:0}
+.nba-games-hub__featured p,.nba-games-hub__section p{font-size:.76rem;color:#bbc3cb;line-height:1.45;margin:0}
+.nba-games-hub__featured .primary-action{justify-self:start;text-decoration:none}
+.nba-games-hub__eyebrow{margin:0!important}
+.nba-games-hub__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.nba-games-hub__tile{display:grid;align-content:center;gap:7px;min-height:73px;padding:11px;text-decoration:none;color:#f3f5f7;background:#20282d;border:1px solid #39454c;border-radius:10px}
+.nba-games-hub__tile strong{font-size:.83rem;line-height:1.2}
+.nba-games-hub__tile span{font-size:.58rem;color:#e7b67c;font-weight:900;letter-spacing:.03em}
+.nba-games-hub__tile.is-locked{opacity:.63}
+.nba-games-hub__catalog{display:grid;gap:0}
+.nba-games-hub__catalog a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #303c43;text-decoration:none;color:#edf2f5;min-width:0}
+.nba-games-hub__catalog a:last-child{border-bottom:0}
+.nba-games-hub__catalog a span{font-size:.77rem;font-weight:800}
+.nba-games-hub__catalog a small{font-size:.55rem;color:#f1b671;text-align:right}
+.nba-games-hub__footer{grid-template-columns:minmax(0,1fr) auto;align-items:center}
+.nba-games-hub__footer div{display:grid;gap:4px}
+.nba-games-hub__footer strong{font-size:.78rem}
+@media(max-width:390px){.nba-games-hub__grid{gap:5px}.nba-games-hub__tile{padding:9px;min-height:70px}.nba-games-hub__footer{grid-template-columns:1fr}.nba-games-hub__footer .secondary-action{justify-self:start}}

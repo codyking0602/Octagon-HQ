@@ -1,102 +1,110 @@
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
+import {
+  NBA_CASUAL_GAME_TYPES, NBA_DAILY_GAME_LABELS, NBA_GAMES_LAUNCH_DAY,
+  NBA_DAILY_WEIGHTS, nbaCanAccessReleasedGames, nbaCentralDay,
+  nbaOwnerPreviewDaily, nbaRegularSeasonDaily, type NbaDailyGame,
+} from "./nbaDailySchedule";
 import "../../styles/nba-hq.css";
-export default function NbaPlayPage(){
-  const identity = useIdentity();
-  return <div className="page nba-hq-page" data-sport="nba">
-    <header className="nba-hq-hero"><p className="eyebrow">BASKETBALL HQ</p><h1>Basketball Games</h1>
-      <p>Games join the lineup after the World Series. NBA Futures are open now.</p></header>
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="Owner NBA Who Am I calibration preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
-        <h2>NBA Who Am I?</h2>
-        <p>Play the complete authored NBA clue bank before the games launch.</p>
-        <Link className="primary-action" to="/nba/who-am-i">PLAY NBA WHO AM I →</Link>
-      </section>
-    ) : null}
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="Owner NBA Hit the Number preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
-        <h2>NBA Hit the Number</h2>
-        <p>The Football game layout and scoring, with NBA per-game stats, four/five picks and curated pools.</p>
-        <Link className="primary-action" to="/nba/hit-the-number">PLAY NBA HIT THE NUMBER →</Link>
-      </section>
-    ) : null}
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="NBA Find the Leader owner preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
-        <h2>NBA Find the Leader</h2>
-        <p>Eliminate nine players to find the leader. NBA legends, eras and season averages.</p>
-        <div className="nba-find-preview-actions">
-          <Link className="primary-action" to="/nba/find-the-leader">PLAY CASUAL →</Link>
-          <Link className="secondary-action" to="/nba/find-the-leader?mode=daily">DAILY PREVIEW →</Link>
-        </div>
-      </section>
-    ) : null}
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="NBA Higher or Lower owner preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
-        <h2>NBA Higher or Lower</h2>
-        <p>Ten fresh NBA comparisons — scoring averages, threes, All-Stars, All-NBA and draft.</p>
-        <div className="nba-find-preview-actions">
-          <Link className="primary-action" to="/nba/higher-lower">PLAY CASUAL →</Link>
-          <Link className="secondary-action" to="/nba/higher-lower?mode=daily">DAILY PREVIEW →</Link>
-        </div>
-      </section>
-    ) : null}
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="NBA Millionaire owner preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
-        <h2>NBA Millionaire</h2>
-        <p>Eight questions, three lifelines, the $1 million ladder and 240 source-backed questions. Same game as Football.</p>
-        <div className="nba-find-preview-actions">
-          <Link className="primary-action" to="/nba/millionaire">PLAY CASUAL →</Link>
-          <Link className="secondary-action" to="/nba/millionaire?mode=daily">DAILY PREVIEW →</Link>
-        </div>
-      </section>
-    ) : null}
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="NBA Sports Feud owner preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
-        <h2>NBA Sports Feud</h2>
-        <p>Two four-answer rounds, three strikes each, then five Fast Money prompts in 50 seconds. Curated NBA boards with editorial HQ points — not survey results.</p>
-        <Link className="primary-action" to="/nba/sports-feud?mode=daily">DAILY PREVIEW →</Link>
-      </section>
-    ) : null}
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="NBA Average Fan owner preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
-        <h2>NBA Average Fan</h2>
-        <p>Eight classroom questions, five fans, three lifelines and a Final — basketball trivia built for regular fans.</p>
-        <div className="nba-find-preview-actions">
-          <Link className="primary-action" to="/nba/average-fan">PLAY CASUAL →</Link>
-          <Link className="secondary-action" to="/nba/average-fan?mode=daily">DAILY PREVIEW →</Link>
-        </div>
-      </section>
-    ) : null}
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="NBA Bar Trivia owner Daily preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC · DAILY ONLY</p>
-        <h2>NBA Bar Trivia</h2>
-        <p>Ten NBA questions, three escalating rounds and Last Call. Preview play never writes official Daily scores.</p>
-        <Link className="primary-action" to="/nba/bar-trivia?mode=daily">TEST NBA BAR TRIVIA →</Link>
-      </section>
-    ) : null}
-    {canPreviewNbaWhoAmI(identity.profile) ? (
-      <section className="surface-card nba-hq-notice" aria-label="NBA Wavelength owner preview">
-        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
-        <h2>NBA Wavelength</h2>
-        <p>Find two hidden numbers with four adaptive basketball clues each. Only final guesses score. Unranked Daily preview.</p>
-        <div className="nba-find-preview-actions">
-          <Link className="primary-action" to="/nba/wavelength">PLAY CASUAL →</Link>
-          <Link className="secondary-action" to="/nba/wavelength?mode=daily">DAILY PREVIEW →</Link>
-        </div>
-      </section>
-    ) : null}
-    <section className="surface-card nba-hq-notice">
-      <h2>First up: NBA Futures</h2><p>Make your 30 over/under picks and the rest of your season predictions.</p>
-      <Link className="primary-action" to="/nba/picks">OPEN NBA FUTURES →</Link>
+import "../../styles/nba-games-hub.css";
+
+const NBA_GAME_ROUTES: Record<NbaDailyGame, string> = {
+  average_fan: "/nba/average-fan",
+  sports_feud: "/nba/sports-feud",
+  millionaire: "/nba/millionaire",
+  who_am_i: "/nba/who-am-i",
+  find_leader: "/nba/find-the-leader",
+  wavelength: "/nba/wavelength",
+  bar_trivia: "/nba/bar-trivia",
+  hit_the_number: "/nba/hit-the-number",
+  higher_lower: "/nba/higher-lower",
+};
+
+function previewRoute(game: NbaDailyGame) {
+  // Those two games still have only Casual previews. Do not mislabel them as saved Daily runs.
+  return NBA_GAME_ROUTES[game] + (game === "who_am_i" || game === "hit_the_number" ? "" : "?mode=daily");
+}
+
+const dailyGameOrder: readonly NbaDailyGame[] = [
+  "average_fan", "sports_feud", "millionaire", "who_am_i", "find_leader",
+  "wavelength", "bar_trivia", "hit_the_number", "higher_lower",
+];
+
+export default function NbaPlayPage() {
+  const { profile } = useIdentity();
+  const day = nbaCentralDay();
+  const owner = canPreviewNbaWhoAmI(profile);
+  const published = nbaCanAccessReleasedGames(day);
+  const slot = nbaRegularSeasonDaily(day);
+  const ownerPreview = nbaOwnerPreviewDaily(day);
+  const featured = published ? slot?.gameType : owner ? ownerPreview ?? slot?.gameType : null;
+  const featuredRoute = featured ? previewRoute(featured) : null;
+
+  return <div className="page nba-hq-page nba-games-hub" data-sport="nba">
+    <header className="nba-hq-hero">
+      <p className="eyebrow">BASKETBALL HQ</p>
+      <h1>Basketball Games</h1>
+      <p>Nine games. One featured NBA challenge every other day during the regular season.</p>
+    </header>
+
+    <section className="surface-card nba-games-hub__featured" aria-label="NBA featured challenge">
+      <div className="nba-games-hub__topline">
+        <span>{published ? "NBA DAILY" : owner ? "OWNER TESTING · NOT RANKED" : "NBA GAMES"}</span>
+        <span>{published && slot ? (slot.isPublicationDay ? "NEW CHALLENGE" : "DAY 2 OF 2") : "NOVEMBER 1 LAUNCH"}</span>
+      </div>
+      {featured && owner && !published ? <>
+        <p className="nba-games-hub__eyebrow">TODAY'S PRIVATE GAME PREVIEW</p>
+        <h2>{NBA_DAILY_GAME_LABELS[featured]}</h2>
+        <p>This is the selected NBA game for today's private rehearsal. Scores aren't saved to the official Daily leaderboard yet.</p>
+        <Link className="primary-action" to={featuredRoute!}>TEST THIS GAME →</Link>
+      </> : published && featured ? <>
+        <p className="nba-games-hub__eyebrow">FEATURED THROUGH {slot?.nextDay}</p>
+        <h2>{NBA_DAILY_GAME_LABELS[featured]}</h2>
+        <p>Complete the featured challenge before the next NBA Daily arrives.</p>
+        <Link className="primary-action" to={NBA_GAME_ROUTES[featured]}>PLAY DAILY →</Link>
+      </> : <>
+        <p className="nba-games-hub__eyebrow">2026–27 SEASON</p>
+        <h2>{day < NBA_GAMES_LAUNCH_DAY ? "NBA Games start November 1" : "NBA Games are being finalized"}</h2>
+        <p>{day < NBA_GAMES_LAUNCH_DAY
+          ? "Nine Daily games and four anytime Casual games are coming. NBA Futures are already available."
+          : "The new Daily experience will open after official scoring and result verification."}</p>
+      </>}
+    </section>
+
+    <section className="surface-card nba-games-hub__section" aria-label="NBA Casual games">
+      <div className="nba-games-hub__section-heading"><h2>Game Room</h2><small>4 CASUAL GAMES</small></div>
+      <p>Replay these anytime without affecting the official NBA Daily result.</p>
+      <div className="nba-games-hub__grid">
+        {NBA_CASUAL_GAME_TYPES.map(game => published || owner ? (
+          <Link className="nba-games-hub__tile" key={game} to={NBA_GAME_ROUTES[game]}>
+            <strong>{NBA_DAILY_GAME_LABELS[game]}</strong>
+            <span>{published ? "PLAY CASUAL →" : "OWNER PREVIEW →"}</span>
+          </Link>
+        ) : (
+          <div className="nba-games-hub__tile is-locked" key={game}>
+            <strong>{NBA_DAILY_GAME_LABELS[game]}</strong><span>AVAILABLE AT LAUNCH</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {owner ? <section className="surface-card nba-games-hub__section" aria-label="Owner preview catalog">
+      <div className="nba-games-hub__section-heading"><h2>Daily Test Catalog</h2><small>OWNER ONLY</small></div>
+      <p>Test each game independently while server-owned NBA Daily results and drill-downs are being integrated.</p>
+      <div className="nba-games-hub__catalog">
+        {dailyGameOrder.map(game => (
+          <Link key={game} to={previewRoute(game)}>
+            <span>{NBA_DAILY_GAME_LABELS[game]}</span>
+            <small>{NBA_DAILY_WEIGHTS[game]}× WEIGHT · PREVIEW ↗</small>
+          </Link>
+        ))}
+      </div>
+    </section> : null}
+
+    <section className="surface-card nba-games-hub__footer" aria-label="NBA Futures">
+      <div><small>2026–27 NBA SEASON</small><strong>NBA Futures & Championship</strong></div>
+      <Link className="secondary-action" to="/nba/picks">OPEN FUTURES →</Link>
     </section>
   </div>;
 }

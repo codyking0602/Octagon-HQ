@@ -48,9 +48,12 @@ describe("NBA Sports Feud is Daily-only with a shared four-month no-repeat rotat
 
   it("provides only a Daily Feud preview link and no Casual selection or backend reservation", () => {
     const page = readFileSync("src/features/nba/NbaPlayPage.tsx", "utf8");
-    const preview = page.slice(page.indexOf('aria-label="NBA Sports Feud owner preview"'));
-    expect(preview.slice(0, 800)).toContain("DAILY PREVIEW");
-    expect(preview.slice(0, 800)).not.toContain("PLAY CASUAL");
+    const schedule = readFileSync("src/features/nba/nbaDailySchedule.ts", "utf8");
+    expect(page).toContain("Daily Test Catalog");
+    expect(page).toContain("previewRoute(game)");
+    expect(schedule).toContain('"sports_feud"');
+    expect(schedule).toContain('NBA_CASUAL_GAME_TYPES = [');
+    expect(schedule.slice(schedule.indexOf('NBA_CASUAL_GAME_TYPES = ['), schedule.indexOf('] as const satisfies'))).not.toContain('"sports_feud"');
 
     const scene = readFileSync("src/features/play/FamilyFeudPrototypePage.tsx", "utf8");
     expect(scene).toContain("buildNbaSportsFeudDailyPack");
