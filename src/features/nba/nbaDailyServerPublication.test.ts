@@ -96,9 +96,32 @@ describe("NBA server-authored Daily publication foundation", () => {
     for (const row of seasons) expect(String(row.season_label)).toMatch(/[0-9]{2}/);
   });
 
+  it("protects targets and scores for two NBA Wavelength games",()=>{
+    const pub=buildNbaServerDailyPublication("2026-11-11","nba-daily-regular-v1","wavelength");
+    expect(pub.publicSetup.round_count).toBe(2);
+    expect(JSON.stringify(pub.publicSetup)).not.toContain('"target":');
+    expect(pub.privateSetupEvidence.rounds).toHaveLength(2);
+  });
+  it("preserves capped NBA Hit the Number 4/5-pick rules in both games",()=>{
+    const pub=buildNbaServerDailyPublication("2026-11-15","nba-daily-regular-v1","hit_the_number");
+    const rounds=pub.publicSetup.rounds as Record<string,unknown>[];
+    expect(rounds).toHaveLength(2);
+    expect(rounds.every(row=>[4,5].includes(Number(row.pick_count)))).toBe(true);
+    expect(JSON.stringify(pub.publicSetup)).not.toContain('"values":');
+  });
+  it("protects NBA Higher or Lower comparisons until after final answer",()=>{
+    const pub=buildNbaServerDailyPublication("2026-11-17","nba-daily-regular-v1","higher_lower");
+    expect(pub.publicSetup.question_count).toBe(10);
+    const initial=pub.publicSetup.initial_state as Record<string,unknown>;
+    const question=initial.current_question as Record<string,unknown>;
+    expect(question.answer).toBeUndefined();
+    expect((question.hidden as Record<string,unknown>).value).toBeUndefined();
+    expect(pub.privateSetupEvidence.board).toBeTruthy();
+  });
+
   it("reuses the canonical Bar Trivia server scorer and answer reveal boundary", () => {
     const published = buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v1", "bar_trivia");
-    expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia", "millionaire", "who_am_i", "find_leader"]);
+    expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia", "millionaire", "who_am_i", "find_leader", "wavelength", "hit_the_number", "higher_lower"]);
     expect(published.publicSetup.league).toBe("nba");
     expect(published.privateSetupEvidence.questions).toHaveLength(10);
     expect(published.revealSetup.questions).toHaveLength(10);
