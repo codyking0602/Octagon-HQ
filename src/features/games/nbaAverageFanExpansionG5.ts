@@ -9,4 +9,5 @@ export const nbaAverageFanExpansionG5 = [
   "Teams~Which team shocked the Lakers in five games in the 2004 NBA Finals?~Detroit Pistons~San Antonio Spurs~Boston Celtics~Indiana Pacers~C~The defense-first Detroit Pistons defeated the favored Lakers four games to one in 2004.~~classic00",
   "NBA History~Who hit the junior sky hook over Boston in Game 4 of the 1987 Finals?~Magic Johnson~Kareem Abdul-Jabbar~James Worthy~Byron Scott~C~Magic Johnson's game-winning junior sky hook quieted Boston Garden in 1987.~~finals",
   "NBA History~Which Knicks center made an injured surprise appearance before Game 7 of the 1970 Finals?~Willis Reed~Walt Frazier~Dave DeBusschere~Bill Bradley~C~Willis Reed limped onto the court for Game 7 and scored New York's first two baskets.~~classic70",
+"NBA History~Which Warriors guard scored 37 points in a single quarter in 2015?~Klay Thompson~Stephen Curry~Andre Iguodala~Shaun Livingston~C~Klay Thompson erupted for 37 points in the third quarter against Sacramento in 2015.~~classic10",
 ] as const;
