@@ -61,10 +61,7 @@ export default function NbaPlayPage(){
         <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC</p>
         <h2>NBA Sports Feud</h2>
         <p>Two four-answer rounds, three strikes each, then five Fast Money prompts in 50 seconds. Curated NBA boards with editorial HQ points — not survey results.</p>
-        <div className="nba-find-preview-actions">
-          <Link className="primary-action" to="/nba/sports-feud">PLAY CASUAL →</Link>
-          <Link className="secondary-action" to="/nba/sports-feud?mode=daily">DAILY PREVIEW →</Link>
-        </div>
+        <Link className="primary-action" to="/nba/sports-feud?mode=daily">DAILY PREVIEW →</Link>
       </section>
     ) : null}
     {canPreviewNbaWhoAmI(identity.profile) ? (

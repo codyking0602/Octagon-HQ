@@ -1,33 +1,28 @@
-# NBA Sports Feud: four-month guaranteed no-repeat rotation + Round 4 editorial audit
+# NBA Sports Feud: four-month Daily-only no-repeat rotation + Round 4 editorial audit
 
-## Scope / release contract
+## Correct product scope
+NBA Sports Feud is a **Daily Challenge only**. There is no public or owner Casual variant. The owner-only preview remains a non-scoring playback harness until NBA Daily publishing is connected; the rest of the approved game, hosts, animations, timers, scoring, and editorial bank are unchanged.
 
-**Baseline:** 65 Main + 105 Fast = 170 live. **New:** +6 Main and +25 Fast = **71 Main + 130 Fast = 201**. Do not inflate toward 225–250 at the cost of borderline questions. Gameplay, stages, timers, scoring, hosts, animations, Daily mode, Football/UFC, and other NBA games remain unchanged.
+**Bank:** 65 Main + 105 Fast before Round 4; +6 Main and +25 Fast = **71 Main + 130 Fast = 201**. Quality-first stopped short of a forced 225/250 quota.
 
-Five complete Casual games each month × four months = **20 games = 40 distinct Main and 100 distinct Fast Money boards**. The new bank has **31 spare Main and 30 spare Fast** after those 20 games.
+**Daily selection contract:** five Feud appearances/month × four months = 20 official Daily Feud slots. Each appearance publishes one immutable shared pack (2 Main + 5 Fast); all players receive exactly the same pack for that appearance. The 20 successive appearances consume 40 distinct Main and 100 distinct Fast prompts, leaving 31 Main and 30 Fast spare. After 20 appearances the next cycle can use previously selected content. This is **not** a per-player Casual history; Daily previews/replays of the same appearance deliberately show the identical pack.
 
-Casual play reserves a complete two-Main/five-Fast pack to the logged-in player **before the first question is shown**. Reservation is atomic, account-scoped, and cross-device, using authenticated Supabase RPC and a row lock. Exiting midway counts as consuming the questions. Two simultaneously opened sessions cannot reserve the same board: the second rereads and tries again. The server will not permit clearing history until 20 reservations have occurred, and the client refuses to start with repeated questions before that floor. After that, a new cycle begins **only if no legal unseen pack remains**. Failed storage calls refuse to start a new casual board, rather than silently serving duplicates.
+`buildNbaSportsFeudDailyPack(appearanceIndex)` enforces this guarantee using deterministic cycle-seeded exclusions. The **appearanceIndex is the zero-based count of published NBA Sports Feud Daily appearances**, not the calendar-day number and not a user's play count. A future NBA Daily publisher must derive that index from its approved schedule and pass it to the pack builder. NBA Daily has not yet been publicly published; do not infer a cadence, date, or server-authoritative score from the owner preview.
 
-**Daily preview** still uses its original explicit date seed, does **not** touch the per-player rotation table and does not submit a score. Owner preview still does not submit Daily/leaderboard scores.
+The deployed Casual-only reservation from migration 202612310320 is retired in migration 202612310321: both authenticated RPC privileges revoked, no client code path, historical owner-preview rows retained rather than deleted. No per-player storage is needed for Daily content selection.
 
 ## Editorial outcome
+No additional franchise-alumni fillers or year-guessing puzzles. Fast Money is immediate and recognizable; Main Round allows NBA championships, NCAA champions, international stars, rivalry teams, *The Last Dance*, and iconic player looks. Ranked answers reflect editorial fan recognition, **not real survey results**. Each board retains eight ranked answers and broad defensible off-board variants with fan-language aliases.
 
-No additional "name a star who played for this franchise" variants. Fast Money stays obvious, quick and broad: passes, timeouts, bench, mascots, fan chants, giveaways, jersey details, injured players, media, travel, offseason, autograph items, press room, coaching, and championship rings.
+Rejected candidates included obscure year/roster facts, repetitive school and superstar-team prompts, specialist numerical thresholds, unbounded jersey puzzles, tenuous celebrity claims and niche technical coaching jargon.
 
-Main Round emphasizes NCAA champions, historic NBA title winners, national-team identities, familiar NBA rivalries, *The Last Dance*, and recognizable personal style.
-
-We deliberately rejected additional candidates including individual jersey numbers (uncapped answer universe), 60-point and 50-point scorer prompts (too similar to existing 70-point question), new single-season Finals rosters, additional Duke/Kentucky-style school lists, extra franchise-alumni prompts, national-team roster year puzzles, coach technical jargon, historical ABA-player trivia, media-personality claims without an objective basis, and obscure All-Star weekend side events.
-
-Ranking order is a recognition-first editorial judgment **not a survey result**. All new boards have eight ranked canonical answers and off-board valid answers; alias handling includes common player spellings, team-rivalry reversal, passage terms, slang, chant normalization, and short fan responses. Existing graded off-board scores untouched.
-
-## Required checks
-
-- Exact total: 71 Main, 130 Fast, 201.
-- All 201 question prompts and identities unique; eight distinct ranked answers and non-conflicting aliases.
-- 20,000 ordinary seven-question pack seeds (existing audit) plus 100 independent players × 20 repeat-free Casual games (new regression).
-- The new automated test checks semantic lanes within **all 2,000 complete seven-question games**.
-- New SQL security contract: authentication, user-scoped access, row locking, atomic reserve, locked reset before 20 games.
-- Exact-head full Validate V2 (typecheck, production build, eight complete test shards, provider and phone verification) before merge; production verification afterward.
+## Verification
+- 71 Main, 130 Fast; eight ranked canonical answers plus audited extra answers
+- 20,000 baseline complete seven-question bank simulations
+- Eight independent consecutive 20-appearance Daily windows: 40 distinct Main and 100 distinct Fast per cycle, zero repeats
+- Seven distinct semantic lanes per appearance, deterministic cross-user same-slot selection
+- No Casual CTA, no Casual client reservation or API privileges
+- PR-head full Validate V2 before merge; production delivery after merge
 
 ## Main Round: six editorial boards
 

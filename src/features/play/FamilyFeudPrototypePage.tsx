@@ -22,7 +22,6 @@ import {
   submitFamilyFeudFastMoneyAnswer,
   submitFamilyFeudMainAnswer,
   timeoutFamilyFeudFastMoney,
-  type FamilyFeudPack,
   type FamilyFeudOutcome,
   type FamilyFeudRankedAnswer,
   type FamilyFeudState,
@@ -31,13 +30,11 @@ import {
 import { isFamilyFeudPrototypeOwner } from "./familyFeudPrototypeAccess";
 import { familyFeudPrototypePack } from "./familyFeudPrototypePacks";
 import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
-import { buildNbaSportsFeudPack } from "../nba/nbaSportsFeudBank";
-import { claimNbaCasualFeudPack } from "../nba/nbaSportsFeudRotation";
+import { buildNbaSportsFeudDailyPack } from "../nba/nbaSportsFeudDailyRotation";
 import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
   sportsFeudHostAsset,
-  sportsFeudCentralDateKey,
   nbaSportsFeudHostAsset,
   type SportsFeudHostSport,
 } from "./sportsFeudPresentation";
@@ -145,23 +142,19 @@ function FastMoneyHost({ asset }: { asset: string }) {
 
 function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototypePageProps) {
   const navigate = useNavigate();
-  const { profile } = useIdentity();
   const [searchParams] = useSearchParams();
-  const nbaDaily = scope === "nba" && searchParams.get("mode") === "daily";
-  const [nbaSeed] = useState(() => nbaDaily
-    ? "daily:" + sportsFeudCentralDateKey()
-    : "casual:" + Math.random().toString(36).slice(2));
+  // Owner-only preview until NBA officially joins the Daily publication schedule.
+  // An appearance is a Sports Feud Daily slot, not an individual player run.
+  const appearanceParam = searchParams.get("appearance");
+  const nbaDailyAppearance = appearanceParam && /^(0|[1-9][0-9]{0,4})$/.test(appearanceParam)
+    ? Number(appearanceParam) : 0;
   const [nbaHostIndex, setNbaHostIndex] = useState(0);
-  const [nbaCasualPack, setNbaCasualPack] = useState<FamilyFeudPack | null>(null);
-  const [nbaClaiming, setNbaClaiming] = useState(false);
-  const nbaClaimInFlight = useRef(false);
-  const [nbaClaimError, setNbaClaimError] = useState("");
   const pack = useMemo(() => {
-    if (scope === "nba") return nbaCasualPack && !nbaDaily ? nbaCasualPack : buildNbaSportsFeudPack(nbaSeed);
+    if (scope === "nba") return buildNbaSportsFeudDailyPack(nbaDailyAppearance);
     if (!qaReplayDay) return familyFeudPrototypePack(scope);
     if (scope !== "ufc") throw new Error("Sports Feud QA replay is currently UFC-only.");
     return buildSportsFeudPack("ufc", qaReplayDay);
-  }, [qaReplayDay, scope, nbaSeed, nbaCasualPack, nbaDaily]);
+  }, [qaReplayDay, scope, nbaDailyAppearance]);
   const [state, setState] = useState<FamilyFeudState>(() => createFamilyFeudState());
   const [scene, setScene] = useState<PrototypeScene>("intro");
   const [answer, setAnswer] = useState("");
@@ -386,28 +379,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
     setScene("reveal");
   }
 
-  async function startGame() {
-    if (nbaClaimInFlight.current) return;
-    if (scope === "nba" && !nbaDaily) {
-      if (!profile?.id) {
-        setNbaClaimError("Sign in to keep your question rotation between devices.");
-        return;
-      }
-      nbaClaimInFlight.current = true;
-      setNbaClaiming(true);
-      setNbaClaimError("");
-      try {
-        // Reserve before showing the board. An interrupted run stays consumed.
-        const nextPack = await claimNbaCasualFeudPack();
-        setNbaCasualPack(nextPack);
-      } catch {
-        setNbaClaimError("Couldn't reserve a fresh NBA board. Try again.");
-        return;
-      } finally {
-        nbaClaimInFlight.current = false;
-        setNbaClaiming(false);
-      }
-    }
+  function startGame() {
     if (scope === "nba") setNbaHostIndex(nextNbaHostIndex());
     setState(createFamilyFeudState());
     setDisplayBoardIndex(0);
@@ -556,7 +528,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="feud-intro-title">
           <div className="feud-intro__eyebrow">{scope === "nba"
-            ? `${hqName} · OWNER ${nbaDaily ? "DAILY" : "CASUAL"} PREVIEW`
+            ? `${hqName} · OWNER DAILY PREVIEW`
             : qaReplayDay ? `${hqName} · OWNER QA REPLAY` : `${hqName} · DAILY CHALLENGE`}</div>
           <Brand />
           <h1 id="feud-intro-title">Clear the board.</h1>
@@ -569,8 +541,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
             <span><b>4</b> ANSWERS EACH</span>
             <span><b>0:50</b> FAST MONEY</span>
           </div>
-          {nbaClaimError ? <p role="alert">{nbaClaimError}</p> : null}
-          <button className="feud-primary-button" type="button" onClick={startGame} disabled={nbaClaiming}>{qaReplayDay ? "REPLAY SEPT 24 FEUD" : "PLAY SPORTS FEUD"}</button>
+          <button className="feud-primary-button" type="button" onClick={startGame}>{qaReplayDay ? "REPLAY SEPT 24 FEUD" : "PLAY SPORTS FEUD"}</button>
         </section>
       ) : null}
 
@@ -864,8 +835,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
             <p><span>MAIN BOARDS</span><strong>{score.main}/{FAMILY_FEUD_MAIN_RAW_MAX}</strong></p>
             <p><span>FAST MONEY</span><strong>{score.fastMoney}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong></p>
           </div>
-          {nbaClaimError ? <p role="alert">{nbaClaimError}</p> : null}
-          <button className="feud-primary-button" type="button" onClick={startGame} disabled={nbaClaiming}>{scope === "nba" && !nbaDaily ? "NEW BOARD" : "PLAY AGAIN"}</button>
+          <button className="feud-primary-button" type="button" onClick={startGame}>{"PLAY AGAIN"}</button>
           <button className="feud-secondary-button" type="button" onClick={() => navigate(exitRoute)}>EXIT TO HQ</button>
         </section>
       ) : null}
