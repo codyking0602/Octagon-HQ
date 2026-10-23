@@ -1901,12 +1901,13 @@ function seededShuffle<T>(values: readonly T[], seed: number): T[] {
   return array;
 }
 
-function pickQuestions(seed: string) {
+function pickQuestions(seed: string, usedMain: ReadonlySet<string>, usedFast: ReadonlySet<string>) {
   const seenCategories = new Set<string>();
   const seenLanes = new Set<string>();
-  function choose(pool: readonly Authored[], count: number, salt: string) {
+  function choose(pool: readonly Authored[], count: number, salt: string, used: ReadonlySet<string>) {
     const selected: Authored[] = [];
     for (const question of seededShuffle(pool, hash(seed + salt))) {
+      if (used.has(question.id)) continue;
       const lane = nbaSportsFeudEditorialLane(question.category);
       if (seenCategories.has(question.category) || seenLanes.has(lane)) continue;
       selected.push(question);
@@ -1917,8 +1918,8 @@ function pickQuestions(seed: string) {
     if (selected.length !== count) throw new Error("NBA Sports Feud: insufficient distinct editorial topics.");
     return selected;
   }
-  return { main: choose(BANK.main, 2, "|main"),
-    fast: choose(BANK.fast, 5, "|fast") };
+  return { main: choose(BANK.main, 2, "|main", usedMain),
+    fast: choose(BANK.fast, 5, "|fast", usedFast) };
 }
 
 function makeQuestion(authored: Authored, ladder: readonly number[], entities: FamilyFeudEntity[]): FamilyFeudQuestion {
@@ -1939,8 +1940,11 @@ function makeQuestion(authored: Authored, ladder: readonly number[], entities: F
 }
 
 /** Stable daily seed or caller-generated casual seed; no server writes. */
-export function buildNbaSportsFeudPack(seed: string): FamilyFeudPack {
-  const selected = pickQuestions(seed);
+export function buildNbaSportsFeudPack(
+  seed: string,
+  exclude?: { main: ReadonlySet<string>; fast: ReadonlySet<string> },
+): FamilyFeudPack {
+  const selected = pickQuestions(seed, exclude?.main ?? new Set<string>(), exclude?.fast ?? new Set<string>());
   const entities: FamilyFeudEntity[] = [];
   const pack: FamilyFeudPack = {
     id: NBA_SPORTS_FEUD_BANK_VERSION + ":" + seed,
