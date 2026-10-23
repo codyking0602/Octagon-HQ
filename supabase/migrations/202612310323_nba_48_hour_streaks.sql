@@ -238,7 +238,7 @@ begin
       coalesce(current_week.wins, 0)::integer as weekly_wins,
       coalesce(current_week.played, 0)::integer as weekly_played,
       coalesce(current_week.average_score, 0)::numeric as weekly_average_score,
-      
+
       greatest(
         0,
         coalesce(titles.weekly_titles, 0)
