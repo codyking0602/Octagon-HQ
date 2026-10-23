@@ -11,10 +11,10 @@ The NBA-specific selection exception eliminates the existing shared selector's *
 | Difficulty | Surviving | Needed for 20 official Daily appearances | Shortfall |
 |---|---:|---:|---:|
 | Round 1 — accessible | 34 | 60 | 26 |
-| Round 2 — moderate | 33 | 60 | 27 |
+| Round 2 — moderate | 34 | 60 | 26 |
 | Round 3 — difficult | 35 | 60 | 25 |
 | Last Call | 16 | 20 | 4 |
-| **Total** | **118** | **200** | **82** |
+| **Total** | **119** | **200** | **81** |
 
 The minimum actual full no-repeat capacity is **11 ten-question Daily appearances**. The deterministic appearance index shares a board across users; the same index preserves the same answers and Double Round for replay. Cycles then restart with independently seeded order. These counts are honest quality floors, not launch targets. **Do not enable official Daily scheduling at this point.**
 
