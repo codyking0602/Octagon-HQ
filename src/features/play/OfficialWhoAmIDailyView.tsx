@@ -58,8 +58,10 @@ export function OfficialWhoAmIDailyView({
     ? "football"
     : configuredSport === "mlb"
       ? "mlb"
-      : "ufc";
-  const league = String(setup.league ?? state.league ?? (sport === "football" ? "FOOTBALL" : sport === "mlb" ? "MLB" : "UFC"));
+      : configuredSport === "nba"
+        ? "nba"
+        : "ufc";
+  const league = String(setup.league ?? state.league ?? (sport === "football" ? "FOOTBALL" : sport === "mlb" ? "MLB" : sport === "nba" ? "NBA" : "UFC"));
   const phase = String(state.phase ?? "playing");
   const revealedCount = Number(state.revealed_count ?? WHO_AM_I_CLUES_PER_REVEAL);
   const wrongGuesses = Number(state.wrong_guesses ?? 0);
