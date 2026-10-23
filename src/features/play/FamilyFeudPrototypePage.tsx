@@ -35,7 +35,6 @@ import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
   sportsFeudHostAsset,
-  sportsFeudCentralDateKey,
   nbaSportsFeudHostAsset,
   type SportsFeudHostSport,
 } from "./sportsFeudPresentation";
