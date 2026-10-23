@@ -781,12 +781,12 @@
     url("/images/bar-trivia/cfb-bar-trivia-bg.png");
 }
 
-/* NBA uses the same approved Football/UFC Bar Trivia venue overlays, HUD,
-   opening sign and receipt. Never reuse the Millionaire television studio. */
+/* NBA uses the approved Bar Trivia portrait framing and the owner's
+   basketball sports-bar photo; keep all shared Daily HUD and screens intact. */
 .bar-trivia__venue[data-league="nba"] {
   background-image:
-    linear-gradient(180deg, rgba(8, 7, 6, 0.32), rgba(8, 7, 6, 0.10) 48%, rgba(8, 7, 6, 0.28)),
-    url("/assets/nba/basketball-welcome.png");
+    linear-gradient(180deg, rgba(8, 7, 6, 0.2), rgba(8, 7, 6, 0.05) 48%, rgba(8, 7, 6, 0.18)),
+    url("/images/bar-trivia/nba-bar-trivia-bg.png");
 }
 
 .bar-trivia__venue[data-league="mlb"] {

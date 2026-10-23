@@ -94,8 +94,12 @@ describe("NBA Bar Trivia quality and Daily owner preview", () => {
     expect(preview).not.toContain("BarTriviaCasualPage");
     expect(preview).not.toMatch(/submitOfficial|recordLineupCompletion|claimDaily|onAdvanceDaily|mutateAsync|createOfficial|window\.localStorage|supabase/);
     expect(officialView).toContain('gameLeague === "nba" ? "nba"');
-    expect(styles).toContain('url("/assets/nba/basketball-welcome.png")');
+    expect(styles).toContain('aspect-ratio: 941 / 1672;');
+    expect(styles).toContain('url("/images/bar-trivia/nba-bar-trivia-bg.png")');
+    expect(styles).not.toContain('url("/assets/nba/basketball-welcome.png")');
     expect(styles).not.toContain("nba-clean-studio.webp");
+    const uploadedPortrait = readFileSync("public/images/bar-trivia/nba-bar-trivia-bg.png");
+    expect(uploadedPortrait.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");
     const landing = readFileSync("src/features/nba/NbaPlayPage.tsx", "utf8");
     const entry = landing.split('aria-label="NBA Bar Trivia owner Daily preview"')[1]?.slice(0, 750) ?? "";
     expect(entry).toContain("DAILY ONLY");
