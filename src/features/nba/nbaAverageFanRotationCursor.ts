@@ -9,3 +9,11 @@ export function readNbaAverageFanCursor(): NbaAverageFanCursor {
     return initial;
   } catch { return { cursor: 0, seed: "nba-fallback" }; }
 }
+/** Advance on a completed Casual game only; no answer or score is persisted. */
+export function advanceNbaAverageFanCursor(expected: NbaAverageFanCursor) {
+  try {
+    const current = readNbaAverageFanCursor();
+    if (current.seed !== expected.seed || current.cursor !== expected.cursor) return;
+    window.localStorage.setItem(KEY, JSON.stringify({ ...current, cursor: current.cursor + 1 }));
+  } catch { /* storage unavailable: casual remains playable */ }
+}
