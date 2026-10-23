@@ -109,6 +109,7 @@ const standingsEntrySchema = z.object({
     sports_feud: z.coerce.number().nullable().optional(),
     bar_trivia: z.coerce.number().nullable().optional(),
     average_fan: z.coerce.number().nullable().optional(),
+    higher_lower: z.coerce.number().nullable().optional(),
   }),
   is_current_user: z.boolean(),
   weekly_rank: z.coerce.number().int().positive(),
