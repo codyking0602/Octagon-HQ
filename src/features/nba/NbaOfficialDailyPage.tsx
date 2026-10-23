@@ -46,6 +46,27 @@ function objects(value: unknown): Json[] {
 function ids(value: unknown) {
   return Array.isArray(value) ? value.filter((x): x is string => typeof x === "string") : [];
 }
+/**
+ * The NBA server publishes Find Leader, Hit the Number and Wavelength as two
+ * authoritative rounds. UI must read the active child, never the empty wrapper.
+ * Full round reveals are withheld until the official attempt is completed.
+ */
+export function nbaOfficialActiveRound(projection: TodayChallengeProjection) {
+  const twoGame = projection.publicSetup.format_version === "daily-two-game-average-v1";
+  const rawIndex = Number(projection.publicState.round_index ?? 0);
+  const index = twoGame && Number.isInteger(rawIndex) && rawIndex >= 0 && rawIndex <= 1 ? rawIndex : 0;
+  const setup = twoGame ? objects(projection.publicSetup.rounds)[index] ?? {} : projection.publicSetup;
+  const state = twoGame ? object(projection.publicState.active_round) : projection.publicState;
+  const reveal = !projection.officialAttempt ? {}
+    : twoGame ? objects(object(projection.revealSetup).rounds)[index] ?? {}
+    : object(projection.revealSetup);
+  const scores = projection.publicState.round_scores;
+  const roundScore = Array.isArray(scores) ? Number(scores[index]) : NaN;
+  const score = !projection.officialAttempt ? null
+    : Number.isFinite(roundScore) ? roundScore : projection.officialAttempt.normalizedScore;
+  return { index, setup, state, reveal, score };
+}
+
 function NBAHeadshot({ name, compact = false }: { name: string; compact?: boolean }) {
   const [failed, setFailed] = useState(false);
   const src = nbaFindLeaderHeadshot({ name, nbaId: null });
@@ -58,9 +79,7 @@ function NBAHeadshot({ name, compact = false }: { name: string; compact?: boolea
 
 /** The same approved NBA Casual board presentation, driven exclusively by saved official state. */
 export function NbaOfficialFindLeader({ projection, advance, busy }: { projection: TodayChallengeProjection; advance: Advance; busy: boolean }) {
-  const setup = projection.publicSetup;
-  const state = projection.publicState;
-  const reveal = object(projection.revealSetup);
+  const { setup, state, reveal, score } = nbaOfficialActiveRound(projection);
   const chosen = ids(state.eliminated_ids);
   const revealed = new Map(objects(reveal.candidates).map(row => [String(row.id), row]));
   const candidates = objects(setup.candidates).map(row => ({
@@ -72,7 +91,7 @@ export function NbaOfficialFindLeader({ projection, advance, busy }: { projectio
     ...(typeof revealed.get(String(row.id))?.value === "number" ? { value: Number(revealed.get(String(row.id))!.value) } : {}),
   }));
   const attempt = projection.officialAttempt;
-  const perfect = attempt?.nativeScore === 10;
+  const perfect = score === 100;
   const stat = String(setup.stat_label ?? "NBA STAT");
   return <div className="page football-find-leader-page nba-find-leader-page" data-sport="nba" style={theme}>
     <FootballFindLeaderPresentation
@@ -81,7 +100,7 @@ export function NbaOfficialFindLeader({ projection, advance, busy }: { projectio
       categoryLabel={"NBA · " + stat} statLabel={stat} shortLabel={stat}
       candidates={candidates} eliminatedIds={chosen}
       leaderId={attempt ? String(reveal.leader_id ?? "") : null}
-      result={attempt ? { score: dailyTwoGameActiveScore(projection) ?? attempt.normalizedScore, perfect, fatalId: perfect ? null : chosen.at(-1) ?? null } : null}
+      result={attempt ? { score: score ?? attempt.normalizedScore, perfect, fatalId: perfect ? null : chosen.at(-1) ?? null } : null}
       eyebrow="TODAY'S NBA CHALLENGE" intro="Eliminate nine decoys. Leave the leader standing."
       onEliminate={attempt || busy ? null : id => advance({ eliminated_id: id })}
       renderVisual={(candidate, compact) => <NBAHeadshot name={candidate.name} compact={compact} />}
@@ -102,7 +121,7 @@ const wavelengthCopy = {
 
 export function NbaOfficialWavelength({ projection, advance, busy }: { projection: TodayChallengeProjection; advance: Advance; busy: boolean }) {
   const [guess, setGuess] = useState(50);
-  const state = projection.publicState;
+  const { state, score } = nbaOfficialActiveRound(projection);
   const reveal = object(state.reveal);
   const clues = objects(projection.officialAttempt ? reveal.clues : state.clues).map((row, index) => ({
     id: String(row.id ?? index),
@@ -118,7 +137,7 @@ export function NbaOfficialWavelength({ projection, advance, busy }: { projectio
       clues={clues} guesses={guesses} guess={guess}
       onGuessChange={setGuess} onLock={attempt || busy ? undefined : () => advance({ guess })}
       busy={busy} copy={wavelengthCopy}
-      result={attempt ? { score: dailyTwoGameActiveScore(projection) ?? attempt.normalizedScore, target } : null}
+      result={attempt ? { score: score ?? attempt.normalizedScore, target } : null}
     />
   </main>;
 }
@@ -134,8 +153,7 @@ function NBAPlayerMark({ id, className }: { id: string; className: string }) {
 }
 
 export function NbaOfficialHitTheNumber({ projection, advance, busy }: { projection: TodayChallengeProjection; advance: Advance; busy: boolean }) {
-  const setup = projection.publicSetup;
-  const state = projection.publicState;
+  const { setup, state, reveal, score } = nbaOfficialActiveRound(projection);
   const result = projection.officialAttempt;
   const selected = ids(state.selected_ids);
   const candidates = objects(setup.candidates).map(row => ({
@@ -143,14 +161,15 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
   }));
   const slots = objects(setup.slots).map(row => ({ id: String(row.id ?? ""), label: String(row.label ?? "") }));
   const activeSlot = object(state.active_slot);
-  const reveal = object(projection.revealSetup);
   const privateValues = object(reveal.values);
   const values = Object.fromEntries(Object.entries(privateValues).filter((pair): pair is [string, number] => typeof pair[1] === "number"));
-  const details = result?.publicResult ?? {};
   const target = Number(setup.target ?? 0);
-  const total = Number(details.total ?? 0);
-  const distance = Number(details.distance ?? Math.abs(target - total));
-  const status = details.status === "perfect" || details.status === "bust" ? details.status : total > target ? "bust" : "under";
+  // These values come exclusively from the server's authorized post-completion
+  // reveal. Never fill missing evidence with a fake zero-point result.
+  const completeReveal = result !== null && selected.every(id => Number.isFinite(values[id]));
+  const total = Number(selected.reduce((sum, id) => sum + (values[id] ?? 0), 0).toFixed(1));
+  const distance = Number(Math.abs(target - total).toFixed(1));
+  const status = total > target ? "bust" : total === target ? "perfect" : "under";
   const available = ids(state.available_subject_ids);
   return <div className="hit-number-page nba-hit-number-page" data-sport="nba" style={theme}>
     <FootballHitTheNumberPresentation
@@ -161,7 +180,7 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
       activeSlotIndex={typeof activeSlot.index === "number" ? activeSlot.index : null}
       availableIds={available.length ? available : candidates.map(row => row.id)}
       values={result ? values : undefined}
-      result={result ? { score: dailyTwoGameActiveScore(projection) ?? result.normalizedScore, target, total, distance, status } : null}
+      result={result && completeReveal ? { score: score ?? result.normalizedScore, target, total, distance, status } : null}
       formatValue={formatNbaHitNumber}
       onToggle={result || busy ? null : id => advance({ fighter_id: id })}
       onRewind={result || busy ? null : index => advance({ rewind_to: index })}
@@ -222,7 +241,7 @@ export function NbaOfficialDailyContent({ projection, advance, busy, onExit }: {
   return <>
     <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
     {projection.gameType === "find_leader" ? <NbaOfficialFindLeader projection={projection} advance={advance} busy={busy} /> : null}
-    {projection.gameType === "wavelength" ? <NbaOfficialWavelength key={projection.setupKey} projection={projection} advance={advance} busy={busy} /> : null}
+    {projection.gameType === "wavelength" ? <NbaOfficialWavelength key={projection.setupKey + ":" + String(projection.publicState.round_index ?? 0)} projection={projection} advance={advance} busy={busy} /> : null}
     {projection.gameType === "hit_the_number" ? <NbaOfficialHitTheNumber projection={projection} advance={advance} busy={busy} /> : null}
     {projection.gameType === "higher_lower" ? <NbaOfficialHigherLower projection={projection} advance={advance} busy={busy} /> : null}
     {projection.gameType === "who_am_i" ? <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={advance} /> : null}
@@ -280,6 +299,9 @@ export default function NbaOfficialDailyPage() {
       advance={(action, options) => { void runtime.advance(action, options); }}
       onExit={() => navigate("/nba")}
     />
+    {projection.officialAttempt ? <section className="nba-official-daily__saved-score" aria-label="Official NBA Daily total score">
+      OFFICIAL SAVED SCORE · <strong>{projection.officialAttempt.normalizedScore}/100</strong>
+    </section> : null}
     {projection.officialAttempt ? <footer className="nba-official-daily__footer">
       <button type="button" onClick={() => navigate("/nba/today?view=leaderboard")}>VIEW TODAY'S LEADERBOARD ↗</button>
       <button type="button" onClick={() => navigate("/nba")}>ALL NBA GAMES</button>
