@@ -66,7 +66,7 @@ export function NbaOfficialFindLeader({ projection, advance, busy }: { projectio
   const candidates = objects(setup.candidates).map(row => ({
     id: String(row.id ?? ""), name: String(row.name ?? ""),
     displayName: String(row.display_name ?? row.name ?? ""),
-    subtitle: String(row.subtitle ?? ""), 
+    subtitle: String(row.subtitle ?? ""),
     ...(typeof row.season === "number" ? { season: row.season } : {}),
     ...(typeof row.season_label === "string" ? { seasonLabel: row.season_label } : {}),
     ...(typeof revealed.get(String(row.id))?.value === "number" ? { value: Number(revealed.get(String(row.id))!.value) } : {}),
