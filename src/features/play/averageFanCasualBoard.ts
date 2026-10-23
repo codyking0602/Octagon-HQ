@@ -35,10 +35,15 @@ export function buildAverageFanCasualBoard(
   sport: AverageFanCasualSport,
   seed: string,
   now: Date | string = new Date(),
+  excludedNbaQuestionIds: ReadonlySet<string> = new Set(),
 ): AverageFanCasualBoard {
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport] as readonly AverageFanQuestion[];
-  const boardEligible = bank.filter((question) => averageFanQuestionEligibleForBoard(question, now));
-  const finalEligible = bank.filter((question) => averageFanQuestionEligibleForFinal(question, now));
+  // Only NBA owner Casual rotation uses exclusions. Football/UFC and date-seeded Daily remain unchanged.
+  const eligibleForCycle = (question: AverageFanQuestion) => (
+    sport !== "nba" || !excludedNbaQuestionIds.has(question.id)
+  );
+  const boardEligible = bank.filter((question) => eligibleForCycle(question) && averageFanQuestionEligibleForBoard(question, now));
+  const finalEligible = bank.filter((question) => eligibleForCycle(question) && averageFanQuestionEligibleForFinal(question, now));
 
   const currentEvent = rankCandidates(
     boardEligible.filter((question) => question.contentType === "current-event"),
