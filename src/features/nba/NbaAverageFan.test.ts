@@ -63,7 +63,7 @@ describe("NBA Average Fan audited question bank", () => {
     expect(bank.some((q) => q.prompt.includes("11 three-pointers in Game 6 against Oklahoma City"))).toBe(false);
     expect(bank.some((q) => q.prompt.includes("53 points in a 2017 playoff game against Washington"))).toBe(false);
     expect(bank.some((q) => q.prompt.includes("25 third-quarter points in Game 6 of the 1988 Finals"))).toBe(false);
-    expect(bank.some((q) => q.prompt.includes("overcame a 3-1 series deficit against the Warriors in the 2016 NBA Finals"))).toBe(false;
+    expect(bank.some((q) => q.prompt.includes("overcame a 3-1 series deficit against the Warriors in the 2016 NBA Finals"))).toBe(false);
     const retiredFacts = [
       "Which 76ers icon was nicknamed The Answer?",
       "Which current NBA star is widely called the Joker?",
