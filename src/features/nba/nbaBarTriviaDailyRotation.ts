@@ -13,10 +13,10 @@ import { NBA_BAR_TRIVIA_QUESTION_BANK } from "./nbaBarTriviaQuestionBank";
  * Publisher integration will supply this from the NBA Daily schedule after
  * owner approval; preview does not write official attempts or score.
  *
- * Curated inventory currently guarantees 15 complete appearances without
+ * Curated inventory currently guarantees 11 complete appearances without
  * reusing a question. Do not inflate this value without new reviewed content.
  */
-export const NBA_BAR_TRIVIA_UNIQUE_APPEARANCES = 15;
+export const NBA_BAR_TRIVIA_UNIQUE_APPEARANCES = 11;
 
 export interface NbaBarTriviaDailyBoard {
   questions: readonly BarTriviaQuestion[];
