@@ -44,6 +44,29 @@ const bundles = [
     fileName: "football-advance.generated.mjs",
     requiredExports: ["advanceFootballOfficialDailyRuntime"],
   },
+  {
+    label: "NBA daily publication runtime",
+    entry: resolve(repoRoot, "src/features/nba/nbaDailyServerPublication.ts"),
+    fileName: "nba-publication.generated.mjs",
+    requiredExports: ["buildNbaServerDailyPublication", "nbaDailyGameAppearance"],
+    nbaSmokes: [
+      { day: "2026-11-01", gameType: "average_fan" },
+      { day: "2026-11-03", gameType: "sports_feud" },
+      { day: "2026-11-05", gameType: "millionaire" },
+      { day: "2026-11-07", gameType: "who_am_i" },
+      { day: "2026-11-09", gameType: "find_leader" },
+      { day: "2026-11-11", gameType: "wavelength" },
+      { day: "2026-11-13", gameType: "bar_trivia" },
+      { day: "2026-11-15", gameType: "hit_the_number" },
+      { day: "2026-11-17", gameType: "higher_lower" },
+    ],
+  },
+  {
+    label: "NBA daily advance runtime",
+    entry: resolve(repoRoot, "src/features/nba/nbaDailyServerAdvance.ts"),
+    fileName: "nba-advance.generated.mjs",
+    requiredExports: ["advanceNbaOfficialDailyRuntime"],
+  },
 ];
 
 // The Football runtime imports generated canonical projections. Keep the
@@ -106,15 +129,21 @@ for (const bundle of bundles) {
 
   const digest = createHash("sha256").update(bundled).digest("hex");
 
-  const smokes = bundle.smokes ?? (bundle.smoke ? [bundle.smoke] : []);
+  const smokes = bundle.smokes ?? bundle.nbaSmokes ?? (bundle.smoke ? [bundle.smoke] : []);
   if (smokes.length) {
     const generatedRuntime = await import(`${pathToFileURL(output).href}?sha256=${digest}`);
     for (const smoke of smokes) {
-      const publication = generatedRuntime.buildFootballDailyPersistenceSetup(
-        smoke.day,
-        footballScheduleVersion,
-        smoke.gameType,
-      );
+      const publication = bundle.nbaSmokes
+        ? generatedRuntime.buildNbaServerDailyPublication(
+            smoke.day,
+            "nba-daily-regular-v1",
+            smoke.gameType,
+          )
+        : generatedRuntime.buildFootballDailyPersistenceSetup(
+            smoke.day,
+            footballScheduleVersion,
+            smoke.gameType,
+          );
       if (
         !publication
         || typeof publication !== "object"
