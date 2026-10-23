@@ -100,3 +100,13 @@ The owner's test exposed misleading polarity in the original editorial descripti
 - **Only one question or dimension is displayed on the playing card**; the second category question is suppressed *only for NBA*. UFC and Football retain their existing treatment.
 - Low and high always describe **strength on the named positive attribute**, not the intensity of being bad, unwilling, or unreliable. No implied number is included in the text.
 - All 25 categories, 386 canonical IDs, 386 editorial rationales, ratings, two-game format and score formula are retained. The catalog/calibration versions increment to v3 to invalidate old seeded preview boards. Cosmetic changes keep NBA-gold reveal headers, subtler borders and more compact cards without touching shared UFC/Football styling.
+
+## Targeted low/middle-bank expansion (2026-10-23, v4)
+
+- Preserved **all 386** original clues, ratings, subject bindings, categories and one-dimensional gameplay wording.
+- Added **195 new references**, giving **581 total** across the same 25 categories.
+- Every new reference includes a positive-attribute gameplay prompt generated from the existing category map; a separate editorial note anchors the rating but never appears on the game card.
+- Expansion was targeted toward lower and middle score ranges rather than padding with 90+ superstars. All 25 categories receive additional entries. General familiarity remains the default, with selected historical NBA examples.
+- Rating counts for added references (1–20, 21–40, 41–60, 61–80, 81–100): **24, 32, 31, 36, 72**.
+- Subject-specific seasons and eras remain identified for teams, moments, rivalries and duos. Identical category/subject pairs and IDs are prohibited; no changes to adaptive targeting, scoring, Daily publication status or existing UFC/Football gameplay.
+- The bank intentionally remains a subjective, contestable HQ rating scale; none of the numbers is presented as an objective statistic.

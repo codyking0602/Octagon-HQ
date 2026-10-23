@@ -20,7 +20,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
   it("uses distinct bounded editorial ratings, explicit traits and multiple NBA eras", () => {
     const audit = auditNbaWavelengthCatalog();
     expect(audit.failures).toEqual([]);
-    expect(audit.entries).toBe(386);
+    expect(audit.entries).toBe(581);
     expect(audit.distinctSubjects).toBeGreaterThan(170);
     expect(audit.categories).toBe(25);
     expect(audit.eras).toBe(4);
@@ -39,7 +39,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
   it("includes a meaningful share of clearly named NBA culture and rivalry references", () => {
     const cultural = new Set(["SHOWMANSHIP", "VILLAIN REPUTATION", "CULTURAL INFLUENCE", "HOME-COURT HEAT", "RIVALRY HEAT"]);
     const culture = nbaWavelengthClues.filter(clue => cultural.has(clue.category));
-    expect(culture).toHaveLength(56);
+    expect(culture).toHaveLength(94);
     expect(culture.length / nbaWavelengthClues.length).toBeGreaterThan(.12);
     expect(culture.length / nbaWavelengthClues.length).toBeLessThan(.2);
     for (const category of cultural) {
@@ -75,11 +75,11 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(nbaWavelengthClues.find(row => row.id === "nba-wl-villain-bill-laimbeer")?.rating).toBe(100);
     expect(nbaWavelengthClues.find(row => row.id === "nba-wl-duo-jordan-pippen")?.rating).toBe(100);
     expect(nbaWavelengthClues.find(row => row.id === "nba-wl-hype-lebron-james")?.rating).toBe(100);
-    expect(nbaWavelengthClues.length).toBe(386);
+    expect(nbaWavelengthClues.length).toBe(581);
   });
 
-  it("presents a single unambiguous positive attribute for every one of 386 clues", () => {
-    expect(nbaWavelengthClues).toHaveLength(386);
+  it("presents a single unambiguous positive attribute for every one of 581 clues", () => {
+    expect(nbaWavelengthClues).toHaveLength(581);
     for (const clue of nbaWavelengthClues) {
       expect(clue.text).toBe(nbaWavelengthCluePrompt(clue.category, clue.subject));
       expect(clue.text).toContain(clue.subject);
@@ -100,6 +100,49 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(focus("Ben Simmons", "MIDRANGE TOUCH")).toBe("Ben Simmons' midrange shooting ability");
     expect(focus("Dennis Rodman", "OUTSIDE SHOOTING")).toBe("Dennis Rodman's outside shooting ability");
     expect(focus("J.R. Smith", "BASKETBALL IQ")).toBe("J.R. Smith's basketball decision-making");
+  });
+
+  it("preserves all original 386 clues and expands weak and middle rating anchors", () => {
+    const originalIds = [
+      "nba-wl-legacy-anthony-bennett",
+      "nba-wl-shooting-shaq",
+      "nba-wl-boards-dennis-rodman",
+      "nba-wl-villain-bill-laimbeer",
+      "nba-wl-franchise-celtics",
+      "nba-wl-duo-shaq-kobe",
+    ];
+    for (const id of originalIds) expect(nbaWavelengthClues.some(row => row.id === id)).toBe(true);
+    const lowMiddle = nbaWavelengthClues.filter(row => row.rating <= 80);
+    expect(lowMiddle.length).toBeGreaterThanOrEqual(295);
+    const newIds = [
+      "nba-wl-legacy-olowokandi",
+      "nba-wl-peak-adam-morrison",
+      "nba-wl-scoring-kendrick-perkins",
+      "nba-wl-shooting-dwight-howard",
+      "nba-wl-passing-deandre-jordan",
+      "nba-wl-defense-cj-mccollum",
+      "nba-wl-explosion-nikola-vucevic",
+      "nba-wl-clutch-anthony-bennett",
+      "nba-wl-playoffs-brandon-ingram",
+      "nba-wl-show-john-stockton",
+      "nba-wl-villain-derrick-white",
+      "nba-wl-culture-mike-conley",
+      "nba-wl-crowd-hornets-2018",
+      "nba-wl-rivalry-magic-wizards-2010s",
+      "nba-wl-handles-clint-capela",
+      "nba-wl-boards-fred-vanvleet",
+      "nba-wl-rim-luka-doncic",
+      "nba-wl-mid-clint-capela",
+      "nba-wl-finish-buddy-hield",
+      "nba-wl-iq-hassan-whiteside",
+      "nba-wl-talk-nikola-jokic",
+      "nba-wl-moment-duncan-bank-2008",
+      "nba-wl-franchise-wizards",
+      "nba-wl-hype-fred-vanvleet",
+      "nba-wl-duo-beal-kuzma"
+];
+    for (const id of newIds) expect(nbaWavelengthClues.some(row => row.id === id)).toBe(true);
+    expect(nbaWavelengthClues.length).toBe(581);
   });
 
   it("does not conflate overall greatness with shooting, defense or playmaking", () => {
