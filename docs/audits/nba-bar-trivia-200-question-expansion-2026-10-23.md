@@ -43,3 +43,36 @@ New questions contain explanation and an NBA.com source link. Critical obscure a
 - [2022 Luka 60/21/10](https://www.nba.com/news/mavericks-star-luka-doncic-posts-historic-triple-double-in-historic-comeback)
 
 **All 81 newly added questions now link to a specific NBA.com news article, NBA archive feature, or NBA team article** relevant to the question rather than a generic history home page. The content authors individually located and checked supporting NBA pages, including official retrospective reporting for the four new Last Call rows; structural tests enforce non-homepage URLs. The previously retained 119-question bank was not re-sourced by this PR and still contains its earlier generic source IDs. Subjective difficulty, distractor plausibility, and deeper semantic overlap require ongoing editorial judgment; automated checks are not substitutes for that review. Keep the PR unmerged until owner approval.
+
+## Stage 2: difficulty, semantic uniqueness and current-event readiness — October 23, 2026
+
+### Exact inventory
+The locked **200 evergreen** questions still divide into **60 easy, 60 moderate, 60 hard and 20 Last Call**. No IDs or round quotas were added to solve editorial problems. The earlier 119 were rechecked alongside 81 new questions and **10 authored rows were replaced in place** (no padding and no changes to Football/UFC or visual/game flow).
+
+### Editorial changes (replaced entire facts, not cosmetic rewordings)
+| ID | Reason | Replacement fact |
+|---|---|---|
+| nba-bt-e-018 | Same goaltending definition in NBA Average Fan | Raptors' We The North campaign |
+| nba-bt-200-e-13 | Same Kawhi 'The Klaw' nickname in Average Fan | Manu Ginóbili popularizing the Eurostep |
+| nba-bt-h-001 | Same 1976 triple-overtime Finals Game 5 as Average Fan | Sam Cassell's decisive 1994 Finals Game 3 three |
+| nba-bt-h-036 | Kobe's 81 points / Toronto shared with Average Fan | George Hill's missed 2018 Finals Game 1 free throw before J.R. Smith mistake |
+| nba-bt-f-010 | Same 2005 Robert Horry Finals Game 5 in Average Fan | 1979 Finals MVP / future Boston guard Dennis Johnson |
+| nba-bt-f-011 | Same Allan Houston 1999 first-round winner as Average Fan | Vinnie Johnson's 1990 Finals clincher |
+| nba-bt-200-m-01 | Same 'Seven Seconds or Less' Phoenix team/coach prompt within bank | Larry Brown's 2001 Finals 76ers |
+| nba-bt-200-h-01 | Obscure Dennis Johnson 1978 seven-block number without enough player recognition | Draymond Green's 32/15/9 in 2016 Finals Game 7 |
+| nba-bt-200-h-18 | 'Which Bulls star made The Shrug?' too easy for Hard | Wilkins' 47 against Bird in legendary 1988 Game 7 |
+| nba-bt-200-f-04 | Luka's 60-point triple-double too self-evident for Last Call | Patrick Ewing's surprising 30 blocks in 1994 Finals |
+
+Other retained Hard questions require recognition of an opponent, coach or postseason detail, but the revised material prioritizes identifiable anchors over anonymous numeric gotchas. The more subjective difficulty decisions remain editorial judgments rather than inference from passing unit tests.
+
+### NBA news ingestion contract
+**Curated** current events are now authored in `src/features/nba/nbaBarTriviaCurrentEvents.ts` with a confirmed NBA.com source, `verifiedAt`, `activeFrom` and `expiresAt`. Initial batch: five independently sourced 2026-27 opening-week stories (LeBron in Philadelphia, Kawhi's Raptors return, Anthony Davis's Washington debut, Lillard's Portland return, Ty Jerome's 45-point Memphis opener), from [NBA.com Starting 5, October 22](https://www.nba.com/news/starting-5-october-22-2026).
+
+- Date-bounded article facts must be already completed/verified, **never schedules, rumors, predictions, future milestones or partial live-score claims**.
+- NBA uses the existing shared engine: **0–2 timely questions** per appearance when eligible, **no forced news** when the vetted pool is exhausted or expired. Date-specific questions expire after at most 21 days; the first batch expires November 6, 2026.
+- `buildNbaBarTriviaDailyBoard(appearanceIndex, asOf)` accepts a publisher date and deterministically holds a 20-appearance cycle; recent IDs include both evergreen and timely questions, preventing question repeats during the whole cycle. Expiration and first-play date are enforced by the shared engine.
+- **Ingestion requires an editorial update and deployment**, matching the existing manually authored Football/UFC current-event files. This is not an AI-driven unsupervised fetch or a promise that new news will appear automatically without content curation. The existing NBA owner-only preview uses this mechanism; official NBA Daily schedule/publisher must still be authorized and wired separately.
+- An author should check the official recap, record the actual event time/result, choose a fair difficulty, add four credible choices and full explanation, and set a short active window. A second reviewer should inspect semantic duplicates against the NBA games before staging. If no strong question exists, ship none.
+- Tests enforce explicit source verification windows, expiration, absence of forced filler, up to two news questions, all-evergreen 20-board fallbacks and no repeated IDs. Maintain editorial activity before each game week.
+
+The number **200 means evergreen capacity**; the five expiring timely items are an optional supplemental pool, not five filler items counted toward the four-month guarantee.
