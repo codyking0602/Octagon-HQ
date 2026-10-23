@@ -1,7 +1,8 @@
 /**
  * Editorial NBA Wavelength calibration bank. This is a comparison SCALE, not
  * a Who Am I question bank or a statistical ranker. Each row is rated only for
- * its named trait. Stable NBA-era reference points intentionally include weak,
+ * its named attribute; cultural and rivalry judgments are editorial opinions,
+ * not substitutes for skill ratings. Stable NBA-era reference points intentionally include weak,
  * ordinary, strong, elite and iconic examples. No projected 2026 performance.
  */
 export const NBA_WAVELENGTH_CATALOG_VERSION = "nba-wavelength-catalog-v1" as const;
@@ -16,7 +17,12 @@ export type NbaWavelengthCategory =
   | "DEFENSIVE IMPACT"
   | "EXPLOSIVE ATHLETICISM"
   | "CLUTCH SHOTMAKING"
-  | "PLAYOFF RÉSUMÉ";
+  | "PLAYOFF RÉSUMÉ"
+  | "SHOWMANSHIP"
+  | "VILLAIN REPUTATION"
+  | "CULTURAL INFLUENCE"
+  | "HOME-COURT HEAT"
+  | "RIVALRY HEAT";
 export type NbaWavelengthEra = "classic" | "eighties-nineties" | "two-thousands" | "modern";
 export type NbaWavelengthTier = "low" | "developing" | "middle" | "strong" | "elite" | "iconic";
 
@@ -45,6 +51,12 @@ export const NBA_WAVELENGTH_CATEGORY_ANCHORS = [
   { category: "EXPLOSIVE ATHLETICISM", question: "At NBA peak, how extraordinary were this player's burst and above-the-rim explosion?", low: "Ground-bound", middle: "NBA-average burst and leaping", high: "Era-defining physical explosion" },
   { category: "CLUTCH SHOTMAKING", question: "How strong was this player's reputation for making difficult late-game baskets?", low: "Almost never trusted with a late shot", middle: "Some memorable late makes", high: "An all-time late-game shotmaking icon" },
   { category: "PLAYOFF RÉSUMÉ", question: "How accomplished is this player's NBA postseason body of work?", low: "Barely any meaningful playoff work", middle: "Some real postseason success", high: "Defining championship and Finals legacy" },
+
+  { category: "SHOWMANSHIP", question: "How much deliberate flair and spectacle did this player bring to NBA games?", low: "Reserved and businesslike on court", middle: "Occasional expressive highlights", high: "Signature crowd-pleasing NBA performer" },
+  { category: "VILLAIN REPUTATION", question: "How strongly was this player viewed as an on-court antagonist by opponents and their fans?", low: "Widely respected with little villain reputation", middle: "Polarizing competitive edge", high: "Defining NBA antagonist" },
+  { category: "CULTURAL INFLUENCE", question: "How deeply did this player change NBA style, fan culture or the sport's wider reach?", low: "Little beyond-the-box-score influence", middle: "Recognizable influence on fan culture", high: "Changed basketball's global cultural identity" },
+  { category: "HOME-COURT HEAT", question: "How intense and intimidating was this team's home crowd in the stated era?", low: "Quiet or limited home-crowd advantage", middle: "Noticeable playoff crowd energy", high: "One of the NBA's defining crowd atmospheres" },
+  { category: "RIVALRY HEAT", question: "How fierce and historically charged was this specific NBA matchup in the stated period?", low: "Little established bad blood", middle: "Some heated head-to-head history", high: "Defining, deeply contentious rivalry" },
 ] as const satisfies readonly {
   category: NbaWavelengthCategory; question: string; low: string; middle: string; high: string;
 }[];
@@ -218,6 +230,72 @@ const groups: readonly SeedGroup[] = [
     ["lebron-james", "LeBron James", "LeBron James — ten Finals appearances and four titles", 98, "modern"],
     ["michael-jordan", "Michael Jordan", "Michael Jordan — six championships in six Finals appearances", 100, "eighties-nineties"],
     ["bill-russell", "Bill Russell", "Bill Russell — eleven NBA championships", 100, "classic"],
+  ]),
+  group("SHOWMANSHIP", "show", [
+    ["kawhi-leonard", "Kawhi Leonard", "Kawhi Leonard — reserved on-court celebrations and an all-business style", 9, "modern"],
+    ["tim-duncan", "Tim Duncan", "Tim Duncan — deliberately understated play and low-key celebrations", 14, "two-thousands"],
+    ["jrue-holiday", "Jrue Holiday", "Jrue Holiday — quiet, no-frills two-way approach", 24, "modern"],
+    ["demar-derozan", "DeMar DeRozan", "DeMar DeRozan — expressive footwork without a flashy public persona", 43, "modern"],
+    ["jimmy-butler", "Jimmy Butler", "Jimmy Butler — playoff theatrics, banter and dramatic shotmaking", 59, "modern"],
+    ["dwyane-wade", "Dwyane Wade", "Dwyane Wade — acrobatic finishes and animated on-court celebrations", 72, "two-thousands"],
+    ["steph-curry", "Stephen Curry", "Stephen Curry — deep-three celebrations and his signature shimmy", 85, "modern"],
+    ["jason-williams", "Jason Williams", "Jason Williams — behind-the-back and elbow-pass spectacle", 92, "two-thousands"],
+    ["vince-carter", "Vince Carter", "Vince Carter — explosive dunk-contest showmanship carried into games", 95, "two-thousands"],
+    ["magic-johnson", "Magic Johnson", "Magic Johnson — Showtime flair, no-look passes and infectious energy", 98, "eighties-nineties"],
+    ["shaq", "Shaquille O'Neal", "Shaquille O'Neal — theatrical power dunks and crowd-working personality", 99, "two-thousands"],
+  ]),
+  group("VILLAIN REPUTATION", "villain", [
+    ["boban-marjanovic", "Boban Marjanović", "Boban Marjanović — widely liked, friendly presence with little antagonist reputation", 6, "modern"],
+    ["mike-conley", "Mike Conley", "Mike Conley — longtime sportsmanship reputation rather than on-court feuds", 11, "modern"],
+    ["tim-duncan", "Tim Duncan", "Tim Duncan — stoic and respected, rarely cast as the opponent's villain", 18, "two-thousands"],
+    ["giannis-antetokounmpo", "Giannis Antetokounmpo", "Giannis Antetokounmpo — intense competitor but not known as a deliberate agitator", 27, "modern"],
+    ["kobe-bryant", "Kobe Bryant", "Kobe Bryant — ruthless on-court swagger that opposing crowds loved to challenge", 57, "two-thousands"],
+    ["rasheed-wallace", "Rasheed Wallace", "Rasheed Wallace — confrontational edge and famous technical-foul battles", 70, "two-thousands"],
+    ["trae-young", "Trae Young", "Trae Young — embraced the Madison Square Garden antagonist role", 78, "modern"],
+    ["patrick-beverley", "Patrick Beverley", "Patrick Beverley — relentless trash talk and deliberate defensive pestering", 85, "modern"],
+    ["reggie-miller", "Reggie Miller", "Reggie Miller — taunting Knicks crowds and trading barbs with Spike Lee", 91, "eighties-nineties"],
+    ["draymond-green", "Draymond Green", "Draymond Green — confrontations, technicals and an unmistakable antagonist role", 97, "modern"],
+    ["bill-laimbeer", "Bill Laimbeer", "Bill Laimbeer — Bad Boys physicality made him an archetypal NBA villain", 100, "eighties-nineties"],
+  ]),
+  group("CULTURAL INFLUENCE", "culture", [
+    ["rudy-gay", "Rudy Gay", "Rudy Gay — established NBA scorer without a defining influence on basketball culture", 9, "modern"],
+    ["joe-johnson", "Joe Johnson", "Joe Johnson — respected isolation scorer with a relatively limited wider cultural imprint", 23, "two-thousands"],
+    ["jamal-crawford", "Jamal Crawford", "Jamal Crawford — streetball-style handles and a cult following for four-point plays", 47, "two-thousands"],
+    ["jason-williams", "Jason Williams", "Jason Williams — White Chocolate passing helped popularize flashy highlight basketball", 63, "two-thousands"],
+    ["carmelo-anthony", "Carmelo Anthony", "Carmelo Anthony — signature isolation style and a recognizable off-court NBA identity", 73, "two-thousands"],
+    ["jeremy-lin", "Jeremy Lin", "Jeremy Lin — Linsanity became a major Asian-American basketball cultural moment", 81, "modern"],
+    ["vince-carter", "Vince Carter", "Vince Carter — iconic dunks helped shape a generation of young fans", 85, "two-thousands"],
+    ["magic-johnson", "Magic Johnson", "Magic Johnson — Showtime helped make the NBA a major entertainment spectacle", 94, "eighties-nineties"],
+    ["yao-ming", "Yao Ming", "Yao Ming — greatly expanded the NBA's cultural reach in China", 97, "two-thousands"],
+    ["steph-curry", "Stephen Curry", "Stephen Curry — transformed youth basketball aspirations with deep-range shooting", 98, "modern"],
+    ["allen-iverson", "Allen Iverson", "Allen Iverson — fashion, braids and individual style profoundly shaped NBA culture", 99, "two-thousands"],
+    ["michael-jordan", "Michael Jordan", "Michael Jordan — global sneaker culture and worldwide basketball identity", 100, "eighties-nineties"],
+  ]),
+  group("HOME-COURT HEAT", "crowd", [
+    ["clippers-1990s", "Los Angeles Clippers (1990s Sports Arena)", "Los Angeles Clippers (1990s Sports Arena) — modest home buzz during long losing seasons", 22, "eighties-nineties"],
+    ["nets-2002", "New Jersey Nets (2002–03 Meadowlands)", "New Jersey Nets (2002–03 Meadowlands) — Finals teams without the league's most feared crowd", 38, "two-thousands"],
+    ["hawks-2015", "Atlanta Hawks (2015 playoffs)", "Atlanta Hawks (2015 playoffs) — lively crowds for a breakout top-seeded team", 46, "modern"],
+    ["nets-brooklyn-early", "Brooklyn Nets (early Barclays Center era)", "Brooklyn Nets (early Barclays Center era) — new local identity still finding its home-court edge", 49, "modern"],
+    ["mavericks-2011", "Dallas Mavericks (2011 title run)", "Dallas Mavericks (2011 title run) — raucous home support through a memorable Finals push", 76, "two-thousands"],
+    ["heat-2013", "Miami Heat (2013 Finals)", "Miami Heat (2013 Finals) — loud, star-studded home games with enormous stakes", 79, "modern"],
+    ["sixers-2019", "Philadelphia 76ers (2019 playoffs)", "Philadelphia 76ers (2019 playoffs) — hostile, high-pressure Philadelphia home crowd", 87, "modern"],
+    ["celtics-garden", "Boston Celtics (TD Garden playoff nights)", "Boston Celtics (TD Garden playoff nights) — sustained, intense crowd pressure on visiting teams", 94, "modern"],
+    ["thunder-2012", "Oklahoma City Thunder (2012 playoffs)", "Oklahoma City Thunder (2012 playoffs) — famously deafening atmosphere around a young Finals team", 96, "modern"],
+    ["warriors-2015", "Golden State Warriors (2015 Oracle Arena)", "Golden State Warriors (2015 Oracle Arena) — Roaracle crowds at the height of the breakthrough", 99, "modern"],
+    ["kings-2002", "Sacramento Kings (2002 ARCO Arena)", "Sacramento Kings (2002 ARCO Arena) — legendary cowbell-fueled playoff noise", 100, "two-thousands"],
+  ]),
+  group("RIVALRY HEAT", "rivalry", [
+    ["hornets-pistons-2010s", "Charlotte Hornets vs Detroit Pistons (late 2010s)", "Charlotte Hornets vs Detroit Pistons (late 2010s) — regular opponents without a major historical feud", 3, "modern"],
+    ["lakers-raptors-2010s", "Los Angeles Lakers vs Toronto Raptors (late 2010s)", "Los Angeles Lakers vs Toronto Raptors (late 2010s) — little sustained rivalry despite recognizable teams", 8, "modern"],
+    ["magic-celtics-2009", "Orlando Magic vs Boston Celtics (2009–10 playoffs)", "Orlando Magic vs Boston Celtics (2009–10 playoffs) — two contentious postseason clashes without an enduring feud", 48, "two-thousands"],
+    ["suns-mavs-2022", "Phoenix Suns vs Dallas Mavericks (2022 playoffs)", "Phoenix Suns vs Dallas Mavericks (2022 playoffs) — Game 7 humiliation sparked real short-term heat", 59, "modern"],
+    ["heat-mavs-2006", "Miami Heat vs Dallas Mavericks (2006–11 Finals)", "Miami Heat vs Dallas Mavericks (2006–11 Finals) — championship rematches and years of lingering bitterness", 80, "two-thousands"],
+    ["celtics-sixers", "Boston Celtics vs Philadelphia 76ers (historic)", "Boston Celtics vs Philadelphia 76ers (historic) — repeated postseason wars across multiple eras", 88, "classic"],
+    ["knicks-pacers-1990s", "New York Knicks vs Indiana Pacers (1990s)", "New York Knicks vs Indiana Pacers (1990s) — Reggie Miller versus Madison Square Garden drama", 91, "eighties-nineties"],
+    ["warriors-cavs-2015", "Golden State Warriors vs Cleveland Cavaliers (2015–18)", "Golden State Warriors vs Cleveland Cavaliers (2015–18) — four straight Finals and a defining 3–1 comeback", 94, "modern"],
+    ["knicks-heat-1990s", "New York Knicks vs Miami Heat (1990s)", "New York Knicks vs Miami Heat (1990s) — physical playoff series and genuine mutual hostility", 96, "eighties-nineties"],
+    ["bulls-pistons-1980s", "Chicago Bulls vs Detroit Pistons (late 1980s)", "Chicago Bulls vs Detroit Pistons (late 1980s) — Jordan Rules and bitter postseason battles", 99, "eighties-nineties"],
+    ["celtics-lakers", "Boston Celtics vs Los Angeles Lakers (historic)", "Boston Celtics vs Los Angeles Lakers (historic) — the NBA's signature intergenerational rivalry", 100, "classic"],
   ]),
 ];
 

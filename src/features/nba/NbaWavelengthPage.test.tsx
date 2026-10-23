@@ -37,7 +37,7 @@ describe("NBA Wavelength owner-only presentation", () => {
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
     expect(screen.getByText("FINAL GUESS")).toBeInTheDocument();
     expect(screen.getByText("CLUE REVEAL")).toBeInTheDocument();
-    expect(screen.getByText(/A rating refers only to the named basketball trait/)).toBeInTheDocument();
+    expect(screen.getByText(/Ratings apply to the named dimension alone/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "START GAME 2 →" })).toBeInTheDocument();
   });
 

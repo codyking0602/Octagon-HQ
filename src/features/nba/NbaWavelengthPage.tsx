@@ -30,7 +30,7 @@ const presentationCopy = {
   categoryLabel: nbaWavelengthCategoryLabel,
   clueDescriptor: nbaWavelengthClueDescriptor,
   disclosure: WAVELENGTH_OPINION_DISCLOSURE
-    + " A rating refers only to the named basketball trait, not overall greatness.",
+    + " Ratings apply to the named dimension alone. Fame and basketball skill are not interchangeable.",
 };
 
 function completedRound(round: NbaWavelengthRound, guesses: number[]): NbaWavelengthCompletedRound {

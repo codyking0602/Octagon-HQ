@@ -19,12 +19,12 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
   it("uses distinct bounded editorial ratings, explicit traits and multiple NBA eras", () => {
     const audit = auditNbaWavelengthCatalog();
     expect(audit.failures).toEqual([]);
-    expect(audit.entries).toBe(136);
-    expect(audit.distinctSubjects).toBe(77);
-    expect(audit.categories).toBe(9);
+    expect(audit.entries).toBe(192);
+    expect(audit.distinctSubjects).toBeGreaterThan(95);
+    expect(audit.categories).toBe(14);
     expect(audit.eras).toBe(4);
-    expect(NBA_WAVELENGTH_CATEGORY_ANCHORS).toHaveLength(9);
-    expect(new Set(NBA_WAVELENGTH_CATEGORY_ANCHORS.map(row => row.category)).size).toBe(9);
+    expect(NBA_WAVELENGTH_CATEGORY_ANCHORS).toHaveLength(14);
+    expect(new Set(NBA_WAVELENGTH_CATEGORY_ANCHORS.map(row => row.category)).size).toBe(14);
     expect(NBA_WAVELENGTH_BANDS[0].min).toBe(1);
     expect(NBA_WAVELENGTH_BANDS.at(-1)?.max).toBe(100);
     expect(new Set(nbaWavelengthClues.map(row => row.id)).size).toBe(nbaWavelengthClues.length);
@@ -33,6 +33,29 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(subjectCategory.size).toBe(nbaWavelengthClues.length);
     expect(nbaWavelengthClues.filter(row => row.rating <= 30).length).toBeGreaterThan(20);
     expect(nbaWavelengthClues.filter(row => row.rating >= 90).length).toBeGreaterThan(40);
+  });
+
+  it("includes a meaningful share of clearly named NBA culture and rivalry references", () => {
+    const cultural = new Set(["SHOWMANSHIP", "VILLAIN REPUTATION", "CULTURAL INFLUENCE", "HOME-COURT HEAT", "RIVALRY HEAT"]);
+    const culture = nbaWavelengthClues.filter(clue => cultural.has(clue.category));
+    expect(culture).toHaveLength(56);
+    expect(culture.length / nbaWavelengthClues.length).toBeGreaterThan(.25);
+    expect(culture.length / nbaWavelengthClues.length).toBeLessThan(.35);
+    for (const category of cultural) {
+      const rows = culture.filter(clue => clue.category === category);
+      expect(rows.length).toBeGreaterThanOrEqual(11);
+      expect(new Set(rows.map(row => row.subject)).size).toBe(rows.length);
+      expect(rows.every(row => row.text.includes(" — "))).toBe(true);
+    }
+    const byCategory = new Map<string, number[]>();
+    for (const clue of nbaWavelengthClues) {
+      byCategory.set(clue.category, [...(byCategory.get(clue.category) ?? []), clue.rating]);
+    }
+    expect(byCategory.size).toBe(14);
+    for (const values of byCategory.values()) {
+      expect(Math.min(...values)).toBeLessThanOrEqual(50);
+      expect(Math.max(...values)).toBeGreaterThanOrEqual(90);
+    }
   });
 
   it("does not conflate overall greatness with shooting, defense or playmaking", () => {
@@ -99,7 +122,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(Math.min(...targets)).toBeLessThanOrEqual(3);
     expect(Math.max(...targets)).toBeGreaterThanOrEqual(98);
     expect(new Set(targets).size).toBeGreaterThan(92);
-    expect(categoryCounts.size).toBe(9);
+    expect(categoryCounts.size).toBe(14);
     for (const count of categoryCounts.values()) expect(count).toBeGreaterThan(10);
   });
 
