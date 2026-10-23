@@ -8,6 +8,9 @@ import {
   type AverageFanSport,
 } from "../games/averageFanEngine";
 import { stableLineupHash } from "./lineupModel";
+import { nbaAverageFanRotationRounds, NBA_AVERAGE_FAN_ROTATION_SIZE } from "./nbaAverageFanRotationPools";
+import { nbaAverageFanRotationFinals } from "./nbaAverageFanRotationFinals";
+
 
 type AverageFanCasualSport = Exclude<AverageFanSport, "mlb">;
 
