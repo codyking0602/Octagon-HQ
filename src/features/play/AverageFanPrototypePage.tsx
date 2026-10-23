@@ -1204,6 +1204,9 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
         finalQuestion={casualFinal}
         initialQuestion={reviewQuestionEnabled ? reviewQuestion : null}
         onExit={() => navigate(exitRoute)}
+        onSettled={() => {
+          if (lockedSport === "nba" && !previewSeed && rotationCursor) advanceNbaAverageFanCursor(rotationCursor);
+        }}
         onRestart={() => {
           setReviewQuestionEnabled(false);
           setGameKey((value) => value + 1);
