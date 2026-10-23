@@ -27,8 +27,8 @@ describe("Average Fan selector stage presentation contract", () => {
     expect(pageSource).toContain('nnamdi: "/assets/average-fan/average-fan-nnamdi.png"');
     expect(pageSource).toContain('(sport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER)');
     expect(pageSource).not.toContain("PORTRAIT PENDING");
-    expect(pageCss).toMatch(/\\.average-fan-card--nnamdi \\{[\\s\\S]*?left: 204px;[\\s\\S]*?top: 414px;[\\s\\S]*?width: 239px;/);
-    expect(pageCss).toMatch(/\\.average-fan-card--troy \\{[\\s\\S]*?left: 201px;[\\s\\S]*?top: 628px;/);
+    expect(pageCss).toMatch(/\.average-fan-card--nnamdi \{[\s\S]*?left: 204px;[\s\S]*?top: 414px;[\s\S]*?width: 239px;/);
+    expect(pageCss).toMatch(/\.average-fan-card--troy \{[\s\S]*?left: 201px;[\s\S]*?top: 628px;/);
     expect(pageCss).toContain(".average-fan-card__nnamdi img");
   });
 
