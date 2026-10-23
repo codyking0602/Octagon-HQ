@@ -177,7 +177,8 @@ function PerformancePreview({ sport, profileId }: { sport: PlaySport; profileId:
   );
 }
 
-function MatchupsCompact({ sport }: { sport: PlaySport }) {
+/** Shared Game Room matchup treatment for UFC, Football and NBA. */
+export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
   const { activeProfile, profiles, challenges, loading, error, refresh, markOpened, viewResults,
     dismissChallenge, cancelPendingAuction } = usePlayChallenges();
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -189,7 +190,7 @@ function MatchupsCompact({ sport }: { sport: PlaySport }) {
   const gmRepository = useMemo(() => createFootballGmMatchRepository(), []);
   const requestedCode = searchParams.get("challenge")?.trim().toUpperCase() ?? "";
   const allMatchups = useMemo(() => challenges
-    .filter((challenge) => challengeSport(challenge) === sport
+     .filter((challenge) => (challenge.gameVersion.startsWith("nba-") || challenge.playUrl.includes("/nba/") ? "nba" : challengeSport(challenge)) === sport
       && Boolean(activeProfile?.id)
       && (challenge.creatorId === activeProfile?.id || challenge.recipientId === activeProfile?.id)
       && !challenge.hiddenFor.includes(activeProfile!.id))
