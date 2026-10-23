@@ -781,6 +781,21 @@
     url("/images/bar-trivia/cfb-bar-trivia-bg.png");
 }
 
+/* Keep the approved Bar Trivia venue layout; NBA adds its own basketball identity. */
+.bar-trivia__venue[data-league="nba"] {
+  background-image:
+    linear-gradient(180deg, rgba(12, 6, 11, 0.46), rgba(12, 6, 11, 0.08) 45%, rgba(12, 6, 11, 0.48)),
+    url("/assets/millionaire/nba-clean-studio.webp");
+}
+.bar-trivia[data-league="nba"] .bar-trivia__kicker,
+.bar-trivia[data-league="nba"] .bar-trivia__sign b {
+  color: #f0a3a7;
+}
+.bar-trivia[data-league="nba"] .bar-trivia__sign {
+  border-color: rgba(213, 67, 84, 0.4);
+  background: radial-gradient(circle at 50% 0%, rgba(167, 40, 58, 0.18), transparent 58%), #191019;
+}
+
 .bar-trivia__venue[data-league="mlb"] {
   background-image:
     linear-gradient(180deg, rgba(8, 7, 6, 0.2), rgba(8, 7, 6, 0.05) 48%, rgba(8, 7, 6, 0.18)),

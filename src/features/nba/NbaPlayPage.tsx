@@ -75,6 +75,14 @@ export default function NbaPlayPage(){
         </div>
       </section>
     ) : null}
+    {canPreviewNbaWhoAmI(identity.profile) ? (
+      <section className="surface-card nba-hq-notice" aria-label="NBA Bar Trivia owner Daily preview">
+        <p className="eyebrow">OWNER PREVIEW · NOT PUBLIC · DAILY ONLY</p>
+        <h2>NBA Bar Trivia</h2>
+        <p>Ten NBA questions, three escalating rounds and Last Call. Preview play never writes official Daily scores.</p>
+        <Link className="primary-action" to="/nba/bar-trivia?mode=daily">TEST NBA BAR TRIVIA →</Link>
+      </section>
+    ) : null}
     <section className="surface-card nba-hq-notice">
       <h2>First up: NBA Futures</h2><p>Make your 30 over/under picks and the rest of your season predictions.</p>
       <Link className="primary-action" to="/nba/picks">OPEN NBA FUTURES →</Link>

@@ -3,7 +3,7 @@ import {
   type TriviaContentType,
 } from "./triviaContentExpiry";
 
-export type BarTriviaLeague = "nfl" | "cfb" | "ufc" | "mlb";
+export type BarTriviaLeague = "nfl" | "cfb" | "ufc" | "mlb" | "nba";
 export type BarTriviaRound = "round1" | "round2" | "round3" | "last-call";
 export type BarTriviaDoubleRound = Exclude<BarTriviaRound, "last-call">;
 export type BarTriviaDifficulty = "easy" | "medium" | "hard" | "last-call";
@@ -101,6 +101,12 @@ export const BAR_TRIVIA_ROUND_NAMES: Record<BarTriviaLeague, Record<BarTriviaRou
     round1: "Around the Octagon",
     round2: "Deep Cuts",
     round3: "Championship Rounds",
+    "last-call": "Last Call",
+  },
+  nba: {
+    round1: "Around the Association",
+    round2: "Deep Cuts",
+    round3: "Playoff Pressure",
     "last-call": "Last Call",
   },
   mlb: {
@@ -264,7 +270,7 @@ export function buildBarTriviaRun(
   const run: BarTriviaQuestion[] = [];
 
   for (const [index, round] of BAR_TRIVIA_ROUND_SLOTS.entries()) {
-    if (index === 3) {
+    if (index === 3 && league !== "nba") {
       const accessible = pickQuestion(
         bank.filter((question) =>
           question.league === league &&
