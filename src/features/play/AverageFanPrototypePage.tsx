@@ -1153,6 +1153,7 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>(() => reviewGameplay ? reviewFan : "shane");
   const [reviewQuestionEnabled, setReviewQuestionEnabled] = useState(reviewGameplay);
   const [gameKey, setGameKey] = useState(0);
+  const [rotationCursor, setRotationCursor] = useState(() => lockedSport === "nba" && !previewSeed ? readNbaAverageFanCursor() : null);
   const [rulesOpen, setRulesOpen] = useState(false);
   const casualBoard = useMemo(
     () => buildAverageFanCasualBoard(casualSport, previewSeed ?? `${casualSport}-owner-casual-${lockedSport ? randomSeed + "-" : ""}${gameKey}`),
