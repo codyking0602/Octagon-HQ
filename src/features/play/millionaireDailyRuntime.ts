@@ -363,23 +363,14 @@ function finalSubmission(
   };
 }
 
-export function buildMillionaireDailySetup(
-  sport: "ufc" | "football",
+function millionairePublicationFromRun(
+  league: MillionaireLeague,
   day: string,
   scheduleVersion: string,
+  runIndex: number,
+  hostNumber: number,
+  run: MillionaireRun,
 ): OfficialDailySetupPublication {
-  const league = millionaireDailyLeague(sport, day);
-  const runIndex = millionaireDailyRunIndex(sport, day);
-  const hostNumber = millionaireDailyHostNumber(sport, day);
-  const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
-  const baseRun = themedRun ?? millionaireDailyRun(league, runIndex);
-  const run = balanceRun(
-    sport === "football" && day === "2026-10-10" && league === "cfb"
-      ? withDitkaMemorialQuestion(baseRun)
-      : baseRun,
-    runIndex,
-  );
-  assertMillionaireRun(run);
   const state = createMillionaireState(run);
   const proof = proofFor(run, league, day, scheduleVersion);
   return {
@@ -417,6 +408,41 @@ export function buildMillionaireDailySetup(
       proof,
     },
   };
+}
+
+export function buildNbaMillionaireDailySetup(
+  day: string,
+  scheduleVersion: string,
+  runIndex: number,
+  authoredRun: MillionaireRun,
+): OfficialDailySetupPublication {
+  if (!Number.isSafeInteger(runIndex) || runIndex < 0) {
+    throw new Error("NBA Millionaire appearance ordinal must be a nonnegative integer.");
+  }
+  return millionairePublicationFromRun(
+    "nba", day, scheduleVersion, runIndex, (runIndex % 3) + 1,
+    balanceRun(authoredRun, runIndex),
+  );
+}
+
+export function buildMillionaireDailySetup(
+  sport: "ufc" | "football",
+  day: string,
+  scheduleVersion: string,
+): OfficialDailySetupPublication {
+  const league = millionaireDailyLeague(sport, day);
+  const runIndex = millionaireDailyRunIndex(sport, day);
+  const hostNumber = millionaireDailyHostNumber(sport, day);
+  const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
+  const baseRun = themedRun ?? millionaireDailyRun(league, runIndex);
+  const run = balanceRun(
+    sport === "football" && day === "2026-10-10" && league === "cfb"
+      ? withDitkaMemorialQuestion(baseRun)
+      : baseRun,
+    runIndex,
+  );
+  assertMillionaireRun(run);
+  return millionairePublicationFromRun(league, day, scheduleVersion, runIndex, hostNumber, run);
 }
 
 function runtimeAction(action: JsonRecord): MillionaireAction {

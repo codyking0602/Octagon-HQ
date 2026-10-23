@@ -54,7 +54,7 @@ export function buildTwoGameDailyPublication({
   scheduleVersion,
   children,
 }: {
-  sport: "ufc" | "football";
+  sport: "ufc" | "football" | "nba";
   gameType: OfficialDailyGameType;
   day: string;
   scheduleVersion: string;

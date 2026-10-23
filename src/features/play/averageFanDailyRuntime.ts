@@ -24,9 +24,8 @@ import type {
 export const AVERAGE_FAN_DAILY_CONTENT_VERSION = "average-fan-daily-v3" as const;
 export const AVERAGE_FAN_DAILY_SCORING_VERSION = "average-fan-score-v2" as const;
 
-type AverageFanDailyScope = "ufc" | "football";
-// Official Daily publication remains Football/UFC only; NBA currently has an owner-local preview.
-type AverageFanDailySport = "nfl" | "cfb" | "ufc";
+type AverageFanDailyScope = "ufc" | "football" | "nba";
+type AverageFanDailySport = "nfl" | "cfb" | "ufc" | "nba";
 type JsonRecord = Record<string, unknown>;
 
 interface AverageFanPublicationHistoryRow {
@@ -62,7 +61,7 @@ function parsePublicationHistory(value: unknown): AverageFanPublicationHistoryRo
   return records(value).flatMap((row) => {
     const day = typeof row.day === "string" ? row.day : "";
     const sport = row.sport;
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || (sport !== "nfl" && sport !== "cfb" && sport !== "ufc")) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || (sport !== "nfl" && sport !== "cfb" && sport !== "ufc" && sport !== "nba")) {
       return [];
     }
     return [{
@@ -92,6 +91,7 @@ function recentHistory(history: readonly AverageFanPublicationHistoryRow[], day:
 
 function dailySport(scope: AverageFanDailyScope, history: readonly AverageFanPublicationHistoryRow[]): AverageFanDailySport {
   if (scope === "ufc") return "ufc";
+  if (scope === "nba") return "nba";
   const footballAppearances = history.filter((row) => row.sport === "nfl" || row.sport === "cfb").length;
   return footballAppearances % 2 === 0 ? "cfb" : "nfl";
 }

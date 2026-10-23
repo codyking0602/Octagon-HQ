@@ -132,12 +132,22 @@ const LEVEL_SELECTIONS: readonly (readonly { sourceLevel: number; bias: number }
 ];
 
 /** Pure: equal seeds make equal boards; recent casual IDs are excluded when possible. */
-export function createNbaMillionaireRun(seed: string, recentIds: readonly string[] = []): MillionaireRun {
+export function createNbaMillionaireRun(
+  seed: string,
+  recentIds: readonly string[] = [],
+  options: { strictNoRepeats?: boolean } = {},
+): MillionaireRun {
   const random = createRandom(stringSeed(`nba-millionaire-v2:${seed}`));
   const recent = new Set(recentIds);
   const chosen: NbaMillionaireFact[] = [];
   for (let targetLevel = 0; targetLevel < MILLIONAIRE_LEVELS.length; targetLevel += 1) {
-    const choices = LEVEL_SELECTIONS[targetLevel]!;
+    // Official Daily reserves each authored source tier for its matching
+    // difficulty level. All eight tiers have at least 20 eligible questions,
+    // so twenty complete boards remain repeat-free without cannibalizing the
+    // Q4–Q6 supply. Casual retains the intentionally broader accessible mix.
+    const choices = options.strictNoRepeats
+      ? [{ sourceLevel: targetLevel, bias: 0 }]
+      : LEVEL_SELECTIONS[targetLevel]!;
     const accessible = targetLevel === 2 || targetLevel === 3
       ? APPROACHABLE_CATEGORIES
       : targetLevel === 4 || targetLevel === 5 ? FAMILIAR_CATEGORIES : null;
@@ -145,6 +155,7 @@ export function createNbaMillionaireRun(seed: string, recentIds: readonly string
       NBA_MILLIONAIRE_QUESTION_BANK[sourceLevel]!
         .filter(fact => !accessible || accessible.has(fact.source))
         .filter(fact => !chosen.some(other => other.id === fact.id))
+        .filter(fact => !options.strictNoRepeats || !recent.has(fact.id))
         .map(fact => {
           const alreadySeen = recent.has(fact.id) ? 1000 : 0;
           const sameAnswer = chosen.some(other => other.answer === fact.answer) ? 80 : 0;
