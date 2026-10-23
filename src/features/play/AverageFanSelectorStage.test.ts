@@ -22,6 +22,16 @@ describe("Average Fan selector stage presentation contract", () => {
     expect(pageCss).not.toMatch(/\.average-fan-card\.is-selected::before/);
   });
 
+  it("replaces only NBA Lib with the uploaded Nnamdi photo while Troy remains selectable", () => {
+    expect(pageSource).toContain('src="/assets/average-fan/average-fan-nnamdi.png"');
+    expect(pageSource).toContain('nnamdi: "/assets/average-fan/average-fan-nnamdi.png"');
+    expect(pageSource).toContain('(sport === "nba" ? AVERAGE_FAN_NBA_FANS : FAN_ORDER)');
+    expect(pageSource).not.toContain("PORTRAIT PENDING");
+    expect(pageCss).toMatch(/\\.average-fan-card--nnamdi \\{[\\s\\S]*?left: 204px;[\\s\\S]*?top: 414px;[\\s\\S]*?width: 239px;/);
+    expect(pageCss).toMatch(/\\.average-fan-card--troy \\{[\\s\\S]*?left: 201px;[\\s\\S]*?top: 628px;/);
+    expect(pageCss).toContain(".average-fan-card__nnamdi img");
+  });
+
   it("uses the opened board for live fan name, report grades, and the blank baked select shell", () => {
     expect(pageSource).toContain("<h2>{FAN_LABELS[selectedFan]}</h2>");
     expect(pageSource).toContain("{averageFanSubjectIcon(subject)}");
