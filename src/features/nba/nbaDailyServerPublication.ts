@@ -9,6 +9,8 @@ import {
 } from "./nbaDailySchedule";
 import { buildNbaSportsFeudDailyPack } from "./nbaSportsFeudDailyRotation";
 import { buildNbaBarTriviaDailyBoard } from "./nbaBarTriviaDailyRotation";
+import { buildNbaOfficialMillionaireRun } from "./nbaMillionaireDailyRotation";
+import { buildNbaMillionaireDailySetup } from "../play/millionaireDailyRuntime";
 
 /**
  * Publication-only foundation using the existing canonical server graders.
@@ -16,7 +18,7 @@ import { buildNbaBarTriviaDailyBoard } from "./nbaBarTriviaDailyRotation";
  * authenticated Daily runtime and the remaining six games are wired.
  */
 export const NBA_SERVER_READY_GAME_TYPES = [
-  "average_fan", "sports_feud", "bar_trivia",
+  "average_fan", "sports_feud", "bar_trivia", "millionaire",
 ] as const satisfies readonly NbaDailyGame[];
 
 export const NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION = "nba-bar-trivia-server-v1";
@@ -83,7 +85,9 @@ export function buildNbaServerDailyPublication(
 ) {
   if (!scheduleVersion.trim()) throw new Error("NBA Daily schedule version is required.");
   const ordinal = nbaDailyGameAppearance(day, gameType);
-  const publication = gameType === "average_fan"
+  const publication = gameType === "millionaire"
+    ? buildNbaMillionaireDailySetup(day, scheduleVersion, ordinal, buildNbaOfficialMillionaireRun(ordinal))
+    : gameType === "average_fan"
     ? buildAverageFanDailySetup("nba", day, scheduleVersion, publicationHistory)
     : gameType === "sports_feud"
       ? buildFamilyFeudDailySetup(buildNbaSportsFeudDailyPack(ordinal), day, scheduleVersion)

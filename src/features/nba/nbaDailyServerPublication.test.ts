@@ -4,6 +4,7 @@ import {
 } from "./nbaDailyServerPublication";
 import { NBA_DAILY_WEIGHTED_CYCLE, nbaRegularSeasonDaily } from "./nbaDailySchedule";
 import { advanceFamilyFeudDailyRuntime } from "../play/familyFeudDailyRuntime";
+import { buildNbaOfficialMillionaireRun } from "./nbaMillionaireDailyRotation";
 
 describe("NBA server-authored Daily publication foundation", () => {
   it("computes appearance ordinals from published every-other-day game slots", () => {
@@ -46,9 +47,25 @@ describe("NBA server-authored Daily publication foundation", () => {
     }, { type: "answer", answer: "unrecognizable made-up answer" })).not.toThrow();
   });
 
+  it("constructs a canonical Millionaire NBA board with twenty appearance question histories", () => {
+    const published = buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v1", "millionaire");
+    expect(published.publicSetup.league).toBe("nba");
+    expect(published.publicSetup.questions).toHaveLength(8);
+    expect(JSON.stringify(published.publicSetup)).not.toContain('"correctChoiceId"');
+    expect(published.privateSetupEvidence.run).toHaveLength(8);
+    const seen = new Set<string>();
+    for (let appearance = 0; appearance < 20; appearance++) {
+      for (const question of buildNbaOfficialMillionaireRun(appearance)) {
+        expect(seen.has(question.id), "Repeated Millionaire question " + question.id).toBe(false);
+        seen.add(question.id);
+      }
+    }
+    expect(seen.size).toBe(160);
+  }, 120_000);
+
   it("reuses the canonical Bar Trivia server scorer and answer reveal boundary", () => {
     const published = buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v1", "bar_trivia");
-    expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia"]);
+    expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia", "millionaire"]);
     expect(published.publicSetup.league).toBe("nba");
     expect(published.privateSetupEvidence.questions).toHaveLength(10);
     expect(published.revealSetup.questions).toHaveLength(10);
