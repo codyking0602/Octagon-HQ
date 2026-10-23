@@ -33,7 +33,7 @@ Ranking order is a recognition-first editorial judgment **not a survey result**.
 
 | Question | Eight ranked answers (editorial recognition order) | Explicit extra answers |
 |---|---|---:|
-| Name a famous NBA player who represented a country other than the United States in international basketball. | 1. Nikola Jokic; 2. Luka Doncic; 3. Giannis Antetokounmpo; 4. Victor Wembanyama; 5. Dirk Nowitzki; 6. Pau Gasol; 7. Manu Ginobili; 8. Yao Ming | 25 |
+| Name a famous NBA player who represented a country other than the United States in international basketball. | 1. Nikola Jokic; 2. Luka Doncic; 3. Giannis Antetokounmpo; 4. Victor Wembanyama; 5. Dirk Nowitzki; 6. Pau Gasol; 7. Manu Ginobili; 8. Yao Ming | 24 |
 | Name an NBA player who also won the NCAA men's basketball national championship. | 1. Michael Jordan; 2. Magic Johnson; 3. Kareem Abdul-Jabbar; 4. Carmelo Anthony; 5. Anthony Davis; 6. Kemba Walker; 7. Jalen Brunson; 8. Bill Russell | 15 |
 | Name an NBA player who won at least three NBA championships. | 1. Michael Jordan; 2. LeBron James; 3. Kobe Bryant; 4. Stephen Curry; 5. Shaquille O'Neal; 6. Tim Duncan; 7. Magic Johnson; 8. Larry Bird | 24 |
 | Name two NBA teams with a famous rivalry. | 1. Los Angeles Lakers and Boston Celtics; 2. Chicago Bulls and Detroit Pistons; 3. Golden State Warriors and Cleveland Cavaliers; 4. New York Knicks and Indiana Pacers; 5. New York Knicks and Miami Heat; 6. Dallas Mavericks and San Antonio Spurs; 7. Boston Celtics and Miami Heat; 8. Los Angeles Lakers and Los Angeles Clippers | 11 |
