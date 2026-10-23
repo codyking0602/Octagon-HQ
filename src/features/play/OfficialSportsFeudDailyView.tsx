@@ -26,6 +26,7 @@ import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
   sportsFeudHostAsset,
+  nbaSportsFeudHostAsset,
   type SportsFeudHostSport,
 } from "./sportsFeudPresentation";
 import "./FamilyFeudPrototypePage.css";
@@ -209,11 +210,13 @@ export function OfficialSportsFeudDailyView({
   const baseViewportHeightRef = useRef(0);
 
   const setup = projection.publicSetup;
-  const domain = String(setup.presentation_domain ?? (projection.sport === "football" ? "nfl" : "ufc")) as SportsFeudHostSport;
-  const hqName = domain === "mlb" ? "MLB HQ" : domain === "cfb" ? "CFB HQ" : domain === "nfl" ? "NFL HQ" : "UFC HQ";
+  const domain = String(setup.presentation_domain ?? (projection.sport === "football" ? "nfl" : projection.sport === "nba" ? "nba" : "ufc")) as SportsFeudHostSport | "nba";
+  const hqName = domain === "nba" ? "NBA HQ" : domain === "mlb" ? "MLB HQ" : domain === "cfb" ? "CFB HQ" : domain === "nfl" ? "NFL HQ" : "UFC HQ";
   const challengeLabel = domain === "mlb" ? "PLAYOFF CHALLENGE" : "DAILY CHALLENGE";
   const hostAsset = useMemo(
-    () => sportsFeudHostAsset(domain, projection.centralDay),
+    () => domain === "nba"
+      ? nbaSportsFeudHostAsset(Number(setup.host_index ?? 0))
+      : sportsFeudHostAsset(domain, projection.centralDay),
     [domain, projection.centralDay],
   );
 
@@ -588,7 +591,7 @@ export function OfficialSportsFeudDailyView({
         "feud-scene--" + scene,
         keyboardOpen ? "is-keyboard-open" : "",
       ].filter(Boolean).join(" ")}
-      data-scope={domain === "mlb" ? "mlb" : projection.sport === "football" ? "football" : "ufc"}
+      data-scope={domain === "nba" ? "nba" : domain === "mlb" ? "mlb" : projection.sport === "football" ? "football" : "ufc"}
       data-scene={scene}
       data-special-daily={specialTheme ? "true" : undefined}
       data-main-reveal={mainRevealPhase}
