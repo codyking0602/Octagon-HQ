@@ -22,6 +22,8 @@ import {
   resolveAverageFanPreviewAnswer,
 } from "./AverageFanPrototypeModel";
 import { buildAverageFanCasualBoard } from "./averageFanCasualBoard";
+import { buildNbaAverageFanRotationBoard } from "./nbaAverageFanRotationBoard";
+import { readNbaAverageFanCursor, advanceNbaAverageFanCursor } from "../nba/nbaAverageFanRotationCursor";
 import "./AverageFanPrototypePage.css";
 
 type PrototypeScene = "intro" | "sport-select" | "fan-select" | "game";
