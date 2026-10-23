@@ -93,7 +93,8 @@ function NbaBarTriviaDailySandbox({ slot }: { slot: number }) {
     setSnapshot((current) => {
       if (current.state.complete) return current;
       if (typeof action.choice === "string") {
-        if (current.lastResult) return current;
+        // The Daily view owns reveal dismissal. The last-result payload must
+        // remain available until the next answer replaces it, as on the server.
         const { state, result } = submitBarTriviaAnswer(board.questions, current.state, action.choice);
         return { state, lastResult: result, revision: current.revision + 1 };
       }
