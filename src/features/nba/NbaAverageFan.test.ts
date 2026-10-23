@@ -24,7 +24,7 @@ const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, 
 
 describe("NBA Average Fan audited question bank", () => {
   it("keeps a quality-first replayable NBA inventory after removing repeated Millionaire facts", () => {
-    expect(bank.length).toBeGreaterThanOrEqual(100);
+    expect(bank.length).toBe(180); // 20 full no-repeat playthroughs × 9 questions
     expect(new Set(bank.map((q) => q.id)).size).toBe(bank.length);
     expect(new Set(bank.map((q) => normalize(q.prompt))).size).toBe(bank.length);
     expect(bank.every((q) => q.sport === "nba")).toBe(true);
@@ -33,13 +33,13 @@ describe("NBA Average Fan audited question bank", () => {
     const ordinary = bank.filter((q) => !q.protectedFinal);
     for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
       const tier = ordinary.filter((q) => q.grade === grade);
-      expect(tier.length).toBeGreaterThanOrEqual(20);
+      expect(tier.length).toBe(40); // Two questions per grade in each of 20 rounds
       for (const subject of AVERAGE_FAN_SUBJECTS.nba) {
         expect(tier.filter((q) => q.subject === subject).length).toBeGreaterThanOrEqual(3);
       }
     }
     const finals = bank.filter((q) => q.protectedFinal);
-    expect(finals.length).toBeGreaterThanOrEqual(8);
+    expect(finals.length).toBe(20); // One distinct protected Final in each round
     expect(finals.every((q) => q.grade === 5)).toBe(true);
   });
 
@@ -58,6 +58,12 @@ describe("NBA Average Fan audited question bank", () => {
       ["In NBA defensive terminology, what is the goal of ICE coverage on a side pick-and-roll?", 5],
     ];
     for (const [prompt, grade] of calibrated) expect(gradeOf(prompt), prompt).toBe(grade);
+    expect(bank.some((q) => q.prompt.includes("quadruple-double with 10 blocks against Detroit"))).toBe(false);
+    expect(bank.some((q) => q.prompt.includes("Malice at the Palace"))).toBe(false);
+    expect(bank.some((q) => q.prompt.includes("11 three-pointers in Game 6 against Oklahoma City"))).toBe(false);
+    expect(bank.some((q) => q.prompt.includes("53 points in a 2017 playoff game against Washington"))).toBe(false);
+    expect(bank.some((q) => q.prompt.includes("25 third-quarter points in Game 6 of the 1988 Finals"))).toBe(false);
+    expect(bank.some((q) => q.prompt.includes("overcame a 3-1 series deficit against the Warriors in the 2016 NBA Finals"))).toBe(false);
     const retiredFacts = [
       "Which 76ers icon was nicknamed The Answer?",
       "Which current NBA star is widely called the Joker?",
@@ -246,6 +252,15 @@ describe("NBA Average Fan retained gameplay and safe owner preview", () => {
     expect(scoreAverageFanFinal(90, "correct")).toBe(100);
     expect(scoreAverageFanFinal(90, "wrong")).toBe(80);
     expect(scoreAverageFanFinal(80, "walk-away")).toBe(80);
+  });
+
+  it("only consumes no-repeat rotation when an NBA owner starts playing", () => {
+    const source = readFileSync("src/features/play/AverageFanPrototypePage.tsx", "utf8");
+    expect(source).toContain("nextNbaAverageFanOwnerBoard(");
+    expect(source).toContain('if (casualSport === "nba") {');
+    expect(source).toContain('setNbaRotatedBoard(nextNbaAverageFanOwnerBoard(');
+    expect(source).toContain('onConfirm={(fan) => {');
+    expect(source).not.toContain("onSettled={(result)");
   });
 
   it("keeps owner-only routing, NBA navigation, and the locked landscape presentation", () => {

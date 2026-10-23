@@ -21,7 +21,8 @@ import {
   averageFanMoneyLabel,
   resolveAverageFanPreviewAnswer,
 } from "./AverageFanPrototypeModel";
-import { buildAverageFanCasualBoard } from "./averageFanCasualBoard";
+import { buildAverageFanCasualBoard, type AverageFanCasualBoard } from "./averageFanCasualBoard";
+import { nextNbaAverageFanOwnerBoard } from "./nbaAverageFanRotation";
 import "./AverageFanPrototypePage.css";
 
 type PrototypeScene = "intro" | "sport-select" | "fan-select" | "game";
@@ -1151,13 +1152,15 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>(() => reviewGameplay ? reviewFan : "shane");
   const [reviewQuestionEnabled, setReviewQuestionEnabled] = useState(reviewGameplay);
   const [gameKey, setGameKey] = useState(0);
+  const [nbaRotatedBoard, setNbaRotatedBoard] = useState<AverageFanCasualBoard | null>(null);
   const [rulesOpen, setRulesOpen] = useState(false);
   const casualBoard = useMemo(
     () => buildAverageFanCasualBoard(casualSport, previewSeed ?? `${casualSport}-owner-casual-${lockedSport ? randomSeed + "-" : ""}${gameKey}`),
     [casualSport, gameKey, lockedSport, previewSeed, randomSeed],
   );
-  const casualQuestions = casualBoard.questions;
-  const casualFinal = casualBoard.finalQuestion;
+  const activeBoard = casualSport === "nba" && nbaRotatedBoard ? nbaRotatedBoard : casualBoard;
+  const casualQuestions = activeBoard.questions;
+  const casualFinal = activeBoard.finalQuestion;
   const reviewQuestion = casualQuestions.find((question) => question.format === "four-choice" && question.grade === 3)
     ?? casualQuestions.find((question) => question.format === "four-choice")
     ?? casualQuestions[0]!;
@@ -1182,6 +1185,12 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
         sport={casualSport}
         onBack={() => setScene(lockedSport ? "intro" : "sport-select")}
         onConfirm={(fan) => {
+          // Consume NBA questions when the owner actually begins a run, not when opening the page.
+          // Casual and Daily-style preview share question-ID-only local no-repeat rotation.
+          if (casualSport === "nba") {
+            const day = previewSeed?.split("|").at(-1);
+            setNbaRotatedBoard(nextNbaAverageFanOwnerBoard(`${randomSeed}-${gameKey}`, day));
+          }
           setSelectedFan(fan);
           setReviewQuestionEnabled(false);
           setScene("game");
