@@ -14,7 +14,7 @@ import {
   dailyTwoGameActiveScore, dailyTwoGamePresentationIntermissionState,
   dailyTwoGameSeriesState,
 } from "../play/DailyTwoGameStatus";
-import { createTodayChallengeRepository, type TodayChallengeProjection } from "../play/todayChallengeRepository";
+import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
@@ -23,7 +23,7 @@ import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
 import { nbaHitHeadshot, nbaHitSubjectById } from "./nbaHitTheNumberStats";
 import { formatNbaHitNumber } from "./nbaHitTheNumberModel";
-import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaRegularSeasonDaily, nbaCentralDay } from "./nbaDailySchedule";
+import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaRegularSeasonDaily, nbaCentralDay, type NbaDailyGame } from "./nbaDailySchedule";
 import "../../styles/football-find-leader.css";
 import "../../styles/nba-find-the-leader.css";
 import "../../styles/nba-wavelength.css";
@@ -239,11 +239,10 @@ export default function NbaOfficialDailyPage() {
   const [params] = useSearchParams();
   const releaseEnabled = NBA_OFFICIAL_GAMES_RELEASE_READY && nbaRegularSeasonDaily(nbaCentralDay()) != null;
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
-  const repository = createTodayChallengeRepository(undefined, "nba");
   const runtime = useTodayChallengeRuntime({
     profileId: identity.profile?.id ?? "signed-out",
     enabled: releaseEnabled && signedIn,
-    repository, sport: "nba",
+    sport: "nba",
   });
   if (!releaseEnabled) return <div className="page nba-official-daily" data-sport="nba">
     <section className="nba-official-daily__message"><h1>NBA Daily is coming soon.</h1>
@@ -269,7 +268,7 @@ export default function NbaOfficialDailyPage() {
   const projection = runtime.projection;
   return <div className="nba-official-daily official-daily-page" data-sport="nba" data-game={projection.gameType}>
     <nav className="nba-official-daily__top"><button type="button" onClick={() => navigate("/nba")}>← NBA PLAY</button>
-      <span>OFFICIAL DAILY · {NBA_DAILY_GAME_LABELS[projection.gameType]}</span>
+      <span>OFFICIAL DAILY · {NBA_DAILY_GAME_LABELS[projection.gameType as NbaDailyGame] ?? "NBA Daily"}</span>
       <button type="button" onClick={() => navigate("/nba/today?view=leaderboard")}>STANDINGS ↗</button>
     </nav>
     {runtime.error ? <div className="nba-official-daily__error" role="status">
