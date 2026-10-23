@@ -28,7 +28,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(NBA_WAVELENGTH_BANDS[0].min).toBe(1);
     expect(NBA_WAVELENGTH_BANDS.at(-1)?.max).toBe(100);
     expect(new Set(nbaWavelengthClues.map(row => row.id)).size).toBe(nbaWavelengthClues.length);
-    expect(new Set(nbaWavelengthClues.map(row => row.category)).size).toBe(9);
+    expect(new Set(nbaWavelengthClues.map(row => row.category)).size).toBe(14);
     const subjectCategory = new Set(nbaWavelengthClues.map(row => row.subject + "|" + row.category));
     expect(subjectCategory.size).toBe(nbaWavelengthClues.length);
     expect(nbaWavelengthClues.filter(row => row.rating <= 30).length).toBeGreaterThan(20);
