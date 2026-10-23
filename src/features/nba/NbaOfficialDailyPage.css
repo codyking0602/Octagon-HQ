@@ -1,0 +1,27 @@
+.nba-official-daily { --football-accent:#f2a341; --football-accent-rgb:242,163,65; color:var(--text-primary,#fafafa); }
+.nba-official-daily__top { display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;max-width:1060px;margin:auto; }
+.nba-official-daily__top span { font-size:11px;font-weight:850;letter-spacing:.1em;text-align:center; }
+.nba-official-daily__top button,.nba-official-daily__back {background:transparent;border:1px solid currentColor;border-radius:9px;color:inherit;font-weight:800;font-size:11px;padding:9px;}
+.nba-official-daily__back {margin:12px;}
+.nba-official-daily__message {border:1px solid var(--border-color,#555);border-radius:14px;margin:24px auto;padding:25px;max-width:580px;text-align:center;}
+.nba-official-daily__message h1 {font-size:22px;}
+.nba-official-daily__message button,.nba-official-daily__error button,.nba-official-daily__footer button {background:#f2a341;border:0;border-radius:9px;padding:12px 16px;color:#201508;font-weight:850;}
+.nba-official-daily__error {margin:8px auto;padding:14px;max-width:680px;border:1px solid #db7878;border-radius:12px;}
+.nba-official-daily__error button {margin:10px;}
+.nba-official-daily__footer {display:flex;justify-content:center;gap:12px;padding:18px;flex-wrap:wrap;}
+.nba-official-higher-lower {max-width:800px;margin:0 auto;padding:18px 14px;text-align:center;}
+.nba-official-higher-lower header small {letter-spacing:.13em;font-size:11px;font-weight:900;color:#f2a341;}
+.nba-official-higher-lower header h1 {font-size:clamp(25px,5vw,42px);margin:8px 0;}
+.nba-official-higher-lower header p {opacity:.76;font-size:12px;font-weight:800;}
+.nba-official-higher-lower__comparison {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:22px 0;}
+.nba-official-higher-lower__comparison article {border-radius:16px;background:var(--panel-bg,#171a23);border:1px solid var(--border-color,#45424b);padding:20px 10px;display:flex;flex-direction:column;gap:12px;min-height:216px;justify-content:space-between;}
+.nba-official-higher-lower__comparison small {font-size:10px;letter-spacing:.08em;opacity:.7;font-weight:700;}
+.nba-official-higher-lower__comparison strong {font-size:clamp(15px,3vw,25px);line-height:1.2;}
+.nba-official-higher-lower__comparison span {font-size:12px;}
+.nba-official-higher-lower__comparison b {color:#f2a341;font-size:34px;}
+.nba-official-higher-lower__actions {display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.nba-official-higher-lower__actions button {padding:16px 10px;background:#f2a341;border:0;border-radius:12px;color:#261700;font-weight:950;font-size:15px;}
+.nba-official-higher-lower__actions button:disabled {opacity:.5;}
+.nba-official-higher-lower__feedback {font-size:13px;font-weight:850;padding:10px;margin:12px 0;border-radius:8px;}
+.nba-official-higher-lower__feedback.is-correct {color:#81e6ad;}.nba-official-higher-lower__feedback.is-wrong {color:#ffa6a6;}
+@media(max-width:390px){.nba-official-daily__top{gap:5px;padding:10px 5px}.nba-official-daily__top span{font-size:9px}.nba-official-daily__top button{padding:8px 5px;font-size:10px}.nba-official-higher-lower__comparison{gap:7px}.nba-official-higher-lower__comparison article{padding:15px 7px}}
