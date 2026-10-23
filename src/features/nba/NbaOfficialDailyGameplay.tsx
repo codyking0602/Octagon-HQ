@@ -9,6 +9,7 @@ import { nbaHitHeadshot, nbaHitSubjectById } from "./nbaHitTheNumberStats";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 import "../../styles/football-find-leader.css";
+import "../../styles/hit-the-number.css";
 import "../../styles/nba-wavelength.css";
 import "../../styles/nba-higher-lower.css";
 import "./NbaOfficialDailyGameplay.css";
