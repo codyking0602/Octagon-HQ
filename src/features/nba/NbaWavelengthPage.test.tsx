@@ -34,7 +34,7 @@ describe("NBA Wavelength owner-only presentation", () => {
     expect((screen.getByRole("slider", { name: "NBA Wavelength guess from 1 to 100" }) as HTMLInputElement).value).toBe("50");
     expect(screen.getByText("GAME 1 OF 2")).toBeInTheDocument();
     expect(view.container.querySelector(".wavelength-clue__descriptor")).toBeNull();
-    expect(view.container.querySelector(".wavelength-clue--hero h1")?.textContent).toMatch(/(ability|career|dominance|scoring|shooting|playmaking|impact|résumé|showmanship|reputation|culture|atmosphere|intensity|handling|rebounding|protection|rim|decision-making|talk|history|tradition|draft|duo|explosiveness)/i);
+    expect(view.container.querySelector(".wavelength-clue--hero h1")?.textContent).toMatch(/(ability|career|dominance|scoring|shooting|shotmaking|playmaking|impact|résumé|showmanship|reputation|culture|atmosphere|intensity|handling|rebounding|protection|rim|decision-making|talk|history|tradition|draft|duo|explosiveness)/i);
     finishGame();
     expect(screen.getByText("HIDDEN NUMBER")).toBeInTheDocument();
     expect(screen.getByText("FINAL GUESS")).toBeInTheDocument();
