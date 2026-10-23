@@ -21,7 +21,8 @@ import {
   averageFanMoneyLabel,
   resolveAverageFanPreviewAnswer,
 } from "./AverageFanPrototypeModel";
-import { buildAverageFanCasualBoard } from "./averageFanCasualBoard";
+import { buildAverageFanCasualBoard, type AverageFanCasualBoard } from "./averageFanCasualBoard";
+import { reserveNbaAverageFanRotatingBoard } from "./nbaAverageFanRotation";
 import "./AverageFanPrototypePage.css";
 
 type PrototypeScene = "intro" | "sport-select" | "fan-select" | "game";
@@ -1152,10 +1153,13 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
   const [reviewQuestionEnabled, setReviewQuestionEnabled] = useState(reviewGameplay);
   const [gameKey, setGameKey] = useState(0);
   const [rulesOpen, setRulesOpen] = useState(false);
-  const casualBoard = useMemo(
-    () => buildAverageFanCasualBoard(casualSport, previewSeed ?? `${casualSport}-owner-casual-${lockedSport ? randomSeed + "-" : ""}${gameKey}`),
-    [casualSport, gameKey, lockedSport, previewSeed, randomSeed],
+  const [reservedNbaCasualBoard, setReservedNbaCasualBoard] = useState<AverageFanCasualBoard | null>(null);
+  const casualSeed = previewSeed ?? `${casualSport}-owner-casual-${lockedSport ? randomSeed + "-" : ""}${gameKey}`;
+  const unreservedBoard = useMemo(
+    () => buildAverageFanCasualBoard(casualSport, casualSeed),
+    [casualSport, casualSeed],
   );
+  const casualBoard = reservedNbaCasualBoard ?? unreservedBoard;
   const casualQuestions = casualBoard.questions;
   const casualFinal = casualBoard.finalQuestion;
   const reviewQuestion = casualQuestions.find((question) => question.format === "four-choice" && question.grade === 3)
@@ -1182,6 +1186,10 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
         sport={casualSport}
         onBack={() => setScene(lockedSport ? "intro" : "sport-select")}
         onConfirm={(fan) => {
+          // Reserve IDs only when entering real NBA Casual gameplay, never in a Daily-style preview.
+          if (lockedSport === "nba" && !previewSeed) {
+            setReservedNbaCasualBoard(reserveNbaAverageFanRotatingBoard(casualSeed));
+          }
           setSelectedFan(fan);
           setReviewQuestionEnabled(false);
           setScene("game");
@@ -1201,6 +1209,7 @@ export default function AverageFanPrototypePage({ lockedSport, previewSeed }: { 
         onExit={() => navigate(exitRoute)}
         onRestart={() => {
           setReviewQuestionEnabled(false);
+          setReservedNbaCasualBoard(null);
           setGameKey((value) => value + 1);
           setScene("fan-select");
         }}
