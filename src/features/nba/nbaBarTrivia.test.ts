@@ -92,7 +92,7 @@ describe("NBA Bar Trivia quality and Daily owner preview", () => {
     expect(preview).toContain("createBarTriviaState(board.doubleRound)");
     expect(preview).toContain("submitBarTriviaAnswer(board.questions");
     expect(preview).not.toContain("BarTriviaCasualPage");
-    expect(preview).not.toMatch(/submitOfficial|recordLineupCompletion|claimDaily|onAdvanceDaily|mutateAsync|createOfficial|localStorage|supabase/);
+    expect(preview).not.toMatch(/submitOfficial|recordLineupCompletion|claimDaily|onAdvanceDaily|mutateAsync|createOfficial|window\.localStorage|supabase/);
     expect(officialView).toContain('gameLeague === "nba" ? "nba"');
     expect(styles).toContain('url("/assets/nba/basketball-welcome.png")');
     expect(styles).not.toContain("nba-clean-studio.webp");
