@@ -161,6 +161,8 @@ export function useTodayChallengeRuntime({
   const drainingRef = useRef(false);
   const cancelledRef = useRef(false);
   const dedupePromisesRef = useRef(new Map<string, Promise<TodayChallengeProjection | null>>());
+  const autoRecoveryAttemptsRef = useRef(0);
+  const autoRecoverRef = useRef<() => Promise<void>>(async () => {});
   const [queueDepth, setQueueDepth] = useState(0);
   const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState<unknown>(null);
@@ -219,6 +221,7 @@ export function useTodayChallengeRuntime({
 
   const discardQueue = useCallback((value: TodayChallengeProjection | null) => {
     const pending = queueRef.current.splice(0);
+    autoRecoveryAttemptsRef.current = 0;
     for (const item of pending) releaseItem(item, value);
     setQueueDepth(0);
     rebuildOptimisticProjection(authoritativeRef.current);
@@ -264,6 +267,7 @@ export function useTodayChallengeRuntime({
           setQueueDepth(queueRef.current.length);
           publishOfficialProjection(next);
           releaseItem(item, next);
+          autoRecoveryAttemptsRef.current = 0;
           if (next.officialAttempt) {
             discardQueue(null);
             rebuildOptimisticProjection(next);
@@ -285,6 +289,22 @@ export function useTodayChallengeRuntime({
           break;
         }
 
+        // An Edge resource limit can occur after the database has saved the
+        // action but before its response reaches the player. Re-read first,
+        // never blindly replaying a guess against a potentially newer revision.
+        if (failure instanceof TodayChallengeRepositoryError && failure.code === "DAILY_RUNTIME_BUSY") {
+          try {
+            const saved = await repository.loadToday();
+            if (saved.id !== base.id || saved.progressRevision !== base.progressRevision || saved.officialAttempt) {
+              publishOfficialProjection(saved);
+              discardQueue(saved);
+              setSyncError(null);
+              break;
+            }
+          } catch {
+            // Still busy; keep the same idempotent action queued for recovery.
+          }
+        }
         setSyncError(failure ?? new Error("Today’s Challenge could not sync this action."));
         break;
       }
@@ -327,6 +347,7 @@ export function useTodayChallengeRuntime({
       options,
       resolve: resolveAction,
     };
+    if (!queueRef.current.length) autoRecoveryAttemptsRef.current = 0;
     queueRef.current.push(item);
     if (key) dedupePromisesRef.current.set(key, promise);
     setQueueDepth(queueRef.current.length);
@@ -334,6 +355,43 @@ export function useTodayChallengeRuntime({
     void drainQueueRef.current();
     return promise;
   }, [query.data, rebuildOptimisticProjection]);
+
+  autoRecoverRef.current = async () => {
+    if (!repository || !queueRef.current.length || drainingRef.current) return;
+    try {
+      const saved = await repository.loadToday();
+      const previous = authoritativeRef.current;
+      if (previous && (
+        saved.id !== previous.id
+        || saved.progressRevision !== previous.progressRevision
+        || Boolean(saved.officialAttempt)
+      )) {
+        publishOfficialProjection(saved);
+        discardQueue(saved);
+        setSyncError(null);
+        return;
+      }
+    } catch {
+      // A failed read must not discard a locally queued answer.
+    }
+    // Same revision: retry with the exact original client_action_id.
+    await drainQueueRef.current();
+  };
+
+  useEffect(() => {
+    if (
+      !enabled
+      || queueDepth === 0
+      || !(syncError instanceof TodayChallengeRepositoryError)
+      || syncError.code !== "DAILY_RUNTIME_BUSY"
+      || autoRecoveryAttemptsRef.current >= 3
+    ) return;
+    const timeout = window.setTimeout(() => {
+      autoRecoveryAttemptsRef.current += 1;
+      void autoRecoverRef.current();
+    }, 3000 * (autoRecoveryAttemptsRef.current + 1));
+    return () => window.clearTimeout(timeout);
+  }, [enabled, queueDepth, syncError]);
 
   return {
     projection: optimisticProjection ?? query.data ?? null,
