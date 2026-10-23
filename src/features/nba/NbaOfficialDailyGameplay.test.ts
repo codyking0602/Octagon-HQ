@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { nbaOfficialActiveRound } from "./NbaOfficialDailyGameplay";
+import { dailyTwoGameSeriesState } from "../play/DailyTwoGameStatus";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 
 const source = (path: string) => readFileSync(path, "utf8");
@@ -23,7 +24,8 @@ function projection(complete = false): TodayChallengeProjection {
       ],
     },
     publicState: {
-      round_index: 1, active_round: { guesses: [51, 76] }, round_scores: [90, 80],
+      format_version: "daily-two-game-average-v1", round_index: 1,
+      active_round: { guesses: [51, 76] }, round_scores: [90, 80],
     },
     revealSetup: { rounds: [{ target: 51 }, { target: 76 }] },
     officialAttempt: complete ? {
@@ -40,6 +42,7 @@ describe("NBA official Daily front-end safety", () => {
     });
     expect(nbaOfficialActiveRound(projection(true)).reveal).toEqual({ target: 76 });
     expect(nbaOfficialActiveRound(projection(true)).score).toBe(80);
+    expect(dailyTwoGameSeriesState(projection(false))?.gameIndex).toBe(1);
   });
 
   it("routes official NBA game, standings, and private rehearsals independently", () => {
