@@ -68,7 +68,7 @@ export function dailyTwoGameSeriesState(
   if (!source || source.format_version !== "daily-two-game-average-v1") return null;
 
   const roundScores = numberArray(source.round_scores);
-  const rawIndex = Number(source.game_index ?? Math.max(0, roundScores.length - 1));
+  const rawIndex = Number(source.game_index ?? source.round_index ?? Math.max(0, roundScores.length - 1));
   const gameIndex = Number.isInteger(rawIndex) && rawIndex >= 0 && rawIndex <= 1 ? rawIndex : 0;
   const rawAverage = source.average_score;
   const averageScore = rawAverage != null && Number.isFinite(Number(rawAverage)) ? Number(rawAverage) : null;
