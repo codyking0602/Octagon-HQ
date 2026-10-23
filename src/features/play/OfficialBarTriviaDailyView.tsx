@@ -20,7 +20,7 @@ function record(value: unknown): JsonRecord {
 }
 
 function league(value: unknown): BarTriviaLeague {
-  return value === "nfl" || value === "cfb" || value === "ufc" ? value : "ufc";
+  return value === "nfl" || value === "cfb" || value === "ufc" || value === "nba" ? value : "ufc";
 }
 
 function answerResults(value: unknown): BarTriviaAnswerResult[] {
@@ -153,7 +153,7 @@ export function OfficialBarTriviaDailyView({
 
   return (
     <BarTriviaGameView
-      scope={projection.sport === "football" ? "football" : "ufc"}
+      scope={gameLeague === "nba" ? "nba" : projection.sport === "football" ? "football" : "ufc"}
       league={gameLeague}
       scene={scene}
       state={state}
