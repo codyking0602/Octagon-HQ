@@ -15,7 +15,6 @@ import {
   type BarTriviaState,
 } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
-import { NBA_BAR_TRIVIA_QUESTION_BANK } from "../nba/nbaBarTriviaQuestionBank";
 import {
   BarTriviaGameView,
   type BarTriviaScene,
@@ -99,7 +98,7 @@ export default function BarTriviaCasualPage({
     cfb: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "cfb").length,
     ufc: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "ufc").length,
     mlb: runOverride?.length ?? 0,
-    nba: NBA_BAR_TRIVIA_QUESTION_BANK.length,
+    nba: runOverride?.length ?? 0,
   }), [runOverride]);
 
   function selectLeague(nextLeague: BarTriviaLeague) {
