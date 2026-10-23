@@ -147,7 +147,7 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
   // Owner-only preview until NBA officially joins the Daily publication schedule.
   // An appearance is a Sports Feud Daily slot, not an individual player run.
   const appearanceParam = searchParams.get("appearance");
-  const nbaDailyAppearance = appearanceParam && /^(0|[1-9]\\d{0,4})$/.test(appearanceParam)
+  const nbaDailyAppearance = appearanceParam && /^(0|[1-9][0-9]{0,4})$/.test(appearanceParam)
     ? Number(appearanceParam) : 0;
   const [nbaHostIndex, setNbaHostIndex] = useState(0);
   const pack = useMemo(() => {
