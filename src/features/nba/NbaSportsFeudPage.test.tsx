@@ -3,9 +3,6 @@ import { act, fireEvent, render, screen, cleanup } from "@testing-library/react"
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const rotationStub = vi.hoisted(() => ({ claim: vi.fn() }));
-vi.mock("./nbaSportsFeudRotation", () => ({ claimNbaCasualFeudPack: rotationStub.claim }));
-
 const identity = vi.hoisted(() => ({
   profile: { id: "00000000-0000-4000-8000-000000000001",
     displayName: "CODY", initials: "C", canControlPicks: true },
@@ -15,13 +12,10 @@ vi.mock("../identity/IdentityProvider", () => ({
 }));
 
 import FamilyFeudPrototypePage from "../play/FamilyFeudPrototypePage";
-import { buildNbaSportsFeudPack } from "./nbaSportsFeudBank";
-import { sportsFeudCentralDateKey } from "../play/sportsFeudPresentation";
+import { buildNbaSportsFeudDailyPack } from "./nbaSportsFeudDailyRotation";
 
-async function startCasual() {
-  await act(async () => {
-    fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
-  });
+function startDaily() {
+  fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
 }
 function mount(query = "") {
   return render(<MemoryRouter initialEntries={["/nba/sports-feud" + query]}>
@@ -40,23 +34,19 @@ function threeStrikes(prefix: string) {
 }
 
 describe("NBA Sports Feud reused immersive presentation", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    rotationStub.claim.mockImplementation(async () => buildNbaSportsFeudPack("owner-casual-test:" + Math.random()));
-  });
+  beforeEach(() => { vi.useFakeTimers(); });
   afterEach(() => {
-    rotationStub.claim.mockReset();
     cleanup();
     vi.useRealTimers();
     document.body.classList.remove("family-feud-prototype-active");
   });
 
-  it("is a local owner preview with NBA questions, transparent NBA host, and existing stage assets", async () => {
+  it("is a Daily-only owner preview with NBA questions and the approved assets", () => {
     mount();
-    expect(screen.getByText("NBA HQ · OWNER CASUAL PREVIEW")).toBeInTheDocument();
+    expect(screen.getByText("NBA HQ · OWNER DAILY PREVIEW")).toBeInTheDocument();
     expect(screen.getByText(/not survey results/i)).toBeInTheDocument();
     expect(screen.getByText(/does not submit a Daily or leaderboard score/i)).toBeInTheDocument();
-    await startCasual();
+    startDaily();
     const root = document.querySelector(".family-feud-prototype");
     expect(root).toHaveAttribute("data-scope", "nba");
     expect(root).toHaveAttribute("data-scene", "main");
@@ -68,19 +58,31 @@ describe("NBA Sports Feud reused immersive presentation", () => {
       .toMatch(/^\/assets\/sports-feud\/nba-host-[123]\.(?:png|webp)$/);
   });
 
-  it("keeps daily preview deterministic and does not submit a leaderboard score", () => {
+  it("keeps the single Daily preview deterministic and does not submit a leaderboard score", () => {
     mount("?mode=daily");
     expect(screen.getByText("NBA HQ · OWNER DAILY PREVIEW")).toBeInTheDocument();
-    const expected = buildNbaSportsFeudPack("daily:" + sportsFeudCentralDateKey());
+    const expected = buildNbaSportsFeudDailyPack(0);
     // This local preview reads the same bank and stage without a second Daily backend.
     fireEvent.click(screen.getByRole("button", { name: "PLAY SPORTS FEUD" }));
     expect(document.querySelector(".family-feud-prototype")).toHaveAttribute("data-scene", "main");
     expect(screen.getByText(expected.mainBoards[0]!.prompt)).toBeInTheDocument();
   });
 
-  it("shows all main-board answers after three strikes, advances to Fast Money, and reveals a result", async () => {
+  it("always uses Daily, even at the old unqualified route; preview ordinal changes the shared pack", () => {
     mount();
-    await startCasual();
+    expect(screen.getByText("NBA HQ · OWNER DAILY PREVIEW")).toBeInTheDocument();
+    startDaily();
+    expect(screen.getByText(buildNbaSportsFeudDailyPack(0).mainBoards[0]!.prompt)).toBeInTheDocument();
+    cleanup();
+    mount("?appearance=1");
+    startDaily();
+    expect(screen.getByText(buildNbaSportsFeudDailyPack(1).mainBoards[0]!.prompt)).toBeInTheDocument();
+    expect(buildNbaSportsFeudDailyPack(0).id).not.toBe(buildNbaSportsFeudDailyPack(1).id);
+  });
+
+  it("shows all main-board answers after three strikes, advances to Fast Money, and reveals a result", () => {
+    mount();
+    startDaily();
     const firstHost = document.querySelector(".feud-fast-host-asset")?.getAttribute("src");
     threeStrikes("bad-first");
     expect(screen.getByText("3 STRIKES — BOARD CLOSED")).toBeInTheDocument();
@@ -102,23 +104,21 @@ describe("NBA Sports Feud reused immersive presentation", () => {
     fireEvent.click(screen.getByRole("button", { name: "VIEW HQ SCORE" }));
     expect(screen.getByText("FINAL RESULT")).toBeInTheDocument();
     expect(screen.getByText("/100")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "NEW BOARD" })).toBeInTheDocument();
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "NEW BOARD" }));
-    });
+    expect(screen.getByRole("button", { name: "PLAY AGAIN" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "PLAY AGAIN" }));
     const nextHost = document.querySelector(".feud-fast-host-asset")?.getAttribute("src");
     expect(nextHost).toMatch(/^\/assets\/sports-feud\/nba-host-[123]\.(?:png|webp)$/);
     expect(nextHost).not.toBe(firstHost);
   });
 
-  it("keeps the locked responsive stage and mobile controls rather than a second NBA layout", async () => {
+  it("keeps the locked responsive stage and mobile controls rather than a second NBA layout", () => {
     const css = readFileSync("src/features/play/FamilyFeudPrototypePage.css", "utf8");
     expect(css).toContain("height: 100dvh;");
     expect(css).toContain("env(safe-area-inset-top)");
     expect(css).toMatch(/@media \(max-height: 700px\)/);
     expect(css).toContain(".feud-answer-entry__row");
     mount();
-    await startCasual();
+    startDaily();
     const stage = document.querySelector(".family-feud-prototype");
     expect(stage).toHaveClass("family-feud-prototype");
     expect(stage).toHaveAttribute("data-scope", "nba");
