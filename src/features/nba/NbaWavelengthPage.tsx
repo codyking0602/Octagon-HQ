@@ -114,7 +114,11 @@ export default function NbaWavelengthPage() {
     }
 
     // A second game never repeats the first game's actual clues or people.
-    const previousClues = completed.flatMap(item => item.clues);
+    const previousClues = [
+      ...completed.flatMap(item => item.clues),
+      // Reserve Game 2's opening identity while generating Game 1's adaptive path.
+      ...(roundIndex === 0 ? board.rounds[1].clues : []),
+    ];
     const excluded = {
       clueIds: previousClues.map(item => item.id),
       subjects: previousClues.map(item => item.subject),
