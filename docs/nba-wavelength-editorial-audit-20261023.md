@@ -87,3 +87,16 @@ Owner has authorized production publication strictly to **test behind the existi
 ### Calibration follow-up: NBA moments
 
 The moment category is called **NBA Moment Impact**, not “Iconic Moments”: a reference being mentioned must not automatically imply a rating above 65. Six recognizably framed but less league-defining events anchor the 28–61 range. The remaining landmark Finals shots and historical performances properly remain high. We did not fabricate 1–10 moments merely to complete a numerical grid.
+
+## Clue clarity revision (2026-10-23, v3)
+
+The owner's test exposed misleading polarity in the original editorial descriptions: e.g. “Ben Simmons — unwilling to take regular midrange jumpers” intuitively sounds *very* high on unwillingness, though the rating is low for shooting. Likewise “Joe Johnson — respected isolation scorer” encourages rating scoring rather than his cultural impact. The remedy is a full-catalog **single-focus playable prompt** for **all 386 existing references**, with original `editorialNote` preserved for internal calibration only.
+
+- Joe Johnson → “Joe Johnson's influence on basketball culture”
+- Ben Simmons → “Ben Simmons' midrange shooting ability”
+- Dennis Rodman → “Dennis Rodman's outside shooting ability”
+- J.R. Smith → “J.R. Smith's basketball decision-making”
+- Rivalries, teams, moments and duos keep their exact identities/eras but end with one plainly named attribute.
+- **Only one question or dimension is displayed on the playing card**; the second category question is suppressed *only for NBA*. UFC and Football retain their existing treatment.
+- Low and high always describe **strength on the named positive attribute**, not the intensity of being bad, unwilling, or unreliable. No implied number is included in the text.
+- All 25 categories, 386 canonical IDs, 386 editorial rationales, ratings, two-game format and score formula are retained. The catalog/calibration versions increment to v3 to invalidate old seeded preview boards. Cosmetic changes keep NBA-gold reveal headers, subtler borders and more compact cards without touching shared UFC/Football styling.

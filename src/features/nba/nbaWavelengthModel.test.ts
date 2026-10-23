@@ -3,6 +3,7 @@ import {
   NBA_WAVELENGTH_CATEGORY_ANCHORS,
   NBA_WAVELENGTH_BANDS,
   nbaWavelengthClues,
+  nbaWavelengthCluePrompt,
 } from "./nbaWavelengthCatalog";
 import {
   NBA_WAVELENGTH_GAME_ID,
@@ -45,7 +46,7 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
       const rows = culture.filter(clue => clue.category === category);
       expect(rows.length).toBeGreaterThanOrEqual(11);
       expect(new Set(rows.map(row => row.subject)).size).toBe(rows.length);
-      expect(rows.every(row => row.text.includes(" — "))).toBe(true);
+      expect(rows.every(row => row.editorialNote.includes(" — "))).toBe(true);
     }
     const byCategory = new Map<string, number[]>();
     for (const clue of nbaWavelengthClues) {
@@ -75,6 +76,30 @@ describe("NBA Wavelength editorial rating and adaptive game contracts", () => {
     expect(nbaWavelengthClues.find(row => row.id === "nba-wl-duo-jordan-pippen")?.rating).toBe(100);
     expect(nbaWavelengthClues.find(row => row.id === "nba-wl-hype-lebron-james")?.rating).toBe(100);
     expect(nbaWavelengthClues.length).toBe(386);
+  });
+
+  it("presents a single unambiguous positive attribute for every one of 386 clues", () => {
+    expect(nbaWavelengthClues).toHaveLength(386);
+    for (const clue of nbaWavelengthClues) {
+      expect(clue.text).toBe(nbaWavelengthCluePrompt(clue.category, clue.subject));
+      expect(clue.text).toContain(clue.subject);
+      expect(clue.editorialNote).toContain(clue.subject);
+      expect(clue.editorialNote.length).toBeGreaterThan(clue.subject.length);
+      expect(clue.text).not.toBe(clue.editorialNote);
+      expect(clue.text).not.toContain(" — unwilling");
+      expect(clue.text).not.toContain(" — low-volume");
+      expect(clue.text).not.toContain(" — respected");
+      expect(clue.text).not.toContain(" — terrible");
+      expect(clue.text).not.toContain(" — occasional");
+      expect(clue.text).not.toContain(" — rarely");
+      expect(clue.text).not.toContain(" — limited");
+    }
+    const focus = (subject: string, category: string) =>
+      nbaWavelengthClues.find(row => row.subject === subject && row.category === category)?.text;
+    expect(focus("Joe Johnson", "CULTURAL INFLUENCE")).toBe("Joe Johnson's influence on basketball culture");
+    expect(focus("Ben Simmons", "MIDRANGE TOUCH")).toBe("Ben Simmons' midrange shooting ability");
+    expect(focus("Dennis Rodman", "OUTSIDE SHOOTING")).toBe("Dennis Rodman's outside shooting ability");
+    expect(focus("J.R. Smith", "BASKETBALL IQ")).toBe("J.R. Smith's basketball decision-making");
   });
 
   it("does not conflate overall greatness with shooting, defense or playmaking", () => {

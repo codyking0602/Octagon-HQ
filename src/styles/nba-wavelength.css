@@ -42,8 +42,11 @@
   background: radial-gradient(circle at 95% 0%, rgba(234, 162, 76, .20), transparent 45%), #151617;
 }
 .nba-wavelength-page .wavelength-clue--hero h1 {
-  font-size: clamp(25px, 6.4vw, 39px);
-  line-height: 1.11;
+  font-size: clamp(24px, 6vw, 36px);
+  line-height: 1.16;
+}
+.nba-wavelength-page .wavelength-clue--hero {
+  min-height: clamp(148px, 19vh, 200px);
 }
 .nba-wavelength-page .wavelength-clue__descriptor {
   display: block;
@@ -55,6 +58,26 @@
   margin-top: 13px;
 }
 .nba-wavelength-page .wavelength-topline span { color: #ffca80; }
+/* Keep result surfaces sport-branded rather than inheriting the bright
+   white outlines and UFC-red reveal accent. No UFC/Football changes. */
+.nba-wavelength-page .football-debate-result-hero,
+.nba-wavelength-page .football-wavelength-final-numbers,
+.nba-wavelength-page .football-wavelength-reveal,
+.nba-wavelength-page .football-wavelength-reveal article {
+  border-color: rgba(234, 162, 76, .28);
+}
+.nba-wavelength-page .football-wavelength-reveal .eyebrow {
+  color: #f2b65c;
+}
+.nba-wavelength-page .football-wavelength-reveal header h2 {
+  color: #f3f0eb;
+}
+.nba-wavelength-page .football-debate-result-hero {
+  background: radial-gradient(circle at 100% 0, rgba(234, 162, 76, .11), transparent 48%), #0c0f15;
+}
+.nba-wavelength-page .football-wavelength-reveal article {
+  background: rgba(234, 162, 76, .035);
+}
 .nba-wavelength-page .wavelength-guess-panel .primary-action,
 .nba-wavelength-page .nba-wavelength-intermission .primary-action,
 .nba-wavelength-page .nba-wavelength-series-result .primary-action {
