@@ -9,6 +9,10 @@ import { UFC_SPORTS_FEUD_V2_FAST_BATCH2 } from "./ufcSportsFeudV2FastBatch2";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH3 } from "./ufcSportsFeudV2FastBatch3";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH4 } from "./ufcSportsFeudV2MainBatch4";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH4 } from "./ufcSportsFeudV2FastBatch4";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5 } from "./ufcSportsFeudV2MainBatch5";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2MainBatch5Supplement";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH5 } from "./ufcSportsFeudV2FastBatch5";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2FastBatch5Supplement";
 
 describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", () => {
   const main = [
@@ -16,6 +20,8 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     ...UFC_SPORTS_FEUD_V2_MAIN_DRAFT, ...UFC_SPORTS_FEUD_V2_MAIN_BATCH2,
     ...UFC_SPORTS_FEUD_V2_MAIN_BATCH3,
     ...UFC_SPORTS_FEUD_V2_MAIN_BATCH4,
+    ...UFC_SPORTS_FEUD_V2_MAIN_BATCH5,
+    ...UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT,
     ...UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES,
   ];
   const fast = [
@@ -24,15 +30,19 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH2,
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH3,
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH4,
+    ...UFC_SPORTS_FEUD_V2_FAST_BATCH5,
+    ...UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT,
   ];
 
-  it("proves the staged bank is still short of the required 100 distinct Fast prompts", () => {
+  it("tracks the staged Main and Fast shortfall separately from factual approval", () => {
     expect(UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES).toHaveLength(15);
-    expect(main).toHaveLength(42);
-    expect(fast).toHaveLength(77);
+    expect(main).toHaveLength(49);
+    expect(fast).toHaveLength(92);
     expect(main.length).toBeGreaterThanOrEqual(20 * 2);
     // A sufficient Main count alone does not establish 20 semantic categories;
     // named-opponent and championship lists may still collide.
+    // The five new country-fighter boards share a semantic category and
+    // cannot be counted as five independent no-repeat slots.
     expect(fast.length).toBeLessThan(20 * 5);
     expect(main.length).toBeLessThan(70);
     expect(fast.length).toBeLessThan(140);
@@ -49,7 +59,7 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
       sourceIds.add(q.sourceId);
     }
     const all = [...main, ...fast];
-    expect(all).toHaveLength(119);
-    expect(new Set(all.map(q => q.id)).size).toBe(119);
+    expect(all).toHaveLength(141);
+    expect(new Set(all.map(q => q.id)).size).toBe(141);
   });
 });
