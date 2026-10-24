@@ -221,7 +221,7 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
       highlightUrl:`https://www.youtube.com/watch?v=${selected.video.id}`,
       highlightSourceChannelId: selected.video.channel,
       channelUrl: "https://www.youtube.com/@NBA",
-      summary:`Averaged ${round(p.points/g)} points, ${round(p.assists/g)} assists and ${round(p.rebounds/g)} rebounds across ${g} completed games this week.`,
+      summary:`${round(p.points/g)} PPG, ${round(p.assists/g)} APG and ${round(p.rebounds/g)} RPG across ${g} games.`,
       stats:[{label:"PPG",value:round(p.points/g)},{label:"APG",value:round(p.assists/g)},
         {label:"RPG",value:round(p.rebounds/g)},{label:"FG%",value:fg}],
     },
@@ -231,7 +231,7 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
       record:`${t.wins}-${t.losses}`,
       ppg:round(t.for/tg),oppPpg:round(t.against/tg),
       netMargin:(t.for>=t.against?"+":"")+round((t.for-t.against)/tg),
-      summary:`Went ${t.wins}-${t.losses} across ${tg} games, scoring ${round(t.for/tg)} points per game and allowing ${round(t.against/tg)}.`,
+      summary:`${t.wins}-${t.losses} this week · ${round((t.for-t.against)/tg)} average margin and ${round(t.against/tg)} allowed per game.`,
     },
   };
   return winner;
