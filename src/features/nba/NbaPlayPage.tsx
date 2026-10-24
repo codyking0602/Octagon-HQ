@@ -144,7 +144,7 @@ export default function NbaPlayPage() {
                 ))}
         </div> : null}
         {selectedStanding && dailyProjection ? <DailyAnswerDetail
-          entry={selectedStanding} projection={dailyProjection} sport={dailySport}
+          entry={selectedStanding} projection={dailyProjection} sport="nba"
           onClose={() => setSelectedProfileId(null)} /> : null}
       </> : <>
         <div className="play-v2__daily-row">
