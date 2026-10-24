@@ -75,10 +75,12 @@ export function findMatchingHighlight(playerName, videos, lastSunday) {
   const end=Date.parse(lastSunday+"T00:00:00Z")+MS_DAY+16*3_600_000;
   const start=Date.parse(lastSunday+"T00:00:00Z")-6*MS_DAY;
   return videos.filter(v=>{
+    if (v.channel !== NBA_CHANNEL_ID) return false;
     const title=normal(v.title);
+    const words=title.split(" ");
     const date=Date.parse(v.published);
     return date>=start && date<=end
-      && title.includes(first) && title.includes(last)
+      && words.includes(first) && words.includes(last)
       && /highlights?|full game|best plays|performance/i.test(v.title);
   }).sort((a,b)=>Date.parse(b.published)-Date.parse(a.published))[0]??null;
 }
