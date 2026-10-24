@@ -39,7 +39,9 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
 - Directly below it: an account-wide **All sports / UFC / Football / MLB / NBA**
   multi-selection. It applies to every enabled device using server-managed profile
   preferences, not local storage. UFC red, Football blue, MLB green, NBA orange.
-- Existing accounts default to UFC, Football and MLB selected; NBA defaults **off**.
+- New accounts default to **no sport push alerts** until they select a sport;
+  existing enabled subscriptions are seeded with UFC, Football and MLB enabled
+  for backward compatibility. NBA defaults **off** for everybody.
   NBA can be selected explicitly before launch but preview games **must not** generate
   any public notification. The All sports button selects every sport, including NBA;
   tapping it again deselects all.
