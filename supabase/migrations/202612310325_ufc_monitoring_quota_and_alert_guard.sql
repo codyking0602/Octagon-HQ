@@ -1,5 +1,178 @@
 -- Free official UFC card checks, shared odds quota, and deduplicated failure pushes.
 -- This keeps one existing scheduler, Picks recorder, and notification owner.
+
+-- Preserve the append-only protection: the canonical writer inserts card-only
+-- monitoring evidence with provider_called=false from the outset. Never UPDATE
+-- evidence rows after inserting them.
+CREATE OR REPLACE FUNCTION public.record_pick_monitoring_run(p_payload jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare
+  v_run_id uuid;
+  v_card_only boolean := p_payload->>'decision_reason' = 'card_source_only';
+  v_trigger_kind text := coalesce(nullif(trim(p_payload->>'trigger_kind'),''), 'scheduled');
+  v_status text := trim(coalesce(p_payload->>'status',''));
+  v_source_event_identity text := trim(coalesce(p_payload->>'source_event_identity',''));
+  v_event_id text := nullif(lower(trim(p_payload->>'event_id')), '');
+  v_started_at timestamptz := coalesce(nullif(p_payload->>'started_at','')::timestamptz, now());
+  v_completed_at timestamptz := nullif(p_payload->>'completed_at','')::timestamptz;
+  v_payload_locks_at timestamptz := nullif(p_payload->>'locks_at','')::timestamptz;
+  v_observed_locks_at timestamptz;
+  v_diagnostics jsonb := coalesce(p_payload->'diagnostics', '[]'::jsonb);
+  v_findings jsonb := coalesce(p_payload->'findings', '[]'::jsonb);
+  v_snapshots jsonb := coalesce(p_payload->'odds_snapshots', '[]'::jsonb);
+  v_finding jsonb;
+  v_snapshot jsonb;
+  v_prices jsonb;
+  v_fetched_at timestamptz;
+  v_bout_id text;
+  v_fighter_one_odds integer;
+  v_fighter_two_odds integer;
+begin
+  if auth.role() is distinct from 'service_role' then
+    raise exception 'service role required to record pick monitoring evidence';
+  end if;
+  if jsonb_typeof(p_payload) <> 'object' then
+    raise exception 'pick monitoring payload must be an object';
+  end if;
+  if v_status not in ('completed','partial','failed') or v_source_event_identity = '' then
+    raise exception 'pick monitoring run identity or status is invalid';
+  end if;
+  if jsonb_typeof(v_diagnostics) <> 'array'
+    or jsonb_typeof(v_findings) <> 'array'
+    or jsonb_typeof(v_snapshots) <> 'array' then
+    raise exception 'pick monitoring diagnostics, findings, and odds snapshots must be arrays';
+  end if;
+
+  if v_card_only and (
+    v_trigger_kind <> 'scheduled'
+    or v_status <> 'completed'
+    or v_event_id is null
+    or jsonb_array_length(v_snapshots) <> 0
+    or jsonb_array_length(v_findings) = 0
+    or p_payload->'quota'->>'requests_remaining' is not null
+    or p_payload->'quota'->>'requests_used' is not null
+    or p_payload->'quota'->>'last_request_cost' is not null
+  ) then
+    raise exception 'invalid free official-card evidence for canonical monitoring writer';
+  end if;
+
+  if v_event_id is not null then
+    select event.locks_at into v_observed_locks_at
+    from public.pick_events event
+    where event.event_id = v_event_id;
+    if not found then
+      raise exception 'canonical pick event not found for monitoring run';
+    end if;
+    if v_payload_locks_at is not null and v_payload_locks_at is distinct from v_observed_locks_at then
+      raise exception 'monitoring lock snapshot does not match canonical event';
+    end if;
+  else
+    v_observed_locks_at := v_payload_locks_at;
+  end if;
+
+  insert into public.pick_monitoring_runs (
+    trigger_kind, status, source_event_identity, event_id, observed_locks_at,
+    started_at, completed_at, card_source, card_source_url, odds_provider,
+    provider_requests_remaining, provider_requests_used, provider_last_request_cost,
+    provider_event_count, complete_snapshot_count, missing_snapshot_count,
+    diagnostics, provider_called, decision_reason
+  ) values (
+    v_trigger_kind,
+    v_status,
+    v_source_event_identity,
+    v_event_id,
+    v_observed_locks_at,
+    v_started_at,
+    v_completed_at,
+    nullif(trim(p_payload->>'card_source'),''),
+    nullif(trim(p_payload->>'card_source_url'),''),
+    nullif(trim(p_payload->>'odds_provider'),''),
+    nullif(p_payload->'quota'->>'requests_remaining','')::integer,
+    nullif(p_payload->'quota'->>'requests_used','')::integer,
+    nullif(p_payload->'quota'->>'last_request_cost','')::integer,
+    coalesce(nullif(p_payload->'coverage'->>'provider_events','')::integer, 0),
+    coalesce(nullif(p_payload->'coverage'->>'complete_snapshots','')::integer, 0),
+    coalesce(nullif(p_payload->'coverage'->>'missing_snapshots','')::integer, 0),
+    v_diagnostics,
+    not v_card_only,
+    case when v_card_only then 'card_source_only' else null end
+  ) returning run_id into v_run_id;
+
+  for v_finding in select value from jsonb_array_elements(v_findings)
+  loop
+    insert into public.pick_monitoring_findings (
+      run_id, event_id, finding_key, finding_type, severity, review_status,
+      matchup_identity, bout_id, summary, before_value, after_value,
+      source_details, detected_at
+    ) values (
+      v_run_id,
+      v_event_id,
+      trim(coalesce(v_finding->>'finding_key','')),
+      trim(coalesce(v_finding->>'finding_type','')),
+      trim(coalesce(v_finding->>'severity','')),
+      'new',
+      nullif(trim(v_finding->>'matchup_identity'),''),
+      nullif(trim(v_finding->>'bout_id'),''),
+      trim(coalesce(v_finding->>'summary','')),
+      v_finding->'before_value',
+      v_finding->'after_value',
+      coalesce(v_finding->'source_details', '{}'::jsonb),
+      coalesce(nullif(v_finding->>'detected_at','')::timestamptz, v_completed_at, now())
+    );
+  end loop;
+
+  for v_snapshot in select value from jsonb_array_elements(v_snapshots)
+  loop
+    v_prices := v_snapshot->'prices';
+    if jsonb_typeof(v_prices) <> 'array' or jsonb_array_length(v_prices) <> 2 then
+      raise exception 'monitoring odds snapshot must contain exactly two prices';
+    end if;
+    v_fetched_at := nullif(v_snapshot->>'fetched_at','')::timestamptz;
+    v_bout_id := nullif(trim(v_snapshot->>'bout_id'),'');
+    v_fighter_one_odds := (v_prices->0->>'american_odds')::integer;
+    v_fighter_two_odds := (v_prices->1->>'american_odds')::integer;
+
+    insert into public.pick_monitoring_odds_snapshots (
+      run_id, event_id, bout_id, provider, sport_key, source_event_id,
+      source_event_identity, matchup_identity, commence_time, sportsbook,
+      sportsbook_title, sportsbook_updated_at, fetched_at, observed_locks_at,
+      fighter_one_name, fighter_one_identity, fighter_one_american_odds,
+      fighter_two_name, fighter_two_identity, fighter_two_american_odds
+    ) values (
+      v_run_id,
+      v_event_id,
+      v_bout_id,
+      trim(coalesce(v_snapshot->>'provider','')),
+      trim(coalesce(v_snapshot->>'sport_key','')),
+      trim(coalesce(v_snapshot->>'source_event_id','')),
+      trim(coalesce(v_snapshot->>'source_event_identity','')),
+      trim(coalesce(v_snapshot->>'matchup_identity','')),
+      (v_snapshot->>'commence_time')::timestamptz,
+      trim(coalesce(v_snapshot->>'sportsbook','')),
+      trim(coalesce(v_snapshot->>'sportsbook_title','')),
+      (v_snapshot->>'sportsbook_updated_at')::timestamptz,
+      v_fetched_at,
+      v_observed_locks_at,
+      trim(coalesce(v_prices->0->>'fighter_name','')),
+      trim(coalesce(v_prices->0->>'fighter_identity','')),
+      v_fighter_one_odds,
+      trim(coalesce(v_prices->1->>'fighter_name','')),
+      trim(coalesce(v_prices->1->>'fighter_identity','')),
+      v_fighter_two_odds
+    );
+  end loop;
+
+  return v_run_id;
+end;
+$function$;
+
+revoke all on function public.record_pick_monitoring_run(jsonb)
+  from public, anon, authenticated;
+grant execute on function public.record_pick_monitoring_run(jsonb) to service_role;
 create or replace function public.record_card_source_monitoring_run(p_payload jsonb)
 returns uuid
 language plpgsql
@@ -39,12 +212,12 @@ begin
     raise exception 'invalid free official-card monitoring evidence';
   end if;
 
-  v_run_id := public.record_pick_monitoring_run(p_payload);
-  update public.pick_monitoring_runs
-  set provider_called = false,
-      decision_reason = 'card_source_only',
-      odds_provider = null
-  where run_id = v_run_id;
+  v_run_id := public.record_pick_monitoring_run(
+    p_payload || jsonb_build_object(
+      'decision_reason', 'card_source_only',
+      'odds_provider', null
+    )
+  );
   return v_run_id;
 end;
 $function$;
