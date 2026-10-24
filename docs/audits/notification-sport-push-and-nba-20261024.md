@@ -28,7 +28,14 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
    Web Push pipeline de-duplicates notification versions and device endpoints and does
    not require a second scheduler. The live project has registered push endpoints,
    but this audit made **no changes to live subscriptions, deliveries, or notifications**.
-7. **The bell is a long list.** It already marks sports using context colors; filtering
+7. **Stale unread reminders create inbox noise.** The October 24 read-only live
+   snapshot showed 987 total canonical notification groups, 509 unread; 474
+   unread groups were already older than two days and 386 older than seven days.
+   This spans users, not just one profile. The screenshot likewise shows a
+   two-day-old "Today's MLB Challenge is live" alert. The current model lacks
+   an explicit expiry/deadline field, so outdated time-sensitive copy continues
+   to appear as actionable until read or cleared.
+8. **The bell is a long list.** It already marks sports using context colors; filtering
    the visible inbox by all/UFC/Football/MLB/NBA makes scanning easier without
    affecting underlying unread totals.
 
@@ -107,6 +114,12 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
   Always recheck at claim time, and never backfill muted events when a sport is re-enabled.
 - Unread count and grouping are for all in-app events, including muted sports; the badge
   does **not** represent only selected push sports.
+- Expiry should be addressed in a **separate, approved focused PR**: add optional
+  producer-supplied `expires_at` to time-sensitive notifications; past-due
+  reminders should no longer say "closes soon", show an obsolete CTA or display
+  "NEW" as if timely. Keep history available and avoid deleting unread alerts
+  without an explicit product decision. Validate UFC, Football, MLB, NBA
+  expiration semantics by actual contest/lock time instead of a generic TTL.
 - The launch-readiness and QA checks must be completed without sending any bulk
   notification to production members.
 
