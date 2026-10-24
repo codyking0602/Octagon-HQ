@@ -347,10 +347,12 @@ function FeaturedGameRow({
   event,
   breakdown,
   game,
+  compact = false,
 }: {
   event: PickEvent;
   breakdown: FootballMatchupBreakdown;
   game: PickBout;
+  compact?: boolean;
 }) {
   const label = isCollegeGame(game.weightClass) ? "COLLEGE GAME OF THE WEEK" : "NFL GAME OF THE WEEK";
   const firstTeam = breakdown.teams[0];
@@ -370,7 +372,7 @@ function FeaturedGameRow({
         aria-label={`Open matchup breakdown for ${breakdown.title}`}
       />
       <div className="football-hq-game-row__main">
-        <span>{label}</span>
+        <span>{compact ? level : label}</span>
         <div className="football-hq-game-row__teams">
           <FeaturedGameTeamPill team={firstTeam} game={game} presentation={firstPresentation}
             name={firstLabel.name} nickname={firstLabel.nickname} level={level} season={event.season} />
@@ -495,7 +497,7 @@ export function FootballHq({
           <p className="eyebrow">FOOTBALL HQ</p>
           <h2>This week</h2>
         </div>
-        <small>PICKS · COLLEGE · NFL</small>
+        {!compactPreview ? <small>PICKS · COLLEGE · NFL</small> : null}
       </header>
 
       <section className="surface-card home-event-card home-event-card--compact" aria-label="Football Picks and standing">
@@ -569,6 +571,7 @@ export function FootballHq({
                 event={event!}
                 breakdown={breakdown}
                 game={game}
+                compact={compactPreview}
               />
             ))}
           </div>

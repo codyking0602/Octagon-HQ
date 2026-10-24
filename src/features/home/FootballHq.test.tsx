@@ -238,6 +238,20 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toBeInTheDocument();
     expect(hq.querySelectorAll(".football-hq-game-row")).toHaveLength(2);
+    expect(within(hq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
+    expect(within(hq).queryByText("PICKS · COLLEGE · NFL")).not.toBeInTheDocument();
+    expect(within(hq).getByText("CFB")).toBeInTheDocument();
+    expect(within(hq).getByText("NFL")).toBeInTheDocument();
+    expect(within(hq).queryByText("COLLEGE GAME OF THE WEEK")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("NFL GAME OF THE WEEK")).not.toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Alabama at Mississippi State" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-alabama-mississippi-state");
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Chiefs at Raiders" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-chiefs-raiders");
+    expect(within(hq).getByRole("link", { name: "Open 2026 Alabama Sports Reference page" }))
+      .toHaveAttribute("href", "https://www.sports-reference.com/cfb/schools/alabama/2026.html");
+    expect(within(hq).getByRole("link", { name: "Open 2026 Kansas City Chiefs Sports Reference page" }))
+      .toHaveAttribute("href", "https://www.pro-football-reference.com/teams/kan/2026.htm");
     expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toBeInTheDocument();
   });
 
@@ -299,6 +313,8 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
+    expect(hq).not.toHaveClass("football-hq--compact-preview");
     expect(within(hq).getByText("Alabama")).toBeInTheDocument();
     expect(within(hq).getByText("Mississippi State")).toBeInTheDocument();
     const collegeGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Alabama at Mississippi State" });

@@ -578,3 +578,148 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
     min-height: 28px;
   }
 }
+
+
+/* Owner preview, round two: a single-line header and two flat weekly rows.
+   Shared/public football layout, spotlight, and team reference links remain unchanged. */
+.football-hq--compact-preview .home-sport-hq__heading {
+  align-items: center;
+  min-height: 25px;
+}
+.football-hq--compact-preview .home-sport-hq__heading > div {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+}
+.football-hq--compact-preview .home-sport-hq__heading .eyebrow {
+  flex: 0 0 auto;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.football-hq--compact-preview .home-sport-hq__heading .eyebrow::after {
+  content: "·";
+  padding-left: 7px;
+  color: #8a929d;
+}
+.football-hq--compact-preview .home-sport-hq__heading h2 {
+  font-size: 22px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.football-hq--compact-preview .home-sport-hq__heading > small {
+  display: none;
+}
+.football-hq--compact-preview .football-hq-games {
+  gap: 0;
+  padding: 8px 11px 5px;
+}
+.football-hq--compact-preview .football-hq-games > header {
+  min-height: 21px;
+  padding: 0 0 6px;
+}
+.football-hq--compact-preview .football-hq-games__list {
+  gap: 0;
+}
+.football-hq--compact-preview .football-hq-game-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 7px 0;
+  border: 0;
+  border-top: 1px solid rgba(171, 184, 199, .16);
+  border-radius: 0;
+  background: transparent;
+}
+.football-hq--compact-preview .football-hq-game-row__main {
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr);
+  align-items: center;
+  gap: 5px;
+}
+.football-hq--compact-preview .football-hq-game-row__main > span {
+  margin: 0;
+  font-size: 9px;
+  letter-spacing: .06em;
+}
+.football-hq--compact-preview .football-hq-game-row__teams {
+  grid-template-columns: minmax(0, 1fr) 12px minmax(0, 1fr);
+  gap: 4px;
+  min-width: 0;
+}
+.football-hq--compact-preview .football-hq-game-row__team-pill {
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 3px;
+  min-height: 30px;
+  padding: 0 0 0 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.football-hq--compact-preview .football-hq-game-row__team-pill::before {
+  width: 2px;
+  clip-path: none;
+}
+.football-hq--compact-preview .football-hq-team-mark {
+  width: 21px;
+  height: 21px;
+}
+.football-hq--compact-preview .football-hq-game-row__team-label {
+  gap: 0;
+}
+.football-hq--compact-preview .football-hq-game-row__team-label strong {
+  font-size: clamp(9px, 2.5vw, 11px);
+  line-height: 1.15;
+  white-space: normal;
+  overflow-wrap: normal;
+}
+.football-hq--compact-preview .football-hq-game-row__team-label small {
+  font-size: 8px;
+}
+.football-hq--compact-preview .football-hq-game-row__teams > b {
+  font-size: 8px;
+}
+.football-hq--compact-preview .football-hq-game-row__meta {
+  min-width: 0;
+  padding: 0;
+  pointer-events: none;
+}
+.football-hq--compact-preview .football-hq-game-row__meta > b {
+  font-size: 9px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.football-hq--compact-preview .football-hq-games__schedule {
+  min-height: 27px;
+  padding-top: 3px;
+  border: 0;
+  border-top: 1px solid rgba(171, 184, 199, .16);
+  border-radius: 0;
+  background: transparent;
+}
+@media (max-width: 360px) {
+  .football-hq--compact-preview .football-hq-game-row {
+    gap: 5px;
+  }
+  .football-hq--compact-preview .football-hq-game-row__main {
+    grid-template-columns: 21px minmax(0, 1fr);
+    gap: 3px;
+  }
+  .football-hq--compact-preview .football-hq-game-row__teams {
+    grid-template-columns: minmax(0, 1fr) 9px minmax(0, 1fr);
+    gap: 2px;
+  }
+  .football-hq--compact-preview .football-hq-game-row__team-pill {
+    grid-template-columns: 19px minmax(0, 1fr);
+    gap: 2px;
+  }
+  .football-hq--compact-preview .football-hq-team-mark {
+    width: 18px;
+    height: 18px;
+  }
+  .football-hq--compact-preview .football-hq-game-row__meta > b {
+    font-size: 8px;
+  }
+}
