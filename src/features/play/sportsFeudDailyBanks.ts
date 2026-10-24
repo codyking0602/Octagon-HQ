@@ -11,6 +11,8 @@ import { CFB_SPORTS_FEUD_FAST_3 } from "./cfbSportsFeudFast3";
 import { CFB_SPORTS_FEUD_FAST_4 } from "./cfbSportsFeudFast4";
 import { CFB_SPORTS_FEUD_FAST_5 } from "./cfbSportsFeudFast5";
 import { NFL_SPORTS_FEUD_MAIN } from "./nflSportsFeudMain";
+import { NFL_FEUD_REBUILD_CANDIDATES, CFB_FEUD_REBUILD_CANDIDATES } from "./footballSportsFeudRebuildCandidates";
+import { footballFeudRebuildQuestionsForAppearance } from "./footballSportsFeudRebuildRotation";
 import { OCT19_NFL_SPORTS_FEUD_MAIN, OCT19_NFL_SPORTS_FEUD_FAST } from "./oct19NflSportsFeudQuality";
 import { NFL_SPORTS_FEUD_FAST_1 } from "./nflSportsFeudFast1";
 import { NFL_SPORTS_FEUD_FAST_2 } from "./nflSportsFeudFast2";
@@ -277,6 +279,12 @@ for (const question of [
 ]) {
   CURRENT_QUESTION_INDEX.set(question.id, { domain: "ufc", question });
 }
+for (const sport of ["nfl", "cfb"] as const) {
+  const rebuilt = sport === "nfl" ? NFL_FEUD_REBUILD_CANDIDATES : CFB_FEUD_REBUILD_CANDIDATES;
+  for (const question of [...rebuilt.main, ...rebuilt.fast]) {
+    CURRENT_QUESTION_INDEX.set(question.id, { domain: sport, question });
+  }
+}
 for (const themed of FOOTBALL_THEMED_SPORTS_FEUD_QUESTIONS) {
   CURRENT_QUESTION_INDEX.set(themed.question.id, themed);
 }
@@ -487,5 +495,39 @@ export function sportsFeudQuestionIdsForDay(domain: SportsFeudBankDomain, day: s
   return {
     main: pack.mainBoards.map((question) => question.id),
     fastMoney: pack.fastMoney.map((question) => question.id),
+  };
+}
+
+/**
+ * Versioned Football-only Daily cutover. Historical v1 packs and the UFC
+ * selection code are immutable; the new Daily uses distinct candidate IDs.
+ * Published daily setups embed the full answer universe for server grading.
+ */
+export const FOOTBALL_FEUD_REBUILD_CUTOVER_DAY = "2026-10-29" as const;
+
+export function buildFootballFeudRebuildPack(
+  domain: "nfl" | "cfb",
+  day: string,
+): FamilyFeudPack {
+  if (day < FOOTBALL_FEUD_REBUILD_CUTOVER_DAY) {
+    return buildSportsFeudPack(domain, day);
+  }
+  if (footballThemedSportsFeudPackForDay(domain, day)) {
+    return buildSportsFeudPack(domain, day);
+  }
+  const count = footballSportsFeudAppearanceCountThroughDay(day);
+  // Oct 29 is official appearance eight (NFL), followed by appearance nine
+  // (CFB). Each sport has its own independent 17-appearance exclusion cycle.
+  const index = Math.max(0, Math.floor((count - (domain === "nfl" ? 8 : 9)) / 2));
+  const chosen = footballFeudRebuildQuestionsForAppearance(domain, index);
+  const entities: FamilyFeudEntity[] = [];
+  const main = chosen.main.map((question) => materializeQuestion(domain, question, MAIN_POINTS, entities));
+  const fastMoney = chosen.fast.map((question) => materializeQuestion(domain, question, FAST_POINTS, entities));
+  return {
+    id: `sports-feud-bank-r2-${domain}-${day}-${main.map(q => q.id).join("-")}`,
+    sport: "football",
+    entities,
+    mainBoards: main,
+    fastMoney,
   };
 }

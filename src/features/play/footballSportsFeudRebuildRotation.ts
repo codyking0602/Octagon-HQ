@@ -2,12 +2,12 @@ import type { SportsFeudAuthoredQuestion } from "./sportsFeudBankTypes";
 import { CFB_FEUD_REBUILD_CANDIDATES, NFL_FEUD_REBUILD_CANDIDATES } from "./footballSportsFeudRebuildCandidates";
 
 /**
- * FUTURE-ONLY editorial rotation rehearsal, NOT the current Daily publisher.
+ * Versioned Football Daily editorial no-repeat rotation. The historical Daily publisher is immutable.
  * Each call models a fresh rotation cycle for a fixed calendar-independent sequence.
  * We do NOT claim 20 appearances per sport until at least 40 Main + 100 Fast
  * independent topics exist for BOTH NFL and CFB.
  */
-export const FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT = 10;
+export const FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT = 17;
 
 function hash(text: string) {
   let result = 2166136261;
@@ -46,6 +46,7 @@ function allocate(
 export function previewFootballFeudRebuildRotation(
   sport: "nfl" | "cfb",
   appearances = FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT,
+  cycle = 0,
 ) {
   if (!Number.isSafeInteger(appearances) || appearances < 1
     || appearances > FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT) {
@@ -56,11 +57,30 @@ export function previewFootballFeudRebuildRotation(
   const usedFast = new Set<string>();
   const output: { main: SportsFeudAuthoredQuestion[]; fast: SportsFeudAuthoredQuestion[] }[] = [];
   for (let slot = 0; slot < appearances; slot += 1) {
-    const main = allocate(bank.main, usedMain, new Set<string>(), 2, sport + ":main:" + slot);
-    const fast = allocate(bank.fast, usedFast, new Set(main.map(lane)), 5, sport + ":fast:" + slot);
+    const main = allocate(bank.main, usedMain, new Set<string>(), 2, sport + ":" + cycle + ":main:" + slot);
+    const fast = allocate(bank.fast, usedFast, new Set(main.map(lane)), 5, sport + ":" + cycle + ":fast:" + slot);
     main.forEach((question) => usedMain.add(question.id));
     fast.forEach((question) => usedFast.add(question.id));
     output.push({ main, fast });
   }
   return output;
+}
+
+const CYCLES = new Map<string, ReturnType<typeof previewFootballFeudRebuildRotation>>();
+
+export function footballFeudRebuildQuestionsForAppearance(
+  sport: "nfl" | "cfb",
+  appearanceIndex: number,
+) {
+  if (!Number.isSafeInteger(appearanceIndex) || appearanceIndex < 0) {
+    throw new Error("Football Sports Feud appearance index must be a nonnegative integer.");
+  }
+  const cycle = Math.floor(appearanceIndex / FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT);
+  const key = sport + ":" + cycle;
+  let slots = CYCLES.get(key);
+  if (!slots) {
+    slots = previewFootballFeudRebuildRotation(sport, FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT, cycle);
+    CYCLES.set(key, slots);
+  }
+  return slots[appearanceIndex % FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT]!;
 }

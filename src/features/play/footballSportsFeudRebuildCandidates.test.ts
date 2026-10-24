@@ -31,10 +31,10 @@ function matching(q: SportsFeudAuthoredQuestion, input: string) {
 
 describe("future-only Football Sports Feud editorial rebuild", () => {
   it("counts distinct ideas, never paraphrase families", () => {
-    expect(NFL_FEUD_REBUILD_CANDIDATES.main).toHaveLength(23);
-    expect(NFL_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(53);
-    expect(CFB_FEUD_REBUILD_CANDIDATES.main).toHaveLength(21);
-    expect(CFB_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(54);
+    expect(NFL_FEUD_REBUILD_CANDIDATES.main).toHaveLength(34);
+    expect(NFL_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(85);
+    expect(CFB_FEUD_REBUILD_CANDIDATES.main).toHaveLength(34);
+    expect(CFB_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(86);
     for (const bank of Object.values(BANKS)) {
       const all = [...bank.main, ...bank.fast];
       expect(new Set(all.map(q => q.id)).size).toBe(all.length);
@@ -76,14 +76,14 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
     expect(matching(find("first-12team-playoff"), "Indiana").status).toBe("matched");
   });
 
-  it("rehearses 20 total appearances with no repeat of an ID or concept family", () => {
-    expect(FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT).toBe(10);
+  it("rehearses 34 total appearances with no repeat of an ID or semantic lane", () => {
+    expect(FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT).toBe(17);
     for (const sport of ["nfl", "cfb"] as const) {
       const slots = previewFootballFeudRebuildRotation(sport);
-      expect(slots).toHaveLength(10);
+      expect(slots).toHaveLength(17);
       const all = slots.flatMap(slot => [...slot.main, ...slot.fast]);
-      expect(all).toHaveLength(70);
-      expect(new Set(all.map(q => q.id)).size).toBe(70);
+      expect(all).toHaveLength(119);
+      expect(new Set(all.map(q => q.id)).size).toBe(119);
       expect(slots.every(slot => slot.main.length === 2 && slot.fast.length === 5)).toBe(true);
       for (const slot of slots) {
         const lanes = [...slot.main, ...slot.fast].map(lane);
@@ -91,5 +91,6 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
       }
     }
     expect(() => previewFootballFeudRebuildRotation("cfb", 20)).toThrow();
+    expect(() => previewFootballFeudRebuildRotation("nfl", 20)).toThrow();
   });
 });

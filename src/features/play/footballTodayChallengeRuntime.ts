@@ -42,6 +42,8 @@ import { buildMillionaireDailySetup } from "./millionaireDailyRuntime";
 import { buildFamilyFeudDailySetup } from "./familyFeudDailyRuntime";
 import {
   buildSportsFeudPack,
+  buildFootballFeudRebuildPack,
+  FOOTBALL_FEUD_REBUILD_CUTOVER_DAY,
   footballSportsFeudDomainForDay,
 } from "./sportsFeudDailyBanks";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
@@ -344,7 +346,9 @@ export function buildFootballOfficialDailySetup(
     case "hit_the_number": return buildHitTheNumberSetup(day, scheduleVersion);
     case "millionaire": return buildMillionaireDailySetup("football", day, scheduleVersion);
     case "sports_feud": return buildFamilyFeudDailySetup(
-      buildSportsFeudPack(footballSportsFeudDomainForDay(day), day),
+      day >= FOOTBALL_FEUD_REBUILD_CUTOVER_DAY
+        ? buildFootballFeudRebuildPack(footballSportsFeudDomainForDay(day), day)
+        : buildSportsFeudPack(footballSportsFeudDomainForDay(day), day),
       day,
       scheduleVersion,
     );
