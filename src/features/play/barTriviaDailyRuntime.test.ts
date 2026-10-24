@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   BAR_TRIVIA_DAILY_CONTENT_VERSION,
+  UFC_BAR_TRIVIA_V3_CONTENT_VERSION,
   BAR_TRIVIA_DAILY_SCORING_VERSION,
   advanceBarTriviaDailyRuntime,
   buildBarTriviaDailySetup,
@@ -28,8 +29,10 @@ describe("Bar Trivia official Daily runtime", () => {
     const second = buildBarTriviaDailySetup("ufc", "2026-09-29", "play-rotation-v17-bar-trivia-sep29");
 
     expect(second).toEqual(first);
-    expect(first.contentVersion).toBe(BAR_TRIVIA_DAILY_CONTENT_VERSION);
+    expect(first.contentVersion).toBe(UFC_BAR_TRIVIA_V3_CONTENT_VERSION);
     expect(first.scoringVersion).toBe(BAR_TRIVIA_DAILY_SCORING_VERSION);
+    const football = buildBarTriviaDailySetup("nfl", "2026-09-29", "football-daily-v17-bar-trivia-sep29");
+    expect(football.contentVersion).toBe(BAR_TRIVIA_DAILY_CONTENT_VERSION);
     expect(first.publicSetup.league).toBe("ufc");
     expect(first.publicSetup.question_count).toBe(10);
   });
