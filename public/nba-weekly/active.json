@@ -8,7 +8,7 @@
     "position": "PG",
     "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/4431678.png",
     "profileUrl": "https://www.espn.com/nba/player/_/id/4431678",
-    "highlightUrl": null,
+    "highlightUrl": "https://www.youtube.com/watch?v=e8g1Fa8iYYM",
     "channelUrl": "https://www.youtube.com/@NBA",
     "summary": "Averaged 30.0 points and 5.5 assists in two wins, including a 32-point effort as Philadelphia erased a 29-point deficit against Cleveland.",
     "stats": [
@@ -28,7 +28,8 @@
         "label": "FG%",
         "value": "50.0"
       }
-    ]
+    ],
+    "highlightSourceChannelId": "UCWJ2lWNubArHWmf3FIHbfcQ"
   },
   "team": {
     "name": "Atlanta Hawks",
