@@ -15,10 +15,10 @@ const existingPrefs = readFileSync(
 );
 
 describe("notification sport push controls — draft contract", () => {
-  it("provides four sport options with NBA initially opt-in", () => {
+  it("provides four opt-in sport options for new members", () => {
     expect(pushNotificationSports).toEqual(["ufc", "football", "mlb", "nba"]);
     expect(defaultNotificationPushSports).toEqual({
-      ufc: true, football: true, mlb: true, nba: false,
+      ufc: false, football: false, mlb: false, nba: false,
     });
     expect(notificationSport({ kind: "new_game_available", route: "/?hq-reveal=basketball-2026" }))
       .toBe("nba");
@@ -29,6 +29,8 @@ describe("notification sport push controls — draft contract", () => {
     expect(migration).toContain("alter table private.notification_push_sports enable row level security");
     expect(migration).toContain("revoke all on private.notification_push_sports from public, anon, authenticated");
     expect(migration).toContain("v_id uuid := auth.uid()");
+    expect(migration).toContain("from private.notification_push_subscriptions subscription");
+    expect(migration).toContain("where subscription.enabled");
     expect(migration).toContain("grant execute on function public.get_my_notification_push_sports() to authenticated");
     expect(repository).toContain('client.rpc("get_my_notification_push_sports")');
     expect(repository).toContain('client.rpc("set_my_notification_push_sports"');
