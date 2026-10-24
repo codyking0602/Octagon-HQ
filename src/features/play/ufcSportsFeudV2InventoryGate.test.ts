@@ -15,6 +15,7 @@ import { UFC_SPORTS_FEUD_V2_FAST_BATCH5 } from "./ufcSportsFeudV2FastBatch5";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2FastBatch5Supplement";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH6 } from "./ufcSportsFeudV2MainBatch6";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH6 } from "./ufcSportsFeudV2FastBatch6";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH7 } from "./ufcSportsFeudV2FastBatch7";
 
 describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", () => {
   const main = [
@@ -36,12 +37,13 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH5,
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT,
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH6,
+    ...UFC_SPORTS_FEUD_V2_FAST_BATCH7,
   ];
 
   it("distinguishes 57 Main and 108 Fast candidate rows from six-month approved inventory", () => {
     expect(UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES).toHaveLength(15);
     expect(main).toHaveLength(57);
-    expect(fast).toHaveLength(108);
+    expect(fast).toHaveLength(127);
     expect(main.length).toBeGreaterThanOrEqual(20 * 2);
     // A sufficient Main count alone does not establish 20 semantic categories;
     // named-opponent and championship lists may still collide.
@@ -52,9 +54,10 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     // independently approved Fast Money concepts.
     expect(main.length).toBeLessThan(70);
     expect(fast.length).toBeLessThan(140);
-    // At current production cadence (~25 Sports Feud appearances / six months),
-    // the 125-Fast raw candidate floor is unmet even before holds.
-    expect(fast.length).toBeLessThan(125);
+    // UFC currently has ~24 Sports Feud appearances / six months; 127 raw Fast
+    // rows DO NOT mean 120 distinct verified semantic topics. Release gate proves
+    // held/overlapping and unreviewed questions still prevent activation.
+    expect(fast.length).toBeGreaterThanOrEqual(125);
   });
 
   it("never treats a staged legacy rewrite as an approved content board", () => {
@@ -68,7 +71,7 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
       sourceIds.add(q.sourceId);
     }
     const all = [...main, ...fast];
-    expect(all).toHaveLength(165);
-    expect(new Set(all.map(q => q.id)).size).toBe(165);
+    expect(all).toHaveLength(184);
+    expect(new Set(all.map(q => q.id)).size).toBe(184);
   });
 });
