@@ -22,7 +22,7 @@ describe("weekly GM champions, archive and compact Play", () => {
   });
   it("offers real prior GM history and clickable individual franchise reports", () => {
     expect(gm).toContain("PAST WEEKLY GM CHAMPIONSHIPS");
-    expect(gm).toContain("archive.standings");
+    expect(gm).toContain("archive?.standings");
     expect(gm).toContain("repository.archivedResult");
     expect(gm).toContain("FootballGmFranchiseReport");
     expect(gm).not.toContain("VIEW PRIOR AUCTION RESULTS");

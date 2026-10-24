@@ -19,23 +19,23 @@ as $$
   cross join lateral (
     select
       coalesce(jsonb_agg(jsonb_build_object(
-        'profile_id', placing.profile_id,
-        'display_name', placing.display_name,
-        'elite_score', placing.elite_score,
-        'young_score', placing.young_score,
-        'total_score', placing.total_score,
-        'completed_runs', placing.completed_runs,
-        'rank', placing.rank
-      ) order by placing.rank, placing.display_name), '[]'::jsonb) as standings,
+        'profile_id', entrant_ranked.profile_id,
+        'display_name', entrant_ranked.display_name,
+        'elite_score', entrant_ranked.elite_score,
+        'young_score', entrant_ranked.young_score,
+        'total_score', entrant_ranked.total_score,
+        'completed_runs', entrant_ranked.completed_runs,
+        'rank', entrant_ranked.rank
+      ) order by entrant_ranked.rank, entrant_ranked.display_name), '[]'::jsonb) as standings,
       coalesce(jsonb_agg(jsonb_build_object(
-        'profile_id', placing.profile_id,
-        'display_name', placing.display_name,
-        'elite_score', placing.elite_score,
-        'young_score', placing.young_score,
-        'total_score', placing.total_score,
-        'completed_runs', placing.completed_runs,
-        'rank', placing.rank
-      ) order by placing.display_name) filter (where placing.rank = 1), '[]'::jsonb) as champions
+        'profile_id', entrant_ranked.profile_id,
+        'display_name', entrant_ranked.display_name,
+        'elite_score', entrant_ranked.elite_score,
+        'young_score', entrant_ranked.young_score,
+        'total_score', entrant_ranked.total_score,
+        'completed_runs', entrant_ranked.completed_runs,
+        'rank', entrant_ranked.rank
+      ) order by entrant_ranked.display_name) filter (where entrant_ranked.rank = 1), '[]'::jsonb) as champions
     from (
       select scored.*, rank() over (order by scored.total_score desc)::integer as rank
       from (
@@ -52,7 +52,7 @@ as $$
         group by attempt.profile_id, profile.display_name
         having count(distinct attempt.scenario) = 2
       ) scored
-    ) placing
+    ) entrant_ranked
   ) ranked
   where auth.uid() is not null
     and event.closes_at <= now()
