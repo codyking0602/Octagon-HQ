@@ -14,6 +14,7 @@ import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2Main
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH5 } from "./ufcSportsFeudV2FastBatch5";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2FastBatch5Supplement";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH6 } from "./ufcSportsFeudV2MainBatch6";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH8 } from "./ufcSportsFeudV2MainBatch8";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH6 } from "./ufcSportsFeudV2FastBatch6";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH7 } from "./ufcSportsFeudV2FastBatch7";
 
@@ -26,6 +27,7 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     ...UFC_SPORTS_FEUD_V2_MAIN_BATCH5,
     ...UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT,
     ...UFC_SPORTS_FEUD_V2_MAIN_BATCH6,
+    ...UFC_SPORTS_FEUD_V2_MAIN_BATCH8,
     ...UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES,
   ];
   const fast = [
@@ -40,9 +42,9 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH7,
   ];
 
-  it("distinguishes 57 Main and 108 Fast candidate rows from six-month approved inventory", () => {
+  it("distinguishes 59 Main and 127 Fast candidate rows from six-month approved inventory", () => {
     expect(UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES).toHaveLength(15);
-    expect(main).toHaveLength(57);
+    expect(main).toHaveLength(59);
     expect(fast).toHaveLength(127);
     expect(main.length).toBeGreaterThanOrEqual(20 * 2);
     // A sufficient Main count alone does not establish 20 semantic categories;
@@ -71,7 +73,7 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
       sourceIds.add(q.sourceId);
     }
     const all = [...main, ...fast];
-    expect(all).toHaveLength(184);
+    expect(all).toHaveLength(186);
     expect(new Set(all.map(q => q.id)).size).toBe(184);
   });
 });
