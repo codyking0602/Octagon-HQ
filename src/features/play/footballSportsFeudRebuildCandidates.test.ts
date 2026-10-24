@@ -74,6 +74,9 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
     expect(matching(find("fcs-to-nfl"), "Randy Moss").status).toBe("matched");
     expect(matching(find("cfb-2024-realignment"), "SMU").status).toBe("matched");
     expect(matching(find("first-12team-playoff"), "Indiana").status).toBe("matched");
+    expect(matching(find("first-12team-playoff"), "Hoosiers").status).toBe("matched");
+    expect(matching(find("cfp-2025-field"), "JMU").status).toBe("matched");
+    expect(matching(find("nfl-qbs-heisman"), "RG3").status).toBe("matched");
   });
 
   it("rehearses 20 appearances per sport (40 Football appearances) with no repeat of an ID or concept family", () => {
