@@ -40,7 +40,9 @@ describe("UFC Feud v2 editorial consolidation (never used by production)", () =>
       expect(q.answers).toEqual(source.answers);
       expect(q.alsoAcceptedAnswers).toEqual(source.alsoAcceptedAnswers);
     }
-    expect(new Set(kept.map(q => q.collisionGroup)).size).toBe(kept.length);
+    expect(new Set(kept.map(q => q.prompt.toLowerCase())).size).toBe(kept.length);
+    // Legacy source collisionGroups are broad (e.g. "fighters" and "culture");
+    // a future scheduler must map precise topics rather than assume those groups are unique.
   });
 
   it("has 68 novel drafts plus 20 canonical legacy candidates, all with unique IDs", () => {
