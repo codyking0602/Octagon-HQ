@@ -37,6 +37,9 @@ jobs:
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
+      - name: Verify weekly selection using offline ESPN and YouTube fixtures
+        if: steps.clock.outputs.run == 'true'
+        run: node --test scripts/generate-nba-weekly-spotlight.test.mjs
       - name: Gather last complete week's NBA results and verified YouTube highlights
         if: steps.clock.outputs.run == 'true'
         run: node scripts/generate-nba-weekly-spotlight.mjs

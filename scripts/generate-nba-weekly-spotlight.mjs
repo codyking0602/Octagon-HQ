@@ -91,7 +91,7 @@ function readPlayerBoxscore(raw, result, eventId) {
         return i<0?NaN:numerical(row.stats?.[i]);
       };
       const fg=(row)=>{
-        const i=names.findIndex(n=>["fg","fieldgoals","fieldgoalsmade-fieldgoalsattempted"].includes(normal(n).replaceAll(" ","")));
+        const i=names.findIndex(n=>["fg","fieldgoals","fieldgoalsmadefieldgoalsattempted"].includes(normal(n).replaceAll(" ","")));
         const pair=String(row.stats?.[i]??"").split("-").map(Number);
         return i>=0&&pair.length===2&&Number.isFinite(pair[0])&&Number.isFinite(pair[1])
           ? pair : [0,0];
@@ -156,7 +156,7 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
       || ((b.for-b.against)/b.games.size - (a.for-a.against)/a.games.size)
       || b.wins-a.wins || a.name.localeCompare(b.name));
   if (!candidateTeams.length) throw Error("No team with two completed games");
-  const playerCandidates=[...players.values()].filter(p=>p.games.size>=2&&p.points/p.games.size>=18)
+  const playerCandidates=[...players.values()].filter(p=>p.games.size>=2&&p.points/p.games.size>=18&&p.attempts>0)
     .sort((a,b)=>candidateScore(b,teams)-candidateScore(a,teams));
   const selected=playerCandidates.map(player=>({
     player, video:findMatchingHighlight(player.name,videos,weekEnd),
