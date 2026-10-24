@@ -31,6 +31,12 @@ The six-month readiness gate `src/features/play/ufcSportsFeudV2EditorialReleaseG
 - **Facts repaired**: A failed DWCS appearance cannot count as *earning a UFC contract via a win*; a 1987 NCAA Division I wrestling runner-up was removed from the national-champion answer set; Jessica Penne was removed from the undisputed UFC women's champions board; Jose Aldo was removed from UFC-only trilogy participants; the venue and person answer kinds were corrected to prevent surname-based false matches; the Jon Jones 2018 UFC title reclaim and Kayla Harrison 2025 bantamweight title are explicitly sourced.
 - **Automated verification**: all ranked answers, true off-board extras and curated aliases tested against the production matching engine; separate negative tests for historically incorrect candidates; explicit 24-appearance six-month target and duplicate-family guard.
 
+## Future-only selection foundation (not integrated)
+
+`src/features/play/ufcSportsFeudV2FutureSelection.ts` is a **pure, unused selector** that accepts only a caller-provided set of reviewed questions and a **server-authoritative zero-based Feud appearance ordinal**. It uses deterministic topic-family shuffles and an exact greedy Main-only-first allocation so 24 official appearances consume 48 distinct Main topics and 120 distinct Fast topics, with no shared semantic topic between either round and no per-account randomness. It refuses underfilled pools or excessive overlap. Synthetic tests prove the 24-appearance and boundary behavior with both surplus and precisely sufficient material. The live UFC Daily question bank does **not** import this code.
+
+This foundation cannot be switched on until the release-readiness gate has explicit fact/alias approvals, correct semantic mappings and sufficient high-quality authored questions. Preservation of previously published score/result snapshots remains mandatory.
+
 ## Reasons not to activate the future-only selector yet
 
 1. **The Main bank is not deep enough after editorial and factual filtering.** The staged count looks large only when unverified rewrite placeholders, held concepts and near-identical questions are included.
