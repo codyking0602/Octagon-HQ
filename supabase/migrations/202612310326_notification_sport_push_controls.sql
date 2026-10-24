@@ -1,15 +1,23 @@
 -- Draft only: sport-specific Web Push choices on top of the canonical in-app inbox.
 -- Do not use the legacy notification_preferences flags: they intentionally stay enabled
 -- so disabling a sport's phone alerts never hides its bell notifications.
--- NBA begins off for existing members until they explicitly select basketball.
+-- New profiles begin with all sport pushes off; current active subscriptions keep\n-- legacy UFC/Football/MLB delivery until the member explicitly changes their choices.
 create table if not exists private.notification_push_sports (
   profile_id uuid primary key references public.profiles(id) on delete cascade,
-  ufc boolean not null default true,
-  football boolean not null default true,
-  mlb boolean not null default true,
+  ufc boolean not null default false,
+  football boolean not null default false,
+  mlb boolean not null default false,
   nba boolean not null default false,
   updated_at timestamptz not null default now()
 );
+
+-- Preserve established delivery choices of already-connected members. This runs
+-- only once in the new migration; there is no automatic retroactive opt-in.
+insert into private.notification_push_sports(profile_id,ufc,football,mlb,nba)
+select distinct subscription.profile_id,true,true,true,false
+from private.notification_push_subscriptions subscription
+where subscription.enabled
+on conflict (profile_id) do nothing;
 
 alter table private.notification_push_sports enable row level security;
 revoke all on private.notification_push_sports from public, anon, authenticated;
@@ -24,9 +32,9 @@ begin
   if v_id is null then raise exception 'sign in required'; end if;
   select * into v_row from private.notification_push_sports where profile_id = v_id;
   return jsonb_build_object(
-    'ufc',coalesce(v_row.ufc,true),
-    'football',coalesce(v_row.football,true),
-    'mlb',coalesce(v_row.mlb,true),
+    'ufc',coalesce(v_row.ufc,false),
+    'football',coalesce(v_row.football,false),
+    'mlb',coalesce(v_row.mlb,false),
     'nba',coalesce(v_row.nba,false)
   );
 end;
@@ -138,13 +146,13 @@ begin
     return jsonb_build_object('allowed',true,'summary',coalesce(p_summary,''));
   end if;
 
-  if 'ufc' = any(v_sports) and coalesce(v_prefs.ufc,true) then
+  if 'ufc' = any(v_sports) and coalesce(v_prefs.ufc,false) then
     v_selected := array_append(v_selected,'UFC');
   end if;
-  if 'football' = any(v_sports) and coalesce(v_prefs.football,true) then
+  if 'football' = any(v_sports) and coalesce(v_prefs.football,false) then
     v_selected := array_append(v_selected,'Football');
   end if;
-  if 'mlb' = any(v_sports) and coalesce(v_prefs.mlb,true) then
+  if 'mlb' = any(v_sports) and coalesce(v_prefs.mlb,false) then
     v_selected := array_append(v_selected,'MLB');
   end if;
   if 'nba' = any(v_sports) and coalesce(v_prefs.nba,false) then
