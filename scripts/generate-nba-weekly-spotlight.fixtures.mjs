@@ -2,7 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { finishedWeek, collectTeamGames, selectWeek, extractYoutubeVideos,
-  findMatchingHighlight, mergeOfficialVideos, playerEditorialScore, teamEditorialScore } from "./generate-nba-weekly-spotlight.mjs";
+  findMatchingHighlight, mergeOfficialVideos, playerEditorialScore, teamEditorialScore,
+  basketballReferenceTeamSeasonUrl, basketballReferencePlayerUrl } from "./generate-nba-weekly-spotlight.mjs";
 test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
   assert.deepEqual(
     (({weekStart,weekEnd})=>({weekStart,weekEnd}))(finishedWeek(new Date("2026-10-27T12:00:00Z"))),
@@ -10,8 +11,8 @@ test("A Tuesday run selects only the previous completed Central Monday-Sunday", 
 });
 const player={id:"123",displayName:"Sample Star",position:{abbreviation:"PG"}};
 const teams=[
-  {id:"1",displayName:"Sample Winners",abbreviation:"AAA",logo:"https://a.espncdn.com/i/teamlogos/nba/500/aaa.png"},
-  {id:"2",displayName:"Sample Rivals",abbreviation:"BBB",logo:"https://a.espncdn.com/i/teamlogos/nba/500/bbb.png"},
+  {id:"1",displayName:"Sample Winners",abbreviation:"ATL",logo:"https://a.espncdn.com/i/teamlogos/nba/500/aaa.png"},
+  {id:"2",displayName:"Sample Rivals",abbreviation:"BOS",logo:"https://a.espncdn.com/i/teamlogos/nba/500/bbb.png"},
 ];
 const events=Array.from({length:8},(_,i)=>({
   id:String(i+1),status:{type:{completed:true}},
@@ -46,6 +47,10 @@ test("uses only completed NBA results and calculates weekly stats from actual at
   assert.deepEqual(data.player.stats.map(x=>x.value),["30.0","5.0","7.0","55.0"]);
   assert.equal(data.team.record,"8-0");
   assert.equal(data.team.netMargin,"+15.0");
+  assert.equal(data.player.profileUrl, "https://www.basketball-reference.com/search/search.fcgi?search=Sample%20Star");
+  assert.equal(data.team.profileUrl, "https://www.basketball-reference.com/teams/AAA/2027.html");
+  assert.equal(Object.hasOwn(data.player,"summary"),false);
+  assert.equal(Object.hasOwn(data.team,"summary"),false);
   assert.match(data.player.highlightUrl,/^https:\/\/www\.youtube\.com\/watch\?v=/);
   assert.equal(data.player.highlightSourceChannelId,"UCWJ2lWNubArHWmf3FIHbfcQ");
 });
@@ -94,14 +99,14 @@ test("official @NBA is the only eligible highlight channel",()=>{
 });
 
 test("balanced production, efficiency, wins and defensive impact, and team dominance",()=>{
-  const base={games:new Set(["1","2"]),position:"PG",teamId:"AAA",points:60,assists:10,
+  const base={games:new Set(["1","2"]),position:"PG",teamId:"ATL",points:60,assists:10,
     rebounds:14,made:22,attempts:40,steals:4,blocks:2};
-  const map=new Map([["AAA",{abbreviation:"AAA",games:new Set(["1","2"]),wins:2}]]);
+  const map=new Map([["ATL",{abbreviation:"ATL",games:new Set(["1","2"]),wins:2}]]);
   const score=playerEditorialScore(base,map);
   assert.ok(score>0&&score<=100);
   assert.ok(playerEditorialScore({...base,steals:0,blocks:0},map)<score);
   assert.ok(playerEditorialScore({...base,made:12},map)<score);
-  assert.ok(playerEditorialScore({...base,teamId:"BBB"},map)<score);
+  assert.ok(playerEditorialScore({...base,teamId:"BOS"},map)<score);
   const teamsMap=collectTeamGames(events).teams;
   const winning=teamsMap.get("1"), losing=teamsMap.get("2");
   assert.ok(teamEditorialScore(winning,teamsMap)>teamEditorialScore(losing,teamsMap));
@@ -126,4 +131,16 @@ test("recovers the chosen current video source and keeps Team of the Week withou
   assert.equal(data.player.highlightSourceChannelId,"UCWJ2lWNubArHWmf3FIHbfcQ");
   assert.equal(data.team.name,"Atlanta Hawks");
   assert.equal(Object.hasOwn(data.team,"highlightUrl"),false);
+});
+
+
+test("Sports Reference season and player IDs remain correct across 2026-27",()=>{
+  assert.equal(basketballReferenceTeamSeasonUrl("ATL","2026-10-23"),"https://www.basketball-reference.com/teams/ATL/2027.html");
+  assert.equal(basketballReferenceTeamSeasonUrl("BKN","2026-11-01"),"https://www.basketball-reference.com/teams/BRK/2027.html");
+  assert.equal(basketballReferenceTeamSeasonUrl("CHA","2026-11-01"),"https://www.basketball-reference.com/teams/CHO/2027.html");
+  assert.equal(basketballReferenceTeamSeasonUrl("PHX","2026-11-01"),"https://www.basketball-reference.com/teams/PHO/2027.html");
+  assert.equal(basketballReferenceTeamSeasonUrl("ATL","2027-02-08"),"https://www.basketball-reference.com/teams/ATL/2027.html");
+  assert.equal(basketballReferencePlayerUrl("4431678","Tyrese Maxey"),"https://www.basketball-reference.com/players/m/maxeyty01.html");
+  assert.equal(basketballReferencePlayerUrl("123","Sample Star"),"https://www.basketball-reference.com/search/search.fcgi?search=Sample%20Star");
+  assert.throws(()=>basketballReferenceTeamSeasonUrl("INVALID","2026-10-23"),/Unsupported NBA team/);
 });
