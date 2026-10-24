@@ -92,7 +92,7 @@ describe("Owner Championship Home preview", () => {
     expect(cabinet.querySelectorAll(".home-champ-preview__summary--row")).toHaveLength(4);
     expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("1");
     expect(within(cabinet).getByText("LEAGUE LEAD")).toBeInTheDocument();
-    expect(within(cabinet).getByText("Football")).toBeInTheDocument();
+    expect(cabinet.querySelector(".home-champ-preview__league-tally small")).toHaveTextContent("Football");
     expect(within(cabinet).getByText("HQ DAILY STREAK")).toBeInTheDocument();
     expect(within(cabinet).getByText("11 days")).toBeInTheDocument();
     expect(within(cabinet).getByRole("link", { name: "Open football Championship standings" })).toHaveAttribute("href", "/championship/football?tab=overall");
@@ -109,7 +109,8 @@ describe("Owner Championship Home preview", () => {
   it("shows only available sport rows and excludes unranked Basketball from the denominator", async () => {
     render(<Preview showMlb={false} />);
     const board = screen.getByRole("region", { name: "Your HQ" });
-    expect(await within(board).findByText("Football")).toBeInTheDocument();
+    expect(await within(board).findByText("91.3")).toBeInTheDocument();
+    expect(board.querySelector(".home-champ-preview__league-tally small")).toHaveTextContent("Football");
     const rows = board.querySelectorAll(".home-champ-preview__summary--row");
     expect(Array.from(rows).map((row) => row.getAttribute("data-sport"))).toEqual(["football", "ufc", "nba"]);
     const basketball = within(board).getByRole("link", { name: "Open Basketball Championship" });

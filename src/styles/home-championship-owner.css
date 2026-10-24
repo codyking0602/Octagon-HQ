@@ -955,3 +955,8 @@
     padding: 6px 8px;
   }
 }
+
+/* Keep Basketball's one chevron aligned with ranked rows when there is no score. */
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary--row[data-sport="nba"] .home-champ-preview__summary-arrow {
+  grid-column: 4;
+}
