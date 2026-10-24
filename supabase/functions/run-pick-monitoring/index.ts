@@ -136,6 +136,20 @@ Deno.serve(async (request) => {
       });
     }
 
+    // NBA shares this same trusted wake-up. Its database release gate stays off
+    // until official NBA Daily is confirmed public; no preview alert can escape.
+    // There is only one NBA Daily alert, on the second evening before closing.
+    const nbaDispatched = await admin.rpc("dispatch_due_nba_notifications", {
+      p_now: new Date().toISOString(),
+    });
+    if (nbaDispatched.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "nba_notification_dispatch_failed",
+        response: safeError(503, "NBA_NOTIFICATION_DISPATCH_FAILED", "Due NBA notifications could not be dispatched safely."),
+      });
+    }
+
     // Football shares this existing scheduler owner. The football sync owns ESPN
     // final detection and the canonical record_football_pick_final write path.
     const footballSettlementResponse = await fetch(`${url}/functions/v1/sync-next-football-event`, {
