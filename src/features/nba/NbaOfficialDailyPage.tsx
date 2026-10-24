@@ -308,7 +308,7 @@ export default function NbaOfficialDailyPage() {
     </section> : null}
     {ownerTest ? <p className="play-v2__muted">Owner-only rehearsal · no championship points or public ranking.</p> : null}
     {projection.officialAttempt ? <footer className="nba-official-daily__footer">
-      <button type="button" onClick={() => navigate("/nba/today?view=leaderboard")}>VIEW TODAY'S LEADERBOARD ↗</button>
+      <button type="button" onClick={() => navigate(ownerTest ? "/nba/today?mode=owner-test&view=leaderboard" : "/nba/today?view=leaderboard")}>VIEW TODAY'S LEADERBOARD ↗</button>
       <button type="button" onClick={() => navigate("/nba")}>ALL NBA GAMES</button>
     </footer> : null}
   </div>;
