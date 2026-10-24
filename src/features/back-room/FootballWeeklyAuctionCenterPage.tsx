@@ -10,7 +10,6 @@ import { FootballWeeklyBuildQbFinalResult } from "./FootballWeeklyBuildQbGate";
 import { FootballWeeklySuperteamFinalResult } from "./FootballWeeklySuperteamGate";
 import { FootballWeeklyNflTeamSeasonFinalResult } from "./FootballWeeklyNflTeamSeasonGate";
 import { useIdentity } from "../identity/IdentityProvider";
-import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import { hqImpostorV1Window } from "../impostor/hqImpostorSchedule";
 import "../../styles/football-weekly-auction-center.css";
 
@@ -54,7 +53,6 @@ function archivedScore(result: FootballWeeklyFinal) {
 export default function FootballWeeklyAuctionCenterPage() {
   const navigate = useNavigate();
   const identity = useIdentity();
-  const owner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
   const impostorWindow = hqImpostorV1Window();
   const gmWeek = gmFeaturedWeek();
   const repository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
@@ -155,35 +153,6 @@ export default function FootballWeeklyAuctionCenterPage() {
           RESULTS{history.length ? ` · ${history.length}` : ""}
         </button>
       </nav>
-
-      {owner ? (
-        <button
-          className="football-weekly-auction-center__lab"
-          type="button"
-          onClick={() => navigate("/football/weekly-auction-lab")}
-        >
-          <span>
-            <small>OWNER QA · REAL ENGINE</small>
-            <strong>WEEKLY AUCTION PLAYTHROUGH LAB</strong>
-            <em>Control six seats, resolve seven days, reset to a fresh alternate board.</em>
-          </span>
-          <b>OPEN →</b>
-        </button>
-      ) : null}
-      {owner ? (
-        <button
-          className="football-weekly-auction-center__lab"
-          type="button"
-          onClick={() => navigate("/football/weekly-nfl-team-season-lab")}
-        >
-          <span>
-            <small>OWNER QA · NFL TEAM-SEASONS</small>
-            <strong>BEST NFL TEAM-SEASONS PLAYTHROUGH</strong>
-            <em>Control five seats through six auction days and the full Wildcard/Risk Draw finale.</em>
-          </span>
-          <b>OPEN →</b>
-        </button>
-      ) : null}
 
       {loading ? <section className="football-weekly-auction-center__message surface-card">Loading Weekly Auction…</section> : null}
       {error ? <section className="football-weekly-auction-center__message surface-card is-error">{error}</section> : null}
