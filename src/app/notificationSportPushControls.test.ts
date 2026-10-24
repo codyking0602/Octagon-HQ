@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import { defaultNotificationPushSports, notificationSport, pushNotificationSports } from "../features/notifications/notificationModel";
 
 const migration = readFileSync(
-  "supabase/migrations/202612310326_notification_sport_push_controls.sql", "utf8",
+  "supabase/migrations/202612310402_notification_sport_push_controls.sql", "utf8",
 );
-const nbaMigration = readFileSync("supabase/migrations/202612310327_nba_notification_kind_preparation.sql", "utf8");
+const nbaMigration = readFileSync("supabase/migrations/202612310403_nba_notification_kind_preparation.sql", "utf8");
 const provider = readFileSync("src/features/notifications/NotificationProvider.tsx", "utf8");
 const repository = readFileSync("src/features/notifications/notificationRepository.ts", "utf8");
 const inbox = readFileSync("src/features/notifications/NotificationCenterPage.tsx", "utf8");
