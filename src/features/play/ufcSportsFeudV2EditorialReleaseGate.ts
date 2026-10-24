@@ -82,7 +82,19 @@ export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast7-ufc-memory-shelf",
   "ufc-v2-fast7-ufc-fan-questions",
   "ufc-v2-fast7-title-shot-discussions",
-  "ufc-v2-fast7-new-gym-first-day"
+  "ufc-v2-fast7-new-gym-first-day",
+  "ufc-v2-fast8-fan-arena-facilities",
+  "ufc-v2-fast8-sports-bar-etiquette",
+  "ufc-v2-fast8-tattoo-placement",
+  "ufc-v2-fast8-fan-favorites",
+  "ufc-v2-fast8-ufc-marketing-places",
+  "ufc-v2-fast8-cage-distractions",
+  "ufc-v2-fast8-octagon-early-rules",
+  "ufc-v2-fast8-mma-underdog-appeal",
+  "ufc-v2-fast8-ufc-app-features",
+  "ufc-v2-fast8-fighter-transport",
+  "ufc-v2-fast8-gym-newcomer-concerns",
+  "ufc-v2-fast8-mma-sparring-partners"
 ]);
 // Only a complete reviewer fact/aliases signoff should add an ID here. The two
 // lists intentionally start empty; staging is not production certification.
