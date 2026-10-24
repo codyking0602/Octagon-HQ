@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { finishedWeek, collectTeamGames, selectWeek, extractYoutubeVideos,
-  findMatchingHighlight } from "./generate-nba-weekly-spotlight.mjs";
+  findMatchingHighlight, mergeOfficialVideos } from "./generate-nba-weekly-spotlight.mjs";
 test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
   assert.deepEqual(
     (({weekStart,weekEnd})=>({weekStart,weekEnd}))(finishedWeek(new Date("2026-10-27T12:00:00Z"))),
@@ -55,4 +55,17 @@ test("fails closed for incomplete source video and boxscore coverage",()=>{
   assert.throws(()=>selectWeek({events,boxscores:missing,
     videos:extractYoutubeVideos(xml,"UCWJ2lWNubArHWmf3FIHbfcQ"),
     weekStart:"2026-10-19",weekEnd:"2026-10-25",publishedAt:"2026-10-27T11:00:00Z"}),/Missing complete boxscore/);
+});
+
+test("recovers week-long NBA highlight coverage from cached daily official uploads",()=>{
+  const now=new Date().toISOString();
+  const older={id:"ABCdefghi12",title:"Sample Star Full Game Highlights",published:now,channel:"UCWJ2lWNubArHWmf3FIHbfcQ"};
+  const latest={id:"ABCDEFGHIjk",title:"Latest NBA Highlights",published:now,channel:"UCWJ2lWNubArHWmf3FIHbfcQ"};
+  const list=mergeOfficialVideos([older],[latest,older],[
+    {...older,id:"XBCdefghi12",channel:"unknown-channel"}
+  ]);
+  assert.equal(list.length,2);
+  assert.ok(list.some(v=>v.id==="ABCdefghi12"));
+  assert.ok(list.some(v=>v.id==="ABCDEFGHIjk"));
+  assert.ok(list.every(v=>v.channel==="UCWJ2lWNubArHWmf3FIHbfcQ"));
 });
