@@ -101,6 +101,10 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
     expect(matching(college, "Dabo Swinney").status).not.toBe("matched");
     expect(matching(college, "Kirk Ferentz").status).toBe("matched");
     expect(matching(college, "Bobby Bowden").status).toBe("matched");
+    const collegeHofQb = [...BANKS.cfb.main].find(q => q.id.endsWith("college-hof-quarterbacks"))!;
+    expect(matching(collegeHofQb, "Colt McCoy").status).not.toBe("matched");
+    expect(matching(collegeHofQb, "Graham Harrell").status).toBe("matched");
+
 
 
   });
