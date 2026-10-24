@@ -84,6 +84,12 @@ declare
   v_text text := upper(coalesce(p_summary,''));
   v_sports text[] := array[]::text[];
 begin
+  -- Repicks and general card updates remain in-app only, even for an old
+  -- historical row still stamped with the legacy push-candidate priority.
+  if p_kind in ('picks_repick_required','picks_card_updated') then
+    return array[]::text[];
+  end if;
+
   if p_aggregation_key = 'daily-closing-combined'
     and v_route = '/'
   then
@@ -148,6 +154,8 @@ declare
   v_name text;
   v_names text;
   v_summary text := p_summary;
+  v_title text := null;
+  v_destination text := null;
 begin
   -- Owner-only control and monitoring actions remain critical independent of
   -- entertainment sport choices, matching the existing always-on contract.
@@ -180,21 +188,31 @@ begin
 
   -- A combined push must NEVER mention a muted sport. The original single
   -- in-app group continues to show all unfinished challenges.
-  if p_aggregation_key = 'daily-closing-combined'
-    and p_route = '/'
-    and cardinality(v_selected) < cardinality(v_sports)
-  then
+  if p_aggregation_key = 'daily-closing-combined' and p_route = '/' then
+    -- The phone gets exactly the selected unfinished sports. The canonical
+    -- in-app group is deliberately unchanged and keeps all sports visible.
     if cardinality(v_selected) = 1 then
-      v_summary := 'Your ' || v_selected[1]
-        || ' challenge closes at midnight Central. Play it before the next challenge goes live.';
+      v_title := v_selected[1] || ' Daily closes soon';
+      v_summary := 'Your ' || v_selected[1] ||
+        ' Daily challenge closes at midnight Central. Play before the next challenge goes live.';
+      v_destination := case v_selected[1]
+        when 'UFC' then '/play'
+        when 'Football' then '/football/today'
+        when 'MLB' then '/mlb/challenge'
+        when 'NBA' then '/nba'
+        else '/' end;
     else
+      v_title := 'Daily challenges close soon';
       v_names := array_to_string(v_selected[1:cardinality(v_selected)-1], ', ')
         || ' and ' || v_selected[cardinality(v_selected)];
       v_summary := 'Your ' || v_names
         || ' challenges close at midnight Central. Play them before the next challenges go live.';
+      v_destination := '/';
     end if;
   end if;
-  return jsonb_build_object('allowed',true,'summary',v_summary);
+  return jsonb_build_object(
+    'allowed',true,'summary',v_summary,'title',v_title,'route',v_destination
+  );
 end;
 $fn$;
 
@@ -259,9 +277,9 @@ begin
 
   return jsonb_build_object(
     'notification',jsonb_build_object(
-      'id',v_notification.id,'title',v_notification.title,
+      'id',v_notification.id,'title',coalesce(v_selection->>'title',v_notification.title),
       'summary',v_selection->>'summary',
-      'route',coalesce(v_notification.route,'/notifications'),
+      'route',coalesce(v_selection->>'route',v_notification.route,'/notifications'),
       'category',v_notification.category,'kind',v_notification.kind,
       'aggregate_count',v_notification.aggregate_count,
       'latest_event_at',v_notification.latest_event_at
