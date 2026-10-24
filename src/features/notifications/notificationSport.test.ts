@@ -51,6 +51,16 @@ describe("notificationSport", () => {
     expect(notificationSportLabel("nba")).toBe("NBA");
   });
 
+  it("recognizes NBA launch, Daily and results with hardwood-orange identity", () => {
+    for (const kind of ["nba_launch_available", "nba_daily_available", "nba_daily_four_hours", "nba_results_ready"] as const) {
+      expect(notificationKinds).toContain(kind);
+      expect(notificationSport({ kind, route: null })).toBe("nba");
+    }
+    expect(notificationSport({ kind: "nba_daily_available", route: "/nba/daily" })).toBe("nba");
+    expect(notificationSport({ kind: "new_game_available", route: "/championship/nba" })).toBe("nba");
+    expect(notificationSportLabel("nba")).toBe("NBA");
+  });
+
   it("leaves universal account and social notifications neutral", () => {
     expect(notificationSport({ kind: "war_room_mention", route: "/war-room" })).toBeNull();
   });
