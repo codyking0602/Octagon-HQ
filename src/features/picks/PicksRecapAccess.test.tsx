@@ -141,7 +141,7 @@ describe("permanent Picks recap access", () => {
     expect(await screen.findByRole("dialog", { name: "UFC 333 Recap" })).toBeInTheDocument();
     expect(document.querySelector(".picks-event-recap__hero")).toHaveClass("has-poster");
     expect(document.querySelector(".picks-event-recap__poster")).toBeInTheDocument();
-    expect(container.querySelector(".picks-event-recap__hero")).toHaveStyle(
+    expect(document.querySelector(".picks-event-recap__hero")).toHaveStyle(
       '--picks-recap-poster-aspect: 1000 / 744',
     );
   });
