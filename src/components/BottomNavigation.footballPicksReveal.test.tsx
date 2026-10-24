@@ -3,6 +3,7 @@ import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   SELECTED_SPORT_STORAGE_KEY,
+  PICKS_SPORT_STORAGE_KEY,
   SportProvider,
 } from "../app/SportProvider";
 import { resetFootballEntrySessionForTests } from "../features/back-room/footballEntrySession";
@@ -39,6 +40,7 @@ describe("BottomNavigation Football Picks no-reveal navigation", () => {
     fireEvent.click(picks);
     fireEvent.click(picks);
     expect(screen.getByTestId("location")).toHaveTextContent("/mlb/picks|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("mlb");
+    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("mlb");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 });
