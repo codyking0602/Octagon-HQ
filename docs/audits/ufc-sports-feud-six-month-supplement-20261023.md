@@ -22,3 +22,9 @@ Returning-veteran historical example and full UFC stint timeline: https://www.uf
 
 ## Review gate before release
 The active UFC Daily rotation actually has **24 Sports Feud appearances in six months** (verified by the other audit PR #2067). At least **48 independent Main** topics and **120 independent Fast** topics are therefore needed for six months of consecutive 2+5 appearances without semantic reuse, alongside a deterministic versioned future-only selector and exact-head CI. Existing **staged row counts are insufficient evidence** after holds and topic-family collapses. Preserve all prior 350-bank snapshots.
+
+## Safe six-month selection foundation (not activated)
+
+Added `ufcSportsFeudFutureRotation.ts` and a pure deterministic planner regression test. A full six-month UFC Sports Feud run currently comprises **24 official appearances**, so the allocation needs 48 Main and 120 Fast boards, **168 distinct semantic families across the entire window**, not merely 168 different IDs. The planner intentionally fails closed if the candidate inventory cannot satisfy that constraint; it reserves cross-round overlapping families only once and generates the same selected boards for the same cycle. It never imports or changes the live Daily builder or previous scores.
+
+The active UFC editorial staging at draft PR #2067 reports at most 29 potential Main and 78 Fast unique semantic families after holds; this supplemental branch proposes three further Main and five further Fast as **uncertified** candidates, not an approved solution. Full six-month certification and versioned future-only publishing remain blocked until sufficient unique topics and comprehensive answer review exist.
