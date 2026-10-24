@@ -25,7 +25,7 @@ import { UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES } from "./ufcSportsFeudV2L
 export const UFC_V2_NEW_MAIN_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_MAIN_BATCH2, UFC_SPORTS_FEUD_V2_MAIN_BATCH3, UFC_SPORTS_FEUD_V2_MAIN_BATCH4, UFC_SPORTS_FEUD_V2_MAIN_BATCH5, UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_MAIN_BATCH6].flat();
 export const UFC_V2_NEW_FAST_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_FAST_DRAFT, UFC_SPORTS_FEUD_V2_FAST_BATCH2, UFC_SPORTS_FEUD_V2_FAST_BATCH3, UFC_SPORTS_FEUD_V2_FAST_BATCH4, UFC_SPORTS_FEUD_V2_FAST_BATCH5, UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_FAST_BATCH6, UFC_SPORTS_FEUD_V2_FAST_BATCH7].flat();
 
-export const UFC_V2_HELD_IDS = new Set([
+export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast-faceoff-gestures",
   "ufc-v2-fast-retired-careers",
   "ufc-v2-fast-event-poster",
@@ -80,7 +80,7 @@ export const UFC_V2_HELD_IDS = new Set([
   "ufc-v2-fast7-ufc-fan-questions",
   "ufc-v2-fast7-title-shot-discussions",
   "ufc-v2-fast7-new-gym-first-day"
-] as const);
+]);
 // Only a complete reviewer fact/aliases signoff should add an ID here. The two
 // lists intentionally start empty; staging is not production certification.
 export const UFC_V2_APPROVED_MAIN_IDS: ReadonlySet<string> = new Set([]);
