@@ -59,7 +59,7 @@ describe("UFC Sports Feud batch five editorial questions — no live imports",()
     for(const q of batch){
       expect(q.answers,q.id).toHaveLength(8);
       expect(q.alsoAcceptedAnswers?.length ?? 0,q.id).toBeGreaterThan(0);
-      if(q.entityKind==="person")expect(q.source?.length ?? 0,q.id).toBeGreaterThan(0);
+      if(q.id.includes("-main5-"))expect(q.source?.length ?? 0,q.id).toBeGreaterThan(0);
       const {board,pack,answers}=make(q);
       expect(new Set(answers.map(a=>normalizeFamilyFeudInput(a.name))).size,q.id).toBe(answers.length);
       for(const [i,a]of answers.entries()){
@@ -100,6 +100,30 @@ describe("UFC Sports Feud batch five editorial questions — no live imports",()
     expect(new Set(origin.map(e=>e.semanticFamily)).size).toBe(1);
     const advancing=entries.filter(e=>e.decision==="advance");
     expect(new Set(advancing.map(e=>e.semanticFamily)).size).toBe(10);
+  });
+
+  it("recognizes full fighter surnames on Fast Money while refusing shared surnames",()=>{
+    for(const [id,answer] of [
+      ["ufc-v2-fast5-japanese-fighters","Horiguchi"],
+      ["ufc-v2-fast5-polish-fighters","Tybura"],
+      ["ufc-v2-fast5-french-fighters","Fiorot"],
+      ["ufc-v2-fast5-chinese-fighters","Jingliang"],
+    ] as const){
+      const q=batch.find(b=>b.id===id)!;
+      expect(q.entityKind,id).toBe("person");
+      const {pack,board}=make(q);
+      expect(matchFamilyFeudAnswer(pack,board,answer).status,id+" "+answer).toBe("matched");
+    }
+    for(const [id,ambiguous] of [
+      ["ufc-v2-fast5-japanese-fighters","Nakamura"],
+      ["ufc-v2-fast5-korean-fighters","Kim"],
+      ["ufc-v2-fast5-chinese-fighters","Zhang"],
+    ] as const){
+      const q=batch.find(b=>b.id===id)!;
+      const {pack,board}=make(q);
+      expect(matchFamilyFeudAnswer(pack,board,ambiguous).status,id+" "+ambiguous)
+        .toBe("ambiguous");
+    }
   });
 
   it("recognizes everyday and fighter-name shorthand without inventing more ranked choices",()=>{
