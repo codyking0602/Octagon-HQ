@@ -66,7 +66,18 @@ export type NotificationKind = typeof notificationKinds[number];
 export type NotificationCategory = typeof notificationCategories[number];
 export type NotificationPriority = typeof notificationPriorities[number];
 export type NotificationPreferenceKey = typeof notificationPreferenceKeys[number];
-export type NotificationSport = "ufc" | "football" | "mlb";
+export type NotificationSport = "ufc" | "football" | "mlb" | "nba";
+
+export const pushNotificationSports = ["ufc", "football", "mlb", "nba"] as const;
+export type PushNotificationSport = typeof pushNotificationSports[number];
+export type NotificationPushSports = Record<PushNotificationSport, boolean>;
+export const defaultNotificationPushSports: NotificationPushSports = {
+  ufc: true,
+  football: true,
+  mlb: true,
+  // NBA is an upcoming product. Existing devices do not silently opt into NBA push.
+  nba: false,
+};
 export type NotificationPermissionState = "unsupported" | "default" | "granted" | "denied";
 export type NotificationDevicePushStatus =
   | "checking"
@@ -211,6 +222,7 @@ function routeMatches(route: string, root: string) {
 export function notificationSport(item: Pick<NotificationItem, "kind" | "route">): NotificationSport | null {
   const route = item.route ?? "";
   if (routeMatches(route, "/football")) return "football";
+  if (routeMatches(route, "/nba") || routeMatches(route, "/championship/nba")) return "nba";
   if (routeMatches(route, "/mlb")) return "mlb";
   if (
     routeMatches(route, "/picks")
@@ -226,6 +238,7 @@ export function notificationSport(item: Pick<NotificationItem, "kind" | "route">
 export function notificationSportLabel(sport: NotificationSport) {
   if (sport === "football") return "Football";
   if (sport === "mlb") return "MLB";
+  if (sport === "nba") return "NBA";
   return "UFC";
 }
 
