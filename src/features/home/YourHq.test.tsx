@@ -133,6 +133,7 @@ function yourHqSection() {
 
 describe("Home Your HQ", () => {
   beforeEach(() => {
+    window.localStorage.clear(); // Home selections now persist between mounts; isolate each test.
     vi.clearAllMocks();
     mocks.identity.profile = null;
     mocks.picks.event = pickEvent;
