@@ -117,8 +117,8 @@ describe("completed Picks event recaps", () => {
   });
 
   it("keeps the persisted event header visible and makes the matchup the visual hero beneath it", () => {
-    expect(recapSource).toContain('import { pickEventPoster } from "./picksEventAssets"');
-    expect(recapSource).toContain("const eventPoster = pickEventPoster(event)");
+    expect(recapSource).toContain('import { pickArchivedEventPoster } from "./picksEventAssets"');
+    expect(recapSource).toContain("const eventPoster = pickArchivedEventPoster(event)");
     expect(recapSource).toContain('className="picks-event-recap__poster"');
     expect(recapSource).toContain('<details className="picks-event-recap__fights">');
     expect(recapSource).toContain("VIEW FIGHTS ›");
