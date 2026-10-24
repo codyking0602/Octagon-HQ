@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useOptionalPlayChallenges } from "../challenges/ChallengeProvider";
+import { challengeIsHidden, type PlayChallenge } from "../challenges/challengeModel";
+import { challengeSport } from "../challenges/challengeRuntime";
 import { footballCfbTeamMediaId } from "../back-room/footballMediaIdentity";
 import { footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMetadata";
 import { footballTeamAssets } from "../back-room/footballSubjectAssets";
@@ -375,18 +378,36 @@ function FeaturedGameRow({
         <span>{compact ? level : label}</span>
         <div className="football-hq-game-row__teams">
           <FeaturedGameTeamPill team={firstTeam} game={game} presentation={firstPresentation}
-            name={firstLabel.name} nickname={firstLabel.nickname} level={level} season={event.season} />
-          <b aria-hidden="true">VS</b>
+            name={firstLabel.name} nickname={compact ? "" : firstLabel.nickname} level={level} season={event.season} />
+          {!compact ? <b aria-hidden="true">VS</b> : null}
           <FeaturedGameTeamPill team={secondTeam} game={game} presentation={secondPresentation}
-            name={secondLabel.name} nickname={secondLabel.nickname} level={level} season={event.season} />
+            name={secondLabel.name} nickname={compact ? "" : secondLabel.nickname} level={level} season={event.season} />
         </div>
       </div>
       <div className="football-hq-game-row__meta">
         <strong><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></svg>{footballDateTimeLabel(breakdown.kickoffAt ?? game.locksAt ?? event.startsAt)}</strong>
-        <b aria-hidden="true">BREAKDOWN <span>→</span></b>
+        <b aria-hidden="true">{compact ? "›" : <>BREAKDOWN <span>→</span></>}</b>
       </div>
     </article>
   );
+}
+
+/** Count received, actionable Football challenges, not seen/read notifications. */
+export function footballOutstandingChallengeCount(
+  challenges: readonly PlayChallenge[],
+  profileId: string,
+  now = Date.now(),
+) {
+  if (!profileId) return 0;
+  return challenges.filter((challenge) => (
+    challenge.recipientId === profileId
+    && challengeSport(challenge) === "football"
+    && challenge.responderResult === null
+    && !challenge.completedAt
+    && !challenge.declinedAt
+    && !challengeIsHidden(challenge, profileId)
+    && new Date(challenge.expiresAt).getTime() > now
+  )).length;
 }
 
 function weekLabel(event: PickEvent) {
@@ -426,6 +447,10 @@ export function FootballHq({
   onManagePlayerPhoto?: () => void;
 }) {
   const [spotlightNow, setSpotlightNow] = useState(() => new Date());
+  const playChallenges = useOptionalPlayChallenges();
+  const incomingFootballChallenges = compactPreview && playChallenges?.activeProfile
+    ? footballOutstandingChallengeCount(playChallenges.challenges, playChallenges.activeProfile.id)
+    : 0;
   const published = usePublishedFootballWeek();
 
   useEffect(() => {
@@ -493,24 +518,41 @@ export function FootballHq({
       aria-label="Football HQ"
     >
       <header className="home-sport-hq__heading">
-        <div>
-          <p className="eyebrow">FOOTBALL HQ</p>
-          <h2>This week</h2>
-        </div>
-        {!compactPreview ? <small>PICKS · COLLEGE · NFL</small> : null}
+        {compactPreview ? (
+          <>
+            <h2 className="football-hq__center-title">FOOTBALL HQ</h2>
+            {incomingFootballChallenges > 0 ? (
+              <Link className="football-hq__challenge-alert" to="/football#challenge-center"
+                aria-label={`${incomingFootballChallenges} outstanding Football challenge${incomingFootballChallenges === 1 ? "" : "s"}; open Challenge Center`}>
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 5l14 14M19 5L5 19M4 4l4 1-3 3-1-4M20 4l-4 1 3 3 1-4M4 20l4-1-3-3-1 4M20 20l-4-1 3-3 1 4"/>
+                </svg>
+                <b>{incomingFootballChallenges > 9 ? "9+" : incomingFootballChallenges}</b>
+              </Link>
+            ) : null}
+          </>
+        ) : (
+          <>
+            <div>
+              <p className="eyebrow">FOOTBALL HQ</p>
+              <h2>This week</h2>
+            </div>
+            <small>PICKS · COLLEGE · NFL</small>
+          </>
+        )}
       </header>
 
       <section className="surface-card home-event-card home-event-card--compact" aria-label="Football Picks and standing">
         <div className="home-event-card__topline">
           <p className="eyebrow">FOOTBALL PICKS</p>
-          <span>{event ? locked ? "LOCKED" : "ACTIVE" : loading ? "LOADING" : error ? "UNAVAILABLE" : "WAITING"}</span>
+          {!compactPreview ? <span>{event ? locked ? "LOCKED" : "ACTIVE" : loading ? "LOADING" : error ? "UNAVAILABLE" : "WAITING"}</span> : null}
         </div>
         {compactPreview ? (
           <div className="football-hq-compact-picks" aria-label="Football picks summary">
             <div className="football-hq-compact-picks__completion">
               <small>YOUR PICKS</small>
               <strong>{signedIn && event ? `${progress.completed} OF ${progress.total}` : "—"}</strong>
-              <span>{status}</span>
+              {status !== "PICKS LOCKED" ? <span>{status}</span> : null}
             </div>
             <Link className="football-hq-compact-picks__record" to="/championship/football?tab=picks"
               aria-label="Open Football Championship Picks leaderboard">
@@ -561,8 +603,9 @@ export function FootballHq({
       {featuredMatchups.length ? (
         <section className="football-hq-games" aria-label="Football Games of the Week">
           <header>
-            <span>TOP GAMES THIS WEEK</span>
-            <small>{event ? weekLabel(event) : "THIS WEEK"}</small>
+            <span>{compactPreview ? "FEATURED GAMES" : "TOP GAMES THIS WEEK"}</span>
+            {compactPreview ? <Link className="football-hq-games__schedule-link" to="/football/picks">SCHEDULE →</Link>
+              : <small>{event ? weekLabel(event) : "THIS WEEK"}</small>}
           </header>
           <div className="football-hq-games__list">
             {featuredMatchups.map(({ breakdown, game }) => (
@@ -575,7 +618,7 @@ export function FootballHq({
               />
             ))}
           </div>
-          <Link className="football-hq-games__schedule" to="/football/picks">VIEW FULL SCHEDULE →</Link>
+          {!compactPreview ? <Link className="football-hq-games__schedule" to="/football/picks">VIEW FULL SCHEDULE →</Link> : null}
         </section>
       ) : null}
     </section>
