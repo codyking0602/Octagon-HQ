@@ -17,8 +17,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Cejudo won Olympic wrestling gold before becoming a UFC champion.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-002",
@@ -36,8 +35,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Lesnar won UFC heavyweight gold after becoming a WWE star.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-003",
@@ -55,8 +53,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Machida's karate background shaped his distinctive UFC striking style.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-004",
@@ -74,8 +71,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Pettis launched his famous kick against Benson Henderson in the WEC, an iconic highlight in MMA history.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-005",
@@ -93,8 +89,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Pereira won GLORY kickboxing world titles before becoming a UFC champion.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-006",
@@ -112,8 +107,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Ngannou was born in Cameroon and later became the UFC heavyweight champion.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-007",
@@ -131,8 +125,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Khabib grew up in Dagestan and became one of its most famous athletes.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-008",
@@ -150,8 +143,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "TKO means technical knockout, such as a referee stopping a fight due to unanswered strikes.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-009",
@@ -169,8 +161,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "A fighter can win by submission when the opponent taps or the referee stops the bout.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-010",
@@ -188,8 +179,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "The Unified Rules use a ten-point must scoring system.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-011",
@@ -207,8 +197,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Southpaw generally means a stance with the right side forward and left hand as the power hand.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-012",
@@ -226,8 +215,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Joe Rogan was the host of Fear Factor as well as a longtime UFC commentator.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-013",
@@ -245,8 +233,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "The triangle choke is a common submission applied using the legs.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-014",
@@ -264,8 +251,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Tapping tells the referee and opponent that the fighter submits.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-015",
@@ -283,8 +269,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Lewis gave the memorable interview after his victory over Alexander Volkov.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-016",
@@ -302,8 +287,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Nick and Nate Diaz became famous for representing Stockton, California.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-017",
@@ -321,8 +305,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Cain Velasquez was a two-time NCAA Division I All-American wrestler at Arizona State.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-018",
@@ -340,8 +323,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Mark Coleman popularized the term ground and pound and used it to dominate early UFC competition.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-019",
@@ -359,8 +341,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Interim titles can be contested when the undisputed champion cannot defend.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-020",
@@ -378,8 +359,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "The Unified Rules prohibit strikes to the back of the head.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-021",
@@ -397,8 +377,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Full mount puts one fighter on top of the other's torso.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-022",
@@ -416,8 +395,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Ground and pound combines top control with strikes on the mat.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-023",
@@ -435,8 +413,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Royce Gracie showcased Brazilian jiu-jitsu in the first UFC tournaments.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-024",
@@ -454,8 +431,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Stephen Thompson brought a decorated karate and kickboxing background into UFC welterweight competition.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-025",
@@ -473,8 +449,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "CM Punk made his UFC debut against Mickey Gall in 2016.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-026",
@@ -492,8 +467,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "McGregor boxed Mayweather in 2017.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-027",
@@ -511,8 +485,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "A no-contest result records no winner under the applicable rules.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-028",
@@ -530,8 +503,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Jackson-Wink trained prominent fighters including Jones and Holm.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-029",
@@ -549,8 +521,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "AKA in San Jose has been associated with both Khabib and Daniel Cormier.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-030",
@@ -568,8 +539,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "St-Pierre trained for many years with the Tristar team in Montreal.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-031",
@@ -587,8 +557,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "City Kickboxing produced multiple UFC stars, including Adesanya and Volkanovski.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-032",
@@ -606,8 +575,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Weigh-ins are held to establish each fighter's weight before competing.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-033",
@@ -625,8 +593,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Eye gouging is prohibited by the Unified Rules.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-034",
@@ -644,8 +611,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Clinching is close-range grappling in a standing position.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-035",
@@ -663,8 +629,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Nogueira was a PRIDE heavyweight champion and later held a UFC interim heavyweight belt.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-036",
@@ -682,8 +647,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Pereira has become known for unorthodox acrobatic attacks influenced by capoeira.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-e-037",
@@ -701,8 +665,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Referees wave off contests to indicate a finish.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-038",
@@ -720,8 +683,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "A sprawl drives the hips back to counter an opponent's takedown attempt.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   },
   {
     "id": "ufc-bt-v3-e-039",
@@ -739,8 +701,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "The UFC built its Apex production facility in Las Vegas.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-m-001",
@@ -758,8 +719,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Rampage Jackson stopped Liddell in their UFC 71 rematch to become champion.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/event/ufc-71",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/event/ufc-71"
   },
   {
     "id": "ufc-bt-v3-m-002",
@@ -777,8 +737,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Jones defeated Shogun Rua for the title at UFC 128.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-m-003",
@@ -796,8 +755,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Velasquez beat Lesnar by first-round TKO to become champion.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/event/ufc-121",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/event/ufc-121"
   },
   {
     "id": "ufc-bt-v3-m-004",
@@ -815,8 +773,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "GSP returned from a long layoff and submitted Bisping for the middleweight title.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/event/ufc-217",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/event/ufc-217"
   },
   {
     "id": "ufc-bt-v3-m-005",
@@ -834,8 +791,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Silva survived difficult rounds and finished Sonnen by triangle armbar at UFC 117.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-m-006",
@@ -853,8 +809,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "McGregor's UFC debut was a first-round stoppage of Brimage in 2013.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-m-007",
@@ -872,8 +827,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Benson Henderson held the WEC lightweight title before later winning UFC gold.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-m-008",
@@ -891,8 +845,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Rousey and Tate had a major rivalry in Strikeforce and later the UFC.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-m-009",
@@ -910,8 +863,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Shogun Rua avenged his controversial decision loss to Machida with a knockout at UFC 113.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/event/ufc-113",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/event/ufc-113"
   },
   {
     "id": "ufc-bt-v3-m-010",
@@ -929,8 +881,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Franklin's knockout of Liddell was Liddell's final UFC fight.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/event/ufc-115",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/event/ufc-115"
   },
   {
     "id": "ufc-bt-v3-m-011",
@@ -948,8 +899,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Gaethje became known for his backflips, including after some victories.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-m-012",
@@ -967,8 +917,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Lawler defeated Hendricks by split decision to win the welterweight championship.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/event/ufc-181",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/event/ufc-181"
   },
   {
     "id": "ufc-bt-v3-m-013",
@@ -986,8 +935,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Werdum's triangle-armbar win over Fedor preceded his UFC heavyweight championship.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
   },
   {
     "id": "ufc-bt-v3-m-014",
@@ -1005,8 +953,223 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Weidman held the middleweight championship and used the nickname The All-American.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
+  },
+  {
+    "id": "ufc-bt-v3-e-043",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "What does MMA stand for?",
+    "choices": [
+      "Mixed martial arts",
+      "Modern martial association",
+      "Mixed match athletics",
+      "Maximum martial action"
+    ],
+    "answer": "Mixed martial arts",
+    "explanation": "MMA stands for mixed martial arts.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
+  },
+  {
+    "id": "ufc-bt-v3-e-044",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "What does BJJ stand for in MMA training?",
+    "choices": [
+      "Brazilian jiu-jitsu",
+      "Boxing jump jitsu",
+      "Basic judo judging",
+      "Bare-knuckle jiu-jitsu"
+    ],
+    "answer": "Brazilian jiu-jitsu",
+    "explanation": "BJJ abbreviates Brazilian jiu-jitsu.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
+  },
+  {
+    "id": "ufc-bt-v3-e-045",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "What is a UFC cutman's primary job during a bout?",
+    "choices": [
+      "Treat cuts and reduce swelling",
+      "Judge each round",
+      "Choose the referee",
+      "Coach wrestling technique"
+    ],
+    "answer": "Treat cuts and reduce swelling",
+    "explanation": "Cutmen help control cuts and swelling between rounds.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
+  },
+  {
+    "id": "ufc-bt-v3-e-046",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "How many judges typically score a UFC fight if it goes the distance?",
+    "choices": [
+      "Three",
+      "One",
+      "Two",
+      "Five"
+    ],
+    "answer": "Three",
+    "explanation": "Standard UFC bouts are scored by three judges.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
+  },
+  {
+    "id": "ufc-bt-v3-e-047",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "Which part of the body does a rear-naked choke principally attack?",
+    "choices": [
+      "The neck",
+      "The ankle",
+      "The shoulder",
+      "The wrist"
+    ],
+    "answer": "The neck",
+    "explanation": "A rear-naked choke applies pressure to the neck.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
+  },
+  {
+    "id": "ufc-bt-v3-e-048",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "Which former UFC welterweight champion is known as 'The Nigerian Nightmare'?",
+    "choices": [
+      "Kamaru Usman",
+      "Tyron Woodley",
+      "Leon Edwards",
+      "Jorge Masvidal"
+    ],
+    "answer": "Kamaru Usman",
+    "explanation": "Kamaru Usman competes under the nickname Nigerian Nightmare.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/athlete/kamaru-usman"
+  },
+  {
+    "id": "ufc-bt-v3-e-049",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "Which UFC superstar acted alongside Jake Gyllenhaal in the 2024 film Road House?",
+    "choices": [
+      "Conor McGregor",
+      "Jon Jones",
+      "Dustin Poirier",
+      "Michael Chandler"
+    ],
+    "answer": "Conor McGregor",
+    "explanation": "McGregor appeared alongside Gyllenhaal in the 2024 Road House remake.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/news/history-ufc-fighters-movies-and-television-conor-mcgregor-road-house"
+  },
+  {
+    "id": "ufc-bt-v3-e-050",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "Who said 'headshot, dead' after a famous UFC title-winning knockout?",
+    "choices": [
+      "Leon Edwards",
+      "Israel Adesanya",
+      "Jorge Masvidal",
+      "Max Holloway"
+    ],
+    "answer": "Leon Edwards",
+    "explanation": "Edwards used the phrase after knocking out Kamaru Usman.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/news/best-moments-salt-lake-city"
+  },
+  {
+    "id": "ufc-bt-v3-e-051",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "Which former UFC two-division champion is a familiar color commentator on UFC broadcasts?",
+    "choices": [
+      "Daniel Cormier",
+      "Brock Lesnar",
+      "Georges St-Pierre",
+      "Chuck Liddell"
+    ],
+    "answer": "Daniel Cormier",
+    "explanation": "Cormier became a UFC analyst and commentator after his championship career.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/athlete/daniel-cormier"
+  },
+  {
+    "id": "ufc-bt-v3-e-052",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "What piece of protective equipment do UFC fighters wear inside their mouths?",
+    "choices": [
+      "A mouthguard",
+      "A shin guard",
+      "A headguard",
+      "A wrist splint"
+    ],
+    "answer": "A mouthguard",
+    "explanation": "UFC fighters use a protective mouthguard.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
+  },
+  {
+    "id": "ufc-bt-v3-e-053",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "What does it mean when a UFC fighter wins a unanimous decision?",
+    "choices": [
+      "All three judges scored the fight for that fighter",
+      "The referee stopped the fight",
+      "Both fighters submitted",
+      "A single judge picked the winner"
+    ],
+    "answer": "All three judges scored the fight for that fighter",
+    "explanation": "A unanimous decision means all three judges scored the contest for the same fighter.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
+  },
+  {
+    "id": "ufc-bt-v3-e-054",
+    "league": "ufc",
+    "round": "round1",
+    "category": "Fight Fundamentals & Fighter Culture",
+    "prompt": "What is an orthodox fighting stance?",
+    "choices": [
+      "Left side forward, right power hand",
+      "Right side forward, left power hand",
+      "Both feet even and square",
+      "An inverted grappling guard"
+    ],
+    "answer": "Left side forward, right power hand",
+    "explanation": "Orthodox fighters conventionally lead with their left hand and use their right hand as the rear power hand.",
+    "contentType": "evergreen",
+    "sourceId": "ufc-v3-authority",
+    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
   }
 ];
 export const UFC_BAR_TRIVIA_V3_EASY_MEDIUM: readonly BarTriviaQuestion[] = authored.map((item) => barTriviaQuestion(item));
