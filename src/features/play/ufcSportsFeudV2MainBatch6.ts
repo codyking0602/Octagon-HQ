@@ -39,7 +39,7 @@ const ROWS = [
     "prompt": "Name a former UFC fighter who has worked as a UFC fight analyst or commentator.",
     "kind": "person",
     "ranked": "Daniel Cormier|Michael Bisping|Dominick Cruz|Paul Felder|Kenny Florian|Brian Stann|Din Thomas|Anthony Smith",
-    "extras": "Chael Sonnen|Rashad Evans|Matt Serra|Brendan Schaub|Dan Hardy",
+    "extras": "Chael Sonnen|Rashad Evans|Dan Hardy",
     "aliases": {
       "Daniel Cormier": [
         "DC"
@@ -128,7 +128,7 @@ const ROWS = [
     "prompt": "Name an MMA coach who has coached a UFC champion.",
     "kind": "person",
     "ranked": "Javier Mendez|Trevor Wittman|Eugene Bareman|Greg Jackson|John Kavanagh|Mike Brown|Eric Nicksick|Firas Zahabi",
-    "extras": "Mike Winkeljohn|Henri Hooft|Jason Parillo|Rafael Cordeiro|Mark Henry|Duane Ludwig|Robert Follis|Dean Thomas",
+    "extras": "Mike Winkeljohn|Henri Hooft|Jason Parillo|Rafael Cordeiro|Mark Henry|Duane Ludwig|Robert Follis|Din Thomas",
     "aliases": {
       "Javier Mendez": [
         "Mendez"
