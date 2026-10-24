@@ -76,6 +76,20 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
     expect(matching(find("first-12team-playoff"), "Indiana").status).toBe("matched");
   });
 
+
+  it("rejects nonqualifying career milestones and outdated Hall of Fame entries", () => {
+    const all = [...BANKS.nfl.main, ...BANKS.nfl.fast];
+    const question = (id: string) => all.find(q => q.id.endsWith(id))!;
+    // Romo finished with 34,183 passing yards (below the 40,000-yard floor).
+    expect(matching(question("qbs-40000-passing"), "Tony Romo").status).not.toBe("matched");
+    expect(matching(question("qbs-40000-passing"), "Russell Wilson").status).toBe("matched");
+    // Adams was at 12,633 receiving yards after 2025, short of 13,000.
+    expect(matching(question("career-15k-receiving"), "Davante Adams").status).not.toBe("matched");
+    // Nalen was not in the Hall of Fame by the question's 2025 cutoff.
+    expect(matching(question("nfl-hof-centers"), "Tom Nalen").status).not.toBe("matched");
+    expect(matching(question("nfl-hof-centers"), "Bulldog Turner").status).toBe("matched");
+  });
+
   it("rehearses 34 total appearances with no repeat of an ID or semantic lane", () => {
     expect(FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT).toBe(17);
     for (const sport of ["nfl", "cfb"] as const) {
