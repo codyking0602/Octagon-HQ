@@ -83,7 +83,7 @@ describe("The HQ universal Home foundation", () => {
     expect(within(ufcHq).getByRole("heading", { name: "UFC HQ" })).toBeInTheDocument();
     expect(within(ufcHq).getByRole("article", { name: "UFC Fighter Spotlight" })).toBeInTheDocument();
     expect(within(ufcHq).getByRole("link", { name: "FULL BOARD →" })).toHaveAttribute("href", "/fighters-to-watch");
-    expect(within(footballHq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
+    expect(within(footballHq).getByRole("heading", { name: "FOOTBALL HQ" })).toBeInTheDocument();
     expect(within(ufcHq).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
     expect(within(footballHq).getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
     expect(ufcHq).toHaveClass("home-sport-hq");
