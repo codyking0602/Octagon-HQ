@@ -165,14 +165,17 @@ export function ufcFeudSixMonthReleaseReadiness(
     .filter(q=>UFC_V2_APPROVED_MAIN_IDS.has(q.id)&&!UFC_V2_HELD_IDS.has(q.id));
   const fastApproved=[...UFC_V2_NEW_FAST_DRAFTS,...UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT]
     .filter(q=>UFC_V2_APPROVED_FAST_IDS.has(q.id)&&!UFC_V2_HELD_IDS.has(q.id));
-  const approvedMainFamilies=new Set(mainApproved.map(ufcFeudSemanticFamily)).size;
-  const approvedFastFamilies=new Set(fastApproved.map(ufcFeudSemanticFamily)).size;
+  const mainFamilies=new Set(mainApproved.map(ufcFeudSemanticFamily));
+  const fastFamilies=new Set(fastApproved.map(ufcFeudSemanticFamily));
+  const approvedMainFamilies=mainFamilies.size;
+  const approvedFastFamilies=fastFamilies.size;
+  const approvedUnionFamilies=new Set([...mainFamilies,...fastFamilies]).size;
   return {
     ...inventory,appearanceDates:days,appearanceCount:days.length,
     neededMainFamilies:needMain,neededFastFamilies:needFast,
     provisionalMainShortfall:Math.max(0,needMain-inventory.provisionalMainFamilies),
     provisionalFastShortfall:Math.max(0,needFast-inventory.provisionalFastFamilies),
-    approvedMainFamilies,approvedFastFamilies,
-    ready:approvedMainFamilies>=needMain&&approvedFastFamilies>=needFast,
+    approvedMainFamilies,approvedFastFamilies,approvedUnionFamilies,
+    ready:approvedMainFamilies>=needMain&&approvedFastFamilies>=needFast&&approvedUnionFamilies>=needMain+needFast,
   };
 }
