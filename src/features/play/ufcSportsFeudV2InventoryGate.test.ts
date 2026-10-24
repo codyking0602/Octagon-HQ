@@ -20,6 +20,8 @@ import { UFC_SPORTS_FEUD_V2_MAIN_BATCH10 } from "./ufcSportsFeudV2MainBatch10";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH6 } from "./ufcSportsFeudV2FastBatch6";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH7 } from "./ufcSportsFeudV2FastBatch7";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH8 } from "./ufcSportsFeudV2FastBatch8";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH9 } from "./ufcSportsFeudV2FastBatch9";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH10 } from "./ufcSportsFeudV2FastBatch10";
 
 describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", () => {
   const main = [
@@ -46,12 +48,14 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH6,
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH7,
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH8,
+    ...UFC_SPORTS_FEUD_V2_FAST_BATCH9,
+    ...UFC_SPORTS_FEUD_V2_FAST_BATCH10,
   ];
 
-  it("distinguishes 77 Main and 147 Fast candidate rows from six-month approved inventory", () => {
+  it("distinguishes 77 Main and 189 Fast candidate rows from six-month approved inventory", () => {
     expect(UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES).toHaveLength(15);
     expect(main).toHaveLength(77);
-    expect(fast).toHaveLength(147);
+    expect(fast).toHaveLength(189);
     expect(main.length).toBeGreaterThanOrEqual(20 * 2);
     // A sufficient Main count alone does not establish 20 semantic categories;
     // named-opponent and championship lists may still collide.
@@ -60,9 +64,9 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     expect(fast.length).toBeGreaterThanOrEqual(20 * 5);
     // Raw rows exceed 100 but held questions and topic collisions prevent 100
     // independently approved Fast Money concepts.
-    expect(main.length).toBeLessThan(75);
-    expect(fast.length).toBeLessThan(155);
-    // UFC currently has ~24 Sports Feud appearances / six months; 127 raw Fast
+    expect(main.length).toBeGreaterThanOrEqual(75);
+    expect(fast.length).toBeGreaterThanOrEqual(185);
+    // UFC currently has ~24 Sports Feud appearances / six months; 189 raw Fast
     // rows DO NOT mean 120 distinct verified semantic topics. Release gate proves
     // held/overlapping and unreviewed questions still prevent activation.
     expect(fast.length).toBeGreaterThanOrEqual(125);
@@ -79,7 +83,7 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
       sourceIds.add(q.sourceId);
     }
     const all = [...main, ...fast];
-    expect(all).toHaveLength(224);
-    expect(new Set(all.map(q => q.id)).size).toBe(224);
+    expect(all).toHaveLength(266);
+    expect(new Set(all.map(q => q.id)).size).toBe(266);
   });
 });
