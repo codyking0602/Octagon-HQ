@@ -48,7 +48,7 @@ test("uses only completed NBA results and calculates weekly stats from actual at
   assert.equal(data.team.record,"8-0");
   assert.equal(data.team.netMargin,"+15.0");
   assert.equal(data.player.profileUrl, "https://www.basketball-reference.com/search/search.fcgi?search=Sample%20Star");
-  assert.equal(data.team.profileUrl, "https://www.basketball-reference.com/teams/AAA/2027.html");
+  assert.equal(data.team.profileUrl, "https://www.basketball-reference.com/teams/ATL/2027.html");
   assert.equal(Object.hasOwn(data.player,"summary"),false);
   assert.equal(Object.hasOwn(data.team,"summary"),false);
   assert.match(data.player.highlightUrl,/^https:\/\/www\.youtube\.com\/watch\?v=/);
