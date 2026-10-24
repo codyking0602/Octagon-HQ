@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { finishedWeek, collectTeamGames, selectWeek, extractYoutubeVideos,
   findMatchingHighlight, mergeOfficialVideos, playerEditorialScore, teamEditorialScore } from "./generate-nba-weekly-spotlight.mjs";
 test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
@@ -104,4 +105,25 @@ test("balanced production, efficiency, wins and defensive impact, and team domin
   const teamsMap=collectTeamGames(events).teams;
   const winning=teamsMap.get("1"), losing=teamsMap.get("2");
   assert.ok(teamEditorialScore(winning,teamsMap)>teamEditorialScore(losing,teamsMap));
+});
+
+test("prefers short official NBA player performance clips over longer videos",()=>{
+  const base={title:"Sample Star 30 Point Highlights",published:"2026-10-26T00:00:00Z",
+    channel:"UCWJ2lWNubArHWmf3FIHbfcQ"};
+  const items=[
+    {...base,id:"ABCdefghi11",durationSeconds:420,published:"2026-10-26T02:00:00Z"},
+    {...base,id:"ABCdefghi12",durationSeconds:190},
+    {...base,id:"ABCdefghi13",durationSeconds:610},
+    {...base,id:"ABCdefghi14",durationSeconds:160,title:"Sample Star EXTENDED HIGHLIGHTS"},
+    {...base,id:"ABCdefghi15",durationSeconds:200,channel:"UCVSSpcmZD2PwPBqb8yKQKBA"},
+  ];
+  assert.equal(findMatchingHighlight("Sample Star",items,"2026-10-25")?.id,"ABCdefghi12");
+});
+test("recovers the chosen current video source and keeps Team of the Week without a video CTA",()=>{
+  const data=JSON.parse(readFileSync("public/nba-weekly/active.json","utf8"));
+  assert.equal(data.player.name,"Tyrese Maxey");
+  assert.equal(data.player.highlightUrl,"https://www.youtube.com/watch?v=e8g1Fa8iYYM");
+  assert.equal(data.player.highlightSourceChannelId,"UCWJ2lWNubArHWmf3FIHbfcQ");
+  assert.equal(data.team.name,"Atlanta Hawks");
+  assert.equal(Object.hasOwn(data.team,"highlightUrl"),false);
 });
