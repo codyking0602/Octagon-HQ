@@ -131,7 +131,7 @@ const standingsSchema = z.object({
   entries: z.array(standingsEntrySchema),
 });
 
-export type TodayChallengeSport = PlaySport | "nba";
+export type TodayChallengeSport = PlaySport | "nba" | "nba_preview";
 
 export interface TodayChallengeProjection {
   available: true;
@@ -454,18 +454,21 @@ export function createTodayChallengeRepository(
   if (!client) return null;
   const parseProjection = sport === "football"
     ? parseFootballTodayChallengeProjection
-    : sport === "nba"
+    : (sport === "nba" || sport === "nba_preview")
       ? parseNbaTodayChallengeProjection
       : parseTodayChallengeProjection;
 
+  const preview = sport === "nba_preview";
+  const runtimeSport = preview ? "nba" : sport;
   return {
     async loadToday() {
-      return parseProjection(await invokeRuntime(client, { mode: "get-today", sport }));
+      return parseProjection(await invokeRuntime(client, { mode: "get-today", sport: runtimeSport, ...(preview ? { preview: true } : {}) }));
     },
     async advance(projection, action, clientActionId) {
       return parseProjection(await invokeRuntime(client, {
         mode: "advance",
-        sport,
+        sport: runtimeSport,
+        ...(preview ? { preview: true } : {}),
         daily_challenge_id: projection.id,
         ...(projection.gameType === "average_fan" ? { game_type: "average_fan" } : {}),
         revision: projection.progressRevision,
@@ -534,7 +537,7 @@ export function createTodayChallengeRepository(
             millionaire: entry.game_averages.millionaire ?? null,
             sportsFeud: entry.game_averages.sports_feud ?? null,
             barTrivia: entry.game_averages.bar_trivia ?? null,
-            ...(sport === "nba" ? { higherLower: entry.game_averages.higher_lower ?? null } : {}),
+            ...((sport === "nba" || sport === "nba_preview") ? { higherLower: entry.game_averages.higher_lower ?? null } : {}),
           },
           isCurrentUser: entry.is_current_user,
         })),
