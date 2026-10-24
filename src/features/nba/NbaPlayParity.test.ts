@@ -38,7 +38,7 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(page).toContain("Private previews do not count.");
     expect(page).toContain('ownerTest ? "test games" : "official games"');
     expect(page).toContain('dailyCompleted ? "VIEW RESULT"');
-    expect(page).toContain("Preview play does not count toward the NBA championship");
+    expect(page).toContain("Owner-only scored rehearsal · not ranked publicly");
     expect(page).toContain("disabled={!published}");
     expect(page).toContain("Daily Test Catalog");
     expect(page).toContain("previewRoute(game)");
