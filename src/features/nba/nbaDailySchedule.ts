@@ -17,6 +17,19 @@ export const NBA_DAILY_GAME_LABELS = {
 
 export type NbaDailyGame = keyof typeof NBA_DAILY_GAME_LABELS;
 
+/** Basketball-only Daily copy. Shared UFC and Football instructions remain unchanged. */
+export const NBA_DAILY_GAME_INSTRUCTIONS: Record<NbaDailyGame, string> = {
+  average_fan: "Choose a fan, clear 10 NBA grade-and-subject tiles, then bank your score or play the Final.",
+  sports_feud: "Clear two NBA answer boards before three strikes, then finish Fast Money.",
+  millionaire: "Eight NBA questions. Three lifelines. Climb to $1,000,000.",
+  who_am_i: "Identify NBA players from clue pairs before the score falls, or recover on the final board.",
+  find_leader: "Eliminate nine NBA players while leaving today's statistical leader standing.",
+  wavelength: "Use four basketball clues to guess the hidden rating from 1 to 100.",
+  bar_trivia: "Ten NBA questions, a Double Round, rising streaks, and Last Call.",
+  hit_the_number: "Choose NBA players to reach today's stat target without going over.",
+  higher_lower: "Compare ten NBA seasons and legends. Make every higher-or-lower call count.",
+};
+
 /** Twenty-eight slots: 4/4/4, 3/3/3/3, 2/2. Keep the order evenly distributed. */
 export const NBA_DAILY_WEIGHTED_CYCLE: readonly NbaDailyGame[] = [
   "average_fan", "sports_feud", "millionaire", "who_am_i", "find_leader",
