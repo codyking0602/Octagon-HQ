@@ -88,6 +88,12 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
     // Nalen was not in the Hall of Fame by the question's 2025 cutoff.
     expect(matching(question("nfl-hof-centers"), "Tom Nalen").status).not.toBe("matched");
     expect(matching(question("nfl-hof-centers"), "Bulldog Turner").status).toBe("matched");
+    expect(matching(question("qbs-40000-passing"), "Johnny Unitas").status).toBe("matched");
+    expect(matching(question("qbs-40td-season"), "Baker Mayfield").status).toBe("matched");
+    expect(matching(question("qbs-40td-season"), "Lamar Jackson").status).toBe("matched");
+    expect(matching(question("career-15k-receiving"), "Mike Evans").status).toBe("matched");
+    expect(matching(question("nfl-rookie-dpoy"), "Carson Schwesinger").status).toBe("matched");
+
   });
 
   it("rehearses 34 total appearances with no repeat of an ID or semantic lane", () => {
