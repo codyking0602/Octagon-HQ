@@ -233,7 +233,7 @@ function routeMatches(route: string, root: string) {
 export function notificationSport(item: Pick<NotificationItem, "kind" | "route">): NotificationSport | null {
   const route = item.route ?? "";
   if (routeMatches(route, "/football")) return "football";
-  if (routeMatches(route, "/nba") || routeMatches(route, "/championship/nba")) return "nba";
+  if (routeMatches(route, "/nba") || routeMatches(route, "/championship/nba") || route.startsWith("/?hq-reveal=basketball-")) return "nba";
   if (routeMatches(route, "/mlb")) return "mlb";
   if (
     routeMatches(route, "/picks")
