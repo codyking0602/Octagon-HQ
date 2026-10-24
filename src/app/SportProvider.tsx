@@ -14,11 +14,12 @@ export type HomeSport = SelectedSport | "all";
 export const SELECTED_SPORT_STORAGE_KEY = "the-hq:selected-sport";
 export const PICKS_SPORT_STORAGE_KEY = "the-hq:picks-sport";
 export const HOME_SPORT_STORAGE_KEY = "the-hq:home-sport";
+export const LAST_USED_SPORT_STORAGE_KEY = "the-hq:last-used-sport";
 
-export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "mlb", "nba"];
+export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "nba", "mlb"];
 
-export function nextSport(current: SelectedSport, showMlb = true, showNba = true): SelectedSport {
-  const available = SPORT_ORDER.filter((sport) => (showMlb || sport !== "mlb") && (showNba || sport !== "nba"));
+export function nextSport(current: SelectedSport, showMlb = true, showNba = true, order: readonly SelectedSport[] = SPORT_ORDER): SelectedSport {
+  const available = order.filter((sport) => (showMlb || sport !== "mlb") && (showNba || sport !== "nba"));
   return available[(available.indexOf(current) + 1) % available.length] ?? "football";
 }
 
@@ -54,6 +55,19 @@ function readSectionSport(key: string): SelectedSport {
   return legacySport;
 }
 
+function readLastUsedSport(): SelectedSport {
+  if (typeof window === "undefined") return DEFAULT_SPORT;
+  try {
+    const stored = window.localStorage.getItem(LAST_USED_SPORT_STORAGE_KEY);
+    if (isSelectedSport(stored)) return stored;
+    const priorPicks = window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY);
+    if (isSelectedSport(priorPicks)) return priorPicks;
+  } catch {
+    // Local storage is optional.
+  }
+  return readPersistedSport();
+}
+
 function readHomeSport(): HomeSport {
   if (typeof window === "undefined") return DEFAULT_SPORT;
   try {
@@ -81,6 +95,7 @@ type SportContextValue = {
   setPicksSport: (sport: SelectedSport) => void;
   homeSport: HomeSport;
   setHomeSport: (sport: HomeSport) => void;
+  lastUsedSport: SelectedSport;
 };
 
 const SportContext = createContext<SportContextValue | null>(null);
@@ -89,16 +104,24 @@ export function SportProvider({ children }: PropsWithChildren) {
   const [selectedSport, setSelectedSportState] = useState<SelectedSport>(readPersistedSport);
   const [picksSport, setPicksSportState] = useState<SelectedSport>(() => readSectionSport(PICKS_SPORT_STORAGE_KEY));
   const [homeSport, setHomeSportState] = useState<HomeSport>(readHomeSport);
+  const [lastUsedSport, setLastUsedSport] = useState<SelectedSport>(readLastUsedSport);
+
+  const rememberSport = useCallback((sport: SelectedSport) => {
+    setLastUsedSport(sport);
+    persistSport(LAST_USED_SPORT_STORAGE_KEY, sport);
+  }, []);
 
   const setSelectedSport = useCallback((sport: SelectedSport) => {
     setSelectedSportState(sport);
     persistSport(SELECTED_SPORT_STORAGE_KEY, sport);
-  }, []);
+    rememberSport(sport);
+  }, [rememberSport]);
 
   const setPicksSport = useCallback((sport: SelectedSport) => {
     setPicksSportState(sport);
     persistSport(PICKS_SPORT_STORAGE_KEY, sport);
-  }, []);
+    rememberSport(sport);
+  }, [rememberSport]);
 
   const setHomeSport = useCallback((sport: HomeSport) => {
     setHomeSportState(sport);
@@ -106,8 +129,8 @@ export function SportProvider({ children }: PropsWithChildren) {
   }, []);
 
   const value = useMemo(
-    () => ({ selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport }),
-    [selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport],
+    () => ({ selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport, lastUsedSport }),
+    [selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport, lastUsedSport],
   );
 
   return <SportContext.Provider value={value}>{children}</SportContext.Provider>;

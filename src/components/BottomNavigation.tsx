@@ -4,6 +4,8 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
 import { nextSport, useSport } from "../app/SportProvider";
+import { entrySport, prioritizedSports } from "../app/sportPriority";
+import { useOptionalNotifications } from "../features/notifications/NotificationProvider";
 import { useOptionalIdentity } from "../features/identity/IdentityProvider";
 import { canPreviewNba } from "../features/nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
@@ -86,7 +88,9 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const location = useLocation();
   const navigate = useNavigate();
   const identity = useOptionalIdentity();
-  const { selectedSport, setSelectedSport, picksSport, setPicksSport } = useSport();
+  const { selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, lastUsedSport } = useSport();
+  const notifications = useOptionalNotifications();
+  const sportOrder = prioritizedSports(notifications && (notifications.pushSportStatus === "ready" || notifications.pushSportStatus === "saving") ? notifications.pushSports : null);
   const lastActiveSportTapRef = useRef<Record<SecretSportSection, number>>({ picks: 0, play: 0 });
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
@@ -96,8 +100,11 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const visibleSport = (sport: typeof selectedSport) =>
     (sport === "mlb" && !canViewMlbPlayoffs(identity?.profile)) || (sport === "nba" && !nbaVisible)
       ? "football" : sport;
-  const playSport = visibleSport(selectedSport);
-  const currentPicksSport = visibleSport(picksSport);
+  // Bottom tab entry follows frozen Home choice. All Sports follows the most
+  // recently visited/selected sport across BOTH sections, not separate tabs.
+  const entry = visibleSport(entrySport(homeSport, lastUsedSport));
+  const playSport = entry;
+  const currentPicksSport = entry;
   const selectedPlayRoot = playSport === "football" ? "/football" : playSport === "mlb" ? "/mlb" : playSport === "nba" ? "/nba" : "/play";
   const selectedPicksRoot = currentPicksSport === "football" ? "/football/picks" : currentPicksSport === "mlb" ? "/mlb/picks" : currentPicksSport === "nba" ? "/nba/picks" : "/picks";
   const standardDestinations = baseDestinations.map((destination) => (
@@ -169,7 +176,7 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
                   event.preventDefault();
                   lastActiveSportTapRef.current[section] = 0;
                   const currentSport = footballMode ? "football" : mlbMode ? "mlb" : nbaMode ? "nba" : "ufc";
-                  const next = nextSport(currentSport, canViewMlbPlayoffs(identity?.profile), nbaVisible);
+                  const next = nextSport(currentSport, canViewMlbPlayoffs(identity?.profile), nbaVisible, sportOrder);
                   if (section === "play") setSelectedSport(next);
                   else setPicksSport(next);
                   const targetPath = section === "play"

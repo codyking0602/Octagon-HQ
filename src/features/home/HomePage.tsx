@@ -1,4 +1,6 @@
 import { useOptionalSport } from "../../app/SportProvider";
+import { prioritizedSports, sportsForDisplay, sportNames } from "../../app/sportPriority";
+import { useOptionalNotifications } from "../notifications/NotificationProvider";
 import { useOptionalPlayChallenges } from "../challenges/ChallengeProvider";
 import { challengeIsHidden, type PlayChallenge } from "../challenges/challengeModel";
 import { challengeSport } from "../challenges/challengeRuntime";
@@ -52,14 +54,6 @@ function readableError(error: unknown) {
 function todayRank(leaderboard: TodayChallengeLeaderboard | null) {
   if (!leaderboard?.unlocked) return null;
   return leaderboard.entries.find((entry) => entry.isCurrentUser)?.rank ?? null;
-}
-
-function isFootballSeason(now = new Date()) {
-  const month = Number(new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
-    month: "numeric",
-  }).format(now));
-  return month >= 8 || month <= 2;
 }
 
 function TodayChallengeCard({
@@ -188,17 +182,17 @@ export default function HomePage() {
     : 0;
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
   const nbaVisible = canPreviewNba(identity.profile);
-  const ownerPreview = signedIn;
-  // Only the authenticated owner gets the in-progress Home density experiment.
-  const compactFootballPreview = Boolean(identity.profile?.canControlPicks === true
-    && identity.profile.displayName.trim().toUpperCase() === "CODY");
-  // Keep Baseball's approved compact experiment on the existing owner identity only.
-  const compactMlbPreview = Boolean(identity.profile?.canControlPicks === true
-    && identity.profile.displayName.trim().toUpperCase() === "CODY");
+  // Approved compact Home HQ designs are public, including signed-out visitors.
+  const ownerPreview = true;
+  const compactFootballPreview = true;
+  const compactMlbPreview = true;
   // Owner-only NBA daily game previews stay private; the polished Basketball HQ layout is shared.
   const nbaHqOwnerPreview = Boolean(identity.profile?.canControlPicks === true
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
   const sportPreference = useOptionalSport();
+  const notifications = useOptionalNotifications();
+  const sportOrder = prioritizedSports(notifications && (notifications.pushSportStatus === "ready" || notifications.pushSportStatus === "saving") ? notifications.pushSports : null);
+  const visibleOrder = sportsForDisplay(sportOrder, mlbVisible, nbaVisible);
   // Home has its own persisted view, independent of all sport navigation.
   const homeSport = sportPreference?.homeSport ?? "football";
   const ownerSport: SportFilter = (homeSport === "nba" && !nbaVisible) || (homeSport === "mlb" && !mlbVisible)
@@ -403,10 +397,7 @@ export default function HomePage() {
             <span className="sr-only">Home sport</span>
             <select aria-label="Home sport" value={ownerSport} onChange={(event) => setOwnerSport(event.target.value as SportFilter)}>
               <option value="all">All sports</option>
-              <option value="football">Football</option>
-              <option value="ufc">UFC</option>
-              {mlbVisible ? <option value="mlb">MLB</option> : null}
-              {nbaVisible ? <option value="nba">Basketball</option> : null}
+              {visibleOrder.map(sport => <option key={sport} value={sport}>{sportNames[sport]}</option>)}
             </select>
           </label>
         </header>
@@ -496,49 +487,28 @@ export default function HomePage() {
 
       {(!ownerPreview || ownerSport === "all") ? <HqImpostorHomeCard /> : null}
 
-      {ownerPreview && ownerSport !== "all" ? (
+      {ownerSport !== "all" ? (
         ownerSport === "football" ? footballHq
           : ownerSport === "ufc" ? ufcHq
-            : ownerSport === "nba" && nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} />
-            : mlbVisible ? (
-              <MlbHomeHq
-                enabled={mlbVisible}
-                signedIn={signedIn}
-                previewMode={true}
-                compactPreview={compactMlbPreview}
-              />
-            ) : null
-      ) : (
-        <>
-      {isFootballSeason() ? (
-        <>
-          {footballHq}
-          {nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship /> : null}
-          {mlbVisible ? (
+          : ownerSport === "nba" && nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} />
+          : mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}
               signedIn={signedIn}
               previewMode={identity.profile?.canControlPicks === true}
               compactPreview={compactMlbPreview}
             />
-          ) : null}
-          {ufcHq}
-        </>
+          ) : null
       ) : (
         <>
-          {ufcHq}
-          {footballHq}
-          {nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship /> : null}
-          {mlbVisible ? (
-            <MlbHomeHq
-              enabled={mlbVisible}
-              signedIn={signedIn}
-              previewMode={identity.profile?.canControlPicks === true}
-            compactPreview={compactMlbPreview}
-            />
-          ) : null}
-        </>
-      )}
+          {visibleOrder.map(sport => (
+            <div className="home-sport-order-slot" key={sport} data-home-sport-order={sport}>
+              {sport === "football" ? footballHq : sport === "ufc" ? ufcHq
+                : sport === "nba" ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship />
+                : <MlbHomeHq enabled={mlbVisible} signedIn={signedIn}
+                    previewMode={identity.profile?.canControlPicks === true} compactPreview={compactMlbPreview} />}
+            </div>
+          ))}
         </>
       )}
       {ownerPreview && ownerSport === "mlb" && compactMlbPreview ? (
@@ -550,6 +520,7 @@ export default function HomePage() {
           onSportChange={setOwnerSport}
           showSportSelector={false}
           compactMlbPreview
+          sportOrder={visibleOrder}
         />
       ) : null}
       {ownerPreview && ownerSport !== "mlb" && ownerSport !== "nba" ? (
@@ -561,6 +532,7 @@ export default function HomePage() {
           onSportChange={setOwnerSport}
           showSportSelector={false}
           compactFootballPreview={compactFootballPreview}
+          sportOrder={visibleOrder}
         />
       ) : null}
     </div>
