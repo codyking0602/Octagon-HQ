@@ -24,6 +24,9 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(page).toContain('className="play-v2__game"');
     expect(page).toContain('className="play-v2__metrics"');
     expect(page).toContain('className="play-v2__daily-row"');
+    expect(page).not.toContain("<TodayChallengeHub");
+    expect(page).toContain('className="play-v2__daily-actions"');
+    expect(page).toContain('className="play-v2__daily-leaders"');
     expect(playCss).toContain(".play-v2__daily {");
     expect(nbaCss).toContain('.play-v2[data-sport="nba"]');
   });
@@ -33,6 +36,8 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(new Set(NBA_DAILY_WEIGHTED_CYCLE).size).toBe(9);
     expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
     expect(page).toContain("Private previews do not count.");
+    expect(page).toContain('ownerTest ? "test games" : "official games"');
+    expect(page).toContain('dailyCompleted ? "VIEW RESULT"');
     expect(page).toContain("Preview play does not count toward the NBA championship");
     expect(page).toContain("disabled={!published}");
     expect(page).toContain("Daily Test Catalog");
