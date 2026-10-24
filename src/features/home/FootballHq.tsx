@@ -497,7 +497,7 @@ export function FootballHq({
           <p className="eyebrow">FOOTBALL HQ</p>
           <h2>This week</h2>
         </div>
-        <small>PICKS · COLLEGE · NFL</small>
+        {!compactPreview ? <small>PICKS · COLLEGE · NFL</small> : null}
       </header>
 
       <section className="surface-card home-event-card home-event-card--compact" aria-label="Football Picks and standing">
