@@ -92,7 +92,7 @@ describe("Owner Championship Home preview", () => {
     expect(cabinet.querySelectorAll(".home-champ-preview__summary--row")).toHaveLength(4);
     expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("1");
     expect(within(cabinet).getByText("LEAGUE LEAD")).toBeInTheDocument();
-    expect(within(cabinet).getByText("Leading 1 of 3 ranked championships")).toBeInTheDocument();
+    expect(cabinet.querySelector(".home-champ-preview__league-tally small")).toHaveTextContent("Football");
     expect(within(cabinet).getByText("HQ DAILY STREAK")).toBeInTheDocument();
     expect(within(cabinet).getByText("11 days")).toBeInTheDocument();
     expect(within(cabinet).getByRole("link", { name: "Open football Championship standings" })).toHaveAttribute("href", "/championship/football?tab=overall");
@@ -100,7 +100,7 @@ describe("Owner Championship Home preview", () => {
     expect(within(cabinet).getByRole("link", { name: "Open MLB Postseason Championship standings" })).toHaveAttribute("href", "/championship/mlb");
     expect(within(cabinet).getByRole("link", { name: "Open Basketball Championship" })).toHaveAttribute("href", "/championship/nba");
     const ranks = Array.from(cabinet.querySelectorAll(".home-champ-preview__summary-rank")).map((element) => element.textContent);
-    expect(ranks).toEqual(["#1", "#2", "#3", "—"]);
+    expect(ranks).toEqual(["#1", "#2", "#3"]);
     expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon")).toHaveLength(0);
     expect(cabinet.querySelectorAll(".home-champ-preview__trophy")).toHaveLength(1);
     expect(cabinet.querySelector(".home-champ-preview__overview")).toHaveAttribute("aria-label", "Championship standings by sport");
@@ -109,11 +109,32 @@ describe("Owner Championship Home preview", () => {
   it("shows only available sport rows and excludes unranked Basketball from the denominator", async () => {
     render(<Preview showMlb={false} />);
     const board = screen.getByRole("region", { name: "Your HQ" });
-    expect(await within(board).findByText("Leading 1 of 2 ranked championships")).toBeInTheDocument();
+    expect(await within(board).findByText("91.3")).toBeInTheDocument();
+    expect(board.querySelector(".home-champ-preview__league-tally small")).toHaveTextContent("Football");
     const rows = board.querySelectorAll(".home-champ-preview__summary--row");
     expect(Array.from(rows).map((row) => row.getAttribute("data-sport"))).toEqual(["football", "ufc", "nba"]);
-    expect(within(board).getByText("FUTURES OPEN")).toBeInTheDocument();
-    expect(within(board).getByText("SCORING PENDING")).toBeInTheDocument();
+    const basketball = within(board).getByRole("link", { name: "Open Basketball Championship" });
+    expect(within(basketball).getByText("Futures open · Scoring pending")).toBeInTheDocument();
+    expect(basketball.querySelector(".home-champ-preview__summary-result")).not.toBeInTheDocument();
+    expect(basketball.querySelector(".home-champ-preview__summary-rank")).not.toBeInTheDocument();
+  });
+
+  it("keeps all four sport rows clickable with no duplicate Basketball placeholder", async () => {
+    render(<Preview />);
+    const board = screen.getByRole("region", { name: "Your HQ" });
+    await within(board).findByText("91.3");
+    const links = [
+      ["Open football Championship standings", "/championship/football?tab=overall"],
+      ["Open ufc Championship standings", "/championship/ufc?tab=overall"],
+      ["Open MLB Postseason Championship standings", "/championship/mlb"],
+      ["Open Basketball Championship", "/championship/nba"],
+    ] as const;
+    for (const [label, href] of links) {
+      expect(within(board).getByRole("link", { name: label })).toHaveAttribute("href", href);
+    }
+    expect(board.querySelectorAll(".home-champ-preview__summary-rank")).toHaveLength(3);
+    expect(within(board).queryByText("Leading 1 of 3 ranked championships")).not.toBeInTheDocument();
+    expect(within(board).queryByText("Season open")).not.toBeInTheDocument();
   });
 
   it("supports a standalone bottom-of-page championship without a duplicated sport selector", async () => {
@@ -205,7 +226,7 @@ describe("Owner Championship Home preview", () => {
     expect(within(cabinet).getByText("LEAGUE LEADS")).toBeInTheDocument();
     expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("3");
     expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon")).toHaveLength(0);
-    expect(within(cabinet).getByText("Leading 3 of 3 ranked championships")).toBeInTheDocument();
+    expect(within(cabinet).getByText("Football · UFC · MLB")).toBeInTheDocument();
     expect(within(cabinet).getByText("93")).toBeInTheDocument();
   });
 
