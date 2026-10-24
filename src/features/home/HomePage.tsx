@@ -361,7 +361,7 @@ export default function HomePage() {
           <div className="football-hq-compact-picks__completion">
             <small>YOUR PICKS</small>
             <strong>{signedIn && currentEvent ? `${picksProgress.completed} OF ${picksProgress.total}` : "—"}</strong>
-            {picksStatus !== "PICKS LOCKED" ? <span>{picksStatus}</span> : null}
+            {picksStatus !== "PICKS LOCKED" && picksStatus !== "PICKS READY" ? <span>{picksStatus}</span> : null}
           </div>
           <Link className="football-hq-compact-picks__record" to="/championship/ufc?tab=picks"
             aria-label="Open UFC Championship Picks leaderboard">

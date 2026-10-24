@@ -7,6 +7,10 @@ import { resolveWatchMomentAction } from "../rankings/rankingPresentation";
 
 export function RankingSpotlightCard({ fighter, compact = false }: { fighter: RankingFighter; compact?: boolean }) {
   const watchAction = resolveWatchMomentAction(fighter.slug);
+  const divisionLabel = [fighter.primaryDivision, fighter.secondaryDivision]
+    .map((division) => division?.trim())
+    .filter(Boolean)
+    .join(" / ") || fighter.division;
 
   // Match the locked Football Player Spotlight structure without changing its component.
   if (compact) return (
@@ -25,10 +29,11 @@ export function RankingSpotlightCard({ fighter, compact = false }: { fighter: Ra
       <div className="football-player-spotlight__copy">
         <span>FIGHTER SPOTLIGHT</span>
         <h3><Link className="ufc-fighter-spotlight__name-link" to={`/fighters/${fighter.slug}`}>{fighter.displayName}</Link></h3>
-        <strong>{fighter.division.toUpperCase()}</strong>
+        <strong>{divisionLabel}</strong>
         <div className="football-player-spotlight__stats" aria-label="Fighter ranking and statistics">
           <span><b>#{fighter.rank}</b><small>ALL-TIME</small></span>
           <span><b>{fighter.visibleStats.ufcRecord}</b><small>UFC RECORD</small></span>
+          <span><b>{fighter.visibleStats.titleFightWins}</b><small>TITLE FIGHT WINS</small></span>
           <span><b>{fighter.ovr}</b><small>OVR</small></span>
         </div>
         <p className="football-player-spotlight__meta">{fighter.resumeTag}</p>
