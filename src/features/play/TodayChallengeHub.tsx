@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { memberProfilePath } from "../members/memberProfilesModel";
+import { NBA_DAILY_GAME_INSTRUCTIONS, type NbaDailyGame } from "../nba/nbaDailySchedule";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyLeaderboardGameResult } from "./DailyLeaderboardGameResult";
 import {
@@ -376,7 +377,8 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
   const title = combo ? "Blind Rank + Keep/Cut" : adapter.title;
   const instructions = combo
     ? "Blind Rank five, then immediately Keep 4, Cut 4. Both halves count equally toward one official Daily score."
-    : sport === "football" ? adapter.footballInstructions : adapter.instructions;
+    : presentationSport === "nba" ? NBA_DAILY_GAME_INSTRUCTIONS[projection.gameType as NbaDailyGame] ?? adapter.instructions
+      : sport === "football" ? adapter.footballInstructions : adapter.instructions;
   const cta = combo
     ? dailyRankKeepComboStage(projection) === 2 ? "CONTINUE PART 2" : "START PART 1"
     : adapter.cta.toUpperCase();
@@ -482,9 +484,13 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
         </button>
       </div>
 
-      <button className="home-weekly-games-row" type="button" onClick={() => navigate("/championship/" + sport + "?tab=play")} aria-label="Open Championship Play standings">
-            <span className="home-weekly-games-row__copy"><small>PLAY LEADERBOARD</small><strong>Daily + Featured · Season standings</strong></span><b>VIEW →</b>
-          </button>
+      {sport === "nba_preview" ? <p className="play-v2__muted">Private owner test · no public championship points.</p> : (
+        <button className="home-weekly-games-row" type="button"
+          onClick={() => navigate(sport === "nba" ? "/championship/nba?tab=play" : "/championship/" + sport + "?tab=play")}
+          aria-label="Open Championship Play standings">
+          <span className="home-weekly-games-row__copy"><small>PLAY LEADERBOARD</small><strong>Daily + Featured · Season standings</strong></span><b>VIEW →</b>
+        </button>
+      )}
     </section>
   );
 }
