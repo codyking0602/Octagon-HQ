@@ -23,7 +23,9 @@ describe("UFC HQ finishing refinements", () => {
     thumbUrl: "/fighter.webp",
     rank: 5,
     division: "LW / WW",
-    visibleStats: { ufcRecord: "18-1" },
+    primaryDivision: "Lightweight",
+    secondaryDivision: "Welterweight",
+    visibleStats: { ufcRecord: "18-1", titleFightWins: 5 },
     ovr: 94,
     resumeTag: "Modern lightweight standard",
   } as RankingFighter;
@@ -37,6 +39,12 @@ describe("UFC HQ finishing refinements", () => {
       .toHaveAttribute("href", "/fighters/islam-makhachev");
     expect(within(spotlight).getByRole("link", { name: "WATCH MOMENT ↗" }))
       .toHaveAttribute("href", "https://www.youtube.com/watch?v=abc123");
+    expect(within(spotlight).getByText("Lightweight / Welterweight")).toBeInTheDocument();
+    expect(within(spotlight).queryByText("LW / WW")).not.toBeInTheDocument();
+    const stats = spotlight.querySelectorAll(".football-player-spotlight__stats > span");
+    expect(stats).toHaveLength(4);
+    expect(within(stats[2] as HTMLElement).getByText("5")).toBeInTheDocument();
+    expect(within(stats[2] as HTMLElement).getByText("TITLE FIGHT WINS")).toBeInTheDocument();
     expect(within(spotlight).queryByText("VIEW PROFILE →")).not.toBeInTheDocument();
     expect(within(spotlight).queryByText("WATCH HIGHLIGHTS ↗")).not.toBeInTheDocument();
 
@@ -88,5 +96,8 @@ describe("UFC HQ finishing refinements", () => {
     expect(css).toMatch(/\.ufc-hq--compact\s*\{[^}]*background:\s*linear-gradient\(160deg/s);
     expect(css).toMatch(/\.ufc-hq--compact \.ufc-fighter-spotlight\s*\{[^}]*background:/s);
     expect(css).not.toContain("radial-gradient(circle at 95% 110%");
+    expect(css).toMatch(/\.home-champ-preview--compact-ufc\[data-sport="ufc"\]\s*\{[^}]*background:\s*linear-gradient\(157deg/s);
+    expect(css).toMatch(/\.home-champ-preview--compact-ufc\[data-sport="ufc"\]::before\s*\{\s*content:\s*none/s);
+    expect(css).toMatch(/\.ufc-fighter-spotlight \.football-player-spotlight__stats\s*\{[^}]*grid-template-columns:\s*repeat\(4/s);
   });
 });

@@ -418,7 +418,23 @@ a.home-event-card__standing:focus-visible {
 .ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__copy > h3 {
   overflow-wrap: anywhere; font-size: clamp(19px, 5vw, 29px);
 }
-.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__stats { grid-template-columns: 1fr 1.3fr .75fr; }
+/* All four audited UFC statistics remain legible at narrow phone widths. */
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__copy > strong {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+  line-height: 1.2;
+}
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+}
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__stats small {
+  white-space: normal;
+  overflow-wrap: normal;
+  font-size: 6px;
+  line-height: 1.15;
+}
 /* Profile links use the same understated typography as the locked Football spotlight. */
 .ufc-hq--compact .ufc-fighter-spotlight__profile-media {
   color: inherit;
@@ -512,9 +528,14 @@ a.home-event-card__standing:focus-visible {
   .ufc-hq--compact .ufc-contender-series__lead > strong { flex-shrink: 0; }
 }
 /* UFC public Championship matches the locked Football compact layout. */
+/* Same neutral Championship shell as the HQ, without the UFC radial glow or red lattice. */
 .home-champ-preview--compact-ufc[data-sport="ufc"] {
   gap: 8px;
   padding: 12px 13px;
+  background: linear-gradient(157deg, #191a1d 0%, #121316 52%, #101114 100%);
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"]::before {
+  content: none;
 }
 .home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__top h2 {
   font-size: clamp(19px, 5vw, 22px);
