@@ -9,7 +9,10 @@ export type NbaWeeklySpotlight = {
     position: string;
     headshotUrl: string;
     profileUrl: string;
-    highlightUrl: string;
+    highlightUrl: string | null;
+    /** Only videos verified against the official @NBA channel are accepted. */
+    highlightSourceChannelId?: string;
+    channelUrl?: string;
     summary: string;
     stats: [WeeklyStat, WeeklyStat, WeeklyStat, WeeklyStat];
   };
@@ -48,7 +51,10 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
     || !isHttpsFrom(team.logoUrl, /(^|\.)espncdn\.com$/i)
     || !isHttpsFrom(player.profileUrl, /(^|\.)espn\.com$/i)
     || !isHttpsFrom(team.profileUrl, /(^|\.)espn\.com$/i)
-    || !isHttpsFrom(player.highlightUrl, /^(www\.)?(youtube\.com|youtu\.be)$/i)) return null;
+    || (player.highlightUrl
+      ? !isHttpsFrom(player.highlightUrl, /^(www\\.)?(youtube\\.com|youtu\\.be)$/i)
+        || player.highlightSourceChannelId !== "UCWJ2lWNubArHWmf3FIHbfcQ"
+      : player.channelUrl !== "https://www.youtube.com/@NBA")) return null;
   const published = new Date(value.publishedAt);
   if (published.getTime() > Date.now() + 60_000) return null;
   return value as NbaWeeklySpotlight;
