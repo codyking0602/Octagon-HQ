@@ -160,12 +160,16 @@ function pickQuestion(
   usedCategories: ReadonlySet<string>,
   recentQuestionIds: readonly string[],
   random: () => number,
+  strictRecentNoRepeat = false,
 ) {
   const unused = pool.filter((question) => !used.has(question.id));
   if (!unused.length) throw new Error("Bar Trivia does not have enough questions for this round.");
 
   const ranks = recentRank(recentQuestionIds);
   const fresh = unused.filter((question) => !ranks.has(question.id));
+  if (strictRecentNoRepeat && !fresh.length) {
+    throw new Error("Bar Trivia audited no-repeat pool exhausted for this round.");
+  }
   let candidates = fresh.length ? fresh : unused;
 
   const categoryFresh = candidates.filter((question) => !usedCategories.has(question.category));
@@ -241,6 +245,7 @@ export function buildBarTriviaRun(
     recentQuestionIds?: readonly string[];
     now?: Date | string;
     currentEventTarget?: number;
+    strictRecentNoRepeat?: boolean;
   } = {},
 ) {
   const random = options.random ?? Math.random;
@@ -282,6 +287,7 @@ export function buildBarTriviaRun(
         usedCategories,
         recentQuestionIds,
         random,
+        options.strictRecentNoRepeat === true,
       );
       const chosen = { ...accessible, round: "round2" as const };
       run.push(chosen);
@@ -302,6 +308,7 @@ export function buildBarTriviaRun(
       usedCategories,
       recentQuestionIds,
       random,
+      options.strictRecentNoRepeat === true,
     );
     run.push(chosen);
     used.add(chosen.id);
