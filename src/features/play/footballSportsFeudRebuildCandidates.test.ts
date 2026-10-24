@@ -1,0 +1,98 @@
+import { describe, expect, it } from "vitest";
+import {
+  CFB_FEUD_REBUILD_CANDIDATES, NFL_FEUD_REBUILD_CANDIDATES,
+} from "./footballSportsFeudRebuildCandidates";
+import {
+  previewFootballFeudRebuildRotation, FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT,
+} from "./footballSportsFeudRebuildRotation";
+import { matchFamilyFeudAnswer, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
+import type { FamilyFeudPack, FamilyFeudQuestion } from "../games/familyFeudEngine";
+import type { SportsFeudAuthoredQuestion } from "./sportsFeudBankTypes";
+
+const BANKS = { nfl: NFL_FEUD_REBUILD_CANDIDATES, cfb: CFB_FEUD_REBUILD_CANDIDATES };
+const normalize = normalizeFamilyFeudInput;
+const lane = (q: SportsFeudAuthoredQuestion) => q.collisionGroup ?? q.category;
+
+function matching(q: SportsFeudAuthoredQuestion, input: string) {
+  const answers = [...q.answers, ...(q.alsoAcceptedAnswers ?? [])];
+  const entities = answers.map((a, index) => ({
+    id: q.id + ":accept:" + index,
+    kind: q.entityKind, displayName: a.name, aliases: [...(a.aliases ?? [])],
+  }));
+  const question: FamilyFeudQuestion = {
+    id: q.id, prompt: q.prompt,
+    candidateIds: entities.map(e => e.id),
+    answers: entities.slice(0, 8).map((e, index) => ({ entityId: e.id, points: 8 - index })),
+    alsoAcceptedEntityIds: entities.slice(8).map(e => e.id),
+  };
+  const pack: FamilyFeudPack = { id: q.id, sport: "football", entities, mainBoards: [], fastMoney: [] };
+  return matchFamilyFeudAnswer(pack, question, input);
+}
+
+describe("future-only Football Sports Feud editorial rebuild", () => {
+  it("counts distinct ideas, never paraphrase families", () => {
+    expect(NFL_FEUD_REBUILD_CANDIDATES.main).toHaveLength(40);
+    expect(NFL_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(101);
+    expect(CFB_FEUD_REBUILD_CANDIDATES.main).toHaveLength(40);
+    expect(CFB_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(100);
+    for (const bank of Object.values(BANKS)) {
+      const all = [...bank.main, ...bank.fast];
+      expect(new Set(all.map(q => q.id)).size).toBe(all.length);
+      expect(new Set(all.map(q => normalize(q.prompt))).size).toBe(all.length);
+      for (const q of all) {
+        expect(q.answers, q.id).toHaveLength(8);
+        const allNames = [...q.answers, ...(q.alsoAcceptedAnswers ?? [])].map(a => normalize(a.name));
+        expect(new Set(allNames).size, q.id).toBe(allNames.length);
+      }
+    }
+  });
+
+  it("keeps distinct semantic lanes across the newly authored set", () => {
+    for (const bank of Object.values(BANKS)) {
+      const newRows = [...bank.main, ...bank.fast].filter(q => q.id.includes("-feud-r2-"));
+      expect(new Set(newRows.map(lane)).size).toBe(newRows.length);
+      expect(newRows.every(q => (q.alsoAcceptedAnswers?.length ?? 0) >= 3)).toBe(true);
+    }
+  });
+
+  it("recognizes all explicit candidate names on all newly authored boards", () => {
+    for (const bank of Object.values(BANKS)) {
+      for (const q of [...bank.main, ...bank.fast].filter(row => row.id.includes("-feud-r2-"))) {
+        for (const answer of [...q.answers, ...(q.alsoAcceptedAnswers ?? [])]) {
+          const hit = matching(q, answer.name);
+          expect(hit.status, q.id + " / " + answer.name).toBe("matched");
+        }
+      }
+    }
+  });
+
+  it("accepts non-ranked legitimate answers and common aliases", () => {
+    const find = (id: string) => [...BANKS.nfl.main, ...BANKS.nfl.fast,
+      ...BANKS.cfb.main, ...BANKS.cfb.fast].find(q => q.id.endsWith(id))!;
+    expect(matching(find("first-pick-quarterbacks"), "Cam Ward").status).toBe("matched");
+    expect(matching(find("route-tree"), "Fly route").status).toBe("matched");
+    expect(matching(find("fcs-to-nfl"), "Randy Moss").status).toBe("matched");
+    expect(matching(find("cfb-2024-realignment"), "SMU").status).toBe("matched");
+    expect(matching(find("first-12team-playoff"), "Indiana").status).toBe("matched");
+    expect(matching(find("first-12team-playoff"), "Hoosiers").status).toBe("matched");
+    expect(matching(find("cfp-2025-field"), "JMU").status).toBe("matched");
+    expect(matching(find("nfl-qbs-heisman"), "RG3").status).toBe("matched");
+  });
+
+  it("rehearses 20 appearances per sport (40 Football appearances) with no repeat of an ID or concept family", () => {
+    expect(FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT).toBe(20);
+    for (const sport of ["nfl", "cfb"] as const) {
+      const slots = previewFootballFeudRebuildRotation(sport);
+      expect(slots).toHaveLength(20);
+      const all = slots.flatMap(slot => [...slot.main, ...slot.fast]);
+      expect(all).toHaveLength(140);
+      expect(new Set(all.map(q => q.id)).size).toBe(140);
+      expect(slots.every(slot => slot.main.length === 2 && slot.fast.length === 5)).toBe(true);
+      for (const slot of slots) {
+        const lanes = [...slot.main, ...slot.fast].map(lane);
+        expect(new Set(lanes).size, sport).toBe(7);
+      }
+    }
+    expect(() => previewFootballFeudRebuildRotation("cfb", 21)).toThrow();
+  });
+});
