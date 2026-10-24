@@ -44,6 +44,13 @@ describe("notificationSport", () => {
     expect(notificationSportLabel("football")).toBe("Football");
   });
 
+  it("recognizes basketball routes and the existing launch reveal", () => {
+    expect(notificationSport({ kind: "new_game_available", route: "/?hq-reveal=basketball-2026" })).toBe("nba");
+    expect(notificationSport({ kind: "daily_challenge_available", route: "/nba/today" })).toBe("nba");
+    expect(notificationSport({ kind: "new_game_available", route: "/championship/nba" })).toBe("nba");
+    expect(notificationSportLabel("nba")).toBe("NBA");
+  });
+
   it("leaves universal account and social notifications neutral", () => {
     expect(notificationSport({ kind: "war_room_mention", route: "/war-room" })).toBeNull();
   });
