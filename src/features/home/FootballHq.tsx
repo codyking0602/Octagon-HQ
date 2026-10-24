@@ -558,7 +558,7 @@ export function FootballHq({
               aria-label="Open Football Championship Picks leaderboard">
               <small>{season} PICKS RECORD</small>
               <strong>{signedIn ? pickRecord(summary) : "—"}</strong>
-              <span>{!signedIn ? "SIGN IN TO TRACK" : seasonWinPercentage === null ? "NO RESULTS YET" : `${seasonWinPercentage}% WIN`}</span>
+              <span>{!signedIn ? "SIGN IN TO TRACK" : seasonWinPercentage === null ? "NO RESULTS YET" : `${seasonWinPercentage}% WIN RATE`}</span>
             </Link>
             <Link className="football-hq-compact-picks__action" to="/football/picks">OPEN PICKS →</Link>
           </div>
