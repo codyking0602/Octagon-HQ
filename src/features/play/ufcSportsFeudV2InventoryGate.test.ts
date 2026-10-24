@@ -13,6 +13,8 @@ import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5 } from "./ufcSportsFeudV2MainBatch5";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2MainBatch5Supplement";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH5 } from "./ufcSportsFeudV2FastBatch5";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2FastBatch5Supplement";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH6 } from "./ufcSportsFeudV2MainBatch6";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH6 } from "./ufcSportsFeudV2FastBatch6";
 
 describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", () => {
   const main = [
@@ -22,6 +24,7 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     ...UFC_SPORTS_FEUD_V2_MAIN_BATCH4,
     ...UFC_SPORTS_FEUD_V2_MAIN_BATCH5,
     ...UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT,
+    ...UFC_SPORTS_FEUD_V2_MAIN_BATCH6,
     ...UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES,
   ];
   const fast = [
@@ -32,20 +35,26 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH4,
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH5,
     ...UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT,
+    ...UFC_SPORTS_FEUD_V2_FAST_BATCH6,
   ];
 
-  it("tracks the staged Main and Fast shortfall separately from factual approval", () => {
+  it("distinguishes 57 Main and 108 Fast candidate rows from six-month approved inventory", () => {
     expect(UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES).toHaveLength(15);
-    expect(main).toHaveLength(49);
-    expect(fast).toHaveLength(92);
+    expect(main).toHaveLength(57);
+    expect(fast).toHaveLength(108);
     expect(main.length).toBeGreaterThanOrEqual(20 * 2);
     // A sufficient Main count alone does not establish 20 semantic categories;
     // named-opponent and championship lists may still collide.
     // The five new country-fighter boards share a semantic category and
     // cannot be counted as five independent no-repeat slots.
-    expect(fast.length).toBeLessThan(20 * 5);
+    expect(fast.length).toBeGreaterThanOrEqual(20 * 5);
+    // Raw rows exceed 100 but held questions and topic collisions prevent 100
+    // independently approved Fast Money concepts.
     expect(main.length).toBeLessThan(70);
     expect(fast.length).toBeLessThan(140);
+    // At current production cadence (~25 Sports Feud appearances / six months),
+    // the 125-Fast raw candidate floor is unmet even before holds.
+    expect(fast.length).toBeLessThan(125);
   });
 
   it("never treats a staged legacy rewrite as an approved content board", () => {
@@ -59,7 +68,7 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
       sourceIds.add(q.sourceId);
     }
     const all = [...main, ...fast];
-    expect(all).toHaveLength(141);
-    expect(new Set(all.map(q => q.id)).size).toBe(141);
+    expect(all).toHaveLength(165);
+    expect(new Set(all.map(q => q.id)).size).toBe(165);
   });
 });
