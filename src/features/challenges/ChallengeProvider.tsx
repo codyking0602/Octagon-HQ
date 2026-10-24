@@ -643,6 +643,11 @@ export function ChallengeProvider({
   );
 }
 
+/** Safe for optional owner-only Home decorations outside challenge-provider test harnesses. */
+export function useOptionalPlayChallenges() {
+  return useContext(PlayChallengesContext);
+}
+
 export function usePlayChallenges() {
   const value = useContext(PlayChallengesContext);
   if (!value) throw new Error("usePlayChallenges must be used inside ChallengeProvider");
