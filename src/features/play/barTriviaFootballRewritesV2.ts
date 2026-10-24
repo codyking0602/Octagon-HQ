@@ -453,7 +453,7 @@ const EDITS: Readonly<Record<string, EditableFact>> = {
       "Matt Mauck",
       "JaMarcus Russell",
       "Rohan Davey",
-      "Flynn"
+      "Matt Flynn"
     ],
     "answer": "Matt Mauck",
     "explanation": "Matt Mauck quarterbacked LSU in its 21–14 Sugar Bowl victory over Oklahoma.",

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
+import { FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS } from "./barTriviaFootballEditorialV2";
 import {
   BAR_TRIVIA_EDITORIAL_RETIREMENTS,
   BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES,
@@ -31,6 +32,7 @@ describe("2026-10-22 NFL/CFB/UFC Bar Trivia editorial curation", () => {
   it("places explicit regrades into the reviewed round rather than trusting old labels", () => {
     for (const [id, round] of Object.entries(BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES)) {
       expect(BAR_TRIVIA_EDITORIAL_RETIREMENTS[id], id).toBeUndefined();
+      if (FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS.has(id)) continue; // newly retired in the later editorial pass
       const question = byId.get(id);
       expect(question, id).toBeDefined();
       expect(question?.round, id).toBe(round);

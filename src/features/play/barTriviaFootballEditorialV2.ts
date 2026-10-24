@@ -91,7 +91,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Bart Starr",
     "explanation": "Bart Starr scored from one yard out with seconds remaining to defeat Dallas in the Ice Bowl.",
-    "sourceId": "nfl-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.nfl.com/100/originals/100-greatest/detail.html?slug=plays-8",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "nfl-v2-final-manningham",
@@ -107,7 +109,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Mario Manningham",
     "explanation": "Mario Manningham caught Eli Manning's deep sideline throw on the Giants' winning drive against New England.",
-    "sourceId": "nfl-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.nfl.com/news/giants-execution-too-perfect-for-patriots-to-defend-09000d5d826be806",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "nfl-v2-final-epic-miami",
@@ -123,7 +127,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Kellen Winslow",
     "explanation": "Kellen Winslow caught 13 passes in San Diego's overtime victory over Miami.",
-    "sourceId": "nfl-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.nfl.com/news/the-best-trick-plays-in-nfl-history-0ap2000000338664",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "nfl-v2-final-red-right-88",
@@ -139,7 +145,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Brian Sipe",
     "explanation": "Brian Sipe's end-zone pass was intercepted by Oakland in Cleveland's 1980-season playoff loss.",
-    "sourceId": "nfl-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.nfl.com/news/pain-rankings-no-1-the-cleveland-browns-0ap3000000503270",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "nfl-v2-final-jacoby-jones",
@@ -155,7 +163,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Jacoby Jones",
     "explanation": "Jacoby Jones returned the kickoff 108 yards in Baltimore's win over San Francisco.",
-    "sourceId": "nfl-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.nfl.com/news/jacoby-jones-108-yard-return-td-a-super-bowl-record-0ap1000000135302",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "nfl-v2-final-fitzgerald-sb",
@@ -171,7 +181,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Larry Fitzgerald",
     "explanation": "Larry Fitzgerald scored on a 64-yard pass before the Steelers answered with Santonio Holmes' catch.",
-    "sourceId": "nfl-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.nfl.com/news/pro-football-hall-of-fame-class-of-2026-revealed-at-nfl-honors",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "nfl-v2-final-butler-tyree-teammate",
@@ -187,7 +199,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Justin Tuck",
     "explanation": "Justin Tuck recorded two sacks in the Giants' defensive upset of New England.",
-    "sourceId": "nfl-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "nfl-v2-final-doug-williams",
@@ -203,7 +215,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Doug Williams",
     "explanation": "Doug Williams led Washington's 1987-season championship comeback against Denver.",
-    "sourceId": "nfl-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.nfl.com/news/young-leads-quarterbacks-in-super-bowl-performances-09000d5d81e04e03",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "cfb-v2-final-flutie-hail-mary",
@@ -219,7 +233,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Gerard Phelan",
     "explanation": "Gerard Phelan caught Flutie's 48-yard game-winner for Boston College.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.espn.com/college-football/story/_/id/29260553/kordell-stewart-doug-flutie-epic-hail-marys-our-wildest-college-football-finishes",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "cfb-v2-final-kick-six",
@@ -235,7 +251,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Chris Davis",
     "explanation": "Chris Davis returned the missed field goal 109 yards to win the Iron Bowl.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.espn.com/college-football/recap?gameId=401520427",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "cfb-v2-final-band-play",
@@ -251,7 +269,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Kevin Moen",
     "explanation": "Kevin Moen took the last lateral into the end zone as the Stanford band entered the field.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "cfb-v2-final-fiesta-johnson",
@@ -267,7 +285,9 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Ian Johnson",
     "explanation": "Ian Johnson scored the two-point conversion to beat Oklahoma at the 2007 Fiesta Bowl.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-verified-reference",
+    "sourceUrl": "https://www.espn.com/blog/ncfnation/post/_/id/106731/boise-state-hopes-vizio-fiesta-bowl-win-is-a-first-step",
+    "verifiedAt": "2026-10-24"
   },
   {
     "id": "cfb-v2-final-vince-fourth-five",
@@ -283,7 +303,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Vince Young",
     "explanation": "Vince Young scrambled for the decisive touchdown with 19 seconds remaining in the Rose Bowl.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "cfb-v2-final-second-26",
@@ -299,7 +319,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Tua Tagovailoa",
     "explanation": "Freshman Tua Tagovailoa hit DeVonta Smith to beat Georgia for the national title.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "cfb-v2-final-bama-onside",
@@ -315,7 +335,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Adam Griffith",
     "explanation": "Adam Griffith's onside kick helped swing Alabama's 2016 title game win over Clemson.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "cfb-v2-final-ringo-pick-six",
@@ -331,7 +351,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Kelee Ringo",
     "explanation": "Kelee Ringo returned Bryce Young's pass for a late pick-six in Georgia's national championship victory.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "cfb-v2-final-bush-push",
@@ -347,7 +367,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Matt Leinart",
     "explanation": "Matt Leinart scored the winning sneak after Reggie Bush pushed him toward the end zone in 2005.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "cfb-v2-final-schlesinger",
@@ -363,7 +383,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Cory Schlesinger",
     "explanation": "Cory Schlesinger scored two fourth-quarter touchdowns in Nebraska's 24–17 win.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "cfb-v2-final-haskins-five",
@@ -379,7 +399,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Hassan Haskins",
     "explanation": "Hassan Haskins powered Michigan's breakthrough win over Ohio State with five rushing scores.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   },
   {
     "id": "cfb-v2-final-ohio-state-maurice",
@@ -395,7 +415,7 @@ const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
     ],
     "answer": "Maurice Clarett",
     "explanation": "Maurice Clarett was a pivotal freshman for Ohio State's 2002 championship team.",
-    "sourceId": "cfb-official-historical-review-v2"
+    "sourceId": "football-v2-editorial-source-check"
   }
 ];
 export const FOOTBALL_BAR_TRIVIA_V2_LAST_CALL: readonly BarTriviaQuestion[] = LAST_CALL_SEEDS.map(barTriviaQuestion);

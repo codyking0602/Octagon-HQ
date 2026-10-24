@@ -37,3 +37,7 @@ This draft is a content proposal, **not yet a complete independent historical so
 ## Known limitation
 
 Manual fact-family clustering protects identified same-event and reverse-answer variants, not every possible semantic similarity across other games. Do not equate this with a complete cross-game plagiarism/semantic certification. It does not query actual historical Supabase published boards; the replay is a deterministic candidate generator based on the present bank.
+
+## Per-question reference progress
+
+A first batch of **10** newly authored Last Call facts has been cross-checked against relevant NFL.com or ESPN articles and linked directly in the bank, with the 2026-10-24 review date. The other additions and rewrites retain explicit source-verification status; they must not be treated as fully certified or merged solely because structural CI is green.
