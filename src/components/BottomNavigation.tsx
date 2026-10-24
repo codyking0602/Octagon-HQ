@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
-import { nextSport, useSport } from "../app/SportProvider";
+import { nextSport, useSport, type SelectedSport } from "../app/SportProvider";
 import { entrySport, prioritizedSports } from "../app/sportPriority";
 import { useOptionalNotifications } from "../features/notifications/NotificationProvider";
 import { useOptionalIdentity } from "../features/identity/IdentityProvider";
@@ -97,7 +97,7 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const mlbMode = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
   const nbaMode = location.pathname === "/nba" || location.pathname.startsWith("/nba/");
   const nbaVisible = canPreviewNba(identity?.profile);
-  const visibleSport = (sport: typeof selectedSport) =>
+  const visibleSport = (sport: SelectedSport) =>
     (sport === "mlb" && !canViewMlbPlayoffs(identity?.profile)) || (sport === "nba" && !nbaVisible)
       ? "football" : sport;
   // Bottom tab entry follows frozen Home choice. All Sports follows the most
