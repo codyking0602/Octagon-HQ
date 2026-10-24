@@ -1,12 +1,12 @@
-import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
+import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 /** UFC Bar Trivia editorial v3: high-difficulty fights and last-call moments. */
-export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
+const authored: readonly BarTriviaQuestionSeed[] = [
   {
     "id": "ufc-bt-v3-h-001",
     "league": "ufc",
     "round": "round3",
     "category": "Memorable Fights & Champions",
-    "prompt": "Which former Olympic judoka submitted James Toney in the boxer's only UFC fight?",
+    "prompt": "Which former UFC heavyweight champion submitted boxer James Toney in the boxer's only UFC fight?",
     "choices": [
       "Randy Couture",
       "Frank Mir",
@@ -14,7 +14,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
       "Mark Coleman"
     ],
     "answer": "Randy Couture",
-    "explanation": "Couture submitted boxer James Toney at UFC 118.",
+    "explanation": "Randy Couture used his wrestling and grappling to submit boxer James Toney at UFC 118.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
     "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
@@ -36,7 +36,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Liddell defeated Wanderlei Silva by unanimous decision in their 2007 fight.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-79",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -55,7 +55,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "BJ Penn upset Hughes and took his welterweight title in 2004.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-46",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -74,7 +74,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Young Nick Diaz knocked out Robbie Lawler in their first meeting at UFC 47.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-47",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -131,7 +131,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Jones submitted Gane with a guillotine early in their heavyweight title fight.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-285",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -150,7 +150,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Aspinall stopped Pavlovich in the first round for the interim title.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-295",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -158,7 +158,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "league": "ufc",
     "round": "round3",
     "category": "Memorable Fights & Champions",
-    "prompt": "Which former middleweight champion did Alex Pereira beat to win the vacant light heavyweight title at UFC 295?",
+    "prompt": "Which former light heavyweight champion did Alex Pereira beat to capture the vacant 205-pound belt at UFC 295?",
     "choices": [
       "Jiri Prochazka",
       "Israel Adesanya",
@@ -166,10 +166,10 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
       "Glover Teixeira"
     ],
     "answer": "Jiri Prochazka",
-    "explanation": "Pereira stopped Prochazka at UFC 295 to win a title in a second weight class.",
+    "explanation": "Pereira stopped Jiri Prochazka at UFC 295 to capture the vacant UFC light heavyweight championship.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-295",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -188,7 +188,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Topuria stopped Holloway in round three at UFC 308.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-ufc24",
-    "sourceUrl": "https://www.ufc.com/news/knockouts-2024-ufccom-awards",
+    "sourceUrl": "https://www.ufc.com/event/ufc-308",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -226,7 +226,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Makhachev submitted Poirier with a D'Arce choke in their title fight.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-302",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -245,7 +245,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Muhammad beat Edwards by unanimous decision in Manchester in 2024.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-304",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -264,7 +264,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Usman scored a devastating knockout of Masvidal in their UFC 261 rematch.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-261",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -283,7 +283,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Nunes knocked out Cyborg to win the UFC women's featherweight title.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-232",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -302,7 +302,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Gaethje stopped Ferguson late in the fifth round at UFC 249.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-249",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -321,7 +321,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Namajunas finished Zhang with a first-round head kick to regain the strawweight title.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-261",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -340,7 +340,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Prochazka submitted Teixeira in the final round of their thrilling title fight.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-275",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -359,7 +359,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "O'Malley stopped Sterling with punches in the second round of UFC 292.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-292",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -378,7 +378,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Chandler landed a front kick to Ferguson's face for an unforgettable finish.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-274",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -397,7 +397,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Andrade slammed Namajunas and scored a dramatic knockout in Brazil.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-237",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -416,7 +416,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Shevchenko scored one of the division's most memorable head-kick knockouts.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-238",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -435,7 +435,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Zhang knocked out Joanna with a spinning backfist in their second meeting.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-275",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -454,7 +454,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Werdum submitted Velasquez with a guillotine to become heavyweight champion.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-188",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -492,7 +492,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Silva suffered a severe leg fracture on a checked kick against Weidman.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-168",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -568,7 +568,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Ortega knocked out Edgar with an uppercut in 2018.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-222",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -625,7 +625,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Poirier knocked out McGregor in their January 2021 rematch.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-257",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -663,7 +663,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Nate Diaz submitted Ferguson with a guillotine in UFC 279's rearranged main event.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice",
+    "sourceUrl": "https://www.ufc.com/event/ufc-279",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -682,7 +682,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Lauzon shocked former UFC lightweight champion Pulver with a first-round knockout.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-63",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -701,7 +701,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Carter scored an iconic spinning-backfist finish over Serra at UFC 31.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-31",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -720,7 +720,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Junior dos Santos knocked out Werdum with an uppercut at UFC 90.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-90",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -739,7 +739,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Jackson outpointed Dan Henderson at UFC 75 to unify UFC and PRIDE titles.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-75",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -758,7 +758,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Griffin submitted Shogun Rua in one of the bigger UFC 76 upsets.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-76",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -777,7 +777,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Makdessi finished Watson with a spinning backfist on the UFC 129 card.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-129",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -796,7 +796,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Cerrone finished Brown early in Round 3 after a friendly embrace at the beginning of the round.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-206",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -815,26 +815,7 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Maia submitted Story with a neck crank/choke during his welterweight run.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
-  },
-  {
-    "id": "ufc-bt-v3-f-009",
-    "league": "ufc",
-    "round": "last-call",
-    "category": "Last Call: Historic Fight Moments",
-    "prompt": "Which fighter defeated Jens Pulver by knockout in a highly regarded 2006 UFC debut?",
-    "choices": [
-      "Joe Lauzon",
-      "Frankie Edgar",
-      "Kenny Florian",
-      "Nate Diaz"
-    ],
-    "answer": "Joe Lauzon",
-    "explanation": "Joe Lauzon upset Pulver with strikes at UFC 63.",
-    "contentType": "evergreen",
-    "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-153",
     "verifiedAt": "2026-10-24"
   },
   {
@@ -872,26 +853,8 @@ export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = [
     "explanation": "Franklin won a decision over Wanderlei Silva in the UFC 99 main event.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
-    "verifiedAt": "2026-10-24"
-  },
-  {
-    "id": "ufc-bt-v3-f-016",
-    "league": "ufc",
-    "round": "last-call",
-    "category": "Last Call: Historic Fight Moments",
-    "prompt": "Which fighter finished the first ever UFC 5 Superfight by submission?",
-    "choices": [
-      "Neither fighter",
-      "Royce Gracie",
-      "Ken Shamrock",
-      "Dan Severn"
-    ],
-    "answer": "Neither fighter",
-    "explanation": "Gracie and Shamrock's UFC 5 Superfight ended in a draw after the time limit, not a submission.",
-    "contentType": "evergreen",
-    "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list",
+    "sourceUrl": "https://www.ufc.com/event/ufc-99",
     "verifiedAt": "2026-10-24"
   }
-].map(barTriviaQuestion);
+];
+export const UFC_BAR_TRIVIA_V3_HARD_FINAL: readonly BarTriviaQuestion[] = authored.map((item) => barTriviaQuestion(item));
