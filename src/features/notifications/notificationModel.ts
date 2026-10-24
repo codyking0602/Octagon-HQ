@@ -18,7 +18,6 @@ export const notificationKinds = [
   "ufc_event_starting",
   "football_picks_open",
   "nba_launch_available",
-  "nba_daily_available",
   "nba_daily_four_hours",
   "nba_results_ready",
   "mlb_launch_available",
@@ -188,7 +187,6 @@ const categoryMarks: Record<NotificationCategory, string> = {
 
 const nbaOnlyKinds = new Set<NotificationKind>([
   "nba_launch_available",
-  "nba_daily_available",
   "nba_daily_four_hours",
   "nba_results_ready",
 ]);
