@@ -3,7 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { MatchupsCompact } from "../play/PlayV2Page";
-import TodayChallengeHub from "../play/TodayChallengeHub";
+import { DailyAnswerDetail } from "../play/TodayChallengeHub";
+import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
+import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { createTodayChallengeRepository } from "../play/todayChallengeRepository";
 import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
 import {
@@ -58,6 +60,24 @@ export default function NbaPlayPage() {
   const ownerTest = owner && !published && ownerPreview != null;
   const featured = published ? slot?.gameType : owner ? ownerPreview ?? slot?.gameType : null;
   const [showOwnerCatalog, setShowOwnerCatalog] = useState(false);
+  const [showDailyStandings, setShowDailyStandings] = useState(false);
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
+  const dailySport = ownerTest ? "nba_preview" : "nba";
+  const dailyEnabled = (published || ownerTest) && Boolean(profile?.id);
+  const runtime = useTodayChallengeRuntime({
+    profileId: profile?.id ?? "signed-out", enabled: dailyEnabled, sport: dailySport,
+  });
+  const overview = useTodayChallengeOverview({
+    profileId: profile?.id ?? "signed-out", enabled: dailyEnabled,
+    projection: runtime.projection, sport: dailySport,
+  });
+  const dailyProjection = runtime.projection;
+  const dailyGame = (dailyProjection?.gameType as NbaDailyGame | undefined) ?? featured;
+  const dailyCompleted = Boolean(dailyProjection?.officialAttempt);
+  const dailySaved = !dailyCompleted && Boolean(dailyProjection?.progressRevision);
+  const dailyRoute = ownerTest ? "/nba/today?mode=owner-test" : "/nba/today";
+  const ownStanding = overview.leaderboard?.entries.find(entry => entry.isCurrentUser);
+  const selectedStanding = overview.leaderboard?.entries.find(entry => entry.profileId === selectedProfileId) ?? null;
   const repository = useMemo(() => createTodayChallengeRepository(undefined, ownerTest ? "nba_preview" : "nba"), [ownerTest]);
   const history = useQuery({
     queryKey: ["nba", ownerTest ? "owner-test-history" : "official-daily-history", profile?.id ?? "signed-out"],
@@ -76,30 +96,56 @@ export default function NbaPlayPage() {
     </header>
 
     <section className="play-v2__daily" aria-label="Today's Challenge" data-sport="nba">
-      {published || ownerTest ? <TodayChallengeHub sport={ownerTest ? "nba_preview" : "nba"} /> : <>
       <div className="play-v2__section-top">
         <span>TODAY'S CHALLENGE</span>
-        <span className="play-v2__daily-status">{published ? "OFFICIAL DAILY" : owner ? "OWNER PREVIEW" : "NOV 1 LAUNCH"}</span>
+        <span className="play-v2__daily-status">{ownerTest ? "PRIVATE OWNER TEST" : dailyCompleted ? "COMPLETE" : dailySaved ? "IN PROGRESS" : published ? "OFFICIAL DAILY" : "NOV 1 LAUNCH"}</span>
       </div>
-      {featured ? <>
+      {dailyEnabled && runtime.loading && !dailyProjection ? (
+        <p className="play-v2__muted" role="status">Loading today's NBA game…</p>
+      ) : dailyEnabled && !dailyProjection ? (
+        <div className="play-v2__error">
+          <p>{runtime.error instanceof Error ? runtime.error.message : "Today's NBA game is unavailable."}</p>
+          <button type="button" onClick={() => void runtime.refresh()}>TRY AGAIN ↗</button>
+        </div>
+      ) : dailyGame ? <>
         <div className="play-v2__daily-row">
           <div className="play-v2__daily-title">
-            <h2>{NBA_DAILY_GAME_LABELS[featured]}</h2>
-            <span>{published && slot
-              ? slot.isPublicationDay ? "New every other day · 48-hour window" : "Day 2 of 2 · challenge still open"
-              : "Private rehearsal · not ranked"}</span>
+            <h2>{NBA_DAILY_GAME_LABELS[dailyGame]}</h2>
+            <span>{dailyCompleted
+              ? ownStanding ? "#" + ownStanding.rank + " today" : ownerTest ? "Private test score saved" : "Official result saved"
+              : dailySaved ? "Your progress is saved"
+              : ownerTest ? "Owner-only scored rehearsal · not ranked publicly"
+              : slot?.isPublicationDay ? "New every other day · 48-hour window" : "Day 2 of 2 · challenge still open"}</span>
           </div>
-          <span className="play-v2__daily-arrow" aria-hidden="true">↗</span>
+          {dailyCompleted
+            ? <div className="play-v2__daily-score"><strong>{dailyProjection?.officialAttempt?.normalizedScore}</strong><span>/100</span></div>
+            : <span className="play-v2__daily-arrow" aria-hidden="true">↗</span>}
         </div>
         <div className="play-v2__daily-actions">
-          <button type="button" onClick={() => navigate(published ? NBA_GAME_ROUTES[featured] : previewRoute(featured))}>
-            {published ? "PLAY TODAY" : "TEST GAME"} →
+          <button type="button" onClick={() => navigate(dailyRoute)}>
+            {dailyCompleted ? "VIEW RESULT" : dailySaved ? "RESUME DAILY" : ownerTest ? "PLAY OWNER TEST" : "PLAY TODAY"} →
           </button>
-          <button type="button" disabled={!published} title={!published ? "Official NBA standings are not active yet." : undefined}>
-            TODAY'S STANDINGS ↗
+          <button type="button" aria-expanded={showDailyStandings} aria-controls="nba-play-daily-leaders"
+            onClick={() => setShowDailyStandings(open => !open)}>
+            {showDailyStandings ? "HIDE STANDINGS" : "TODAY'S STANDINGS"} ↗
           </button>
         </div>
-        {!published ? <p className="play-v2__muted">Preview play does not count toward the NBA championship or public leaderboards.</p> : null}
+        {showDailyStandings ? <div id="nba-play-daily-leaders" className="play-v2__daily-leaders">
+          {overview.leaderboardLoading ? <p>Loading today's standings…</p>
+            : !overview.leaderboard?.unlocked ? <p>Finish today's game to unlock standings.</p>
+              : !overview.leaderboard.entries.length ? <p>No completed scores yet.</p>
+                : overview.leaderboard.entries.slice().sort((a, b) => a.rank - b.rank).map(entry => (
+                  <button key={entry.profileId} type="button" className="play-v2__leader-row"
+                    aria-label={"View " + entry.displayName + "'s NBA Daily result"}
+                    onClick={() => setSelectedProfileId(entry.profileId)}>
+                    <span><b>#{entry.rank}</b> {entry.isCurrentUser ? "You" : entry.displayName}</span>
+                    <strong>{entry.normalizedScore}/100</strong>
+                  </button>
+                ))}
+        </div> : null}
+        {selectedStanding && dailyProjection ? <DailyAnswerDetail
+          entry={selectedStanding} projection={dailyProjection} sport={dailySport}
+          onClose={() => setSelectedProfileId(null)} /> : null}
       </> : <>
         <div className="play-v2__daily-row">
           <div className="play-v2__daily-title">
@@ -111,7 +157,6 @@ export default function NbaPlayPage() {
         </div>
         <p className="play-v2__muted">NBA Futures and the championship remain available separately.</p>
       </>}
-      </>}
     </section>
 
     <section className="play-v2__performance" aria-label="Your Play Performance">
@@ -121,7 +166,7 @@ export default function NbaPlayPage() {
       </div>
       <div className="play-v2__metrics">
         <div><span>DAILY AVERAGE</span><strong>{(published || ownerTest) && average !== null ? average : "—"}</strong><small>/100</small></div>
-        <div><span>COMPLETED</span><strong>{published || ownerTest ? completed : "—"}</strong><small>official games</small></div>
+        <div><span>COMPLETED</span><strong>{published || ownerTest ? completed : "—"}</strong><small>{ownerTest ? "test games" : "official games"}</small></div>
         <div><span>PERSONAL BEST</span><strong>{(published || ownerTest) && best !== null ? best : "—"}</strong><small>/100</small></div>
       </div>
       {ownerTest ? <p className="play-v2__muted">Your server-saved test results reset from view at launch; they never count toward public NBA standings.</p> : !published ? <p className="play-v2__muted">Your NBA scores will appear here after official Daily results are enabled. Private previews do not count.</p> : null}
