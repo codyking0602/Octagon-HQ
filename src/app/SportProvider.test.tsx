@@ -3,6 +3,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   SELECTED_SPORT_STORAGE_KEY,
+  PICKS_SPORT_STORAGE_KEY,
+  HOME_SPORT_STORAGE_KEY,
   SportProvider,
   useSport,
 } from "./SportProvider";
@@ -16,11 +18,16 @@ const tokensSource = readFileSync("src/styles/tokens.css", "utf8");
 const sportContextStyles = readFileSync("src/styles/sport-context.css", "utf8");
 
 function SportProbe() {
-  const { selectedSport, setSelectedSport } = useSport();
+  const { selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport } = useSport();
 
   return (
     <div>
       <output data-testid="selected-sport">{selectedSport}</output>
+      <output data-testid="picks-sport">{picksSport}</output>
+      <output data-testid="home-sport">{homeSport}</output>
+      <button type="button" onClick={() => setHomeSport("all")}>Home All Sports</button>
+      <button type="button" onClick={() => setHomeSport("ufc")}>Home UFC</button>
+      <button type="button" onClick={() => setPicksSport("nba")}>Picks Basketball</button>
       <button type="button" onClick={() => setSelectedSport("football")}>
         Select Football
       </button>
@@ -54,13 +61,16 @@ describe("SportProvider", () => {
     expect(bottomNavigationSource).toContain("useSport");
     expect(appShellSource).not.toContain("localStorage");
     expect(bottomNavigationSource).not.toContain("localStorage");
-    expect(sportProviderSource.match(/useState<SelectedSport>/g) ?? []).toHaveLength(1);
-    expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(1);
+    expect(sportProviderSource.match(/useState<SelectedSport>/g) ?? []).toHaveLength(2);
+    expect(sportProviderSource.match(/useState<HomeSport>/g) ?? []).toHaveLength(1);
+    expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(2);
   });
 
-  it("drives contextual theme from actual route while synchronizing the one sport preference", () => {
+  it("drives contextual theme from the route without synchronizing Home's preference", () => {
     expect(appShellSource).toContain("if (context?.switchable) return context.sport;");
     expect(appShellSource).toContain("setSelectedSport(sportContext.sport);");
+    expect(appShellSource).toContain("setPicksSport(sportContext.sport);");
+    expect(appShellSource).not.toContain("setHomeSport(");
   });
 
   it("keeps one canonical theme/style initialization path", () => {
@@ -123,6 +133,45 @@ describe("SportProvider", () => {
 
     expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+  });
+
+  it("keeps All Sports through Play/Picks changes and a fresh provider mount", () => {
+    const view = renderSportProvider();
+    fireEvent.click(screen.getByRole("button", { name: "Home All Sports" }));
+    fireEvent.click(screen.getByRole("button", { name: "Select UFC" }));
+    fireEvent.click(screen.getByRole("button", { name: "Picks Basketball" }));
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("all");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
+    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("nba");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+
+    view.unmount();
+    renderSportProvider();
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("all");
+    expect(screen.getByTestId("picks-sport")).toHaveTextContent("nba");
+    expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
+  });
+
+  it("keeps individual Home preferences unchanged when Picks or Play changes", () => {
+    renderSportProvider();
+    fireEvent.click(screen.getByRole("button", { name: "Home UFC" }));
+    fireEvent.click(screen.getByRole("button", { name: "Picks Basketball" }));
+    fireEvent.click(screen.getByRole("button", { name: "Select Football" }));
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("ufc");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("ufc");
+  });
+
+  it("migrates a single-sport legacy preference once, without following subsequent navigation", () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "ufc");
+    const view = renderSportProvider();
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("picks-sport")).toHaveTextContent("ufc");
+    fireEvent.click(screen.getByRole("button", { name: "Select Football" }));
+    view.unmount();
+    renderSportProvider();
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("picks-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("selected-sport")).toHaveTextContent("football");
   });
 
   it("ignores invalid persisted values instead of creating another sport state", () => {

@@ -8,8 +8,12 @@ import {
 } from "react";
 
 export type SelectedSport = "ufc" | "football" | "mlb" | "nba";
+export type HomeSport = SelectedSport | "all";
 
+// Keep the established key as the Play preference for existing users.
 export const SELECTED_SPORT_STORAGE_KEY = "the-hq:selected-sport";
+export const PICKS_SPORT_STORAGE_KEY = "the-hq:picks-sport";
+export const HOME_SPORT_STORAGE_KEY = "the-hq:home-sport";
 
 export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "mlb", "nba"];
 
@@ -35,29 +39,75 @@ function readPersistedSport(): SelectedSport {
   }
 }
 
+// Snapshot the old shared preference once during migration, so later Play/Picks
+// navigation cannot change Home or the other section after a reload.
+function readSectionSport(key: string): SelectedSport {
+  const legacySport = readPersistedSport();
+  if (typeof window === "undefined") return legacySport;
+  try {
+    const stored = window.localStorage.getItem(key);
+    if (isSelectedSport(stored)) return stored;
+    window.localStorage.setItem(key, legacySport);
+  } catch {
+    // The selection still works in memory when storage is unavailable.
+  }
+  return legacySport;
+}
+
+function readHomeSport(): HomeSport {
+  if (typeof window === "undefined") return DEFAULT_SPORT;
+  try {
+    const stored = window.localStorage.getItem(HOME_SPORT_STORAGE_KEY);
+    if (stored === "all" || isSelectedSport(stored)) return stored;
+  } catch {
+    // Fall back to the existing preference.
+  }
+  return readSectionSport(HOME_SPORT_STORAGE_KEY);
+}
+
+function persistSport(key: string, sport: HomeSport) {
+  try {
+    window.localStorage.setItem(key, sport);
+  } catch {
+    // Persistence should never prevent in-session navigation.
+  }
+}
+
 type SportContextValue = {
+  /** Play selection, preserving the historical selectedSport API and key. */
   selectedSport: SelectedSport;
   setSelectedSport: (sport: SelectedSport) => void;
+  picksSport: SelectedSport;
+  setPicksSport: (sport: SelectedSport) => void;
+  homeSport: HomeSport;
+  setHomeSport: (sport: HomeSport) => void;
 };
 
 const SportContext = createContext<SportContextValue | null>(null);
 
 export function SportProvider({ children }: PropsWithChildren) {
   const [selectedSport, setSelectedSportState] = useState<SelectedSport>(readPersistedSport);
+  const [picksSport, setPicksSportState] = useState<SelectedSport>(() => readSectionSport(PICKS_SPORT_STORAGE_KEY));
+  const [homeSport, setHomeSportState] = useState<HomeSport>(readHomeSport);
 
   const setSelectedSport = useCallback((sport: SelectedSport) => {
     setSelectedSportState(sport);
+    persistSport(SELECTED_SPORT_STORAGE_KEY, sport);
+  }, []);
 
-    try {
-      window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, sport);
-    } catch {
-      // Persistence should never prevent the in-session sport selection from changing.
-    }
+  const setPicksSport = useCallback((sport: SelectedSport) => {
+    setPicksSportState(sport);
+    persistSport(PICKS_SPORT_STORAGE_KEY, sport);
+  }, []);
+
+  const setHomeSport = useCallback((sport: HomeSport) => {
+    setHomeSportState(sport);
+    persistSport(HOME_SPORT_STORAGE_KEY, sport);
   }, []);
 
   const value = useMemo(
-    () => ({ selectedSport, setSelectedSport }),
-    [selectedSport, setSelectedSport],
+    () => ({ selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport }),
+    [selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport],
   );
 
   return <SportContext.Provider value={value}>{children}</SportContext.Provider>;

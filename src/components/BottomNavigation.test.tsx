@@ -4,6 +4,7 @@ import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   SELECTED_SPORT_STORAGE_KEY,
+  PICKS_SPORT_STORAGE_KEY,
   SportProvider,
 } from "../app/SportProvider";
 import { resetFootballEntrySessionForTests } from "../features/back-room/footballEntrySession";
@@ -90,7 +91,7 @@ describe("BottomNavigation", () => {
     expect(screen.getByRole("link", { name: "Rankings" })).toHaveAttribute("href", "/rankings");
   });
 
-  it("uses the globally selected Football Picks and Play destinations while keeping Rankings UFC-only", () => {
+  it("preserves separate Picks and Play destinations while keeping Rankings UFC-only", () => {
     window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
     renderNavigation(["/football/picks"]);
 
@@ -208,19 +209,19 @@ describe("BottomNavigation", () => {
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(second + "|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+    expect(window.localStorage.getItem(_section === "play" ? SELECTED_SPORT_STORAGE_KEY : PICKS_SPORT_STORAGE_KEY)).toBe("ufc");
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(third + "|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("mlb");
+    expect(window.localStorage.getItem(_section === "play" ? SELECTED_SPORT_STORAGE_KEY : PICKS_SPORT_STORAGE_KEY)).toBe("mlb");
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(fourth + "|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("nba");
+    expect(window.localStorage.getItem(_section === "play" ? SELECTED_SPORT_STORAGE_KEY : PICKS_SPORT_STORAGE_KEY)).toBe("nba");
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(first + "|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+    expect(window.localStorage.getItem(_section === "play" ? SELECTED_SPORT_STORAGE_KEY : PICKS_SPORT_STORAGE_KEY)).toBe("football");
   });
 
 });
