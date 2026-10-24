@@ -196,7 +196,7 @@ export function mergeOfficialVideos(...collections) {
   for (const entries of collections) {
     for (const entry of Array.isArray(entries) ? entries : []) {
       if (!OFFICIAL_CHANNELS.includes(entry?.channel)
-        || !/^[\\w-]{11}$/.test(entry?.id ?? "")
+        || !/^[\w-]{11}$/.test(entry?.id ?? "")
         || typeof entry.title !== "string" || !entry.title.trim()
         || !Number.isFinite(Date.parse(entry?.published ?? ""))
         || Date.parse(entry.published) < earliest
@@ -234,7 +234,7 @@ async function youtubeApiVideos(channel, key) {
     } finally { clearTimeout(timer); }
     for(const item of payload.items ?? []) {
       const id=item.id?.videoId, snippet=item.snippet;
-      if(snippet?.channelId===channel && /^[\\w-]{11}$/.test(id??""))
+      if(snippet?.channelId===channel && /^[\w-]{11}$/.test(id??""))
         videos.push({id,channel,title:snippet.title,published:snippet.publishedAt});
     }
     pageToken=payload.nextPageToken ?? "";
@@ -260,7 +260,7 @@ export async function collectOfficialVideos() {
   }
   const merged=mergeOfficialVideos(previous,newlyFound);
   if (!merged.length) throw Error("No verifiable official YouTube videos; " + errors.join("; "));
-  await fs.writeFile(VIDEO_CACHE_FILE, JSON.stringify(merged,null,2)+"\\n");
+  await fs.writeFile(VIDEO_CACHE_FILE, JSON.stringify(merged,null,2)+"\n");
   console.log(`Verified official NBA/ESPN video catalog: ${merged.length} videos (${newlyFound.length} refreshed)`);
   return merged;
 }
