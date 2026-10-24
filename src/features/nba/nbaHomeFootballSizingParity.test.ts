@@ -6,8 +6,8 @@ const css = readFileSync("src/styles/nba-owner-home.css", "utf8");
 const football = readFileSync("src/styles/home-football-hq.css", "utf8");
 const component = readFileSync("src/features/nba/NbaOwnerHomeHq.tsx", "utf8");
 const current = JSON.parse(readFileSync("public/nba-weekly/active.json", "utf8")) as {
-  player: { summary: string; highlightUrl: string };
-  team: { summary: string; highlightUrl?: string };
+  player: { profileUrl: string; highlightUrl: string; summary?: string };
+  team: { profileUrl: string; highlightUrl?: string; summary?: string };
 };
 
 function rules(selector: string) {
@@ -29,12 +29,25 @@ describe("Basketball HQ locked Football mobile sizing", () => {
     expect(rules(".nba-hq-owner__watch")).toContain("min-height: 32px;");
     expect(css).toContain("@media (max-width: 350px)");
   });
-  it("keeps full content accessible while visually restricting summaries to two lines", () => {
-    expect(css).toContain("-webkit-line-clamp: 2;");
-    expect(component).toContain("title={weekly.player.summary}");
-    expect(component).toContain("title={weekly.team.summary}");
-    expect(current.player.summary.length).toBeLessThanOrEqual(78);
-    expect(current.team.summary.length).toBeLessThanOrEqual(78);
+  it("never renders player or team summaries and retains Football-sized cards", () => {
+    expect(component).not.toContain("weekly.player.summary");
+    expect(component).not.toContain("weekly.team.summary");
+    expect(current.player.summary).toBeUndefined();
+    expect(current.team.summary).toBeUndefined();
+    expect(component).not.toContain('<b aria-hidden="true">›</b>');
+    expect(current.player.profileUrl).toBe("https://www.basketball-reference.com/players/m/maxeyty01.html");
+    expect(current.team.profileUrl).toBe("https://www.basketball-reference.com/teams/ATL/2027.html");
+  });
+  it("shows orange sport borders, readable stat labels and preserves compact dimensions", () => {
+    expect(css).toContain("rgba(242, 163, 65, .52)");
+    expect(css).toContain("rgba(242, 163, 65, .40)");
+    expect(css).toContain("rgba(242, 163, 65, .49)");
+    expect(css).toContain("font-size: 7px;");
+    expect(rules(".nba-hq-owner__player")).toContain("height: 156px;");
+    expect(rules(".nba-hq-owner__team")).toContain("height: 133px;");
+    const selector = readFileSync("src/styles/home-sport-chooser.css", "utf8");
+    expect(selector).toContain('.home-sport-chooser[data-home-sport="nba"]');
+    expect(readFileSync("src/features/home/HomePage.tsx", "utf8")).toContain('data-home-sport={ownerSport}');
   });
   it("avoids raw dates, owner testing clutter, fabricated rankings, and team videos", () => {
     expect(nbaSpotlightWeekLabel("2026-10-20", "2026-10-23")).toBe("OPENING WEEK");
