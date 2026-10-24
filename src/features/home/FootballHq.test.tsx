@@ -240,6 +240,8 @@ describe("owner Football challenge notification count", () => {
 
 describe("Football HQ Home summary", () => {
   it("keeps all Football content but replaces only the owner's Picks card with percentage summary", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-23T20:00:00Z"));
     render(
       <MemoryRouter>
         <FootballHq
@@ -261,7 +263,7 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("67% WIN RATE")).toBeInTheDocument();
     expect(hq.querySelector(".picks-progress__track")).not.toBeInTheDocument();
     expect(within(hq).queryByText("10 PTS")).not.toBeInTheDocument();
-    expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
+    expect(within(hq).getByRole("link", { name: "VIEW PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toBeInTheDocument();
     expect(hq.querySelectorAll(".football-hq-game-row")).toHaveLength(2);
@@ -289,6 +291,30 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).queryByText("Raiders")).not.toBeInTheDocument();
     expect(within(hq).getByText("Kansas City")).toBeInTheDocument();
     expect(within(hq).getByText("Las Vegas")).toBeInTheDocument();
+  });
+
+  it("keeps OPEN PICKS when a slate has not locked in owner preview", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-15T19:30:00Z"));
+    render(
+      <MemoryRouter>
+        <FootballHq
+          event={event}
+          selections={{}}
+          history={history}
+          summary={summary}
+          compactPreview
+          loading={false}
+          error=""
+          signedIn
+          dailyChallenge={null}
+        />
+      </MemoryRouter>,
+    );
+    const hq = screen.getByRole("region", { name: "Football HQ" });
+    expect(within(hq).getByRole("link", { name: "OPEN PICKS →" }))
+      .toHaveAttribute("href", "/football/picks");
+    expect(within(hq).queryByText("LOCKED")).not.toBeInTheDocument();
   });
 
   it("uses UFC-style Picks, one Daily row, Player Spotlight, and canonical authored matchup rows", () => {
