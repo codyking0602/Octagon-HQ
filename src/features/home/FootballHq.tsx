@@ -525,7 +525,7 @@ export function FootballHq({
               <Link className="football-hq__challenge-alert" to="/football#challenge-center"
                 aria-label={`${incomingFootballChallenges} outstanding Football challenge${incomingFootballChallenges === 1 ? "" : "s"}; open Challenge Center`}>
                 <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 5l14 14M19 5L5 19M4 4l4 1-3 3-1-4M20 4l-4 1 3 3 1-4M4 20l4-1-3-3-1 4M20 20l-4-1 3-3 1 4"/>
+                  <path d="M5 5.5h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 3v-3a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8m-8 4h5"/>
                 </svg>
                 <b>{incomingFootballChallenges > 9 ? "9+" : incomingFootballChallenges}</b>
               </Link>
@@ -560,7 +560,7 @@ export function FootballHq({
               <strong>{signedIn ? pickRecord(summary) : "—"}</strong>
               <span>{!signedIn ? "SIGN IN TO TRACK" : seasonWinPercentage === null ? "NO RESULTS YET" : `${seasonWinPercentage}% WIN RATE`}</span>
             </Link>
-            <Link className="football-hq-compact-picks__action" to="/football/picks">OPEN PICKS →</Link>
+            <Link className="football-hq-compact-picks__action" to="/football/picks">{locked ? "VIEW PICKS →" : "OPEN PICKS →"}</Link>
           </div>
         ) : (
           <>
