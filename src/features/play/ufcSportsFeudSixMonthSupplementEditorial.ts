@@ -77,5 +77,17 @@ export const UFC_SPORTS_FEUD_SIX_MONTH_EDITORIAL = [
     "decision": "hold",
     "semanticFamily": "ufc-fight-broadcast-moments",
     "reason": "Repeats broadcast/replay and crowd cheer recall task"
+  },
+  {
+    "id": "ufc-v2-main8-pro-kickboxing",
+    "decision": "hold",
+    "semanticFamily": "ufc-fighters-professional-boxing-and-kickboxing-crossovers",
+    "reason": "Factually promising, but same crossover-recall pattern as professional boxing and bare-knuckle candidates; use as alternative after athlete-by-athlete historical verification."
+  },
+  {
+    "id": "ufc-v2-main8-grappling-world-titles",
+    "decision": "advance",
+    "semanticFamily": "ufc-fighters-international-grappling-world-honors",
+    "reason": "Official UFC athlete biographies corroborate IBJJF and ADCC world accomplishments; every named fighter's exact event/title requires independent confirmation before release."
   }
 ] as const;
