@@ -186,7 +186,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "league": "ufc",
     "round": "round3",
     "category": "Memorable Fights & Champions",
-    "prompt": "Which featherweight champion lost his title to a head-kick knockout in a 2023 rematch with Islam Makhachev?",
+    "prompt": "Which reigning featherweight champion was knocked out while challenging Islam Makhachev for the lightweight belt at UFC 294?",
     "choices": [
       "Alexander Volkanovski",
       "Max Holloway",
@@ -194,10 +194,10 @@ const authored: readonly BarTriviaQuestionSeed[] = [
       "Yair Rodriguez"
     ],
     "answer": "Alexander Volkanovski",
-    "explanation": "Makhachev knocked out Volkanovski with a head kick in their UFC 294 rematch.",
+    "explanation": "Makhachev knocked out Volkanovski with a head kick at UFC 294; Volkanovski was challenging for the lightweight title, not defending his featherweight belt.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-honors",
-    "sourceUrl": "https://www.ufc.com/honors/fans-choice"
+    "sourceUrl": "https://www.ufc.com/news/ufc-294-makhachev-vs-volkanovski-2-results-highlights-winner-interviews"
   },
   {
     "id": "ufc-bt-v3-h-012",
@@ -636,7 +636,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "league": "ufc",
     "round": "last-call",
     "category": "Last Call: Historic Fight Moments",
-    "prompt": "Which fighter lost his UFC debut to Joe Lauzon in a famous upset at UFC 63?",
+    "prompt": "Whom did UFC newcomer Joe Lauzon upset in his Octagon debut at UFC 63?",
     "choices": [
       "Jens Pulver",
       "BJ Penn",
