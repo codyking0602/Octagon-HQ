@@ -32,7 +32,9 @@ describe("NBA weekly feed safety", () => {
     player: {name:"Example Player",team:"Example Team",position:"PG",
       headshotUrl:"https://a.espncdn.com/i/headshots/nba/players/full/1.png",
       profileUrl:"https://www.espn.com/nba/player/_/id/1",
-      highlightUrl:"https://www.youtube.com/watch?v=ABCdefghi12", summary:"Verified performance",
+      highlightUrl:"https://www.youtube.com/watch?v=ABCdefghi12",
+      highlightSourceChannelId:"UCWJ2lWNubArHWmf3FIHbfcQ",
+      channelUrl:"https://www.youtube.com/@NBA", summary:"Verified performance",
       stats:[{label:"PPG",value:"30"},{label:"APG",value:"7"},{label:"RPG",value:"4"},{label:"FG%",value:"52"}]},
     team: {name:"Example Team",teamId:"OKC",logoUrl:"https://a.espncdn.com/i/teamlogos/nba/500/okc.png",
       profileUrl:"https://www.espn.com/nba/team/_/name/okc",record:"3-0",ppg:"120",oppPpg:"105",netMargin:"+15",summary:"Verified team performance"},
@@ -40,7 +42,15 @@ describe("NBA weekly feed safety", () => {
   it("rejects absent data, fake photos and non-YouTube highlights", () => {
     expect(readVerifiedNbaWeekly(null)).toBeNull();
     expect(readVerifiedNbaWeekly({...valid,player:{...valid.player,highlightUrl:"https://example.com/fake"}})).toBeNull();
+    expect(readVerifiedNbaWeekly({...valid,player:{...valid.player,highlightSourceChannelId:"UCVSSpcmZD2PwPBqb8yKQKBA"}})).toBeNull();
     expect(readVerifiedNbaWeekly({...valid,team:{...valid.team,logoUrl:"https://example.com/fake"}})).toBeNull();
+  });
+  it("supports a verified current owner-approved spotlight with no fabricated video", () => {
+    const player={...valid.player,highlightUrl:null,highlightSourceChannelId:undefined};
+    expect(readVerifiedNbaWeekly({...valid,publishedAt:"2026-10-24T00:00:00Z",player})?.player.name).toBe("Example Player");
+    expect(readVerifiedNbaWeekly({...valid,publishedAt:"2026-10-24T00:00:00Z",player:{...player,channelUrl:"https://example.com"}})).toBeNull();
+    expect(owner).toContain("weekly.player.highlightUrl ? \"WATCH HIGHLIGHT ↗\" : \"NBA CHANNEL ↗\"");
+    expect(owner).not.toContain("weekly.team.highlightUrl");
   });
   it("accepts valid completed editorial packages only after their publication timestamp", () => {
     expect(readVerifiedNbaWeekly({...valid,publishedAt:"2999-10-27T13:00:00Z"})).toBeNull();
