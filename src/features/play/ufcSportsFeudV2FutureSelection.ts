@@ -69,15 +69,19 @@ export function planUfcFeudV2Appearance(
   // A topic may exist in both pools. Spend Main-only topic families first,
   // keeping shared families available for Fast Money. The mathematical
   // union threshold above guarantees this allocation can succeed.
+  // The semantic topic schedule is fixed across cycles, rather than re-shuffled
+  // at each boundary. Otherwise the last topics in one cycle can recur in the
+  // first days of the next, violating a sliding 24-appearance no-repeat rule.
+  // A future cycle may use a newly edited question in that same topic family.
   const mainOnly=[...main.keys()].filter(k=>!fast.has(k));
   const shared=[...main.keys()].filter(k=>fast.has(k));
   const selectedMainKeys=[
-    ...seedOrder(mainOnly,`ufc-v2-main-only-${cycle}`,x=>x),
-    ...seedOrder(shared,`ufc-v2-main-shared-${cycle}`,x=>x),
+    ...seedOrder(mainOnly,"ufc-v2-main-only-topic-schedule",x=>x),
+    ...seedOrder(shared,"ufc-v2-main-shared-topic-schedule",x=>x),
   ].slice(0,requiredMain);
   const reserved=new Set(selectedMainKeys);
   const selectedFastKeys=seedOrder([...fast.keys()].filter(k=>!reserved.has(k)),
-    `ufc-v2-fast-${cycle}`,x=>x).slice(0,requiredFast);
+    "ufc-v2-fast-topic-schedule",x=>x).slice(0,requiredFast);
   if(selectedMainKeys.length!==requiredMain||selectedFastKeys.length!==requiredFast)
     throw new Error("UFC Feud V2 insufficient unique Main/Fast topic allocation");
 
