@@ -4,10 +4,10 @@ const ROWS = [
   {
     "id": "ufc-v2-main5-dwcs-graduates",
     "lane": "ufc-dwcs-alumni",
-    "prompt": "Name a UFC fighter who earned a UFC opportunity through Dana White's Contender Series.",
+    "prompt": "Name a fighter who earned a UFC contract with a win on Dana White's Contender Series.",
     "kind": "person",
     "ranked": "Sean O'Malley|Jamahal Hill|Bo Nickal|Johnny Walker|Maycee Barber|Jack Della Maddalena|Carlos Ulberg|Geoff Neal",
-    "extras": "Joe Pyfer|Michael Morales|Anthony Hernandez|Jailton Almeida|Sean Woodson|Punahele Soriano|Sodiq Yusuff|Gregory Rodrigues|Carlos Prates|Quillan Salkilld",
+    "extras": "Joe Pyfer|Michael Morales|Anthony Hernandez|Jailton Almeida|Sean Woodson|Punahele Soriano|Sodiq Yusuff|Carlos Prates|Quillan Salkilld",
     "aliases": {
       "Sean O'Malley": [
         "Suga Sean"
