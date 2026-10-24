@@ -94,11 +94,26 @@ describe("scheduled monitoring cadence", () => {
     });
   });
 
-  it("protects low or exhausted provider quota until a manual run observes recovery", () => {
+  it("protects low or exhausted provider quota while allowing bounded automatic recovery probes", () => {
     expect(decideScheduledMonitoring({
       event: event("2026-08-20T12:00:00Z"),
       now,
       state: { provider_requests_remaining: 5 },
+    })).toEqual({ due: false, reason: "quota_protected" });
+    expect(decideScheduledMonitoring({
+      event: event("2026-08-20T12:00:00Z"),
+      now,
+      state: { provider_requests_remaining: 0, quota_observed_at: "2026-08-10T11:00:00Z" },
+    })).toEqual({ due: false, reason: "quota_protected" });
+    expect(decideScheduledMonitoring({
+      event: event("2026-08-20T12:00:00Z"),
+      now,
+      state: { provider_requests_remaining: 0, quota_observed_at: "2026-08-09T11:00:00Z" },
+    }).due).toBe(true);
+    expect(decideScheduledMonitoring({
+      event: event("2026-08-20T12:00:00Z"),
+      now,
+      state: { provider_requests_remaining: 5, quota_observed_at: "2026-08-09T11:00:00Z" },
     })).toEqual({ due: false, reason: "quota_protected" });
     expect(decideScheduledMonitoring({
       event: event("2026-08-20T12:00:00Z"),
