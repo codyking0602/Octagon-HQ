@@ -71,11 +71,11 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
   `NotificationCenterPage.tsx` hosts push controls and a separate inbox sport filter.
 - Model: adds NBA sport identity and recognizes basketball launch reveal deep links.
 - Repository/provider: add private get/set push-sports RPCs and cross-device profile state.
-- Migration `202612310326_notification_sport_push_controls.sql`:
+- Migration `202612310402_notification_sport_push_controls.sql`:
   stores private per-profile selection; enforces it in the **push enqueue trigger and
   service-only delivery claim**, including filtered summaries for combined Daily.
   Do not reuse `private.notification_preferences` to mute inbox events.
-- Migration `202612310327_nba_notification_kind_preparation.sql` adds four
+- Migration `202612310403_nba_notification_kind_preparation.sql` adds four
   dormant NBA canonical kinds and their category/priority mapping; it does
   not publish, schedule, or enable NBA previews.
 - Tests: add TypeScript architecture contracts and isolated SQL eligibility assertions.
