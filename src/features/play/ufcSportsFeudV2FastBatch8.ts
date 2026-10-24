@@ -421,7 +421,7 @@ const ROWS = [
     "prompt": "Name something that became standardized in the UFC after its earliest no-holds-barred tournaments.",
     "kind": "other",
     "ranked": "Weight classes|Round time limits|Mandatory gloves|Judges' decisions|Fouls against headbutts|Three-round non-title bouts|Five-round title bouts|Unified rules",
-    "extras": "Athletic commission oversight|No groin strikes|Medical checks|Mouthguards|No eye gouging|No hair pulling|Point deductions|Standing eight counts removed",
+    "extras": "Athletic commission oversight|No groin strikes|Medical checks|Mouthguards|No hair pulling|Point deductions",
     "aliases": {
       "Weight classes": [
         "Divisions"
