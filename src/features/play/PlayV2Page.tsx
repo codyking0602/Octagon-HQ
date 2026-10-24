@@ -210,7 +210,8 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
     }), [challenges, sport, activeProfile]);
   const openMatchups = allMatchups.filter((challenge) => {
     const status = challengeStatus(challenge, activeProfile!.id);
-    return status !== "completed" && status !== "declined";
+    return status !== "completed" && status !== "declined"
+      && new Date(challenge.expiresAt).getTime() > Date.now();
   });
   const visible = detailsOpen ? allMatchups : openMatchups.slice(0, 3);
   const yourTurn = openMatchups.filter((challenge) =>
@@ -339,7 +340,7 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
                       <strong>{challenge.gameTitle} vs {partner?.displayName ?? "Friend"}</strong>
                       <small>{statusLabel(challenge)}</small>
                     </span>
-                    {direction === "received" && (status === "new" || status === "opened")
+                    {direction === "received" && new Date(challenge.expiresAt).getTime() > Date.now() && (status === "new" || status === "opened")
                       ? <span className="play-v2__matchup-alert">YOUR TURN</span>
                       : <span aria-hidden="true">↗</span>}
                   </button>
