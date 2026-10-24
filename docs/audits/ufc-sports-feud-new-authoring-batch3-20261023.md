@@ -404,5 +404,3 @@ This phase also introduced `ufcSportsFeudV2RetainedDraft.ts`, which **copies one
 **Alias bindings (6):** Alexander Volkanovski = Volk; Robert Whittaker = Bobby Knuckles; Israel Adesanya = Izzy; Tai Tuivasa = Bam Bam; Jack Della Maddalena = JDM; Kai Kara-France = KKF.
 
 **Verdict:** ADVANCE TO FULL FACT AND GRADING VERIFICATION. Recognizable MMA region and fighters, broad accepted roster and national representation verification.
-
-
