@@ -4331,9 +4331,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 86px 0 8px;
+  padding: 0;
 }
 .mlb-hq--compact-preview .home-sport-hq__heading .mlb-hq__center-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
   color: var(--mlb-green-strong);
   font-size: 17px;
