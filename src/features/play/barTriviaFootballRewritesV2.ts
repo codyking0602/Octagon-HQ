@@ -160,7 +160,7 @@ const EDITS: Readonly<Record<string, EditableFact>> = {
     "sourceId": "football-bar-trivia-v2-fact-check-pending"
   },
   "nfl-easy2-lincoln-financial": {
-    "prompt": "Which Eagles quarterback reached five straight NFC Championship Games from 2001 through 2004?",
+    "prompt": "Which Eagles quarterback reached four straight NFC Championship Games from 2001 through 2004?",
     "choices": [
       "Donovan McNabb",
       "Nick Foles",

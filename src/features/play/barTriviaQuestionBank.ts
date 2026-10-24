@@ -1,5 +1,8 @@
 import { barTriviaDifficultyForRound, barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_EDITORIAL_RETIREMENTS, BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES } from "./barTriviaEditorialCuration";
+import { FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS, FOOTBALL_BAR_TRIVIA_V2_LAST_CALL } from "./barTriviaFootballEditorialV2";
+import { applyFootballBarTriviaV2Rewrite } from "./barTriviaFootballRewritesV2";
+import { footballTriviaConceptKey } from "./barTriviaFootballConcepts";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
 import { BAR_TRIVIA_EASY_EXPANSION, BAR_TRIVIA_EASY_QUESTION_IDS } from "./barTriviaEasyCalibration";
 import { BAR_TRIVIA_EASY_EXPANSION_2 } from "./barTriviaEasyExpansion2";
@@ -119,6 +122,7 @@ const RAW_BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   ...BAR_TRIVIA_EASY_EXPANSION,
   ...BAR_TRIVIA_EASY_EXPANSION_2,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
+  ...FOOTBALL_BAR_TRIVIA_V2_LAST_CALL,
 ];
 
 
@@ -143,5 +147,7 @@ function calibrateBarTriviaDifficulty(question: BarTriviaQuestion): BarTriviaQue
 
 export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] =
   RAW_BAR_TRIVIA_QUESTION_BANK
-    .filter((question) => !(question.id in BAR_TRIVIA_EDITORIAL_RETIREMENTS))
-    .map(calibrateBarTriviaDifficulty);
+    .filter((question) => !(question.id in BAR_TRIVIA_EDITORIAL_RETIREMENTS) && !FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS.has(question.id))
+    .map(applyFootballBarTriviaV2Rewrite)
+    .map(calibrateBarTriviaDifficulty)
+    .map((question) => ({ ...question, factKey: footballTriviaConceptKey(question.id) }));

@@ -11,6 +11,8 @@ export type BarTriviaContentType = TriviaContentType;
 
 export interface BarTriviaQuestion {
   id: string;
+  /** Groups different IDs asking about the same recognizable historical fact. */
+  factKey?: string;
   league: BarTriviaLeague;
   round: BarTriviaRound;
   difficulty: BarTriviaDifficulty;
@@ -161,7 +163,7 @@ function pickQuestion(
   recentQuestionIds: readonly string[],
   random: () => number,
 ) {
-  const unused = pool.filter((question) => !used.has(question.id));
+  const unused = pool.filter((question) => !used.has(question.id) && !used.has(question.factKey ?? question.id));
   if (!unused.length) throw new Error("Bar Trivia does not have enough questions for this round.");
 
   const ranks = recentRank(recentQuestionIds);
@@ -215,6 +217,7 @@ function selectCurrentEvents(
     const chosen = pickQuestion(pool, used, usedCategories, recentQuestionIds, random);
     selected.push(chosen);
     used.add(chosen.id);
+    used.add(chosen.factKey ?? chosen.id);
     usedCategories.add(chosen.category);
     capacity.set(chosen.round, (capacity.get(chosen.round) ?? 0) - 1);
   }
@@ -305,6 +308,7 @@ export function buildBarTriviaRun(
     );
     run.push(chosen);
     used.add(chosen.id);
+    used.add(chosen.factKey ?? chosen.id);
     usedCategories.add(chosen.category);
   }
 
