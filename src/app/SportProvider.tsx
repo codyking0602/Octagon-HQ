@@ -78,15 +78,6 @@ export function SportProvider({ children }: PropsWithChildren) {
 
   const updatePreference = useCallback((section: keyof SportPreferences, sport: HomeSport) => {
     setPreferences((current) => {
-      if (current[section] === sport) {
-        // An explicit selection should still persist even when it matches the default.
-        try {
-          window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, JSON.stringify(current));
-        } catch {
-          // Storage is optional.
-        }
-        return current;
-      }
       const next: SportPreferences = {
         home: section === "home" ? sport : current.home,
         play: section === "play" ? sport as SelectedSport : current.play,
@@ -97,7 +88,8 @@ export function SportProvider({ children }: PropsWithChildren) {
       } catch {
         // Storage failures must never block in-session section navigation.
       }
-      return next;
+      // No render is needed when selecting the current default, but the choice is persisted.
+      return current[section] === sport ? current : next;
     });
   }, []);
 
