@@ -15,9 +15,9 @@ describe("October 20 official Weekly GM rollover", () => {
     expect(page).toContain('quarterback: "Michael Penix Jr."');
     expect(page).toContain('quarterback: "Josh Allen"');
     expect(page).toContain('quarterback: "Jaxson Dart"');
-    expect(page).toContain("October 20–26");
-    expect(page).toContain("October 26 at 11:59 PM Central");
-    expect(page).toContain('state.week_start === "2026-10-13" && showAuctionReveal');
+    expect(page).toContain("formatWeek(state.week_start)");
+    expect(page).toContain("new Date(state.closes_at)");
+    expect(page).toContain("repository.archivedResult(archive.week_start");
   });
 
   it("prefills the exact week-specific starting QB and never changes other weeks", () => {
