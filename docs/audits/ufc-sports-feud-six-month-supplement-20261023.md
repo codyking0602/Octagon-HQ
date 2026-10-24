@@ -3,13 +3,15 @@
 The production `main` SHA at task start was `f1d5634d3a8f9fa8bc26dae42f8aaa24cdac665e`. A separate chat is developing the main six-month candidate PR #2067 concurrently, so this change uses collision-safe filenames and stays off `main` to avoid competing integrations.
 
 ## Supplemental candidates
-**15 authored editorial prompts:** 3 Main (UFC Hall of Fame Contributor Wing inductees, professional kickboxing crossovers, and IBJJF/ADCC grappling world-title holders) plus 12 Fast covering fan logistics, streaming problems, MMA gym names, martial arts belt colors, travel paperwork, and UFC event context. Each has eight ranked editorial examples, more valid off-board responses, and curated aliases; these rankings are never represented as survey results.
+**16 authored editorial prompts:** 4 Main (UFC Hall of Fame Contributor Wing inductees, professional kickboxing crossovers, IBJJF/ADCC grappling world-title holders, and fighters returning to the UFC after stints elsewhere) plus 12 Fast covering fan logistics, streaming problems, MMA gym names, martial arts belt colors, travel paperwork, and UFC event context. Each has eight ranked editorial examples, more valid off-board responses, and curated aliases; these rankings are never represented as survey results.
 
-**First editorial pass:** 7 advance to final review (2 Main + 5 Fast), 8 held owing to duplication or adjacent semantic families. The target is not met or certified merely by writing this file.
+**First editorial pass:** 8 advance to final review (3 Main + 5 Fast), 8 held owing to duplication or adjacent semantic families. The target is not met or certified merely by writing this file.
 
 The official UFC Hall of Fame lists Joe Silva, Art Davie, Jeff Blatnick, Bob Meyrowitz, Marc Ratner, Craig Piligian, Charles "Mask" Lewis, Thomas Gerbasi and Bruce Connal in Contributor Wing: https://www.ufc.com/ufc-hall-of-fame
 
 The kickboxing Main board is held as an alternative to other boxing crossovers, not counted as a new semantic topic. UFC source references for grappling world-title credentials: https://www.ufc.com/athlete/gilbert-burns, https://www.ufc.com/athlete/mackenzie-dern, https://www.ufc.com/athlete/rodolfo-vieira, and https://www.ufc.com/news/penns-prodigious-history. UFC source references for kickboxing careers: https://www.ufc.com/news/overeem-vs-hunt-lands-ufc-209-card, https://www.ufc.com/news/they-have-history-pre-ufc-rematches-ufc-281-adesanya-vs-pereira, and https://www.ufc.com/athlete/stephen-thompson.
+
+Returning-veteran historical example and full UFC stint timeline: https://www.ufc.com/athlete/robbie-lawler; 2013 return narrative: https://www.ufc.com/news/robbie-lawler-ruthless-return; and UFC Josh Barnett return: https://www.ufc.com/video/37191. Returnees must have fought for another promotion between UFC stints, not merely returned from an injury layoff.
 
 ## Quality controls
 - Tested each ranked canonical, extra accepted and nickname/alias through `matchFamilyFeudAnswer`.
