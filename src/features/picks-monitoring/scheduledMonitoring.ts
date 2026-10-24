@@ -15,6 +15,8 @@ export interface ScheduledMonitoringState {
   last_completed_at?: string | null;
   next_eligible_at?: string | null;
   provider_requests_remaining?: number | null;
+  /** Latest provider quota response across ALL UFC events, not just this event. */
+  quota_observed_at?: string | null;
 }
 
 export type ScheduledMonitoringDecision =
@@ -99,8 +101,15 @@ export function decideScheduledMonitoring(input: {
   if (interval === 0) return { due: false, reason: "monitoring_closed" };
 
   const remaining = input.state?.provider_requests_remaining;
+  // Protect the shared provider budget across all events. A single daily free-of-charge
+  // exhausted-quota probe (weekly if 1–5 requests remain) can discover a plan reset
+  // without requiring the owner to manually re-enable odds monitoring.
   if (typeof remaining === "number" && remaining <= 5) {
-    return { due: false, reason: "quota_protected" };
+    const observedAt = parsedTime(input.state?.quota_observed_at);
+    const cooldown = remaining === 0 ? DAY_MS : 7 * DAY_MS;
+    if (observedAt === null || input.now.getTime() - observedAt < cooldown) {
+      return { due: false, reason: "quota_protected" };
+    }
   }
 
   const nowMs = input.now.getTime();
