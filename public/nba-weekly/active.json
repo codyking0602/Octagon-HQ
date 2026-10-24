@@ -1,4 +1,44 @@
 {
-  "status": "pending",
-  "reason": "Awaiting verified opening-week NBA final box scores and a directly matched official YouTube highlight"
+  "weekStart": "2026-10-20",
+  "weekEnd": "2026-10-23",
+  "publishedAt": "2026-10-24T20:00:00Z",
+  "player": {
+    "name": "Tyrese Maxey",
+    "team": "Philadelphia 76ers",
+    "position": "PG",
+    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/4431678.png",
+    "profileUrl": "https://www.espn.com/nba/player/_/id/4431678",
+    "highlightUrl": null,
+    "channelUrl": "https://www.youtube.com/@NBA",
+    "summary": "Averaged 30.0 points and 5.5 assists in two wins, including a 32-point effort as Philadelphia erased a 29-point deficit against Cleveland.",
+    "stats": [
+      {
+        "label": "PPG",
+        "value": "30.0"
+      },
+      {
+        "label": "APG",
+        "value": "5.5"
+      },
+      {
+        "label": "RPG",
+        "value": "3.5"
+      },
+      {
+        "label": "FG%",
+        "value": "50.0"
+      }
+    ]
+  },
+  "team": {
+    "name": "Atlanta Hawks",
+    "teamId": "ATL",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/atl.png",
+    "profileUrl": "https://www.espn.com/nba/team/_/name/atl",
+    "record": "2-0",
+    "ppg": "130.0",
+    "oppPpg": "103.0",
+    "netMargin": "+27.0",
+    "summary": "Opened 2–0, highlighted by a franchise-record 47-point win over Charlotte. Averaged 130 points while allowing 103."
+  }
 }
