@@ -21,7 +21,11 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const BAR_TRIVIA_DAILY_CONTENT_VERSION = "bar-trivia-daily-v3-ufc-editorial";
+export const BAR_TRIVIA_DAILY_CONTENT_VERSION = "bar-trivia-daily-v2-recent-rotation";
+export const UFC_BAR_TRIVIA_V3_CONTENT_VERSION = "bar-trivia-daily-v3-ufc-editorial";
+function barTriviaContentVersion(league: BarTriviaLeague) {
+  return league === "ufc" ? UFC_BAR_TRIVIA_V3_CONTENT_VERSION : BAR_TRIVIA_DAILY_CONTENT_VERSION;
+}
 export const UFC_BAR_TRIVIA_UNIQUE_APPEARANCES = 20;
 export const BAR_TRIVIA_DAILY_SCORING_VERSION = "play-official-score-v1";
 
@@ -157,7 +161,7 @@ function dailyBarTriviaRun(
       ? [...themed]
       : buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, {
           random: seededLineupRandom(
-            BAR_TRIVIA_DAILY_CONTENT_VERSION, league, scheduleVersion, candidateDay, "questions",
+            barTriviaContentVersion(league), league, scheduleVersion, candidateDay, "questions",
           ),
           now: candidateDay + "T12:00:00.000Z",
           recentQuestionIds: recentIds,
@@ -179,21 +183,22 @@ export function buildBarTriviaDailySetup(
   scheduleVersion: string,
 ): OfficialDailySetupPublication {
   const run = dailyBarTriviaRun(league, day, scheduleVersion);
+  const contentVersion = barTriviaContentVersion(league);
   const doubleRound = pickBarTriviaDoubleRound(seededLineupRandom(
-    BAR_TRIVIA_DAILY_CONTENT_VERSION,
+    contentVersion,
     league,
     scheduleVersion,
     day,
     "double-round",
   ));
   const initial = createBarTriviaState(doubleRound);
-  const proof = `${BAR_TRIVIA_DAILY_CONTENT_VERSION}:${stableLineupHash(
+  const proof = `${contentVersion}:${stableLineupHash(
     `${league}|${scheduleVersion}|${day}|${run.map((question) => question.id).join("|")}|${doubleRound}`,
   )}`;
 
   return {
-    setupKey: `${BAR_TRIVIA_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:${league}`,
-    contentVersion: BAR_TRIVIA_DAILY_CONTENT_VERSION,
+    setupKey: `${contentVersion}:${scheduleVersion}:${day}:${league}`,
+    contentVersion,
     scoringVersion: BAR_TRIVIA_DAILY_SCORING_VERSION as OfficialDailySetupPublication["scoringVersion"],
     publicSetup: {
       league,
