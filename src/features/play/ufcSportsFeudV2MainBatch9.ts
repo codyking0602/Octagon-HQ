@@ -58,7 +58,7 @@ const ROWS = [
  prompt:"Name a fighter on the UFC Record Book's career significant strikes landed Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Max Holloway|Sean Strickland|Angela Hill|King Green|Dustin Poirier|Rafael dos Anjos|Jessica Andrade|Alexander Volkanovski",
- extras:"Frankie Edgar",
+ extras:"Frankie Edgar|Joanna Jedrzejczyk",
  aliases:{"King Green":["Bobby Green"],"Rafael dos Anjos":["RDA"],"Alexander Volkanovski":["Volk"]},source:[RECORD]
 },
 {
