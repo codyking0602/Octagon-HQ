@@ -9,7 +9,6 @@ import { FootballWeeklyAuctionFinalResult } from "./FootballWeeklyAuctionGate";
 import { FootballWeeklyBuildQbFinalResult } from "./FootballWeeklyBuildQbGate";
 import { FootballWeeklySuperteamFinalResult } from "./FootballWeeklySuperteamGate";
 import { FootballWeeklyNflTeamSeasonFinalResult } from "./FootballWeeklyNflTeamSeasonGate";
-import { useIdentity } from "../identity/IdentityProvider";
 import { hqImpostorV1Window } from "../impostor/hqImpostorSchedule";
 import "../../styles/football-weekly-auction-center.css";
 
@@ -52,7 +51,6 @@ function archivedScore(result: FootballWeeklyFinal) {
 
 export default function FootballWeeklyAuctionCenterPage() {
   const navigate = useNavigate();
-  const identity = useIdentity();
   const impostorWindow = hqImpostorV1Window();
   const gmWeek = gmFeaturedWeek();
   const repository = useMemo(() => createFootballWeeklyAuctionRepository(), []);

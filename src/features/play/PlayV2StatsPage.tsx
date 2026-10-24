@@ -4,6 +4,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import type { PlaySport } from "./playRegistry";
 import { playV2Score } from "./playV2Stats";
 import { usePlayV2History } from "./usePlayV2History";
+import { useTodayChallengeOverview } from "./useTodayChallengeOverview";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
 import "../../styles/play-v2.css";
 
@@ -15,6 +16,8 @@ export default function PlayV2StatsPage({ sport, memberName }: { sport: PlaySpor
     && normalizedMember === normalizeMemberName(identity.profile.displayName));
   const publicMemberView = Boolean(normalizedMember);
   const requestedMember = publicMemberView && !isOwn ? normalizedMember : null;
+  const overview = useTodayChallengeOverview({ profileId, enabled: !requestedMember, projection: null, sport });
+  const dailyWins = overview.standings?.entries.find((entry) => entry.isCurrentUser)?.wins;
   const history = usePlayV2History(sport,
     profileId,
     requestedMember);
@@ -44,7 +47,7 @@ export default function PlayV2StatsPage({ sport, memberName }: { sport: PlaySpor
                   <div className="play-v2__metrics">
                     <div><span>CAREER AVG</span><strong>{playV2Score(summary.average)}</strong><small>/100</small></div>
                     <div><span>COMPLETED</span><strong>{summary.count}</strong><small>games</small></div>
-                    <div><span>PERSONAL BEST</span><strong>{summary.best}</strong><small>/100</small></div>
+                    <div><span>{requestedMember ? "RECENT RESULTS" : "DAILY WINS"}</span><strong>{requestedMember ? summary.recent.length : dailyWins ?? "—"}</strong><small>{requestedMember ? "shown below" : "first-place finishes"}</small></div>
                   </div>
                   <div className="play-v2__trend-block">
                     <span>LAST FIVE AVG: {playV2Score(summary.lastFiveAverage)}</span>
