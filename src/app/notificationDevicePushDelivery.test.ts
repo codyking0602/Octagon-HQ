@@ -126,9 +126,9 @@ describe("notification device push delivery", () => {
     expect(profilePush).toContain("notifications.enableDevicePush()");
     expect(profilePush.indexOf("requestNotificationDevicePermission()"))
       .toBeLessThan(profilePush.indexOf("notifications.enableDevicePush()"));
-    expect(profilePush).toContain("Your iPhone should ask for permission");
+    expect(profilePush).toContain("Tap the switch again to allow notifications");
     expect(profilePush).toContain("notifications.disableDevicePush()");
-    expect(profilePush).toContain("Bell notifications still");
+    expect(profilePush).toContain("in-app inbox");
     expect(center).not.toContain("Device notifications");
     expect(repository).not.toContain("localStorage");
     expect(provider).not.toContain("localStorage");

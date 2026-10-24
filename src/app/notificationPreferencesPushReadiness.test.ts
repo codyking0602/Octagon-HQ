@@ -68,26 +68,28 @@ describe("notification settings simplification", () => {
   });
 
   it("keeps the notification center focused only on the bell feed", () => {
-    expect(center).toContain("UFC, Football, Baseball, and account updates in one inbox.");
+    expect(center).toContain("UFC, Football, Baseball, Basketball, and account updates in one inbox.");
     expect(center).toContain("Mark all as read");
     expect(center).toContain("notification-list");
     expect(center).not.toContain("What should reach you?");
-    expect(center).toContain("Picks reminders");
-    expect(center).not.toContain("Daily Challenge");
+    expect(center).toContain("<NotificationPushSetting compact />");
+    expect(center).toContain("Filter in-app notifications by sport");
     expect(center).not.toContain("Game challenges");
     expect(center).not.toContain("War Room activity");
-    expect(center).not.toContain("Device notifications");
+    expect(center).not.toContain("OPEN PROFILE");
   });
 
-  it("places one push-only switch on the signed-in member profile route", () => {
+  it("reuses the push-only switch in both Notifications and Profile", () => {
     expect(appShell).toContain("ProfilePushSettingRoute");
     expect(appShell).toContain("memberProfilePath(identity.profile.displayName)");
     expect(appShell).toContain("<NotificationPushSetting />");
-    expect(profilePush).toContain("Push notifications");
+    expect(profilePush).toContain("Phone notifications");
+    expect(profilePush).toContain("pushNotificationSports");
+    expect(profilePush).toContain("updatePushSports");
     expect(profilePush).toContain('role="switch"');
     expect(profilePush).toContain("notifications.enableDevicePush()");
     expect(profilePush).toContain("notifications.disableDevicePush()");
-    expect(profilePush).toContain("Bell notifications still appear inside The HQ.");
+    expect(profilePush).toContain("Your in-app inbox is always available.");
     expect(profilePush).not.toContain("picksReminders");
     expect(profilePush).not.toContain("dailyChallengeReminders");
     expect(profilePush).not.toContain("gameChallengeActivity");
@@ -98,7 +100,7 @@ describe("notification settings simplification", () => {
     expect(profilePush).toContain("attemptedConnection");
     expect(profilePush).toContain('readiness.permission === "default"');
     expect(profilePush).toContain('? "off"');
-    expect(profilePush).toContain("The last connection attempt did not finish");
+    expect(profilePush).toContain("Connection failed. In-app notifications are still available.");
   });
 
   it("keeps installability and passive readiness detection intact", () => {
