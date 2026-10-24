@@ -210,8 +210,7 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
     }), [challenges, sport, activeProfile]);
   const openMatchups = allMatchups.filter((challenge) => {
     const status = challengeStatus(challenge, activeProfile!.id);
-    return status !== "completed" && status !== "declined"
-      && new Date(challenge.expiresAt).getTime() > Date.now();
+    return status !== "completed" && status !== "declined";
   });
   const visible = detailsOpen ? allMatchups : openMatchups.slice(0, 3);
   const yourTurn = openMatchups.filter((challenge) =>
