@@ -262,7 +262,7 @@ returns text
 language plpgsql
 immutable
 set search_path = ''
-as $
+as $$
 declare
   v_kind text := trim(p_kind);
 begin
@@ -338,14 +338,14 @@ begin
 
   raise exception 'unsupported notification kind: %', v_kind;
 end;
-$;
+$$;
 
 create or replace function private.notification_priority_for_kind(p_kind text)
 returns text
 language plpgsql
 immutable
 set search_path = ''
-as $
+as $$
 declare
   v_kind text := trim(p_kind);
 begin
@@ -378,7 +378,7 @@ begin
 
   return 'in_app';
 end;
-$;
+$$;
 
 
 -- Recheck immediately before each delivery claim: revocation must be enforced on
