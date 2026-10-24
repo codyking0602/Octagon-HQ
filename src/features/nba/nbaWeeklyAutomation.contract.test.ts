@@ -21,6 +21,8 @@ describe("NBA unattended editorial safeguards", () => {
     expect(flow).toContain("workflow run validate.yml --ref");
     expect(flow).toContain("completed success");
     expect(flow).toContain("--match-head-commit");
+    expect(flow).toContain("workflow run deploy-cloudflare.yml --ref main");
+    expect(flow).toContain("no unverified claims.");
     expect(flow).toContain('current" != "$EXPECTED_MAIN');
   });
 });

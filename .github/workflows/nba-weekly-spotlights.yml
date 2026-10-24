@@ -112,3 +112,37 @@ jobs:
           [[ "$actual" == "$HEAD_SHA" ]] || { echo "::error::Editorial head advanced"; exit 1; }
           gh pr merge "$PR_URL" --squash --delete-branch --match-head-commit "$HEAD_SHA"
           echo "Verified NBA weekly package merged for frontend deployment." >> "$GITHUB_STEP_SUMMARY"
+      - name: Dispatch Cloudflare deployment for the exact merged commit
+        if: steps.propose.outputs.created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_URL: ${{ steps.propose.outputs.pr }}
+        run: |
+          set -euo pipefail
+          merged=$(gh pr view "$PR_URL" --json mergeCommit --jq .mergeCommit.oid)
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)
+          if [[ -z "$merged" || "$merged" != "$main_sha" ]]; then
+            echo "::error::Main moved before exact deployment; no unverified claims."
+            exit 1
+          fi
+          # GITHUB_TOKEN merges do not trigger regular push workflows.
+          gh workflow run deploy-cloudflare.yml --ref main
+          id=""
+          for i in $(seq 1 60); do
+            id=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/deploy-cloudflare.yml/runs?event=workflow_dispatch&per_page=10" |
+              jq -r --arg sha "$merged" '[.workflow_runs[] | select(.head_sha == $sha)] | sort_by(.created_at) | last | .id // empty')
+            [[ -n "$id" ]] && break
+            sleep 8
+          done
+          [[ -n "$id" ]] || { echo "::error::No exact merged deployment run"; exit 1; }
+          for i in $(seq 1 140); do
+            result=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" | jq -r '.status + " " + (.conclusion // "")')
+            if [[ "$result" == "completed success" ]]; then
+              echo "Deployed and verified NBA weekly content at $merged" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            if [[ "$result" == completed* ]]; then echo "::error::Cloudflare deployment: $result"; exit 1; fi
+            sleep 10
+          done
+          echo "::error::Exact Cloudflare delivery timed out"; exit 1
+
