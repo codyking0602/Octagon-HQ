@@ -448,6 +448,7 @@ Deno.serve(async (request) => {
   let scheduledCardPreview: { event_preview?: SourcePreview; effective_scope?: CardScope } | null = null;
   let fighterMediaSync: unknown = null;
   let forceCardRefresh = false;
+  let scheduledCardFindings: ReturnType<typeof buildCardChangeFindings> = [];
 
   if (
     scheduled
@@ -514,6 +515,7 @@ Deno.serve(async (request) => {
       allBoutIds: resolved.allBoutIds,
     });
     forceCardRefresh = cardFindings.length > 0;
+    scheduledCardFindings = cardFindings;
   }
 
   let suppressFindingKeys = new Set<string>();
@@ -531,7 +533,59 @@ Deno.serve(async (request) => {
     }
     const scheduleState = asRecord(scheduleStateResponse.data) as ScheduledMonitoringState & { existing_finding_keys?: unknown } | null;
     const decision = decideScheduledMonitoring({ event: resolved.selected, now: new Date(), state: scheduleState });
-    if (!decision.due && !forceCardRefresh) {
+    if (!decision.due) {
+      // Free official-card monitoring must NEVER override the paid odds cadence,
+      // a lease, or an exhausted provider quota. Persist and auto-apply trusted
+      // card changes through the canonical ledger without calling The Odds API.
+      if (forceCardRefresh && scheduledCardPreview?.event_preview) {
+        const preview = scheduledCardPreview.event_preview;
+        const seen = new Set(Array.isArray(scheduleState?.existing_finding_keys)
+          ? scheduleState.existing_finding_keys.filter((key): key is string => typeof key === "string")
+          : []);
+        const unseen = scheduledCardFindings.filter((finding) => !seen.has(finding.finding_key));
+        if (unseen.length) {
+          const nowIso = new Date().toISOString();
+          const cardOnlyPayload = {
+            trigger_kind: "scheduled",
+            status: "completed",
+            source_event_identity: resolved.identity,
+            event_id: resolved.storageEventId,
+            locks_at: resolved.selected.locks_at,
+            started_at: nowIso,
+            completed_at: nowIso,
+            card_source: preview.source,
+            card_source_url: preview.source_url,
+            odds_provider: "the-odds-api",
+            quota: { requests_remaining: null, requests_used: null, last_request_cost: null },
+            coverage: { provider_events: 0, complete_snapshots: 0, missing_snapshots: 0 },
+            diagnostics: [],
+            findings: unseen,
+            odds_snapshots: [],
+          };
+          const recordedCard = await admin.rpc("record_card_source_monitoring_run", {
+            p_payload: cardOnlyPayload,
+          });
+          if (recordedCard.error || !recordedCard.data) {
+            return finishScheduledDecision({
+              outcome: "failed",
+              reason: "card_source_record_failed",
+              identity: resolved.identity,
+              providerCalled: false,
+              response: safeError(503, "CARD_SOURCE_RECORD_FAILED", "Official card findings could not be recorded safely."),
+            });
+          }
+          const trusted = preview.source === "UFC.com event + card"
+            && /^https:\/\/www\.ufc\.com\/event\/[a-z0-9-]+$/i.test(preview.source_url)
+            && !(preview.warnings?.length);
+          if (trusted) {
+            // The existing stale-guarded approval owner can apply free card-only evidence.
+            // A later card-source tick converges any dependent remaining changes.
+            await admin.rpc("auto_apply_trusted_pick_monitoring_changes", {
+              p_run_id: recordedCard.data,
+            });
+          }
+        }
+      }
       return finishScheduledDecision({
         outcome: "skipped",
         reason: decision.reason,

@@ -12,6 +12,7 @@ declare
   v_provider_run_id uuid;
   v_provider_completed_at timestamptz := now() - interval '2 minutes';
   v_decision_run_id uuid;
+  v_card_run_id uuid;
   v_event_state jsonb;
   v_schedule_state jsonb;
   v_inbox jsonb;
@@ -192,6 +193,41 @@ begin
   if (v_schedule_state->>'last_completed_at')::timestamptz <> v_provider_completed_at
     or v_schedule_state #>> '{provider_requests_remaining}' <> '42' then
     raise exception 'decision-only row corrupted provider cadence or quota state: %', v_schedule_state;
+  end if;
+
+  -- Free card-source evidence is useful without spending the provider budget.
+  v_card_run_id := public.record_card_source_monitoring_run(jsonb_build_object(
+    'trigger_kind', 'scheduled',
+    'status', 'completed',
+    'source_event_identity', v_identity,
+    'event_id', 'pick-monitoring-future',
+    'locks_at', v_locks_at,
+    'started_at', now(),
+    'completed_at', now(),
+    'card_source', 'UFC.com event + card',
+    'card_source_url', 'https://www.ufc.com/event/test',
+    'quota', jsonb_build_object('requests_remaining', null, 'requests_used', null, 'last_request_cost', null),
+    'coverage', jsonb_build_object('provider_events', 0, 'complete_snapshots', 0, 'missing_snapshots', 0),
+    'diagnostics', '[]'::jsonb,
+    'odds_snapshots', '[]'::jsonb,
+    'findings', jsonb_build_array(jsonb_build_object(
+      'finding_key', 'test-card-only-evidence', 'finding_type', 'card_change',
+      'severity', 'info', 'summary', 'Test UFC card change', 'detected_at', now()
+    ))
+  ));
+  if not exists (
+    select 1 from public.pick_monitoring_runs
+    where run_id = v_card_run_id
+      and provider_called = false
+      and decision_reason = 'card_source_only'
+      and odds_provider is null
+  ) then
+    raise exception 'free card finding was falsely billed as an odds-provider call';
+  end if;
+  v_schedule_state := public.get_pick_monitoring_schedule_state('ufc:another-upcoming-event');
+  if v_schedule_state #>> '{provider_requests_remaining}' <> '42'
+    or v_schedule_state #>> '{quota_observed_at}' is null then
+    raise exception 'provider quota did not follow the account across different UFC events: %', v_schedule_state;
   end if;
 
   perform set_config('request.jwt.claim.role', 'authenticated', true);
@@ -387,6 +423,29 @@ begin
 
   if v_group_count <> 1 or v_event_count <> 1 or v_aggregate_count <> 1 then
     raise exception 'hourly dispatcher replay duplicated an unchanged repeated-failure alert';
+  end if;
+
+  -- A new fourth failure used to publish a brand-new push every 15 minutes.
+  insert into public.pick_monitoring_runs (
+    trigger_kind, status, source_event_identity, started_at, completed_at,
+    odds_provider, provider_requests_remaining, provider_requests_used,
+    provider_last_request_cost, provider_event_count, complete_snapshot_count,
+    missing_snapshot_count, diagnostics, provider_called, decision_reason
+  ) values (
+    'scheduled', 'failed', v_identity,
+    v_now - interval '2 minutes', v_now - interval '1 minute',
+    'the-odds-api', 496, 5, 1, 0, 0, 1,
+    '[{"code":"provider_unavailable","severity":"error"}]'::jsonb,
+    true, null
+  );
+  perform public.dispatch_due_in_app_notifications(v_now);
+  select count(*) into v_event_count
+  from private.notification_events e
+  join private.notification_groups g on g.id = e.group_id
+  where g.recipient_profile_id = v_owner_id
+    and g.aggregation_key = v_aggregation_key;
+  if v_event_count <> 1 then
+    raise exception 'new failed run repushed the same unresolved incident';
   end if;
 end;
 $$;

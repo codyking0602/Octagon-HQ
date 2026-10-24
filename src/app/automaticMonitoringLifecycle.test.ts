@@ -23,7 +23,11 @@ describe("automatic Picks monitoring lifecycle", () => {
     expect(scheduleDecisionAt).toBeGreaterThan(cardCheckAt);
     expect(providerAt).toBeGreaterThan(scheduleDecisionAt);
     expect(runner).toContain("forceCardRefresh");
-    expect(runner).toContain("!decision.due && !forceCardRefresh");
+    expect(runner).toContain("if (!decision.due) {");
+    expect(runner).not.toContain("!decision.due && !forceCardRefresh");
+    expect(runner).toContain('admin.rpc("record_card_source_monitoring_run"');
+    expect(runner).toContain('admin.rpc("auto_apply_trusted_pick_monitoring_changes"');
+    expect(runner.indexOf('admin.rpc("record_card_source_monitoring_run"')).toBeLessThan(providerAt);
     expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
   });
 
