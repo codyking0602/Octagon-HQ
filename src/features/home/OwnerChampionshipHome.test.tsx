@@ -124,6 +124,43 @@ describe("Owner Championship Home preview", () => {
     expect(within(standings).queryByRole("combobox", { name: "Home sport" })).not.toBeInTheDocument();
   });
 
+  it("compacts only the authenticated owner's standalone Football Championship, keeping full standings and links", async () => {
+    const football = projection("football");
+    const tyler = {
+      ...football.own, profile_id: "22222222-2222-4222-8222-222222222222",
+      display_name: "TYLER", initials: "T", rank: 2, rating: 89.1, is_current_user: false,
+    };
+    const troy = {
+      ...football.own, profile_id: "33333333-3333-4333-8333-333333333333",
+      display_name: "TROY", initials: "T", rank: 3, rating: 83.0, is_current_user: false,
+    };
+    loader.sport.mockImplementation(async (sport) => sport === "football"
+      ? { ...football, entries: [football.own, tyler, troy] } : projection("ufc"));
+    render(
+      <MemoryRouter>
+        <OwnerChampionshipHome
+          streak={11} streakLoading={false} showMlb={false}
+          sport="football" onSportChange={vi.fn()}
+          showSportSelector={false} compactFootballPreview
+        />
+      </MemoryRouter>,
+    );
+    const region = screen.getByRole("region", { name: "Championship standings" });
+    expect(await within(region).findByText("+2.2 over TYLER")).toBeInTheDocument();
+    expect(region).toHaveClass("home-champ-preview--compact-football");
+    expect(within(region).getByRole("heading", { name: "Championship standings" })).toBeInTheDocument();
+    expect(within(region).getByText("FOOTBALL CHAMPIONSHIP · 2026")).toBeInTheDocument();
+    expect(within(region).queryByText("CHAMPIONSHIP STANDINGS")).not.toBeInTheDocument();
+    expect(within(region).getByText("LEAGUE LEADER")).toBeInTheDocument();
+    expect(region.querySelectorAll(".home-champ-preview__competitor")).toHaveLength(3);
+    expect(within(region).getByRole("link", { name: "View all Football Championship standings" }))
+      .toHaveAttribute("href", "/championship/football?tab=overall");
+    expect(within(region).getByRole("link", { name: "Open Football Picks leaderboard" }))
+      .toHaveAttribute("href", "/championship/football?tab=picks");
+    expect(within(region).getByRole("link", { name: "Open Football Play leaderboard" }))
+      .toHaveAttribute("href", "/championship/football?tab=play");
+  });
+
   it("counts MLB as a league lead only when MLB actually ranks first", async () => {
     loader.mlb.mockResolvedValue({ own: { overall_rank: 1, total_points: 93 }, standings: [{}, {}, {}] });
     loader.sport.mockImplementation(async (sport) => {
