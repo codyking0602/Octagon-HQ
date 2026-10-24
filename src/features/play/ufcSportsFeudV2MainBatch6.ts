@@ -226,7 +226,7 @@ const ROWS = [
     "prompt": "Name a venue where the UFC has staged a major numbered UFC event.",
     "kind": "other",
     "ranked": "T-Mobile Arena|Madison Square Garden|MGM Grand Garden Arena|Etihad Arena|O2 Arena|Rod Laver Arena|Scotiabank Arena|Jeunesse Arena",
-    "extras": "Crypto.com Arena|UFC Apex|Saitama Super Arena|Accor Arena|Toyota Center|Barclays Center|The Forum|Honda Center|Etihad Stadium",
+    "extras": "Crypto.com Arena|UFC Apex|Saitama Super Arena|Toyota Center|Barclays Center|The Forum|Honda Center",
     "aliases": {
       "Madison Square Garden": [
         "MSG"
