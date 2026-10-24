@@ -102,6 +102,25 @@ export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
 export const UFC_V2_APPROVED_MAIN_IDS: ReadonlySet<string> = new Set([]);
 export const UFC_V2_APPROVED_FAST_IDS: ReadonlySet<string> = new Set([]);
 const SEMANTIC_OVERRIDES: Readonly<Record<string,string>> = {
+  // A ranked stats list and a legacy subjective list should not both ask
+  // players to recall fundamentally the same pool of knockout/submission
+  // specialists across one no-repeat cycle.
+  "ufc-v2-retained-ufc-main-02-1": "ufc-knockout-identities",
+  "ufc-v2-main9-ten-knockouts": "ufc-knockout-identities",
+  "ufc-v2-retained-ufc-main-03-1": "ufc-submission-identities",
+  "ufc-v2-main9-eight-submissions": "ufc-submission-identities",
+  "ufc-v2-retained-ufc-main-04-1": "ufc-wrestling-identities",
+  "ufc-v2-main10-career-takedowns": "ufc-wrestling-identities",
+  "ufc-v2-main10-control-time": "ufc-wrestling-identities",
+  "ufc-v2-retained-ufc-main-05-1": "ufc-striking-identities",
+  "ufc-v2-main9-sig-strike-volume": "ufc-striking-identities",
+  "ufc-v2-main9-twenty-wins": "ufc-career-volume-identities",
+  "ufc-v2-main9-fight-appearances": "ufc-career-volume-identities",
+  "ufc-v2-retained-ufc-fast2-06-1": "nationality-ufc-fighter-identities",
+  "ufc-v2-retained-ufc-fast2-07-1": "nationality-ufc-fighter-identities",
+  "ufc-v2-retained-ufc-fast3-08-1": "ufc-broadcast-personalities",
+  "ufc-v2-retained-ufc-main-20-1": "ufc-fighter-culture",
+  "ufc-v2-retained-ufc-fast5-05-1": "ufc-fighter-culture",
   "ufc-v2-main3-ufc100-card": "numbered-ufc-event-roster",
   "ufc-v2-main3-ufc300-card": "numbered-ufc-event-roster",
   "ufc-v2-main4-mcgregor-opponents": "named-ufc-fighter-opponents",
