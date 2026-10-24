@@ -180,7 +180,7 @@ export function DailyAnswerDetail({
             <DailyTwoGameLeaderboardResult
               projection={resultProjection}
               resultDetail={entry.resultDetail}
-              sport={sport}
+              sport={sport === "nba_preview" ? "nba" : sport}
             />
           </Suspense>
         ) : sport === "nba" && entry.gameType === "higher_lower" ? (
@@ -454,7 +454,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
         </div>
       </div>
 
-      {sport !== "nba" ? <OwnerTomorrowAverageFanPreviewEntry
+      {presentationSport !== "nba" ? <OwnerTomorrowAverageFanPreviewEntry
         enabled={identity.profile?.canControlPicks === true}
         sport={sport}
         centralDay={projection.centralDay}
