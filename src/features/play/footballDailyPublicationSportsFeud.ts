@@ -1,6 +1,8 @@
 import { buildFamilyFeudDailySetup } from "./familyFeudDailyRuntime";
 import {
   buildSportsFeudPack,
+  buildFootballFeudRebuildPack,
+  FOOTBALL_FEUD_REBUILD_CUTOVER_DAY,
   footballSportsFeudDomainForDay,
 } from "./sportsFeudDailyBanks";
 import type { OfficialDailyGameType } from "./todaysChallengeRuntime";
@@ -19,6 +21,8 @@ export function buildFootballDailyPersistenceSetup(
     gameType,
     day,
     scheduleVersion,
-    buildFamilyFeudDailySetup(buildSportsFeudPack(domain, day), day, scheduleVersion),
+    buildFamilyFeudDailySetup(day >= FOOTBALL_FEUD_REBUILD_CUTOVER_DAY
+      ? buildFootballFeudRebuildPack(domain, day)
+      : buildSportsFeudPack(domain, day), day, scheduleVersion),
   );
 }
