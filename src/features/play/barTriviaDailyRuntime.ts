@@ -11,6 +11,7 @@ import {
   type BarTriviaState,
 } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
+import { expandUfcBarTriviaRecentFactIds } from "./ufcBarTriviaV3Editorial";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import { footballThemedBarTriviaRunForDay } from "./footballTeamThemeDailyPacks";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
@@ -20,7 +21,8 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const BAR_TRIVIA_DAILY_CONTENT_VERSION = "bar-trivia-daily-v2-recent-rotation";
+export const BAR_TRIVIA_DAILY_CONTENT_VERSION = "bar-trivia-daily-v3-ufc-editorial";
+export const UFC_BAR_TRIVIA_UNIQUE_APPEARANCES = 20;
 export const BAR_TRIVIA_DAILY_SCORING_VERSION = "play-official-score-v1";
 
 type JsonRecord = Record<string, unknown>;
@@ -133,6 +135,7 @@ function dailyBarTriviaRun(
   const beginning = new Date(BAR_TRIVIA_FIRST_DAY + "T12:00:00.000Z").getTime();
   const historyIds: string[][] = [];
   let latest: BarTriviaQuestion[] = [];
+  let ufcAppearanceCount = 0;
 
   // Historical/MLB previews do not participate in the NFL/CFB/UFC Daily cadence.
   const first = league === "mlb" || !Number.isFinite(target) || target < beginning
@@ -141,7 +144,14 @@ function dailyBarTriviaRun(
   for (let timestamp = first; timestamp <= target; timestamp += DAY_MS) {
     const candidateDay = new Date(timestamp).toISOString().slice(0, 10);
     if (candidateDay !== day && !wasBarTriviaDailyAppearance(league, candidateDay)) continue;
-    const recentIds = historyIds.flat();
+    // One independently curated UFC cycle is 20 league appearances. An exact
+    // question ID cannot recur within it, even across different calendar weeks.
+    if (league === "ufc" && ufcAppearanceCount > 0 && ufcAppearanceCount % UFC_BAR_TRIVIA_UNIQUE_APPEARANCES === 0) {
+      historyIds.length = 0;
+    }
+    const recentIds = league === "ufc"
+      ? expandUfcBarTriviaRecentFactIds(historyIds.flat())
+      : historyIds.flat();
     const themed = league === "nfl" ? footballThemedBarTriviaRunForDay(candidateDay) : null;
     const run = themed
       ? [...themed]
@@ -151,10 +161,12 @@ function dailyBarTriviaRun(
           ),
           now: candidateDay + "T12:00:00.000Z",
           recentQuestionIds: recentIds,
+          strictRecentNoRepeat: league === "ufc",
         });
     latest = run;
     historyIds.unshift(run.map((question) => question.id));
-    if (historyIds.length > BAR_TRIVIA_RECENT_APPEARANCES) historyIds.pop();
+    if (league === "ufc") ufcAppearanceCount += 1;
+    if (historyIds.length > (league === "ufc" ? UFC_BAR_TRIVIA_UNIQUE_APPEARANCES : BAR_TRIVIA_RECENT_APPEARANCES)) historyIds.pop();
   }
 
   if (latest.length !== 10) throw new Error("The Bar Trivia Daily lineup is unavailable.");
