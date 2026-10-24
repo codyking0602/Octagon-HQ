@@ -84,11 +84,11 @@ export function findMatchingHighlight(playerName, videos, lastSunday) {
       && words.includes(first) && words.includes(last)
       && !/full game|extended|press conference|postgame|post-game|interview|reaction/i.test(v.title)
       && (!Number.isFinite(duration) || duration===0 || (duration>=25 && duration<=480))
-      && /highlights?|best plays|top plays|best moments|\\b\\d{1,3} (?:points?|pts)\\b|performance/i.test(v.title);
+      && /highlights?|best plays|top plays|best moments|\b\d{1,3} (?:points?|pts)\b|performance/i.test(v.title);
   }).sort((a,b)=>{
     const short=v=>Number.isFinite(Number(v.durationSeconds)) && Number(v.durationSeconds)>0
       ? Number(v.durationSeconds)<=300 ? 2 : 1
-      : /top plays|best plays|\\b\\d{1,3} (?:points?|pts)\\b/i.test(v.title) ? 1 : 0;
+      : /top plays|best plays|\b\d{1,3} (?:points?|pts)\b/i.test(v.title) ? 1 : 0;
     return short(b)-short(a) || Date.parse(b.published)-Date.parse(a.published);
   })[0]??null;
 }
@@ -307,7 +307,7 @@ async function youtubeApiVideos(channel, key) {
       if(!response.ok) throw Error("YouTube duration API error " + response.status);
       const data=await response.json();
       const durations=new Map((data.items??[]).map(item=>{
-        const match=String(item.contentDetails?.duration??"").match(/^PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?$/);
+        const match=String(item.contentDetails?.duration??"").match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
         return [item.id,match ? (+match[1]||0)*3600+(+match[2]||0)*60+(+match[3]||0) : null];
       }));
       for(const v of videos.slice(offset,offset+50)) {
