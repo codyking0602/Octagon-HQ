@@ -30,3 +30,56 @@
   .football-weekly-gm__scenarios { grid-template-columns: minmax(0, 1fr); }
   .football-weekly-gm__franchise { gap: 5px; }
 }
+
+/* Official weekly GM: compact scoreboard and a distinct finished-week archive. */
+.football-weekly-gm { max-width: 1000px; }
+.football-weekly-gm__last-champion,
+.football-weekly-gm__champion { display: flex; align-items: center; gap: 12px; background: #1b2025; border: 1px solid #566375; border-radius: 15px; padding: 11px 14px; color: #f4f7fb; text-decoration: none; margin-bottom: 11px; }
+.football-weekly-gm__last-champion > span:first-child,
+.football-weekly-gm__champion > span:first-child { font-size: 25px; }
+.football-weekly-gm__last-champion > span:last-child,
+.football-weekly-gm__champion > div { display: grid; gap: 3px; min-width: 0; }
+.football-weekly-gm__last-champion small,
+.football-weekly-gm__champion small { color: #a3b3c6; letter-spacing: .05em; font-size: 10px; }
+.football-weekly-gm__last-champion strong,
+.football-weekly-gm__champion strong { font-size: 19px; line-height: 1.1; }
+.football-weekly-gm__intro { gap: 6px; margin-bottom: 9px; padding: 13px !important; }
+.football-weekly-gm__intro h1 { font-size: clamp(23px, 6vw, 34px) !important; }
+.football-weekly-gm__history-link { display: inline-flex; width: fit-content; border: 0; background: transparent; color: #9acaf1; font-size: 11px; font-weight: 800; padding: 3px 0; cursor: pointer; }
+.football-weekly-gm__archive { display: grid; gap: 5px; padding: 12px !important; margin-bottom: 10px; }
+.football-weekly-gm__archive h2 { margin: 0 0 4px; font-size: 15px; }
+.football-weekly-gm__archive-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #303840; color: #f2f6fa; text-decoration: none; }
+.football-weekly-gm__archive-row > span { display: grid; gap: 3px; min-width: 0; }
+.football-weekly-gm__archive-row small { font-size: 10px; color: #acb5c0; }
+.football-weekly-gm__archive-row strong { font-size: 12px; }
+.football-weekly-gm__archive-row b { flex-shrink: 0; color: #9acaf1; font-size: 11px; }
+.football-weekly-gm__scenarios { gap: 8px; margin-bottom: 9px; }
+.football-weekly-gm__franchise { gap: 5px; padding: 12px !important; }
+.football-weekly-gm__franchise h2 { font-size: clamp(16px, 4vw, 21px) !important; overflow-wrap: anywhere; }
+.football-weekly-gm__franchise > strong { font-size: 18px; }
+.football-weekly-gm__franchise > p { font-size: 11px; color: #aeb7c2; }
+.football-weekly-gm__franchise > button { min-height: 35px; padding: 7px !important; margin-top: 2px !important; }
+.football-weekly-gm__standings { gap: 7px; padding: 12px !important; }
+.football-weekly-gm__standings h2 { font-size: clamp(17px, 4vw, 22px); }
+.football-weekly-gm__standings-title,
+.football-weekly-gm__entry-main { display: flex; align-items: center; justify-content: space-between; gap: 9px; }
+.football-weekly-gm__standings-title span:last-child { color: #acb5c1; font-size: 10px; }
+.football-weekly-gm__leader-list { display: grid; }
+.football-weekly-gm__entry { padding: 9px 0; gap: 5px; }
+.football-weekly-gm__entry-main strong { min-width: 0; overflow-wrap: anywhere; font-size: 12px; }
+.football-weekly-gm__entry-main b { white-space: nowrap; font-size: 12px; }
+.football-weekly-gm__entry-scores { gap: 5px; }
+.football-weekly-gm__entry-scores > button { color: #91c4ed; font-size: 10px; min-height: 26px; }
+.football-weekly-gm__detail { display: grid; gap: 12px; margin-top: 14px; scroll-margin-top: 100px; }
+.football-weekly-gm__detail > button { justify-self: start; }
+.football-weekly-gm__casual { color: #a9b4c1; font-size: 12px; text-align: center; padding: 8px; }
+.football-weekly-gm__casual a { color: #9acaf1; }
+@media (max-width: 550px) {
+  .football-weekly-gm__scenarios { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .football-weekly-gm__franchise { gap: 4px; }
+  .football-weekly-gm__franchise .eyebrow { font-size: 9px; }
+  .football-weekly-gm__franchise > button { font-size: 10px; }
+}
+@media (max-width: 340px) {
+  .football-weekly-gm__scenarios { grid-template-columns: minmax(0,1fr); }
+}

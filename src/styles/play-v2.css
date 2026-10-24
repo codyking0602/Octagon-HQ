@@ -402,3 +402,24 @@
   border-color: var(--special-daily-primary);
   color: #fff;
 }
+
+/* Play scorecard belongs below the Game Room, not above the games. */
+.play-v2__performance { gap: 7px; padding: 10px 12px; background: #181c22; }
+.play-v2__performance .play-v2__metrics { gap: 5px; }
+.play-v2__performance .play-v2__metrics > div { gap: 2px; padding: 7px 3px; background: #242a32; }
+.play-v2__performance .play-v2__metrics > div > strong { font-size: clamp(19px, 5vw, 26px); }
+.play-v2__performance .play-v2__metrics > div > span { font-size: 8px; }
+.play-v2__performance .play-v2__metrics > div > small { font-size: 8px; }
+.play-v2__matchups { scroll-margin-top: 120px; }
+.play-v2__matchups .play-v2__section-top { flex-wrap: wrap; }
+.play-v2__matchups .play-v2__section-top > span:first-child { margin-right: auto; }
+.play-v2__pending-badge,
+.play-v2__matchups .play-v2__section-top .play-v2__pending-badge { padding: 5px 8px; border-radius: 999px; border: 1px solid #587a97; background: #243a4e; color: #a7d2f5; font-size: 9px; font-weight: 900; cursor: pointer; }
+.play-v2__matchup-row > .play-v2__matchup-alert { border: 1px solid #516f8a; border-radius: 7px; padding: 5px; background: #26394a; color: #add4f6; font-size: 9px; font-weight: 900; white-space: nowrap; }
+.play-v2__gm-champion { display: flex; gap: 10px; align-items: center; padding: 12px; border: 1px solid #567082; border-radius: 16px; background: #1b222a; color: #f1f5fa; position: relative; }
+.play-v2__gm-champion-icon { font-size: 27px; }
+.play-v2__gm-champion > div { display: grid; gap: 3px; padding-right: 15px; min-width: 0; }
+.play-v2__gm-champion small { font-size: 9px; font-weight: 800; letter-spacing: .08em; color: #a6c1d5; }
+.play-v2__gm-champion strong { font-size: 18px; line-height: 1.1; }
+.play-v2__gm-champion a { color: #9acaf1; font-size: 11px; font-weight: 850; text-decoration: none; }
+.play-v2__gm-champion-dismiss { position: absolute; top: 7px; right: 9px; background: transparent; border: 0; color: #a5b6c4; font-size: 21px; cursor: pointer; }
