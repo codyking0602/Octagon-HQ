@@ -7,10 +7,12 @@ import type { UFCFeudDraft } from "./ufcSportsFeudV2DraftHelpers";
 import { UFC_SPORTS_FEUD_SIX_MONTH_FAST_A } from "./ufcSportsFeudSixMonthSupplementFastA";
 import { UFC_SPORTS_FEUD_SIX_MONTH_FAST_B } from "./ufcSportsFeudSixMonthSupplementFastB";
 import { UFC_SPORTS_FEUD_SIX_MONTH_MAIN } from "./ufcSportsFeudSixMonthSupplementMain";
+import { UFC_SPORTS_FEUD_SIX_MONTH_MAIN_ATHLETE_HONORS } from "./ufcSportsFeudSixMonthMainAthleteHonors";
 import { UFC_SPORTS_FEUD_SIX_MONTH_EDITORIAL } from "./ufcSportsFeudSixMonthSupplementEditorial";
 
 const questions: readonly UFCFeudDraft[] = [
   ...UFC_SPORTS_FEUD_SIX_MONTH_MAIN,
+  ...UFC_SPORTS_FEUD_SIX_MONTH_MAIN_ATHLETE_HONORS,
   ...UFC_SPORTS_FEUD_SIX_MONTH_FAST_A,
   ...UFC_SPORTS_FEUD_SIX_MONTH_FAST_B,
 ];
@@ -29,15 +31,15 @@ function packFor(q: UFCFeudDraft) {
 }
 
 describe("UFC six-month Feud supplemental candidates, never imported by production", () => {
-  it("tracks all 13 candidate IDs with six fast and one Main advancing", () => {
+  it("tracks all 15 candidate IDs with six Fast and two Main advancing", () => {
     expect(UFC_SPORTS_FEUD_SIX_MONTH_FAST_A).toHaveLength(6);
     expect(UFC_SPORTS_FEUD_SIX_MONTH_FAST_B).toHaveLength(6);
     expect(UFC_SPORTS_FEUD_SIX_MONTH_MAIN).toHaveLength(1);
-    expect(questions).toHaveLength(13);
-    expect(UFC_SPORTS_FEUD_SIX_MONTH_EDITORIAL).toHaveLength(13);
-    expect(new Set(questions.map(q=>q.id)).size).toBe(13);
+    expect(questions).toHaveLength(15);
+    expect(UFC_SPORTS_FEUD_SIX_MONTH_EDITORIAL).toHaveLength(15);
+    expect(new Set(questions.map(q=>q.id)).size).toBe(15);
     expect(new Set(UFC_SPORTS_FEUD_SIX_MONTH_EDITORIAL.map(q=>q.id))).toEqual(new Set(questions.map(q=>q.id)));
-    expect(UFC_SPORTS_FEUD_SIX_MONTH_EDITORIAL.filter(q=>q.decision==="advance")).toHaveLength(6);
+    expect(UFC_SPORTS_FEUD_SIX_MONTH_EDITORIAL.filter(q=>q.decision==="advance")).toHaveLength(7);
   });
   it("recognizes all canonical and offboard candidates and unambiguous fan shorthand", () => {
     for(const q of questions){
