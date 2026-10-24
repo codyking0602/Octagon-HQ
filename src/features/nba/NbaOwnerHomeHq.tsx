@@ -95,7 +95,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
                   {weekly.player.stats.map(item => <div key={item.label}><b>{item.value}</b><small>{item.label}</small></div>)}
                 </div>
                 <p>{weekly.player.summary}</p>
-                <a href={weekly.player.highlightUrl} className="nba-hq-owner__watch" target="_blank" rel="noreferrer">WATCH HIGHLIGHT ↗</a>
+                <a href={weekly.player.highlightUrl ?? "https://www.youtube.com/@NBA"} className="nba-hq-owner__watch" target="_blank" rel="noreferrer">{weekly.player.highlightUrl ? "WATCH HIGHLIGHT ↗" : "NBA CHANNEL ↗"}</a>
               </div>
             </>
           ) : (
