@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  LAST_USED_SPORT_STORAGE_KEY,
   SELECTED_SPORT_STORAGE_KEY,
   PICKS_SPORT_STORAGE_KEY,
   HOME_SPORT_STORAGE_KEY,
@@ -18,13 +19,14 @@ const tokensSource = readFileSync("src/styles/tokens.css", "utf8");
 const sportContextStyles = readFileSync("src/styles/sport-context.css", "utf8");
 
 function SportProbe() {
-  const { selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport } = useSport();
+  const { selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, setHomeSport, lastUsedSport } = useSport();
 
   return (
     <div>
       <output data-testid="selected-sport">{selectedSport}</output>
       <output data-testid="picks-sport">{picksSport}</output>
       <output data-testid="home-sport">{homeSport}</output>
+      <output data-testid="last-used-sport">{lastUsedSport}</output>
       <button type="button" onClick={() => setHomeSport("all")}>Home All Sports</button>
       <button type="button" onClick={() => setHomeSport("ufc")}>Home UFC</button>
       <button type="button" onClick={() => setPicksSport("nba")}>Picks Basketball</button>
@@ -61,7 +63,7 @@ describe("SportProvider", () => {
     expect(bottomNavigationSource).toContain("useSport");
     expect(appShellSource).not.toContain("localStorage");
     expect(bottomNavigationSource).not.toContain("localStorage");
-    expect(sportProviderSource.match(/useState<SelectedSport>/g) ?? []).toHaveLength(2);
+    expect(sportProviderSource.match(/useState<SelectedSport>/g) ?? []).toHaveLength(3);
     expect(sportProviderSource.match(/useState<HomeSport>/g) ?? []).toHaveLength(1);
     expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(2);
   });
@@ -143,12 +145,14 @@ describe("SportProvider", () => {
     expect(screen.getByTestId("home-sport")).toHaveTextContent("all");
     expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
     expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("nba");
+    expect(window.localStorage.getItem(LAST_USED_SPORT_STORAGE_KEY)).toBe("nba");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
 
     view.unmount();
     renderSportProvider();
     expect(screen.getByTestId("home-sport")).toHaveTextContent("all");
     expect(screen.getByTestId("picks-sport")).toHaveTextContent("nba");
+    expect(screen.getByTestId("last-used-sport")).toHaveTextContent("nba");
     expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
   });
 

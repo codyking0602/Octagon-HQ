@@ -104,7 +104,7 @@ describe("The HQ sport switching", () => {
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 
-  it("keeps Play and Picks navigation independent, including return to Home and browser back", async () => {
+  it("uses the latest sport across Picks and Play when Home is All Sports", async () => {
     window.localStorage.setItem(HOME_SPORT_STORAGE_KEY, "all");
     const router = renderRoute("/");
     expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
@@ -113,46 +113,34 @@ describe("The HQ sport switching", () => {
     switchSport(await sportContext("FOOTBALL PLAY"), "ufc");
     await expectPath(router, "/play");
 
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/picks");
     fireEvent.click(screen.getByRole("link", { name: "Picks" }));
-    await expectPath(router, "/football/picks");
-    switchSport(await sportContext("FOOTBALL PICKS"), "ufc");
     await expectPath(router, "/picks");
-
-    fireEvent.click(screen.getByRole("link", { name: "Rankings" }));
-    await expectPath(router, "/rankings");
-    await sportContext("UFC RANKINGS");
-    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
+    switchSport(await sportContext("UFC PICKS"), "nba");
+    await expectPath(router, "/nba/picks");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/nba");
 
     fireEvent.click(screen.getByRole("link", { name: "Home" }));
     await expectPath(router, "/");
     expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
-
-    await router.navigate(-1);
-    await expectPath(router, "/rankings");
-    await router.navigate(-1);
-    await expectPath(router, "/picks");
-    await sportContext("UFC PICKS");
-    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
-    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("ufc");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/nba");
   });
 
-  it("keeps a one-sport Home selection on deep-linked Play and Picks URLs and refresh", async () => {
+  it("keeps a frozen Home sport as the entry for both tabs regardless of deep links", async () => {
     window.localStorage.setItem(HOME_SPORT_STORAGE_KEY, "football");
     const router = renderRoute("/picks");
     await sportContext("UFC PICKS");
     expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
     await router.navigate("/nba");
     await sportContext("NBA PLAY");
-    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
     await router.navigate("/football/picks");
     await sportContext("FOOTBALL PICKS");
-    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
     cleanup();
     renderRoute("/");
-    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
     expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
-    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/nba");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
   });
 
   it("respects the persisted PR 4 sport when choosing Picks and Play from universal surfaces", async () => {

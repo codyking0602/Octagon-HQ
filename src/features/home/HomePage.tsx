@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useOptionalSport } from "../../app/SportProvider";
 import { prioritizedSports, sportsForDisplay, sportNames } from "../../app/sportPriority";
 import { useOptionalNotifications } from "../notifications/NotificationProvider";
@@ -502,12 +503,12 @@ export default function HomePage() {
       ) : (
         <>
           {visibleOrder.map(sport => (
-            <div className="home-sport-order-slot" key={sport} data-home-sport-order={sport}>
+            <Fragment key={sport}>
               {sport === "football" ? footballHq : sport === "ufc" ? ufcHq
                 : sport === "nba" ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship />
                 : <MlbHomeHq enabled={mlbVisible} signedIn={signedIn}
                     previewMode={identity.profile?.canControlPicks === true} compactPreview={compactMlbPreview} />}
-            </div>
+            </Fragment>
           ))}
         </>
       )}

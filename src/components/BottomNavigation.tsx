@@ -88,7 +88,7 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const location = useLocation();
   const navigate = useNavigate();
   const identity = useOptionalIdentity();
-  const { selectedSport, setSelectedSport, picksSport, setPicksSport, homeSport, lastUsedSport } = useSport();
+  const { setSelectedSport, setPicksSport, homeSport, lastUsedSport } = useSport();
   const notifications = useOptionalNotifications();
   const sportOrder = prioritizedSports(notifications && (notifications.pushSportStatus === "ready" || notifications.pushSportStatus === "saving") ? notifications.pushSports : null);
   const lastActiveSportTapRef = useRef<Record<SecretSportSection, number>>({ picks: 0, play: 0 });
@@ -107,9 +107,13 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const currentPicksSport = entry;
   const selectedPlayRoot = playSport === "football" ? "/football" : playSport === "mlb" ? "/mlb" : playSport === "nba" ? "/nba" : "/play";
   const selectedPicksRoot = currentPicksSport === "football" ? "/football/picks" : currentPicksSport === "mlb" ? "/mlb/picks" : currentPicksSport === "nba" ? "/nba/picks" : "/picks";
+  const currentPlayRoot = footballMode ? "/football" : mlbMode ? "/mlb" : nbaMode ? "/nba" : "/play";
+  const currentPicksRoot = footballMode ? "/football/picks" : mlbMode ? "/mlb/picks" : nbaMode ? "/nba/picks" : "/picks";
+  // Re-tapping an active tab keeps its current sport and double-tap cycling.
+  // Entering a different tab uses the frozen Home sport / last-used fallback.
   const standardDestinations = baseDestinations.map((destination) => (
-    destination.icon === "play" ? { ...destination, to: selectedPlayRoot }
-      : destination.icon === "picks" ? { ...destination, to: selectedPicksRoot }
+    destination.icon === "play" ? { ...destination, to: routeOwnsNavigationItem("play", location.pathname) ? currentPlayRoot : selectedPlayRoot }
+      : destination.icon === "picks" ? { ...destination, to: routeOwnsNavigationItem("picks", location.pathname) ? currentPicksRoot : selectedPicksRoot }
       : destination
   ));
 
