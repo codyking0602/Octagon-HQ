@@ -67,11 +67,14 @@ export function extractYoutubeVideos(xml, channel) {
   return result;
 }
 export function findMatchingHighlight(playerName, videos, lastSunday) {
-  const names=normal(playerName).split(" ");
+  const names=normal(playerName).split(" ").filter(Boolean);
+  while (["jr","sr","ii","iii","iv"].includes(names.at(-1))) names.pop();
   if (names.length<2) return null;
   const first=names[0], last=names.at(-1);
-  const end=Date.parse(lastSunday+"T23:59:59Z")+3*MS_DAY;
-  const start=Date.parse(lastSunday+"T00:00:00Z")-8*MS_DAY;
+  // Last week's Sunday games finish early Monday UTC. Stop before Monday's
+  // new slate so the video cannot accidentally showcase next week's game.
+  const end=Date.parse(lastSunday+"T00:00:00Z")+MS_DAY+16*3_600_000;
+  const start=Date.parse(lastSunday+"T00:00:00Z")-6*MS_DAY;
   return videos.filter(v=>{
     const title=normal(v.title);
     const date=Date.parse(v.published);
