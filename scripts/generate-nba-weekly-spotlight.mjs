@@ -185,8 +185,90 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
   };
   return winner;
 }
+
+const VIDEO_CACHE_FILE = path.resolve(".nba-weekly-video-cache.json");
+
+/** Keep an accumulated feed across days: YouTube RSS exposes only the latest
+ * 15 uploads, far too few to recover an entire NBA week on Tuesday. */
+export function mergeOfficialVideos(...collections) {
+  const byId = new Map();
+  const earliest = Date.now() - 21 * MS_DAY;
+  for (const entries of collections) {
+    for (const entry of Array.isArray(entries) ? entries : []) {
+      if (!OFFICIAL_CHANNELS.includes(entry?.channel)
+        || !/^[\\w-]{11}$/.test(entry?.id ?? "")
+        || typeof entry.title !== "string" || !entry.title.trim()
+        || !Number.isFinite(Date.parse(entry?.published ?? ""))
+        || Date.parse(entry.published) < earliest
+        || Date.parse(entry.published) > Date.now() + MS_DAY) continue;
+      byId.set(entry.id, entry);
+    }
+  }
+  return [...byId.values()].sort((a,b) => Date.parse(b.published) - Date.parse(a.published));
+}
+
+async function youtubeApiVideos(channel, key) {
+  const videos=[];
+  let pageToken="";
+  const after = new Date(Date.now() - 15 * MS_DAY).toISOString();
+  const before = new Date(Date.now() + MS_DAY).toISOString();
+  for (let page=0; page<4; page++) {
+    const url = new URL("https://www.googleapis.com/youtube/v3/search");
+    url.searchParams.set("part","snippet");
+    url.searchParams.set("channelId",channel);
+    url.searchParams.set("maxResults","50");
+    url.searchParams.set("order","date");
+    url.searchParams.set("type","video");
+    url.searchParams.set("publishedAfter",after);
+    url.searchParams.set("publishedBefore",before);
+    url.searchParams.set("key",key);
+    if (pageToken) url.searchParams.set("pageToken",pageToken);
+    // Never include a source URL with a secret API key in errors or logs.
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(),14_000);
+    let payload;
+    try {
+      const response=await fetch(url,{signal:controller.signal});
+      if(!response.ok) throw Error("YouTube Data API error " + response.status);
+      payload=await response.json();
+    } finally { clearTimeout(timer); }
+    for(const item of payload.items ?? []) {
+      const id=item.id?.videoId, snippet=item.snippet;
+      if(snippet?.channelId===channel && /^[\\w-]{11}$/.test(id??""))
+        videos.push({id,channel,title:snippet.title,published:snippet.publishedAt});
+    }
+    pageToken=payload.nextPageToken ?? "";
+    if(!pageToken) break;
+  }
+  return videos;
+}
+
+export async function collectOfficialVideos() {
+  const previous=JSON.parse(await fs.readFile(VIDEO_CACHE_FILE,"utf8").catch(() => "[]"));
+  const newlyFound=[];
+  const key=process.env.YOUTUBE_DATA_API_KEY?.trim();
+  const errors=[];
+  for(const channel of OFFICIAL_CHANNELS) {
+    try {
+      const xml=await retrieveText(`https://www.youtube.com/feeds/videos.xml?channel_id=${channel}`);
+      newlyFound.push(...extractYoutubeVideos(xml,channel));
+    } catch(error) { errors.push(String(error?.message ?? error)); }
+    if(key) {
+      try { newlyFound.push(...await youtubeApiVideos(channel,key)); }
+      catch(error) { errors.push(String(error?.message ?? error)); }
+    }
+  }
+  const merged=mergeOfficialVideos(previous,newlyFound);
+  if (!merged.length) throw Error("No verifiable official YouTube videos; " + errors.join("; "));
+  await fs.writeFile(VIDEO_CACHE_FILE, JSON.stringify(merged,null,2)+"\\n");
+  console.log(`Verified official NBA/ESPN video catalog: ${merged.length} videos (${newlyFound.length} refreshed)`);
+  return merged;
+}
+
 async function main(){
   const {start,end,weekStart,weekEnd}=finishedWeek();
+  const videos=await collectOfficialVideos();
+  if (process.argv.includes("--collect-only")) return;
   const destination=path.resolve("public/nba-weekly/active.json");
   const existing=JSON.parse(await fs.readFile(destination,"utf8").catch(()=>"{}"));
   if (existing.weekEnd===weekEnd&&existing.player&&existing.team) {
@@ -201,11 +283,6 @@ async function main(){
   for (const event of finals) {
     boxscores.set(String(event.id),await retrieveJson(`${ESPN}/summary?event=${encodeURIComponent(event.id)}`));
     await new Promise(resolve=>setTimeout(resolve,200));
-  }
-  const videos=[];
-  for(const id of OFFICIAL_CHANNELS) {
-    const xml=await retrieveText(`https://www.youtube.com/feeds/videos.xml?channel_id=${id}`);
-    videos.push(...extractYoutubeVideos(xml,id));
   }
   const data=selectWeek({events:finals,boxscores,videos,weekStart,weekEnd,publishedAt:new Date().toISOString()});
   await fs.mkdir(path.dirname(destination),{recursive:true});
