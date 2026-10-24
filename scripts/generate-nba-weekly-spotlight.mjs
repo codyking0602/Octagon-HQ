@@ -211,7 +211,7 @@ export function basketballReferenceTeamSeasonUrl(abbreviation, weekEnd) {
   if(!BASKETBALL_REFERENCE_TEAM_CODES.has(code)) {
     throw Error("Unsupported NBA team abbreviation for Basketball Reference: "+source);
   }
-  if(!/^20\\d{2}-\\d{2}-\\d{2}$/.test(weekEnd)) throw Error("Invalid NBA weekly end date");
+  if(!/^20\d{2}-\\d{2}-\\d{2}$/.test(weekEnd)) throw Error("Invalid NBA weekly end date");
   const parsed=new Date(weekEnd+"T12:00:00Z");
   if(!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0,10)!==weekEnd) throw Error("Invalid NBA weekly end date");
   const seasonEnd=parsed.getUTCFullYear()+(parsed.getUTCMonth()>=7 ? 1 : 0);
