@@ -47,6 +47,17 @@ describe("future UFC 24-appearance selector — not active in live Daily",()=>{
     expect(new Set(used).size).toBe(168);
   });
 
+  it("has no semantic repeat in ANY sliding 24-appearance window across three cycles",()=>{
+    const {main,fast}=synthetic(60,140,20);
+    const packs=Array.from({length:72},(_,i)=>planUfcFeudV2Appearance(main,fast,i));
+    for(let start=0;start<=48;start++){
+      const window=packs.slice(start,start+24);
+      const families=window.flatMap(p=>[...p.main,...p.fast].map(ufcFeudSemanticFamily));
+      expect(families,start.toString()).toHaveLength(168);
+      expect(new Set(families).size,"rolling window starting at "+start).toBe(168);
+    }
+  });
+
   it("blocks inadequate content and too much shared Main/Fast material",()=>{
     const shortage=synthetic(47,130,0);
     expect(()=>planUfcFeudV2Appearance(shortage.main,shortage.fast,0)).toThrow("lacks");
