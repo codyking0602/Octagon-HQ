@@ -7,7 +7,7 @@ const ROWS = [
     "prompt": "Name a UFC fighter who lost or relinquished a UFC title, then later won that same division's undisputed championship again.",
     "kind": "person",
     "ranked": "Georges St-Pierre|Amanda Nunes|Rose Namajunas|Stipe Miocic|Israel Adesanya|Zhang Weili|Dominick Cruz|Randy Couture",
-    "extras": "Cain Velasquez|TJ Dillashaw|Carla Esparza|Deiveson Figueiredo",
+    "extras": "Cain Velasquez|TJ Dillashaw|Carla Esparza|Deiveson Figueiredo|Jon Jones",
     "aliases": {
       "Georges St-Pierre": [
         "GSP"
@@ -26,11 +26,15 @@ const ROWS = [
       ],
       "Deiveson Figueiredo": [
         "Deus da Guerra"
+      ],
+      "Jon Jones": [
+        "Bones"
       ]
     },
     "source": [
       "https://www.ufc.com/news/reclaiming-gold-ufc-fight-pass-dillashaw-nunes-figueiredo-esparza-miocic-namajunas-cruz-jones",
-      "https://www.ufc.com/athlete/rose-namajunas"
+      "https://www.ufc.com/athlete/rose-namajunas",
+      "https://www.ufc.com/news/ufc-232-main-event-report"
     ]
   },
   {
@@ -98,7 +102,7 @@ const ROWS = [
     "prompt": "Name a woman who has held an undisputed UFC championship.",
     "kind": "person",
     "ranked": "Ronda Rousey|Amanda Nunes|Valentina Shevchenko|Zhang Weili|Joanna Jedrzejczyk|Rose Namajunas|Holly Holm|Cris Cyborg",
-    "extras": "Miesha Tate|Julianna Pena|Carla Esparza|Jessica Andrade|Alexa Grasso|Germaine de Randamie|Raquel Pennington|Nicco Montano",
+    "extras": "Miesha Tate|Julianna Pena|Carla Esparza|Jessica Andrade|Alexa Grasso|Germaine de Randamie|Raquel Pennington|Nicco Montano|Kayla Harrison",
     "aliases": {
       "Cris Cyborg": [
         "Cyborg"
@@ -115,11 +119,15 @@ const ROWS = [
       ],
       "Valentina Shevchenko": [
         "Bullet"
+      ],
+      "Kayla Harrison": [
+        "Kayla"
       ]
     },
     "source": [
       "https://www.ufc.com/news/ufc-womens-bantamweight-title-lineage-Rousey-Holm-Tate-Nunes-Pena",
-      "https://www.ufc.com/news/ufc-womens-strawweight-title-lineage-esparza-jedrzejczyk-namajunas-andrade-zhang"
+      "https://www.ufc.com/news/ufc-womens-strawweight-title-lineage-esparza-jedrzejczyk-namajunas-andrade-zhang",
+      "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-316-dvalishvili-vs-omalley-2-newark"
     ]
   },
   {
