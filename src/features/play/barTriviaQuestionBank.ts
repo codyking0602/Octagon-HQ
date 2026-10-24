@@ -160,7 +160,7 @@ export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] =
       const prompt = UFC_BAR_TRIVIA_V3_PROMPT_OVERRIDES[question.id] ?? question.prompt;
       // Add an explicit UFC authority URL wherever the legacy seed omitted one.
       // Source assignment is not a substitute for individually checking disputed facts.
-      const event = prompt.match(/\\bUFC\\s+(\\d{2,3})\\b/i);
+      const event = prompt.match(/\bUFC\s+(\d{2,3})\b/i);
       const sourceUrl = question.sourceUrl ??
         (event ? `https://www.ufc.com/event/ufc-${event[1]}`
           : "https://www.ufc.com/news/top-500-ufc-moments-list");
