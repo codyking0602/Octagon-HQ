@@ -305,7 +305,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
 
   if (!signedIn) {
     return (
-      <section className="today-hub-gate" data-sport={presentationSport}>
+      <section className="today-hub-gate" data-sport={sport}>
         <div>
           <p className="eyebrow">TODAY’S CHALLENGE</p>
           <h2>One official game. One first attempt.</h2>
