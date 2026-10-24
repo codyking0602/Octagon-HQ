@@ -6,20 +6,26 @@ const ROWS = [
     "lane": "fan-experience-belt-design",
     "prompt": "Name a design feature on a UFC championship belt.",
     "kind": "other",
-    "ranked": "UFC letters|Gold plates|Leather strap|Octagon shapes|Nameplate|Decorative stones|Engraving|UFC logo",
-    "extras": "Metal plate|Rivets|Gemstones|Gold finish|Championship text|Weight-class plate|Belt buckle",
+    "ranked": "UFC letters|Gold plates|Leather strap|Octagon shapes|Nameplate|Decorative stones|Engraving|Rivets",
+    "extras": "Championship text|Weight-class plate|Belt buckle",
     "aliases": {
       "UFC letters": [
-        "UFC lettering"
+        "UFC lettering",
+        "UFC logo"
       ],
       "Leather strap": [
         "Strap"
       ],
       "Decorative stones": [
-        "Gems"
+        "Gems",
+        "Gemstones"
       ],
       "Engraving": [
         "Engraved details"
+      ],
+      "Gold plates": [
+        "Metal plate",
+        "Gold finish"
       ]
     }
   },
@@ -29,7 +35,7 @@ const ROWS = [
     "prompt": "Name a service a UFC arena might offer spectators.",
     "kind": "other",
     "ranked": "Restrooms|Food stands|Merchandise shop|First aid|Security desk|Elevators|Guest services|Accessible seating",
-    "extras": "ATM|Lost and found|Information booth|Drinking fountain|Parking|Bar|Escalator|Customer service|VIP lounge",
+    "extras": "ATM|Lost and found|Drinking fountain|Parking|Bar|Escalator|VIP lounge",
     "aliases": {
       "Restrooms": [
         "Bathrooms"
@@ -42,6 +48,10 @@ const ROWS = [
       ],
       "Accessible seating": [
         "ADA seating"
+      ],
+      "Guest services": [
+        "Information booth",
+        "Customer service"
       ]
     }
   },
@@ -95,7 +105,7 @@ const ROWS = [
     "prompt": "Name a way someone might travel to a UFC event.",
     "kind": "other",
     "ranked": "Car|Ride-share|Taxi|Train|Bus|Walking|Airplane|Motorcycle",
-    "extras": "Subway|Rental car|Bike|Hotel shuttle|Carpool|Limousine|Light rail|Scooter|Tram",
+    "extras": "Rental car|Bike|Hotel shuttle|Carpool|Limousine|Scooter",
     "aliases": {
       "Car": [
         "Driving"
@@ -112,6 +122,11 @@ const ROWS = [
       ],
       "Bike": [
         "Bicycle"
+      ],
+      "Train": [
+        "Subway",
+        "Light rail",
+        "Tram"
       ]
     }
   },
@@ -121,10 +136,11 @@ const ROWS = [
     "prompt": "Name something a UFC premium ticket package might include.",
     "kind": "other",
     "ranked": "Closer seats|VIP lounge|Early entry|Special entrance|Food|Drinks|Exclusive gift|Dedicated staff",
-    "extras": "Parking|Photo opportunity|Priority check-in|Reserved table|Hospitality area|Private suite|Meet and greet|Merchandise|Better view",
+    "extras": "Parking|Photo opportunity|Priority check-in|Reserved table|Private suite|Meet and greet|Merchandise",
     "aliases": {
       "Closer seats": [
-        "Better seats"
+        "Better seats",
+        "Better view"
       ],
       "Special entrance": [
         "VIP entrance"
@@ -134,6 +150,9 @@ const ROWS = [
       ],
       "Photo opportunity": [
         "Photo op"
+      ],
+      "VIP lounge": [
+        "Hospitality area"
       ]
     }
   }
