@@ -5,7 +5,7 @@ import { BAR_TRIVIA_MAX_SCORE, createBarTriviaState, type BarTriviaQuestion } fr
 import { BAR_TRIVIA_DAILY_SCORING_VERSION } from "../play/barTriviaDailyRuntime";
 import { stableLineupHash } from "../play/lineupModel";
 import {
-  NBA_DAILY_WEIGHTED_CYCLE, nbaRegularSeasonDaily, type NbaDailyGame,
+  NBA_DAILY_WEIGHTED_CYCLE, nbaOwnerPreviewDaily, nbaRegularSeasonDaily, type NbaDailyGame,
 } from "./nbaDailySchedule";
 import { buildNbaSportsFeudDailyPack } from "./nbaSportsFeudDailyRotation";
 import { buildNbaBarTriviaDailyBoard } from "./nbaBarTriviaDailyRotation";
@@ -91,7 +91,9 @@ export function buildNbaServerDailyPublication(
   publicationHistory?: unknown,
 ) {
   if (!scheduleVersion.trim()) throw new Error("NBA Daily schedule version is required.");
-  const ordinal = nbaDailyGameAppearance(day, gameType);
+  const ordinal = scheduleVersion === "nba-owner-prelaunch-v1"
+    ? (nbaOwnerPreviewDaily(day) === gameType ? 0 : (() => { throw new Error("NBA owner prelaunch game/day mismatch."); })())
+    : nbaDailyGameAppearance(day, gameType);
   const publication = gameType === "higher_lower"
     ? buildNbaHigherLowerDailyPublication(day, scheduleVersion, ordinal)
     : gameType === "hit_the_number"
