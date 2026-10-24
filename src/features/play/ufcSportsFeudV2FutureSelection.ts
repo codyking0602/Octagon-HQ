@@ -66,22 +66,26 @@ export function planUfcFeudV2Appearance(
   if(allUnique.size<requiredMain+requiredFast)
     throw new Error("UFC Feud V2 Main and Fast share too many recall concepts");
 
-  // Some topics may legitimately exist in both pools. Choose a disjoint cycle
-  // allocation, seeded only by cycle (never user or current time).
-  for(let attempt=0;attempt<256;attempt++){
-    const mainKeys=seedOrder([...main.keys()],`ufc-v2-main-${cycle}-${attempt}`,x=>x)
-      .slice(0,requiredMain);
-    const mainSet=new Set(mainKeys);
-    const fastKeys=seedOrder([...fast.keys()].filter(k=>!mainSet.has(k)),
-      `ufc-v2-fast-${cycle}-${attempt}`,x=>x).slice(0,requiredFast);
-    if(fastKeys.length!==requiredFast)continue;
-    const selectedMain=mainKeys
-      .slice(slot*UFC_FEUD_V2_MAIN_PER_APPEARANCE,(slot+1)*UFC_FEUD_V2_MAIN_PER_APPEARANCE)
-      .map(k=>chooseQuestion(main.get(k)!,cycle,k));
-    const selectedFast=fastKeys
-      .slice(slot*UFC_FEUD_V2_FAST_PER_APPEARANCE,(slot+1)*UFC_FEUD_V2_FAST_PER_APPEARANCE)
-      .map(k=>chooseQuestion(fast.get(k)!,cycle,k));
-    return {appearanceIndex,cycle,main:selectedMain,fast:selectedFast};
-  }
-  throw new Error("UFC Feud V2 cannot allocate distinct editorial families across all 24 appearances");
+  // A topic may exist in both pools. Spend Main-only topic families first,
+  // keeping shared families available for Fast Money. The mathematical
+  // union threshold above guarantees this allocation can succeed.
+  const mainOnly=[...main.keys()].filter(k=>!fast.has(k));
+  const shared=[...main.keys()].filter(k=>fast.has(k));
+  const selectedMainKeys=[
+    ...seedOrder(mainOnly,`ufc-v2-main-only-${cycle}`,x=>x),
+    ...seedOrder(shared,`ufc-v2-main-shared-${cycle}`,x=>x),
+  ].slice(0,requiredMain);
+  const reserved=new Set(selectedMainKeys);
+  const selectedFastKeys=seedOrder([...fast.keys()].filter(k=>!reserved.has(k)),
+    `ufc-v2-fast-${cycle}`,x=>x).slice(0,requiredFast);
+  if(selectedMainKeys.length!==requiredMain||selectedFastKeys.length!==requiredFast)
+    throw new Error("UFC Feud V2 insufficient unique Main/Fast topic allocation");
+
+  const selectedMain=selectedMainKeys
+    .slice(slot*UFC_FEUD_V2_MAIN_PER_APPEARANCE,(slot+1)*UFC_FEUD_V2_MAIN_PER_APPEARANCE)
+    .map(k=>chooseQuestion(main.get(k)!,cycle,k));
+  const selectedFast=selectedFastKeys
+    .slice(slot*UFC_FEUD_V2_FAST_PER_APPEARANCE,(slot+1)*UFC_FEUD_V2_FAST_PER_APPEARANCE)
+    .map(k=>chooseQuestion(fast.get(k)!,cycle,k));
+  return {appearanceIndex,cycle,main:selectedMain,fast:selectedFast};
 }
