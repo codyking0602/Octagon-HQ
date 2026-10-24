@@ -63,7 +63,7 @@ describe("SportProvider", () => {
     expect(bottomNavigationSource).not.toContain("localStorage");
     expect(sportProviderSource.match(/useState<SelectedSport>/g) ?? []).toHaveLength(2);
     expect(sportProviderSource.match(/useState<HomeSport>/g) ?? []).toHaveLength(1);
-    expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(1);
+    expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(2);
   });
 
   it("drives contextual theme from the route without synchronizing Home's preference", () => {
