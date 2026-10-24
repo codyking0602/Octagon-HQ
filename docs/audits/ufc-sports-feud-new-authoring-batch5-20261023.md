@@ -8,6 +8,7 @@
 - **14 advance to independent fact and answer review**, **eight HELD** for overlap, excessive ambiguity, generic content or dynamic sponsor trivia. Advance is **not** final production approval.
 - Of those fourteen advancing boards, only **ten genuinely different semantic families** are present. Five nationality-based fighter questions all share one "fighter from [country]" recall format, and must count as **one** family for the future cooldown rather than five.
 - All 22 have eight distinct ranked editorial answers, additional accepted/off-board responses, and 89 explicitly authored aliases. Source-level alias review found no canonical collisions across 348 accepted names. Matcher tests still must run.
+- All five nationality-based Fast Money boards now use `entityKind: person`, allowing the actual matcher to recognize unique surnames such as Horiguchi, Fiorot and Tybura, and to refuse ambiguous ones such as Nakamura, Kim, or Zhang rather than wrongly picking a fighter. Added explicit positive/negative regression tests.
 - Major factual catch: **Kevin Jackson** was a Division I wrestling **runner-up** (1987), not an NCAA Division I champion. His answer was removed. UFC records also confirm **Doo Ho Choi is South Korean**, not Japanese, and **Gregory Rodrigues lost on Contender Series** rather than signing directly through a DWCS win. Regression negative-answer checks were added. These corrections prevent incorrect player credit, not just spelling issues.
 
 ## Combined editorial inventory (not approved live content)
