@@ -92,17 +92,18 @@ begin
     if v_copy ~* '\mNBA\M' then v_sports := array_append(v_sports, 'nba'); end if;
     return v_sports;
   end if;
-  if v_route ~ '^/(football)(/|$|\\?)' or p_kind = 'football_picks_open' then
+  if v_route = '/football' or v_route like '/football/%' or v_route like '/football?%' or p_kind = 'football_picks_open' then
     return array['football']::text[];
   end if;
-  if v_route ~ '^/(nba)(/|$|\\?)' or v_route ~ '^/championship/nba(/|$|\\?)'
+  if v_route = '/nba' or v_route like '/nba/%' or v_route like '/nba?%'
+    or v_route = '/championship/nba' or v_route like '/championship/nba/%' or v_route like '/championship/nba?%'
     or p_kind like 'nba_%' then
     return array['nba']::text[];
   end if;
-  if v_route ~ '^/(mlb)(/|$|\\?)' or p_kind like 'mlb_%' then
+  if v_route = '/mlb' or v_route like '/mlb/%' or v_route like '/mlb?%' or p_kind like 'mlb_%' then
     return array['mlb']::text[];
   end if;
-  if v_route ~ '^/(picks|play|rankings|intelligence|fighters-to-watch)(/|$|\\?)'
+  if v_route ~ '^/(picks|play|rankings|intelligence|fighters-to-watch)(/|$|[?])'
     or p_kind in (
       'picks_repick_required', 'picks_fight_cancelled', 'picks_incomplete_near_lock',
       'picks_recap_ready', 'picks_season_result_changed', 'picks_card_updated',
