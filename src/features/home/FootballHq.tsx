@@ -397,6 +397,7 @@ export function FootballHq({
   selections,
   history,
   summary,
+  compactPreview = false,
   loading,
   error,
   signedIn,
@@ -411,6 +412,7 @@ export function FootballHq({
   selections: Readonly<Record<string, string>>;
   history: PickHistory;
   summary: PickSummary;
+  compactPreview?: boolean;
   loading: boolean;
   error: string;
   signedIn: boolean;
@@ -451,6 +453,9 @@ export function FootballHq({
   const progress = pickProgress(event, selections);
   const progressPercent = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
   const remaining = Math.max(0, progress.total - progress.completed);
+  const settledSeasonPicks = summary.correct + summary.incorrect;
+  const seasonWinPercentage = settledSeasonPicks > 0
+    ? Math.round(100 * summary.correct / settledSeasonPicks) : null;
   const locked = event ? eventPicksLocked(event) : false;
   const standings = picksSeasonStandings(history, "football");
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
@@ -480,7 +485,7 @@ export function FootballHq({
 
   return (
     <section
-      className="home-section home-sport-hq home-sport-hq--football home-section--football-hq"
+      className={`home-section home-sport-hq home-sport-hq--football home-section--football-hq${compactPreview ? " football-hq--compact-preview" : ""}`}
       data-testid="home-section"
       data-home-section="football-hq"
       aria-label="Football HQ"
@@ -498,6 +503,23 @@ export function FootballHq({
           <p className="eyebrow">FOOTBALL PICKS</p>
           <span>{event ? locked ? "LOCKED" : "ACTIVE" : loading ? "LOADING" : error ? "UNAVAILABLE" : "WAITING"}</span>
         </div>
+        {compactPreview ? (
+          <div className="football-hq-compact-picks" aria-label="Football picks summary">
+            <div className="football-hq-compact-picks__completion">
+              <small>YOUR PICKS</small>
+              <strong>{signedIn && event ? `${progress.completed} OF ${progress.total}` : "—"}</strong>
+              <span>{status}</span>
+            </div>
+            <Link className="football-hq-compact-picks__record" to="/championship/football?tab=picks"
+              aria-label="Open Football Championship Picks leaderboard">
+              <small>{season} PICKS RECORD</small>
+              <strong>{signedIn ? pickRecord(summary) : "—"}</strong>
+              <span>{!signedIn ? "SIGN IN TO TRACK" : seasonWinPercentage === null ? "NO RESULTS YET" : `${seasonWinPercentage}% WIN`}</span>
+            </Link>
+            <Link className="football-hq-compact-picks__action" to="/football/picks">OPEN PICKS →</Link>
+          </div>
+        ) : (
+          <>
         <div className="home-event-card__picks-grid">
           <div className="picks-progress" aria-label={`${progress.completed} of ${progress.total} football picks completed`}>
             <div>
@@ -518,6 +540,8 @@ export function FootballHq({
           </Link>
         </div>
         <Link className="secondary-action" to="/football/picks">OPEN PICKS →</Link>
+          </>
+        )}
       </section>
 
       {dailyChallenge}

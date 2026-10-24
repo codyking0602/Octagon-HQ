@@ -168,6 +168,9 @@ export default function HomePage() {
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
   const nbaVisible = canPreviewNba(identity.profile);
   const ownerPreview = signedIn;
+  // Only the authenticated owner gets the in-progress Home density experiment.
+  const compactFootballPreview = Boolean(identity.profile?.canControlPicks === true
+    && identity.profile.displayName.trim().toUpperCase() === "CODY");
   const sportPreference = useOptionalSport();
   const selectedSport = sportPreference?.selectedSport ?? "football";
   const setSelectedSport = (sport: "football" | "ufc" | "mlb" | "nba") => sportPreference?.setSelectedSport(sport);
@@ -300,6 +303,7 @@ export default function HomePage() {
   const footballHq = (
     <FootballHq
       event={picks.footballEvent}
+      compactPreview={compactFootballPreview}
       selections={picks.footballSelections}
       history={picks.footballHistory}
       summary={picks.footballSummary}
@@ -382,7 +386,7 @@ export default function HomePage() {
   );
 
   return (
-    <div className="page home-page">
+    <div className={`page home-page${compactFootballPreview ? " home-page--compact-football-preview" : ""}`}>
       {ownerPreview ? (
         <header className="home-sport-chooser" aria-label="Your HQ dashboard">
           <div className="home-sport-chooser__identity">
