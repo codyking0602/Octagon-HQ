@@ -11,9 +11,11 @@ const current = JSON.parse(readFileSync("public/nba-weekly/active.json", "utf8")
 };
 
 function rules(selector: string) {
-  const index = css.lastIndexOf(selector + " {");
-  expect(index, `Missing CSS block ${selector}`).toBeGreaterThanOrEqual(0);
-  return css.slice(index, css.indexOf("}", index) + 1);
+  // A selector may appear in a base declaration and multiple mobile overrides.
+  // Examine all of its blocks, not whichever declaration happens to be last.
+  const blocks = css.split(selector + " {").slice(1).map(part => part.slice(0, part.indexOf("}")));
+  expect(blocks.length, `Missing CSS block ${selector}`).toBeGreaterThan(0);
+  return blocks.join("\n");
 }
 
 describe("Basketball HQ locked Football mobile sizing", () => {
