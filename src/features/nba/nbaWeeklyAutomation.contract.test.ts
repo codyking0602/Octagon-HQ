@@ -5,7 +5,7 @@ const script = readFileSync("scripts/generate-nba-weekly-spotlight.mjs","utf8");
 const flow = readFileSync(".github/workflows/nba-weekly-spotlights.yml","utf8");
 describe("NBA unattended editorial safeguards", () => {
   it("passes offline ESPN box-score and verified YouTube fixture tests", () => {
-    expect(() => execFileSync("node", ["--test", "scripts/generate-nba-weekly-spotlight.test.mjs"],
+    expect(() => execFileSync("node", ["--test", "scripts/generate-nba-weekly-spotlight.fixtures.mjs"],
       { encoding: "utf8", timeout: 30_000 })).not.toThrow();
   });
   it("uses finished ESPN boxscores and official YouTube videos, never synthetic weekly winners", () => {
