@@ -4,10 +4,10 @@ import { CFB_FEUD_REBUILD_CANDIDATES, NFL_FEUD_REBUILD_CANDIDATES } from "./foot
 /**
  * FUTURE-ONLY editorial rotation rehearsal, NOT the current Daily publisher.
  * Each call models a fresh rotation cycle for a fixed calendar-independent sequence.
- * We do NOT claim 20 appearances per sport until at least 40 Main + 100 Fast
- * independent topics exist for BOTH NFL and CFB.
+ * The candidate banks now meet the 20-appearance inventory minimum:
+ * 40 Main and at least 100 Fast per sport. This remains a PREVIEW, not Daily.
  */
-export const FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT = 10;
+export const FOOTBALL_FEUD_REBUILD_VALIDATED_APPEARANCES_PER_SPORT = 20;
 
 function hash(text: string) {
   let result = 2166136261;

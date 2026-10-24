@@ -1,0 +1,6 @@
+import { parseFootballRebuildRows } from "./footballSportsFeudRebuildParser";
+/** Additional bounded college-to-NFL defensive/offensive line history topics. */
+export const CFB_FEUD_REBUILD_MAIN_BATCH5 = parseFootballRebuildRows("cfb", "main", [
+  "first-round-edge-2020s|person|college-edge-first-round-2020s|Name a college defensive end or edge rusher selected in Round 1 of an NFL Draft between 2020 and 2025.|Aidan Hutchinson,Chase Young,Travon Walker,Kayvon Thibodeaux,Will Anderson Jr.,Jared Verse,Abdul Carter,Dallas Turner|Tyree Wilson,Laiatu Latu,Chop Robinson,Nolan Smith,Jermaine Johnson II,Jaelan Phillips,Kwity Paye,Jalon Walker,Lukas Van Ness",
+  "first-round-ol-2020s|person|college-offensive-line-first-round-2020s|Name an offensive lineman selected in Round 1 of the NFL Draft between 2020 and 2025.|Joe Alt,Penei Sewell,Tristan Wirfs,Rashawn Slater,Paris Johnson Jr.,Ikem Ekwonu,Peter Skoronski,J.C. Latham|Olu Fashanu,Taliese Fuaga,Amarius Mims,Tyler Guyton,Broderick Jones,Anton Harrison,Trevor Penning,Zion Johnson,Tyler Smith,Will Campbell,Kelvin Banks Jr.,Tyler Booker,Andrew Thomas,Mekhi Becton,Jedrick Wills Jr.,Austin Jackson,Cesar Ruiz,Christian Darrisaw,Alijah Vera-Tucker,Charles Cross,Evan Neal,Tyler Linderbaum,Darnell Wright,Jordan Morgan,Armand Membou,Josh Simmons,Josh Conerly Jr."
+]);

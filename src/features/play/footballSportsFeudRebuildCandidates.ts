@@ -1,4 +1,10 @@
 import type { SportsFeudAuthoredQuestion } from "./sportsFeudBankTypes";
+import { NFL_FEUD_REBUILD_MAIN_BATCH3, CFB_FEUD_REBUILD_MAIN_BATCH3 } from "./footballSportsFeudRebuildMainBatch3";
+import { NFL_FEUD_REBUILD_MAIN_BATCH4, CFB_FEUD_REBUILD_MAIN_BATCH4 } from "./footballSportsFeudRebuildMainBatch4";
+import { CFB_FEUD_REBUILD_MAIN_BATCH5 } from "./footballSportsFeudRebuildCfbMainBatch5";
+import { NFL_FEUD_REBUILD_FAST_BATCH2 } from "./footballSportsFeudRebuildNflFastBatch2";
+import { CFB_FEUD_REBUILD_FAST_BATCH2 } from "./footballSportsFeudRebuildCfbFastBatch2";
+
 import { NFL_SPORTS_FEUD_MAIN } from "./nflSportsFeudMain";
 import { CFB_SPORTS_FEUD_MAIN } from "./cfbSportsFeudMain";
 import { NFL_SPORTS_FEUD_FAST_1 } from "./nflSportsFeudFast1";
@@ -59,11 +65,11 @@ const CFB_OLD_FAST = [
 ];
 
 export const NFL_FEUD_REBUILD_CANDIDATES = {
-  main: [...retained(NFL_MAIN_KEEP, NFL_SPORTS_FEUD_MAIN), ...NFL_FEUD_REBUILD_MAIN, ...NFL_FEUD_REBUILD_MAIN_BATCH2],
-  fast: [...retained(NFL_FAST_KEEP, NFL_OLD_FAST), ...NFL_FEUD_REBUILD_FAST],
+  main: [...retained(NFL_MAIN_KEEP, NFL_SPORTS_FEUD_MAIN), ...NFL_FEUD_REBUILD_MAIN, ...NFL_FEUD_REBUILD_MAIN_BATCH2, ...NFL_FEUD_REBUILD_MAIN_BATCH3, ...NFL_FEUD_REBUILD_MAIN_BATCH4],
+  fast: [...retained(NFL_FAST_KEEP, NFL_OLD_FAST), ...NFL_FEUD_REBUILD_FAST, ...NFL_FEUD_REBUILD_FAST_BATCH2],
 } as const;
 
 export const CFB_FEUD_REBUILD_CANDIDATES = {
-  main: [...retained(CFB_MAIN_KEEP, CFB_SPORTS_FEUD_MAIN), ...CFB_FEUD_REBUILD_MAIN, ...CFB_FEUD_REBUILD_MAIN_BATCH2],
-  fast: [...retained(CFB_FAST_KEEP, CFB_OLD_FAST), ...CFB_FEUD_REBUILD_FAST],
+  main: [...retained(CFB_MAIN_KEEP, CFB_SPORTS_FEUD_MAIN), ...CFB_FEUD_REBUILD_MAIN, ...CFB_FEUD_REBUILD_MAIN_BATCH2, ...CFB_FEUD_REBUILD_MAIN_BATCH3, ...CFB_FEUD_REBUILD_MAIN_BATCH4, ...CFB_FEUD_REBUILD_MAIN_BATCH5],
+  fast: [...retained(CFB_FAST_KEEP, CFB_OLD_FAST), ...CFB_FEUD_REBUILD_FAST, ...CFB_FEUD_REBUILD_FAST_BATCH2],
 } as const;

@@ -1,38 +1,41 @@
-# Football Sports Feud rebuild staging — October 23, 2026
+# Football Sports Feud — isolated rebuild progress (October 23, 2026)
 
-Branch-only editorial staging. **No live player gets these questions yet**. The old v1 publisher, score ladders, bank selection, result IDs and prior official packs remain unchanged.
+**DRAFT STAGING ONLY. Never merge or deploy without separate authorization.** The current v1 NFL/CFB game, historical question IDs, fixed point ladders, Daily schedule, official published packs and stored results are unchanged.
 
-## Ground truth
+## True distinct-content inventory
 
-- Audit source: main ec0944bb62ece69f70cc3c86b2611bfbde589ce7.
-- Old claim: 350 NFL and 350 CFB questions, but 70 five-prompt families each.
-- This branch retains only one original (-1) entry per KEEP family. Variants -2 through -5 are not counted as distinct.
-- New entries are individually authored topic lanes, not five prompt variations.
-- NFL candidate bank: **23 Main + 53 Fast = 76** independent source IDs, consisting of 21 old KEEP and 55 new.
-- CFB candidate bank: **21 Main + 54 Fast = 75** independent source IDs, consisting of 23 old KEEP and 52 new.
-- 151 candidate IDs combined, compared with 700 padded old variants. KEEP remains subject to final fact-and-alias certification.
+The old bank reported 350 authored prompts per sport, but each came from exactly 70 question families with five alternate phrasings. This rebuild counts a source ID as a question only when its underlying semantic topic is new. Only one original -1 prompt from each audited KEEP family survives in the candidate inventory; original alternate variants are not deleted.
 
-## Gating
+| Candidate inventory | NFL | CFB |
+| --- | ---: | ---: |
+| Kept original concepts (one ID each) | 21 | 23 |
+| New distinct editorial candidate topics | 120 | 117 |
+| Main board candidates | 40 | 40 |
+| Fast Money candidates | 101 | 100 |
+| **Total concepts staged** | **141** | **140** |
 
-The isolated rotation preview permits **10 appearances per sport (20 Football appearances in all)** without repeating source question IDs, with two Main and five Fast per appearance. It deliberately rejects requests for 20 appearances *per sport*: that more demanding standard needs at least 40 genuinely distinct Main and 100 Fast questions per sport, before quality buffer. Six months plus buffer should target roughly 50 Main and 120 Fast per sport; do not activate early.
+New questions include objective NFL award and career-history topics, college CFP and award-specific questions, pass routes, field and special teams knowledge, fan culture, recruiting, college traditions and gameday operations. New questions have eight editorially ranked examples and explicit off-board candidates (NOT actual survey findings). Candidate does not mean all factual claims or aliases have received independent final primary-source certification.
 
-The rotation preview does **not** change the current Daily schedule or replace the publication code. Materialization into canonical result entity metadata, persisted Daily pack version, challenge-history behavior and no-repeat cadence must be implemented and verified in a future release step after content is sufficient.
+## Technical rotation
 
-## Editorial review policy
+`previewFootballFeudRebuildRotation(sport, appearances)` selects 2 Main + 5 Fast for **20 consecutive appearances of each sport**, deterministic by slot and sport, with no reused question ID over 20 appearances, and no same-lane collisions within an appearance. This is 40 combined alternating Football Daily appearances of content in preview. The staging preview is deliberately disconnected from the live Daily generator and does not change prior player results. Tests exercise exact IDs, candidate/alias matching, distinct lanes, and the 20-appearance constraint. The 21st same-sport appearance requires a fresh cycle or more content; there is no 6-month-per-sport no-repeat claim.
 
-Eight ranked examples plus explicit additional correct answers on each new board. Ranking is editorial recognition, **not an actual survey**. Scope annual awards and historical affiliation explicitly; NBA's no-repeat and fan-language acceptance work informs this bank. Brand/type and collision checks exist in `footballSportsFeudRebuildCandidates.test.ts`; more objective source cross-checks and native CI are still required before activation.
+At four Football Sports Feud appearances per 22 days, alternating NFL/CFB, 40 combined appearances provide over six months of content before an exact question ID must repeat in this preview.
 
-Sources to check during final historical gate include NFL Awards history, Pro Football Reference, NCAA official record books, CFP 2024-2025 field lists, official Heisman archives and Doak Walker/Biletnikoff recipients. Stage objective questions with curated eligibility caps instead of manufacturing fillers.
+## Editorial standards and remaining release gates
 
-## High-risk history-aware areas to keep reviewing
+1. Primary-source verification of every objective answer universe before activation (NFL/Pro Football Reference; NCAA/CFP; Davey O'Brien, Heisman, Doak Walker and related award records). A correct answer omitted from an authoritative list is a grading bug.
+2. Audit plausible extra answers and spelling/short-name aliases with exact matcher behavior. Do not confuse rankings with empirical surveys.
+3. Reconcile loosely related "game experience" questions and avoid turning the new bank into a pile of generic fan-life trivia at the expense of football identity.
+4. Wire a **versioned future-only** selector/materializer that preserves already published challenge setups/results and archived IDs. The live v1 cardinality asserts must NOT simply be changed to 40/100, and the UFC implementation must remain untouched.
+5. Run PR-head typecheck/unit tests, rotate each sport over multiple 20-appearance cycles, verify historical result continuity, then obtain explicit merge/go-live approval.
 
-- Franchise relocations and stadium sponsor renames must accept contemporaneous labels.
-- 2024 conference realignment must not use present membership to retroactively classify earlier seasons.
-- Historic MVP/award recipients include shared awards and renamed recognitions.
-- NFL quarterbacks starting on different franchises must never be credited for seasons they did not play there.
-- Avoid ranking near-synonymous plays/actions as separate substantive responses.
-- Main may require history knowledge; Fast should allow a casual fan to respond within seconds.
+## Confirmed references reviewed during staging
 
-## Never overwrite
+- NFL AP 2025 season Honors and OPOY/Coach of Year: https://www.nfl.com/news/list-of-nfl-honors-award-winners-from-2025-nfl-season
+- Pro Football Reference passing career leaders: https://www.pro-football-reference.com/leaders/pass_yds_career.htm
+- Davey O'Brien official archive: https://www.daveyobrienaward.com/national-quarterback-award
+- Heisman official archive: https://www.heisman.com/heisman-winners/
+- NCAA 2025 College Football Playoff bracket: https://www.ncaa.com/brackets/football/fbs/2025
 
-The original v1 bank files, published Daily setups and completed results. Live integration is explicitly deferred. No PR merge or deployment authorization is implied.
+Everything remains unactivated. No main edits, merge or deployment.
