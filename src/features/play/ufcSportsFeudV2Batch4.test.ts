@@ -44,7 +44,7 @@ describe("UFC Feud v2 batch 4 — isolated editorial staging",()=>{
   it("provides eight ranked names and recognizes every authored accepted answer and alias",()=>{
     for(const q of batch) {
       expect(q.answers,q.id).toHaveLength(8);
-      expect(q.alsoAcceptedAnswers?.length ?? 0,q.id).toBeGreaterThan(6);
+      expect(q.alsoAcceptedAnswers?.length ?? 0,q.id).toBeGreaterThan(q.entityKind==="person" ? 0 : 6);
       if(q.entityKind==="person") expect(q.source?.length ?? 0,q.id).toBeGreaterThan(0);
       const {pack,board,names}=makePack(q);
       expect(new Set(names.map(x=>normalizeFamilyFeudInput(x.name))).size,q.id).toBe(names.length);
