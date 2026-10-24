@@ -13,7 +13,6 @@ export type NbaWeeklySpotlight = {
     /** Only videos verified against the official @NBA channel are accepted. */
     highlightSourceChannelId?: string;
     channelUrl?: string;
-    summary: string;
     stats: [WeeklyStat, WeeklyStat, WeeklyStat, WeeklyStat];
   };
   team: {
@@ -25,7 +24,6 @@ export type NbaWeeklySpotlight = {
     ppg: string;
     oppPpg: string;
     netMargin: string;
-    summary: string;
   };
 };
 function isHttpsFrom(url: unknown, host: RegExp) {
@@ -44,13 +42,17 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
     || !value.publishedAt || !Number.isFinite(Date.parse(value.publishedAt))
     || !player || !team || !Array.isArray(player.stats) || player.stats.length !== 4) return null;
   const string = (v: unknown) => typeof v === "string" && v.trim().length > 0;
-  if (![player.name,player.team,player.position,player.summary,team.name,team.teamId,
-    team.record,team.ppg,team.oppPpg,team.netMargin,team.summary].every(string)) return null;
+  if (![player.name,player.team,player.position,team.name,team.teamId,
+    team.record,team.ppg,team.oppPpg,team.netMargin].every(string)) return null;
   if (!player.stats.every(s => s && string(s.label) && string(s.value))) return null;
   if (!isHttpsFrom(player.headshotUrl, /(^|\.)espncdn\.com$/i)
     || !isHttpsFrom(team.logoUrl, /(^|\.)espncdn\.com$/i)
     || !isHttpsFrom(player.profileUrl, /(^|\.)espn\.com$/i)
-    || !isHttpsFrom(team.profileUrl, /(^|\.)espn\.com$/i)
+    || !isHttpsFrom(team.profileUrl, /^(www\.)?basketball-reference\.com$/i)
+    || !/^\/teams\/[A-Z]{3}\/20\d{2}\.html$/.test(new URL(team.profileUrl).pathname)
+    || Number(new URL(team.profileUrl).pathname.slice(-9,-5)) !== (
+      Number(value.weekEnd?.slice(0,4)) + (Number(value.weekEnd?.slice(5,7)) >= 8 ? 1 : 0)
+    )
     || (player.highlightUrl
       ? !isHttpsFrom(player.highlightUrl, /^(www\.)?(youtube\.com|youtu\.be)$/i)
         || player.highlightSourceChannelId !== "UCWJ2lWNubArHWmf3FIHbfcQ"
