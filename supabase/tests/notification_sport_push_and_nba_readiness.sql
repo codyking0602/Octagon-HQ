@@ -67,11 +67,17 @@ begin
     raise exception 'Football push was not idempotent';
   end if;
 
-  v_mixed := public.publish_notification(v_member,
-    'sport-proof:combined', 'daily-closing-combined', 'daily_challenge_four_hours',
+  -- Combined reminders use a special producer that computes live schedules.
+  -- Inject the exact resulting group shape so this proof stays date-independent.
+  insert into private.notification_groups(
+    recipient_profile_id, aggregation_key, kind, category, priority,
+    title, summary, route, action_label
+  ) values (
+    v_member, 'daily-closing-combined', 'daily_challenge_four_hours', 'games', 'push_candidate',
     'Daily challenges close soon',
     'Your UFC, Football and MLB challenges close at midnight Central.',
-    '/', 'PLAY TODAY', now());
+    '/', 'PLAY TODAY'
+  ) returning jsonb_build_object('id', id) into v_mixed;
   v_claim := public.claim_notification_push_delivery((v_mixed->>'id')::uuid);
   if jsonb_array_length(v_claim->'deliveries') <> 1
     or v_claim->'notification'->>'summary' like '%UFC%'
