@@ -68,8 +68,11 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
       [...BANKS[sport].main, ...BANKS[sport].fast].find(q => q.id.endsWith(suffix))!;
     expect(matching(find("nfl", "afc-2025-franchises"), "Dallas Cowboys").status).not.toBe("matched");
     expect(matching(find("nfl", "afc-2025-franchises"), "Buffalo Bills").status).toBe("matched");
+    expect(matching(find("nfl", "afc-2025-franchises"), "Bills").status).toBe("matched");
+    expect(matching(find("nfl", "nfl-animal-team-names"), "Seahawks").status).toBe("matched");
     expect(matching(find("cfb", "acc-2025-schools"), "Notre Dame").status).not.toBe("matched");
     expect(matching(find("cfb", "acc-2025-schools"), "SMU").status).toBe("matched");
+    expect(matching(find("cfb", "acc-2025-schools"), "Pitt").status).toBe("matched");
     expect(matching(find("cfb", "big-ten-title-game-schools"), "Indiana").status).toBe("matched");
   });
 
