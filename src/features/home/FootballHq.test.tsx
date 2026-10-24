@@ -212,6 +212,35 @@ describe("Football HQ team logo presentation", () => {
 });
 
 describe("Football HQ Home summary", () => {
+  it("keeps all Football content but replaces only the owner's Picks card with percentage summary", () => {
+    render(
+      <MemoryRouter>
+        <FootballHq
+          event={event}
+          selections={{ "stale-first-college-game": "miami-hurricanes" }}
+          history={history}
+          summary={summary}
+          compactPreview
+          loading={false}
+          error=""
+          signedIn
+          dailyChallenge={<a href="/football/today">DAILY CHALLENGE</a>}
+        />
+      </MemoryRouter>,
+    );
+    const hq = screen.getByRole("region", { name: "Football HQ" });
+    expect(hq).toHaveClass("football-hq--compact-preview");
+    expect(within(hq).getByText("1 OF 3")).toBeInTheDocument();
+    expect(within(hq).getByText("67% WIN")).toBeInTheDocument();
+    expect(hq.querySelector(".picks-progress__track")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("10 PTS")).not.toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
+    expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toBeInTheDocument();
+    expect(hq.querySelectorAll(".football-hq-game-row")).toHaveLength(2);
+    expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toBeInTheDocument();
+  });
+
   it("uses UFC-style Picks, one Daily row, Player Spotlight, and canonical authored matchup rows", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-09-15T19:30:00Z"));
