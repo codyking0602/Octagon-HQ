@@ -209,6 +209,8 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
       name:p.name,team:p.team,position:p.position||"NBA",
       headshotUrl:p.headshotUrl,profileUrl:`https://www.espn.com/nba/player/_/id/${p.id}`,
       highlightUrl:`https://www.youtube.com/watch?v=${selected.video.id}`,
+      highlightSourceChannelId: selected.video.channel,
+      channelUrl: "https://www.youtube.com/@NBA",
       summary:`Averaged ${round(p.points/g)} points, ${round(p.assists/g)} assists and ${round(p.rebounds/g)} rebounds across ${g} completed games this week.`,
       stats:[{label:"PPG",value:round(p.points/g)},{label:"APG",value:round(p.assists/g)},
         {label:"RPG",value:round(p.rebounds/g)},{label:"FG%",value:fg}],
