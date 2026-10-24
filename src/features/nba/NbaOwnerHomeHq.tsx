@@ -97,14 +97,12 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
                 <div className="nba-hq-owner__stats">
                   {weekly.player.stats.map(item => <div key={item.label}><b>{item.value}</b><small>{item.label}</small></div>)}
                 </div>
-                <p title={weekly.player.summary}>{weekly.player.summary}</p>
                 <a href={weekly.player.highlightUrl ?? "https://www.youtube.com/@NBA"} className="nba-hq-owner__watch" target="_blank" rel="noreferrer">{weekly.player.highlightUrl ? "WATCH HIGHLIGHT ↗" : "NBA CHANNEL ↗"}</a>
               </div>
             </>
           ) : (
             <div className="nba-hq-owner__weekly-pending">
               <span>PLAYER SPOTLIGHT</span><h3>First weekly selection in progress</h3>
-              <p>Verified player statistics and an official NBA YouTube highlight will appear after the first completed league week.</p>
             </div>
           )}
         </section>
@@ -112,7 +110,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
         <section className="nba-hq-owner__team" aria-label="NBA Team of the Week">
           <header><h3>TEAM OF THE WEEK</h3>{weekly ? <small>{nbaSpotlightWeekLabel(weekly.weekStart, weekly.weekEnd)}</small> : null}</header>
           {weekly ? (
-            <a href={weekly.team.profileUrl} target="_blank" rel="noreferrer" className="nba-hq-owner__team-link">
+            <a href={weekly.team.profileUrl} target="_blank" rel="noreferrer" className="nba-hq-owner__team-link" aria-label={`View ${weekly.team.name} 2026–27 season on Basketball Reference`}>
               <img src={weekly.team.logoUrl} alt="" loading="lazy"/>
               <div className="nba-hq-owner__team-copy">
                 <strong>{weekly.team.name}</strong><small>{weekly.team.record} THIS WEEK</small>
@@ -121,8 +119,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
                   <span><b>{weekly.team.oppPpg}</b><small>OPP PPG</small></span>
                   <span><b>{weekly.team.netMargin}</b><small>AVG MARGIN</small></span>
                 </div>
-                <p title={weekly.team.summary}>{weekly.team.summary}</p>
-              </div><b aria-hidden="true">›</b>
+              </div>
             </a>
           ) : <p className="nba-hq-owner__team-pending">The week's best team will appear here after verified final games are collected.</p>}
         </section>

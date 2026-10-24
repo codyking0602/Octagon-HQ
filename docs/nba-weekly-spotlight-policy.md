@@ -24,7 +24,7 @@ production. Use these approximate editorial weightings in the canonical generato
 - Team success: **20%**
 - Defensive contribution: **20%**, using steals and blocks with position awareness
 
-Consider verified on-court significance and narrative for editorial summaries.
+Spotlight cards contain identity, verified numbers and a player-highlight link only. **No written summaries, ever.**
 Reduce casual consecutive-week repetition without vetoing an exceptional repeat.
 
 **Player video policy:** Only link a directly matched video from the official
@@ -41,9 +41,10 @@ the general channel a specific verified highlight.
 Require at least two completed games. Score principally by winning record,
 then average scoring margin, points allowed, and opponent strength. The
 current automated team model weights these **45% / 25% / 15% / 15%**.
-Use verified scores and context, such as an exceptional win, in the summary.
-The Team card uses a logo, weekly record, weekly statistics, and concise
-explanation. **No Team highlight video or Watch Highlight button.**
+The Team card uses a logo, weekly record and weekly statistics only. No summary,
+no highlight video and no chevron. The entire card links to that team's current
+season on **Basketball Reference** (Sports Reference): the URL's year is the
+NBA season **ending** year (2026–27 => `/teams/ATL/2027.html`).
 
 ## Integrity and release
 
