@@ -26,7 +26,7 @@ This is a **time-window** exclusion rather than a global permanent no-reuse lock
 
 ## Verification caveats and exact next checks
 
-This draft is a content proposal, **not yet a complete independent historical source certification**. Many surviving prior evergreen questions have only generic `sourceId` without a direct fact-specific source URL. The 55 proposed replacement facts and 20 new Last Call facts are intentionally marked as needing source verification rather than attributing them to an unsupported official article. Attach independent primary-source article URLs and mark verified dates only after actually reading the supporting material. A passing four-choice test does not certify the historical truth or ambiguity of each answer.
+This draft is a content proposal, **not yet a complete independent historical source certification**. Many surviving prior evergreen questions have only generic `sourceId` without a direct fact-specific source URL. All 20 newly authored Last Call questions now carry article-level NFL.com, school-athletics, or ESPN references and an October 24 review date. The 55 proposed replacement facts still need per-question official source verification rather than a generic sourceId. Attach independent primary-source article URLs and mark verified dates only after actually reading the supporting material. A passing four-choice test does not certify the historical truth or ambiguity of each answer.
 
 - Confirm season-vs-calendar-year wording, Super Bowl participant/opponent references, all championship claims, and school affiliations.
 - Check 4 distractors per replacement, including whether a plausible option could also be defensible.
@@ -40,4 +40,4 @@ Manual fact-family clustering protects identified same-event and reverse-answer 
 
 ## Per-question reference progress
 
-A first batch of **10** newly authored Last Call facts has been cross-checked against relevant NFL.com or ESPN articles and linked directly in the bank, with the 2026-10-24 review date. The other additions and rewrites retain explicit source-verification status; they must not be treated as fully certified or merged solely because structural CI is green.
+All **20 newly authored Last Call facts** have been reviewed against NFL.com, official college athletics, or ESPN article-level references and linked in the bank with the 2026-10-24 verification date. The 55 proposed rewritten rows still require full individual reference certification; do not merge solely because structural CI passes.

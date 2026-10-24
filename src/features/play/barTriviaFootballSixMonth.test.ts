@@ -18,6 +18,10 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
     expect(Object.keys(FOOTBALL_BAR_TRIVIA_V2_REWRITES)).toHaveLength(55);
     expect(FOOTBALL_BAR_TRIVIA_V2_LAST_CALL.filter((q) => q.league === "nfl")).toHaveLength(8);
     expect(FOOTBALL_BAR_TRIVIA_V2_LAST_CALL.filter((q) => q.league === "cfb")).toHaveLength(12);
+    for (const question of FOOTBALL_BAR_TRIVIA_V2_LAST_CALL) {
+      expect(question.sourceUrl, question.id).toMatch(/^https:\/\//);
+      expect(question.verifiedAt, question.id).toBe("2026-10-24");
+    }
 
     for (const league of ["nfl", "cfb"] as const) {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
