@@ -26,7 +26,6 @@ alter table private.notification_groups
     'ufc_event_starting',
     'football_picks_open',
     'nba_launch_available',
-    'nba_daily_available',
     'nba_daily_four_hours',
     'nba_results_ready',
     'mlb_launch_available',
@@ -91,7 +90,6 @@ begin
     'mlb_challenge_available',
     'mlb_challenge_four_hours',
     'nba_launch_available',
-    'nba_daily_available',
     'nba_daily_four_hours',
     'nba_results_ready'
   ) then
@@ -156,10 +154,8 @@ begin
       'game_challenge_received',
       'auction_action_required',
       'auction_result_ready',
-      'picks_repick_required',
       'picks_incomplete_near_lock',
       'picks_recap_ready',
-      'picks_card_updated',
       'ufc_event_starting',
       'football_picks_open',
       'new_game_available',
@@ -169,8 +165,7 @@ begin
       'mlb_challenge_four_hours',
       'mlb_round_available',
       'nba_launch_available',
-      'nba_daily_available',
-      'nba_daily_four_hours'
+        'nba_daily_four_hours'
     )
   then
     return 'push_candidate';
@@ -180,7 +175,14 @@ begin
 end;
 $$;
 
--- Launch and Daily available/closing are push candidates when an authorized
--- future NBA producer calls the existing notification publisher. Results stay
--- in-app until NBA's launch editorial rules explicitly change.
+-- UFC repick/card-update records are in-app only. Old delivery rows are
+-- historical: new claims are also suppressed by the sport-push selector.
+update private.notification_groups
+set priority = 'in_app'
+where kind in ('picks_repick_required','picks_card_updated')
+  and priority = 'push_candidate';
+
+-- NBA has no "available" notification: one closing-only reminder every 48 hours.
+-- Launch is push eligible only after explicit public release authorization.
+-- NBA results stay in-app until editorial rules explicitly change.
 notify pgrst, 'reload schema';
