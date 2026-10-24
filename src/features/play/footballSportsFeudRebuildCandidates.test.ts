@@ -94,6 +94,15 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
     expect(matching(question("career-15k-receiving"), "Mike Evans").status).toBe("matched");
     expect(matching(question("nfl-rookie-dpoy"), "Carson Schwesinger").status).toBe("matched");
 
+    const college = [...BANKS.cfb.main, ...BANKS.cfb.fast].find(q => q.id.endsWith("coaches-200-fbs"))!;
+    expect(matching(college, "Dan Mullen").status).not.toBe("matched");
+    expect(matching(college, "Jim Harbaugh").status).not.toBe("matched");
+    expect(matching(college, "Urban Meyer").status).not.toBe("matched");
+    expect(matching(college, "Dabo Swinney").status).not.toBe("matched");
+    expect(matching(college, "Kirk Ferentz").status).toBe("matched");
+    expect(matching(college, "Bobby Bowden").status).toBe("matched");
+
+
   });
 
   it("rehearses 34 total appearances with no repeat of an ID or semantic lane", () => {
