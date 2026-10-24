@@ -151,7 +151,9 @@ function dailyBarTriviaRun(
     // One independently curated UFC cycle is 20 league appearances. An exact
     // question ID cannot recur within it, even across different calendar weeks.
     if (league === "ufc" && ufcAppearanceCount > 0 && ufcAppearanceCount % UFC_BAR_TRIVIA_UNIQUE_APPEARANCES === 0) {
-      historyIds.length = 0;
+      // Retain the last three prior-cycle appearances so the cycle boundary
+      // cannot immediately repeat yesterday's league question set.
+      historyIds.splice(BAR_TRIVIA_RECENT_APPEARANCES);
     }
     const recentIds = league === "ufc"
       ? expandUfcBarTriviaRecentFactIds(historyIds.flat())
@@ -170,7 +172,7 @@ function dailyBarTriviaRun(
     latest = run;
     historyIds.unshift(run.map((question) => question.id));
     if (league === "ufc") ufcAppearanceCount += 1;
-    if (historyIds.length > (league === "ufc" ? UFC_BAR_TRIVIA_UNIQUE_APPEARANCES : BAR_TRIVIA_RECENT_APPEARANCES)) historyIds.pop();
+    if (historyIds.length > (league === "ufc" ? UFC_BAR_TRIVIA_UNIQUE_APPEARANCES + BAR_TRIVIA_RECENT_APPEARANCES : BAR_TRIVIA_RECENT_APPEARANCES)) historyIds.pop();
   }
 
   if (latest.length !== 10) throw new Error("The Bar Trivia Daily lineup is unavailable.");
