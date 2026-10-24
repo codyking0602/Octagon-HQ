@@ -73,10 +73,10 @@ describe("notification settings simplification", () => {
     expect(center).toContain("notification-list");
     expect(center).not.toContain("What should reach you?");
     expect(center).toContain("<NotificationPushSetting compact />");
-    expect(center).not.toContain("Daily Challenge");
+    expect(center).toContain("Filter in-app notifications by sport");
     expect(center).not.toContain("Game challenges");
     expect(center).not.toContain("War Room activity");
-    expect(center).not.toContain("Device notifications");
+    expect(center).not.toContain("OPEN PROFILE");
   });
 
   it("reuses the push-only switch in both Notifications and Profile", () => {
