@@ -153,7 +153,7 @@ export function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const identity = useIdentity();
-  const { selectedSport, setSelectedSport } = useSport();
+  const { selectedSport, setSelectedSport, picksSport, setPicksSport } = useSport();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
@@ -177,13 +177,17 @@ export function AppShell() {
   const effectiveSelectedSport = (selectedSport === "mlb" && !mlbVisible) || (selectedSport === "nba" && !nbaVisible) ? "football" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
   const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
-  // Direct/deep-linked sport URLs must keep the persisted tab preference in sync
-  // with the actual sport being displayed, never show Football tabs on UFC content.
+  // Root/deep-linked section URLs update only their own navigation preference.
+  // Visiting Play or Picks must never overwrite the Home dashboard selection.
   useEffect(() => {
-    if (sportContext?.switchable && sportContext.sport !== selectedSport) {
+    if (!sportContext?.switchable) return;
+    if (sportContext.section === "PLAY" && sportContext.sport !== selectedSport) {
       setSelectedSport(sportContext.sport);
     }
-  }, [sportContext?.sport, sportContext?.switchable, selectedSport, setSelectedSport]);
+    if (sportContext.section === "PICKS" && sportContext.sport !== picksSport) {
+      setPicksSport(sportContext.sport);
+    }
+  }, [sportContext?.sport, sportContext?.section, sportContext?.switchable, selectedSport, picksSport, setSelectedSport, setPicksSport]);
 
 
   if ((location.pathname.startsWith("/nba/") || location.pathname === "/nba" || location.pathname.startsWith("/championship/nba")) && !nbaVisible && identity.ready) {
@@ -198,7 +202,8 @@ export function AppShell() {
     if (sport === "mlb" && !mlbVisible) return;
     if (sport === "nba" && !nbaVisible) return;
 
-    setSelectedSport(sport);
+    if (sportContext.section === "PLAY") setSelectedSport(sport);
+    if (sportContext.section === "PICKS") setPicksSport(sport);
     const destination = sportSectionDestination(sportContext.section, sport);
     if (destination && destination !== location.pathname) navigate(destination);
   }
