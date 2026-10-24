@@ -540,6 +540,7 @@ export default function HomePage() {
           sport={ownerSport}
           onSportChange={setOwnerSport}
           showSportSelector={false}
+          compactFootballPreview={compactFootballPreview}
         />
       ) : null}
     </div>
