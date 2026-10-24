@@ -10,6 +10,7 @@ import { UFC_SPORTS_FEUD_V2_MAIN_BATCH6 } from "./ufcSportsFeudV2MainBatch6";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH8 } from "./ufcSportsFeudV2MainBatch8";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH9 } from "./ufcSportsFeudV2MainBatch9";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH10 } from "./ufcSportsFeudV2MainBatch10";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH11 } from "./ufcSportsFeudV2MainBatch11";
 import { UFC_SPORTS_FEUD_V2_FAST_DRAFT } from "./ufcSportsFeudV2FastDraft";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH2 } from "./ufcSportsFeudV2FastBatch2";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH3 } from "./ufcSportsFeudV2FastBatch3";
@@ -21,6 +22,7 @@ import { UFC_SPORTS_FEUD_V2_FAST_BATCH7 } from "./ufcSportsFeudV2FastBatch7";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH8 } from "./ufcSportsFeudV2FastBatch8";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH9 } from "./ufcSportsFeudV2FastBatch9";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH10 } from "./ufcSportsFeudV2FastBatch10";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH11 } from "./ufcSportsFeudV2FastBatch11";
 import { UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT } from "./ufcSportsFeudV2RetainedDraft";
 import { UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES } from "./ufcSportsFeudV2LegacyRewriteCandidates";
 
@@ -28,8 +30,8 @@ import { UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES } from "./ufcSportsFeudV2L
  * A first-pass advancing question is NOT equivalent to fact-checked approved.
  * No candidate becomes live merely because the staging total reaches a quota.
  */
-export const UFC_V2_NEW_MAIN_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_MAIN_BATCH2, UFC_SPORTS_FEUD_V2_MAIN_BATCH3, UFC_SPORTS_FEUD_V2_MAIN_BATCH4, UFC_SPORTS_FEUD_V2_MAIN_BATCH5, UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_MAIN_BATCH6, UFC_SPORTS_FEUD_V2_MAIN_BATCH8, UFC_SPORTS_FEUD_V2_MAIN_BATCH9, UFC_SPORTS_FEUD_V2_MAIN_BATCH10].flat();
-export const UFC_V2_NEW_FAST_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_FAST_DRAFT, UFC_SPORTS_FEUD_V2_FAST_BATCH2, UFC_SPORTS_FEUD_V2_FAST_BATCH3, UFC_SPORTS_FEUD_V2_FAST_BATCH4, UFC_SPORTS_FEUD_V2_FAST_BATCH5, UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_FAST_BATCH6, UFC_SPORTS_FEUD_V2_FAST_BATCH7, UFC_SPORTS_FEUD_V2_FAST_BATCH8, UFC_SPORTS_FEUD_V2_FAST_BATCH9, UFC_SPORTS_FEUD_V2_FAST_BATCH10].flat();
+export const UFC_V2_NEW_MAIN_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_MAIN_BATCH2, UFC_SPORTS_FEUD_V2_MAIN_BATCH3, UFC_SPORTS_FEUD_V2_MAIN_BATCH4, UFC_SPORTS_FEUD_V2_MAIN_BATCH5, UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_MAIN_BATCH6, UFC_SPORTS_FEUD_V2_MAIN_BATCH8, UFC_SPORTS_FEUD_V2_MAIN_BATCH9, UFC_SPORTS_FEUD_V2_MAIN_BATCH10, UFC_SPORTS_FEUD_V2_MAIN_BATCH11].flat();
+export const UFC_V2_NEW_FAST_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_FAST_DRAFT, UFC_SPORTS_FEUD_V2_FAST_BATCH2, UFC_SPORTS_FEUD_V2_FAST_BATCH3, UFC_SPORTS_FEUD_V2_FAST_BATCH4, UFC_SPORTS_FEUD_V2_FAST_BATCH5, UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_FAST_BATCH6, UFC_SPORTS_FEUD_V2_FAST_BATCH7, UFC_SPORTS_FEUD_V2_FAST_BATCH8, UFC_SPORTS_FEUD_V2_FAST_BATCH9, UFC_SPORTS_FEUD_V2_FAST_BATCH10, UFC_SPORTS_FEUD_V2_FAST_BATCH11].flat();
 
 export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast-faceoff-gestures",
@@ -97,13 +99,54 @@ export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast8-ufc-app-features",
   "ufc-v2-fast8-fighter-transport",
   "ufc-v2-fast8-gym-newcomer-concerns",
-  "ufc-v2-fast8-mma-sparring-partners"
+  "ufc-v2-fast8-mma-sparring-partners",
+  "ufc-v2-fast9-five-round-challenges",
+  "ufc-v2-fast9-fighter-rules-meeting",
+  "ufc-v2-fast9-event-site-update",
+  "ufc-v2-fast9-judges-effective-grappling",
+  "ufc-v2-fast9-ufc-video-game-modes",
+  "ufc-v2-fast9-fighter-profile-content",
+  "ufc-v2-fast9-crowd-chants",
+  "ufc-v2-fast9-live-arena-screens",
+  "ufc-v2-fast9-title-belt-ceremony",
+  "ufc-v2-fast9-fan-ppv-rewatch",
+  "ufc-v2-fast10-cutman-actions",
+  "ufc-v2-fast11-arena-sound-details",
+  "ufc-v2-fast11-bout-card-size",
+  "ufc-v2-fast11-postfight-suspensions"
 ]);
 // Only a complete reviewer fact/aliases signoff should add an ID here. The two
 // lists intentionally start empty; staging is not production certification.
 export const UFC_V2_APPROVED_MAIN_IDS: ReadonlySet<string> = new Set([]);
 export const UFC_V2_APPROVED_FAST_IDS: ReadonlySet<string> = new Set([]);
 const SEMANTIC_OVERRIDES: Readonly<Record<string,string>> = {
+  // Do not treat a changed fighter, corner of the cage, or record format as a new question concept.
+  "ufc-v2-fast9-five-round-challenges": "ufc-five-round-bout-comparison",
+  "ufc-v2-fast9-5-round-fight-differences": "ufc-five-round-bout-comparison",
+  "ufc-v2-fast10-reach-advantage": "ufc-reach-matchup-strategy",
+  "ufc-v2-fast10-shorter-reach": "ufc-reach-matchup-strategy",
+  "ufc-v2-fast10-ground-space": "ufc-bottom-ground-defense",
+  "ufc-v2-fast10-ground-pound-defense": "ufc-bottom-ground-defense",
+  "ufc-v2-fast10-takedown-warning": "ufc-takedown-shot-defense",
+  "ufc-v2-fast10-anti-takedown": "ufc-takedown-shot-defense",
+  "ufc-v2-fast10-clinch-offense": "ufc-clinch-technique",
+  "ufc-v2-fast11-clinch-break": "ufc-clinch-technique",
+  "ufc-v2-fast11-clinch-control-signs": "ufc-clinch-technique",
+  "ufc-v2-fast10-cage-defense": "ufc-fence-pressure-tactics",
+  "ufc-v2-fast11-cage-mistakes": "ufc-fence-pressure-tactics",
+  "ufc-v2-fast9-postfight-reporter": "ufc-postfight-interview-questions",
+  "ufc-v2-fast11-fighter-interview-lessons": "ufc-postfight-interview-questions",
+  "ufc-v2-fast10-leg-kick-defense": "ufc-defending-kicks",
+  "ufc-v2-fast11-high-kick-defense": "ufc-defending-kicks",
+  "ufc-v2-fast11-southpaw-adjustments": "ufc-stance-fight-adjustment",
+  "ufc-v2-fast11-stance-switch": "ufc-stance-fight-adjustment",
+  "ufc-v2-main11-knockdowns-per-fifteen": "ufc-knockdown-identities",
+  "ufc-v2-main11-most-total-strikes": "ufc-striking-identities",
+  "ufc-v2-main11-striking-differential": "ufc-striking-identities",
+  "ufc-v2-main11-significant-accuracy": "ufc-striking-identities",
+  "ufc-v2-main11-takedown-accuracy": "ufc-wrestling-identities",
+  "ufc-v2-main11-top-position-percent": "ufc-wrestling-identities",
+
   // A ranked stats list and a legacy subjective list should not both ask
   // players to recall fundamentally the same pool of knockout/submission
   // specialists across one no-repeat cycle.
