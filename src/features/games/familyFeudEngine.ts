@@ -374,6 +374,19 @@ export function matchFamilyFeudAnswer(
     if (row.term.length < 3) continue;
     const entity = entitiesById.get(row.entityId);
     if (entity?.kind === "person" && !fuzzyPersonFullNameCompatible(normalized, row.term)) continue;
+    // Football Feud v2 has objectively bounded, named historical answer sets.
+    // A whole different surname must not receive credit simply because the
+    // remaining full-name characters happen to sit inside the typo allowance.
+    // Keep the historical matcher contract untouched for published v1 packs.
+    if (entity?.kind === "person" && question.id.includes("-feud-r2-")) {
+      const inputWords = normalized.split(" ");
+      const termWords = row.term.split(" ");
+      if (inputWords.length > 1 && termWords.length > 1) {
+        const enteredSurname = inputWords.at(-1)!;
+        const candidateSurname = termWords.at(-1)!;
+        if (editDistance(enteredSurname, candidateSurname) > 2) continue;
+      }
+    }
     let allowance = typoAllowance(normalized, row.term);
     if (
       entity?.kind === "person"
