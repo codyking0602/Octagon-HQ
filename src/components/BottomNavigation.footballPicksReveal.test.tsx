@@ -39,6 +39,8 @@ describe("BottomNavigation Football Picks no-reveal navigation", () => {
     fireEvent.click(picks);
     fireEvent.click(picks);
     expect(screen.getByTestId("location")).toHaveTextContent("/mlb/picks|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("mlb");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual({
+      home: "ufc", play: "ufc", picks: "mlb",
+    });
   });
 });
