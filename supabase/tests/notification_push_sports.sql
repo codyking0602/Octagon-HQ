@@ -78,6 +78,13 @@ begin
     raise exception 'universal social notification unexpectedly muted';
   end if;
 
+  -- Owner monitoring events remain critical even with all sport choices muted.
+  v_result := private.notification_push_selection(
+    v_id,'card_change_detected','/picks/control','monitoring','A UFC card needs owner review');
+  if not coalesce((v_result->>'allowed')::boolean,false) then
+    raise exception 'critical owner monitoring push was muted by entertainment sport choices';
+  end if;
+
   if has_table_privilege('authenticated', 'private.notification_push_sports', 'SELECT') then
     raise exception 'private preferences exposed to authenticated browser';
   end if;
