@@ -425,7 +425,7 @@ The semantic-review disposition is recorded explicitly for every source ID. A **
 | ufc-bt-v3-e-011 | round1 | What does 'southpaw' describe in combat sports? | A left-handed fighting stance | https://www.ufc.com/unified-rules-mixed-martial-arts |
 | ufc-bt-v3-e-012 | round1 | Which UFC broadcast figure used to host Fear Factor? | Joe Rogan | https://www.ufc.com/news/top-500-ufc-moments-list |
 | ufc-bt-v3-e-013 | round1 | Which of these is a common Brazilian jiu-jitsu submission used in UFC fights? | Triangle choke | https://www.ufc.com/unified-rules-mixed-martial-arts |
-| ufc-bt-v3-e-014 | round1 | What happens when a fighter 'taps out'? | They concede the submission | https://www.ufc.com/unified-rules-mixed-martial-arts |
+| ufc-bt-v3-e-014 | round1 | A kimura submission in mixed martial arts primarily attacks which joint? | Shoulder | https://www.ufc.com/news/ufc-bjj-4-tackett-vs-dorsey-results-match-recaps-interviews |
 | ufc-bt-v3-e-015 | round1 | Which UFC heavyweight famously coined the postfight line 'My balls was hot'? | Derrick Lewis | https://www.ufc.com/news/top-500-ufc-moments-list |
 | ufc-bt-v3-e-016 | round1 | Which American city are the Diaz brothers strongly associated with? | Stockton | https://www.ufc.com/news/top-500-ufc-moments-list |
 | ufc-bt-v3-e-017 | round1 | Which future UFC heavyweight champion was a two-time NCAA All-American wrestler at Arizona State? | Cain Velasquez | https://www.ufc.com/news/top-500-ufc-moments-list |
@@ -450,7 +450,7 @@ The semantic-review disposition is recorded explicitly for every source ID. A **
 | ufc-bt-v3-e-036 | round1 | Which Brazilian fighter famously used capoeira-inspired techniques in the Octagon? | Michel Pereira | https://www.ufc.com/news/top-500-ufc-moments-list |
 | ufc-bt-v3-e-037 | round1 | What do referees usually signal when they wave off a UFC fight after a knockout? | The fight is over | https://www.ufc.com/unified-rules-mixed-martial-arts |
 | ufc-bt-v3-e-038 | round1 | Which MMA technique is a 'sprawl' primarily used to defend? | A takedown attempt | https://www.ufc.com/unified-rules-mixed-martial-arts |
-| ufc-bt-v3-e-039 | round1 | Which UFC organization holds fighter interviews and broadcasts many events at its Las Vegas Apex venue? | The UFC | https://www.ufc.com/news/top-500-ufc-moments-list |
+| ufc-bt-v3-e-039 | round1 | Which former UFC lightweight champion is known as 'The Underground King'? | Eddie Alvarez | https://www.ufc.com/athlete/eddie-alvarez |
 | ufc-bt-v3-m-001 | round2 | Which fighter knocked out Chuck Liddell to take the light heavyweight championship at UFC 71? | Quinton Jackson | https://www.ufc.com/event/ufc-71 |
 | ufc-bt-v3-m-002 | round2 | Who did Jon Jones beat to win his first UFC light heavyweight championship in 2011? | Mauricio Rua | https://www.ufc.com/news/top-500-ufc-moments-list |
 | ufc-bt-v3-m-003 | round2 | Who stopped Brock Lesnar to take the heavyweight title at UFC 121? | Cain Velasquez | https://www.ufc.com/event/ufc-121 |
@@ -487,7 +487,7 @@ The semantic-review disposition is recorded explicitly for every source ID. A **
 | ufc-bt-v3-h-008 | round3 | Who did Tom Aspinall defeat to win the interim UFC heavyweight championship at UFC 295? | Sergei Pavlovich | https://www.ufc.com/event/ufc-295 |
 | ufc-bt-v3-h-009 | round3 | Which former light heavyweight champion did Alex Pereira beat to capture the vacant 205-pound belt at UFC 295? | Jiri Prochazka | https://www.ufc.com/event/ufc-295 |
 | ufc-bt-v3-h-010 | round3 | Who became the first fighter to knock out Max Holloway in his professional MMA career at UFC 308? | Ilia Topuria | https://www.ufc.com/event/ufc-308 |
-| ufc-bt-v3-h-011 | round3 | Which featherweight champion lost his title to a head-kick knockout in a 2023 rematch with Islam Makhachev? | Alexander Volkanovski | https://www.ufc.com/honors/fans-choice |
+| ufc-bt-v3-h-011 | round3 | Which reigning featherweight champion was knocked out while challenging Islam Makhachev for the lightweight belt at UFC 294? | Alexander Volkanovski | https://www.ufc.com/news/ufc-294-makhachev-vs-volkanovski-2-results-highlights-winner-interviews |
 | ufc-bt-v3-h-012 | round3 | Which longtime lightweight contender was submitted by Islam Makhachev in the fifth round at UFC 302? | Dustin Poirier | https://www.ufc.com/event/ufc-302 |
 | ufc-bt-v3-h-013 | round3 | Who upset Leon Edwards by decision to capture the welterweight championship at UFC 304? | Belal Muhammad | https://www.ufc.com/event/ufc-304 |
 | ufc-bt-v3-h-014 | round3 | Which former welterweight contender was knocked out by Kamaru Usman's right hand at UFC 261? | Jorge Masvidal | https://www.ufc.com/event/ufc-261 |
@@ -512,7 +512,7 @@ The semantic-review disposition is recorded explicitly for every source ID. A **
 | ufc-bt-v3-h-033 | round3 | Which fighter became the first to knock out Conor McGregor in the UFC at UFC 257? | Dustin Poirier | https://www.ufc.com/event/ufc-257 |
 | ufc-bt-v3-h-034 | round3 | During his famous 2021 performance against Calvin Kattar, which fighter shouted that he was the UFC's best boxer? | Max Holloway | https://www.ufc.com/news/top-500-ufc-moments-list |
 | ufc-bt-v3-h-035 | round3 | Who won the main event of UFC 279 by submitting Tony Ferguson? | Nate Diaz | https://www.ufc.com/event/ufc-279 |
-| ufc-bt-v3-f-001 | last-call | Which fighter lost his UFC debut to Joe Lauzon in a famous upset at UFC 63? | Jens Pulver | https://www.ufc.com/event/ufc-63 |
+| ufc-bt-v3-f-001 | last-call | Whom did UFC newcomer Joe Lauzon upset in his Octagon debut at UFC 63? | Jens Pulver | https://www.ufc.com/event/ufc-63 |
 | ufc-bt-v3-f-002 | last-call | Which fighter knocked out Matt Serra with a spinning backfist at UFC 31? | Shonie Carter | https://www.ufc.com/event/ufc-31 |
 | ufc-bt-v3-f-003 | last-call | Which heavyweight was knocked out by Junior dos Santos in JDS's UFC debut at UFC 90? | Fabricio Werdum | https://www.ufc.com/event/ufc-90 |
 | ufc-bt-v3-f-004 | last-call | Which former PRIDE champion did Quinton Jackson defeat to unify light heavyweight gold at UFC 75? | Dan Henderson | https://www.ufc.com/event/ufc-75 |
