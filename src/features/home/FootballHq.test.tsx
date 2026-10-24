@@ -2,8 +2,9 @@ import { act, cleanup, fireEvent, render, screen, within } from "@testing-librar
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
+import type { PlayChallenge } from "../challenges/challengeModel";
 import { parsePublishedFootballWeek } from "./footballWeeklyPublication";
-import { FootballHq, featuredGameForBreakdown, footballHqTeamPresentationFor, footballSpotlightKindAt } from "./FootballHq";
+import { FootballHq, featuredGameForBreakdown, footballHqTeamPresentationFor, footballSpotlightKindAt, footballOutstandingChallengeCount } from "./FootballHq";
 
 // These legacy presentation tests intentionally exercise the static fallback
 // when no published weekly editorial is available.
@@ -211,6 +212,32 @@ describe("Football HQ team logo presentation", () => {
   });
 });
 
+describe("owner Football challenge notification count", () => {
+  const received: PlayChallenge = {
+    code: "ABCD1234", gameId: "who-am-i", gameVersion: "football-who-am-i-v1",
+    gameTitle: "Who Am I?", summary: "", creatorId: "friend", recipientId: "owner",
+    playUrl: "/football/who-am-i", setup: null, creatorResult: null,
+    responderResult: null, createdAt: "2026-10-22T00:00:00Z", openedAt: null,
+    completedAt: null, declinedAt: null, expiresAt: "2026-11-22T00:00:00Z",
+    hiddenFor: [],
+  };
+  const at = new Date("2026-10-23T12:00:00Z").getTime();
+
+  it("counts only pending received Football challenges, including opened but unfinished", () => {
+    const incoming = { ...received, code: "BBBB2222", openedAt: "2026-10-23T01:00:00Z" };
+    expect(footballOutstandingChallengeCount([
+      received, incoming,
+      { ...received, code: "CCCC3333", creatorId: "owner", recipientId: "friend" },
+      { ...received, code: "DDDD4444", gameVersion: "ufc-who-am-i", playUrl: "/play/who-am-i" },
+      { ...received, code: "EEEE5555", responderResult: 80, completedAt: "2026-10-23T02:00:00Z" },
+      { ...received, code: "FFFF6666", declinedAt: "2026-10-23T02:00:00Z" },
+      { ...received, code: "GGGG7777", hiddenFor: ["owner"] },
+      { ...received, code: "HHHH8888", expiresAt: "2026-10-22T00:00:00Z" },
+    ], "owner", at)).toBe(2);
+    expect(footballOutstandingChallengeCount([received], "different-user", at)).toBe(0);
+  });
+});
+
 describe("Football HQ Home summary", () => {
   it("keeps all Football content but replaces only the owner's Picks card with percentage summary", () => {
     render(
@@ -238,7 +265,8 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "WATCH HIGHLIGHT ↗" })).toBeInTheDocument();
     expect(hq.querySelectorAll(".football-hq-game-row")).toHaveLength(2);
-    expect(within(hq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
+    expect(within(hq).getByRole("heading", { name: "FOOTBALL HQ" })).toBeInTheDocument();
+    expect(within(hq).queryByText("This week")).not.toBeInTheDocument();
     expect(within(hq).queryByText("PICKS · COLLEGE · NFL")).not.toBeInTheDocument();
     expect(within(hq).getByText("CFB")).toBeInTheDocument();
     expect(within(hq).getByText("NFL")).toBeInTheDocument();
@@ -252,7 +280,15 @@ describe("Football HQ Home summary", () => {
       .toHaveAttribute("href", "https://www.sports-reference.com/cfb/schools/alabama/2026.html");
     expect(within(hq).getByRole("link", { name: "Open 2026 Kansas City Chiefs Sports Reference page" }))
       .toHaveAttribute("href", "https://www.pro-football-reference.com/teams/kan/2026.htm");
-    expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "SCHEDULE →" })).toHaveAttribute("href", "/football/picks");
+    expect(within(hq).queryByRole("link", { name: "VIEW FULL SCHEDULE →" })).not.toBeInTheDocument();
+    expect(within(hq).getByText("FEATURED GAMES")).toBeInTheDocument();
+    expect(within(hq).queryByText("VS")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("PICKS LOCKED")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("LOCKED")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("Raiders")).not.toBeInTheDocument();
+    expect(within(hq).getByText("Kansas City")).toBeInTheDocument();
+    expect(within(hq).getByText("Las Vegas")).toBeInTheDocument();
   });
 
   it("uses UFC-style Picks, one Daily row, Player Spotlight, and canonical authored matchup rows", () => {
