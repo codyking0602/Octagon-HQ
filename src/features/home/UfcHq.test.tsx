@@ -221,7 +221,7 @@ describe("Home UFC HQ", () => {
     renderHome();
 
     const section = ufcHq();
-    expect(within(section).getByRole("heading", { name: "Fight week" })).toBeInTheDocument();
+    expect(within(section).getByRole("heading", { name: "UFC HQ" })).toBeInTheDocument();
     expect(within(section).queryByRole("heading", { name: "UFC Fight Night" })).not.toBeInTheDocument();
     expect(within(section).queryByText("Ankalaev vs. Guskov")).not.toBeInTheDocument();
     expect(within(section).queryByText("Etihad Arena · Abu Dhabi, United Arab Emirates")).not.toBeInTheDocument();
@@ -231,11 +231,21 @@ describe("Home UFC HQ", () => {
     expect(within(section).getByText("2026 PICKS RECORD")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "Open UFC Championship Picks leaderboard" }))
       .toHaveAttribute("href", "/championship/ufc?tab=picks");
-    expect(within(section).getByText("69 PTS")).toBeInTheDocument();
-    expect(within(section).getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
+    expect(within(section).getByText("NO RESULTS YET")).toBeInTheDocument();
+    expect(within(section).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/picks");
+    expect(section.querySelector(".picks-progress__track")).not.toBeInTheDocument();
     expect(within(section).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toBeInTheDocument();
     expect(within(section).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "SHANE’S CONTENDER SERIES" })).toHaveAttribute("href", "/fighters-to-watch");
+  });
+
+  it("uses settled picks for UFC season win rate, without showing points", () => {
+    mocks.picks.summary = { ...mocks.emptySummary, correct: 17, incorrect: 7 };
+    renderHome();
+    const section = ufcHq();
+    expect(within(section).getByText("71% WIN RATE")).toBeInTheDocument();
+    expect(within(section).getByText("17-7")).toBeInTheDocument();
+    expect(section.querySelector(".picks-progress__track")).not.toBeInTheDocument();
   });
 
   it("keeps UFC features when no card is published without adding a generic Open UFC action", () => {
