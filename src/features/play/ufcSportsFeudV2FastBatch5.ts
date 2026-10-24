@@ -5,7 +5,7 @@ const ROWS = [
     "id": "ufc-v2-fast5-japanese-fighters",
     "lane": "japan-fighter-identities",
     "prompt": "Name a Japanese fighter who has competed in the UFC.",
-    "kind": "other",
+    "kind": "person",
     "ranked": "Yushin Okami|Kyoji Horiguchi|Takanori Gomi|Tatsuro Taira|Takeya Mizugaki|Caol Uno|Kazushi Sakuraba|Rinya Nakamura",
     "extras": "Hatsu Hioki|Yuki Kondo|Norifumi Yamamoto|Keita Nakamura|Takanori Kikuno|Shinsho Anzai|Teruto Ishihara|Yuta Sasaki",
     "aliases": {
@@ -21,7 +21,7 @@ const ROWS = [
     "id": "ufc-v2-fast5-korean-fighters",
     "lane": "korea-fighter-identities",
     "prompt": "Name a fighter from South Korea who has competed in the UFC.",
-    "kind": "other",
+    "kind": "person",
     "ranked": "The Korean Zombie|Dong Hyun Kim|Doo Ho Choi|Kyung Ho Kang|Jun Yong Park|Da Un Jung|Seung Woo Choi|Ji Yeon Kim",
     "extras": "Hyun Sung Park|Chan Mi Jeon|Tae Hyun Bang|Yui Chul Nam|Sung Bin Jo|Seokhyeon Ko",
     "aliases": {
@@ -43,7 +43,7 @@ const ROWS = [
     "id": "ufc-v2-fast5-polish-fighters",
     "lane": "poland-fighter-identities",
     "prompt": "Name a Polish fighter who has competed in the UFC.",
-    "kind": "other",
+    "kind": "person",
     "ranked": "Joanna Jedrzejczyk|Jan Blachowicz|Mateusz Gamrot|Marcin Tybura|Karolina Kowalkiewicz|Krzysztof Jotko|Michal Oleksiejczuk|Marcin Held",
     "extras": "Damian Stasiak|Daniel Omielanczuk|Piotr Hallmann|Lukasz Brzeski|Tomasz Drwal|Bartosz Fabinski",
     "aliases": {
@@ -62,7 +62,7 @@ const ROWS = [
     "id": "ufc-v2-fast5-chinese-fighters",
     "lane": "china-fighter-identities",
     "prompt": "Name a fighter from China who has competed in the UFC.",
-    "kind": "other",
+    "kind": "person",
     "ranked": "Zhang Weili|Yan Xiaonan|Song Yadong|Li Jingliang|Su Mudaerji|Zhang Mingyang|Wang Cong|Aoriqileng",
     "extras": "Wu Yanan|Zhang Lipeng|Ma Yaozong|Heili Alateng|Zhu Rong|Zhang Tiequan|Liu Pingyuan",
     "aliases": {
@@ -81,7 +81,7 @@ const ROWS = [
     "id": "ufc-v2-fast5-french-fighters",
     "lane": "france-fighter-identities",
     "prompt": "Name a French UFC fighter.",
-    "kind": "other",
+    "kind": "person",
     "ranked": "Ciryl Gane|Benoit Saint Denis|Manon Fiorot|Cheick Kongo|Morgan Charriere|William Gomis|Fares Ziam|Taylor Lapilus",
     "extras": "Nassourdine Imavov|Oumar Sy|Cyrille Diabate|Mickael Lebout",
     "aliases": {
