@@ -7,7 +7,7 @@ const ROWS = [
     "prompt": "Name a famous UFC fighter nickname.",
     "kind": "other",
     "ranked": "The Notorious|Bones|The Eagle|Blessed|Poatan|The Diamond|The Last Stylebender|Thug Rose",
-    "extras": "Mighty Mouse|The Spider|The Predator|The Iceman|The Korean Zombie|The Lioness|El Cucuy|The Great|Gamebred|The Natural|The Count|Suga|Borz|Do Bronx|The Machine|The Highlight|El Matador|Bullet|The Reaper|Rampage|DC|The Nigerian Nightmare",
+    "extras": "Mighty Mouse|The Spider|The Predator|The Iceman|The Korean Zombie|The Lioness|El Cucuy|The Great|Gamebred|The Natural|The Count|Suga|Borz|Do Bronx|The Machine|The Highlight|El Matador|Bullet|The Reaper|Rampage|DC|The Nigerian Nightmare|No Love|The American Gangster|Rocky|Chaos|The Black Beast|The Mauler|Wonderboy|The Hangman|The Eraser|The Axe Murderer|The Nightmare|Ruthless|Cowboy|The Korean Superboy|The Assassin Baby|The Dominator|The Answer|The California Kid|The Gorilla|Big Nog",
     "aliases": {
       "The Notorious": [
         "Conor McGregor"
@@ -46,7 +46,8 @@ const ROWS = [
         "Chuck Liddell"
       ],
       "The Korean Zombie": [
-        "Chan Sung Jung"
+        "Chan Sung Jung",
+        "Korean Zombie"
       ],
       "The Lioness": [
         "Amanda Nunes"
@@ -83,13 +84,15 @@ const ROWS = [
         "Justin Gaethje"
       ],
       "El Matador": [
-        "Ilia Topuria"
+        "Ilia Topuria",
+        "Topuria"
       ],
       "Bullet": [
         "Valentina Shevchenko"
       ],
       "The Reaper": [
-        "Robert Whittaker"
+        "Robert Whittaker",
+        "Bobby Knuckles"
       ],
       "Rampage": [
         "Quinton Jackson"
@@ -99,6 +102,66 @@ const ROWS = [
       ],
       "The Nigerian Nightmare": [
         "Kamaru Usman"
+      ],
+      "No Love": [
+        "Cody Garbrandt"
+      ],
+      "The American Gangster": [
+        "Chael Sonnen"
+      ],
+      "Rocky": [
+        "Leon Edwards"
+      ],
+      "Chaos": [
+        "Colby Covington"
+      ],
+      "The Black Beast": [
+        "Derrick Lewis"
+      ],
+      "The Mauler": [
+        "Alexander Gustafsson"
+      ],
+      "Wonderboy": [
+        "Stephen Thompson"
+      ],
+      "The Hangman": [
+        "Dan Hooker"
+      ],
+      "The Eraser": [
+        "Paulo Costa"
+      ],
+      "The Axe Murderer": [
+        "Wanderlei Silva"
+      ],
+      "The Nightmare": [
+        "Diego Sanchez"
+      ],
+      "Ruthless": [
+        "Robbie Lawler"
+      ],
+      "Cowboy": [
+        "Donald Cerrone"
+      ],
+      "The Korean Superboy": [
+        "Doo Ho Choi"
+      ],
+      "The Assassin Baby": [
+        "Brandon Moreno"
+      ],
+      "The Dominator": [
+        "Dominick Cruz"
+      ],
+      "The Answer": [
+        "Frankie Edgar"
+      ],
+      "The California Kid": [
+        "Urijah Faber"
+      ],
+      "The Gorilla": [
+        "Darren Till"
+      ],
+      "Big Nog": [
+        "Antonio Rodrigo Nogueira"
       ]
     }
   },
@@ -184,8 +247,7 @@ const ROWS = [
         "UK",
         "Britain",
         "England",
-        "Scotland",
-        "Wales"
+        "Scotland"
       ],
       "United Arab Emirates": [
         "UAE"
