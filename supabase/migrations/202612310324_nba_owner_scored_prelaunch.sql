@@ -7,7 +7,7 @@ alter table private.daily_challenge_schedule_versions add constraint daily_chall
   check (sport in ('ufc','football','nba','nba_preview'));
 
 insert into private.daily_challenge_schedule_versions(version,time_zone,anchor_day,starts_on,game_cycle,sport)
-values ('nba-owner-prelaunch-v1','America/Chicago',date '2026-10-23',date '2026-10-23',
+values ('nba-daily-owner-prelaunch-v1','America/Chicago',date '2026-10-23',date '2026-10-23',
   array['average_fan','sports_feud','millionaire','who_am_i','find_leader','wavelength','bar_trivia','hit_the_number','higher_lower']::text[],
   'nba_preview') on conflict (version) do nothing;
 
@@ -43,7 +43,7 @@ CREATE OR REPLACE FUNCTION public.get_nba_owner_prelaunch_materialization_reques
 AS $function$
 declare
   v_day date := private.daily_challenge_central_day(now());
-  v_version text := 'nba-owner-prelaunch-v1';
+  v_version text := 'nba-daily-owner-prelaunch-v1';
   v_game text;
   v_daily private.daily_challenges;
 begin
@@ -972,7 +972,7 @@ begin
   if v_daily.id is null then
     raise exception 'daily challenge not found';
   end if;
-  if v_daily.schedule_version = 'nba-owner-prelaunch-v1' and not exists (
+  if v_daily.schedule_version = 'nba-daily-owner-prelaunch-v1' and not exists (
     select 1 from public.pick_control_owners owner_row
     join public.profiles profile on profile.id = owner_row.profile_id
     where owner_row.profile_id = v_profile and profile.normalized_name = 'CODY'
