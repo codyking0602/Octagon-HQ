@@ -104,6 +104,18 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
     const collegeHofQb = [...BANKS.cfb.main].find(q => q.id.endsWith("college-hof-quarterbacks"))!;
     expect(matching(collegeHofQb, "Colt McCoy").status).not.toBe("matched");
     expect(matching(collegeHofQb, "Graham Harrell").status).toBe("matched");
+    expect(matching(question("first-pick-quarterbacks"), "Jeff George").status).toBe("matched");
+    expect(matching(question("first-pick-quarterbacks"), "Carson Palmer").status).toBe("matched");
+    expect(matching(question("nfl-rookie-dpoy"), "Jared Verse").status).toBe("matched");
+    expect(matching(question("nfl-rookie-dpoy"), "Von Miller").status).toBe("matched");
+    expect(matching(question("nfl-rookie-dpoy"), "Sheldon Richardson").status).toBe("matched");
+    const firstOverallColleges = [...BANKS.cfb.main].find(q => q.id.endsWith("first-overall-colleges"))!;
+    expect(matching(firstOverallColleges, "Ole Miss").status).toBe("matched");
+    const heismanSchools = [...BANKS.cfb.main].find(q => q.id.endsWith("heisman-schools"))!;
+    expect(matching(heismanSchools, "Indiana").status).toBe("matched");
+    expect(matching(heismanSchools, "Oregon").status).toBe("matched");
+    expect(matching(heismanSchools, "Boston College").status).toBe("matched");
+
 
 
 
