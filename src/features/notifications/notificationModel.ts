@@ -76,10 +76,11 @@ export const pushNotificationSports = ["ufc", "football", "mlb", "nba"] as const
 export type PushNotificationSport = typeof pushNotificationSports[number];
 export type NotificationPushSports = Record<PushNotificationSport, boolean>;
 export const defaultNotificationPushSports: NotificationPushSports = {
-  ufc: true,
-  football: true,
-  mlb: true,
-  // NBA is an upcoming product. Existing devices do not silently opt into NBA push.
+  // New members explicitly select the sports they follow; legacy push users are
+  // seeded with their pre-existing UFC/Football/MLB entitlement server-side.
+  ufc: false,
+  football: false,
+  mlb: false,
   nba: false,
 };
 export type NotificationPermissionState = "unsupported" | "default" | "granted" | "denied";
