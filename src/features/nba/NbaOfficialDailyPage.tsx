@@ -23,7 +23,8 @@ import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
 import { nbaHitHeadshot, nbaHitSubjectById } from "./nbaHitTheNumberStats";
 import { formatNbaHitNumber } from "./nbaHitTheNumberModel";
-import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaRegularSeasonDaily, nbaCentralDay, type NbaDailyGame } from "./nbaDailySchedule";
+import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaOwnerPreviewDaily, nbaRegularSeasonDaily, nbaCentralDay, type NbaDailyGame } from "./nbaDailySchedule";
+import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
 import "../../styles/football-find-leader.css";
 import "../../styles/nba-find-the-leader.css";
 import "../../styles/nba-wavelength.css";
@@ -256,12 +257,15 @@ export default function NbaOfficialDailyPage() {
   const identity = useIdentity();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const releaseEnabled = NBA_OFFICIAL_GAMES_RELEASE_READY && nbaRegularSeasonDaily(nbaCentralDay()) != null;
+  const ownerTest = params.get("mode") === "owner-test"
+    && canPreviewNbaWhoAmI(identity.profile)
+    && nbaOwnerPreviewDaily(nbaCentralDay()) !== null;
+  const releaseEnabled = ownerTest || (NBA_OFFICIAL_GAMES_RELEASE_READY && nbaRegularSeasonDaily(nbaCentralDay()) != null);
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const runtime = useTodayChallengeRuntime({
     profileId: identity.profile?.id ?? "signed-out",
     enabled: releaseEnabled && signedIn,
-    sport: "nba",
+    sport: ownerTest ? "nba_preview" : "nba",
   });
   if (!releaseEnabled) return <div className="page nba-official-daily" data-sport="nba">
     <section className="nba-official-daily__message"><h1>NBA Daily is coming soon.</h1>
@@ -275,7 +279,7 @@ export default function NbaOfficialDailyPage() {
   </section></div>;
   if (params.get("view") === "leaderboard") return <div className="page nba-official-daily" data-sport="nba">
     <button type="button" className="nba-official-daily__back" onClick={() => navigate("/nba")}>← NBA PLAY</button>
-    <TodayChallengeHub sport="nba" initialPanel="leaderboard" />
+    <TodayChallengeHub sport={ownerTest ? "nba_preview" : "nba"} initialPanel="leaderboard" />
   </div>;
   if (!runtime.projection) return <div className="page nba-official-daily" data-sport="nba">
     <section className="nba-official-daily__message" role="status">
@@ -287,8 +291,8 @@ export default function NbaOfficialDailyPage() {
   const projection = runtime.projection;
   return <div className="nba-official-daily official-daily-page" data-sport="nba" data-game={projection.gameType}>
     <nav className="nba-official-daily__top"><button type="button" onClick={() => navigate("/nba")}>← NBA PLAY</button>
-      <span>OFFICIAL DAILY · {NBA_DAILY_GAME_LABELS[projection.gameType as NbaDailyGame] ?? "NBA Daily"}</span>
-      <button type="button" onClick={() => navigate("/nba/today?view=leaderboard")}>STANDINGS ↗</button>
+      <span>{ownerTest ? "OWNER TEST" : "OFFICIAL DAILY"} · {NBA_DAILY_GAME_LABELS[projection.gameType as NbaDailyGame] ?? "NBA Daily"}</span>
+      <button type="button" onClick={() => navigate(ownerTest ? "/nba/today?mode=owner-test&view=leaderboard" : "/nba/today?view=leaderboard")}>STANDINGS ↗</button>
     </nav>
     {runtime.error ? <div className="nba-official-daily__error" role="status">
       {runtime.error instanceof Error ? runtime.error.message : "Your game needs a refresh."}
@@ -300,10 +304,11 @@ export default function NbaOfficialDailyPage() {
       onExit={() => navigate("/nba")}
     />
     {projection.officialAttempt ? <section className="nba-official-daily__saved-score" aria-label="Official NBA Daily total score">
-      OFFICIAL SAVED SCORE · <strong>{projection.officialAttempt.normalizedScore}/100</strong>
+      {ownerTest ? "SAVED TEST SCORE" : "OFFICIAL SAVED SCORE"} · <strong>{projection.officialAttempt.normalizedScore}/100</strong>
     </section> : null}
+    {ownerTest ? <p className="play-v2__muted">Owner-only rehearsal · no championship points or public ranking.</p> : null}
     {projection.officialAttempt ? <footer className="nba-official-daily__footer">
-      <button type="button" onClick={() => navigate("/nba/today?view=leaderboard")}>VIEW TODAY'S LEADERBOARD ↗</button>
+      <button type="button" onClick={() => navigate(ownerTest ? "/nba/today?mode=owner-test&view=leaderboard" : "/nba/today?view=leaderboard")}>VIEW TODAY'S LEADERBOARD ↗</button>
       <button type="button" onClick={() => navigate("/nba")}>ALL NBA GAMES</button>
     </footer> : null}
   </div>;

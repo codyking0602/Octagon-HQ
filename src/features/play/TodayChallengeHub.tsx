@@ -180,7 +180,7 @@ export function DailyAnswerDetail({
             <DailyTwoGameLeaderboardResult
               projection={resultProjection}
               resultDetail={entry.resultDetail}
-              sport={sport}
+              sport={sport === "nba_preview" ? "nba" : sport}
             />
           </Suspense>
         ) : sport === "nba" && entry.gameType === "higher_lower" ? (
@@ -273,6 +273,7 @@ function DailyLeaderboard({
 }
 
 export default function TodayChallengeHub({ sport = "ufc", initialPanel = "challenge" }: { sport?: TodayChallengeSport; initialPanel?: "challenge" | "leaderboard" }) {
+  const presentationSport = sport === "nba_preview" ? "nba" : sport;
   const identity = useIdentity();
   const navigate = useNavigate();
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -317,7 +318,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
 
   if (runtime.loading && !projection) {
     return (
-      <section className="today-hub-loading" data-sport={sport} aria-live="polite">
+      <section className="today-hub-loading" data-sport={presentationSport} aria-live="polite">
         <span />
         <strong>Loading today’s official game…</strong>
       </section>
@@ -336,7 +337,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
 
     if (weeklyAuctionError && previewAdapter && weeklyAuctionError.previewCentralDay) {
       return (
-        <section className="today-hub" data-sport={sport} data-game={weeklyAuctionError.previewGameType ?? undefined}>
+        <section className="today-hub" data-sport={presentationSport} data-game={weeklyAuctionError.previewGameType ?? undefined}>
           <div className="today-hub__carousel" aria-label="Today’s Challenge">
             <button className="today-hub-card" type="button" onClick={() => navigate("/football/today")}>
               <div className="today-hub-card__topline">
@@ -351,15 +352,15 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
               <em>{previewAdapter.cta.toUpperCase()} →</em>
             </button>
           </div>
-          <button className="home-weekly-games-row" type="button" onClick={() => navigate("/championship/" + sport + "?tab=play")} aria-label="Open Championship Play standings">
+          {sport !== "nba_preview" ? <button className="home-weekly-games-row" type="button" onClick={() => navigate("/championship/" + sport + "?tab=play")} aria-label="Open Championship Play standings">
             <span className="home-weekly-games-row__copy"><small>PLAY LEADERBOARD</small><strong>Daily + Featured · Season standings</strong></span><b>VIEW →</b>
-          </button>
+          </button> : <p className="play-v2__muted">Owner-only saved test scores. Public NBA championship and leaderboards are unaffected.</p>}
         </section>
       );
     }
 
     return (
-      <section className="today-hub-gate is-error" data-sport={sport}>
+      <section className="today-hub-gate is-error" data-sport={presentationSport}>
         <div>
           <p className="eyebrow">TODAY’S CHALLENGE</p>
           <h2>The official game did not load.</h2>
@@ -379,7 +380,8 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
   const cta = combo
     ? dailyRankKeepComboStage(projection) === 2 ? "CONTINUE PART 2" : "START PART 1"
     : adapter.cta.toUpperCase();
-  const dailyRoute = sport === "football" ? "/football/today" : sport === "nba" ? "/nba/today" : adapter.dailyRoute;
+  const dailyRoute = sport === "nba_preview" ? "/nba/today?mode=owner-test"
+    : sport === "football" ? "/football/today" : sport === "nba" ? "/nba/today" : adapter.dailyRoute;
 
   const showPanel = (nextPanel: "challenge" | "leaderboard") => {
     const carousel = carouselRef.current;
@@ -403,7 +405,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
     <section
       className="today-hub"
       data-game={projection.gameType}
-      data-sport={sport}
+      data-sport={presentationSport}
       data-special-daily={specialTheme ? "true" : undefined}
       style={specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined}
     >
@@ -415,14 +417,14 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
       >
         <button className={specialTheme ? "today-hub-card is-special-daily" : "today-hub-card"} type="button" onClick={() => navigate(dailyRoute)}>
           <div className="today-hub-card__topline">
-            <span>{combo ? "TODAY’S DAILY DOUBLE" : "TODAY’S CHALLENGE"}</span>
+            <span>{sport === "nba_preview" ? "NBA OWNER TEST" : combo ? "TODAY’S DAILY DOUBLE" : "TODAY’S CHALLENGE"}</span>
             <b>{dayLabel(projection.centralDay).toUpperCase()}</b>
           </div>
           {specialTheme ? <FootballSpecialDailyHubMark theme={specialTheme} /> : null}
           <div className="today-hub-card__body">
             <small>
               {completed && projection.officialAttempt
-                ? `OFFICIAL RESULT · ${projection.officialAttempt.normalizedScore}`
+                ? `${sport === "nba_preview" ? "SAVED TEST SCORE" : "OFFICIAL RESULT"} · ${projection.officialAttempt.normalizedScore}`
                 : projection.progressRevision > 0
                   ? `SAVED · ${gameProgress(projection)}`
                   : gameProgress(projection)}
@@ -430,7 +432,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
             <h2>{title}</h2>
             <p>{instructions}</p>
           </div>
-          <em>{completed ? "VIEW OFFICIAL RESULT" : projection.progressRevision > 0 ? "CONTINUE OFFICIAL GAME" : cta} →</em>
+          <em>{completed ? "VIEW SAVED RESULT" : projection.progressRevision > 0 ? "CONTINUE GAME" : cta} →</em>
           <span className="today-hub-card__swipe">SWIPE FOR TODAY’S LEADERBOARD →</span>
         </button>
 
@@ -446,15 +448,15 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
             leaderboard={overview.leaderboard}
             projection={projection}
             loading={overview.leaderboardLoading}
-            sport={sport}
+            sport={presentationSport}
           />
           <small className="today-hub-leaderboard__swipe">← SWIPE FOR TODAY’S GAME</small>
         </div>
       </div>
 
-      {sport !== "nba" ? <OwnerTomorrowAverageFanPreviewEntry
+      {presentationSport !== "nba" ? <OwnerTomorrowAverageFanPreviewEntry
         enabled={identity.profile?.canControlPicks === true}
-        sport={sport}
+        sport={sport === "football" ? "football" : "ufc"}
         centralDay={projection.centralDay}
         onNavigate={navigate}
       /> : null}

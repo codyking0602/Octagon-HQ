@@ -12,11 +12,12 @@ describe("NBA official Daily client release safety and all nine presentations", 
     expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
     expect(routerSource).toContain('path: "nba/today"');
     expect(routerSource).toContain("<NbaPreviewGate><NbaOfficialDailyPage /></NbaPreviewGate>");
-    expect(officialPageSource).toContain('const releaseEnabled = NBA_OFFICIAL_GAMES_RELEASE_READY &&');
+    expect(officialPageSource).toContain('const ownerTest = params.get("mode") === "owner-test"');
+    expect(officialPageSource).toContain('const releaseEnabled = ownerTest || (NBA_OFFICIAL_GAMES_RELEASE_READY &&');
     expect(officialPageSource).toContain("enabled: releaseEnabled && signedIn");
-    expect(hubSource).toContain('{published ? <TodayChallengeHub sport="nba" />');
-    expect(hubSource).toContain('createTodayChallengeRepository(undefined, "nba")');
-    expect(hubSource).toContain("enabled: published && Boolean(profile?.id)");
+    expect(hubSource).toContain('{published || ownerTest ? <TodayChallengeHub sport={ownerTest ? "nba_preview" : "nba"} />');
+    expect(hubSource).toContain('createTodayChallengeRepository(undefined, ownerTest ? "nba_preview" : "nba")');
+    expect(hubSource).toContain("enabled: (published || ownerTest) && Boolean(profile?.id)");
     expect(nbaRegularSeasonDaily("2026-11-01")?.gameType).toBe("average_fan");
     expect(nbaRegularSeasonDaily("2026-11-02")?.day).toBe("2026-11-01");
   });

@@ -677,11 +677,13 @@ async function materializeFootballToday(admin: SupabaseClient, at?: string) {
   };
 }
 
-async function materializeNbaToday(admin: SupabaseClient, at?: string) {
-  const response = await admin.rpc("get_daily_challenge_materialization_request", {
-    p_sport: "nba",
-    ...(at ? { p_at: at } : {}),
-  });
+async function materializeNbaToday(admin: SupabaseClient, at?: string, preview = false) {
+  const response = preview
+    ? await admin.rpc("get_nba_owner_prelaunch_materialization_request")
+    : await admin.rpc("get_daily_challenge_materialization_request", {
+        p_sport: "nba",
+        ...(at ? { p_at: at } : {}),
+      });
   if (response.error) throw new Error("NBA scheduled Daily identity is unavailable.");
   const request = requiredRecord(response.data, "NBA daily materialization request");
   const day = requiredString(request.central_day, "NBA Central publication day");
@@ -727,12 +729,21 @@ async function handleNbaDaily(
   admin: SupabaseClient, userClient: SupabaseClient,
   profileId: string, body: JsonRecord,
 ) {
-  // A release must be explicitly enabled after public UX, championship and
-  // every leaderboard drill-down are verified. Never expose incomplete Daily.
-  if (!NBA_DAILY_EDGE_RELEASE_READY) {
+  const preview = body.preview === true;
+  // The client flag grants nothing. Recheck the authenticated profile on every
+  // read and advance, and keep the public release locked independently.
+  if (preview) {
+    const [owner, identity] = await Promise.all([
+      admin.rpc("is_pick_control_owner", { p_profile_id: profileId }),
+      admin.from("profiles").select("normalized_name").eq("id", profileId).maybeSingle(),
+    ]);
+    if (owner.error || owner.data !== true || identity.error || identity.data?.normalized_name !== "CODY") {
+      return safeError(403, "NBA_OWNER_TEST_FORBIDDEN", "NBA prelaunch scoring is available only to the HQ owner.");
+    }
+  } else if (!NBA_DAILY_EDGE_RELEASE_READY) {
     return safeError(503, "NBA_DAILY_NOT_LAUNCHED", "NBA official Daily is not available yet.");
   }
-  const materialized = await materializeNbaToday(admin);
+  const materialized = await materializeNbaToday(admin, undefined, preview);
   let context = await getContext(admin, materialized.dailyChallengeId, profileId);
   context = await finalizePending(userClient, admin, context, profileId);
   context = await continueTwoGameWithoutIntermission(admin, context, profileId);
