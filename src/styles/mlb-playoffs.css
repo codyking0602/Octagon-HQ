@@ -4706,3 +4706,124 @@
   font-size: 16px;
   line-height: 1.05;
 }
+
+
+/* Final owner-only Baseball HQ refinements — locked Football/UFC and MLB public views unchanged. */
+.mlb-hq--compact-preview .mlb-hq__bracket-row {
+  min-height: 0;
+  padding: 6px 10px;
+  border-radius: 11px;
+}
+.mlb-hq--compact-preview .mlb-hq__bracket-row .home-weekly-games-row__copy {
+  gap: 1px;
+}
+.mlb-hq--compact-preview .mlb-hq__bracket-row .home-weekly-games-row__copy small,
+.mlb-hq--compact-preview .mlb-hq__bracket-row .home-weekly-games-row__copy strong {
+  line-height: 1.15;
+}
+.mlb-hq--compact-preview .home-challenge-card {
+  align-items: center;
+  padding: 7px 10px;
+  gap: 8px;
+}
+.mlb-hq--compact-preview .home-challenge-card__copy { gap: 2px; }
+.mlb-hq--compact-preview .home-challenge-card__topline > span { font-size: 8px; }
+.mlb-hq--compact-preview .home-challenge-card__copy h3 {
+  font-size: 15px;
+  line-height: 1.12;
+  overflow-wrap: normal;
+}
+.mlb-hq--compact-preview .home-challenge-card__copy p {
+  display: block;
+  max-width: 100%;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  font-size: 9px;
+  line-height: 1.2;
+}
+.mlb-hq--compact-preview .home-challenge-card__result {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-width: 57px;
+  padding-left: 8px;
+  border-left-color: #3d4442;
+}
+.mlb-hq--compact-preview .home-challenge-card__result > strong {
+  font-size: 11px;
+  white-space: nowrap;
+}
+.mlb-hq--compact-preview .football-player-spotlight {
+  min-height: 150px;
+  grid-template-columns: minmax(104px, .64fr) minmax(0, 1.36fr);
+}
+.mlb-hq--compact-preview .mlb-player-spotlight__profile-media,
+.mlb-hq--compact-preview .mlb-player-spotlight__profile-media img {
+  min-height: 150px;
+}
+.mlb-hq--compact-preview .mlb-player-spotlight__profile-media {
+  background: #0b1726;
+}
+.mlb-hq--compact-preview .mlb-player-spotlight__profile-media::after {
+  background: linear-gradient(90deg, transparent 62%, rgba(11,23,38,.35) 80%, #0b1726 100%);
+}
+.mlb-hq--compact-preview .mlb-player-spotlight__profile-media::before { background: none; }
+.mlb-hq--compact-preview .football-player-spotlight__copy {
+  padding: 7px 9px 7px 7px;
+  gap: 3px;
+}
+.mlb-hq--compact-preview .football-player-spotlight__stats { margin: 2px 0 1px; }
+.mlb-hq--compact-preview .football-player-spotlight__meta { margin: 0; }
+.mlb-hq--compact-preview .football-player-spotlight__copy h3 > a.mlb-player-spotlight__name-link,
+.mlb-hq--compact-preview .football-player-spotlight__copy h3 > a.mlb-player-spotlight__name-link:hover,
+.mlb-hq--compact-preview .football-player-spotlight__copy h3 > a.mlb-player-spotlight__name-link:visited {
+  box-shadow: none;
+  border: 0;
+  padding: 0;
+  text-decoration: none;
+  background: transparent;
+}
+.mlb-hq--compact-preview .football-player-spotlight__copy a.mlb-player-spotlight__watch {
+  min-height: 28px;
+  margin-top: 1px;
+  padding: 5px 4px;
+}
+.mlb-hq--compact-preview .football-hq-games {
+  gap: 4px;
+  padding: 7px 9px;
+}
+.mlb-hq--compact-preview .football-hq-games > header {
+  min-height: 18px;
+  padding: 0 0 3px;
+}
+.mlb-hq--compact-preview .football-hq-game-row {
+  display: grid;
+  gap: 4px;
+  padding: 2px 0 0;
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+}
+.mlb-hq--compact-preview .football-hq-game-row__main > span { margin-bottom: 2px; }
+.mlb-hq--compact-preview .football-hq-game-row__teams > div {
+  min-height: 38px;
+  border-radius: 9px;
+}
+.mlb-hq--compact-preview .football-hq-game-row__meta {
+  padding: 3px 0 0;
+  border-top: 1px solid #3c4248;
+  gap: 4px;
+}
+.mlb-hq--compact-preview .football-hq-game-row__meta > strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.mlb-hq--compact-preview .football-hq-game-row__meta > b {
+  flex-shrink: 0;
+}
+@media (max-width: 360px) {
+  .mlb-hq--compact-preview .football-hq-game-row__meta > strong,
+  .mlb-hq--compact-preview .football-hq-game-row__meta > b { font-size: 8px; }
+  .mlb-hq--compact-preview .home-challenge-card__copy h3 { font-size: 13px; }
+}
