@@ -149,6 +149,12 @@ declare
   v_names text;
   v_summary text := p_summary;
 begin
+  -- Owner-only control and monitoring actions remain critical independent of
+  -- entertainment sport choices, matching the existing always-on contract.
+  if private.notification_category_for_kind(p_kind) = 'operations' then
+    return jsonb_build_object('allowed',true,'summary',coalesce(p_summary,''));
+  end if;
+
   select * into v_prefs from private.notification_push_sports where profile_id = p_profile_id;
 
   if 'universal' = any(v_sports) then
