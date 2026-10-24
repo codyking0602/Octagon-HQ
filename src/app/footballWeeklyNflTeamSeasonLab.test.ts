@@ -72,8 +72,10 @@ describe("NFL Team-Seasons owner playthrough lab", () => {
     expect(migration).toContain("auth.uid() is distinct from v_owner");
     expect(migration.match(/auth\.uid\(\) is distinct from v_owner/g)?.length).toBe(5);
     expect(migration).toContain("owner-only");
-    expect(center).toContain("BEST NFL TEAM-SEASONS PLAYTHROUGH");
-    expect(center).toContain('navigate("/football/weekly-nfl-team-season-lab")');
+    // The QA lab remains owner-only via its own route and server guard,
+    // without an entry card on the public Auction Center.
+    expect(center).not.toContain("BEST NFL TEAM-SEASONS PLAYTHROUGH");
+    expect(center).not.toContain('navigate("/football/weekly-nfl-team-season-lab")');
     expect(router).toContain('path: "football/weekly-nfl-team-season-lab"');
   });
 
