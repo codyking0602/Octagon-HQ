@@ -68,7 +68,7 @@ const ROWS = [
     "prompt": "Name a fighter who faced Amanda Nunes in a UFC bout.",
     "kind": "person",
     "ranked": "Ronda Rousey|Miesha Tate|Valentina Shevchenko|Cris Cyborg|Holly Holm|Julianna Pena|Irene Aldana|Raquel Pennington",
-    "extras": "Germaine de Randamie|Felicia Spencer|Megan Anderson|Sara McMann|Cat Zingano|Alexis Davis|Sheila Gaff|Liz Carmouche|Shayna Baszler|Sarah Kaufman|Jessica Eye|Julia Budd",
+    "extras": "Germaine de Randamie|Felicia Spencer|Megan Anderson|Sara McMann|Cat Zingano|Sheila Gaff|Liz Carmouche|Shayna Baszler",
     "aliases": {
       "Cris Cyborg": [
         "Cyborg"
@@ -85,7 +85,8 @@ const ROWS = [
     },
     "source": [
       "https://www.ufc.com/news/ufc-womens-bantamweight-title-lineage-Rousey-Holm-Tate-Nunes-Pena",
-      "https://www.ufc.com/news/ufc-womens-featherweight-title-lineage-De-Randamie-Cyborg-Nunes"
+      "https://www.ufc.com/news/ufc-womens-featherweight-title-lineage-De-Randamie-Cyborg-Nunes",
+      "https://us.ufcespanol.com/athlete/amanda-nunes"
     ]
   },
   {
@@ -94,7 +95,7 @@ const ROWS = [
     "prompt": "Name a fighter who competed in both Bellator MMA and the UFC.",
     "kind": "person",
     "ranked": "Michael Chandler|Eddie Alvarez|Ben Askren|Gegard Mousasi|Ryan Bader|Benson Henderson|Rory MacDonald|Cris Cyborg",
-    "extras": "Quinton Jackson|Tito Ortiz|Frank Mir|Lyoto Machida|Corey Anderson|Phil Davis|Aaron Pico|Yoel Romero|Douglas Lima",
+    "extras": "Quinton Jackson|Tito Ortiz|Frank Mir|Lyoto Machida|Corey Anderson|Phil Davis|Aaron Pico|Yoel Romero",
     "aliases": {
       "Quinton Jackson": [
         "Rampage Jackson"
