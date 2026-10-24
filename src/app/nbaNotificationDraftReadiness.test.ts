@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const sql = readFileSync("supabase/migrations/202612310327_nba_notification_kind_preparation.sql", "utf8");
+const sql = readFileSync("supabase/migrations/202612310403_nba_notification_kind_preparation.sql", "utf8");
 const model = readFileSync("src/features/notifications/notificationModel.ts", "utf8");
 const nbaSchedule = readFileSync("src/features/nba/nbaDailySchedule.ts", "utf8");
 const center = readFileSync("src/features/notifications/NotificationCenterPage.tsx", "utf8");
