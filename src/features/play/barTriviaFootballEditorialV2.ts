@@ -1,4 +1,4 @@
-import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
+import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 
 /** Future selection only. The original rows remain available to historic official setup snapshots. */
 export const FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS: ReadonlySet<string> = new Set([
@@ -76,7 +76,7 @@ export const FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS: ReadonlySet<string> = new Set([
 ]);
 
 /** These are NEW distinct historical moments; never duplicate an existing ID. */
-export const FOOTBALL_BAR_TRIVIA_V2_LAST_CALL: readonly BarTriviaQuestion[] = [
+const LAST_CALL_SEEDS: readonly BarTriviaQuestionSeed[] = [
   {
     "id": "nfl-v2-final-ice-bowl",
     "league": "nfl",
@@ -397,4 +397,5 @@ export const FOOTBALL_BAR_TRIVIA_V2_LAST_CALL: readonly BarTriviaQuestion[] = [
     "explanation": "Maurice Clarett was a pivotal freshman for Ohio State's 2002 championship team.",
     "sourceId": "cfb-official-historical-review-v2"
   }
-].map(barTriviaQuestion);
+];
+export const FOOTBALL_BAR_TRIVIA_V2_LAST_CALL: readonly BarTriviaQuestion[] = LAST_CALL_SEEDS.map(barTriviaQuestion);
