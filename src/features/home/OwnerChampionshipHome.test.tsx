@@ -100,7 +100,7 @@ describe("Owner Championship Home preview", () => {
     expect(within(cabinet).getByRole("link", { name: "Open MLB Postseason Championship standings" })).toHaveAttribute("href", "/championship/mlb");
     expect(within(cabinet).getByRole("link", { name: "Open Basketball Championship" })).toHaveAttribute("href", "/championship/nba");
     const ranks = Array.from(cabinet.querySelectorAll(".home-champ-preview__summary-rank")).map((element) => element.textContent);
-    expect(ranks).toEqual(["#1", "#2", "#3", "—"]);
+    expect(ranks).toEqual(["#1", "#2", "#3"]);
     expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon")).toHaveLength(0);
     expect(cabinet.querySelectorAll(".home-champ-preview__trophy")).toHaveLength(1);
     expect(cabinet.querySelector(".home-champ-preview__overview")).toHaveAttribute("aria-label", "Championship standings by sport");
