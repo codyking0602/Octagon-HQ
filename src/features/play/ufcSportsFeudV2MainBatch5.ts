@@ -33,7 +33,7 @@ const ROWS = [
     "prompt": "Name a UFC fighter who won an NCAA Division I national wrestling championship.",
     "kind": "person",
     "ranked": "Brock Lesnar|Bo Nickal|Ben Askren|Mark Coleman|Johny Hendricks|Phil Davis|Gregor Gillespie|Kevin Randleman",
-    "extras": "Josh Koscheck|Mark Schultz|Kevin Jackson",
+    "extras": "Josh Koscheck|Mark Schultz",
     "aliases": {
       "Ben Askren": [
         "Funky"
@@ -47,7 +47,8 @@ const ROWS = [
     },
     "source": [
       "https://www.ufc.com/athlete/bo-nickal",
-      "https://www.ufc.com/news/wrestling-greats-made-transition-mma"
+      "https://www.ufc.com/news/wrestling-greats-made-transition-mma",
+      "https://en.wikipedia.org/wiki/1987_NCAA_Division_I_Wrestling_Championships"
     ]
   },
   {
