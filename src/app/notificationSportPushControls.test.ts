@@ -6,6 +6,11 @@ const migration = readFileSync(
   "supabase/migrations/202612310402_notification_sport_push_controls.sql", "utf8",
 );
 const nbaMigration = readFileSync("supabase/migrations/202612310403_nba_notification_kind_preparation.sql", "utf8");
+const nbaCombined = readFileSync("supabase/migrations/202612310404_nba_combined_daily_close.sql", "utf8");
+const nbaDue = readFileSync("supabase/migrations/202612310405_nba_due_launch_and_close_dispatch.sql", "utf8");
+const tokens = readFileSync("src/styles/tokens.css", "utf8");
+const pushCss = readFileSync("src/styles/notification-push-prompt.css", "utf8");
+const monitor = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const provider = readFileSync("src/features/notifications/NotificationProvider.tsx", "utf8");
 const repository = readFileSync("src/features/notifications/notificationRepository.ts", "utf8");
 const inbox = readFileSync("src/features/notifications/NotificationCenterPage.tsx", "utf8");
@@ -52,8 +57,10 @@ describe("notification sport push controls — draft contract", () => {
 
   it("never leaks excluded sports in combined Daily phone alert copy", () => {
     expect(migration).toContain("p_aggregation_key = 'daily-closing-combined'");
-    expect(migration).toContain("cardinality(v_selected) < cardinality(v_sports)");
-    expect(migration).toContain("v_summary := 'Your ' || v_selected[1]");
+    expect(migration).toContain("cardinality(v_selected) = 1");
+    expect(migration).toContain("v_title := v_selected[1] || ' Daily closes soon'");
+    expect(migration).toContain("v_destination := case v_selected[1]");
+    expect(migration).toContain("'route',coalesce(v_selection->>'route',v_notification.route");
     expect(migration).toContain("v_text ~ '(^|[^A-Z])UFC([^A-Z]|$)'");
     expect(migration).toContain("v_text ~ '(^|[^A-Z])NBA([^A-Z]|$)'");
   });
@@ -69,7 +76,7 @@ describe("notification sport push controls — draft contract", () => {
     expect(pushControl).toContain("In-app notifications are unaffected.");
   });
 
-  it("prepares the four dormant NBA notification kinds without starting producers", () => {
+  it("prepares the three NBA notification kinds, with only closing push, not an opening alert", () => {
     for (const kind of ["nba_launch_available", "nba_daily_four_hours", "nba_results_ready"]) {
       expect(nbaMigration).toContain("'" + kind + "'");
     }
@@ -78,9 +85,36 @@ describe("notification sport push controls — draft contract", () => {
     expect(nbaMigration).toContain("notification_priority_for_kind");
     expect(nbaMigration).not.toContain("'nba_daily_available'");
     expect(nbaMigration).toContain("where kind in ('picks_repick_required','picks_card_updated')");
+    expect(migration).toContain("if p_kind in ('picks_repick_required','picks_card_updated') then");
+    expect(nbaMigration).not.toMatch(/\s+'picks_repick_required',\s*'picks_incomplete_near_lock'/);
   });
 
-  it("does not create a new notification scheduler or send messages in the migration", () => {
+  it("preserves NBA orange and four independently selectable sport pills", () => {
+    expect(tokens).toContain('[data-hq-theme="nba"]');
+    expect(tokens).toContain("--nba-accent: #f2a341");
+    expect(pushControl).toContain("pushNotificationSports.map");
+    expect(pushControl).toContain('data-hq-theme={sport}');
+    expect(pushCss).toContain(".notification-push-sport.is-selected");
+  });
+
+  it("schedules a gated November 1 NBA launch and only one closing alert on the second day", () => {
+    expect(nbaCombined).toContain("notification_nba_release_gate");
+    expect(nbaCombined).toContain("public_enabled boolean not null default false");
+    expect(nbaCombined).toContain("v_sports := array_append(v_sports,'NBA')");
+    expect(nbaCombined).toContain("'nba_daily_four_hours'");
+    expect(nbaDue).toContain("date '2026-11-01'");
+    expect(nbaDue).toContain("date '2026-11-02'");
+    expect(nbaDue).toContain("time '20:00'");
+    expect(nbaDue).toContain("time '08:00'");
+    expect(nbaDue).toContain("schedule.sport = 'nba'");
+    expect(nbaDue).toContain("schedule.version = 'nba-daily-regular-v1'");
+    expect(nbaDue).toContain("attempt.attempt_kind = 'official_first'");
+    expect(nbaDue).not.toContain("nba_daily_available");
+    expect(monitor).toContain('admin.rpc("dispatch_due_nba_notifications"');
+    expect(nbaDue).not.toContain("cron.schedule");
+  });
+
+  it("does not create a new notification scheduler or send messages in the sport-preference migration", () => {
     expect(migration).not.toContain("cron.schedule");
     expect(migration).not.toContain("publish_notification_to_profile(");
     expect(migration).not.toContain("create trigger");
