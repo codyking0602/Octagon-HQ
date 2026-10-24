@@ -284,5 +284,3 @@ Review date: October 23, 2026. Source reviewed against current production `main`
 **Curated aliases (9):** Total wins: Wins, W; Total losses: Losses, L; Draws: Draw; Knockout wins: KO wins, TKO wins; No contests: NC; Win streak: Winning streak.
 
 **Editorial status:** ADVANCE (subject to verification). Career record summary is different from per-fight stat categories, but verify natural percentages/numbers count correctly and avoid category overlap..
-
-
