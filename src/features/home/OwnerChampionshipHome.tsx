@@ -204,6 +204,7 @@ export function OwnerChampionshipHome({
   onSportChange,
   showSportSelector = true,
   compactFootballPreview = false,
+  compactMlbPreview = false,
 }: {
   streak: number;
   streakLoading: boolean;
@@ -213,6 +214,7 @@ export function OwnerChampionshipHome({
   onSportChange: (nextSport: SportFilter) => void;
   showSportSelector?: boolean;
   compactFootballPreview?: boolean;
+  compactMlbPreview?: boolean;
 }) {
   const [football, setFootball] = useState<SportChampionship | null>(null);
   const [ufc, setUfc] = useState<SportChampionship | null>(null);
@@ -245,19 +247,21 @@ export function OwnerChampionshipHome({
   const chosen = sport === "mlb" && !showMlb ? "all" : sport;
   const compactFootball = compactFootballPreview && chosen === "football" && !showSportSelector;
   const compactUfc = chosen === "ufc" && !showSportSelector;
+  const compactMlb = compactMlbPreview && chosen === "mlb" && !showSportSelector;
   const knownRanks = [football?.own?.rank, ufc?.own?.rank, ...(showMlb ? [mlb?.own?.overall_rank] : [])];
   const leagueLeads = knownRanks.filter((rank) => rank === 1).length;
   const leagueLeadDisplay = loading && knownRanks.every((rank) => rank == null) ? "…" : leagueLeads;
   return (
     <section
-      className={`home-section home-section--your-hq home-champ-preview${compactFootball ? " home-champ-preview--compact-football" : ""}${compactUfc ? " home-champ-preview--compact-ufc" : ""}`}
+      className={`home-section home-section--your-hq home-champ-preview${compactFootball ? " home-champ-preview--compact-football" : ""}${compactUfc ? " home-champ-preview--compact-ufc" : ""}${compactMlb ? " home-champ-preview--compact-mlb" : ""}`}
       data-testid="home-section"
       data-home-section={showSportSelector ? "your-hq" : "championship-standings"}
       data-sport={chosen}
       aria-label={showSportSelector ? "Your HQ" : "Championship standings"}
     >
       <div className="home-champ-preview__top">
-        <div><h2>{showSportSelector ? "Your HQ" : "Championship standings"}</h2>{chosen === "all" ? <small>2026 CHAMPIONSHIP HEADQUARTERS</small> : null}</div>
+        <div><h2>{compactMlb ? "MLB CHAMPIONSHIP" : showSportSelector ? "Your HQ" : "Championship standings"}</h2>{chosen === "all" ? <small>2026 CHAMPIONSHIP HEADQUARTERS</small> : null}</div>
+        {compactMlb ? <Link className="mlb-hq__championship-heading-link" to="/championship/mlb">STANDINGS →</Link> : null}
         {showSportSelector ? (
           <label className="home-champ-preview__filter">
             <span className="sr-only">Home sport</span>
@@ -325,13 +329,39 @@ export function OwnerChampionshipHome({
           <p>Standings begin when official results settle.</p>
         </div>
       ) : chosen === "mlb" ? (
-        <div className="home-champ-preview__detail" data-sport="mlb">
-          <div className="home-champ-preview__kicker">MLB POSTSEASON CHAMPIONSHIP</div>
-          <div className="home-champ-preview__headline">
-            <Link to="/championship/mlb" aria-label="Open MLB Postseason Championship leaderboard"><strong>{formatRank(mlb?.own?.overall_rank)}</strong><span>OF {mlb?.standings.length ?? 0} COMPETITORS</span></Link>
-            <Link to="/championship/mlb" aria-label="View MLB Championship Points breakdown"><strong>{mlb?.own?.total_points ?? "—"}</strong><span>CHAMPIONSHIP POINTS</span></Link>
+        compactMlb ? (
+          <div className="mlb-hq__championship-compact" data-sport="mlb">
+            <div className="mlb-hq__championship-totals">
+              <Link to="/championship/mlb" aria-label="Open MLB Postseason Championship standings">
+                <small>YOUR STANDING</small>
+                <strong>{formatRank(mlb?.own?.overall_rank)} <span>OF {mlb?.standings.length ?? 0}</span></strong>
+              </Link>
+              <Link to="/championship/mlb" aria-label="View MLB Championship Points breakdown">
+                <small>POSTSEASON SCORE</small>
+                <strong>{mlb?.own?.total_points ?? "—"} <span>PTS</span></strong>
+              </Link>
+            </div>
+            <div className="mlb-hq__championship-lanes" aria-label="MLB postseason scoring ranks">
+              <Link to="/championship/mlb" aria-label="Open MLB Series Picks standings">
+                <small>SERIES PICKS</small><strong>{formatRank(mlb?.own?.series_rank)}</strong>
+              </Link>
+              <Link to="/championship/mlb" aria-label="Open MLB Playoff Bracket standings">
+                <small>BRACKET</small><strong>{formatRank(mlb?.own?.bracket_rank)}</strong>
+              </Link>
+              <Link to="/championship/mlb" aria-label="Open MLB Playoff Games standings">
+                <small>PLAYOFF GAMES</small><strong>{formatRank(mlb?.own?.play_rank)}</strong>
+              </Link>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="home-champ-preview__detail" data-sport="mlb">
+            <div className="home-champ-preview__kicker">MLB POSTSEASON CHAMPIONSHIP</div>
+            <div className="home-champ-preview__headline">
+              <Link to="/championship/mlb" aria-label="Open MLB Postseason Championship leaderboard"><strong>{formatRank(mlb?.own?.overall_rank)}</strong><span>OF {mlb?.standings.length ?? 0} COMPETITORS</span></Link>
+              <Link to="/championship/mlb" aria-label="View MLB Championship Points breakdown"><strong>{mlb?.own?.total_points ?? "—"}</strong><span>CHAMPIONSHIP POINTS</span></Link>
+            </div>
+          </div>
+        )
       ) : (
         <Detail sport={chosen} result={chosen === "football" ? football : ufc} loading={loading} error={errors[chosen]} compactFootball={compactFootball || compactUfc} />
       )}
