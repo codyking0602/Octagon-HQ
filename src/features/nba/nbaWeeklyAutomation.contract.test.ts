@@ -1,8 +1,13 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 const script = readFileSync("scripts/generate-nba-weekly-spotlight.mjs","utf8");
 const flow = readFileSync(".github/workflows/nba-weekly-spotlights.yml","utf8");
 describe("NBA unattended editorial safeguards", () => {
+  it("passes offline ESPN box-score and verified YouTube fixture tests", () => {
+    expect(() => execFileSync("node", ["--test", "scripts/generate-nba-weekly-spotlight.test.mjs"],
+      { encoding: "utf8", timeout: 30_000 })).not.toThrow();
+  });
   it("uses finished ESPN boxscores and official YouTube videos, never synthetic weekly winners", () => {
     expect(script).toContain("/scoreboard?dates=");
     expect(script).toContain("/summary?event=");
