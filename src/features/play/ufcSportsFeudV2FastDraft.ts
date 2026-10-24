@@ -177,7 +177,7 @@ const ROWS = [
     "prompt": "Name an item a UFC fighter's corner might use between rounds.",
     "kind": "other",
     "ranked": "Water bottle|Towel|Ice bag|Stool|Vaseline|Gauze|Cotton swab|Cold metal swelling tool",
-    "extras": "Bucket|Medical tape|Scissors|Gloves|Sponge|Ice pack|Enswell|Cutman supplies|Paper towels|Petroleum jelly|Swab|Cup",
+    "extras": "Bucket|Medical tape|Scissors|Gloves|Sponge|Cutman supplies|Paper towels|Cup",
     "aliases": {
       "Cold metal swelling tool": [
         "Enswell",
@@ -252,7 +252,7 @@ const ROWS = [
     "prompt": "Name something a UFC fighter might wear or carry during their walkout.",
     "kind": "other",
     "ranked": "Fighter shorts|Walkout shirt|Hoodie|Country flag|Hat|Sneakers|Headphones|Sunglasses",
-    "extras": "Jacket|Track pants|Team uniform|T-shirt|Warmup top|Mouthguard|Gloves|Cape|Championship belt|Sweatshirt|Chain|Robe|Flag draped over shoulders|Shoes",
+    "extras": "Jacket|Track pants|Team uniform|Warmup top|Mouthguard|Gloves|Cape|Championship belt|Chain|Robe|Flag draped over shoulders",
     "aliases": {
       "Country flag": [
         "Flag"
@@ -299,7 +299,7 @@ const ROWS = [
     "prompt": "Name something you might see in UFC's on-screen fight graphics.",
     "kind": "other",
     "ranked": "Round clock|Fighter names|Fighter records|Weight class|Country flags|Round number|Significant strikes|Betting odds",
-    "extras": "Height|Reach|Age|Rankings|Event name|UFC logo|Takedowns|Control time|Fight date|Fighter pictures|Fight statistics|Sponsored graphic|PPV logo|Timer",
+    "extras": "Height|Reach|Age|Rankings|Event name|UFC logo|Takedowns|Control time|Fight date|Fighter pictures|Fight statistics|Sponsored graphic|PPV logo",
     "aliases": {
       "Round clock": [
         "Fight clock",
@@ -415,7 +415,7 @@ const ROWS = [
     "prompt": "Name something an MMA fighter might do to recover after training.",
     "kind": "other",
     "ranked": "Sleep|Stretch|Drink water|Eat a meal|Take an ice bath|Get a massage|Rest|Use a foam roller",
-    "extras": "See physiotherapist|Cool down|Sauna|Shower|Hydrate|Have protein shake|Meditate|Walk|Compression boots|Elevate legs|Use heat pack|Take a nap|Physical therapy|Take a day off",
+    "extras": "See physiotherapist|Cool down|Sauna|Shower|Have protein shake|Meditate|Walk|Compression boots|Elevate legs|Use heat pack|Take a nap|Physical therapy|Take a day off",
     "aliases": {
       "Drink water": [
         "Hydrate"
