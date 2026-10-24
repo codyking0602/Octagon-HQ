@@ -15,7 +15,9 @@ describe("NBA official Daily client release safety and all nine presentations", 
     expect(officialPageSource).toContain('const ownerTest = params.get("mode") === "owner-test"');
     expect(officialPageSource).toContain('const releaseEnabled = ownerTest || (NBA_OFFICIAL_GAMES_RELEASE_READY &&');
     expect(officialPageSource).toContain("enabled: releaseEnabled && signedIn");
-    expect(hubSource).toContain('{published || ownerTest ? <TodayChallengeHub sport={ownerTest ? "nba_preview" : "nba"} />');
+    expect(hubSource).not.toContain("<TodayChallengeHub");
+    expect(hubSource).toContain('className="play-v2__daily-row"');
+    expect(hubSource).toContain('aria-controls="nba-play-daily-leaders"');
     expect(hubSource).toContain('createTodayChallengeRepository(undefined, ownerTest ? "nba_preview" : "nba")');
     expect(hubSource).toContain("enabled: (published || ownerTest) && Boolean(profile?.id)");
     expect(nbaRegularSeasonDaily("2026-11-01")?.gameType).toBe("average_fan");

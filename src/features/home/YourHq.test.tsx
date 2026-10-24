@@ -133,6 +133,7 @@ function yourHqSection() {
 
 describe("Home Your HQ", () => {
   beforeEach(() => {
+    window.localStorage.clear(); // Home selections now persist between mounts; isolate each test.
     vi.clearAllMocks();
     mocks.identity.profile = null;
     mocks.picks.event = pickEvent;
@@ -497,6 +498,7 @@ describe("Home Your HQ", () => {
     renderHome();
     expect(document.querySelector(".home-page")).toHaveClass("home-page--compact-football-preview");
     expect(screen.getByRole("region", { name: "Football HQ" })).toHaveClass("football-hq--compact-preview");
+    expect(screen.getByRole("region", { name: "Championship standings" })).toHaveClass("home-champ-preview--compact-football");
   });
 
   it("does not enable the Football preview for regular profiles", () => {
@@ -504,12 +506,14 @@ describe("Home Your HQ", () => {
     renderHome();
     expect(document.querySelector(".home-page")).not.toHaveClass("home-page--compact-football-preview");
     expect(screen.getByRole("region", { name: "Football HQ" })).not.toHaveClass("football-hq--compact-preview");
+    expect(screen.getByRole("region", { name: "Championship standings" })).not.toHaveClass("home-champ-preview--compact-football");
   });
 
   it("does not enable the Football preview for other pick controllers", () => {
     mocks.identity.profile = { ...cody, displayName: "TROY", canControlPicks: true };
     renderHome();
     expect(screen.getByRole("region", { name: "Football HQ" })).not.toHaveClass("football-hq--compact-preview");
+    expect(screen.getByRole("region", { name: "Championship standings" })).not.toHaveClass("home-champ-preview--compact-football");
   });
 
   it("uses the Championship Home for all signed-in users and filters HQs", () => {

@@ -360,3 +360,253 @@ a.home-event-card__standing:focus-visible {
   outline: 2px solid var(--ufc-red-strong);
   outline-offset: 2px;
 }
+
+
+/* Public UFC is Football's locked compact layout, with sport-specific red branding. */
+.ufc-hq--compact { --home-football-blue: var(--ufc-red-strong); --home-football-blue-rgb: 229, 9, 20; gap: 10px; }
+.ufc-hq--compact .home-sport-hq__heading {
+  position: relative; display: flex; justify-content: center; align-items: center;
+  min-height: 27px; padding: 0 32px 3px;
+}
+.ufc-hq--compact .ufc-hq__center-title {
+  margin: 0; color: var(--ufc-red-strong); font-size: 17px; line-height: 1.15;
+  font-weight: 950; letter-spacing: .16em; white-space: nowrap;
+}
+.ufc-hq--compact .ufc-hq__challenge-alert {
+  position: absolute; top: 0; right: 2px; z-index: 3; display: grid; place-items: center;
+  width: 31px; height: 27px; border: 1px solid rgba(229,9,20,.32);
+  border-radius: 9px; color: #fff; background: #292024; text-decoration: none;
+}
+.ufc-hq--compact .ufc-hq__challenge-alert svg { width: 17px; height: 17px; }
+.ufc-hq--compact .ufc-hq__challenge-alert b {
+  position: absolute; top: -7px; right: -7px; display: grid; place-items: center;
+  min-width: 17px; height: 17px; padding: 0 3px;
+  border: 1px solid #17191c; border-radius: 999px; background: #e11f36;
+  color: white; font-size: 10px; line-height: 1;
+}
+.ufc-hq--compact .ufc-hq__challenge-alert:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+.ufc-hq--compact .home-event-card { padding: 9px 12px 8px; gap: 7px; }
+.ufc-hq--compact .home-event-card__topline { min-height: 0; margin-bottom: 0; }
+.ufc-hq--compact .football-hq-compact-picks small { color: #bac3ce; }
+.ufc-hq--compact .football-hq-compact-picks__completion,
+.ufc-hq--compact .football-hq-compact-picks__record { gap: 1px; }
+.ufc-hq--compact .football-hq-compact-picks span { color: #f1747d; }
+.ufc-hq--compact .football-hq-compact-picks__action { color: #f1f3f6; font-family: inherit; cursor: pointer; }
+.ufc-hq--compact .football-hq-compact-picks__action:focus-visible,
+.ufc-hq--compact .football-hq-compact-picks__record:focus-visible { outline-color: var(--ufc-red-strong); }
+
+.ufc-hq--compact .ufc-fighter-spotlight { min-height: 156px; }
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__media { display: flex; align-items: end; }
+.ufc-hq--compact .ufc-fighter-spotlight__photo {
+  width: 100%; height: 156px; min-height: 156px; border-radius: 0;
+  object-fit: contain; object-position: center bottom; background: transparent;
+}
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__copy { padding-block: 8px; }
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__copy > span { color: #f1747d; }
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__copy > h3 {
+  overflow-wrap: anywhere; font-size: clamp(19px, 5vw, 29px);
+}
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__stats { grid-template-columns: 1fr 1.3fr .75fr; }
+.ufc-hq--compact .ufc-fighter-spotlight__actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px; }
+.ufc-hq--compact .ufc-fighter-spotlight__actions a {
+  min-width: 0; min-height: 30px; padding: 4px 3px; font-size: 7px; letter-spacing: 0;
+  text-align: center; white-space: normal; line-height: 1.2; box-shadow: none; border-radius: 8px;
+}
+.ufc-hq--compact .ufc-fighter-spotlight__actions a + a {
+  background: rgba(255,255,255,.045); border-color: rgba(255,255,255,.20);
+}
+.ufc-hq--compact .ufc-fighter-spotlight__actions a:focus-visible { outline: 2px solid var(--ufc-red-strong); }
+
+.ufc-hq--compact .ufc-contender-series { gap: 7px; padding: 9px 10px 7px; }
+.ufc-hq--compact .ufc-contender-series > header { min-height: 26px; padding-bottom: 8px; }
+.ufc-hq--compact .ufc-contender-series > header > span { overflow-wrap: anywhere; }
+.ufc-hq--compact .ufc-contender-series__full {
+  flex: 0 0 auto; color: var(--ufc-red-strong); font-size: 10px; font-weight: 900;
+  letter-spacing: .04em; text-decoration: none; white-space: nowrap;
+}
+.ufc-hq--compact .ufc-contender-series__full:focus-visible { outline: 2px solid var(--ufc-red-strong); }
+.ufc-hq--compact .ufc-contender-series__list { display: grid; gap: 6px; min-width: 0; }
+.ufc-hq--compact .ufc-contender-series__lead,
+.ufc-hq--compact .ufc-contender-series__pair > a {
+  display: grid; align-items: center; min-width: 0; text-decoration: none;
+  color: #f2f2f4; background: #131518; border: 1px solid rgba(229,9,20,.25); border-radius: 9px;
+}
+.ufc-hq--compact .ufc-contender-series__lead {
+  grid-template-columns: 18px 43px minmax(0,1fr) auto; gap: 7px; min-height: 54px; padding: 5px 7px;
+}
+.ufc-hq--compact .ufc-contender-series__lead .fighter-photo { width: 43px; height: 43px; border-radius: 7px; }
+.ufc-hq--compact .ufc-contender-series__pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; min-width: 0; }
+.ufc-hq--compact .ufc-contender-series__pair > a {
+  grid-template-columns: 14px 31px minmax(0,1fr); gap: 5px; padding: 5px;
+}
+.ufc-hq--compact .ufc-contender-series__pair .fighter-photo { width: 31px; height: 31px; border-radius: 6px; }
+.ufc-hq--compact .ufc-contender-series__lead > strong,
+.ufc-hq--compact .ufc-contender-series__pair > a > strong { color: #ff6e79; font-size: 10px; }
+.ufc-hq--compact .ufc-contender-series__lead > span:not(.watch-status),
+.ufc-hq--compact .ufc-contender-series__pair > a > span { display: grid; gap: 2px; min-width: 0; }
+.ufc-hq--compact .ufc-contender-series__lead b,
+.ufc-hq--compact .ufc-contender-series__pair b {
+  font-size: 10px; line-height: 1.12; overflow-wrap: anywhere;
+}
+.ufc-hq--compact .ufc-contender-series__lead small,
+.ufc-hq--compact .ufc-contender-series__pair small {
+  font-size: 7px; line-height: 1.18; color: #a9b1bb; overflow-wrap: anywhere;
+}
+.ufc-hq--compact .ufc-contender-series__lead .watch-status { font-size: 7px; padding: 3px 4px; }
+.ufc-hq--compact .ufc-contender-series__lead:focus-visible,
+.ufc-hq--compact .ufc-contender-series__pair > a:focus-visible { outline: 2px solid var(--ufc-red-strong); }
+@media (max-width: 430px) {
+  .ufc-hq--compact .football-hq-compact-picks { gap: 6px; }
+  .ufc-hq--compact .football-hq-compact-picks small,
+  .ufc-hq--compact .football-hq-compact-picks span { font-size: 8px; letter-spacing: .02em; }
+  .ufc-hq--compact .football-hq-compact-picks strong { font-size: 14px; }
+  .ufc-hq--compact .football-hq-compact-picks__action { padding-inline: 6px; font-size: 8px; }
+  .ufc-hq--compact .ufc-contender-series__lead { grid-template-columns: 15px 36px minmax(0,1fr) auto; gap: 5px; }
+  .ufc-hq--compact .ufc-contender-series__lead .fighter-photo { width: 36px; height: 36px; }
+}
+@media (max-width: 360px) {
+  .ufc-hq--compact .football-hq-compact-picks { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .ufc-hq--compact .football-hq-compact-picks__action { grid-column: 1 / -1; min-height: 28px; }
+  .ufc-hq--compact .ufc-contender-series__lead .watch-status { display: none; }
+  .ufc-hq--compact .ufc-contender-series__pair > a { grid-template-columns: 11px 26px minmax(0,1fr); gap: 3px; padding: 4px; }
+  .ufc-hq--compact .ufc-contender-series__pair .fighter-photo { width: 26px; height: 26px; }
+  .ufc-hq--compact .ufc-fighter-spotlight__actions a { font-size: 6.5px; }
+}
+/* UFC public Championship matches the locked Football compact layout. */
+.home-champ-preview--compact-ufc[data-sport="ufc"] {
+  gap: 8px;
+  padding: 12px 13px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__top h2 {
+  font-size: clamp(19px, 5vw, 22px);
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__detail {
+  gap: 7px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__kicker {
+  font-size: 9px;
+  letter-spacing: .1em;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__kicker::before {
+  height: 11px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__hero {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  justify-items: stretch;
+  gap: 2px 10px;
+  padding: 1px 0 4px;
+  text-align: left;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__honor {
+  grid-column: 1;
+  grid-row: 1;
+  justify-content: flex-start;
+  white-space: nowrap;
+  font-size: 10px;
+  letter-spacing: .035em;
+  gap: 6px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__trophy {
+  width: 19px;
+  height: 19px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__rank-link {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 7px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__rank-link strong {
+  font-size: clamp(28px, 8vw, 35px);
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__rank-link > span {
+  font-size: 8px;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__season-link {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1px;
+  text-align: right;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__season-link strong {
+  font-size: clamp(29px, 8vw, 36px);
+  line-height: 1;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__season-link > span {
+  font-size: 8px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__race {
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__race-top {
+  align-items: center;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__race-top small {
+  font-size: 10px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__race-list {
+  gap: 0;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__competitor {
+  grid-template-columns: 15px 22px minmax(0,1fr) auto;
+  min-height: 29px;
+  padding: 3px 5px;
+  gap: 6px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__avatar {
+  height: 22px;
+  width: 22px;
+  border-radius: 7px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__competitor-main {
+  gap: 3px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__meter {
+  height: 3px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__competitor-name {
+  font-size: 11px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__lanes {
+  gap: 7px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__lanes > a {
+  grid-template-columns: minmax(0,1fr) auto;
+  grid-template-rows: auto;
+  align-items: center;
+  gap: 5px;
+  min-height: 37px;
+  padding: 6px 9px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__lanes a > span:first-child {
+  font-size: 9px;
+  letter-spacing: .015em;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__lanes strong {
+  font-size: 19px;
+  gap: 8px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__chevron {
+  font-size: 13px;
+}
+.home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__weight-track {
+  display: none;
+}
+@media (max-width: 355px) {
+  .home-champ-preview--compact-ufc[data-sport="ufc"] { padding: 11px; }
+  .home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__rank-link { gap: 4px; }
+  .home-champ-preview--compact-ufc[data-sport="ufc"] .home-champ-preview__rank-link > span { font-size: 7px; }
+}
+

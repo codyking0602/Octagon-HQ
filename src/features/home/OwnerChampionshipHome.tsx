@@ -90,11 +90,12 @@ function TrophyMark() {
   );
 }
 
-function Detail({ sport, result, loading, error }: {
+function Detail({ sport, result, loading, error, compactFootball = false }: {
   sport: ChampionshipSport;
   result: SportChampionship | null;
   loading: boolean;
   error: string;
+  compactFootball?: boolean;
 }) {
   const own: SportChampionshipEntry | null = result?.own ?? null;
   const label = sport === "football" ? "Football" : "UFC";
@@ -150,7 +151,7 @@ function Detail({ sport, result, loading, error }: {
           <div className="home-champ-preview__race">
             <div className="home-champ-preview__race-top">
               <div>
-                <span>CHAMPIONSHIP STANDINGS</span>
+                {!compactFootball ? <span>CHAMPIONSHIP STANDINGS</span> : null}
                 {standingsContext ? <small>{standingsContext}</small> : null}
               </div>
               <Link to={overallRoute} aria-label={"View all " + label + " Championship standings"}>VIEW ALL <span aria-hidden="true">↗</span></Link>
@@ -202,6 +203,7 @@ export function OwnerChampionshipHome({
   sport,
   onSportChange,
   showSportSelector = true,
+  compactFootballPreview = false,
 }: {
   streak: number;
   streakLoading: boolean;
@@ -210,6 +212,7 @@ export function OwnerChampionshipHome({
   sport: SportFilter;
   onSportChange: (nextSport: SportFilter) => void;
   showSportSelector?: boolean;
+  compactFootballPreview?: boolean;
 }) {
   const [football, setFootball] = useState<SportChampionship | null>(null);
   const [ufc, setUfc] = useState<SportChampionship | null>(null);
@@ -240,12 +243,14 @@ export function OwnerChampionshipHome({
   }, [showMlb]);
 
   const chosen = sport === "mlb" && !showMlb ? "all" : sport;
+  const compactFootball = compactFootballPreview && chosen === "football" && !showSportSelector;
+  const compactUfc = chosen === "ufc" && !showSportSelector;
   const knownRanks = [football?.own?.rank, ufc?.own?.rank, ...(showMlb ? [mlb?.own?.overall_rank] : [])];
   const leagueLeads = knownRanks.filter((rank) => rank === 1).length;
   const leagueLeadDisplay = loading && knownRanks.every((rank) => rank == null) ? "…" : leagueLeads;
   return (
     <section
-      className="home-section home-section--your-hq home-champ-preview"
+      className={`home-section home-section--your-hq home-champ-preview${compactFootball ? " home-champ-preview--compact-football" : ""}${compactUfc ? " home-champ-preview--compact-ufc" : ""}`}
       data-testid="home-section"
       data-home-section={showSportSelector ? "your-hq" : "championship-standings"}
       data-sport={chosen}
@@ -328,7 +333,7 @@ export function OwnerChampionshipHome({
           </div>
         </div>
       ) : (
-        <Detail sport={chosen} result={chosen === "football" ? football : ufc} loading={loading} error={errors[chosen]} />
+        <Detail sport={chosen} result={chosen === "football" ? football : ufc} loading={loading} error={errors[chosen]} compactFootball={compactFootball || compactUfc} />
       )}
     </section>
   );

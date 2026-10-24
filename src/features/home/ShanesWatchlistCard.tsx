@@ -35,9 +35,36 @@ export function WatchMovementBadge({ fighter }: { fighter: ShaneWatchFighter }) 
   );
 }
 
-export function ShanesWatchlistCard() {
+export function ShanesWatchlistCard({ compact = false }: { compact?: boolean }) {
   const [featured, ...ranked] = shanesWatchlist.fighters;
   const nextFighters = ranked.slice(0, 2);
+
+  // The same two-row density and frame used by Football's Featured Games.
+  if (compact) return (
+    <section className="football-hq-games ufc-contender-series" id="shanes-watchlist" aria-labelledby="shanes-watchlist-title">
+      <header>
+        <span id="shanes-watchlist-title">SHANE'S CONTENDER SERIES</span>
+        <Link className="ufc-contender-series__full" to="/fighters-to-watch">FULL BOARD →</Link>
+      </header>
+      <div className="ufc-contender-series__list">
+        <Link className="ufc-contender-series__lead" to={`/fighters-to-watch#${featured.id}`}>
+          <strong>#{featured.rank}</strong>
+          <WatchFighterPhoto fighter={featured} />
+          <span><b>{featured.name}</b><small>{featured.division} · {featured.ufcRecord} UFC</small></span>
+          <span className={`watch-status watch-status--${featured.status.toLowerCase()}`}>{featured.status}</span>
+        </Link>
+        <div className="ufc-contender-series__pair">
+          {nextFighters.map((fighter) => (
+            <Link key={fighter.id} to={`/fighters-to-watch#${fighter.id}`}>
+              <strong>#{fighter.rank}</strong>
+              <WatchFighterPhoto fighter={fighter} />
+              <span><b>{fighter.name}</b><small>{fighter.division} · {fighter.ufcRecord} UFC</small></span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 
   return (
     <section className="surface-card shane-watchlist-preview" id="shanes-watchlist" aria-labelledby="shanes-watchlist-title">

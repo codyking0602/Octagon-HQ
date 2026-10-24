@@ -1,5 +1,7 @@
-import { useState } from "react";
 import { useOptionalSport } from "../../app/SportProvider";
+import { useOptionalPlayChallenges } from "../challenges/ChallengeProvider";
+import { challengeIsHidden, type PlayChallenge } from "../challenges/challengeModel";
+import { challengeSport } from "../challenges/challengeRuntime";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
@@ -158,13 +160,31 @@ function TodayChallengeCard({
   );
 }
 
+/** Received and unanswered UFC challenges, matching the locked Football header semantics. */
+export function outstandingUfcChallengeCount(challenges: readonly PlayChallenge[], profileId: string, now = Date.now()) {
+  if (!profileId) return 0;
+  return challenges.filter((challenge) => (
+    challenge.recipientId === profileId
+    && challengeSport(challenge) === "ufc"
+    && challenge.responderResult === null
+    && !challenge.completedAt
+    && !challenge.declinedAt
+    && !challengeIsHidden(challenge, profileId)
+    && new Date(challenge.expiresAt).getTime() > now
+  )).length;
+}
+
 export default function HomePage() {
   const identity = useIdentity();
   const navigate = useNavigate();
   const picks = usePicks();
+  const playChallenges = useOptionalPlayChallenges();
   const footballPlayerPhotos = useFootballHomeSpotlightPhotos();
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
+  const incomingUfcChallenges = playChallenges?.activeProfile
+    ? outstandingUfcChallengeCount(playChallenges.challenges, playChallenges.activeProfile.id)
+    : 0;
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
   const nbaVisible = canPreviewNba(identity.profile);
   const ownerPreview = signedIn;
@@ -172,15 +192,11 @@ export default function HomePage() {
   const compactFootballPreview = Boolean(identity.profile?.canControlPicks === true
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
   const sportPreference = useOptionalSport();
-  const selectedSport = sportPreference?.selectedSport ?? "football";
-  const setSelectedSport = (sport: "football" | "ufc" | "mlb" | "nba") => sportPreference?.setSelectedSport(sport);
-  // All is a Home-only view; selecting a sport persists it for Picks and Play.
-  const [homeOverview, setHomeOverview] = useState(false);
-  const ownerSport: SportFilter = homeOverview ? "all" : selectedSport === "nba" && !nbaVisible ? "football" : selectedSport;
-  const setOwnerSport = (next: SportFilter) => {
-    if (next === "all") setHomeOverview(true);
-    else { setSelectedSport(next); setHomeOverview(false); }
-  };
+  // Home has its own persisted view, independent of all sport navigation.
+  const homeSport = sportPreference?.homeSport ?? "football";
+  const ownerSport: SportFilter = (homeSport === "nba" && !nbaVisible) || (homeSport === "mlb" && !mlbVisible)
+    ? "football" : homeSport;
+  const setOwnerSport = (next: SportFilter) => sportPreference?.setHomeSport(next);
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
   const ufcDailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport: "ufc" });
   const ufcDailyOverview = useTodayChallengeOverview({
@@ -226,9 +242,9 @@ export default function HomePage() {
   const currentEvent = picks.event;
   const recordSeason = currentEvent?.season ?? picks.history?.season ?? new Date().getFullYear();
   const picksProgress = pickProgress(currentEvent, picks.selections);
-  const picksPercent = picksProgress.total
-    ? Math.round((picksProgress.completed / picksProgress.total) * 100)
-    : 0;
+  const settledUfcPicks = picks.summary.correct + picks.summary.incorrect;
+  const ufcWinPercentage = settledUfcPicks > 0
+    ? Math.round(100 * picks.summary.correct / settledUfcPicks) : null;
   const picksLocked = currentEvent ? eventPicksLocked(currentEvent) : false;
   const picksRemaining = Math.max(0, picksProgress.total - picksProgress.completed);
   const picksStatus = !signedIn
@@ -321,70 +337,53 @@ export default function HomePage() {
 
   const ufcHq = (
     <section
-      className="home-section home-sport-hq home-sport-hq--ufc home-section--ufc-hq"
+      className="home-section home-sport-hq home-sport-hq--ufc home-section--ufc-hq ufc-hq--compact"
       data-testid="home-section"
       data-home-section="ufc-hq"
       aria-label="UFC HQ"
     >
       <header className="home-sport-hq__heading">
-        <div>
-          <p className="eyebrow">UFC HQ</p>
-          <h2>Fight week</h2>
-        </div>
-        <small>PICKS · RANKINGS · CONTENDERS</small>
+        <h2 className="ufc-hq__center-title">UFC HQ</h2>
+        {incomingUfcChallenges > 0 ? (
+          <Link className="ufc-hq__challenge-alert" to="/play#challenge-center"
+            aria-label={`${incomingUfcChallenges} outstanding UFC challenge${incomingUfcChallenges === 1 ? "" : "s"}; open Challenge Center`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 5.5h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4 3v-3a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8m-8 4h5"/>
+            </svg>
+            <b>{incomingUfcChallenges > 9 ? "9+" : incomingUfcChallenges}</b>
+          </Link>
+        ) : null}
       </header>
 
       <section className="surface-card home-event-card home-event-card--compact" aria-label="UFC Picks and standing">
-        <div className="home-event-card__topline">
-          <p className="eyebrow">UFC PICKS</p>
-          <span>
-            {currentEvent
-              ? picksLocked ? "LOCKED" : "ACTIVE"
-              : picks.loading ? "LOADING" : picks.error ? "UNAVAILABLE" : "WAITING"}
-          </span>
-        </div>
-        <div className="home-event-card__picks-grid">
-          <div className="picks-progress" aria-label={`${picksProgress.completed} of ${picksProgress.total} picks completed`}>
-            <div>
-              <span>YOUR PICKS</span>
-              <b>{signedIn && currentEvent ? `${picksProgress.completed} OF ${picksProgress.total}` : "—"}</b>
-            </div>
-            <div className="picks-progress__track" aria-hidden="true"><span style={{ width: `${picksPercent}%` }} /></div>
-            <small className="home-event-card__picks-status">{picksStatus}</small>
+        <div className="home-event-card__topline"><p className="eyebrow">UFC PICKS</p></div>
+        <div className="football-hq-compact-picks" aria-label="UFC picks summary">
+          <div className="football-hq-compact-picks__completion">
+            <small>YOUR PICKS</small>
+            <strong>{signedIn && currentEvent ? `${picksProgress.completed} OF ${picksProgress.total}` : "—"}</strong>
+            {picksStatus !== "PICKS LOCKED" ? <span>{picksStatus}</span> : null}
           </div>
-          <Link
-            className="home-event-card__standing"
-            to="/championship/ufc?tab=picks"
-            aria-label="Open UFC Championship Picks leaderboard"
-          >
-            <span>{recordSeason} PICKS RECORD</span>
-            <b>{signedIn ? pickRecord(picks.summary) : "—"}</b>
-            <small>
-              {!signedIn
-                ? "SIGN IN TO TRACK"
-                : currentUfcStanding
-                  ? `${currentUfcStanding.totalPoints} PTS`
-                  : "NO STANDING YET"}
-            </small>
+          <Link className="football-hq-compact-picks__record" to="/championship/ufc?tab=picks"
+            aria-label="Open UFC Championship Picks leaderboard">
+            <small>{recordSeason} PICKS RECORD</small>
+            <strong>{signedIn ? pickRecord(picks.summary) : "—"}</strong>
+            <span>{!signedIn ? "SIGN IN TO TRACK" : ufcWinPercentage === null ? "NO RESULTS YET" : `${ufcWinPercentage}% WIN RATE`}</span>
           </Link>
+          {currentEvent ? (
+            identity.profile ? (
+              <Link className="football-hq-compact-picks__action" to="/picks">{picksLocked ? "VIEW PICKS →" : "OPEN PICKS →"}</Link>
+            ) : (
+              <button className="football-hq-compact-picks__action" type="button" onClick={identity.openDialog}>SIGN IN →</button>
+            )
+          ) : null}
         </div>
-        {currentEvent ? (
-          identity.profile ? (
-            <Link className="secondary-action" to="/picks">
-              {picksProgress.completed === picksProgress.total ? "REVIEW PICKS" : "MAKE PICKS"} →
-            </Link>
-          ) : (
-            <button className="secondary-action" type="button" onClick={identity.openDialog}>SIGN IN TO MAKE PICKS →</button>
-          )
-        ) : null}
       </section>
 
       {ufcDailyChallenge}
-      {spotlight ? <RankingSpotlightCard fighter={spotlight} /> : null}
-      <ShanesWatchlistCard />
+      {spotlight ? <RankingSpotlightCard fighter={spotlight} compact /> : null}
+      <ShanesWatchlistCard compact />
     </section>
   );
-
   return (
     <div className={`page home-page${compactFootballPreview ? " home-page--compact-football-preview" : ""}`}>
       {ownerPreview ? (
@@ -540,6 +539,7 @@ export default function HomePage() {
           sport={ownerSport}
           onSportChange={setOwnerSport}
           showSportSelector={false}
+          compactFootballPreview={compactFootballPreview}
         />
       ) : null}
     </div>
