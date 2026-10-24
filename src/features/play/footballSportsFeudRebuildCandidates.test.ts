@@ -8,6 +8,8 @@ import {
 import { matchFamilyFeudAnswer, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
 import type { FamilyFeudPack, FamilyFeudQuestion } from "../games/familyFeudEngine";
 import type { SportsFeudAuthoredQuestion } from "./sportsFeudBankTypes";
+import { NFL_FEUD_REBUILD_MAIN_BATCH6, CFB_FEUD_REBUILD_MAIN_BATCH6 } from "./footballSportsFeudRebuildMainBatch6";
+import { NFL_FEUD_REBUILD_FAST_BATCH3, CFB_FEUD_REBUILD_FAST_BATCH3 } from "./footballSportsFeudRebuildFastBatch3";
 
 const BANKS = { nfl: NFL_FEUD_REBUILD_CANDIDATES, cfb: CFB_FEUD_REBUILD_CANDIDATES };
 const normalize = normalizeFamilyFeudInput;
@@ -31,10 +33,10 @@ function matching(q: SportsFeudAuthoredQuestion, input: string) {
 
 describe("future-only Football Sports Feud editorial rebuild", () => {
   it("counts distinct ideas, never paraphrase families", () => {
-    expect(NFL_FEUD_REBUILD_CANDIDATES.main).toHaveLength(34);
-    expect(NFL_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(85);
-    expect(CFB_FEUD_REBUILD_CANDIDATES.main).toHaveLength(34);
-    expect(CFB_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(86);
+    expect(NFL_FEUD_REBUILD_CANDIDATES.main).toHaveLength(40);
+    expect(NFL_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(99);
+    expect(CFB_FEUD_REBUILD_CANDIDATES.main).toHaveLength(40);
+    expect(CFB_FEUD_REBUILD_CANDIDATES.fast).toHaveLength(100);
     for (const bank of Object.values(BANKS)) {
       const all = [...bank.main, ...bank.fast];
       expect(new Set(all.map(q => q.id)).size).toBe(all.length);
@@ -45,6 +47,30 @@ describe("future-only Football Sports Feud editorial rebuild", () => {
         expect(new Set(allNames).size, q.id).toBe(allNames.length);
       }
     }
+  });
+
+
+  it("adds exactly 20 independent reserve questions per sport and protects conference answers", () => {
+    const batches = {
+      nfl: { main: NFL_FEUD_REBUILD_MAIN_BATCH6, fast: NFL_FEUD_REBUILD_FAST_BATCH3 },
+      cfb: { main: CFB_FEUD_REBUILD_MAIN_BATCH6, fast: CFB_FEUD_REBUILD_FAST_BATCH3 },
+    };
+    for (const sport of ["nfl", "cfb"] as const) {
+      const added = [...batches[sport].main, ...batches[sport].fast];
+      expect(batches[sport].main).toHaveLength(6);
+      expect(batches[sport].fast).toHaveLength(14);
+      expect(new Set(added.map(q => q.id)).size, sport).toBe(20);
+      expect(new Set(added.map(q => q.collisionGroup)).size, sport).toBe(20);
+      expect(added.every(q => BANKS[sport][q.id.includes("-main-") ? "main" : "fast"]
+        .some(candidate => candidate.id === q.id))).toBe(true);
+    }
+    const find = (sport: "nfl" | "cfb", suffix: string) =>
+      [...BANKS[sport].main, ...BANKS[sport].fast].find(q => q.id.endsWith(suffix))!;
+    expect(matching(find("nfl", "afc-2025-franchises"), "Dallas Cowboys").status).not.toBe("matched");
+    expect(matching(find("nfl", "afc-2025-franchises"), "Buffalo Bills").status).toBe("matched");
+    expect(matching(find("cfb", "acc-2025-schools"), "Notre Dame").status).not.toBe("matched");
+    expect(matching(find("cfb", "acc-2025-schools"), "SMU").status).toBe("matched");
+    expect(matching(find("cfb", "big-ten-title-game-schools"), "Indiana").status).toBe("matched");
   });
 
   it("keeps distinct semantic lanes across the newly authored set", () => {
