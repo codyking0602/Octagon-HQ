@@ -39,7 +39,8 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(page).toContain('ownerTest ? "test games" : "official games"');
     expect(page).toContain('dailyCompleted ? "VIEW RESULT"');
     expect(page).toContain("Owner-only scored rehearsal · not ranked publicly");
-    expect(page).toContain("disabled={!published}");
+    expect(page).toContain('aria-expanded={showDailyStandings}');
+    expect(page).toContain("Finish today's game to unlock standings.");
     expect(page).toContain("Daily Test Catalog");
     expect(page).toContain("previewRoute(game)");
   });
