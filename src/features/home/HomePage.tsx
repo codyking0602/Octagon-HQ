@@ -195,7 +195,7 @@ export default function HomePage() {
   // Keep Baseball's approved compact experiment on the existing owner identity only.
   const compactMlbPreview = Boolean(identity.profile?.canControlPicks === true
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
-  // Basketball's proposed weekly layout remains owner-only until its content pipeline is verified.
+  // Owner-only NBA daily game previews stay private; the polished Basketball HQ layout is shared.
   const nbaHqOwnerPreview = Boolean(identity.profile?.canControlPicks === true
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
   const sportPreference = useOptionalSport();
@@ -499,9 +499,7 @@ export default function HomePage() {
       {ownerPreview && ownerSport !== "all" ? (
         ownerSport === "football" ? footballHq
           : ownerSport === "ufc" ? ufcHq
-            : ownerSport === "nba" && nbaVisible ? (nbaHqOwnerPreview
-              ? <NbaOwnerHomeHq profileId={profileId} />
-              : <NbaHomeHq signedIn={signedIn} />)
+            : ownerSport === "nba" && nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} />
             : mlbVisible ? (
               <MlbHomeHq
                 enabled={mlbVisible}

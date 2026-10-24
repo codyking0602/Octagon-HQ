@@ -8,12 +8,12 @@ import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
 import "../../styles/nba-owner-home.css";
 
-export function NbaOwnerHomeHq({ profileId }: { profileId: string }) {
+export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { profileId: string; allowOwnerDailyPreview?: boolean }) {
   const [futures, setFutures] = useState<{ count: number; locked: boolean } | null>(null);
   const [weekly, setWeekly] = useState<NbaWeeklySpotlight | null>(null);
   const day = nbaCentralDay();
   const publishedDaily = NBA_OFFICIAL_GAMES_RELEASE_READY && day >= NBA_GAMES_LAUNCH_DAY;
-  const ownerSlot = !publishedDaily && day < NBA_GAMES_LAUNCH_DAY ? nbaOwnerPreviewDaily(day) : null;
+  const ownerSlot = allowOwnerDailyPreview && !publishedDaily && day < NBA_GAMES_LAUNCH_DAY ? nbaOwnerPreviewDaily(day) : null;
   const officialSlot = publishedDaily ? nbaRegularSeasonDaily(day) : null;
   const dailyType = publishedDaily ? officialSlot?.gameType : ownerSlot;
   const dailyEnabled = Boolean(dailyType);
@@ -95,7 +95,7 @@ export function NbaOwnerHomeHq({ profileId }: { profileId: string }) {
                   {weekly.player.stats.map(item => <div key={item.label}><b>{item.value}</b><small>{item.label}</small></div>)}
                 </div>
                 <p>{weekly.player.summary}</p>
-                <a href={weekly.player.highlightUrl} className="nba-hq-owner__watch" target="_blank" rel="noreferrer">WATCH HIGHLIGHT ↗</a>
+                <a href={weekly.player.highlightUrl ?? "https://www.youtube.com/@NBA"} className="nba-hq-owner__watch" target="_blank" rel="noreferrer">{weekly.player.highlightUrl ? "WATCH HIGHLIGHT ↗" : "NBA CHANNEL ↗"}</a>
               </div>
             </>
           ) : (

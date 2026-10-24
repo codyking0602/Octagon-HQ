@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { finishedWeek, collectTeamGames, selectWeek, extractYoutubeVideos,
-  findMatchingHighlight } from "./generate-nba-weekly-spotlight.mjs";
+  findMatchingHighlight, mergeOfficialVideos, playerEditorialScore, teamEditorialScore } from "./generate-nba-weekly-spotlight.mjs";
 test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
   assert.deepEqual(
     (({weekStart,weekEnd})=>({weekStart,weekEnd}))(finishedWeek(new Date("2026-10-27T12:00:00Z"))),
@@ -22,8 +23,8 @@ const events=Array.from({length:8},(_,i)=>({
 const boxscores=new Map(events.map(event=>[event.id,{boxscore:{players:[{
   team:teams[0],
   statistics:[{
-    names:["points","assists","rebounds","fieldGoalsMade-fieldGoalsAttempted"],
-    athletes:[{athlete:player,stats:["30","5","7","11-20"],didNotPlay:false}],
+    names:["points","assists","rebounds","fieldGoalsMade-fieldGoalsAttempted","steals","blocks"],
+    athletes:[{athlete:player,stats:["30","5","7","11-20","2","1"],didNotPlay:false}],
   }],
 }]}}]));
 const xml='<feed><entry><yt:videoId>ABCdefghi12</yt:videoId><title>Sample Star 30 Point Highlights</title><published>2026-10-26T00:00:00Z</published></entry></feed>';
@@ -46,6 +47,7 @@ test("uses only completed NBA results and calculates weekly stats from actual at
   assert.equal(data.team.record,"8-0");
   assert.equal(data.team.netMargin,"+15.0");
   assert.match(data.player.highlightUrl,/^https:\/\/www\.youtube\.com\/watch\?v=/);
+  assert.equal(data.player.highlightSourceChannelId,"UCWJ2lWNubArHWmf3FIHbfcQ");
 });
 test("fails closed for incomplete source video and boxscore coverage",()=>{
   assert.throws(()=>selectWeek({events,boxscores,videos:[],weekStart:"2026-10-19",
@@ -55,4 +57,73 @@ test("fails closed for incomplete source video and boxscore coverage",()=>{
   assert.throws(()=>selectWeek({events,boxscores:missing,
     videos:extractYoutubeVideos(xml,"UCWJ2lWNubArHWmf3FIHbfcQ"),
     weekStart:"2026-10-19",weekEnd:"2026-10-25",publishedAt:"2026-10-27T11:00:00Z"}),/Missing complete boxscore/);
+});
+
+test("recovers week-long NBA highlight coverage from cached daily official uploads",()=>{
+  const now=new Date().toISOString();
+  const older={id:"ABCdefghi12",title:"Sample Star Full Game Highlights",published:now,channel:"UCWJ2lWNubArHWmf3FIHbfcQ"};
+  const latest={id:"ABCDEFGHIjk",title:"Latest NBA Highlights",published:now,channel:"UCWJ2lWNubArHWmf3FIHbfcQ"};
+  const list=mergeOfficialVideos([older],[latest,older],[
+    {...older,id:"XBCdefghi12",channel:"unknown-channel"}
+  ]);
+  assert.equal(list.length,2);
+  assert.ok(list.some(v=>v.id==="ABCdefghi12"));
+  assert.ok(list.some(v=>v.id==="ABCDEFGHIjk"));
+  assert.ok(list.every(v=>v.channel==="UCWJ2lWNubArHWmf3FIHbfcQ"));
+});
+
+test("rejects an otherwise matching highlight from Monday's next slate",()=>{
+  const future=extractYoutubeVideos(
+    '<feed><entry><yt:videoId>ABCdefghi12</yt:videoId><title>Sample Star NBA Highlights</title><published>2026-10-27T01:00:00Z</published></entry></feed>',
+    "UCWJ2lWNubArHWmf3FIHbfcQ");
+  assert.equal(findMatchingHighlight("Sample Star",future,"2026-10-25"),null);
+  const valid=extractYoutubeVideos(
+    '<feed><entry><yt:videoId>ABCdefghi12</yt:videoId><title>Sample Star Jr Highlights</title><published>2026-10-26T00:00:00Z</published></entry></feed>',
+    "UCWJ2lWNubArHWmf3FIHbfcQ");
+  assert.equal(findMatchingHighlight("Sample Star Jr.",valid,"2026-10-25")?.id,"ABCdefghi12");
+});
+
+test("official @NBA is the only eligible highlight channel",()=>{
+  const espn=extractYoutubeVideos(xml,"UCVSSpcmZD2PwPBqb8yKQKBA");
+  assert.equal(findMatchingHighlight("Sample Star",espn,"2026-10-25"),null);
+  const raw=extractYoutubeVideos(xml,"UCWJ2lWNubArHWmf3FIHbfcQ");
+  assert.ok(findMatchingHighlight("Sample Star",raw,"2026-10-25"));
+  assert.throws(()=>selectWeek({events,boxscores,videos:espn,
+    weekStart:"2026-10-19",weekEnd:"2026-10-25",publishedAt:"2026-10-27T11:00:00Z"}),
+    /verified matching NBA YouTube/);
+});
+
+test("balanced production, efficiency, wins and defensive impact, and team dominance",()=>{
+  const base={games:new Set(["1","2"]),position:"PG",teamId:"AAA",points:60,assists:10,
+    rebounds:14,made:22,attempts:40,steals:4,blocks:2};
+  const map=new Map([["AAA",{abbreviation:"AAA",games:new Set(["1","2"]),wins:2}]]);
+  const score=playerEditorialScore(base,map);
+  assert.ok(score>0&&score<=100);
+  assert.ok(playerEditorialScore({...base,steals:0,blocks:0},map)<score);
+  assert.ok(playerEditorialScore({...base,made:12},map)<score);
+  assert.ok(playerEditorialScore({...base,teamId:"BBB"},map)<score);
+  const teamsMap=collectTeamGames(events).teams;
+  const winning=teamsMap.get("1"), losing=teamsMap.get("2");
+  assert.ok(teamEditorialScore(winning,teamsMap)>teamEditorialScore(losing,teamsMap));
+});
+
+test("prefers short official NBA player performance clips over longer videos",()=>{
+  const base={title:"Sample Star 30 Point Highlights",published:"2026-10-26T00:00:00Z",
+    channel:"UCWJ2lWNubArHWmf3FIHbfcQ"};
+  const items=[
+    {...base,id:"ABCdefghi11",durationSeconds:420,published:"2026-10-26T02:00:00Z"},
+    {...base,id:"ABCdefghi12",durationSeconds:190},
+    {...base,id:"ABCdefghi13",durationSeconds:610},
+    {...base,id:"ABCdefghi14",durationSeconds:160,title:"Sample Star EXTENDED HIGHLIGHTS"},
+    {...base,id:"ABCdefghi15",durationSeconds:200,channel:"UCVSSpcmZD2PwPBqb8yKQKBA"},
+  ];
+  assert.equal(findMatchingHighlight("Sample Star",items,"2026-10-25")?.id,"ABCdefghi12");
+});
+test("recovers the chosen current video source and keeps Team of the Week without a video CTA",()=>{
+  const data=JSON.parse(readFileSync("public/nba-weekly/active.json","utf8"));
+  assert.equal(data.player.name,"Tyrese Maxey");
+  assert.equal(data.player.highlightUrl,"https://www.youtube.com/watch?v=e8g1Fa8iYYM");
+  assert.equal(data.player.highlightSourceChannelId,"UCWJ2lWNubArHWmf3FIHbfcQ");
+  assert.equal(data.team.name,"Atlanta Hawks");
+  assert.equal(Object.hasOwn(data.team,"highlightUrl"),false);
 });

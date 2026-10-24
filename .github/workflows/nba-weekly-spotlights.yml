@@ -2,8 +2,8 @@ name: NBA Weekly Spotlight Auto-Publisher
 
 on:
   schedule:
-    # 5 AM CT in both CDT/CST, with a fail-closed retry Wed-Fri.
-    - cron: '0 10,11 * * 2-5'
+    # Collect official video feeds daily at 5 AM Central; publish on Tuesday, retry Wed-Fri.
+    - cron: '0 10,11 * * *'
   workflow_dispatch:
 
 permissions:
@@ -27,24 +27,49 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - name: Only run at 5 AM Central on a weekday
+      - name: Collect daily at 5 AM Central and publish Tuesday through Friday
         id: clock
         run: |
           local_hour=$(TZ=America/Chicago date +%H)
           local_day=$(TZ=America/Chicago date +%u)
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" || ("$local_hour" == 05 && "$local_day" -ge 2 && "$local_day" -le 5) ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "$local_hour" == 05 ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
-      - name: Verify weekly selection using offline ESPN and YouTube fixtures
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || ("$local_hour" == 05 && "$local_day" -ge 2 && "$local_day" -le 5) ]]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Restore growing official YouTube video catalog
         if: steps.clock.outputs.run == 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: .nba-weekly-video-cache.json
+          key: nba-weekly-youtube-${{ github.run_id }}
+          restore-keys: nba-weekly-youtube-
+      - name: Collect fresh videos from the official @NBA YouTube channel
+        if: steps.clock.outputs.run == 'true'
+        env:
+          YOUTUBE_DATA_API_KEY: ${{ secrets.YOUTUBE_DATA_API_KEY }}
+        run: node scripts/generate-nba-weekly-spotlight.mjs --collect-only
+      - name: Retain official videos for upcoming verified weekly picks
+        if: steps.clock.outputs.run == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .nba-weekly-video-cache.json
+          key: nba-weekly-youtube-${{ github.run_id }}
+      - name: Verify weekly selection using offline ESPN and YouTube fixtures
+        if: steps.clock.outputs.publish == 'true'
         run: node --test scripts/generate-nba-weekly-spotlight.fixtures.mjs
       - name: Gather last complete week's NBA results and verified YouTube highlights
-        if: steps.clock.outputs.run == 'true'
+        if: steps.clock.outputs.publish == 'true'
+        env:
+          YOUTUBE_DATA_API_KEY: ${{ secrets.YOUTUBE_DATA_API_KEY }}
         run: node scripts/generate-nba-weekly-spotlight.mjs
       - name: Propose verified weekly editorial update
-        if: steps.clock.outputs.run == 'true'
+        if: steps.clock.outputs.publish == 'true'
         id: propose
         env:
           GH_TOKEN: ${{ github.token }}
@@ -65,7 +90,7 @@ jobs:
           git commit -m "Publish sourced NBA player and team spotlights for ${week}"
           head_sha=$(git rev-parse HEAD)
           git push origin "$branch"
-          url=$(gh pr create --base main --head "$branch" --title "Weekly NBA spotlights · ${week}" --body "Unattended editorial publication. ESPN completed game box scores and directly matched official NBA/ESPN YouTube highlights. Fail closed on unverifiable sources. Auto-merge only after exact-head Validate V2 passes.")
+          url=$(gh pr create --base main --head "$branch" --title "Weekly NBA spotlights · ${week}" --body "Unattended editorial publication. ESPN completed game box scores and directly matched official @NBA YouTube highlights. Fail closed on unverifiable sources. Auto-merge only after exact-head Validate V2 passes.")
           echo "created=true" >> "$GITHUB_OUTPUT"
           echo "branch=$branch" >> "$GITHUB_OUTPUT"
           echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"

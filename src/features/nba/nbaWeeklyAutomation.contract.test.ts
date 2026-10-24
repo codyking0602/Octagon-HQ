@@ -16,7 +16,11 @@ describe("NBA unattended editorial safeguards", () => {
     expect(script).toContain("Missing complete boxscore");
   });
   it("runs at local 5 AM with retries and merges only after exact-head green checks", () => {
-    expect(flow).toContain("cron: '0 10,11 * * 2-5'");
+    expect(flow).toContain("cron: '0 10,11 * * *'");
+    expect(flow).toContain("actions/cache/restore@v4");
+    expect(flow).toContain("actions/cache/save@v4");
+    expect(flow).toContain("--collect-only");
+    expect(script).toContain("mergeOfficialVideos");
     expect(flow).toContain("TZ=America/Chicago");
     expect(flow).toContain("workflow run validate.yml --ref");
     expect(flow).toContain("completed success");
