@@ -1,0 +1,111 @@
+name: NBA Weekly Spotlight Auto-Publisher
+
+on:
+  schedule:
+    # 5 AM CT in both CDT/CST, with a fail-closed retry Wed-Fri.
+    - cron: '0 10,11 * * 2-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: nba-weekly-editorial
+  cancel-in-progress: false
+
+jobs:
+  research-validate-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Only run at 5 AM Central on a weekday
+        id: clock
+        run: |
+          local_hour=$(TZ=America/Chicago date +%H)
+          local_day=$(TZ=America/Chicago date +%u)
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || ("$local_hour" == 05 && "$local_day" -ge 2 && "$local_day" -le 5) ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Gather last complete week's NBA results and verified YouTube highlights
+        if: steps.clock.outputs.run == 'true'
+        run: node scripts/generate-nba-weekly-spotlight.mjs
+      - name: Propose verified weekly editorial update
+        if: steps.clock.outputs.run == 'true'
+        id: propose
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- public/nba-weekly/active.json; then
+            echo "No new verified NBA weekly package"
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          base_sha=$(git rev-parse HEAD)
+          week=$(node -e 'console.log(require("./public/nba-weekly/active.json").weekEnd)')
+          branch="bot/nba-weekly-${week}-${GITHUB_RUN_ID}"
+          git config user.name "octagon-weekly-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add public/nba-weekly/active.json "data/generated/nba/weekly-${week}.json"
+          git commit -m "Publish sourced NBA player and team spotlights for ${week}"
+          head_sha=$(git rev-parse HEAD)
+          git push origin "$branch"
+          url=$(gh pr create --base main --head "$branch" --title "Weekly NBA spotlights · ${week}" --body "Unattended editorial publication. ESPN completed game box scores and directly matched official NBA/ESPN YouTube highlights. Fail closed on unverifiable sources. Auto-merge only after exact-head Validate V2 passes.")
+          echo "created=true" >> "$GITHUB_OUTPUT"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+          echo "base_sha=$base_sha" >> "$GITHUB_OUTPUT"
+          echo "pr=$url" >> "$GITHUB_OUTPUT"
+          echo "$url" >> "$GITHUB_STEP_SUMMARY"
+      - name: Run full validation on exact automated PR head
+        if: steps.propose.outputs.created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.propose.outputs.branch }}
+          HEAD_SHA: ${{ steps.propose.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          gh workflow run validate.yml --ref "$BRANCH"
+          for i in $(seq 1 90); do
+            id=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/validate.yml/runs?branch=$BRANCH&event=workflow_dispatch&per_page=10" | jq -r --arg sha "$HEAD_SHA" '[.workflow_runs[] | select(.head_sha == $sha)] | sort_by(.created_at) | last | .id // empty')
+            if [[ -n "$id" ]]; then break; fi
+            sleep 8
+          done
+          if [[ -z "${id:-}" ]]; then echo "::error::Could not identify exact-head validation run"; exit 1; fi
+          for i in $(seq 1 170); do
+            result=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" | jq -r '.status + " " + (.conclusion // "")')
+            if [[ "$result" == "completed success" ]]; then exit 0; fi
+            if [[ "$result" == completed* ]]; then echo "::error::Exact-head validation: $result"; exit 1; fi
+            sleep 10
+          done
+          echo "::error::Timed out waiting for exact-head validation"; exit 1
+      - name: Merge only when exact PR head and main are unchanged
+        if: steps.propose.outputs.created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_MAIN: ${{ steps.propose.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.propose.outputs.head_sha }}
+          PR_URL: ${{ steps.propose.outputs.pr }}
+        run: |
+          set -euo pipefail
+          current=$(git ls-remote origin refs/heads/main | cut -f1)
+          if [[ "$current" != "$EXPECTED_MAIN" ]]; then
+            echo "::error::Main advanced; leave editorial PR pending for independent verification."
+            exit 1
+          fi
+          actual=$(gh pr view "$PR_URL" --json headRefOid --jq .headRefOid)
+          [[ "$actual" == "$HEAD_SHA" ]] || { echo "::error::Editorial head advanced"; exit 1; }
+          gh pr merge "$PR_URL" --squash --delete-branch --match-head-commit "$HEAD_SHA"
+          echo "Verified NBA weekly package merged for frontend deployment." >> "$GITHUB_STEP_SUMMARY"
