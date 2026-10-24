@@ -218,6 +218,20 @@ export function basketballReferenceTeamSeasonUrl(abbreviation, weekEnd) {
   return `https://www.basketball-reference.com/teams/${code}/${seasonEnd}.html`;
 }
 
+
+// Confirmed Basketball Reference IDs are always direct player-profile links.
+// Otherwise use Basketball Reference's own player search rather than guessing
+// an ID that can resolve to a different player or lead to a 404.
+const BASKETBALL_REFERENCE_VERIFIED_PLAYER_IDS = {
+  "4431678": "m/maxeyty01"
+};
+export function basketballReferencePlayerUrl(espnId, playerName) {
+  const direct=BASKETBALL_REFERENCE_VERIFIED_PLAYER_IDS[String(espnId??"")];
+  if(direct) return `https://www.basketball-reference.com/players/${direct}.html`;
+  if(!String(playerName??"").trim()) throw Error("Missing player name for Basketball Reference");
+  return `https://www.basketball-reference.com/search/search.fcgi?search=${encodeURIComponent(String(playerName).trim())}`;
+}
+
 export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publishedAt, previous=null}) {
   const {teams,finals}=collectTeamGames(events);
   // Two or more final appearances required to establish a genuine weekly sample.
@@ -247,7 +261,7 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
     weekStart,weekEnd,publishedAt,
     player:{
       name:p.name,team:p.team,position:p.position||"NBA",
-      headshotUrl:p.headshotUrl,profileUrl:`https://www.espn.com/nba/player/_/id/${p.id}`,
+      headshotUrl:p.headshotUrl,profileUrl:basketballReferencePlayerUrl(p.id,p.name),
       highlightUrl:`https://www.youtube.com/watch?v=${selected.video.id}`,
       highlightSourceChannelId: selected.video.channel,
       channelUrl: "https://www.youtube.com/@NBA",
