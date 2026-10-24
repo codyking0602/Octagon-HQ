@@ -11,6 +11,7 @@ import { UFC_SPORTS_FEUD_V2_MAIN_BATCH8 } from "./ufcSportsFeudV2MainBatch8";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH9 } from "./ufcSportsFeudV2MainBatch9";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH10 } from "./ufcSportsFeudV2MainBatch10";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH11 } from "./ufcSportsFeudV2MainBatch11";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH12 } from "./ufcSportsFeudV2MainBatch12";
 import { UFC_SPORTS_FEUD_V2_FAST_DRAFT } from "./ufcSportsFeudV2FastDraft";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH2 } from "./ufcSportsFeudV2FastBatch2";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH3 } from "./ufcSportsFeudV2FastBatch3";
@@ -30,7 +31,7 @@ import { UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES } from "./ufcSportsFeudV2L
  * A first-pass advancing question is NOT equivalent to fact-checked approved.
  * No candidate becomes live merely because the staging total reaches a quota.
  */
-export const UFC_V2_NEW_MAIN_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_MAIN_BATCH2, UFC_SPORTS_FEUD_V2_MAIN_BATCH3, UFC_SPORTS_FEUD_V2_MAIN_BATCH4, UFC_SPORTS_FEUD_V2_MAIN_BATCH5, UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_MAIN_BATCH6, UFC_SPORTS_FEUD_V2_MAIN_BATCH8, UFC_SPORTS_FEUD_V2_MAIN_BATCH9, UFC_SPORTS_FEUD_V2_MAIN_BATCH10, UFC_SPORTS_FEUD_V2_MAIN_BATCH11].flat();
+export const UFC_V2_NEW_MAIN_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_MAIN_BATCH2, UFC_SPORTS_FEUD_V2_MAIN_BATCH3, UFC_SPORTS_FEUD_V2_MAIN_BATCH4, UFC_SPORTS_FEUD_V2_MAIN_BATCH5, UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_MAIN_BATCH6, UFC_SPORTS_FEUD_V2_MAIN_BATCH8, UFC_SPORTS_FEUD_V2_MAIN_BATCH9, UFC_SPORTS_FEUD_V2_MAIN_BATCH10, UFC_SPORTS_FEUD_V2_MAIN_BATCH11, UFC_SPORTS_FEUD_V2_MAIN_BATCH12].flat();
 export const UFC_V2_NEW_FAST_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_FAST_DRAFT, UFC_SPORTS_FEUD_V2_FAST_BATCH2, UFC_SPORTS_FEUD_V2_FAST_BATCH3, UFC_SPORTS_FEUD_V2_FAST_BATCH4, UFC_SPORTS_FEUD_V2_FAST_BATCH5, UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_FAST_BATCH6, UFC_SPORTS_FEUD_V2_FAST_BATCH7, UFC_SPORTS_FEUD_V2_FAST_BATCH8, UFC_SPORTS_FEUD_V2_FAST_BATCH9, UFC_SPORTS_FEUD_V2_FAST_BATCH10, UFC_SPORTS_FEUD_V2_FAST_BATCH11].flat();
 
 export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
@@ -114,6 +115,8 @@ export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast11-arena-sound-details",
   "ufc-v2-fast11-bout-card-size",
   "ufc-v2-fast11-postfight-suspensions",
+  // Referee main-event assignments need event-level source signoff.
+  "ufc-v2-main12-ufc-title-referees",
   "ufc-v2-fast9-final-staredown-fans",
   "ufc-v2-fast9-daily-training-log",
   "ufc-v2-fast10-leg-kick-defense",
