@@ -1,5 +1,8 @@
 import { barTriviaDifficultyForRound, barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_EDITORIAL_RETIREMENTS, BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES } from "./barTriviaEditorialCuration";
+import { UFC_BAR_TRIVIA_V3_RETIRE_IDS, UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES, UFC_BAR_TRIVIA_V3_PROMPT_OVERRIDES } from "./ufcBarTriviaV3Editorial";
+import { UFC_BAR_TRIVIA_V3_EASY_MEDIUM } from "./ufcBarTriviaV3EasyMedium";
+import { UFC_BAR_TRIVIA_V3_HARD_FINAL } from "./ufcBarTriviaV3HardFinal";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
 import { BAR_TRIVIA_EASY_EXPANSION, BAR_TRIVIA_EASY_QUESTION_IDS } from "./barTriviaEasyCalibration";
 import { BAR_TRIVIA_EASY_EXPANSION_2 } from "./barTriviaEasyExpansion2";
@@ -119,13 +122,17 @@ const RAW_BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   ...BAR_TRIVIA_EASY_EXPANSION,
   ...BAR_TRIVIA_EASY_EXPANSION_2,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
+  ...UFC_BAR_TRIVIA_V3_EASY_MEDIUM,
+  ...UFC_BAR_TRIVIA_V3_HARD_FINAL,
 ];
 
 
 function calibrateBarTriviaDifficulty(question: BarTriviaQuestion): BarTriviaQuestion {
   if (question.contentType !== "evergreen") return question;
 
-  const reviewedRound = BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES[question.id];
+  const reviewedRound = question.league === "ufc"
+    ? UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES[question.id] ?? BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES[question.id]
+    : BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES[question.id];
   if (reviewedRound) {
     return { ...question, round: reviewedRound, difficulty: barTriviaDifficultyForRound(reviewedRound) };
   }
@@ -143,5 +150,19 @@ function calibrateBarTriviaDifficulty(question: BarTriviaQuestion): BarTriviaQue
 
 export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] =
   RAW_BAR_TRIVIA_QUESTION_BANK
-    .filter((question) => !(question.id in BAR_TRIVIA_EDITORIAL_RETIREMENTS))
-    .map(calibrateBarTriviaDifficulty);
+    .filter((question) =>
+      !(question.id in BAR_TRIVIA_EDITORIAL_RETIREMENTS) &&
+      (question.league !== "ufc" || !UFC_BAR_TRIVIA_V3_RETIRE_IDS.has(question.id))
+    )
+    .map(calibrateBarTriviaDifficulty)
+    .map((question) => {
+      if (question.league !== "ufc") return question;
+      const prompt = UFC_BAR_TRIVIA_V3_PROMPT_OVERRIDES[question.id] ?? question.prompt;
+      // Add an explicit UFC authority URL wherever the legacy seed omitted one.
+      // Source assignment is not a substitute for individually checking disputed facts.
+      const event = prompt.match(/\\bUFC\\s+(\\d{2,3})\\b/i);
+      const sourceUrl = question.sourceUrl ??
+        (event ? `https://www.ufc.com/event/ufc-${event[1]}`
+          : "https://www.ufc.com/news/top-500-ufc-moments-list");
+      return { ...question, prompt, sourceUrl };
+    });
