@@ -52,7 +52,7 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
     || !isHttpsFrom(player.profileUrl, /(^|\.)espn\.com$/i)
     || !isHttpsFrom(team.profileUrl, /(^|\.)espn\.com$/i)
     || (player.highlightUrl
-      ? !isHttpsFrom(player.highlightUrl, /^(www\\.)?(youtube\\.com|youtu\\.be)$/i)
+      ? !isHttpsFrom(player.highlightUrl, /^(www\.)?(youtube\.com|youtu\.be)$/i)
         || player.highlightSourceChannelId !== "UCWJ2lWNubArHWmf3FIHbfcQ"
       : player.channelUrl !== "https://www.youtube.com/@NBA")) return null;
   const published = new Date(value.publishedAt);
