@@ -5,6 +5,7 @@ import {
 } from "../games/familyFeudEngine";
 import type { UFCFeudDraft } from "./ufcSportsFeudV2DraftHelpers";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5 } from "./ufcSportsFeudV2MainBatch5";
+import { UFC_SPORTS_FEUD_V2_BATCH5_EDITORIAL } from "./ufcSportsFeudV2Batch5Editorial";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2MainBatch5Supplement";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH5 } from "./ufcSportsFeudV2FastBatch5";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2FastBatch5Supplement";
@@ -87,6 +88,20 @@ describe("UFC Sports Feud batch five editorial questions — no live imports",()
       expect(matchFamilyFeudAnswer(pack,board,answer).status,id+" "+answer).toBe("unrecognized");
     }
   });
+  it("keeps semantic cooldown families and editorial holds distinct from candidate IDs",()=>{
+    expect(UFC_SPORTS_FEUD_V2_BATCH5_EDITORIAL).toHaveLength(22);
+    const entries=UFC_SPORTS_FEUD_V2_BATCH5_EDITORIAL;
+    expect(new Set(entries.map(e=>e.id)).size).toBe(entries.length);
+    expect(new Set(entries.map(e=>e.id))).toEqual(new Set(batch.map(q=>q.id)));
+    expect(entries.filter(e=>e.decision==="advance")).toHaveLength(14);
+    expect(entries.filter(e=>e.decision==="hold")).toHaveLength(8);
+    const origin=entries.filter(e=>e.id.includes("fast5-") && e.semanticFamily==="nationality-fighter-recognition");
+    expect(origin).toHaveLength(5);
+    expect(new Set(origin.map(e=>e.semanticFamily)).size).toBe(1);
+    const advancing=entries.filter(e=>e.decision==="advance");
+    expect(new Set(advancing.map(e=>e.semanticFamily)).size).toBe(10);
+  });
+
   it("recognizes everyday and fighter-name shorthand without inventing more ranked choices",()=>{
     const samples=[
       ["ufc-v2-main5-ufc-siblings","Big Nog"],
