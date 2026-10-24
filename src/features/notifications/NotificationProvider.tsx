@@ -586,3 +586,8 @@ export function useNotifications() {
   if (!value) throw new Error("useNotifications must be used inside NotificationProvider");
   return value;
 }
+
+/** Used by standalone UI previews that do not mount NotificationProvider. */
+export function useOptionalNotifications() {
+  return useContext(NotificationContext);
+}

@@ -5,11 +5,7 @@ import { SELECTED_SPORT_STORAGE_KEY, type SelectedSport } from "../../app/SportP
 import { AppProviders } from "../../app/providers";
 import { appRoutes } from "../../app/router";
 
-const FOOTBALL_SEASON_HOME_ORDER = [
-  "your-hq",
-  "football-hq",
-  "ufc-hq",
-];
+const FOOTBALL_SEASON_HOME_ORDER = ["football-hq", "championship-standings"];
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -57,8 +53,8 @@ describe("The HQ universal Home foundation", () => {
     expect(router.state.location.pathname).toBe("/");
 
     const sections = screen.getAllByTestId("home-section");
-    expect(sections).toHaveLength(3);
     expect(sections.map((section) => section.getAttribute("data-home-section"))).toEqual(FOOTBALL_SEASON_HOME_ORDER);
+    expect(screen.getByRole("combobox", {name:"Home sport"})).toBeInTheDocument();
     expect(screen.queryByRole("region", { name: "What’s New" })).not.toBeInTheDocument();
     expect(screen.queryByRole("region", { name: "Today’s Challenges" })).not.toBeInTheDocument();
     expect(screen.queryByRole("region", { name: "Up Next" })).not.toBeInTheDocument();
@@ -76,18 +72,18 @@ describe("The HQ universal Home foundation", () => {
   );
 
   it("keeps each Daily Challenge inside its sport HQ", async () => {
+    window.localStorage.setItem("the-hq:home-sport", "all");
     renderHome();
     await screen.findByRole("heading", { name: "Your HQ" });
 
-    const sections = screen.getAllByTestId("home-section");
     const ufcHq = screen.getByRole("region", { name: "UFC HQ" });
     const footballHq = screen.getByRole("region", { name: "Football HQ" });
 
-    expect(within(sections[0]).getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
     expect(within(ufcHq).getByRole("heading", { name: "UFC HQ" })).toBeInTheDocument();
     expect(within(ufcHq).getByRole("article", { name: "UFC Fighter Spotlight" })).toBeInTheDocument();
     expect(within(ufcHq).getByRole("link", { name: "FULL BOARD →" })).toHaveAttribute("href", "/fighters-to-watch");
-    expect(within(footballHq).getByRole("heading", { name: "This week" })).toBeInTheDocument();
+    expect(within(footballHq).getByRole("heading", { name: "FOOTBALL HQ" })).toBeInTheDocument();
     expect(within(ufcHq).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
     expect(within(footballHq).getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
     expect(ufcHq).toHaveClass("home-sport-hq");

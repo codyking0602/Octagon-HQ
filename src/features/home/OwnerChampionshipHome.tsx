@@ -9,6 +9,8 @@ import {
 import "../../styles/home-championship-owner.css";
 
 export type SportFilter = "all" | "football" | "ufc" | "mlb" | "nba";
+import { SPORT_ORDER, type SelectedSport } from "../../app/SportProvider";
+import { sportNames } from "../../app/sportPriority";
 type ChampionshipSport = "football" | "ufc";
 
 function formatRank(rank: number | null | undefined) {
@@ -231,6 +233,7 @@ export function OwnerChampionshipHome({
   showSportSelector = true,
   compactFootballPreview = false,
   compactMlbPreview = false,
+  sportOrder = SPORT_ORDER,
 }: {
   streak: number;
   streakLoading: boolean;
@@ -241,6 +244,7 @@ export function OwnerChampionshipHome({
   showSportSelector?: boolean;
   compactFootballPreview?: boolean;
   compactMlbPreview?: boolean;
+  sportOrder?: readonly SelectedSport[];
 }) {
   const [football, setFootball] = useState<SportChampionship | null>(null);
   const [ufc, setUfc] = useState<SportChampionship | null>(null);
@@ -301,10 +305,9 @@ export function OwnerChampionshipHome({
             <span className="sr-only">Home sport</span>
             <select aria-label="Home sport" value={chosen} onChange={(event) => onSportChange(event.target.value as SportFilter)}>
               <option value="all">All sports</option>
-              <option value="football">Football</option>
-              <option value="ufc">UFC</option>
-              {showMlb ? <option value="mlb">MLB</option> : null}
-              {showNba ? <option value="nba">Basketball</option> : null}
+              {sportOrder.filter(s => (showMlb || s !== "mlb") && (showNba || s !== "nba")).map(s => (
+                <option key={s} value={s}>{sportNames[s]}</option>
+              ))}
             </select>
           </label>
         ) : null}
@@ -333,40 +336,32 @@ export function OwnerChampionshipHome({
             </div> : null}
           </div>
           <div className="home-champ-preview__overview" aria-label="Championship standings by sport">
-            <ChampionshipRow
-              sport="football" title="FOOTBALL"
-              rank={football?.own?.rank}
-              value={football?.own?.rating != null ? formatRating(football.own.rating) : "—"}
-              unit={football?.own?.rating != null ? "SEASON SCORE" : "SCORE PENDING"}
-              to="/championship/football?tab=overall"
-              ariaLabel="Open football Championship standings"
-            />
-            <ChampionshipRow
-              sport="ufc" title="UFC"
-              rank={ufc?.own?.rank}
-              value={ufc?.own?.rating != null ? formatRating(ufc.own.rating) : "—"}
-              unit={ufc?.own?.rating != null ? "SEASON SCORE" : "SCORE PENDING"}
-              to="/championship/ufc?tab=overall"
-              ariaLabel="Open ufc Championship standings"
-            />
-            {showMlb ? (
-              <ChampionshipRow
+            {sportOrder.map(s => {
+              if (s === "football") return <ChampionshipRow key={s}
+                sport="football" title="FOOTBALL"
+                rank={football?.own?.rank}
+                value={football?.own?.rating != null ? formatRating(football.own.rating) : "—"}
+                unit={football?.own?.rating != null ? "SEASON SCORE" : "SCORE PENDING"}
+                to="/championship/football?tab=overall"
+                ariaLabel="Open football Championship standings" />;
+              if (s === "ufc") return <ChampionshipRow key={s}
+                sport="ufc" title="UFC"
+                rank={ufc?.own?.rank}
+                value={ufc?.own?.rating != null ? formatRating(ufc.own.rating) : "—"}
+                unit={ufc?.own?.rating != null ? "SEASON SCORE" : "SCORE PENDING"}
+                to="/championship/ufc?tab=overall"
+                ariaLabel="Open ufc Championship standings" />;
+              if (s === "nba") return showNba ? <ChampionshipRow key={s}
+                sport="nba" title="BASKETBALL" rank={null} value="" unit=""
+                pending to="/championship/nba" ariaLabel="Open Basketball Championship" /> : null;
+              return showMlb ? <ChampionshipRow key={s}
                 sport="mlb" title="MLB POSTSEASON"
                 rank={mlb?.own?.overall_rank}
                 value={mlb?.own ? String(mlb.own.total_points) : "—"}
                 unit={mlb?.own ? "PTS" : "SCORE PENDING"}
                 to="/championship/mlb"
-                ariaLabel="Open MLB Postseason Championship standings"
-              />
-            ) : null}
-            {showNba ? (
-              <ChampionshipRow
-                sport="nba" title="BASKETBALL"
-                rank={null} value="" unit=""
-                pending to="/championship/nba"
-                ariaLabel="Open Basketball Championship"
-              />
-            ) : null}
+                ariaLabel="Open MLB Postseason Championship standings" /> : null;
+            })}
           </div>
         </>
       ) : chosen === "nba" ? (

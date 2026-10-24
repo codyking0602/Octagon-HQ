@@ -7,15 +7,16 @@ const spotlight = readFileSync("src/features/mlb/MlbPlayerSpotlight.tsx", "utf8"
 const championship = readFileSync("src/features/home/OwnerChampionshipHome.tsx", "utf8");
 const css = readFileSync("src/styles/mlb-playoffs.css", "utf8");
 
-describe("MLB compact owner-only home", () => {
-  it("gates compact MLB behind the same privileged Cody identity as locked Football", () => {
-    expect(homepage).toContain('const compactMlbPreview = Boolean(identity.profile?.canControlPicks === true');
-    expect(homepage).toContain('&& identity.profile.displayName.trim().toUpperCase() === "CODY");');
+describe("MLB compact public Home", () => {
+  it("makes the compact MLB design public while keeping preview data privileged", () => {
+    expect(homepage).toContain("const compactMlbPreview = true;");
+    expect(homepage).toContain("const compactFootballPreview = true;");
+    expect(homepage).toContain("previewMode={identity.profile?.canControlPicks === true}");
     expect(homepage).toContain('compactPreview={compactMlbPreview}');
     expect(mlb).toContain('compactPreview ? " mlb-hq--compact-preview" : ""');
   });
 
-  it("preserves the full public MLB card and the owner-only concise presentation", () => {
+  it("preserves legacy MLB card and the public concise presentation", () => {
     expect(mlb).toContain('className="home-event-card__picks-grid"');
     expect(mlb).toContain('className="mlb-hq__compact-picks"');
     expect(mlb).toContain('postseasonWinRate === null ? "RESULTS PENDING"');
@@ -37,7 +38,7 @@ describe("MLB compact owner-only home", () => {
     expect(spotlight).toContain("player.highlightUrl");
   });
 
-  it("shows compact and neutral MLB championship only to the owner", () => {
+  it("shows compact and neutral MLB championship to everyone", () => {
     expect(championship).toContain('compactMlbPreview = false');
     expect(championship).toContain('home-champ-preview--compact-mlb');
     expect(championship).toContain('mlb?.own?.series_rank');

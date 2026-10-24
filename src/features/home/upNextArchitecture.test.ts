@@ -31,14 +31,14 @@ describe("retired Up Next ownership", () => {
     expect(main).not.toContain('styles/home-up-next.css');
   });
 
-  it("keeps only Your HQ and the two canonical sport HQ owners on Home", () => {
+  it("keeps canonical sport HQ owners while allowing public preference ordering", () => {
     expect(home).toContain('data-home-section="your-hq"');
     expect(home).toContain('data-home-section="ufc-hq"');
     expect(footballHome).toContain('data-home-section="football-hq"');
     expect(home).not.toContain('data-home-section="whats-new"');
     expect(home).not.toContain('data-home-section="todays-challenges"');
-    expect(home).toContain("isFootballSeason()");
-    expect(home).toContain("{footballHq}");
-    expect(home).toContain("{ufcHq}");
+    expect(home).toContain("visibleOrder.map(sport =>");
+    expect(home).toContain('sport === "football" ? footballHq');
+    expect(home).toContain('sport === "ufc" ? ufcHq');
   });
 });

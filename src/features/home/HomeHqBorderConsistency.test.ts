@@ -43,7 +43,8 @@ describe("Home sports share a restrained outline hierarchy", () => {
   });
 
   it("keeps full weekly Basketball HQ on All Sports without duplicate standings", () => {
-    expect(home.match(/<NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship \/>/g)).toHaveLength(2);
+    expect(home).toContain('<NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship />');
+    expect(home).toContain("visibleOrder.map(sport =>");
     expect(home).not.toContain("<NbaHomeHq");
     expect(basketball).toContain("hideChampionship = false");
     expect(basketball).toContain("{!hideChampionship ? (");
