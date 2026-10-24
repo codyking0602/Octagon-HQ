@@ -72,6 +72,7 @@ interface NotificationContextValue {
   clearRead: () => Promise<boolean>;
   updatePreference: (key: NotificationPreferenceKey, enabled: boolean) => Promise<boolean>;
   updatePushSports: (sport: PushNotificationSport | "all", enabled: boolean) => Promise<boolean>;
+  refreshPushSports: () => Promise<void>;
   installApp: () => Promise<boolean>;
   enableDevicePush: () => Promise<boolean>;
   disableDevicePush: () => Promise<boolean>;
@@ -565,6 +566,7 @@ export function NotificationProvider({
       pushSports,
       pushSportStatus,
       updatePushSports,
+      refreshPushSports: loadPushSports,
       refresh: () => loadSnapshot(false),
       markRead,
       markAllRead,
