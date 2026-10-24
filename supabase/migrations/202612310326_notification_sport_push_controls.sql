@@ -72,6 +72,7 @@ returns text[] language plpgsql stable set search_path = ''
 as $fn$
 declare
   v_route text := coalesce(p_route,'');
+  v_path text := split_part(coalesce(p_route,''),'?',1);
   v_text text := upper(coalesce(p_summary,''));
   v_sports text[] := array[]::text[];
 begin
@@ -85,14 +86,14 @@ begin
     return v_sports;
   end if;
 
-  if v_route ~ '^/football(/|\\?|$)' then return array['football']; end if;
-  if v_route ~ '^/mlb(/|\\?|$)' then return array['mlb']; end if;
-  if v_route ~ '^/nba(/|\\?|$)'
-    or v_route ~ '^/championship/nba(/|\\?|$)'
+  if v_path ~ '^/football(/|$)' then return array['football']; end if;
+  if v_path ~ '^/mlb(/|$)' then return array['mlb']; end if;
+  if v_path ~ '^/nba(/|$)'
+    or v_path ~ '^/championship/nba(/|$)'
     or v_route like '/?hq-reveal=basketball-%'
   then return array['nba']; end if;
-  if v_route ~ '^/(picks|play|rankings|intelligence)(/|\\?|$)'
-    or v_route ~ '^/(fighters-to-watch|fight-night)(/|\\?|$)'
+  if v_path ~ '^/(picks|play|rankings|intelligence)(/|$)'
+    or v_path ~ '^/(fighters-to-watch|fight-night)(/|$)'
   then return array['ufc']; end if;
 
   if p_kind in ('war_room_mention','war_room_reply','war_room_invite_accepted')
