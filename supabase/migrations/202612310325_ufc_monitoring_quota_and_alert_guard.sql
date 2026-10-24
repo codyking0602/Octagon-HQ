@@ -356,7 +356,7 @@ begin
           -- Exceeded quota already generates the provider-quota alert and cannot be
           -- fixed by repeated monitoring; exclude it from three-failure escalation.
           and not (
-            run.provider_requests_remaining = 0
+            coalesce(run.provider_requests_remaining, -1) = 0
             and run.diagnostics @> '[{"code":"provider_http_error"}]'::jsonb
           )
           and coalesce(run.completed_at, run.started_at) >= p_now - interval '6 hours'
