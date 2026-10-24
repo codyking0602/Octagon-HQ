@@ -21,7 +21,7 @@ describe("MLB compact owner-only home", () => {
     expect(mlb).toContain('postseasonWinRate === null ? "RESULTS PENDING"');
     expect(mlb).toContain("mlbPostseasonPickRecord");
     expect(mlb).toContain('mlbCompactSeriesStatus(spotlightSeries)');
-    expect(mlb).toContain('className={`home-weekly-games-row${compactPreview ? " mlb-hq__bracket-row" : ""}`}');
+    expect(mlb).toContain('className="home-weekly-games-row"');
     expect(mlb).toContain('challengePlayable ? "PLAY →" : "VIEW →"');
     expect(mlb).not.toContain('className="mlb-hq__header-round"');
     expect(mlb).toContain('to="/mlb/picks#mlb-bracket"');

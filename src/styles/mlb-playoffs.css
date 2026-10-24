@@ -4709,7 +4709,7 @@
 
 
 /* Final owner-only Baseball HQ refinements — locked Football/UFC and MLB public views unchanged. */
-.mlb-hq--compact-preview .mlb-hq__bracket-row {
+.mlb-hq--compact-preview .home-weekly-games-row {
   min-height: 0;
   padding: 6px 10px;
   border-radius: 11px;

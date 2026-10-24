@@ -203,7 +203,7 @@ export function MlbHomeHq({
           </section>
 
           <Link
-            className={`home-weekly-games-row${compactPreview ? " mlb-hq__bracket-row" : ""}`}
+            className="home-weekly-games-row"
             to="/mlb/picks#mlb-bracket"
             aria-label="View MLB Playoff Bracket"
           >
