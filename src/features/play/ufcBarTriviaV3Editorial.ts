@@ -237,13 +237,13 @@ export const UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES: Readonly<Record<string,"round1"|
   "ufc-r3-ufc306-main": "round2",
   "ufc-r3-tuf1-network": "round2",
   "ufc-r3-fox-finish-time": "round2",
-  "ufc-r3-the-natural": "round2",
+  "ufc-r3-the-natural": "round1",
   "ufc-r3-first-asia-event": "round2",
   "ufc-r3-gracie-shamrock-36": "round2",
   "ufc-r3-last-no-time-limit": "round2",
   "ufc-r3-tuf21-format": "round2",
   "ufc-r3-russia-debut-winner": "round2",
-  "ufc-r3-du-plessis-first-sa": "round2",
+  "ufc-r3-du-plessis-first-sa": "round1",
   "ufc-r3-pena-nunes-rematch": "round2",
   "ufc-r3-miocic-dc-regain": "round2",
   "ufc-r2-modern-era-event": "round3",
@@ -263,4 +263,51 @@ export const UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES: Readonly<Record<string,"round1"|
   "ufc-r2-hof-2025-fight": "round3",
   "ufc-r2-hof-2024-fight": "round3",
   "ufc-r2-hof-2023-fight": "round3",
+  "ufc-r1-uk-first-champion": "round1",
+  "ufc-r1-australia-first-champion": "round1",
+  "ufc-r1-prodigy": "round1",
+  "ufc-r1-women-debut-event": "round1",
+  "ufc-r1-first-canada-event": "round1",
+  "ufc-r1-first-australia-event": "round1",
+  "ufc-r1-first-europe-event": "round1",
+  "ufc-r1-first-france-headliner": "round1",
+  "ufc-r1-first-france-opponent": "round1",
+  "ufc-r1-tuf5-winner": "round1",
+  "ufc-r1-tuf3-winner": "round1",
+  "ufc-r1-rocky-edwards": "round1",
+  "ufc-r1-herb-dean": "round1",
+  "ufc-r2-first-bmf": "round1",
+  "ufc-r2-korean-zombie": "round1",
+  "ufc-r2-ufc100": "round1",
+  "ufc-r2-rousey-olympic-sport": "round1",
+  "ufc-r2-triple-c": "round1",
+  "ufc-r2-stockton-slap": "round1",
+  "ufc-r2-ufc306-sphere": "round1",
+  "ufc-r2-ufc300-bmf": "round1",
+  "ufc-r2-pena-nunes": "round1",
+  "ufc-r2-strickland-adesanya": "round1",
+  "ufc-r2-cormier-stipe": "round1",
+  "ufc-r2-natural-born-killer": "round1",
+  "ufc-r2-ufc189-interim": "round1",
+  "ufc-r2-ufc284-champ-champ": "round1",
+  "ufc-r2-ufc300-main": "round1",
 };
+
+/** Distinct phrasings of the same answerable UFC fact may not recur within a curated cycle. */
+export const UFC_BAR_TRIVIA_V3_FACT_FAMILIES: readonly (readonly string[])[] = [
+  ["ufc-bt-v3-e-015", "ufc-final-lewis-volkov-quote"],
+  ["ufc-r1-first-france-headliner", "ufc-r1-first-france-opponent"],
+  ["ufc-r3-hof-sanchez-guida", "ufc-r2-sanchez-guida-event"],
+  ["ufc-r1-ufc1-winner", "ufc-final-ufc1-final"],
+  ["ufc-r2-ufc300-bmf", "ufc-bt-v3-h-020"],
+  ["ufc-r2-ufc306-sphere", "ufc-r3-ufc306-main"],
+  ["ufc-r3-hof-swanson-choi", "ufc-r2-hof-2023-fight"],
+];
+
+export function expandUfcBarTriviaRecentFactIds(ids: readonly string[]): string[] {
+  const result = new Set(ids);
+  for (const family of UFC_BAR_TRIVIA_V3_FACT_FAMILIES) {
+    if (family.some((id) => result.has(id))) for (const id of family) result.add(id);
+  }
+  return [...result];
+}
