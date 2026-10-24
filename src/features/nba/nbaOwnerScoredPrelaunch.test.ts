@@ -13,7 +13,7 @@ describe("NBA owner-only scored Oct 23–31 prelaunch", () => {
   it("keeps all public release flags closed and separates preview from public season standings", () => {
     expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
     expect(edge).toContain("const NBA_DAILY_EDGE_RELEASE_READY = false;");
-    expect(migration).toContain("'nba-owner-prelaunch-v1'");
+    expect(migration).toContain("'nba-daily-owner-prelaunch-v1'");
     expect(migration).toContain("'nba_preview'");
     expect(migration).toContain("get_nba_owner_prelaunch_materialization_request");
     expect(migration).toContain("NBA prelaunch tests are restricted to the HQ owner");
@@ -29,13 +29,13 @@ describe("NBA owner-only scored Oct 23–31 prelaunch", () => {
     expect(new Set(dates.map(d => nbaOwnerPreviewDaily(d))).size).toBe(9);
     for (const day of dates) {
       const game = nbaOwnerPreviewDaily(day)!;
-      const published = buildNbaServerDailyPublication(day, "nba-owner-prelaunch-v1", game);
+      const published = buildNbaServerDailyPublication(day, "nba-daily-owner-prelaunch-v1", game);
       expect(published.gameType).toBe(game);
-      expect(published.scheduleVersion).toBe("nba-owner-prelaunch-v1");
+      expect(published.scheduleVersion).toBe("nba-daily-owner-prelaunch-v1");
       expect(published.publicSetup).toBeTruthy();
       expect(published.privateGradingEvidence).toBeTruthy();
     }
-    expect(() => buildNbaServerDailyPublication("2026-11-01", "nba-owner-prelaunch-v1", "average_fan")).toThrow();
+    expect(() => buildNbaServerDailyPublication("2026-11-01", "nba-daily-owner-prelaunch-v1", "average_fan")).toThrow();
   });
 
   it("persists through the same signed-in Edge path but reads isolated test leaderboards", async () => {
