@@ -36,7 +36,7 @@ const ROWS = [
     "prompt": "Name a fighter who won a UFC tournament during the promotion's early tournament era.",
     "kind": "person",
     "ranked": "Royce Gracie|Dan Severn|Mark Coleman|Don Frye|Mark Kerr|Oleg Taktarov|Marco Ruas|Steve Jennum",
-    "extras": "Vitor Belfort|Dan Henderson|Randy Couture|Kazushi Sakuraba",
+    "extras": "Vitor Belfort|Dan Henderson|Randy Couture|Kazushi Sakuraba|Pat Miletich|Jerry Bohlander|Guy Mezger",
     "aliases": {
       "Mark Kerr": [
         "The Smashing Machine"
@@ -53,7 +53,10 @@ const ROWS = [
     },
     "source": [
       "https://www.ufc.com/news/championship-matters",
-      "https://www.ufc.com/hof/mark-kerr-hall-of-fame"
+      "https://www.ufc.com/hof/mark-kerr-hall-of-fame",
+      "https://www.ufc.com/news/numbers-super-streaks",
+      "https://www.ufc.com/news/fast-facts-our-20th-anniversary",
+      "https://www.ufc.com/news/wanderlei-silva-named-ufc-hall-fame-class-2024"
     ]
   },
   {
@@ -86,7 +89,9 @@ const ROWS = [
     "source": [
       "https://www.ufc.com/news/wec-forever-legacy-little-blue-cage-ufc",
       "https://www.ufc.com/news/best-2012-so-far",
-      "https://www.ufc.com/news/wec-champ-cantwell-gets-fresh-start-ufc"
+      "https://www.ufc.com/news/wec-champ-cantwell-gets-fresh-start-ufc",
+      "https://www.ufc.com/news/brian-bowles-allow-me-reintroduce-myself",
+      "https://www.ufc.com/news/returning-varner-focuses-future"
     ]
   },
   {
