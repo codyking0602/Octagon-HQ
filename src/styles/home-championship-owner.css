@@ -916,3 +916,42 @@
   .home-champ-preview[data-sport="all"] .home-champ-preview__summary-score b { font-size: 10px; }
   .home-champ-preview[data-sport="all"] .home-champ-preview__summary-score small { font-size: 7px; letter-spacing: 0; }
 }
+
+
+
+/* All Sports final polish: override obsolete sport-card gradients and top borders.
+   Keep styling scoped to this dashboard, not the individual championships. */
+.home-champ-preview[data-sport="all"] {
+  gap: 10px;
+  padding: 13px;
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary.home-champ-preview__summary--row {
+  min-height: 58px;
+  padding: 7px 10px;
+  gap: 8px;
+  border: 0;
+  border-top: 0;
+  border-radius: 0;
+  background: #1d2024;
+  background-image: none;
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary.home-champ-preview__summary--row + .home-champ-preview__summary--row {
+  border-top: 1px solid #383d44;
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary.home-champ-preview__summary--row:hover {
+  background: #262a2e;
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary-accent {
+  height: 31px;
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary--row .home-champ-preview__summary-copy {
+  gap: 2px;
+}
+@media (max-width: 360px) {
+  .home-champ-preview[data-sport="all"] { padding: 11px; }
+  .home-champ-preview[data-sport="all"] .home-champ-preview__summary.home-champ-preview__summary--row {
+    min-height: 55px;
+    gap: 6px;
+    padding: 6px 8px;
+  }
+}

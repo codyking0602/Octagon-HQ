@@ -51,7 +51,7 @@ function ChampionshipRow({
   unit: string;
   pending?: boolean;
 }) {
-  const status = pending ? "Season open" : rank === 1 ? "League leader"
+  const status = pending ? "Futures open · Scoring pending" : rank === 1 ? "League leader"
     : rank != null ? finishLabel(rank).toLowerCase() : "Standing pending";
   return (
     <Link
@@ -65,13 +65,15 @@ function ChampionshipRow({
         <span className="home-champ-preview__summary-sport">{title}</span>
         <small className="home-champ-preview__summary-finish">{status}</small>
       </span>
-      <span className="home-champ-preview__summary-result">
-        <strong className="home-champ-preview__summary-rank">{pending ? "—" : formatRank(rank)}</strong>
-        <span className="home-champ-preview__summary-score">
-          <b>{value}</b>
-          <small>{unit}</small>
+      {!pending ? (
+        <span className="home-champ-preview__summary-result">
+          <strong className="home-champ-preview__summary-rank">{formatRank(rank)}</strong>
+          <span className="home-champ-preview__summary-score">
+            <b>{value}</b>
+            <small>{unit}</small>
+          </span>
         </span>
-      </span>
+      ) : null}
       <span className="home-champ-preview__summary-arrow" aria-hidden="true">›</span>
     </Link>
   );
@@ -273,9 +275,16 @@ export function OwnerChampionshipHome({
   const compactUfc = chosen === "ufc" && !showSportSelector;
   const compactMlb = compactMlbPreview && chosen === "mlb" && !showSportSelector;
   const knownRanks = [football?.own?.rank, ufc?.own?.rank, ...(showMlb ? [mlb?.own?.overall_rank] : [])];
-  const rankedChampionships = knownRanks.filter((rank): rank is number => rank != null).length;
-  const leagueLeads = knownRanks.filter((rank) => rank === 1).length;
-  const leagueLeadDisplay = loading && rankedChampionships === 0 ? "…" : leagueLeads;
+  const leadingSports = [
+    ...(football?.own?.rank === 1 ? ["Football"] : []),
+    ...(ufc?.own?.rank === 1 ? ["UFC"] : []),
+    ...(showMlb && mlb?.own?.overall_rank === 1 ? ["MLB"] : []),
+  ];
+  const leagueLeads = leadingSports.length;
+  const leagueLeadDisplay = loading && knownRanks.every((rank) => rank == null) ? "…" : leagueLeads;
+  const leagueLeadSummary = loading && knownRanks.every((rank) => rank == null)
+    ? "Checking championship standings…"
+    : leadingSports.length ? leadingSports.join(" · ") : "No league leads yet";
   return (
     <section
       className={`home-section home-section--your-hq home-champ-preview${compactFootball ? " home-champ-preview--compact-football" : ""}${compactUfc ? " home-champ-preview--compact-ufc" : ""}${compactMlb ? " home-champ-preview--compact-mlb" : ""}`}
@@ -310,9 +319,7 @@ export function OwnerChampionshipHome({
                   <strong data-testid="hq-league-leads">{leagueLeadDisplay}</strong>
                   <span>LEAGUE {leagueLeads === 1 ? "LEAD" : "LEADS"}</span>
                 </div>
-                <small>{loading && rankedChampionships === 0 ? "Checking championship standings…" : rankedChampionships
-                  ? `Leading ${leagueLeads} of ${rankedChampionships} ranked championships`
-                  : "No ranked championships yet"}</small>
+                <small>{leagueLeadSummary}</small>
               </div>
             </div>
             {showSportSelector ? <div className="home-champ-preview__overview-streak">
@@ -355,7 +362,7 @@ export function OwnerChampionshipHome({
             {showNba ? (
               <ChampionshipRow
                 sport="nba" title="BASKETBALL"
-                rank={null} value="FUTURES OPEN" unit="SCORING PENDING"
+                rank={null} value="" unit=""
                 pending to="/championship/nba"
                 ariaLabel="Open Basketball Championship"
               />
