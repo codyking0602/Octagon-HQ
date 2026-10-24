@@ -102,6 +102,9 @@ type NbaPublicationRuntimeModule = {
 type NbaAdvanceRuntimeModule = {
   advanceNbaOfficialDailyRuntime: DailyAdvanceRuntime;
 };
+type NbaFeudAdvanceRuntimeModule = {
+  advanceFamilyFeudDailyCore: DailyAdvanceRuntime;
+};
 // Never open NBA Daily merely because November 1 arrives. The frontend and
 // leaderboard adapter must pass the exact-head release verification first.
 const NBA_DAILY_EDGE_RELEASE_READY = false;
@@ -122,6 +125,7 @@ let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null 
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
+let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
 
 function loadUfcRuntime() {
   if (!ufcRuntimePromise) {
@@ -155,6 +159,13 @@ function loadNbaAdvanceRuntime() {
     nbaAdvanceRuntimePromise = import("./nba-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
   }
   return nbaAdvanceRuntimePromise;
+}
+
+function loadNbaFeudAdvanceRuntime() {
+  if (!nbaFeudAdvanceRuntimePromise) {
+    nbaFeudAdvanceRuntimePromise = import("./nba-feud-advance.generated.mjs") as Promise<NbaFeudAdvanceRuntimeModule>;
+  }
+  return nbaFeudAdvanceRuntimePromise;
 }
 
 function loadAverageFanRuntime() {
@@ -767,7 +778,12 @@ async function handleNbaDaily(
   // idempotency, grading and persisted results still use the same trusted path.
   const advanced = context.gameType === "average_fan"
     ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)
-    : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
+    : context.gameType === "sports_feud"
+      // Current NBA packs already carry their own authoritative candidates and
+      // aliases. Avoid booting NBA's all-games module + legacy UFC/NFL/CFB
+      // question catalogs for every individual Feud answer.
+      ? (await loadNbaFeudAdvanceRuntime()).advanceFamilyFeudDailyCore(context, action)
+      : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
   const history = footballActionHistory(context);
   const nextSubmissionState = submissionStateWithClientActionId({
     ...advanced.submissionState, action_history: [...history, action],

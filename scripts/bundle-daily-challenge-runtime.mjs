@@ -62,6 +62,12 @@ const bundles = [
     ],
   },
   {
+    label: "NBA Sports Feud lean advance runtime",
+    entry: resolve(repoRoot, "src/features/play/familyFeudDailyCore.ts"),
+    fileName: "nba-feud-advance.generated.mjs",
+    requiredExports: ["advanceFamilyFeudDailyCore"],
+  },
+  {
     label: "NBA daily advance runtime",
     entry: resolve(repoRoot, "src/features/nba/nbaDailyServerAdvance.ts"),
     fileName: "nba-advance.generated.mjs",
