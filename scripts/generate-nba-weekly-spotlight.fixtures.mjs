@@ -44,6 +44,7 @@ test("uses only completed NBA results and calculates weekly stats from actual at
     weekStart:"2026-10-19",weekEnd:"2026-10-25",publishedAt:"2026-10-27T11:00:00Z",
   });
   assert.equal(data.player.name,"Sample Star");
+  assert.equal(data.player.gamesPlayed,8);
   assert.deepEqual(data.player.stats.map(x=>x.value),["30.0","5.0","7.0","55.0"]);
   assert.equal(data.team.record,"8-0");
   assert.equal(data.team.netMargin,"+15.0");
@@ -127,6 +128,7 @@ test("prefers short official NBA player performance clips over longer videos",()
 test("recovers the chosen current video source and keeps Team of the Week without a video CTA",()=>{
   const data=JSON.parse(readFileSync("public/nba-weekly/active.json","utf8"));
   assert.equal(data.player.name,"Tyrese Maxey");
+  assert.equal(data.player.gamesPlayed,2);
   assert.equal(data.player.highlightUrl,"https://www.youtube.com/watch?v=e8g1Fa8iYYM");
   assert.equal(data.player.highlightSourceChannelId,"UCWJ2lWNubArHWmf3FIHbfcQ");
   assert.equal(data.team.name,"Atlanta Hawks");

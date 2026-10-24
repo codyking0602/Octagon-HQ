@@ -30,11 +30,4 @@
 .home-sport-chooser__filter { flex: none; }
 .home-sport-chooser__filter select { max-width: 43vw; }
 
-/* Selected Basketball carries the same low-key sport outline as the HQ shell. */
-.home-sport-chooser[data-home-sport="nba"] {
-  border-color: rgba(242, 163, 65, .32);
-}
-.home-sport-chooser[data-home-sport="nba"] .home-sport-chooser__filter select {
-  border-color: rgba(242, 163, 65, .55);
-  background: linear-gradient(125deg, rgba(242, 163, 65, .11), #22252a);
-}
+/* This header and sport selector stay neutral regardless of the active sport. */

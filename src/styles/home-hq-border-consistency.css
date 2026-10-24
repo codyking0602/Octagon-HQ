@@ -1,0 +1,21 @@
+/* One outline treatment across the four Home sports. Every HQ uses its own
+   accent but the same border opacity; spacing, card fills and team-color
+   matchup pills remain untouched. The global Your HQ header stays neutral. */
+.home-page .home-sport-hq {
+  border-color: rgba(var(--home-sport-accent-rgb), .42);
+}
+.home-page .home-sport-hq :is(
+  .home-event-card,
+  .home-challenge-card,
+  .home-weekly-games-row,
+  .football-hq-games,
+  .ufc-contender-series,
+  .nba-hq-owner__picks,
+  .nba-hq-owner__daily,
+  .nba-hq-owner__player,
+  .nba-hq-owner__team,
+  .football-hq-compact-picks__action,
+  .nba-hq-owner__picks-grid a
+) {
+  border-color: rgba(var(--home-sport-accent-rgb), .38);
+}

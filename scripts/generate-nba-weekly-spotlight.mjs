@@ -260,7 +260,7 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
   const winner={
     weekStart,weekEnd,publishedAt,
     player:{
-      name:p.name,team:p.team,position:p.position||"NBA",
+      name:p.name,team:p.team,position:p.position||"NBA",gamesPlayed:g,
       headshotUrl:p.headshotUrl,profileUrl:basketballReferencePlayerUrl(p.id,p.name),
       highlightUrl:`https://www.youtube.com/watch?v=${selected.video.id}`,
       highlightSourceChannelId: selected.video.channel,
