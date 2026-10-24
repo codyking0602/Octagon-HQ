@@ -49,7 +49,7 @@ jobs:
           path: .nba-weekly-video-cache.json
           key: nba-weekly-youtube-${{ github.run_id }}
           restore-keys: nba-weekly-youtube-
-      - name: Collect fresh NBA and ESPN official YouTube highlights
+      - name: Collect fresh videos from the official @NBA YouTube channel
         if: steps.clock.outputs.run == 'true'
         env:
           YOUTUBE_DATA_API_KEY: ${{ secrets.YOUTUBE_DATA_API_KEY }}
@@ -90,7 +90,7 @@ jobs:
           git commit -m "Publish sourced NBA player and team spotlights for ${week}"
           head_sha=$(git rev-parse HEAD)
           git push origin "$branch"
-          url=$(gh pr create --base main --head "$branch" --title "Weekly NBA spotlights · ${week}" --body "Unattended editorial publication. ESPN completed game box scores and directly matched official NBA/ESPN YouTube highlights. Fail closed on unverifiable sources. Auto-merge only after exact-head Validate V2 passes.")
+          url=$(gh pr create --base main --head "$branch" --title "Weekly NBA spotlights · ${week}" --body "Unattended editorial publication. ESPN completed game box scores and directly matched official @NBA YouTube highlights. Fail closed on unverifiable sources. Auto-merge only after exact-head Validate V2 passes.")
           echo "created=true" >> "$GITHUB_OUTPUT"
           echo "branch=$branch" >> "$GITHUB_OUTPUT"
           echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
