@@ -31,6 +31,14 @@ export interface WeeklyGmResult {
   state: PersistedRun;
 }
 
+export interface WeeklyGmArchivedWeek {
+  week_start: string;
+  opens_at: string;
+  closes_at: string;
+  standings: WeeklyGmStanding[];
+  champions: WeeklyGmStanding[];
+}
+
 export function createFootballWeeklyGmRepository(preview = false) {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
@@ -43,6 +51,12 @@ export function createFootballWeeklyGmRepository(preview = false) {
   }
   return {
     load: () => rpc<WeeklyGmState>(preview ? "get_my_football_weekly_gm_preview" : "get_my_football_weekly_gm"),
+    history: () => preview ? Promise.resolve([] as WeeklyGmArchivedWeek[])
+      : rpc<WeeklyGmArchivedWeek[]>("get_football_weekly_gm_history"),
+    archivedResult: (weekStart: string, profileId: string, scenario: WeeklyGmScenario) =>
+      rpc<WeeklyGmResult>("get_football_weekly_gm_archived_result", {
+        p_week_start: weekStart, p_profile_id: profileId, p_scenario: scenario,
+      }),
     start: (scenario: WeeklyGmScenario) =>
       rpc<WeeklyGmAttempt>(preview ? "start_my_football_weekly_gm_preview" : "start_my_football_weekly_gm", { p_scenario: scenario }),
     result: (profileId: string | null, scenario: WeeklyGmScenario) =>

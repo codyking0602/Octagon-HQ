@@ -191,6 +191,9 @@ export default function HomePage() {
   // Only the authenticated owner gets the in-progress Home density experiment.
   const compactFootballPreview = Boolean(identity.profile?.canControlPicks === true
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
+  // Keep Baseball's approved compact experiment on the existing owner identity only.
+  const compactMlbPreview = Boolean(identity.profile?.canControlPicks === true
+    && identity.profile.displayName.trim().toUpperCase() === "CODY");
   const sportPreference = useOptionalSport();
   // Home has its own persisted view, independent of all sport navigation.
   const homeSport = sportPreference?.homeSport ?? "football";
@@ -476,7 +479,7 @@ export default function HomePage() {
       </section>
       )}
 
-      {ownerPreview && ownerSport === "mlb" ? (
+      {ownerPreview && ownerSport === "mlb" && !compactMlbPreview ? (
         <OwnerChampionshipHome
           streak={hqDailyStreak.streak.currentStreak}
           streakLoading={hqDailyStreak.loading}
@@ -498,6 +501,7 @@ export default function HomePage() {
                 enabled={mlbVisible}
                 signedIn={signedIn}
                 previewMode={true}
+                compactPreview={compactMlbPreview}
               />
             ) : null
       ) : (
@@ -511,6 +515,7 @@ export default function HomePage() {
               enabled={mlbVisible}
               signedIn={signedIn}
               previewMode={identity.profile?.canControlPicks === true}
+              compactPreview={compactMlbPreview}
             />
           ) : null}
           {ufcHq}
@@ -525,12 +530,24 @@ export default function HomePage() {
               enabled={mlbVisible}
               signedIn={signedIn}
               previewMode={identity.profile?.canControlPicks === true}
+            compactPreview={compactMlbPreview}
             />
           ) : null}
         </>
       )}
         </>
       )}
+      {ownerPreview && ownerSport === "mlb" && compactMlbPreview ? (
+        <OwnerChampionshipHome
+          streak={hqDailyStreak.streak.currentStreak}
+          streakLoading={hqDailyStreak.loading}
+          showMlb={mlbVisible} showNba={nbaVisible}
+          sport={ownerSport}
+          onSportChange={setOwnerSport}
+          showSportSelector={false}
+          compactMlbPreview
+        />
+      ) : null}
       {ownerPreview && ownerSport !== "mlb" && ownerSport !== "nba" ? (
         <OwnerChampionshipHome
           streak={hqDailyStreak.streak.currentStreak}

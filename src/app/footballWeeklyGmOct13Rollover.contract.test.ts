@@ -19,14 +19,13 @@ describe("October 13 Football Weekly GM rollover", () => {
     expect(center).toContain("Last week's Auction is complete.");
   });
 
-  it("presents last week's final winner and full grades before first GM play", () => {
-    expect(gm).toContain('const LAST_AUCTION_WEEK = "2026-10-06"');
-    expect(gm).toContain("createFootballWeeklyAuctionRepository");
-    expect(gm).toContain("setLastAuction(final");
-    expect(gm).toContain("lastAuction.standings.find");
-    expect(gm).toContain("<FootballWeeklyNflTeamSeasonFinalResult");
-    expect(gm).toContain("CONTINUE TO THIS WEEK'S GM");
-    expect(gm).toContain("VIEW OCT 6–12 AUCTION RESULTS");
+  it("preserves full Auction finals in the Auction Center while GM has its own closed-week history", () => {
+    expect(center).toContain("repository.loadHistory()");
+    expect(center).toContain("<FootballWeeklyNflTeamSeasonFinalResult");
+    expect(gm).toContain("repository.history()");
+    expect(gm).toContain("PAST GM CHAMPIONSHIPS");
+    expect(gm).toContain("FootballGmFranchiseReport");
+    expect(gm).not.toContain("showAuctionReveal");
   });
 
   it("reveals the Day 7 Wildcard wheel in archived finals", () => {

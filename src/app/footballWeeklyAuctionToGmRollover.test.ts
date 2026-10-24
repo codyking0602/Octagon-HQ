@@ -17,14 +17,13 @@ describe("October 13 Football Weekly Auction to GM rollover", () => {
     expect(center).toContain('FootballWeeklyNflTeamSeasonFinalResult');
   });
 
-  it("presents finalized Auction standings and the full reveal before Weekly GM", () => {
-    expect(gmPage).toContain('const LAST_AUCTION_WEEK = "2026-10-06"');
-    expect(gmPage).toContain('auctionRepository.loadHistory()');
-    expect(gmPage).toContain('showAuctionReveal && lastAuction');
-    expect(gmPage).toContain('FINAL AUCTION RESULTS');
-    expect(gmPage).toContain('FootballWeeklyNflTeamSeasonFinalResult');
-    expect(gmPage).toContain('CONTINUE TO THIS WEEK\'S GM');
-    expect(gmPage).toContain('VIEW OCT 6–12 AUCTION RESULTS');
+  it("leaves prior Auction final standings and full reveal in the archived Auction Center", () => {
+    expect(center).toContain("repository.loadHistory()");
+    expect(center).toContain("<FootballWeeklyNflTeamSeasonFinalResult");
+    expect(center).toContain("← ALL RESULTS");
+    expect(gmPage).toContain("PAST GM CHAMPIONSHIPS");
+    expect(gmPage).toContain("repository.archivedResult");
+    expect(gmPage).not.toContain("FINAL AUCTION RESULTS");
   });
 
   it("reveals past Wildcard wheel and the collections and grades even after week rollover", () => {
