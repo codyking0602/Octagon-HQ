@@ -62,7 +62,7 @@ const ROWS = [
     "prompt": "Name a fighter who held a WEC championship and later fought in the UFC.",
     "kind": "person",
     "ranked": "Jose Aldo|Dominick Cruz|Urijah Faber|Anthony Pettis|Benson Henderson|Carlos Condit|Miguel Torres|Mike Brown",
-    "extras": "Brian Bowles|Eddie Wineland|Jamie Varner|Rob McCullough",
+    "extras": "Brian Bowles|Eddie Wineland|Jamie Varner|Steve Cantwell",
     "aliases": {
       "Jose Aldo": [
         "Aldo"
@@ -85,7 +85,8 @@ const ROWS = [
     },
     "source": [
       "https://www.ufc.com/news/wec-forever-legacy-little-blue-cage-ufc",
-      "https://www.ufc.com/news/best-2012-so-far"
+      "https://www.ufc.com/news/best-2012-so-far",
+      "https://www.ufc.com/news/wec-champ-cantwell-gets-fresh-start-ufc"
     ]
   },
   {
