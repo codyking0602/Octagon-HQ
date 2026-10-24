@@ -445,3 +445,136 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
   pointer-events:none;
 }
 .football-player-spotlight__copy > span { color:color-mix(in srgb,var(--player-team-secondary) 70%, #f4f5f6); }
+
+
+/* Owner-only Football Home iteration: public cards retain their established sizes. */
+.home-page--compact-football-preview .home-sport-chooser {
+  padding: 10px 14px;
+}
+
+.football-hq--compact-preview {
+  gap: 10px;
+}
+.football-hq--compact-preview .home-event-card {
+  padding: 11px 12px;
+  gap: 7px;
+}
+.football-hq--compact-preview .home-event-card__topline {
+  margin-bottom: 0;
+}
+.football-hq-compact-picks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.football-hq-compact-picks__completion,
+.football-hq-compact-picks__record {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.football-hq-compact-picks__record {
+  color: inherit;
+  text-decoration: none;
+}
+.football-hq-compact-picks small {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .055em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.football-hq-compact-picks strong {
+  font-size: 16px;
+  line-height: 1.08;
+  white-space: nowrap;
+}
+.football-hq-compact-picks span {
+  color: var(--home-football-blue, #8ebce6);
+  font-size: 8px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.football-hq-compact-picks__action {
+  display: grid;
+  place-items: center;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #383b41;
+  border-radius: 10px;
+  background: rgba(255,255,255,.025);
+  color: #f1f3f6;
+  font-size: 9px;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.football-hq-compact-picks__record:focus-visible,
+.football-hq-compact-picks__action:focus-visible {
+  outline: 2px solid var(--home-football-blue, #8ebce6);
+  outline-offset: 2px;
+}
+.football-hq--compact-preview .football-player-spotlight {
+  min-height: 156px;
+}
+.football-hq--compact-preview .football-player-spotlight__media img,
+.football-hq--compact-preview .football-player-spotlight__placeholder {
+  min-height: 156px;
+}
+.football-hq--compact-preview .football-player-spotlight__copy {
+  padding-block: 8px;
+}
+.football-hq--compact-preview .football-hq-games {
+  gap: 7px;
+  padding: 9px;
+}
+.football-hq--compact-preview .football-hq-games__list {
+  gap: 7px;
+}
+.football-hq--compact-preview .football-hq-game-row {
+  gap: 5px;
+  padding: 7px;
+}
+.football-hq--compact-preview .football-hq-game-row__main > span {
+  margin-bottom: 5px;
+}
+.football-hq--compact-preview .football-hq-game-row__team-pill {
+  min-height: 43px;
+  padding: 4px 6px;
+}
+.football-hq--compact-preview .football-hq-game-row__meta {
+  justify-content: flex-end;
+  padding: 0 2px;
+  border: 0;
+}
+.football-hq--compact-preview .football-hq-game-row__meta > strong {
+  display: none;
+}
+.football-hq--compact-preview .football-hq-games__schedule {
+  min-height: 30px;
+}
+@media (max-width: 430px) {
+  .football-hq--compact-preview .football-hq-compact-picks {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    gap: 6px;
+  }
+  .football-hq--compact-preview .football-hq-compact-picks strong { font-size: 14px; }
+  .football-hq--compact-preview .football-hq-compact-picks small,
+  .football-hq--compact-preview .football-hq-compact-picks span { font-size: 7px; }
+  .football-hq--compact-preview .football-hq-compact-picks__action { padding: 0 6px; font-size: 8px; }
+  .football-hq--compact-preview .football-hq-game-row__team-pill { min-height: 43px; }
+  .football-hq--compact-preview .football-player-spotlight { min-height: 156px; }
+  .football-hq--compact-preview .football-player-spotlight__media img,
+  .football-hq--compact-preview .football-player-spotlight__placeholder { min-height: 156px; }
+}
+@media (max-width: 360px) {
+  .football-hq--compact-preview .football-hq-compact-picks {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .football-hq--compact-preview .football-hq-compact-picks__action {
+    grid-column: 1 / -1;
+    min-height: 28px;
+  }
+}
