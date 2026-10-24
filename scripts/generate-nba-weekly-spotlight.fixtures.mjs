@@ -69,3 +69,14 @@ test("recovers week-long NBA highlight coverage from cached daily official uploa
   assert.ok(list.some(v=>v.id==="ABCDEFGHIjk"));
   assert.ok(list.every(v=>v.channel==="UCWJ2lWNubArHWmf3FIHbfcQ"));
 });
+
+test("rejects an otherwise matching highlight from Monday's next slate",()=>{
+  const future=extractYoutubeVideos(
+    '<feed><entry><yt:videoId>ABCdefghi12</yt:videoId><title>Sample Star NBA Highlights</title><published>2026-10-27T01:00:00Z</published></entry></feed>',
+    "UCWJ2lWNubArHWmf3FIHbfcQ");
+  assert.equal(findMatchingHighlight("Sample Star",future,"2026-10-25"),null);
+  const valid=extractYoutubeVideos(
+    '<feed><entry><yt:videoId>ABCdefghi12</yt:videoId><title>Sample Star Jr Highlights</title><published>2026-10-26T00:00:00Z</published></entry></feed>',
+    "UCWJ2lWNubArHWmf3FIHbfcQ");
+  assert.equal(findMatchingHighlight("Sample Star Jr.",valid,"2026-10-25")?.id,"ABCdefghi12");
+});
