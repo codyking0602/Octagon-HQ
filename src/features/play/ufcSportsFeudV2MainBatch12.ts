@@ -113,33 +113,21 @@ const ROWS = [
   },
   {
     "id": "ufc-v2-main12-ufc-title-referees",
-    "lane": "ufc-title-fight-referees",
-    "prompt": "Name a referee who has officiated an official UFC championship fight.",
+    "lane": "ufc-top-twelve-most-experienced-referees",
+    "prompt": "Name a referee among the twelve with the most UFC fights officiated in the October 23, 2026 FightIQ all-time referee table.",
     "kind": "person",
-    "ranked": "Herb Dean|John McCarthy|Marc Goddard|Jason Herzog|Dan Miragliotta|Mario Yamasaki|Keith Peterson|Mark Smith",
-    "extras": "Steve Mazzagatti|Yves Lavigne|Chris Tognoni|Kevin MacDonald",
+    "ranked": "Herb Dean|John McCarthy|Marc Goddard|Dan Miragliotta|Jason Herzog|Mark Smith|Chris Tognoni|Keith Peterson",
+    "extras": "Mario Yamasaki|Yves Lavigne|Mike Beltran|Steve Mazzagatti",
     "aliases": {
-      "John McCarthy": [
-        "Big John McCarthy",
-        "Big John"
-      ],
-      "Marc Goddard": [
-        "Goddard"
-      ],
-      "Mario Yamasaki": [
-        "Yamasaki"
-      ],
-      "Dan Miragliotta": [
-        "Miragliotta"
-      ],
-      "Steve Mazzagatti": [
-        "Mazzagatti"
-      ]
+      "John McCarthy": ["Big John McCarthy", "Big John"],
+      "Marc Goddard": ["Goddard"],
+      "Dan Miragliotta": ["Miragliotta"],
+      "Jason Herzog": ["Herzog"],
+      "Chris Tognoni": ["Tognoni"],
+      "Mario Yamasaki": ["Yamasaki"],
+      "Steve Mazzagatti": ["Mazzagatti"]
     },
-    "source": [
-      "https://www.ufc.com/events",
-      "https://www.ufc.com/news/ufc-referees-past-and-present"
-    ]
+    "source": ["https://fightiq.net/stats/decision-rate-by-referee"]
   }
 ] as const satisfies readonly UFCFeudDraftRow[];
 export const UFC_SPORTS_FEUD_V2_MAIN_BATCH12 = makeUfcFeudDraft(ROWS);

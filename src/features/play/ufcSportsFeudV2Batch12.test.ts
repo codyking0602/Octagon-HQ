@@ -38,6 +38,13 @@ describe("UFC Main V2 batch 12 source-anchored editorial (not live)",()=>{
       }
     }
   });
+  it("bounds the referee category to the verified twelve highest-volume UFC referees",()=>{
+    const q=UFC_SPORTS_FEUD_V2_MAIN_BATCH12.find(x=>x.id==="ufc-v2-main12-ufc-title-referees")!;
+    expect(q.prompt).toContain("twelve with the most UFC fights");
+    const {pack,board}=asPack(q);
+    for(const name of ["Bruce Buffer","Kevin MacDonald","Joe Rogan","Sal D'Amato"])
+      expect(matchFamilyFeudAnswer(pack,board,name).status,name).toBe("unrecognized");
+  });
   it("does not confuse current challenger or famous former champion with two-division winner",()=>{
     const q=UFC_SPORTS_FEUD_V2_MAIN_BATCH12.find(x=>x.id==="ufc-v2-main12-two-division-ufc-champs")!;
     const {pack,board}=asPack(q);
