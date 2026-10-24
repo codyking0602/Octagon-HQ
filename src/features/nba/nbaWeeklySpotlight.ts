@@ -59,3 +59,16 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
   if (published.getTime() > Date.now() + 60_000) return null;
   return value as NbaWeeklySpotlight;
 }
+
+/** Football HQ-style editorial date, never the raw ISO range. */
+export function nbaSpotlightWeekLabel(start: string, end: string): string {
+  const from = new Date(start + "T12:00:00Z");
+  const to = new Date(end + "T12:00:00Z");
+  if (!Number.isFinite(from.getTime()) || !Number.isFinite(to.getTime())) return "THIS WEEK";
+  if (start === "2026-10-20" && end === "2026-10-23") return "OPENING WEEK";
+  const fmt = (d: Date) => d.toLocaleString("en-US", {month: "short", timeZone: "UTC"}).toUpperCase();
+  const firstMonth = fmt(from), finalMonth = fmt(to);
+  return firstMonth === finalMonth
+    ? `${firstMonth} ${from.getUTCDate()}–${to.getUTCDate()}`
+    : `${firstMonth} ${from.getUTCDate()}–${finalMonth} ${to.getUTCDate()}`;
+}

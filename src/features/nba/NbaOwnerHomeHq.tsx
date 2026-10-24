@@ -5,7 +5,7 @@ import { NBA_GAMES_LAUNCH_DAY, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaCentralDay,
 import { NBA_FUTURES_SELECTIONS, emptyNbaFutures, nbaFuturesProgress } from "./nbaFutures";
 import { loadNbaFutures } from "./nbaFuturesRepository";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
-import { readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
+import { nbaSpotlightWeekLabel, readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
 import "../../styles/nba-owner-home.css";
 
 export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { profileId: string; allowOwnerDailyPreview?: boolean }) {
@@ -50,7 +50,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
   const dailyLabel = dailyType ? NBA_DAILY_GAME_LABELS[dailyType] : "Basketball Daily";
   const dailyState = !dailyEnabled ? "RELEASE PENDING" : publishedDaily
     ? hasCompleted ? "COMPLETED" : hasSaved ? "IN PROGRESS" : "AVAILABLE"
-    : "PRIVATE OWNER TEST";
+    : "OWNER PREVIEW";
 
   return (
     <>
@@ -63,8 +63,8 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
         <section className="nba-hq-owner__picks" aria-label="Basketball Picks">
           <h3>BASKETBALL PICKS</h3>
           <div className="nba-hq-owner__picks-grid">
-            <div><small>YOUR FUTURES PICKS</small><strong>{count == null ? "—" : `${count} OF ${NBA_FUTURES_SELECTIONS}`}</strong></div>
-            <div><small>SEASON RECORD</small><strong>—</strong><span>SCORING PENDING</span></div>
+            <div><small>YOUR PICKS</small><strong>{count == null ? "—" : `${count} OF ${NBA_FUTURES_SELECTIONS}`}</strong></div>
+            <div><small>2026–27 RECORD</small><strong>—</strong><span>AWAITING RESULTS</span></div>
             <Link to="/nba/picks">VIEW PICKS →</Link>
           </div>
           <span className="nba-hq-owner__picks-note">{futures?.locked ? "FUTURES LOCKED" : "FUTURES OPEN"} · CUP AND PLAYOFF PICKS WILL APPEAR WHEN RELEASED</span>
@@ -74,11 +74,14 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
           <div>
             <span>NBA DAILY CHALLENGE <small>{dailyState}</small></span>
             <strong>{dailyLabel}</strong>
-            <small>{publishedDaily && hasCompleted ? "Your official result is saved"
-              : ownerSlot ? "Owner-only preview · Not publicly ranked"
-              : "Official NBA games remain protected until launch verification"}</small>
+            <small>{publishedDaily && hasCompleted ? "Official result saved"
+              : ownerSlot ? "Practice · Unranked"
+              : dailyEnabled ? "Ready when you are" : "Official launch pending"}</small>
           </div>
-          <b>{hasCompleted && score != null ? `${score}/100` : dailyEnabled ? "PLAY →" : "VIEW →"}</b>
+          <div className="nba-hq-owner__daily-result">
+            {hasCompleted && score != null ? <strong>{score}<small>/100</small></strong> : <strong>{dailyEnabled ? "PLAY" : "VIEW"}</strong>}
+            <span>OPEN →</span>
+          </div>
         </Link>
 
         <section className="nba-hq-owner__player" aria-label="NBA Player Spotlight">
@@ -88,13 +91,13 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
                 <img src={weekly.player.headshotUrl} alt={weekly.player.name} loading="lazy" />
               </a>
               <div className="nba-hq-owner__player-copy">
-                <span>PLAYER SPOTLIGHT · {weekly.weekStart}–{weekly.weekEnd}</span>
+                <span>PLAYER SPOTLIGHT</span>
                 <h3><a href={weekly.player.profileUrl} target="_blank" rel="noreferrer">{weekly.player.name}</a></h3>
                 <strong>{weekly.player.team} · {weekly.player.position}</strong>
                 <div className="nba-hq-owner__stats">
                   {weekly.player.stats.map(item => <div key={item.label}><b>{item.value}</b><small>{item.label}</small></div>)}
                 </div>
-                <p>{weekly.player.summary}</p>
+                <p title={weekly.player.summary}>{weekly.player.summary}</p>
                 <a href={weekly.player.highlightUrl ?? "https://www.youtube.com/@NBA"} className="nba-hq-owner__watch" target="_blank" rel="noreferrer">{weekly.player.highlightUrl ? "WATCH HIGHLIGHT ↗" : "NBA CHANNEL ↗"}</a>
               </div>
             </>
@@ -107,7 +110,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
         </section>
 
         <section className="nba-hq-owner__team" aria-label="NBA Team of the Week">
-          <header><h3>TEAM OF THE WEEK</h3>{weekly ? <small>{weekly.weekStart}–{weekly.weekEnd}</small> : null}</header>
+          <header><h3>TEAM OF THE WEEK</h3>{weekly ? <small>{nbaSpotlightWeekLabel(weekly.weekStart, weekly.weekEnd)}</small> : null}</header>
           {weekly ? (
             <a href={weekly.team.profileUrl} target="_blank" rel="noreferrer" className="nba-hq-owner__team-link">
               <img src={weekly.team.logoUrl} alt="" loading="lazy"/>
@@ -118,7 +121,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
                   <span><b>{weekly.team.oppPpg}</b><small>OPP PPG</small></span>
                   <span><b>{weekly.team.netMargin}</b><small>AVG MARGIN</small></span>
                 </div>
-                <p>{weekly.team.summary}</p>
+                <p title={weekly.team.summary}>{weekly.team.summary}</p>
               </div><b aria-hidden="true">›</b>
             </a>
           ) : <p className="nba-hq-owner__team-pending">The week's best team will appear here after verified final games are collected.</p>}
@@ -126,11 +129,20 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
       </section>
 
       <section className="home-section nba-hq-owner__championship" aria-label="NBA Championship standings">
-        <header><h2>Championship standings</h2><Link to="/championship/nba">VIEW ALL ↗</Link></header>
-        <small>NBA CHAMPIONSHIP · 2026–27</small>
-        <div className="nba-hq-owner__championship-state">
-          <span aria-hidden="true">🏆</span>
-          <div><strong>SEASON OPEN</strong><small>Futures open · Scoring pending</small></div>
+        <h2>Championship standings</h2>
+        <div className="nba-hq-owner__championship-kicker">BASKETBALL CHAMPIONSHIP · 2026–27</div>
+        <div className="nba-hq-owner__championship-hero">
+          <div className="nba-hq-owner__championship-honor"><span aria-hidden="true">🏆</span> SCORING PENDING</div>
+          <div className="nba-hq-owner__championship-rank">
+            <strong>—</strong><span>RANK UNAVAILABLE</span>
+          </div>
+          <div className="nba-hq-owner__championship-score">
+            <strong>—</strong><span>SEASON SCORE</span>
+          </div>
+        </div>
+        <div className="nba-hq-owner__championship-foot">
+          <small>Futures results have not settled</small>
+          <Link to="/championship/nba">VIEW ALL ↗</Link>
         </div>
       </section>
     </>
