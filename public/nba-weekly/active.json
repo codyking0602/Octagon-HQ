@@ -10,7 +10,7 @@
     "profileUrl": "https://www.espn.com/nba/player/_/id/4431678",
     "highlightUrl": "https://www.youtube.com/watch?v=e8g1Fa8iYYM",
     "channelUrl": "https://www.youtube.com/@NBA",
-    "summary": "Averaged 30.0 points and 5.5 assists in two wins, including a 32-point effort as Philadelphia erased a 29-point deficit against Cleveland.",
+    "summary": "30.0 PPG and 5.5 APG in two wins · 32 against Cleveland.",
     "stats": [
       {
         "label": "PPG",
@@ -40,6 +40,6 @@
     "ppg": "130.0",
     "oppPpg": "103.0",
     "netMargin": "+27.0",
-    "summary": "Opened 2–0, highlighted by a franchise-record 47-point win over Charlotte. Averaged 130 points while allowing 103."
+    "summary": "2–0, including a franchise-record 47-point win over Charlotte."
   }
 }
