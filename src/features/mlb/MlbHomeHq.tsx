@@ -8,6 +8,7 @@ import { MlbPlayerSpotlight } from "./MlbPlayerSpotlight";
 import { mlbTeamAssetByName, mlbTeamColor, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import { useMlbChampionship } from "./useMlbChampionship";
+import { mlbPostseasonPickRecord, mlbCompactSeriesStatus } from "./mlbHomePresentation";
 import "../../styles/mlb-playoffs.css";
 
 function seriesDateTimeLabel(value: string | null) {
@@ -75,10 +76,9 @@ export function MlbHomeHq({
   const completedRoundPicks = roundSeries.filter((series) => submittedSeries.has(series.series_id)).length;
   const roundPicksTotal = roundSeries.length;
   const roundPicksRemaining = Math.max(0, roundPicksTotal - completedRoundPicks);
-  const ownRoundEntry = hub?.roundPickEntries.find((entry) => entry.is_current_user) ?? null;
-  const settledRoundPicks = ownRoundEntry ? ownRoundEntry.wins + ownRoundEntry.losses : 0;
-  const roundWinRate = settledRoundPicks && ownRoundEntry
-    ? Math.round((ownRoundEntry.wins / settledRoundPicks) * 100)
+  const postseasonRecord = mlbPostseasonPickRecord(hub?.series ?? [], hub?.ownRoundPicks ?? []);
+  const postseasonWinRate = postseasonRecord.settled
+    ? Math.round((postseasonRecord.wins / postseasonRecord.settled) * 100)
     : null;
   const roundProgressPercent = roundPicksTotal
     ? Math.round((completedRoundPicks / roundPicksTotal) * 100)
@@ -120,7 +120,7 @@ export function MlbHomeHq({
             <h2>{roundTitle}</h2>
           </div>
         )}
-        {compactPreview ? <small className="mlb-hq__header-round">{roundTitle.toUpperCase()}</small> : ownChampionship ? (
+        {compactPreview ? null : ownChampionship ? (
           <button
             className="mlb-home-championship-trigger"
             type="button"
@@ -170,9 +170,9 @@ export function MlbHomeHq({
                   {roundPicksRemaining > 0 ? <span>{pickStatus}</span> : null}
                 </div>
                 <Link className="mlb-hq__compact-picks-record" to="/mlb/picks#mlb-round-picks" aria-label="Open MLB current round Picks standings">
-                  <small>{MLB_ROUND_LABELS[hub.currentRound]} RECORD</small>
-                  <strong>{ownRoundEntry ? `${ownRoundEntry.wins}-${ownRoundEntry.losses}` : "—"}</strong>
-                  <span>{roundWinRate === null ? "RESULTS PENDING" : `${roundWinRate}% WIN RATE`}</span>
+                  <small>{hub.season} POSTSEASON RECORD</small>
+                  <strong>{postseasonRecord.settled ? `${postseasonRecord.wins}-${postseasonRecord.losses}` : "—"}</strong>
+                  <span>{postseasonWinRate === null ? "RESULTS PENDING" : `${postseasonWinRate}% WIN RATE`}</span>
                 </Link>
                 <Link className="mlb-hq__compact-picks-action" to="/mlb/picks#mlb-round-picks">
                   {hub.bracketLocked ? "VIEW PICKS →" : "OPEN PICKS →"}
@@ -214,7 +214,7 @@ export function MlbHomeHq({
               </small>
               <strong>
                 {bracketSummary}
-                {ownChampionship && championship
+                {!compactPreview && ownChampionship && championship
                   ? ` · ${formatChampionshipPoints(ownChampionship.bracket_points)} / ${championship.bracketMax} PTS`
                   : ""}
               </strong>
@@ -231,14 +231,16 @@ export function MlbHomeHq({
             <div className="home-challenge-card__copy">
               <div className="home-challenge-card__topline">
                 <span>MLB PLAYOFF CHALLENGE</span>
-                <small>{challengePlayable ? "READY" : "COMING SOON"}</small>
+                {!compactPreview ? <small>{challengePlayable ? "READY" : "COMING SOON"}</small> : null}
               </div>
               <h3>{featuredChallenge?.title ?? "Playoff Challenge"}</h3>
-              <p>{featuredChallenge?.description ?? "A new challenge arrives during the postseason."}</p>
+              <p>{compactPreview && /average fan/i.test(featuredChallenge?.title ?? "")
+                ? "Five grades · Ten questions"
+                : featuredChallenge?.description ?? "A new challenge arrives during the postseason."}</p>
             </div>
             <div className="home-challenge-card__result">
-              <strong>{challengePlayable ? "PLAY NOW" : "SOON"}</strong>
-              <span>OPEN <b aria-hidden="true">→</b></span>
+              <strong>{compactPreview ? (challengePlayable ? "PLAY →" : "VIEW →") : challengePlayable ? "PLAY NOW" : "SOON"}</strong>
+              {!compactPreview ? <span>OPEN <b aria-hidden="true">→</b></span> : null}
             </div>
           </Link>
 
@@ -265,7 +267,7 @@ export function MlbHomeHq({
                     </div>
                   </div>
                   <div className="football-hq-game-row__meta">
-                    <strong>{seriesDateTimeLabel(spotlightSeries.starts_at)}</strong>
+                    <strong>{compactPreview ? mlbCompactSeriesStatus(spotlightSeries) : seriesDateTimeLabel(spotlightSeries.starts_at)}</strong>
                     <b>OPEN BREAKDOWN →</b>
                   </div>
                 </Link>

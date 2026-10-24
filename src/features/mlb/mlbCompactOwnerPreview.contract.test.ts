@@ -18,7 +18,12 @@ describe("MLB compact owner-only home", () => {
   it("preserves the full public MLB card and the owner-only concise presentation", () => {
     expect(mlb).toContain('className="home-event-card__picks-grid"');
     expect(mlb).toContain('className="mlb-hq__compact-picks"');
-    expect(mlb).toContain('roundWinRate === null ? "RESULTS PENDING"');
+    expect(mlb).toContain('postseasonWinRate === null ? "RESULTS PENDING"');
+    expect(mlb).toContain("mlbPostseasonPickRecord");
+    expect(mlb).toContain('mlbCompactSeriesStatus(spotlightSeries)');
+    expect(mlb).toContain('className="home-weekly-games-row"');
+    expect(mlb).toContain('challengePlayable ? "PLAY →" : "VIEW →"');
+    expect(mlb).not.toContain('className="mlb-hq__header-round"');
     expect(mlb).toContain('to="/mlb/picks#mlb-bracket"');
     expect(mlb).toContain('to={challengePlayable ? featuredChallenge?.route ?? "/mlb" : "/mlb"}');
     expect(mlb).toContain('to={`/mlb/series/${spotlightSeries.series_id}`}');
@@ -40,5 +45,8 @@ describe("MLB compact owner-only home", () => {
     expect(championship).toContain('mlb?.own?.play_rank');
     expect(css).toContain('.home-sport-hq--mlb.mlb-hq--compact-preview');
     expect(css).toContain('background: #1b1d20;');
+    expect(css).toContain(".mlb-hq--compact-preview .mlb-player-spotlight__profile-media::after");
+    expect(css).toContain("box-shadow: none;");
+    expect(css).toContain(".mlb-hq--compact-preview .football-hq-game-row");
   });
 });
