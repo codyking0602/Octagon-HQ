@@ -2,16 +2,15 @@
 /**
  * Automated NBA weekly package. Fails closed: never emits a player card without
  * ESPN box-score aggregates and a matching direct highlight from an official
- * NBA or ESPN YouTube channel. Last verified package remains active on failure.
+ * NBA YouTube channel. Last verified package remains active on failure.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
 
 const ESPN = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba";
-const OFFICIAL_CHANNELS = [
-  "UCWJ2lWNubArHWmf3FIHbfcQ", // NBA
-  "UCVSSpcmZD2PwPBqb8yKQKBA", // NBA on ESPN
-];
+// @NBA is the sole permitted publisher for player spotlight videos.
+const NBA_CHANNEL_ID = "UCWJ2lWNubArHWmf3FIHbfcQ";
+const OFFICIAL_CHANNELS = [NBA_CHANNEL_ID];
 const MS_DAY = 86_400_000;
 const round = x => (Math.round(x * 10) / 10).toFixed(1);
 const dateText = d => d.toISOString().slice(0, 10);
@@ -106,11 +105,13 @@ function readPlayerBoxscore(raw, result, eventId) {
         const pts=stat(row,["pts","points"]),reb=stat(row,["reb","rebounds"]),ast=stat(row,["ast","assists"]);
         if (!id || !athlete.displayName || ![pts,reb,ast].every(Number.isFinite)) continue;
         const [made,attempts]=fg(row);
+        const steals=stat(row,["stl","steals"]),blocks=stat(row,["blk","blocks"]);
+        if (![made,attempts,steals,blocks].every(Number.isFinite) || attempts<=0) continue;
         const old=result.get(id)??{id,name:athlete.displayName,team:group?.team?.displayName??"",teamId,
           position:athlete.position?.abbreviation??"",headshotUrl:athlete.headshot?.href??`https://a.espncdn.com/i/headshots/nba/players/full/${id}.png`,
-          games:new Set(),points:0,rebounds:0,assists:0,made:0,attempts:0};
+          games:new Set(),points:0,rebounds:0,assists:0,made:0,attempts:0,steals:0,blocks:0};
         if (old.games.has(eventId)) continue;
-        old.games.add(eventId); old.points+=pts;old.rebounds+=reb;old.assists+=ast;old.made+=made;old.attempts+=attempts;
+        old.games.add(eventId); old.points+=pts;old.rebounds+=reb;old.assists+=ast;old.made+=made;old.attempts+=attempts;old.steals+=steals;old.blocks+=blocks;
         result.set(id,old);
       }
     }
@@ -128,23 +129,56 @@ export function collectTeamGames(events) {
       const id=String(self.team.id);
       const row=teams.get(id)??{id,name:self.team.displayName,abbreviation:self.team.abbreviation,
         logoUrl:self.team.logo??`https://a.espncdn.com/i/teamlogos/nba/500/${String(self.team.abbreviation).toLowerCase()}.png`,
-        wins:0,losses:0,for:0,against:0,games:new Set()};
+        wins:0,losses:0,for:0,against:0,games:new Set(),opponents:[]};
       if (row.games.has(event.id)) continue;
       const pts=numerical(self.score),opp=numerical(other.score);
-      row.games.add(event.id);
+      row.games.add(event.id); row.opponents.push(String(other.team.id));
       row.wins+=pts>opp?1:0;row.losses+=pts<opp?1:0;row.for+=pts;row.against+=opp;
       teams.set(id,row);
     }
   }
   return { teams, finals };
 }
-function candidateScore(p, teams) {
+// Approved editorial model: 40% production, 20% efficiency, 20% winning,
+// 20% defense. Position normalization values guard assists / big rebounds
+// without arbitrarily rewarding whichever player scored the most points.
+const clamp01 = n => Math.max(0, Math.min(1, n));
+export function playerEditorialScore(p, teams) {
   const games=p.games.size;
+  if (!games || !p.attempts) return 0;
   const team=[...teams.values()].find(t=>t.abbreviation===p.teamId);
-  return p.points/games + (p.assists/games)*1.5 + (p.rebounds/games)*.7
-    + (team ? (team.wins/team.games.size)*7 : 0);
+  const role=String(p.position).toUpperCase();
+  const weights=role==="C" || role==="PF" ? [.5,.15,.35]
+    : role==="PG" || role==="SG" || role==="G" ? [.58,.3,.12] : [.63,.17,.2];
+  const production=100*(weights[0]*clamp01(p.points/games/35)
+    +weights[1]*clamp01(p.assists/games/10)
+    +weights[2]*clamp01(p.rebounds/games/12));
+  const efficiency=100*clamp01((p.made/p.attempts-.35)/.25)
+    *clamp01(p.attempts/games/12);
+  const winning=100*(team ? team.wins/Math.max(1,team.games.size) : 0);
+  const defense=100*(role==="C"||role==="PF"
+    ? .35*clamp01(p.steals/games/2.5)+.65*clamp01(p.blocks/games/2.5)
+    : .65*clamp01(p.steals/games/2.5)+.35*clamp01(p.blocks/games/2.5));
+  return .4*production+.2*efficiency+.2*winning+.2*defense;
 }
-export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publishedAt}) {
+
+// Team award: wins are most important, then margin, points allowed, opponent
+// strength. For teams with only one observed opponent game, opposition quality
+// is neutral rather than falsely treating the opponent as a weak/strong team.
+export function teamEditorialScore(t, teams) {
+  const games=t.games.size;
+  if (!games) return 0;
+  const winRate=t.wins/games;
+  const margin=(t.for-t.against)/games;
+  const allowed=t.against/games;
+  const opponentRates=t.opponents.map(id=>teams.get(id)).filter(Boolean)
+    .map(opp=>opp.games.size>=2 ? opp.wins/opp.games.size : .5);
+  const opponentStrength=opponentRates.length
+    ? opponentRates.reduce((sum,n)=>sum+n,0)/opponentRates.length : .5;
+  return 45*winRate+25*clamp01((margin+10)/40)
+    +15*clamp01((125-allowed)/40)+15*opponentStrength;
+}
+export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publishedAt, previous=null}) {
   const {teams,finals}=collectTeamGames(events);
   // Two or more final appearances required to establish a genuine weekly sample.
   if (finals.length<8) throw Error("Fewer than eight verified final NBA games");
@@ -155,16 +189,18 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
     readPlayerBoxscore(summary,players,String(game.id));
   }
   const candidateTeams=[...teams.values()].filter(t=>t.games.size>=2)
-    .sort((a,b)=> (b.wins/b.games.size - a.wins/a.games.size)
-      || ((b.for-b.against)/b.games.size - (a.for-a.against)/a.games.size)
+    .sort((a,b)=> (teamEditorialScore(b,teams)-(previous?.team?.teamId===b.abbreviation?7:0))
+      -(teamEditorialScore(a,teams)-(previous?.team?.teamId===a.abbreviation?7:0))
       || b.wins-a.wins || a.name.localeCompare(b.name));
   if (!candidateTeams.length) throw Error("No team with two completed games");
-  const playerCandidates=[...players.values()].filter(p=>p.games.size>=2&&p.points/p.games.size>=18&&p.attempts>0)
-    .sort((a,b)=>candidateScore(b,teams)-candidateScore(a,teams));
+  const playerCandidates=[...players.values()].filter(p=>p.games.size>=2&&p.points/p.games.size>=16&&p.attempts/p.games.size>=9)
+    .sort((a,b)=> (playerEditorialScore(b,teams)-(previous?.player?.name===b.name?7:0))
+      -(playerEditorialScore(a,teams)-(previous?.player?.name===a.name?7:0))
+      || a.name.localeCompare(b.name));
   const selected=playerCandidates.map(player=>({
     player, video:findMatchingHighlight(player.name,videos,weekEnd),
   })).find(x=>x.video);
-  if (!selected) throw Error("No eligible weekly player has a verified matching NBA/ESPN YouTube highlight");
+  if (!selected) throw Error("No eligible weekly player has a verified matching NBA YouTube highlight");
   const p=selected.player,g=p.games.size,t=candidateTeams[0],tg=t.games.size;
   const fg=p.attempts>0?round(p.made/p.attempts*100):"—";
   const winner={
@@ -264,7 +300,7 @@ export async function collectOfficialVideos() {
   const merged=mergeOfficialVideos(previous,newlyFound);
   if (!merged.length) throw Error("No verifiable official YouTube videos; " + errors.join("; "));
   await fs.writeFile(VIDEO_CACHE_FILE, JSON.stringify(merged,null,2)+"\n");
-  console.log(`Verified official NBA/ESPN video catalog: ${merged.length} videos (${newlyFound.length} refreshed)`);
+  console.log(`Verified official NBA video catalog: ${merged.length} videos (${newlyFound.length} refreshed)`);
   return merged;
 }
 
@@ -287,7 +323,7 @@ async function main(){
     boxscores.set(String(event.id),await retrieveJson(`${ESPN}/summary?event=${encodeURIComponent(event.id)}`));
     await new Promise(resolve=>setTimeout(resolve,200));
   }
-  const data=selectWeek({events:finals,boxscores,videos,weekStart,weekEnd,publishedAt:new Date().toISOString()});
+  const data=selectWeek({events:finals,boxscores,videos,weekStart,weekEnd,publishedAt:new Date().toISOString(),previous:existing});
   await fs.mkdir(path.dirname(destination),{recursive:true});
   await fs.writeFile(destination,JSON.stringify(data,null,2)+"\n");
   const archive=path.resolve(`data/generated/nba/weekly-${weekEnd}.json`);
