@@ -120,7 +120,7 @@ export function MlbHomeHq({
             <h2>{roundTitle}</h2>
           </div>
         )}
-        {ownChampionship ? (
+        {compactPreview ? <small className="mlb-hq__header-round">{roundTitle.toUpperCase()}</small> : ownChampionship ? (
           <button
             className="mlb-home-championship-trigger"
             type="button"
@@ -136,9 +136,7 @@ export function MlbHomeHq({
           <small>MLB CHAMPIONSHIP</small>
         )}
       </header>
-      {compactPreview ? <p className="mlb-hq__round-context">2026 MLB PLAYOFFS · {roundTitle.toUpperCase()}</p> : null}
-
-      {showChampionship && championship ? (
+      {showChampionship && championship && !compactPreview ? (
         <div id="mlb-home-championship-breakdown">
           <MlbChampionshipSummary championship={championship} className="mlb-home-championship-summary" />
         </div>

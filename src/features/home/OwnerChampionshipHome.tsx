@@ -260,7 +260,8 @@ export function OwnerChampionshipHome({
       aria-label={showSportSelector ? "Your HQ" : "Championship standings"}
     >
       <div className="home-champ-preview__top">
-        <div><h2>{showSportSelector ? "Your HQ" : "Championship standings"}</h2>{chosen === "all" ? <small>2026 CHAMPIONSHIP HEADQUARTERS</small> : null}</div>
+        <div><h2>{compactMlb ? "MLB CHAMPIONSHIP" : showSportSelector ? "Your HQ" : "Championship standings"}</h2>{chosen === "all" ? <small>2026 CHAMPIONSHIP HEADQUARTERS</small> : null}</div>
+        {compactMlb ? <Link className="mlb-hq__championship-heading-link" to="/championship/mlb">STANDINGS →</Link> : null}
         {showSportSelector ? (
           <label className="home-champ-preview__filter">
             <span className="sr-only">Home sport</span>
@@ -340,16 +341,17 @@ export function OwnerChampionshipHome({
                 <strong>{mlb?.own?.total_points ?? "—"} <span>PTS</span></strong>
               </Link>
             </div>
-            <div className="mlb-hq__championship-leaders" aria-label="MLB postseason leaders">
-              {mlb?.standings.slice().sort((a, b) => a.overall_rank - b.overall_rank).slice(0, 3).map((entry) => (
-                <Link key={entry.profile_id} to="/championship/mlb">
-                  <b>#{entry.overall_rank}</b>
-                  <span>{entry.is_current_user ? "YOU" : entry.display_name}</span>
-                  <strong>{entry.total_points} PTS</strong>
-                </Link>
-              )) ?? <span>Standings are loading…</span>}
+            <div className="mlb-hq__championship-lanes" aria-label="MLB postseason scoring ranks">
+              <Link to="/championship/mlb" aria-label="Open MLB Series Picks standings">
+                <small>SERIES PICKS</small><strong>{formatRank(mlb?.own?.series_rank)}</strong>
+              </Link>
+              <Link to="/championship/mlb" aria-label="Open MLB Playoff Bracket standings">
+                <small>BRACKET</small><strong>{formatRank(mlb?.own?.bracket_rank)}</strong>
+              </Link>
+              <Link to="/championship/mlb" aria-label="Open MLB Playoff Games standings">
+                <small>PLAYOFF GAMES</small><strong>{formatRank(mlb?.own?.play_rank)}</strong>
+              </Link>
             </div>
-            <Link className="mlb-hq__championship-all" to="/championship/mlb">VIEW FULL STANDINGS →</Link>
           </div>
         ) : (
           <div className="home-champ-preview__detail" data-sport="mlb">

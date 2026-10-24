@@ -35,7 +35,9 @@ describe("MLB compact owner-only home", () => {
   it("shows compact and neutral MLB championship only to the owner", () => {
     expect(championship).toContain('compactMlbPreview = false');
     expect(championship).toContain('home-champ-preview--compact-mlb');
-    expect(championship).toContain('entry.total_points');
+    expect(championship).toContain('mlb?.own?.series_rank');
+    expect(championship).toContain('mlb?.own?.bracket_rank');
+    expect(championship).toContain('mlb?.own?.play_rank');
     expect(css).toContain('.home-sport-hq--mlb.mlb-hq--compact-preview');
     expect(css).toContain('background: #1b1d20;');
   });

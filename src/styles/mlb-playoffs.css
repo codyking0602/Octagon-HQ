@@ -4648,3 +4648,61 @@
   letter-spacing: .07em;
 }
 .home-champ-preview--compact-mlb[data-sport="mlb"] a:focus-visible { outline: 2px solid var(--mlb-green-strong); outline-offset: 2px; }
+
+/* Keep the owner championship and World Series label as clean as the approved mock-up. */
+.mlb-hq--compact-preview .mlb-hq__header-round {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  color: #a2a9ad;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.home-champ-preview--compact-mlb .home-champ-preview__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.home-champ-preview--compact-mlb .home-champ-preview__top h2 {
+  color: var(--mlb-green-strong);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+.mlb-hq__championship-heading-link {
+  color: var(--mlb-green-strong);
+  text-decoration: none;
+  font-size: 9px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.mlb-hq__championship-lanes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 7px;
+  min-width: 0;
+}
+.mlb-hq__championship-lanes a {
+  display: grid;
+  gap: 3px;
+  padding: 8px 7px;
+  min-width: 0;
+  border: 1px solid #41464a;
+  border-radius: 9px;
+  background: #232528;
+  text-decoration: none;
+}
+.mlb-hq__championship-lanes small {
+  color: #aeb5ba;
+  font-size: 8px;
+  line-height: 1.1;
+  font-weight: 900;
+  white-space: normal;
+}
+.mlb-hq__championship-lanes strong {
+  color: #f3f6f5;
+  font-size: 16px;
+  line-height: 1.05;
+}
