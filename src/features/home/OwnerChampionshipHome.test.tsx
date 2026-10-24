@@ -161,6 +161,26 @@ describe("Owner Championship Home preview", () => {
       .toHaveAttribute("href", "/championship/football?tab=play");
   });
 
+  it("uses Football's compact Championship structure for public UFC without changing Football", async () => {
+    render(
+      <MemoryRouter>
+        <OwnerChampionshipHome
+          streak={11} streakLoading={false} showMlb={false}
+          sport="ufc" onSportChange={vi.fn()} showSportSelector={false}
+        />
+      </MemoryRouter>,
+    );
+    const region = screen.getByRole("region", { name: "Championship standings" });
+    expect(region).toHaveClass("home-champ-preview--compact-ufc");
+    expect(region).not.toHaveClass("home-champ-preview--compact-football");
+    expect(await within(region).findByText("UFC CHAMPIONSHIP · 2026")).toBeInTheDocument();
+    expect(within(region).queryByText("CHAMPIONSHIP STANDINGS")).not.toBeInTheDocument();
+    expect(within(region).getByRole("link", { name: "Open UFC Picks leaderboard" }))
+      .toHaveAttribute("href", "/championship/ufc?tab=picks");
+    expect(within(region).getByRole("link", { name: "Open UFC Play leaderboard" }))
+      .toHaveAttribute("href", "/championship/ufc?tab=play");
+  });
+
   it("counts MLB as a league lead only when MLB actually ranks first", async () => {
     loader.mlb.mockResolvedValue({ own: { overall_rank: 1, total_points: 93 }, standings: [{}, {}, {}] });
     loader.sport.mockImplementation(async (sport) => {
