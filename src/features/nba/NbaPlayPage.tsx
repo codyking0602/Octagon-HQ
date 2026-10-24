@@ -88,7 +88,9 @@ export default function NbaPlayPage() {
   const savedScores = (history.data ?? []).map(row => row.normalizedScore).filter(Number.isFinite);
   const completed = savedScores.length;
   const average = completed ? Math.round(savedScores.reduce((sum, score) => sum + score, 0) / completed) : null;
-  const best = completed ? Math.max(...savedScores) : null;
+  const dailyWins = (published || ownerTest)
+    ? overview.standings?.entries.find(entry => entry.isCurrentUser)?.wins
+    : undefined;
 
   return <div className="page play-v2 nba-games-hub" data-sport="nba" data-testid="nba-play-v2-hub">
     <header className="play-v2__heading">
@@ -159,19 +161,6 @@ export default function NbaPlayPage() {
       </>}
     </section>
 
-    <section className="play-v2__performance" aria-label="Your Play Performance">
-      <div className="play-v2__section-top">
-        <span>YOUR PLAY PERFORMANCE</span>
-        <span className="nba-games-hub__pending-label">{ownerTest ? "PRIVATE TEST SCORES" : "OFFICIAL SCORES ONLY"}</span>
-      </div>
-      <div className="play-v2__metrics">
-        <div><span>DAILY AVERAGE</span><strong>{(published || ownerTest) && average !== null ? average : "—"}</strong><small>/100</small></div>
-        <div><span>COMPLETED</span><strong>{published || ownerTest ? completed : "—"}</strong><small>{ownerTest ? "test games" : "official games"}</small></div>
-        <div><span>PERSONAL BEST</span><strong>{(published || ownerTest) && best !== null ? best : "—"}</strong><small>/100</small></div>
-      </div>
-      {ownerTest ? <p className="play-v2__muted">Your server-saved test results reset from view at launch; they never count toward public NBA standings.</p> : !published ? <p className="play-v2__muted">Your NBA scores will appear here after official Daily results are enabled. Private previews do not count.</p> : null}
-    </section>
-
     {profile ? <MatchupsCompact sport="nba" /> : (
       <section className="play-v2__matchups" aria-label="Your Matchups">
         <div className="play-v2__section-top"><span>YOUR MATCHUPS</span></div>
@@ -196,6 +185,19 @@ export default function NbaPlayPage() {
           </button>;
         })}
       </div>
+    </section>
+
+    <section className="play-v2__performance" aria-label="Your Play Performance">
+      <div className="play-v2__section-top">
+        <span>YOUR PLAY PERFORMANCE</span>
+        <span className="nba-games-hub__pending-label">{ownerTest ? "PRIVATE TEST SCORES" : "OFFICIAL SCORES ONLY"}</span>
+      </div>
+      <div className="play-v2__metrics">
+        <div><span>DAILY AVERAGE</span><strong>{(published || ownerTest) && average !== null ? average : "—"}</strong><small>/100</small></div>
+        <div><span>COMPLETED</span><strong>{published || ownerTest ? completed : "—"}</strong><small>{ownerTest ? "test games" : "official games"}</small></div>
+        <div><span>DAILY WINS</span><strong>{dailyWins ?? "—"}</strong><small>first-place finishes</small></div>
+      </div>
+      {ownerTest ? <p className="play-v2__muted">Your server-saved test results reset from view at launch; they never count toward public NBA standings.</p> : !published ? <p className="play-v2__muted">Your NBA scores will appear here after official Daily results are enabled. Private previews do not count.</p> : null}
     </section>
 
     {owner ? <section className="nba-games-hub__owner-tools" aria-label="Owner preview catalog">

@@ -1,0 +1,82 @@
+.nba-hq--owner-preview {
+  --nba-hq-orange: #f2a341;
+  padding: 12px;
+  gap: 10px;
+  background: #1a1d20;
+  border: 1px solid #40444b;
+  border-radius: 24px;
+}
+.nba-hq-owner__heading { display: flex; justify-content: center; align-items: center; min-height: 35px; position: relative; }
+.nba-hq-owner__heading h2 { color: var(--nba-hq-orange); font-size: 18px; letter-spacing: .13em; font-weight: 950; margin: 0; text-align: center; }
+.nba-hq-owner__heading small { position: absolute; right: 0; top: 4px; font-size: 8px; font-weight: 900; color: #b1b8c0; }
+.nba-hq--owner-preview > section { min-width: 0; }
+.nba-hq-owner__picks,.nba-hq-owner__daily,.nba-hq-owner__team {
+  border: 1px solid #41454b; border-radius: 15px; background: #202225;
+}
+.nba-hq-owner__picks { display: grid; padding: 12px 11px; gap: 10px; }
+.nba-hq-owner__picks h3 { margin: 0; font-size: 12px; color: #c7cbd0; letter-spacing: .08em; }
+.nba-hq-owner__picks-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.nba-hq-owner__picks-grid > div { display: grid; gap: 3px; min-width: 0; }
+.nba-hq-owner__picks-grid small { color: #a5abb4; font-size: 8px; font-weight: 900; }
+.nba-hq-owner__picks-grid strong { color: #f4f5f7; font-size: 17px; font-weight: 950; white-space: nowrap; }
+.nba-hq-owner__picks-grid span { color: var(--nba-hq-orange); font-size: 8px; font-weight: 800; }
+.nba-hq-owner__picks-grid a { padding: 10px 9px; border: 1px solid #4b4f56; border-radius: 9px; color: #fff; text-decoration: none; font-size: 10px; font-weight: 950; white-space: nowrap; }
+.nba-hq-owner__picks-note { color: #9ea7b2; font-size: 7px; letter-spacing: .025em; }
+.nba-hq-owner__daily { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 9px; align-items: center; text-decoration: none; padding: 10px 11px; color: #fff; min-height: 63px; }
+.nba-hq-owner__daily > div { display: grid; min-width: 0; gap: 4px; }
+.nba-hq-owner__daily div > span { font-size: 9px; color: var(--nba-hq-orange); font-weight: 900; letter-spacing: .055em; }
+.nba-hq-owner__daily div > span > small { margin-left: 5px; color: #aeb3bb; font-size: 8px; }
+.nba-hq-owner__daily strong { font-size: 15px; line-height: 1.15; }
+.nba-hq-owner__daily div > small { color: #a8aeb8; font-size: 9px; line-height: 1.15; }
+.nba-hq-owner__daily > b { color: var(--nba-hq-orange); padding-left: 11px; border-left: 1px solid #41464e; font-size: 11px; white-space: nowrap; }
+.nba-hq-owner__player { display: grid; grid-template-columns: 34% minmax(0,1fr); background: #0b1520; border: 1px solid #3b5060; border-radius: 16px; min-height: 177px; overflow: hidden; }
+.nba-hq-owner__photo { position: relative; display: block; overflow: hidden; background: #132231; }
+.nba-hq-owner__photo::after { content: ""; pointer-events: none; position: absolute; inset: 0; background: linear-gradient(90deg,transparent 65%,#0b1520 100%); }
+.nba-hq-owner__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+.nba-hq-owner__player-copy { padding: 10px 10px 10px 5px; display: grid; align-content: center; gap: 6px; min-width: 0; }
+.nba-hq-owner__player-copy > span,.nba-hq-owner__weekly-pending > span { font-size: 8px; font-weight: 950; color: var(--nba-hq-orange); letter-spacing: .085em; }
+.nba-hq-owner__player-copy h3,.nba-hq-owner__weekly-pending h3 { margin: 0; font-size: clamp(17px, 4.5vw, 23px); letter-spacing: -.04em; line-height: 1; }
+.nba-hq-owner__player-copy h3 a { color: #fff; text-decoration: none; }
+.nba-hq-owner__player-copy > strong { font-size: 8px; color: #c0c9d2; letter-spacing: .05em; }
+.nba-hq-owner__stats { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 4px; min-width: 0; }
+.nba-hq-owner__stats div,.nba-hq-owner__team-stats span { display: grid; gap: 2px; min-width: 0; }
+.nba-hq-owner__stats b,.nba-hq-owner__team-stats b { font-size: 11px; }
+.nba-hq-owner__stats small,.nba-hq-owner__team-stats small { font-size: 7px; color: #aeb6c0; font-weight: 900; white-space: nowrap; }
+.nba-hq-owner__player-copy p,.nba-hq-owner__team-copy p { margin: 0; font-size: 9px; line-height: 1.3; color: #b4bdc7; }
+.nba-hq-owner__watch { display: grid; place-items: center; min-height: 31px; border: 1px solid #ffaa65; border-radius: 9px; color: #fff; background: #bd5d21; font-size: 10px; font-weight: 950; text-decoration: none; }
+.nba-hq-owner__weekly-pending { grid-column: 1 / -1; align-content: center; padding: 15px; display: grid; gap: 9px; min-height: 135px; }
+.nba-hq-owner__weekly-pending p { font-size: 11px; line-height: 1.45; color: #b5bec8; margin: 0; }
+.nba-hq-owner__team { padding: 10px 11px; display: grid; gap: 9px; }
+.nba-hq-owner__team > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.nba-hq-owner__team h3 { color: var(--nba-hq-orange); font-size: 11px; letter-spacing: .09em; margin: 0; }
+.nba-hq-owner__team > header small { color: #aeb4bd; font-size: 8px; }
+.nba-hq-owner__team-link { display: grid; grid-template-columns: 75px minmax(0,1fr) 12px; gap: 10px; align-items: center; text-decoration: none; color: #f4f5f6; }
+.nba-hq-owner__team-link img { width: 75px; height: 75px; object-fit: contain; }
+.nba-hq-owner__team-copy { display: grid; min-width: 0; gap: 4px; }
+.nba-hq-owner__team-copy > strong { font-size: 14px; line-height: 1.1; }
+.nba-hq-owner__team-copy > small { color: #a9b6bf; font-size: 9px; font-weight: 900; }
+.nba-hq-owner__team-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 5px; padding: 3px 0; }
+.nba-hq-owner__team-copy p { font-size: 9px; }
+.nba-hq-owner__team-link > b { font-size: 22px; color: var(--nba-hq-orange); }
+.nba-hq-owner__team-pending { margin: 0; min-height: 44px; font-size: 11px; color: #aeb8c0; }
+.nba-hq-owner__championship { margin-top: 15px; padding: 13px; border-radius: 20px; border: 1px solid #3b454b; background: #1c2024; display: grid; gap: 8px; }
+.nba-hq-owner__championship > header { display: flex; gap: 10px; justify-content: space-between; align-items: center; }
+.nba-hq-owner__championship h2 { margin: 0; font-size: 21px; line-height: 1.1; color: #f5f7fa; letter-spacing: -.045em; }
+.nba-hq-owner__championship > header a { color: var(--nba-hq-orange,#f2a341); font-size: 9px; white-space: nowrap; font-weight: 950; text-decoration: none; }
+.nba-hq-owner__championship > small { color: var(--nba-hq-orange,#f2a341); font-size: 9px; letter-spacing: .07em; font-weight: 950; }
+.nba-hq-owner__championship-state { display: flex; gap: 10px; align-items: center; padding: 6px 0; }
+.nba-hq-owner__championship-state > span { font-size: 28px; }
+.nba-hq-owner__championship-state > div { display: grid; gap: 4px; }
+.nba-hq-owner__championship-state strong { color: #d4b06b; font-size: 14px; }
+.nba-hq-owner__championship-state small { color: #b1bac5; font-size: 11px; }
+.nba-hq--owner-preview a:focus-visible,.nba-hq-owner__championship a:focus-visible { outline: 2px solid #f2a341; outline-offset: 2px; }
+@media(max-width:370px){
+  .nba-hq-owner__heading h2 { font-size: 15px; }
+  .nba-hq-owner__picks-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .nba-hq-owner__picks-grid a { grid-column: 1 / -1; text-align: center; }
+  .nba-hq-owner__team-link { grid-template-columns: 54px minmax(0,1fr) 10px; gap: 7px; }
+  .nba-hq-owner__team-link img { width: 54px; height: 54px; }
+  .nba-hq-owner__player { grid-template-columns: 32% minmax(0,1fr); }
+  .nba-hq-owner__stats b { font-size: 9px; }
+  .nba-hq-owner__stats small { font-size: 6px; }
+}
