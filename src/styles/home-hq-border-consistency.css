@@ -1,15 +1,20 @@
-/* One outline treatment across the four Home sports. Every HQ uses its own
-   accent but the same border opacity; spacing, card fills and team-color
-   matchup pills remain untouched. The global Your HQ header stays neutral. */
+/* Home HQ borders follow one hierarchy, regardless of the selected sport.
+   Sport identity lives in headings, labels, primary actions, and team pills.
+   The outer shell gets only a muted sport tint; ordinary cards use graphite. */
 .home-page .home-sport-hq {
-  border-color: rgba(var(--home-sport-accent-rgb), .42);
+  border-color: color-mix(in srgb, rgb(var(--home-sport-accent-rgb)) 20%, #42474e);
 }
+
+/* Identical neutral outlines for picks, Daily, weekly panels, and spotlights.
+   Keep the approved sizes/backgrounds and preserve team-specific matchup pills.
+   Special-event Football Daily cards retain their own approved rivalry border. */
 .home-page .home-sport-hq :is(
   .home-event-card,
-  .home-challenge-card,
+  .home-challenge-card:not([data-special-daily]),
   .home-weekly-games-row,
   .football-hq-games,
   .ufc-contender-series,
+  .football-player-spotlight:not(.football-player-spotlight--memorial),
   .nba-hq-owner__picks,
   .nba-hq-owner__daily,
   .nba-hq-owner__player,
@@ -17,5 +22,17 @@
   .football-hq-compact-picks__action,
   .nba-hq-owner__picks-grid a
 ) {
-  border-color: rgba(var(--home-sport-accent-rgb), .38);
+  border-color: #42474e;
+}
+
+/* UFC Contender Series was left with red outlines on every individual name.
+   Match Football's understated inner rows, not another red border layer. */
+.home-page .home-sport-hq .ufc-contender-series__lead,
+.home-page .home-sport-hq .ufc-contender-series__pair > a {
+  border-color: #383e45;
+}
+
+/* Daily's result separator is structural, not another sport accent. */
+.home-page .home-sport-hq .nba-hq-owner__daily-result {
+  border-left-color: rgba(173, 184, 197, .22);
 }
