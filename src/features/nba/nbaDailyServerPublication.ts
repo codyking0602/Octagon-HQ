@@ -91,7 +91,7 @@ export function buildNbaServerDailyPublication(
   publicationHistory?: unknown,
 ) {
   if (!scheduleVersion.trim()) throw new Error("NBA Daily schedule version is required.");
-  const ordinal = scheduleVersion === "nba-owner-prelaunch-v1"
+  const ordinal = scheduleVersion === "nba-daily-owner-prelaunch-v1"
     ? (nbaOwnerPreviewDaily(day) === gameType ? 0 : (() => { throw new Error("NBA owner prelaunch game/day mismatch."); })())
     : nbaDailyGameAppearance(day, gameType);
   const publication = gameType === "higher_lower"
