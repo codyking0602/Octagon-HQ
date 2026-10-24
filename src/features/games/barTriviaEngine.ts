@@ -289,6 +289,7 @@ export function buildBarTriviaRun(
       const chosen = { ...accessible, round: "round2" as const };
       run.push(chosen);
       used.add(chosen.id);
+      used.add(chosen.factKey ?? chosen.id);
       usedCategories.add(chosen.category);
       continue;
     }
