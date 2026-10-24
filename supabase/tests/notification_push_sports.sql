@@ -5,6 +5,7 @@ begin;
 do $test$
 declare
   v_id uuid := '00000000-0000-0000-0000-000000000001';
+  v_existing_id uuid;
   v_result jsonb;
   v_scope text[];
 begin
@@ -44,6 +45,31 @@ begin
     'Your UFC and NBA challenges close at midnight Central. Play them.');
   if coalesce((v_result->>'allowed')::boolean,true) then
     raise exception 'combined push unexpectedly allowed before any sport opt-in';
+  end if;
+
+  -- For a real profile in the isolated fixture, model UFC-only opt-in and
+  -- ensure the phone text excludes a muted NBA or Football sport.
+  select id into v_existing_id from public.profiles order by id limit 1;
+  if v_existing_id is not null then
+    insert into private.notification_push_sports(profile_id,ufc,football,mlb,nba)
+    values (v_existing_id,true,false,false,false)
+    on conflict (profile_id) do update
+      set ufc = true, football = false, mlb = false, nba = false;
+
+    v_result := private.notification_push_selection(
+      v_existing_id,'daily_challenge_four_hours','/','daily-closing-combined',
+      'Your UFC and Football challenges close at midnight Central. Play them.');
+    if not coalesce((v_result->>'allowed')::boolean,false)
+      or position('Football' in (v_result->>'summary')) > 0
+      or position('UFC' in (v_result->>'summary')) = 0 then
+      raise exception 'combined push did not sanitize muted sport';
+    end if;
+
+    v_result := private.notification_push_selection(
+      v_existing_id,'football_picks_open','/football/picks','football-picks','Make picks');
+    if coalesce((v_result->>'allowed')::boolean,true) then
+      raise exception 'football-only push was not muted';
+    end if;
   end if;
 
   v_result := private.notification_push_selection(
