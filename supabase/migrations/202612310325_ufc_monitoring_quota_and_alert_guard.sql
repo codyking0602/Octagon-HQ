@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION public.record_pick_monitoring_run(p_payload jsonb)
 AS $function$
 declare
   v_run_id uuid;
-  v_card_only boolean := p_payload->>'decision_reason' = 'card_source_only';
+  v_card_only boolean := coalesce(p_payload->>'decision_reason' = 'card_source_only', false);
   v_trigger_kind text := coalesce(nullif(trim(p_payload->>'trigger_kind'),''), 'scheduled');
   v_status text := trim(coalesce(p_payload->>'status',''));
   v_source_event_identity text := trim(coalesce(p_payload->>'source_event_identity',''));
