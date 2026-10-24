@@ -31,6 +31,7 @@ describe("notification sport push controls — draft contract", () => {
     expect(migration).toContain("v_id uuid := auth.uid()");
     expect(migration).toContain("from private.notification_push_subscriptions subscription");
     expect(migration).toContain("where subscription.enabled");
+    expect(migration).toContain("private.notification_push_selection");
     expect(migration).toContain("grant execute on function public.get_my_notification_push_sports() to authenticated");
     expect(repository).toContain('client.rpc("get_my_notification_push_sports")');
     expect(repository).toContain('client.rpc("set_my_notification_push_sports"');
@@ -65,6 +66,15 @@ describe("notification sport push controls — draft contract", () => {
     expect(migration).not.toContain("delete from private.notification_groups");
     expect(migration).not.toContain("update private.notification_groups");
     expect(pushControl).toContain("In-app notifications are unaffected.");
+  });
+
+  it("prepares the four dormant NBA notification kinds without starting producers", () => {
+    for (const kind of ["nba_launch_available", "nba_daily_available", "nba_daily_four_hours", "nba_results_ready"]) {
+      expect(migration).toContain("'" + kind + "'");
+    }
+    expect(migration).toContain("notification_groups_kind_valid");
+    expect(migration).toContain("notification_category_for_kind");
+    expect(migration).toContain("notification_priority_for_kind");
   });
 
   it("does not create a new notification scheduler or send messages in the migration", () => {
