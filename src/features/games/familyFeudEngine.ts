@@ -378,7 +378,9 @@ export function matchFamilyFeudAnswer(
     // A whole different surname must not receive credit simply because the
     // remaining full-name characters happen to sit inside the typo allowance.
     // Keep the historical matcher contract untouched for published v1 packs.
-    if (entity?.kind === "person" && question.id.includes("-feud-r2-")) {
+    // UFC Feud V2 also uses bounded historical names: avoid crediting another
+    // person with the same given name but a different full-name surname.
+    if (entity?.kind === "person" && (question.id.includes("-feud-r2-") || question.id.startsWith("ufc-v2-"))) {
       const inputWords = normalized.split(" ");
       const termWords = row.term.split(" ");
       if (inputWords.length > 1 && termWords.length > 1) {
