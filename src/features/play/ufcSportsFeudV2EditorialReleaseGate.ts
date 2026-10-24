@@ -81,6 +81,10 @@ export const UFC_V2_HELD_IDS = new Set([
   "ufc-v2-fast7-title-shot-discussions",
   "ufc-v2-fast7-new-gym-first-day"
 ] as const);
+// Only a complete reviewer fact/aliases signoff should add an ID here. The two
+// lists intentionally start empty; staging is not production certification.
+export const UFC_V2_APPROVED_MAIN_IDS: ReadonlySet<string> = new Set([]);
+export const UFC_V2_APPROVED_FAST_IDS: ReadonlySet<string> = new Set([]);
 const SEMANTIC_OVERRIDES: Readonly<Record<string,string>> = {
   "ufc-v2-main3-ufc100-card": "numbered-ufc-event-roster",
   "ufc-v2-main3-ufc300-card": "numbered-ufc-event-roster",
@@ -155,13 +159,19 @@ export function ufcFeudSixMonthReleaseReadiness(
   const days=ufcFeudAppearanceDatesInWindow(firstInclusive,lastExclusive);
   const inventory=ufcV2ProvisionalInventory();
   const needMain=days.length*2,needFast=days.length*5;
+  // Counts come only from explicitly reviewer-approved IDs, never candidate totals.
+  const mainApproved=[...UFC_V2_NEW_MAIN_DRAFTS,...UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT]
+    .filter(q=>UFC_V2_APPROVED_MAIN_IDS.has(q.id)&&!UFC_V2_HELD_IDS.has(q.id));
+  const fastApproved=[...UFC_V2_NEW_FAST_DRAFTS,...UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT]
+    .filter(q=>UFC_V2_APPROVED_FAST_IDS.has(q.id)&&!UFC_V2_HELD_IDS.has(q.id));
+  const approvedMainFamilies=new Set(mainApproved.map(ufcFeudSemanticFamily)).size;
+  const approvedFastFamilies=new Set(fastApproved.map(ufcFeudSemanticFamily)).size;
   return {
     ...inventory,appearanceDates:days,appearanceCount:days.length,
     neededMainFamilies:needMain,neededFastFamilies:needFast,
     provisionalMainShortfall:Math.max(0,needMain-inventory.provisionalMainFamilies),
     provisionalFastShortfall:Math.max(0,needFast-inventory.provisionalFastFamilies),
-    // All rows advancing first-pass still require final factual and alias approval.
-    // A release cannot claim readiness while any editorial question is unapproved.
-    approvedMainFamilies:0,approvedFastFamilies:0,ready:false as const,
+    approvedMainFamilies,approvedFastFamilies,
+    ready:approvedMainFamilies>=needMain&&approvedFastFamilies>=needFast,
   };
 }
