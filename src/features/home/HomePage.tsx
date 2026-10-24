@@ -394,7 +394,7 @@ export default function HomePage() {
   return (
     <div className={`page home-page${compactFootballPreview ? " home-page--compact-football-preview" : ""}`}>
       {ownerPreview ? (
-        <header className="home-sport-chooser" aria-label="Your HQ dashboard">
+        <header className="home-sport-chooser" data-home-sport={ownerSport} aria-label="Your HQ dashboard">
           <div className="home-sport-chooser__identity">
             <h2>Your HQ</h2>
             <small>{hqDailyStreak.loading ? "STREAK LOADING" : `${hqDailyStreak.streak.currentStreak} DAY DAILY STREAK`}</small>
