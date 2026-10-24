@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   SELECTED_SPORT_STORAGE_KEY,
@@ -16,11 +16,17 @@ const tokensSource = readFileSync("src/styles/tokens.css", "utf8");
 const sportContextStyles = readFileSync("src/styles/sport-context.css", "utf8");
 
 function SportProbe() {
-  const { selectedSport, setSelectedSport } = useSport();
+  const { selectedSport, setSelectedSport, homeSport, playSport, picksSport, setHomeSport, setPicksSport } = useSport();
 
   return (
     <div>
       <output data-testid="selected-sport">{selectedSport}</output>
+      <output data-testid="home-sport">{homeSport}</output>
+      <output data-testid="play-sport">{playSport}</output>
+      <output data-testid="picks-sport">{picksSport}</output>
+      <button type="button" onClick={() => setHomeSport("all")}>Home All sports</button>
+      <button type="button" onClick={() => setHomeSport("ufc")}>Home UFC</button>
+      <button type="button" onClick={() => setPicksSport("nba")}>Picks Basketball</button>
       <button type="button" onClick={() => setSelectedSport("football")}>
         Select Football
       </button>
@@ -125,6 +131,51 @@ describe("SportProvider", () => {
 
     expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
     expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual({ home: "football", play: "ufc", picks: "football" });
+  });
+
+
+  it("migrates legacy sport values without changing the existing single-sport experience", () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "ufc");
+    renderSportProvider();
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("play-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("picks-sport")).toHaveTextContent("ufc");
+  });
+
+  it("keeps All sports saved independently across other selections and provider remount", () => {
+    renderSportProvider();
+    fireEvent.click(screen.getByRole("button", { name: "Home All sports" }));
+    fireEvent.click(screen.getByRole("button", { name: "Select UFC" }));
+    fireEvent.click(screen.getByRole("button", { name: "Picks Basketball" }));
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("all");
+    expect(screen.getByTestId("play-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("picks-sport")).toHaveTextContent("nba");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual({
+      home: "all", play: "ufc", picks: "nba",
+    });
+    cleanup();
+    renderSportProvider();
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("all");
+    expect(screen.getByTestId("play-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("picks-sport")).toHaveTextContent("nba");
+    fireEvent.click(screen.getByRole("button", { name: "Home UFC" }));
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual({
+      home: "ufc", play: "ufc", picks: "nba",
+    });
+  });
+
+  it("recovers safely from malformed or incomplete saved preferences", () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "{bad");
+    renderSportProvider();
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("football");
+    cleanup();
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, JSON.stringify({
+      home: "all", play: "invalid", picks: "ufc",
+    }));
+    renderSportProvider();
+    expect(screen.getByTestId("home-sport")).toHaveTextContent("all");
+    expect(screen.getByTestId("play-sport")).toHaveTextContent("football");
+    expect(screen.getByTestId("picks-sport")).toHaveTextContent("ufc");
   });
 
   it("ignores invalid persisted values instead of creating another sport state", () => {
