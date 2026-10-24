@@ -54,6 +54,8 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
   tapping it again deselects all.
 - Push muting does **not** hide any in-app notification, remove notification history,
   alter read state, disconnect a device, or silence neutral War Room messages.
+  Cody-only operational monitoring stays critical and push-eligible, independent
+  of optional entertainment sport choices.
 - Unknown/ambiguous sport-bound push events fail **closed**. A publisher must give
   a recognized canonical sport route or explicitly declare its event scope.
 - Combined Daily messages remain a single inbox event, but phone summaries list
@@ -73,6 +75,9 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
   stores private per-profile selection; enforces it in the **push enqueue trigger and
   service-only delivery claim**, including filtered summaries for combined Daily.
   Do not reuse `private.notification_preferences` to mute inbox events.
+- Migration `202612310327_nba_notification_kind_preparation.sql` adds four
+  dormant NBA canonical kinds and their category/priority mapping; it does
+  not publish, schedule, or enable NBA previews.
 - Tests: add TypeScript architecture contracts and isolated SQL eligibility assertions.
 
 ## Release gates (not yet satisfied)
@@ -94,8 +99,8 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
    one delivered phone alert, correct deep link, correct badge and mark-read behavior,
    and no notification to other users. The screenshot device currently displays a
    disabled-push prompt, so actual delivery requires device activation first.
-7. NBA release is a **separate** gate: add NBA-specific canonical kinds and their
-   allowed/priority classification, official Daily/closing/recap and Picks/Futures
+7. NBA release is a **separate** gate: NBA kinds and their classification are
+   staged in the draft; still build official Daily/closing/recap and Picks/Futures
    producers, correct 48-hour cadence, no `nba_preview` recipients, deep links,
    aggregation and deduplication; verify `NBA_OFFICIAL_GAMES_RELEASE_READY` and
    backend authorization before enabling NBA public publishing. Do not treat a calendar
