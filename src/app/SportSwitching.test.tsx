@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { SELECTED_SPORT_STORAGE_KEY } from "./SportProvider";
+import { HOME_SPORT_STORAGE_KEY, PICKS_SPORT_STORAGE_KEY, SELECTED_SPORT_STORAGE_KEY } from "./SportProvider";
 import { AppProviders } from "./providers";
 import { appRoutes } from "./router";
 
@@ -60,7 +60,7 @@ describe("The HQ sport switching", () => {
     await expectPath(router, "/football/picks");
     await sportContext("FOOTBALL PICKS");
     expectThemeScope("football");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("football");
   });
 
   it("switches Picks from Football to UFC through the same canonical sport state", async () => {
@@ -74,7 +74,7 @@ describe("The HQ sport switching", () => {
     await expectPath(router, "/picks");
     await sportContext("UFC PICKS");
     expectThemeScope("ufc");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 
   it("switches Play from UFC to Football through the canonical sport state", async () => {
@@ -104,27 +104,55 @@ describe("The HQ sport switching", () => {
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 
-  it("keeps sport selection global across Picks and Play in both directions", async () => {
-    const router = renderRoute("/picks");
-    let row = await sportContext("UFC PICKS");
-
-    switchSport(row, "football");
-    await expectPath(router, "/football/picks");
-    expectThemeScope("football");
-
+  it("keeps Play and Picks navigation independent, including return to Home and browser back", async () => {
+    window.localStorage.setItem(HOME_SPORT_STORAGE_KEY, "all");
+    const router = renderRoute("/");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
     fireEvent.click(screen.getByRole("link", { name: "Play" }));
     await expectPath(router, "/football");
-    row = await sportContext("FOOTBALL PLAY");
-    expectThemeScope("football");
-
-    switchSport(row, "ufc");
+    switchSport(await sportContext("FOOTBALL PLAY"), "ufc");
     await expectPath(router, "/play");
-    expectThemeScope("ufc");
 
     fireEvent.click(screen.getByRole("link", { name: "Picks" }));
+    await expectPath(router, "/football/picks");
+    switchSport(await sportContext("FOOTBALL PICKS"), "ufc");
+    await expectPath(router, "/picks");
+
+    fireEvent.click(screen.getByRole("link", { name: "Rankings" }));
+    await expectPath(router, "/rankings");
+    await sportContext("UFC RANKINGS");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
+
+    fireEvent.click(screen.getByRole("link", { name: "Home" }));
+    await expectPath(router, "/");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
+
+    await router.navigate(-1);
+    await expectPath(router, "/rankings");
+    await router.navigate(-1);
     await expectPath(router, "/picks");
     await sportContext("UFC PICKS");
-    expectThemeScope("ufc");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
+    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("ufc");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+  });
+
+  it("keeps a one-sport Home selection on deep-linked Play and Picks URLs and refresh", async () => {
+    window.localStorage.setItem(HOME_SPORT_STORAGE_KEY, "football");
+    const router = renderRoute("/picks");
+    await sportContext("UFC PICKS");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
+    await router.navigate("/nba");
+    await sportContext("NBA PLAY");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
+    await router.navigate("/football/picks");
+    await sportContext("FOOTBALL PICKS");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
+    cleanup();
+    renderRoute("/");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/nba");
   });
 
   it("respects the persisted PR 4 sport when choosing Picks and Play from universal surfaces", async () => {
