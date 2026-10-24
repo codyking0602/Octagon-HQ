@@ -27,7 +27,7 @@ function renderRoute(path: string) {
 
 async function sportContext(label: string) {
   const row = await screen.findByTestId("sport-context-row");
-  expect(row).toHaveTextContent(label);
+  await waitFor(() => expect(row).toHaveTextContent(label));
   return row;
 }
 
