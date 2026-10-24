@@ -13,6 +13,7 @@ import {
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import { footballThemedBarTriviaRunForDay } from "./footballTeamThemeDailyPacks";
+import { footballTriviaConceptKey, footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import type {
   OfficialDailyAdvanceResult,
@@ -20,7 +21,7 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const BAR_TRIVIA_DAILY_CONTENT_VERSION = "bar-trivia-daily-v2-recent-rotation";
+export const BAR_TRIVIA_DAILY_CONTENT_VERSION = "bar-trivia-daily-v3-six-month-fact-rotation";
 export const BAR_TRIVIA_DAILY_SCORING_VERSION = "play-official-score-v1";
 
 type JsonRecord = Record<string, unknown>;
@@ -112,7 +113,8 @@ function fullRun(value: unknown): BarTriviaQuestion[] {
  * current curated bank (legacy published boards stay immutable in storage).
  */
 const BAR_TRIVIA_FIRST_DAY = "2026-09-29";
-const BAR_TRIVIA_RECENT_APPEARANCES = 3;
+/** Six calendar months of ID AND recognizable fact-family history, per league. */
+const BAR_TRIVIA_RECENT_LOOKBACK_DAYS = 184;
 const DAY_MS = 86_400_000;
 
 function wasBarTriviaDailyAppearance(league: BarTriviaLeague, day: string): boolean {
@@ -131,7 +133,7 @@ function dailyBarTriviaRun(
 ): BarTriviaQuestion[] {
   const target = new Date(day + "T12:00:00.000Z").getTime();
   const beginning = new Date(BAR_TRIVIA_FIRST_DAY + "T12:00:00.000Z").getTime();
-  const historyIds: string[][] = [];
+  const historyIds: Array<{ timestamp: number; ids: string[] }> = [];
   let latest: BarTriviaQuestion[] = [];
 
   // Historical/MLB previews do not participate in the NFL/CFB/UFC Daily cadence.
@@ -141,10 +143,12 @@ function dailyBarTriviaRun(
   for (let timestamp = first; timestamp <= target; timestamp += DAY_MS) {
     const candidateDay = new Date(timestamp).toISOString().slice(0, 10);
     if (candidateDay !== day && !wasBarTriviaDailyAppearance(league, candidateDay)) continue;
-    const recentIds = historyIds.flat();
+    const recentIds = historyIds
+      .filter((entry) => timestamp - entry.timestamp <= BAR_TRIVIA_RECENT_LOOKBACK_DAYS * DAY_MS)
+      .flatMap((entry) => entry.ids.flatMap(footballTriviaFamilyMemberIds));
     const themed = league === "nfl" ? footballThemedBarTriviaRunForDay(candidateDay) : null;
     const run = themed
-      ? [...themed]
+      ? themed.map((question) => ({ ...question, factKey: footballTriviaConceptKey(question.id) }))
       : buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, {
           random: seededLineupRandom(
             BAR_TRIVIA_DAILY_CONTENT_VERSION, league, scheduleVersion, candidateDay, "questions",
@@ -153,8 +157,10 @@ function dailyBarTriviaRun(
           recentQuestionIds: recentIds,
         });
     latest = run;
-    historyIds.unshift(run.map((question) => question.id));
-    if (historyIds.length > BAR_TRIVIA_RECENT_APPEARANCES) historyIds.pop();
+    historyIds.unshift({ timestamp, ids: run.map((question) => question.id) });
+    while (historyIds.length && timestamp - historyIds[historyIds.length - 1]!.timestamp > BAR_TRIVIA_RECENT_LOOKBACK_DAYS * DAY_MS) {
+      historyIds.pop();
+    }
   }
 
   if (latest.length !== 10) throw new Error("The Bar Trivia Daily lineup is unavailable.");
