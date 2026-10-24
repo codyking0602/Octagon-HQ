@@ -9,14 +9,14 @@ const HALL = "https://www.ufc.com/ufc-hall-of-fame";
 const ROWS = [
 {
  id:"ufc-v2-main9-twenty-wins", lane:"career-twenty-ufc-wins",
- prompt:"As of October 18, 2026, name a fighter credited with at least 20 wins in UFC's modern-era record book.",
+ prompt:"Name a fighter on the UFC Record Book's career wins Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Jim Miller|Charles Oliveira|Neil Magny|Max Holloway|Andrei Arlovski|Donald Cerrone|Demian Maia|Jon Jones",
  extras:"Dustin Poirier|Rafael dos Anjos", source:[RECORD]
 },
 {
  id:"ufc-v2-main9-ten-knockouts", lane:"ten-ufc-ko-tko-wins",
- prompt:"As of October 18, 2026, name a fighter with at least ten UFC KO/TKO victories in UFC's record book.",
+ prompt:"Name a fighter on the UFC Record Book's career KO/TKO wins Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Derrick Lewis|Matt Brown|Max Holloway|Anderson Silva|Anthony Johnson|Drew Dober|Dustin Poirier|Thiago Santos",
  extras:"Michael Bisping|Cain Velasquez|Junior dos Santos|Donald Cerrone|Francis Ngannou",
@@ -24,14 +24,14 @@ const ROWS = [
 },
 {
  id:"ufc-v2-main9-eight-submissions",lane:"eight-ufc-submission-wins",
- prompt:"As of October 18, 2026, name a fighter credited with at least eight submission wins in the UFC's modern-era record book.",
+ prompt:"Name a fighter on the UFC Record Book's career submission wins Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Charles Oliveira|Jim Miller|Demian Maia|Gerald Meerschaert|Nate Diaz|Michael Chiesa|Frank Mir|Gunnar Nelson",
  extras:"Islam Makhachev|Brendan Allen",source:[RECORD]
 },
 {
  id:"ufc-v2-main9-postfight-bonuses",lane:"ufc-postfight-bonuses-twelve",
- prompt:"As of October 18, 2026, name a UFC fighter officially credited with twelve or more post-fight performance or Fight of the Night bonuses.",
+ prompt:"Name a fighter on the UFC Record Book's career Fight Night bonuses Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Charles Oliveira|Donald Cerrone|Justin Gaethje|Jim Miller|Nate Diaz|Joe Lauzon|Dustin Poirier|Anderson Silva",
  extras:"Edson Barboza|Max Holloway",
@@ -39,7 +39,7 @@ const ROWS = [
 },
 {
  id:"ufc-v2-main9-ufc-win-streak",lane:"twelve-fight-ufc-winning-streak",
- prompt:"Name a UFC fighter whose official modern-era UFC winning streak reached twelve or more consecutive victories by October 18, 2026.",
+ prompt:"Name a fighter on the UFC Record Book's longest career win streak Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Islam Makhachev|Anderson Silva|Kamaru Usman|Merab Dvalishvili|Georges St-Pierre|Jon Jones|Demetrious Johnson|Khabib Nurmagomedov",
  extras:"Max Holloway|Amanda Nunes|Tony Ferguson|Alexander Volkanovski",
@@ -47,7 +47,7 @@ const ROWS = [
 },
 {
  id:"ufc-v2-main9-title-fight-wins",lane:"eight-ufc-title-fight-wins",
- prompt:"As of October 18, 2026, name a fighter with at least eight victories in official UFC title fights.",
+ prompt:"Name a fighter on the UFC Record Book's career title fight wins Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Jon Jones|Georges St-Pierre|Demetrious Johnson|Anderson Silva|Amanda Nunes|Valentina Shevchenko|Matt Hughes|Randy Couture",
  extras:"Jose Aldo|Alexander Volkanovski|Israel Adesanya",
@@ -55,7 +55,7 @@ const ROWS = [
 },
 {
  id:"ufc-v2-main9-sig-strike-volume",lane:"ufc-career-significant-strikes-1800",
- prompt:"As of October 18, 2026, name a UFC fighter with at least 1,800 career significant strikes landed in the official UFC record book.",
+ prompt:"Name a fighter on the UFC Record Book's career significant strikes landed Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Max Holloway|Sean Strickland|Angela Hill|King Green|Dustin Poirier|Rafael dos Anjos|Jessica Andrade|Alexander Volkanovski",
  extras:"Frankie Edgar",
@@ -63,7 +63,7 @@ const ROWS = [
 },
 {
  id:"ufc-v2-main9-knockdowns",lane:"ufc-career-knockdowns-14",
- prompt:"As of October 18, 2026, name a fighter credited with at least fourteen UFC knockdowns in the official record book.",
+ prompt:"Name a fighter on the UFC Record Book's career knockdowns landed Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Donald Cerrone|Anderson Silva|Jeremy Stephens|Edson Barboza|Marlon Vera|Dustin Poirier|Chuck Liddell|Lyoto Machida",
  extras:"Mauricio Rua|Junior dos Santos|Thiago Santos|Khalil Rountree Jr.|Montel Jackson",
@@ -71,7 +71,7 @@ const ROWS = [
 },
 {
  id:"ufc-v2-main9-decision-wins",lane:"ufc-career-12-decision-wins",
- prompt:"As of October 18, 2026, name a fighter who had won twelve or more UFC fights by judges' decision in the official UFC record book.",
+ prompt:"Name a fighter on the UFC Record Book's career decision wins Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Brad Tavares|Neil Magny|Andrei Arlovski|Georges St-Pierre|Diego Sanchez|Rafael dos Anjos|Darren Elkins|Sean Strickland",
  extras:"Belal Muhammad|Merab Dvalishvili",
@@ -79,7 +79,7 @@ const ROWS = [
 },
 {
  id:"ufc-v2-main9-fight-appearances",lane:"ufc-career-thirty-three-appearances",
- prompt:"As of October 18, 2026, name a fighter with at least 33 UFC appearances in the official UFC record book.",
+ prompt:"Name a fighter on the UFC Record Book's career total fights Top 10 list (including ties) as of October 18, 2026.",
  kind:"person",
  ranked:"Jim Miller|Andrei Arlovski|Donald Cerrone|Neil Magny|Clay Guida|Rafael dos Anjos|Charles Oliveira|Jeremy Stephens",
  extras:"Demian Maia|Edson Barboza|Max Holloway",
