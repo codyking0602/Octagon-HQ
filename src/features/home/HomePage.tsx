@@ -32,6 +32,7 @@ import { FootballHq } from "./FootballHq";
 import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
 import { MlbHomeHq } from "../mlb/MlbHomeHq";
 import { NbaHomeHq } from "../nba/NbaHomeHq";
+import { NbaOwnerHomeHq } from "../nba/NbaOwnerHomeHq";
 import { canPreviewNba } from "../nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
 import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
@@ -193,6 +194,9 @@ export default function HomePage() {
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
   // Keep Baseball's approved compact experiment on the existing owner identity only.
   const compactMlbPreview = Boolean(identity.profile?.canControlPicks === true
+    && identity.profile.displayName.trim().toUpperCase() === "CODY");
+  // Basketball's proposed weekly layout remains owner-only until its content pipeline is verified.
+  const nbaHqOwnerPreview = Boolean(identity.profile?.canControlPicks === true
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
   const sportPreference = useOptionalSport();
   // Home has its own persisted view, independent of all sport navigation.
@@ -495,7 +499,9 @@ export default function HomePage() {
       {ownerPreview && ownerSport !== "all" ? (
         ownerSport === "football" ? footballHq
           : ownerSport === "ufc" ? ufcHq
-            : ownerSport === "nba" && nbaVisible ? <NbaHomeHq signedIn={signedIn} />
+            : ownerSport === "nba" && nbaVisible ? (nbaHqOwnerPreview
+              ? <NbaOwnerHomeHq profileId={profileId} />
+              : <NbaHomeHq signedIn={signedIn} />)
             : mlbVisible ? (
               <MlbHomeHq
                 enabled={mlbVisible}

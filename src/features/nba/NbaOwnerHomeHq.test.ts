@@ -1,0 +1,49 @@
+import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { readVerifiedNbaWeekly } from "./nbaWeeklySpotlight";
+const homepage = readFileSync("src/features/home/HomePage.tsx", "utf8");
+const owner = readFileSync("src/features/nba/NbaOwnerHomeHq.tsx", "utf8");
+const css = readFileSync("src/styles/nba-owner-home.css", "utf8");
+describe("NBA HQ owner-only regular-season proposal", () => {
+  it("gates the new Basketball layout on a privileged owner identity only", () => {
+    expect(homepage).toContain('const nbaHqOwnerPreview = Boolean(identity.profile?.canControlPicks === true');
+    expect(homepage).toContain('&& identity.profile.displayName.trim().toUpperCase() === "CODY");');
+    expect(homepage).toContain('<NbaHomeHq signedIn={signedIn} />');
+    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} />');
+  });
+  it("does not expose future Cup or Playoff picks or bypass official game launch", () => {
+    expect(owner).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY");
+    expect(owner).toContain("nbaOwnerPreviewDaily");
+    expect(owner).toContain('sport: publishedDaily ? "nba" : "nba_preview"');
+    expect(owner).toContain('to="/nba/picks"');
+    expect(owner).toContain('to="/championship/nba"');
+    expect(owner).toContain("CUP AND PLAYOFF PICKS WILL APPEAR WHEN RELEASED");
+  });
+  it("uses verified weekly data rather than placeholder numbers or fake videos", () => {
+    expect(owner).toContain("readVerifiedNbaWeekly(raw)");
+    expect(owner).toContain("weekly.player.highlightUrl");
+    expect(owner).toContain("weekly.team.record");
+    expect(css).toContain(".nba-hq-owner__championship");
+  });
+});
+describe("NBA weekly feed safety", () => {
+  const valid = {
+    weekStart:"2026-10-19", weekEnd:"2026-10-25", publishedAt:"2026-10-27T13:00:00Z",
+    player: {name:"Example Player",team:"Example Team",position:"PG",
+      headshotUrl:"https://a.espncdn.com/i/headshots/nba/players/full/1.png",
+      profileUrl:"https://www.espn.com/nba/player/_/id/1",
+      highlightUrl:"https://www.youtube.com/watch?v=ABCdefghi12", summary:"Verified performance",
+      stats:[{label:"PPG",value:"30"},{label:"APG",value:"7"},{label:"RPG",value:"4"},{label:"FG%",value:"52"}]},
+    team: {name:"Example Team",teamId:"OKC",logoUrl:"https://a.espncdn.com/i/teamlogos/nba/500/okc.png",
+      profileUrl:"https://www.espn.com/nba/team/_/name/okc",record:"3-0",ppg:"120",oppPpg:"105",netMargin:"+15",summary:"Verified team performance"},
+  };
+  it("rejects absent data, fake photos and non-YouTube highlights", () => {
+    expect(readVerifiedNbaWeekly(null)).toBeNull();
+    expect(readVerifiedNbaWeekly({...valid,player:{...valid.player,highlightUrl:"https://example.com/fake"}})).toBeNull();
+    expect(readVerifiedNbaWeekly({...valid,team:{...valid.team,logoUrl:"https://example.com/fake"}})).toBeNull();
+  });
+  it("accepts valid completed editorial packages only after their publication timestamp", () => {
+    expect(readVerifiedNbaWeekly({...valid,publishedAt:"2999-10-27T13:00:00Z"})).toBeNull();
+    expect(readVerifiedNbaWeekly({...valid,publishedAt:"2026-10-24T00:00:00Z"})?.team.name).toBe("Example Team");
+  });
+});
