@@ -113,7 +113,7 @@ export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast10-cutman-actions",
   "ufc-v2-fast11-arena-sound-details",
   "ufc-v2-fast11-bout-card-size",
-  "ufc-v2-fast11-postfight-suspensions"
+  "ufc-v2-fast11-postfight-suspensions",
   "ufc-v2-fast9-final-staredown-fans",
   "ufc-v2-fast9-daily-training-log",
   "ufc-v2-fast10-leg-kick-defense",
