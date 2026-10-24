@@ -761,7 +761,13 @@ async function handleNbaDaily(
     return safeError(409, "STALE_PROGRESS", "NBA Daily progress changed on another device. Refresh and continue.");
   }
   const action = requiredRecord(body.action, "NBA Daily action");
-  const advanced = (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
+  // Average Fan already has a standalone canonical Edge bundle. Do not cold-load
+  // all nine NBA game runtimes to resolve its small per-tile actions: the old
+  // path exceeded CPU limits during live owner testing. Auth, revision checks,
+  // idempotency, grading and persisted results still use the same trusted path.
+  const advanced = context.gameType === "average_fan"
+    ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)
+    : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
   const history = footballActionHistory(context);
   const nextSubmissionState = submissionStateWithClientActionId({
     ...advanced.submissionState, action_history: [...history, action],
