@@ -272,10 +272,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Reapply historical migrations against their original UFC/Football/NBA
-          # baseline; an Oct 2026 owner-only test schedule did not exist then.
-          # The disposable test database is discarded after these assertions.
-          psql "$DB_URL" --set ON_ERROR_STOP=on -c "delete from private.daily_challenge_schedule_versions where version = 'nba-owner-prelaunch-v1'"
           psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/generalized_todays_challenge_legacy_seed.sql
           for pass in 1 2; do
             echo "Reapplying generalized daily migrations for idempotency pass $pass"
