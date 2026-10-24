@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useOptionalSport } from "../../app/SportProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -172,15 +171,11 @@ export default function HomePage() {
   const compactFootballPreview = Boolean(identity.profile?.canControlPicks === true
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
   const sportPreference = useOptionalSport();
-  const selectedSport = sportPreference?.selectedSport ?? "football";
-  const setSelectedSport = (sport: "football" | "ufc" | "mlb" | "nba") => sportPreference?.setSelectedSport(sport);
-  // All is a Home-only view; selecting a sport persists it for Picks and Play.
-  const [homeOverview, setHomeOverview] = useState(false);
-  const ownerSport: SportFilter = homeOverview ? "all" : selectedSport === "nba" && !nbaVisible ? "football" : selectedSport;
-  const setOwnerSport = (next: SportFilter) => {
-    if (next === "all") setHomeOverview(true);
-    else { setSelectedSport(next); setHomeOverview(false); }
-  };
+  // Home owns its own persisted preference, including "all"; visiting Play/Picks never changes it.
+  const savedHomeSport = sportPreference?.homeSport ?? "football";
+  const ownerSport: SportFilter = (savedHomeSport === "nba" && !nbaVisible)
+    || (savedHomeSport === "mlb" && !mlbVisible) ? "football" : savedHomeSport;
+  const setOwnerSport = (next: SportFilter) => sportPreference?.setHomeSport(next);
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
   const ufcDailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport: "ufc" });
   const ufcDailyOverview = useTodayChallengeOverview({

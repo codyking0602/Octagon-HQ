@@ -8,7 +8,9 @@ import {
 } from "react";
 
 export type SelectedSport = "ufc" | "football" | "mlb" | "nba";
+export type HomeSport = SelectedSport | "all";
 
+// Keep the original key so existing sport preferences migrate without competing storage.
 export const SELECTED_SPORT_STORAGE_KEY = "the-hq:selected-sport";
 
 export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "mlb", "nba"];
@@ -20,22 +22,51 @@ export function nextSport(current: SelectedSport, showMlb = true, showNba = true
 
 const DEFAULT_SPORT: SelectedSport = "football";
 
-function isSelectedSport(value: string | null): value is SelectedSport {
+type SportPreferences = {
+  home: HomeSport;
+  play: SelectedSport;
+  picks: SelectedSport;
+};
+
+function isSelectedSport(value: unknown): value is SelectedSport {
   return value === "ufc" || value === "football" || value === "mlb" || value === "nba";
 }
 
-function readPersistedSport(): SelectedSport {
-  if (typeof window === "undefined") return DEFAULT_SPORT;
+function isHomeSport(value: unknown): value is HomeSport {
+  return value === "all" || isSelectedSport(value);
+}
+
+function readPersistedSportPreferences(): SportPreferences {
+  const defaults: SportPreferences = { home: DEFAULT_SPORT, play: DEFAULT_SPORT, picks: DEFAULT_SPORT };
+  if (typeof window === "undefined") return defaults;
 
   try {
-    const storedSport = window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY);
-    return isSelectedSport(storedSport) ? storedSport : DEFAULT_SPORT;
+    const stored = window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY);
+    // Migrate the legacy single-sport value without changing anyone's existing default.
+    if (isSelectedSport(stored)) return { home: stored, play: stored, picks: stored };
+    if (!stored) return defaults;
+
+    const parsed: unknown = JSON.parse(stored);
+    if (!parsed || typeof parsed !== "object") return defaults;
+    const saved = parsed as Partial<SportPreferences>;
+    return {
+      home: isHomeSport(saved.home) ? saved.home : defaults.home,
+      play: isSelectedSport(saved.play) ? saved.play : defaults.play,
+      picks: isSelectedSport(saved.picks) ? saved.picks : defaults.picks,
+    };
   } catch {
-    return DEFAULT_SPORT;
+    return defaults;
   }
 }
 
 type SportContextValue = {
+  homeSport: HomeSport;
+  playSport: SelectedSport;
+  picksSport: SelectedSport;
+  setHomeSport: (sport: HomeSport) => void;
+  setPlaySport: (sport: SelectedSport) => void;
+  setPicksSport: (sport: SelectedSport) => void;
+  /** Compatibility for older sport consumers: this is Play, never the Home preference. */
   selectedSport: SelectedSport;
   setSelectedSport: (sport: SelectedSport) => void;
 };
@@ -43,21 +74,41 @@ type SportContextValue = {
 const SportContext = createContext<SportContextValue | null>(null);
 
 export function SportProvider({ children }: PropsWithChildren) {
-  const [selectedSport, setSelectedSportState] = useState<SelectedSport>(readPersistedSport);
+  const [preferences, setPreferences] = useState<SportPreferences>(readPersistedSportPreferences);
 
-  const setSelectedSport = useCallback((sport: SelectedSport) => {
-    setSelectedSportState(sport);
-
-    try {
-      window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, sport);
-    } catch {
-      // Persistence should never prevent the in-session sport selection from changing.
-    }
+  const updatePreference = useCallback((section: keyof SportPreferences, sport: HomeSport) => {
+    setPreferences((current) => {
+      if (current[section] === sport) return current;
+      const next: SportPreferences = {
+        home: section === "home" ? sport : current.home,
+        play: section === "play" ? sport as SelectedSport : current.play,
+        picks: section === "picks" ? sport as SelectedSport : current.picks,
+      };
+      try {
+        window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // Storage failures must never block in-session section navigation.
+      }
+      return next;
+    });
   }, []);
 
+  const setHomeSport = useCallback((sport: HomeSport) => updatePreference("home", sport), [updatePreference]);
+  const setPlaySport = useCallback((sport: SelectedSport) => updatePreference("play", sport), [updatePreference]);
+  const setPicksSport = useCallback((sport: SelectedSport) => updatePreference("picks", sport), [updatePreference]);
+
   const value = useMemo(
-    () => ({ selectedSport, setSelectedSport }),
-    [selectedSport, setSelectedSport],
+    () => ({
+      homeSport: preferences.home,
+      playSport: preferences.play,
+      picksSport: preferences.picks,
+      setHomeSport,
+      setPlaySport,
+      setPicksSport,
+      selectedSport: preferences.play,
+      setSelectedSport: setPlaySport,
+    }),
+    [preferences, setHomeSport, setPlaySport, setPicksSport],
   );
 
   return <SportContext.Provider value={value}>{children}</SportContext.Provider>;

@@ -60,7 +60,7 @@ describe("The HQ sport switching", () => {
     await expectPath(router, "/football/picks");
     await sportContext("FOOTBALL PICKS");
     expectThemeScope("football");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!).picks).toBe("football");
   });
 
   it("switches Picks from Football to UFC through the same canonical sport state", async () => {
@@ -74,7 +74,7 @@ describe("The HQ sport switching", () => {
     await expectPath(router, "/picks");
     await sportContext("UFC PICKS");
     expectThemeScope("ufc");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!).picks).toBe("ufc");
   });
 
   it("switches Play from UFC to Football through the canonical sport state", async () => {
@@ -87,7 +87,7 @@ describe("The HQ sport switching", () => {
     await expectPath(router, "/football");
     await sportContext("FOOTBALL PLAY");
     expectThemeScope("football");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!).play).toBe("football");
   });
 
   it("switches Play from Football to UFC through the same canonical sport state", async () => {
@@ -101,10 +101,10 @@ describe("The HQ sport switching", () => {
     await expectPath(router, "/play");
     await sportContext("UFC PLAY");
     expectThemeScope("ufc");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!).play).toBe("ufc");
   });
 
-  it("keeps sport selection global across Picks and Play in both directions", async () => {
+  it("keeps Picks and Play independent across both directions", async () => {
     const router = renderRoute("/picks");
     let row = await sportContext("UFC PICKS");
 
@@ -113,18 +113,21 @@ describe("The HQ sport switching", () => {
     expectThemeScope("football");
 
     fireEvent.click(screen.getByRole("link", { name: "Play" }));
+    await expectPath(router, "/play");
+    row = await sportContext("UFC PLAY");
+    expectThemeScope("ufc");
+
+    switchSport(row, "football");
     await expectPath(router, "/football");
-    row = await sportContext("FOOTBALL PLAY");
     expectThemeScope("football");
 
-    switchSport(row, "ufc");
-    await expectPath(router, "/play");
-    expectThemeScope("ufc");
-
     fireEvent.click(screen.getByRole("link", { name: "Picks" }));
-    await expectPath(router, "/picks");
-    await sportContext("UFC PICKS");
-    expectThemeScope("ufc");
+    await expectPath(router, "/football/picks");
+    await sportContext("FOOTBALL PICKS");
+    expectThemeScope("football");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual({
+      home: "ufc", play: "football", picks: "football",
+    });
   });
 
   it("respects the persisted PR 4 sport when choosing Picks and Play from universal surfaces", async () => {
@@ -175,6 +178,60 @@ describe("The HQ sport switching", () => {
 
     expectThemeScope("neutral");
     expect(screen.queryByTestId("sport-context-row")).not.toBeInTheDocument();
+  });
+
+
+  it.each(["all", "football", "ufc", "nba"] as const)(
+    "preserves Home %s through Picks, Play, Rankings, back navigation and refresh", async (home) => {
+      window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, JSON.stringify({
+        home, play: "ufc", picks: "ufc",
+      }));
+      const router = renderRoute("/");
+      expectThemeScope("neutral");
+
+      fireEvent.click(screen.getByRole("link", { name: "Play" }));
+      await expectPath(router, "/play");
+      switchSport(await sportContext("UFC PLAY"), "football");
+      await expectPath(router, "/football");
+
+      fireEvent.click(screen.getByRole("link", { name: "Picks" }));
+      await expectPath(router, "/picks");
+      switchSport(await sportContext("UFC PICKS"), "football");
+      await expectPath(router, "/football/picks");
+
+      fireEvent.click(screen.getByRole("link", { name: "Rankings" }));
+      await expectPath(router, "/rankings");
+      await sportContext("UFC RANKINGS");
+      await router.navigate(-1);
+      await expectPath(router, "/football/picks");
+      await router.navigate("/");
+      await expectPath(router, "/");
+
+      const stored = JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!);
+      expect(stored).toEqual({ home, play: "football", picks: "football" });
+      cleanup();
+      const refreshed = renderRoute("/");
+      expect(refreshed.state.location.pathname).toBe("/");
+      expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual(stored);
+      expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
+      expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
+    },
+  );
+
+  it("honors direct game deep links without overwriting Home or Picks", async () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, JSON.stringify({
+      home: "all", play: "ufc", picks: "ufc",
+    }));
+    const router = renderRoute("/football/find-leader");
+    await expectPath(router, "/football/find-leader");
+    await waitFor(() => expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!).play).toBe("football"));
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual({
+      home: "all", play: "football", picks: "ufc",
+    });
+    await router.navigate("/");
+    await expectPath(router, "/");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/picks");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
   });
 
   it("keeps Intelligence clearly UFC-only with UFC contextual accent and no Football option", async () => {

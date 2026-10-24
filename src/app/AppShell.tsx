@@ -54,7 +54,7 @@ function sportContextForPath(pathname: string): SportContext | null {
   return null;
 }
 
-function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqThemeScope {
+function themeScopeForPath(pathname: string): HqThemeScope {
   const context = sportContextForPath(pathname);
 
   if (context?.switchable) return context.sport;
@@ -94,6 +94,25 @@ function sportSectionDestination(section: SportContextSection, sport: SelectedSp
     if (sport === "mlb") return "/mlb";
     if (sport === "nba") return "/nba";
     return "/play";
+  }
+  return null;
+}
+
+
+// Resolve navigation preference from the actual URL, including game deep links.
+// Owner-only control and championship routes are intentionally not sport selectors.
+function sectionPreferenceForPath(pathname: string): { section: "play" | "picks"; sport: SelectedSport } | null {
+  if (pathname === "/picks") return { section: "picks", sport: "ufc" };
+  if (pathname === "/football/picks") return { section: "picks", sport: "football" };
+  if (pathname === "/mlb/picks" || pathname.startsWith("/mlb/series/")) return { section: "picks", sport: "mlb" };
+  if (pathname === "/nba/picks") return { section: "picks", sport: "nba" };
+  if (pathname === "/play" || pathname.startsWith("/play/")) return { section: "play", sport: "ufc" };
+  if (pathname === "/football" || (pathname.startsWith("/football/") && !pathname.startsWith("/football/picks"))) {
+    return { section: "play", sport: "football" };
+  }
+  if (pathname === "/mlb" || pathname === "/mlb/challenge") return { section: "play", sport: "mlb" };
+  if (pathname === "/nba" || (pathname.startsWith("/nba/") && !pathname.startsWith("/nba/picks"))) {
+    return { section: "play", sport: "nba" };
   }
   return null;
 }
@@ -153,7 +172,7 @@ export function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const identity = useIdentity();
-  const { selectedSport, setSelectedSport } = useSport();
+  const { playSport, picksSport, setPlaySport, setPicksSport } = useSport();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
@@ -174,16 +193,19 @@ export function AppShell() {
     && (MLB_PLAYOFFS_PUBLIC_ENABLED || identity.profile.canControlPicks === true)
   );
   const mlbWelcomeMode = MLB_PLAYOFFS_PUBLIC_ENABLED ? "launch" : "preview";
-  const effectiveSelectedSport = (selectedSport === "mlb" && !mlbVisible) || (selectedSport === "nba" && !nbaVisible) ? "football" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
-  const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
-  // Direct/deep-linked sport URLs must keep the persisted tab preference in sync
-  // with the actual sport being displayed, never show Football tabs on UFC content.
+  const sectionPreference = sectionPreferenceForPath(location.pathname);
+  const themeScope = themeScopeForPath(location.pathname);
+  // Only the visited section follows its URL. Never overwrite Home or the other section.
+  // This also restores browser-back and deep-link navigation to the correct sport.
   useEffect(() => {
-    if (sportContext?.switchable && sportContext.sport !== selectedSport) {
-      setSelectedSport(sportContext.sport);
+    if (sectionPreference?.section === "picks" && sectionPreference.sport !== picksSport) {
+      setPicksSport(sectionPreference.sport);
     }
-  }, [sportContext?.sport, sportContext?.switchable, selectedSport, setSelectedSport]);
+    if (sectionPreference?.section === "play" && sectionPreference.sport !== playSport) {
+      setPlaySport(sectionPreference.sport);
+    }
+  }, [sectionPreference?.section, sectionPreference?.sport, picksSport, playSport, setPicksSport, setPlaySport]);
 
 
   if ((location.pathname.startsWith("/nba/") || location.pathname === "/nba" || location.pathname.startsWith("/championship/nba")) && !nbaVisible && identity.ready) {
@@ -198,7 +220,6 @@ export function AppShell() {
     if (sport === "mlb" && !mlbVisible) return;
     if (sport === "nba" && !nbaVisible) return;
 
-    setSelectedSport(sport);
     const destination = sportSectionDestination(sportContext.section, sport);
     if (destination && destination !== location.pathname) navigate(destination);
   }

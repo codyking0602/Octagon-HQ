@@ -54,13 +54,15 @@ describe("SportProvider", () => {
     expect(bottomNavigationSource).toContain("useSport");
     expect(appShellSource).not.toContain("localStorage");
     expect(bottomNavigationSource).not.toContain("localStorage");
-    expect(sportProviderSource.match(/useState<SelectedSport>/g) ?? []).toHaveLength(1);
+    expect(sportProviderSource.match(/useState<SportPreferences>/g) ?? []).toHaveLength(1);
     expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(1);
   });
 
-  it("drives contextual theme from actual route while synchronizing the one sport preference", () => {
+  it("drives route themes without rewriting Home or another section's preference", () => {
     expect(appShellSource).toContain("if (context?.switchable) return context.sport;");
-    expect(appShellSource).toContain("setSelectedSport(sportContext.sport);");
+    expect(appShellSource).toContain("setPicksSport(sectionPreference.sport);");
+    expect(appShellSource).toContain("setPlaySport(sectionPreference.sport);");
+    expect(appShellSource).not.toContain("setHomeSport(");
   });
 
   it("keeps one canonical theme/style initialization path", () => {
@@ -117,12 +119,12 @@ describe("SportProvider", () => {
     fireEvent.click(screen.getByRole("button", { name: "Select Football" }));
 
     expect(screen.getByTestId("selected-sport")).toHaveTextContent("football");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual({ home: "football", play: "football", picks: "football" });
 
     fireEvent.click(screen.getByRole("button", { name: "Select UFC" }));
 
     expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)).toEqual({ home: "football", play: "ufc", picks: "football" });
   });
 
   it("ignores invalid persisted values instead of creating another sport state", () => {

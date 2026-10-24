@@ -86,16 +86,20 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const location = useLocation();
   const navigate = useNavigate();
   const identity = useOptionalIdentity();
-  const { selectedSport, setSelectedSport } = useSport();
+  const { playSport, picksSport, setPlaySport, setPicksSport } = useSport();
   const lastActiveSportTapRef = useRef<Record<SecretSportSection, number>>({ picks: 0, play: 0 });
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const mlbMode = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
   const nbaMode = location.pathname === "/nba" || location.pathname.startsWith("/nba/");
   const nbaVisible = canPreviewNba(identity?.profile);
-  const effectiveSport = (selectedSport === "mlb" && !canViewMlbPlayoffs(identity?.profile)) || (selectedSport === "nba" && !nbaVisible) ? "football" : selectedSport;
-  const selectedPlayRoot = effectiveSport === "football" ? "/football" : effectiveSport === "mlb" ? "/mlb" : effectiveSport === "nba" ? "/nba" : "/play";
-  const selectedPicksRoot = effectiveSport === "football" ? "/football/picks" : effectiveSport === "mlb" ? "/mlb/picks" : effectiveSport === "nba" ? "/nba/picks" : "/picks";
+  const visibleSport = (sport: typeof playSport) =>
+    (sport === "mlb" && !canViewMlbPlayoffs(identity?.profile)) || (sport === "nba" && !nbaVisible)
+      ? "football" : sport;
+  const selectedPlaySport = visibleSport(playSport);
+  const selectedPicksSport = visibleSport(picksSport);
+  const selectedPlayRoot = selectedPlaySport === "football" ? "/football" : selectedPlaySport === "mlb" ? "/mlb" : selectedPlaySport === "nba" ? "/nba" : "/play";
+  const selectedPicksRoot = selectedPicksSport === "football" ? "/football/picks" : selectedPicksSport === "mlb" ? "/mlb/picks" : selectedPicksSport === "nba" ? "/nba/picks" : "/picks";
   const standardDestinations = baseDestinations.map((destination) => (
     destination.icon === "play" ? { ...destination, to: selectedPlayRoot }
       : destination.icon === "picks" ? { ...destination, to: selectedPicksRoot }
@@ -166,7 +170,8 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
                   lastActiveSportTapRef.current[section] = 0;
                   const currentSport = footballMode ? "football" : mlbMode ? "mlb" : nbaMode ? "nba" : "ufc";
                   const next = nextSport(currentSport, canViewMlbPlayoffs(identity?.profile), nbaVisible);
-                  setSelectedSport(next);
+                  if (section === "play") setPlaySport(next);
+                  else setPicksSport(next);
                   const targetPath = section === "play"
                     ? next === "football" ? "/football" : next === "mlb" ? "/mlb" : next === "nba" ? "/nba" : "/play"
                     : next === "football" ? "/football/picks" : next === "mlb" ? "/mlb/picks" : next === "nba" ? "/nba/picks" : "/picks";

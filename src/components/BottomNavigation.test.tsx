@@ -208,19 +208,19 @@ describe("BottomNavigation", () => {
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(second + "|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)?.[_section]).toBe("ufc");
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(third + "|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("mlb");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)?.[_section]).toBe("mlb");
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(fourth + "|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("nba");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)?.[_section]).toBe("nba");
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(first + "|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+    expect(JSON.parse(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)!)?.[_section]).toBe("football");
   });
 
 });
