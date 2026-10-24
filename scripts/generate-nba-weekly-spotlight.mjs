@@ -79,10 +79,18 @@ export function findMatchingHighlight(playerName, videos, lastSunday) {
     const title=normal(v.title);
     const words=title.split(" ");
     const date=Date.parse(v.published);
+    const duration=Number(v.durationSeconds);
     return date>=start && date<=end
       && words.includes(first) && words.includes(last)
-      && /highlights?|full game|best plays|performance/i.test(v.title);
-  }).sort((a,b)=>Date.parse(b.published)-Date.parse(a.published))[0]??null;
+      && !/full game|extended|press conference|postgame|post-game|interview|reaction/i.test(v.title)
+      && (!Number.isFinite(duration) || duration===0 || (duration>=25 && duration<=480))
+      && /highlights?|best plays|top plays|best moments|\\b\\d{1,3} (?:points?|pts)\\b|performance/i.test(v.title);
+  }).sort((a,b)=>{
+    const short=v=>Number.isFinite(Number(v.durationSeconds)) && Number(v.durationSeconds)>0
+      ? Number(v.durationSeconds)<=300 ? 2 : 1
+      : /top plays|best plays|\\b\\d{1,3} (?:points?|pts)\\b/i.test(v.title) ? 1 : 0;
+    return short(b)-short(a) || Date.parse(b.published)-Date.parse(a.published);
+  })[0]??null;
 }
 
 function readPlayerBoxscore(raw, result, eventId) {
@@ -244,7 +252,8 @@ export function mergeOfficialVideos(...collections) {
         || !Number.isFinite(Date.parse(entry?.published ?? ""))
         || Date.parse(entry.published) < earliest
         || Date.parse(entry.published) > Date.now() + MS_DAY) continue;
-      byId.set(entry.id, entry);
+      const earlier=byId.get(entry.id);
+      byId.set(entry.id,{...earlier,...entry,durationSeconds:entry.durationSeconds??earlier?.durationSeconds});
     }
   }
   return [...byId.values()].sort((a,b) => Date.parse(b.published) - Date.parse(a.published));
@@ -282,6 +291,30 @@ async function youtubeApiVideos(channel, key) {
     }
     pageToken=payload.nextPageToken ?? "";
     if(!pageToken) break;
+  }
+  // Optional verified video durations let the editor favor ~1–5 minute
+  // highlights; clips >8 minutes are not suitable for these compact cards.
+  for(let offset=0;offset<videos.length;offset+=50) {
+    const ids=videos.slice(offset,offset+50).map(v=>v.id);
+    const url=new URL("https://www.googleapis.com/youtube/v3/videos");
+    url.searchParams.set("part","contentDetails");
+    url.searchParams.set("id",ids.join(","));
+    url.searchParams.set("key",key);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),14_000);
+    try {
+      const response=await fetch(url,{signal:controller.signal});
+      if(!response.ok) throw Error("YouTube duration API error " + response.status);
+      const data=await response.json();
+      const durations=new Map((data.items??[]).map(item=>{
+        const match=String(item.contentDetails?.duration??"").match(/^PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?$/);
+        return [item.id,match ? (+match[1]||0)*3600+(+match[2]||0)*60+(+match[3]||0) : null];
+      }));
+      for(const v of videos.slice(offset,offset+50)) {
+        const duration=durations.get(v.id);
+        if(duration != null) v.durationSeconds=duration;
+      }
+    } finally { clearTimeout(timer); }
   }
   return videos;
 }
