@@ -1,6 +1,6 @@
 # Notification delivery — full product and implementation audit (draft, 2026-10-24)
 
-Base: `main` @ `70a33643c2063902722356a478d21b60326f8b48`.
+Reviewed main @ 248afb3b290a5a19c65aa65ac996d38a82584e60; refresh before merge.
 Working branch: `draft/notification-sport-controls-nba-20261024`.
 **This draft must not be merged, migrate the production database, or send production notifications without a separate go-live instruction.**
 
@@ -58,8 +58,7 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
   of optional entertainment sport choices.
 - Unknown/ambiguous sport-bound push events fail **closed**. A publisher must give
   a recognized canonical sport route or explicitly declare its event scope.
-- Combined Daily messages remain a single inbox event, but phone summaries list
-  *only the member-selected, unfinished sports*. If none are selected, no push.
+- Combined Daily remains one inbox event; phone summaries include only the selected unfinished sports. One selected sport gets a sport-specific title and deep link. Multiple selected sports get one grouped phone alert. If none are selected, no push.
 - For iPhone push, the installed Home Screen web app and OS permission are required.
   The permission prompt must begin directly from the user's switch tap.
 - The visual treatment remains charcoal, compact, mobile-first, with small team/sport
@@ -75,9 +74,9 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
   stores private per-profile selection; enforces it in the **push enqueue trigger and
   service-only delivery claim**, including filtered summaries for combined Daily.
   Do not reuse `private.notification_preferences` to mute inbox events.
-- Migration `202612310403_nba_notification_kind_preparation.sql` adds four
-  dormant NBA canonical kinds and their category/priority mapping; it does
-  not publish, schedule, or enable NBA previews.
+- Migration 202612310403 defines three NBA kinds: launch, Daily closing, results (no opening alert), and makes UFC repick/card updates in-app only.
+- Migration 202612310404 adds NBA to the existing multi-sport Daily closing group only when the official second-day challenge remains incomplete.
+- Migration 202612310405 prepares the Nov 1 NBA launch and one second-day 8 PM Central closing reminder. The public release gate defaults OFF; preview games cannot notify members.
 - Tests: add TypeScript architecture contracts and isolated SQL eligibility assertions.
 
 ## Release gates (not yet satisfied)
@@ -99,11 +98,7 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
    one delivered phone alert, correct deep link, correct badge and mark-read behavior,
    and no notification to other users. The screenshot device currently displays a
    disabled-push prompt, so actual delivery requires device activation first.
-7. NBA release is a **separate** gate: NBA kinds and their classification are
-   staged in the draft; still build official Daily/closing/recap and Picks/Futures
-   producers, correct 48-hour cadence, no `nba_preview` recipients, deep links,
-   aggregation and deduplication; verify `NBA_OFFICIAL_GAMES_RELEASE_READY` and
-   backend authorization before enabling NBA public publishing. Do not treat a calendar
+7. NBA release requires official Daily readiness, verified public routing and explicit enabling of the private release gate. Launch is Nov 1 after 8 AM Central only, and NBA closing reminders are on Nov 2, 4, 6, etc. near 8 PM. No new-board alert or owner-preview blast. Do not treat a calendar
    date or colored NBA pill as proof that notifications are live.
 8. Confirm exact PR head green before merge; apply canonical Supabase deploy workflow
    and verify production **only after** a separate "go live" request.
@@ -130,3 +125,12 @@ Working branch: `draft/notification-sport-controls-nba-20261024`.
 
 **Current disposition:** work prepared in draft only; no delivery test, production
 deployment, or public NBA notification launch was performed.
+
+## Approved editorial changes (Oct 24)
+
+- Keep all other UFC, Football, MLB, social and operations notifications as already implemented; MLB specifically stays unchanged.
+- UFC Repick required and Picks card updated remain in-app only, not phone push.
+- Do not create a weekly NFL GM champion announcement in push or in-app.
+- Football already has opening notices and near-kickoff notices in its notification history; no additional Thursday alert has been introduced.
+- NBA retains its orange accent and multi-select sport controls. New members start with no sport push enabled. One selected sport means one sport-specific reminder; multiple selected unfinished sports combine into one phone alert. In-app inbox is unchanged.
+- The existing NBA teaser announcement was already sent earlier; do not treat that as the dedicated November 1 official-launch signal.
