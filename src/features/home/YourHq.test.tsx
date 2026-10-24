@@ -492,6 +492,26 @@ describe("Home Your HQ", () => {
     expect(homeSections[homeSections.length - 1]).toBe(championship);
 
   });
+  it("limits the compact Football preview to the authenticated owner profile", () => {
+    mocks.identity.profile = { ...cody, canControlPicks: true };
+    renderHome();
+    expect(document.querySelector(".home-page")).toHaveClass("home-page--compact-football-preview");
+    expect(screen.getByRole("region", { name: "Football HQ" })).toHaveClass("football-hq--compact-preview");
+  });
+
+  it("does not enable the Football preview for regular profiles", () => {
+    mocks.identity.profile = cody;
+    renderHome();
+    expect(document.querySelector(".home-page")).not.toHaveClass("home-page--compact-football-preview");
+    expect(screen.getByRole("region", { name: "Football HQ" })).not.toHaveClass("football-hq--compact-preview");
+  });
+
+  it("does not enable the Football preview for other pick controllers", () => {
+    mocks.identity.profile = { ...cody, displayName: "TROY", canControlPicks: true };
+    renderHome();
+    expect(screen.getByRole("region", { name: "Football HQ" })).not.toHaveClass("football-hq--compact-preview");
+  });
+
   it("uses the Championship Home for all signed-in users and filters HQs", () => {
     const ownerProfile = { ...cody, canControlPicks: true };
     mocks.identity.profile = ownerProfile;
