@@ -47,7 +47,12 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
   if (!player.stats.every(s => s && string(s.label) && string(s.value))) return null;
   if (!isHttpsFrom(player.headshotUrl, /(^|\.)espncdn\.com$/i)
     || !isHttpsFrom(team.logoUrl, /(^|\.)espncdn\.com$/i)
-    || !isHttpsFrom(player.profileUrl, /(^|\.)espn\.com$/i)
+    || !isHttpsFrom(player.profileUrl, /^(www\.)?basketball-reference\.com$/i)
+    || !(
+      /^\/players\/[a-z]\/\w+\.html$/.test(new URL(player.profileUrl).pathname)
+      || (new URL(player.profileUrl).pathname === "/search/search.fcgi"
+          && new URL(player.profileUrl).searchParams.get("search") === player.name)
+    )
     || !isHttpsFrom(team.profileUrl, /^(www\.)?basketball-reference\.com$/i)
     || !/^\/teams\/[A-Z]{3}\/20\d{2}\.html$/.test(new URL(team.profileUrl).pathname)
     || Number(new URL(team.profileUrl).pathname.slice(-9,-5)) !== (
