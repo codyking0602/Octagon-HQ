@@ -361,5 +361,3 @@ Existing second-pass bank: 20 keep-as-concept + 31 rewrite/move = up to 51 salva
 **Other authored answers (12):** Read ESPN; Check MMA news site; Look at UFC app; Check X; Watch YouTube replay; Talk with friends; Read fight recap; Follow live blog; Get push notification; Read newspaper; Listen to sports news; Search Google
 
 **Decision:** advance to answer verification. New category compared with existing UFC Feud source families; full subjective off-board acceptance still needs live-match and editorial proof
-
-
