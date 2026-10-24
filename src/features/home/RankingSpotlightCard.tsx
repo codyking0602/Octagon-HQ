@@ -15,12 +15,16 @@ export function RankingSpotlightCard({ fighter, compact = false }: { fighter: Ra
       aria-label="UFC Fighter Spotlight"
       style={{ "--player-team-color": "#e50914", "--player-team-secondary": "#a90918" } as CSSProperties}
     >
-      <div className="football-player-spotlight__media">
+      <Link
+        className="football-player-spotlight__media ufc-fighter-spotlight__profile-media"
+        to={`/fighters/${fighter.slug}`}
+        aria-label={`View ${fighter.displayName} profile photo`}
+      >
         <FighterPhoto className="ufc-fighter-spotlight__photo" name={fighter.displayName} src={fighter.thumbUrl} />
-      </div>
+      </Link>
       <div className="football-player-spotlight__copy">
         <span>FIGHTER SPOTLIGHT</span>
-        <h3>{fighter.displayName}</h3>
+        <h3><Link className="ufc-fighter-spotlight__name-link" to={`/fighters/${fighter.slug}`}>{fighter.displayName}</Link></h3>
         <strong>{fighter.division.toUpperCase()}</strong>
         <div className="football-player-spotlight__stats" aria-label="Fighter ranking and statistics">
           <span><b>#{fighter.rank}</b><small>ALL-TIME</small></span>
@@ -28,10 +32,11 @@ export function RankingSpotlightCard({ fighter, compact = false }: { fighter: Ra
           <span><b>{fighter.ovr}</b><small>OVR</small></span>
         </div>
         <p className="football-player-spotlight__meta">{fighter.resumeTag}</p>
-        <div className="ufc-fighter-spotlight__actions">
-          {watchAction ? <a href={watchAction.url} target="_blank" rel="noopener noreferrer">WATCH HIGHLIGHTS ↗</a> : null}
-          <Link to={`/fighters/${fighter.slug}`}>VIEW PROFILE →</Link>
-        </div>
+        {watchAction ? (
+          <a className="ufc-fighter-spotlight__watch" href={watchAction.url} target="_blank" rel="noopener noreferrer">
+            WATCH MOMENT ↗
+          </a>
+        ) : null}
       </div>
     </article>
   );

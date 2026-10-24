@@ -363,7 +363,13 @@ a.home-event-card__standing:focus-visible {
 
 
 /* Public UFC is Football's locked compact layout, with sport-specific red branding. */
-.ufc-hq--compact { --home-football-blue: var(--ufc-red-strong); --home-football-blue-rgb: 229, 9, 20; gap: 10px; }
+/* Neutral graphite surfaces like Football HQ; red is reserved for identity and controls. */
+.ufc-hq--compact {
+  --home-football-blue: var(--ufc-red-strong);
+  --home-football-blue-rgb: 229, 9, 20;
+  gap: 10px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .025), transparent 50%), var(--surface);
+}
 .ufc-hq--compact .home-sport-hq__heading {
   position: relative; display: flex; justify-content: center; align-items: center;
   min-height: 27px; padding: 0 32px 3px;
@@ -395,7 +401,13 @@ a.home-event-card__standing:focus-visible {
 .ufc-hq--compact .football-hq-compact-picks__action:focus-visible,
 .ufc-hq--compact .football-hq-compact-picks__record:focus-visible { outline-color: var(--ufc-red-strong); }
 
-.ufc-hq--compact .ufc-fighter-spotlight { min-height: 156px; }
+/* Avoid the red radial bleed on the right; preserve the narrow red identity stripe. */
+.ufc-hq--compact .ufc-fighter-spotlight {
+  min-height: 156px;
+  background:
+    linear-gradient(90deg, rgba(169, 9, 24, .34) 0 3px, transparent 3px),
+    linear-gradient(135deg, #11151a, #090b0f 66%);
+}
 .ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__media { display: flex; align-items: end; }
 .ufc-hq--compact .ufc-fighter-spotlight__photo {
   width: 100%; height: 156px; min-height: 156px; border-radius: 0;
@@ -407,15 +419,33 @@ a.home-event-card__standing:focus-visible {
   overflow-wrap: anywhere; font-size: clamp(19px, 5vw, 29px);
 }
 .ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__stats { grid-template-columns: 1fr 1.3fr .75fr; }
-.ufc-hq--compact .ufc-fighter-spotlight__actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px; }
-.ufc-hq--compact .ufc-fighter-spotlight__actions a {
-  min-width: 0; min-height: 30px; padding: 4px 3px; font-size: 7px; letter-spacing: 0;
-  text-align: center; white-space: normal; line-height: 1.2; box-shadow: none; border-radius: 8px;
+/* Profile links use the same understated typography as the locked Football spotlight. */
+.ufc-hq--compact .ufc-fighter-spotlight__profile-media {
+  color: inherit;
+  text-decoration: none;
 }
-.ufc-hq--compact .ufc-fighter-spotlight__actions a + a {
-  background: rgba(255,255,255,.045); border-color: rgba(255,255,255,.20);
+.ufc-hq--compact .ufc-fighter-spotlight .football-player-spotlight__copy h3 a {
+  display: inline;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-decoration: none;
 }
-.ufc-hq--compact .ufc-fighter-spotlight__actions a:focus-visible { outline: 2px solid var(--ufc-red-strong); }
+.ufc-hq--compact .ufc-fighter-spotlight__profile-media:focus-visible,
+.ufc-hq--compact .ufc-fighter-spotlight__name-link:focus-visible,
+.ufc-hq--compact .ufc-fighter-spotlight__watch:focus-visible {
+  outline: 2px solid var(--ufc-red-strong);
+  outline-offset: 2px;
+}
+/* Exactly one full-width highlight action, matching Football's button sizing. */
+.ufc-hq--compact .ufc-fighter-spotlight__watch { width: 100%; box-sizing: border-box; }
 
 .ufc-hq--compact .ufc-contender-series { gap: 7px; padding: 9px 10px 7px; }
 .ufc-hq--compact .ufc-contender-series > header { min-height: 26px; padding-bottom: 8px; }
@@ -432,7 +462,16 @@ a.home-event-card__standing:focus-visible {
   color: #f2f2f4; background: #131518; border: 1px solid rgba(229,9,20,.25); border-radius: 9px;
 }
 .ufc-hq--compact .ufc-contender-series__lead {
-  grid-template-columns: 18px 43px minmax(0,1fr) auto; gap: 7px; min-height: 54px; padding: 5px 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 54px;
+  padding: 5px 7px;
+}
+.ufc-hq--compact .ufc-contender-series__lead > span:not(.watch-status) {
+  flex: 0 1 auto;
+  min-width: 0;
 }
 .ufc-hq--compact .ufc-contender-series__lead .fighter-photo { width: 43px; height: 43px; border-radius: 7px; }
 .ufc-hq--compact .ufc-contender-series__pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; min-width: 0; }
@@ -461,7 +500,7 @@ a.home-event-card__standing:focus-visible {
   .ufc-hq--compact .football-hq-compact-picks span { font-size: 8px; letter-spacing: .02em; }
   .ufc-hq--compact .football-hq-compact-picks strong { font-size: 14px; }
   .ufc-hq--compact .football-hq-compact-picks__action { padding-inline: 6px; font-size: 8px; }
-  .ufc-hq--compact .ufc-contender-series__lead { grid-template-columns: 15px 36px minmax(0,1fr) auto; gap: 5px; }
+  .ufc-hq--compact .ufc-contender-series__lead { gap: 5px; }
   .ufc-hq--compact .ufc-contender-series__lead .fighter-photo { width: 36px; height: 36px; }
 }
 @media (max-width: 360px) {
@@ -470,7 +509,7 @@ a.home-event-card__standing:focus-visible {
   .ufc-hq--compact .ufc-contender-series__lead .watch-status { display: none; }
   .ufc-hq--compact .ufc-contender-series__pair > a { grid-template-columns: 11px 26px minmax(0,1fr); gap: 3px; padding: 4px; }
   .ufc-hq--compact .ufc-contender-series__pair .fighter-photo { width: 26px; height: 26px; }
-  .ufc-hq--compact .ufc-fighter-spotlight__actions a { font-size: 6.5px; }
+  .ufc-hq--compact .ufc-contender-series__lead > strong { flex-shrink: 0; }
 }
 /* UFC public Championship matches the locked Football compact layout. */
 .home-champ-preview--compact-ufc[data-sport="ufc"] {
