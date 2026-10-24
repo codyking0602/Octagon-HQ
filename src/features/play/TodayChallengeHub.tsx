@@ -456,7 +456,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
 
       {presentationSport !== "nba" ? <OwnerTomorrowAverageFanPreviewEntry
         enabled={identity.profile?.canControlPicks === true}
-        sport={sport}
+        sport={sport === "football" ? "football" : "ufc"}
         centralDay={projection.centralDay}
         onNavigate={navigate}
       /> : null}
