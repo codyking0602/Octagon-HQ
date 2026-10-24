@@ -17,6 +17,10 @@ export const notificationKinds = [
   "picks_card_updated",
   "ufc_event_starting",
   "football_picks_open",
+  "nba_launch_available",
+  "nba_daily_available",
+  "nba_daily_four_hours",
+  "nba_results_ready",
   "mlb_launch_available",
   "mlb_challenge_available",
   "mlb_challenge_four_hours",
@@ -181,6 +185,13 @@ const categoryMarks: Record<NotificationCategory, string> = {
   operations: "!",
 };
 
+const nbaOnlyKinds = new Set<NotificationKind>([
+  "nba_launch_available",
+  "nba_daily_available",
+  "nba_daily_four_hours",
+  "nba_results_ready",
+]);
+
 const mlbOnlyKinds = new Set<NotificationKind>([
   "mlb_launch_available",
   "mlb_challenge_available",
@@ -230,6 +241,7 @@ export function notificationSport(item: Pick<NotificationItem, "kind" | "route">
     || routeMatches(route, "/rankings")
     || routeMatches(route, "/intelligence")
   ) return "ufc";
+  if (nbaOnlyKinds.has(item.kind)) return "nba";
   if (mlbOnlyKinds.has(item.kind)) return "mlb";
   if (ufcOnlyKinds.has(item.kind)) return "ufc";
   return null;
