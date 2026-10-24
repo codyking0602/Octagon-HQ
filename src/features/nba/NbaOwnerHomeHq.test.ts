@@ -29,7 +29,7 @@ describe("NBA HQ owner-only regular-season proposal", () => {
 describe("NBA weekly feed safety", () => {
   const valid = {
     weekStart:"2026-10-19", weekEnd:"2026-10-25", publishedAt:"2026-10-27T13:00:00Z",
-    player: {name:"Example Player",team:"Example Team",position:"PG",
+    player: {name:"Example Player",team:"Example Team",position:"PG",gamesPlayed:2,
       headshotUrl:"https://a.espncdn.com/i/headshots/nba/players/full/1.png",
       profileUrl:"https://www.basketball-reference.com/players/e/example01.html",
       highlightUrl:"https://www.youtube.com/watch?v=ABCdefghi12",
@@ -41,6 +41,9 @@ describe("NBA weekly feed safety", () => {
   };
   it("rejects absent data, fake photos and non-YouTube highlights", () => {
     expect(readVerifiedNbaWeekly(null)).toBeNull();
+    expect(readVerifiedNbaWeekly({...valid,player:{...valid.player,gamesPlayed:0}})).toBeNull();
+    expect(readVerifiedNbaWeekly({...valid,player:{...valid.player,gamesPlayed:2.5}})).toBeNull();
+    expect(readVerifiedNbaWeekly({...valid,player:{...valid.player,gamesPlayed:undefined}})).toBeNull();
     expect(readVerifiedNbaWeekly({...valid,player:{...valid.player,highlightUrl:"https://example.com/fake"}})).toBeNull();
     expect(readVerifiedNbaWeekly({...valid,player:{...valid.player,highlightSourceChannelId:"UCVSSpcmZD2PwPBqb8yKQKBA"}})).toBeNull();
     expect(readVerifiedNbaWeekly({...valid,team:{...valid.team,logoUrl:"https://example.com/fake"}})).toBeNull();

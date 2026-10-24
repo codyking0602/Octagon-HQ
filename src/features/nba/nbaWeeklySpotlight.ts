@@ -7,6 +7,8 @@ export type NbaWeeklySpotlight = {
     name: string;
     team: string;
     position: string;
+    /** Number of verified final box scores contributing to the weekly averages. */
+    gamesPlayed: number;
     headshotUrl: string;
     profileUrl: string;
     highlightUrl: string | null;
@@ -44,7 +46,8 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
   const string = (v: unknown) => typeof v === "string" && v.trim().length > 0;
   if (![player.name,player.team,player.position,team.name,team.teamId,
     team.record,team.ppg,team.oppPpg,team.netMargin].every(string)) return null;
-  if (!player.stats.every(s => s && string(s.label) && string(s.value))) return null;
+  if (!Number.isInteger(player.gamesPlayed) || player.gamesPlayed < 1 || player.gamesPlayed > 7
+    || !player.stats.every(s => s && string(s.label) && string(s.value))) return null;
   if (!isHttpsFrom(player.headshotUrl, /(^|\.)espncdn\.com$/i)
     || !isHttpsFrom(team.logoUrl, /(^|\.)espncdn\.com$/i)
     || !isHttpsFrom(player.profileUrl, /^(www\.)?basketball-reference\.com$/i)

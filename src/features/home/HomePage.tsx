@@ -31,7 +31,6 @@ import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
 import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
 import { MlbHomeHq } from "../mlb/MlbHomeHq";
-import { NbaHomeHq } from "../nba/NbaHomeHq";
 import { NbaOwnerHomeHq } from "../nba/NbaOwnerHomeHq";
 import { canPreviewNba } from "../nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
@@ -44,6 +43,7 @@ import "../../styles/home-football-hq.css";
 import "../../styles/football-special-daily.css";
 import "../../styles/home-ufc-hq.css";
 import "../../styles/home-sport-chooser.css";
+import "../../styles/home-hq-border-consistency.css";
 
 function readableError(error: unknown) {
   return error instanceof Error && error.message ? error.message : "";
@@ -513,7 +513,7 @@ export default function HomePage() {
       {isFootballSeason() ? (
         <>
           {footballHq}
-          {nbaVisible ? <NbaHomeHq signedIn={signedIn} compact /> : null}
+          {nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship /> : null}
           {mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}
@@ -528,7 +528,7 @@ export default function HomePage() {
         <>
           {ufcHq}
           {footballHq}
-          {nbaVisible ? <NbaHomeHq signedIn={signedIn} compact /> : null}
+          {nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship /> : null}
           {mlbVisible ? (
             <MlbHomeHq
               enabled={mlbVisible}

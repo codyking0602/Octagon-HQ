@@ -8,7 +8,7 @@ import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { nbaSpotlightWeekLabel, readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
 import "../../styles/nba-owner-home.css";
 
-export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { profileId: string; allowOwnerDailyPreview?: boolean }) {
+export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hideChampionship = false }: { profileId: string; allowOwnerDailyPreview?: boolean; hideChampionship?: boolean }) {
   const [futures, setFutures] = useState<{ count: number; locked: boolean } | null>(null);
   const [weekly, setWeekly] = useState<NbaWeeklySpotlight | null>(null);
   const day = nbaCentralDay();
@@ -94,6 +94,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
                 <span>PLAYER SPOTLIGHT</span>
                 <h3><a href={weekly.player.profileUrl} target="_blank" rel="noreferrer">{weekly.player.name}</a></h3>
                 <strong>{weekly.player.team} · {weekly.player.position}</strong>
+                <small className="nba-hq-owner__week-context">{nbaSpotlightWeekLabel(weekly.weekStart, weekly.weekEnd)} · {weekly.player.gamesPlayed} GAMES · WEEKLY AVG</small>
                 <div className="nba-hq-owner__stats">
                   {weekly.player.stats.map(item => <div key={item.label}><b>{item.value}</b><small>{item.label}</small></div>)}
                 </div>
@@ -125,6 +126,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
         </section>
       </section>
 
+      {!hideChampionship ? (
       <section className="home-section nba-hq-owner__championship" aria-label="NBA Championship standings">
         <h2>Championship standings</h2>
         <div className="nba-hq-owner__championship-kicker">BASKETBALL CHAMPIONSHIP · 2026–27</div>
@@ -142,6 +144,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false }: { 
           <Link to="/championship/nba">VIEW ALL ↗</Link>
         </div>
       </section>
+      ) : null}
     </>
   );
 }

@@ -6,7 +6,7 @@ const css = readFileSync("src/styles/nba-owner-home.css", "utf8");
 const football = readFileSync("src/styles/home-football-hq.css", "utf8");
 const component = readFileSync("src/features/nba/NbaOwnerHomeHq.tsx", "utf8");
 const current = JSON.parse(readFileSync("public/nba-weekly/active.json", "utf8")) as {
-  player: { profileUrl: string; highlightUrl: string; summary?: string };
+  player: { profileUrl: string; highlightUrl: string; gamesPlayed: number; summary?: string };
   team: { profileUrl: string; highlightUrl?: string; summary?: string };
 };
 
@@ -33,6 +33,9 @@ describe("Basketball HQ locked Football mobile sizing", () => {
     expect(component).not.toContain("weekly.player.summary");
     expect(component).not.toContain("weekly.team.summary");
     expect(current.player.summary).toBeUndefined();
+    expect(current.player.gamesPlayed).toBe(2);
+    expect(component).toContain("weekly.player.gamesPlayed");
+    expect(css).toContain(".nba-hq-owner__week-context");
     expect(current.team.summary).toBeUndefined();
     expect(component).not.toContain('<b aria-hidden="true">›</b>');
     expect(current.player.profileUrl).toBe("https://www.basketball-reference.com/players/m/maxeyty01.html");
@@ -46,7 +49,8 @@ describe("Basketball HQ locked Football mobile sizing", () => {
     expect(rules(".nba-hq-owner__player")).toContain("height: 156px;");
     expect(rules(".nba-hq-owner__team")).toContain("height: 133px;");
     const selector = readFileSync("src/styles/home-sport-chooser.css", "utf8");
-    expect(selector).toContain('.home-sport-chooser[data-home-sport="nba"]');
+    expect(selector).not.toContain('.home-sport-chooser[data-home-sport="nba"]');
+    expect(selector).toContain("border: 1px solid #363d46;");
     expect(readFileSync("src/features/home/HomePage.tsx", "utf8")).toContain('data-home-sport={ownerSport}');
   });
   it("avoids raw dates, owner testing clutter, fabricated rankings, and team videos", () => {
