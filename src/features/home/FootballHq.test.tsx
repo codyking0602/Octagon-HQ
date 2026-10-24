@@ -258,7 +258,7 @@ describe("Football HQ Home summary", () => {
     const hq = screen.getByRole("region", { name: "Football HQ" });
     expect(hq).toHaveClass("football-hq--compact-preview");
     expect(within(hq).getByText("1 OF 3")).toBeInTheDocument();
-    expect(within(hq).getByText("67% WIN")).toBeInTheDocument();
+    expect(within(hq).getByText("67% WIN RATE")).toBeInTheDocument();
     expect(hq.querySelector(".picks-progress__track")).not.toBeInTheDocument();
     expect(within(hq).queryByText("10 PTS")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
