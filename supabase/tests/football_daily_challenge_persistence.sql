@@ -42,7 +42,6 @@ begin
     from private.daily_challenge_schedule_versions
     where version not like 'football-daily-v%'
       and version not like 'nba-daily-%'
-      and version <> 'nba-owner-prelaunch-v1'
       and sport <> 'ufc'
   ) then
     raise exception 'pre-Football schedules were reclassified away from UFC';
