@@ -108,8 +108,7 @@ begin
     ), '[]'::jsonb)
   );
 end;
-$function$
-
+$function$;
 
 revoke all on function public.get_pick_monitoring_schedule_state(text)
   from public, anon, authenticated;
@@ -433,8 +432,7 @@ begin
     'owner_operations', v_owner_operations
   );
 end;
-$function$
-
+$function$;
 
 revoke all on function public.dispatch_due_in_app_notifications(timestamptz)
   from public, anon, authenticated;
