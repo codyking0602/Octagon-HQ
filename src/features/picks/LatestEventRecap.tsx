@@ -8,7 +8,7 @@ import {
   type PickHistoryBout,
   type PickHistoryEvent,
 } from "./picksModel";
-import { pickEventPoster } from "./picksEventAssets";
+import { pickArchivedEventPoster } from "./picksEventAssets";
 import {
   createPicksRecapShareImage,
   type PicksRecapStory,
@@ -133,7 +133,7 @@ export function LatestEventRecap({
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const scrollRef = useRef<HTMLElement | null>(null);
   const watchMoments = event.watchMoments ?? [];
-  const eventPoster = pickEventPoster(event);
+  const eventPoster = pickArchivedEventPoster(event);
   const heroStyle = eventPoster
     ? ({
         "--picks-recap-poster": `url("${eventPoster.src}")`,

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PickEvent } from "./picksModel";
-import { PICK_EVENT_HEADER_BUCKET, PICK_EVENT_HEADER_MAX_IMAGES, pickEventPoster, pickEventPosters } from "./picksEventAssets";
+import type { PickEvent, PickHistoryEvent } from "./picksModel";
+import { PICK_EVENT_HEADER_BUCKET, PICK_EVENT_HEADER_MAX_IMAGES, pickArchivedEventPoster, pickEventPoster, pickEventPosters } from "./picksEventAssets";
 
 vi.mock("../../lib/supabase", () => ({
   getSupabaseClient: () => ({
@@ -72,6 +72,32 @@ describe("Picks persisted event header", () => {
       headerNaturalWidth: null,
       headerNaturalHeight: null,
     })).toBeNull();
+  });
+
+  it("restores UFC 333's fight-week official banner after automated completion without a stored upload", () => {
+    const archived = {
+      ...event,
+      eventId: "ufc-333-alexander-volkanovski-vs-movsar-evloev-2026-10-24",
+      name: "UFC 333",
+      subtitle: "Alexander Volkanovski vs. Movsar Evloev",
+      startsAt: "2026-10-24T18:00:00Z",
+      completedAt: "2026-10-24T23:00:00Z",
+      headerStoragePath: null,
+      headerNaturalWidth: null,
+      headerNaturalHeight: null,
+    } as unknown as PickHistoryEvent;
+
+    expect(pickEventPoster(archived)).toBeNull();
+    expect(pickArchivedEventPoster(archived)).toMatchObject({
+      src: expect.stringContaining("visitabudhabi.ae"),
+      aspectRatio: "1000 / 744",
+    });
+    expect(pickArchivedEventPoster({ ...archived, name: "UFC 334" })).toBeNull();
+  });
+
+  it("preserves an uploaded event header when no publisher or official banner matches", () => {
+    const archived = { ...event, completedAt: "2099-08-02T01:00:00Z" } as unknown as PickHistoryEvent;
+    expect(pickArchivedEventPoster(archived)).toEqual(pickEventPoster(archived));
   });
 
   it("does not choose artwork from main-event fighter identity", () => {

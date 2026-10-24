@@ -124,4 +124,26 @@ describe("permanent Picks recap access", () => {
     expect(document.documentElement).not.toHaveClass("picks-recap-open");
     expect(document.body).not.toHaveClass("picks-recap-open");
   });
+  it("renders the live UFC 333 artwork inside its automatically completed recap", async () => {
+    const completed = {
+      ...event,
+      eventId: "ufc-333-alexander-volkanovski-vs-movsar-evloev-2026-10-24",
+      name: "UFC 333",
+      subtitle: "Alexander Volkanovski vs. Movsar Evloev",
+      startsAt: "2026-10-24T18:00:00Z",
+      completedAt: "2026-10-24T23:00:00Z",
+      headerStoragePath: null,
+      headerNaturalWidth: null,
+      headerNaturalHeight: null,
+    } satisfies PickHistoryEvent;
+
+    render(<LatestEventRecap event={completed} requestedOpen />);
+    expect(await screen.findByRole("dialog", { name: "UFC 333 Recap" })).toBeInTheDocument();
+    expect(document.querySelector(".picks-event-recap__hero")).toHaveClass("has-poster");
+    expect(document.querySelector(".picks-event-recap__poster")).toBeInTheDocument();
+    expect(document.querySelector(".picks-event-recap__hero")).toHaveStyle(
+      '--picks-recap-poster-aspect: 1000 / 744',
+    );
+  });
+
 });

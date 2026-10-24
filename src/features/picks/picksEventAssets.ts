@@ -1,5 +1,6 @@
 import { getSupabaseClient } from "../../lib/supabase";
 import type { PickEvent, PickHistoryEvent } from "./picksModel";
+import { reviewedMmaManiaPoster, reviewedOfficialUfcEventBanner } from "./ufcMmaManiaPoster";
 
 export const PICK_EVENT_HEADER_BUCKET = "pick-event-headers";
 export const PICK_EVENT_HEADER_MAX_IMAGES = 4;
@@ -42,4 +43,16 @@ export function pickEventPosters(event: PickEvent | PickHistoryEvent | null): Pi
 
 export function pickEventPoster(event: PickEvent | PickHistoryEvent | null): PickEventPoster | null {
   return pickEventPosters(event)[0] ?? null;
+}
+
+/** Replay the exact vetted fight-week artwork for a completed UFC event.
+ * The weekly publisher ledger expires for LIVE display, not for event history.
+ * Event identity is checked by the existing publisher validator; absent a
+ * verified record, retain the same official/banner and persisted-header fallbacks
+ * as the live Picks page. No opponent-based image guessing is introduced.
+ */
+export function pickArchivedEventPoster(event: PickHistoryEvent): PickEventPoster | null {
+  return reviewedMmaManiaPoster(event, new Date(event.startsAt))
+    ?? reviewedOfficialUfcEventBanner(event)
+    ?? pickEventPoster(event);
 }
