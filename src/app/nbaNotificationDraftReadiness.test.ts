@@ -8,7 +8,7 @@ const center = readFileSync("src/features/notifications/NotificationCenterPage.t
 
 describe("NBA notification definitions: dormant before official launch", () => {
   it("permits all four NBA kinds in the single canonical notification contract", () => {
-    for (const kind of ["nba_launch_available", "nba_daily_available", "nba_daily_four_hours", "nba_results_ready"]) {
+    for (const kind of ["nba_launch_available", "nba_daily_four_hours", "nba_results_ready"]) {
       expect(sql).toContain("'" + kind + "'");
       expect(model).toContain('"' + kind + '"');
     }
@@ -17,6 +17,8 @@ describe("NBA notification definitions: dormant before official launch", () => {
     expect(sql).toContain("notification_priority_for_kind");
     expect(sql).toContain("return 'push_candidate'");
     expect(sql).toContain("return 'in_app'");
+    expect(sql).not.toContain("'nba_daily_available'");
+    expect(model).not.toContain('"nba_daily_available"');
   });
 
   it("uses NBA identity but never releases owner-preview games from a calendar date", () => {
