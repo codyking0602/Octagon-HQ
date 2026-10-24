@@ -343,4 +343,3 @@ The most important remaining weaknesses are: subjective all-time-great and perso
 **Other valid authored answers (6):** TJ Dillashaw; Rose Namajunas; Rafael dos Anjos; Henry Cejudo; Sean Strickland; Justin Gaethje
 
 **Editorial risk:** Harder than desired under 50 seconds; exact upset/era anchors may be required. **Release verdict:** needs answer-by-answer independent confirmation, natural-input checks and owner approval.
-
