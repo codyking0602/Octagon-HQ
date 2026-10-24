@@ -35,17 +35,15 @@ begin
 
   v_result := private.notification_push_selection(
     v_id,'football_picks_open','/football/picks','football-picks','Make picks');
-  if not coalesce((v_result->>'allowed')::boolean,false) then
-    raise exception 'existing football push unexpectedly disabled';
+  if coalesce((v_result->>'allowed')::boolean,true) then
+    raise exception 'new member football push should await explicit opt-in';
   end if;
 
   v_result := private.notification_push_selection(
     v_id,'daily_challenge_four_hours','/','daily-closing-combined',
     'Your UFC and NBA challenges close at midnight Central. Play them.');
-  if not coalesce((v_result->>'allowed')::boolean,false)
-    or position('NBA' in (v_result->>'summary')) > 0
-    or position('UFC' in (v_result->>'summary')) = 0 then
-    raise exception 'combined push leaked a muted sport';
+  if coalesce((v_result->>'allowed')::boolean,true) then
+    raise exception 'combined push unexpectedly allowed before any sport opt-in';
   end if;
 
   v_result := private.notification_push_selection(
