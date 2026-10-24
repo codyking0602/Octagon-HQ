@@ -21,6 +21,8 @@ describe("NBA owner-only scored Oct 23–31 prelaunch", () => {
     expect(edge).toContain('identity.data?.normalized_name !== "CODY"');
     expect(edge).toContain('"NBA_OWNER_TEST_FORBIDDEN"');
     expect(edge).toContain('admin.rpc("is_pick_control_owner"');
+    expect(edge).toContain('context.gameType === "average_fan"');
+    expect(edge).toContain('(await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)');
   });
 
   it("publishes only the daily game for each of the nine distinct preview dates", () => {
@@ -49,6 +51,7 @@ describe("NBA owner-only scored Oct 23–31 prelaunch", () => {
     await repository.loadHistory();
     expect(rpc).toHaveBeenCalledWith("list_my_daily_challenge_history", { p_sport: "nba_preview" });
     expect(page).toContain('sport: ownerTest ? "nba_preview" : "nba"');
-    expect(play).toContain('<TodayChallengeHub sport={ownerTest ? "nba_preview" : "nba"} />');
+    expect(play).toContain('const dailySport = ownerTest ? "nba_preview" : "nba"');
+    expect(play).toContain('ownerTest ? "/nba/today?mode=owner-test" : "/nba/today"');
   });
 });
