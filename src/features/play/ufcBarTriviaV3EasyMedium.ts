@@ -239,19 +239,19 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "id": "ufc-bt-v3-e-014",
     "league": "ufc",
     "round": "round1",
-    "category": "UFC Fundamentals & Stories",
-    "prompt": "What happens when a fighter 'taps out'?",
+    "category": "Submission Knowledge",
+    "prompt": "A kimura submission in mixed martial arts primarily attacks which joint?",
     "choices": [
-      "They concede the submission",
-      "They win the round",
-      "They request a new referee",
-      "They earn a point"
+      "Shoulder",
+      "Ankle",
+      "Knee",
+      "Elbow"
     ],
-    "answer": "They concede the submission",
-    "explanation": "Tapping tells the referee and opponent that the fighter submits.",
+    "answer": "Shoulder",
+    "explanation": "The kimura is a shoulder-lock submission that rotates the opponent's arm.",
     "contentType": "evergreen",
-    "sourceId": "ufc-v3-rules",
-    "sourceUrl": "https://www.ufc.com/unified-rules-mixed-martial-arts"
+    "sourceId": "ufc-bjj-kimura",
+    "sourceUrl": "https://www.ufc.com/news/ufc-bjj-4-tackett-vs-dorsey-results-match-recaps-interviews"
   },
   {
     "id": "ufc-bt-v3-e-015",
@@ -689,19 +689,19 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "id": "ufc-bt-v3-e-039",
     "league": "ufc",
     "round": "round1",
-    "category": "UFC Fundamentals & Stories",
-    "prompt": "Which UFC organization holds fighter interviews and broadcasts many events at its Las Vegas Apex venue?",
+    "category": "Fighter Nicknames",
+    "prompt": "Which former UFC lightweight champion is known as 'The Underground King'?",
     "choices": [
-      "The UFC",
-      "Bellator",
-      "PFL",
-      "ONE Championship"
+      "Eddie Alvarez",
+      "Benson Henderson",
+      "Rafael dos Anjos",
+      "Anthony Pettis"
     ],
-    "answer": "The UFC",
-    "explanation": "The UFC built its Apex production facility in Las Vegas.",
+    "answer": "Eddie Alvarez",
+    "explanation": "Eddie Alvarez used the Underground King nickname throughout his high-profile lightweight career.",
     "contentType": "evergreen",
-    "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
+    "sourceId": "ufc-athlete-eddie-alvarez",
+    "sourceUrl": "https://www.ufc.com/athlete/eddie-alvarez"
   },
   {
     "id": "ufc-bt-v3-m-001",
