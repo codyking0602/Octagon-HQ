@@ -85,7 +85,7 @@ const ROWS = [
     "prompt": "Name a colored belt rank used in martial arts practiced by some UFC fighters.",
     "kind": "other",
     "ranked": "White|Blue|Purple|Brown|Black|Yellow|Orange|Green",
-    "extras": "Red|Coral|Gray|Red and white|Striped|Red and black",
+    "extras": "Red|Coral|Gray|Red and white|Striped",
     "aliases": {
       "White": [
         "White belt"
@@ -97,7 +97,8 @@ const ROWS = [
         "Grey"
       ],
       "Coral": [
-        "Coral belt"
+        "Coral belt",
+        "Red and black"
       ]
     }
   },
