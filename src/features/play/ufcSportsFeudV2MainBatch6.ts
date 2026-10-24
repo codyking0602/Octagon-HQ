@@ -7,7 +7,7 @@ const ROWS = [
     "prompt": "Name a UFC fighter who lost or relinquished a UFC title, then later won that same division's undisputed championship again.",
     "kind": "person",
     "ranked": "Georges St-Pierre|Amanda Nunes|Rose Namajunas|Stipe Miocic|Israel Adesanya|Zhang Weili|Dominick Cruz|Randy Couture",
-    "extras": "Cain Velasquez|TJ Dillashaw|Carla Esparza|Deiveson Figueiredo|Frankie Edgar",
+    "extras": "Cain Velasquez|TJ Dillashaw|Carla Esparza|Deiveson Figueiredo",
     "aliases": {
       "Georges St-Pierre": [
         "GSP"
@@ -69,7 +69,7 @@ const ROWS = [
     "prompt": "Name a UFC fighter who has fought the same opponent at least three times inside the UFC.",
     "kind": "person",
     "ranked": "Conor McGregor|Dustin Poirier|Stipe Miocic|Daniel Cormier|Max Holloway|Alexander Volkanovski|Brandon Moreno|Deiveson Figueiredo",
-    "extras": "Georges St-Pierre|Matt Hughes|Randy Couture|Chuck Liddell|Tito Ortiz|Ken Shamrock|Cain Velasquez|Junior dos Santos|Frankie Edgar|Gray Maynard|BJ Penn|Jose Aldo",
+    "extras": "Georges St-Pierre|Matt Hughes|Randy Couture|Chuck Liddell|Tito Ortiz|Ken Shamrock|Cain Velasquez|Junior dos Santos|Frankie Edgar|Gray Maynard|BJ Penn",
     "aliases": {
       "Georges St-Pierre": [
         "GSP"
@@ -98,7 +98,7 @@ const ROWS = [
     "prompt": "Name a woman who has held an undisputed UFC championship.",
     "kind": "person",
     "ranked": "Ronda Rousey|Amanda Nunes|Valentina Shevchenko|Zhang Weili|Joanna Jedrzejczyk|Rose Namajunas|Holly Holm|Cris Cyborg",
-    "extras": "Miesha Tate|Julianna Pena|Carla Esparza|Jessica Andrade|Alexa Grasso|Germaine de Randamie|Raquel Pennington|Nicco Montano|Jessica Penne",
+    "extras": "Miesha Tate|Julianna Pena|Carla Esparza|Jessica Andrade|Alexa Grasso|Germaine de Randamie|Raquel Pennington|Nicco Montano",
     "aliases": {
       "Cris Cyborg": [
         "Cyborg"
@@ -160,7 +160,7 @@ const ROWS = [
     "prompt": "Name a fighter who competed against Khabib Nurmagomedov in a UFC bout.",
     "kind": "person",
     "ranked": "Conor McGregor|Dustin Poirier|Justin Gaethje|Al Iaquinta|Edson Barboza|Michael Johnson|Rafael dos Anjos|Gleison Tibau",
-    "extras": "Pat Healy|Abel Trujillo|Thiago Tavares|Kamal Shalorus|Darrell Horcher|Shalorus",
+    "extras": "Pat Healy|Abel Trujillo|Thiago Tavares|Kamal Shalorus|Darrell Horcher",
     "aliases": {
       "Rafael dos Anjos": [
         "RDA"
@@ -173,6 +173,9 @@ const ROWS = [
       ],
       "Gleison Tibau": [
         "Tibau"
+      ],
+      "Kamal Shalorus": [
+        "Shalorus"
       ]
     },
     "source": [
@@ -213,7 +216,7 @@ const ROWS = [
     "id": "ufc-v2-main6-legendary-venues",
     "lane": "ufc-major-event-arenas",
     "prompt": "Name a venue where the UFC has staged a major numbered UFC event.",
-    "kind": "person",
+    "kind": "other",
     "ranked": "T-Mobile Arena|Madison Square Garden|MGM Grand Garden Arena|Etihad Arena|O2 Arena|Rod Laver Arena|Scotiabank Arena|Jeunesse Arena",
     "extras": "Crypto.com Arena|UFC Apex|Saitama Super Arena|Accor Arena|Toyota Center|Barclays Center|The Forum|Honda Center|Etihad Stadium",
     "aliases": {
