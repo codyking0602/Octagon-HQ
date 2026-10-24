@@ -109,6 +109,7 @@ jobs:
             supabase/tests/auction_playable_server_engine.sql \
             supabase/tests/auction_notifications_share_release.sql \
             supabase/tests/auction_launch_notification.sql \
+            supabase/tests/notification_sport_push_and_nba_readiness.sql \
             supabase/tests/auction_catalog_expansion.sql \
             supabase/tests/auction_standard_format.sql \
             supabase/tests/stage12_draft_room_build_qb.sql \
