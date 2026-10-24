@@ -11,7 +11,7 @@ const current = JSON.parse(readFileSync("public/nba-weekly/active.json", "utf8")
 };
 
 function rules(selector: string) {
-  const index = css.indexOf(selector + " {");
+  const index = css.lastIndexOf(selector + " {");
   expect(index, `Missing CSS block ${selector}`).toBeGreaterThanOrEqual(0);
   return css.slice(index, css.indexOf("}", index) + 1);
 }
