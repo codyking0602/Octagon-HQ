@@ -176,21 +176,13 @@ describe("Home Your HQ", () => {
     });
   });
 
-  it("keeps Your HQ to the three approved stats with no CTA", () => {
+  it("offers the compact public Your HQ header and sport selector", () => {
     renderHome();
-
-    const hq = yourHqSection();
-    expect(within(hq).getAllByRole("article")).toHaveLength(3);
-    expect(within(hq).getByText("HQ Daily streak")).toBeInTheDocument();
-    expect(within(hq).getByText("UFC Picks")).toBeInTheDocument();
-    expect(within(hq).getByText("Football Picks")).toBeInTheDocument();
-    expect(within(hq).queryByRole("button")).not.toBeInTheDocument();
-    expect(within(hq).queryByRole("link")).not.toBeInTheDocument();
-
-    expect(screen.getByRole("link", { name: /Open UFC Today’s Challenge/i })).toHaveAttribute("href", "/play");
-    expect(screen.getByRole("link", { name: /Open Football Today’s Challenge/i })).toHaveAttribute("href", "/football/today");
+    expect(screen.getByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
+    const selector = screen.getByRole("combobox", { name: "Home sport" });
+    expect(selector).toHaveValue("football");
+    expect(screen.getByRole("region", { name: "Football HQ" })).toHaveClass("football-hq--compact-preview");
     expect(screen.queryByRole("region", { name: "What’s New" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("region", { name: "Today’s Challenges" })).not.toBeInTheDocument();
   });
 
   it("keeps UFC and Football Daily Challenge status independent inside each sport HQ", () => {
@@ -493,7 +485,7 @@ describe("Home Your HQ", () => {
     expect(homeSections[homeSections.length - 1]).toBe(championship);
 
   });
-  it("limits the compact Football preview to the authenticated owner profile", () => {
+  it("preserves the approved compact Football appearance for owner profiles", () => {
     mocks.identity.profile = { ...cody, canControlPicks: true };
     renderHome();
     expect(document.querySelector(".home-page")).toHaveClass("home-page--compact-football-preview");
@@ -501,19 +493,19 @@ describe("Home Your HQ", () => {
     expect(screen.getByRole("region", { name: "Championship standings" })).toHaveClass("home-champ-preview--compact-football");
   });
 
-  it("does not enable the Football preview for regular profiles", () => {
+  it("shows the compact Football design for regular profiles", () => {
     mocks.identity.profile = cody;
     renderHome();
-    expect(document.querySelector(".home-page")).not.toHaveClass("home-page--compact-football-preview");
-    expect(screen.getByRole("region", { name: "Football HQ" })).not.toHaveClass("football-hq--compact-preview");
-    expect(screen.getByRole("region", { name: "Championship standings" })).not.toHaveClass("home-champ-preview--compact-football");
+    expect(document.querySelector(".home-page")).toHaveClass("home-page--compact-football-preview");
+    expect(screen.getByRole("region", { name: "Football HQ" })).toHaveClass("football-hq--compact-preview");
+    expect(screen.getByRole("region", { name: "Championship standings" })).toHaveClass("home-champ-preview--compact-football");
   });
 
-  it("does not enable the Football preview for other pick controllers", () => {
+  it("shows the compact Football design for other pick controllers", () => {
     mocks.identity.profile = { ...cody, displayName: "TROY", canControlPicks: true };
     renderHome();
-    expect(screen.getByRole("region", { name: "Football HQ" })).not.toHaveClass("football-hq--compact-preview");
-    expect(screen.getByRole("region", { name: "Championship standings" })).not.toHaveClass("home-champ-preview--compact-football");
+    expect(screen.getByRole("region", { name: "Football HQ" })).toHaveClass("football-hq--compact-preview");
+    expect(screen.getByRole("region", { name: "Championship standings" })).toHaveClass("home-champ-preview--compact-football");
   });
 
   it("uses the Championship Home for all signed-in users and filters HQs", () => {

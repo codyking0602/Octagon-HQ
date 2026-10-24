@@ -25,7 +25,7 @@ afterEach(() => {
 });
 
 describe("BottomNavigation Football Picks no-reveal navigation", () => {
-  it("switches UFC Picks directly to Football without injecting clip state", () => {
+  it("cycles UFC Picks directly to Basketball without injecting clip state", () => {
     window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "ufc");
 
     render(
@@ -39,8 +39,8 @@ describe("BottomNavigation Football Picks no-reveal navigation", () => {
     const picks = screen.getByRole("link", { name: "Picks" });
     fireEvent.click(picks);
     fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/mlb/picks|plain");
-    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("mlb");
+    expect(screen.getByTestId("location")).toHaveTextContent("/nba/picks|plain");
+    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("nba");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
   });
 });
