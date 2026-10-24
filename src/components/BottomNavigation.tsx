@@ -111,9 +111,13 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const currentPicksRoot = footballMode ? "/football/picks" : mlbMode ? "/mlb/picks" : nbaMode ? "/nba/picks" : "/picks";
   // Re-tapping an active tab keeps its current sport and double-tap cycling.
   // Entering a different tab uses the frozen Home sport / last-used fallback.
+  // Use the visible hub's current sport when already at that hub. From
+  // nested/admin routes, the tab is an entry action and resolves Home instead.
+  const atPlayHub = ["/play", "/football", "/nba", "/mlb"].includes(location.pathname);
+  const atPicksHub = ["/picks", "/football/picks", "/nba/picks", "/mlb/picks"].includes(location.pathname);
   const standardDestinations = baseDestinations.map((destination) => (
-    destination.icon === "play" ? { ...destination, to: routeOwnsNavigationItem("play", location.pathname) ? currentPlayRoot : selectedPlayRoot }
-      : destination.icon === "picks" ? { ...destination, to: routeOwnsNavigationItem("picks", location.pathname) ? currentPicksRoot : selectedPicksRoot }
+    destination.icon === "play" ? { ...destination, to: atPlayHub ? currentPlayRoot : selectedPlayRoot }
+      : destination.icon === "picks" ? { ...destination, to: atPicksHub ? currentPicksRoot : selectedPicksRoot }
       : destination
   ));
 
