@@ -5,6 +5,7 @@ import { defaultNotificationPushSports, notificationSport, pushNotificationSport
 const migration = readFileSync(
   "supabase/migrations/202612310326_notification_sport_push_controls.sql", "utf8",
 );
+const nbaMigration = readFileSync("supabase/migrations/202612310327_nba_notification_kind_preparation.sql", "utf8");
 const provider = readFileSync("src/features/notifications/NotificationProvider.tsx", "utf8");
 const repository = readFileSync("src/features/notifications/notificationRepository.ts", "utf8");
 const inbox = readFileSync("src/features/notifications/NotificationCenterPage.tsx", "utf8");
@@ -70,11 +71,11 @@ describe("notification sport push controls — draft contract", () => {
 
   it("prepares the four dormant NBA notification kinds without starting producers", () => {
     for (const kind of ["nba_launch_available", "nba_daily_available", "nba_daily_four_hours", "nba_results_ready"]) {
-      expect(migration).toContain("'" + kind + "'");
+      expect(nbaMigration).toContain("'" + kind + "'");
     }
-    expect(migration).toContain("notification_groups_kind_valid");
-    expect(migration).toContain("notification_category_for_kind");
-    expect(migration).toContain("notification_priority_for_kind");
+    expect(nbaMigration).toContain("notification_groups_kind_valid");
+    expect(nbaMigration).toContain("notification_category_for_kind");
+    expect(nbaMigration).toContain("notification_priority_for_kind");
   });
 
   it("does not create a new notification scheduler or send messages in the migration", () => {
