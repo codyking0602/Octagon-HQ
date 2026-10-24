@@ -133,10 +133,6 @@ const GROUPS: readonly (readonly string[])[] = [
     "nfl-final-first-cold-weather-sb-venue"
   ],
   [
-    "nfl-r1-thanksgiving",
-    "theme-cowboys-seahawks-2026-r1-thanksgiving"
-  ],
-  [
     "cfb-r3-first-heisman",
     "cfb-final-heisman-number-99",
     "cfb-final-first-heisman-original-name"

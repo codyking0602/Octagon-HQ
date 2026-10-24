@@ -13,7 +13,7 @@ import {
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import { footballThemedBarTriviaRunForDay } from "./footballTeamThemeDailyPacks";
-import { footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
+import { footballTriviaConceptKey, footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import type {
   OfficialDailyAdvanceResult,
@@ -148,7 +148,7 @@ function dailyBarTriviaRun(
       .flatMap((entry) => entry.ids.flatMap(footballTriviaFamilyMemberIds));
     const themed = league === "nfl" ? footballThemedBarTriviaRunForDay(candidateDay) : null;
     const run = themed
-      ? [...themed]
+      ? themed.map((question) => ({ ...question, factKey: footballTriviaConceptKey(question.id) }))
       : buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, {
           random: seededLineupRandom(
             BAR_TRIVIA_DAILY_CONTENT_VERSION, league, scheduleVersion, candidateDay, "questions",
