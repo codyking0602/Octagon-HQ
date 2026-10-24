@@ -3,6 +3,8 @@ import {
   blindResumeStats,
   blindResumeWinner,
   createBlindResumeRounds,
+  createEvidenceSafeBlindResumeRounds,
+  blindResumePairIsEvidenceSafe,
   type BlindResumePair,
   type BlindResumeStat,
 } from "./blindResumeEngine";
@@ -150,6 +152,9 @@ export interface OfficialDailyAdvanceResult {
 type JsonRecord = Record<string, unknown>;
 type BlindResumeDifficulty = "readable" | "competitive" | "tight" | "nightmare";
 
+// No production Daily activation until the owner approves release and sets an actual cutover.
+// Future casual quality previews use this reserved date to exercise the same publication owner.
+export const UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY = "2099-01-01";
 const BLIND_RESUME_V3_REVEAL_COUNTS = [2, 4, 6, 8] as const;
 const BLIND_RESUME_V3_CORRECT_POINTS = [20, 19, 18, 17] as const;
 const BLIND_RESUME_V3_MISS_POINTS = [2, 4, 6, 8] as const;
@@ -471,22 +476,30 @@ function visibleBlindResumeV3Round(round: JsonRecord, revealedCount: number) {
 }
 
 function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
+  const evidenceSafe = day >= UFC_BLIND_RESUME_STAGE3_CUTOVER_DAY;
   const seed = `${OFFICIAL_DAILY_RUNTIME_VERSION}|${BLIND_RESUME_V3_CONTENT_VERSION}|${scheduleVersion}|${day}`;
-  const roundSet = createBlindResumeRounds(seed);
+  const roundSet = evidenceSafe ? createEvidenceSafeBlindResumeRounds(seed) : createBlindResumeRounds(seed);
   const difficulties = blindResumeDifficultyMap(roundSet.pairs);
-  const privateRounds = roundSet.pairs.map((pair, roundIndex) => ({
-    round_index: roundIndex,
-    pair_id: pair.id,
-    difficulty: difficulties.get(pair.id) ?? "competitive",
-    fighter_a_id: pair.fighterA.id,
-    fighter_b_id: pair.fighterB.id,
-    winner_id: blindResumeWinner(pair).id,
-    stats: shuffleBlindResumeStats(blindResumeStats(pair), seed, pair.id).map((stat) => ({
-      label: stat.label,
-      value_a: stat.valueA,
-      value_b: stat.valueB,
-    })),
-  }));
+  const privateRounds = roundSet.pairs.map((pair, roundIndex) => {
+    if (evidenceSafe && !blindResumePairIsEvidenceSafe(pair)) {
+      throw new Error("Blind Resume attempted to publish a disputed matchup.");
+    }
+    const difficulty = difficulties.get(pair.id) ?? "competitive";
+    const stats = blindResumeStats(pair);
+    return {
+      round_index: roundIndex,
+      pair_id: pair.id,
+      difficulty,
+      fighter_a_id: pair.fighterA.id,
+      fighter_b_id: pair.fighterB.id,
+      winner_id: blindResumeWinner(pair).id,
+      stats: shuffleBlindResumeStats(stats, seed, pair.id).map((stat) => ({
+          label: stat.label,
+          value_a: stat.valueA,
+          value_b: stat.valueB,
+        })),
+    };
+  });
   const revealRounds = privateRounds.map((round) => ({
     round_index: round.round_index,
     fighter_a: fighterPresentation(fighterFor(round.fighter_a_id)),
@@ -495,7 +508,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
   }));
 
   return {
-    setupKey: `${BLIND_RESUME_V3_CONTENT_VERSION}:${scheduleVersion}:${day}`,
+    setupKey: `${BLIND_RESUME_V3_CONTENT_VERSION}:${scheduleVersion}:${day}${evidenceSafe ? ":evidence-safe-stage3-v1" : ""}`,
     contentVersion: BLIND_RESUME_V3_CONTENT_VERSION,
     scoringVersion: BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION,
     publicSetup: {
@@ -512,7 +525,7 @@ function buildBlindResumeSetup(day: string, scheduleVersion: string): OfficialDa
       },
     },
     revealSetup: { rounds: revealRounds },
-    privateSetupEvidence: { seed, rounds: privateRounds },
+    privateSetupEvidence: { seed, rounds: privateRounds, ...(evidenceSafe ? { selection_version: "evidence-safe-stage3-v1" } : {}) },
     privateGradingEvidence: {
       correct_choices: privateRounds.map((round) => round.winner_id),
     },
