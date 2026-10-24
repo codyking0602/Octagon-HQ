@@ -89,5 +89,11 @@ export const UFC_SPORTS_FEUD_SIX_MONTH_EDITORIAL = [
     "decision": "advance",
     "semanticFamily": "ufc-fighters-international-grappling-world-honors",
     "reason": "Official UFC athlete biographies corroborate IBJJF and ADCC world accomplishments; every named fighter's exact event/title requires independent confirmation before release."
+  },
+  {
+    "id": "ufc-v2-main8-ufc-returnees",
+    "decision": "advance",
+    "semanticFamily": "ufc-veterans-who-left-and-returned",
+    "reason": "Distinctive two-UFC-stint history verified for well-known veterans; fact-check every additional offboard candidate before release."
   }
 ] as const;
