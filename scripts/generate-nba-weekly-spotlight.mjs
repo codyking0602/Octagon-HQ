@@ -188,6 +188,36 @@ export function teamEditorialScore(t, teams) {
   return 45*winRate+25*clamp01((margin+10)/40)
     +15*clamp01((125-allowed)/40)+15*opponentStrength;
 }
+// Sports Reference labels NBA seasons by the ending year: 2026–27 => /2027.html.
+const BASKETBALL_REFERENCE_TEAM_CODES = new Set([
+  "ATL","BOS","BRK","CHI","CHO","CLE","DAL","DEN","DET","GSW","HOU",
+  "IND","LAC","LAL","MEM","MIA","MIL","MIN","NOP","NYK","OKC","ORL",
+  "PHI","PHO","POR","SAC","SAS","TOR","UTA","WAS"
+]);
+const ESPN_TO_BASKETBALL_REFERENCE = {
+  BKN:"BRK", BRK:"BRK", BK:"BRK",
+  CHA:"CHO", CHO:"CHO",
+  GS:"GSW", GSW:"GSW",
+  NO:"NOP", NOP:"NOP",
+  NY:"NYK", NYK:"NYK",
+  PHX:"PHO", PHO:"PHO",
+  SA:"SAS", SAS:"SAS",
+  UTAH:"UTA", UTA:"UTA",
+  WSH:"WAS", WAS:"WAS"
+};
+export function basketballReferenceTeamSeasonUrl(abbreviation, weekEnd) {
+  const source=String(abbreviation??"").trim().toUpperCase();
+  const code=ESPN_TO_BASKETBALL_REFERENCE[source]??source;
+  if(!BASKETBALL_REFERENCE_TEAM_CODES.has(code)) {
+    throw Error("Unsupported NBA team abbreviation for Basketball Reference: "+source);
+  }
+  if(!/^20\\d{2}-\\d{2}-\\d{2}$/.test(weekEnd)) throw Error("Invalid NBA weekly end date");
+  const parsed=new Date(weekEnd+"T12:00:00Z");
+  if(!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0,10)!==weekEnd) throw Error("Invalid NBA weekly end date");
+  const seasonEnd=parsed.getUTCFullYear()+(parsed.getUTCMonth()>=7 ? 1 : 0);
+  return `https://www.basketball-reference.com/teams/${code}/${seasonEnd}.html`;
+}
+
 export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publishedAt, previous=null}) {
   const {teams,finals}=collectTeamGames(events);
   // Two or more final appearances required to establish a genuine weekly sample.
@@ -221,17 +251,15 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
       highlightUrl:`https://www.youtube.com/watch?v=${selected.video.id}`,
       highlightSourceChannelId: selected.video.channel,
       channelUrl: "https://www.youtube.com/@NBA",
-      summary:`${round(p.points/g)} PPG, ${round(p.assists/g)} APG and ${round(p.rebounds/g)} RPG across ${g} games.`,
       stats:[{label:"PPG",value:round(p.points/g)},{label:"APG",value:round(p.assists/g)},
         {label:"RPG",value:round(p.rebounds/g)},{label:"FG%",value:fg}],
     },
     team:{
       name:t.name,teamId:t.abbreviation,logoUrl:t.logoUrl,
-      profileUrl:`https://www.espn.com/nba/team/_/name/${String(t.abbreviation).toLowerCase()}`,
+      profileUrl:basketballReferenceTeamSeasonUrl(t.abbreviation, weekEnd),
       record:`${t.wins}-${t.losses}`,
       ppg:round(t.for/tg),oppPpg:round(t.against/tg),
       netMargin:(t.for>=t.against?"+":"")+round((t.for-t.against)/tg),
-      summary:`${t.wins}-${t.losses} this week · ${round((t.for-t.against)/tg)} average margin and ${round(t.against/tg)} allowed per game.`,
     },
   };
   return winner;
