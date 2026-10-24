@@ -5,11 +5,11 @@ const homepage = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const owner = readFileSync("src/features/nba/NbaOwnerHomeHq.tsx", "utf8");
 const css = readFileSync("src/styles/nba-owner-home.css", "utf8");
 describe("NBA HQ owner-only regular-season proposal", () => {
-  it("gates the new Basketball layout on a privileged owner identity only", () => {
+  it("shares the Basketball Home design while keeping owner daily testing gated", () => {
     expect(homepage).toContain('const nbaHqOwnerPreview = Boolean(identity.profile?.canControlPicks === true');
     expect(homepage).toContain('&& identity.profile.displayName.trim().toUpperCase() === "CODY");');
-    expect(homepage).toContain('<NbaHomeHq signedIn={signedIn} />');
-    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} />');
+    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} />');
+    expect(owner).toContain("allowOwnerDailyPreview && !publishedDaily");
   });
   it("does not expose future Cup or Playoff picks or bypass official game launch", () => {
     expect(owner).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY");
