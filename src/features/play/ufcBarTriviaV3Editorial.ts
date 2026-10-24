@@ -299,9 +299,7 @@ export const UFC_BAR_TRIVIA_V3_FACT_FAMILIES: readonly (readonly string[])[] = [
   ["ufc-r1-first-france-headliner", "ufc-r1-first-france-opponent"],
   ["ufc-r3-hof-sanchez-guida", "ufc-r2-sanchez-guida-event"],
   ["ufc-r1-ufc1-winner", "ufc-final-ufc1-final"],
-  ["ufc-r2-ufc300-bmf", "ufc-bt-v3-h-020"],
   ["ufc-r2-ufc306-sphere", "ufc-r3-ufc306-main"],
-  ["ufc-r3-hof-swanson-choi", "ufc-r2-hof-2023-fight"],
 ];
 
 export function expandUfcBarTriviaRecentFactIds(ids: readonly string[]): string[] {
