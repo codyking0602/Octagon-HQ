@@ -397,17 +397,21 @@ const ROWS = [
     "prompt": "Name an official way a UFC fight can be recorded as ending.",
     "kind": "other",
     "ranked": "Knockout|Technical knockout|Submission|Unanimous decision|Split decision|Disqualification|No contest|Draw",
-    "extras": "Majority decision|Doctor stoppage|Corner stoppage|Retirement|Technical decision|Technical submission|Technical draw|Split draw|Majority draw",
+    "extras": "Majority decision|Technical decision",
     "aliases": {
       "Knockout": [
         "KO"
       ],
       "Technical knockout": [
-        "TKO"
+        "TKO",
+        "Doctor stoppage",
+        "Corner stoppage",
+        "Retirement"
       ],
       "Submission": [
         "Tap out",
-        "Choke submission"
+        "Choke submission",
+        "Technical submission"
       ],
       "Unanimous decision": [
         "UD"
@@ -420,6 +424,11 @@ const ROWS = [
       ],
       "No contest": [
         "NC"
+      ],
+      "Draw": [
+        "Split draw",
+        "Majority draw",
+        "Technical draw"
       ]
     }
   }
