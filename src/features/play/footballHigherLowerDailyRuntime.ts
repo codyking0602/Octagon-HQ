@@ -37,7 +37,7 @@ export function buildFootballHigherLowerDailyPublication(
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !scheduleVersion.trim()) {
     throw new Error("Football Higher or Lower requires a canonical Daily date and schedule.");
   }
-  const seed = [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, gameIndex ? "game-2" : "game-1"].join("|");
+  const seed = [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, ...(gameIndex ? ["game-2"] : [])].join("|");
   const board = createFootballHigherLowerBoard(
     seed, "MIXED", previousPublishedQuestions.length
       ? footballHigherLowerExclusionKeys(previousPublishedQuestions)
@@ -48,7 +48,7 @@ export function buildFootballHigherLowerDailyPublication(
     throw new Error("Football Higher or Lower requires ten audited comparisons.");
   }
   return {
-    setupKey: [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, gameIndex].join(":"),
+    setupKey: [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, ...(gameIndex ? [gameIndex] : [])].join(":"),
     contentVersion: FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION,
     scoringVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
