@@ -773,7 +773,7 @@ function pairCandidates(spec: MetricSpec, officialCfbExpansion = false): PairCan
   return pairs;
 }
 
-const allPairCandidates = metricSpecs.flatMap(pairCandidates);
+const allPairCandidates = metricSpecs.flatMap(spec => pairCandidates(spec));
 
 /**
  * Official Daily alone needs a wider, verified factual pool for six months.
