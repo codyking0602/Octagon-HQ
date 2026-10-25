@@ -162,5 +162,5 @@ export const BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES: Readonly<Record<string, BarTr
   "ufc-r3-the-natural": "round2",
   "ufc-r3-du-plessis-first-sa": "round2",
   "ufc-r2-ufc5-superfight": "round3",
-  "ufc-r2-rousey-carmouche-city": "round3",
+  // Rousey/Carmouche host-city question was retired from future selectable v3 boards.
 };
