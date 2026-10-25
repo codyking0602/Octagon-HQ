@@ -54,7 +54,7 @@ describe("locked three-sport Daily scheduling policy", () => {
     expect(lockedWeightedGameForDay("ufc", "2026-10-24")).toBe("bar_trivia");
     expect(footballBarTriviaLeagueForDay("2026-09-29")).toBe("nfl");
     expect(footballBarTriviaLeagueForDay("2026-10-22")).toBe("cfb");
-    expect(footballBarTriviaLeagueForDay("2026-11-01")).toBe("nfl");
+    expect(footballBarTriviaLeagueForDay("2026-11-05")).toBe("nfl");
   });
 
   it("preserves all approved active weights without scheduling unfinished Higher or Lower", () => {
