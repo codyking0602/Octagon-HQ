@@ -837,7 +837,13 @@ async function handleNbaDaily(
       // aliases. Avoid booting NBA's all-games module + legacy UFC/NFL/CFB
       // question catalogs for every individual Feud answer.
       ? (await loadNbaFeudAdvanceRuntime()).advanceFamilyFeudDailyCore(context, action)
-      : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
+      : context.gameType === "millionaire" && !isTwoGameDaily(context)
+        // NBA's single-game Millionaire answers use the same lean evaluator as
+        // UFC and Football. Loading the all-games NBA bundle on every tap
+        // made the answer reveal wait on unnecessary cold-start CPU work.
+        // Keep two-game publications on their canonical wrapper.
+        ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime(context, action)
+        : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
   const history = footballActionHistory(context);
   const nextSubmissionState = submissionStateWithClientActionId({
     ...advanced.submissionState, action_history: [...history, action],
