@@ -2,6 +2,23 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
+-- This legacy grader/RLS fixture deliberately publishes synthetic same-day
+-- boards. The October 25+ cadence gate is separately enforced by
+-- locked_three_sport_daily_cadence.sql. Bypass it *only inside this rollback*
+-- so a legacy fixture remains valid on UFC's non-opening days as well.
+do $compat$
+begin
+  if exists (
+    select 1 from pg_trigger
+    where tgname = 'enforce_future_daily_publication_cadence'
+      and tgrelid = 'private.daily_challenges'::regclass
+      and not tgisinternal
+  ) then
+    execute 'alter table private.daily_challenges disable trigger enforce_future_daily_publication_cadence';
+  end if;
+end;
+$compat$;
+
 do $$
 declare
   v_cody uuid := '71000000-0000-4000-8000-000000000001';
@@ -30,10 +47,20 @@ begin
     raise exception 'Central-time day boundary failed across daylight-saving transitions';
   end if;
 
-  if private.daily_challenge_expected_game('find-leader-v1', v_today) <> 'find_leader'
-    or private.daily_challenge_expected_game('find-leader-v1', v_today + 1) <> 'find_leader' then
+  if private.daily_challenge_expected_game('test-generalized-current-find-leader-v1', v_today) <> 'find_leader'
+    or private.daily_challenge_expected_game('test-generalized-current-find-leader-v1', v_today + 1) <> 'find_leader' then
     raise exception 'Find the Leader-only schedule is not deterministic';
   end if;
+
+  -- Make the synthetic test board the canonical UFC version for this
+  -- transaction's current day. Production schedules are not changed.
+  insert into private.daily_challenge_schedule_versions (
+    version, time_zone, anchor_day, starts_on, game_cycle, sport, created_at
+  ) values (
+    'test-generalized-current-find-leader-v1', 'America/Chicago',
+    v_today, v_today, array['find_leader']::text[], 'ufc',
+    clock_timestamp() + interval '1 minute'
+  ) on conflict (version) do nothing;
 
   insert into auth.users (
     id,
@@ -73,7 +100,7 @@ begin
 
   v_ftl := (public.publish_daily_challenge_setup(
     v_today,
-    'find-leader-v1',
+    'test-generalized-current-find-leader-v1',
     'find_leader',
     'ftl-' || v_today::text,
     'find-leader-v2-20260724',
@@ -87,7 +114,7 @@ begin
 
   if v_ftl is distinct from (public.publish_daily_challenge_setup(
     v_today,
-    'find-leader-v1',
+    'test-generalized-current-find-leader-v1',
     'find_leader',
     'ftl-' || v_today::text,
     'find-leader-v2-20260724',
@@ -104,7 +131,7 @@ begin
   begin
     perform public.publish_daily_challenge_setup(
       v_today,
-      'find-leader-v1',
+      'test-generalized-current-find-leader-v1',
       'find_leader',
       'ftl-' || v_today::text,
       'find-leader-v2-20260724',
@@ -275,7 +302,7 @@ begin
     jsonb_build_object('eliminated_ids', jsonb_build_array('f10','f9','f3'))
   );
 
-  v_board := public.get_daily_challenge_leaderboard(v_today, 'find-leader-v1');
+  v_board := public.get_daily_challenge_leaderboard(v_today, 'test-generalized-current-find-leader-v1');
   if (
     select count(*)
     from jsonb_array_elements(v_board->'entries') entry
