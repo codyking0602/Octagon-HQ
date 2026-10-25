@@ -63,8 +63,8 @@ describe("locked Daily Challenge rotation", () => {
     expect(footballBarTriviaLeagueForDay("2026-10-01")).toBe("cfb");
     expect(footballBarTriviaLeagueForDay("2026-10-14")).toBe("nfl");
     expect(footballBarTriviaLeagueForDay("2026-10-22")).toBe("cfb");
-    expect(footballBarTriviaLeagueForDay("2026-11-01")).toBe("nfl");
-    expect(footballBarTriviaLeagueForDay("2026-11-09")).toBe("cfb");
+    expect(footballBarTriviaLeagueForDay("2026-11-05")).toBe("nfl");
+    expect(footballBarTriviaLeagueForDay("2026-11-11")).toBe("cfb");
   });
 
   it("keeps the only near-term UFC/Football collision on the intentional Oct 2 Average Fan retry", () => {
