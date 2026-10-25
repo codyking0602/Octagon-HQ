@@ -1,6 +1,7 @@
-import { createNbaHigherLowerBoard, NBA_HIGHER_LOWER_QUESTION_COUNT, type NbaHigherLowerQuestion } from "./nbaHigherLowerModel";
+import { createNbaHigherLowerBoard, nbaHigherLowerMatchupKey, NBA_HIGHER_LOWER_QUESTION_COUNT, type NbaHigherLowerQuestion } from "./nbaHigherLowerModel";
 import type { OfficialDailySetupPublication } from "../play/todaysChallengeRuntime";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "../play/officialScoreContract";
+import { buildTwoGameDailyPublication } from "../play/dailyTwoGameRuntime";
 
 export const NBA_HIGHER_LOWER_SERVER_VERSION = "nba-higher-lower-official-v1";
 export function nbaHigherLowerPublicQuestion(question:NbaHigherLowerQuestion){
@@ -8,11 +9,14 @@ export function nbaHigherLowerPublicQuestion(question:NbaHigherLowerQuestion){
   const {value:_value,formattedValue:_formatted,...publicHidden}=hidden;
   return {...safe,hidden:publicHidden};
 }
-export function buildNbaHigherLowerDailyPublication(day:string,scheduleVersion:string,ordinal:number):OfficialDailySetupPublication{
-  const board=createNbaHigherLowerBoard(`${NBA_HIGHER_LOWER_SERVER_VERSION}|${scheduleVersion}|${day}|${ordinal}`);
+export function buildNbaHigherLowerDailyPublication(day:string,scheduleVersion:string,ordinal:number,gameIndex=0,excluded:ReadonlySet<string>=new Set()):OfficialDailySetupPublication{
+  const seed=gameIndex===0 && excluded.size===0
+    ? `${NBA_HIGHER_LOWER_SERVER_VERSION}|${scheduleVersion}|${day}|${ordinal}`
+    : `${NBA_HIGHER_LOWER_SERVER_VERSION}|${scheduleVersion}|${day}|${ordinal}|game-${gameIndex+1}`;
+  const board=createNbaHigherLowerBoard(seed,excluded);
   if(board.questions.length!==NBA_HIGHER_LOWER_QUESTION_COUNT)throw new Error("NBA Higher or Lower Daily needs 10 questions.");
   return{
-    setupKey:`${NBA_HIGHER_LOWER_SERVER_VERSION}:${scheduleVersion}:${day}:${ordinal}`,
+    setupKey:`${NBA_HIGHER_LOWER_SERVER_VERSION}:${scheduleVersion}:${day}:${ordinal}:game-${gameIndex+1}`,
     contentVersion:NBA_HIGHER_LOWER_SERVER_VERSION,scoringVersion:OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup:{
       runtime_version:NBA_HIGHER_LOWER_SERVER_VERSION,league:"NBA",
