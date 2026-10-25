@@ -1,0 +1,145 @@
+/* UFC keeps the proven Higher or Lower hierarchy with charcoal panels and restrained red identity. */
+.ufc-higher-lower {
+  --hl-blue: #dc4e52;
+  --hl-deep: #131416;
+  --hl-panel: #1b1b1e;
+  --hl-line: rgba(213, 75, 79, .24);
+  --hl-muted: #b1adb0;
+}
+.ufc-higher-lower :is(.higher-lower-hero,.higher-lower-game-header,.higher-lower-stat-label,
+ .higher-lower-matchup,.higher-lower-controls,.higher-lower-result,.higher-lower-review) {
+  background: linear-gradient(150deg,#242426,#171719 78%,#151517);
+  border-color: var(--hl-line);
+}
+.ufc-higher-lower :is(.higher-lower-hero,.higher-lower-result)::after {
+  background: radial-gradient(circle, rgba(216,66,72,.12), transparent 66%);
+}
+.ufc-higher-lower .higher-lower-hero { padding: 19px 17px; }
+.ufc-higher-lower .higher-lower-hero > strong { color: #f1d2d2; }
+.ufc-higher-lower .higher-lower-hero > p:last-child { font-size: .79rem; }
+.ufc-higher-lower .ufc-higher-lower__facts {
+  display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0;
+}
+.ufc-higher-lower__facts span {
+  padding: 6px 9px; border: 1px solid rgba(229,92,97,.23);
+  border-radius: 8px; background: rgba(200,53,62,.07);
+  color: #f0c3c4; font-size: .67rem; font-weight: 800;
+}
+.ufc-higher-lower .higher-lower-start {
+  background: linear-gradient(135deg,#b22d33,#e04448); color: #fff;
+}
+.ufc-higher-lower .higher-lower-card {
+  --hl-team-primary: #a62a30; --hl-team-secondary: #d4a9aa;
+  min-height: 305px;
+  padding: 8px 8px 9px;
+  background: linear-gradient(155deg,#272123,#1d1b1d 56%,#171719);
+}
+.ufc-higher-lower .higher-lower-card__identity {
+  display: block; min-height: 23px; text-align: center;
+}
+.ufc-higher-lower .higher-lower-card__identity > span:last-child,
+.ufc-higher-lower .higher-lower-card__identity > span:first-child {
+  display: block; font-size: .56rem; color: #d9abae; font-weight: 850;
+  text-wrap: balance; line-height: 1.3;
+}
+.ufc-higher-lower__portrait {
+  display: grid; place-items: end center;
+  width: 100%; height: 148px; margin: 2px auto 0;
+  overflow: hidden; background: transparent;
+}
+.ufc-higher-lower__portrait .fighter-photo {
+  display: block; width: 100%; height: 100%;
+  max-width: 100%; object-fit: contain; object-position: center bottom;
+  background: transparent !important;
+}
+.ufc-higher-lower__portrait .fighter-photo--fallback {
+  display: grid; place-items: center; width: 100%;
+  font-size: 2rem; font-weight: 900; color: #e4b1b3;
+}
+.ufc-higher-lower .higher-lower-card h3 {
+  min-height: 49px; margin-top: 3px;
+  font-size: clamp(.9rem,4.2vw,1.32rem); line-height: 1.06;
+}
+.ufc-higher-lower .higher-lower-card > strong {
+  min-height: 58px; margin-top: 2px; font-size: clamp(2rem,9.5vw,3.2rem);
+}
+.ufc-higher-lower .higher-lower-card.is-hidden > strong,
+.ufc-higher-lower .higher-lower-result > strong,
+.ufc-higher-lower .higher-lower-review__matchup em {
+  color: #f3a8ab;
+}
+.ufc-higher-lower .higher-lower-vs {
+  border-color: #18181a; background: #64282d; color: #fff;
+}
+.ufc-higher-lower :is(.higher-lower-game-header small,.higher-lower-stat-label small,
+  .higher-lower-review__question > small,.higher-lower-review > header) {
+  color: #e0a2a5;
+}
+.ufc-higher-lower .higher-lower-progress i { background: linear-gradient(90deg,#aa3036,#e8585d); }
+.ufc-higher-lower .higher-lower-controls button {
+  border-color: rgba(235,91,96,.28);
+  background: rgba(170,45,52,.10); color: #f7dbdc;
+}
+.ufc-higher-lower .higher-lower-controls button.is-answer {
+  border-color: rgba(91,219,143,.7); background: rgba(42,155,91,.2); color: #b8ffd2;
+}
+.ufc-higher-lower .higher-lower-controls button.is-miss {
+  border-color: rgba(244,102,102,.7); background: rgba(173,48,48,.18); color: #ffc4c4;
+}
+.ufc-higher-lower .higher-lower-feedback {
+  margin-top: 7px; padding: 10px 12px;
+  border: 1px solid transparent; border-radius: 12px;
+}
+.ufc-higher-lower .higher-lower-feedback.is-visible {
+  border-color: rgba(223,86,94,.20); background: #1f1e20;
+}
+.ufc-higher-lower .higher-lower-feedback.is-correct { color: #a0ebbb; }
+.ufc-higher-lower .higher-lower-feedback.is-wrong { color: #f2a3a5; }
+.ufc-higher-lower .higher-lower-review__matchup b,
+.ufc-higher-lower .higher-lower-review__context,
+.ufc-higher-lower .higher-lower-review__question > small {
+  white-space: normal; text-overflow: clip; overflow: visible; overflow-wrap: anywhere;
+}
+.ufc-higher-lower .higher-lower-review > header,
+.ufc-higher-lower .higher-lower-review > div {
+  grid-template-columns: minmax(0,1fr) 58px 54px;
+  column-gap: 6px;
+}
+.ufc-higher-lower .higher-lower-review > div { padding: 10px; min-height: 83px; }
+.ufc-higher-lower .higher-lower-review__matchup b { font-size: .74rem; line-height: 1.25; }
+.ufc-higher-lower .higher-lower-review__matchup em { font-size: .71rem; }
+.ufc-higher-lower .higher-lower-review__question > small { font-size: .52rem; line-height: 1.25; }
+.ufc-higher-lower .higher-lower-review__context { font-size: .53rem; }
+.ufc-higher-lower .higher-lower-review > div > strong,
+.ufc-higher-lower .higher-lower-review > div > em { font-size: .54rem; overflow-wrap: anywhere; }
+.ufc-higher-lower .ufc-higher-lower__actions {
+  display: flex; gap: 9px; margin-top: 10px;
+}
+.ufc-higher-lower__actions button {
+  flex: 1; min-width: 0; min-height: 48px;
+  border: 1px solid rgba(230,97,102,.25);
+  background: #252326; border-radius: 12px;
+  color: #ffe9ea; font: inherit; font-size: .75rem; font-weight: 900;
+}
+.ufc-higher-lower__actions button:first-child {
+  border-color: transparent; background: #be343b; color: #fff;
+}
+@media(max-width:520px) {
+ .ufc-higher-lower { padding-left: 9px; padding-right: 9px; }
+ .ufc-higher-lower .higher-lower-card { min-height: 272px; padding: 7px 5px; }
+ .ufc-higher-lower__portrait { height: 126px; }
+ .ufc-higher-lower .higher-lower-card h3 { min-height: 45px; font-size: clamp(.82rem,3.7vw,1.1rem); }
+ .ufc-higher-lower .higher-lower-card > strong { min-height: 55px; font-size: clamp(1.75rem,9vw,2.6rem); }
+ .ufc-higher-lower .higher-lower-card__identity > span:first-child { font-size: .48rem; }
+ .ufc-higher-lower .higher-lower-review > header,
+ .ufc-higher-lower .higher-lower-review > div { grid-template-columns:minmax(0,1fr) 49px 47px; column-gap:4px; }
+ .ufc-higher-lower .higher-lower-review > div { padding: 9px 6px; }
+ .ufc-higher-lower .higher-lower-review__matchup b { font-size:.64rem; }
+ .ufc-higher-lower .higher-lower-review > div > strong,
+ .ufc-higher-lower .higher-lower-review > div > em { font-size:.49rem; }
+}
+@media(max-width:360px) {
+ .ufc-higher-lower .higher-lower-matchup { gap: 5px; padding: 5px; }
+ .ufc-higher-lower__portrait { height: 106px; }
+ .ufc-higher-lower .higher-lower-card { min-height: 256px; }
+}
