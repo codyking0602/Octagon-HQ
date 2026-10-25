@@ -195,7 +195,7 @@ async function apExternal(teamInfo, applied) {
     id:String(row.team?.id??""),name:row.team?.displayName??row.team?.location??""}))
     .filter(row=>row.rank>=1&&row.rank<=25&&Number.isInteger(row.rank)).sort((a,b)=>a.rank-b.rank);
   assert(rows.length===25 && rows.every((x,i)=>x.rank===i+1&&x.id),
-    "ESPN AP poll malformed; preserve last good snapshot");
+    "ESPN AP poll malformed; preserve last snapshot. Parsed ranks: "+rows.map(x=>x.rank).join(",")+" (count="+rows.length+")");
   const idToSchool=new Map(Object.entries(teamInfo).map(([key,t])=>[t.id,key]));
   const changed=rows.filter(row=>applied[row.rank-1]?.team!==idToSchool.get(row.id));
   if(changed.length) record("factual-correction",
