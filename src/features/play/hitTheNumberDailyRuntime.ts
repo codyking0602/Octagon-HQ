@@ -1,13 +1,21 @@
 import {
   HIT_THE_NUMBER_VERSION,
   hitTheNumberStatRows,
+  hitTheNumberEligibleFighters,
   type HitTheNumberBoardType,
 } from "./hitTheNumberEngine";
-import { hitTheNumberSlotAcceptsFighter } from "./hitTheNumberFormats";
+import {
+  hitTheNumberSlotAcceptsFighter,
+  hitTheNumberFormatSelectionSatisfies,
+  type HitTheNumberFormatPlan,
+} from "./hitTheNumberFormats";
 import { createQualityGatedHitTheNumberFormatPlan } from "./hitTheNumberPoolQuality";
-import { seededLineupRandom } from "./lineupModel";
+import { seededLineupRandom, shuffleLineup } from "./lineupModel";
 
-export const HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "hit-the-number-daily-v2" as const;
+export const HIT_THE_NUMBER_DAILY_CONTENT_VERSION = "hit-the-number-daily-v3" as const;
+
+/** Scoped to NEW official UFC boards; Casual and persisted v2 boards are unchanged. */
+export const UFC_OFFICIAL_HIT_NUMBER_POOL_SIZES = { 4: 12, 5: 14, 6: 16 } as const;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -74,6 +82,40 @@ function boardTypeForDay(
   return random() < 0.5 ? "open-roster" : "random-pool";
 }
 
+/**
+ * Use the canonical quality-gated generator, but reject old seven-pick results
+ * for new Official Daily boards and give Random Pool the approved four extra
+ * strategic choices. Extra fighters are ledger-backed and satisfy format rules.
+ * No separate stat inventory or casually generated fighter facts.
+ */
+export function createSixMonthReadyUfcOfficialHitNumberPlan(seed: string, boardType: HitTheNumberBoardType) {
+  for (let attempt = 0; attempt < 128; attempt++) {
+    const candidateSeed = attempt === 0 ? seed : seed + "|official-six-month|" + attempt;
+    const plan = createQualityGatedHitTheNumberFormatPlan({ seed: candidateSeed, boardType });
+    if (plan.pickCount < 4 || plan.pickCount > 6) continue;
+    if (boardType === "open-roster") return plan;
+    const requiredSize = UFC_OFFICIAL_HIT_NUMBER_POOL_SIZES[plan.pickCount as 4 | 5 | 6];
+    const existing = new Set(plan.fighterIds);
+    const eligible = hitTheNumberEligibleFighters(plan.statId)
+      .map(fighter => fighter.id)
+      .filter(id => !existing.has(id))
+      .filter(id => plan.format.formatId === "themed-lineup"
+        ? hitTheNumberFormatSelectionSatisfies(plan.format, [id])
+        : plan.format.slots.length > 0
+          ? plan.format.slots.some(slot => hitTheNumberSlotAcceptsFighter(slot, id))
+          : true);
+    const candidates = shuffleLineup(
+      eligible,
+      seededLineupRandom(HIT_THE_NUMBER_DAILY_CONTENT_VERSION, candidateSeed, plan.statId, "extras"),
+    );
+    const extras = candidates.slice(0, requiredSize - plan.fighterIds.length);
+    if (plan.fighterIds.length + extras.length !== requiredSize) continue;
+    const result: HitTheNumberFormatPlan = { ...plan, fighterIds: [...plan.fighterIds, ...extras] };
+    return result;
+  }
+  throw new Error("UFC Official Hit the Number lacks a verified 4–6-pick canonical board.");
+}
+
 export function buildOfficialHitTheNumberDailySetup(
   day: string,
   scheduleVersion: string,
@@ -82,7 +124,7 @@ export function buildOfficialHitTheNumberDailySetup(
 ) {
   const boardType = boardTypeForDay(runtimeVersion, day, scheduleVersion);
   const seed = `${HIT_THE_NUMBER_DAILY_CONTENT_VERSION}|${runtimeVersion}|hit-the-number|${scheduleVersion}|${day}`;
-  const plan = createQualityGatedHitTheNumberFormatPlan({ seed, boardType });
+  const plan = createSixMonthReadyUfcOfficialHitNumberPlan(seed, boardType);
   const statRowsById = new Map(hitTheNumberStatRows.map((row) => [row.fighterId, row]));
   const values = Object.fromEntries(plan.fighterIds.map((fighterId) => {
     const value = statRowsById.get(fighterId)?.values[plan.statId];
