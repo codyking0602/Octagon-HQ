@@ -7,6 +7,7 @@ import { JSDOM } from "jsdom";
 import {
   DIVISIONS, NFL_CODES, assert, nameKey, identity, validateCatalog, validateFlex,
   compareEvidence, summarizeDecisions, selectApprovedGrades, snapshotReadiness,
+  validateOfficialUfcTable,
 } from "./core.mjs";
 import { wheelPriorityIdentityKeys } from "../wheel-monitor-census-policy.mjs";
 
@@ -162,13 +163,15 @@ function extractUfcRankings(html) {
       }
     }
   }
-  // Validate source separately: a duplicated UFC source rank is NOT a software failure.
-  const bad=DIVISIONS.filter(d=>{
-    const rows=found.filter(r=>r.division===d);
-    const ranks=rows.filter(r=>!r.champion).map(r=>r.rank).sort((a,b)=>a-b);
-    return rows.length!==16 || ranks.some((rank,i)=>rank!==i+1);
-  });
-  return {rows:found,structuralWarnings:bad};
+  // A tie such as #12/#12 followed by #14 is valid on UFC.com.
+  // Duplicate/missing identities or impossible order remain hard source holds.
+  const checked=DIVISIONS.map(d=>validateOfficialUfcTable(
+    found.filter(r=>r.division===d),d));
+  return {rows:found,
+    structuralWarnings:checked.filter(x=>!x.valid).map(x=>x.division),
+    officialTies:checked.filter(x=>x.tiedRanks.length).map(x=>({
+      division:x.division,ties:x.tiedRanks,
+    }))};
 }
 async function ufcExternal() {
   const url="https://www.ufc.com/rankings";
@@ -178,6 +181,9 @@ async function ufcExternal() {
     record("source-integrity-review","Official UFC table contains missing/duplicate ranks",
       url,{divisions:data.structuralWarnings});
   }
+  for(const tie of data.officialTies) record("verified-official-ranking-tie",
+    "UFC published tied rankings; preserve exact official positions pending factual review",
+    url,tie);
   return {url,...data};
 }
 function apSnapshotSource() {
@@ -414,7 +420,8 @@ async function main() {
     readiness, coverage:{
       nfl:{approved:nflCoverage.expected,graded:nflCoverage.selected.length,missing:nflCoverage.missing,stale:nflCoverage.stale.length},
       cfb:{approved:cfbCoverage.expected,graded:cfbCoverage.selected.length,missing:cfbCoverage.missing,stale:cfbCoverage.stale.length},
-      ufc:{active:db.ufc.length,officialSourceWarnings:ufcRanks.structuralWarnings},
+      ufc:{active:db.ufc.length,officialSourceWarnings:ufcRanks.structuralWarnings,
+        officialRankTies:ufcRanks.officialTies},
     },
     reviews:result.filter(row=>row.classification!=="no-meaningful-change"),
     rosterSourceGaps:result.filter(x=>x.sourceStatus==="coaching-source-needed"
