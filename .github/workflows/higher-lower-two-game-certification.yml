@@ -1,0 +1,55 @@
+name: Higher or Lower Two-Game Certification
+
+on:
+  pull_request:
+    paths:
+      - 'src/features/play/*HigherLower*'
+      - 'src/features/play/*higherLower*'
+      - 'src/features/play/dailyTwoGame*'
+      - 'src/features/play/todaysChallengeRuntime.ts'
+      - 'src/features/nba/*HigherLower*'
+      - 'src/features/nba/*higherLower*'
+      - 'src/features/nba/nbaDailyServer*.ts'
+      - 'supabase/migrations/*higher_lower*'
+      - '.github/workflows/higher-lower-two-game-certification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OCTAGON_WRITE_HL_AUDIT: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --silent --no-audit --no-fund
+      - run: npm run pretest
+      - name: Run canonical and provisional two-game Higher or Lower audits
+        run: |
+          npx vitest run \
+            src/features/play/higherLowerTwoGameDaily.test.ts \
+            src/features/play/higherLowerOfficialSixMonthCalendarAudit.test.ts \
+            src/features/play/footballHigherLowerSixMonthAudit.test.ts \
+            src/features/play/footballHigherLowerDailyRuntime.test.ts \
+            src/features/nba/nbaDailyServerPublication.test.ts
+      - name: Upload full per-question audit and unresolved scheduling gates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: higher-lower-two-game-audit
+          path: |
+            artifacts/higher-lower-canonical-six-month-audit.json
+            artifacts/football-higher-lower-provisional-six-month-boards.json
+          if-no-files-found: warn
