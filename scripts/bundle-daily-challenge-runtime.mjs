@@ -15,6 +15,12 @@ const bundles = [
     requiredExports: ["advanceOfficialDailyRuntime", "buildOfficialDailySetup"],
   },
   {
+    label: "Millionaire Daily answer-only runtime",
+    entry: resolve(repoRoot, "src/features/play/millionaireDailyAdvance.ts"),
+    fileName: "millionaire-advance.generated.mjs",
+    requiredExports: ["advanceMillionaireDailyRuntime"],
+  },
+  {
     label: "Average Fan Daily edge runtime",
     entry: resolve(repoRoot, "src/features/play/averageFanDailyRuntime.ts"),
     fileName: "average-fan.generated.mjs",
