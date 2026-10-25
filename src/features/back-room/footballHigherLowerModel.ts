@@ -595,12 +595,18 @@ function historicalIcon(subject: FootballSubjectProfile) {
   return iconicTeamSeason(subject) || HIGHER_LOWER_HISTORICAL_ICON_NAMES.has(subject.name);
 }
 
-function subjectEligible(subject: FootballSubjectProfile, spec: MetricSpec) {
+function subjectEligible(subject: FootballSubjectProfile, spec: MetricSpec, officialCfbExpansion = false) {
+  const additionalSourceBackedModernCfb = officialCfbExpansion
+    && subject.league === "CFB"
+    && subject.kind === "player-career"
+    && subject.recognizabilityTier === "C"
+    && (subject.endSeason ?? subject.startSeason ?? 0) >= 2010;
   if (
     subject.league !== spec.league
     || !spec.kinds.includes(subject.kind)
     || subject.casualEligible === false
-    || (subject.recognizabilityTier !== "A" && subject.recognizabilityTier !== "B" && !iconicTeamSeason(subject))
+    || (subject.recognizabilityTier !== "A" && subject.recognizabilityTier !== "B"
+      && !iconicTeamSeason(subject) && !additionalSourceBackedModernCfb)
   ) return false;
 
   if (spec.positions && (!subject.position || !spec.positions.includes(subject.position))) return false;
@@ -672,10 +678,10 @@ function formatMetricValue(spec: MetricSpec, value: number) {
   return spec.metricId ? formatFootballFact(spec.metricId, value) : value.toLocaleString("en-US");
 }
 
-function metricRows(spec: MetricSpec): MetricRow[] {
+function metricRows(spec: MetricSpec, officialCfbExpansion = false): MetricRow[] {
   const candidateRows = spec.valueFromSubject
     ? queryFootballSubjects({ league: spec.league }).flatMap((subject) => {
-        if (!subjectEligible(subject, spec)) return [];
+        if (!subjectEligible(subject, spec, officialCfbExpansion)) return [];
         const value = spec.valueFromSubject?.(subject) ?? null;
         if (value == null || !Number.isFinite(value)) return [];
         return [{ subject, value }];
@@ -683,7 +689,7 @@ function metricRows(spec: MetricSpec): MetricRow[] {
     : spec.metricId
       ? footballFactualRecords.flatMap((record) => {
           const subject = getFootballSubject(record.subjectId);
-          if (!subject || !subjectEligible(subject, spec)) return [];
+          if (!subject || !subjectEligible(subject, spec, officialCfbExpansion)) return [];
           const fact = record.facts.find((candidate) => candidate.metricId === spec.metricId);
           if (!fact || !Number.isFinite(fact.value)) return [];
           return [{ subject, value: fact.value }];
@@ -717,11 +723,12 @@ function recognizabilityScore(subject: FootballSubjectProfile) {
   if (iconicTeamSeason(subject)) return 3;
   if (subject.recognizabilityTier === "A") return 3;
   if (subject.recognizabilityTier === "B") return 2;
+  if (subject.recognizabilityTier === "C") return 1;
   return 0;
 }
 
-function pairCandidates(spec: MetricSpec): PairCandidate[] {
-  const rows = metricRows(spec).sort((left, right) => left.value - right.value);
+function pairCandidates(spec: MetricSpec, officialCfbExpansion = false): PairCandidate[] {
+  const rows = metricRows(spec, officialCfbExpansion).sort((left, right) => left.value - right.value);
   const pairs: PairCandidate[] = [];
 
   // The recognition filters make these pools intentionally small. Compare every
@@ -820,9 +827,21 @@ const officialDailySupplementSpecs: readonly MetricSpec[] = [
 ];
 // Registry-only draft metadata has no direct ledger-source binding; do not
 // publish it in Official Daily until independently verified. Casual is unchanged.
-const officialDailyPairCandidates = [
+const standardOfficialPairs = [
   ...allPairCandidates.filter(pair => pair.metricKey !== "nfl-draft-pick"),
-  ...officialDailySupplementSpecs.flatMap(pairCandidates),
+  ...officialDailySupplementSpecs.flatMap(spec => pairCandidates(spec)),
+];
+// The verified CFB factual ledger includes modern Tier C subjects who are
+// not eligible in Casual. For Official Daily only, admit a sourced Tier C
+// season beside a recognizable Tier A anchor. This expands real fact coverage
+// without inventing statistics, reusing matchups, or lowering Casual quality.
+const standardOfficialIds = new Set(standardOfficialPairs.map(pair => pair.id));
+const officialDailyPairCandidates = [
+  ...standardOfficialPairs,
+  ...[...metricSpecs, ...officialDailySupplementSpecs]
+    .filter(spec => spec.league === "CFB" && spec.recognition === "recognizable")
+    .flatMap(spec => pairCandidates(spec, true))
+    .filter(pair => !standardOfficialIds.has(pair.id)),
 ];
 const allMetricSpecs = [...metricSpecs, ...officialDailySupplementSpecs];
 const metricIdOwner = new Map<string, string>();
