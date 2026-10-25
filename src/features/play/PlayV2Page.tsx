@@ -47,14 +47,14 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
   });
   const projection = runtime.projection;
   const specialTheme = sport === "football" && projection ? footballSpecialDailyThemeForDay(projection.centralDay) : null;
-  const adapter = todayChallengeAdapter(projection?.gameType);
+  const adapter = todayChallengeAdapter(projection?.gameType, sport);
   // The backend intentionally enforces Weekly Auction bids before an unstarted
   // Football Daily. Treat its typed gate as the next step, never a load failure.
   const weeklyAuctionGate = sport === "football" && !projection
     && runtime.error instanceof TodayChallengeRepositoryError
     && runtime.error.code === "WEEKLY_AUCTION_REQUIRED"
     ? runtime.error : null;
-  const gatedAdapter = todayChallengeAdapter(weeklyAuctionGate?.previewGameType ?? undefined);
+  const gatedAdapter = todayChallengeAdapter(weeklyAuctionGate?.previewGameType ?? undefined, sport);
   const title = projection && isDailyRankKeepCombo(projection)
     ? "Blind Rank + Keep/Cut" : adapter?.title ?? gatedAdapter?.title ?? "Today's Challenge";
   const completed = Boolean(projection?.officialAttempt);

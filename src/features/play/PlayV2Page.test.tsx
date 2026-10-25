@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import PlayV2Page from "./PlayV2Page";
 import { TodayChallengeRepositoryError } from "./todayChallengeRepository";
@@ -111,6 +111,29 @@ describe("public Football/UFC Play 2.0 release", () => {
     expect(screen.getByRole("dialog", { name: /shane official daily result/i })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /back to standings/i }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("opens the UFC-specific Higher or Lower Official Daily rather than the NBA route", () => {
+    mocked.runtime.mockReturnValue({
+      projection: {
+        centralDay: "2026-11-02", gameType: "higher_lower", progressRevision: 0,
+        officialAttempt: null, publicState: {},
+      },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    mocked.history.mockReturnValue({
+      performance: { count: 0, average: 0, best: 0, recent: [], byGame: [] },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    function CurrentRoute() {
+      const location = useLocation();
+      return <output data-testid="current-ufc-daily-route">{location.pathname + location.search}</output>;
+    }
+    render(<MemoryRouter><PlayV2Page sport="ufc" /><CurrentRoute /></MemoryRouter>);
+    const daily = screen.getByRole("region", { name: "Today's Challenge" });
+    expect(daily).toHaveTextContent("Higher or Lower");
+    fireEvent.click(within(daily).getByRole("button", { name: /play today/i }));
+    expect(screen.getByTestId("current-ufc-daily-route")).toHaveTextContent("/play/higher-lower?mode=daily");
   });
 
   it("shows the two-round Daily average on Play even if the projection score holds the last game", () => {
@@ -328,7 +351,7 @@ describe("public Football/UFC Play 2.0 release", () => {
     preview("ufc");
     const hub = screen.getByTestId("play-v2-hub");
     expect(within(hub).getByRole("region", { name: "Game Room" })).toBeInTheDocument();
-    expect(within(hub).getByText("4 GAMES")).toBeInTheDocument();
+    expect(within(hub).getByText("5 GAMES")).toBeInTheDocument();
     expect(within(hub).getByText(/Sign in to compete in official Dailies/)).toBeInTheDocument();
     expect(within(hub).queryByRole("region", { name: "Your Play Performance" })).not.toBeInTheDocument();
     expect(within(hub).queryByRole("region", { name: "Your Matchups" })).not.toBeInTheDocument();

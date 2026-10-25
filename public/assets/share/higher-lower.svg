@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="UFC Higher or Lower game">
+  <rect width="1200" height="630" fill="#050505"/>
+  <path d="M820 54h250l108 261-108 261H820L712 315z" fill="none" stroke="#d20a0a" stroke-width="18" opacity=".8"/>
+  <rect x="70" y="70" width="18" height="490" rx="9" fill="#d20a0a"/>
+  <text x="130" y="145" fill="#d20a0a" font-family="Arial,Helvetica,sans-serif" font-size="34" font-weight="800" letter-spacing="4">OCTAGON HQ • UFC GAME</text>
+  <text x="130" y="320" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="80" font-weight="900">HIGHER OR LOWER</text>
+  <text x="130" y="412" fill="#b7b7b7" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700">10 UFC STAT COMPARISONS • PICK YOUR SIDE</text>
+  <text x="130" y="485" fill="#92999d" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="700">CAREER WINS • FINISHES • UFC TITLE FIGHTS</text>
+  <circle cx="941" cy="315" r="132" fill="#17191b" stroke="#ffffff" stroke-width="9" stroke-opacity=".28"/>
+  <path d="M903 305v-70l-23 23m23-23 23 23" fill="none" stroke="#e8eef2" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M977 325v75l-23-23m23 23 23-23" fill="none" stroke="#d20a0a" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

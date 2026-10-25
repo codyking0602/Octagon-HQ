@@ -27,6 +27,7 @@ describe("Play landing presentation", () => {
       "auction",
       "find-leader",
       "who-am-i",
+      "higher-lower",
     ]);
     expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_FOOTBALL_GAME_ORDER);
     expect(playLandingGameIds("ufc")).toEqual(PLAY_LANDING_UFC_GAME_ORDER);
@@ -118,11 +119,14 @@ describe("Play landing presentation", () => {
     render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />);
     const library = screen.getByRole("region", { name: /pick a game/i });
     const cards = within(library).getAllByRole("button");
-    expect(cards).toHaveLength(4);
+    expect(cards).toHaveLength(5);
     expect(cards.at(0)).toHaveTextContent("Wheel of UFC");
     expect(cards.at(1)).toHaveTextContent("Auction");
     expect(cards.at(2)).toHaveTextContent("Find the Leader");
     expect(cards.at(3)).toHaveTextContent("Who Am I?");
+    expect(cards.at(4)).toHaveTextContent("Higher or Lower");
+    fireEvent.click(cards.at(4)!);
+    expect(navigate).toHaveBeenCalledWith("/play/higher-lower");
     expect(screen.queryByRole("button", { name: /wavelength/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /hit the number/i })).not.toBeInTheDocument();

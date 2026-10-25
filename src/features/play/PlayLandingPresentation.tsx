@@ -15,6 +15,7 @@ export const PLAY_LANDING_UFC_GAME_ORDER = [
   "auction",
   "find-leader",
   "who-am-i",
+  "higher-lower",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_UFC_WHEEL_GAME = "wheel-ufc" as const satisfies PlayGameId;
@@ -87,7 +88,8 @@ export function PlayLandingGameLibrary({
         {games.map((game) => {
           const strategic = (sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME)
             || (sport === "football" && (game.id === PLAY_LANDING_FOOTBALL_STRATEGIC_GAME || game.id === "gm-football"));
-          const challengeGame = game.id === "wheel-football" || game.id === "wheel-ufc" || game.id === "higher-lower";
+          const challengeGame = game.id === "wheel-football" || game.id === "wheel-ufc"
+            || (game.id === "higher-lower" && sport === "football");
           const gmGame = game.id === "gm-football";
           return (
             <button

@@ -171,6 +171,23 @@ export const playGameCatalog = [
   },
   {
     sport: "ufc",
+    id: "higher-lower",
+    route: "/play/higher-lower",
+    icon: "↕",
+    title: "Higher or Lower",
+    description: "Ten UFC-only career comparisons with real wins, finishes, and title-fight numbers.",
+    lineup: {
+      defaultType: "replayable", supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup", newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized", lineupSize: 10,
+      completionState: "higher-lower-settled",
+      challengeEligible: false, dailyEligible: false, streakEligible: false, reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "Ten verifiable UFC-only comparisons across six factual metrics; 3 approachable, 5 competitive, 2 tough.",
+    },
+  },
+  {
+    sport: "ufc",
     id: "wheel-ufc",
     route: "/play/wheel",
     icon: "↻",

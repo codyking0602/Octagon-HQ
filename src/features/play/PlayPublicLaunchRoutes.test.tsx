@@ -11,7 +11,7 @@ afterEach(cleanup);
 describe("public Football and UFC Play launch routes", () => {
   it.each([
     ["/football", "football", "6 GAMES"],
-    ["/play", "ufc", "4 GAMES"],
+    ["/play", "ufc", "5 GAMES"],
   ])("uses the finished Play hub for every visitor at %s", async (path, sport, count) => {
     const router = createMemoryRouter(appRoutes, { initialEntries: [path] });
     render(<AppProviders><RouterProvider router={router} /></AppProviders>);
