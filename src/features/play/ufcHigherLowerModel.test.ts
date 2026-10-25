@@ -30,6 +30,11 @@ function initialContext(): OfficialDailyRuntimeContext {
 }
 
 describe("UFC Higher or Lower — six-month content readiness", () => {
+  it("does not count Ultimate Fighter tournament-final wins as UFC championship wins", () => {
+    expect(UFC_HIGHER_LOWER_FIGHTERS.find(f => f.name === "Nate Diaz")?.totals.title_wins).toBe(0);
+    expect(UFC_HIGHER_LOWER_FIGHTERS.find(f => f.name === "Matt Serra")?.totals.title_wins).toBe(1);
+    expect(UFC_HIGHER_LOWER_FIGHTERS.find(f => f.name === "Yair Rodriguez")?.totals.title_wins).toBe(1);
+  });
   it("has six pinned UFC-only statistical categories and independently source-backed coverage", () => {
     const specs = ufcHigherLowerCandidateCounts();
     expect(specs).toHaveLength(10);

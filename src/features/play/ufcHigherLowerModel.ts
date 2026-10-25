@@ -99,7 +99,8 @@ function fighterFacts(): Fighter[] {
         finishes: wins.filter(fight => fight.methodCategory === "ko-tko" || fight.methodCategory === "submission").length,
         ko: wins.filter(fight => fight.methodCategory === "ko-tko").length,
         submissions: wins.filter(fight => fight.methodCategory === "submission").length,
-        title_wins: wins.filter(fight => fight.titleFight && fight.championshipEligible !== false).length,
+        title_wins: wins.filter(fight => fight.titleFight && fight.championshipEligible !== false
+          && !/ultimate fighter|tournament/i.test(fight.division)).length,
       },
     };
   }).filter(fighter => fighter.totals.bouts >= 8 && fighter.totals.wins >= 4)
