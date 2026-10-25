@@ -42,7 +42,8 @@ describe("cross-day Bar Trivia recency protection for future Daily publication",
 
     expect(appearances.nfl).toBeGreaterThanOrEqual(5);
     expect(appearances.cfb).toBeGreaterThanOrEqual(5);
-    expect(appearances.ufc).toBeGreaterThanOrEqual(12);
+    // The locked 150-day cadence has nine separate UFC Bar Trivia publications, not carryover dates.
+    expect(appearances.ufc).toBe(9);
   });
 
   it("does not invent fresh current-event slots when eligible stories are exhausted", () => {
