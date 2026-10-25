@@ -784,6 +784,7 @@ const officialDailySupplementSpecs: readonly MetricSpec[] = [
   { key: "cfb-team-sos", league: "CFB", category: "team", label: "Season strength of schedule (SOS)", metricId: "cfb-team-sos", kinds: ["team-season"], minValue: 0, recognition: "recognizable", note: "Strength of schedule rating; higher is tougher." },
 ];
 const officialDailyPairCandidates = [...allPairCandidates, ...officialDailySupplementSpecs.flatMap(pairCandidates)];
+const allMetricSpecs = [...metricSpecs, ...officialDailySupplementSpecs];
 
 
 function entityKey(subject: FootballSubjectProfile) {
@@ -845,7 +846,7 @@ function toQuestion(pair: PairCandidate, answer: FootballHigherLowerChoice): Foo
     name: displaySubjectName(row.subject),
     context: subjectContext(
       row.subject,
-      metricSpecs.find((spec) => spec.key === pair.metricKey)!,
+      allMetricSpecs.find((spec) => spec.key === pair.metricKey)!,
       row.referenceYear,
     ),
     value: row.value,
@@ -956,7 +957,7 @@ export function footballHigherLowerExclusionKeys(
 
 /** Recheck frozen comparison facts against their canonical fact records and source IDs. */
 export function footballHigherLowerQuestionEvidence(question: FootballHigherLowerQuestion) {
-  const spec = metricSpecs.find(metric => metric.key === question.metricKey);
+  const spec = allMetricSpecs.find(metric => metric.key === question.metricKey);
   if (!spec || spec.league !== question.league || spec.category !== question.category
     || spec.label !== question.metricLabel
     || question.known.subjectId === question.hidden.subjectId
