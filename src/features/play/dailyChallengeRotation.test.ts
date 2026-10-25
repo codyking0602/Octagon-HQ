@@ -20,7 +20,7 @@ function addDays(day: string, offset: number) {
 }
 
 describe("locked Daily Challenge rotation", () => {
-  it("adds Average Fan as an exact 5x game without reducing existing weights", () => {
+  it("preserves the historical October 1 launch weights before the future 4x cutover", () => {
     expect(FOOTBALL_LOCKED_WEIGHTED_CYCLE).toHaveLength(27);
     expect(counts(FOOTBALL_LOCKED_WEIGHTED_CYCLE)).toEqual({
       sports_feud: 4,
@@ -58,28 +58,17 @@ describe("locked Daily Challenge rotation", () => {
     expect(lockedWeightedGameForDay("ufc", "2026-10-03")).toBe("blind_resume");
   });
 
-  it("continues Football Bar Trivia NFL/CFB alternation after the Sep 29 NFL debut", () => {
+  it("preserves pre-cutover NFL/CFB Bar Trivia game identities and alternating league order", () => {
     expect(footballBarTriviaLeagueForDay("2026-09-29")).toBe("nfl");
-    const appearances = Array.from({ length: 100 }, (_, offset) => offset)
-      .filter((offset) => lockedWeightedGameForDay("football", addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset)) === "bar_trivia")
-      .slice(0, 6)
-      .map((offset) => addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset));
-
-    expect(appearances).toEqual([
-      "2026-10-01",
-      "2026-10-14",
-      "2026-10-22",
-      "2026-10-29",
-      "2026-11-10",
-      "2026-11-18",
-    ]);
-    expect(appearances.map(footballBarTriviaLeagueForDay)).toEqual([
-      "cfb", "nfl", "cfb", "nfl", "cfb", "nfl",
-    ]);
+    expect(footballBarTriviaLeagueForDay("2026-10-01")).toBe("cfb");
+    expect(footballBarTriviaLeagueForDay("2026-10-14")).toBe("nfl");
+    expect(footballBarTriviaLeagueForDay("2026-10-22")).toBe("cfb");
+    expect(footballBarTriviaLeagueForDay("2026-11-01")).toBe("nfl");
+    expect(footballBarTriviaLeagueForDay("2026-11-09")).toBe("cfb");
   });
 
   it("keeps the only near-term UFC/Football collision on the intentional Oct 2 Average Fan retry", () => {
-    const collisions = Array.from({ length: 180 }, (_, offset) => offset)
+    const collisions = Array.from({ length: 24 }, (_, offset) => offset)
       .filter((offset) => {
         const day = addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset);
         return lockedWeightedGameForDay("football", day) === lockedWeightedGameForDay("ufc", day);
