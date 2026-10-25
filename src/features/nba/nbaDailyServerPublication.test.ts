@@ -10,8 +10,8 @@ import { buildNbaWhoAmIOfficialRounds } from "./nbaWhoAmIDailyRotation";
 describe("NBA server-authored Daily publication foundation", () => {
   it("computes appearance ordinals from published every-other-day game slots", () => {
     expect(nbaDailyGameAppearance("2026-11-01", "average_fan")).toBe(0);
-    expect(nbaDailyGameAppearance("2026-11-03", "sports_feud")).toBe(0);
-    expect(nbaDailyGameAppearance("2026-11-13", "bar_trivia")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-11-11", "sports_feud")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-11-03", "bar_trivia")).toBe(0);
     expect(() => nbaDailyGameAppearance("2026-11-02", "average_fan")).toThrow();
     expect(() => nbaDailyGameAppearance("2026-11-01", "sports_feud")).toThrow();
     let num = 0;
@@ -26,7 +26,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("constructs a private NBA Average Fan board without leaking answers", () => {
-    const published = buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v1", "average_fan");
+    const published = buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v2-locked", "average_fan");
     expect(published.publicSetup.sport).toBe("nba");
     expect(published.publicSetup.board).toHaveLength(8);
     expect(published.privateSetupEvidence.questions).toHaveLength(8);
@@ -35,7 +35,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("uses the existing Sports Feud grader with immutable NBA private evidence", () => {
-    const published = buildNbaServerDailyPublication("2026-11-03", "nba-daily-regular-v1", "sports_feud");
+    const published = buildNbaServerDailyPublication("2026-11-11", "nba-daily-regular-v2-locked", "sports_feud");
     expect(published.publicSetup.sport).toBe("nba");
     expect(published.publicSetup.presentation_domain).toBe("nba");
     expect(published.privateSetupEvidence.pack).toBeTruthy();
@@ -49,7 +49,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("constructs a canonical Millionaire NBA board with twenty appearance question histories", () => {
-    const published = buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v1", "millionaire");
+    const published = buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v2-locked", "millionaire");
     expect(published.publicSetup.league).toBe("nba");
     expect(published.publicSetup.questions).toHaveLength(8);
     expect(JSON.stringify(published.publicSetup)).not.toContain('"correctChoiceId"');
@@ -65,7 +65,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   }, 120_000);
 
   it("builds two unique NBA Who Am I rounds per official appearance", () => {
-    const published = buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v1", "who_am_i");
+    const published = buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v2-locked", "who_am_i");
     expect(published.publicSetup.sport).toBe("nba");
     expect(published.publicSetup.round_count).toBe(2);
     expect(JSON.stringify(published.publicSetup)).not.toContain('"hidden_subject_id"');
@@ -83,7 +83,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("provides two NBA Find the Leader boards with distinct categories and visible season identity", () => {
-    const publication = buildNbaServerDailyPublication("2026-11-09", "nba-daily-regular-v1", "find_leader");
+    const publication = buildNbaServerDailyPublication("2026-11-15", "nba-daily-regular-v2-locked", "find_leader");
     expect(publication.publicSetup.sport).toBe("nba");
     expect(publication.publicSetup.round_count).toBe(2);
     const rounds = publication.publicSetup.rounds as Record<string, unknown>[];
@@ -97,20 +97,20 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("protects targets and scores for two NBA Wavelength games",()=>{
-    const pub=buildNbaServerDailyPublication("2026-11-11","nba-daily-regular-v1","wavelength");
+    const pub=buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v2-locked", "wavelength");
     expect(pub.publicSetup.round_count).toBe(2);
     expect(JSON.stringify(pub.publicSetup)).not.toContain('"target":');
     expect(pub.privateSetupEvidence.rounds).toHaveLength(2);
   });
   it("preserves capped NBA Hit the Number 4/5-pick rules in both games",()=>{
-    const pub=buildNbaServerDailyPublication("2026-11-15","nba-daily-regular-v1","hit_the_number");
+    const pub=buildNbaServerDailyPublication("2026-11-09", "nba-daily-regular-v2-locked", "hit_the_number");
     const rounds=pub.publicSetup.rounds as Record<string,unknown>[];
     expect(rounds).toHaveLength(2);
     expect(rounds.every(row=>[4,5].includes(Number(row.pick_count)))).toBe(true);
     expect(JSON.stringify(pub.publicSetup)).not.toContain('"values":');
   });
   it("protects NBA Higher or Lower comparisons until after final answer",()=>{
-    const pub=buildNbaServerDailyPublication("2026-11-17","nba-daily-regular-v1","higher_lower");
+    const pub=buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v2-locked", "higher_lower");
     expect(pub.publicSetup.question_count).toBe(10);
     const initial=pub.publicSetup.initial_state as Record<string,unknown>;
     const question=initial.current_question as Record<string,unknown>;
@@ -120,7 +120,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("reuses the canonical Bar Trivia server scorer and answer reveal boundary", () => {
-    const published = buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v1", "bar_trivia");
+    const published = buildNbaServerDailyPublication("2026-11-03", "nba-daily-regular-v2-locked", "bar_trivia");
     expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia", "millionaire", "who_am_i", "find_leader", "wavelength", "hit_the_number", "higher_lower"]);
     expect(published.publicSetup.league).toBe("nba");
     expect(published.privateSetupEvidence.questions).toHaveLength(10);
