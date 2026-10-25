@@ -1,4 +1,4 @@
-import { createNbaHigherLowerBoard, nbaHigherLowerMatchupKey, NBA_HIGHER_LOWER_QUESTION_COUNT, type NbaHigherLowerQuestion } from "./nbaHigherLowerModel";
+import { createNbaHigherLowerBoard, nbaHigherLowerMatchupKey, nbaHigherLowerSemanticPairKey, NBA_HIGHER_LOWER_QUESTION_COUNT, type NbaHigherLowerQuestion } from "./nbaHigherLowerModel";
 import type { OfficialDailySetupPublication } from "../play/todaysChallengeRuntime";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "../play/officialScoreContract";
 import { buildTwoGameDailyPublication } from "../play/dailyTwoGameRuntime";
@@ -54,7 +54,10 @@ export function buildNbaHigherLowerTwoGameDailyPublication(day:string,scheduleVe
       const scheduledDay=previousDays[appearance]??(appearance===ordinal?day:`owner-preview-prior-${appearance}`);
       const child=buildNbaHigherLowerDailyPublication(scheduledDay,scheduleVersion,appearance,game,used);
       const board=child.privateSetupEvidence.board as {questions:NbaHigherLowerQuestion[]};
-      for(const question of board.questions)used.add(nbaHigherLowerMatchupKey(question));
+      for(const question of board.questions){
+        used.add(nbaHigherLowerMatchupKey(question));
+        used.add(nbaHigherLowerSemanticPairKey(question));
+      }
       current.push(child);
     }
     if(appearance===ordinal)children=current as [OfficialDailySetupPublication,OfficialDailySetupPublication];
