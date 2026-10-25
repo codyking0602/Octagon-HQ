@@ -81,7 +81,7 @@ begin
     or v_old->>'expected_game'<>v_new->>'expected_game' then raise exception 'NBA retry identity drift';end if;
   if private.daily_challenge_active_day(date '2026-11-01','ufc')<>date '2026-10-31'
      or private.daily_challenge_active_day(date '2026-11-01','nba')<>date '2026-11-01'
-     or private.daily_challenge_active_day(date '2027-04-12','nba')<>date '2027-04-11'
+     or private.daily_challenge_active_day(date '2027-04-11','nba')<>date '2027-04-10'
   then raise exception 'UFC/NBA release, DST or regular-season close drifted';end if;
   if not exists(select 1 from pg_trigger where tgname='enforce_future_daily_publication_cadence' and not tgisinternal)
   then raise exception 'publication cadence gate missing';end if;
