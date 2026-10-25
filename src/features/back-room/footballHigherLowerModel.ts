@@ -1,6 +1,7 @@
 import {
   footballFactualRecords,
   formatFootballFact,
+  getFootballFact,
   getFootballSubject,
   queryFootballSubjects,
   type FootballFactMetricId,
@@ -15,6 +16,7 @@ export const FOOTBALL_HIGHER_LOWER_VERSION = "football-higher-lower-v1" as const
 export const FOOTBALL_HIGHER_LOWER_QUESTION_COUNT = 10;
 export const FOOTBALL_HIGHER_LOWER_MODERN_QUESTION_MIN = 7;
 export const FOOTBALL_HIGHER_LOWER_MODERN_YEAR = 2010;
+export const FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP = 7;
 
 export type FootballHigherLowerScope = "NFL" | "CFB" | "MIXED";
 export type FootballHigherLowerLeague = "NFL" | "CFB";
@@ -26,7 +28,9 @@ export type FootballHigherLowerCategory =
   | "awards"
   | "championships"
   | "team"
-  | "draft";
+  | "draft"
+  | "defense"
+  | "efficiency";
 
 export interface FootballHigherLowerSubject {
   subjectId: string;
@@ -76,6 +80,14 @@ interface MetricRow {
   value: number;
   formattedValue: string;
   referenceYear: number | null;
+}
+
+export interface FootballHigherLowerPreviousComparisonKeys {
+  /** Subject pair irrespective of order or metric. */
+  subjectPairs: ReadonlySet<string>;
+  /** An individual subject compared on the same metric on a previous date. */
+  subjectMetrics: ReadonlySet<string>;
+  appearancesByEntity: ReadonlyMap<string, number>;
 }
 
 interface PairCandidate {
@@ -611,6 +623,10 @@ function metricReferenceYear(subject: FootballSubjectProfile, spec: MetricSpec) 
 }
 
 function displaySubjectName(subject: FootballSubjectProfile) {
+  if (subject.league === "NFL" && subject.kind === "franchise") {
+    const code = (subject.teamId?.replace(/^nfl:/, "") ?? subject.name).toLowerCase();
+    return NFL_TEAM_DISPLAY_NAMES[code] ?? subject.name;
+  }
   if (subject.kind === "player-season" && subject.season != null) {
     return subject.name.replace(new RegExp(`\\s+${subject.season}$`), "");
   }
@@ -628,6 +644,7 @@ function displaySubjectName(subject: FootballSubjectProfile) {
 }
 
 function subjectContext(subject: FootballSubjectProfile, spec: MetricSpec, referenceYear: number | null) {
+  if (subject.kind === "franchise") return "NFL FRANCHISE · 1999–2025";
   const position = subject.position ?? "PLAYER";
   if (spec.category === "draft") {
     return `${subject.draftYear ?? referenceYear ?? "NFL"} DRAFT · ${position}`;
@@ -750,6 +767,73 @@ function pairCandidates(spec: MetricSpec): PairCandidate[] {
 
 const allPairCandidates = metricSpecs.flatMap(pairCandidates);
 
+/**
+ * Official Daily alone needs a wider, verified factual pool for six months.
+ * Casual retains its approved original 37 templates and selection behavior.
+ * Every metric below is already defined in the canonical Football factual ledger.
+ */
+const officialDailySupplementSpecs: readonly MetricSpec[] = [
+  { key: "cfb-season-pass-rating", league: "CFB", category: "efficiency", label: "Best-season passer rating", metricId: "cfb-best-season-passer-rating", kinds: ["player-career"], positions: ["QB"], minValue: 120, recognition: "recognizable" },
+  { key: "cfb-season-receptions", league: "CFB", category: "single-season", label: "Best-season receptions", metricId: "cfb-best-season-receptions", kinds: ["player-career"], positions: ["WR", "TE"], minValue: 45, recognition: "recognizable" },
+  { key: "cfb-season-tfl", league: "CFB", category: "defense", label: "Best-season tackles for loss", metricId: "cfb-best-season-tackles-for-loss", kinds: ["player-career"], positions: ["DL", "LB"], minValue: 8, recognition: "recognizable" },
+  { key: "cfb-season-interceptions", league: "CFB", category: "defense", label: "Best-season defensive interceptions", metricId: "cfb-best-season-defensive-interceptions", kinds: ["player-career"], positions: ["DB"], minValue: 3, recognition: "recognizable" },
+  { key: "cfb-career-pass-completions", league: "CFB", category: "career", label: "College career pass completions", metricId: "cfb-career-passing-completions", kinds: ["player-career"], positions: ["QB"], minValue: 500, recognition: "iconic" },
+  { key: "cfb-career-pass-attempts", league: "CFB", category: "career", label: "College career pass attempts", metricId: "cfb-career-passing-attempts", kinds: ["player-career"], positions: ["QB"], minValue: 800, recognition: "iconic" },
+  { key: "cfb-career-rush-attempts", league: "CFB", category: "career", label: "College career rushing attempts", metricId: "cfb-career-rushing-attempts", kinds: ["player-career"], positions: ["RB", "QB"], minValue: { QB: 250, RB: 400 }, recognition: "iconic" },
+  { key: "cfb-career-receptions", league: "CFB", category: "career", label: "College career receptions", metricId: "cfb-career-receptions", kinds: ["player-career"], positions: ["WR", "TE"], minValue: 130, recognition: "iconic" },
+  { key: "cfb-career-total-td", league: "CFB", category: "career", label: "College career total touchdowns", metricId: "cfb-career-total-touchdowns", kinds: ["player-career"], positions: ["QB", "RB", "WR", "TE"], minValue: 25, recognition: "iconic" },
+  { key: "cfb-career-tfl", league: "CFB", category: "career", label: "College career tackles for loss", metricId: "cfb-career-tackles-for-loss", kinds: ["player-career"], positions: ["DL", "LB"], minValue: 20, recognition: "iconic" },
+  { key: "cfb-career-tackles", league: "CFB", category: "career", label: "College career tackles", metricId: "cfb-career-tackles", kinds: ["player-career"], positions: ["DL", "LB", "DB"], minValue: 100, recognition: "iconic" },
+  { key: "cfb-team-points-against", league: "CFB", category: "defense", label: "Season points allowed", metricId: "cfb-team-points-against", kinds: ["team-season"], minValue: 100, recognition: "recognizable" },
+  { key: "cfb-team-opp-ppg", league: "CFB", category: "defense", label: "Season points allowed per game", metricId: "cfb-team-opponent-points-per-game", kinds: ["team-season"], minValue: 8, recognition: "recognizable" },
+  { key: "cfb-team-point-diff", league: "CFB", category: "team", label: "Season scoring differential", metricId: "cfb-team-point-differential", kinds: ["team-season"], minValue: 200, recognition: "recognizable" },
+  { key: "cfb-team-margin-ppg", league: "CFB", category: "team", label: "Season scoring margin per game", metricId: "cfb-team-scoring-margin-per-game", kinds: ["team-season"], minValue: 12, recognition: "recognizable" },
+  { key: "cfb-team-srs", league: "CFB", category: "efficiency", label: "Season SRS rating", metricId: "cfb-team-srs", kinds: ["team-season"], minValue: 12, recognition: "recognizable", note: "Simple Rating System; higher is stronger." },
+  { key: "cfb-team-conference-wins", league: "CFB", category: "team", label: "Season conference wins", metricId: "cfb-team-conference-wins", kinds: ["team-season"], minValue: 6, recognition: "recognizable" },
+  { key: "cfb-team-sos", league: "CFB", category: "efficiency", label: "Season strength of schedule (SOS)", metricId: "cfb-team-sos", kinds: ["team-season"], minValue: 0, recognition: "recognizable", note: "Strength of schedule rating; higher is tougher." },
+  // Canonical franchise-wide stats use the same 1999–2025 scope on BOTH sides.
+  // These widen recognizable NFL team comparisons without inventing season values.
+  { key: "nfl-franchise-wins-1999", league: "NFL", category: "team", label: "Franchise wins since 1999 (through 2025)", metricId: "nfl-franchise-wins-since-1999", kinds: ["franchise"], minValue: 100, recognition: "recognizable" },
+  { key: "nfl-franchise-losses-1999", league: "NFL", category: "team", label: "Franchise losses since 1999 (through 2025)", metricId: "nfl-franchise-losses-since-1999", kinds: ["franchise"], minValue: 100, recognition: "recognizable" },
+  { key: "nfl-franchise-playoff-wins-1999", league: "NFL", category: "team", label: "Franchise playoff wins since 1999 (through 2025)", metricId: "nfl-franchise-playoff-wins-since-1999", kinds: ["franchise"], minValue: 1, recognition: "recognizable" },
+  { key: "nfl-franchise-sb-appearances-1999", league: "NFL", category: "championships", label: "Franchise Super Bowl appearances since 1999", metricId: "nfl-franchise-super-bowl-appearances-since-1999", kinds: ["franchise"], minValue: 1, recognition: "recognizable" },
+  { key: "nfl-franchise-sb-titles-1999", league: "NFL", category: "championships", label: "Franchise Super Bowl titles since 1999", metricId: "nfl-franchise-super-bowl-titles-since-1999", kinds: ["franchise"], minValue: 1, recognition: "recognizable" },
+  { key: "nfl-franchise-win-rate-1999", league: "NFL", category: "efficiency", label: "Franchise win percentage since 1999", metricId: "nfl-franchise-win-percentage-since-1999", kinds: ["franchise"], minValue: 0.2, recognition: "recognizable" },
+  { key: "nfl-franchise-best-win-rate-1999", league: "NFL", category: "efficiency", label: "Best-season win percentage since 1999", metricId: "nfl-franchise-best-season-win-percentage-since-1999", kinds: ["franchise"], minValue: 0.6, recognition: "recognizable" },
+  { key: "nfl-career-pass-rating", league: "NFL", category: "efficiency", label: "NFL career passer rating", metricId: "nfl-career-passer-rating", kinds: ["player-career"], positions: ["QB"], minValue: 85, recognition: "iconic" },
+  { key: "nfl-career-pass-completion-pct", league: "NFL", category: "efficiency", label: "NFL career completion percentage", metricId: "nfl-career-completion-percentage", kinds: ["player-career"], positions: ["QB"], minValue: 55, recognition: "iconic" },
+  { key: "nfl-career-pass-ypa", league: "NFL", category: "efficiency", label: "NFL career passing yards per attempt", metricId: "nfl-career-passing-yards-per-attempt", kinds: ["player-career"], positions: ["QB"], minValue: 6.5, recognition: "iconic" },
+  { key: "nfl-career-rec-per-game", league: "NFL", category: "efficiency", label: "NFL career receptions per game", metricId: "nfl-career-receptions-per-game", kinds: ["player-career"], positions: ["WR", "TE"], minValue: 3.5, recognition: "iconic" },
+  { key: "nfl-career-rush-ypa", league: "NFL", category: "efficiency", label: "NFL career rushing yards per attempt", metricId: "nfl-career-rushing-yards-per-attempt", kinds: ["player-career"], positions: ["RB", "QB"], minValue: 3.4, recognition: "iconic" },
+  { key: "nfl-career-defensive-ints", league: "NFL", category: "defense", label: "NFL career defensive interceptions", metricId: "nfl-career-interceptions", kinds: ["player-career"], positions: ["DB", "LB"], minValue: 15, recognition: "iconic" },
+  { key: "nfl-career-forced-fumbles", league: "NFL", category: "defense", label: "NFL career forced fumbles", metricId: "nfl-career-forced-fumbles", kinds: ["player-career"], positions: ["DL", "LB", "DB"], minValue: 10, recognition: "iconic" },
+  { key: "nfl-season-pass-rating", league: "NFL", category: "efficiency", label: "Season passer rating", metricId: "nfl-season-passer-rating", kinds: ["player-season"], positions: ["QB"], minValue: 75, recognition: "recognizable" },
+  { key: "nfl-season-interceptions", league: "NFL", category: "single-season", label: "Season interceptions thrown", metricId: "nfl-season-interceptions", kinds: ["player-season"], positions: ["QB"], minValue: 6, recognition: "recognizable" },
+  { key: "nfl-team-opp-points", league: "NFL", category: "defense", label: "Season points allowed", metricId: "nfl-team-points-against", kinds: ["team-season"], minValue: 150, recognition: "recognizable" },
+  { key: "nfl-team-opp-ppg", league: "NFL", category: "defense", label: "Season points allowed per game", metricId: "nfl-team-opponent-points-per-game", kinds: ["team-season"], minValue: 10, recognition: "recognizable" },
+  { key: "nfl-team-def-interceptions", league: "NFL", category: "defense", label: "Season team interceptions", metricId: "nfl-team-defensive-interceptions", kinds: ["team-season"], minValue: 6, recognition: "recognizable" },
+  { key: "nfl-team-passing-yards", league: "NFL", category: "team", label: "Season team passing yards", metricId: "nfl-team-passing-yards", kinds: ["team-season"], minValue: 2200, recognition: "recognizable" },
+  { key: "nfl-team-rushing-yards", league: "NFL", category: "team", label: "Season team rushing yards", metricId: "nfl-team-rushing-yards", kinds: ["team-season"], minValue: 1200, recognition: "recognizable" },
+  { key: "nfl-team-scoring-rate", league: "NFL", category: "efficiency", label: "Season points per game", metricId: "nfl-team-points-per-game", kinds: ["team-season"], minValue: 18, recognition: "recognizable" },
+  { key: "nfl-team-scoring-differential", league: "NFL", category: "team", label: "Season point differential", metricId: "nfl-team-point-differential", kinds: ["team-season"], minValue: 50, recognition: "recognizable" },
+  { key: "nfl-team-postseason-wins", league: "NFL", category: "team", label: "Season playoff wins", metricId: "nfl-team-postseason-wins", kinds: ["team-season"], minValue: 1, recognition: "recognizable" },
+];
+// Registry-only draft metadata has no direct ledger-source binding; do not
+// publish it in Official Daily until independently verified. Casual is unchanged.
+const officialDailyPairCandidates = [
+  ...allPairCandidates.filter(pair => pair.metricKey !== "nfl-draft-pick"),
+  ...officialDailySupplementSpecs.flatMap(pairCandidates),
+];
+const allMetricSpecs = [...metricSpecs, ...officialDailySupplementSpecs];
+const metricIdOwner = new Map<string, string>();
+for (const spec of allMetricSpecs) {
+  if (!spec.metricId) continue;
+  const previous = metricIdOwner.get(spec.metricId);
+  if (previous) throw new Error("Duplicate Higher or Lower factual metric concept: " + previous + " / " + spec.key);
+  metricIdOwner.set(spec.metricId, spec.key);
+}
+
+
 function entityKey(subject: FootballSubjectProfile) {
   if (subject.playerId) {
     return `player:${subject.playerId.replace(/^(?:nfl|cfb)-/, "").replace(/-\\d{4}$/, "")}`;
@@ -809,7 +893,7 @@ function toQuestion(pair: PairCandidate, answer: FootballHigherLowerChoice): Foo
     name: displaySubjectName(row.subject),
     context: subjectContext(
       row.subject,
-      metricSpecs.find((spec) => spec.key === pair.metricKey)!,
+      allMetricSpecs.find((spec) => spec.key === pair.metricKey)!,
       row.referenceYear,
     ),
     value: row.value,
@@ -831,7 +915,10 @@ function toQuestion(pair: PairCandidate, answer: FootballHigherLowerChoice): Foo
   };
 }
 
-function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: number) {
+function tryBuildBoard(
+  seed: string, scope: FootballHigherLowerScope, attempt: number,
+  candidates: readonly PairCandidate[], previousExposure?: ReadonlyMap<string, number>,
+) {
   const random = seededLineupRandom(FOOTBALL_HIGHER_LOWER_VERSION, seed, scope, attempt);
   const leagues = leaguePattern(scope, random);
   const difficulties = difficultyPattern(random);
@@ -849,7 +936,7 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
     const answer = answers[index]!;
     const requireModern = modernity[index]!;
     const lastCategory = questions.at(-1)?.category;
-    const matching = allPairCandidates.filter((pair) => {
+    const matching = candidates.filter((pair) => {
       if (pair.league !== league || pair.difficulty !== difficulty) return false;
       if (requireModern && !pair.modern) return false;
       if ((metricCounts.get(pair.metricKey) ?? 0) >= 2) return false;
@@ -873,7 +960,18 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
 
     const bestRecognition = Math.max(...pool.map((pair) => pair.recognitionScore));
     const recognitionPool = pool.filter((pair) => pair.recognitionScore >= bestRecognition - 1);
-    const pair = shuffleLineup(recognitionPool, random)[0]!;
+    // Official Daily prefers fresh recognizable subjects. The random tie-break
+    // remains seeded; Casual selection is unchanged without prior-date history.
+    const randomized = shuffleLineup(recognitionPool, random);
+    let selection = randomized;
+    if (previousExposure?.size) {
+      const exposure = (pair: PairCandidate) =>
+        (previousExposure.get(entityKey(pair.left.subject)) ?? 0)
+        + (previousExposure.get(entityKey(pair.right.subject)) ?? 0);
+      const lowest = Math.min(...randomized.map(exposure));
+      selection = randomized.filter(pair => exposure(pair) <= lowest + 1);
+    }
+    const pair = selection[0]!;
     const question = toQuestion(pair, answer);
     questions.push(question);
     usedEntities.add(entityKey(pair.left.subject));
@@ -893,12 +991,101 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
   return questions;
 }
 
+export function footballHigherLowerSemanticPairKey(leftId: string, rightId: string) {
+  const left = getFootballSubject(leftId);
+  const right = getFootballSubject(rightId);
+  if (!left || !right) throw new Error("Higher or Lower requires canonical subjects.");
+  return [entityKey(left), entityKey(right)].sort().join("|");
+}
+
+export function footballHigherLowerSubjectMetricKey(subjectId: string, metricKey: string) {
+  const subject = getFootballSubject(subjectId);
+  if (!subject) throw new Error("Higher or Lower requires a canonical subject.");
+  return metricKey + "|" + entityKey(subject);
+}
+
+export function footballHigherLowerExclusionKeys(
+  questions: readonly FootballHigherLowerQuestion[],
+): FootballHigherLowerPreviousComparisonKeys {
+  const appearancesByEntity = new Map<string, number>();
+  for (const q of questions) {
+    for (const row of [q.known, q.hidden]) {
+      const subject = getFootballSubject(row.subjectId);
+      if (!subject) throw new Error("Higher or Lower history contains an unknown entity.");
+      const key = entityKey(subject);
+      appearancesByEntity.set(key, (appearancesByEntity.get(key) ?? 0) + 1);
+    }
+  }
+  return {
+    appearancesByEntity,
+    subjectPairs: new Set(questions.map(q => footballHigherLowerSemanticPairKey(q.known.subjectId, q.hidden.subjectId))),
+    subjectMetrics: new Set(questions.flatMap(q => [
+      footballHigherLowerSubjectMetricKey(q.known.subjectId, q.metricKey),
+      footballHigherLowerSubjectMetricKey(q.hidden.subjectId, q.metricKey),
+    ])),
+  };
+}
+
+/** Recheck frozen comparison facts against their canonical fact records and source IDs. */
+export function footballHigherLowerQuestionEvidence(question: FootballHigherLowerQuestion) {
+  const spec = allMetricSpecs.find(metric => metric.key === question.metricKey);
+  if (!spec || spec.league !== question.league || spec.category !== question.category
+    || spec.label !== question.metricLabel
+    || question.known.subjectId === question.hidden.subjectId
+    || question.known.value === question.hidden.value
+    || question.difficulty !== pairDifficulty(question.known.value, question.hidden.value)
+    || question.answer !== (question.hidden.value > question.known.value ? "higher" : "lower")) {
+    throw new Error("Invalid Football Higher or Lower comparison identity, metric, or grading: " + question.id);
+  }
+  const audit = (row: FootballHigherLowerSubject) => {
+    const subject = getFootballSubject(row.subjectId);
+    if (!subject || !subjectEligible(subject, spec)) throw new Error("Ineligible comparison subject: " + row.subjectId);
+    const entry = spec.metricId ? getFootballFact(subject.id, spec.metricId) : null;
+    const expected = spec.valueFromSubject ? spec.valueFromSubject(subject) : entry?.fact.value;
+    if (!Number.isFinite(expected) || expected !== row.value
+      || formatMetricValue(spec, row.value) !== row.formattedValue) {
+      throw new Error("Invalid or unbound comparison fact: " + question.id + " " + subject.id);
+    }
+    if (spec.metricId && (!entry || !entry.sources.length || entry.sources.some(s => !s.url))) {
+      throw new Error("Missing canonical factual source: " + question.id + " " + subject.id);
+    }
+    const expectedYear = metricReferenceYear(subject, spec);
+    if (row.referenceYear !== (expectedYear ?? undefined)) {
+      throw new Error("Invalid comparison reference year: " + question.id + " " + subject.id);
+    }
+    return {
+      subjectId: subject.id, kind: subject.kind, school: subject.school ?? null,
+      season: subject.season ?? row.referenceYear ?? null,
+      value: row.value,
+      metricId: spec.metricId ?? null,
+      sourceIds: entry?.sources.map(source => source.id) ?? [],
+      // The NFL Draft metadata entry is a registry fact, not a ledger-source audit.
+      registryOnly: !spec.metricId,
+    };
+  };
+  return { known: audit(question.known), hidden: audit(question.hidden) };
+}
+
+/**
+ * Casual remains unchanged without exclusions. For future Official Daily boards,
+ * exclude previous-date subject pairings AND subject/metric reuse structurally.
+ */
 export function createFootballHigherLowerBoard(
   seed: string,
   scope: FootballHigherLowerScope,
+  excluded?: FootballHigherLowerPreviousComparisonKeys,
+  officialDaily = false,
 ): FootballHigherLowerBoard {
+  const sourceCandidates = officialDaily ? officialDailyPairCandidates : allPairCandidates;
+  const candidates = excluded ? sourceCandidates.filter(pair => (
+    !excluded.subjectPairs.has(footballHigherLowerSemanticPairKey(pair.left.subject.id, pair.right.subject.id))
+    && (excluded.appearancesByEntity.get(entityKey(pair.left.subject)) ?? 0) < FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP
+    && (excluded.appearancesByEntity.get(entityKey(pair.right.subject)) ?? 0) < FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP
+    && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.left.subject.id, pair.metricKey))
+    && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.right.subject.id, pair.metricKey))
+  )) : sourceCandidates;
   for (let attempt = 0; attempt < 1_000; attempt += 1) {
-    const questions = tryBuildBoard(seed, scope, attempt);
+    const questions = tryBuildBoard(seed, scope, attempt, candidates, excluded?.appearancesByEntity);
     if (questions) {
       return {
         version: FOOTBALL_HIGHER_LOWER_VERSION,
@@ -908,7 +1095,20 @@ export function createFootballHigherLowerBoard(
       };
     }
   }
-  throw new Error(`Unable to build a valid Higher or Lower ${scope} board.`);
+  const availability = Object.fromEntries((["NFL", "CFB"] as const).flatMap(league => (
+    (["approachable", "competitive", "tough"] as const).map(difficulty => [
+      league + "-" + difficulty,
+      candidates.filter(pair => pair.league === league && pair.difficulty === difficulty).length,
+    ] as const)
+  )));
+  const categoryAvailability = Object.fromEntries((["NFL", "CFB"] as const).flatMap(league => (
+    (["single-season", "career", "awards", "championships", "team", "draft", "defense", "efficiency"] as const).map(category => [
+      league + "-" + category,
+      { pairs: candidates.filter(pair => pair.league === league && pair.category === category).length,
+        metrics: new Set(candidates.filter(pair => pair.league === league && pair.category === category).map(pair => pair.metricKey)).size },
+    ] as const)
+  )));
+  throw new Error(`Unable to build a valid Higher or Lower ${scope} board; ${candidates.length} candidates, ${JSON.stringify(availability)}, categories ${JSON.stringify(categoryAvailability)}`);
 }
 
 function isScope(value: unknown): value is FootballHigherLowerScope {

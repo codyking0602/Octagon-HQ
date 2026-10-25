@@ -96,7 +96,7 @@ describe("Final Play game presentation", () => {
     const { container } = renderAt(<PlayPage />, "/play");
     const playableCards = [...container.querySelectorAll<HTMLButtonElement>(".play-games__grid button.play-game-card")];
     expect(container.querySelectorAll(".play-games__grid .play-game-card")).toHaveLength(10);
-    expect(playableCards).toHaveLength(8);
+    expect(playableCards).toHaveLength(7);
     expect(container.textContent).toContain("Who Am I?");
     expect(container.textContent).not.toContain("20 Questions");
     expect(container.querySelector(".play-game-card__status.is-preview")).toBeNull();

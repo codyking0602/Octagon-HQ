@@ -1,6 +1,7 @@
 import {
   FOOTBALL_HIGHER_LOWER_QUESTION_COUNT,
   createFootballHigherLowerBoard,
+  footballHigherLowerExclusionKeys,
   parseFootballHigherLowerBoard,
   type FootballHigherLowerQuestion,
 } from "../back-room/footballHigherLowerModel";
@@ -28,12 +29,18 @@ export function footballHigherLowerPublicQuestion(question: FootballHigherLowerQ
 export function buildFootballHigherLowerDailyPublication(
   day: string,
   scheduleVersion: string,
+  previousPublishedQuestions: readonly FootballHigherLowerQuestion[] = [],
 ): OfficialDailySetupPublication {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !scheduleVersion.trim()) {
     throw new Error("Football Higher or Lower requires a canonical Daily date and schedule.");
   }
   const seed = [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day].join("|");
-  const board = createFootballHigherLowerBoard(seed, "MIXED");
+  const board = createFootballHigherLowerBoard(
+    seed, "MIXED", previousPublishedQuestions.length
+      ? footballHigherLowerExclusionKeys(previousPublishedQuestions)
+      : undefined,
+    true,
+  );
   if (board.questions.length !== FOOTBALL_HIGHER_LOWER_QUESTION_COUNT) {
     throw new Error("Football Higher or Lower requires ten audited comparisons.");
   }
