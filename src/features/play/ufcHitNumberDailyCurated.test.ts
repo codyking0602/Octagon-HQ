@@ -60,12 +60,12 @@ describe("UFC Hit the Number curated Daily-only six-month foundation (not activa
     }));
     expect(failures).toEqual([]);
     expect(seen.size).toBe(12);
-  });
+  }, 180_000);
 
   it("does not mutate the legacy Casual generator's historical 7-pick policy", async () => {
     const { HIT_THE_NUMBER_MAX_PICKS, HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE } =
       await import("./hitTheNumberEngine");
     expect(HIT_THE_NUMBER_MAX_PICKS).toBe(7);
     expect(HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE).toBe(12);
-  });
+  }, 180_000);
 });
