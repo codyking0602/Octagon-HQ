@@ -314,7 +314,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
     : null;
   const adapter = useMemo(
     () => todayChallengeAdapter(projection?.gameType, sport),
-    [projection?.gameType],
+    [projection?.gameType, sport],
   );
 
   if (!signedIn) {
