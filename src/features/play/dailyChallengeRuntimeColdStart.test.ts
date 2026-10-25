@@ -55,7 +55,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).toContain('import { advancePersistedBlindResumeV3 } from "./blindResumeAdvance.ts"');
     const getTodayReturn = runtime.indexOf(
       'if (body.mode === "get-today" || body.mode === undefined) {',
-      runtime.indexOf('const materialized = await materializeToday(admin);'),
+      runtime.indexOf('const materialized = await resolveInteractiveDaily(admin, "ufc", body.mode);'),
     );
     const v3FastPath = runtime.lastIndexOf('context.setupKey.startsWith("blind-resume-v3:")');
     const heavyweightFallback = runtime.lastIndexOf('(await loadUfcRuntime()).advanceOfficialDailyRuntime');
@@ -100,7 +100,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).not.toContain('import("./football-publication-hit-the-number.generated.mjs")');
     expect(runtime).not.toContain('import("./football-publication-comparison.generated.mjs")');
     const footballBranch = runtime.indexOf('if (body.sport === "football") {');
-    const footballMaterialization = runtime.indexOf('const materialized = await materializeFootballToday(admin);', footballBranch);
+    const footballMaterialization = runtime.indexOf('const materialized = await resolveInteractiveDaily(admin, "football", body.mode);', footballBranch);
     const footballContext = runtime.indexOf('let context = await getContext(admin, materialized.dailyChallengeId, profileId);', footballBranch);
     expect(footballBranch).toBeGreaterThan(-1);
     expect(footballMaterialization).toBeGreaterThan(footballBranch);
