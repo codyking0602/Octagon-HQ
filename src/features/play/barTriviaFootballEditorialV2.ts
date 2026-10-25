@@ -8,6 +8,7 @@ export const FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS: ReadonlySet<string> = new Set([
   "nfl-r3-texans-other-finalist",
   "nfl-r2-first-regular-outside-us-teams",
   "nfl-r2-first-regular-outside-na-teams",
+  "nfl-r3-first-black-pro", // Tony Dungy fact duplicates active NFL Average Fan; preserve archived source only.
   "nfl-r3-first-national-radio-announcer",
   "nfl-final-first-radio-game-year",
   "nfl-r2-radio-helmet-quarterback",
