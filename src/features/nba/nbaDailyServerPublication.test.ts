@@ -111,9 +111,12 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
   it("protects NBA Higher or Lower comparisons until after final answer",()=>{
     const pub=buildNbaServerDailyPublication("2026-11-17","nba-daily-regular-v1","higher_lower");
-    expect(pub.publicSetup.question_count).toBe(10);
+    expect(pub.publicSetup.format_version).toBe("daily-two-game-average-v1");
+    const rounds = pub.publicSetup.rounds as Record<string,unknown>[];
+    expect(rounds).toHaveLength(2);
+    expect(rounds.every(round=>round.question_count===10)).toBe(true);
     const initial=pub.publicSetup.initial_state as Record<string,unknown>;
-    const question=initial.current_question as Record<string,unknown>;
+    const question=(initial.active_round as Record<string,unknown>).current_question as Record<string,unknown>;
     expect(question.answer).toBeUndefined();
     expect((question.hidden as Record<string,unknown>).value).toBeUndefined();
     expect(pub.privateSetupEvidence.board).toBeTruthy();
