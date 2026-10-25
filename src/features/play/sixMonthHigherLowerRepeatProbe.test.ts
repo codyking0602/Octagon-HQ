@@ -26,11 +26,12 @@ describe("Higher or Lower six-month reverse-pair audit (no activation)", () => {
         ? createFootballHigherLowerBoard(
             [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, version, slot.day].join("|"), "MIXED",
           ).questions
-        : (buildNbaServerDailyPublication(slot.day, version, "higher_lower")
-          .revealSetup.questions as Array<{
-            known: { subjectId: string }; hidden: { subjectId: string }; metricKey?: string; category?: string;
-          }>);
-      expect(questions).toHaveLength(10);
+        : ((buildNbaServerDailyPublication(slot.day, version, "higher_lower")
+          .privateSetupEvidence.rounds as Array<{ private_setup_evidence: {
+            board: { questions: Array<{ known: { subjectId: string }; hidden: { subjectId: string };
+              metricKey?: string; category?: string }> }
+          } }>).flatMap(round => round.private_setup_evidence.board.questions));
+      expect(questions).toHaveLength(sport === "nba" ? 20 : 10);
       output[sport].dates++;
       for (const question of questions) {
         output[sport].questions++;
@@ -48,7 +49,7 @@ describe("Higher or Lower six-month reverse-pair audit (no activation)", () => {
     output.reversedOrRepeated = repeats.length;
     output.examples = repeats.slice(0, 20);
     expect(output.football.questions).toBe(130);
-    expect(output.nba.questions).toBe(60);
+    expect(output.nba.questions).toBe(120);
     // Explicitly a PROBE, not certification: Football's content owner must
     // resolve these repeats and validate concepts before schedule activation.
     console.info("SIX_MONTH_HIGHER_LOWER_PROVISIONAL_AUDIT " + JSON.stringify(output));
