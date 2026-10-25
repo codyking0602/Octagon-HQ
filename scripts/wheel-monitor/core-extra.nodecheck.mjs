@@ -29,6 +29,9 @@ test('absence prompts a review but not an ability downgrade', () => {
   const [finding]=compareEvidence([next],{identities:[old]});
   assert.equal(finding.classification,'review-suggested');
   assert.equal(finding.signals[0].kind,'roster-absence-not-proof-of-release');
+  // Follow up identity cheaply; do not pay for an ability/peer regrade.
+  assert.equal(summarizeDecisions([finding]).identityReconciliationCandidates,1);
+  assert.equal(summarizeDecisions([finding]).deepReviewCandidates,0);
 });
 
 test('team change mandates reconciliation; position change deserves priority', () => {
