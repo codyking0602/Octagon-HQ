@@ -349,7 +349,7 @@ begin
             'wager', progress.public_state -> 'wager'
           )
         when history.game_type = 'higher_lower'
-          and history.scoring_version = 'daily-two-game-average-score-v1'
+          and daily.scoring_version = 'daily-two-game-average-score-v1'
           and progress.public_state ->> 'format_version' = 'daily-two-game-average-v1' then
           jsonb_build_object(
             'setup_rounds', coalesce(setup.public_setup->'rounds', '[]'::jsonb),
