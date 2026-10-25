@@ -81,6 +81,9 @@ export function compareEvidence(current, previous=null) {
     if(row.sourceTeam && row.sourceTeam!==row.team) {
       level=LEVEL.FACT;
       reasons.push("verified-mismatched-team-affiliation");
+    } else if(row.transferCandidateTeam && level!==LEVEL.FACT) {
+      if(level===LEVEL.NONE) level=LEVEL.REVIEW;
+      reasons.push("possible-transfer-name-match-requires-espn-id");
     }
     const signals=reasons.map(reason=>({kind:reason,reason,source:source.sourceUrl}));
     return {key,sport:row.sport,name:row.name,family:row.family??null,
