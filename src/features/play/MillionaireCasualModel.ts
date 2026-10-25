@@ -1,3 +1,4 @@
+export { millionaireTimeoutTransition } from "./millionaireDailyAdvance";
 import { createNbaMillionaireRun } from "../nba/nbaMillionaireBank";
 import {
   MILLIONAIRE_LEVELS,
@@ -6,13 +7,7 @@ import {
   type MillionaireRuntimeQuestion,
 } from "../games/millionaireAuthority";
 import {
-  millionaireBaseScore,
-  millionaireCheckpointMoney,
-  millionaireScoreAfterLifelines,
-  currentMillionaireQuestion,
   type MillionaireRun,
-  type MillionaireState,
-  type MillionaireTransitionResult,
 } from "../games/millionaireEngine";
 
 export type MillionaireLeague = "ufc" | "nfl" | "cfb" | "mlb" | "nba";
@@ -351,28 +346,6 @@ const seedsByLeague: Record<Exclude<MillionaireLeague, "nba">, readonly Question
 export function millionaireCasualRun(league: MillionaireLeague): MillionaireRun {
   if (league === "nba") return createNbaMillionaireRun("nba-millionaire-default");
   return seedsByLeague[league].map((seed, index) => question(league, index, seed)) as unknown as MillionaireRun;
-}
-
-export function millionaireTimeoutTransition(run: MillionaireRun, state: MillionaireState): MillionaireTransitionResult {
-  if (state.status !== "playing") throw new Error("Millionaire run is already settled.");
-  const current = currentMillionaireQuestion(run, state);
-  if (!current) throw new Error("Millionaire current question is unavailable.");
-  const firstMissQuestionIndex = state.firstMissQuestionIndex ?? state.currentQuestionIndex;
-  const baseScore = millionaireBaseScore(state.completedQuestions, firstMissQuestionIndex);
-  const score = millionaireScoreAfterLifelines(baseScore, state.lifelinesUsed);
-  return {
-    state: {
-      ...state,
-      status: "lost",
-      firstMissQuestionIndex,
-      finalMoney: state.finalMoney ?? millionaireCheckpointMoney(state.currentQuestionIndex),
-      baseScore,
-      score,
-    },
-    questionReveal: { questionId: current.id, correctChoiceId: current.correctChoiceId, explanation: current.explanation },
-    lifelineReveal: null,
-    answerOutcome: "wrong",
-  };
 }
 
 export function millionaireMoneyLabel(value: number) {
