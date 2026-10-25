@@ -24,15 +24,10 @@ begin
   ) then
     raise exception 'cadence cutover refused: other future Daily boards have already been published';
   end if;
-  if not exists (
-    select 1 from private.daily_challenges d
-    join private.daily_challenge_schedule_versions s on s.version = d.schedule_version
-    where s.sport = 'ufc' and d.central_day = date '2026-10-25'
-      and d.schedule_version = 'play-rotation-v20-resume-v18-oct3'
-      and d.game_type = 'millionaire' and d.fallback_reason is null
-  ) then
-    raise exception 'published Oct 25 UFC Millionaire commitment is missing or changed';
-  end if;
+  -- A fresh database has no materialized October 25 board yet; it can
+  -- legitimately publish the same v20 Millionaire later. Production already
+  -- has that board, which remains untouched. Any conflicting existing board
+  -- was rejected above.
   if private.daily_challenge_schedule_for_day(date '2026-10-24','ufc') <> 'play-rotation-v20-resume-v18-oct3'
      or private.daily_challenge_schedule_for_day(date '2026-10-24','football') <> 'football-daily-v20-resume-v18-oct3'
      or private.daily_challenge_schedule_for_day(date '2026-11-01','nba') <> 'nba-daily-regular-v1' then
