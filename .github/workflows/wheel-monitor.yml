@@ -75,6 +75,12 @@ jobs:
           fi
           node scripts/wheel-monitor/run.mjs \
             --previous="$PREVIOUS_SNAPSHOT" --out=tmp/wheel-monitor/current
+          if [[ -f tmp/wheel-monitor/current/snapshot.json ]]; then
+            echo "snapshot_ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "snapshot_ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Report-only run: review blockers prevent snapshot promotion."
+          fi
       - name: Report checkpoints and blockers
         if: always()
         shell: bash
@@ -96,7 +102,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
       - name: Promote only fully verified source snapshot
-        if: steps.collect.outcome == 'success'
+        if: steps.collect.outputs.snapshot_ready == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: wheel-monitor-snapshot
