@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { buildFootballDailyPersistenceSetup } from "./footballDailyPublicationAll";
 import { buildOfficialDailySetup, type OfficialDailyGameType } from "./todaysChallengeRuntime";
 import { buildNbaServerDailyPublication } from "../nba/nbaDailyServerPublication";
-import { NBA_REGULAR_SEASON_LAST_DAY, type NbaDailyGame } from "../nba/nbaDailySchedule";
+import { type NbaDailyGame } from "../nba/nbaDailySchedule";
 import { normalizeDailyQuestionText } from "./dailyContentQualityPolicy";
-import { previewApprovedDailyRotation } from "./sixMonthDailyRotationAudit";
+import { auditMergedPartOneCalendar } from "./sixMonthDailyRotationAudit";
 
 type AnyRecord = Record<string, unknown>;
 function record(value: unknown): value is AnyRecord {
@@ -40,7 +40,7 @@ describe("six-month daily generator availability probe — editorial certificati
       extractedPromptCount: number; repeatedPromptKeys: number; exceptions: string[];
     }> = {};
     const seenPrompts = new Map<string, Set<string>>();
-    const slots = previewApprovedDailyRotation().slots;
+    const slots = auditMergedPartOneCalendar();
     for (const slot of slots) {
       const key = slot.sport + ":" + slot.game;
       const row = report[key] ??= {
@@ -48,17 +48,17 @@ describe("six-month daily generator availability probe — editorial certificati
         extractedPromptCount: 0, repeatedPromptKeys: 0, exceptions: [],
       };
       row.scheduled++;
-      // These games require the actual Part 1 schedule+seed, or belong to a
-      // separately owned unfinished implementation/editorial rebuild.
-      if ((slot.sport === "ufc" && slot.game === "higher_lower")
-        || (slot.sport === "football" && (slot.game === "higher_lower" || slot.game === "bar_trivia"))
-        || (slot.sport === "nba" && (slot.game === "higher_lower" || slot.day > NBA_REGULAR_SEASON_LAST_DAY))
-        || slot.game === "hit_the_number") {
+      // Hit the Number has its own detailed canonical-date two-board audit.
+      // NBA Higher or Lower has a separate 2-game content certification PR.
+      if (slot.game === "hit_the_number" || slot.game === "higher_lower") {
         row.blocked++;
         continue;
       }
       try {
-        const version = slot.sport + "-six-month-provisional-v1-NOT-LIVE";
+        const version = slot.sport === "football"
+          ? slot.day === "2026-10-25" ? "football-daily-v20-resume-v18-oct3" : "football-daily-v21-locked-oct25"
+          : slot.sport === "ufc" ? "ufc-daily-v21-48h-oct25"
+          : "nba-daily-regular-v2-locked";
         const publication = slot.sport === "football"
           ? buildFootballDailyPersistenceSetup(slot.day, version, slot.game as OfficialDailyGameType)
           : slot.sport === "ufc"
@@ -90,6 +90,6 @@ describe("six-month daily generator availability probe — editorial certificati
     expect(Object.values(report).reduce((sum, row) => sum + row.scheduled, 0)).toBe(slots.length);
     // Nothing about a non-publishing preview can certify final Part 1
     // publication versions, human concept diversity or fact provenance.
-    console.info("SIX_MONTH_OTHER_GAMES_PROVISIONAL_AUDIT " + JSON.stringify(report));
+    console.info("SIX_MONTH_OTHER_GAMES_CANONICAL_PART1_PROBE " + JSON.stringify(report));
   }, 300_000);
 });
