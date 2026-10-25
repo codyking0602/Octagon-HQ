@@ -155,7 +155,7 @@ declare v_today date;v_day date;v_version text;v_game text;v_daily private.daily
 begin
   if p_sport not in ('ufc','football','nba') then raise exception 'unsupported Daily Challenge sport %',coalesce(p_sport,'<null>');end if;
   v_today := private.daily_challenge_central_day(p_at);
-  if p_sport = 'nba' and (v_today < date '2026-11-01' or v_today > date '2027-04-12') then
+  if p_sport = 'nba' and (v_today < date '2026-11-01' or v_today > date '2027-04-11') then
     raise exception 'NBA regular-season Daily is not currently available';
   end if;
   v_day := private.daily_challenge_active_day(v_today,p_sport);
