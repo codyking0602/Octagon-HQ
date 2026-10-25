@@ -33,13 +33,13 @@ export const NBA_DAILY_GAME_INSTRUCTIONS: Record<NbaDailyGame, string> = {
 /** Twenty-eight NBA slots, spread across the season with approved 4/4/4, 3/3/3/3, 2/2 weights. */
 export const NBA_DAILY_WEIGHTED_CYCLE: readonly NbaDailyGame[] = [
   "average_fan",
-  "bar_trivia",
+  "sports_feud",
   "who_am_i",
   "millionaire",
   "hit_the_number",
-  "sports_feud",
-  "wavelength",
   "find_leader",
+  "wavelength",
+  "sports_feud",
   "average_fan",
   "higher_lower",
   "bar_trivia",
@@ -59,7 +59,7 @@ export const NBA_DAILY_WEIGHTED_CYCLE: readonly NbaDailyGame[] = [
   "millionaire",
   "wavelength",
   "find_leader",
-  "sports_feud",
+  "bar_trivia",
 ];
 
 export const NBA_DAILY_WEIGHTS: Readonly<Record<NbaDailyGame, number>> = {
