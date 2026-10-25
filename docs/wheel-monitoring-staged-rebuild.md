@@ -36,9 +36,12 @@ live, end-to-end source and identity acceptance run passes. There is no second
 scheduled poll workflow: `monitor-wheel-cfb-ap-top25.yml` is manual-only.
 
 When the read-only workflow runs:
-1. Restore the artifact from the last **schema-2 source-certified** run if available.
+1. Resolve the newest non-expired **`wheel-monitor-snapshot`** artifact
+   from **main**; successful *report-only* runs have no such artifact and must
+   be skipped. Validate restored contents as schema-2 source-certified.
    Schema-1 artifacts incorrectly promoted review-held observations and cannot
-   serve as trusted baselines.
+   serve as trusted baselines. If no artifact exists, perform baseline review
+   rather than mistaking the latest successful report for a checkpoint.
 2. Run deterministic tests, query current live identity authorities, fetch
    primary evidence and classify roster/AP/UFC changes.
 3. Preserve a factual review report; maintain explicit source errors,
