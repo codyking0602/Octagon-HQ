@@ -49,7 +49,7 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     expect(missingImages.map(f => f.name)).toEqual([]);
   });
 
-  it("supplies at least 200 days of deterministic 48-hour boards with zero reversed/semantic pair repeats", () => {
+  it("supplies 100 official 48-hour dates with two distinct 10-question games and no reversed pairs", () => {
     const pairKeys = new Set<string>();
     const subjectCounts = new Map<string, number>();
     const categoryCounts = new Map<string, number>();
@@ -57,8 +57,10 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     const modern = new Set<string>();
     for (const fighter of UFC_HIGHER_LOWER_FIGHTERS) modern.add(fighter.id);
     for (let day = 0; day < UFC_HIGHER_LOWER_RESERVED_SLOTS; day++) {
-      const board = createUfcHigherLowerOfficialBoard(dayAt(day));
-      expect(createUfcHigherLowerOfficialBoard(dayAt(day))).toEqual(board);
+      const dayIndex = Math.floor(day / 2);
+      const gameIndex = day % 2;
+      const board = createUfcHigherLowerOfficialBoard(dayAt(dayIndex), gameIndex);
+      expect(createUfcHigherLowerOfficialBoard(dayAt(dayIndex), gameIndex)).toEqual(board);
       expect(board.questions).toHaveLength(UFC_HIGHER_LOWER_QUESTION_COUNT);
       expect(board.questions.map(q => q.difficulty)).toEqual([
         "approachable", "approachable", "approachable",
@@ -91,7 +93,7 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     expect(subjectCounts.size).toBeGreaterThanOrEqual(70);
     expect(categoryCounts.size).toBe(3);
     expect(metricCounts.size).toBe(6);
-    console.info("UFC HIGHER LOWER 200-DAY AUDIT", JSON.stringify({
+    console.info("UFC HIGHER LOWER 100-DATE TWO-BOARD AUDIT", JSON.stringify({
       reservedBoards: UFC_HIGHER_LOWER_RESERVED_SLOTS,
       distinctPairs: pairKeys.size,
       distinctFighters: subjectCounts.size,
@@ -108,7 +110,10 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
 
   it("keeps every hidden answer/number private and the canonical grader authoritative", () => {
     const pub = buildUfcHigherLowerDailyPublication(dayAt(0), "ufc-hl-regression-v1");
-    expect(buildOfficialDailySetup("higher_lower", dayAt(0), "ufc-hl-regression-v1")).toEqual(pub);
+    const twoGame = buildOfficialDailySetup("higher_lower", dayAt(0), "ufc-hl-regression-v1");
+    expect(twoGame.publicSetup.format_version).toBe("daily-two-game-average-v1");
+    expect(twoGame.privateSetupEvidence.rounds).toHaveLength(2);
+    expect((twoGame.privateSetupEvidence.rounds as Record<string,unknown>[])[0]?.private_setup_evidence).toEqual(pub.privateSetupEvidence);
     const before = (pub.publicSetup.initial_state as Record<string, unknown>).current_question as Record<string, unknown>;
     expect(before).not.toHaveProperty("answer");
     expect(String(before.id)).toBe("ufc-daily-comparison-1");
