@@ -27,7 +27,9 @@ export type FootballHigherLowerCategory =
   | "awards"
   | "championships"
   | "team"
-  | "draft";
+  | "draft"
+  | "defense"
+  | "efficiency";
 
 export interface FootballHigherLowerSubject {
   subjectId: string;
@@ -764,10 +766,10 @@ const allPairCandidates = metricSpecs.flatMap(pairCandidates);
  * Every metric below is already defined in the canonical Football factual ledger.
  */
 const officialDailySupplementSpecs: readonly MetricSpec[] = [
-  { key: "cfb-season-pass-rating", league: "CFB", category: "single-season", label: "Best-season passer rating", metricId: "cfb-best-season-passer-rating", kinds: ["player-career"], positions: ["QB"], minValue: 120, recognition: "recognizable" },
+  { key: "cfb-season-pass-rating", league: "CFB", category: "efficiency", label: "Best-season passer rating", metricId: "cfb-best-season-passer-rating", kinds: ["player-career"], positions: ["QB"], minValue: 120, recognition: "recognizable" },
   { key: "cfb-season-receptions", league: "CFB", category: "single-season", label: "Best-season receptions", metricId: "cfb-best-season-receptions", kinds: ["player-career"], positions: ["WR", "TE"], minValue: 45, recognition: "recognizable" },
-  { key: "cfb-season-tfl", league: "CFB", category: "single-season", label: "Best-season tackles for loss", metricId: "cfb-best-season-tackles-for-loss", kinds: ["player-career"], positions: ["DL", "LB"], minValue: 8, recognition: "recognizable" },
-  { key: "cfb-season-interceptions", league: "CFB", category: "single-season", label: "Best-season defensive interceptions", metricId: "cfb-best-season-defensive-interceptions", kinds: ["player-career"], positions: ["DB"], minValue: 3, recognition: "recognizable" },
+  { key: "cfb-season-tfl", league: "CFB", category: "defense", label: "Best-season tackles for loss", metricId: "cfb-best-season-tackles-for-loss", kinds: ["player-career"], positions: ["DL", "LB"], minValue: 8, recognition: "recognizable" },
+  { key: "cfb-season-interceptions", league: "CFB", category: "defense", label: "Best-season defensive interceptions", metricId: "cfb-best-season-defensive-interceptions", kinds: ["player-career"], positions: ["DB"], minValue: 3, recognition: "recognizable" },
   { key: "cfb-career-pass-completions", league: "CFB", category: "career", label: "College career pass completions", metricId: "cfb-career-passing-completions", kinds: ["player-career"], positions: ["QB"], minValue: 500, recognition: "iconic" },
   { key: "cfb-career-pass-attempts", league: "CFB", category: "career", label: "College career pass attempts", metricId: "cfb-career-passing-attempts", kinds: ["player-career"], positions: ["QB"], minValue: 800, recognition: "iconic" },
   { key: "cfb-career-rush-attempts", league: "CFB", category: "career", label: "College career rushing attempts", metricId: "cfb-career-rushing-attempts", kinds: ["player-career"], positions: ["RB", "QB"], minValue: { QB: 250, RB: 400 }, recognition: "iconic" },
@@ -775,13 +777,27 @@ const officialDailySupplementSpecs: readonly MetricSpec[] = [
   { key: "cfb-career-total-td", league: "CFB", category: "career", label: "College career total touchdowns", metricId: "cfb-career-total-touchdowns", kinds: ["player-career"], positions: ["QB", "RB", "WR", "TE"], minValue: 25, recognition: "iconic" },
   { key: "cfb-career-tfl", league: "CFB", category: "career", label: "College career tackles for loss", metricId: "cfb-career-tackles-for-loss", kinds: ["player-career"], positions: ["DL", "LB"], minValue: 20, recognition: "iconic" },
   { key: "cfb-career-tackles", league: "CFB", category: "career", label: "College career tackles", metricId: "cfb-career-tackles", kinds: ["player-career"], positions: ["DL", "LB", "DB"], minValue: 100, recognition: "iconic" },
-  { key: "cfb-team-points-against", league: "CFB", category: "team", label: "Season points allowed", metricId: "cfb-team-points-against", kinds: ["team-season"], minValue: 100, recognition: "recognizable" },
-  { key: "cfb-team-opp-ppg", league: "CFB", category: "team", label: "Season points allowed per game", metricId: "cfb-team-opponent-points-per-game", kinds: ["team-season"], minValue: 8, recognition: "recognizable" },
+  { key: "cfb-team-points-against", league: "CFB", category: "defense", label: "Season points allowed", metricId: "cfb-team-points-against", kinds: ["team-season"], minValue: 100, recognition: "recognizable" },
+  { key: "cfb-team-opp-ppg", league: "CFB", category: "defense", label: "Season points allowed per game", metricId: "cfb-team-opponent-points-per-game", kinds: ["team-season"], minValue: 8, recognition: "recognizable" },
   { key: "cfb-team-point-diff", league: "CFB", category: "team", label: "Season scoring differential", metricId: "cfb-team-point-differential", kinds: ["team-season"], minValue: 200, recognition: "recognizable" },
   { key: "cfb-team-margin-ppg", league: "CFB", category: "team", label: "Season scoring margin per game", metricId: "cfb-team-scoring-margin-per-game", kinds: ["team-season"], minValue: 12, recognition: "recognizable" },
-  { key: "cfb-team-srs", league: "CFB", category: "team", label: "Season SRS rating", metricId: "cfb-team-srs", kinds: ["team-season"], minValue: 12, recognition: "recognizable", note: "Simple Rating System; higher is stronger." },
+  { key: "cfb-team-srs", league: "CFB", category: "efficiency", label: "Season SRS rating", metricId: "cfb-team-srs", kinds: ["team-season"], minValue: 12, recognition: "recognizable", note: "Simple Rating System; higher is stronger." },
   { key: "cfb-team-conference-wins", league: "CFB", category: "team", label: "Season conference wins", metricId: "cfb-team-conference-wins", kinds: ["team-season"], minValue: 6, recognition: "recognizable" },
-  { key: "cfb-team-sos", league: "CFB", category: "team", label: "Season strength of schedule (SOS)", metricId: "cfb-team-sos", kinds: ["team-season"], minValue: 0, recognition: "recognizable", note: "Strength of schedule rating; higher is tougher." },
+  { key: "cfb-team-sos", league: "CFB", category: "efficiency", label: "Season strength of schedule (SOS)", metricId: "cfb-team-sos", kinds: ["team-season"], minValue: 0, recognition: "recognizable", note: "Strength of schedule rating; higher is tougher." },
+  { key: "nfl-season-pass-rating", league: "NFL", category: "efficiency", label: "Season passer rating", metricId: "nfl-season-passer-rating", kinds: ["player-season"], positions: ["QB"], minValue: 75, recognition: "recognizable" },
+  { key: "nfl-season-interceptions", league: "NFL", category: "single-season", label: "Season interceptions thrown", metricId: "nfl-season-interceptions", kinds: ["player-season"], positions: ["QB"], minValue: 6, recognition: "recognizable" },
+  { key: "nfl-team-opp-points", league: "NFL", category: "defense", label: "Season points allowed", metricId: "nfl-team-points-against", kinds: ["team-season"], minValue: 150, recognition: "recognizable" },
+  { key: "nfl-team-opp-ppg", league: "NFL", category: "defense", label: "Season points allowed per game", metricId: "nfl-team-opponent-points-per-game", kinds: ["team-season"], minValue: 10, recognition: "recognizable" },
+  { key: "nfl-team-def-interceptions", league: "NFL", category: "defense", label: "Season team interceptions", metricId: "nfl-team-defensive-interceptions", kinds: ["team-season"], minValue: 6, recognition: "recognizable" },
+  { key: "nfl-team-passing-yards", league: "NFL", category: "team", label: "Season team passing yards", metricId: "nfl-team-passing-yards", kinds: ["team-season"], minValue: 2200, recognition: "recognizable" },
+  { key: "nfl-team-rushing-yards", league: "NFL", category: "team", label: "Season team rushing yards", metricId: "nfl-team-rushing-yards", kinds: ["team-season"], minValue: 1200, recognition: "recognizable" },
+  { key: "nfl-team-scoring-rate", league: "NFL", category: "efficiency", label: "Season points per game", metricId: "nfl-team-points-per-game", kinds: ["team-season"], minValue: 18, recognition: "recognizable" },
+  { key: "nfl-team-scoring-differential", league: "NFL", category: "team", label: "Season point differential", metricId: "nfl-team-point-differential", kinds: ["team-season"], minValue: 50, recognition: "recognizable" },
+  { key: "nfl-team-postseason-wins", league: "NFL", category: "team", label: "Season playoff wins", metricId: "nfl-team-postseason-wins", kinds: ["team-season"], minValue: 1, recognition: "recognizable" },
+  { key: "nfl-team-defensive-sacks-official", league: "NFL", category: "defense", label: "Season defensive sacks", metricId: "nfl-team-defensive-sacks", kinds: ["team-season"], minValue: 25, recognition: "recognizable" },
+  { key: "cfb-team-points-per-game-official", league: "CFB", category: "efficiency", label: "Season points per game", metricId: "cfb-team-points-per-game", kinds: ["team-season"], minValue: 27, recognition: "recognizable" },
+  { key: "cfb-team-defensive-efficiency", league: "CFB", category: "defense", label: "Season scoring margin per game", metricId: "cfb-team-scoring-margin-per-game", kinds: ["team-season"], minValue: 10, recognition: "recognizable" },
+  { key: "cfb-team-points-for-official", league: "CFB", category: "team", label: "Season total points", metricId: "cfb-team-total-points", kinds: ["team-season"], minValue: 360, recognition: "recognizable" },
 ];
 const officialDailyPairCandidates = [...allPairCandidates, ...officialDailySupplementSpecs.flatMap(pairCandidates)];
 const allMetricSpecs = [...metricSpecs, ...officialDailySupplementSpecs];
@@ -1029,7 +1045,7 @@ export function createFootballHigherLowerBoard(
     ] as const)
   )));
   const categoryAvailability = Object.fromEntries((["NFL", "CFB"] as const).flatMap(league => (
-    (["single-season", "career", "awards", "championships", "team", "draft"] as const).map(category => [
+    (["single-season", "career", "awards", "championships", "team", "draft", "defense", "efficiency"] as const).map(category => [
       league + "-" + category,
       { pairs: candidates.filter(pair => pair.league === league && pair.category === category).length,
         metrics: new Set(candidates.filter(pair => pair.league === league && pair.category === category).map(pair => pair.metricKey)).size },
