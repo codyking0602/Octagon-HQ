@@ -7,6 +7,10 @@ on:
       - "src/features/play/footballHigherLowerDailyRuntime.ts"
       - "src/features/play/footballHigherLowerSixMonthAudit.ts"
       - "src/features/play/footballHigherLowerSixMonthAudit.test.ts"
+      - "src/features/play/higherLowerTwoGameSixMonthAudit.test.ts"
+      - "src/features/play/higherLowerTwoGameDaily.test.ts"
+      - "src/features/nba/nbaHigherLowerDailyPublication.ts"
+      - "src/features/play/ufcHigherLowerDailyRuntime.ts"
       - ".github/workflows/football-higher-lower-six-month-audit.yml"
   workflow_dispatch:
 
@@ -35,6 +39,15 @@ jobs:
           src/features/nba/NbaHigherLowerLeaderboardResult.test.ts
       - name: Execute all provisional official Daily boards and assertions
         run: OCTAGON_WRITE_HL_AUDIT=1 npx vitest run src/features/play/footballHigherLowerSixMonthAudit.test.ts
+      - name: Verify two-game parity and audit the actual 182-day calendar
+        run: OCTAGON_WRITE_HL_AUDIT=1 npx vitest run src/features/play/higherLowerTwoGameDaily.test.ts src/features/play/higherLowerTwoGameSixMonthAudit.test.ts
+      - name: Upload two-game actual calendar and provisional stress evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: higher-lower-two-game-six-month-audit
+          path: artifacts/higher-lower-two-game-six-month-audit.json
+          if-no-files-found: warn
       - name: Upload reproducible, question-level simulation
         if: always()
         uses: actions/upload-artifact@v4
