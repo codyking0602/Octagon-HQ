@@ -142,17 +142,17 @@ if (differences.length) {
   const report = {status: uncoveredEntrants.length ? "onboarding-required" : "factual-update-required",
     observedAt: new Date().toISOString(), sourceUrl: ESPN_RANKINGS_URL,
     checkedInCount: expected.length, officialCount: current.length, differences, uncoveredEntrants };
-  if (process.env.WHEEL_AP_REPORT_PATH) writeFileSync(process.env.WHEEL_AP_REPORT_PATH, JSON.stringify(report,null,2)+"\\n");
+  if (process.env.WHEEL_AP_REPORT_PATH) writeFileSync(process.env.WHEEL_AP_REPORT_PATH, JSON.stringify(report,null,2)+"\n");
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-    "## Wheel CFB AP Top 25 — factual changes detected\\n" +
-    "- Status: **"+report.status+"**; "+differences.length+" changed rank slots\\n" +
-    "- Official source: "+ESPN_RANKINGS_URL+"\\n" +
-    "- The canonical Wheel poll/SQL is unchanged and requires a reviewed PR.\\n");
+    "## Wheel CFB AP Top 25 — factual changes detected\n" +
+    "- Status: **"+report.status+"**; "+differences.length+" changed rank slots\n" +
+    "- Official source: "+ESPN_RANKINGS_URL+"\n" +
+    "- The canonical Wheel poll/SQL is unchanged and requires a reviewed PR.\n");
   process.exit(0);
 }
 
 if (process.env.WHEEL_AP_REPORT_PATH) writeFileSync(process.env.WHEEL_AP_REPORT_PATH,
-  JSON.stringify({status:"in-sync",observedAt:new Date().toISOString(),sourceUrl:ESPN_RANKINGS_URL,changes:[]},null,2)+"\\n");
+  JSON.stringify({status:"in-sync",observedAt:new Date().toISOString(),sourceUrl:ESPN_RANKINGS_URL,changes:[]},null,2)+"\n");
 console.log(
   "Wheel AP Top 25 snapshot matches the current ESPN AP poll mirror, and every ranked team has audited Wheel coverage.",
 );
