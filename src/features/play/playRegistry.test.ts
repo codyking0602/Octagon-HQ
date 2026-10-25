@@ -3,6 +3,7 @@ import { replayBehaviorFor } from "./lineupModel";
 import { playGameDefinition, playGames, type PlayGameId } from "./playRegistry";
 
 const expectedIds: PlayGameId[] = [
+  "higher-lower",
   "wheel-ufc",
   "auction",
   "hit-the-number",

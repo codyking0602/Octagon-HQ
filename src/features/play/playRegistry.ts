@@ -177,7 +177,7 @@ export const playGameCatalog = [
     title: "Higher or Lower",
     description: "Ten UFC-only career comparisons with real wins, finishes, and title-fight numbers.",
     lineup: {
-      defaultType: "curated", supportedTypes: ["curated"],
+      defaultType: "replayable", supportedTypes: ["replayable", "curated"],
       replayBehavior: "new-lineup", newLineupControl: "result-replay",
       repetitionPolicy: "recent-items-deprioritized", lineupSize: 10,
       completionState: "higher-lower-settled",
