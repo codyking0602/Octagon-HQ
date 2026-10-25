@@ -831,7 +831,7 @@ function toQuestion(pair: PairCandidate, answer: FootballHigherLowerChoice): Foo
   };
 }
 
-function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: number) {
+function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: number, excludedComparisonKeys: ReadonlySet<string>) {
   const random = seededLineupRandom(FOOTBALL_HIGHER_LOWER_VERSION, seed, scope, attempt);
   const leagues = leaguePattern(scope, random);
   const difficulties = difficultyPattern(random);
@@ -850,6 +850,7 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
     const requireModern = modernity[index]!;
     const lastCategory = questions.at(-1)?.category;
     const matching = allPairCandidates.filter((pair) => {
+      if (excludedComparisonKeys.has(pair.id)) return false;
       if (pair.league !== league || pair.difficulty !== difficulty) return false;
       if (requireModern && !pair.modern) return false;
       if ((metricCounts.get(pair.metricKey) ?? 0) >= 2) return false;
@@ -896,9 +897,10 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
 export function createFootballHigherLowerBoard(
   seed: string,
   scope: FootballHigherLowerScope,
+  excludedComparisonKeys: ReadonlySet<string> = new Set(),
 ): FootballHigherLowerBoard {
   for (let attempt = 0; attempt < 1_000; attempt += 1) {
-    const questions = tryBuildBoard(seed, scope, attempt);
+    const questions = tryBuildBoard(seed, scope, attempt, excludedComparisonKeys);
     if (questions) {
       return {
         version: FOOTBALL_HIGHER_LOWER_VERSION,

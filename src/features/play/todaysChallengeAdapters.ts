@@ -156,10 +156,10 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Who Am I score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
-} as const satisfies Record<OfficialDailyGameType, TodayChallengeAdapter>;
+} as const satisfies Record<Exclude<OfficialDailyGameType, "higher_lower">, TodayChallengeAdapter>;
 
-// NBA Higher or Lower is official Daily-only; it is not a UFC/Football
-// canonical rotation member and must not alter their eleven-game catalog.
+// Higher or Lower already has an NBA Daily adapter; Football now has an
+// independently built official publication, gated off its live rotation.
 export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
   gameType: "higher_lower",
   gameId: "higher-lower",
@@ -168,7 +168,7 @@ export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
   casualRoute: "/nba/higher-lower",
   cta: "Make the comparison",
   instructions: "Compare ten NBA seasons and legends. Make every higher or lower call count.",
-  footballInstructions: "Compare ten NBA seasons and legends.",
+  footballInstructions: "Compare ten NFL and college football stat matchups. Every choice counts.",
   nativeResultLabel: "Correct comparisons",
   nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
 };

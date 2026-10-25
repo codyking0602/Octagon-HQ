@@ -14,7 +14,8 @@ type OfficialDailyGameType =
   | "millionaire"
   | "sports_feud"
   | "bar_trivia"
-  | "average_fan";
+  | "average_fan"
+  | "higher_lower";
 
 interface OfficialDailyRuntimeContext {
   gameType: OfficialDailyGameType;
@@ -597,6 +598,16 @@ async function materializeToday(admin: SupabaseClient, at?: string) {
   };
 }
 
+async function footballHigherLowerPublicationHistory(admin: SupabaseClient, day: string) {
+  const response = await admin.rpc("get_football_higher_lower_publication_history", {
+    p_before_day: day,
+  });
+  if (response.error || !Array.isArray(response.data)) {
+    throw new Error("Official Football Higher or Lower repeat-prevention history is unavailable.");
+  }
+  return response.data;
+}
+
 async function materializeFootballToday(admin: SupabaseClient, at?: string) {
   const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "football" });
   if (prepared.error) {
@@ -632,7 +643,9 @@ async function materializeFootballToday(admin: SupabaseClient, at?: string) {
     ? await whoAmIPublicationHistory(admin, "football", day)
     : expectedGame === "average_fan"
       ? await averageFanPublicationHistory(admin, "football", day)
-      : undefined;
+      : expectedGame === "higher_lower"
+        ? await footballHigherLowerPublicationHistory(admin, day)
+        : undefined;
   const publication = expectedGame === "average_fan"
     ? {
         gameType: expectedGame,
