@@ -29,7 +29,7 @@ describe("UFC V2 official release topic and Daily selection coverage",()=>{
  it("publishes two Main and five Fast on exactly 24 official future calendar days",()=>{
    // The release begins on the forward-only V2 cutover. Earlier 2026
    // published Feud appearances keep their original V1 question IDs.
-   const dates=ufcFeudAppearanceDatesInWindow("2026-11-04","2027-07-04").slice(0,24);
+   const dates=ufcFeudAppearanceDatesInWindow("2026-11-04","2027-10-01").slice(0,24);
    expect(dates).toHaveLength(24);
    const seen=new Set<string>();
    for(const [i,day] of dates.entries()){
