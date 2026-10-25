@@ -818,7 +818,12 @@ const officialDailySupplementSpecs: readonly MetricSpec[] = [
   { key: "nfl-team-scoring-differential", league: "NFL", category: "team", label: "Season point differential", metricId: "nfl-team-point-differential", kinds: ["team-season"], minValue: 50, recognition: "recognizable" },
   { key: "nfl-team-postseason-wins", league: "NFL", category: "team", label: "Season playoff wins", metricId: "nfl-team-postseason-wins", kinds: ["team-season"], minValue: 1, recognition: "recognizable" },
 ];
-const officialDailyPairCandidates = [...allPairCandidates, ...officialDailySupplementSpecs.flatMap(pairCandidates)];
+// Registry-only draft metadata has no direct ledger-source binding; do not
+// publish it in Official Daily until independently verified. Casual is unchanged.
+const officialDailyPairCandidates = [
+  ...allPairCandidates.filter(pair => pair.metricKey !== "nfl-draft-pick"),
+  ...officialDailySupplementSpecs.flatMap(pairCandidates),
+];
 const allMetricSpecs = [...metricSpecs, ...officialDailySupplementSpecs];
 const metricIdOwner = new Map<string, string>();
 for (const spec of allMetricSpecs) {

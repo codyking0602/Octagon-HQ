@@ -39,6 +39,7 @@ describe("Football Higher or Lower six-month readiness / integration gate", () =
     expect(s.semanticRepeats).toBe(0);
     expect(s.repeatedSubjectMetrics).toBe(0);
     expect(s.invalidBindings).toBe(0);
+    expect(s.metadataOnlyDraftFacts).toBe(0);
     expect(s.incorrectGrading).toBe(0);
     expect(s.duplicateBoards).toBe(0);
     expect(s.mostRepeatedSubjects[0]?.appearances ?? 0).toBeLessThanOrEqual(
