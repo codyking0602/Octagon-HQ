@@ -290,12 +290,25 @@ function reconcile(rows, sourceRosters, ufcRanks, previous) {
       return updated;
     }
     const own=r?.players.filter(p=>nameKey(p.name)===nameKey(row.name))??[];
-    if(own.length===1) {updated.sourceRole=own[0].role;return updated;}
+    if(own.length===1) {
+      updated.sourceRole=own[0].role;
+      updated.sourcePlayerId=own[0].id;
+      return updated;
+    }
     updated.sourceStatus=own.length>1?"ambiguous":"missing";
     const elsewhere=(externalByName.get(row.sport+"|"+nameKey(row.name))??[])
       .filter(p=>p.team!==row.team);
-    // Only corroborate a transfer when the matched name is unique across source teams.
-    if(own.length===0 && elsewhere.length===1) updated.sourceTeam=elsewhere[0].team;
+    // Names alone do NOT verify trades or transfers. ESPN player ID must
+    // match a previously verified identity before publishing a factual flag.
+    if(own.length===0 && elsewhere.length===1) {
+      const old=previous?.identities.find(p=>identity(p)===identity(row));
+      if(old?.sourcePlayerId && old.sourcePlayerId===elsewhere[0].id)
+        updated.sourceTeam=elsewhere[0].team;
+      else {
+        updated.transferCandidateTeam=elsewhere[0].team;
+        updated.transferCandidateId=elsewhere[0].id;
+      }
+    }
     return updated;
   });
   const result=compareEvidence(marked,previous);
@@ -304,6 +317,9 @@ function reconcile(rows, sourceRosters, ufcRanks, previous) {
     sport:x.sport, name:x.name, team:x.team, division:x.division, family:x.family,
     rank:x.rank, champion:x.champion, sourceStatus:x.sourceStatus,
     sourceRole:x.sourceRole, sourceTeam:x.sourceTeam, sourceUrl:x.sourceUrl,
+    sourcePlayerId:x.sourcePlayerId,
+    transferCandidateTeam:x.transferCandidateTeam,
+    transferCandidateId:x.transferCandidateId,
   }))};
 }
 function gmCoverage(nfl) {
