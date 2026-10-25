@@ -30,7 +30,7 @@ import {
   keepCutTier,
 } from "./keepCutEngine";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
-import { buildUfcHigherLowerDailyPublication, advanceUfcHigherLowerDailyRuntime } from "./ufcHigherLowerDailyRuntime";
+import { buildUfcHigherLowerTwoGameDailyPublication, advanceUfcHigherLowerDailyRuntime } from "./ufcHigherLowerDailyRuntime";
 import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
 import { createUfcWhoAmIAuthoredDailyRounds } from "./ufcWhoAmIAuthoredDaily";
 import { parseWhoAmIAuthoredPublicationHistory } from "./whoAmIAuthoredDailySelection";
@@ -699,7 +699,7 @@ export function buildOfficialDailySetup(
     );
     case "bar_trivia": return buildBarTriviaDailySetup("ufc", day, scheduleVersion);
     case "average_fan": return buildAverageFanDailySetup("ufc", day, scheduleVersion, publicationHistory);
-    case "higher_lower": return buildUfcHigherLowerDailyPublication(day, scheduleVersion);
+    case "higher_lower": return buildUfcHigherLowerTwoGameDailyPublication(day, scheduleVersion);
     case "who_am_i": {
       if (day >= UFC_AUTHORED_WHO_AM_I_CUTOVER_DAY) {
         return buildTwoRoundWhoAmIDailyPublication(
@@ -1072,6 +1072,7 @@ function scoreTwoGameChild(
       selectedIds,
     ).score;
   }
+  if (context.gameType === "higher_lower") return Number(advanced.publicState.correct_count) * 10;
   throw new Error(`Unsupported two-game Daily score for ${String(context.gameType)}.`);
 }
 

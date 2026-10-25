@@ -153,6 +153,7 @@ function childScore(context:OfficialDailyRuntimeContext,result:OfficialDailyAdva
     const status=total===target?"perfect":total>target?"bust":"under";
     return hitTheNumberScore({status,target,distance,pickCount});
   }
+  if(context.gameType==="higher_lower")return Number(result.publicState.correct_count)*10;
   throw new Error("Unsupported NBA two-game scorer.");
 }
 export function advanceNbaOfficialDailyRuntime(context:NbaOfficialDailyRuntimeContext,action:unknown):OfficialDailyAdvanceResult{
