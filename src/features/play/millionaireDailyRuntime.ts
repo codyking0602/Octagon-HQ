@@ -117,7 +117,7 @@ function appearanceIndex(
  * publishes every 48 hours. Keep the old ordinal identities for every
  * published pre-cutover board; index only the canonical v21 dates after it.
  *
- * Football appearances 0–4 and UFC appearances 0–6 were already reserved
+ * Football appearances 0–4 and UFC appearances 0–5 were already reserved
  * before the new schedules began (including Oct 25 UFC Millionaire).
  */
 function futureMillionaireAppearance(sport: "football" | "ufc", day: string) {
@@ -132,7 +132,7 @@ function futureMillionaireAppearance(sport: "football" | "ufc", day: string) {
   const cycleIndex = occurrence % cycle.length;
   const previous = completeCycles * cycle.filter(game => game === "millionaire").length
     + cycle.slice(0, cycleIndex).filter(game => game === "millionaire").length;
-  return (sport === "ufc" ? 7 : 5) + previous;
+  return (sport === "ufc" ? 6 : 5) + previous;
 }
 
 export function millionaireFootballDailyAppearance(day: string) {
