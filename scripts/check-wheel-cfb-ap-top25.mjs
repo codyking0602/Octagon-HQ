@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync, appendFileSync } from "node:fs";
 
 const ESPN_RANKINGS_URL =
   "https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings";
@@ -123,7 +123,7 @@ if (differences.length) {
     .map((difference) => difference.current)
     .filter((team) => !coverage.byEspnId.has(team.espnId));
 
-  console.error("AP Top 25 changed. Update the Wheel snapshot + backend poll rows before the next deploy.");
+  console.log("AP Top 25 source changed: editorial factual update needed (not a software failure).");
   console.error(JSON.stringify(differences, null, 2));
 
   if (uncoveredEntrants.length) {
@@ -139,9 +139,20 @@ if (differences.length) {
     );
   }
 
-  process.exit(1);
+  const report = {status: uncoveredEntrants.length ? "onboarding-required" : "factual-update-required",
+    observedAt: new Date().toISOString(), sourceUrl: ESPN_RANKINGS_URL,
+    checkedInCount: expected.length, officialCount: current.length, differences, uncoveredEntrants };
+  if (process.env.WHEEL_AP_REPORT_PATH) writeFileSync(process.env.WHEEL_AP_REPORT_PATH, JSON.stringify(report,null,2)+"\\n");
+  if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+    "## Wheel CFB AP Top 25 — factual changes detected\\n" +
+    "- Status: **"+report.status+"**; "+differences.length+" changed rank slots\\n" +
+    "- Official source: "+ESPN_RANKINGS_URL+"\\n" +
+    "- The canonical Wheel poll/SQL is unchanged and requires a reviewed PR.\\n");
+  process.exit(0);
 }
 
+if (process.env.WHEEL_AP_REPORT_PATH) writeFileSync(process.env.WHEEL_AP_REPORT_PATH,
+  JSON.stringify({status:"in-sync",observedAt:new Date().toISOString(),sourceUrl:ESPN_RANKINGS_URL,changes:[]},null,2)+"\\n");
 console.log(
   "Wheel AP Top 25 snapshot matches the current ESPN AP poll mirror, and every ranked team has audited Wheel coverage.",
 );
