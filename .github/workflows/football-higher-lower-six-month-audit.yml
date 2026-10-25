@@ -34,11 +34,4 @@ jobs:
           src/features/nba/nbaHigherLowerModel.test.ts
           src/features/nba/NbaHigherLowerLeaderboardResult.test.ts
       - name: Execute all provisional official Daily boards and assertions
-        run: OCTAGON_WRITE_HL_AUDIT=1 npx vitest run src/features/play/footballHigherLowerSixMonthAudit.test.ts
-      - name: Upload reproducible, question-level simulation
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: football-higher-lower-provisional-six-month-boards
-          path: artifacts/football-higher-lower-provisional-six-month-boards.json
-          if-no-files-found: warn
+        run: npx vitest run src/features/play/footballHigherLowerSixMonthAudit.test.ts
