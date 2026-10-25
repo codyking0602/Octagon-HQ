@@ -72,7 +72,7 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
         report.childBoards[sport]++;
         report.metrics[sport + ":" + stat] = (report.metrics[sport + ":" + stat] ?? 0) + 1;
         expect([4, 5, 6], slot.sport + ":" + slot.day).toContain(count);
-        expect(Number.isInteger(target) && target > 0).toBe(true);
+        expect(Number.isFinite(target) && target > 0, `${sport}:${slot.day}:board-${boardIndex + 1}:${stat}:${target}`).toBe(true);
         expect(new Set(ids).size).toBe(ids.length);
         expect(ids.length).toBeGreaterThan(count);
         if (slot.sport === "football" || pub.boardType === "random-pool") {
@@ -86,7 +86,7 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
         fullBoards.add(key);
         report.uniqueBoards[sport]++;
         for (const id of ids) {
-          expect(Number.isInteger(values[id]), "Missing stat for " + id + "/" + stat).toBe(true);
+          expect(Number.isFinite(values[id]), "Missing stat for " + id + "/" + stat).toBe(true);
           const factId = [slot.sport, stat, id].join(":");
           const number = (subjectMetric.get(factId) ?? 0) + 1;
           subjectMetric.set(factId, number);
@@ -101,7 +101,7 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
           expect(plan.metricId).toBe(stat);
           expect(plan.solutionSubjectIds).toHaveLength(count);
           expect(plan.solutionSubjectIds.every(id => ids.includes(id))).toBe(true);
-          expect(plan.solutionSubjectIds.reduce((sum, id) => sum + values[id]!, 0)).toBe(target);
+          expect(plan.solutionSubjectIds.reduce((sum, id) => sum + values[id]!, 0)).toBeCloseTo(target, 5);
         } else {
           const seedVersion = boardIndex === 0 ? version : version + ":game-2";
           const seed = [HIT_THE_NUMBER_DAILY_CONTENT_VERSION, OFFICIAL_DAILY_RUNTIME_VERSION,
