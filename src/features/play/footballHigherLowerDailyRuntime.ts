@@ -17,10 +17,12 @@ export const FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION = "football-higher-lower-off
 type JsonRecord = Record<string, unknown>;
 
 /** Never send the answer or hidden numerical value before official completion. */
-export function footballHigherLowerPublicQuestion(question: FootballHigherLowerQuestion) {
-  const { answer: _answer, hidden, ...safe } = question;
+export function footballHigherLowerPublicQuestion(question: FootballHigherLowerQuestion, index: number) {
+  const { answer: _answer, hidden, id: _privateId, ...safe } = question;
   const { value: _value, formattedValue: _formatted, ...publicHidden } = hidden;
-  return { ...safe, hidden: publicHidden };
+  // The private question ID contains ":higher"/":lower". Never expose it:
+  // even publishing the ID alone would reveal the correct choice.
+  return { ...safe, id: "football-daily-comparison-" + (index + 1), hidden: publicHidden };
 }
 
 export function buildFootballHigherLowerDailyPublication(
@@ -45,7 +47,7 @@ export function buildFootballHigherLowerDailyPublication(
       question_count: FOOTBALL_HIGHER_LOWER_QUESTION_COUNT,
       initial_state: {
         complete: false, index: 0, correct_count: 0, answers: [],
-        current_question: footballHigherLowerPublicQuestion(board.questions[0]!),
+        current_question: footballHigherLowerPublicQuestion(board.questions[0]!, 0),
         last_result: null,
       },
     },
@@ -122,7 +124,7 @@ export function advanceFootballHigherLowerDailyRuntime(
     submissionState: { answers, final_submission: finalSubmission },
     publicState: {
       complete, index: answers.length, correct_count: correctCount, answers,
-      current_question: complete ? null : footballHigherLowerPublicQuestion(board.questions[index + 1]!),
+      current_question: complete ? null : footballHigherLowerPublicQuestion(board.questions[index + 1]!, index + 1),
       last_result: {
         question_id: current.id, choice, correct,
         known: current.known, hidden: current.hidden,
