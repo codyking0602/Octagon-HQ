@@ -110,7 +110,13 @@ export function buildSixMonthRotationPreview() {
   const ufcDates = previewPublicationDates("ufc", days);
   // Basketball is planned first; Football then avoids Basketball where feasible;
   // UFC then avoids Football. Other constraints win before collision minimization.
-  const nba = distribute("nba", nbaDates, {});
+  // NBA already has an approved, well-spaced 28-slot order. Preserve it
+  // exactly so the first 81 dates remain compatible with its date/ordinal
+  // publication logic; the seven additional April dates require Part 1 support.
+  const nba: PreviewSlot[] = nbaDates.map((day, index) => ({
+    day, sport: "nba",
+    game: NBA_DAILY_WEIGHTED_CYCLE[index % NBA_DAILY_WEIGHTED_CYCLE.length]!,
+  }));
   const occupied = Object.fromEntries(nba.map((slot) => [slot.day, slot.game]));
   const football = distribute("football", days, occupied);
   football.forEach((slot) => { occupied[slot.day] = slot.game; });
