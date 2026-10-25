@@ -33,4 +33,3 @@ export function millionaireTimeoutTransition(run: MillionaireRun, state: Million
     answerOutcome: "wrong",
   };
 }
-
