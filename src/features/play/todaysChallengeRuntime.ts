@@ -30,7 +30,7 @@ import {
   keepCutTier,
 } from "./keepCutEngine";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
-import { buildUfcHigherLowerDailyPublication, advanceUfcHigherLowerDailyRuntime } from "./ufcHigherLowerDailyRuntime";
+import { buildUfcHigherLowerDailyPublication, buildUfcHigherLowerTwoGameDailyPublication, advanceUfcHigherLowerDailyRuntime } from "./ufcHigherLowerDailyRuntime";
 import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
 import { createUfcWhoAmIAuthoredDailyRounds } from "./ufcWhoAmIAuthoredDaily";
 import { parseWhoAmIAuthoredPublicationHistory } from "./whoAmIAuthoredDailySelection";
@@ -634,6 +634,7 @@ export function buildOfficialDailySetup(
   if (!scheduleVersion.trim()) throw new Error("Official daily schedule version is required.");
 
   if (dailyUsesTwoGameAverage(gameType, day)) {
+    if (gameType === "higher_lower") return buildUfcHigherLowerTwoGameDailyPublication(day, scheduleVersion);
     if (gameType === "find_leader") {
       return buildTwoGameDailyPublication({
         sport: "ufc",
@@ -1050,6 +1051,7 @@ function scoreTwoGameChild(
   context: OfficialDailyRuntimeContext,
   advanced: OfficialDailyAdvanceResult,
 ) {
+  if (context.gameType === "higher_lower") return Number(advanced.publicState.correct_count) * 10;
   if (context.gameType === "find_leader") {
     return Number(advanced.publicState.native_progress ?? 0) * 10;
   }
