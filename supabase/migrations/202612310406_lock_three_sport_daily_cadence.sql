@@ -1,6 +1,6 @@
 -- Coordinated future-only three-sport Daily cadence. No existing Daily board,
 -- progress, attempt, leaderboard, or historical schedule version is updated.
--- Football: every Central day. UFC: Oct 25/27/29... (48-hour boards).
+-- Football: every Central day. UFC: committed Oct 25 board preserved; new cycle opens Oct 27/29... (48-hour boards).
 -- NBA: Nov 1/3/5... through Apr 11, 2027 (48-hour boards).
 -- Neither unfinished Football nor UFC Higher or Lower enters a schedule.
 do $guard$
@@ -8,10 +8,30 @@ begin
   if exists (
     select 1 from private.daily_challenges daily
     join private.daily_challenge_schedule_versions schedule on schedule.version = daily.schedule_version
-    where (schedule.sport in ('ufc','football') and daily.central_day >= date '2026-10-25')
-       or (schedule.sport = 'nba' and daily.central_day >= date '2026-11-01')
+    where (
+      (schedule.sport in ('ufc','football') and daily.central_day >= date '2026-10-25')
+      or (schedule.sport = 'nba' and daily.central_day >= date '2026-11-01')
+    )
+    and not (
+      -- The Oct 25 UFC Millionaire board was already committed at 11:30pm
+      -- Central on Oct 24. Preserve its schedule/version, setup, and identity.
+      schedule.sport = 'ufc'
+      and daily.central_day = date '2026-10-25'
+      and daily.schedule_version = 'play-rotation-v20-resume-v18-oct3'
+      and daily.game_type = 'millionaire'
+      and daily.fallback_reason is null
+    )
   ) then
-    raise exception 'cadence cutover refused: future Daily boards have already been published';
+    raise exception 'cadence cutover refused: other future Daily boards have already been published';
+  end if;
+  if not exists (
+    select 1 from private.daily_challenges d
+    join private.daily_challenge_schedule_versions s on s.version = d.schedule_version
+    where s.sport = 'ufc' and d.central_day = date '2026-10-25'
+      and d.schedule_version = 'play-rotation-v20-resume-v18-oct3'
+      and d.game_type = 'millionaire' and d.fallback_reason is null
+  ) then
+    raise exception 'published Oct 25 UFC Millionaire commitment is missing or changed';
   end if;
   if private.daily_challenge_schedule_for_day(date '2026-10-24','ufc') <> 'play-rotation-v20-resume-v18-oct3'
      or private.daily_challenge_schedule_for_day(date '2026-10-24','football') <> 'football-daily-v20-resume-v18-oct3'
@@ -51,7 +71,7 @@ values
     'bar_trivia',
     'average_fan'
   ]::text[],'football'),
-  ('ufc-daily-v21-48h-oct25','America/Chicago',date '2026-10-25',date '2026-10-25',array[
+  ('ufc-daily-v21-48h-oct25','America/Chicago',date '2026-10-25',date '2026-10-27',array[
     'find_leader',
     'sports_feud',
     'millionaire',
