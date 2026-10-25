@@ -42,8 +42,9 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
     };
     const canonicalRows = new Map(hitTheNumberStatRows.map(row => [row.fighterId, row.values]));
     for (const slot of slots) {
-      const version = slot.sport + "-six-month-candidate-v1-NOT-LIVE";
-      report.scheduledDates[slot.sport]++;
+      const sport = slot.sport === "football" ? "football" : "ufc";
+      const version = sport + "-six-month-candidate-v1-NOT-LIVE";
+      report.scheduledDates[sport]++;
       const publication = slot.sport === "football"
         ? buildFootballDailyPersistenceSetup(slot.day, version, "hit_the_number")
         : buildOfficialDailySetup("hit_the_number", slot.day, version);
@@ -56,7 +57,7 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
         const stat = String(pub.metric_id ?? pub.statId);
         const target = Number(pub.target);
         const values = child.privateGradingEvidence.values as Record<string, number>;
-        report.childBoards[slot.sport]++;
+        report.childBoards[sport]++;
         expect([4, 5, 6], slot.sport + ":" + slot.day).toContain(count);
         expect(Number.isInteger(target) && target > 0).toBe(true);
         expect(new Set(ids).size).toBe(ids.length);
@@ -70,7 +71,7 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
         const key = [slot.sport, stat, target, count, ...[...ids].sort()].join("|");
         expect(fullBoards.has(key), "Duplicated entire board on " + slot.day).toBe(false);
         fullBoards.add(key);
-        report.uniqueBoards[slot.sport]++;
+        report.uniqueBoards[sport]++;
         for (const id of ids) {
           expect(Number.isInteger(values[id]), "Missing stat for " + id + "/" + stat).toBe(true);
           const factId = [slot.sport, stat, id].join(":");
