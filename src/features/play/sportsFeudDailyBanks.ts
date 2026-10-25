@@ -21,6 +21,7 @@ import { CFB_SPORTS_FEUD_FAST_5 } from "./cfbSportsFeudFast5";
 import { NFL_SPORTS_FEUD_MAIN } from "./nflSportsFeudMain";
 import { NFL_FEUD_REBUILD_CANDIDATES, CFB_FEUD_REBUILD_CANDIDATES } from "./footballSportsFeudRebuildCandidates";
 import { footballFeudRebuildQuestionsForAppearance } from "./footballSportsFeudRebuildRotation";
+import { FOOTBALL_APPROVED_WEIGHTED_CYCLE, FOOTBALL_TWO_GAME_CUTOVER_DAY, lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import { OCT19_NFL_SPORTS_FEUD_MAIN, OCT19_NFL_SPORTS_FEUD_FAST } from "./oct19NflSportsFeudQuality";
 import { NFL_SPORTS_FEUD_FAST_1 } from "./nflSportsFeudFast1";
 import { NFL_SPORTS_FEUD_FAST_2 } from "./nflSportsFeudFast2";
@@ -427,7 +428,29 @@ export function footballSportsFeudAppearanceCountThroughDay(day: string) {
     );
 }
 
+/**
+ * V22 must count the ACTUAL future publication slots. The old 22-day
+ * appearance counter is historical and drifts under the approved 28-day
+ * schedule; using it for the editorial pack index recycled seven questions
+ * on nearby dates. Never use this count for published pre-v22 boards.
+ */
+function approvedFootballFeudAppearanceIndex(day: string): number | null {
+  if (day < FOOTBALL_TWO_GAME_CUTOVER_DAY || lockedWeightedGameForDay("football", day) !== "sports_feud") {
+    return null;
+  }
+  const offset = dayNumber(day) - dayNumber(FOOTBALL_TWO_GAME_CUTOVER_DAY);
+  const fullCycles = Math.floor(offset / FOOTBALL_APPROVED_WEIGHTED_CYCLE.length);
+  const withinCycle = FOOTBALL_APPROVED_WEIGHTED_CYCLE.slice(0, offset % FOOTBALL_APPROVED_WEIGHTED_CYCLE.length + 1)
+    .filter(game => game === "sports_feud").length;
+  return fullCycles * FOOTBALL_APPROVED_WEIGHTED_CYCLE.filter(game => game === "sports_feud").length
+    + withinCycle - 1;
+}
+
 export function footballSportsFeudDomainForDay(day: string): "cfb" | "nfl" {
+  const approved = approvedFootballFeudAppearanceIndex(day);
+  // Preserve Nov 27 Texas–A&M (fifth approved Feud) as CFB and alternate
+  // NFL/CFB without legacy appearance-counter drift on future Daily dates.
+  if (approved != null) return approved % 2 === 0 ? "cfb" : "nfl";
   const appearances = footballSportsFeudAppearanceCountThroughDay(day);
   if (appearances <= 0) return "cfb";
   return (appearances - 1) % 2 === 0 ? "cfb" : "nfl";
@@ -534,10 +557,12 @@ export function buildFootballFeudRebuildPack(
   if (footballThemedSportsFeudPackForDay(domain, day)) {
     return buildSportsFeudPack(domain, day);
   }
+  const approved = approvedFootballFeudAppearanceIndex(day);
   const count = footballSportsFeudAppearanceCountThroughDay(day);
-  // Oct 29 is official appearance eight (NFL), followed by appearance nine
-  // (CFB). Each sport has its own independent 17-appearance exclusion cycle.
-  const index = Math.max(0, Math.floor((count - (domain === "nfl" ? 8 : 9)) / 2));
+  // V22 appearance ordinals follow the 28-slot schedule, not the now-obsolete
+  // 22-day legacy counter. Keep the legacy fallback for old caller/replay paths.
+  const index = approved != null ? Math.floor(approved / 2)
+    : Math.max(0, Math.floor((count - (domain === "nfl" ? 8 : 9)) / 2));
   const chosen = footballFeudRebuildQuestionsForAppearance(domain, index);
   const entities: FamilyFeudEntity[] = [];
   const main = chosen.main.map((question) => materializeQuestion(domain, question, MAIN_POINTS, entities));

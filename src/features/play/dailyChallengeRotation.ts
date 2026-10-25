@@ -138,6 +138,71 @@ export const UFC_FUTURE_WEIGHTED_CYCLE: readonly OfficialDailyGameType[] = [
   "hit_the_number",
 ];
 
+/** Future-only v22: all approved weights including Higher or Lower 2×. */
+export const FOOTBALL_APPROVED_WEIGHTED_CYCLE: readonly OfficialDailyGameType[] = [
+  "wavelength",
+  "average_fan",
+  "bar_trivia",
+  "sports_feud",
+  "millionaire",
+  "who_am_i",
+  "average_fan",
+  "find_leader",
+  "millionaire",
+  "higher_lower",
+  "sports_feud",
+  "wavelength",
+  "hit_the_number",
+  "bar_trivia",
+  "average_fan",
+  "sports_feud",
+  "millionaire",
+  "who_am_i",
+  "find_leader",
+  "bar_trivia",
+  "average_fan",
+  "wavelength",
+  "millionaire",
+  "sports_feud",
+  "higher_lower",
+  "who_am_i",
+  "hit_the_number",
+  "find_leader",
+];
+export const UFC_APPROVED_WEIGHTED_CYCLE: readonly OfficialDailyGameType[] = [
+  "hit_the_number",
+  "find_leader",
+  "bar_trivia",
+  "average_fan",
+  "millionaire",
+  "higher_lower",
+  "who_am_i",
+  "sports_feud",
+  "wavelength",
+  "blind_resume",
+  "average_fan",
+  "find_leader",
+  "millionaire",
+  "bar_trivia",
+  "hit_the_number",
+  "sports_feud",
+  "who_am_i",
+  "average_fan",
+  "millionaire",
+  "wavelength",
+  "higher_lower",
+  "find_leader",
+  "sports_feud",
+  "bar_trivia",
+  "blind_resume",
+  "average_fan",
+  "millionaire",
+  "who_am_i",
+  "wavelength",
+  "sports_feud",
+];
+export const FOOTBALL_TWO_GAME_CUTOVER_DAY = "2026-10-27";
+export const UFC_TWO_GAME_CUTOVER_DAY = "2026-10-29";
 export const THREE_SPORT_CADENCE_CUTOVER_DAY = "2026-10-25";
 
 function dayNumber(day: string) {
@@ -169,6 +234,16 @@ export function lockedWeightedGameForDay(
 ): OfficialDailyGameType {
   const ordinal = dayNumber(day);
   const cutover = dayNumber(THREE_SPORT_CADENCE_CUTOVER_DAY);
+  // Immutable earlier publication schedule remains available under v20/v21.
+  // New, never-before-published v22 boards use the fully approved 28/30 slots.
+  if (sport === "football" && day >= FOOTBALL_TWO_GAME_CUTOVER_DAY) {
+    const index = ordinal - dayNumber(FOOTBALL_TWO_GAME_CUTOVER_DAY);
+    return FOOTBALL_APPROVED_WEIGHTED_CYCLE[index % FOOTBALL_APPROVED_WEIGHTED_CYCLE.length]!;
+  }
+  if (sport === "ufc" && day >= UFC_TWO_GAME_CUTOVER_DAY) {
+    const index = Math.floor((ordinal - dayNumber(UFC_TWO_GAME_CUTOVER_DAY)) / 2);
+    return UFC_APPROVED_WEIGHTED_CYCLE[index % UFC_APPROVED_WEIGHTED_CYCLE.length]!;
+  }
   if (ordinal >= cutover) {
     const cycle = sport === "football" ? FOOTBALL_FUTURE_WEIGHTED_CYCLE : UFC_FUTURE_WEIGHTED_CYCLE;
     const appearance = sport === "football" ? ordinal - cutover : Math.floor((ordinal - cutover) / 2);
@@ -187,6 +262,17 @@ export function lockedWeightedGameForDay(
 }
 
 export function footballBarTriviaAppearanceIndex(day: string) {
+  if (day >= FOOTBALL_TWO_GAME_CUTOVER_DAY) {
+    if (lockedWeightedGameForDay("football", day) !== "bar_trivia") {
+      throw new Error("Football Bar Trivia league is only defined for Bar Trivia Daily dates.");
+    }
+    const offset = dayNumber(day) - dayNumber(FOOTBALL_TWO_GAME_CUTOVER_DAY);
+    const full = Math.floor(offset / FOOTBALL_APPROVED_WEIGHTED_CYCLE.length);
+    const prior = FOOTBALL_APPROVED_WEIGHTED_CYCLE.slice(0, offset % FOOTBALL_APPROVED_WEIGHTED_CYCLE.length)
+      .filter(game => game === "bar_trivia").length;
+    // Four historical NFL/CFB Bar Trivia appearances through Oct 22.
+    return 4 + full * 3 + prior;
+  }
   if (day >= THREE_SPORT_CADENCE_CUTOVER_DAY) {
     if (lockedWeightedGameForDay("football", day) !== "bar_trivia") {
       throw new Error("Football Bar Trivia league is only defined for Bar Trivia Daily dates.");

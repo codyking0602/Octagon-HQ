@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { assertFamilyFeudPack, matchFamilyFeudAnswer } from "../games/familyFeudEngine";
 import { buildFootballDailyPersistenceSetup } from "./footballDailyPublicationSportsFeud";
+import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import { buildFootballOfficialDailySetup } from "./footballTodayChallengeRuntime";
 import {
   buildSportsFeudPack,
@@ -31,15 +32,14 @@ describe("Football Sports Feud future-only official Daily rebuild", () => {
     }
   });
 
-  it("publishes 34 consecutive Feud appearances over the future six-month window with no repeated question", () => {
+  it("publishes 26 actual v22 Feud appearances in 182 days with no repeated question", () => {
     const seen: Record<"nfl" | "cfb", Set<string>> = { nfl: new Set(), cfb: new Set() };
     const appearances: Record<"nfl" | "cfb", number> = { nfl: 0, cfb: 0 };
     const emitted = new Set<string>();
-    const anchor = Date.parse("2026-09-29T00:00:00Z") / 86400000;
-    for (let days = 0; days < 260 && appearances.nfl + appearances.cfb < 34; days += 1) {
-      const day = nextDay(FOOTBALL_FEUD_REBUILD_CUTOVER_DAY, days);
-      const offset = Date.parse(day + "T00:00:00Z") / 86400000 - anchor;
-      if (![2, 8, 12, 18].includes(((offset % 22) + 22) % 22)) continue;
+    for (let days = 0; days < 182; days += 1) {
+      const day = nextDay("2026-10-25", days);
+      if (day < FOOTBALL_FEUD_REBUILD_CUTOVER_DAY
+        || lockedWeightedGameForDay("football", day) !== "sports_feud") continue;
       const sport = footballSportsFeudDomainForDay(day);
       const pack = buildFootballFeudRebuildPack(sport, day);
       expect(pack).toEqual(buildFootballFeudRebuildPack(sport, day));
@@ -61,7 +61,7 @@ describe("Football Sports Feud future-only official Daily rebuild", () => {
       }
       appearances[sport] += 1;
     }
-    expect(appearances).toEqual({ nfl: 17, cfb: 17 });
-    expect(emitted.size).toBe(238);
+    expect(appearances).toEqual({ nfl: 13, cfb: 13 });
+    expect(emitted.size).toBe(182);
   }, 60_000);
 });

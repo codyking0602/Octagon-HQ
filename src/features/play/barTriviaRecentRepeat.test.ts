@@ -3,6 +3,7 @@ import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
 import {
   footballBarTriviaLeagueForDay,
   lockedWeightedGameForDay,
+  isUfcPublicationDay,
 } from "./dailyChallengeRotation";
 
 describe("cross-day Bar Trivia recency protection for future Daily publication", () => {
@@ -18,6 +19,8 @@ describe("cross-day Bar Trivia recency protection for future Daily publication",
       const day = new Date(Date.UTC(2026, 9, 1 + offset)).toISOString().slice(0, 10);
       for (const scope of ["football", "ufc"] as const) {
         if (lockedWeightedGameForDay(scope, day) !== "bar_trivia") continue;
+        // A UFC board stays available for 48 hours; the carryover date is not a second appearance.
+        if (scope === "ufc" && !isUfcPublicationDay(day)) continue;
         const league = scope === "ufc" ? "ufc" : footballBarTriviaLeagueForDay(day);
         const first = buildBarTriviaDailySetup(league, day, "recency-regression-v1");
         const second = buildBarTriviaDailySetup(league, day, "recency-regression-v1");
@@ -39,7 +42,8 @@ describe("cross-day Bar Trivia recency protection for future Daily publication",
 
     expect(appearances.nfl).toBeGreaterThanOrEqual(5);
     expect(appearances.cfb).toBeGreaterThanOrEqual(5);
-    expect(appearances.ufc).toBeGreaterThanOrEqual(12);
+    // The locked 150-day cadence has nine separate UFC Bar Trivia publications, not carryover dates.
+    expect(appearances.ufc).toBe(9);
   });
 
   it("does not invent fresh current-event slots when eligible stories are exhausted", () => {

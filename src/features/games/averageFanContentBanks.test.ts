@@ -11,6 +11,7 @@ import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { getUfcFactualSubject, ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
 import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
+import { UFC_BAR_TRIVIA_V3_RETIRE_IDS } from "../play/ufcBarTriviaV3Editorial";
 import { MILLIONAIRE_DAILY_RUN_COUNT, millionaireDailyRun } from "../play/millionaireDailyQuestionBank";
 import { findDailyContentOverlaps, type DailyContentAuditEntry } from "../play/dailyContentQualityPolicy";
 import {
@@ -908,8 +909,13 @@ describe("Average Fan durable content banks", () => {
 
   it("does not repeat the Bar Trivia five-second Masvidal knockout as an inverted Average Fan Final", () => {
     const barFact = BAR_TRIVIA_QUESTION_BANK.find((row) => row.id === "ufc-r3-fastest-ko");
-    expect(barFact?.answer).toBe("Jorge Masvidal");
-    expect(barFact?.prompt).toMatch(/five-second finish of Ben Askren/i);
+    if (barFact) {
+      expect(barFact.answer).toBe("Jorge Masvidal");
+      expect(barFact.prompt).toMatch(/five-second finish of Ben Askren/i);
+    } else {
+      // The historical source remains authored, but retirement excludes the duplicate from future play.
+      expect(UFC_BAR_TRIVIA_V3_RETIRE_IDS.has("ufc-r3-fastest-ko")).toBe(true);
+    }
     expect(AVERAGE_FAN_CONTENT_BANKS.ufc.some((question) =>
       question.id === "average-fan:ufc:final:authored:final-masvidal-five",
     )).toBe(false);
@@ -1306,8 +1312,12 @@ describe("Average Fan durable content banks", () => {
     expect(sourcePairs).toHaveLength(20);
     for (const [sport, averagePrefix, barId] of sourcePairs) {
       const bar = BAR_TRIVIA_QUESTION_BANK.find((row) => row.id === barId);
-      expect(bar, `Source Bar Trivia question ${barId} must exist`).toBeTruthy();
-      expect(bar?.league).toBe(sport);
+      if (bar) expect(bar.league).toBe(sport);
+      else {
+        // The cross-game duplicate was deliberately retired from the future-selectable bank.
+        expect(sport).toBe("ufc");
+        expect(UFC_BAR_TRIVIA_V3_RETIRE_IDS.has(barId), `Unaccounted missing source ${barId}`).toBe(true);
+      }
       expect(AVERAGE_FAN_CONTENT_BANKS[sport].some((row) => row.id.startsWith(averagePrefix)), averagePrefix)
         .toBe(false);
     }

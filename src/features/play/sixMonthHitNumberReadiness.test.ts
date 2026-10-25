@@ -10,6 +10,9 @@ import {
 import { hitTheNumberRandomPoolQuality } from "./hitTheNumberPoolQuality";
 import { hitTheNumberStatRows, HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
 import { auditMergedPartOneCalendar } from "./sixMonthDailyRotationAudit";
+import { buildNbaServerDailyPublication } from "../nba/nbaDailyServerPublication";
+import { nbaHitBoardQuality, nbaHitPoolSize, type NbaHitPlan } from "../nba/nbaHitTheNumberModel";
+import { nbaHitSubjectById, nbaHitValue } from "../nba/nbaHitTheNumberStats";
 
 type Obj = Record<string, unknown>;
 function children(setup: { publicSetup: Obj; privateSetupEvidence: Obj; privateGradingEvidence: Obj }) {
@@ -56,8 +59,11 @@ describe("six-month Official Hit the Number seed/content audit (merged canonical
     for (const slot of slots) {
       const sport = slot.sport === "football" ? "football" : "ufc";
       const version = sport === "football"
-        ? slot.day === "2026-10-25" ? "football-daily-v20-resume-v18-oct3" : "football-daily-v21-locked-oct25"
-        : "ufc-daily-v21-48h-oct25";
+        ? slot.day === "2026-10-25" ? "football-daily-v20-resume-v18-oct3"
+          : slot.day === "2026-10-26" ? "football-daily-v21-locked-oct25"
+            : "football-daily-v22-higher-lower-oct27"
+        : slot.day < "2026-10-29" ? "ufc-daily-v21-48h-oct25"
+          : "ufc-daily-v22-higher-lower-oct29";
       report.scheduledDates[sport]++;
       const publication = slot.sport === "football"
         ? buildFootballDailyPersistenceSetup(slot.day, version, "hit_the_number")
@@ -123,9 +129,48 @@ describe("six-month Official Hit the Number seed/content audit (merged canonical
       }
     }
     // Any failure in this test blocks prospective 2x content signoff, not old results.
-    expect(report.scheduledDates.football).toBe(15);
+    expect(report.scheduledDates.football).toBe(13);
     expect(report.scheduledDates.ufc).toBe(6);
     expect(report.uniqueBoards).toEqual(report.childBoards);
     console.info("SIX_MONTH_HIT_NUMBER_CANONICAL_PART1_AUDIT " + JSON.stringify(report));
+  }, 180_000);
+});
+
+
+describe("six-month NBA Official Hit the Number 2× content verification", () => {
+  it("builds and proves both 4/5-pick NBA boards on all six scheduled appearances", () => {
+    const scheduled = auditMergedPartOneCalendar().filter(slot => slot.sport === "nba" && slot.game === "hit_the_number");
+    expect(scheduled).toHaveLength(6);
+    const fingerprints = new Set<string>();
+    let childBoards = 0;
+    for (const slot of scheduled) {
+      const publication = buildNbaServerDailyPublication(slot.day, "nba-daily-regular-v2-locked", "hit_the_number");
+      const rounds = children(publication);
+      expect(rounds, slot.day).toHaveLength(2);
+      for (const [index, child] of rounds.entries()) {
+        childBoards++;
+        const plan = child.privateSetupEvidence.plan as NbaHitPlan;
+        const publicEvidence = child.publicSetup;
+        const values = child.privateGradingEvidence.values as Record<string, number>;
+        expect(plan).toBeTruthy();
+        expect([4, 5], slot.day).toContain(plan.pickCount);
+        expect(plan.subjectIds, slot.day).toHaveLength(nbaHitPoolSize(plan.pickCount));
+        expect(new Set(plan.subjectIds).size).toBe(plan.subjectIds.length);
+        expect(publicEvidence.pick_count).toBe(plan.pickCount);
+        expect(publicEvidence.target).toBe(plan.target);
+        expect(publicEvidence.metric_id).toBe(plan.statId);
+        expect(Number.isFinite(plan.target) && plan.target > 0).toBe(true);
+        expect(nbaHitBoardQuality(plan).passes, slot.day + ":" + index).toBe(true);
+        for (const id of plan.subjectIds) {
+          const subject = nbaHitSubjectById.get(id);
+          expect(subject, "Missing NBA subject " + id).toBeTruthy();
+          expect(values[id], id + ":" + plan.statId).toBe(nbaHitValue(subject!, plan.statId));
+        }
+        const key = [plan.statId, plan.target, plan.pickCount, ...[...plan.subjectIds].sort()].join("|");
+        expect(fingerprints.has(key), "Repeated NBA board on " + slot.day).toBe(false);
+        fingerprints.add(key);
+      }
+    }
+    expect(childBoards).toBe(12);
   }, 180_000);
 });

@@ -34,6 +34,7 @@ import {
   FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION,
   FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION,
   FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION,
+  FOOTBALL_APPROVED_HIGHER_LOWER_SCHEDULE_VERSION,
 } from "./footballTodayChallengeSession";
 
 type JsonRecord = Record<string, unknown>;
@@ -150,8 +151,10 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-10-24")).toBe(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION);
     expect(footballTodayScheduleVersionForDay("2026-10-25")).toBe(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION);
     expect(footballTodayScheduleVersionForDay("2026-10-26")).toBe(FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION);
-    const future = Array.from({ length: 26 }, (_unused, offset) => {
-      const day = new Date(Date.UTC(2026, 9, 26 + offset)).toISOString().slice(0, 10);
+    expect(footballTodayGameForDay("2026-10-26")).toBe("millionaire");
+    expect(footballTodayScheduleVersionForDay("2026-10-27")).toBe(FOOTBALL_APPROVED_HIGHER_LOWER_SCHEDULE_VERSION);
+    const future = Array.from({ length: 28 }, (_unused, offset) => {
+      const day = new Date(Date.UTC(2026, 9, 27 + offset)).toISOString().slice(0, 10);
       return footballTodayGameForDay(day);
     });
     expect(future.filter((game) => game === "average_fan")).toHaveLength(4);
@@ -162,6 +165,7 @@ describe("Football Today’s Challenge session", () => {
     expect(future.filter((game) => game === "who_am_i")).toHaveLength(3);
     expect(future.filter((game) => game === "find_leader")).toHaveLength(3);
     expect(future.filter((game) => game === "hit_the_number")).toHaveLength(2);
+    expect(future.filter((game) => game === "higher_lower")).toHaveLength(2);
     expect(future).not.toContain("keep_4_cut_4");
     expect(future).not.toContain("blind_resume");
     expect(future).not.toContain("blind_rank_5");
