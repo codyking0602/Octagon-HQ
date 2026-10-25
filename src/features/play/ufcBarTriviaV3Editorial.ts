@@ -279,7 +279,7 @@ export const UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES: Readonly<Record<string,"round1"|
   "ufc-r3-last-no-time-limit": "round2",
   "ufc-r3-tuf21-format": "round2",
   "ufc-r3-russia-debut-winner": "round2",
-  "ufc-r3-du-plessis-first-sa": "round1",
+  "ufc-r3-du-plessis-first-sa": "round2",
   "ufc-r3-pena-nunes-rematch": "round2",
   "ufc-r3-miocic-dc-regain": "round2",
   "ufc-r2-modern-era-event": "round3",

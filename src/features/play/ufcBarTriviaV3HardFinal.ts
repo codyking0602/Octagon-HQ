@@ -24,7 +24,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "league": "ufc",
     "round": "round3",
     "category": "Memorable Fights & Champions",
-    "prompt": "Which fighter won the highly anticipated Chuck Liddell–Wanderlei Silva bout at UFC 79?",
+    "prompt": "Who defeated Wanderlei Silva in their high-profile light heavyweight bout at UFC 79?",
     "choices": [
       "Chuck Liddell",
       "Wanderlei Silva",
