@@ -132,6 +132,7 @@ function single(context:NbaOfficialDailyRuntimeContext,action:unknown):OfficialD
   }
 }
 function childScore(context:OfficialDailyRuntimeContext,result:OfficialDailyAdvanceResult){
+  if(context.gameType==="higher_lower")return Number(result.publicState.correct_count)*10;
   if(context.gameType==="wavelength"){
     const guesses=Array.isArray(result.submissionState.guesses) ? result.submissionState.guesses.map(Number) : [];
     const guess=guesses.at(-1);
