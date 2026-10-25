@@ -2,6 +2,7 @@ import { createNbaHigherLowerBoard, nbaHigherLowerMatchupKey, NBA_HIGHER_LOWER_Q
 import type { OfficialDailySetupPublication } from "../play/todaysChallengeRuntime";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "../play/officialScoreContract";
 import { buildTwoGameDailyPublication } from "../play/dailyTwoGameRuntime";
+import { NBA_GAMES_LAUNCH_DAY, nbaRegularSeasonDaily } from "./nbaDailySchedule";
 
 export const NBA_HIGHER_LOWER_SERVER_VERSION = "nba-higher-lower-official-v1";
 export function nbaHigherLowerPublicQuestion(question:NbaHigherLowerQuestion){
@@ -16,14 +17,14 @@ export function buildNbaHigherLowerDailyPublication(day:string,scheduleVersion:s
   const board=createNbaHigherLowerBoard(seed,excluded);
   if(board.questions.length!==NBA_HIGHER_LOWER_QUESTION_COUNT)throw new Error("NBA Higher or Lower Daily needs 10 questions.");
   return{
-    setupKey:`${NBA_HIGHER_LOWER_SERVER_VERSION}:${scheduleVersion}:${day}:${ordinal}:game-${gameIndex+1}`,
+    setupKey:`${NBA_HIGHER_LOWER_SERVER_VERSION}:${scheduleVersion}:${day}:${ordinal}${gameIndex ? `:game-${gameIndex+1}` : ""}`,
     contentVersion:NBA_HIGHER_LOWER_SERVER_VERSION,scoringVersion:OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup:{
       runtime_version:NBA_HIGHER_LOWER_SERVER_VERSION,league:"NBA",
       question_count:NBA_HIGHER_LOWER_QUESTION_COUNT,
       initial_state:{complete:false,index:0,correct_count:0,answers:[],current_question:nbaHigherLowerPublicQuestion(board.questions[0]!),last_result:null},
     },
-    revealSetup:{questions:board.questions.map(q=>({id:q.id,answer:q.answer,known:q.known,hidden:q.hidden}))},
+    revealSetup:{questions:board.questions.map(q=>({ ...q }))},
     privateSetupEvidence:{board},
     privateGradingEvidence:{question_ids:board.questions.map(q=>q.id),correct_choices:board.questions.map(q=>q.answer)},
   };
@@ -32,13 +33,25 @@ export function buildNbaHigherLowerDailyPublication(day:string,scheduleVersion:s
 /** Canonical NBA appearance ordinal owns content order; history is never derived from Casual. */
 export function buildNbaHigherLowerTwoGameDailyPublication(day:string,scheduleVersion:string,ordinal:number):OfficialDailySetupPublication{
   if(!Number.isInteger(ordinal)||ordinal<0||ordinal>100)throw new Error("Invalid NBA Higher or Lower appearance ordinal.");
+  const previousDays:string[]=[];
+  if(scheduleVersion!=="nba-daily-owner-prelaunch-v1"){
+    const first=Date.parse(NBA_GAMES_LAUNCH_DAY+"T00:00:00Z");
+    const last=Date.parse(day+"T00:00:00Z");
+    if(!Number.isFinite(last)||last<first)throw new Error("NBA official Higher or Lower day is outside the schedule.");
+    for(let stamp=first;stamp<=last;stamp+=2*86_400_000){
+      const candidateDay=new Date(stamp).toISOString().slice(0,10);
+      const slot=nbaRegularSeasonDaily(candidateDay);
+      if(slot?.isPublicationDay&&slot.gameType==="higher_lower")previousDays.push(candidateDay);
+    }
+    if(previousDays[ordinal]!==day)throw new Error("NBA Higher or Lower appearance ordinal and canonical day do not match.");
+  }
   const used=new Set<string>();
   let children: [OfficialDailySetupPublication,OfficialDailySetupPublication] | null=null;
   for(let appearance=0;appearance<=ordinal;appearance++){
     const current:OfficialDailySetupPublication[]=[];
     for(let game=0;game<2;game++){
       // Ordinal-only historical seeds preserve uniqueness when new date slots are coordinated.
-      const scheduledDay=appearance===ordinal?day:`appearance-${appearance}`;
+      const scheduledDay=previousDays[appearance]??(appearance===ordinal?day:`owner-preview-prior-${appearance}`);
       const child=buildNbaHigherLowerDailyPublication(scheduledDay,scheduleVersion,appearance,game,used);
       const board=child.privateSetupEvidence.board as {questions:NbaHigherLowerQuestion[]};
       for(const question of board.questions)used.add(nbaHigherLowerMatchupKey(question));
