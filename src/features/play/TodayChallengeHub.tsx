@@ -44,6 +44,11 @@ const FootballHigherLowerLeaderboardResult = lazy(() =>
     default: module.FootballHigherLowerLeaderboardResult,
   })),
 );
+const UfcHigherLowerLeaderboardResult = lazy(() =>
+  import("./OfficialUfcHigherLowerDailyView").then((module) => ({
+    default: module.UfcHigherLowerLeaderboardResult,
+  })),
+);
 const NbaHigherLowerLeaderboardResult = lazy(() =>
   import("../nba/NbaHigherLowerLeaderboardResult").then((module) => ({
     default: module.NbaHigherLowerLeaderboardResult,
@@ -192,6 +197,14 @@ export function DailyAnswerDetail({
         ) : sport === "football" && entry.gameType === "higher_lower" ? (
           <Suspense fallback={<p className="today-hub-empty">Loading Football comparison results…</p>}>
             <FootballHigherLowerLeaderboardResult
+              normalizedScore={entry.normalizedScore}
+              answers={entry.resultDetail.answers}
+              revealQuestions={entry.resultDetail.reveal_questions}
+            />
+          </Suspense>
+        ) : sport === "ufc" && entry.gameType === "higher_lower" ? (
+          <Suspense fallback={<p className="today-hub-empty">Loading UFC comparison results…</p>}>
+            <UfcHigherLowerLeaderboardResult
               normalizedScore={entry.normalizedScore}
               answers={entry.resultDetail.answers}
               revealQuestions={entry.resultDetail.reveal_questions}

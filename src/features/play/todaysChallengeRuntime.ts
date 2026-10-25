@@ -30,6 +30,7 @@ import {
   keepCutTier,
 } from "./keepCutEngine";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
+import { buildUfcHigherLowerDailyPublication, advanceUfcHigherLowerDailyRuntime } from "./ufcHigherLowerDailyRuntime";
 import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
 import { createUfcWhoAmIAuthoredDailyRounds } from "./ufcWhoAmIAuthoredDaily";
 import { parseWhoAmIAuthoredPublicationHistory } from "./whoAmIAuthoredDailySelection";
@@ -698,6 +699,7 @@ export function buildOfficialDailySetup(
     );
     case "bar_trivia": return buildBarTriviaDailySetup("ufc", day, scheduleVersion);
     case "average_fan": return buildAverageFanDailySetup("ufc", day, scheduleVersion, publicationHistory);
+    case "higher_lower": return buildUfcHigherLowerDailyPublication(day, scheduleVersion);
     case "who_am_i": {
       if (day >= UFC_AUTHORED_WHO_AM_I_CUTOVER_DAY) {
         return buildTwoRoundWhoAmIDailyPublication(
@@ -1039,6 +1041,7 @@ function advanceSingleOfficialDailyRuntime(
     case "sports_feud": return advanceFamilyFeudDailyRuntime(context, parsedAction);
     case "bar_trivia": return advanceBarTriviaDailyRuntime(context, parsedAction);
     case "average_fan": return advanceAverageFanDailyRuntime(context, parsedAction);
+    case "higher_lower": return advanceUfcHigherLowerDailyRuntime(context, parsedAction);
     default: throw new Error(`Unsupported official daily game ${String(context.gameType)}.`);
   }
 }

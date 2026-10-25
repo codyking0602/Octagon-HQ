@@ -187,9 +187,23 @@ export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
   nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
 };
 
+export const UFC_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
+  gameType: "higher_lower",
+  gameId: "higher-lower",
+  title: "Higher or Lower",
+  dailyRoute: "/play/higher-lower?mode=daily",
+  casualRoute: "/play/higher-lower",
+  cta: "Compare UFC fighters",
+  instructions: "Ten official UFC statistical comparisons. Choose Higher or Lower.",
+  footballInstructions: "Ten official UFC statistical comparisons.",
+  nativeResultLabel: "Correct comparisons",
+  nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
+};
+
 export function todayChallengeAdapter(gameType: DailyGameType | string | undefined, sport?: string): TodayChallengeAdapter | null {
   if (gameType === "higher_lower") {
-    return sport === "football" ? FOOTBALL_HIGHER_LOWER_DAILY_ADAPTER : NBA_HIGHER_LOWER_DAILY_ADAPTER;
+    return sport === "football" ? FOOTBALL_HIGHER_LOWER_DAILY_ADAPTER
+      : (sport === "ufc" ? UFC_HIGHER_LOWER_DAILY_ADAPTER : NBA_HIGHER_LOWER_DAILY_ADAPTER);
   }
   if (!gameType || !(gameType in TODAY_CHALLENGE_ADAPTERS)) return null;
   return TODAY_CHALLENGE_ADAPTERS[gameType as keyof typeof TODAY_CHALLENGE_ADAPTERS];
