@@ -10,8 +10,8 @@ import { buildNbaWhoAmIOfficialRounds } from "./nbaWhoAmIDailyRotation";
 describe("NBA server-authored Daily publication foundation", () => {
   it("computes appearance ordinals from published every-other-day game slots", () => {
     expect(nbaDailyGameAppearance("2026-11-01", "average_fan")).toBe(0);
-    expect(nbaDailyGameAppearance("2026-11-11", "sports_feud")).toBe(0);
-    expect(nbaDailyGameAppearance("2026-11-03", "bar_trivia")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-11-03", "sports_feud")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-11-21", "bar_trivia")).toBe(0);
     expect(() => nbaDailyGameAppearance("2026-11-02", "average_fan")).toThrow();
     expect(() => nbaDailyGameAppearance("2026-11-01", "sports_feud")).toThrow();
     let num = 0;
@@ -35,7 +35,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("uses the existing Sports Feud grader with immutable NBA private evidence", () => {
-    const published = buildNbaServerDailyPublication("2026-11-11", "nba-daily-regular-v2-locked", "sports_feud");
+    const published = buildNbaServerDailyPublication("2026-11-03", "nba-daily-regular-v2-locked", "sports_feud");
     expect(published.publicSetup.sport).toBe("nba");
     expect(published.publicSetup.presentation_domain).toBe("nba");
     expect(published.privateSetupEvidence.pack).toBeTruthy();
@@ -83,7 +83,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("provides two NBA Find the Leader boards with distinct categories and visible season identity", () => {
-    const publication = buildNbaServerDailyPublication("2026-11-15", "nba-daily-regular-v2-locked", "find_leader");
+    const publication = buildNbaServerDailyPublication("2026-11-11", "nba-daily-regular-v2-locked", "find_leader");
     expect(publication.publicSetup.sport).toBe("nba");
     expect(publication.publicSetup.round_count).toBe(2);
     const rounds = publication.publicSetup.rounds as Record<string, unknown>[];
@@ -120,7 +120,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("reuses the canonical Bar Trivia server scorer and answer reveal boundary", () => {
-    const published = buildNbaServerDailyPublication("2026-11-03", "nba-daily-regular-v2-locked", "bar_trivia");
+    const published = buildNbaServerDailyPublication("2026-11-21", "nba-daily-regular-v2-locked", "bar_trivia");
     expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia", "millionaire", "who_am_i", "find_leader", "wavelength", "hit_the_number", "higher_lower"]);
     expect(published.publicSetup.league).toBe("nba");
     expect(published.privateSetupEvidence.questions).toHaveLength(10);
