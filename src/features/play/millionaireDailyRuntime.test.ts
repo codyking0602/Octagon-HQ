@@ -113,7 +113,7 @@ describe("Millionaire official Daily runtime", () => {
       .not.toBe((tenth.publicSetup.questions as Record<string, unknown>[])[0]!.id);
   });
 
-  it("builds every Part 1 future Millionaire date, with no historical reseeding", () => {
+  it("builds every approved future Millionaire date, with no historical reseeding", () => {
     const first = Date.parse("2026-10-25T00:00:00Z");
     const appearance = { football: [] as number[], ufc: [] as number[] };
     for (let index = 0; index < 182; index++) {
@@ -122,8 +122,10 @@ describe("Millionaire official Daily runtime", () => {
         if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
         if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
         const version = sport === "ufc"
-          ? day === "2026-10-25" ? "play-rotation-v20-resume-v18-oct3" : "ufc-daily-v21-48h-oct25"
-          : "football-daily-v21-locked-oct25";
+          ? day === "2026-10-25" ? "play-rotation-v20-resume-v18-oct3"
+            : day < "2026-10-29" ? "ufc-daily-v21-48h-oct25" : "ufc-daily-v22-higher-lower-oct29"
+          : day === "2026-10-26" ? "football-daily-v21-locked-oct25"
+            : "football-daily-v22-higher-lower-oct27";
         const publication = buildMillionaireDailySetup(sport, day, version);
         expect(publication.publicSetup.question_count, sport + ":" + day).toBe(8);
         expect(publication.privateSetupEvidence.run, sport + ":" + day).toHaveLength(8);
@@ -132,8 +134,8 @@ describe("Millionaire official Daily runtime", () => {
     }
     expect(millionaireDailyRunIndex("ufc", "2026-10-25")).toBe(5);
     expect(millionaireDailyRunIndex("ufc", "2026-11-06")).toBe(6);
-    expect(appearance.football).toHaveLength(28);
-    expect(appearance.ufc).toHaveLength(14);
+    expect(appearance.football).toHaveLength(27);
+    expect(appearance.ufc).toHaveLength(13);
     expect(() => millionaireDailyRunIndex("football", "2026-10-25")).toThrow("not scheduled");
     expect(() => millionaireDailyRunIndex("ufc", "2026-10-30")).toThrow("not scheduled");
     expect(nbaRegularSeasonDaily("2027-04-12")).toBeNull();
