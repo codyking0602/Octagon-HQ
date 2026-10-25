@@ -4,6 +4,7 @@ import type { PersistedRun } from "./FootballGmModePage";
 export type WeeklyGmScenario = "elite" | "young";
 export interface WeeklyGmAttempt {
   seed: string;
+  starting_player_id?: string | null;
   state: PersistedRun | null;
   completed: boolean;
   score: number | null;
@@ -57,8 +58,12 @@ export function createFootballWeeklyGmRepository(preview = false) {
       rpc<WeeklyGmResult>("get_football_weekly_gm_archived_result", {
         p_week_start: weekStart, p_profile_id: profileId, p_scenario: scenario,
       }),
-    start: (scenario: WeeklyGmScenario) =>
-      rpc<WeeklyGmAttempt>(preview ? "start_my_football_weekly_gm_preview" : "start_my_football_weekly_gm", { p_scenario: scenario }),
+    start: (scenario: WeeklyGmScenario, startingPlayerId?: string) =>
+      startingPlayerId && !preview
+        ? rpc<WeeklyGmAttempt>("start_my_football_weekly_gm_with_player", {
+          p_scenario: scenario, p_player_id: startingPlayerId,
+        })
+        : rpc<WeeklyGmAttempt>(preview ? "start_my_football_weekly_gm_preview" : "start_my_football_weekly_gm", { p_scenario: scenario }),
     result: (profileId: string | null, scenario: WeeklyGmScenario) =>
       rpc<WeeklyGmResult>(preview ? "get_football_weekly_gm_preview_result" : "get_football_weekly_gm_result", { p_profile_id: profileId, p_scenario: scenario }),
     resetPreview: () => {
