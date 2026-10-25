@@ -10,7 +10,7 @@ export const UFC_HIGHER_LOWER_VERSION = "ufc-higher-lower-v1" as const;
 export const UFC_HIGHER_LOWER_QUESTION_COUNT = 10;
 export const UFC_HIGHER_LOWER_SNAPSHOT = "2026-08-18";
 export const UFC_HIGHER_LOWER_FIRST_SLOT = "2026-11-02";
-export const UFC_HIGHER_LOWER_RESERVED_SLOTS = 100; // 200 days: over six months at 48-hour cadence
+export const UFC_HIGHER_LOWER_RESERVED_SLOTS = 200; // two games per 48-hour date
 
 export type UfcHigherLowerChoice = "higher" | "lower";
 export type UfcHigherLowerDifficulty = "approachable" | "competitive" | "tough";
@@ -217,18 +217,19 @@ function makeBoard(
   return { version: UFC_HIGHER_LOWER_VERSION, seed, questions: ordered };
 }
 
-let reserved: readonly UfcHigherLowerBoard[] | null = null;
-function reservedBoards(): readonly UfcHigherLowerBoard[] {
-  if (reserved) return reserved;
-  const used = new Set<string>();
-  const appearances = new Map<string, number>();
-  const metricCounts = new Map<string, number>();
-  const boards: UfcHigherLowerBoard[] = [];
-  for (let index = 0; index < UFC_HIGHER_LOWER_RESERVED_SLOTS; index++) {
-    boards.push(makeBoard("official-slot-" + index, used, appearances, metricCounts));
+// Lazy reservation retains deterministic, unique historical slots.
+const officialBoards: UfcHigherLowerBoard[] = [];
+const officialUsed = new Set<string>();
+const officialAppearances = new Map<string, number>();
+const officialMetrics = new Map<string, number>();
+function reservedBoard(index: number) {
+  if (!Number.isInteger(index) || index < 0 || index >= UFC_HIGHER_LOWER_RESERVED_SLOTS) {
+    throw new Error("UFC Higher or Lower content horizon exceeded.");
   }
-  reserved = boards;
-  return reserved;
+  while (officialBoards.length <= index) {
+    officialBoards.push(makeBoard("official-slot-" + officialBoards.length, officialUsed, officialAppearances, officialMetrics));
+  }
+  return officialBoards[index]!;
 }
 
 function utcDay(day: string): number {
@@ -244,12 +245,13 @@ function utcDay(day: string): number {
  * Do NOT activate/modify the calendar here. These boards can be sampled by
  * any subset of UFC's opposite-NBA 48-hour dates with zero pair collisions.
  */
-export function createUfcHigherLowerOfficialBoard(day: string): UfcHigherLowerBoard {
+export function createUfcHigherLowerOfficialBoard(day: string, gameIndex = 0): UfcHigherLowerBoard {
   const offset = utcDay(day) - utcDay(UFC_HIGHER_LOWER_FIRST_SLOT);
-  if (offset < 0 || offset % 2 !== 0 || offset / 2 >= UFC_HIGHER_LOWER_RESERVED_SLOTS) {
+  if (offset < 0 || offset % 2 !== 0 || ![0, 1].includes(gameIndex)
+    || offset + gameIndex >= UFC_HIGHER_LOWER_RESERVED_SLOTS) {
     throw new Error("UFC Higher or Lower Daily is outside the reserved 48-hour content horizon.");
   }
-  return reservedBoards()[offset / 2]!;
+  return reservedBoard(offset + gameIndex);
 }
 
 /** Casual is fully replayable, separately seeded, and never consumes official content. */
