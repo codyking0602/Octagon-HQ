@@ -172,6 +172,8 @@ export function lockedWeightedGameForDay(
   if (ordinal >= cutover) {
     const cycle = sport === "football" ? FOOTBALL_FUTURE_WEIGHTED_CYCLE : UFC_FUTURE_WEIGHTED_CYCLE;
     const appearance = sport === "football" ? ordinal - cutover : Math.floor((ordinal - cutover) / 2);
+    // Preserve already-published October 25 Football Hit the Number under v20.
+    if (sport === "football" && appearance === 0) return "hit_the_number";
     // Oct 25 UFC Millionaire was published under v20 before the cutover.
     // Its immutable board is playable Oct 25–26; start the v21 cycle Oct 27.
     if (sport === "ufc" && appearance === 0) return "millionaire";
