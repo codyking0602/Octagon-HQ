@@ -38,13 +38,16 @@ describe("NBA canonical Daily private server advancement",()=>{
   it("does not accept wrong choices or leak the Higher Lower hidden answer",()=>{
     const ctx=context("2026-11-19","higher_lower");
     expect(()=>advanceNbaOfficialDailyRuntime(ctx,{choice:"neither"})).toThrow();
-    const prior=ctx.publicState.current_question as Record<string,unknown>;
+    const active=ctx.publicState.active_round as Record<string,unknown>;
+    const prior=active.current_question as Record<string,unknown>;
     expect(prior.answer).toBeUndefined();
     expect((prior.hidden as Record<string,unknown>).value).toBeUndefined();
     const a=advanceNbaOfficialDailyRuntime(ctx,{choice:"higher"});
     expect(a.complete).toBe(false);
-    expect(a.publicState.index).toBe(1);
-    expect((a.publicState.current_question as Record<string,unknown>).answer).toBeUndefined();
-    expect((a.publicState.current_question as Record<string,unknown>).hidden).not.toHaveProperty("value");
+    const updated=a.publicState.active_round as Record<string,unknown>;
+    expect(updated.index).toBe(1);
+    expect(a.complete).toBe(false);
+    expect((updated.current_question as Record<string,unknown>).answer).toBeUndefined();
+    expect((updated.current_question as Record<string,unknown>).hidden).not.toHaveProperty("value");
   },15_000);
 });
