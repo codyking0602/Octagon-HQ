@@ -47,7 +47,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
     const counts: Record<"nfl" | "cfb", number> = { nfl: 0, cfb: 0 };
     const seed = "football-bar-trivia-v3-six-month-contract";
     for (let offset = 0; offset < 182; offset++) {
-      const date = new Date(Date.UTC(2026, 9, 24 + offset)).toISOString().slice(0, 10);
+      const date = new Date(Date.UTC(2026, 9, 25 + offset)).toISOString().slice(0, 10);
       if (lockedWeightedGameForDay("football", date) !== "bar_trivia") continue;
       const league = footballBarTriviaLeagueForDay(date);
       const setup = buildBarTriviaDailySetup(league, date, seed);
@@ -62,9 +62,10 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       }
       counts[league]++;
     }
-    expect(counts).toEqual({ nfl: 10, cfb: 10 });
+    // The approved v22 28-slot calendar has 19 Football Bar Trivia appearances, alternating 10 NFL / 9 CFB.
+    expect(counts).toEqual({ nfl: 10, cfb: 9 });
     expect(seen.nfl.size).toBe(100);
-    expect(seen.cfb.size).toBe(100);
+    expect(seen.cfb.size).toBe(90);
   });
 
   it("retains a dedicated, non-overlapping December Cowboys-Seahawks board", () => {
