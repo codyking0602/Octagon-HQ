@@ -28,7 +28,10 @@ try {
   mkdirSync(dirname(output),{recursive:true});
   writeFileSync(output,JSON.stringify(report,null,2)+"\n");
   console.log(JSON.stringify({status:report.status,summary:report.summary,
-    publishedDate:report.publishedDate,sourceQueryDate:report.sourceQueryDate}));
+    publishedDate:report.publishedDate,sourceQueryDate:report.sourceQueryDate,
+    materialChanges:report.changes.filter(row=>row.reviewKind==="contract-fact")
+      .map(row=>({key:row.key,player:row.player,differences:row.differences,
+        previous:row.previous,current:row.current,sourceUrl:row.sourceUrl}))}));
 } catch(error) {
   mkdirSync(dirname(output),{recursive:true});
   writeFileSync(output,JSON.stringify({
