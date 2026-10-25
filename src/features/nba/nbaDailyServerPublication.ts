@@ -17,7 +17,8 @@ import { OFFICIAL_SCORE_CONTRACT_VERSION } from "../play/officialScoreContract";
 import { buildNbaFindLeaderDailyPublication } from "./nbaFindLeaderDailyPublication";
 import { buildNbaWavelengthDailyPublication } from "./nbaWavelengthDailyPublication";
 import { buildNbaHitNumberDailyPublication } from "./nbaHitNumberDailyPublication";
-import { buildNbaHigherLowerDailyPublication } from "./nbaHigherLowerDailyPublication";
+import { buildNbaHigherLowerDailyPublication, buildNbaHigherLowerTwoGameDailyPublication } from "./nbaHigherLowerDailyPublication";
+import { dailyUsesTwoGameAverage } from "../play/dailyTwoGameContract";
 
 /**
  * Publication-only foundation using the existing canonical server graders.
@@ -99,7 +100,9 @@ export function buildNbaServerDailyPublication(
       : (() => { throw new Error("NBA owner prelaunch game/day mismatch."); })())
     : nbaDailyGameAppearance(day, gameType);
   const publication = gameType === "higher_lower"
-    ? buildNbaHigherLowerDailyPublication(day, scheduleVersion, ordinal)
+    ? (dailyUsesTwoGameAverage(gameType, day)
+      ? buildNbaHigherLowerTwoGameDailyPublication(day, scheduleVersion, ordinal)
+      : buildNbaHigherLowerDailyPublication(day, scheduleVersion, ordinal))
     : gameType === "hit_the_number"
       ? buildNbaHitNumberDailyPublication(day, scheduleVersion, ordinal)
     : gameType === "wavelength"
