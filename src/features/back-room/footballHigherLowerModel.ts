@@ -16,7 +16,7 @@ export const FOOTBALL_HIGHER_LOWER_VERSION = "football-higher-lower-v1" as const
 export const FOOTBALL_HIGHER_LOWER_QUESTION_COUNT = 10;
 export const FOOTBALL_HIGHER_LOWER_MODERN_QUESTION_MIN = 7;
 export const FOOTBALL_HIGHER_LOWER_MODERN_YEAR = 2010;
-export const FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP = 5;
+export const FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP = 6;
 
 export type FootballHigherLowerScope = "NFL" | "CFB" | "MIXED";
 export type FootballHigherLowerLeague = "NFL" | "CFB";
