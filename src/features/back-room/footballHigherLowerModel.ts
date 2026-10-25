@@ -143,6 +143,49 @@ const ICONIC_CFB_TEAM_SEASONS = new Set([
   "2022-georgia",
 ]);
 
+/**
+ * Official-only national-program seasons. Each entry is admitted ONLY when
+ * the original pinned CFB season ledger identifies at least ten wins.
+ * We draw no inferred wins, rankings, player seasons, or championships.
+ * Up to four strongest sourced seasons per recognizable FBS program.
+ * This broadens the factual identity pool; Casual selection is unchanged.
+ */
+const OFFICIAL_CFB_PROGRAM_BRANDS = new Set([
+  "alabama","georgia","ohiostate","michigan","notredame","texas","oklahoma",
+  "lsu","clemson","floridastate","oregon","washington","pennstate",
+  "auburn","florida","tennessee","nebraska","wisconsin","miamifl",
+  "olemiss","texasam","usc","utah","tcu","boisestate","oklahomastate",
+  "ucf","cincinnati","louisville","iowa","michiganstate","virginiatech",
+  "northcarolina","ncstate","ncstatewolfpack","baylor","missouri",
+  "southcarolina","kansasstate","kentucky","pittsburgh","mississippistate",
+  "arizonastate","arizona","westvirginia","byu","houston","ucla",
+  "stanford","california","minnesota","iowastate","duke","smu",
+  "indiana","illinois","texastech","maryland","colorado",
+]);
+const officialCfbNormalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
+const OFFICIAL_ELITE_CFB_SEASON_IDS = (() => {
+  const values = queryFootballSubjects({ league: "CFB", kind: "team-season" })
+    .flatMap(subject => {
+      if (!subject.season || subject.season < 2010) return [];
+      const names = [subject.school ?? "", subject.name.replace(/^\\d{4}\\s+/, ""),
+        subject.teamId?.replace(/^cfb:/, "") ?? ""];
+      const key = names.map(officialCfbNormalize).find(name => OFFICIAL_CFB_PROGRAM_BRANDS.has(name));
+      if (!key) return [];
+      const wins = getFootballFact(subject.id, "cfb-team-wins");
+      if (!wins?.sources.length || wins.fact.value < 10) return [];
+      return [{ subject, wins: wins.fact.value, key }];
+    })
+    .sort((a, b) => b.wins - a.wins || (b.subject.season ?? 0) - (a.subject.season ?? 0));
+  const counts = new Map<string, number>();
+  const selected = new Set<string>();
+  for (const row of values) {
+    const count = counts.get(row.key) ?? 0;
+    if (count >= 4) continue;
+    selected.add(row.subject.id);
+    counts.set(row.key, count + 1);
+  }
+  return selected;
+})();
 const NFL_TEAM_DISPLAY_NAMES: Readonly<Record<string, string>> = {
   ari: "Arizona Cardinals",
   atl: "Atlanta Falcons",
@@ -595,16 +638,21 @@ function historicalIcon(subject: FootballSubjectProfile) {
   return iconicTeamSeason(subject) || HIGHER_LOWER_HISTORICAL_ICON_NAMES.has(subject.name);
 }
 
-function subjectEligible(subject: FootballSubjectProfile, spec: MetricSpec) {
+function subjectEligible(subject: FootballSubjectProfile, spec: MetricSpec, officialDaily = false) {
+  const qualifiedOfficialTeam = officialDaily
+    && spec.league === "CFB" && subject.kind === "team-season"
+    && OFFICIAL_ELITE_CFB_SEASON_IDS.has(subject.id);
   if (
     subject.league !== spec.league
     || !spec.kinds.includes(subject.kind)
-    || subject.casualEligible === false
-    || (subject.recognizabilityTier !== "A" && subject.recognizabilityTier !== "B" && !iconicTeamSeason(subject))
+    || (!qualifiedOfficialTeam && subject.casualEligible === false)
+    || (!qualifiedOfficialTeam && subject.recognizabilityTier !== "A"
+      && subject.recognizabilityTier !== "B" && !iconicTeamSeason(subject))
   ) return false;
 
   if (spec.positions && (!subject.position || !spec.positions.includes(subject.position))) return false;
-  if (spec.recognition === "iconic" && subject.recognizabilityTier !== "A" && !iconicTeamSeason(subject)) return false;
+  if (spec.recognition === "iconic" && subject.recognizabilityTier !== "A" && !iconicTeamSeason(subject)
+    && !qualifiedOfficialTeam) return false;
   return true;
 }
 
@@ -672,10 +720,10 @@ function formatMetricValue(spec: MetricSpec, value: number) {
   return spec.metricId ? formatFootballFact(spec.metricId, value) : value.toLocaleString("en-US");
 }
 
-function metricRows(spec: MetricSpec): MetricRow[] {
+function metricRows(spec: MetricSpec, officialDaily = false): MetricRow[] {
   const candidateRows = spec.valueFromSubject
     ? queryFootballSubjects({ league: spec.league }).flatMap((subject) => {
-        if (!subjectEligible(subject, spec)) return [];
+        if (!subjectEligible(subject, spec, officialDaily)) return [];
         const value = spec.valueFromSubject?.(subject) ?? null;
         if (value == null || !Number.isFinite(value)) return [];
         return [{ subject, value }];
@@ -721,7 +769,7 @@ function recognizabilityScore(subject: FootballSubjectProfile) {
 }
 
 function pairCandidates(spec: MetricSpec, officialDaily = false): PairCandidate[] {
-  const rows = metricRows(spec).sort((left, right) => left.value - right.value);
+  const rows = metricRows(spec, officialDaily).sort((left, right) => left.value - right.value);
   const pairs: PairCandidate[] = [];
 
   // The recognition filters make these pools intentionally small. Compare every
@@ -738,8 +786,8 @@ function pairCandidates(spec: MetricSpec, officialDaily = false): PairCandidate[
 
       const modern = (left.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
         && (right.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR;
-      const leftRecognition = recognizabilityScore(left.subject);
-      const rightRecognition = recognizabilityScore(right.subject);
+      const leftRecognition = officialDaily && OFFICIAL_ELITE_CFB_SEASON_IDS.has(left.subject.id) ? 3 : recognizabilityScore(left.subject);
+      const rightRecognition = officialDaily && OFFICIAL_ELITE_CFB_SEASON_IDS.has(right.subject.id) ? 3 : recognizabilityScore(right.subject);
 
       // Older questions have to be household-name history, not merely valid database rows.
       // Casual insists on a Tier A anchor; Official Daily can use two vetted
@@ -1049,7 +1097,7 @@ export function footballHigherLowerQuestionEvidence(question: FootballHigherLowe
   }
   const audit = (row: FootballHigherLowerSubject) => {
     const subject = getFootballSubject(row.subjectId);
-    if (!subject || !subjectEligible(subject, spec)) throw new Error("Ineligible comparison subject: " + row.subjectId);
+    if (!subject || !subjectEligible(subject, spec, true)) throw new Error("Ineligible comparison subject: " + row.subjectId);
     const entry = spec.metricId ? getFootballFact(subject.id, spec.metricId) : null;
     const expected = spec.valueFromSubject ? spec.valueFromSubject(subject) : entry?.fact.value;
     if (!Number.isFinite(expected) || expected !== row.value
