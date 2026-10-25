@@ -63,7 +63,8 @@ export function UfcHigherLowerLeaderboardResult({
 export function OfficialUfcHigherLowerDailyView({
   projection, busy, onAdvance,
 }: { projection: TodayChallengeProjection; busy: boolean; onAdvance: (action: Row) => void }) {
-  const state = record(projection.publicState);
+  const state = record(projection.publicSetup).format_version === "daily-two-game-average-v1"
+    ? record(projection.publicState.active_round) : record(projection.publicState);
   const attempt = projection.officialAttempt;
   if (attempt) return <UfcHigherLowerLeaderboardResult
     normalizedScore={attempt.normalizedScore}
