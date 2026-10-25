@@ -122,12 +122,16 @@ type AverageFanRuntimeModule = {
 type MillionaireAdvanceRuntimeModule = {
   advanceMillionaireDailyRuntime: DailyAdvanceRuntime;
 };
+type BarTriviaAdvanceRuntimeModule = {
+  advanceBarTriviaDailyRuntime: DailyAdvanceRuntime;
+};
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
+let barTriviaAdvanceRuntimePromise: Promise<BarTriviaAdvanceRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
@@ -185,6 +189,13 @@ function loadMillionaireAdvanceRuntime() {
     millionaireAdvanceRuntimePromise = import("./millionaire-advance.generated.mjs") as Promise<MillionaireAdvanceRuntimeModule>;
   }
   return millionaireAdvanceRuntimePromise;
+}
+
+function loadBarTriviaAdvanceRuntime() {
+  if (!barTriviaAdvanceRuntimePromise) {
+    barTriviaAdvanceRuntimePromise = import("./bar-trivia-advance.generated.mjs") as Promise<BarTriviaAdvanceRuntimeModule>;
+  }
+  return barTriviaAdvanceRuntimePromise;
 }
 
 function asRecord(value: unknown): JsonRecord | null {
@@ -797,7 +808,9 @@ async function handleNbaDaily(
       ? (await loadNbaFeudAdvanceRuntime()).advanceFamilyFeudDailyCore(context, action)
       : context.gameType === "millionaire" && !isTwoGameDaily(context)
         ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime(context, action)
-        : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
+        : context.gameType === "bar_trivia" && !isTwoGameDaily(context)
+          ? (await loadBarTriviaAdvanceRuntime()).advanceBarTriviaDailyRuntime(context, action)
+          : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
   const history = footballActionHistory(context);
   const nextSubmissionState = submissionStateWithClientActionId({
     ...advanced.submissionState, action_history: [...history, action],
@@ -1596,7 +1609,9 @@ Deno.serve(async (request) => {
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
           : context.gameType === "millionaire" && !isTwoGameDaily(context)
             ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
-            : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
+            : context.gameType === "bar_trivia" && !isTwoGameDaily(context)
+              ? (await loadBarTriviaAdvanceRuntime()).advanceBarTriviaDailyRuntime
+              : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
         context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
         advanced = isDailyCombo(context)
           ? advanceDailyCombo(context, action, advanceFootballRuntime)
@@ -1663,7 +1678,9 @@ Deno.serve(async (request) => {
         ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
         : context.gameType === "millionaire" && !isTwoGameDaily(context)
           ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
-          : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
+          : context.gameType === "bar_trivia" && !isTwoGameDaily(context)
+            ? (await loadBarTriviaAdvanceRuntime()).advanceBarTriviaDailyRuntime
+            : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
             ? advancePersistedBlindResumeV3
             : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
       advanced = isDailyCombo(context)
