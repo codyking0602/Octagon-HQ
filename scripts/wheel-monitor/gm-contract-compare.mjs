@@ -40,7 +40,10 @@ export function compareGmContractSnapshots(published,generated,observedAt) {
     if(String(prev.source?.otcId??"")!==String(cur.source?.otcId??""))
       differences.push("source.otcId");
     if(differences.length) {
+      const material= differences.some(field=>
+        ["salaryApy","realContractEndSeason","gameContract","gmEligibleSlots","source.otcId"].includes(field));
       changes.push({key,player:cur.player,team:cur.team,family:cur.family,
+        reviewKind:material?"contract-fact":"metadata-only",
         differences,previous:Object.fromEntries(differences.map(field=>
           [field,field==="source.otcId"?prev.source?.otcId:prev[field]])),
         current:Object.fromEntries(differences.map(field=>
@@ -50,13 +53,19 @@ export function compareGmContractSnapshots(published,generated,observedAt) {
     }
   }
   const sourceUrl=generated.source??"https://nflreadr.nflverse.com/reference/load_contracts.html";
+  const materialChanged=changes.filter(row=>row.reviewKind==="contract-fact").length;
+  const metadataOnly=changes.length-materialChanged;
   return {
     status:missing.length||extra.length?"identity-review-blocked":
-      changes.length?"contract-fact-review-required":"unchanged",
+      materialChanged?"contract-fact-review-required":
+      metadataOnly?"metadata-review-required":"unchanged",
     observedAt,sourceUrl,
     publishedDate:published.snapshotDate,sourceQueryDate:generated.snapshotDate,
     publishedCount:old.size,generatedCount:next.size,missing,extra,changes,
-    summary:{changed:changes.length,missing:missing.length,extra:extra.length,
+    summary:{changed:changes.length,materialChanged,metadataOnly,
+      fieldCounts:Object.fromEntries([...new Set(changes.flatMap(x=>x.differences))]
+        .sort().map(field=>[field,changes.filter(x=>x.differences.includes(field)).length])),
+      missing:missing.length,extra:extra.length,
       unchanged:[...next.keys()].filter(key=>old.has(key)).length-changes.length},
     sourceProvenanceStatus:"provider-dataset-freshness-not-independently-certified",
     economyRegressionStatus:"not-run",
