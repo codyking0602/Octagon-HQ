@@ -69,6 +69,23 @@ export function compareEvidence(current, previous=null) {
       level=LEVEL.FACT;
       reasons.push("new-canonical-identity-requires-reconciliation");
     }
+    // ESPN designation is a source claim (active, injured, reserve), not an
+    // ability score or a verified transaction. Only compare observed statuses.
+    if(prior?.sourceDesignation && row.sourceDesignation &&
+      prior.sourceDesignation!==row.sourceDesignation && level===LEVEL.NONE) {
+      level=LEVEL.REVIEW;
+      reasons.push("roster-designation-change-requires-factual-reconciliation");
+    }
+    // UFC official rank changes are factual movements, not mathematical
+    // ability changes. Compare official-to-official, not DB ranking-to-ESPN.
+    if(row.sport==="ufc" && prior?.sourceStatus==="matched" &&
+       row.sourceStatus==="matched" &&
+       prior.officialChampion!==undefined && row.officialChampion!==undefined &&
+       (prior.officialRank!==row.officialRank ||
+        prior.officialChampion!==row.officialChampion)) {
+      level=LEVEL.FACT;
+      reasons.push("official-ufc-ranking-or-champion-movement");
+    }
     if(row.sourceStatus==="missing" && prior?.sourceStatus!=="missing"
       && level===LEVEL.NONE) {
       level=LEVEL.REVIEW;
