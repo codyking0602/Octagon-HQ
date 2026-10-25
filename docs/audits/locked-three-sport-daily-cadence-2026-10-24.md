@@ -22,7 +22,7 @@ The prior UFC schedule advances a 29-slot game cycle **every single calendar day
 | UFC | 182 | 91 | 23 days | 28 days |
 | NBA | 81 | 81 | 32 days | 28 days |
 
-The largest post-cutover UFC and NBA gaps are **28 days for intentionally 2×-weighted games** (their ideal interval is 28 days on a 56-day cycle), not unexpected clustering. The 3× games occupy 16–20-day intervals for UFC/NBA, while 4× games occupy 10–18-day intervals. Football's 2× Hit the Number maintains its approved frequency and evenly distributed slots.
+The largest post-cutover UFC and NBA gaps are **28 days for intentionally 2×-weighted games** (their ideal interval is 28 days on a 56-day cycle), not unexpected clustering. Across UFC and NBA, 3× games occupy 14–22-day intervals and 4× games occupy 10–18-day intervals. Football's 2× Hit the Number maintains its approved frequency and evenly distributed slots.
 
 | Verification | Old configuration | New configuration |
 |---|---:|---:|
