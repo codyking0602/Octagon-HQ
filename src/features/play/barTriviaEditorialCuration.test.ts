@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
+import { UFC_BAR_TRIVIA_V3_RETIRE_IDS } from "./ufcBarTriviaV3Editorial";
 import {
   BAR_TRIVIA_EDITORIAL_RETIREMENTS,
   BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES,
@@ -32,6 +33,12 @@ describe("2026-10-22 NFL/CFB/UFC Bar Trivia editorial curation", () => {
     for (const [id, round] of Object.entries(BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES)) {
       expect(BAR_TRIVIA_EDITORIAL_RETIREMENTS[id], id).toBeUndefined();
       const question = byId.get(id);
+      // A later explicit future-only v3 retirement supersedes an older regrade;
+      // never reinstate a weak retired fact merely to satisfy stale tests.
+      if (UFC_BAR_TRIVIA_V3_RETIRE_IDS.has(id)) {
+        expect(question, id).toBeUndefined();
+        continue;
+      }
       expect(question, id).toBeDefined();
       expect(question?.round, id).toBe(round);
       expect(question?.difficulty, id).toBe(barTriviaDifficultyForRound(round));
