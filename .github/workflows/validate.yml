@@ -68,6 +68,9 @@ jobs:
           python -m pip install --disable-pip-version-check pillow
           python -m unittest scripts/test_football_editorial_assets.py
 
+      - name: Verify deterministic Wheel monitoring change policy
+        run: node --test scripts/wheel-monitor-change-policy.fixtures.mjs
+
       - name: Typecheck
         id: typecheck
         run: npm run typecheck 2>&1 | tee typecheck.log

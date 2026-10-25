@@ -2,8 +2,8 @@ name: Monitor Wheel CFB AP Top 25
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 23 * 1,8-12 0"
+  # Old independent cron retired. The coordinated Wheel monitor will own cadence
+  # only after full-source coverage and recovery gates have been certified.
 
 permissions:
   contents: read
@@ -18,4 +18,14 @@ jobs:
         with:
           node-version: "22"
       - name: Compare poll and enforce extra-team audit coverage
+        env:
+          WHEEL_AP_REPORT_PATH: ${{ runner.temp }}/wheel-ap-top25-report.json
         run: node scripts/check-wheel-cfb-ap-top25.mjs
+      - name: Upload AP change receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-ap-top25-change-receipt
+          path: ${{ runner.temp }}/wheel-ap-top25-report.json
+          if-no-files-found: warn
+          retention-days: 30
