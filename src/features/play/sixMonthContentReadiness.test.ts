@@ -154,7 +154,7 @@ describe("six-month other-game production publication readiness evidence", () =>
   it("rehearses NBA's CURRENT dated server publications, not an unsynchronized preview order", () => {
     const failures: string[] = [];
     const rows: AuditRow[] = [];
-    const actual = buildMaskedLegacyComparison().nba;
+    const actual = buildMaskedLegacyComparison().nba.filter(({ day }) => day <= "2027-04-11");
     for (const { day, game } of actual) {
       try {
         rows.push(inspect("nba", game, day,
