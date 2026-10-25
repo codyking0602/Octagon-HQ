@@ -131,8 +131,8 @@ describe("Millionaire official Daily runtime", () => {
         const correctText = question.choices.find(choice => choice.id === question.correctChoiceId)!.text;
         // Only apply the surname check to multiword fighter identities, not
         // events, chronology, numeric answers, or short/common last tokens.
-        const surname = correctText.split(/\\s+/).at(-1)!;
-        if (correctText.split(/\\s+/).length < 2 || surname.length < 5 || !/^[A-Za-z]+$/.test(surname)) continue;
+        const surname = correctText.split(/\s+/).at(-1)!;
+        if (correctText.split(/\s+/).length < 2 || surname.length < 5 || !/^[A-Za-z]+$/.test(surname)) continue;
         expect(question.statSheet?.toLowerCase().split(/[^a-z]+/)).not.toContain(surname.toLowerCase());
       }
       expect(run[7]!.statSheet).toBeNull();
