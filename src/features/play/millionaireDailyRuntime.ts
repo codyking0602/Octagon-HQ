@@ -279,6 +279,68 @@ function withDitkaMemorialQuestion(run: MillionaireRun): MillionaireRun {
   }) as unknown as MillionaireRun;
 }
 
+/**
+ * Narrow future-only editorial errata. Never rewrite a previously published
+ * board: historical run identities and private proofs stay unchanged.
+ *
+ * Primary records:
+ * NFL 2025 AP All-Pro (Jan 2026): nfl.com/news/2025-all-pro-team-matthew-stafford-bijan-robinson-jsn...
+ * NCAA 2025 season CFP champion: ncaa.com/brackets/football/fbs/2025
+ * UFC 285 official results: ufc.com/news/ufc-285-jones-vs-gane-results-highlights-winner-interviews-las-vegas
+ */
+function futureMillionaireErrata(
+  run: MillionaireRun,
+  league: MillionaireLeague,
+  runIndex: number,
+  day: string,
+): MillionaireRun {
+  if (day < "2026-10-27") return run;
+  return run.map((question, index) => {
+    // In January 2026 Stafford became a first-team All-Pro; the legacy
+    // "never first-team All-Pro" question is factually false.
+    if (league === "nfl" && runIndex === 0 && index === 5) {
+      return {
+        ...question,
+        id: "millionaire-nfl-2025-ap-all-pro-q6-future",
+        type: "awards-2025",
+        prompt: "Which quarterback earned his first career AP first-team All-Pro selection for the 2025 NFL season?",
+        choices: [
+          { id: "A", text: "Matthew Stafford" },
+          { id: "B", text: "Drake Maye" },
+          { id: "C", text: "Josh Allen" },
+          { id: "D", text: "Lamar Jackson" },
+        ],
+        correctChoiceId: "A",
+        explanation: "Matthew Stafford earned his first AP first-team All-Pro selection after the 2025 season, his 17th NFL season.",
+        statSheet: "The veteran led the league with 4,707 passing yards and 46 passing touchdowns in the 2025 regular season.",
+        fiftyFifty: {
+          survivorChoiceIds: ["A", "B"],
+          removalChoiceIds: ["C", "D"],
+        },
+      };
+    }
+    // The 2025 *season* winner was Indiana, while the championship GAME
+    // played in January 2025 was won by Ohio State. Name the season.
+    if (league === "cfb" && runIndex === 9 && index === 0) {
+      return {
+        ...question,
+        id: "millionaire-cfb-2025-season-title-q1-future",
+        prompt: "Which program won the national championship for the 2025 college football season?",
+        explanation: "Indiana completed a 16-0 season by defeating Miami in the January 2026 College Football Playoff national championship game.",
+      };
+    }
+    // Grasso's surname was previously written verbatim in the Stat Sheet.
+    if (league === "ufc" && runIndex === 9 && index === 6) {
+      return {
+        ...question,
+        id: "millionaire-ufc-285-flyweight-2023-q7-future",
+        statSheet: "The belt changed hands by fourth-round submission at UFC 285 after seven successful defenses by the longtime champion.",
+      };
+    }
+    return question;
+  }) as unknown as MillionaireRun;
+}
+
 function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string) {
   return [
     MILLIONAIRE_DAILY_CONTENT_VERSION,
@@ -360,7 +422,9 @@ export function buildMillionaireDailySetup(
   const runIndex = millionaireDailyRunIndex(sport, day);
   const hostNumber = millionaireDailyHostNumber(sport, day);
   const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
-  const baseRun = themedRun ?? millionaireDailyRun(league, runIndex);
+  const baseRun = futureMillionaireErrata(
+    themedRun ?? millionaireDailyRun(league, runIndex), league, runIndex, day,
+  );
   const run = balanceRun(
     sport === "football" && day === "2026-10-10" && league === "cfb"
       ? withDitkaMemorialQuestion(baseRun)
