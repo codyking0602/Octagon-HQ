@@ -20,6 +20,7 @@ import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
 import { OfficialSportsFeudDailyView } from "./OfficialSportsFeudDailyView";
 import { OfficialBarTriviaDailyView } from "./OfficialBarTriviaDailyView";
 import { OfficialAverageFanDailyView } from "./OfficialAverageFanDailyView";
+import { OfficialFootballHigherLowerDailyView } from "./OfficialFootballHigherLowerDailyView";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -104,7 +105,7 @@ export function OfficialTodayChallengeContent({
   onRetrySportsFeud?: () => void;
   onRefreshSportsFeud?: () => void;
 }) {
-  const adapter = todayChallengeAdapter(projection.gameType);
+  const adapter = todayChallengeAdapter(projection.gameType, projection.sport);
   const blindResumeV3 = projection.gameType === "blind_resume"
     && projection.contentVersion === "blind-resume-v3";
   const keepCutComponentScore = dailyRankKeepComboComponentScore(projection, "keep_cut");
@@ -190,6 +191,8 @@ export function OfficialTodayChallengeContent({
           onAdvance={onAdvance}
           onExit={() => onNavigate(projection.sport === "football" ? "/football" : "/play")}
         />
+      ) : projection.gameType === "higher_lower" && projection.sport === "football" ? (
+        <OfficialFootballHigherLowerDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
       ) : projection.gameType === "bar_trivia" ? (
         <OfficialBarTriviaDailyView
           projection={projection}
@@ -236,7 +239,7 @@ export default function OfficialTodayChallengePage({
     repository,
   });
   const adapter = useMemo(
-    () => runtime.projection ? todayChallengeAdapter(runtime.projection.gameType) : null,
+    () => runtime.projection ? todayChallengeAdapter(runtime.projection.gameType, runtime.projection.sport) : null,
     [runtime.projection],
   );
 

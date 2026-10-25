@@ -144,6 +144,18 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Average Fan score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
+  higher_lower: {
+    gameType: "higher_lower",
+    gameId: "higher-lower",
+    title: "Higher or Lower",
+    dailyRoute: "/football/today",
+    casualRoute: "/football/higher-lower",
+    cta: "Make the comparison",
+    instructions: "Compare ten football players and teams using real stats.",
+    footballInstructions: "Ten NFL and College Football comparisons. Pick higher or lower to score.",
+    nativeResultLabel: "Correct comparisons",
+    nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
+  },
   who_am_i: {
     gameType: "who_am_i",
     gameId: "who-am-i",
@@ -158,8 +170,8 @@ export const TODAY_CHALLENGE_ADAPTERS = {
   },
 } as const satisfies Record<OfficialDailyGameType, TodayChallengeAdapter>;
 
-// NBA Higher or Lower is official Daily-only; it is not a UFC/Football
-// canonical rotation member and must not alter their eleven-game catalog.
+// NBA retains its own released route. Football stays staged until a future
+// coordinated calendar activates it, and UFC stays inactive.
 export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
   gameType: "higher_lower",
   gameId: "higher-lower",
@@ -173,8 +185,8 @@ export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
   nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
 };
 
-export function todayChallengeAdapter(gameType: DailyGameType | string | undefined): TodayChallengeAdapter | null {
-  if (gameType === "higher_lower") return NBA_HIGHER_LOWER_DAILY_ADAPTER;
+export function todayChallengeAdapter(gameType: DailyGameType | string | undefined, sport?: string): TodayChallengeAdapter | null {
+  if (gameType === "higher_lower" && sport !== "football") return NBA_HIGHER_LOWER_DAILY_ADAPTER;
   if (!gameType || !(gameType in TODAY_CHALLENGE_ADAPTERS)) return null;
   return TODAY_CHALLENGE_ADAPTERS[gameType as OfficialDailyGameType];
 }
