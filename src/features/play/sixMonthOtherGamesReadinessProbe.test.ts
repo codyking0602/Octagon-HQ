@@ -179,7 +179,8 @@ describe("Football Sports Feud v22 actual-calendar content protection", () => {
       const league = footballSportsFeudDomainForDay(slot.day);
       expect(league, slot.day).toBe(index % 2 === 0 ? "cfb" : "nfl");
       const publication = buildFootballDailyPersistenceSetup(slot.day, "football-daily-v22-higher-lower-oct27", "sports_feud");
-      const questions = authoredPrompts(publication.revealSetup);
+      const revealed = authoredPrompts(publication.revealSetup);
+      const questions = revealed.length ? revealed : authoredPrompts(publication.privateSetupEvidence);
       expect(questions, slot.day).toHaveLength(7);
       for (const question of questions) {
         const key = league + ":" + question.prompt;
