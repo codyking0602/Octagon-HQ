@@ -6,6 +6,8 @@ import {
   type FootballHigherLowerQuestion,
 } from "../back-room/footballHigherLowerModel";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
+import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
+import { buildTwoGameDailyPublication } from "./dailyTwoGameRuntime";
 import { persistenceSetup } from "./footballDailyPublicationShared";
 import type {
   OfficialDailyAdvanceResult,
@@ -30,11 +32,12 @@ export function buildFootballHigherLowerDailyPublication(
   day: string,
   scheduleVersion: string,
   previousPublishedQuestions: readonly FootballHigherLowerQuestion[] = [],
+  gameIndex = 0,
 ): OfficialDailySetupPublication {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !scheduleVersion.trim()) {
     throw new Error("Football Higher or Lower requires a canonical Daily date and schedule.");
   }
-  const seed = [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day].join("|");
+  const seed = [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, ...(gameIndex ? ["game-2"] : [])].join("|");
   const board = createFootballHigherLowerBoard(
     seed, "MIXED", previousPublishedQuestions.length
       ? footballHigherLowerExclusionKeys(previousPublishedQuestions)
@@ -45,7 +48,7 @@ export function buildFootballHigherLowerDailyPublication(
     throw new Error("Football Higher or Lower requires ten audited comparisons.");
   }
   return {
-    setupKey: [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day].join(":"),
+    setupKey: [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, ...(gameIndex ? ["game-2"] : [])].join(":"),
     contentVersion: FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION,
     scoringVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
@@ -75,11 +78,26 @@ export function buildFootballHigherLowerDailyPublication(
   };
 }
 
+/** Each game is a full source-backed ten-comparison board. Game 2 excludes Game 1. */
+export function buildFootballHigherLowerTwoGameDailyPublication(
+  day: string, scheduleVersion: string,
+  prior: readonly FootballHigherLowerQuestion[] = [],
+): OfficialDailySetupPublication {
+  const first = buildFootballHigherLowerDailyPublication(day, scheduleVersion, prior);
+  const firstBoard = first.privateSetupEvidence.board as { questions: FootballHigherLowerQuestion[] };
+  const second = buildFootballHigherLowerDailyPublication(day, scheduleVersion, [...prior, ...firstBoard.questions], 1);
+  return buildTwoGameDailyPublication({
+    sport: "football", gameType: "higher_lower", day, scheduleVersion, children: [first, second],
+  });
+}
+
 /** The coordinated future calendar is the sole activation point. */
 export function buildFootballHigherLowerDailyPersistenceSetup(day: string, scheduleVersion: string) {
   return persistenceSetup(
     "higher_lower", day, scheduleVersion,
-    buildFootballHigherLowerDailyPublication(day, scheduleVersion),
+    dailyUsesTwoGameAverage("higher_lower", day)
+      ? buildFootballHigherLowerTwoGameDailyPublication(day, scheduleVersion)
+      : buildFootballHigherLowerDailyPublication(day, scheduleVersion),
   );
 }
 
