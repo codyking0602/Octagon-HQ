@@ -1,5 +1,5 @@
 central_day,football_before,ufc_before,nba_before,football_after,ufc_after,nba_after,ufc_publication_day,nba_publication_day,before_collisions,after_collisions
-2026-10-25,hit_the_number,millionaire,,who_am_i,millionaire,,true,false,,
+2026-10-25,hit_the_number,millionaire,,hit_the_number,millionaire,,true,false,,
 2026-10-26,millionaire,find_leader,,millionaire,,,false,false,,
 2026-10-27,who_am_i,hit_the_number,,find_leader,sports_feud,,true,false,,
 2026-10-28,average_fan,wavelength,,hit_the_number,,,false,false,,
