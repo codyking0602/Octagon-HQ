@@ -39,6 +39,7 @@ export function buildFootballHigherLowerDailyPublication(
     seed, "MIXED", previousPublishedQuestions.length
       ? footballHigherLowerExclusionKeys(previousPublishedQuestions)
       : undefined,
+    true,
   );
   if (board.questions.length !== FOOTBALL_HIGHER_LOWER_QUESTION_COUNT) {
     throw new Error("Football Higher or Lower requires ten audited comparisons.");

@@ -758,6 +758,34 @@ function pairCandidates(spec: MetricSpec): PairCandidate[] {
 
 const allPairCandidates = metricSpecs.flatMap(pairCandidates);
 
+/**
+ * Official Daily alone needs a wider, verified factual pool for six months.
+ * Casual retains its approved original 37 templates and selection behavior.
+ * Every metric below is already defined in the canonical Football factual ledger.
+ */
+const officialDailySupplementSpecs: readonly MetricSpec[] = [
+  { key: "cfb-season-pass-rating", league: "CFB", category: "single-season", label: "Best-season passer rating", metricId: "cfb-best-season-passer-rating", kinds: ["player-career"], positions: ["QB"], minValue: 120, recognition: "recognizable" },
+  { key: "cfb-season-receptions", league: "CFB", category: "single-season", label: "Best-season receptions", metricId: "cfb-best-season-receptions", kinds: ["player-career"], positions: ["WR", "TE"], minValue: 45, recognition: "recognizable" },
+  { key: "cfb-season-tfl", league: "CFB", category: "single-season", label: "Best-season tackles for loss", metricId: "cfb-best-season-tackles-for-loss", kinds: ["player-career"], positions: ["DL", "LB"], minValue: 8, recognition: "recognizable" },
+  { key: "cfb-season-interceptions", league: "CFB", category: "single-season", label: "Best-season defensive interceptions", metricId: "cfb-best-season-defensive-interceptions", kinds: ["player-career"], positions: ["DB"], minValue: 3, recognition: "recognizable" },
+  { key: "cfb-career-pass-completions", league: "CFB", category: "career", label: "College career pass completions", metricId: "cfb-career-passing-completions", kinds: ["player-career"], positions: ["QB"], minValue: 500, recognition: "iconic" },
+  { key: "cfb-career-pass-attempts", league: "CFB", category: "career", label: "College career pass attempts", metricId: "cfb-career-passing-attempts", kinds: ["player-career"], positions: ["QB"], minValue: 800, recognition: "iconic" },
+  { key: "cfb-career-rush-attempts", league: "CFB", category: "career", label: "College career rushing attempts", metricId: "cfb-career-rushing-attempts", kinds: ["player-career"], positions: ["RB", "QB"], minValue: { QB: 250, RB: 400 }, recognition: "iconic" },
+  { key: "cfb-career-receptions", league: "CFB", category: "career", label: "College career receptions", metricId: "cfb-career-receptions", kinds: ["player-career"], positions: ["WR", "TE"], minValue: 130, recognition: "iconic" },
+  { key: "cfb-career-total-td", league: "CFB", category: "career", label: "College career total touchdowns", metricId: "cfb-career-total-touchdowns", kinds: ["player-career"], positions: ["QB", "RB", "WR", "TE"], minValue: 25, recognition: "iconic" },
+  { key: "cfb-career-tfl", league: "CFB", category: "career", label: "College career tackles for loss", metricId: "cfb-career-tackles-for-loss", kinds: ["player-career"], positions: ["DL", "LB"], minValue: 20, recognition: "iconic" },
+  { key: "cfb-career-tackles", league: "CFB", category: "career", label: "College career tackles", metricId: "cfb-career-tackles", kinds: ["player-career"], positions: ["DL", "LB", "DB"], minValue: 100, recognition: "iconic" },
+  { key: "cfb-team-points-against", league: "CFB", category: "team", label: "Season points allowed", metricId: "cfb-team-points-against", kinds: ["team-season"], minValue: 100, recognition: "recognizable" },
+  { key: "cfb-team-opp-ppg", league: "CFB", category: "team", label: "Season points allowed per game", metricId: "cfb-team-opponent-points-per-game", kinds: ["team-season"], minValue: 8, recognition: "recognizable" },
+  { key: "cfb-team-point-diff", league: "CFB", category: "team", label: "Season scoring differential", metricId: "cfb-team-point-differential", kinds: ["team-season"], minValue: 200, recognition: "recognizable" },
+  { key: "cfb-team-margin-ppg", league: "CFB", category: "team", label: "Season scoring margin per game", metricId: "cfb-team-scoring-margin-per-game", kinds: ["team-season"], minValue: 12, recognition: "recognizable" },
+  { key: "cfb-team-srs", league: "CFB", category: "team", label: "Season SRS rating", metricId: "cfb-team-srs", kinds: ["team-season"], minValue: 12, recognition: "recognizable", note: "Simple Rating System; higher is stronger." },
+  { key: "cfb-team-conference-wins", league: "CFB", category: "team", label: "Season conference wins", metricId: "cfb-team-conference-wins", kinds: ["team-season"], minValue: 6, recognition: "recognizable" },
+  { key: "cfb-team-sos", league: "CFB", category: "team", label: "Season strength of schedule (SOS)", metricId: "cfb-team-sos", kinds: ["team-season"], minValue: 0, recognition: "recognizable", note: "Strength of schedule rating; higher is tougher." },
+];
+const officialDailyPairCandidates = [...allPairCandidates, ...officialDailySupplementSpecs.flatMap(pairCandidates)];
+
+
 function entityKey(subject: FootballSubjectProfile) {
   if (subject.playerId) {
     return `player:${subject.playerId.replace(/^(?:nfl|cfb)-/, "").replace(/-\\d{4}$/, "")}`;
@@ -974,12 +1002,14 @@ export function createFootballHigherLowerBoard(
   seed: string,
   scope: FootballHigherLowerScope,
   excluded?: FootballHigherLowerPreviousComparisonKeys,
+  officialDaily = false,
 ): FootballHigherLowerBoard {
-  const candidates = excluded ? allPairCandidates.filter(pair => (
+  const sourceCandidates = officialDaily ? officialDailyPairCandidates : allPairCandidates;
+  const candidates = excluded ? sourceCandidates.filter(pair => (
     !excluded.subjectPairs.has(footballHigherLowerSemanticPairKey(pair.left.subject.id, pair.right.subject.id))
     && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.left.subject.id, pair.metricKey))
     && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.right.subject.id, pair.metricKey))
-  )) : allPairCandidates;
+  )) : sourceCandidates;
   for (let attempt = 0; attempt < 1_000; attempt += 1) {
     const questions = tryBuildBoard(seed, scope, attempt, candidates);
     if (questions) {
