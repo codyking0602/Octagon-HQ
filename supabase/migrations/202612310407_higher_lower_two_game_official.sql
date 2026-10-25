@@ -116,7 +116,6 @@ begin
 end;
 $function$
 ;
-
 CREATE OR REPLACE FUNCTION public.get_daily_challenge_leaderboard(p_day date, p_schedule_version text, p_sport text)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -134,8 +133,15 @@ begin
   if p_day is null or nullif(trim(p_schedule_version), '') is null then
     raise exception 'daily leaderboard identity required';
   end if;
-  if p_sport is null or p_sport not in ('ufc', 'football', 'nba') then
+  if p_sport is null or p_sport not in ('ufc', 'football', 'nba', 'nba_preview') then
     raise exception 'unsupported Daily Challenge sport %', coalesce(p_sport, '<null>');
+  end if;
+  if p_sport = 'nba_preview' and not exists (
+    select 1 from public.pick_control_owners owner_row
+    join public.profiles profile on profile.id = owner_row.profile_id
+    where owner_row.profile_id = auth.uid() and profile.normalized_name = 'CODY'
+  ) then
+    raise exception 'NBA prelaunch tests are restricted to the HQ owner';
   end if;
   if not exists (
     select 1
