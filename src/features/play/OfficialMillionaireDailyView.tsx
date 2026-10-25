@@ -10,6 +10,7 @@ import {
   MILLIONAIRE_BASE_PTS,
   MILLIONAIRE_DOUBLE_DIP_MISS_MS,
   MILLIONAIRE_HOSTS,
+  MILLIONAIRE_NBA_STUDIO_ASSET,
   MILLIONAIRE_REVEAL_DELAY_MS,
   MILLIONAIRE_TIME_BANK_MS,
   millionaireLeagueLabel,
@@ -23,6 +24,7 @@ import "./MillionaireCasualPolish.css";
 import "./MillionairePortrait.css";
 import "./MillionairePortraitRefine.css";
 import "./MillionaireFixedStage.css";
+import "../../styles/nba-millionaire.css";
 import "../../styles/football-special-daily.css";
 import { footballSpecialDailyStyle, footballSpecialDailyThemeForDay } from "./footballSpecialDailyTheme";
 
@@ -239,7 +241,10 @@ export function OfficialMillionaireDailyView({
   }, [answerFeedback, state.first_miss_question_index, status]);
 
   const hostNumber = Math.min(3, Math.max(1, Math.trunc(Number(setup.host_number ?? 1))));
-  const stageBackground = MILLIONAIRE_HOSTS[league][hostNumber - 1] ?? MILLIONAIRE_HOSTS[league][0];
+  const stageBackground = league === "nba"
+    ? MILLIONAIRE_NBA_STUDIO_ASSET
+    : MILLIONAIRE_HOSTS[league][hostNumber - 1] ?? MILLIONAIRE_HOSTS[league][0];
+  const nbaHostAsset = league === "nba" ? MILLIONAIRE_HOSTS.nba[hostNumber - 1] : null;
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
   const displayIndex = answerFeedback?.currentIndex ?? currentIndex;
   const displayQuestion = answerFeedback?.question ?? question;
@@ -334,6 +339,7 @@ export function OfficialMillionaireDailyView({
       style={specialStageStyle}>
       <div className="millionaire-stage-canvas" style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}>
         <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
+        {nbaHostAsset ? <img className="millionaire-nba-host" src={nbaHostAsset} alt="" aria-hidden="true" /> : null}
         {redRiverDay ? (
           <div className="millionaire-red-river-plate" aria-label="Red River Rivalry, Texas versus Oklahoma">
             <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt="" referrerPolicy="no-referrer" />
