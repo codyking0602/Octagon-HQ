@@ -93,3 +93,24 @@ test('a name-only transfer guess is not a verified factual correction',()=>{
  assert.notEqual(finding.classification,'mandatory-factual-correction');
  assert.ok(finding.signals.some(x=>x.kind==='possible-transfer-name-match-requires-espn-id'));
 });
+
+test('official UFC rank movements are factual even if published DB has not yet changed',()=>{
+ const old={sport:'ufc',division:'Heavyweight',name:'Fighter',rank:9,
+   champion:false,grade:85,sourceStatus:'matched',officialRank:9,officialChampion:false};
+ const finding=compareEvidence([{...old,officialRank:8}],{identities:[old]})[0];
+ assert.equal(finding.classification,'mandatory-factual-correction');
+ assert.equal(finding.gradePreserved,true);
+ assert.ok(finding.signals.some(signal=>signal.kind==='official-ufc-ranking-or-champion-movement'));
+ assert.equal(summarizeDecisions([finding]).deepReviewCandidates,0);
+});
+
+test('roster injury and reserve designations prompt cheap review, not a regrade',()=>{
+ const old={sport:'nfl',team:'BUF',family:'QB',name:'Test QB',grade:88,
+   sourceStatus:'matched',sourceRole:'QB',sourceDesignation:'active'};
+ const [finding]=compareEvidence([{...old,sourceDesignation:'injured-reserve'}],
+   {identities:[old]});
+ assert.equal(finding.classification,'review-suggested');
+ assert.equal(finding.gradePreserved,true);
+ assert.ok(finding.signals.some(signal=>signal.kind==='roster-designation-change-requires-factual-reconciliation'));
+ assert.equal(summarizeDecisions([finding]).deepReviewCandidates,0);
+});
