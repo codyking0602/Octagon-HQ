@@ -275,7 +275,7 @@ function deepEarlyEra(row: Row) {
 }
 /** Reversed comparisons share the same immutable matchup identity. */
 export function nbaHigherLowerMatchupKey(question: Pick<NbaHigherLowerQuestion, "known" | "hidden">) {
-  return [question.known.subjectId, question.hidden.subjectId].sort().join("|");
+  return [question.known.name.toLowerCase(), question.hidden.name.toLowerCase()].sort().join("|");
 }
 function buildAttempt(seed: string, attempt: number, excludedPairs: ReadonlySet<string>) {
   const random = seededLineupRandom(NBA_HIGHER_LOWER_VERSION, seed, attempt);
@@ -293,7 +293,7 @@ function buildAttempt(seed: string, attempt: number, excludedPairs: ReadonlySet<
     const category = categories[i]!;
     if (i > 0 && category === categories[i - 1]) return null;
     const eligible = (pairsByCategoryAndDifficulty.get(category + ":" + difficulty[i]!) ?? []).filter(pair =>
-      !excludedPairs.has([pair.left.id, pair.right.id].sort().join("|"))
+      !excludedPairs.has([pair.left.name.toLowerCase(), pair.right.name.toLowerCase()].sort().join("|"))
       && (!modernSlots[i] || pair.modern)
       && !usedPeople.has(pair.left.key) && !usedPeople.has(pair.right.key)
       && (counts.get(pair.key) ?? 0) < 2
