@@ -255,6 +255,12 @@ function answerAliases(
   answer: SportsFeudAuthoredAnswer,
 ) {
   const group = question.collisionGroup ?? question.category;
+  // V2 uses scoped editorial aliases. The unrelated V1 global Fast Money alias
+  // map can otherwise make a different V2 answer ambiguous or falsely valid.
+  if (domain === "ufc" && question.id.startsWith("ufc-v2-")) {
+    return unique([...(answer.aliases ?? []), ...automaticAliases(answer.name,domain)])
+      .filter(alias => alias.trim() && alias !== answer.name);
+  }
   return unique([
     ...(answer.aliases ?? []),
     ...(ALIAS_INDEX[domain].get(answer.name) ?? []),
