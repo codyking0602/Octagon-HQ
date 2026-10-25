@@ -1,0 +1,73 @@
+name: Wheel GM Contract Source Review (staged)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/wheel-monitor/gm-contract-*.mjs'
+      - 'scripts/wheel-monitor/gm-contract-*.nodecheck.mjs'
+      - '.github/workflows/wheel-gm-contract-review.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wheel-gm-contract-source-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  provider-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test no-publish GM comparator
+        run: |
+          node --check scripts/wheel-monitor/gm-contract-review.mjs
+          node --test scripts/wheel-monitor/gm-contract-compare.nodecheck.mjs
+      - name: Install version-pinned read-only nflverse provider
+        run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
+      - name: Build ephemeral live-source contract evidence
+        id: generate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tmp/wheel-monitor/gm
+          year=$(date -u +%Y)
+          set +e
+          python scripts/generate-wheel-nfl-gm-contracts.py \
+            --snapshot-date="$(date -u +%F)" \
+            --window-end-season="$((year+2))" \
+            --output=tmp/wheel-monitor/gm/live-contracts.json \
+            --report=tmp/wheel-monitor/gm/provider-report.json
+          status=$?
+          set -e
+          echo "exit_status=$status" >> "$GITHUB_OUTPUT"
+          if [[ "$status" -ne 0 && "$status" -ne 2 ]]; then
+            echo "::error::Provider request failed; keep last published GM snapshot and report explicitly."
+            exit "$status"
+          fi
+      - name: Compare generated evidence with published immutable snapshot
+        if: steps.generate.outcome == 'success'
+        shell: bash
+        run: |
+          node scripts/wheel-monitor/gm-contract-review.mjs \
+            --generated=tmp/wheel-monitor/gm/live-contracts.json \
+            --sourceExit="${{ steps.generate.outputs.exit_status }}" \
+            --out=tmp/wheel-monitor/gm/comparison.json
+      - name: Archive source/identity review data only, never publish contracts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-gm-contract-source-review
+          path: |
+            tmp/wheel-monitor/gm/provider-report.json
+            tmp/wheel-monitor/gm/comparison.json
+          if-no-files-found: warn
+          retention-days: 30
