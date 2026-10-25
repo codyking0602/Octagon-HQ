@@ -794,13 +794,16 @@ const officialDailySupplementSpecs: readonly MetricSpec[] = [
   { key: "nfl-team-scoring-rate", league: "NFL", category: "efficiency", label: "Season points per game", metricId: "nfl-team-points-per-game", kinds: ["team-season"], minValue: 18, recognition: "recognizable" },
   { key: "nfl-team-scoring-differential", league: "NFL", category: "team", label: "Season point differential", metricId: "nfl-team-point-differential", kinds: ["team-season"], minValue: 50, recognition: "recognizable" },
   { key: "nfl-team-postseason-wins", league: "NFL", category: "team", label: "Season playoff wins", metricId: "nfl-team-postseason-wins", kinds: ["team-season"], minValue: 1, recognition: "recognizable" },
-  { key: "nfl-team-defensive-sacks-official", league: "NFL", category: "defense", label: "Season defensive sacks", metricId: "nfl-team-defensive-sacks", kinds: ["team-season"], minValue: 25, recognition: "recognizable" },
-  { key: "cfb-team-points-per-game-official", league: "CFB", category: "efficiency", label: "Season points per game", metricId: "cfb-team-points-per-game", kinds: ["team-season"], minValue: 27, recognition: "recognizable" },
-  { key: "cfb-team-defensive-efficiency", league: "CFB", category: "defense", label: "Season scoring margin per game", metricId: "cfb-team-scoring-margin-per-game", kinds: ["team-season"], minValue: 10, recognition: "recognizable" },
-  { key: "cfb-team-points-for-official", league: "CFB", category: "team", label: "Season total points", metricId: "cfb-team-total-points", kinds: ["team-season"], minValue: 360, recognition: "recognizable" },
 ];
 const officialDailyPairCandidates = [...allPairCandidates, ...officialDailySupplementSpecs.flatMap(pairCandidates)];
 const allMetricSpecs = [...metricSpecs, ...officialDailySupplementSpecs];
+const metricIdOwner = new Map<string, string>();
+for (const spec of allMetricSpecs) {
+  if (!spec.metricId) continue;
+  const previous = metricIdOwner.get(spec.metricId);
+  if (previous) throw new Error("Duplicate Higher or Lower factual metric concept: " + previous + " / " + spec.key);
+  metricIdOwner.set(spec.metricId, spec.key);
+}
 
 
 function entityKey(subject: FootballSubjectProfile) {
