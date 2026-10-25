@@ -148,7 +148,8 @@ describe("Football Today’s Challenge session", () => {
     expect(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION).toBe("football-daily-v20-resume-v18-oct3");
 
     expect(footballTodayScheduleVersionForDay("2026-10-24")).toBe(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION);
-    expect(footballTodayScheduleVersionForDay("2026-10-25")).toBe(FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION);
+    expect(footballTodayScheduleVersionForDay("2026-10-25")).toBe(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION);
+    expect(footballTodayScheduleVersionForDay("2026-10-26")).toBe(FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION);
     const future = Array.from({ length: 26 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 9, 25 + offset)).toISOString().slice(0, 10);
       return footballTodayGameForDay(day);
