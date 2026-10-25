@@ -219,7 +219,7 @@ begin
               '        else central_day - date ''2000-01-01''';
   v_after := 'then (central_day - date ''2026-11-01'') / 2' || chr(10) ||
              '        when p_sport = ''ufc'' and central_day >= date ''2026-10-25''' || chr(10) ||
-             '        then (date ''2026-10-25'' - date ''2000-01-01'') + 1 + (central_day - date ''2026-10-25'') / 2' || chr(10) ||
+             '        then (date ''2026-10-25'' - date ''2000-01-01'') + (central_day - date ''2026-10-25'') / 2' || chr(10) ||
              '        else central_day - date ''2000-01-01''';
   if position(v_before in v_sql)=0 then raise exception 'standings streak grouping contract changed';end if;
   v_sql := replace(v_sql,v_before,v_after);
