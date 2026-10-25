@@ -18,6 +18,7 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
+import { DailyTwoGameLeaderboardResult } from "../play/DailyTwoGameLeaderboardResult";
 import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLeaderModel";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
@@ -193,7 +194,7 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
 }
 
 export function NbaOfficialHigherLower({ projection, advance, busy }: { projection: TodayChallengeProjection; advance: Advance; busy: boolean }) {
-  const state = projection.publicState;
+  const state = nbaOfficialActiveRound(projection).state;
   const question = object(state.current_question);
   const known = object(question.known), hidden = object(question.hidden);
   const last = object(state.last_result);
@@ -239,6 +240,9 @@ export function NbaOfficialDailyContent({ projection, advance, busy, onExit }: {
   if (handoff) return <DailyTwoGamePresentationIntermission projection={projection} busy={busy}
     onContinue={() => advance({ type: "next_game" }, { dedupeKey: "nba-wavelength-handoff:" + projection.id })} />;
   if (twoGame?.awaitingNext) return <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />;
+  if (projection.gameType === "higher_lower" && twoGame?.complete && projection.officialAttempt) {
+    return <DailyTwoGameLeaderboardResult projection={projection} sport="nba" resultDetail={{}} />;
+  }
   return <>
     <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
     {projection.gameType === "find_leader" ? <NbaOfficialFindLeader projection={projection} advance={advance} busy={busy} /> : null}
