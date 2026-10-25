@@ -56,8 +56,11 @@ describe("six-month Official Hit the Number seed/content audit (merged canonical
     for (const slot of slots) {
       const sport = slot.sport === "football" ? "football" : "ufc";
       const version = sport === "football"
-        ? slot.day === "2026-10-25" ? "football-daily-v20-resume-v18-oct3" : "football-daily-v21-locked-oct25"
-        : "ufc-daily-v21-48h-oct25";
+        ? slot.day === "2026-10-25" ? "football-daily-v20-resume-v18-oct3"
+          : slot.day === "2026-10-26" ? "football-daily-v21-locked-oct25"
+            : "football-daily-v22-higher-lower-oct27"
+        : slot.day < "2026-10-29" ? "ufc-daily-v21-48h-oct25"
+          : "ufc-daily-v22-higher-lower-oct29";
       report.scheduledDates[sport]++;
       const publication = slot.sport === "football"
         ? buildFootballDailyPersistenceSetup(slot.day, version, "hit_the_number")
