@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DIVISIONS, validateCatalog, validateUfc, validateFlex, compareEvidence, summarizeDecisions, selectApprovedGrades, snapshotReadiness } from './core.mjs';
+import { DIVISIONS, validateCatalog, validateUfc, validateFlex, compareEvidence, summarizeDecisions, selectApprovedGrades, snapshotReadiness, validateOfficialUfcTable } from './core.mjs';
 
 function fighters() { return DIVISIONS.flatMap(division => [
   { sport:'ufc', division, name:division+' Champion', rank:null, champion:true, grade:95 },
@@ -66,4 +66,19 @@ test('active-only reconciliation rejects stale grade rows and reports every miss
 });
 test('certification is possible only after all blockers resolved', () => {
   assert.deepEqual(snapshotReadiness([]),{status:'source-certified',snapshotReady:true,blockers:[]});
+});
+
+test('official UFC ties use competition ranks rather than malformed sequential rankings', () => {
+ const rows=[{name:'Champion',champion:true,rank:null},
+   ...Array.from({length:15},(_,i)=>({
+     name:'Contender '+i,champion:false,rank:i===12?12:i+1,
+   }))];
+ // 1..12,12,14,15 is a legitimate official vote tie at #12.
+ const valid=validateOfficialUfcTable(rows,'Welterweight');
+ assert.equal(valid.valid,true);
+ assert.deepEqual(valid.tiedRanks,[{rank:12,name:'Contender 12'}]);
+ const gap=rows.map(x=>({...x})); gap.at(-1).rank=13;
+ assert.equal(validateOfficialUfcTable(gap,'Welterweight').valid,false);
+ const duplicated=rows.map(x=>({...x})); duplicated.at(-1).name='Contender 0';
+ assert.equal(validateOfficialUfcTable(duplicated,'Welterweight').valid,false);
 });
