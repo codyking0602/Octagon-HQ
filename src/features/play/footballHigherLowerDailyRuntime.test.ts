@@ -43,6 +43,8 @@ describe("Football Higher or Lower official Daily (staged)", () => {
     });
     const first = (p.publicSetup.initial_state as Record<string, unknown>).current_question as Record<string, unknown>;
     expect(first).not.toHaveProperty("answer");
+    expect(first.id).toBe("football-daily-comparison-1");
+    expect(board!.questions[0]!.id).not.toBe(first.id);
     expect(first.hidden).not.toHaveProperty("value");
     expect(first.hidden).not.toHaveProperty("formattedValue");
     expect(buildFootballHigherLowerDailyPublication(day, schedule)).toEqual(p);
@@ -61,6 +63,7 @@ describe("Football Higher or Lower official Daily (staged)", () => {
       if (index < 9) {
         const current = next.publicState.current_question as Record<string, unknown>;
         expect(current).not.toHaveProperty("answer");
+        expect(current.id).toBe("football-daily-comparison-" + (index + 2));
         expect(current.hidden).not.toHaveProperty("value");
         expect(next.complete).toBe(false);
       }
