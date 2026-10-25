@@ -223,19 +223,19 @@ begin
              '        else central_day - date ''2000-01-01''';
   if position(v_before in v_sql)=0 then raise exception 'standings streak grouping contract changed';end if;
   v_sql := replace(v_sql,v_before,v_after);
-  v_before := '       when exists (' || chr(10) || '         select 1 from history' || chr(10) ||
-              '         where history.profile_id = profile.id' || chr(10) ||
-              '           and history.central_day = v_today';
-  v_after := '       when p_sport = ''ufc'' and v_today >= date ''2026-10-25'' then' || chr(10) ||
+  v_before := '      when exists (' || chr(10) || '        select 1 from history' || chr(10) ||
+              '        where history.profile_id = profile.id' || chr(10) ||
+              '          and history.central_day = v_today';
+  v_after := '      when p_sport = ''ufc'' and v_today >= date ''2026-10-25'' then' || chr(10) ||
              '         case when exists (select 1 from history where history.profile_id = profile.id' || chr(10) ||
              '           and history.central_day = private.daily_challenge_active_day(v_today,''ufc''))' || chr(10) ||
              '           then private.daily_challenge_active_day(v_today,''ufc'')' || chr(10) ||
              '           when private.daily_challenge_active_day(v_today,''ufc'') = date ''2026-10-25''' || chr(10) ||
              '           then date ''2026-10-24''' || chr(10) ||
              '           else private.daily_challenge_active_day(v_today,''ufc'') - 2 end' || chr(10) ||
-             '       when exists (' || chr(10) || '         select 1 from history' || chr(10) ||
-             '         where history.profile_id = profile.id' || chr(10) ||
-             '           and history.central_day = v_today';
+             '      when exists (' || chr(10) || '        select 1 from history' || chr(10) ||
+             '        where history.profile_id = profile.id' || chr(10) ||
+             '          and history.central_day = v_today';
   if position(v_before in v_sql)=0 then raise exception 'standings current-streak contract changed';end if;
   execute replace(v_sql,v_before,v_after);
 
