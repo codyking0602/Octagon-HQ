@@ -33,7 +33,7 @@ jobs:
       - run: node --check scripts/wheel-monitor/run.mjs
       - run: node --test scripts/wheel-monitor/*.test.mjs
   monitor:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 19
