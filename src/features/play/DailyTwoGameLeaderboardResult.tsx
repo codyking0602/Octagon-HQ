@@ -7,6 +7,9 @@ import { HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
 import { HitTheNumberPickBreakdown, formatHitNumberStatValue } from "./HitTheNumberPickBreakdown";
 import { footballHitNumberDisplayName } from "./footballHitNumberDisplayName";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
+import { FootballHigherLowerLeaderboardResult } from "./OfficialFootballHigherLowerDailyView";
+import { UfcHigherLowerLeaderboardResult } from "./OfficialUfcHigherLowerDailyView";
+import { NbaHigherLowerLeaderboardResult } from "../nba/NbaHigherLowerLeaderboardResult";
 import { wavelengthClues } from "./wavelengthEngine";
 import "./DailyTwoGameLeaderboardResult.css";
 
@@ -323,6 +326,12 @@ function GameRound({
         <WavelengthRoundDetail sport={sport} result={result} detail={detail} />
       ) : gameType === "hit_the_number" ? (
         <HitNumberRoundDetail sport={sport} setup={setup} result={result} />
+      ) : gameType === "higher_lower" && sport === "football" ? (
+        <FootballHigherLowerLeaderboardResult normalizedScore={score} answers={result.answers} revealQuestions={reveal.questions} />
+      ) : gameType === "higher_lower" && sport === "ufc" ? (
+        <UfcHigherLowerLeaderboardResult normalizedScore={score} answers={result.answers} revealQuestions={reveal.questions} />
+      ) : gameType === "higher_lower" ? (
+        <NbaHigherLowerLeaderboardResult detail={{unlocked:true,normalizedScore:score,answers:result.answers,revealQuestions:reveal.questions}} />
       ) : null}
     </details>
   );
