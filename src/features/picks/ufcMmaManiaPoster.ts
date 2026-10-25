@@ -1,4 +1,6 @@
-import type { PickEvent } from "./picksModel";
+import type { PickEvent, PickHistoryEvent } from "./picksModel";
+
+type PosterEvent = PickEvent | PickHistoryEvent;
 import weeklyPosters from "./ufcMmaManiaWeeklyPosters.json";
 
 // Approved horizontal event art from MMA Mania's UFC Posters archive.
@@ -10,7 +12,7 @@ export const MMA_MANIA_EDMONTON_POSTER = {
   aspectRatio: "1200 / 628",
 } as const;
 
-export function reviewedMmaManiaPoster(event: PickEvent | null, now = new Date()) {
+export function reviewedMmaManiaPoster(event: PosterEvent | null, now = new Date()) {
   const weekly = scheduledMmaManiaPosters(event, now);
   if (weekly) return weekly;
   const timestamp = now.getTime();
@@ -18,7 +20,7 @@ export function reviewedMmaManiaPoster(event: PickEvent | null, now = new Date()
     || timestamp < Date.parse("2026-10-12T00:00:00-05:00")
     || timestamp >= Date.parse("2026-10-18T00:00:00-05:00")) return null;
   if (event) {
-    if (event.sport === "football") return null;
+    if ("sport" in event && event.sport === "football") return null;
     const title = `${event.name} ${event.subtitle}`.toLowerCase();
     if (!title.includes("buckley") || !title.includes("malott")) return null;
     const start = Date.parse(event.startsAt);
@@ -55,7 +57,7 @@ function chicagoMidnightTuesday(iso: string): boolean {
 }
 
 export function verifiedWeeklyMmaManiaPoster(
-  entry: WeeklyMmaManiaPoster, event: PickEvent | null, now: Date,
+  entry: WeeklyMmaManiaPoster, event: PosterEvent | null, now: Date,
 ) {
   const { eventTitleContains: names, eventStartsAt, releaseAt, expiresAt, source, src, aspectRatio } = entry;
   const release = Date.parse(releaseAt);
@@ -76,7 +78,7 @@ export function verifiedWeeklyMmaManiaPoster(
       || !/^\d{2,4}\s*\/\s*\d{2,4}$/.test(aspectRatio)) return null;
   } catch { return null; }
   if (event) {
-    if (event.sport === "football") return null;
+    if ("sport" in event && event.sport === "football") return null;
     const title = `${event.name} ${event.subtitle}`.toLowerCase();
     if (!names.every((name) => title.includes(name.trim().toLowerCase()))) return null;
     const eventStart = Date.parse(event.startsAt);
@@ -87,7 +89,7 @@ export function verifiedWeeklyMmaManiaPoster(
 
 // Standalone source review can be tested before publishing a JSON record.
 export function scheduledMmaManiaPosters(
-  event: PickEvent | null, now = new Date(),
+  event: PosterEvent | null, now = new Date(),
   records: readonly WeeklyMmaManiaPoster[] = weeklyPosters as WeeklyMmaManiaPoster[],
 ) {
   return records.map((record) => verifiedWeeklyMmaManiaPoster(record, event, now))
@@ -99,8 +101,8 @@ export function scheduledMmaManiaPosters(
  * choice, but its poster archive may not publish the new card's poster by Tuesday.
  * Do not mislabel third-party art as an MMA Mania poster.
  */
-export function reviewedOfficialUfcEventBanner(event: PickEvent | null) {
-  if (!event || event.sport === "football" || event.name !== "UFC 333") return null;
+export function reviewedOfficialUfcEventBanner(event: PosterEvent | null) {
+  if (!event || ("sport" in event && event.sport === "football") || event.name !== "UFC 333") return null;
   if (!/volkanovski/i.test(event.subtitle) || !/evloev/i.test(event.subtitle)) return null;
   if (Math.abs(Date.parse(event.startsAt) - Date.parse("2026-10-24T18:00:00Z")) > 86_400_000) return null;
   return {

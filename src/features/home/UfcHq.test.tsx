@@ -239,6 +239,18 @@ describe("Home UFC HQ", () => {
     expect(within(section).getByRole("link", { name: "SHANE’S CONTENDER SERIES" })).toHaveAttribute("href", "/fighters-to-watch");
   });
 
+  it("hides the redundant Picks Ready status when the entire UFC card is selected", () => {
+    mocks.picks.selections = {
+      "ankalaev-guskov": "magomed-ankalaev",
+      "erceg-temirov": "steve-erceg",
+    };
+    renderHome();
+    const section = ufcHq();
+    expect(within(section).getByText("2 OF 2")).toBeInTheDocument();
+    expect(within(section).queryByText("PICKS READY")).not.toBeInTheDocument();
+    expect(within(section).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/picks");
+  });
+
   it("uses settled picks for UFC season win rate, without showing points", () => {
     mocks.picks.summary = { ...mocks.emptySummary, correct: 17, incorrect: 7 };
     renderHome();

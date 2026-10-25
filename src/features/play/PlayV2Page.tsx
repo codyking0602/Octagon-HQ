@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { createFootballGmMatchRepository } from "./footballGmMatchRepository";
 import { createWheelFootballRepository } from "./wheelFootballRepository";
 import { DailyAnswerDetail } from "./TodayChallengeHub";
@@ -11,6 +11,7 @@ import { isDailyRankKeepCombo } from "./DailyRankKeepComboStatus";
 import { dailyTwoGameOfficialAverageScore } from "./DailyTwoGameStatus";
 import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
 import { WeeklyOverallChampionBanner } from "./WeeklyOverallChampionBanner";
+import { WeeklyGmChampionAnnouncement } from "./WeeklyGmChampionAnnouncement";
 import { playLandingDestination, playLandingGameIds } from "./PlayLandingPresentation";
 import { playGameDefinition, type PlaySport } from "./playRegistry";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
@@ -155,6 +156,8 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
 
 function PerformancePreview({ sport, profileId }: { sport: PlaySport; profileId: string }) {
   const { performance, loading, error, refresh } = usePlayV2History(sport, profileId);
+  const overview = useTodayChallengeOverview({ profileId, enabled: true, projection: null, sport });
+  const dailyWins = overview.standings?.entries.find((entry) => entry.isCurrentUser)?.wins;
   return (
     <section className="play-v2__performance" aria-label="Your Play Performance">
       <div className="play-v2__section-top">
@@ -168,7 +171,7 @@ function PerformancePreview({ sport, profileId }: { sport: PlaySport; profileId:
               <div className="play-v2__metrics">
                 <div><span>DAILY AVERAGE</span><strong>{playV2Score(performance.average)}</strong><small>/100</small></div>
                 <div><span>COMPLETED</span><strong>{performance.count}</strong><small>official games</small></div>
-                <div><span>PERSONAL BEST</span><strong>{performance.best}</strong><small>/100</small></div>
+                <div><span>DAILY WINS</span><strong>{dailyWins ?? "—"}</strong><small>first-place finishes</small></div>
               </div>
 
             </>
@@ -186,6 +189,7 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
   const [searchParams] = useSearchParams();
   const handledCode = useRef("");
   const navigate = useNavigate();
+  const location = useLocation();
   const wheelRepository = useMemo(() => createWheelFootballRepository(), []);
   const gmRepository = useMemo(() => createFootballGmMatchRepository(), []);
   const requestedCode = searchParams.get("challenge")?.trim().toUpperCase() ?? "";
@@ -209,6 +213,19 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
     return status !== "completed" && status !== "declined";
   });
   const visible = detailsOpen ? allMatchups : openMatchups.slice(0, 3);
+  const yourTurn = openMatchups.filter((challenge) =>
+    challenge.recipientId === activeProfile?.id
+    && challenge.responderResult === null
+    && new Date(challenge.expiresAt).getTime() > Date.now()
+    && ["new", "opened"].includes(challengeStatus(challenge, activeProfile!.id))
+  ).length;
+
+  // Home's challenge badge lands directly on this section, after the Play tab has mounted.
+  useEffect(() => {
+    if (location.hash !== "#challenge-center" || loading) return;
+    document.getElementById("challenge-center")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [location.hash, loading]);
+
 
   // Preserve shared challenge deep links without mounting the old Challenge Center.
   useEffect(() => {
@@ -285,6 +302,11 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
     <section id="challenge-center" className="play-v2__matchups" aria-label="Your Matchups">
       <div className="play-v2__section-top">
         <span>YOUR MATCHUPS</span>
+        {yourTurn > 0 ? <button className="play-v2__pending-badge" type="button"
+          aria-label={`${yourTurn} matchups awaiting your turn`}
+          onClick={() => document.getElementById("challenge-center")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+          {yourTurn} YOUR TURN
+        </button> : null}
         <button type="button" onClick={() => setDetailsOpen((open) => !open)} aria-expanded={detailsOpen}>
           {detailsOpen ? "SHOW LESS" : "VIEW ALL"} ↗
         </button>
@@ -317,7 +339,9 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
                       <strong>{challenge.gameTitle} vs {partner?.displayName ?? "Friend"}</strong>
                       <small>{statusLabel(challenge)}</small>
                     </span>
-                    <span aria-hidden="true">↗</span>
+                    {direction === "received" && new Date(challenge.expiresAt).getTime() > Date.now() && (status === "new" || status === "opened")
+                      ? <span className="play-v2__matchup-alert">YOUR TURN</span>
+                      : <span aria-hidden="true">↗</span>}
                   </button>
                   {canRemove ? (
                     <button type="button" className="play-v2__matchup-remove" disabled={busyCode === challenge.code}
@@ -392,6 +416,7 @@ export default function PlayV2Page({ sport }: { sport: PlaySport }) {
   return (
     <div className="page play-v2" data-sport={sport} data-testid="play-v2-hub">
       {profileId ? <WeeklyOverallChampionBanner sport={sport} /> : null}
+      {profileId && sport === "football" ? <WeeklyGmChampionAnnouncement profileId={profileId} /> : null}
       <header className="play-v2__heading">
         <div><span>{sport === "football" ? "FOOTBALL" : "UFC"} PLAY</span><h1>Play</h1></div>
       </header>
@@ -399,7 +424,6 @@ export default function PlayV2Page({ sport }: { sport: PlaySport }) {
       {profileId ? (
         <>
           <DailyCompact sport={sport} profileId={profileId} />
-          <PerformancePreview sport={sport} profileId={profileId} />
           <MatchupsCompact sport={sport} />
         </>
       ) : (
@@ -426,6 +450,7 @@ export default function PlayV2Page({ sport }: { sport: PlaySport }) {
         </section>
       )}
       <GameRoom sport={sport} />
+      {profileId ? <PerformancePreview sport={sport} profileId={profileId} /> : null}
     </div>
   );
 }

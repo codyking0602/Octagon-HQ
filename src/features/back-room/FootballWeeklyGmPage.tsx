@@ -1,26 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import FootballGmModePage from "./FootballGmModePage";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
-import { FootballWeeklyNflTeamSeasonFinalResult } from "./FootballWeeklyNflTeamSeasonGate";
-import { createFootballWeeklyAuctionRepository, type FootballWeeklyNflTeamSeasonFinal } from "../play/footballWeeklyAuctionRepository";
-import { createFootballWeeklyGmRepository, type WeeklyGmResult, type WeeklyGmScenario, type WeeklyGmState } from "./footballWeeklyGmRepository";
+import { createFootballWeeklyGmRepository, type WeeklyGmArchivedWeek, type WeeklyGmResult, type WeeklyGmScenario, type WeeklyGmState } from "./footballWeeklyGmRepository";
 import type { PersistedRun } from "./FootballGmModePage";
 import { canViewWeeklyGmScenario, canViewWeeklyGmTotal } from "./footballWeeklyGmVisibility";
 import "../../styles/football-gm-mode.css";
 import "../../styles/football-weekly-gm.css";
 
-const LAST_AUCTION_WEEK = "2026-10-06";
-const LAST_AUCTION_REVEAL_KEY = "football-weekly-gm-2026-10-13-auction-reveal-seen";
-
-function auctionRevealAlreadySeen() {
-  try {
-    return typeof window !== "undefined" && window.localStorage.getItem(LAST_AUCTION_REVEAL_KEY) === "1";
-  } catch {
-    return false;
-  }
+function formatWeek(week: string) {
+  const date = new Date(week + "T12:00:00Z");
+  const end = new Date(date.getTime() + 6 * 86400000);
+  const format = (value: Date) => value.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+  return format(date) + "–" + format(end);
 }
 
 const OCT13_SCENARIOS: { id: WeeklyGmScenario; title: string; quarterback: string; development: string }[] = [
@@ -35,37 +29,28 @@ const OCT20_SCENARIOS: typeof OCT13_SCENARIOS = [
 
 export default function FootballWeeklyGmPage({ preview = false }: { preview?: boolean } = {}) {
   const identity = useIdentity();
+  const [params] = useSearchParams();
   const isOwner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
   const repository = useMemo(() => createFootballWeeklyGmRepository(preview), [preview]);
-  const auctionRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [state, setState] = useState<WeeklyGmState | null>(null);
   const [playing, setPlaying] = useState<WeeklyGmScenario | null>(null);
   const [detail, setDetail] = useState<WeeklyGmResult | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [lastAuction, setLastAuction] = useState<FootballWeeklyNflTeamSeasonFinal | null>(null);
-  const [showAuctionReveal, setShowAuctionReveal] = useState(() => !auctionRevealAlreadySeen());
+  const [history, setHistory] = useState<WeeklyGmArchivedWeek[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    if (preview || !identity.ready || !auctionRepository) return;
     let active = true;
-    void auctionRepository.loadHistory().then((history) => {
-      if (!active) return;
-      const final = history.find((entry) =>
-        entry.week_start === LAST_AUCTION_WEEK
-        && entry.subject_key === "nfl-best-team-seasons-since-2000");
-      setLastAuction(final && final.subject_key === "nfl-best-team-seasons-since-2000" ? final : null);
-    }).catch(() => {
-      // The standalone Auction Center remains available if its history request fails.
-    });
+    if (!identity.ready || preview || !repository) return;
+    void repository.history().then((weeks) => { if (active) setHistory(weeks); })
+      .catch(() => { /* The live game stays playable if history is unavailable. */ });
     return () => { active = false; };
-  }, [preview, identity.ready, auctionRepository]);
-
-  function continueToGm() {
-    setShowAuctionReveal(false);
-    try { window.localStorage.setItem(LAST_AUCTION_REVEAL_KEY, "1"); } catch { /* private browsing */ }
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  }, [identity.ready, preview, repository]);
+  useEffect(() => {
+    if (detail) document.getElementById("weekly-gm-result")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [detail]);
 
   async function refresh() {
     if (!repository) throw new Error("Sign in to play the Weekly GM Championship.");
@@ -103,11 +88,15 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
     }
   }
 
+  const archive = !preview ? history.find((week) => week.week_start === params.get("history")) : null;
+  const latestChampion = history[0];
   async function inspect(profileId: string | null, scenario: WeeklyGmScenario) {
-    if (!repository || (profileId && !canViewWeeklyGmScenario(state?.attempts ?? {}, scenario, preview))) return;
+    if (!repository || (!archive && profileId && !canViewWeeklyGmScenario(state?.attempts ?? {}, scenario, preview))) return;
     setError("");
     try {
-      setDetail(await repository.result(profileId, scenario));
+      setDetail(archive
+        ? await repository.archivedResult(archive.week_start, profileId ?? identity.profile!.id, scenario)
+        : await repository.result(profileId, scenario));
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : "That result is not available.");
     }
@@ -159,120 +148,137 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
       {error ? <button type="button" onClick={() => void refresh().catch((failure: unknown) => setError(String(failure)))}>RETRY</button> : null}
     </section></div>
   );
-  if (!preview && state.week_start === "2026-10-13" && showAuctionReveal && lastAuction) {
-    const winner = lastAuction.standings.find((entry) => entry.is_winner)
-      ?? lastAuction.standings.find((entry) => entry.rank === 1);
-    return (
-      <div className="page football-gm-page">
-        <section className="surface-card" style={{ padding: 16, marginBottom: 12 }}>
-          <Link to="/football">← FOOTBALL HQ</Link>
-          <p className="eyebrow">OCT 6–12 · LAST WEEK'S NFL AUCTION</p>
-          <h1>FINAL AUCTION RESULTS</h1>
-          <p><strong>{winner?.display_name ?? "Weekly winner"}</strong> finished first{winner?.final_score != null ? ` with ${winner.final_score.toFixed(1)} points` : ""}.</p>
-          <p>Explore the final standings, every collection, all 32 team grades and the Day 7 Wildcard wheel before starting this week's GM.</p>
-          <button className="primary-action" type="button" onClick={continueToGm}>CONTINUE TO THIS WEEK'S GM →</button>
-        </section>
-        <FootballWeeklyNflTeamSeasonFinalResult
-          result={lastAuction}
-          busy={false}
-          onAcknowledge={continueToGm}
-          showNewWeekAction={false}
-        />
-        <section className="surface-card" style={{ padding: 12, marginTop: 12 }}>
-          <button type="button" className="primary-action" onClick={continueToGm}>CONTINUE TO THIS WEEK'S GM →</button>
-        </section>
-      </div>
-    );
-  }
 
   const myTotal = (state.attempts.elite?.score ?? 0) + (state.attempts.young?.score ?? 0);
   const canViewTotal = canViewWeeklyGmTotal(state.attempts, preview);
+  const standingRows = archive?.standings ?? state.leaderboard;
+  const standingScenarios = archive?.week_start === "2026-10-13" ? OCT13_SCENARIOS : scenarios;
+  const winners = archive?.champions ?? [];
+  const leaderList = (showAll || archive ? standingRows : standingRows.slice(0, 3));
   return (
-    <div className="page football-gm-page">
-      <section className="surface-card football-weekly-gm__intro">
-        <Link to={preview ? "/football/weekly-gm" : "/football"}>← {preview ? "OFFICIAL GM WEEK" : "FOOTBALL HQ"}</Link>
-        <p className="eyebrow">{preview ? "OWNER PLAYTEST · REAL PRODUCTION ENGINE" : "WEEKLY FEATURED · CHAMPIONSHIP 10%"}</p>
-        <h1>{preview ? "TEST THE FULL WEEKLY GM" : "NFL GM CHAMPIONSHIP"}</h1>
-        <p className="football-weekly-gm__summary">{preview ? "Real GM mechanics and saves · test entries do not count." : (isOct20Week ? "October 20–26" : "October 13–19") + " · Two official three-season runs · $150M cap · Six random spins per franchise."}</p>
-        {!preview && isOwner && state.status === "upcoming" ? <p><Link to="/football/weekly-gm-test">OWNER-ONLY: PLAY THE REAL COMPETITION NOW ↗</Link></p> : null}
-        {!preview ? (
-          <p>
-            {lastAuction && !isOct20Week ? (
-              <button type="button" onClick={() => { setShowAuctionReveal(true); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-                VIEW OCT 6–12 AUCTION RESULTS · WHEEL · COLLECTIONS · ALL GRADES ↗
-              </button>
-            ) : <Link to="/football/weekly-auction">VIEW PRIOR AUCTION RESULTS ↗</Link>}
-          </p>
-        ) : null}
-        <p className="football-weekly-gm__progress"><strong>{myTotal.toFixed(1)} / 200</strong><span>{Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</span></p>
-        <small>{preview ? "Owner-only production playtest · Test data never enters championship standings · Closes Tuesday at 12:00 AM Central" :
-          state.status === "upcoming" ? (isOct20Week ? "Opens Tuesday, October 20 at midnight Central" : "Opens Tuesday, October 13 at midnight Central") :
-          state.status === "closed" ? "Competition closed · Final results" : (isOct20Week ? "Closes Monday, October 26 at 11:59 PM Central" : "Closes Monday, October 19 at 11:59 PM Central")}</small>
-        {preview ? <p><button type="button" disabled={busy} onClick={() => {
-          if (!window.confirm("Reset both owner test franchises? This permanently clears only your test attempts. Official Weekly GM is unaffected.")) return;
-          setBusy(true);
-          void repository?.resetPreview().then(() => { setDetail(null); return refresh(); })
-            .catch((failure: unknown) => setError(failure instanceof Error ? failure.message : "Test reset failed."))
-            .finally(() => setBusy(false));
-        }}>RESET OWNER TEST ATTEMPTS</button></p> : null}
-      </section>
-
-      <div className="football-weekly-gm__scenarios">
-        {scenarios.map((scenario) => {
-          const item = state.attempts[scenario.id];
-          return (
-            <section className="surface-card football-weekly-gm__franchise" key={scenario.id}>
-              <p className="eyebrow">{scenario.title} · 100 POINTS</p>
-              <h2>{scenario.quarterback}</h2>
-              <p>{scenario.development} · 6 random spins</p>
-              <p><strong>{item?.completed ? item.score?.toFixed(1) + " / 100" : item ? "IN PROGRESS" : "NOT STARTED"}</strong></p>
-              {item?.completed ? (
-                <button type="button" onClick={() => void inspect(null, scenario.id)}>VIEW YOUR FRANCHISE RESULT</button>
-              ) : state.status === "active" ? (
-                <button className="primary-action" disabled={busy} type="button" onClick={() => void open(scenario.id)}>
-                  {item ? "RESUME OFFICIAL FRANCHISE" : "START OFFICIAL FRANCHISE"}
-                </button>
-              ) : null}
-            </section>
-          );
-        })}
-      </div>
-      <section className="surface-card football-weekly-gm__standings">
-        <p className="eyebrow">{preview ? "ISOLATED TEST RESULTS" : "LIVE STANDINGS"}</p>
-        <h2>{preview ? "OWNER PLAYTEST RESULTS" : "WEEKLY GM LEADERBOARD"}</h2>
-        <p>{preview ? "Test standings never count toward the Championship." : "Standings are ranked by combined score. Opponent scores unlock only after you complete the matching franchise."}</p>
-        {state.leaderboard.length ? (
-          <div style={{ display: "grid", gap: 12 }}>
-            {state.leaderboard.map((entry) => (
-              <div key={entry.profile_id} className="football-weekly-gm__entry">
-                <strong>#{entry.rank} · {entry.display_name}{canViewTotal ? ` — ${entry.total_score.toFixed(1)} / 200` : ""}</strong>
-                <small>{entry.completed_runs} of 2 runs completed{!canViewTotal ? " · SCORES HIDDEN" : ""}</small>
-                <div className="football-weekly-gm__entry-scores">
-                  {scenarios.map(({ id, quarterback }) => {
-                    const score = id === "elite" ? entry.elite_score : entry.young_score;
-                    if (score == null) return null;
-                    return canViewWeeklyGmScenario(state.attempts, id, preview) ? (
-                      <button type="button" key={id} onClick={() => void inspect(entry.profile_id, id)}>
-                        {quarterback}: {score.toFixed(1)} ↗
+    <div className="page football-gm-page football-weekly-gm">
+      {archive ? (
+        <section className="surface-card football-weekly-gm__intro">
+          <Link to="/football/weekly-gm" onClick={() => setDetail(null)}>← CURRENT WEEK</Link>
+          <p className="eyebrow">FINAL RESULTS · {formatWeek(archive.week_start).toUpperCase()}</p>
+          <h1>WEEKLY GM CHAMPIONSHIP</h1>
+          <div className="football-weekly-gm__champion">
+            <span aria-hidden="true">🏆</span>
+            <div><small>{winners.length > 1 ? "CO-CHAMPIONS" : "WEEKLY CHAMPION"}</small>
+              <strong>{winners.map((entry) => entry.display_name).join(" & ")}</strong>
+              <span>{winners[0]?.total_score.toFixed(1)} / 200</span></div>
+          </div>
+        </section>
+      ) : (
+        <>
+          {latestChampion && !preview ? (
+            <Link className="football-weekly-gm__last-champion"
+              to={`/football/weekly-gm?history=${latestChampion.week_start}`}>
+              <span aria-hidden="true">🏆</span>
+              <span><small>LAST WEEK'S GM CHAMPION · {formatWeek(latestChampion.week_start)}</small>
+                <strong>{latestChampion.champions.map((entry) => entry.display_name).join(" & ")}</strong>
+                <small>{latestChampion.champions[0]?.total_score.toFixed(1)} / 200 · VIEW RESULTS →</small>
+              </span>
+            </Link>
+          ) : null}
+          <section className="surface-card football-weekly-gm__intro">
+            <Link to={preview ? "/football/weekly-gm" : "/football"}>← {preview ? "OFFICIAL GM WEEK" : "FOOTBALL PLAY"}</Link>
+            <p className="eyebrow">{preview ? "OWNER PLAYTEST" : "WEEKLY FEATURED · CHAMPIONSHIP 10%"}</p>
+            <h1>{preview ? "TEST WEEKLY GM" : "NFL GM CHAMPIONSHIP"}</h1>
+            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · Two official franchises · $150M cap · Six spins each</p>
+            <p className="football-weekly-gm__progress">
+              <strong>{myTotal.toFixed(1)} / 200</strong>
+              <span>{Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</span>
+            </p>
+            <small>{preview ? "Owner test entries never enter official standings" :
+              state.status === "closed" ? "Competition closed · Final results" :
+              state.status === "upcoming" ? "Competition opens soon" :
+              `Closes ${new Date(state.closes_at).toLocaleString("en-US", { timeZone: "America/Chicago", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })} Central`}</small>
+            {!preview ? <button type="button" className="football-weekly-gm__history-link"
+              onClick={() => setHistoryOpen((open) => !open)} aria-expanded={historyOpen}>
+              {historyOpen ? "HIDE" : "VIEW"} PAST WEEKLY GM CHAMPIONSHIPS →
+            </button> : null}
+            {preview ? <button type="button" disabled={busy} onClick={() => {
+              if (!window.confirm("Reset both owner test franchises? Official Weekly GM is unaffected.")) return;
+              setBusy(true);
+              void repository?.resetPreview().then(() => { setDetail(null); return refresh(); })
+                .catch((failure: unknown) => setError(String(failure))).finally(() => setBusy(false));
+            }}>RESET OWNER TEST ATTEMPTS</button> : null}
+          </section>
+          {historyOpen ? <section className="surface-card football-weekly-gm__archive">
+            <h2>PAST GM CHAMPIONSHIPS</h2>
+            {history.length ? history.map((week) => (
+              <Link key={week.week_start} to={`/football/weekly-gm?history=${week.week_start}`}
+                onClick={() => setDetail(null)} className="football-weekly-gm__archive-row">
+                <span><small>{formatWeek(week.week_start)}</small>
+                  <strong>🏆 {week.champions.map((entry) => entry.display_name).join(" & ")}</strong></span>
+                <b>{week.champions[0]?.total_score.toFixed(1)} / 200 →</b>
+              </Link>
+            )) : <p>No finished two-franchise GM championships are on record yet.</p>}
+          </section> : null}
+          <div className="football-weekly-gm__scenarios">
+            {scenarios.map((scenario) => {
+              const item = state.attempts[scenario.id];
+              return (
+                <section className="surface-card football-weekly-gm__franchise" key={scenario.id}>
+                  <p className="eyebrow">{scenario.title}</p>
+                  <h2>{scenario.quarterback}</h2>
+                  <p>{scenario.development}</p>
+                  <strong>{item?.completed ? item.score?.toFixed(1) + " / 100" : item ? "IN PROGRESS" : "NOT STARTED"}</strong>
+                  {item?.completed ? <button type="button" onClick={() => void inspect(null, scenario.id)}>VIEW RESULT →</button>
+                    : state.status === "active" ? (
+                      <button className="primary-action" disabled={busy} type="button" onClick={() => void open(scenario.id)}>
+                        {item ? "RESUME" : "START"} FRANCHISE →
                       </button>
-                    ) : <span key={id}>{quarterback}: LOCKED</span>;
-                  })}
+                    ) : null}
+                </section>
+              );
+            })}
+          </div>
+        </>
+      )}
+      <section className="surface-card football-weekly-gm__standings">
+        <div className="football-weekly-gm__standings-title">
+          <span className="eyebrow">{archive ? "FINAL" : preview ? "OWNER TEST" : "LIVE"} STANDINGS</span>
+          <span>{standingRows.length} GMs</span>
+        </div>
+        <h2>{archive ? "CHAMPIONSHIP RESULTS" : "WEEKLY GM LEADERBOARD"}</h2>
+        {standingRows.length ? (
+          <div className="football-weekly-gm__leader-list">
+            {leaderList.map((entry) => (
+              <div key={entry.profile_id} className="football-weekly-gm__entry">
+                <div className="football-weekly-gm__entry-main">
+                  <strong>#{entry.rank} · {entry.display_name}{entry.profile_id === identity.profile?.id ? " · YOU" : ""}</strong>
+                  <b>{archive || canViewTotal ? entry.total_score.toFixed(1) + " / 200" : "LOCKED"}</b>
                 </div>
+                {archive || showAll ? (
+                  <div className="football-weekly-gm__entry-scores">
+                    {standingScenarios.map(({ id, quarterback }) => {
+                      const score = id === "elite" ? entry.elite_score : entry.young_score;
+                      if (score == null) return null;
+                      return archive || canViewWeeklyGmScenario(state.attempts, id, preview) ? (
+                        <button type="button" key={id} onClick={() => void inspect(entry.profile_id, id)}>
+                          {quarterback}: {score.toFixed(1)} ↗
+                        </button>
+                      ) : <span key={id}>{quarterback}: LOCKED</span>;
+                    })}
+                  </div>
+                ) : null}
               </div>
             ))}
           </div>
-        ) : <p>No official runs completed yet. Be the first GM on the board.</p>}
+        ) : <p>No official results yet.</p>}
+        {!archive && standingRows.length > 3 ? <button className="football-weekly-gm__history-link"
+          type="button" onClick={() => setShowAll((open) => !open)}>
+          {showAll ? "SHOW TOP THREE" : `VIEW ALL ${standingRows.length} STANDINGS`} →
+        </button> : null}
       </section>
-      {detail ? (
-        <section style={{ marginTop: 16 }}>
-          <button type="button" onClick={() => setDetail(null)}>← CLOSE FRANCHISE RESULTS</button>
-          <FootballGmFranchiseReport name={detail.display_name} run={detail.state} />
-        </section>
-      ) : null}
+      {detail ? <section id="weekly-gm-result" className="football-weekly-gm__detail">
+        <button type="button" onClick={() => setDetail(null)}>← CLOSE FRANCHISE RESULTS</button>
+        <FootballGmFranchiseReport name={detail.display_name} run={detail.state} />
+      </section> : null}
       {error ? <p role="alert">{error}</p> : null}
-      <section className="surface-card" style={{ padding: 16, marginTop: 12 }}>
-        <p>Want more spins? <Link to="/football/gm-mode">Play unlimited Casual GM</Link> without affecting your official standings.</p>
-      </section>
+      {!archive ? <p className="football-weekly-gm__casual">Want more spins? <Link to="/football/gm-mode">Play unlimited Casual GM →</Link></p> : null}
     </div>
   );
 }

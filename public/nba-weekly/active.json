@@ -1,0 +1,44 @@
+{
+  "weekStart": "2026-10-20",
+  "weekEnd": "2026-10-23",
+  "publishedAt": "2026-10-24T20:00:00Z",
+  "player": {
+    "name": "Tyrese Maxey",
+    "team": "Philadelphia 76ers",
+    "position": "PG",
+    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/4431678.png",
+    "profileUrl": "https://www.basketball-reference.com/players/m/maxeyty01.html",
+    "highlightUrl": "https://www.youtube.com/watch?v=e8g1Fa8iYYM",
+    "channelUrl": "https://www.youtube.com/@NBA",
+    "stats": [
+      {
+        "label": "PPG",
+        "value": "30.0"
+      },
+      {
+        "label": "APG",
+        "value": "5.5"
+      },
+      {
+        "label": "RPG",
+        "value": "3.5"
+      },
+      {
+        "label": "FG%",
+        "value": "50.0"
+      }
+    ],
+    "highlightSourceChannelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+    "gamesPlayed": 2
+  },
+  "team": {
+    "name": "Atlanta Hawks",
+    "teamId": "ATL",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/atl.png",
+    "profileUrl": "https://www.basketball-reference.com/teams/ATL/2027.html",
+    "record": "2-0",
+    "ppg": "130.0",
+    "oppPpg": "103.0",
+    "netMargin": "+27.0"
+  }
+}

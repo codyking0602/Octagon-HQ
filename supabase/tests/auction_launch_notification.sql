@@ -59,6 +59,8 @@ begin
     repeat('B', 24),
     'Auction launch fresh-database proof'
   );
+  -- A new member intentionally follows UFC; a device subscription alone is not consent.
+  perform public.set_my_notification_push_sports(true,false,false,false);
 
   perform set_config('request.jwt.claim.role', 'service_role', true);
   perform set_config('request.jwt.claim.sub', '', true);
@@ -130,11 +132,17 @@ begin
     and notification.aggregation_key = 'new-game:auction';
 
   v_claim := public.claim_notification_push_delivery(v_in_app_group);
-  if v_claim->'notification'->>'kind' <> 'new_game_available'
+  if v_claim->'notification' <> 'null'::jsonb
     or jsonb_array_length(v_claim->'deliveries') <> 0
   then
-    raise exception 'profile without push did not retain in-app delivery without a device claim: %', v_claim;
+    raise exception 'unselected sport must not produce a phone delivery claim: %', v_claim;
   end if;
+  if not exists (
+    select 1 from private.notification_groups g
+    where g.id = v_in_app_group
+      and g.kind = 'new_game_available'
+      and g.read_at is null
+  ) then raise exception 'muting phone push altered in-app Auction history'; end if;
 
   select private.publish_auction_launch_notification_once() into v_targeted;
   if v_targeted <> 0

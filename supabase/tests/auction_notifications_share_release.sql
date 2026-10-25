@@ -162,6 +162,10 @@ begin
     raise exception 'Auction push proof subscription was not registered: %', v_push_registration;
   end if;
 
+  -- New accounts opt in explicitly before their device can receive sport push.
+  -- The Auction fixture is UFC-scoped, so authorize only UFC for this profile.
+  perform pg_temp.set_auction_actor(v_challenger);
+  perform public.set_my_notification_push_sports(true,false,false,false);
   perform set_config('request.jwt.claim.role', 'service_role', true);
   perform set_config('request.jwt.claim.sub', '', true);
   v_claim := public.claim_notification_push_delivery((v_notification->>'id')::uuid);

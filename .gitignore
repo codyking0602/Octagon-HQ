@@ -7,3 +7,4 @@ data/generated/football/
 .DS_Store
 coverage
 *.log
+.nba-weekly-video-cache.json

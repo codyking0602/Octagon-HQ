@@ -134,10 +134,9 @@ describe("Weekly Auction owner playthrough lab", () => {
     expect(realismMigration).not.toContain("'hidden_grade',");
   });
 
-  it("adds an owner-only Auction Center entry and dedicated route", () => {
-    expect(center).toContain("isFootballWeeklyBuildQbPreviewOwner");
-    expect(center).toContain("WEEKLY AUCTION PLAYTHROUGH LAB");
-    expect(center).toContain('navigate("/football/weekly-auction-lab")');
+  it("preserves the dedicated owner-only lab route without an Auction Center entry card", () => {
+    expect(center).not.toContain("WEEKLY AUCTION PLAYTHROUGH LAB");
+    expect(center).not.toContain('navigate("/football/weekly-auction-lab")');
     expect(router).toContain('path: "football/weekly-auction-lab"');
     expect(repository).toContain('"get_my_football_weekly_superteam_lab"');
     expect(repository).toContain('"reset_my_football_weekly_superteam_lab"');

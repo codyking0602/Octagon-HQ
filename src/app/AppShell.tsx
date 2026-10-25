@@ -15,6 +15,8 @@ import { IdentityControl } from "../features/identity/IdentityControl";
 import { BrandedPullToRefresh } from "./BrandedPullToRefresh";
 import { RouteScrollManager } from "./RouteScrollManager";
 import { useSport, type SelectedSport } from "./SportProvider";
+import { prioritizedSports, sportsForDisplay, sportNames } from "./sportPriority";
+import { useOptionalNotifications } from "../features/notifications/NotificationProvider";
 
 const PLAY_GAME_TITLES: Record<string, string> = {
   "/play/find-leader": "Find the Leader",
@@ -103,11 +105,13 @@ function SportContextRow({
   onSelectSport,
   showMlb,
   showNba,
+  order,
 }: {
   context: SportContext;
   onSelectSport: (sport: SelectedSport) => void;
   showMlb: boolean;
   showNba: boolean;
+  order: readonly SelectedSport[];
 }) {
   const sectionLabel = context.section[0] + context.section.slice(1).toLowerCase();
 
@@ -124,10 +128,9 @@ function SportContextRow({
             value={context.sport}
             onChange={(event) => onSelectSport(event.target.value as SelectedSport)}
           >
-            <option value="football">Football</option>
-            <option value="ufc">UFC</option>
-            {showMlb ? <option value="mlb">MLB</option> : null}
-            {showNba ? <option value="nba">Basketball</option> : null}
+            {sportsForDisplay(order, showMlb, showNba).map(sport => (
+              <option key={sport} value={sport}>{sportNames[sport]}</option>
+            ))}
           </select>
         </label>
       ) : null}
@@ -154,6 +157,8 @@ export function AppShell() {
   const navigate = useNavigate();
   const identity = useIdentity();
   const { selectedSport, setSelectedSport, picksSport, setPicksSport } = useSport();
+  const notifications = useOptionalNotifications();
+  const sportOrder = prioritizedSports(notifications && (notifications.pushSportStatus === "ready" || notifications.pushSportStatus === "saving") ? notifications.pushSports : null);
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
@@ -286,7 +291,7 @@ export function AppShell() {
             <IdentityControl />
           </div>
           {sportContext ? (
-            <SportContextRow context={sportContext} onSelectSport={selectSport} showMlb={mlbVisible} showNba={nbaVisible} />
+            <SportContextRow context={sportContext} onSelectSport={selectSport} showMlb={mlbVisible} showNba={nbaVisible} order={sportOrder} />
           ) : null}
         </header>
       )}

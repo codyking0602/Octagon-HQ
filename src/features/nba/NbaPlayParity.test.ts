@@ -10,9 +10,9 @@ describe("NBA Play mirrors UFC Play layout", () => {
     const sections = [
       'className="play-v2__heading"',
       'className="play-v2__daily"',
-      'className="play-v2__performance"',
       '<MatchupsCompact sport="nba" />',
       'className="play-v2__room"',
+      'className="play-v2__performance"',
     ];
     let lastIndex = -1;
     for (const section of sections) {
@@ -24,6 +24,12 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(page).toContain('className="play-v2__game"');
     expect(page).toContain('className="play-v2__metrics"');
     expect(page).toContain('className="play-v2__daily-row"');
+    expect(page).toContain("<span>DAILY WINS</span>");
+    expect(page).toContain("overview.standings?.entries.find(entry => entry.isCurrentUser)?.wins");
+    expect(page).toContain('ownerTest ? "PRIVATE TEST SCORES" : "OFFICIAL SCORES ONLY"');
+    expect(page).toContain('first-place finishes');
+    expect(page).not.toContain("PERSONAL BEST");
+    expect(page).not.toContain("const best =");
     expect(page).not.toContain("<TodayChallengeHub");
     expect(page).toContain('className="play-v2__daily-actions"');
     expect(page).toContain('className="play-v2__daily-leaders"');

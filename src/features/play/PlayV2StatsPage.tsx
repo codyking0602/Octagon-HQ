@@ -44,7 +44,7 @@ export default function PlayV2StatsPage({ sport, memberName }: { sport: PlaySpor
                   <div className="play-v2__metrics">
                     <div><span>CAREER AVG</span><strong>{playV2Score(summary.average)}</strong><small>/100</small></div>
                     <div><span>COMPLETED</span><strong>{summary.count}</strong><small>games</small></div>
-                    <div><span>PERSONAL BEST</span><strong>{summary.best}</strong><small>/100</small></div>
+                    <div><span>LAST FIVE AVG</span><strong>{playV2Score(summary.lastFiveAverage)}</strong><small>/100</small></div>
                   </div>
                   <div className="play-v2__trend-block">
                     <span>LAST FIVE AVG: {playV2Score(summary.lastFiveAverage)}</span>

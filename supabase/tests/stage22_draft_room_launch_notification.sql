@@ -55,6 +55,9 @@ begin
     'Draft Room launch fresh-database proof'
   );
 
+  -- The connected device must also opt into Football push explicitly.
+  perform public.set_my_notification_push_sports(false,true,false,false);
+
   perform set_config('request.jwt.claim.role', 'service_role', true);
   perform set_config('request.jwt.claim.sub', '', true);
 

@@ -29,3 +29,5 @@
 }
 .home-sport-chooser__filter { flex: none; }
 .home-sport-chooser__filter select { max-width: 43vw; }
+
+/* This header and sport selector stay neutral regardless of the active sport. */

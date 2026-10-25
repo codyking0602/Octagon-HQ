@@ -17,6 +17,9 @@ export const notificationKinds = [
   "picks_card_updated",
   "ufc_event_starting",
   "football_picks_open",
+  "nba_launch_available",
+  "nba_daily_four_hours",
+  "nba_results_ready",
   "mlb_launch_available",
   "mlb_challenge_available",
   "mlb_challenge_four_hours",
@@ -66,7 +69,19 @@ export type NotificationKind = typeof notificationKinds[number];
 export type NotificationCategory = typeof notificationCategories[number];
 export type NotificationPriority = typeof notificationPriorities[number];
 export type NotificationPreferenceKey = typeof notificationPreferenceKeys[number];
-export type NotificationSport = "ufc" | "football" | "mlb";
+export type NotificationSport = "ufc" | "football" | "mlb" | "nba";
+
+export const pushNotificationSports = ["ufc", "football", "mlb", "nba"] as const;
+export type PushNotificationSport = typeof pushNotificationSports[number];
+export type NotificationPushSports = Record<PushNotificationSport, boolean>;
+export const defaultNotificationPushSports: NotificationPushSports = {
+  // New members explicitly select the sports they follow; legacy push users are
+  // seeded with their pre-existing UFC/Football/MLB entitlement server-side.
+  ufc: false,
+  football: false,
+  mlb: false,
+  nba: false,
+};
 export type NotificationPermissionState = "unsupported" | "default" | "granted" | "denied";
 export type NotificationDevicePushStatus =
   | "checking"
@@ -170,6 +185,12 @@ const categoryMarks: Record<NotificationCategory, string> = {
   operations: "!",
 };
 
+const nbaOnlyKinds = new Set<NotificationKind>([
+  "nba_launch_available",
+  "nba_daily_four_hours",
+  "nba_results_ready",
+]);
+
 const mlbOnlyKinds = new Set<NotificationKind>([
   "mlb_launch_available",
   "mlb_challenge_available",
@@ -211,6 +232,7 @@ function routeMatches(route: string, root: string) {
 export function notificationSport(item: Pick<NotificationItem, "kind" | "route">): NotificationSport | null {
   const route = item.route ?? "";
   if (routeMatches(route, "/football")) return "football";
+  if (routeMatches(route, "/nba") || routeMatches(route, "/championship/nba") || route.startsWith("/?hq-reveal=basketball-")) return "nba";
   if (routeMatches(route, "/mlb")) return "mlb";
   if (
     routeMatches(route, "/picks")
@@ -218,6 +240,7 @@ export function notificationSport(item: Pick<NotificationItem, "kind" | "route">
     || routeMatches(route, "/rankings")
     || routeMatches(route, "/intelligence")
   ) return "ufc";
+  if (nbaOnlyKinds.has(item.kind)) return "nba";
   if (mlbOnlyKinds.has(item.kind)) return "mlb";
   if (ufcOnlyKinds.has(item.kind)) return "ufc";
   return null;
@@ -226,6 +249,7 @@ export function notificationSport(item: Pick<NotificationItem, "kind" | "route">
 export function notificationSportLabel(sport: NotificationSport) {
   if (sport === "football") return "Football";
   if (sport === "mlb") return "MLB";
+  if (sport === "nba") return "NBA";
   return "UFC";
 }
 

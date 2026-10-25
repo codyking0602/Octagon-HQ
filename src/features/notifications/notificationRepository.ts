@@ -5,6 +5,7 @@ import {
   notificationCategories,
   notificationKinds,
   notificationPriorities,
+  type NotificationPushSports,
   type NotificationItem,
   type NotificationPreferences,
   type NotificationSnapshot,
@@ -44,6 +45,13 @@ const preferenceRowSchema = z.object({
   updated_at: z.string().nullable(),
 });
 
+const pushSportsRowSchema = z.object({
+  ufc: z.boolean(),
+  football: z.boolean(),
+  mlb: z.boolean(),
+  nba: z.boolean(),
+});
+
 const pushStatusRowSchema = z.object({
   current_device_registered: z.boolean(),
   active_device_count: z.coerce.number().int().nonnegative(),
@@ -67,6 +75,8 @@ export interface NotificationRepository {
   loadPreferences: () => Promise<NotificationPreferences>;
   savePreferences: (preferences: NotificationPreferences) => Promise<NotificationPreferences>;
   subscribe: (profileId: string, onChange: () => void) => () => void;
+  loadPushSports?: () => Promise<NotificationPushSports>;
+  savePushSports?: (sports: NotificationPushSports) => Promise<NotificationPushSports>;
   loadPushConfiguration?: () => Promise<string>;
   loadPushStatus?: (endpoint: string | null) => Promise<NotificationPushStatusSnapshot>;
   registerPushSubscription?: (
@@ -183,6 +193,27 @@ export function createNotificationRepository(): NotificationRepository | null {
         "Octagon HQ could not save notification preferences.",
       );
       return toPreferences(data);
+    },
+
+    async loadPushSports() {
+      const data = await requireRpcSuccess(
+        client.rpc("get_my_notification_push_sports"),
+        "The HQ could not load sport push settings.",
+      );
+      return pushSportsRowSchema.parse(data);
+    },
+
+    async savePushSports(sports) {
+      const data = await requireRpcSuccess(
+        client.rpc("set_my_notification_push_sports", {
+          p_ufc: sports.ufc,
+          p_football: sports.football,
+          p_mlb: sports.mlb,
+          p_nba: sports.nba,
+        }),
+        "The HQ could not save sport push settings.",
+      );
+      return pushSportsRowSchema.parse(data);
     },
 
     async loadPushConfiguration() {

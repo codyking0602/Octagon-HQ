@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
-import { memberProfilePath } from "../members/memberProfilesModel";
 import { notificationDestination } from "./notificationDestination";
 import {
   formatNotificationAge,
@@ -8,10 +8,12 @@ import {
   notificationCategoryMark,
   notificationSport,
   notificationSportLabel,
+  pushNotificationSports,
   type NotificationItem,
   type NotificationSport,
 } from "./notificationModel";
 import { useNotifications } from "./NotificationProvider";
+import { NotificationPushSetting } from "./NotificationPushSetting";
 
 function NotificationCopy({
   item,
@@ -85,36 +87,13 @@ function NotificationRow({ item }: { item: NotificationItem }) {
   );
 }
 
-function pushProfilePrompt(status: ReturnType<typeof useNotifications>["devicePush"]["status"]) {
-  if (status === "off") {
-    return {
-      title: "Turn on push notifications",
-      detail: "Get important alerts even when The HQ is closed.",
-      action: "OPEN PROFILE",
-    };
-  }
-  if (status === "error") {
-    return {
-      title: "Push notifications need attention",
-      detail: "Open your Profile to retry the device connection.",
-      action: "RETRY IN PROFILE",
-    };
-  }
-  if (status === "blocked") {
-    return {
-      title: "Push notifications are blocked",
-      detail: "Open your Profile for the steps to turn them back on.",
-      action: "OPEN PROFILE",
-    };
-  }
-  return null;
-}
-
 export default function NotificationCenterPage() {
   const identity = useIdentity();
   const notifications = useNotifications();
-  const ownProfilePath = identity.profile ? memberProfilePath(identity.profile.displayName) : null;
-  const pushPrompt = pushProfilePrompt(notifications.devicePush.status);
+  const [sportFilter, setSportFilter] = useState<NotificationSport | "all">("all");
+  const visibleItems = sportFilter === "all"
+    ? notifications.items
+    : notifications.items.filter((item) => notificationSport(item) === sportFilter);
   const hasReadNotifications = notifications.items.some((item) => item.isRead);
 
   return (
@@ -123,7 +102,7 @@ export default function NotificationCenterPage() {
         <div>
           <p className="eyebrow">THE HQ</p>
           <h1>Notifications</h1>
-          <p>UFC, Football, Baseball, and account updates in one inbox.</p>
+          <p>UFC, Football, Baseball, Basketball, and account updates in one inbox.</p>
         </div>
         {notifications.unreadCount > 0 || hasReadNotifications ? (
           <div className="notification-page__actions">
@@ -166,6 +145,29 @@ export default function NotificationCenterPage() {
         </section>
       ) : (
         <>
+          <NotificationPushSetting compact />
+          <div className="notification-page__filters" role="group" aria-label="Filter in-app notifications by sport">
+            <button
+              type="button"
+              className={`notification-feed-filter${sportFilter === "all" ? " is-selected" : ""}`}
+              aria-pressed={sportFilter === "all"}
+              onClick={() => setSportFilter("all")}
+            >
+              All
+            </button>
+            {pushNotificationSports.map((sport) => (
+              <button
+                type="button"
+                key={sport}
+                data-hq-theme={sport}
+                className={`notification-feed-filter${sportFilter === sport ? " is-selected" : ""}`}
+                aria-pressed={sportFilter === sport}
+                onClick={() => setSportFilter(sport)}
+              >
+                {notificationSportLabel(sport)}
+              </button>
+            ))}
+          </div>
           {notifications.status === "loading" && !notifications.items.length ? (
             <section className="surface-card notification-empty">
               <strong>Loading notifications…</strong>
@@ -183,32 +185,17 @@ export default function NotificationCenterPage() {
                 TRY AGAIN
               </button>
             </section>
-          ) : !notifications.items.length ? (
+          ) : !visibleItems.length ? (
             <section className="surface-card notification-empty">
               <span className="notification-empty__bell" aria-hidden="true">♢</span>
-              <strong>You&apos;re caught up.</strong>
-              <p>Actionable The HQ updates will appear here.</p>
+              <strong>{sportFilter === "all" ? "You’re caught up." : `No ${notificationSportLabel(sportFilter)} notifications yet.`}</strong>
+              <p>{sportFilter === "all" ? "Actionable The HQ updates will appear here." : "Choose All to see your full notification history."}</p>
             </section>
           ) : (
             <section className="notification-list" aria-label="Notifications">
-              {notifications.items.map((item) => <NotificationRow item={item} key={item.id} />)}
+              {visibleItems.map((item) => <NotificationRow item={item} key={item.id} />)}
             </section>
           )}
-
-          {ownProfilePath && pushPrompt ? (
-            <Link className="notification-push-profile-prompt" to={ownProfilePath}>
-              <span className="notification-push-profile-prompt__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
-                </svg>
-              </span>
-              <span className="notification-push-profile-prompt__copy">
-                <strong>{pushPrompt.title}</strong>
-                <small>{pushPrompt.detail}</small>
-              </span>
-              <b>{pushPrompt.action} →</b>
-            </Link>
-          ) : null}
         </>
       )}
     </div>

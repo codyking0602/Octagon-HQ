@@ -10,6 +10,9 @@ import {
 import { useIdentity } from "../identity/IdentityProvider";
 import {
   defaultNotificationPreferences,
+  defaultNotificationPushSports,
+  type NotificationPushSports,
+  type PushNotificationSport,
   initialNotificationDevicePushState,
   initialNotificationDeviceReadiness,
   type NotificationDevicePushState,
@@ -61,11 +64,15 @@ interface NotificationContextValue {
   preferenceStatus: NotificationPreferenceStatus;
   deviceReadiness: NotificationDeviceReadiness;
   devicePush: NotificationDevicePushState;
+  pushSports: NotificationPushSports;
+  pushSportStatus: "loading" | "ready" | "saving" | "error" | "unavailable";
   refresh: () => Promise<boolean>;
   markRead: (notificationId: string) => Promise<boolean>;
   markAllRead: () => Promise<boolean>;
   clearRead: () => Promise<boolean>;
   updatePreference: (key: NotificationPreferenceKey, enabled: boolean) => Promise<boolean>;
+  updatePushSports: (sport: PushNotificationSport | "all", enabled: boolean) => Promise<boolean>;
+  refreshPushSports: () => Promise<void>;
   installApp: () => Promise<boolean>;
   enableDevicePush: () => Promise<boolean>;
   disableDevicePush: () => Promise<boolean>;
@@ -102,6 +109,11 @@ export function NotificationProvider({
   const preferencesRef = useRef(preferences);
   preferencesRef.current = preferences;
   const [preferenceStatus, setPreferenceStatus] = useState<NotificationPreferenceStatus>("idle");
+  const [pushSports, setPushSports] = useState<NotificationPushSports>(defaultNotificationPushSports);
+  const pushSportsRef = useRef(pushSports);
+  pushSportsRef.current = pushSports;
+  const [pushSportStatus, setPushSportStatus] = useState<NotificationContextValue["pushSportStatus"]>("loading");
+  const pushSportRevisionRef = useRef(0);
   const [deviceReadiness, setDeviceReadiness] = useState<NotificationDeviceReadiness>(
     initialNotificationDeviceReadiness,
   );
@@ -177,6 +189,54 @@ export function NotificationProvider({
       return false;
     }
   }, [repository]);
+
+  const loadPushSports = useCallback(async () => {
+    const expectedProfileId = profileIdRef.current;
+    const revision = ++pushSportRevisionRef.current;
+    if (!expectedProfileId) {
+      setPushSports(defaultNotificationPushSports);
+      setPushSportStatus("unavailable");
+      return;
+    }
+    if (!repository?.loadPushSports) {
+      setPushSportStatus("unavailable");
+      return;
+    }
+    setPushSportStatus("loading");
+    try {
+      const next = await repository.loadPushSports();
+      if (revision !== pushSportRevisionRef.current || profileIdRef.current !== expectedProfileId) return;
+      setPushSports(next);
+      setPushSportStatus("ready");
+    } catch {
+      if (revision !== pushSportRevisionRef.current || profileIdRef.current !== expectedProfileId) return;
+      setPushSportStatus("error");
+    }
+  }, [repository]);
+
+  const updatePushSports = useCallback(async (sport: PushNotificationSport | "all", enabled: boolean) => {
+    const expectedProfileId = profileIdRef.current;
+    if (!expectedProfileId || !repository?.savePushSports || pushSportStatus !== "ready") return false;
+    const previous = pushSportsRef.current;
+    const next: NotificationPushSports = sport === "all"
+      ? { ufc: enabled, football: enabled, mlb: enabled, nba: enabled }
+      : { ...previous, [sport]: enabled };
+    const revision = ++pushSportRevisionRef.current;
+    setPushSports(next);
+    setPushSportStatus("saving");
+    try {
+      const saved = await repository.savePushSports(next);
+      if (revision !== pushSportRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      setPushSports(saved);
+      setPushSportStatus("ready");
+      return true;
+    } catch {
+      if (revision !== pushSportRevisionRef.current || profileIdRef.current !== expectedProfileId) return false;
+      setPushSports(previous);
+      setPushSportStatus("error");
+      return false;
+    }
+  }, [pushSportStatus, repository]);
 
   const refreshDeviceReadiness = useCallback(async () => {
     setDeviceReadiness((current) => ({ ...current, status: "checking" }));
@@ -257,6 +317,8 @@ export function NotificationProvider({
     ++revisionRef.current;
     ++preferenceRevisionRef.current;
     ++pushRevisionRef.current;
+    ++pushSportRevisionRef.current;
+    setPushSports(defaultNotificationPushSports);
     setItems([]);
     setUnreadCount(0);
     setError("");
@@ -266,20 +328,23 @@ export function NotificationProvider({
     if (identity.status === "loading") {
       setStatus("loading");
       setPreferenceStatus("loading");
+      setPushSportStatus("loading");
       return;
     }
 
     if (!profileId) {
       setStatus("signed-out");
       setPreferenceStatus("signed-out");
+      setPushSportStatus("unavailable");
       setDevicePush({ status: "off", currentDeviceRegistered: false, activeDeviceCount: 0 });
       return;
     }
 
     void loadSnapshot(true);
     void loadPreferences(true);
+    void loadPushSports();
     void refreshDevicePush();
-  }, [identity.status, loadPreferences, loadSnapshot, profileId, refreshDevicePush]);
+  }, [identity.status, loadPreferences, loadPushSports, loadSnapshot, profileId, refreshDevicePush]);
 
   useEffect(() => {
     if (!repository || !profileId) return undefined;
@@ -291,6 +356,7 @@ export function NotificationProvider({
     const refreshVisibleData = () => {
       void loadSnapshot(false);
       void loadPreferences(false);
+      void loadPushSports();
       void refreshDeviceReadiness();
       void refreshDevicePush();
     };
@@ -311,7 +377,7 @@ export function NotificationProvider({
       document.removeEventListener("visibilitychange", onVisibility);
       navigator.serviceWorker?.removeEventListener("message", onServiceWorkerMessage);
     };
-  }, [loadPreferences, loadSnapshot, profileId, refreshDevicePush, refreshDeviceReadiness]);
+  }, [loadPreferences, loadPushSports, loadSnapshot, profileId, refreshDevicePush, refreshDeviceReadiness]);
 
   const markRead = useCallback(async (notificationId: string) => {
     const expectedProfileId = profileIdRef.current;
@@ -497,6 +563,10 @@ export function NotificationProvider({
       preferenceStatus,
       deviceReadiness,
       devicePush,
+      pushSports,
+      pushSportStatus,
+      updatePushSports,
+      refreshPushSports: loadPushSports,
       refresh: () => loadSnapshot(false),
       markRead,
       markAllRead,
@@ -515,4 +585,9 @@ export function useNotifications() {
   const value = useContext(NotificationContext);
   if (!value) throw new Error("useNotifications must be used inside NotificationProvider");
   return value;
+}
+
+/** Used by standalone UI previews that do not mount NotificationProvider. */
+export function useOptionalNotifications() {
+  return useContext(NotificationContext);
 }
