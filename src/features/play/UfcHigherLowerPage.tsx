@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import { createReplaySeed } from "./lineupModel";
@@ -30,6 +30,7 @@ export default function UfcHigherLowerPage() {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [revealed, setRevealed] = useState<UfcHigherLowerChoice | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
   const [finished, setFinished] = useState(false);
   const hits = useMemo(() => answers.filter(a => a.correct).length, [answers]);
 

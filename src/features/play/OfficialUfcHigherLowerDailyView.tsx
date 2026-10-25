@@ -80,8 +80,8 @@ export function OfficialUfcHigherLowerDailyView({
       <span>{Number(state.correct_count ?? 0)}/{index}</span>
     </header>
     <div className="higher-lower-progress" aria-hidden="true"><i style={{ width: index * 10 + "%" }} /></div>
-    {feedback.correct !== undefined ? <p className={"higher-lower-feedback " + (feedback.correct === true ? "is-correct" : "is-wrong")} role="status">
-      {feedback.correct === true ? "CORRECT" : "NOT QUITE"} · Previous fighter: {String(record(feedback.hidden).formattedValue ?? "")}
+    {feedback.correct !== undefined ? <p className={"higher-lower-feedback is-visible " + (feedback.correct === true ? "is-correct" : "is-wrong")} role="status">
+      {feedback.correct === true ? "CORRECT" : "NOT QUITE"} · Previous comparison: {String(record(feedback.known).name ?? "")} {String(record(feedback.known).formattedValue ?? "")} vs {String(record(feedback.hidden).name ?? "")} {String(record(feedback.hidden).formattedValue ?? "")}
     </p> : null}
     <section className="higher-lower-stat-label">
       <small>OFFICIAL UFC CAREER NUMBERS</small>
