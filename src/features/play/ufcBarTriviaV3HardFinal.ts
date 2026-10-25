@@ -402,7 +402,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "league": "ufc",
     "round": "round3",
     "category": "Memorable Fights & Champions",
-    "prompt": "Which fighter won the Zhang Weili–Joanna Jedrzejczyk rematch at UFC 275 with a spinning backfist?",
+    "prompt": "Who scored a spinning-backfist knockout against Joanna Jedrzejczyk in their rematch at UFC 275?",
     "choices": [
       "Zhang Weili",
       "Joanna Jedrzejczyk",
@@ -780,7 +780,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "league": "ufc",
     "round": "last-call",
     "category": "Last Call: Historic Fight Moments",
-    "prompt": "Who won the famous five-round war between Chan Sung Jung and Dustin Poirier in 2012?",
+    "prompt": "Which fighter submitted Dustin Poirier with a fourth-round D’Arce choke in their 2012 UFC fight?",
     "choices": [
       "Chan Sung Jung",
       "Dustin Poirier",
