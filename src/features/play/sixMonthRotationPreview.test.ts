@@ -15,9 +15,9 @@ describe("nonpublishing six-month Daily rotation preview", () => {
     expect(previewDays().at(-1)).toBe(SIX_MONTH_AUDIT_END);
     expect(planned.football).toHaveLength(183);
     expect(planned.ufc).toHaveLength(92);
-    expect(planned.nba).toHaveLength(81);
+    expect(planned.nba).toHaveLength(88);
     expect(planned.nba[0]?.day).toBe("2026-11-01");
-    expect(planned.nba.at(-1)?.day).toBe("2027-04-11");
+    expect(planned.nba.at(-1)?.day).toBe("2027-04-25");
     expect(planned.nba.every((row) => !planned.ufc.some((other) => row.day === other.day))).toBe(true);
     expect(new Set(previewPublicationDates("football")).size).toBe(183);
     for (const sport of ["football", "ufc", "nba"] as const) {
