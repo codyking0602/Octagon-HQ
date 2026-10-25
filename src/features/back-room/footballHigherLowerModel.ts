@@ -1028,7 +1028,14 @@ export function createFootballHigherLowerBoard(
       candidates.filter(pair => pair.league === league && pair.difficulty === difficulty).length,
     ] as const)
   )));
-  throw new Error(`Unable to build a valid Higher or Lower ${scope} board; ${candidates.length} candidates, ${JSON.stringify(availability)}`);
+  const categoryAvailability = Object.fromEntries((["NFL", "CFB"] as const).flatMap(league => (
+    (["single-season", "career", "awards", "championships", "team", "draft"] as const).map(category => [
+      league + "-" + category,
+      { pairs: candidates.filter(pair => pair.league === league && pair.category === category).length,
+        metrics: new Set(candidates.filter(pair => pair.league === league && pair.category === category).map(pair => pair.metricKey)).size },
+    ] as const)
+  )));
+  throw new Error(`Unable to build a valid Higher or Lower ${scope} board; ${candidates.length} candidates, ${JSON.stringify(availability)}, categories ${JSON.stringify(categoryAvailability)}`);
 }
 
 function isScope(value: unknown): value is FootballHigherLowerScope {
