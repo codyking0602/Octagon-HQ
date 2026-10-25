@@ -63,7 +63,7 @@ Direct or near-direct *source-bank* overlaps found in Bar Trivia:
 - UFC 10 Q2: Rousey–Carmouche, first UFC women's fight opponent.
 - UFC 3 Q1: first simultaneous UFC double champion.
 
-These are **candidates**, not proof that the current Bar Trivia rotation selects them: the Bar Trivia editorial retirements/overrides and newly merged Football/UFC banks must be resolved first. Generic Feud prompts mentioning the same athlete are **not** duplicate facts. Average Fan, latest approved Feud expansions and semantic topic families still need complete question-level cross-game comparison before certification.
+**Active-bank resolution of the five direct cross-game candidates:** `nfl-r3-music-city`, `ufc-r2-first-city`, `ufc-r1-first-women` and `ufc-r2-double-champ` are explicitly excluded by `BAR_TRIVIA_EDITORIAL_RETIREMENTS` and therefore **are not current playable Bar Trivia duplicates**. The Buffalo four-straight-Super-Bowls item `nfl-r3-four-super-bowls` is **not excluded** by the present Bar Trivia retirement or Football V2 retirement lists, so it remains an **active-bank factual overlap** with NFL Millionaire 5 Q2. An active-bank collision is not proof of a collision on two six-month scheduled Daily dates; scheduling still requires separate verification. This distinction was verified against the actual `BAR_TRIVIA_QUESTION_BANK` filter, not just raw source prompts. Generic Feud prompts mentioning the same athlete are **not** duplicate facts. Average Fan, latest approved Feud expansions and semantic topic families still need complete question-level cross-game comparison before certification.
 
 ## Minimum readiness work before an editorial go-live
 
