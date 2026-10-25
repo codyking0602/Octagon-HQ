@@ -21,6 +21,7 @@ import { OfficialSportsFeudDailyView } from "./OfficialSportsFeudDailyView";
 import { OfficialBarTriviaDailyView } from "./OfficialBarTriviaDailyView";
 import { OfficialAverageFanDailyView } from "./OfficialAverageFanDailyView";
 import { OfficialFootballHigherLowerDailyView } from "./OfficialFootballHigherLowerDailyView";
+import { OfficialUfcHigherLowerDailyView } from "./OfficialUfcHigherLowerDailyView";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -193,6 +194,8 @@ export function OfficialTodayChallengeContent({
         />
       ) : projection.gameType === "higher_lower" && projection.sport === "football" ? (
         <OfficialFootballHigherLowerDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
+      ) : projection.gameType === "higher_lower" && projection.sport === "ufc" ? (
+        <OfficialUfcHigherLowerDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
       ) : projection.gameType === "bar_trivia" ? (
         <OfficialBarTriviaDailyView
           projection={projection}

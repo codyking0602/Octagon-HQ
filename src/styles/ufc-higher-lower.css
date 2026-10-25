@@ -1,0 +1,101 @@
+/* UFC-specific treatment layered over the approved compact Higher or Lower shell. */
+.ufc-higher-lower {
+  --hl-blue: #e6ecef;
+  --hl-deep: #101113;
+  --hl-panel: #1b1e21;
+  --hl-line: rgba(226, 231, 235, .14);
+  --hl-text: #f6f7f8;
+  --hl-muted: #aeb5bc;
+  max-width: 720px;
+}
+.ufc-higher-lower .higher-lower-hero,
+.ufc-higher-lower .higher-lower-result,
+.ufc-higher-lower .higher-lower-review,
+.ufc-higher-lower .higher-lower-game-header,
+.ufc-higher-lower .higher-lower-stat-label,
+.ufc-higher-lower .higher-lower-matchup,
+.ufc-higher-lower .higher-lower-controls {
+  background: linear-gradient(155deg, #22262a, #111316);
+  border-color: rgba(230, 235, 239, .14);
+}
+.ufc-higher-lower .higher-lower-hero::after,
+.ufc-higher-lower .higher-lower-result::after { opacity: .14; }
+.ufc-higher-lower .higher-lower-start {
+  background: #e7ebee;
+  color: #151719;
+}
+.ufc-higher-lower .higher-lower-game-header small,
+.ufc-higher-lower .higher-lower-game-header > span,
+.ufc-higher-lower .higher-lower-stat-label small {
+  color: #d5dadd;
+}
+.ufc-higher-lower .higher-lower-card.ufc-hl__card {
+  min-height: 0;
+  padding: 8px 8px 10px;
+  border: 1px solid rgba(235,238,240,.16);
+  background: linear-gradient(160deg, #292e32 0%, #151719 80%);
+  box-shadow: inset 0 2px 0 rgba(245,248,250,.12);
+}
+.ufc-higher-lower .ufc-hl__portrait {
+  height: clamp(104px, 26vw, 154px);
+  width: 100%;
+  display: grid;
+  place-items: end center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: radial-gradient(ellipse at center bottom, #363b3f 0%, #191c1e 76%);
+}
+.ufc-higher-lower .ufc-hl__portrait .fighter-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+.ufc-higher-lower .ufc-hl__portrait .fighter-photo--fallback {
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  font-weight: 950;
+  letter-spacing: .04em;
+}
+.ufc-higher-lower .higher-lower-card__identity {
+  display: block;
+  min-height: 20px;
+  margin-top: 5px;
+  text-align: center;
+}
+.ufc-higher-lower .higher-lower-card__identity > span:last-child {
+  color: #bfc4c7;
+  font-size: .52rem;
+}
+.ufc-higher-lower .higher-lower-card h3 {
+  min-height: 44px;
+  margin-top: 2px;
+  font-size: clamp(.83rem, 3.5vw, 1.16rem);
+  line-height: 1.08;
+}
+.ufc-higher-lower .higher-lower-card > strong {
+  min-height: 61px;
+  margin-top: 4px;
+  background: #101214;
+  border-color: rgba(240,244,246,.1);
+  color: #f7fafb;
+  font-size: clamp(1.85rem, 9vw, 3.2rem);
+}
+.ufc-higher-lower .higher-lower-card.is-hidden > strong {
+  color: #f1f4f5;
+}
+.ufc-higher-lower .higher-lower-controls button {
+  min-height: 54px;
+}
+.ufc-higher-lower .higher-lower-feedback.is-correct { color: #c9f2d4; }
+.ufc-higher-lower .higher-lower-feedback.is-wrong { color: #f5caca; }
+@media (max-width: 520px) {
+  .ufc-higher-lower .higher-lower-matchup { gap: 6px; padding: 6px; }
+  .ufc-higher-lower .higher-lower-card.ufc-hl__card { padding: 6px; }
+  .ufc-higher-lower .ufc-hl__portrait { height: 112px; }
+  .ufc-higher-lower .higher-lower-card h3 { min-height: 40px; }
+  .ufc-higher-lower .higher-lower-card > strong { min-height: 56px; }
+  .ufc-higher-lower .higher-lower-stat-label h2 { font-size: 1.05rem; }
+}
