@@ -32,6 +32,10 @@ describe("Higher or Lower presentation parity across three sports", () => {
     expect(ufc).not.toContain('3 approachable, 5 competitive, 2 tough.');
     expect(ufc).not.toContain('Fights through August 18');
     expect(css).toContain('.ufc-higher-lower .higher-lower-progress i');
+    // Same context -> portrait -> name -> numeric reveal hierarchy as NBA.
+    expect(ufc.indexOf('className="higher-lower-card__identity"')).toBeLessThan(ufc.indexOf('className="ufc-hl__portrait"'));
+    expect(ufc).toContain('revealed={Boolean(revealed)}');
+    expect(ufcDaily.indexOf('className="higher-lower-card__identity"')).toBeLessThan(ufcDaily.indexOf('className="ufc-hl__portrait"'));
   });
   it("never forces a tie into an unfair higher/lower choice", () => {
     const boards = [

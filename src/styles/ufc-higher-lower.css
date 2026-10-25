@@ -62,7 +62,7 @@
 .ufc-higher-lower .higher-lower-card__identity {
   display: block;
   min-height: 20px;
-  margin-top: 5px;
+  margin: 0 0 5px;
   text-align: center;
 }
 .ufc-higher-lower .higher-lower-card__identity > span:last-child {

@@ -13,10 +13,10 @@ const rows = (value: unknown): Row[] => Array.isArray(value) ? value.map(record)
 function UfcSubjectCard({ subject, hidden = false }: { subject: Row; hidden?: boolean }) {
   const name = String(subject.name ?? "UFC fighter");
   return <article className={"higher-lower-card ufc-hl__card " + (hidden ? "is-hidden" : "is-known")}>
+    <div className="higher-lower-card__identity"><span>{String(subject.context ?? "UFC")}</span></div>
     <div className="ufc-hl__portrait">
       <FighterPhoto name={name} src={String(subject.photoSrc ?? "")} />
     </div>
-    <div className="higher-lower-card__identity"><span>{String(subject.context ?? "UFC")}</span></div>
     <h3>{name}</h3>
     <strong>{hidden ? "?" : String(subject.formattedValue ?? subject.value ?? "")}</strong>
   </article>;

@@ -12,12 +12,12 @@ import "../../styles/ufc-higher-lower.css";
 import "../../styles/higher-lower-standard.css";
 
 type Answer = { questionId: string; choice: UfcHigherLowerChoice; correct: boolean };
-function UfcCard({ name, context, portrait, value, hidden }: {
-  name: string; context: string; portrait: string; value: string; hidden?: boolean;
+function UfcCard({ name, context, portrait, value, hidden, revealed = false }: {
+  name: string; context: string; portrait: string; value: string; hidden?: boolean; revealed?: boolean;
 }) {
-  return <article className={"higher-lower-card ufc-hl__card " + (hidden ? "is-hidden" : "is-known")}>
-    <div className="ufc-hl__portrait"><FighterPhoto name={name} src={portrait} /></div>
+  return <article className={"higher-lower-card ufc-hl__card " + (hidden ? "is-hidden" : revealed ? "is-revealed" : "is-known")}>
     <div className="higher-lower-card__identity"><span>{context}</span></div>
+    <div className="ufc-hl__portrait"><FighterPhoto name={name} src={portrait} /></div>
     <h3>{name}</h3><strong>{value}</strong>
   </article>;
 }
@@ -96,7 +96,7 @@ export default function UfcHigherLowerPage() {
     <section className="higher-lower-matchup">
       <UfcCard name={current.known.name} context={current.known.context} portrait={current.known.photoSrc} value={current.known.formattedValue} />
       <div className="higher-lower-vs">VS</div>
-      <UfcCard name={current.hidden.name} context={current.hidden.context} portrait={current.hidden.photoSrc} value={revealed ? current.hidden.formattedValue : "?"} hidden={!revealed} />
+      <UfcCard name={current.hidden.name} context={current.hidden.context} portrait={current.hidden.photoSrc} value={revealed ? current.hidden.formattedValue : "?"} hidden={!revealed} revealed={Boolean(revealed)} />
     </section>
     <HigherLowerChoices revealed={revealed} answer={current.answer} onChoose={answer} />
     <HigherLowerFeedback correct={revealed === null ? null : correct}
