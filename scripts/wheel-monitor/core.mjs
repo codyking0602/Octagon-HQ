@@ -114,3 +114,17 @@ export function snapshotReadiness(blockers) {
   assert(Array.isArray(blockers),"Review blockers must be explicit");
   return {status:blockers.length?"review-blocked":"source-certified",snapshotReady:blockers.length===0,blockers};
 }
+
+export function validateOfficialUfcTable(rows, division) {
+  const champions=rows.filter(r=>r.champion===true);
+  const contenders=rows.filter(r=>r.champion===false).sort((a,b)=>a.rank-b.rank);
+  if(champions.length!==1 || contenders.length!==15 ||
+    new Set(rows.map(r=>nameKey(r.name))).size!==16 ||
+    contenders.some((r,i)=>!Number.isInteger(r.rank) || r.rank<1 || r.rank>15 ||
+      (i===0 ? r.rank!==1 : r.rank!==contenders[i-1].rank && r.rank!==i+1))) {
+    return {valid:false,division,tiedRanks:[]};
+  }
+  const tiedRanks=contenders.filter((r,i)=>i>0 && r.rank===contenders[i-1].rank)
+    .map(r=>({rank:r.rank,name:r.name}));
+  return {valid:true,division,tiedRanks};
+}
