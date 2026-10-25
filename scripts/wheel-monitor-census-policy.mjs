@@ -3,7 +3,7 @@
 import { createHash } from "node:crypto";
 import { compareWheelSnapshots, verifyUfcRankings } from "./wheel-monitor-change-policy.mjs";
 export const stableHash = value => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-export const normalizePerson = value => String(value ?? "").normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "").replace(/(iii|ii|iv|jr|sr)$/,"");
+export const normalizePerson = value => String(value ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "").replace(/(iii|ii|iv|jr|sr)$/,"");
 export function flattenEspnRoster(payload) {
   const rows = Array.isArray(payload?.athletes) ? payload.athletes : [];
   const athletes = rows.flatMap(group => Array.isArray(group?.items) ? group.items : group?.id ? [group] : []);
