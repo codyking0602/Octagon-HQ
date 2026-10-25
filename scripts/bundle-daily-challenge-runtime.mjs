@@ -15,6 +15,12 @@ const bundles = [
     requiredExports: ["advanceOfficialDailyRuntime", "buildOfficialDailySetup"],
   },
   {
+    label: "Football Hit the Number Daily answer-only runtime",
+    entry: resolve(repoRoot, "src/features/play/footballHitNumberDailyAdvance.ts"),
+    fileName: "football-hit-number-advance.generated.mjs",
+    requiredExports: ["advanceFootballHitNumberDailyRuntime"],
+  },
+  {
     label: "Millionaire Daily answer-only runtime",
     entry: resolve(repoRoot, "src/features/play/millionaireDailyAdvance.ts"),
     fileName: "millionaire-advance.generated.mjs",
