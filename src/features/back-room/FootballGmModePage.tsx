@@ -1519,6 +1519,7 @@ export default function FootballGmModePage({
     scenario: "elite" | "young";
     seed: string;
     savedState: PersistedRun | null;
+    startingPlayerId?: string | null;
     save: (state: PersistedRun, score: number | null) => Promise<void>;
     onBack: () => void;
     legacyFreeAgency?: boolean;
@@ -1534,6 +1535,16 @@ export default function FootballGmModePage({
     if (weeklyRun) {
       const persisted = weeklyRun.savedState ? parsePersistedRun(weeklyRun.savedState) : null;
       if (persisted && persisted.seed === weeklyRun.seed) return persisted;
+      // October 27–November 2 is the first choose-your-own WR/RB week.
+      // The selection was bound to the attempt server-side before the draft.
+      if (weeklyRun.startingPlayerId) {
+        const chosen = footballGmPlayerById(weeklyRun.startingPlayerId);
+        if (!chosen || (chosen.family !== "WR" && chosen.family !== "RB")) {
+          throw new Error("Invalid saved Weekly GM starting player.");
+        }
+        return { ...initialRun(weeklyRun.seed, "three-plus-one"), phase: "draft", spinIndex: 1,
+          roster: [{ slot: chosen.family, playerId: chosen.id, acquired: "draft" }] };
+      }
       const qbId = weeklyRun.seed.startsWith("weekly-gm:2026-10-20:")
         ? (weeklyRun.scenario === "elite" ? "DAL|QB|dakprescott" : "ATL|QB|michaelpenix")
         : (weeklyRun.scenario === "elite" ? "BUF|QB|joshallen" : "NYG|QB|jaxsondart");
@@ -2282,7 +2293,9 @@ export default function FootballGmModePage({
         <>
           <CapMeter roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
           <RosterGrid roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
-          {run.startMode === "choose-qb" ? <p className="football-gm__qb-draft-banner">CHOOSE YOUR QB · SIX INDEPENDENT WHEEL PICKS · NORMAL DEVELOPMENT</p> : null}
+          {weeklyRun?.startingPlayerId ? (
+            <p className="football-gm__qb-draft-banner">YOUR CHOSEN {weeklyRun.scenario === "elite" ? "WR" : "RB"} · SIX TEAM-WHEEL PICKS · NORMAL PLAYER DEVELOPMENT</p>
+          ) : run.startMode === "choose-qb" ? <p className="football-gm__qb-draft-banner">CHOOSE YOUR QB · SIX INDEPENDENT WHEEL PICKS · NORMAL DEVELOPMENT</p> : null}
           <div className="football-gm__draft-context" aria-label="Draft round and open roster spots">
             <span>ROUND {run.roster.length + 1} OF 7</span>
             <strong>{footballGmOpenSlots(run.roster).join(" · ")}</strong>

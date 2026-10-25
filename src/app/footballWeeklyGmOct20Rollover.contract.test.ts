@@ -10,7 +10,7 @@ const auctionCenter = readFileSync("src/features/back-room/FootballWeeklyAuction
 
 describe("October 20 official Weekly GM rollover", () => {
   it("names the current matchup and retains original historical/owner preview labels", () => {
-    expect(page).toContain('week_start === "2026-10-20"');
+    expect(page).toContain('weekStart === "2026-10-20"');
     expect(page).toContain('quarterback: "Dak Prescott"');
     expect(page).toContain('quarterback: "Michael Penix Jr."');
     expect(page).toContain('quarterback: "Josh Allen"');

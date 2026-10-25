@@ -6,6 +6,9 @@ import FootballGmModePage from "./FootballGmModePage";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
 import { createFootballWeeklyGmRepository, type WeeklyGmArchivedWeek, type WeeklyGmResult, type WeeklyGmScenario, type WeeklyGmState } from "./footballWeeklyGmRepository";
 import type { PersistedRun } from "./FootballGmModePage";
+import { footballGmMoney, footballGmPlayerById } from "./footballGmEngine";
+import { OCT27_WEEKLY_GM_START, oct27WeeklyGmCandidates, oct27WeeklyGmAllows, oct27WeeklyGmScouting } from "./footballWeeklyGmOct27";
+import { footballGmRepriceLabel } from "./footballGmScouting";
 import { canViewWeeklyGmScenario, canViewWeeklyGmTotal } from "./footballWeeklyGmVisibility";
 import "../../styles/football-gm-mode.css";
 import "../../styles/football-weekly-gm.css";
@@ -27,6 +30,17 @@ const OCT20_SCENARIOS: typeof OCT13_SCENARIOS = [
   { id: "young", title: "RISING FRANCHISE", quarterback: "Michael Penix Jr.", development: "Guaranteed 78 → 83 OVR · progression" },
 ];
 
+const OCT27_SCENARIOS: typeof OCT13_SCENARIOS = [
+  { id: "elite", title: "CHOOSE YOUR RECEIVER", quarterback: "WR Run", development: "Choose from 12 approved wide receivers. Normal progression and real GM contracts." },
+  { id: "young", title: "CHOOSE YOUR RUNNING BACK", quarterback: "RB Run", development: "Choose from five running backs, including McCaffrey as a Decline Risk wildcard." },
+];
+
+function scenariosForWeek(weekStart: string, preview: boolean) {
+  if (!preview && weekStart === OCT27_WEEKLY_GM_START) return OCT27_SCENARIOS;
+  if (!preview && weekStart === "2026-10-20") return OCT20_SCENARIOS;
+  return OCT13_SCENARIOS;
+}
+
 export default function FootballWeeklyGmPage({ preview = false }: { preview?: boolean } = {}) {
   const identity = useIdentity();
   const [params] = useSearchParams();
@@ -34,6 +48,8 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   const repository = useMemo(() => createFootballWeeklyGmRepository(preview), [preview]);
   const [state, setState] = useState<WeeklyGmState | null>(null);
   const [playing, setPlaying] = useState<WeeklyGmScenario | null>(null);
+  const [choosing, setChoosing] = useState<WeeklyGmScenario | null>(null);
+  const [selectedOpeningId, setSelectedOpeningId] = useState<string | null>(null);
   const [detail, setDetail] = useState<WeeklyGmResult | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -51,6 +67,9 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   useEffect(() => {
     if (detail) document.getElementById("weekly-gm-result")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [detail]);
+  useEffect(() => {
+    if (choosing) document.getElementById("weekly-gm-choose-player")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [choosing]);
 
   async function refresh() {
     if (!repository) throw new Error("Sign in to play the Weekly GM Championship.");
@@ -73,7 +92,12 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
 
   async function open(scenario: WeeklyGmScenario) {
     if (!repository || !state || busy) return;
-    if (state.status === "closed") return;
+    if (state.status !== "active") return;
+    if (!state.attempts[scenario] && !preview && state.week_start === OCT27_WEEKLY_GM_START) {
+      setChoosing(scenario);
+      setSelectedOpeningId(null);
+      return;
+    }
     setError("");
     setBusy(true);
     try {
@@ -83,6 +107,26 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
       setDetail(null);
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : "Unable to begin the franchise.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function confirmOpening() {
+    if (!repository || !state || !choosing || !selectedOpeningId || busy
+      || state.status !== "active" || state.week_start !== OCT27_WEEKLY_GM_START
+      || !oct27WeeklyGmAllows(choosing, selectedOpeningId)) return;
+    setBusy(true);
+    setError("");
+    try {
+      const attempt = await repository.start(choosing, selectedOpeningId);
+      setState((current) => current ? { ...current, attempts: { ...current.attempts, [choosing]: attempt } } : current);
+      setPlaying(choosing);
+      setChoosing(null);
+      setSelectedOpeningId(null);
+      setDetail(null);
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : "Unable to confirm franchise selection.");
     } finally {
       setBusy(false);
     }
@@ -105,8 +149,8 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   if (preview && !identity.ready) return <div className="page football-gm-page"><section className="surface-card">Loading owner GM preview…</section></div>;
   if (preview && !isOwner) return <div className="page football-gm-page"><section className="surface-card"><h1>OWNER-ONLY PLAYTEST</h1><p>This production test is reserved for the Octagon HQ owner.</p><Link to="/football/weekly-gm">Weekly GM Championship</Link></section></div>;
 
-  const isOct20Week = !preview && state?.week_start === "2026-10-20";
-  const scenarios = isOct20Week ? OCT20_SCENARIOS : OCT13_SCENARIOS;
+  const isOct27Week = !preview && state?.week_start === OCT27_WEEKLY_GM_START;
+  const scenarios = scenariosForWeek(state?.week_start ?? "2026-10-13", preview);
   const attempt = playing ? state?.attempts[playing] : null;
   if (playing && state && attempt && state.status === "active") {
     return (
@@ -114,8 +158,8 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         <div className="page football-gm-page">
           <section className="surface-card" style={{ padding: 16, marginBottom: 12 }}>
             <button type="button" onClick={() => { setPlaying(null); void refresh().catch(() => {}); }}>← WEEKLY CHAMPIONSHIP</button>
-            <h2>{scenarios.find((scenario) => scenario.id === playing)?.quarterback.toUpperCase()} · {preview ? "LIVE OWNER TEST" : "OFFICIAL RUN"}</h2>
-            <p>{preview ? "Real production gameplay, scoring, saves, and result screens. Test attempts stay outside the official standings." : "One official attempt · Six random wheel spins · The usual three-year franchise."}</p>
+            <h2>{(isOct27Week ? footballGmPlayerById(attempt.starting_player_id ?? "")?.name : scenarios.find((scenario) => scenario.id === playing)?.quarterback)?.toUpperCase()} · {preview ? "LIVE OWNER TEST" : "OFFICIAL RUN"}</h2>
+            <p>{preview ? "Real production gameplay, scoring, saves, and result screens. Test attempts stay outside the official standings." : "One official attempt · Six random wheel spins · Normal player-specific development over three seasons."}</p>
             {error ? <p role="alert">{error}</p> : null}
           </section>
         </div>
@@ -125,6 +169,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
             scenario: playing,
             seed: attempt.seed,
             savedState: attempt.state,
+            startingPlayerId: isOct27Week ? attempt.starting_player_id : null,
             // Keep the already-started October 13 championship on its original rules.
             legacyFreeAgency: state.week_start < "2026-10-20",
             onBack: () => { setPlaying(null); void refresh().catch(() => {}); },
@@ -152,7 +197,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   const myTotal = (state.attempts.elite?.score ?? 0) + (state.attempts.young?.score ?? 0);
   const canViewTotal = canViewWeeklyGmTotal(state.attempts, preview);
   const standingRows = archive?.standings ?? state.leaderboard;
-  const standingScenarios = archive?.week_start === "2026-10-13" ? OCT13_SCENARIOS : scenarios;
+  const standingScenarios = archive ? scenariosForWeek(archive.week_start, false) : scenarios;
   const winners = archive?.champions ?? [];
   const leaderList = (showAll || archive ? standingRows : standingRows.slice(0, 3));
   return (
@@ -185,7 +230,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
             <Link to={preview ? "/football/weekly-gm" : "/football"}>← {preview ? "OFFICIAL GM WEEK" : "FOOTBALL PLAY"}</Link>
             <p className="eyebrow">{preview ? "OWNER PLAYTEST" : "WEEKLY FEATURED · CHAMPIONSHIP 10%"}</p>
             <h1>{preview ? "TEST WEEKLY GM" : "NFL GM CHAMPIONSHIP"}</h1>
-            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · Two official franchises · $150M cap · Six spins each</p>
+            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · Two official franchises · $150M cap · Six spins each{isOct27Week ? " · Choose your WR and RB" : ""}</p>
             <p className="football-weekly-gm__progress">
               <strong>{myTotal.toFixed(1)} / 200</strong>
               <span>{Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</span>
@@ -222,7 +267,9 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
               return (
                 <section className="surface-card football-weekly-gm__franchise" key={scenario.id}>
                   <p className="eyebrow">{scenario.title}</p>
-                  <h2>{scenario.quarterback}</h2>
+                  <h2>{isOct27Week && item?.starting_player_id
+                    ? footballGmPlayerById(item.starting_player_id)?.name ?? scenario.quarterback
+                    : scenario.quarterback}</h2>
                   <p>{scenario.development}</p>
                   <strong>{item?.completed ? item.score?.toFixed(1) + " / 100" : item ? "IN PROGRESS" : "NOT STARTED"}</strong>
                   {item?.completed ? <button type="button" onClick={() => void inspect(null, scenario.id)}>VIEW RESULT →</button>
@@ -235,6 +282,50 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
               );
             })}
           </div>
+          {isOct27Week && choosing ? (
+            <section id="weekly-gm-choose-player" className="surface-card football-weekly-gm__picker">
+              <div className="football-weekly-gm__picker-heading">
+                <span><p className="eyebrow">FIRST FRANCHISE DECISION</p>
+                <h2>CHOOSE YOUR {choosing === "elite" ? "WIDE RECEIVER" : "RUNNING BACK"}</h2></span>
+                <button type="button" onClick={() => { setChoosing(null); setSelectedOpeningId(null); }}>CANCEL</button>
+              </div>
+              <p>Scout the salary, contract term, talent, outlook and repricing risk before making your franchise pick. Each player's development is simulated normally, with no guaranteed result.</p>
+              <details className="football-weekly-gm__scout-key">
+                <summary>WHAT DO THE SCOUTING BADGES MEAN?</summary>
+                <p><strong>ELITE / IMPACT</strong> describe current talent. Exact overall ratings stay hidden, just as in regular GM.</p>
+                <p><strong>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</strong> summarize player-specific development probabilities, not guaranteed improvement or decline. McCaffrey is the one permitted Decline Risk pick.</p>
+                <p><strong>1YR</strong> means the salary reprices in the offseason; LOW / MED / HIGH REPRICE estimates the increase. <strong>3YR · SALARY LOCKED</strong> means the existing salary stays fixed over the three-season run.</p>
+              </details>
+              <div className="football-weekly-gm__picker-list" role="group" aria-label="Approved franchise starters">
+                {oct27WeeklyGmCandidates(choosing).map((player) => {
+                  const scout = oct27WeeklyGmScouting(player);
+                  return (
+                    <button key={player.id} type="button"
+                      className={selectedOpeningId === player.id ? "is-selected" : ""}
+                      aria-pressed={selectedOpeningId === player.id}
+                      onClick={() => setSelectedOpeningId(player.id)}>
+                      <span className="football-weekly-gm__picker-identity">
+                        <small>{player.team} · {player.position} · AGE {player.age}</small>
+                        <strong>{player.name}</strong>
+                        <span className="football-weekly-gm__picker-badges">
+                          <em className="is-tier">{scout.tier}</em>
+                          <em className={scout.outlook === "DECLINE RISK" ? "is-risk" : "is-outlook"}>{scout.outlook}</em>
+                          <em>{player.gameContract}</em>
+                          <em className={`risk-${player.extensionRisk.toLowerCase()}`}>{footballGmRepriceLabel(player.extensionRisk)}</em>
+                        </span>
+                      </span>
+                      <span className="football-weekly-gm__picker-contract"><b>{footballGmMoney(player.salaryApy)}</b><small>PER YEAR</small></span>
+                    </button>
+                  );
+                })}
+              </div>
+              <button className="primary-action football-weekly-gm__confirm" type="button"
+                disabled={!selectedOpeningId || busy} onClick={() => void confirmOpening()}>
+                {selectedOpeningId ? "CONFIRM " + (footballGmPlayerById(selectedOpeningId)?.name ?? "PLAYER").toUpperCase() + " →" : "SELECT A PLAYER TO CONTINUE"}
+              </button>
+              <small>Selection is final for this official run. After confirmation, six normal team-wheel picks complete your seven-player core.</small>
+            </section>
+          ) : null}
         </>
       )}
       <section className="surface-card football-weekly-gm__standings">
