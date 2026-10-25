@@ -328,7 +328,7 @@ describe("public Football/UFC Play 2.0 release", () => {
     preview("ufc");
     const hub = screen.getByTestId("play-v2-hub");
     expect(within(hub).getByRole("region", { name: "Game Room" })).toBeInTheDocument();
-    expect(within(hub).getByText("4 GAMES")).toBeInTheDocument();
+    expect(within(hub).getByText("5 GAMES")).toBeInTheDocument();
     expect(within(hub).getByText(/Sign in to compete in official Dailies/)).toBeInTheDocument();
     expect(within(hub).queryByRole("region", { name: "Your Play Performance" })).not.toBeInTheDocument();
     expect(within(hub).queryByRole("region", { name: "Your Matchups" })).not.toBeInTheDocument();
