@@ -3,6 +3,7 @@ import {
   UFC_HIGHER_LOWER_QUESTION_COUNT, type UfcHigherLowerQuestion,
 } from "./ufcHigherLowerModel";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
+import { buildTwoGameDailyPublication } from "./dailyTwoGameRuntime";
 import type {
   OfficialDailyAdvanceResult, OfficialDailyRuntimeContext, OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
@@ -25,15 +26,15 @@ export function ufcHigherLowerPublicQuestion(question: UfcHigherLowerQuestion, i
 }
 
 export function buildUfcHigherLowerDailyPublication(
-  day: string, scheduleVersion: string,
+  day: string, scheduleVersion: string, gameIndex = 0,
 ): OfficialDailySetupPublication {
   if (!scheduleVersion.trim()) throw new Error("UFC Higher or Lower needs a schedule version.");
-  const board = createUfcHigherLowerOfficialBoard(day);
+  const board = createUfcHigherLowerOfficialBoard(day, gameIndex);
   if (board.questions.length !== UFC_HIGHER_LOWER_QUESTION_COUNT) {
     throw new Error("UFC Higher or Lower Daily must publish ten verified comparisons.");
   }
   return {
-    setupKey: [UFC_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day].join(":"),
+    setupKey: [UFC_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, ...(gameIndex ? ["game-2"] : [])].join(":"),
     contentVersion: UFC_HIGHER_LOWER_OFFICIAL_VERSION,
     scoringVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
@@ -57,6 +58,16 @@ export function buildUfcHigherLowerDailyPublication(
       correct_choices: board.questions.map(q => q.answer),
     },
   };
+}
+
+export function buildUfcHigherLowerTwoGameDailyPublication(day: string, scheduleVersion: string) {
+  return buildTwoGameDailyPublication({
+    sport: "ufc", gameType: "higher_lower", day, scheduleVersion,
+    children: [
+      buildUfcHigherLowerDailyPublication(day, scheduleVersion, 0),
+      buildUfcHigherLowerDailyPublication(day, scheduleVersion, 1),
+    ],
+  });
 }
 
 export function advanceUfcHigherLowerDailyRuntime(
