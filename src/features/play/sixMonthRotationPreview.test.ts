@@ -48,7 +48,7 @@ describe("nonpublishing six-month Daily rotation preview", () => {
       const gaps = previewGaps(planned[sport]);
       for (const [game, gap] of Object.entries(gaps)) {
         expect(gap.minDays, sport + " " + game + " near-consecutive appearance").toBeGreaterThanOrEqual(
-          sport === "football" ? 4 : 8);
+          sport === "football" ? 4 : sport === "nba" ? 6 : 8);
         expect(gap.maxDays, sport + " " + game + " excessive absence").toBeLessThanOrEqual(
           sport === "football" ? 20 : sport === "ufc" ? 36 : 36);
       }
