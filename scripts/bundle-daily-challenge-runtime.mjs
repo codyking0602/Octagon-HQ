@@ -57,7 +57,7 @@ const bundles = [
       { day: "2026-11-09", gameType: "hit_the_number" },
       { day: "2026-11-11", gameType: "find_leader" },
       { day: "2026-11-13", gameType: "wavelength" },
-      { day: "2026-11-15", gameType: "sports_feud" },
+      { day: "2026-11-21", gameType: "bar_trivia" },
       { day: "2026-11-19", gameType: "higher_lower" },
     ],
   },
