@@ -4,6 +4,7 @@ import { NBA_DAILY_WEIGHTS, NBA_DAILY_WEIGHTED_CYCLE } from "../nba/nbaDailySche
 import {
   SIX_MONTH_AUDIT_DAYS,
   auditCurrentMainBaseline,
+  auditMergedPartOneCalendar,
   previewApprovedDailyRotation,
   summarizeRotation,
 } from "./sixMonthDailyRotationAudit";
@@ -11,6 +12,20 @@ import {
 describe("six-month future Daily planning (NON-PUBLISHING, Part 1 owns cutover)", () => {
   const future = previewApprovedDailyRotation();
   const report = summarizeRotation(future.slots);
+
+  it("audits actual Part 1 dates, content-cycle truth and the NBA season boundary", () => {
+    const calendar = auditMergedPartOneCalendar();
+    const actual = summarizeRotation(calendar);
+    expect(actual.totals).toEqual({ football: 182, ufc: 91, nba: 81 });
+    expect(actual.collisions.total).toBe(0);
+    expect(actual.games.football.higher_lower).toBeUndefined();
+    expect(actual.games.ufc.higher_lower).toBeUndefined();
+    const first = calendar.filter(slot => slot.day === "2026-10-25");
+    expect(first.map(slot => slot.sport).sort()).toEqual(["football", "ufc"]);
+    const lastNba = calendar.filter(slot => slot.sport === "nba").at(-1);
+    expect(lastNba?.day).toBe("2027-04-10");
+    expect(calendar.some(slot => slot.sport === "nba" && slot.day > "2027-04-10")).toBe(false);
+  });
 
   it("preserves every approved frequency and does not change the live rotation", () => {
     expect(future.live).toBe(false);
