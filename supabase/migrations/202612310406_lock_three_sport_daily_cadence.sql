@@ -21,6 +21,14 @@ begin
       and daily.game_type = 'millionaire'
       and daily.fallback_reason is null
     )
+    and not (
+      -- Preserve the already-published Oct 25 Football Hit the Number board.
+      schedule.sport = 'football'
+      and daily.central_day = date '2026-10-25'
+      and daily.schedule_version = 'football-daily-v20-resume-v18-oct3'
+      and daily.game_type = 'hit_the_number'
+      and daily.fallback_reason is null
+    )
   ) then
     raise exception 'cadence cutover refused: other future Daily boards have already been published';
   end if;
@@ -38,7 +46,7 @@ $guard$;
 
 insert into private.daily_challenge_schedule_versions(version,time_zone,anchor_day,starts_on,game_cycle,sport)
 values
-  ('football-daily-v21-locked-oct25','America/Chicago',date '2026-10-25',date '2026-10-25',array[
+  ('football-daily-v21-locked-oct25','America/Chicago',date '2026-10-25',date '2026-10-26',array[
     'who_am_i',
     'millionaire',
     'find_leader',
@@ -348,7 +356,7 @@ begin
    or (select count(*) from unnest(v_u) as g where g='hit_the_number')<>2
  then raise exception 'approved Football/UFC weights changed';end if;
  for v_day in select d::date from generate_series(date '2026-10-25',date '2027-04-24', interval '1 day') d loop
-   if private.daily_challenge_schedule_for_day(v_day,'football') <> 'football-daily-v21-locked-oct25' then raise exception 'missing Football day %',v_day;end if;
+   if private.daily_challenge_schedule_for_day(v_day,'football') <> (case when v_day=date '2026-10-25' then 'football-daily-v20-resume-v18-oct3' else 'football-daily-v21-locked-oct25' end) then raise exception 'Football daily schedule drift %',v_day;end if;
    if private.daily_challenge_active_day(v_day,'ufc') <> date '2026-10-25' + (((v_day-date '2026-10-25')/2)*2) then raise exception 'UFC cadence drift %',v_day;end if;
    if v_day between date '2026-11-01' and date '2027-04-11'
      and private.daily_challenge_active_day(v_day,'nba') <> date '2026-11-01' + (((v_day-date '2026-11-01')/2)*2)
