@@ -74,7 +74,8 @@ export function FootballHigherLowerLeaderboardResult({
 export function OfficialFootballHigherLowerDailyView({
   projection, busy, onAdvance,
 }: { projection: TodayChallengeProjection; busy: boolean; onAdvance: (action: Row) => void }) {
-  const state = object(projection.publicState);
+  const state = object(projection.publicSetup).format_version === "daily-two-game-average-v1"
+    ? object(projection.publicState.active_round) : object(projection.publicState);
   const attempt = projection.officialAttempt;
   if (attempt) return <FootballHigherLowerLeaderboardResult
     normalizedScore={attempt.normalizedScore}
