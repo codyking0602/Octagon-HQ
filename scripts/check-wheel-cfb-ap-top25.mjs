@@ -94,7 +94,7 @@ function currentApRows(payload) {
     .filter((row) => Number.isInteger(row.rank) && row.rank >= 1 && row.rank <= 25)
     .sort((left, right) => left.rank - right.rank);
 
-  if (normalized.length !== 25 || normalized.some((row, index) => row.rank !== index + 1 || !row.espnId)) {
+  if (normalized.length !== 25 || normalized.some((row, index) => !row.espnId || (index > 0 && row.rank < normalized[index - 1].rank)) || new Set(normalized.map(row => row.espnId)).size !== 25) {
     throw new Error(`ESPN AP Top 25 payload was incomplete: received ${normalized.length} ranked rows.`);
   }
   return normalized;
@@ -108,17 +108,20 @@ const response = await fetch(ESPN_RANKINGS_URL, {
 if (!response.ok) throw new Error(`ESPN rankings request failed: ${response.status}`);
 const current = currentApRows(await response.json());
 
-const differences = current.flatMap((row) => {
-  const checkedIn = expected[row.rank - 1];
+const apTies = current.filter((row,index) => index > 0 && row.rank === current[index-1].rank);
+const differences = current.flatMap((row, index) => {
+  // AP can tie ranks; index is comparison order, rank stays the official value.
+  const checkedIn = expected[index];
   if (checkedIn?.espnId === row.espnId) return [];
   return [{
     rank: row.rank,
+    comparisonSlot: index + 1,
     checkedIn: checkedIn ? { schoolId: checkedIn.schoolId, espnId: checkedIn.espnId } : null,
     current: { name: row.name, espnId: row.espnId },
   }];
 });
 
-if (differences.length) {
+if (differences.length || apTies.length) {
   const uncoveredEntrants = differences
     .map((difference) => difference.current)
     .filter((team) => !coverage.byEspnId.has(team.espnId));
@@ -140,6 +143,7 @@ if (differences.length) {
   }
 
   const report = {status: uncoveredEntrants.length ? "onboarding-required" : "factual-update-required",
+    officialRankTies: apTies.map(row => ({rank:row.rank,name:row.name,espnId:row.espnId})),
     observedAt: new Date().toISOString(), sourceUrl: ESPN_RANKINGS_URL,
     checkedInCount: expected.length, officialCount: current.length, differences, uncoveredEntrants };
   if (process.env.WHEEL_AP_REPORT_PATH) writeFileSync(process.env.WHEEL_AP_REPORT_PATH, JSON.stringify(report,null,2)+"\n");
