@@ -26,15 +26,16 @@ describe("Football Higher or Lower six-month readiness / integration gate", () =
     expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
   });
 
-  it("simulates fourteen distinct 10-question official Daily boards using real seeded publisher and canonical source records", () => {
+  it("simulates 14 appearances with 28 independent source-bound 10-question boards", () => {
     const result = auditFootballHigherLowerDailyDates(
       provisionalDates(), "football-higher-lower-provisional-certification-v1",
     );
     const s = result.summary;
-    expect(s.generatedBoards).toBe(14);
-    expect(s.totalComparisons).toBe(140);
-    expect(s.nflComparisons).toBe(70);
-    expect(s.cfbComparisons).toBe(70);
+    expect(s.generatedBoards).toBe(28);
+    expect(s.comparisonsPerAppearance).toBe(20);
+    expect(s.totalComparisons).toBe(280);
+    expect(s.nflComparisons).toBe(140);
+    expect(s.cfbComparisons).toBe(140);
     expect(s.exactRepeats).toBe(0);
     expect(s.semanticRepeats).toBe(0);
     expect(s.repeatedSubjectMetrics).toBe(0);
@@ -51,8 +52,13 @@ describe("Football Higher or Lower six-month readiness / integration gate", () =
       [q.known, q.hidden].filter(side => side.evidence.kind === "franchise")));
     expect(franchiseSubjects.length).toBeGreaterThan(0);
     expect(franchiseSubjects.every(side => !/^[A-Z]{2,4}$/.test(side.name))).toBe(true);
-    expect(s.difficultyCounts).toEqual({ approachable: 42, competitive: 70, tough: 28 });
+    expect(s.difficultyCounts).toEqual({ approachable: 84, competitive: 140, tough: 56 });
     expect(result.boards.every(board => board.questions.length === 10)).toBe(true);
+    for (let i = 0; i < result.boards.length; i += 2) {
+      expect(result.boards[i]?.day).toBe(result.boards[i + 1]?.day);
+      expect(result.boards[i]?.gameNumber).toBe(1);
+      expect(result.boards[i + 1]?.gameNumber).toBe(2);
+    }
     expect(auditFootballHigherLowerDailyDates(
       provisionalDates(), "football-higher-lower-provisional-certification-v1",
     ).boards).toEqual(result.boards);
@@ -60,7 +66,7 @@ describe("Football Higher or Lower six-month readiness / integration gate", () =
     if (process.env.OCTAGON_WRITE_HL_AUDIT === "1") {
       mkdirSync("artifacts", { recursive: true });
       writeFileSync("artifacts/football-higher-lower-provisional-six-month-boards.json",
-        JSON.stringify({ ...result, WARNING: "PROVISIONAL: NOT A CERTIFIED PRODUCTION CALENDAR. FINAL ROTATION AND SEED NOT YET MERGED." }, null, 2) + "\n");
+        JSON.stringify({ ...result, WARNING: "PROVISIONAL: 14 stress appearances, 28 boards; Football Higher or Lower not yet scheduled by canonical v21 calendar." }, null, 2) + "\n");
     }
   }, 180_000);
 });
