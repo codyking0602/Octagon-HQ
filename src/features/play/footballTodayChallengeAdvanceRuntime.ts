@@ -18,6 +18,7 @@ import { advanceMillionaireDailyRuntime } from "./millionaireDailyRuntime";
 import { advanceFamilyFeudDailyRuntime } from "./familyFeudDailyRuntime";
 import { advanceBarTriviaDailyRuntime } from "./barTriviaDailyRuntime";
 import { advanceAverageFanDailyRuntime } from "./averageFanDailyRuntime";
+import { advanceFootballHigherLowerDailyRuntime } from "./footballHigherLowerDailyRuntime";
 import type {
   OfficialDailyAdvanceResult,
   OfficialDailyRuntimeContext,
@@ -395,6 +396,7 @@ function advanceSingleFootballOfficialDailyRuntime(
     case "sports_feud": return advanceFamilyFeudDailyRuntime(context, parsed);
     case "bar_trivia": return advanceBarTriviaDailyRuntime(context, parsed);
     case "average_fan": return advanceAverageFanDailyRuntime(context, parsed);
+    case "higher_lower": return advanceFootballHigherLowerDailyRuntime(context, parsed);
     default: throw new Error(`Unsupported Football official daily game ${String(context.gameType)}.`);
   }
 }

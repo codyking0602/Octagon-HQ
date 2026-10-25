@@ -39,6 +39,11 @@ const DailyTwoGameLeaderboardResult = lazy(() =>
     default: module.DailyTwoGameLeaderboardResult,
   })),
 );
+const FootballHigherLowerLeaderboardResult = lazy(() =>
+  import("./OfficialFootballHigherLowerDailyView").then((module) => ({
+    default: module.FootballHigherLowerLeaderboardResult,
+  })),
+);
 const NbaHigherLowerLeaderboardResult = lazy(() =>
   import("../nba/NbaHigherLowerLeaderboardResult").then((module) => ({
     default: module.NbaHigherLowerLeaderboardResult,
@@ -184,6 +189,14 @@ export function DailyAnswerDetail({
               sport={sport === "nba_preview" ? "nba" : sport}
             />
           </Suspense>
+        ) : sport === "football" && entry.gameType === "higher_lower" ? (
+          <Suspense fallback={<p className="today-hub-empty">Loading Football comparison results…</p>}>
+            <FootballHigherLowerLeaderboardResult
+              normalizedScore={entry.normalizedScore}
+              answers={entry.resultDetail.answers}
+              revealQuestions={entry.resultDetail.reveal_questions}
+            />
+          </Suspense>
         ) : sport === "nba" && entry.gameType === "higher_lower" ? (
           <Suspense fallback={<p className="today-hub-empty">Loading NBA comparison results…</p>}>
             <NbaHigherLowerLeaderboardResult
@@ -300,8 +313,8 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
     ? footballSpecialDailyThemeForDay(projection.centralDay)
     : null;
   const adapter = useMemo(
-    () => todayChallengeAdapter(projection?.gameType),
-    [projection?.gameType],
+    () => todayChallengeAdapter(projection?.gameType, sport),
+    [projection?.gameType, sport],
   );
 
   if (!signedIn) {

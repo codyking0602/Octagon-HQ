@@ -14,7 +14,8 @@ type OfficialDailyGameType =
   | "millionaire"
   | "sports_feud"
   | "bar_trivia"
-  | "average_fan";
+  | "average_fan"
+  | "higher_lower";
 
 interface OfficialDailyRuntimeContext {
   gameType: OfficialDailyGameType;

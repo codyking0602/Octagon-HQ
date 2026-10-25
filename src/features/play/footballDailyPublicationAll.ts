@@ -9,6 +9,7 @@ import { buildFootballDailyPersistenceSetup as buildSportsFeud } from "./footbal
 import { buildFootballDailyPersistenceSetup as buildBarTrivia } from "./footballDailyPublicationBarTrivia";
 import { buildFootballDailyPersistenceSetup as buildAverageFan } from "./footballDailyPublicationAverageFan";
 import { buildFootballDailyPersistenceSetup as buildComparison } from "./footballDailyPublicationComparison";
+import { buildFootballHigherLowerDailyPersistenceSetup } from "./footballHigherLowerDailyRuntime";
 
 export function buildFootballDailyPersistenceSetup(
   day: string,
@@ -35,6 +36,8 @@ export function buildFootballDailyPersistenceSetup(
       return buildBarTrivia(day, scheduleVersion, gameType);
     case "average_fan":
       return buildAverageFan(day, scheduleVersion, gameType, publicationHistory);
+    case "higher_lower":
+      return buildFootballHigherLowerDailyPersistenceSetup(day, scheduleVersion);
     case "blind_rank_5":
     case "keep_4_cut_4":
       return buildComparison(day, scheduleVersion, gameType);
