@@ -56,8 +56,12 @@ describe("six-month daily generator availability probe — editorial certificati
       }
       try {
         const version = slot.sport === "football"
-          ? slot.day === "2026-10-25" ? "football-daily-v20-resume-v18-oct3" : "football-daily-v21-locked-oct25"
-          : slot.sport === "ufc" ? "ufc-daily-v21-48h-oct25"
+          ? slot.day === "2026-10-25" ? "football-daily-v20-resume-v18-oct3"
+            : slot.day === "2026-10-26" ? "football-daily-v21-locked-oct25"
+              : "football-daily-v22-higher-lower-oct27"
+          : slot.sport === "ufc"
+            ? slot.day < "2026-10-29" ? "ufc-daily-v21-48h-oct25"
+              : "ufc-daily-v22-higher-lower-oct29"
           : "nba-daily-regular-v2-locked";
         const publication = slot.sport === "football"
           ? buildFootballDailyPersistenceSetup(slot.day, version, slot.game as OfficialDailyGameType)

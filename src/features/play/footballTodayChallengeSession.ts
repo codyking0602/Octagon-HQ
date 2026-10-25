@@ -16,6 +16,7 @@ import { buildFootballHigherLowerDailyPublication } from "./footballHigherLowerD
 import {
   DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
   THREE_SPORT_CADENCE_CUTOVER_DAY,
+  FOOTBALL_TWO_GAME_CUTOVER_DAY,
   lockedWeightedGameForDay,
 } from "./dailyChallengeRotation";
 import type {
@@ -38,6 +39,7 @@ export const FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION = "football-daily-v18-average
 export const FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION = "football-daily-v19-average-fan-delay-oct1" as const;
 export const FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION = "football-daily-v20-resume-v18-oct3" as const;
 export const FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION = "football-daily-v21-locked-oct25" as const;
+export const FOOTBALL_APPROVED_HIGHER_LOWER_SCHEDULE_VERSION = "football-daily-v22-higher-lower-oct27" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
 const FOOTBALL_MILLIONAIRE_CUTOVER_DAY = "2026-09-19";
 const FOOTBALL_SPORTS_FEUD_CUTOVER_DAY = "2026-09-23";
@@ -237,6 +239,7 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= FOOTBALL_TWO_GAME_CUTOVER_DAY) return FOOTBALL_APPROVED_HIGHER_LOWER_SCHEDULE_VERSION;
   if (day > THREE_SPORT_CADENCE_CUTOVER_DAY) return FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION;
   if (day >= "2026-10-03") return FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION;
   if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION;
