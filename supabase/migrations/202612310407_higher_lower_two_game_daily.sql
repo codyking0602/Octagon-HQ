@@ -62,7 +62,7 @@ begin
         v_submissions->0,
         v_rounds->0->'private_grading_evidence'
       );
-  
+
       select *
       into v_round_two
       from private.grade_daily_challenge_pre_two_game(
