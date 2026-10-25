@@ -273,6 +273,7 @@ function scoreTwoGameFootballChild(
   context: OfficialDailyRuntimeContext,
   advanced: OfficialDailyAdvanceResult,
 ) {
+  if (context.gameType === "higher_lower") return Number(advanced.publicState.correct_count) * 10;
   if (context.gameType === "find_leader") {
     return Number(advanced.publicState.native_progress ?? 0) * 10;
   }
