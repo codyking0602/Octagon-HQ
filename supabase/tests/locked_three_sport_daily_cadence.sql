@@ -87,5 +87,31 @@ begin
   then raise exception 'publication cadence gate missing';end if;
 end;
 $test$;
+-- A repeated materialization must resolve one immutable board identity, while
+-- attempting to create an extra board on the intervening day fails closed.
+do $publication$
+declare v_first jsonb;v_retry jsonb;v_rejected boolean:=false;
+begin
+  v_first:=public.publish_daily_challenge_setup(
+    date '2026-10-25','ufc-daily-v21-48h-oct25','find_leader',
+    'cadence-proof:ufc:2026-10-25','cadence-proof-v1','daily-two-game-average-score-v1',
+    '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
+  v_retry:=public.publish_daily_challenge_setup(
+    date '2026-10-25','ufc-daily-v21-48h-oct25','find_leader',
+    'cadence-proof:ufc:2026-10-25','cadence-proof-v1','daily-two-game-average-score-v1',
+    '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
+  if v_first->>'id' is null or v_first->>'id' is distinct from v_retry->>'id' then
+    raise exception 'Daily publication retry created a different identity';
+  end if;
+  begin
+    perform public.publish_daily_challenge_setup(
+      date '2026-10-26','ufc-daily-v21-48h-oct25','find_leader',
+      'cadence-proof:ufc:2026-10-26','cadence-proof-v1','daily-two-game-average-score-v1',
+      '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
+  exception when others then v_rejected:=true;
+  end;
+  if not v_rejected then raise exception 'UFC off-day publication was allowed';end if;
+end;
+$publication$;
 rollback;
 \echo 'Locked three-sport Daily cadence, weight, spacing, history and idempotency proofs passed.'
