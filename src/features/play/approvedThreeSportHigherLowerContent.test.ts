@@ -6,6 +6,7 @@ import { buildUfcHigherLowerTwoGameDailyPublication } from "./ufcHigherLowerDail
 import { buildNbaServerDailyPublication } from "../nba/nbaDailyServerPublication";
 import { footballHigherLowerSemanticPairKey, footballHigherLowerQuestionEvidence, type FootballHigherLowerQuestion } from "../back-room/footballHigherLowerModel";
 import { nbaHigherLowerSemanticPairKey } from "../nba/nbaHigherLowerModel";
+import { ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
 
 type Sport = "football" | "ufc" | "nba";
 type Pair = { id:string; answer:string; metricKey:string; league?:string;
@@ -14,6 +15,26 @@ function children(pub: { privateSetupEvidence: Record<string, unknown> }) {
   const rounds = pub.privateSetupEvidence.rounds as Array<{private_setup_evidence:{board:{questions:Pair[]}}}>;
   expect(rounds).toHaveLength(2);
   return rounds.map(r=>r.private_setup_evidence.board.questions);
+}
+/** Recount every pinned UFC comparison from its original fight records, not its precomputed display values. */
+function verifyUfcLedgerFact(r: Pair) {
+  const recount = (id: string) => {
+    const fighter = ufcFactualLedgerSubjects.find(subject => subject.id === id);
+    if (!fighter) throw new Error("Unbound Official UFC Higher/Lower source subject: " + id);
+    const fights = fighter.fights.filter(fight => fight.date <= "2026-08-18");
+    const wins = fights.filter(fight => fight.result === "win");
+    switch (r.metricKey) {
+      case "bouts": return fights.length;
+      case "wins": return wins.length;
+      case "finishes": return wins.filter(fight => fight.methodCategory === "ko-tko" || fight.methodCategory === "submission").length;
+      case "ko": return wins.filter(fight => fight.methodCategory === "ko-tko").length;
+      case "submissions": return wins.filter(fight => fight.methodCategory === "submission").length;
+      case "title_wins": return wins.filter(fight => fight.titleFight && fight.championshipEligible !== false && !/ultimate fighter|tournament/i.test(fight.division)).length;
+      default: throw new Error("Unknown Official UFC comparison metric: " + r.metricKey);
+    }
+  };
+  expect(r.known.value).toBe(recount(r.known.subjectId));
+  expect(r.hidden.value).toBe(recount(r.hidden.subjectId));
 }
 describe("approved 2x Higher or Lower six-month publication audit",()=>{
   it("certifies all actual Football, UFC and NBA slots with 20 distinct, graded comparisons per appearance",()=>{
@@ -50,6 +71,7 @@ describe("approved 2x Higher or Lower six-month publication audit",()=>{
               :[r.known.subjectId,r.hidden.subjectId].sort().join("|");
             expect(seen[sport].has(key),sport+":"+day+":"+key).toBe(false);
             seen[sport].add(key);
+            if(sport==="ufc")verifyUfcLedgerFact(r);
             if(sport==="football"){
               const evidence=footballHigherLowerQuestionEvidence(r as FootballHigherLowerQuestion);
               expect(evidence.known.sourceIds.length).toBeGreaterThan(0);
