@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { buildBarTriviaDailySetup, UFC_BAR_TRIVIA_UNIQUE_APPEARANCES } from "./barTriviaDailyRuntime";
-import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
+import { lockedWeightedGameForDay, isUfcPublicationDay } from "./dailyChallengeRotation";
 import {
   UFC_BAR_TRIVIA_V3_RETIRE_IDS,
   UFC_BAR_TRIVIA_V3_REWORK_IDS,
@@ -56,7 +56,7 @@ describe("UFC Bar Trivia v3 full editorial rebuild", () => {
     const days = ["2026-09-29"];
     for (let offset = 0; offset < 500 && days.length < 20; offset++) {
       const day = new Date(Date.UTC(2026, 9, 1 + offset)).toISOString().slice(0, 10);
-      if (lockedWeightedGameForDay("ufc", day) === "bar_trivia") days.push(day);
+      if (lockedWeightedGameForDay("ufc", day) === "bar_trivia" && isUfcPublicationDay(day)) days.push(day);
     }
     expect(days).toHaveLength(20);
     const ids = new Set<string>();

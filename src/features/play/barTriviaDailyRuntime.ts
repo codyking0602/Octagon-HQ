@@ -12,7 +12,7 @@ import {
 } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { expandUfcBarTriviaRecentFactIds } from "./ufcBarTriviaV3Editorial";
-import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
+import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay, isUfcPublicationDay } from "./dailyChallengeRotation";
 import { footballThemedBarTriviaRunForDay } from "./footballTeamThemeDailyPacks";
 import { footballTriviaConceptKey, footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
@@ -127,6 +127,7 @@ function wasBarTriviaDailyAppearance(league: BarTriviaLeague, day: string): bool
   if (day < "2026-10-01") return false;
   const sport = league === "ufc" ? "ufc" : "football";
   if (lockedWeightedGameForDay(sport, day) !== "bar_trivia") return false;
+  if (sport === "ufc" && !isUfcPublicationDay(day)) return false;
   return sport === "ufc" || footballBarTriviaLeagueForDay(day) === league;
 }
 
