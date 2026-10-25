@@ -29,6 +29,18 @@ describe("Today’s Challenge adapters", () => {
     }
   });
 
+  it("preserves the eleven core adapters and routes Higher or Lower by sport", () => {
+    const football = todayChallengeAdapter("higher_lower", "football");
+    const nba = todayChallengeAdapter("higher_lower", "nba");
+    expect(football?.dailyRoute).toBe("/football/today");
+    expect(football?.casualRoute).toBe("/football/higher-lower");
+    expect(nba?.dailyRoute).toBe("/nba/today");
+    expect(nba?.casualRoute).toBe("/nba/higher-lower");
+    expect(football).not.toBe(nba);
+    expect(todayChallengeGameDefinition("higher_lower")).toBeNull();
+    expect(Object.keys(TODAY_CHALLENGE_ADAPTERS)).toHaveLength(11);
+  });
+
   it("keeps official and casual routes distinct without launching rotation", () => {
     expect(TODAY_CHALLENGE_ADAPTERS.find_leader.dailyRoute).toBe("/play/find-leader");
     expect(TODAY_CHALLENGE_ADAPTERS.find_leader.casualRoute).toContain("mode=replayable");

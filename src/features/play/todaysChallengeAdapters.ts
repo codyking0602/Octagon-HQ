@@ -144,18 +144,6 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Average Fan score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
-  higher_lower: {
-    gameType: "higher_lower",
-    gameId: "higher-lower",
-    title: "Higher or Lower",
-    dailyRoute: "/football/today",
-    casualRoute: "/football/higher-lower",
-    cta: "Make the comparison",
-    instructions: "Compare ten football players and teams using real stats.",
-    footballInstructions: "Ten NFL and College Football comparisons. Pick higher or lower to score.",
-    nativeResultLabel: "Correct comparisons",
-    nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
-  },
   who_am_i: {
     gameType: "who_am_i",
     gameId: "who-am-i",
@@ -168,10 +156,24 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Who Am I score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
-} as const satisfies Record<OfficialDailyGameType, TodayChallengeAdapter>;
+} as const satisfies Record<Exclude<OfficialDailyGameType, "higher_lower">, TodayChallengeAdapter>;
 
 // NBA retains its own released route. Football stays staged until a future
 // coordinated calendar activates it, and UFC stays inactive.
+export const FOOTBALL_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
+  gameType: "higher_lower",
+  gameId: "higher-lower",
+  title: "Higher or Lower",
+  dailyRoute: "/football/today",
+  casualRoute: "/football/higher-lower",
+  cta: "Make the comparison",
+  instructions: "Compare ten football players and teams using real stats.",
+  footballInstructions: "Ten NFL and College Football comparisons. Pick higher or lower to score.",
+  nativeResultLabel: "Correct comparisons",
+  nativeDisplay: (attempt) => `${attempt.nativeScore}/10`,
+};
+
+
 export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
   gameType: "higher_lower",
   gameId: "higher-lower",
@@ -186,9 +188,11 @@ export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
 };
 
 export function todayChallengeAdapter(gameType: DailyGameType | string | undefined, sport?: string): TodayChallengeAdapter | null {
-  if (gameType === "higher_lower" && sport !== "football") return NBA_HIGHER_LOWER_DAILY_ADAPTER;
+  if (gameType === "higher_lower") {
+    return sport === "football" ? FOOTBALL_HIGHER_LOWER_DAILY_ADAPTER : NBA_HIGHER_LOWER_DAILY_ADAPTER;
+  }
   if (!gameType || !(gameType in TODAY_CHALLENGE_ADAPTERS)) return null;
-  return TODAY_CHALLENGE_ADAPTERS[gameType as OfficialDailyGameType];
+  return TODAY_CHALLENGE_ADAPTERS[gameType as keyof typeof TODAY_CHALLENGE_ADAPTERS];
 }
 
 export function todayChallengeGameDefinition(gameType: DailyGameType | string | undefined) {
