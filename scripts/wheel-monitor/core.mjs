@@ -92,8 +92,13 @@ export function compareEvidence(current, previous=null) {
 export function summarizeDecisions(decisions) {
   const breakdown=Object.fromEntries(Object.values(LEVEL).map(level=>[level,0]));
   for(const decision of decisions) breakdown[decision.classification]++;
-  return {covered:decisions.length,breakdown,
-    deepReviewCandidates:breakdown[LEVEL.REVIEW]+breakdown[LEVEL.PRIORITY]};
+  const performanceReasons=new Set(["sustained-performance-evidence","verified-significant-event"]);
+  const deepReviewCandidates=decisions.filter(row=>row.classification===LEVEL.PRIORITY ||
+    row.classification===LEVEL.REVIEW && row.signals.some(signal=>performanceReasons.has(signal.kind))).length;
+  const identityReconciliationCandidates=decisions.filter(row=>
+    row.signals.some(signal=>signal.kind.includes("roster-absence") ||
+      signal.kind==="baseline-roster-identity-missing")).length;
+  return {covered:decisions.length,breakdown,deepReviewCandidates,identityReconciliationCandidates};
 }
 
 export function selectApprovedGrades(rows, sport, approvedKeys) {
