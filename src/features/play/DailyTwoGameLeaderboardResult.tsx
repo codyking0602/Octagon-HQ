@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { footballWavelengthClues } from "../back-room/footballWavelengthModel";
 import { nbaWavelengthClues } from "../nba/nbaWavelengthCatalog";
+import { nbaHitSubjectById } from "../nba/nbaHitTheNumberStats";
 import { getPlayFighter } from "./playFighterPool";
 import { HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
 import { HitTheNumberPickBreakdown, formatHitNumberStatValue } from "./HitTheNumberPickBreakdown";
@@ -42,6 +43,27 @@ function prettyId(value: string) {
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
+}
+
+/**
+ * Completed Daily pick labels use the sport's identity catalog, not a prettified
+ * provider key. Year-qualified NBA and NFL seasons stay distinguishable.
+ * This affects presentation only; the saved pick IDs/grades never change.
+ */
+function hitNumberPickLabel(sport: Sport, id: string, publishedName: string): string {
+  if (sport === "football") return footballHitNumberDisplayName(id, publishedName);
+  if (sport === "ufc") return getPlayFighter(id)?.name || publishedName || prettyId(id);
+
+  const nbaSubject = nbaHitSubjectById.get(id);
+  const name = nbaSubject?.name || publishedName;
+  const year = nbaSubject?.season ?? Number(/^season-(\\d{4}):/.exec(id)?.[1] ?? NaN);
+  const qualifiedSeason = Number.isInteger(year) && year >= 1900 && year <= 2100
+    ? `${year - 1}–${String(year).slice(-2)}`
+    : "";
+  if (name) return qualifiedSeason && !name.includes(qualifiedSeason)
+    ? `${name} · ${qualifiedSeason}`
+    : name;
+  return qualifiedSeason ? `NBA player · ${qualifiedSeason}` : "NBA player";
 }
 
 function candidateImage(candidate: JsonRecord) {
@@ -236,10 +258,7 @@ function HitNumberRoundDetail({
     selection.fighterId ?? selection.fighter_id ?? selection.subjectId ?? selection.subject_id ?? "",
   )).filter(Boolean);
   const picks = ids.map((id) => {
-    const footballName = candidateNames.get(id);
-    const name = sport === "football"
-      ? footballHitNumberDisplayName(id, footballName)
-      : getPlayFighter(id)?.name || prettyId(id);
+    const name = hitNumberPickLabel(sport, id, candidateNames.get(id) ?? "");
     const rawValue = selectionById.get(id)?.value;
     return {
       id,
