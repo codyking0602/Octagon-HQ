@@ -31,7 +31,7 @@ jobs:
           node-version: '22'
       - run: npm ci --silent --no-audit --no-fund
       - run: node --check scripts/wheel-monitor/run.mjs
-      - run: node --test scripts/wheel-monitor/*.test.mjs
+      - run: node --test scripts/wheel-monitor/*.nodecheck.mjs
   monitor:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     needs: verify
@@ -48,7 +48,7 @@ jobs:
           cache: npm
       - run: npm ci --silent --no-audit --no-fund
       - name: Verify conservative classifications
-        run: node --test scripts/wheel-monitor/*.test.mjs
+        run: node --test scripts/wheel-monitor/*.nodecheck.mjs
       - name: Restore last verified complete snapshot
         env:
           GH_TOKEN: ${{ github.token }}
