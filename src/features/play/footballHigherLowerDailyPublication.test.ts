@@ -11,13 +11,14 @@ import type { OfficialDailyRuntimeContext } from "./todaysChallengeRuntime";
 const addDays = (day: string, n: number) => new Date(Date.parse(day + "T00:00:00Z") + n * 86_400_000).toISOString().slice(0,10);
 
 describe("Football Higher or Lower official Daily (future-only)", () => {
-  it("has 14 repeat-free ten-question Daily boards over a 182-day 2× reference period", () => {
+  it("has 13 repeat-free ten-question Daily boards over a 182-day 2× reference period", () => {
     const history: FootballHigherLowerDailyHistoryRow[] = [];
     const all = new Set<string>();
     const usedDates = new Set<string>();
-    for (let n = 0; n < 14; n++) {
-      // Every 26 days has two Daily positions: 14 appearances in 182 days.
-      const day = addDays("2026-10-31", n * 13);
+    for (let n = 0; n < 13; n++) {
+      // Adding Higher or Lower without cutting approved game weights makes 28 slots.
+      // At two evenly spaced positions per 28 days, there are 13 in 182 days.
+      const day = addDays("2026-10-31", n * 14);
       usedDates.add(day);
       const publication = buildFootballHigherLowerDailyPublication(day, "football-daily-future-test", history);
       const board = publication.privateSetupEvidence.board as ReturnType<typeof createFootballHigherLowerBoard>;
@@ -39,8 +40,8 @@ describe("Football Higher or Lower official Daily (future-only)", () => {
       expect(firstQuestion.hidden.formattedValue).toBeUndefined();
       history.unshift({ day, question_ids: board.questions.map(q => q.id) });
     }
-    expect(usedDates.size).toBe(14);
-    expect(all.size).toBe(140);
+    expect(usedDates.size).toBe(13);
+    expect(all.size).toBe(130);
   });
 
   it("persists ten independent choices, reveals the right answer only after each choice", () => {
