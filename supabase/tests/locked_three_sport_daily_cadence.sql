@@ -17,7 +17,7 @@ begin
       when 'ufc' then 'ufc-daily-v21-48h-oct25' else 'nba-daily-regular-v2-locked' end;
     select game_cycle into strict v_cycle from private.daily_challenge_schedule_versions where version=v_version;
     v_len := cardinality(v_cycle);
-    if v_len <> case when v_sport='football' then 26 else 28 end
+    if v_len <> (case when v_sport='football' then 26 else 28 end)
       or (select count(*) from unnest(v_cycle) g where g='average_fan')<>4
       or (select count(*) from unnest(v_cycle) g where g='sports_feud')<>4
       or (select count(*) from unnest(v_cycle) g where g='millionaire')<>4
