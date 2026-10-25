@@ -28,3 +28,24 @@ export function buildNbaHigherLowerDailyPublication(day:string,scheduleVersion:s
     privateGradingEvidence:{question_ids:board.questions.map(q=>q.id),correct_choices:board.questions.map(q=>q.answer)},
   };
 }
+
+/** Canonical NBA appearance ordinal owns content order; history is never derived from Casual. */
+export function buildNbaHigherLowerTwoGameDailyPublication(day:string,scheduleVersion:string,ordinal:number):OfficialDailySetupPublication{
+  if(!Number.isInteger(ordinal)||ordinal<0||ordinal>100)throw new Error("Invalid NBA Higher or Lower appearance ordinal.");
+  const used=new Set<string>();
+  let children: [OfficialDailySetupPublication,OfficialDailySetupPublication] | null=null;
+  for(let appearance=0;appearance<=ordinal;appearance++){
+    const current:OfficialDailySetupPublication[]=[];
+    for(let game=0;game<2;game++){
+      // Ordinal-only historical seeds preserve uniqueness when new date slots are coordinated.
+      const scheduledDay=appearance===ordinal?day:`appearance-${appearance}`;
+      const child=buildNbaHigherLowerDailyPublication(scheduledDay,scheduleVersion,appearance,game,used);
+      const board=child.privateSetupEvidence.board as {questions:NbaHigherLowerQuestion[]};
+      for(const question of board.questions)used.add(nbaHigherLowerMatchupKey(question));
+      current.push(child);
+    }
+    if(appearance===ordinal)children=current as [OfficialDailySetupPublication,OfficialDailySetupPublication];
+  }
+  if(!children)throw new Error("NBA Higher or Lower could not build two boards.");
+  return buildTwoGameDailyPublication({sport:"nba",gameType:"higher_lower",day,scheduleVersion,children});
+}
