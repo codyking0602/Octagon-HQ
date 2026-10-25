@@ -153,7 +153,10 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     expect(css).toContain("object-fit: contain");
     expect(css).toContain("@media (max-width: 520px)");
     const official = readFileSync("src/features/play/OfficialUfcHigherLowerDailyView.tsx","utf8");
-    expect(official).toContain("higher-lower-feedback is-visible ");
+    const shared = readFileSync("src/features/play/HigherLowerStandard.tsx","utf8");
+    expect(official).toContain('<HigherLowerFeedback correct={feedback.correct === true}');
+    expect(shared).toContain('role="status" aria-live="polite"');
+    expect(shared).toContain('is-visible ');
   });
 
   it("keeps Home's UFC and Football Daily adapters correctly sport-scoped", () => {
