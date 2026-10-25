@@ -598,7 +598,7 @@ function historicalIcon(subject: FootballSubjectProfile) {
 function subjectEligible(subject: FootballSubjectProfile, spec: MetricSpec, officialCfbExpansion = false) {
   const additionalSourceBackedModernCfb = officialCfbExpansion
     && subject.league === "CFB"
-    && subject.kind === "player-career"
+    && (subject.kind === "player-career" || subject.kind === "team-season")
     && subject.recognizabilityTier === "C"
     && (subject.endSeason ?? subject.startSeason ?? 0) >= 2010;
   if (
@@ -751,7 +751,8 @@ function pairCandidates(spec: MetricSpec, officialCfbExpansion = false): PairCan
       // Older questions have to be household-name history, not merely valid database rows.
       // Modern Tier B subjects can appear, but only beside a Tier A anchor.
       if (!modern && (!historicalIcon(left.subject) || !historicalIcon(right.subject))) continue;
-      if (leftRecognition < 3 && rightRecognition < 3) continue;
+      if (leftRecognition < 3 && rightRecognition < 3
+        && !(officialCfbExpansion && modern && leftRecognition >= 2 && rightRecognition >= 2)) continue;
 
       pairs.push({
         id: `${spec.key}:${left.subject.id}:${right.subject.id}`,
