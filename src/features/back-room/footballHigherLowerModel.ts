@@ -910,7 +910,10 @@ function toQuestion(pair: PairCandidate, answer: FootballHigherLowerChoice): Foo
   };
 }
 
-function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: number, candidates: readonly PairCandidate[]) {
+function tryBuildBoard(
+  seed: string, scope: FootballHigherLowerScope, attempt: number,
+  candidates: readonly PairCandidate[], previousExposure?: ReadonlyMap<string, number>,
+) {
   const random = seededLineupRandom(FOOTBALL_HIGHER_LOWER_VERSION, seed, scope, attempt);
   const leagues = leaguePattern(scope, random);
   const difficulties = difficultyPattern(random);
@@ -952,7 +955,18 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
 
     const bestRecognition = Math.max(...pool.map((pair) => pair.recognitionScore));
     const recognitionPool = pool.filter((pair) => pair.recognitionScore >= bestRecognition - 1);
-    const pair = shuffleLineup(recognitionPool, random)[0]!;
+    // Official Daily prefers fresh recognizable subjects. The random tie-break
+    // remains seeded; Casual selection is unchanged without prior-date history.
+    const randomized = shuffleLineup(recognitionPool, random);
+    let selection = randomized;
+    if (previousExposure?.size) {
+      const exposure = (pair: PairCandidate) =>
+        (previousExposure.get(entityKey(pair.left.subject)) ?? 0)
+        + (previousExposure.get(entityKey(pair.right.subject)) ?? 0);
+      const lowest = Math.min(...randomized.map(exposure));
+      selection = randomized.filter(pair => exposure(pair) <= lowest + 1);
+    }
+    const pair = selection[0]!;
     const question = toQuestion(pair, answer);
     questions.push(question);
     usedEntities.add(entityKey(pair.left.subject));
@@ -1066,7 +1080,7 @@ export function createFootballHigherLowerBoard(
     && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.right.subject.id, pair.metricKey))
   )) : sourceCandidates;
   for (let attempt = 0; attempt < 1_000; attempt += 1) {
-    const questions = tryBuildBoard(seed, scope, attempt, candidates);
+    const questions = tryBuildBoard(seed, scope, attempt, candidates, excluded?.appearancesByEntity);
     if (questions) {
       return {
         version: FOOTBALL_HIGHER_LOWER_VERSION,
