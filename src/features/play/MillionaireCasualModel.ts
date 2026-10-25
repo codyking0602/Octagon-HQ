@@ -1,3 +1,4 @@
+import { MILLIONAIRE_TIME_BANK_MS } from "./millionaireRuntimeShared";
 import { createNbaMillionaireRun } from "../nba/nbaMillionaireBank";
 import {
   MILLIONAIRE_LEVELS,
@@ -17,7 +18,7 @@ import {
 
 export type MillionaireLeague = "ufc" | "nfl" | "cfb" | "mlb" | "nba";
 
-export const MILLIONAIRE_TIME_BANK_MS = 120_000;
+export { MILLIONAIRE_TIME_BANK_MS } from "./millionaireRuntimeShared";
 
 export const MILLIONAIRE_REVEAL_DELAY_MS = {
   Q1: 90,
@@ -353,27 +354,7 @@ export function millionaireCasualRun(league: MillionaireLeague): MillionaireRun 
   return seedsByLeague[league].map((seed, index) => question(league, index, seed)) as unknown as MillionaireRun;
 }
 
-export function millionaireTimeoutTransition(run: MillionaireRun, state: MillionaireState): MillionaireTransitionResult {
-  if (state.status !== "playing") throw new Error("Millionaire run is already settled.");
-  const current = currentMillionaireQuestion(run, state);
-  if (!current) throw new Error("Millionaire current question is unavailable.");
-  const firstMissQuestionIndex = state.firstMissQuestionIndex ?? state.currentQuestionIndex;
-  const baseScore = millionaireBaseScore(state.completedQuestions, firstMissQuestionIndex);
-  const score = millionaireScoreAfterLifelines(baseScore, state.lifelinesUsed);
-  return {
-    state: {
-      ...state,
-      status: "lost",
-      firstMissQuestionIndex,
-      finalMoney: state.finalMoney ?? millionaireCheckpointMoney(state.currentQuestionIndex),
-      baseScore,
-      score,
-    },
-    questionReveal: { questionId: current.id, correctChoiceId: current.correctChoiceId, explanation: current.explanation },
-    lifelineReveal: null,
-    answerOutcome: "wrong",
-  };
-}
+export { millionaireTimeoutTransition } from "./millionaireRuntimeShared";
 
 export function millionaireMoneyLabel(value: number) {
   return `$${value.toLocaleString("en-US")}`;
