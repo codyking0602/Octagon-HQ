@@ -37,7 +37,7 @@ export function buildFootballDailyPersistenceSetup(
     case "average_fan":
       return buildAverageFan(day, scheduleVersion, gameType, publicationHistory);
     case "higher_lower":
-      return buildFootballHigherLowerDailyPersistenceSetup(day, scheduleVersion);
+      return buildFootballHigherLowerDailyPersistenceSetup(day, scheduleVersion, publicationHistory);
     case "blind_rank_5":
     case "keep_4_cut_4":
       return buildComparison(day, scheduleVersion, gameType);
