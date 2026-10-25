@@ -12,6 +12,7 @@ import { buildFootballDailyPersistenceSetup as buildFootballFindLeaderPersistenc
 import { buildFootballDailyPersistenceSetup as buildFootballHitNumberPersistenceSetup } from "./footballDailyPublicationHitNumber";
 import { buildFootballDailyPersistenceSetup as buildFootballBarTriviaPersistenceSetup } from "./footballDailyPublicationBarTrivia";
 import { buildFootballDailyPersistenceSetup as buildFootballAverageFanPersistenceSetup } from "./footballDailyPublicationAverageFan";
+import { buildFootballHigherLowerDailyPublication } from "./footballHigherLowerDailyRuntime";
 import {
   DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
   lockedWeightedGameForDay,
@@ -481,6 +482,24 @@ function grade(
     };
   }
 
+  if (gameType === "higher_lower") {
+    const answers = recordArray(finalSubmission.answers, "Football Higher or Lower answers");
+    const ids = stringArray(context.privateGradingEvidence.question_ids, "Football Higher or Lower question ids");
+    const choices = stringArray(context.privateGradingEvidence.correct_choices, "Football Higher or Lower correct choices");
+    if (answers.length !== 10 || ids.length !== 10 || choices.length !== 10) {
+      throw new Error("Football Higher or Lower must complete exactly ten comparisons.");
+    }
+    let hits = 0;
+    answers.forEach((answer, index) => {
+      if (answer.question_id !== ids[index] || (answer.choice !== "higher" && answer.choice !== "lower")
+        || (choices[index] !== "higher" && choices[index] !== "lower")) {
+        throw new Error("Football Higher or Lower saved answer does not match the official board.");
+      }
+      if (answer.choice === choices[index]) hits += 1;
+    });
+    return { native: hits, normalized: hits * 10, result: { correct_count: hits, answers } };
+  }
+
   if (gameType === "average_fan") {
     const score = Number(finalSubmission.normalized_score ?? -1);
     const boardScore = Number(finalSubmission.board_score ?? -1);
@@ -549,6 +568,7 @@ function buildSessionPublication(
   day: string,
   scheduleVersion: string,
 ): OfficialDailySetupPublication {
+  if (gameType === "higher_lower") return buildFootballHigherLowerDailyPublication(day, scheduleVersion);
   if (gameType === "average_fan") {
     const persisted = buildFootballAverageFanPersistenceSetup(
       day,
