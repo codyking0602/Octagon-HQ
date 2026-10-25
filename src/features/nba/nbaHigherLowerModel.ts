@@ -277,6 +277,9 @@ function deepEarlyEra(row: Row) {
 export function nbaHigherLowerMatchupKey(question: NbaHigherLowerQuestion) {
   return [question.metricKey, ...[question.known.subjectId, question.hidden.subjectId].sort()].join("|");
 }
+export function nbaHigherLowerSemanticPairKey(question: NbaHigherLowerQuestion) {
+  return "people:" + [normalizedName(question.known.name), normalizedName(question.hidden.name)].sort().join("|");
+}
 
 function buildAttempt(seed: string, attempt: number, excluded: ReadonlySet<string> = new Set()) {
   const random = seededLineupRandom(NBA_HIGHER_LOWER_VERSION, seed, attempt);
@@ -296,6 +299,7 @@ function buildAttempt(seed: string, attempt: number, excluded: ReadonlySet<strin
     const eligible = (pairsByCategoryAndDifficulty.get(category + ":" + difficulty[i]!) ?? []).filter(pair =>
       (!modernSlots[i] || pair.modern)
       && !excluded.has([pair.key, ...[pair.left.id, pair.right.id].sort()].join("|"))
+      && !excluded.has("people:" + [pair.left.key, pair.right.key].sort().join("|"))
       && !usedPeople.has(pair.left.key) && !usedPeople.has(pair.right.key)
       && (counts.get(pair.key) ?? 0) < 2
     );
