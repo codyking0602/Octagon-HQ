@@ -56,9 +56,11 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     const metricCounts = new Map<string, number>();
     const modern = new Set<string>();
     for (const fighter of UFC_HIGHER_LOWER_FIGHTERS) modern.add(fighter.id);
-    for (let day = 0; day < UFC_HIGHER_LOWER_RESERVED_SLOTS; day++) {
-      const board = createUfcHigherLowerOfficialBoard(dayAt(day));
-      expect(createUfcHigherLowerOfficialBoard(dayAt(day))).toEqual(board);
+    for (let boardIndex = 0; boardIndex < UFC_HIGHER_LOWER_RESERVED_SLOTS; boardIndex++) {
+      const day = Math.floor(boardIndex / 2);
+      const gameIndex = boardIndex % 2;
+      const board = createUfcHigherLowerOfficialBoard(dayAt(day), gameIndex);
+      expect(createUfcHigherLowerOfficialBoard(dayAt(day), gameIndex)).toEqual(board);
       expect(board.questions).toHaveLength(UFC_HIGHER_LOWER_QUESTION_COUNT);
       expect(board.questions.map(q => q.difficulty)).toEqual([
         "approachable", "approachable", "approachable",
@@ -91,7 +93,7 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     expect(subjectCounts.size).toBeGreaterThanOrEqual(70);
     expect(categoryCounts.size).toBe(3);
     expect(metricCounts.size).toBe(6);
-    console.info("UFC HIGHER LOWER 200-DAY AUDIT", JSON.stringify({
+    console.info("UFC HIGHER LOWER 100-DATE TWO-BOARD AUDIT", JSON.stringify({
       reservedBoards: UFC_HIGHER_LOWER_RESERVED_SLOTS,
       distinctPairs: pairKeys.size,
       distinctFighters: subjectCounts.size,
