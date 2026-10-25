@@ -195,7 +195,7 @@ export function DailyAnswerDetail({
               }}
             />
           </Suspense>
-        ) : entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" || entry.gameType === "bar_trivia" || entry.gameType === "average_fan" ? (
+        ) : entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" || entry.gameType === "bar_trivia" || entry.gameType === "average_fan" || (sport === "football" && entry.gameType === "higher_lower") ? (
           <DailyLeaderboardGameResult
             projection={resultProjection}
             resultDetail={entry.resultDetail}
