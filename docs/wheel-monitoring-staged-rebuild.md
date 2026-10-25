@@ -93,6 +93,25 @@ disabled. It was oversized; re-enabling it would create competing ownership.
   Neither is a source-certified checkpoint. The disabled old grading task and
   weekly replacement cron remain disabled.
 
+## GM contract live source — isolated staged verification
+
+The manual / PR-only `.github/workflows/wheel-gm-contract-review.yml`
+runs the **existing** NFL GM generator with a pinned nflreadpy provider.
+It writes both provider output and comparisons exclusively under
+`tmp/wheel-monitor/gm/`; **nothing under `data/generated` or the current
+GM TypeScript authority is ever rewritten**. The comparator compares canonical
+NFL identity coverage, APY, signed-contract season, 1YR/3YR classification,
+position, eligibility, age and OTC identifiers against the immutable published
+October 5 snapshot. Changes are evidence requiring review, never automatic
+contract or grade updates. Failed or partially matched source generation is
+marked blocked. The source query date is not an assertion that the underlying
+OTC dataset is current; provider freshness and GM economy simulation remain
+independent release gates.
+
+No schedule is enabled by this source-review workflow. Even if the isolated
+provider comparison completes, a dedicated economy simulation and reviewed
+contract snapshot are required before GM release or all-source certification.
+
 ## Not yet certified — prerequisites for the weekly cron
 
 The full replacement must **not be declared operational** until:
