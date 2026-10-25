@@ -12,7 +12,7 @@ const FIRST_DAY = Date.UTC(2026, 9, 25);
 function centralDay(offset: number) {
   return new Date(FIRST_DAY + offset * 86_400_000).toISOString().slice(0, 10);
 }
-const PREVIEW_HIT_NUMBER_DATES = [38, 96, 126, 154, 178, 182]; // provisional; full planner owns final dates
+const PREVIEW_HIT_NUMBER_DATES = [18, 44, 78, 104, 138, 164]; // exact staged PR #2103 prospective dates; final Part 1 seeds still pending
 
 describe("UFC Hit the Number curated Daily-only six-month foundation (not activated)", () => {
   it("generates distinct, exact, challenging, 4/5/6-pick boards with 12/14/16 choices", () => {
