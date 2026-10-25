@@ -52,6 +52,9 @@ describe("locked three-sport Daily scheduling policy", () => {
     expect(lockedWeightedGameForDay("football", "2026-10-01")).toBe("bar_trivia");
     expect(lockedWeightedGameForDay("ufc", "2026-10-02")).toBe("average_fan");
     expect(lockedWeightedGameForDay("ufc", "2026-10-24")).toBe("bar_trivia");
+    // Existing Oct 25 official boards are immutable; the new schedules start later.
+    expect(lockedWeightedGameForDay("football", "2026-10-25")).toBe("hit_the_number");
+    expect(lockedWeightedGameForDay("ufc", "2026-10-25")).toBe("millionaire");
     expect(footballBarTriviaLeagueForDay("2026-09-29")).toBe("nfl");
     expect(footballBarTriviaLeagueForDay("2026-10-22")).toBe("cfb");
     expect(footballBarTriviaLeagueForDay("2026-11-05")).toBe("nfl");
