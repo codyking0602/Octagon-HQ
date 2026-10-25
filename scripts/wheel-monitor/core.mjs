@@ -95,3 +95,22 @@ export function summarizeDecisions(decisions) {
   return {covered:decisions.length,breakdown,
     deepReviewCandidates:breakdown[LEVEL.REVIEW]+breakdown[LEVEL.PRIORITY]};
 }
+
+export function selectApprovedGrades(rows, sport, approvedKeys) {
+  assert(approvedKeys instanceof Set, "Canonical active-priority keys required");
+  const selected=[], stale=[];
+  const matched=new Set(), prefix=sport.toUpperCase()+":";
+  for(const row of rows) {
+    const key=prefix+[row.team,row.family,row.nameKey].join(":");
+    if(!approvedKeys.has(key)) {stale.push(key);continue;}
+    assert(!matched.has(key),"Duplicate latest current grade: "+key);
+    matched.add(key);
+    selected.push(row);
+  }
+  const missing=[...approvedKeys].filter(key=>key.startsWith(prefix)&&!matched.has(key));
+  return {selected,missing,stale,expected:[...approvedKeys].filter(key=>key.startsWith(prefix)).length};
+}
+export function snapshotReadiness(blockers) {
+  assert(Array.isArray(blockers),"Review blockers must be explicit");
+  return {status:blockers.length?"review-blocked":"source-certified",snapshotReady:blockers.length===0,blockers};
+}
