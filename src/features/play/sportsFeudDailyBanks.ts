@@ -1,3 +1,11 @@
+import { planUfcFeudV2Appearance } from "./ufcSportsFeudV2FutureSelection";
+import {
+  UFC_V2_APPROVED_MAIN_IDS, UFC_V2_APPROVED_FAST_IDS,
+  UFC_V2_NEW_MAIN_DRAFTS, UFC_V2_NEW_FAST_DRAFTS,
+  ufcFeudAppearanceDatesInWindow, ufcFeudSixMonthReleaseReadiness,
+} from "./ufcSportsFeudV2EditorialReleaseGate";
+import { UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT }
+  from "./ufcSportsFeudV2RetainedDraft";
 import type {
   FamilyFeudEntity,
   FamilyFeudEntityKind,
@@ -285,6 +293,11 @@ for (const sport of ["nfl", "cfb"] as const) {
     CURRENT_QUESTION_INDEX.set(question.id, { domain: sport, question });
   }
 }
+// Index the staged future UFC identities for immutable published-result grading.
+for (const q of [...UFC_V2_NEW_MAIN_DRAFTS, ...UFC_V2_NEW_FAST_DRAFTS,
+                 ...UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT, ...UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT]) {
+  CURRENT_QUESTION_INDEX.set(q.id, {domain:"ufc",question:q});
+}
 for (const themed of FOOTBALL_THEMED_SPORTS_FEUD_QUESTIONS) {
   CURRENT_QUESTION_INDEX.set(themed.question.id, themed);
 }
@@ -530,4 +543,31 @@ export function buildFootballFeudRebuildPack(
     mainBoards: main,
     fastMoney,
   };
+}
+
+/**
+ * UFC-only, future-only Daily cutover. This does not alter any previous packs,
+ * Casual Feud, NFL/CFB, or cached server-published setup evidence.
+ * A zero-approved editorial bank deliberately falls back to existing V1.
+ */
+export const UFC_FEUD_V2_DAILY_CUTOVER_DAY = "2026-11-04" as const;
+export function buildUfcFeudV2DailyPack(day:string):FamilyFeudPack {
+  if (day < UFC_FEUD_V2_DAILY_CUTOVER_DAY) return buildSportsFeudPack("ufc",day);
+  const readiness=ufcFeudSixMonthReleaseReadiness();
+  if (!readiness.ready) return buildSportsFeudPack("ufc",day);
+  // The actual UFC weighted Daily calendar, not obsolete pre-October slots,
+  // determines the canonical appearance ordinal shared by every player.
+  const until=new Date(Date.parse(day+"T00:00:00Z")+86400000).toISOString().slice(0,10);
+  const appearances=ufcFeudAppearanceDatesInWindow(UFC_FEUD_V2_DAILY_CUTOVER_DAY,until);
+  if (appearances.at(-1)!==day) throw new Error("UFC Feud V2 only publishes on a canonical Feud Daily date");
+  const mainCandidates=[...UFC_V2_NEW_MAIN_DRAFTS,...UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT]
+    .filter(q=>UFC_V2_APPROVED_MAIN_IDS.has(q.id));
+  const fastCandidates=[...UFC_V2_NEW_FAST_DRAFTS,...UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT]
+    .filter(q=>UFC_V2_APPROVED_FAST_IDS.has(q.id));
+  const selected=planUfcFeudV2Appearance(mainCandidates,fastCandidates,appearances.length-1);
+  const entities:FamilyFeudEntity[]=[];
+  const mainBoards=selected.main.map(q=>materializeQuestion("ufc",q,MAIN_POINTS,entities));
+  const fastMoney=selected.fast.map(q=>materializeQuestion("ufc",q,FAST_POINTS,entities));
+  return {id:`sports-feud-v2-ufc-${day}-${mainBoards.map(q=>q.id).join("-")}`,
+    sport:"ufc",entities,mainBoards,fastMoney};
 }
