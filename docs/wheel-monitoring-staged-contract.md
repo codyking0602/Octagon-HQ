@@ -4,7 +4,7 @@ This is an infrastructure-only collector **foundation**, not approval to publish
 
 ## Authorities
 
-- Current NFL/CFB identities come from the latest **effective** version of `private.wheel_football_grade_authority`. Never sum all historical rows and call them active population.
+- Active NFL/CFB identities are driven by the approved **priority inventories**, excluding Flex aliases: 626 NFL and 1,258 base CFB plus 19 audited Boise State (1,277 CFB). Join each active priority to the latest effective grade in `private.wheel_football_grade_authority`; never mistake retired/versioned grade rows for the active player population. Extra old authority rows must be reported as stale, not selected.
 - Current UFC identities come from active `private.wheel_ufc_fighters`, with exactly one champion plus #1–15 per eight men's divisions. UFC source authority is official **All Rankings**, not Meta.
 - NFL grades consumed by GM remain `src/features/back-room/wheelFootballNflCurrentAuthority.ts`; no auto-generated alternative authority.
 - NFL/CFB ESPN rosters are comparison signals, not automatic delete/regrade authority. Coaches, performance trends, UFC authoritative source verification and GM contracts remain separately required inputs.
