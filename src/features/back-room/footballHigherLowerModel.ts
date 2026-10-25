@@ -720,7 +720,7 @@ function recognizabilityScore(subject: FootballSubjectProfile) {
   return 0;
 }
 
-function pairCandidates(spec: MetricSpec): PairCandidate[] {
+function pairCandidates(spec: MetricSpec, officialDaily = false): PairCandidate[] {
   const rows = metricRows(spec).sort((left, right) => left.value - right.value);
   const pairs: PairCandidate[] = [];
 
@@ -742,9 +742,11 @@ function pairCandidates(spec: MetricSpec): PairCandidate[] {
       const rightRecognition = recognizabilityScore(right.subject);
 
       // Older questions have to be household-name history, not merely valid database rows.
-      // Modern Tier B subjects can appear, but only beside a Tier A anchor.
+      // Casual insists on a Tier A anchor; Official Daily can use two vetted
+      // modern Tier B identities to reach the longer two-game factual horizon.
+      // Historical comparisons still require a household-name anchor on both sides.
       if (!modern && (!historicalIcon(left.subject) || !historicalIcon(right.subject))) continue;
-      if (leftRecognition < 3 && rightRecognition < 3) continue;
+      if (!officialDaily && leftRecognition < 3 && rightRecognition < 3) continue;
 
       pairs.push({
         id: `${spec.key}:${left.subject.id}:${right.subject.id}`,
@@ -820,10 +822,18 @@ const officialDailySupplementSpecs: readonly MetricSpec[] = [
 ];
 // Registry-only draft metadata has no direct ledger-source binding; do not
 // publish it in Official Daily until independently verified. Casual is unchanged.
-const officialDailyPairCandidates = [
-  ...allPairCandidates.filter(pair => pair.metricKey !== "nfl-draft-pick"),
-  ...officialDailySupplementSpecs.flatMap(pairCandidates),
-];
+const officialDailyPairCandidates = (() => {
+  const candidates = [
+    ...allPairCandidates.filter(pair => pair.metricKey !== "nfl-draft-pick"),
+    // Expand only Official Daily using existing pinned, source-backed statistics.
+    // Modern CFB B-tier versus B-tier comparisons are still vetted; no new
+    // estimated player or team statistics and no change to Casual generation.
+    ...metricSpecs.filter(spec => spec.league === "CFB").flatMap(spec => pairCandidates(spec, true)),
+    ...officialDailySupplementSpecs.flatMap(spec => pairCandidates(spec, true)),
+  ];
+  const distinct = new Map(candidates.map(pair => [pair.id, pair]));
+  return [...distinct.values()];
+})();
 const allMetricSpecs = [...metricSpecs, ...officialDailySupplementSpecs];
 const metricIdOwner = new Map<string, string>();
 for (const spec of allMetricSpecs) {
