@@ -68,7 +68,7 @@ function footballCatalog() {
   for (const [slug, file] of byFamily) {
     for (const row of readJson("data/generated/football/"+file).grades) {
       nfl.push({ sport:"nfl", team:row.team, family:families[slug],
-        name:row.player, grade:row.grade });
+        name:row.player??row.coach, grade:row.grade });
     }
   }
   return nfl;
