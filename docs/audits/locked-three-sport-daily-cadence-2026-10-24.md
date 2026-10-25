@@ -1,6 +1,6 @@
 # Locked coordinated Daily cadence — October 24, 2026
 
-Baseline main `8b9f2aed26ea10f56c8863e0a0cd5ce6c6d85195`; planned future-only cutover October 25 (Central). Simulation horizon **October 25, 2026–April 24, 2027 inclusive (182 Central dates)**. This file simulates the deterministic configured schedules, not unmaterialized database events. Live production was re-inspected before release: UFC's October 25 Millionaire board was already published under `play-rotation-v20-resume-v18-oct3` at 04:30 UTC October 25. The migration preserves that published identity unchanged and rejects any other future commitments. Reverify this guard immediately before deployment.
+Baseline main `8b9f2aed26ea10f56c8863e0a0cd5ce6c6d85195`; planned future-only cutover October 25 (Central). Simulation horizon **October 25, 2026–April 24, 2027 inclusive (182 Central dates)**. This file simulates the deterministic configured schedules, not unmaterialized database events. Live production was re-inspected before release: UFC's October 25 Millionaire board was published under `play-rotation-v20-resume-v18-oct3` at 04:30 UTC October 25, and Football's October 25 Hit the Number board under `football-daily-v20-resume-v18-oct3` at 06:05 UTC October 25. The migration preserves both already-published identities unchanged and rejects other future commitments. Reverify this guard immediately before deployment.
 
 ## Root cause
 
@@ -8,10 +8,10 @@ The prior UFC schedule advances a 29-slot game cycle **every single calendar day
 
 ## Locked contract
 
-- Football: daily; deterministic 26-slot future cycle. Existing NFL/CFB rules, four prior Bar Trivia league appearances, and approved Cowboys Oct 26 Millionaire, Longhorns Nov 27 Feud, and Cowboys Dec 7 Bar Trivia are preserved.
+- Football: daily; Oct 25's published **Hit the Number** board retains its immutable v20 schedule, while the deterministic 26-slot v21 future cycle begins Oct 26 (its anchor remains Oct 25 to preserve the approved Cowboys Oct 26 Millionaire). Existing NFL/CFB rules, prior Bar Trivia league appearances, Longhorns Nov 27 Feud, and Cowboys Dec 7 Bar Trivia are preserved.
 - UFC: the already-published October 25 **Millionaire** remains in its immutable v20 schedule version; a new v21 rotation begins October 27 and continues Oct 29/31, Nov 2/4/6 and every other day. Each opening remains playable on the intervening day. The new cycle preserves its approved 28-slot relative weights; the one committed Oct 25 substitution changes the six-month observed counts by one.
 - NBA: Nov 1/3/5/.../Apr 10 openings, with the April 10 board playable through April 11; 81 official regular-season publication dates, 28-slot cycle (56 Central days); owner-preview and public-launch gates remain separately closed until authorized.
-- October 25 UFC and every earlier published day retain their original immutable schedule versions. No prior attempt, streak, title or question board is rewritten. Unfinished Football/UFC Higher or Lower are absent from their active cycles; reserved Football 2x is a future activation gate, not a substitute game.
+- Both October 25 UFC and Football plus every earlier published day retain their original immutable schedule versions. No prior attempt, streak, title or question board is rewritten. Unfinished Football/UFC Higher or Lower are absent from their active cycles; reserved Football 2x is a future activation gate, not a substitute game.
 - Approved active weights: Football and UFC Average Fan **4×** (correcting legacy 5×), both Hit the Number **2×**; Football Higher or Lower **future 2×** (inactive), UFC Higher or Lower inactive; NBA unchanged at 4/4/4, 3/3/3/3, 2/2.
 
 ## Before/after summary
@@ -22,7 +22,7 @@ The prior UFC schedule advances a 29-slot game cycle **every single calendar day
 | UFC | 182 | 91 | 23 days | 28 days |
 | NBA | 81 | 81 | 32 days | 28 days |
 
-The largest post-cutover UFC and NBA gaps are **28 days for intentionally 2×-weighted games** (their ideal interval is 28 days on a 56-day cycle), not unexpected clustering. Outside the preserved October 25 UFC Millionaire, the 3× games occupy roughly 14–22-day intervals and 4× games occupy roughly 10–18-day intervals. That existing UFC commitment creates one four-day Millionaire gap (October 25 to October 29), which is deliberately not rewritten. Football's 2× Hit the Number maintains its approved frequency and evenly distributed slots.
+The largest post-cutover UFC and NBA gaps are **28 days for intentionally 2×-weighted games** (their ideal interval is 28 days on a 56-day cycle), not unexpected clustering. Outside the preserved October 25 UFC Millionaire, the 3× games occupy roughly 14–22-day intervals and 4× games occupy roughly 10–18-day intervals. That existing UFC commitment creates one four-day Millionaire gap (October 25 to October 29), which is deliberately not rewritten. Football's 2× Hit the Number maintains its approved frequency and evenly distributed future slots, with the immutable Oct 25 Hit the Number counted as one additional published appearance.
 
 | Verification | Old configuration | New configuration |
 |---|---:|---:|
