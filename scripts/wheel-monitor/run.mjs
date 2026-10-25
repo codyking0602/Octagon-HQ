@@ -433,7 +433,7 @@ async function main() {
   // Never promote a blocker-bearing result or invent a successful baseline.
   // Reporting read-only NFL/UFC observations continues while CFB grades are pending.
   if (readiness.snapshotReady) {
-    writeFileSync(resolve(outputDir,"snapshot.json"),JSON.stringify(all,null,2)+"\\n");
+    writeFileSync(resolve(outputDir,"snapshot.json"),JSON.stringify(all,null,2)+"\n");
   }
   console.log(JSON.stringify({status:output.status,summaries,
     evidenceCount:evidence.length,previousSnapshot:output.previousSnapshot,
