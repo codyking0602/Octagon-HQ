@@ -7,7 +7,7 @@ import {
   ufcHigherLowerCandidateCounts,
 } from "./ufcHigherLowerModel";
 import {
-  advanceUfcHigherLowerDailyRuntime, buildUfcHigherLowerDailyPublication,
+  advanceUfcHigherLowerDailyRuntime, buildUfcHigherLowerDailyPublication, buildUfcHigherLowerTwoGameDailyPublication,
 } from "./ufcHigherLowerDailyRuntime";
 import type { OfficialDailyRuntimeContext } from "./todaysChallengeRuntime";
 import { UFC_LOCKED_WEIGHTED_CYCLE } from "./dailyChallengeRotation";
@@ -108,7 +108,9 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
 
   it("keeps every hidden answer/number private and the canonical grader authoritative", () => {
     const pub = buildUfcHigherLowerDailyPublication(dayAt(0), "ufc-hl-regression-v1");
-    expect(buildOfficialDailySetup("higher_lower", dayAt(0), "ufc-hl-regression-v1")).toEqual(pub);
+    expect(buildOfficialDailySetup("higher_lower", dayAt(0), "ufc-hl-regression-v1"))
+      .toEqual(buildUfcHigherLowerTwoGameDailyPublication(dayAt(0), "ufc-hl-regression-v1"));
+    expect(buildUfcHigherLowerTwoGameDailyPublication(dayAt(0), "ufc-hl-regression-v1").publicSetup.rounds).toHaveLength(2);
     const before = (pub.publicSetup.initial_state as Record<string, unknown>).current_question as Record<string, unknown>;
     expect(before).not.toHaveProperty("answer");
     expect(String(before.id)).toBe("ufc-daily-comparison-1");
