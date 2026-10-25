@@ -9,7 +9,7 @@ export type HitTheNumberPickContribution = {
 /** Display precision only; authoritative scoring retains its full recorded values. */
 export function formatHitNumberStatValue(value: number): string {
   return Number.isFinite(value)
-    ? value.toLocaleString("en-US", { maximumFractionDigits: 1 })
+    ? value.toLocaleString("en-US", { minimumFractionDigits: Number.isInteger(value) ? 0 : 1, maximumFractionDigits: 1 })
     : "—";
 }
 
