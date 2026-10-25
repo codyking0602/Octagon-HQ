@@ -1,7 +1,7 @@
 import type { UFCFeudDraft } from "./ufcSportsFeudV2DraftHelpers";
 import { UFC_FEUD_V2_APPROVED_MAIN_CANDIDATE_IDS } from "./ufcSportsFeudV2MainShortlist";
 import { UFC_FEUD_V2_APPROVED_FAST_CANDIDATE_IDS } from "./ufcSportsFeudV2FastShortlist";
-import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
+import { isUfcPublicationDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import { UFC_SPORTS_FEUD_V2_MAIN_DRAFT } from "./ufcSportsFeudV2MainDraft";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH2 } from "./ufcSportsFeudV2MainBatch2";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH3 } from "./ufcSportsFeudV2MainBatch3";
@@ -283,7 +283,7 @@ export function ufcFeudAppearanceDatesInWindow(firstInclusive:string,lastExclusi
   const result:string[]=[];
   for(let time=start;time<end;time+=MS_PER_DAY){
     const day=toDay(new Date(time));
-    if(lockedWeightedGameForDay("ufc",day)==="sports_feud") result.push(day);
+    if(isUfcPublicationDay(day) && lockedWeightedGameForDay("ufc",day)==="sports_feud") result.push(day);
   }
   return result;
 }
