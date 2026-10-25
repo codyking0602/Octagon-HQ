@@ -22,6 +22,7 @@ import { OfficialBarTriviaDailyView } from "./OfficialBarTriviaDailyView";
 import { OfficialAverageFanDailyView } from "./OfficialAverageFanDailyView";
 import { OfficialFootballHigherLowerDailyView } from "./OfficialFootballHigherLowerDailyView";
 import { OfficialUfcHigherLowerDailyView } from "./OfficialUfcHigherLowerDailyView";
+import { DailyTwoGameLeaderboardResult } from "./DailyTwoGameLeaderboardResult";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -149,7 +150,9 @@ export function OfficialTodayChallengeContent({
       <DailyRankKeepComboStatus projection={projection} />
       <OfficialBlindRankScoreSummary projection={projection} />
       <OfficialBlindRankComboResult projection={projection} />
-      {blindResumeV3 ? (
+      {projection.gameType === "higher_lower" && twoGameSeries?.complete ? (
+        <DailyTwoGameLeaderboardResult projection={projection} resultDetail={{}} sport={projection.sport === "football" ? "football" : "ufc"} />
+      ) : blindResumeV3 ? (
         <OfficialBlindResumeV3DailyView
           projection={projection}
           busy={busy}
