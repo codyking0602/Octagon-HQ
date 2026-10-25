@@ -56,7 +56,7 @@ import {
   buildFamilyFeudDailySetup,
   FAMILY_FEUD_DAILY_SCORING_VERSION,
 } from "./familyFeudDailyRuntime";
-import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
+import { buildSportsFeudPack, buildUfcFeudV2DailyPack } from "./sportsFeudDailyBanks";
 import {
   advanceBarTriviaDailyRuntime,
   buildBarTriviaDailySetup,
@@ -691,7 +691,7 @@ export function buildOfficialDailySetup(
     ) as OfficialDailySetupPublication;
     case "millionaire": return buildMillionaireDailySetup("ufc", day, scheduleVersion);
     case "sports_feud": return buildFamilyFeudDailySetup(
-      buildSportsFeudPack("ufc", day),
+      buildUfcFeudV2DailyPack(day),
       day,
       scheduleVersion,
     );

@@ -1,0 +1,314 @@
+import type { UFCFeudDraft } from "./ufcSportsFeudV2DraftHelpers";
+import { UFC_FEUD_V2_APPROVED_MAIN_CANDIDATE_IDS } from "./ufcSportsFeudV2MainShortlist";
+import { UFC_FEUD_V2_APPROVED_FAST_CANDIDATE_IDS } from "./ufcSportsFeudV2FastShortlist";
+import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
+import { UFC_SPORTS_FEUD_V2_MAIN_DRAFT } from "./ufcSportsFeudV2MainDraft";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH2 } from "./ufcSportsFeudV2MainBatch2";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH3 } from "./ufcSportsFeudV2MainBatch3";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH4 } from "./ufcSportsFeudV2MainBatch4";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5 } from "./ufcSportsFeudV2MainBatch5";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2MainBatch5Supplement";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH6 } from "./ufcSportsFeudV2MainBatch6";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH8 } from "./ufcSportsFeudV2MainBatch8";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH9 } from "./ufcSportsFeudV2MainBatch9";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH10 } from "./ufcSportsFeudV2MainBatch10";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH11 } from "./ufcSportsFeudV2MainBatch11";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH12 } from "./ufcSportsFeudV2MainBatch12";
+import { UFC_SPORTS_FEUD_V2_MAIN_BATCH13 } from "./ufcSportsFeudV2MainBatch13";
+import { UFC_SPORTS_FEUD_V2_FAST_DRAFT } from "./ufcSportsFeudV2FastDraft";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH2 } from "./ufcSportsFeudV2FastBatch2";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH3 } from "./ufcSportsFeudV2FastBatch3";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH4 } from "./ufcSportsFeudV2FastBatch4";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH5 } from "./ufcSportsFeudV2FastBatch5";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT } from "./ufcSportsFeudV2FastBatch5Supplement";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH6 } from "./ufcSportsFeudV2FastBatch6";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH7 } from "./ufcSportsFeudV2FastBatch7";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH8 } from "./ufcSportsFeudV2FastBatch8";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH9 } from "./ufcSportsFeudV2FastBatch9";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH10 } from "./ufcSportsFeudV2FastBatch10";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH11 } from "./ufcSportsFeudV2FastBatch11";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH12 } from "./ufcSportsFeudV2FastBatch12";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH13 } from "./ufcSportsFeudV2FastBatch13";
+import { UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT } from "./ufcSportsFeudV2RetainedDraft";
+import { UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES } from "./ufcSportsFeudV2LegacyRewriteCandidates";
+
+/** This module is an editorial release gate. Neither list is imported by live Daily.
+ * A first-pass advancing question is NOT equivalent to fact-checked approved.
+ * No candidate becomes live merely because the staging total reaches a quota.
+ */
+export const UFC_V2_NEW_MAIN_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_MAIN_BATCH2, UFC_SPORTS_FEUD_V2_MAIN_BATCH3, UFC_SPORTS_FEUD_V2_MAIN_BATCH4, UFC_SPORTS_FEUD_V2_MAIN_BATCH5, UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_MAIN_BATCH6, UFC_SPORTS_FEUD_V2_MAIN_BATCH8, UFC_SPORTS_FEUD_V2_MAIN_BATCH9, UFC_SPORTS_FEUD_V2_MAIN_BATCH10, UFC_SPORTS_FEUD_V2_MAIN_BATCH11, UFC_SPORTS_FEUD_V2_MAIN_BATCH12, UFC_SPORTS_FEUD_V2_MAIN_BATCH13].flat();
+export const UFC_V2_NEW_FAST_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_FAST_DRAFT, UFC_SPORTS_FEUD_V2_FAST_BATCH2, UFC_SPORTS_FEUD_V2_FAST_BATCH3, UFC_SPORTS_FEUD_V2_FAST_BATCH4, UFC_SPORTS_FEUD_V2_FAST_BATCH5, UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_FAST_BATCH6, UFC_SPORTS_FEUD_V2_FAST_BATCH7, UFC_SPORTS_FEUD_V2_FAST_BATCH8, UFC_SPORTS_FEUD_V2_FAST_BATCH9, UFC_SPORTS_FEUD_V2_FAST_BATCH10, UFC_SPORTS_FEUD_V2_FAST_BATCH11, UFC_SPORTS_FEUD_V2_FAST_BATCH12, UFC_SPORTS_FEUD_V2_FAST_BATCH13].flat();
+
+export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
+  "ufc-v2-fast-faceoff-gestures",
+  "ufc-v2-fast-retired-careers",
+  "ufc-v2-fast-event-poster",
+  "ufc-v2-fast-prefight-talk",
+  "ufc-v2-main2-strikeforce-champions",
+  "ufc-v2-main2-hof-fight-wing",
+  "ufc-v2-fast2-combat-disciplines",
+  "ufc-v2-fast2-ground-positions",
+  "ufc-v2-fast2-postfight-requests",
+  "ufc-v2-fast2-autograph-items",
+  "ufc-v2-main3-ufc200-card",
+  "ufc-v2-main3-tuf1-contestants",
+  "ufc-v2-fast3-announcer-intro",
+  "ufc-v2-fast3-fight-week-events",
+  "ufc-v2-fast3-watch-devices",
+  "ufc-v2-fast3-watch-places",
+  "ufc-v2-fast3-fighter-travel",
+  "ufc-v2-fast3-post-weighin-meals",
+  "ufc-v2-fast3-crowd-cheers",
+  "ufc-v2-fast3-between-fights-tv",
+  "ufc-v2-fast3-first-minute",
+  "ufc-v2-main4-anderson-silva-opponents",
+  "ufc-v2-main4-bellator-ufc-veterans",
+  "ufc-v2-fast4-crowd-boos",
+  "ufc-v2-fast4-delay-causes",
+  "ufc-v2-fast4-weight-class-switch",
+  "ufc-v2-main5-bareknuckle-alumni",
+  "ufc-v2-main5-title-by-strikes",
+  "ufc-v2-fast5-us-host-states",
+  "ufc-v2-fast5-film-study",
+  "ufc-v2-fast5-prior-sports",
+  "ufc-v2-fast5-fight-card-parts",
+  "ufc-v2-fast5-fighter-gear-care",
+  "ufc-v2-fast5-ufc-sponsors",
+  "ufc-v2-main6-khabib-opponents",
+  "ufc-v2-main6-ufc-fight-announcers",
+  "ufc-v2-main6-legendary-venues",
+  "ufc-v2-fast6-decision-announcements",
+  "ufc-v2-fast6-mma-takedown-names",
+  "ufc-v2-fast6-fight-clock-announcements",
+  "ufc-v2-fast6-respect-after-bout",
+  "ufc-v2-fast6-fan-postfight-check",
+  "ufc-v2-fast6-arena-fan-gear",
+  "ufc-v2-fast6-fight-night-roles",
+  "ufc-v2-fast6-ufc-gym-promo",
+  "ufc-v2-fast6-title-fight-honors",
+  "ufc-v2-fast7-unretire-reasons",
+  "ufc-v2-fast7-locker-mental-prep",
+  "ufc-v2-fast7-doctor-no-clearance",
+  "ufc-v2-fast7-big-card-promises",
+  "ufc-v2-fast7-ufc-memory-shelf",
+  "ufc-v2-fast7-ufc-fan-questions",
+  "ufc-v2-fast7-title-shot-discussions",
+  "ufc-v2-fast7-new-gym-first-day",
+  "ufc-v2-fast8-fan-arena-facilities",
+  "ufc-v2-fast8-sports-bar-etiquette",
+  "ufc-v2-fast8-tattoo-placement",
+  "ufc-v2-fast8-fan-favorites",
+  "ufc-v2-fast8-ufc-marketing-places",
+  "ufc-v2-fast8-cage-distractions",
+  "ufc-v2-fast8-octagon-early-rules",
+  "ufc-v2-fast8-mma-underdog-appeal",
+  "ufc-v2-fast8-ufc-app-features",
+  "ufc-v2-fast8-fighter-transport",
+  "ufc-v2-fast8-gym-newcomer-concerns",
+  "ufc-v2-fast8-mma-sparring-partners",
+  "ufc-v2-fast9-five-round-challenges",
+  "ufc-v2-fast9-fighter-rules-meeting",
+  "ufc-v2-fast9-event-site-update",
+  "ufc-v2-fast9-judges-effective-grappling",
+  "ufc-v2-fast9-ufc-video-game-modes",
+  "ufc-v2-fast9-fighter-profile-content",
+  "ufc-v2-fast9-crowd-chants",
+  "ufc-v2-fast9-live-arena-screens",
+  "ufc-v2-fast9-title-belt-ceremony",
+  "ufc-v2-fast9-fan-ppv-rewatch",
+  "ufc-v2-fast10-cutman-actions",
+  "ufc-v2-fast11-arena-sound-details",
+  "ufc-v2-fast11-bout-card-size",
+  "ufc-v2-fast11-postfight-suspensions",
+  "ufc-v2-fast9-final-staredown-fans",
+  "ufc-v2-fast9-daily-training-log",
+  "ufc-v2-fast10-leg-kick-defense",
+  "ufc-v2-fast10-shorter-reach",
+  "ufc-v2-fast10-back-control-escape",
+  "ufc-v2-fast10-ground-space",
+  "ufc-v2-fast10-ground-pound-defense",
+  "ufc-v2-fast10-fight-week-open-workouts",
+  "ufc-v2-fast10-anti-takedown",
+  "ufc-v2-fast10-top-control",
+  "ufc-v2-fast10-postfight-medical-exam",
+  "ufc-v2-fast10-ppv-event-hype",
+  "ufc-v2-fast11-fight-week-briefing",
+  "ufc-v2-fast11-fighter-interview-lessons",
+  "ufc-v2-fast11-cage-mistakes",
+  // Same semantic families as existing alternatives; not distinct rotation slots.
+  "ufc-v2-fast13-contract-negotiations",
+  "ufc-v2-fast13-suspension-recovery",
+  "ufc-v2-fast13-fouls-penalties",
+]);
+/** These two immutable allowlists are manually selected, exact-ID topic family representatives.
+ * Unreviewed and held questions remain staged but can never enter Daily.
+ * Topic-family uniqueness and real answer matching are enforced in release tests.
+ */
+export const UFC_V2_APPROVED_MAIN_IDS: ReadonlySet<string> = new Set(UFC_FEUD_V2_APPROVED_MAIN_CANDIDATE_IDS);
+export const UFC_V2_APPROVED_FAST_IDS: ReadonlySet<string> = new Set(UFC_FEUD_V2_APPROVED_FAST_CANDIDATE_IDS);
+const SEMANTIC_OVERRIDES: Readonly<Record<string,string>> = {
+  // Second-pass thematic review: rephrasing the same recall domain does not create a fresh Daily topic.
+  "ufc-v2-fast9-event-site-update": "ufc-event-change-response",
+  "ufc-v2-fast7-fight-card-change": "ufc-event-change-response",
+  "ufc-v2-fast9-crowd-chants": "ufc-event-audio",
+  "ufc-v2-fast-fight-sounds": "ufc-event-audio",
+  "ufc-v2-fast11-arena-sound-details": "ufc-event-audio",
+  "ufc-v2-fast9-title-belt-ceremony": "ufc-postfight-celebration",
+  "ufc-v2-fast-victory-actions": "ufc-postfight-celebration",
+  "ufc-v2-fast9-fan-ppv-rewatch": "ufc-fight-replay-moments",
+  "ufc-v2-fast8-replay-moments": "ufc-fight-replay-moments",
+  "ufc-v2-fast9-fighter-profile-content": "ufc-fighter-record-stats",
+  "ufc-v2-fast2-career-record": "ufc-fighter-record-stats",
+  "ufc-v2-fast10-back-control-escape": "ufc-ground-escape",
+  "ufc-v2-fast8-hurt-survival": "ufc-hurt-fighter-defense",
+  "ufc-v2-fast10-fight-week-open-workouts": "ufc-training-routines",
+  "ufc-v2-fast-training-sessions": "ufc-training-routines",
+  "ufc-v2-fast2-defensive-moves": "ufc-general-fight-defense",
+  "ufc-v2-fast10-postfight-medical-exam": "ufc-fight-medical-issues",
+  "ufc-v2-fast11-postfight-suspensions": "ufc-fight-medical-issues",
+  "ufc-v2-fast9-fighter-rules-meeting": "ufc-prebout-rule-briefing",
+  "ufc-v2-fast11-fight-week-briefing": "ufc-prebout-rule-briefing",
+  "ufc-v2-main9-knockdowns": "ufc-knockdown-records",
+  "ufc-v2-main10-total-fight-time": "ufc-fight-time-records",
+  "ufc-v2-main10-longest-average-fights": "ufc-fight-time-records",
+  "ufc-v2-main11-shortest-average-bouts": "ufc-fight-time-records",
+  "ufc-v2-main10-submission-attempts": "ufc-submission-identities",
+  "ufc-v2-main11-strikes-absorbed": "ufc-striking-defense-records",
+  // Do not treat a changed fighter, corner of the cage, or record format as a new question concept.
+  "ufc-v2-fast9-five-round-challenges": "ufc-five-round-bout-comparison",
+  "ufc-v2-fast9-5-round-fight-differences": "ufc-five-round-bout-comparison",
+  "ufc-v2-fast10-reach-advantage": "ufc-reach-matchup-strategy",
+  "ufc-v2-fast10-shorter-reach": "ufc-reach-matchup-strategy",
+  "ufc-v2-fast10-ground-space": "ufc-bottom-ground-defense",
+  "ufc-v2-fast10-ground-pound-defense": "ufc-bottom-ground-defense",
+  "ufc-v2-fast10-takedown-warning": "ufc-takedown-shot-defense",
+  "ufc-v2-fast10-anti-takedown": "ufc-takedown-shot-defense",
+  "ufc-v2-fast10-clinch-offense": "ufc-clinch-technique",
+  "ufc-v2-fast11-clinch-break": "ufc-clinch-technique",
+  "ufc-v2-fast11-clinch-control-signs": "ufc-clinch-technique",
+  "ufc-v2-fast10-cage-defense": "ufc-fence-pressure-tactics",
+  "ufc-v2-fast11-cage-mistakes": "ufc-fence-pressure-tactics",
+  "ufc-v2-fast9-postfight-reporter": "ufc-postfight-interview-questions",
+  "ufc-v2-fast11-fighter-interview-lessons": "ufc-postfight-interview-questions",
+  "ufc-v2-fast10-leg-kick-defense": "ufc-defending-kicks",
+  "ufc-v2-fast11-high-kick-defense": "ufc-defending-kicks",
+  "ufc-v2-fast11-southpaw-adjustments": "ufc-stance-fight-adjustment",
+  "ufc-v2-fast11-stance-switch": "ufc-stance-fight-adjustment",
+  "ufc-v2-main11-knockdowns-per-fifteen": "ufc-knockdown-identities",
+  "ufc-v2-main11-most-total-strikes": "ufc-striking-identities",
+  "ufc-v2-main11-striking-differential": "ufc-striking-identities",
+  "ufc-v2-main11-significant-accuracy": "ufc-striking-identities",
+  "ufc-v2-main11-takedown-accuracy": "ufc-wrestling-identities",
+  "ufc-v2-main11-top-position-percent": "ufc-wrestling-identities",
+
+  // A ranked stats list and a legacy subjective list should not both ask
+  // players to recall fundamentally the same pool of knockout/submission
+  // specialists across one no-repeat cycle.
+  "ufc-v2-retained-ufc-main-02-1": "ufc-knockout-identities",
+  "ufc-v2-main9-ten-knockouts": "ufc-knockout-identities",
+  "ufc-v2-retained-ufc-main-03-1": "ufc-submission-identities",
+  "ufc-v2-main9-eight-submissions": "ufc-submission-identities",
+  "ufc-v2-retained-ufc-main-04-1": "ufc-wrestling-identities",
+  "ufc-v2-main10-career-takedowns": "ufc-wrestling-identities",
+  "ufc-v2-main10-control-time": "ufc-wrestling-identities",
+  "ufc-v2-retained-ufc-main-05-1": "ufc-striking-identities",
+  "ufc-v2-main9-sig-strike-volume": "ufc-striking-identities",
+  "ufc-v2-main9-twenty-wins": "ufc-career-volume-identities",
+  "ufc-v2-main9-fight-appearances": "ufc-career-volume-identities",
+  "ufc-v2-retained-ufc-fast2-06-1": "nationality-ufc-fighter-identities",
+  "ufc-v2-retained-ufc-fast2-07-1": "nationality-ufc-fighter-identities",
+  "ufc-v2-retained-ufc-fast3-08-1": "ufc-broadcast-personalities",
+  "ufc-v2-retained-ufc-main-20-1": "ufc-fighter-culture",
+  "ufc-v2-retained-ufc-fast5-05-1": "ufc-fighter-culture",
+  "ufc-v2-main3-ufc100-card": "numbered-ufc-event-roster",
+  "ufc-v2-main3-ufc300-card": "numbered-ufc-event-roster",
+  "ufc-v2-main4-mcgregor-opponents": "named-ufc-fighter-opponents",
+  "ufc-v2-main4-amanda-nunes-opponents": "named-ufc-fighter-opponents",
+  "ufc-v2-main4-anderson-silva-opponents": "named-ufc-fighter-opponents",
+  "ufc-v2-main6-khabib-opponents": "named-ufc-fighter-opponents",
+  "ufc-v2-main3-ufc200-card": "numbered-ufc-event-roster",
+  "ufc-v2-fast3-canadian-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-fast3-australia-nz-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-fast4-canadian-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-fast4-australia-nz-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-fast5-japanese-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-fast5-korean-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-fast5-polish-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-fast5-chinese-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-fast5-french-fighters": "nationality-ufc-fighter-identities",
+  "ufc-v2-main2-wec-champions": "former-promotion-title-holders",
+  "ufc-v2-main2-strikeforce-champions": "former-promotion-title-holders",
+  "ufc-v2-main6-ufc-fight-announcers": "ufc-broadcast-personalities",
+  "ufc-v2-main6-ex-fighter-analysts": "ufc-broadcast-personalities",
+  "ufc-v2-fast3-fight-cancel": "fight-cancellation-causes",
+  "ufc-v2-fast4-delay-causes": "fight-cancellation-causes",
+  "ufc-v2-fast7-change-gym-reasons": "fighter-career-change",
+  "ufc-v2-fast7-retirement-reasons": "fighter-retirement",
+  "ufc-v2-fast7-unretire-reasons": "fighter-retirement"
+};
+
+export function ufcFeudSemanticFamily(question: {id:string;collisionGroup?:string;category:string}) {
+  if (SEMANTIC_OVERRIDES[question.id]) return SEMANTIC_OVERRIDES[question.id]!;
+  // Fighter nationality is one recall concept regardless of country label.
+  if (/^ufc-v2-fast5-(japanese|korean|polish|chinese|french)-fighters$/.test(question.id))
+    return "nationality-ufc-fighter-identities";
+  return question.collisionGroup ?? question.category;
+}
+export function ufcV2ProvisionalInventory() {
+  const newMain=UFC_V2_NEW_MAIN_DRAFTS.filter(q=>!UFC_V2_HELD_IDS.has(q.id));
+  const newFast=UFC_V2_NEW_FAST_DRAFTS.filter(q=>!UFC_V2_HELD_IDS.has(q.id));
+  // Legacy KEEP rows still require full fact/alias verification: estimates only.
+  const potentialMain=[...newMain,...UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT];
+  const potentialFast=[...newFast,...UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT];
+  return {
+    authoredNewMain: UFC_V2_NEW_MAIN_DRAFTS.length,
+    authoredNewFast: UFC_V2_NEW_FAST_DRAFTS.length,
+    stagedLegacyKeepMain: UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT.length,
+    stagedLegacyKeepFast: UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT.length,
+    unapprovedLegacyRewrites: UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES.length,
+    provisionalMainRows: potentialMain.length,
+    provisionalFastRows: potentialFast.length,
+    provisionalMainFamilies: new Set(potentialMain.map(ufcFeudSemanticFamily)).size,
+    provisionalFastFamilies: new Set(potentialFast.map(ufcFeudSemanticFamily)).size,
+    heldNew: UFC_V2_HELD_IDS.size,
+  };
+}
+const MS_PER_DAY=86400000;
+const toDay=(d:Date)=>d.toISOString().slice(0,10);
+export function ufcFeudAppearanceDatesInWindow(firstInclusive:string,lastExclusive:string) {
+  const start=Date.parse(firstInclusive+"T00:00:00Z");
+  const end=Date.parse(lastExclusive+"T00:00:00Z");
+  if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start)
+    throw new Error("Invalid chronological UFC six-month window");
+  const result:string[]=[];
+  for(let time=start;time<end;time+=MS_PER_DAY){
+    const day=toDay(new Date(time));
+    if(lockedWeightedGameForDay("ufc",day)==="sports_feud") result.push(day);
+  }
+  return result;
+}
+export function ufcFeudSixMonthReleaseReadiness(
+  firstInclusive="2026-10-24",lastExclusive="2027-04-24",
+) {
+  const days=ufcFeudAppearanceDatesInWindow(firstInclusive,lastExclusive);
+  const inventory=ufcV2ProvisionalInventory();
+  const needMain=days.length*2,needFast=days.length*5;
+  // Counts come only from explicitly reviewer-approved IDs, never candidate totals.
+  const mainApproved=[...UFC_V2_NEW_MAIN_DRAFTS,...UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT]
+    .filter(q=>UFC_V2_APPROVED_MAIN_IDS.has(q.id)&&!UFC_V2_HELD_IDS.has(q.id));
+  const fastApproved=[...UFC_V2_NEW_FAST_DRAFTS,...UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT]
+    .filter(q=>UFC_V2_APPROVED_FAST_IDS.has(q.id)&&!UFC_V2_HELD_IDS.has(q.id));
+  const mainFamilies=new Set(mainApproved.map(ufcFeudSemanticFamily));
+  const fastFamilies=new Set(fastApproved.map(ufcFeudSemanticFamily));
+  const approvedMainFamilies=mainFamilies.size;
+  const approvedFastFamilies=fastFamilies.size;
+  const approvedUnionFamilies=new Set([...mainFamilies,...fastFamilies]).size;
+  return {
+    ...inventory,appearanceDates:days,appearanceCount:days.length,
+    neededMainFamilies:needMain,neededFastFamilies:needFast,
+    provisionalMainShortfall:Math.max(0,needMain-inventory.provisionalMainFamilies),
+    provisionalFastShortfall:Math.max(0,needFast-inventory.provisionalFastFamilies),
+    approvedMainFamilies,approvedFastFamilies,approvedUnionFamilies,
+    ready:approvedMainFamilies>=needMain&&approvedFastFamilies>=needFast&&approvedUnionFamilies>=needMain+needFast,
+  };
+}
