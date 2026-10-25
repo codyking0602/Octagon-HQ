@@ -26,6 +26,8 @@ test("APY and contract term changes are review facts, not automutations",()=>{
    ["salaryApy","realContractEndSeason","gameContract"]);
  assert.equal(review.changes[0].sourceUrl,"https://overthecap.com/player/example/23/");
  assert.equal(review.contractChangesApplied,0);
+ assert.equal(review.summary.materialChanged,1);
+ assert.equal(review.summary.metadataOnly,0);
 });
 test("no silent population shrinkage or new names",()=>{
  const changed={...fresh,players:[row("Different")]};
@@ -38,4 +40,13 @@ test("fail closed on duplicate identities and invalid contracts",()=>{
  assert.throws(()=>compareGmContractSnapshots(baseline,{...fresh,players:[row("Example"),row("Example")]},date),/duplicated/);
  assert.throws(()=>compareGmContractSnapshots(baseline,{...fresh,players:[row("Example",{salaryApy:-1})]},date),/malformed/);
  assert.throws(()=>compareGmContractSnapshots(baseline,{players:[]},date),/missing GM contract/);
+});
+test("age-only change is cheap roster metadata, never an expensive contract adjustment",()=>{
+ const next={...fresh,players:[row("Example",{age:25})]};
+ const report=compareGmContractSnapshots(baseline,next,date);
+ assert.equal(report.status,"metadata-review-required");
+ assert.equal(report.summary.materialChanged,0);
+ assert.equal(report.summary.metadataOnly,1);
+ assert.equal(report.summary.fieldCounts.age,1);
+ assert.equal(report.contractChangesApplied,0);
 });
