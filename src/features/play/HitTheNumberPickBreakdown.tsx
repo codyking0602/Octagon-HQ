@@ -6,8 +6,11 @@ export type HitTheNumberPickContribution = {
   value: number | null;
 };
 
-function formatStatValue(value: number) {
-  return value.toLocaleString("en-US", { maximumFractionDigits: 8 });
+/** Display precision only; authoritative scoring retains its full recorded values. */
+export function formatHitNumberStatValue(value: number): string {
+  return Number.isFinite(value)
+    ? value.toLocaleString("en-US", { maximumFractionDigits: 1 })
+    : "—";
 }
 
 /** Only render this for a completed result, using its recorded pick values. */
@@ -32,8 +35,8 @@ export function HitTheNumberPickBreakdown({
             <span>{pick.name}</span>
             <strong aria-label={pick.value === null
               ? `${pick.name}: stat unavailable`
-              : `${pick.name}: ${formatStatValue(pick.value)}`}>
-              {pick.value === null ? "—" : formatStatValue(pick.value)}
+              : `${pick.name}: ${formatHitNumberStatValue(pick.value)}`}>
+              {pick.value === null ? "—" : formatHitNumberStatValue(pick.value)}
             </strong>
           </li>
         ))}
