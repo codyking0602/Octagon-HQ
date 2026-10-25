@@ -48,7 +48,9 @@ function audit(sport:Sport, days:string[], scheduleVersion:string, strict:boolea
         if(board.questions.length!==10)localErrors.push(`Game ${game+1} has ${board.questions.length} questions`);
         if(sport==="football" && (board.questions.filter(q=>q.league==="NFL").length!==5 || board.questions.filter(q=>q.league==="CFB").length!==5))localErrors.push("Football NFL/CFB mix invalid");
         for(const [index,q] of board.questions.entries()) {
-          const semanticPair=[q.known.subjectId,q.hidden.subjectId].sort().join("|");
+          const semanticPair=sport==="nba"
+            ? [q.known.name.toLowerCase(),q.hidden.name.toLowerCase()].sort().join("|")
+            : [q.known.subjectId,q.hidden.subjectId].sort().join("|");
           const comparisonKey=q.metricKey+"|"+semanticPair;
           const gradingValid=q.answer===(q.hidden.value>q.known.value?"higher":"lower");
           if(seen.has(comparisonKey))localErrors.push("Repeated comparison: "+comparisonKey);
