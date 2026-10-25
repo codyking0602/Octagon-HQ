@@ -332,6 +332,30 @@ function futureMillionaireErrata(
         explanation: "Indiana completed a 16-0 season by defeating Miami in the January 2026 College Football Playoff national championship game.",
       };
     }
+    // Three additional Stat Sheets disclosed the correct fighter by surname.
+    // UFC fighter/event records: ufc.com/athlete/jessica-andrade,
+    // ufc.com/event/ufc-281, and ufc.com/news/on-this-day-ufc-history-serra-shocks-world.
+    if (league === "ufc" && runIndex === 5 && index === 5) {
+      return {
+        ...question,
+        id: "millionaire-ufc-237-strawweight-q6-future",
+        statSheet: "The belt changed hands in Brazil via a second-round slam finish at UFC 237.",
+      };
+    }
+    if (league === "ufc" && runIndex === 6 && index === 3) {
+      return {
+        ...question,
+        id: "millionaire-ufc-281-middleweight-q4-future",
+        statSheet: "A dramatic fifth-round stoppage at Madison Square Garden ended the champion's title reign.",
+      };
+    }
+    if (league === "ufc" && runIndex === 7 && index === 2) {
+      return {
+        ...question,
+        id: "millionaire-ufc-69-welterweight-q3-future",
+        statSheet: "The upset happened at UFC 69 after the challenger won Season 4 of The Ultimate Fighter.",
+      };
+    }
     // Grasso's surname was previously written verbatim in the Stat Sheet.
     if (league === "ufc" && runIndex === 9 && index === 6) {
       return {
