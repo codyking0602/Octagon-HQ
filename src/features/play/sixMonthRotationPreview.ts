@@ -7,9 +7,8 @@ import { APPROVED_DAILY_ROTATION_WEIGHTS } from "./dailyContentQualityPolicy";
 import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import {
   NBA_DAILY_WEIGHTS,
+  NBA_DAILY_WEIGHTED_CYCLE,
   NBA_GAMES_LAUNCH_DAY,
-  NBA_REGULAR_SEASON_LAST_DAY,
-  nbaRegularSeasonDaily,
 } from "../nba/nbaDailySchedule";
 
 export const SIX_MONTH_AUDIT_START = "2026-10-25";
@@ -60,8 +59,7 @@ export function previewPublicationDates(
 ): string[] {
   if (sport === "football") return [...days];
   if (sport === "nba") return days.filter((day) =>
-    day >= NBA_GAMES_LAUNCH_DAY && day <= NBA_REGULAR_SEASON_LAST_DAY
-    && (ordinal(day) - ordinal(NBA_OPPOSITE_CADENCE_ANCHOR)) % 2 === 0);
+    day >= NBA_GAMES_LAUNCH_DAY && (ordinal(day) - ordinal(NBA_OPPOSITE_CADENCE_ANCHOR)) % 2 === 0);
   return days.filter((day) =>
     (ordinal(day) - ordinal(NBA_OPPOSITE_CADENCE_ANCHOR)) % 2 !== 0);
 }
@@ -127,11 +125,12 @@ export function buildMaskedLegacyComparison() {
     ({ day, sport: "football" as const, game: lockedWeightedGameForDay("football", day) }));
   const ufc = previewPublicationDates("ufc", days).map((day) =>
     ({ day, sport: "ufc" as const, game: lockedWeightedGameForDay("ufc", day) }));
-  const nba = previewPublicationDates("nba", days).map((day) => {
-    const production = nbaRegularSeasonDaily(day);
-    if (!production || !production.isPublicationDay) throw new Error("NBA legacy preview cadence mismatch.");
-    return { day, sport: "nba" as const, game: production.gameType };
-  });
+  const nba = previewPublicationDates("nba", days).map((day, index) => ({
+    day, sport: "nba" as const,
+    // Projections after the existing Apr 11 NBA season are hypothetical until
+    // Part 1 extends the official publication window (7 missing NBA dates).
+    game: NBA_DAILY_WEIGHTED_CYCLE[index % NBA_DAILY_WEIGHTED_CYCLE.length]!,
+  }));
   return { football, ufc, nba };
 }
 
