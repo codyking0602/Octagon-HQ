@@ -89,8 +89,20 @@ function priorityTeams() {
     teamInfo[extra.schoolId] = { name:extra.priority?.school ?? extra.schoolId,
       id:String(extra.priority?.espnId), buckets:extra.priority };
   }
-  validateFlex(nfl);
-  validateFlex(Object.fromEntries(Object.entries(teamInfo).map(([id,team])=>[id,team.buckets])));
+  for (const [sport, teams] of [
+    ["nfl", nfl],
+    ["cfb", Object.fromEntries(Object.entries(teamInfo).map(([id,team])=>[id,team.buckets]))],
+  ]) {
+    for (const [team, buckets] of Object.entries(teams)) {
+      const allowed = new Set(["RB","WR","TE"].flatMap(f=>(buckets[f]??[]).map(nameKey)));
+      for (const player of buckets.Flex??[]) if (!allowed.has(nameKey(player))) {
+        record("flex-inheritance-blocker", "Flex name absent from its RB/WR/TE shortlist",
+          sport==="nfl"?"data/generated/football/wheel-football-priorities.json":
+          "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
+          {sport,team,player});
+      }
+    }
+  }
   assert(Object.keys(nfl).length===32,"Expected all 32 NFL audited teams");
   assert(Object.keys(teamInfo).length>=69, "Missing 68-school base or Boise extra-team audit");
   return {nfl,teamInfo,cfb};
@@ -361,7 +373,7 @@ async function main() {
   };
   const summaries=Object.fromEntries(["nfl","cfb","ufc"].map(sport=>
     [sport,summarizeDecisions(result.filter(row=>row.sport===sport))]));
-  const output={status:"complete-read-only",checkedAt:at,
+  const output={status:"review-blocked-until-verified",checkedAt:at,
     sourceCommit:all.sourceCommit,previousSnapshot:previous?.checkedAt??null,
     summaries,gmContractAuthority:gm,sourceEvidence:evidence,
     reviews:result.filter(row=>row.classification!=="no-meaningful-change"),
@@ -379,7 +391,11 @@ async function main() {
   mkdirSync(outputDir,{recursive:true});
   writeFileSync(resolve(outputDir,"report.json"),JSON.stringify(output,null,2)+"\n");
   assert(!ufcRanks.structuralWarnings.length,
-    "Official UFC source ranking integrity needs editorial resolution; snapshot not promoted");
+    "Official UFC ranking source integrity needs editorial resolution; snapshot not promoted");
+  assert(!evidence.some(row=>row.type==="flex-inheritance-blocker"),
+    "Flex shortlist inheritance discrepancies require reviewed correction; snapshot not promoted");
+  output.status="complete-read-only";
+  writeFileSync(resolve(outputDir,"report.json"),JSON.stringify(output,null,2)+"\n");
   writeFileSync(resolve(outputDir,"snapshot.json"),JSON.stringify(all,null,2)+"\n");
   console.log(JSON.stringify({status:output.status,summaries,
     evidenceCount:evidence.length,previousSnapshot:output.previousSnapshot}));
