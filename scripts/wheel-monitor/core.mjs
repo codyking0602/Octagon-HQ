@@ -52,7 +52,7 @@ function forPolicy(row, previous = false) {
     division:row.division, ranking:row.rank, isChampion:!!row.champion,
     role:row.sourceRole??null,
     // Missing from an ESPN roster is uncertainty, not verified release.
-    rosterStatus:row.sourceStatus==="matched"?"matched":null,
+    rosterStatus:null,
   };
 }
 export function compareEvidence(current, previous=null) {
