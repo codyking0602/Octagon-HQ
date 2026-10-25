@@ -111,12 +111,17 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
   it("protects NBA Higher or Lower comparisons until after final answer",()=>{
     const pub=buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v2-locked", "higher_lower");
-    expect(pub.publicSetup.question_count).toBe(10);
-    const initial=pub.publicSetup.initial_state as Record<string,unknown>;
-    const question=initial.current_question as Record<string,unknown>;
-    expect(question.answer).toBeUndefined();
-    expect((question.hidden as Record<string,unknown>).value).toBeUndefined();
-    expect(pub.privateSetupEvidence.board).toBeTruthy();
+    expect(pub.publicSetup.format_version).toBe("daily-two-game-average-v1");
+    const children=pub.publicSetup.rounds as Array<Record<string,unknown>>;
+    expect(children).toHaveLength(2);
+    for(const child of children) {
+      expect(child.question_count).toBe(10);
+      const initial=child.initial_state as Record<string,unknown>;
+      const question=initial.current_question as Record<string,unknown>;
+      expect(question.answer).toBeUndefined();
+      expect((question.hidden as Record<string,unknown>).value).toBeUndefined();
+    }
+    expect((pub.privateSetupEvidence.rounds as unknown[])).toHaveLength(2);
   });
 
   it("reuses the canonical Bar Trivia server scorer and answer reveal boundary", () => {
