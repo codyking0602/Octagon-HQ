@@ -119,11 +119,15 @@ type AverageFanRuntimeModule = {
   ) => JsonRecord;
   advanceAverageFanDailyRuntime: DailyAdvanceRuntime;
 };
+type MillionaireAdvanceRuntimeModule = {
+  advanceMillionaireDailyRuntime: DailyAdvanceRuntime;
+};
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
+let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
@@ -174,6 +178,13 @@ function loadAverageFanRuntime() {
     averageFanRuntimePromise = import("./average-fan.generated.mjs") as Promise<AverageFanRuntimeModule>;
   }
   return averageFanRuntimePromise;
+}
+
+function loadMillionaireAdvanceRuntime() {
+  if (!millionaireAdvanceRuntimePromise) {
+    millionaireAdvanceRuntimePromise = import("./millionaire-advance.generated.mjs") as Promise<MillionaireAdvanceRuntimeModule>;
+  }
+  return millionaireAdvanceRuntimePromise;
 }
 
 function asRecord(value: unknown): JsonRecord | null {
@@ -784,7 +795,9 @@ async function handleNbaDaily(
       // aliases. Avoid booting NBA's all-games module + legacy UFC/NFL/CFB
       // question catalogs for every individual Feud answer.
       ? (await loadNbaFeudAdvanceRuntime()).advanceFamilyFeudDailyCore(context, action)
-      : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
+      : context.gameType === "millionaire" && !isTwoGameDaily(context)
+        ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime(context, action)
+        : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
   const history = footballActionHistory(context);
   const nextSubmissionState = submissionStateWithClientActionId({
     ...advanced.submissionState, action_history: [...history, action],
@@ -1581,7 +1594,9 @@ Deno.serve(async (request) => {
       if (!advanced) {
         const advanceFootballRuntime = context.gameType === "average_fan"
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
-          : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
+          : context.gameType === "millionaire" && !isTwoGameDaily(context)
+            ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
+            : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
         context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
         advanced = isDailyCombo(context)
           ? advanceDailyCombo(context, action, advanceFootballRuntime)
@@ -1646,9 +1661,11 @@ Deno.serve(async (request) => {
     if (!advanced) {
       const advanceUfcRuntime = context.gameType === "average_fan"
         ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
-        : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
-          ? advancePersistedBlindResumeV3
-          : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
+        : context.gameType === "millionaire" && !isTwoGameDaily(context)
+          ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
+          : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
+            ? advancePersistedBlindResumeV3
+            : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
       advanced = isDailyCombo(context)
         ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
         : advanceUfcRuntime(context, body.action);
