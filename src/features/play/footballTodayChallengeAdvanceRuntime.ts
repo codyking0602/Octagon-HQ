@@ -290,6 +290,7 @@ function scoreTwoGameFootballChild(
   if (context.gameType === "hit_the_number") {
     return scoreFootballHitNumberTwoGameChild(context, advanced);
   }
+  if (context.gameType === "higher_lower") return Number(advanced.publicState.correct_count) * 10;
   throw new Error(`Unsupported Football two-game Daily score for ${String(context.gameType)}.`);
 }
 

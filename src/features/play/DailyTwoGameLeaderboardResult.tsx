@@ -1,4 +1,7 @@
 import { useMemo, useState } from "react";
+import { FootballHigherLowerLeaderboardResult } from "./OfficialFootballHigherLowerDailyView";
+import { UfcHigherLowerLeaderboardResult } from "./OfficialUfcHigherLowerDailyView";
+import { NbaHigherLowerLeaderboardResult } from "../nba/NbaHigherLowerLeaderboardResult";
 import { footballWavelengthClues } from "../back-room/footballWavelengthModel";
 import { nbaWavelengthClues } from "../nba/nbaWavelengthCatalog";
 import { nbaHitSubjectById } from "../nba/nbaHitTheNumberStats";
@@ -99,6 +102,7 @@ function roundSummary(gameType: TodayChallengeProjection["gameType"], result: Js
     const distance = Number(result.distance ?? 0);
     return distance > 0 ? `${formatHitNumberStatValue(distance)} OFF` : score >= 100 ? "PERFECT" : "FINAL";
   }
+  if (gameType === "higher_lower") return `${Math.round(score / 10)} OF 10 CORRECT`;
   return "FINAL";
 }
 
@@ -323,6 +327,14 @@ function GameRound({
         <WavelengthRoundDetail sport={sport} result={result} detail={detail} />
       ) : gameType === "hit_the_number" ? (
         <HitNumberRoundDetail sport={sport} setup={setup} result={result} />
+      ) : gameType === "higher_lower" && sport === "football" ? (
+        <FootballHigherLowerLeaderboardResult normalizedScore={score} answers={result.answers} revealQuestions={reveal.questions} />
+      ) : gameType === "higher_lower" && sport === "ufc" ? (
+        <UfcHigherLowerLeaderboardResult normalizedScore={score} answers={result.answers} revealQuestions={reveal.questions} />
+      ) : gameType === "higher_lower" && sport === "nba" ? (
+        <NbaHigherLowerLeaderboardResult detail={{
+          unlocked: true, normalizedScore: score, answers: result.answers, revealQuestions: reveal.questions,
+        }} />
       ) : null}
     </details>
   );

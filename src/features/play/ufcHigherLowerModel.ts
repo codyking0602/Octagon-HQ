@@ -224,7 +224,8 @@ function reservedBoards(): readonly UfcHigherLowerBoard[] {
   const appearances = new Map<string, number>();
   const metricCounts = new Map<string, number>();
   const boards: UfcHigherLowerBoard[] = [];
-  for (let index = 0; index < UFC_HIGHER_LOWER_RESERVED_SLOTS; index++) {
+  // Reserve both games per canonical 48-hour date from one globally exclusive pool.
+  for (let index = 0; index < UFC_HIGHER_LOWER_RESERVED_SLOTS * 2; index++) {
     boards.push(makeBoard("official-slot-" + index, used, appearances, metricCounts));
   }
   reserved = boards;
@@ -244,12 +245,13 @@ function utcDay(day: string): number {
  * Do NOT activate/modify the calendar here. These boards can be sampled by
  * any subset of UFC's opposite-NBA 48-hour dates with zero pair collisions.
  */
-export function createUfcHigherLowerOfficialBoard(day: string): UfcHigherLowerBoard {
+export function createUfcHigherLowerOfficialBoard(day: string, gameIndex = 0): UfcHigherLowerBoard {
+  if (gameIndex !== 0 && gameIndex !== 1) throw new Error("UFC Daily has exactly two games.");
   const offset = utcDay(day) - utcDay(UFC_HIGHER_LOWER_FIRST_SLOT);
   if (offset < 0 || offset % 2 !== 0 || offset / 2 >= UFC_HIGHER_LOWER_RESERVED_SLOTS) {
     throw new Error("UFC Higher or Lower Daily is outside the reserved 48-hour content horizon.");
   }
-  return reservedBoards()[offset / 2]!;
+  return reservedBoards()[(offset / 2) * 2 + gameIndex]!;
 }
 
 /** Casual is fully replayable, separately seeded, and never consumes official content. */

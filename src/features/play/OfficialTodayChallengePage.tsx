@@ -22,6 +22,7 @@ import { OfficialBarTriviaDailyView } from "./OfficialBarTriviaDailyView";
 import { OfficialAverageFanDailyView } from "./OfficialAverageFanDailyView";
 import { OfficialFootballHigherLowerDailyView } from "./OfficialFootballHigherLowerDailyView";
 import { OfficialUfcHigherLowerDailyView } from "./OfficialUfcHigherLowerDailyView";
+import { DailyTwoGameLeaderboardResult } from "./DailyTwoGameLeaderboardResult";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -125,6 +126,12 @@ export function OfficialTodayChallengeContent({
     : projection;
   const twoGameSeries = dailyTwoGameSeriesState(projection);
   const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
+  const higherLowerTwoGame = projection.gameType === "higher_lower" && Boolean(twoGameSeries);
+  const activeHigherLowerState = projection.publicState.active_round;
+  const higherLowerProjection = higherLowerTwoGame && activeHigherLowerState
+    && typeof activeHigherLowerState === "object" && !Array.isArray(activeHigherLowerState)
+    ? { ...projection, publicState: activeHigherLowerState as Record<string, unknown> }
+    : projection;
 
   if (presentationHandoff) {
     return (
@@ -145,7 +152,7 @@ export function OfficialTodayChallengeContent({
 
   return (
     <>
-      <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={onAdvance} />
+      {higherLowerTwoGame && projection.officialAttempt ? null : <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={onAdvance} />}
       <DailyRankKeepComboStatus projection={projection} />
       <OfficialBlindRankScoreSummary projection={projection} />
       <OfficialBlindRankComboResult projection={projection} />
@@ -192,10 +199,16 @@ export function OfficialTodayChallengeContent({
           onAdvance={onAdvance}
           onExit={() => onNavigate(projection.sport === "football" ? "/football" : "/play")}
         />
+      ) : higherLowerTwoGame && projection.officialAttempt ? (
+        <DailyTwoGameLeaderboardResult
+          projection={projection}
+          sport={projection.sport === "football" ? "football" : "ufc"}
+          resultDetail={{}}
+        />
       ) : projection.gameType === "higher_lower" && projection.sport === "football" ? (
-        <OfficialFootballHigherLowerDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
+        <OfficialFootballHigherLowerDailyView projection={higherLowerProjection} busy={busy} onAdvance={onAdvance} />
       ) : projection.gameType === "higher_lower" && projection.sport === "ufc" ? (
-        <OfficialUfcHigherLowerDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
+        <OfficialUfcHigherLowerDailyView projection={higherLowerProjection} busy={busy} onAdvance={onAdvance} />
       ) : projection.gameType === "bar_trivia" ? (
         <OfficialBarTriviaDailyView
           projection={projection}

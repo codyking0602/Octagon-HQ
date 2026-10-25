@@ -1,0 +1,37 @@
+name: Higher or Lower Two-Game Six-Month Proof
+
+on:
+  pull_request:
+    paths:
+      - "src/features/play/higherLowerTwoGameSixMonthAudit.test.ts"
+      - "src/features/play/footballHigherLowerDailyRuntime.ts"
+      - "src/features/play/ufcHigherLowerModel.ts"
+      - "src/features/play/ufcHigherLowerDailyRuntime.ts"
+      - "src/features/nba/nbaHigherLowerModel.ts"
+      - "src/features/nba/nbaHigherLowerDailyPublication.ts"
+      - "src/features/nba/nbaDailyServerPublication.ts"
+      - ".github/workflows/higher-lower-two-game-six-month-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  canonical-content-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Generate immutable Football factual reference artifacts
+        run: npm run pretest
+      - name: Validate dual-game scoring and six-month rotation capacity
+        run: OCTAGON_WRITE_HL_AUDIT=1 npx vitest run src/features/play/higherLowerTwoGameSixMonthAudit.test.ts
+      - name: Upload all real dates, provisional boards, source identities and grading
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: higher-lower-two-game-six-month-date-and-comparison-audit
+          path: artifacts/higher-lower-two-game-six-month-audit.json
+          if-no-files-found: warn
