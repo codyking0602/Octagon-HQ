@@ -135,15 +135,20 @@ declare v_schedule private.daily_challenge_schedule_versions;
 begin
   select * into v_schedule from private.daily_challenge_schedule_versions where version = p_schedule_version;
   if v_schedule.version is null then raise exception 'unknown daily schedule version %',p_schedule_version; end if;
-  v_length := cardinality(v_schedule.game_cycle);
-  if v_length = 0 then raise exception 'empty Daily schedule %',p_schedule_version; end if;
-  v_index := p_day - v_schedule.anchor_day;
-  if v_schedule.sport = 'nba'
-     or (v_schedule.sport = 'ufc' and v_schedule.starts_on >= date '2026-10-25') then
-    -- Must be an actual publication day; day 2 maps to the same board.
-    v_index := (private.daily_challenge_active_day(p_day,v_schedule.sport) - v_schedule.anchor_day) / 2;
+  v_length := array_length(v_schedule.game_cycle, 1);
+  if v_length is null or v_length = 0 then raise exception 'empty Daily schedule %',p_schedule_version; end if;
+  -- Maintain the exact historical modulo expression for all previous UFC and
+  -- Football schedule versions. No historical reroll day may change.
+  if v_schedule.sport = 'ufc' and v_schedule.starts_on >= date '2026-10-25' then
+    v_index := (private.daily_challenge_active_day(p_day,'ufc') - v_schedule.anchor_day) / 2;
+    v_offset := ((v_index % v_length) + v_length) % v_length;
+  else
+    v_offset := case
+      when v_schedule.sport = 'nba'
+      then (((((p_day - v_schedule.anchor_day) / 2) % v_length) + v_length) % v_length)
+      else (((p_day - v_schedule.anchor_day) % v_length) + v_length) % v_length
+    end;
   end if;
-  v_offset := ((v_index % v_length) + v_length) % v_length;
   return v_schedule.game_cycle[v_offset + 1];
 end;
 $fn$;
