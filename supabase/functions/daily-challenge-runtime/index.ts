@@ -109,6 +109,9 @@ type NbaFeudAdvanceRuntimeModule = {
 type MillionaireAdvanceRuntimeModule = {
   advanceMillionaireDailyRuntime: DailyAdvanceRuntime;
 };
+type FootballHitNumberAdvanceRuntimeModule = {
+  advanceFootballHitNumberDailyRuntime: DailyAdvanceRuntime;
+};
 // Never open NBA Daily merely because November 1 arrives. The frontend and
 // leaderboard adapter must pass the exact-head release verification first.
 const NBA_DAILY_EDGE_RELEASE_READY = false;
@@ -131,6 +134,7 @@ let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = 
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
 let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
+let footballHitNumberAdvanceRuntimePromise: Promise<FootballHitNumberAdvanceRuntimeModule> | null = null;
 
 function loadUfcRuntime() {
   if (!ufcRuntimePromise) {
@@ -171,6 +175,13 @@ function loadNbaFeudAdvanceRuntime() {
     nbaFeudAdvanceRuntimePromise = import("./nba-feud-advance.generated.mjs") as Promise<NbaFeudAdvanceRuntimeModule>;
   }
   return nbaFeudAdvanceRuntimePromise;
+}
+
+function loadFootballHitNumberAdvanceRuntime() {
+  if (!footballHitNumberAdvanceRuntimePromise) {
+    footballHitNumberAdvanceRuntimePromise = import("./football-hit-number-advance.generated.mjs") as Promise<FootballHitNumberAdvanceRuntimeModule>;
+  }
+  return footballHitNumberAdvanceRuntimePromise;
 }
 
 function loadMillionaireAdvanceRuntime() {
@@ -1628,9 +1639,11 @@ Deno.serve(async (request) => {
       if (!advanced) {
         const advanceFootballRuntime = context.gameType === "average_fan"
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
-          : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
-            ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
-            : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
+          : context.gameType === "hit_the_number" && !isDailyCombo(context)
+            ? (await loadFootballHitNumberAdvanceRuntime()).advanceFootballHitNumberDailyRuntime
+            : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
+              ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
+              : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
         context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
         advanced = isDailyCombo(context)
           ? advanceDailyCombo(context, action, advanceFootballRuntime)
