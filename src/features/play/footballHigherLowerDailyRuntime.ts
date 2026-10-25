@@ -91,13 +91,29 @@ export function buildFootballHigherLowerTwoGameDailyPublication(
   });
 }
 
+/** Parse only immutable previously published official boards from the service-only
+ * history RPC. Fail closed rather than silently permitting old comparisons.
+ */
+export function footballHigherLowerPublishedHistory(value: unknown): FootballHigherLowerQuestion[] {
+  if (value == null) return [];
+  if (!Array.isArray(value)) throw new Error("Football Higher or Lower history is unavailable.");
+  return value.flatMap((raw, index) => {
+    const board = parseFootballHigherLowerBoard(raw);
+    if (!board || board.scope !== "MIXED") {
+      throw new Error("Invalid frozen Football Higher or Lower historical board " + index);
+    }
+    return board.questions;
+  });
+}
+
 /** The coordinated future calendar is the sole activation point. */
-export function buildFootballHigherLowerDailyPersistenceSetup(day: string, scheduleVersion: string) {
+export function buildFootballHigherLowerDailyPersistenceSetup(day: string, scheduleVersion: string, history?: unknown) {
+  const prior = footballHigherLowerPublishedHistory(history);
   return persistenceSetup(
     "higher_lower", day, scheduleVersion,
     dailyUsesTwoGameAverage("higher_lower", day)
-      ? buildFootballHigherLowerTwoGameDailyPublication(day, scheduleVersion)
-      : buildFootballHigherLowerDailyPublication(day, scheduleVersion),
+      ? buildFootballHigherLowerTwoGameDailyPublication(day, scheduleVersion, prior)
+      : buildFootballHigherLowerDailyPublication(day, scheduleVersion, prior),
   );
 }
 
