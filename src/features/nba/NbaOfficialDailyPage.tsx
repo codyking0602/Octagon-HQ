@@ -18,6 +18,7 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
+import { DailyTwoGameLeaderboardResult } from "../play/DailyTwoGameLeaderboardResult";
 import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLeaderModel";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
@@ -193,12 +194,15 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
 }
 
 export function NbaOfficialHigherLower({ projection, advance, busy }: { projection: TodayChallengeProjection; advance: Advance; busy: boolean }) {
-  const state = projection.publicState;
+  const { state, reveal, score } = nbaOfficialActiveRound(projection);
   const question = object(state.current_question);
   const known = object(question.known), hidden = object(question.hidden);
   const last = object(state.last_result);
   const attempt = projection.officialAttempt;
   if (attempt) {
+    if (projection.publicSetup.format_version === "daily-two-game-average-v1") {
+      return <DailyTwoGameLeaderboardResult projection={projection} resultDetail={{}} sport="nba" />;
+    }
     return <NbaHigherLowerLeaderboardResult detail={{
       unlocked: true, normalizedScore: attempt.normalizedScore,
       answers: attempt.publicResult.answers ?? state.answers,
