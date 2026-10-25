@@ -40,6 +40,17 @@ describe("UFC Bar Trivia v3 full editorial rebuild", () => {
     }
   });
 
+  it("locks sourced UFC-vs-WEC affiliation and historically correct submission finishes", () => {
+    const pennHughes = ufc.find((question) => question.id === "ufc-bt-v3-h-003");
+    expect(pennHughes?.prompt).toMatch(/rear-naked choke/i);
+    expect(pennHughes?.prompt).not.toMatch(/triangle choke/i);
+    expect(pennHughes?.sourceUrl).toBe("https://www.ufc.com/news/defining-matt-hughes");
+
+    const showtime = ufc.find((question) => question.id === "ufc-bt-v3-e-004");
+    expect(showtime?.prompt).toMatch(/WEC 53/i);
+    expect(showtime?.prompt).not.toMatch(/UFC (?:53|164)/i);
+  });
+
   it("guarantees 20 seeded UFC Daily appearances with no repeated ID or reviewed fact family", () => {
     expect(UFC_BAR_TRIVIA_UNIQUE_APPEARANCES).toBe(20);
     const days = ["2026-09-29"];
