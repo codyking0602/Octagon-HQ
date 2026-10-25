@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { FootballFindLeaderPresentation } from "../back-room/FootballFindLeaderPresentation";
@@ -18,6 +18,8 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
+import { nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { DailyTwoGameLeaderboardResult } from "../play/DailyTwoGameLeaderboardResult";
 import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLeaderModel";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
@@ -192,8 +194,25 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
   </div>;
 }
 
+/** Reuse the approved Casual portrait sources and safe mobile fallback. */
+function NbaOfficialHigherLowerPortrait({ subject }: { subject: Json }) {
+  const name = String(subject.name ?? "");
+  const rawId = Number(subject.nbaId);
+  const nbaId = subject.nbaId == null || !Number.isInteger(rawId) ? null : rawId;
+  const url = nbaHigherLowerPortraitSource({ name, nbaId });
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [name, url]);
+  const editorial = Boolean(url && !url.includes("/headshots/nba/latest/"));
+  return <span className="nba-official-higher-lower__portrait">
+    {url && !failed ? <img src={url} alt="" loading="eager" referrerPolicy="no-referrer"
+      onError={() => setFailed(true)}
+      onLoad={event => {
+        if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true);
+      }} /> : <strong aria-hidden="true">{name.split(/\\s+/).slice(0, 2).map(part => part[0] ?? "").join("") || "NBA"}</strong>}
+  </span>;
+}
 export function NbaOfficialHigherLower({ projection, advance, busy }: { projection: TodayChallengeProjection; advance: Advance; busy: boolean }) {
-  const state = projection.publicState;
+  const state = nbaOfficialActiveRound(projection).state;
   const question = object(state.current_question);
   const known = object(question.known), hidden = object(question.hidden);
   const last = object(state.last_result);
@@ -213,15 +232,24 @@ export function NbaOfficialHigherLower({ projection, advance, busy }: { projecti
       {last.correct ? "CORRECT" : "NOT QUITE"} · Previous pick: {String(last.choice ?? "").toUpperCase()}
     </p> : null}
     <div className="nba-official-higher-lower__comparison">
-      <article><small>KNOWN STAT</small><strong>{String(known.name ?? "")}</strong>
+      <article><small>KNOWN STAT</small><NbaOfficialHigherLowerPortrait subject={known} /><strong>{String(known.name ?? "")}</strong>
         <span>{String(question.metricLabel ?? "NBA STAT")}</span>
         <b>{String(known.formattedValue ?? known.value ?? "—")}</b><small>{String(known.context ?? "")}</small>
       </article>
-      <article><small>YOUR CALL</small><strong>{String(hidden.name ?? "")}</strong>
+      <article><small>YOUR CALL</small><NbaOfficialHigherLowerPortrait subject={hidden} /><strong>{String(hidden.name ?? "")}</strong>
         <span>{String(question.metricLabel ?? "NBA STAT")}</span>
         <b>?</b><small>{String(hidden.context ?? "")}</small>
       </article>
     </div>
+    {([known, hidden].map(row => nbaHigherLowerPortraitCredit({ name: String(row.name ?? "") }))
+      .filter((row): row is NonNullable<typeof row> => row != null).length > 0) ? (
+      <details className="nba-official-higher-lower__credits">
+        <summary>Historical portrait credits</summary>
+        {[known, hidden].map(row => nbaHigherLowerPortraitCredit({ name: String(row.name ?? "") }))
+          .filter((row): row is NonNullable<typeof row> => row != null)
+          .map(credit => <p key={credit.name}>{credit.name}: {credit.author} · {credit.license} · <a href={credit.source} target="_blank" rel="noopener noreferrer">Source</a></p>)}
+      </details>
+    ) : null}
     <p>Was {String(hidden.name ?? "the other player")} higher or lower?</p>
     <div className="nba-official-higher-lower__actions">
       <button type="button" disabled={busy} onClick={() => advance({ choice: "higher" })}>↑ HIGHER</button>
@@ -239,6 +267,9 @@ export function NbaOfficialDailyContent({ projection, advance, busy, onExit }: {
   if (handoff) return <DailyTwoGamePresentationIntermission projection={projection} busy={busy}
     onContinue={() => advance({ type: "next_game" }, { dedupeKey: "nba-wavelength-handoff:" + projection.id })} />;
   if (twoGame?.awaitingNext) return <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />;
+  if (projection.gameType === "higher_lower" && twoGame?.complete && projection.officialAttempt) {
+    return <DailyTwoGameLeaderboardResult projection={projection} sport="nba" resultDetail={{}} />;
+  }
   return <>
     <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
     {projection.gameType === "find_leader" ? <NbaOfficialFindLeader projection={projection} advance={advance} busy={busy} /> : null}

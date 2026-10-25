@@ -7,6 +7,8 @@ import {
 } from "../back-room/footballHigherLowerModel";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
 import { persistenceSetup } from "./footballDailyPublicationShared";
+import { buildTwoGameDailyPublication } from "./dailyTwoGameRuntime";
+import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
 import type {
   OfficialDailyAdvanceResult,
   OfficialDailyRuntimeContext,
@@ -30,22 +32,30 @@ export function buildFootballHigherLowerDailyPublication(
   day: string,
   scheduleVersion: string,
   previousPublishedQuestions: readonly FootballHigherLowerQuestion[] = [],
+  gameIndex = 0,
+  enforceCooldown = false,
 ): OfficialDailySetupPublication {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !scheduleVersion.trim()) {
     throw new Error("Football Higher or Lower requires a canonical Daily date and schedule.");
   }
-  const seed = [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day].join("|");
-  const board = createFootballHigherLowerBoard(
-    seed, "MIXED", previousPublishedQuestions.length
-      ? footballHigherLowerExclusionKeys(previousPublishedQuestions)
-      : undefined,
-    true,
-  );
+  const seed = [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, ...(gameIndex ? ["game-2"] : [])].join("|");
+  const history = previousPublishedQuestions.length
+    ? footballHigherLowerExclusionKeys(previousPublishedQuestions)
+    : undefined;
+  // Six-month Official 2× must protect every canonical pair and per-entity
+  // concentration without exhausting its smaller sourced CFB metric pool.
+  // Repeating one athlete/stat against a different opponent is only eligible
+  // after at least five *other* ten-question games. No pair can ever recur.
+  const metricCooldown = enforceCooldown && history
+    ? footballHigherLowerExclusionKeys(previousPublishedQuestions.slice(-50)).subjectMetrics
+    : history?.subjectMetrics;
+  const excluded = history ? { ...history, subjectMetrics: metricCooldown! } : undefined;
+  const board = createFootballHigherLowerBoard(seed, "MIXED", excluded, true);
   if (board.questions.length !== FOOTBALL_HIGHER_LOWER_QUESTION_COUNT) {
     throw new Error("Football Higher or Lower requires ten audited comparisons.");
   }
   return {
-    setupKey: [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day].join(":"),
+    setupKey: [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, ...(gameIndex ? [gameIndex] : [])].join(":"),
     contentVersion: FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION,
     scoringVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
@@ -76,11 +86,28 @@ export function buildFootballHigherLowerDailyPublication(
 }
 
 /** The coordinated future calendar is the sole activation point. */
-export function buildFootballHigherLowerDailyPersistenceSetup(day: string, scheduleVersion: string) {
-  return persistenceSetup(
-    "higher_lower", day, scheduleVersion,
-    buildFootballHigherLowerDailyPublication(day, scheduleVersion),
+export function buildFootballHigherLowerTwoGameDailyPublication(
+  day: string, scheduleVersion: string,
+  previousPublishedQuestions: readonly FootballHigherLowerQuestion[] = [],
+) {
+  const first = buildFootballHigherLowerDailyPublication(day, scheduleVersion, previousPublishedQuestions, 0, true);
+  const firstBoard = (first.privateSetupEvidence as { board: { questions: FootballHigherLowerQuestion[] } }).board;
+  const second = buildFootballHigherLowerDailyPublication(
+    day, scheduleVersion, [...previousPublishedQuestions, ...firstBoard.questions], 1, true,
   );
+  return buildTwoGameDailyPublication({
+    sport: "football", gameType: "higher_lower", day, scheduleVersion, children: [first, second],
+  });
+}
+
+/** Existing published single-game submissions are never reinterpreted. */
+export function buildFootballHigherLowerDailyPersistenceSetup(
+  day: string, scheduleVersion: string, previousPublishedQuestions: readonly FootballHigherLowerQuestion[] = [],
+) {
+  return persistenceSetup("higher_lower", day, scheduleVersion,
+    dailyUsesTwoGameAverage("higher_lower", day)
+      ? buildFootballHigherLowerTwoGameDailyPublication(day, scheduleVersion, previousPublishedQuestions)
+      : buildFootballHigherLowerDailyPublication(day, scheduleVersion, previousPublishedQuestions));
 }
 
 function record(value: unknown, label: string): JsonRecord {
