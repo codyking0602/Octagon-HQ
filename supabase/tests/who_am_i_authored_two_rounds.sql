@@ -171,6 +171,17 @@ declare
 begin
   perform set_config('request.jwt.claim.role', 'service_role', true);
 
+  -- Legacy two-round scorer fixture deliberately persists a synthetic board
+  -- under an isolated test schedule, not the canonical UFC opening schedule.
+  -- Disable the future-only publication gate inside this rollback transaction.
+  if exists (
+    select 1 from pg_trigger
+    where tgname = 'enforce_future_daily_publication_cadence'
+      and tgrelid = 'private.daily_challenges'::regclass and not tgisinternal
+  ) then
+    execute 'alter table private.daily_challenges disable trigger enforce_future_daily_publication_cadence';
+  end if;
+
   insert into auth.users (
     id,
     instance_id,
