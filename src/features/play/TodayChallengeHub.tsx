@@ -185,7 +185,7 @@ export function DailyAnswerDetail({
         style={specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined}
       >
         {specialTheme ? <FootballSpecialDailyHubMark theme={specialTheme} /> : null}
-        {(entry.gameType === "find_leader" || entry.gameType === "wavelength" || entry.gameType === "hit_the_number")
+        {(entry.gameType === "find_leader" || entry.gameType === "wavelength" || entry.gameType === "hit_the_number" || entry.gameType === "higher_lower")
           && record(entry.publicResult.daily_series).format_version === "daily-two-game-average-v1" ? (
           <Suspense fallback={<p className="today-hub-empty">Loading two-game result…</p>}>
             <DailyTwoGameLeaderboardResult
