@@ -3,7 +3,8 @@ import { footballWavelengthClues } from "../back-room/footballWavelengthModel";
 import { nbaWavelengthClues } from "../nba/nbaWavelengthCatalog";
 import { getPlayFighter } from "./playFighterPool";
 import { HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
-import { HitTheNumberPickBreakdown } from "./HitTheNumberPickBreakdown";
+import { HitTheNumberPickBreakdown, formatHitNumberStatValue } from "./HitTheNumberPickBreakdown";
+import { footballHitNumberDisplayName } from "./footballHitNumberDisplayName";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 import { wavelengthClues } from "./wavelengthEngine";
 import "./DailyTwoGameLeaderboardResult.css";
@@ -74,7 +75,7 @@ function roundSummary(gameType: TodayChallengeProjection["gameType"], result: Js
     if (status === "perfect") return "PERFECT";
     if (status === "bust") return "BUST";
     const distance = Number(result.distance ?? 0);
-    return distance > 0 ? `${distance} OFF` : score >= 100 ? "PERFECT" : "FINAL";
+    return distance > 0 ? `${formatHitNumberStatValue(distance)} OFF` : score >= 100 ? "PERFECT" : "FINAL";
   }
   return "FINAL";
 }
@@ -236,7 +237,9 @@ function HitNumberRoundDetail({
   )).filter(Boolean);
   const picks = ids.map((id) => {
     const footballName = candidateNames.get(id);
-    const name = footballName || (sport === "ufc" ? getPlayFighter(id)?.name : null) || prettyId(id);
+    const name = sport === "football"
+      ? footballHitNumberDisplayName(id, footballName)
+      : getPlayFighter(id)?.name || prettyId(id);
     const rawValue = selectionById.get(id)?.value;
     return {
       id,
@@ -256,10 +259,10 @@ function HitNumberRoundDetail({
 
   return (
     <div className="daily-two-game-result__detail">
-      <div className="daily-two-game-result__metrics">
-        <div><span>TARGET</span><strong>{Number.isFinite(target) ? target : "—"}</strong></div>
-        <div><span>TOTAL</span><strong>{Number.isFinite(total) ? total : "—"}</strong></div>
-        <div><span>RESULT</span><strong className="is-word">{status || (Number.isFinite(distance) ? `${distance} OFF` : "—")}</strong></div>
+      <div className="daily-two-game-result__metrics daily-two-game-result__metrics--hit-number">
+        <div><span>TARGET</span><strong>{formatHitNumberStatValue(target)}</strong></div>
+        <div><span>TOTAL</span><strong>{formatHitNumberStatValue(total)}</strong></div>
+        <div><span>RESULT</span><strong className="is-word">{status || (Number.isFinite(distance) ? `${formatHitNumberStatValue(distance)} OFF` : "—")}</strong></div>
       </div>
       <HitTheNumberPickBreakdown metricLabel={metricLabel} picks={picks} />
     </div>
