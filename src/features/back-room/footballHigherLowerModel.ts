@@ -731,7 +731,7 @@ function metricRows(spec: MetricSpec, officialDaily = false): MetricRow[] {
     : spec.metricId
       ? footballFactualRecords.flatMap((record) => {
           const subject = getFootballSubject(record.subjectId);
-          if (!subject || !subjectEligible(subject, spec)) return [];
+          if (!subject || !subjectEligible(subject, spec, officialDaily)) return [];
           const fact = record.facts.find((candidate) => candidate.metricId === spec.metricId);
           if (!fact || !Number.isFinite(fact.value)) return [];
           return [{ subject, value: fact.value }];
