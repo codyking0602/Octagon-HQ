@@ -917,7 +917,13 @@ function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
           normalized_score: Number(round.normalized_score ?? attempt.normalized_score ?? 0),
           public_result: {
             ...round,
-            daily_series: series,
+            daily_series: context.gameType === "higher_lower"
+              ? {
+                  ...series,
+                  setup_rounds: requiredRecord(context.publicSetup, "Completed two-game setup").rounds,
+                  reveal_rounds: requiredRecord(context.revealSetup, "Completed two-game reveal").rounds,
+                }
+              : series,
           },
         };
       })(),
