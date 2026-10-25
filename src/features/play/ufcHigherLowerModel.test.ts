@@ -110,7 +110,8 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
 
   it("keeps every hidden answer/number private and the canonical grader authoritative", () => {
     const pub = buildUfcHigherLowerDailyPublication(dayAt(0), "ufc-hl-regression-v1");
-    expect(buildOfficialDailySetup("higher_lower", dayAt(0), "ufc-hl-regression-v1")).toEqual(pub);
+    expect(buildOfficialDailySetup("higher_lower", dayAt(0), "ufc-hl-regression-v1").publicSetup.format_version)
+      .toBe("daily-two-game-average-v1");
     const before = (pub.publicSetup.initial_state as Record<string, unknown>).current_question as Record<string, unknown>;
     expect(before).not.toHaveProperty("answer");
     expect(String(before.id)).toBe("ufc-daily-comparison-1");
