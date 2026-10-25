@@ -13,7 +13,14 @@ today=$(psql "$db_url" --tuples-only --no-align --command \
 schedule_version="test-concurrency-find-leader-v1"
 
 psql "$db_url" --set ON_ERROR_STOP=on <<SQL
+begin;
 select set_config('request.jwt.claim.role', 'service_role', false);
+
+-- Synthetic same-day legacy fixture: publication must remain possible for
+-- concurrency testing even on UFC's alternate days. This transaction alone
+-- bypasses the future-only publication trigger; the cadence regression tests
+-- assert that the trigger rejects real off-day and fallback publications.
+alter table private.daily_challenges disable trigger enforce_future_daily_publication_cadence;
 
 insert into auth.users (
   id,
@@ -79,6 +86,9 @@ select public.publish_daily_challenge_setup(
   ),
   null
 );
+
+alter table private.daily_challenges enable trigger enforce_future_daily_publication_cadence;
+commit;
 SQL
 
 daily_id=$(psql "$db_url" --tuples-only --no-align --command \
