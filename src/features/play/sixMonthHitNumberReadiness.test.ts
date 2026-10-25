@@ -1,13 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { buildOfficialDailySetup, OFFICIAL_DAILY_RUNTIME_VERSION } from "./todaysChallengeRuntime";
 import { buildFootballDailyPersistenceSetup } from "./footballDailyPublicationHitNumber";
+import { footballHitTheNumberSubjects, FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG } from "../back-room/footballHitTheNumberModel";
 import {
   createSixMonthReadyUfcOfficialHitNumberPlan,
   HIT_THE_NUMBER_DAILY_CONTENT_VERSION,
   UFC_OFFICIAL_HIT_NUMBER_POOL_SIZES,
 } from "./hitTheNumberDailyRuntime";
 import { hitTheNumberRandomPoolQuality } from "./hitTheNumberPoolQuality";
-import { hitTheNumberStatRows } from "./hitTheNumberEngine";
+import { hitTheNumberStatRows, HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
 import { previewApprovedDailyRotation } from "./sixMonthDailyRotationAudit";
 
 type Obj = Record<string, unknown>;
@@ -39,6 +40,17 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
       formats: {} as Record<string, number>,
       picks: {} as Record<string, number>,
       largestRepeatedSubjectMetric: 0,
+      metrics: {} as Record<string, number>,
+      inventory: {
+        footballSubjects: footballHitTheNumberSubjects.length,
+        footballNflSubjects: footballHitTheNumberSubjects.filter(subject => subject.league === "NFL").length,
+        footballCfbSubjects: footballHitTheNumberSubjects.filter(subject => subject.league === "CFB").length,
+        footballMetrics: FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.length,
+        ufcLedgerFighters: hitTheNumberStatRows.length,
+        ufcMetricDefinitions: HIT_THE_NUMBER_STATS.length,
+        ufcStatCoverage: Object.fromEntries(HIT_THE_NUMBER_STATS.map(stat => [stat.id,
+          hitTheNumberStatRows.filter(row => Number.isInteger(row.values[stat.id])).length])),
+      },
     };
     const canonicalRows = new Map(hitTheNumberStatRows.map(row => [row.fighterId, row.values]));
     for (const slot of slots) {
@@ -58,6 +70,7 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
         const target = Number(pub.target);
         const values = child.privateGradingEvidence.values as Record<string, number>;
         report.childBoards[sport]++;
+        report.metrics[sport + ":" + stat] = (report.metrics[sport + ":" + stat] ?? 0) + 1;
         expect([4, 5, 6], slot.sport + ":" + slot.day).toContain(count);
         expect(Number.isInteger(target) && target > 0).toBe(true);
         expect(new Set(ids).size).toBe(ids.length);
