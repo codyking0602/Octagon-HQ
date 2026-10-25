@@ -87,10 +87,10 @@ begin
     v_repeated := private.daily_challenge_expected_game(v_reroll_schedule.version, v_day);
     if v_expected is distinct from v_repeated
       or v_expected is distinct from v_reroll_schedule.game_cycle[(((v_index % 20) + 20) % 20) + 1] then
-      raise exception 'schedule version/date resolution was not deterministic for %: %, %',
-        v_day,
-        v_expected,
-        v_repeated;
+      raise exception 'schedule version/date resolution was not deterministic for %: %, %; manual=%, index=%, version=%, anchor=%, slots=%',
+        v_day, v_expected, v_repeated,
+        v_reroll_schedule.game_cycle[(((v_index % 20) + 20) % 20) + 1],
+        v_index, v_reroll_schedule.version, v_reroll_schedule.anchor_day, v_reroll_schedule.game_cycle;
     end if;
   end loop;
 
