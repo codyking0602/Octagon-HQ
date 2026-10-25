@@ -361,7 +361,7 @@ describe("compact two-game leaderboard result", () => {
     );
     const games = container.querySelectorAll(".daily-two-game-result__game");
     expect(games).toHaveLength(2);
-    expect(games[1]!.querySelector("summary")?.textContent).toContain("41 OFF");
+    expect(games[1]!.querySelector("summary")?.textContent).toContain("41.0 OFF");
     const metricGroups = container.querySelectorAll(".daily-two-game-result__metrics--hit-number");
     expect(metricGroups).toHaveLength(2);
     expect(metricGroups[0]!.textContent).toContain("201.4");
