@@ -116,6 +116,30 @@ describe("Millionaire official Daily runtime", () => {
     expect((next.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
   });
 
+  it("never prints the correct fighter's surname in a future UFC Millionaire Stat Sheet", () => {
+    const inspected = new Set<number>();
+    for (let offset = 0; offset < 182; offset += 1) {
+      const day = new Date(Date.parse("2026-10-25T00:00:00Z") + offset * 86400000)
+        .toISOString().slice(0, 10);
+      if (day < "2026-10-27" || !isUfcPublicationDay(day)
+        || lockedWeightedGameForDay("ufc", day) !== "millionaire") continue;
+      inspected.add(millionaireDailyRunIndex("ufc", day));
+      const publication = buildMillionaireDailySetup("ufc", day, "future-test");
+      const run = publication.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+      expect(run).toHaveLength(8);
+      for (const question of run.slice(0, 7)) {
+        const correctText = question.choices.find(choice => choice.id === question.correctChoiceId)!.text;
+        // Only apply the surname check to multiword fighter identities, not
+        // events, chronology, numeric answers, or short/common last tokens.
+        const surname = correctText.split(/\\s+/).at(-1)!;
+        if (correctText.split(/\\s+/).length < 2 || surname.length < 5 || !/^[A-Za-z]+$/.test(surname)) continue;
+        expect(question.statSheet?.toLowerCase().split(/[^a-z]+/)).not.toContain(surname.toLowerCase());
+      }
+      expect(run[7]!.statSheet).toBeNull();
+    }
+    expect(inspected).toEqual(new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
+  });
+
   it("debuts CFB for Football and UFC for UFC on September 19", () => {
     expect(millionaireDailyLeague("football", "2026-09-19")).toBe("cfb");
     expect(millionaireDailyLeague("ufc", "2026-09-19")).toBe("ufc");
