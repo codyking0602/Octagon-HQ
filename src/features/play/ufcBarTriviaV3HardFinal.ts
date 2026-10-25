@@ -42,7 +42,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "league": "ufc",
     "round": "round3",
     "category": "Memorable Fights & Champions",
-    "prompt": "Who submitted Matt Hughes with a triangle choke in their first UFC meeting at UFC 46?",
+    "prompt": "Who submitted Matt Hughes with a rear-naked choke to win the welterweight title at UFC 46?",
     "choices": [
       "BJ Penn",
       "Georges St-Pierre",
@@ -53,7 +53,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "BJ Penn upset Hughes and took his welterweight title in 2004.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/event/ufc-46"
+    "sourceUrl": "https://www.ufc.com/news/defining-matt-hughes"
   },
   {
     "id": "ufc-bt-v3-h-004",
