@@ -513,6 +513,17 @@ async function whoAmIPublicationHistory(
   return response.data;
 }
 
+/** Service-role-only prior published Football Higher or Lower board evidence. */
+async function footballHigherLowerPublicationHistory(admin: SupabaseClient, day: string) {
+  const response = await admin.rpc("get_football_higher_lower_publication_history", {
+    p_before_day: day,
+  });
+  if (response.error || !Array.isArray(response.data)) {
+    throw new Error("Football Higher or Lower frozen publication history is unavailable.");
+  }
+  return response.data;
+}
+
 async function averageFanPublicationHistory(
   admin: SupabaseClient,
   sport: "ufc" | "football",
@@ -686,7 +697,9 @@ async function materializeFootballToday(admin: SupabaseClient, at?: string) {
     ? await whoAmIPublicationHistory(admin, "football", day)
     : expectedGame === "average_fan"
       ? await averageFanPublicationHistory(admin, "football", day)
-      : undefined;
+      : expectedGame === "higher_lower"
+        ? await footballHigherLowerPublicationHistory(admin, day)
+        : undefined;
   const publication = expectedGame === "average_fan"
     ? {
         gameType: expectedGame,
