@@ -56,8 +56,17 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p tmp/wheel-monitor/previous
-          id=$(gh run list --workflow wheel-monitor.yml --branch main --limit 25 \
-            --json databaseId,conclusion --jq '[.[] | select(.conclusion == "success")] | first | .databaseId // empty')
+          # A successful *report-only* run has no promoted snapshot.
+          # Query named artifacts directly; do not assume the newest green run
+          # produced a checkpoint. Ignore expired and non-main artifacts.
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=wheel-monitor-snapshot&per_page=100" \
+            > tmp/wheel-monitor/previous/artifacts.json
+          id=$(node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            import {selectLatestCheckpointArtifact} from "./scripts/wheel-monitor/checkpoint-policy.mjs";
+            const payload=JSON.parse(readFileSync("tmp/wheel-monitor/previous/artifacts.json","utf8"));
+            process.stdout.write(String(selectLatestCheckpointArtifact(payload.artifacts)?.workflow_run.id ?? ""));
+          ')
           if [[ -n "$id" ]]; then
             gh run download "$id" --name wheel-monitor-snapshot --dir tmp/wheel-monitor/previous
             echo "PREVIOUS_SNAPSHOT=tmp/wheel-monitor/previous/snapshot.json" >> "$GITHUB_ENV"
