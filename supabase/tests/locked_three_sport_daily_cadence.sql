@@ -94,11 +94,11 @@ declare v_first jsonb;v_retry jsonb;v_rejected boolean:=false; v_fallback_reject
 begin
   v_first:=public.publish_daily_challenge_setup(
     date '2026-10-25','ufc-daily-v21-48h-oct25','find_leader',
-    'cadence-proof:ufc:2026-10-25','cadence-proof-v1','daily-two-game-average-score-v1',
+    'cadence-proof:ufc:2026-10-25','cadence-proof-v1','play-official-score-v1',
     '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
   v_retry:=public.publish_daily_challenge_setup(
     date '2026-10-25','ufc-daily-v21-48h-oct25','find_leader',
-    'cadence-proof:ufc:2026-10-25','cadence-proof-v1','daily-two-game-average-score-v1',
+    'cadence-proof:ufc:2026-10-25','cadence-proof-v1','play-official-score-v1',
     '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
   if v_first->>'id' is null or v_first->>'id' is distinct from v_retry->>'id' then
     raise exception 'Daily publication retry created a different identity';
@@ -106,7 +106,7 @@ begin
   begin
     perform public.publish_daily_challenge_setup(
       date '2026-10-26','ufc-daily-v21-48h-oct25','find_leader',
-      'cadence-proof:ufc:2026-10-26','cadence-proof-v1','daily-two-game-average-score-v1',
+      'cadence-proof:ufc:2026-10-26','cadence-proof-v1','play-official-score-v1',
       '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
   exception when others then v_rejected:=true;
   end;
