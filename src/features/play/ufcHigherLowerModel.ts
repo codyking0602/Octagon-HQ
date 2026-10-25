@@ -84,8 +84,17 @@ export const UFC_HIGHER_LOWER_METRIC_LABELS = Object.fromEntries(
   Object.entries(METRICS).map(([key, spec]) => [key, spec.label]),
 ) as Record<UfcHigherLowerMetric, string>;
 
+// The pinned UFC fighter portrait manifest does not yet include these expansion
+// subjects. Exclude them from this photo-first game rather than showing repeated
+// fallback initials on official boards; the factual ledger remains untouched.
+const MISSING_PORTRAIT_EXPANSION = new Set([
+  "Diego Lopes", "Jiří Procházka", "Jamahal Hill", "Carlos Ulberg",
+  "Arman Tsarukyan", "Jack Della Maddalena", "Shavkat Rakhmonov",
+  "Rich Franklin", "Luke Rockhold", "Michael Morales",
+  "Carlos Prates", "Tim Kennedy",
+]);
 function fighterFacts(): Fighter[] {
-  return ufcFactualLedgerSubjects.map(subject => {
+  return ufcFactualLedgerSubjects.filter(subject => !MISSING_PORTRAIT_EXPANSION.has(subject.name)).map(subject => {
     const fights = subject.fights.filter(fight => fight.date <= UFC_HIGHER_LOWER_SNAPSHOT);
     const wins = fights.filter(fight => fight.result === "win");
     const lastYear = Number((fights.at(-1)?.date ?? subject.activeFrom).slice(0, 4));

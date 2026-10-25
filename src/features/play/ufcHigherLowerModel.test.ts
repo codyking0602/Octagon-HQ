@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { existsSync } from "node:fs";
 import {
   createUfcHigherLowerBoard, createUfcHigherLowerOfficialBoard,
   UFC_HIGHER_LOWER_FIGHTERS, UFC_HIGHER_LOWER_QUESTION_COUNT,
@@ -43,6 +44,9 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     );
     expect(specs.every(spec => spec.count > 0)).toBe(true);
     expect(UFC_HIGHER_LOWER_FIGHTERS.length).toBeGreaterThanOrEqual(70);
+    const missingImages = UFC_HIGHER_LOWER_FIGHTERS.filter(f =>
+      !existsSync("public/assets/fighters/" + f.slug + "-thumb.webp"));
+    expect(missingImages.map(f => f.name)).toEqual([]);
   });
 
   it("supplies at least 200 days of deterministic 48-hour boards with zero reversed/semantic pair repeats", () => {
@@ -87,6 +91,17 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     expect(subjectCounts.size).toBeGreaterThanOrEqual(70);
     expect(categoryCounts.size).toBe(3);
     expect(metricCounts.size).toBe(6);
+    console.info("UFC HIGHER LOWER 200-DAY AUDIT", JSON.stringify({
+      reservedBoards: UFC_HIGHER_LOWER_RESERVED_SLOTS,
+      distinctPairs: pairKeys.size,
+      distinctFighters: subjectCounts.size,
+      eligibleFighters: UFC_HIGHER_LOWER_FIGHTERS.length,
+      categoryDistribution: Object.fromEntries(categoryCounts),
+      metricDistribution: Object.fromEntries(metricCounts),
+      minFighterUse: Math.min(...subjectCounts.values()),
+      maxFighterUse: Math.max(...subjectCounts.values()),
+      candidateComparisonsBySlot: ufcHigherLowerCandidateCounts(),
+    }));
     // Fighter concentration regression: any one athlete should not dominate.
     expect(Math.max(...subjectCounts.values())).toBeLessThanOrEqual(65);
   });
