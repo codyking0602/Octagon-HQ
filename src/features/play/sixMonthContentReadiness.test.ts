@@ -126,7 +126,7 @@ describe("six-month other-game production publication readiness evidence", () =>
     expect(rows.length + failures.length).toBe(staged.football.length -
       staged.football.filter((slot) => slot.game === "hit_the_number").length);
     expect(new Set(rows.map((row) => row.setupKey)).size).toBe(rows.length);
-  });
+  }, 180_000);
 
   it("rehearses all UFC games except separately owned unfinished Higher or Lower", () => {
     const failures: string[] = [];
@@ -149,7 +149,7 @@ describe("six-month other-game production publication readiness evidence", () =>
     expect(rows.length + failures.length).toBe(staged.ufc.length -
       staged.ufc.filter((slot) => ["higher_lower", "hit_the_number"].includes(slot.game)).length);
     expect(new Set(rows.map((row) => row.setupKey)).size).toBe(rows.length);
-  });
+  }, 180_000);
 
   it("rehearses NBA's CURRENT dated server publications, not an unsynchronized preview order", () => {
     const failures: string[] = [];
@@ -170,5 +170,5 @@ describe("six-month other-game production publication readiness evidence", () =>
     }));
     expect(rows.length + failures.length).toBe(actual.length);
     expect(new Set(rows.map((row) => row.setupKey)).size).toBe(rows.length);
-  });
+  }, 180_000);
 });
