@@ -150,18 +150,19 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayScheduleVersionForDay("2026-10-24")).toBe(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION);
     expect(footballTodayScheduleVersionForDay("2026-10-25")).toBe(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION);
     expect(footballTodayScheduleVersionForDay("2026-10-26")).toBe(FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION);
-    const future = Array.from({ length: 26 }, (_unused, offset) => {
+    const future = Array.from({ length: 56 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 9, 26 + offset)).toISOString().slice(0, 10);
       return footballTodayGameForDay(day);
     });
-    expect(future.filter((game) => game === "average_fan")).toHaveLength(4);
-    expect(future.filter((game) => game === "sports_feud")).toHaveLength(4);
-    expect(future.filter((game) => game === "millionaire")).toHaveLength(4);
-    expect(future.filter((game) => game === "bar_trivia")).toHaveLength(3);
-    expect(future.filter((game) => game === "wavelength")).toHaveLength(3);
-    expect(future.filter((game) => game === "who_am_i")).toHaveLength(3);
-    expect(future.filter((game) => game === "find_leader")).toHaveLength(3);
-    expect(future.filter((game) => game === "hit_the_number")).toHaveLength(2);
+    expect(future.filter((game) => game === "average_fan")).toHaveLength(8);
+    expect(future.filter((game) => game === "sports_feud")).toHaveLength(8);
+    expect(future.filter((game) => game === "millionaire")).toHaveLength(8);
+    expect(future.filter((game) => game === "bar_trivia")).toHaveLength(6);
+    expect(future.filter((game) => game === "wavelength")).toHaveLength(6);
+    expect(future.filter((game) => game === "who_am_i")).toHaveLength(6);
+    expect(future.filter((game) => game === "find_leader")).toHaveLength(6);
+    expect(future.filter((game) => game === "hit_the_number")).toHaveLength(4);
+    expect(future.filter((game) => game === "higher_lower")).toHaveLength(4);
     expect(future).not.toContain("keep_4_cut_4");
     expect(future).not.toContain("blind_resume");
     expect(future).not.toContain("blind_rank_5");
