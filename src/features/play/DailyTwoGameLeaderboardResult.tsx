@@ -288,6 +288,38 @@ function HitNumberRoundDetail({
   );
 }
 
+function HigherLowerRoundDetail({ reveal, result }: { reveal: JsonRecord; result: JsonRecord }) {
+  const questions = records(reveal.questions);
+  const answers = records(result.answers);
+  if (questions.length !== 10 || answers.length !== 10
+    || !questions.every((question, index) => question.id === answers[index]?.question_id)) {
+    return <div className="daily-two-game-result__detail"><p>Question-by-question reveal is unavailable for this completed game.</p></div>;
+  }
+  return <div className="daily-two-game-result__detail">
+    <div className="higher-lower-review">
+      <header><span>QUESTION + FINAL NUMBERS</span><strong>YOUR CALL</strong><em>ANSWER</em></header>
+      {questions.map((question, index) => {
+        const answer = answers[index]!;
+        const known = record(question.known);
+        const hidden = record(question.hidden);
+        return <div className={answer.correct === true ? "is-correct" : "is-wrong"} key={String(question.id)}>
+          <span className="higher-lower-review__question">
+            <small>Q{index + 1} · {String(question.league ?? "").toUpperCase()} · {String(question.metricLabel ?? "HIGHER OR LOWER")}</small>
+            <span className="higher-lower-review__matchup">
+              <span><b>{String(known.name ?? "")}</b><em>{String(known.formattedValue ?? known.value ?? "")}</em></span>
+              <i aria-hidden="true">→</i>
+              <span><b>{String(hidden.name ?? "")}</b><em>{String(hidden.formattedValue ?? hidden.value ?? "")}</em></span>
+            </span>
+            <span className="higher-lower-review__context">{String(known.context ?? "")} vs {String(hidden.context ?? "")}</span>
+          </span>
+          <strong>{String(answer.choice ?? "").toUpperCase()}</strong>
+          <em>{String(question.answer ?? "").toUpperCase()}</em>
+        </div>;
+      })}
+    </div>
+  </div>;
+}
+
 function GameRound({
   sport,
   gameType,
@@ -323,6 +355,8 @@ function GameRound({
         <WavelengthRoundDetail sport={sport} result={result} detail={detail} />
       ) : gameType === "hit_the_number" ? (
         <HitNumberRoundDetail sport={sport} setup={setup} result={result} />
+      ) : gameType === "higher_lower" ? (
+        <HigherLowerRoundDetail reveal={reveal} result={result} />
       ) : null}
     </details>
   );
@@ -339,8 +373,12 @@ export function DailyTwoGameLeaderboardResult({
 }) {
   const series = record(projection.officialAttempt?.publicResult.daily_series);
   const roundResults = records(series.rounds);
-  const projectionSetupRounds = records(projection.publicSetup.rounds);
-  const projectionRevealRounds = records(record(projection.revealSetup).rounds);
+  const projectionSetupRounds = records(projection.publicSetup.rounds).length
+    ? records(projection.publicSetup.rounds)
+    : records(series.setup_rounds);
+  const projectionRevealRounds = records(record(projection.revealSetup).rounds).length
+    ? records(record(projection.revealSetup).rounds)
+    : records(series.reveal_rounds);
   const detailSetupRounds = records(resultDetail.setup_rounds);
   const detailRevealRounds = records(resultDetail.reveal_rounds);
   const setupRounds = projectionSetupRounds.length ? projectionSetupRounds : detailSetupRounds;
