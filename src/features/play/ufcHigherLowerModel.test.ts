@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import {
   createUfcHigherLowerBoard, createUfcHigherLowerOfficialBoard,
   UFC_HIGHER_LOWER_FIGHTERS, UFC_HIGHER_LOWER_QUESTION_COUNT,
@@ -138,6 +138,22 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     expect(() => advanceUfcHigherLowerDailyRuntime(ctx, { choice: "higher" })).toThrow();
     expect(createUfcHigherLowerBoard("casual-1")).toEqual(createUfcHigherLowerBoard("casual-1"));
     expect(createUfcHigherLowerBoard("casual-1")).not.toEqual(createUfcHigherLowerBoard("casual-2"));
+  });
+
+  it("reuses the protected SQL ten-answer grader and gated completed-result reveal", () => {
+    const sql = readFileSync("supabase/migrations/202612310322_nba_official_daily_schedule_and_authority.sql","utf8");
+    expect(sql).toContain("if p_game_type = 'higher_lower' and p_scoring_version = 'play-official-score-v1'");
+    expect(sql).toContain("private.grade_nba_higher_lower_daily(p_submission,p_grading_evidence)");
+    expect(sql).toContain("v_answer->>'question_id' is distinct from v_ids->>v_index");
+    expect(sql).toContain("'reveal_questions', coalesce(setup.reveal_setup->'questions'");
+  });
+
+  it("preserves UFC portraits and tight-screen layout protections", () => {
+    const css = readFileSync("src/styles/ufc-higher-lower.css","utf8");
+    expect(css).toContain("object-fit: contain");
+    expect(css).toContain("@media (max-width: 520px)");
+    const official = readFileSync("src/features/play/OfficialUfcHigherLowerDailyView.tsx","utf8");
+    expect(official).toContain("higher-lower-feedback is-visible ");
   });
 
   it("preserves the active UFC rotation, which has not yet activated Higher or Lower", () => {

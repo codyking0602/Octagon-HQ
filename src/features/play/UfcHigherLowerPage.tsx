@@ -55,8 +55,8 @@ export default function UfcHigherLowerPage() {
   const shell = "page football-higher-lower ufc-higher-lower";
   if (!board) return <main className={shell}>
     <section className="higher-lower-hero ufc-hl__intro">
-      <p className="eyebrow">UFC CHALLENGE</p><h1>HIGHER OR LOWER</h1>
-      <strong>10 fighters. 10 comparisons. One shot at each.</strong>
+      <p className="eyebrow">UFC CASUAL</p><h1>HIGHER OR LOWER</h1>
+      <strong>20 fighters. 10 comparisons. One shot at each.</strong>
       <p>Compare real UFC career statistics: wins, finishes, knockouts, submissions and title-fight victories. No total MMA records.</p>
       <p>Fights through August 18, 2026 · 3 approachable, 5 competitive, 2 tough.</p>
     </section>
