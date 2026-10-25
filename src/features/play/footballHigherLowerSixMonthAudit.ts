@@ -13,6 +13,7 @@ export const FOOTBALL_HIGHER_LOWER_APPROVED_DAILY_WEIGHT = 2;
 type DailyEvidence = ReturnType<typeof footballHigherLowerQuestionEvidence>;
 export interface FootballHigherLowerAuditedQuestion {
   day: string;
+  gameNumber: number;
   position: number;
   league: string;
   metricKey: string;
@@ -42,7 +43,7 @@ export function auditFootballHigherLowerDailyDates(
     throw new Error("Higher or Lower audit requires sorted unique dates and canonical schedule version.");
   }
   const allPriorQuestions: FootballHigherLowerQuestion[] = [];
-  const boardSnapshots: Array<{ day: string; setupKey: string; seed: string; questions: FootballHigherLowerAuditedQuestion[] }> = [];
+  const boardSnapshots: Array<{ day: string; gameNumber: number; setupKey: string; seed: string; questions: FootballHigherLowerAuditedQuestion[] }> = [];
   const subjects = new Map<string, { name: string; appearances: number }>();
   const categoryCounts: Record<string, number> = {};
   const metricCounts: Record<string, number> = {};
@@ -64,13 +65,14 @@ export function auditFootballHigherLowerDailyDates(
   let priorSubjects = new Set<string>();
 
   for (const day of dates) {
+    for (let gameIndex = 0; gameIndex < 2; gameIndex += 1) {
     let publication;
     try {
-      publication = buildFootballHigherLowerDailyPublication(day, scheduleVersion, allPriorQuestions);
+      publication = buildFootballHigherLowerDailyPublication(day, scheduleVersion, allPriorQuestions, gameIndex);
     } catch (error) {
       throw new Error(`Six-month official board #${boardSnapshots.length + 1}, ${day}, after ${allPriorQuestions.length} questions: ${String(error)}`);
     }
-    console.info("FOOTBALL_HL_BOARD_GENERATED", day, boardSnapshots.length + 1);
+    console.info("FOOTBALL_HL_BOARD_GENERATED", day, gameIndex + 1, boardSnapshots.length + 1);
     const board = (publication.privateSetupEvidence as { board: { seed: string; questions: FootballHigherLowerQuestion[] } }).board;
     if (board.questions.length !== FOOTBALL_HIGHER_LOWER_QUESTION_COUNT
       || board.questions.filter(q => q.league === "NFL").length !== 5
@@ -108,7 +110,7 @@ export function auditFootballHigherLowerDailyDates(
       difficultyCounts[q.difficulty] = (difficultyCounts[q.difficulty] ?? 0) + 1;
       leagueCounts[q.league] = (leagueCounts[q.league] ?? 0) + 1;
       rowQuestions.push({
-        day, position: index + 1, league: q.league,
+        day, gameNumber: gameIndex + 1, position: index + 1, league: q.league,
         metricKey: q.metricKey, metricLabel: q.metricLabel,
         category: q.category, difficulty: q.difficulty,
         matchupKey: exactKey, semanticPairKey, questionId: q.id,
@@ -125,8 +127,9 @@ export function auditFootballHigherLowerDailyDates(
       reusedSubjectsFromPreviousBoard: [...todaysSubjects].filter(id => priorSubjects.has(id)).length,
     });
     priorSubjects = todaysSubjects;
-    boardSnapshots.push({ day, setupKey: publication.setupKey, seed: board.seed, questions: rowQuestions });
+    boardSnapshots.push({ day, gameNumber: gameIndex + 1, setupKey: publication.setupKey, seed: board.seed, questions: rowQuestions });
     allPriorQuestions.push(...board.questions);
+    }
   }
   return {
     auditKind: "generator-backed-official-daily-board-simulation",
@@ -135,6 +138,7 @@ export function auditFootballHigherLowerDailyDates(
     summary: {
       scheduledAppearances: dates.length,
       generatedBoards: boardSnapshots.length,
+      comparisonsPerAppearance: 20,
       totalComparisons: allPriorQuestions.length,
       nflComparisons: leagueCounts.NFL ?? 0,
       cfbComparisons: leagueCounts.CFB ?? 0,
