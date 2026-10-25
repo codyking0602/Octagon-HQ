@@ -138,6 +138,108 @@ export const UFC_FUTURE_WEIGHTED_CYCLE: readonly OfficialDailyGameType[] = [
   "hit_the_number",
 ];
 
+/** v22: a 56-slot Football supercycle holds two independently weighted 28-day
+ * sets. This prevents inevitable NBA collisions from repeating every 56 days
+ * when a single 28-slot Football cycle is used. Each 28-slot half preserves
+ * Average Fan/Millionaire/Sports Feud 4x, four 3x games and two 2x games.
+ * The Oct 26 Cowboys Millionaire and Nov 27/Dec 7 themed games are retained.
+ * Previously published games retain their immutable v20/v21 identities. */
+export const FOOTBALL_TWO_GAME_HIGHER_LOWER_CYCLE: readonly OfficialDailyGameType[] = [
+  "higher_lower",
+  "millionaire",
+  "who_am_i",
+  "average_fan",
+  "wavelength",
+  "sports_feud",
+  "bar_trivia",
+  "hit_the_number",
+  "millionaire",
+  "average_fan",
+  "who_am_i",
+  "find_leader",
+  "sports_feud",
+  "wavelength",
+  "higher_lower",
+  "bar_trivia",
+  "millionaire",
+  "average_fan",
+  "find_leader",
+  "who_am_i",
+  "sports_feud",
+  "hit_the_number",
+  "wavelength",
+  "millionaire",
+  "average_fan",
+  "bar_trivia",
+  "find_leader",
+  "sports_feud",
+  "higher_lower",
+  "average_fan",
+  "who_am_i",
+  "millionaire",
+  "wavelength",
+  "sports_feud",
+  "bar_trivia",
+  "average_fan",
+  "millionaire",
+  "find_leader",
+  "who_am_i",
+  "wavelength",
+  "hit_the_number",
+  "sports_feud",
+  "higher_lower",
+  "bar_trivia",
+  "millionaire",
+  "average_fan",
+  "find_leader",
+  "who_am_i",
+  "sports_feud",
+  "hit_the_number",
+  "wavelength",
+  "millionaire",
+  "average_fan",
+  "bar_trivia",
+  "find_leader",
+  "sports_feud",
+];
+
+/** UFC alternates with NBA, on its original Oct 25–anchored 48-hour cadence. */
+export const UFC_TWO_GAME_HIGHER_LOWER_CYCLE: readonly OfficialDailyGameType[] = [
+  "find_leader",
+  "sports_feud",
+  "bar_trivia",
+  "millionaire",
+  "hit_the_number",
+  "average_fan",
+  "who_am_i",
+  "blind_resume",
+  "wavelength",
+  "millionaire",
+  "find_leader",
+  "sports_feud",
+  "bar_trivia",
+  "higher_lower",
+  "average_fan",
+  "millionaire",
+  "who_am_i",
+  "sports_feud",
+  "wavelength",
+  "hit_the_number",
+  "find_leader",
+  "average_fan",
+  "bar_trivia",
+  "millionaire",
+  "blind_resume",
+  "sports_feud",
+  "who_am_i",
+  "higher_lower",
+  "average_fan",
+  "wavelength",
+];
+
+export const FOOTBALL_TWO_GAME_HIGHER_LOWER_CUTOVER_DAY = "2026-10-27";
+export const UFC_TWO_GAME_HIGHER_LOWER_CUTOVER_DAY = "2026-10-29";
+
 export const THREE_SPORT_CADENCE_CUTOVER_DAY = "2026-10-25";
 
 function dayNumber(day: string) {
@@ -175,8 +277,14 @@ export function lockedWeightedGameForDay(
     // Preserve already-published October 25 Football Hit the Number under v20.
     if (sport === "football" && appearance === 0) return "hit_the_number";
     // Oct 25 UFC Millionaire was published under v20 before the cutover.
-    // Its immutable board is playable Oct 25–26; start the v21 cycle Oct 27.
+    // Its immutable board is playable Oct 25–26; v21 begins Oct 27.
     if (sport === "ufc" && appearance === 0) return "millionaire";
+    if (sport === "football" && day >= FOOTBALL_TWO_GAME_HIGHER_LOWER_CUTOVER_DAY) {
+      return FOOTBALL_TWO_GAME_HIGHER_LOWER_CYCLE[appearance % FOOTBALL_TWO_GAME_HIGHER_LOWER_CYCLE.length]!;
+    }
+    if (sport === "ufc" && day >= UFC_TWO_GAME_HIGHER_LOWER_CUTOVER_DAY) {
+      return UFC_TWO_GAME_HIGHER_LOWER_CYCLE[appearance % UFC_TWO_GAME_HIGHER_LOWER_CYCLE.length]!;
+    }
     return cycle[appearance % cycle.length]!;
   }
   const override = DAILY_GAME_DATE_OVERRIDES[sport][day];
@@ -192,11 +300,14 @@ export function footballBarTriviaAppearanceIndex(day: string) {
       throw new Error("Football Bar Trivia league is only defined for Bar Trivia Daily dates.");
     }
     const offset = dayNumber(day) - dayNumber(THREE_SPORT_CADENCE_CUTOVER_DAY);
-    const full = Math.floor(offset / FOOTBALL_FUTURE_WEIGHTED_CYCLE.length);
-    const prior = FOOTBALL_FUTURE_WEIGHTED_CYCLE.slice(0, offset % FOOTBALL_FUTURE_WEIGHTED_CYCLE.length)
-      .filter((game) => game === "bar_trivia").length;
+    const cycle = day >= FOOTBALL_TWO_GAME_HIGHER_LOWER_CUTOVER_DAY
+      ? FOOTBALL_TWO_GAME_HIGHER_LOWER_CYCLE : FOOTBALL_FUTURE_WEIGHTED_CYCLE;
+    const countPerCycle = cycle.filter(game => game === "bar_trivia").length;
+    const full = Math.floor(offset / cycle.length);
+    const prior = cycle.slice(0, offset % cycle.length).filter(game => game === "bar_trivia").length;
     // Four published Football Bar Trivia appearances: Sep 29, Oct 1, Oct 14, Oct 22.
-    return 4 + full * 3 + prior;
+    // Both future cycles have no Bar Trivia on Oct 25–26, so indexing is stable.
+    return 4 + full * countPerCycle + prior;
   }
   if (day === "2026-09-29") return 0;
   const offset = dayNumber(day) - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
