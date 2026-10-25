@@ -194,10 +194,19 @@ async function apExternal(teamInfo, applied) {
   const rows=(poll.ranks??[]).map(row=>({rank:Number(row.current??row.rank??row.ranking),
     id:String(row.team?.id??""),name:row.team?.displayName??row.team?.location??""}))
     .filter(row=>row.rank>=1&&row.rank<=25&&Number.isInteger(row.rank)).sort((a,b)=>a.rank-b.rank);
-  assert(rows.length===25 && rows.every((x,i)=>x.rank===i+1&&x.id),
-    "ESPN AP poll malformed; preserve last snapshot. Parsed ranks: "+rows.map(x=>x.rank).join(",")+" (count="+rows.length+")");
+  assert(rows.length===25 && rows.every(x=>x.id)
+    && new Set(rows.map(x=>x.id)).size===25
+    && rows.every((x,i)=>i===0||x.rank>=rows[i-1].rank),
+    "ESPN AP Top 25 rows are incomplete/ambiguous; preserve last good snapshot");
+  // AP can officially tie positions (e.g., two #20 teams and no #21).
+  // A slot is only a comparison position, NEVER a fabricated official AP rank.
+  rows.forEach((row,i)=>row.position=i+1);
+  const duplicates=rows.filter((row,i)=>i>0&&row.rank===rows[i-1].rank);
+  if(duplicates.length) record("source-ranking-tie",
+    "Official AP poll contains tied positions; reviewed canonical publication needs a tie policy",
+    url,{officialTies:duplicates.map(row=>({rank:row.rank,id:row.id,name:row.name}))});
   const idToSchool=new Map(Object.entries(teamInfo).map(([key,t])=>[t.id,key]));
-  const changed=rows.filter(row=>applied[row.rank-1]?.team!==idToSchool.get(row.id));
+  const changed=rows.filter(row=>applied[row.position-1]?.team!==idToSchool.get(row.id));
   if(changed.length) record("factual-correction",
     "AP poll changed; reviewed versioned frontend/backend poll update required (not CI software failure)",
     url,{changes:changed.map(x=>({...x,auditedSchool:idToSchool.get(x.id)??null})),
