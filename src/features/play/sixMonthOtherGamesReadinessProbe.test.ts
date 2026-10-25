@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildFootballDailyPersistenceSetup } from "./footballDailyPublicationAll";
+import { footballSportsFeudDomainForDay } from "./sportsFeudDailyBanks";
 import { buildOfficialDailySetup, type OfficialDailyGameType } from "./todaysChallengeRuntime";
 import { buildNbaServerDailyPublication } from "../nba/nbaDailyServerPublication";
 import { type NbaDailyGame } from "../nba/nbaDailySchedule";
@@ -165,4 +166,28 @@ describe("six-month daily generator availability probe — editorial certificati
     // block activation until game banks/rotations can substantiate it.
     expect(closeRepeated).toEqual({});
   }, 300_000);
+});
+
+
+describe("Football Sports Feud v22 actual-calendar content protection", () => {
+  it("alternates CFB/NFL from the approved slots and never repeats a future question", () => {
+    const dates = auditMergedPartOneCalendar().filter(slot =>
+      slot.sport === "football" && slot.game === "sports_feud" && slot.day >= "2026-10-27");
+    expect(dates).toHaveLength(26);
+    const priorQuestions = new Set<string>();
+    for (const [index, slot] of dates.entries()) {
+      const league = footballSportsFeudDomainForDay(slot.day);
+      expect(league, slot.day).toBe(index % 2 === 0 ? "cfb" : "nfl");
+      const publication = buildFootballDailyPersistenceSetup(slot.day, "football-daily-v22-higher-lower-oct27", "sports_feud");
+      const questions = authoredPrompts(publication.revealSetup);
+      expect(questions, slot.day).toHaveLength(7);
+      for (const question of questions) {
+        const key = league + ":" + question.prompt;
+        expect(priorQuestions.has(key), "Repeated Feud question in " + slot.day).toBe(false);
+        priorQuestions.add(key);
+      }
+    }
+    expect(footballSportsFeudDomainForDay("2026-11-27")).toBe("cfb");
+    expect(priorQuestions).toHaveProperty("size", 182);
+  }, 180_000);
 });
