@@ -237,7 +237,7 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
-  if (day >= THREE_SPORT_CADENCE_CUTOVER_DAY) return FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION;
+  if (day > THREE_SPORT_CADENCE_CUTOVER_DAY) return FOOTBALL_LOCKED_FUTURE_SCHEDULE_VERSION;
   if (day >= "2026-10-03") return FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION;
   if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION;
   if (day >= "2026-09-29") return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
