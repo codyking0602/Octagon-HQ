@@ -29,7 +29,7 @@ const horizon = Array.from({ length: 182 }, (_, index) => add(start, index));
 
 describe("locked three-sport Daily scheduling policy", () => {
   it("matches every future SQL canonical cycle to the TypeScript content-calendar mirror", () => {
-    const migration = readFileSync(new URL("../../../supabase/migrations/202612310406_lock_three_sport_daily_cadence.sql", import.meta.url), "utf8");
+    const migration = readFileSync("supabase/migrations/202612310406_lock_three_sport_daily_cadence.sql", "utf8");
     function sqlCycle(version: string) {
       const marker = `('${version}','America/Chicago'`;
       const start = migration.indexOf(marker);
