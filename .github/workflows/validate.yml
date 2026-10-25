@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     # Draft PRs iterate through Fast PR Feedback. Run the expensive full suite
-    # only when a PR is opened/reopened ready, or explicitly marked ready.
-    types: [opened, reopened, ready_for_review]
+    # for every ready PR head, including synchronization after new commits.
+    types: [opened, reopened, ready_for_review, synchronize]
   push:
     branches: [main]
 
