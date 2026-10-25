@@ -408,7 +408,7 @@ describe("compact two-game leaderboard result", () => {
       },
     });
     const { container } = render(<DailyTwoGameLeaderboardResult projection={nba} resultDetail={{}} sport="nba" />);
-    expect(container.classList.contains("daily-two-game-result")).toBe(true);
+    expect(container.querySelector(".daily-two-game-result--nba")).not.toBeNull();
     expect(container.querySelectorAll(".daily-two-game-result__metrics--hit-number")).toHaveLength(2);
     expect(container.textContent).toContain("Michael Jordan");
     expect(container.textContent).toContain("Stephen Curry · 2024–25");
