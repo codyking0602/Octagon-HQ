@@ -176,8 +176,13 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(footballGenerationRuntime).toContain("createFootballHitTheNumberPlan");
     expect(footballGenerationRuntime).toContain("footballHitTheNumberProgressionSlotSubjectIds");
     expect(footballGenerationRuntime).toContain("progression_slot_subject_ids");
-    expect(footballAdvanceRuntime).toContain("progression_slot_subject_ids");
+    const hitNumberCore = readFileSync(
+      "src/features/play/footballHitNumberAdvanceCore.ts", "utf8",
+    );
+    expect(hitNumberCore).toContain("progression_slot_subject_ids");
+    expect(footballAdvanceRuntime).toContain("scoreFootballHitNumberTwoGameChild");
     expect(footballAdvanceRuntime).not.toContain("footballHitTheNumberModel");
+    expect(hitNumberCore).not.toContain("footballHitTheNumberModel");
     expect(footballAdvanceRuntime).not.toContain("createFootballHitTheNumberPlan");
     expect(footballAdvanceRuntime).not.toContain("footballHitTheNumberPlanQuality");
     expect(footballAdvanceRuntime).not.toContain('from "./footballTodayChallengeRuntime"');
