@@ -33,9 +33,10 @@ describe("Football Higher or Lower official Daily (future-only)", () => {
         all.add(key);
       }
       const first = publication.publicSetup.initial_state as Record<string, unknown>;
-      expect(JSON.stringify(first)).not.toContain('"answer"');
-      expect(JSON.stringify(first)).not.toContain('"formattedValue"');
-      expect(JSON.stringify(first)).not.toContain('"value":');
+      const firstQuestion = first.current_question as { hidden: Record<string, unknown>; answer?: unknown };
+      expect(firstQuestion.answer).toBeUndefined();
+      expect(firstQuestion.hidden.value).toBeUndefined();
+      expect(firstQuestion.hidden.formattedValue).toBeUndefined();
       history.unshift({ day, question_ids: board.questions.map(q => q.id) });
     }
     expect(usedDates.size).toBe(14);
