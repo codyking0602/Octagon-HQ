@@ -88,6 +88,9 @@ describe("six-month daily generator availability probe — editorial certificati
       }
     }
     expect(Object.values(report).reduce((sum, row) => sum + row.scheduled, 0)).toBe(slots.length);
+    // Missing Millionaire publications on already-scheduled dates are release blockers.
+    expect(report["football:millionaire"]?.blocked).toBe(0);
+    expect(report["ufc:millionaire"]?.blocked).toBe(0);
     // Nothing about a non-publishing preview can certify final Part 1
     // publication versions, human concept diversity or fact provenance.
     console.info("SIX_MONTH_OTHER_GAMES_CANONICAL_PART1_PROBE " + JSON.stringify(report));
