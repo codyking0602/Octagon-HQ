@@ -51,6 +51,54 @@ function advance(context: OfficialDailyRuntimeContext, action: Record<string, un
 }
 
 describe("Millionaire official Daily runtime", () => {
+  it("preserves archived NFL proof and applies sourced future-only editorial corrections", () => {
+    const past = buildMillionaireDailySetup("football", "2026-09-24", "archive");
+    const pastQuestion = (past.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[5]!;
+    expect(pastQuestion.prompt).toContain("never been named first-team All-Pro");
+    expect(pastQuestion.id).toBe("millionaire-nfl-run-1-q6");
+
+    const days = Array.from({ length: 182 }, (_, offset) =>
+      new Date(Date.parse("2026-10-25T00:00:00Z") + offset * 86400000).toISOString().slice(0, 10));
+    const target = days.find(day => day >= "2026-10-27"
+      && lockedWeightedGameForDay("football", day) === "millionaire"
+      && millionaireDailyLeague("football", day) === "nfl"
+      && millionaireDailyRunIndex("football", day) === 0);
+    expect(target).toBeDefined();
+    const future = buildMillionaireDailySetup("football", target!, "future");
+    const updated = (future.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[5]!;
+    expect(updated.id).toBe("millionaire-nfl-2025-ap-all-pro-q6-future");
+    expect(updated.prompt).toContain("2025 NFL season");
+    expect(updated.choices.find(c => c.id === updated.correctChoiceId)?.text).toBe("Matthew Stafford");
+    expect(updated.statSheet).not.toMatch(/Stafford/i);
+    expect(future.privateGradingEvidence.proof).toContain(updated.id);
+    expect(past.privateGradingEvidence.proof).not.toContain(updated.id);
+  });
+
+  it("disambiguates the 2025 CFB season and removes the UFC answer-leaking clue only in future runs", () => {
+    const days = Array.from({ length: 182 }, (_, offset) =>
+      new Date(Date.parse("2026-10-25T00:00:00Z") + offset * 86400000).toISOString().slice(0, 10));
+    const cfbDay = days.find(day => day >= "2026-10-27"
+      && lockedWeightedGameForDay("football", day) === "millionaire"
+      && millionaireDailyLeague("football", day) === "cfb"
+      && millionaireDailyRunIndex("football", day) === 9);
+    const ufcDay = days.find(day => day >= "2026-10-27"
+      && isUfcPublicationDay(day)
+      && lockedWeightedGameForDay("ufc", day) === "millionaire"
+      && millionaireDailyRunIndex("ufc", day) === 9);
+    expect(cfbDay).toBeDefined();
+    expect(ufcDay).toBeDefined();
+    const cfb = buildMillionaireDailySetup("football", cfbDay!, "future");
+    const ufc = buildMillionaireDailySetup("ufc", ufcDay!, "future");
+    const championship = (cfb.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[0]!;
+    const clue = (ufc.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[6]!;
+    expect(championship.prompt).toContain("2025 college football season");
+    expect(championship.explanation).toContain("January 2026");
+    expect(championship.choices.find(c => c.id === championship.correctChoiceId)?.text).toBe("Indiana");
+    expect(clue.statSheet).not.toMatch(/Grasso/i);
+    expect(clue.statSheet).toContain("fourth-round");
+  });
+
+
   it("features one accurate Ditka question in Oct 10 CFB Millionaire only", () => {
     const previous = buildMillionaireDailySetup("football", "2026-10-07", "football-daily-v20-resume-v18-oct3");
     const memorial = buildMillionaireDailySetup("football", "2026-10-10", "football-daily-v20-resume-v18-oct3");
@@ -66,6 +114,30 @@ describe("Millionaire official Daily runtime", () => {
     expect(question.choices.find((choice) => choice.id === question.correctChoiceId)?.text).toBe("1985");
     expect((previous.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
     expect((next.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
+  });
+
+  it("never prints the correct fighter's surname in a future UFC Millionaire Stat Sheet", () => {
+    const inspected = new Set<number>();
+    for (let offset = 0; offset < 182; offset += 1) {
+      const day = new Date(Date.parse("2026-10-25T00:00:00Z") + offset * 86400000)
+        .toISOString().slice(0, 10);
+      if (day < "2026-10-27" || !isUfcPublicationDay(day)
+        || lockedWeightedGameForDay("ufc", day) !== "millionaire") continue;
+      inspected.add(millionaireDailyRunIndex("ufc", day));
+      const publication = buildMillionaireDailySetup("ufc", day, "future-test");
+      const run = publication.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+      expect(run).toHaveLength(8);
+      for (const question of run.slice(0, 7)) {
+        const correctText = question.choices.find(choice => choice.id === question.correctChoiceId)!.text;
+        // Only apply the surname check to multiword fighter identities, not
+        // events, chronology, numeric answers, or short/common last tokens.
+        const surname = correctText.split(/\s+/).at(-1)!;
+        if (correctText.split(/\s+/).length < 2 || surname.length < 5 || !/^[A-Za-z]+$/.test(surname)) continue;
+        expect(question.statSheet?.toLowerCase().split(/[^a-z]+/)).not.toContain(surname.toLowerCase());
+      }
+      expect(run[7]!.statSheet).toBeNull();
+    }
+    expect(inspected).toEqual(new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
   });
 
   it("debuts CFB for Football and UFC for UFC on September 19", () => {
