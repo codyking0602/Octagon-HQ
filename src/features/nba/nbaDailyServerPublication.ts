@@ -18,6 +18,7 @@ import { buildNbaFindLeaderDailyPublication } from "./nbaFindLeaderDailyPublicat
 import { buildNbaWavelengthDailyPublication } from "./nbaWavelengthDailyPublication";
 import { buildNbaHitNumberDailyPublication } from "./nbaHitNumberDailyPublication";
 import { buildNbaHigherLowerDailyPublication, buildNbaHigherLowerTwoGameDailyPublication } from "./nbaHigherLowerDailyPublication";
+import type { NbaHigherLowerQuestion } from "./nbaHigherLowerModel";
 import { dailyUsesTwoGameAverage } from "../play/dailyTwoGameContract";
 
 /**
@@ -85,6 +86,27 @@ function barTriviaPublication(day: string, scheduleVersion: string, ordinal: num
   };
 }
 
+
+/** Reconstruct earlier published NBA Higher or Lower comparisons in calendar order.
+ * No extra calendar is introduced: nbaRegularSeasonDaily is the existing authority.
+ * The official generator excludes both directions of all previously used pairs.
+ */
+function buildNbaHigherLowerCalendarPublication(day:string,scheduleVersion:string,ordinal:number) {
+  const prior:NbaHigherLowerQuestion[]=[];
+  if(day >= "2026-11-01") {
+    for(let ms=Date.parse("2026-11-01T00:00:00Z"); ms<Date.parse(day+"T00:00:00Z"); ms+=2*86_400_000) {
+      const priorDay=new Date(ms).toISOString().slice(0,10);
+      const slot=nbaRegularSeasonDaily(priorDay);
+      if(!slot || !slot.isPublicationDay || slot.gameType!=="higher_lower")continue;
+      const published=buildNbaHigherLowerTwoGameDailyPublication(priorDay,scheduleVersion,slot.appearanceIndex,prior);
+      for(const child of published.privateSetupEvidence.rounds as Array<Record<string,unknown>>) {
+        prior.push(...(child.private_setup_evidence as {board:{questions:NbaHigherLowerQuestion[]}}).board.questions);
+      }
+    }
+  }
+  return buildNbaHigherLowerTwoGameDailyPublication(day,scheduleVersion,ordinal,prior);
+}
+
 export function buildNbaServerDailyPublication(
   day: string,
   scheduleVersion: string,
@@ -101,7 +123,7 @@ export function buildNbaServerDailyPublication(
     : nbaDailyGameAppearance(day, gameType);
   const publication = gameType === "higher_lower"
     ? (dailyUsesTwoGameAverage(gameType, day)
-      ? buildNbaHigherLowerTwoGameDailyPublication(day, scheduleVersion, ordinal)
+      ? buildNbaHigherLowerCalendarPublication(day, scheduleVersion, ordinal)
       : buildNbaHigherLowerDailyPublication(day, scheduleVersion, ordinal))
     : gameType === "hit_the_number"
       ? buildNbaHitNumberDailyPublication(day, scheduleVersion, ordinal)
