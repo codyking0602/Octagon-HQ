@@ -18,6 +18,7 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
+import { DailyTwoGameLeaderboardResult } from "../play/DailyTwoGameLeaderboardResult";
 import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLeaderModel";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
@@ -199,6 +200,9 @@ export function NbaOfficialHigherLower({ projection, advance, busy }: { projecti
   const last = object(state.last_result);
   const attempt = projection.officialAttempt;
   if (attempt) {
+    if (dailyTwoGameSeriesState(projection)) {
+      return <DailyTwoGameLeaderboardResult projection={projection} resultDetail={{}} sport="nba" />;
+    }
     return <NbaHigherLowerLeaderboardResult detail={{
       unlocked: true, normalizedScore: attempt.normalizedScore,
       answers: attempt.publicResult.answers ?? state.answers,
