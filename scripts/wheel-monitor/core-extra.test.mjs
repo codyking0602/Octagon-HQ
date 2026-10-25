@@ -11,7 +11,7 @@ test('one champion and exactly fifteen distinct ranks per division', () => {
   assert.equal(validateCatalog(fighters(),'ufc'),128);
   assert.throws(() => validateUfc(fighters().slice(1)),/champion/);
   const duplicate=fighters(); duplicate[2].rank=1;
-  assert.throws(() => validateUfc(duplicate),/duplicate\/missing/);
+  assert.throws(() => validateUfc(duplicate),/distinct contenders/);
 });
 
 test('stable evidence skips evaluation even when previous score differs', () => {
