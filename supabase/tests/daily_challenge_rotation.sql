@@ -120,16 +120,16 @@ begin
   into v_active_schedule
   from private.daily_challenge_schedule_versions schedule
   where schedule.sport = 'ufc'
-  order by schedule.starts_on desc, schedule.created_at desc, schedule.version desc
+    and schedule.version = 'play-rotation-v20-resume-v18-oct3'
   limit 1;
 
   if v_active_schedule.version is null then
-    raise exception 'latest Daily schedule version is missing';
+    raise exception 'historical pre-cutover Daily schedule version is missing';
   end if;
 
   v_cycle_length := coalesce(array_length(v_active_schedule.game_cycle, 1), 0);
   if v_cycle_length = 0 then
-    raise exception 'latest Daily schedule has an empty game cycle: %', row_to_json(v_active_schedule);
+    raise exception 'historical Daily schedule has an empty game cycle: %', row_to_json(v_active_schedule);
   end if;
 
   select candidate.day::date,
@@ -137,7 +137,7 @@ begin
   into v_fallback_day, v_fallback_expected
   from generate_series(
     v_active_schedule.starts_on,
-    v_active_schedule.starts_on + (v_cycle_length - 1),
+    least(v_active_schedule.starts_on + (v_cycle_length - 1), date '2026-10-24'),
     interval '1 day'
   ) as candidate(day)
   where private.daily_challenge_expected_game(v_active_schedule.version, candidate.day::date) <> 'find_leader'
@@ -145,7 +145,7 @@ begin
   limit 1;
 
   if v_fallback_day is null then
-    raise exception 'latest Daily schedule has no non-Find-the-Leader day for fallback proof: %', row_to_json(v_active_schedule);
+    raise exception 'historical Daily schedule has no non-Find-the-Leader day for fallback proof: %', row_to_json(v_active_schedule);
   end if;
 
   begin
