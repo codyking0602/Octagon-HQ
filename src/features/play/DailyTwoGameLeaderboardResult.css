@@ -124,11 +124,11 @@
 }
 
 .daily-two-game-result__game-copy {
-  display: flex;
+  display: grid;
   min-width: 0;
-  align-items: baseline;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-items: end;
+  align-content: center;
+  gap: 3px;
 }
 
 .daily-two-game-result__game-copy strong {
@@ -148,6 +148,7 @@
 
 .daily-two-game-result__game-copy em {
   min-width: 0;
+  max-width: 100%;
   color: #9ba1aa;
   font-size: 0.7rem;
   font-style: normal;
@@ -360,9 +361,29 @@
 }
 
 .daily-two-game-result__metrics strong {
+  min-width: 0;
   color: #fff;
-  font-size: 1.35rem;
-  line-height: 1;
+  font-size: clamp(1.05rem, 4.1vw, 1.35rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+/* Two equal numeric tiles plus a full-width, legible result on narrow phones. */
+.daily-two-game-result__metrics--hit-number {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.daily-two-game-result__metrics--hit-number > div:last-child {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.daily-two-game-result__metrics--hit-number strong {
+  overflow-wrap: normal;
 }
 
 .daily-two-game-result__metrics strong.is-word {
@@ -447,7 +468,7 @@
   }
 
   .daily-two-game-result__game-copy {
-    gap: 7px;
+    gap: 3px;
   }
 
   .daily-two-game-result__game-copy em {

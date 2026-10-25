@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { HigherLowerIntro, HigherLowerRoundHeader, HigherLowerPrompt, HigherLowerChoices, HigherLowerFeedback } from "../play/HigherLowerStandard";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-higher-lower.css";
+import "../../styles/higher-lower-standard.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { GameResultActions } from "../play/GameResultActions";
@@ -83,57 +85,17 @@ function SetupScreen({
 }) {
   return (
     <main className="page football-higher-lower">
-      <section className="higher-lower-hero">
-        <p className="eyebrow">FOOTBALL CHALLENGE</p>
-        <h1>HIGHER OR LOWER</h1>
-        <strong>Same 10 questions. Accuracy wins. Time breaks ties.</strong>
-        <p>
-          Compare the hidden number to the number on the board. Every challenge freezes the exact
-          same questions, values and order for both players.
-        </p>
-      </section>
-
-      <section className="higher-lower-setup">
-        <header>
-          <span>1</span>
-          <div>
-            <small>CHOOSE YOUR BOARD</small>
-            <strong>NFL, College, or a 5-and-5 mix</strong>
-          </div>
-        </header>
-        <div className="higher-lower-scope-grid">
-          {scopeOptions.map((option) => (
-            <button
-              type="button"
-              className={option.scope === scope ? "is-selected" : ""}
-              key={option.scope}
-              onClick={() => onScope(option.scope)}
-            >
-              <b>{option.label}</b>
-              <span>{option.detail}</span>
-            </button>
-          ))}
+      <HigherLowerIntro sport="FOOTBALL" onStart={onStart}
+        startLabel={"START " + (scope === "CFB" ? "COLLEGE" : scope) + " BOARD"}>
+        <div className="higher-lower-scope-grid" aria-label="Choose Football board">
+          {scopeOptions.map(option => <button type="button" key={option.scope}
+            className={option.scope === scope ? "is-selected" : ""}
+            aria-pressed={option.scope === scope}
+            onClick={() => onScope(option.scope)}>
+            <b>{option.label}</b><span>{option.detail}</span>
+          </button>)}
         </div>
-      </section>
-
-      <section className="higher-lower-rules">
-        <header>
-          <span>2</span>
-          <div>
-            <small>HOW IT WORKS</small>
-            <strong>Fast, clean head-to-head scoring</strong>
-          </div>
-        </header>
-        <div>
-          <p><b>10</b><span>predetermined comparisons</span></p>
-          <p><b>1st</b><span>most correct answers wins</span></p>
-          <p><b>TIME</b><span>only breaks an accuracy tie</span></p>
-        </div>
-      </section>
-
-      <button className="higher-lower-start" type="button" onClick={onStart}>
-        START {scope === "CFB" ? "COLLEGE" : scope} BOARD
-      </button>
+      </HigherLowerIntro>
     </main>
   );
 }
@@ -153,6 +115,9 @@ export default function FootballHigherLowerPage() {
   const activeTimerStartedAt = useRef<number | null>(null);
   const activeElapsedMs = useRef(0);
   const sharedSeed = searchParams.get("seed");
+  useLayoutEffect(() => {
+    if (board && !result) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [questionIndex, board?.seed, Boolean(result)]);
 
   const challengeBoard = useMemo(() => {
     const setup = challengeRecord(profileMatch.challenge?.setup);
@@ -392,24 +357,12 @@ export default function FootballHigherLowerPage() {
         </section>
       ) : null}
 
-      <section className="higher-lower-game-header">
-        <button type="button" onClick={() => navigate("/football")} aria-label="Back to Football HQ">←</button>
-        <div>
-          <small>{board.scope === "CFB" ? "COLLEGE" : board.scope} · QUESTION {questionIndex + 1} OF 10</small>
-          <strong>HIGHER OR LOWER</strong>
-        </div>
-        <span>{answers.filter((answerRow) => answerRow.correct).length}/{answers.length}</span>
-      </section>
-
-      <div className="higher-lower-progress" aria-hidden="true">
-        <i style={{ width: `${((questionIndex + (answered ? 1 : 0)) / board.questions.length) * 100}%` }} />
-      </div>
-
-      <section className="higher-lower-stat-label">
-        <small>{categoryLabel(question.category)}</small>
-        <h2>{question.metricLabel}</h2>
-        {question.note ? <p>{question.note}</p> : null}
-      </section>
+      <HigherLowerRoundHeader sport={board.scope === "CFB" ? "COLLEGE" : board.scope}
+        index={questionIndex} correct={answers.filter(row => row.correct).length}
+        completed={questionIndex + (answered ? 1 : 0)}
+        onBack={() => navigate("/football")} backLabel="Back to Football HQ" />
+      <HigherLowerPrompt category={categoryLabel(question.category)}
+        metric={question.metricLabel} note={question.note} />
 
       <section className="higher-lower-matchup">
         <article
@@ -447,35 +400,9 @@ export default function FootballHigherLowerPage() {
         </article>
       </section>
 
-      <section className="higher-lower-controls" aria-label="Higher or lower choice">
-        <button
-          type="button"
-          disabled={answered}
-          className={answered && question.answer === "higher" ? "is-answer" : revealedChoice === "higher" ? "is-miss" : ""}
-          onClick={() => answer("higher")}
-        >
-          <b>↑</b>
-          <span>HIGHER</span>
-        </button>
-        <button
-          type="button"
-          disabled={answered}
-          className={answered && question.answer === "lower" ? "is-answer" : revealedChoice === "lower" ? "is-miss" : ""}
-          onClick={() => answer("lower")}
-        >
-          <b>↓</b>
-          <span>LOWER</span>
-        </button>
-      </section>
-
-      <div className={`higher-lower-feedback${answered ? " is-visible" : ""}`} role="status">
-        {answered ? (
-          <>
-            <strong>{wasCorrect ? "CORRECT" : "MISS"}</strong>
-            <span>{question.hidden.formattedValue} is {question.answer} than {question.known.formattedValue}.</span>
-          </>
-        ) : null}
-      </div>
+      <HigherLowerChoices revealed={revealedChoice} answer={question.answer} onChoose={answer} />
+      <HigherLowerFeedback correct={!answered ? null : wasCorrect}
+        detail={answered ? question.hidden.formattedValue + " is " + question.answer + " than " + question.known.formattedValue + "." : undefined} />
     </main>
   );
 }

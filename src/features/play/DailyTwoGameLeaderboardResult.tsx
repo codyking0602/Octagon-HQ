@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
 import { footballWavelengthClues } from "../back-room/footballWavelengthModel";
 import { nbaWavelengthClues } from "../nba/nbaWavelengthCatalog";
+import { nbaHitSubjectById } from "../nba/nbaHitTheNumberStats";
 import { getPlayFighter } from "./playFighterPool";
 import { HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
-import { HitTheNumberPickBreakdown } from "./HitTheNumberPickBreakdown";
+import { HitTheNumberPickBreakdown, formatHitNumberStatValue } from "./HitTheNumberPickBreakdown";
+import { footballHitNumberDisplayName } from "./footballHitNumberDisplayName";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 import { wavelengthClues } from "./wavelengthEngine";
 import "./DailyTwoGameLeaderboardResult.css";
@@ -43,6 +45,27 @@ function prettyId(value: string) {
     .join(" ");
 }
 
+/**
+ * Completed Daily pick labels use the sport's identity catalog, not a prettified
+ * provider key. Year-qualified NBA and NFL seasons stay distinguishable.
+ * This affects presentation only; the saved pick IDs/grades never change.
+ */
+function hitNumberPickLabel(sport: Sport, id: string, publishedName: string): string {
+  if (sport === "football") return footballHitNumberDisplayName(id, publishedName);
+  if (sport === "ufc") return getPlayFighter(id)?.name || publishedName || prettyId(id);
+
+  const nbaSubject = nbaHitSubjectById.get(id);
+  const name = nbaSubject?.name || publishedName;
+  const year = nbaSubject?.season ?? Number(/^season-(\\d{4}):/.exec(id)?.[1] ?? NaN);
+  const qualifiedSeason = Number.isInteger(year) && year >= 1900 && year <= 2100
+    ? `${year - 1}–${String(year).slice(-2)}`
+    : "";
+  if (name) return qualifiedSeason && !name.includes(qualifiedSeason)
+    ? `${name} · ${qualifiedSeason}`
+    : name;
+  return qualifiedSeason ? `NBA player · ${qualifiedSeason}` : "NBA player";
+}
+
 function candidateImage(candidate: JsonRecord) {
   for (const key of ["thumb_url", "image_url", "headshot_url", "logo_url", "team_logo_url"]) {
     const value = candidate[key];
@@ -74,7 +97,7 @@ function roundSummary(gameType: TodayChallengeProjection["gameType"], result: Js
     if (status === "perfect") return "PERFECT";
     if (status === "bust") return "BUST";
     const distance = Number(result.distance ?? 0);
-    return distance > 0 ? `${distance} OFF` : score >= 100 ? "PERFECT" : "FINAL";
+    return distance > 0 ? `${formatHitNumberStatValue(distance)} OFF` : score >= 100 ? "PERFECT" : "FINAL";
   }
   return "FINAL";
 }
@@ -235,8 +258,7 @@ function HitNumberRoundDetail({
     selection.fighterId ?? selection.fighter_id ?? selection.subjectId ?? selection.subject_id ?? "",
   )).filter(Boolean);
   const picks = ids.map((id) => {
-    const footballName = candidateNames.get(id);
-    const name = footballName || (sport === "ufc" ? getPlayFighter(id)?.name : null) || prettyId(id);
+    const name = hitNumberPickLabel(sport, id, candidateNames.get(id) ?? "");
     const rawValue = selectionById.get(id)?.value;
     return {
       id,
@@ -256,10 +278,10 @@ function HitNumberRoundDetail({
 
   return (
     <div className="daily-two-game-result__detail">
-      <div className="daily-two-game-result__metrics">
-        <div><span>TARGET</span><strong>{Number.isFinite(target) ? target : "—"}</strong></div>
-        <div><span>TOTAL</span><strong>{Number.isFinite(total) ? total : "—"}</strong></div>
-        <div><span>RESULT</span><strong className="is-word">{status || (Number.isFinite(distance) ? `${distance} OFF` : "—")}</strong></div>
+      <div className="daily-two-game-result__metrics daily-two-game-result__metrics--hit-number">
+        <div><span>TARGET</span><strong>{formatHitNumberStatValue(target)}</strong></div>
+        <div><span>TOTAL</span><strong>{formatHitNumberStatValue(total)}</strong></div>
+        <div><span>RESULT</span><strong className="is-word">{status || (Number.isFinite(distance) ? `${formatHitNumberStatValue(distance)} OFF` : "—")}</strong></div>
       </div>
       <HitTheNumberPickBreakdown metricLabel={metricLabel} picks={picks} />
     </div>
