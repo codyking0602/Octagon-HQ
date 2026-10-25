@@ -10,6 +10,7 @@ import {
   validateOfficialUfcTable,
 } from "./core.mjs";
 import { wheelPriorityIdentityKeys } from "../wheel-monitor-census-policy.mjs";
+import { validateObservation } from "./observation-policy.mjs";
 
 const root = resolve(import.meta.dirname, "../..");
 const repoRead = p => readFileSync(resolve(root, p), "utf8");
@@ -271,6 +272,10 @@ function reconcile(rows, sourceRosters, ufcRanks, previous) {
       // Unranked UFC options have no official ranked counterpart; correct, not a roster failure.
       if(row.champion||row.rank!=null) {
         updated.sourceStatus=candidate?"matched":"missing";
+        if(candidate) {
+          updated.officialRank=candidate.rank;
+          updated.officialChampion=candidate.champion;
+        }
         if(candidate && (candidate.rank!==row.rank||candidate.champion!==row.champion)) {
           record("factual-correction","UFC canonical ranking differs from official All Rankings",
             ufcRanks.url,{fighterId:row.fighterId,division:row.division,
@@ -292,6 +297,7 @@ function reconcile(rows, sourceRosters, ufcRanks, previous) {
     const own=r?.players.filter(p=>nameKey(p.name)===nameKey(row.name))??[];
     if(own.length===1) {
       updated.sourceRole=own[0].role;
+      updated.sourceDesignation=own[0].status;
       updated.sourcePlayerId=own[0].id;
       return updated;
     }
@@ -316,7 +322,9 @@ function reconcile(rows, sourceRosters, ufcRanks, previous) {
     // Never write out hidden UFC grade or the optional current rating field.
     sport:x.sport, name:x.name, team:x.team, division:x.division, family:x.family,
     rank:x.rank, champion:x.champion, sourceStatus:x.sourceStatus,
-    sourceRole:x.sourceRole, sourceTeam:x.sourceTeam, sourceUrl:x.sourceUrl,
+    sourceRole:x.sourceRole, sourceDesignation:x.sourceDesignation,
+    officialRank:x.officialRank, officialChampion:x.officialChampion,
+    sourceTeam:x.sourceTeam, sourceUrl:x.sourceUrl,
     sourcePlayerId:x.sourcePlayerId,
     transferCandidateTeam:x.transferCandidateTeam,
     transferCandidateId:x.transferCandidateId,
@@ -369,7 +377,17 @@ async function main() {
     ? JSON.parse(readFileSync(resolve(priorPath),"utf8")):null;
   // The original schema-1 baseline promoted review-held data as successful.
   // Never use that artifact as an authoritative last-good checkpoint.
-  const previous=priorRaw?.schema===2 && priorRaw?.status==="source-certified" ? priorRaw : null;
+  const previousCertified=priorRaw?.schema===2 && priorRaw?.status==="source-certified"
+    ? priorRaw : null;
+  // Evidence continuity must not depend on promotion of globally certified
+  // snapshots. An observation is read-only, ungraded and never certification.
+  const observationPath=cli["previous-observation"];
+  const observationRaw=observationPath && existsSync(resolve(observationPath))
+    ? JSON.parse(readFileSync(resolve(observationPath),"utf8")) : null;
+  const previousObserved=validateObservation(observationRaw);
+  const previous=previousObserved && (!previousCertified ||
+    Date.parse(previousObserved.checkedAt)>Date.parse(previousCertified.checkedAt))
+    ? previousObserved : previousCertified;
   const teams=priorityTeams();
   const nfl=footballCatalog();
   const db=await liveCatalog();
@@ -401,6 +419,9 @@ async function main() {
     rosters(teams.nfl,teams.teamInfo), ufcExternal(),
     apExternal(teams.teamInfo,checkedIn),
   ]);
+  // A malformed official table cannot seed either kind of retained artifact.
+  assert(!ufcRanks.structuralWarnings.length,
+    "Official UFC rankings malformed; previous observations remain authoritative");
   const {result,snapshot}=reconcile([...nfl,...cfbCoverage.selected,...db.ufc],
     sourceRosters,ufcRanks,previous);
   const orphaned=(previous?.identities??[]).filter(x=>!snapshot.some(y=>identity(x)===identity(y)));
@@ -415,6 +436,14 @@ async function main() {
     sourceCounts:{nflTeams:Object.keys(teams.nfl).length,
       cfbTeams:Object.keys(teams.teamInfo).length,ufcDivisions:DIVISIONS.length},
   };
+  // Successful source observations are retained even when grade/GM/publishing
+  // gates remain blocked. This is NOT a ratings or source-certified snapshot.
+  const observation=validateObservation({
+    schema:3,status:"read-only-observation",checkedAt:at,
+    sourceCommit:process.env.GITHUB_SHA??null,
+    identities:snapshot,poll:currentPoll,ufcOfficialRanks:ufcRanks.rows,
+    catalogCounts:all.catalogCounts,sourceCounts:all.sourceCounts,
+  });
   const summaries=Object.fromEntries(["nfl","cfb","ufc"].map(sport=>
     [sport,summarizeDecisions(result.filter(row=>row.sport===sport))]));
   // Independent read-only sport results survive other sports' review holds.
@@ -431,8 +460,13 @@ async function main() {
   ];
   const readiness=snapshotReadiness(blockers);
   const output={status:readiness.status,checkedAt:at,
-    sourceCommit:all.sourceCommit,previousSnapshot:previous?.checkedAt??null,
+    sourceCommit:all.sourceCommit,
+    previousSnapshot:previousCertified?.checkedAt??null,
+    previousObservation:previousObserved?.checkedAt??null,
+    comparisonBaseline:previous?.checkedAt??null,
     summaries,gmContractAuthority:gm,sourceEvidence:evidence,
+    performanceEvidenceStatus:"not-yet-certified",
+    detailedReviewAvoidanceMeasured:false,
     readiness, coverage:{
       nfl:{approved:nflCoverage.expected,graded:nflCoverage.selected.length,missing:nflCoverage.missing,stale:nflCoverage.stale.length},
       cfb:{approved:cfbCoverage.expected,graded:cfbCoverage.selected.length,missing:cfbCoverage.missing,stale:cfbCoverage.stale.length},
@@ -453,14 +487,19 @@ async function main() {
   };
   mkdirSync(outputDir,{recursive:true});
   writeFileSync(resolve(outputDir,"report.json"),JSON.stringify(output,null,2)+"\n");
+  // Persist a full, ungraded source observation for the next cheap comparison.
+  // This is never eligible for restore as wheel-monitor-snapshot.
+  writeFileSync(resolve(outputDir,"observation.json"),
+    JSON.stringify(observation,null,2)+"\n");
   // Never promote a blocker-bearing result or invent a successful baseline.
   // Reporting read-only NFL/UFC observations continues while CFB grades are pending.
   if (readiness.snapshotReady) {
     writeFileSync(resolve(outputDir,"snapshot.json"),JSON.stringify(all,null,2)+"\n");
   }
   console.log(JSON.stringify({status:output.status,summaries,
-    evidenceCount:evidence.length,previousSnapshot:output.previousSnapshot,
-    blockers:blockers.length,snapshotReady:readiness.snapshotReady}));
+    evidenceCount:evidence.length,comparisonBaseline:output.comparisonBaseline,
+    blockers:blockers.length,snapshotReady:readiness.snapshotReady,
+    observationReady:true}));
 }
 try {await main();} catch(e) {
   mkdirSync(outputDir,{recursive:true});
