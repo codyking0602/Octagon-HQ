@@ -1,0 +1,34 @@
+name: Football Higher or Lower Six-Month Audit
+
+on:
+  pull_request:
+    paths:
+      - "src/features/back-room/footballHigherLowerModel.ts"
+      - "src/features/play/footballHigherLowerDailyRuntime.ts"
+      - "src/features/play/footballHigherLowerSixMonthAudit.ts"
+      - "src/features/play/footballHigherLowerSixMonthAudit.test.ts"
+      - ".github/workflows/football-higher-lower-six-month-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  generator-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Generate pinned football factual projections
+        run: npm run pretest
+      - name: Execute all provisional official Daily boards and assertions
+        run: OCTAGON_WRITE_HL_AUDIT=1 npx vitest run src/features/play/footballHigherLowerSixMonthAudit.test.ts
+      - name: Upload reproducible, question-level simulation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: football-higher-lower-provisional-six-month-boards
+          path: artifacts/football-higher-lower-provisional-six-month-boards.json
+          if-no-files-found: warn
