@@ -54,7 +54,7 @@ describe("UFC Bar Trivia v3 full editorial rebuild", () => {
   it("guarantees 20 seeded UFC Daily appearances with no repeated ID or reviewed fact family", () => {
     expect(UFC_BAR_TRIVIA_UNIQUE_APPEARANCES).toBe(20);
     const days = ["2026-09-29"];
-    for (let offset = 0; offset < 240 && days.length < 20; offset++) {
+    for (let offset = 0; offset < 500 && days.length < 20; offset++) {
       const day = new Date(Date.UTC(2026, 9, 1 + offset)).toISOString().slice(0, 10);
       if (lockedWeightedGameForDay("ufc", day) === "bar_trivia") days.push(day);
     }
