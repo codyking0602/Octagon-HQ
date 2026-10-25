@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import {
   DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
   FOOTBALL_LOCKED_WEIGHTED_CYCLE,
@@ -27,6 +28,22 @@ const start = "2026-10-25";
 const horizon = Array.from({ length: 182 }, (_, index) => add(start, index));
 
 describe("locked three-sport Daily scheduling policy", () => {
+  it("matches every future SQL canonical cycle to the TypeScript content-calendar mirror", () => {
+    const migration = readFileSync(new URL("../../../supabase/migrations/202612310406_lock_three_sport_daily_cadence.sql", import.meta.url), "utf8");
+    function sqlCycle(version: string) {
+      const marker = `('${version}','America/Chicago'`;
+      const start = migration.indexOf(marker);
+      expect(start).toBeGreaterThanOrEqual(0);
+      const open = migration.indexOf("array[", start) + 6;
+      const close = migration.indexOf("]::text[]", open);
+      expect(close).toBeGreaterThan(open);
+      return [...migration.slice(open, close).matchAll(/'([a-z_]+)'/g)].map((match) => match[1]);
+    }
+    expect(sqlCycle("football-daily-v21-locked-oct25")).toEqual(FOOTBALL_FUTURE_WEIGHTED_CYCLE);
+    expect(sqlCycle("ufc-daily-v21-48h-oct25")).toEqual(UFC_FUTURE_WEIGHTED_CYCLE);
+    expect(sqlCycle("nba-daily-regular-v2-locked")).toEqual(NBA_DAILY_WEIGHTED_CYCLE);
+  });
+
   it("preserves historical October boards and the Football NFL/CFB Bar Trivia parity", () => {
     expect(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY).toBe("2026-10-01");
     expect(THREE_SPORT_CADENCE_CUTOVER_DAY).toBe(start);
