@@ -139,10 +139,11 @@ const ROWS = [
     "lane": "mma-bottom-position-space-creation",
     "prompt": "Name a technique a UFC fighter on the bottom might use to create space on the ground.",
     "kind": "other",
-    "ranked": "Frame with forearms|Hip escape|Bridge|Push opponent away|Shrimp|Regain guard|Make an underhook|Kick off",
+    "ranked": "Frame with forearms|Hip escape|Bridge|Push opponent away|Sit up|Regain guard|Make an underhook|Kick off",
     "extras": "Post on hips|Move hips|Recover knee shield|Turn to side|Use feet on hips|Stand up|Technical get-up",
     "aliases": {
       "Hip escape": [
+        "Shrimp",
         "Shrimping"
       ],
       "Frame with forearms": [
