@@ -22,6 +22,7 @@ import { OfficialBarTriviaDailyView } from "./OfficialBarTriviaDailyView";
 import { OfficialAverageFanDailyView } from "./OfficialAverageFanDailyView";
 import { OfficialFootballHigherLowerDailyView } from "./OfficialFootballHigherLowerDailyView";
 import { OfficialUfcHigherLowerDailyView } from "./OfficialUfcHigherLowerDailyView";
+import { DailyTwoGameLeaderboardResult } from "./DailyTwoGameLeaderboardResult";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -192,6 +193,8 @@ export function OfficialTodayChallengeContent({
           onAdvance={onAdvance}
           onExit={() => onNavigate(projection.sport === "football" ? "/football" : "/play")}
         />
+      ) : projection.gameType === "higher_lower" && projection.officialAttempt && twoGameSeries ? (
+        <DailyTwoGameLeaderboardResult projection={projection} resultDetail={{}} sport={projection.sport as "football" | "ufc" | "nba"} />
       ) : projection.gameType === "higher_lower" && projection.sport === "football" ? (
         <OfficialFootballHigherLowerDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
       ) : projection.gameType === "higher_lower" && projection.sport === "ufc" ? (
