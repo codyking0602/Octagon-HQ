@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DIVISIONS, validateCatalog, validateUfc, validateFlex, compareEvidence, summarizeDecisions } from './core.mjs';
+import { DIVISIONS, validateCatalog, validateUfc, validateFlex, compareEvidence, summarizeDecisions, selectApprovedGrades, snapshotReadiness } from './core.mjs';
 
 function fighters() { return DIVISIONS.flatMap(division => [
   { sport:'ufc', division, name:division+' Champion', rank:null, champion:true, grade:95 },
@@ -47,4 +47,23 @@ test('fighter rank is a fact, not a score formula', () => {
 test('Flex is inherited from RB, WR, or TE', () => {
   validateFlex({DAL:{RB:['One'],WR:['Two'],TE:['Three'],Flex:['Two','Three']}});
   assert.throws(()=>validateFlex({DAL:{RB:['One'],WR:['Two'],TE:['Three'],Flex:['Unknown']}}),/not inherited/);
+});
+
+test('active-only reconciliation rejects stale grade rows and reports every missing approved identity', () => {
+  const approved=new Set(['CFB:texas:QB:playerone','CFB:texas:RB:playertwo']);
+  const rows=[
+    {sport:'cfb',team:'texas',family:'QB',name:'Player One',nameKey:'playerone',grade:88},
+    {sport:'cfb',team:'texas',family:'QB',name:'Retired',nameKey:'retired',grade:85},
+  ];
+  const report=selectApprovedGrades(rows,'cfb',approved);
+  assert.equal(report.expected,2);
+  assert.equal(report.selected.length,1);
+  assert.deepEqual(report.missing,['CFB:texas:RB:playertwo']);
+  assert.deepEqual(report.stale,['CFB:texas:QB:retired']);
+  assert.deepEqual(snapshotReadiness(report.missing),{
+    status:'review-blocked',snapshotReady:false,blockers:report.missing,
+  });
+});
+test('certification is possible only after all blockers resolved', () => {
+  assert.deepEqual(snapshotReadiness([]),{status:'source-certified',snapshotReady:true,blockers:[]});
 });
