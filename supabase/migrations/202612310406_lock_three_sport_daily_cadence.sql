@@ -31,18 +31,18 @@ values
     'wavelength',
     'sports_feud',
     'average_fan',
-    'bar_trivia',
+    'sports_feud',
     'who_am_i',
     'millionaire',
     'find_leader',
-    'sports_feud',
+    'bar_trivia',
     'wavelength',
     'average_fan',
     'millionaire',
+    'sports_feud',
+    'who_am_i',
     'bar_trivia',
     'hit_the_number',
-    'who_am_i',
-    'sports_feud',
     'find_leader',
     'average_fan',
     'wavelength',
@@ -83,13 +83,13 @@ values
   ]::text[],'ufc'),
   ('nba-daily-regular-v2-locked','America/Chicago',date '2026-11-01',date '2026-11-01',array[
     'average_fan',
-    'bar_trivia',
+    'sports_feud',
     'who_am_i',
     'millionaire',
     'hit_the_number',
-    'sports_feud',
-    'wavelength',
     'find_leader',
+    'wavelength',
+    'sports_feud',
     'average_fan',
     'higher_lower',
     'bar_trivia',
@@ -109,7 +109,7 @@ values
     'millionaire',
     'wavelength',
     'find_leader',
-    'sports_feud'
+    'bar_trivia'
   ]::text[],'nba');
 
 -- One central policy owns the publication day for the two 48-hour sports.
