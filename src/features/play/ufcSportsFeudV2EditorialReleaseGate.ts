@@ -1,4 +1,6 @@
 import type { UFCFeudDraft } from "./ufcSportsFeudV2DraftHelpers";
+import { UFC_FEUD_V2_APPROVED_MAIN_CANDIDATE_IDS } from "./ufcSportsFeudV2MainShortlist";
+import { UFC_FEUD_V2_APPROVED_FAST_CANDIDATE_IDS } from "./ufcSportsFeudV2FastShortlist";
 import { lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import { UFC_SPORTS_FEUD_V2_MAIN_DRAFT } from "./ufcSportsFeudV2MainDraft";
 import { UFC_SPORTS_FEUD_V2_MAIN_BATCH2 } from "./ufcSportsFeudV2MainBatch2";
@@ -138,10 +140,12 @@ export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast13-suspension-recovery",
   "ufc-v2-fast13-fouls-penalties",
 ]);
-// Only a complete reviewer fact/aliases signoff should add an ID here. The two
-// lists intentionally start empty; staging is not production certification.
-export const UFC_V2_APPROVED_MAIN_IDS: ReadonlySet<string> = new Set([]);
-export const UFC_V2_APPROVED_FAST_IDS: ReadonlySet<string> = new Set([]);
+/** These two immutable allowlists are manually selected, exact-ID topic family representatives.
+ * Unreviewed and held questions remain staged but can never enter Daily.
+ * Topic-family uniqueness and real answer matching are enforced in release tests.
+ */
+export const UFC_V2_APPROVED_MAIN_IDS: ReadonlySet<string> = new Set(UFC_FEUD_V2_APPROVED_MAIN_CANDIDATE_IDS);
+export const UFC_V2_APPROVED_FAST_IDS: ReadonlySet<string> = new Set(UFC_FEUD_V2_APPROVED_FAST_CANDIDATE_IDS);
 const SEMANTIC_OVERRIDES: Readonly<Record<string,string>> = {
   // Second-pass thematic review: rephrasing the same recall domain does not create a fresh Daily topic.
   "ufc-v2-fast9-event-site-update": "ufc-event-change-response",

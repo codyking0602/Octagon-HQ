@@ -18,7 +18,7 @@ describe("future-only UFC Feud V2 Daily cutover and historical immutability",()=
     expect(dates[1]).toBe("2026-11-06");
     expect(dates[23]).toMatch(/^2027-/);
   });
-  it("leaves a fail-closed, fully scored V1 pack until 168 disjoint topics receive editorial approval",()=>{
+  it("publishes a fully scored V2 pack only with 168 explicitly certified disjoint topics",()=>{
     const readiness=ufcFeudSixMonthReleaseReadiness();
     if(!readiness.ready){
       expect(buildUfcFeudV2DailyPack("2026-11-04")).toEqual(buildSportsFeudPack("ufc","2026-11-04"));

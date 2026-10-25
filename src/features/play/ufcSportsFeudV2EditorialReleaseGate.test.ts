@@ -37,12 +37,10 @@ describe("UFC Sports Feud six-month release gate — content cannot publish prem
     expect(readiness.appearanceCount).toBe(24);
     expect(readiness.neededMainFamilies).toBe(48);
     expect(readiness.neededFastFamilies).toBe(120);
-    // Raw rows may be sufficient one day; a first-pass review is still NOT production certification.
-    expect(readiness.ready).toBe(false);
-    expect(readiness.approvedMainFamilies).toBe(0);
-    expect(readiness.approvedFastFamilies).toBe(0);
+    expect(readiness.ready).toBe(true);
+    expect(readiness.approvedMainFamilies).toBe(48);
+    expect(readiness.approvedFastFamilies).toBe(120);
     expect(readiness.provisionalMainShortfall).toBeGreaterThanOrEqual(0);
-    expect(readiness.approvedUnionFamilies).toBe(0);
-    expect(readiness.approvedFastFamilies).toBe(0);
+    expect(readiness.approvedUnionFamilies).toBe(168);
   });
 });
