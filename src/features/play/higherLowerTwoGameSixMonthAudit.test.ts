@@ -11,6 +11,7 @@ import { footballHigherLowerQuestionEvidence, footballHigherLowerSemanticPairKey
 import { nbaHigherLowerSemanticPairKey } from "../nba/nbaHigherLowerModel";
 import { createUfcHigherLowerOfficialBoard, UFC_HIGHER_LOWER_FIRST_SLOT, UFC_HIGHER_LOWER_RESERVED_SLOTS } from "./ufcHigherLowerModel";
 import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
+import { ufcFactualLedgerSubjects, ufcFactualExpansion } from "../back-room/ufcFactualLedger";
 
 type Comparison = {
   id: string; answer: "higher" | "lower"; metricKey: string; difficulty: string;
@@ -48,6 +49,33 @@ function actualDates() {
   }
   return results;
 }
+/** Independent source-row recount, not a comparison of two derived UI values. */
+function ufcFactProof(subjectId: string, metric: string) {
+  const subject = ufcFactualLedgerSubjects.find(row => row.id === subjectId);
+  if (!subject) throw new Error("Unknown UFC factual source subject " + subjectId);
+  const fights = subject.fights.filter(fight => fight.date <= "2026-08-18");
+  const wins = fights.filter(fight => fight.result === "win");
+  const finishes = wins.filter(fight =>
+    fight.methodCategory === "ko-tko" || fight.methodCategory === "submission");
+  const matching = metric === "bouts" ? fights
+    : metric === "wins" ? wins
+      : metric === "finishes" ? finishes
+        : metric === "ko" ? wins.filter(fight => fight.methodCategory === "ko-tko")
+          : metric === "submissions" ? wins.filter(fight => fight.methodCategory === "submission")
+            : metric === "title_wins" ? wins.filter(fight =>
+              fight.titleFight && fight.championshipEligible !== false
+              && !/ultimate fighter|tournament/i.test(fight.division))
+              : (() => { throw new Error("Unknown UFC source metric " + metric); })();
+  return {
+    source: subject.scope === "recognizable-expansion" ? "UFCStats pinned expansion" : "canonical ranked UFC fight ledger",
+    provider: "ufcstats",
+    snapshot: "2026-08-18",
+    subjectId,
+    sourceCommit: ufcFactualExpansion.provenance.core.commit,
+    total: matching.length,
+    fightIds: matching.map(fight => fight.id),
+  };
+}
 function validateBoard(sport: AuditSport, questions: Comparison[]) {
   expect(questions).toHaveLength(10);
   expect(new Set(questions.map(q => q.id)).size).toBe(10);
@@ -61,6 +89,12 @@ function validateBoard(sport: AuditSport, questions: Comparison[]) {
   if (sport === "football") {
     expect(questions.filter(q => q.league === "NFL")).toHaveLength(5);
     expect(questions.filter(q => q.league === "CFB")).toHaveLength(5);
+  }
+  if (sport === "ufc") {
+    for (const q of questions) {
+      expect(ufcFactProof(q.known.subjectId, q.metricKey).total).toBe(q.known.value);
+      expect(ufcFactProof(q.hidden.subjectId, q.metricKey).total).toBe(q.hidden.value);
+    }
   }
 }
 function pairKey(sport: AuditSport, q: Comparison) {
@@ -154,8 +188,10 @@ function capture(sport: AuditSport, day: string, boards: Comparison[][], status:
         category: q.category, difficulty: q.difficulty, league: q.league ?? sport,
         known: q.known, hidden: q.hidden, answer: q.answer,
         sourceBinding: evidence ?? (sport === "nba"
-          ? "nbaFindLeaderSubjects / nbaHigherLowerSupplement pinned app catalogs"
-          : "ufcFactualLedgerSubjects; UFC-only fights through 2026-08-18"),
+          ? { catalog: "nbaFindLeaderSubjects / nbaHigherLowerSupplement", knownName: q.known.name,
+            hiddenName: q.hidden.name, metricKey: q.metricKey, sourceClass: "pinned app catalog" }
+          : { known: ufcFactProof(q.known.subjectId, q.metricKey),
+              hidden: ufcFactProof(q.hidden.subjectId, q.metricKey) }),
         gradingCorrect: q.answer === (q.hidden.value > q.known.value ? "higher" : "lower"),
       });
     }
@@ -244,6 +280,11 @@ describe("Official Daily Higher or Lower two-game contract and content capacity"
           actualRequiredBoards: Object.fromEntries(Object.entries(artifact.activeDates)
             .map(([sport, dates]) => [sport, dates.length * 2])),
           capturedComparisons: artifact.records.length,
+          capturedBySport: Object.fromEntries(["football", "ufc", "nba"].map(sport => [
+            sport, artifact.records.filter(record => record.sport === sport).length,
+          ])),
+          correctGradeProofs: artifact.records.filter(record => record.gradingCorrect === true).length,
+          distinctMatchups: new Set(artifact.records.map(record => String(record.sport) + ":" + String(record.matchupKey))).size,
           canonicalRotationReadyForAllSports: false,
         },
       }, null, 2) + "\n");
