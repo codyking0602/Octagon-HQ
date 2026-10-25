@@ -1,7 +1,9 @@
+import { HigherLowerRoundHeader, HigherLowerPrompt, HigherLowerChoices, HigherLowerFeedback } from "./HigherLowerStandard";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 import "../../styles/football-higher-lower.css";
 import "../../styles/ufc-higher-lower.css";
+import "../../styles/higher-lower-standard.css";
 
 type Row = Record<string, unknown>;
 const record = (value: unknown): Row =>
@@ -74,28 +76,18 @@ export function OfficialUfcHigherLowerDailyView({
   const index = Number(state.index ?? 0);
   const feedback = record(state.last_result);
   return <section className="football-higher-lower ufc-higher-lower" data-sport="ufc" aria-label="Official UFC Higher or Lower Daily">
-    <header className="higher-lower-game-header">
-      <span aria-hidden="true">🥊</span>
-      <div><small>OFFICIAL UFC DAILY · QUESTION {index + 1} OF 10</small><strong>HIGHER OR LOWER</strong></div>
-      <span>{Number(state.correct_count ?? 0)}/{index}</span>
-    </header>
-    <div className="higher-lower-progress" aria-hidden="true"><i style={{ width: index * 10 + "%" }} /></div>
-    {feedback.correct !== undefined ? <p className={"higher-lower-feedback is-visible " + (feedback.correct === true ? "is-correct" : "is-wrong")} role="status">
-      {feedback.correct === true ? "CORRECT" : "NOT QUITE"} · Previous comparison: {String(record(feedback.known).name ?? "")} {String(record(feedback.known).formattedValue ?? "")} vs {String(record(feedback.hidden).name ?? "")} {String(record(feedback.hidden).formattedValue ?? "")}
-    </p> : null}
-    <section className="higher-lower-stat-label">
-      <small>OFFICIAL UFC CAREER NUMBERS</small>
-      <h2>{String(current.metricLabel ?? "UFC comparison")}</h2>
-      <p>Official UFC results through August 18, 2026 · Not total MMA career</p>
-    </section>
+    <HigherLowerRoundHeader sport="OFFICIAL UFC DAILY"
+      index={index} correct={Number(state.correct_count ?? 0)} />
+    {feedback.correct !== undefined ? <HigherLowerFeedback correct={feedback.correct === true}
+      detail={"Previous: " + String(record(feedback.known).name ?? "") + " vs " + String(record(feedback.hidden).name ?? "") + " · " + String(record(feedback.hidden).formattedValue ?? "")} /> : null}
+    <HigherLowerPrompt category={String(current.category ?? "UFC CAREER")}
+      metric={String(current.metricLabel ?? "UFC comparison")} />
     <section className="higher-lower-matchup">
       <UfcSubjectCard subject={known} />
       <div className="higher-lower-vs">VS</div>
       <UfcSubjectCard subject={hidden} hidden />
     </section>
-    <section className="higher-lower-controls" aria-label="Higher or lower choice">
-      <button type="button" disabled={busy || !current.id} onClick={() => onAdvance({ choice: "higher" })}>↑ HIGHER</button>
-      <button type="button" disabled={busy || !current.id} onClick={() => onAdvance({ choice: "lower" })}>↓ LOWER</button>
-    </section>
+    <HigherLowerChoices disabled={busy || !current.id}
+      onChoose={choice => onAdvance({ choice })} />
   </section>;
 }

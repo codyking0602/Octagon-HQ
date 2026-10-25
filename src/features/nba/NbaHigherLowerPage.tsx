@@ -1,8 +1,10 @@
+import { HigherLowerIntro, HigherLowerRoundHeader, HigherLowerPrompt, HigherLowerChoices, HigherLowerFeedback } from "../play/HigherLowerStandard";
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-higher-lower.css";
 import "../../styles/nba-higher-lower.css";
 import "../../styles/nba-game-actions.css";
+import "../../styles/higher-lower-standard.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { asChallengeJson, challengeRecord, footballChallengeUrl } from "../back-room/footballChallengeRuntime";
@@ -216,16 +218,7 @@ export default function NbaHigherLowerPage() {
     </section></main>;
   }
   if (!board) return <main className={shell} style={nbaTheme}>
-    <section className="higher-lower-hero nba-higher-lower-intro">
-      <p className="eyebrow">NBA · OWNER PREVIEW</p>
-      <h1>HIGHER OR LOWER</h1>
-      <p className="nba-higher-lower-intro__copy">Ten quick comparisons. Know the player, make the call.</p>
-      <div className="nba-higher-lower-intro__highlights" aria-label="Game rules">
-        <span>10 QUESTIONS</span><span>EASY TO TOUGH</span><span>ACCURACY FIRST</span>
-      </div>
-      <p className="nba-higher-lower-intro__topics">Career &amp; season stats · 3-pointers · Honors · Draft picks</p>
-      <button className="higher-lower-start" type="button" onClick={newBoard}>START NBA BOARD</button>
-    </section>
+    <HigherLowerIntro sport="NBA" preview onStart={newBoard} />
   </main>;
 
   if (result) return <main className={shell} style={nbaTheme}>
@@ -265,18 +258,11 @@ export default function NbaHigherLowerPage() {
       <span>PROFILE CHALLENGE</span><strong>{match.creator.displayName} sent this exact NBA Higher or Lower board.</strong>
       <small>Same questions and order. Accuracy first; time only breaks a tie.</small>
     </section>}
-    <section className="higher-lower-game-header" ref={boardHeaderRef}>
-      <button type="button" onClick={() => navigate("/nba")} aria-label="Back to NBA HQ">←</button>
-      <div><small>NBA · QUESTION {index + 1} OF 10</small><strong>HIGHER OR LOWER</strong></div>
-      <span>{answers.filter(row => row.correct).length}/{answers.length}</span>
-    </section>
-    <div className="higher-lower-progress" aria-hidden="true">
-      <i style={{ width: ((index + (revealed ? 1 : 0)) / board.questions.length * 100) + "%" }} />
-    </div>
-    <section className="higher-lower-stat-label">
-      <small>{question.category.toUpperCase()}</small><h2>{question.metricLabel}</h2>
-      {question.note && <p>{question.note}</p>}
-    </section>
+    <HigherLowerRoundHeader sport="NBA" index={index}
+      correct={answers.filter(row => row.correct).length}
+      completed={index + (revealed ? 1 : 0)}
+      headerRef={boardHeaderRef} onBack={() => navigate("/nba")} backLabel="Back to NBA HQ" />
+    <HigherLowerPrompt category={question.category} metric={question.metricLabel} note={question.note} />
     <section className="higher-lower-matchup">
       <article className="higher-lower-card is-known">
         <div className="higher-lower-card__identity"><span>{question.known.context}</span></div>
@@ -290,18 +276,9 @@ export default function NbaHigherLowerPage() {
         <strong>{revealed ? question.hidden.formattedValue : "?"}</strong>
       </article>
     </section>
-    <section className="higher-lower-controls" aria-label="Higher or lower choice">
-      <button type="button" disabled={Boolean(revealed)}
-        className={revealed && question.answer === "higher" ? "is-answer" : revealed === "higher" ? "is-miss" : ""}
-        onClick={() => answer("higher")}><b>↑</b><span>HIGHER</span></button>
-      <button type="button" disabled={Boolean(revealed)}
-        className={revealed && question.answer === "lower" ? "is-answer" : revealed === "lower" ? "is-miss" : ""}
-        onClick={() => answer("lower")}><b>↓</b><span>LOWER</span></button>
-    </section>
+    <HigherLowerChoices revealed={revealed} answer={question.answer} onChoose={answer} />
     <NbaPhotoCredits subjects={[question.known, question.hidden]} />
-    <div className={"higher-lower-feedback" + (revealed ? " is-visible" : "")} role="status">
-      {revealed && <><strong>{correct ? "CORRECT" : "MISS"}</strong>
-        <span>{question.hidden.formattedValue} is {question.answer} than {question.known.formattedValue}.</span></>}
-    </div>
+    <HigherLowerFeedback correct={revealed === null ? null : correct}
+      detail={revealed ? question.hidden.formattedValue + " is " + question.answer + " than " + question.known.formattedValue + "." : undefined} />
   </main>;
 }

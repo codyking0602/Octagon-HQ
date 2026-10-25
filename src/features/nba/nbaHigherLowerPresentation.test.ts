@@ -22,7 +22,7 @@ describe("NBA Higher or Lower owner-preview integration", () => {
     expect(pageSource).toContain('import "../../styles/football-higher-lower.css"');
     expect(pageSource).toContain("nbaHigherLowerPortraitSource");
     expect(pageSource).toContain("nbaHigherLowerIsGenericSilhouette");
-    expect(pageSource).toContain('ref={boardHeaderRef}');
+    expect(pageSource).toContain("headerRef={boardHeaderRef}");
     expect(pageSource).toContain("useLayoutEffect");
     expect(pageSource).toContain("scrollIntoView");
     expect(pageSource).toContain("question.known.context");
@@ -37,7 +37,7 @@ describe("NBA Higher or Lower owner-preview integration", () => {
     expect(styles).toContain("scroll-margin-top");
     expect(styles).toContain(".nba-higher-lower-portrait.is-editorial img");
     expect(pageSource).toContain("reviewContext(question)");
-    expect(pageSource).toContain("nba-higher-lower-intro__highlights");
+    expect(pageSource).toContain('<HigherLowerIntro sport="NBA" preview onStart={newBoard} />');
     expect(pageSource).not.toContain("3/5/2");
     expect(pageSource).not.toContain('className="higher-lower-rules"');
     expect(styles).toContain("background: linear-gradient(90deg, #b8752c, #efb35b)");
