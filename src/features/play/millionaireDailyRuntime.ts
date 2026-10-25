@@ -317,4 +317,3 @@ export function buildMillionaireDailySetup(
   assertMillionaireRun(run);
   return millionairePublicationFromRun(league, day, scheduleVersion, runIndex, hostNumber, run);
 }
-
