@@ -19,6 +19,11 @@ try {
   const published=JSON.parse(readFileSync(resolve("data/generated/football",file),"utf8"));
   const generated=JSON.parse(readFileSync(resolve(args.generated),"utf8"));
   const report=compareGmContractSnapshots(published,generated,at);
+  const sourceExit=Number(args.sourceExit??"0");
+  if(!Number.isInteger(sourceExit) || sourceExit!==0) {
+    report.status="source-quality-review-blocked";
+    report.sourceGeneratorExit=sourceExit;
+  }
   report.publishedFile=file;
   mkdirSync(dirname(output),{recursive:true});
   writeFileSync(output,JSON.stringify(report,null,2)+"\n");
