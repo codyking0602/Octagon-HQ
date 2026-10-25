@@ -9,7 +9,7 @@ import {
 } from "./hitTheNumberDailyRuntime";
 import { hitTheNumberRandomPoolQuality } from "./hitTheNumberPoolQuality";
 import { hitTheNumberStatRows, HIT_THE_NUMBER_STATS } from "./hitTheNumberEngine";
-import { previewApprovedDailyRotation } from "./sixMonthDailyRotationAudit";
+import { auditMergedPartOneCalendar } from "./sixMonthDailyRotationAudit";
 
 type Obj = Record<string, unknown>;
 function children(setup: { publicSetup: Obj; privateSetupEvidence: Obj; privateGradingEvidence: Obj }) {
@@ -27,9 +27,9 @@ function fighterIds(setup: Obj) {
 }
 const expectedChoices: Record<number, number> = { 4: 12, 5: 14, 6: 16 };
 
-describe("six-month Official Hit the Number seed/content audit (provisional Part-1 cutover)", () => {
+describe("six-month Official Hit the Number seed/content audit (merged canonical Part 1 dates)", () => {
   it("generates distinct, fact-backed, solvable 4–6-pick Football and UFC boards at planned 2x demand", () => {
-    const slots = previewApprovedDailyRotation().slots.filter(slot =>
+    const slots = auditMergedPartOneCalendar().filter(slot =>
       slot.game === "hit_the_number" && (slot.sport === "football" || slot.sport === "ufc"));
     const fullBoards = new Set<string>();
     const subjectMetric = new Map<string, number>();
@@ -55,7 +55,9 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
     const canonicalRows = new Map(hitTheNumberStatRows.map(row => [row.fighterId, row.values]));
     for (const slot of slots) {
       const sport = slot.sport === "football" ? "football" : "ufc";
-      const version = sport + "-six-month-candidate-v1-NOT-LIVE";
+      const version = sport === "football"
+        ? slot.day === "2026-10-25" ? "football-daily-v20-resume-v18-oct3" : "football-daily-v21-locked-oct25"
+        : "ufc-daily-v21-48h-oct25";
       report.scheduledDates[sport]++;
       const publication = slot.sport === "football"
         ? buildFootballDailyPersistenceSetup(slot.day, version, "hit_the_number")
@@ -121,9 +123,9 @@ describe("six-month Official Hit the Number seed/content audit (provisional Part
       }
     }
     // Any failure in this test blocks prospective 2x content signoff, not old results.
-    expect(report.scheduledDates.football).toBeGreaterThan(10);
-    expect(report.scheduledDates.ufc).toBeGreaterThanOrEqual(5);
+    expect(report.scheduledDates.football).toBe(15);
+    expect(report.scheduledDates.ufc).toBe(6);
     expect(report.uniqueBoards).toEqual(report.childBoards);
-    console.info("SIX_MONTH_HIT_NUMBER_PROVISIONAL_AUDIT " + JSON.stringify(report));
+    console.info("SIX_MONTH_HIT_NUMBER_CANONICAL_PART1_AUDIT " + JSON.stringify(report));
   }, 180_000);
 });
