@@ -176,7 +176,7 @@ export const NBA_HIGHER_LOWER_DAILY_ADAPTER: TodayChallengeAdapter = {
 export function todayChallengeAdapter(gameType: DailyGameType | string | undefined): TodayChallengeAdapter | null {
   if (gameType === "higher_lower") return NBA_HIGHER_LOWER_DAILY_ADAPTER;
   if (!gameType || !(gameType in TODAY_CHALLENGE_ADAPTERS)) return null;
-  return TODAY_CHALLENGE_ADAPTERS[gameType as OfficialDailyGameType];
+  return TODAY_CHALLENGE_ADAPTERS[gameType as keyof typeof TODAY_CHALLENGE_ADAPTERS];
 }
 
 export function todayChallengeGameDefinition(gameType: DailyGameType | string | undefined) {

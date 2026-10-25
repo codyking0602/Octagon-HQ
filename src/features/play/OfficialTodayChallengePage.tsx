@@ -8,6 +8,7 @@ import {
   OfficialBlindRankScoreSummary,
 } from "./OfficialBlindRankResult";
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
+import { OfficialFootballHigherLowerDailyView } from "./OfficialFootballHigherLowerDailyView";
 import {
   DailyTwoGamePresentationIntermission,
   DailyTwoGameStatus,
@@ -154,6 +155,8 @@ export function OfficialTodayChallengeContent({
           onAdvance={onAdvance}
           onNavigate={onNavigate}
         />
+      ) : projection.gameType === "higher_lower" && projection.sport === "football" ? (
+        <OfficialFootballHigherLowerDailyView projection={projection} busy={busy} onAdvance={onAdvance} />
       ) : projection.gameType === "hit_the_number" ? (
         <OfficialHitTheNumberDailyView
           projection={presentationProjection}
@@ -212,7 +215,9 @@ export function OfficialTodayChallengeContent({
         && projection.gameType !== "bar_trivia"
         && projection.gameType !== "average_fan" ? (
         <OfficialResultActions
-          casualRoute={officialDailyGameAllowsCasualReplay(projection.gameType) ? adapter.casualRoute : null}
+          casualRoute={officialDailyGameAllowsCasualReplay(projection.gameType)
+             ? projection.gameType === "higher_lower" && projection.sport === "football"
+               ? "/football/higher-lower" : adapter.casualRoute : null}
           onNavigate={onNavigate}
         />
       ) : null}

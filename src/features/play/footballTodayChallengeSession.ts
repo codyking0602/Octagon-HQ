@@ -504,6 +504,34 @@ function grade(
     };
   }
 
+  if (gameType === "higher_lower") {
+    const answers = finalSubmission.answers;
+    const expectedIds = context.privateGradingEvidence.question_ids;
+    const expectedChoices = context.privateGradingEvidence.correct_choices;
+    if (!Array.isArray(answers) || answers.length !== 10
+      || !Array.isArray(expectedIds) || expectedIds.length !== 10
+      || !Array.isArray(expectedChoices) || expectedChoices.length !== 10) {
+      throw new Error("Football Higher or Lower requires ten completed comparisons.");
+    }
+    let correct = 0;
+    const rows = answers.map((answer, index) => {
+      if (!answer || typeof answer !== "object" || Array.isArray(answer)) {
+        throw new Error("Football Higher or Lower answer is invalid.");
+      }
+      const response = answer as JsonRecord;
+      const choice = response.choice;
+      if (response.question_id !== expectedIds[index]
+        || (choice !== "higher" && choice !== "lower")
+        || (expectedChoices[index] !== "higher" && expectedChoices[index] !== "lower")) {
+        throw new Error("Football Higher or Lower answer mismatches its official board.");
+      }
+      const hit = choice === expectedChoices[index];
+      if (hit) correct += 1;
+      return { question_id: expectedIds[index], choice, correct: hit };
+    });
+    return { native: correct, normalized: correct * 10, result: { correct_count: correct, answers: rows } };
+  }
+
   if (gameType === "keep_4_cut_4") {
     const kept = stringArray(finalSubmission.kept_ids, "Football Keep Cut kept ids");
     const board = stringArray(context.privateGradingEvidence.fighter_ids, "Football Keep Cut board ids");

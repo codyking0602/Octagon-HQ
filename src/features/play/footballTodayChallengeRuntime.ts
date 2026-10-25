@@ -58,6 +58,8 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
+import { buildFootballHigherLowerDailyPublication } from "./footballHigherLowerDailyPublication";
+
 export const FOOTBALL_DAILY_RUNTIME_VERSION = "football-official-daily-v1" as const;
 export const FOOTBALL_BLIND_RESUME_DAILY_CONTENT_VERSION = "football-blind-resume-daily-v4" as const;
 export const FOOTBALL_BLIND_RESUME_DAILY_SCORING_VERSION = "football-blind-resume-score-v4" as const;
@@ -354,6 +356,7 @@ export function buildFootballOfficialDailySetup(
     );
     case "bar_trivia": return buildBarTriviaDailySetup(footballBarTriviaLeagueForDay(day), day, scheduleVersion);
     case "average_fan": return buildAverageFanDailySetup("football", day, scheduleVersion, publicationHistory);
+    case "higher_lower": return buildFootballHigherLowerDailyPublication(day, scheduleVersion, publicationHistory);
     case "who_am_i": return buildWhoAmIDailyPublication(
       createFootballWhoAmIDailyRound(
         seededLineupRandom(FOOTBALL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
