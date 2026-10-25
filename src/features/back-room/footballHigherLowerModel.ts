@@ -1,6 +1,7 @@
 import {
   footballFactualRecords,
   formatFootballFact,
+  getFootballFact,
   getFootballSubject,
   queryFootballSubjects,
   type FootballFactMetricId,
@@ -76,6 +77,13 @@ interface MetricRow {
   value: number;
   formattedValue: string;
   referenceYear: number | null;
+}
+
+export interface FootballHigherLowerPreviousComparisonKeys {
+  /** Subject pair irrespective of order or metric. */
+  subjectPairs: ReadonlySet<string>;
+  /** An individual subject compared on the same metric on a previous date. */
+  subjectMetrics: ReadonlySet<string>;
 }
 
 interface PairCandidate {
@@ -831,7 +839,7 @@ function toQuestion(pair: PairCandidate, answer: FootballHigherLowerChoice): Foo
   };
 }
 
-function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: number) {
+function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: number, candidates: readonly PairCandidate[]) {
   const random = seededLineupRandom(FOOTBALL_HIGHER_LOWER_VERSION, seed, scope, attempt);
   const leagues = leaguePattern(scope, random);
   const difficulties = difficultyPattern(random);
@@ -849,7 +857,7 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
     const answer = answers[index]!;
     const requireModern = modernity[index]!;
     const lastCategory = questions.at(-1)?.category;
-    const matching = allPairCandidates.filter((pair) => {
+    const matching = candidates.filter((pair) => {
       if (pair.league !== league || pair.difficulty !== difficulty) return false;
       if (requireModern && !pair.modern) return false;
       if ((metricCounts.get(pair.metricKey) ?? 0) >= 2) return false;
@@ -893,12 +901,87 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
   return questions;
 }
 
+export function footballHigherLowerSemanticPairKey(leftId: string, rightId: string) {
+  const left = getFootballSubject(leftId);
+  const right = getFootballSubject(rightId);
+  if (!left || !right) throw new Error("Higher or Lower requires canonical subjects.");
+  return [entityKey(left), entityKey(right)].sort().join("|");
+}
+
+export function footballHigherLowerSubjectMetricKey(subjectId: string, metricKey: string) {
+  const subject = getFootballSubject(subjectId);
+  if (!subject) throw new Error("Higher or Lower requires a canonical subject.");
+  return metricKey + "|" + entityKey(subject);
+}
+
+export function footballHigherLowerExclusionKeys(
+  questions: readonly FootballHigherLowerQuestion[],
+): FootballHigherLowerPreviousComparisonKeys {
+  return {
+    subjectPairs: new Set(questions.map(q => footballHigherLowerSemanticPairKey(q.known.subjectId, q.hidden.subjectId))),
+    subjectMetrics: new Set(questions.flatMap(q => [
+      footballHigherLowerSubjectMetricKey(q.known.subjectId, q.metricKey),
+      footballHigherLowerSubjectMetricKey(q.hidden.subjectId, q.metricKey),
+    ])),
+  };
+}
+
+/** Recheck frozen comparison facts against their canonical fact records and source IDs. */
+export function footballHigherLowerQuestionEvidence(question: FootballHigherLowerQuestion) {
+  const spec = metricSpecs.find(metric => metric.key === question.metricKey);
+  if (!spec || spec.league !== question.league || spec.category !== question.category
+    || spec.label !== question.metricLabel
+    || question.known.subjectId === question.hidden.subjectId
+    || question.known.value === question.hidden.value
+    || question.difficulty !== pairDifficulty(question.known.value, question.hidden.value)
+    || question.answer !== (question.hidden.value > question.known.value ? "higher" : "lower")) {
+    throw new Error("Invalid Football Higher or Lower comparison identity, metric, or grading: " + question.id);
+  }
+  const audit = (row: FootballHigherLowerSubject) => {
+    const subject = getFootballSubject(row.subjectId);
+    if (!subject || !subjectEligible(subject, spec)) throw new Error("Ineligible comparison subject: " + row.subjectId);
+    const entry = spec.metricId ? getFootballFact(subject.id, spec.metricId) : null;
+    const expected = spec.valueFromSubject ? spec.valueFromSubject(subject) : entry?.fact.value;
+    if (!Number.isFinite(expected) || expected !== row.value
+      || formatMetricValue(spec, row.value) !== row.formattedValue) {
+      throw new Error("Invalid or unbound comparison fact: " + question.id + " " + subject.id);
+    }
+    if (spec.metricId && (!entry || !entry.sources.length || entry.sources.some(s => !s.url))) {
+      throw new Error("Missing canonical factual source: " + question.id + " " + subject.id);
+    }
+    const expectedYear = metricReferenceYear(subject, spec);
+    if (row.referenceYear !== (expectedYear ?? undefined)) {
+      throw new Error("Invalid comparison reference year: " + question.id + " " + subject.id);
+    }
+    return {
+      subjectId: subject.id, kind: subject.kind, school: subject.school ?? null,
+      season: subject.season ?? row.referenceYear ?? null,
+      value: row.value,
+      metricId: spec.metricId ?? null,
+      sourceIds: entry?.sources.map(source => source.id) ?? [],
+      // The NFL Draft metadata entry is a registry fact, not a ledger-source audit.
+      registryOnly: !spec.metricId,
+    };
+  };
+  return { known: audit(question.known), hidden: audit(question.hidden) };
+}
+
+/**
+ * Casual remains unchanged without exclusions. For future Official Daily boards,
+ * exclude previous-date subject pairings AND subject/metric reuse structurally.
+ */
 export function createFootballHigherLowerBoard(
   seed: string,
   scope: FootballHigherLowerScope,
+  excluded?: FootballHigherLowerPreviousComparisonKeys,
 ): FootballHigherLowerBoard {
+  const candidates = excluded ? allPairCandidates.filter(pair => (
+    !excluded.subjectPairs.has(footballHigherLowerSemanticPairKey(pair.left.subject.id, pair.right.subject.id))
+    && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.left.subject.id, pair.metricKey))
+    && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.right.subject.id, pair.metricKey))
+  )) : allPairCandidates;
   for (let attempt = 0; attempt < 1_000; attempt += 1) {
-    const questions = tryBuildBoard(seed, scope, attempt);
+    const questions = tryBuildBoard(seed, scope, attempt, candidates);
     if (questions) {
       return {
         version: FOOTBALL_HIGHER_LOWER_VERSION,
