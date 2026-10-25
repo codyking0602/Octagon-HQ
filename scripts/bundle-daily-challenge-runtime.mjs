@@ -27,6 +27,12 @@ const bundles = [
     requiredExports: ["advanceMillionaireDailyRuntime"],
   },
   {
+    label: "Bar Trivia lean Daily advance runtime",
+    entry: resolve(repoRoot, "src/features/play/barTriviaDailyAdvanceRuntime.ts"),
+    fileName: "bar-trivia-advance.generated.mjs",
+    requiredExports: ["advanceBarTriviaDailyRuntime"],
+  },
+  {
     label: "Football Daily publication runtime",
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationAll.ts"),
     fileName: "football-publication.generated.mjs",
