@@ -443,3 +443,29 @@ begin
 end;
 $function$
 ;
+
+
+-- Prior committed Football boards are authoritative for match-up exclusions.
+-- Only the server/service role may read these private frozen facts.
+create or replace function public.get_football_higher_lower_publication_history(
+  p_before_day date
+) returns jsonb language sql stable security definer set search_path = '' as $history$
+  select coalesce(jsonb_agg(question.value order by daily.central_day, question.ordinality), '[]'::jsonb)
+  from private.daily_challenges daily
+  join private.daily_challenge_schedule_versions schedule on schedule.version = daily.schedule_version
+  join private.daily_challenge_setups setup on setup.id = daily.setup_id
+  cross join lateral jsonb_array_elements(
+    case when setup.private_setup_evidence ->> 'format_version' = 'daily-two-game-average-v1'
+      then coalesce(setup.private_setup_evidence #> '{rounds,0,private_setup_evidence,board,questions}', '[]'::jsonb)
+         || coalesce(setup.private_setup_evidence #> '{rounds,1,private_setup_evidence,board,questions}', '[]'::jsonb)
+      else coalesce(setup.private_setup_evidence #> '{board,questions}', '[]'::jsonb)
+    end
+  ) with ordinality as question(value, ordinality)
+  where schedule.sport = 'football'
+    and daily.game_type = 'higher_lower'
+    and daily.central_day < p_before_day;
+$history$;
+revoke all on function public.get_football_higher_lower_publication_history(date)
+  from public, anon, authenticated;
+grant execute on function public.get_football_higher_lower_publication_history(date)
+  to service_role;
