@@ -72,8 +72,16 @@ begin
   v_new:=public.get_daily_challenge_materialization_request('ufc','2026-10-26T20:00:00Z'::timestamptz);
   if v_old->>'central_day'<>'2026-10-25' or v_new->>'central_day'<>'2026-10-25'
     or v_old->>'schedule_version'<>v_new->>'schedule_version'
+    or v_old->>'schedule_version'<>'play-rotation-v20-resume-v18-oct3'
+    or v_old->>'expected_game'<>'millionaire'
     or v_old->>'expected_game'<>v_new->>'expected_game' then
     raise exception 'UFC retry must resolve exactly the same 48-hour board: % / %',v_old,v_new;
+  end if;
+  v_old:=public.get_daily_challenge_materialization_request('ufc','2026-10-27T20:00:00Z'::timestamptz);
+  if v_old->>'central_day'<>'2026-10-27'
+    or v_old->>'schedule_version'<>'ufc-daily-v21-48h-oct25'
+    or v_old->>'expected_game'<>'sports_feud' then
+    raise exception 'new UFC 48-hour cycle failed to start with Oct 27 Sports Feud: %',v_old;
   end if;
   v_old:=public.get_daily_challenge_materialization_request('nba','2026-11-01T20:00:00Z'::timestamptz);
   v_new:=public.get_daily_challenge_materialization_request('nba','2026-11-02T20:00:00Z'::timestamptz);
@@ -93,20 +101,20 @@ do $publication$
 declare v_first jsonb;v_retry jsonb;v_rejected boolean:=false; v_fallback_rejected boolean:=false;
 begin
   v_first:=public.publish_daily_challenge_setup(
-    date '2026-10-25','ufc-daily-v21-48h-oct25','find_leader',
-    'cadence-proof:ufc:2026-10-25','cadence-proof-v1','play-official-score-v1',
+    date '2026-10-27','ufc-daily-v21-48h-oct25','sports_feud',
+    'cadence-proof:ufc:2026-10-27','cadence-proof-v1','family-feud-score-v2',
     '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
   v_retry:=public.publish_daily_challenge_setup(
-    date '2026-10-25','ufc-daily-v21-48h-oct25','find_leader',
-    'cadence-proof:ufc:2026-10-25','cadence-proof-v1','play-official-score-v1',
+    date '2026-10-27','ufc-daily-v21-48h-oct25','sports_feud',
+    'cadence-proof:ufc:2026-10-27','cadence-proof-v1','family-feud-score-v2',
     '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
   if v_first->>'id' is null or v_first->>'id' is distinct from v_retry->>'id' then
     raise exception 'Daily publication retry created a different identity';
   end if;
   begin
     perform public.publish_daily_challenge_setup(
-      date '2026-10-26','ufc-daily-v21-48h-oct25','find_leader',
-      'cadence-proof:ufc:2026-10-26','cadence-proof-v1','play-official-score-v1',
+      date '2026-10-28','ufc-daily-v21-48h-oct25','sports_feud',
+      'cadence-proof:ufc:2026-10-28','cadence-proof-v1','family-feud-score-v2',
       '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,null);
   exception when others then v_rejected:=true;
   end;
