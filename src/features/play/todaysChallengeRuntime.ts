@@ -634,6 +634,14 @@ export function buildOfficialDailySetup(
   if (!scheduleVersion.trim()) throw new Error("Official daily schedule version is required.");
 
   if (dailyUsesTwoGameAverage(gameType, day)) {
+    if (gameType === "higher_lower") {
+      const first = buildUfcHigherLowerDailyPublication(day, scheduleVersion, 0);
+      const second = buildUfcHigherLowerDailyPublication(day, scheduleVersion, 1);
+      return buildTwoGameDailyPublication({
+        sport: "ufc", gameType, day, scheduleVersion,
+        children: [first, second],
+      });
+    }
     if (gameType === "find_leader") {
       return buildTwoGameDailyPublication({
         sport: "ufc",
@@ -1050,6 +1058,9 @@ function scoreTwoGameChild(
   context: OfficialDailyRuntimeContext,
   advanced: OfficialDailyAdvanceResult,
 ) {
+  if (context.gameType === "higher_lower") {
+    return Number(advanced.finalSubmission?.normalized_score);
+  }
   if (context.gameType === "find_leader") {
     return Number(advanced.publicState.native_progress ?? 0) * 10;
   }
