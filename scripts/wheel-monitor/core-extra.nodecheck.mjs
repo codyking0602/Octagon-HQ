@@ -85,3 +85,11 @@ test('official UFC ties use competition ranks rather than malformed sequential r
  const duplicated=rows.map(x=>({...x})); duplicated.at(-1).name='Contender 0';
  assert.equal(validateOfficialUfcTable(duplicated,'Welterweight').valid,false);
 });
+
+test('a name-only transfer guess is not a verified factual correction',()=>{
+ const old={sport:'nfl',team:'ARI',family:'WR',name:'Unique Name',grade:88,sourceStatus:'matched'};
+ const candidate={...old,sourceStatus:'missing',transferCandidateTeam:'SEA'};
+ const [finding]=compareEvidence([candidate],{identities:[old]});
+ assert.notEqual(finding.classification,'mandatory-factual-correction');
+ assert.ok(finding.signals.some(x=>x.kind==='possible-transfer-name-match-requires-espn-id'));
+});
