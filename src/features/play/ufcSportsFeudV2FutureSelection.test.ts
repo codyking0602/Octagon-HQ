@@ -1,7 +1,7 @@
 import { describe,expect,it } from "vitest";
 import type { SportsFeudAuthoredQuestion } from "./sportsFeudBankTypes";
 import { planUfcFeudV2Appearance,UFC_FEUD_V2_UNIQUE_APPEARANCES } from "./ufcSportsFeudV2FutureSelection";
-import { UFC_V2_NEW_MAIN_DRAFTS,UFC_V2_NEW_FAST_DRAFTS,ufcFeudSemanticFamily }
+import { UFC_V2_APPROVED_MAIN_IDS,UFC_V2_APPROVED_FAST_IDS,UFC_V2_NEW_MAIN_DRAFTS,UFC_V2_NEW_FAST_DRAFTS,ufcFeudSemanticFamily }
   from "./ufcSportsFeudV2EditorialReleaseGate";
 
 const make=(round:"main"|"fast",family:string):SportsFeudAuthoredQuestion=>({
@@ -63,7 +63,7 @@ describe("future UFC 24-appearance selector — not active in live Daily",()=>{
     expect(()=>planUfcFeudV2Appearance(shortage.main,shortage.fast,0)).toThrow("lacks");
     const overlap=synthetic(48,120,1);
     expect(()=>planUfcFeudV2Appearance(overlap.main,overlap.fast,0)).toThrow("share too many");
-    expect(()=>planUfcFeudV2Appearance(UFC_V2_NEW_MAIN_DRAFTS,UFC_V2_NEW_FAST_DRAFTS,0)).toThrow("lacks");
+    expect(()=>planUfcFeudV2Appearance(UFC_V2_NEW_MAIN_DRAFTS.filter(q=>UFC_V2_APPROVED_MAIN_IDS.has(q.id)),UFC_V2_NEW_FAST_DRAFTS.filter(q=>UFC_V2_APPROVED_FAST_IDS.has(q.id)),0)).toThrow("lacks");
     expect(()=>planUfcFeudV2Appearance(shortage.main,shortage.fast,-1)).toThrow("Invalid");
   });
 

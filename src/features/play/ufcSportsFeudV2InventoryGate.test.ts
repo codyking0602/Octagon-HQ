@@ -94,6 +94,6 @@ describe("UFC Feud v2 staged, not-yet-approved inventory and coverage gates", ()
     }
     const all = [...main, ...fast];
     expect(all).toHaveLength(310);
-    expect(new Set(all.map(q => q.id)).size).toBe(266);
+    expect(new Set(all.map(q => q.id)).size).toBe(all.length);
   });
 });

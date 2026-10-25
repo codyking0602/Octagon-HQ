@@ -143,7 +143,6 @@ const ROWS = [
     "extras": "Post on hips|Move hips|Recover knee shield|Turn to side|Use feet on hips|Stand up|Technical get-up",
     "aliases": {
       "Hip escape": [
-        "Shrimp",
         "Shrimping"
       ],
       "Frame with forearms": [
