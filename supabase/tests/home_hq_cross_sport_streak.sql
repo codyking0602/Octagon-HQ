@@ -2,6 +2,23 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
+-- This legacy HQ cross-sport streak test builds synthetic daily history on
+-- consecutive dates, including UFC's non-opening dates. Temporarily disable
+-- only the new future-publication gate inside this rollback-only fixture.
+-- locked_three_sport_daily_cadence.sql separately tests that gate end to end.
+do $compat$
+begin
+  if exists (
+    select 1 from pg_trigger
+    where tgname = 'enforce_future_daily_publication_cadence'
+      and tgrelid = 'private.daily_challenges'::regclass
+      and not tgisinternal
+  ) then
+    execute 'alter table private.daily_challenges disable trigger enforce_future_daily_publication_cadence';
+  end if;
+end;
+$compat$;
+
 do $$
 declare
   v_player uuid := '79000000-0000-4000-8000-000000000095';

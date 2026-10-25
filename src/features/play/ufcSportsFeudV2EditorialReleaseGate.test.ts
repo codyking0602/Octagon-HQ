@@ -34,9 +34,9 @@ describe("UFC Sports Feud six-month release gate — content cannot publish prem
   });
   it("uses the actual current UFC Daily calendar rather than assuming a 20-appearance six-month window",()=>{
     const readiness=ufcFeudSixMonthReleaseReadiness("2026-10-24","2027-04-24");
-    expect(readiness.appearanceCount).toBe(24);
-    expect(readiness.neededMainFamilies).toBe(48);
-    expect(readiness.neededFastFamilies).toBe(120);
+    expect(readiness.appearanceCount).toBe(13);
+    expect(readiness.neededMainFamilies).toBe(26);
+    expect(readiness.neededFastFamilies).toBe(65);
     expect(readiness.ready).toBe(true);
     expect(readiness.approvedMainFamilies).toBe(48);
     expect(readiness.approvedFastFamilies).toBe(120);

@@ -30,14 +30,36 @@ export const NBA_DAILY_GAME_INSTRUCTIONS: Record<NbaDailyGame, string> = {
   higher_lower: "Compare ten NBA seasons and legends. Make every higher-or-lower call count.",
 };
 
-/** Twenty-eight slots: 4/4/4, 3/3/3/3, 2/2. Keep the order evenly distributed. */
+/** Twenty-eight NBA slots, spread across the season with approved 4/4/4, 3/3/3/3, 2/2 weights. */
 export const NBA_DAILY_WEIGHTED_CYCLE: readonly NbaDailyGame[] = [
-  "average_fan", "sports_feud", "millionaire", "who_am_i", "find_leader",
-  "wavelength", "bar_trivia", "hit_the_number", "higher_lower",
-  "average_fan", "sports_feud", "millionaire", "who_am_i", "find_leader",
-  "wavelength", "bar_trivia", "average_fan", "sports_feud", "millionaire",
-  "hit_the_number", "higher_lower", "who_am_i", "find_leader", "wavelength",
-  "bar_trivia", "average_fan", "sports_feud", "millionaire",
+  "average_fan",
+  "sports_feud",
+  "who_am_i",
+  "millionaire",
+  "hit_the_number",
+  "find_leader",
+  "wavelength",
+  "sports_feud",
+  "average_fan",
+  "higher_lower",
+  "bar_trivia",
+  "millionaire",
+  "who_am_i",
+  "average_fan",
+  "sports_feud",
+  "wavelength",
+  "find_leader",
+  "millionaire",
+  "hit_the_number",
+  "bar_trivia",
+  "sports_feud",
+  "average_fan",
+  "who_am_i",
+  "higher_lower",
+  "millionaire",
+  "wavelength",
+  "find_leader",
+  "bar_trivia",
 ];
 
 export const NBA_DAILY_WEIGHTS: Readonly<Record<NbaDailyGame, number>> = {

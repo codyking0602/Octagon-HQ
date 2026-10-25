@@ -31,6 +31,8 @@ on:
       - "supabase/migrations/202612310221_average_fan_review_cleanup.sql"
       - "supabase/tests/average_fan_daily_launch.sql"
       - "supabase/migrations/202612310323_nba_48_hour_streaks.sql"
+      - "supabase/migrations/202612310406_lock_three_sport_daily_cadence.sql"
+      - "supabase/tests/locked_three_sport_daily_cadence.sql"
       - "supabase/tests/nba_daily_48_hour_streaks.sql"
       - "src/features/play/*SportsFeud*"
       - "src/features/games/familyFeudEngine.ts"
@@ -243,6 +245,10 @@ jobs:
       - name: Verify NBA 48-hour official streak and game averages
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/nba_daily_48_hour_streaks.sql
+
+      - name: Execute locked three-sport 182-day cadence and publication retry proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/locked_three_sport_daily_cadence.sql
 
       - name: Execute persisted Football Daily runtime proof
         shell: bash

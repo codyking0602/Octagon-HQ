@@ -25,8 +25,9 @@ begin
 
   -- One challenge per 48-hour slot, not a separate challenge each calendar day.
   -- The missed Nov 5 slot intentionally breaks the run; Nov 1 and Nov 3 do not.
-  foreach v_day in array array[date '2026-11-01', date '2026-11-03', date '2026-11-07', date '2026-11-09', date '2026-11-17'] loop
-    v_game := private.daily_challenge_expected_game('nba-daily-regular-v1', v_day);
+  -- Nov 19 is Higher or Lower under the post-cutover 28-slot locked mix.
+  foreach v_day in array array[date '2026-11-01', date '2026-11-03', date '2026-11-07', date '2026-11-09', date '2026-11-19'] loop
+    v_game := private.daily_challenge_expected_game('nba-daily-regular-v2-locked', v_day);
     insert into private.daily_challenge_setups (
       game_type, setup_key, content_version, scoring_version, public_setup,
       reveal_setup, private_setup_evidence, private_grading_evidence
@@ -39,7 +40,7 @@ begin
       central_day, schedule_version, game_type, setup_id,
       content_version, scoring_version, fallback_reason
     ) values (
-      v_day, 'nba-daily-regular-v1', v_game, v_setup,
+      v_day, 'nba-daily-regular-v2-locked', v_game, v_setup,
       'nba-streak-proof-v1', 'play-official-score-v1', null
     ) returning id into v_daily;
     insert into private.daily_challenge_attempts (
