@@ -17,7 +17,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "explanation": "Cejudo won Olympic wrestling gold before becoming a UFC champion.",
     "contentType": "evergreen",
     "sourceId": "ufc-v3-moments",
-    "sourceUrl": "https://www.ufc.com/news/top-500-ufc-moments-list"
+    "sourceUrl": "https://www.ufcespanol.com/news/pettis-dethrones-henderson-final-wec-event"
   },
   {
     "id": "ufc-bt-v3-e-002",
@@ -60,7 +60,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "league": "ufc",
     "round": "round1",
     "category": "UFC Fundamentals & Stories",
-    "prompt": "Which UFC fighter landed the famous off-the-cage 'Showtime Kick'?",
+    "prompt": "Which future UFC champion landed the famous 'Showtime Kick' against Benson Henderson at WEC 53?",
     "choices": [
       "Anthony Pettis",
       "Edson Barboza",
