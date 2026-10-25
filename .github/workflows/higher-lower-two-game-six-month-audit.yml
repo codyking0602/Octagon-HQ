@@ -27,11 +27,4 @@ jobs:
       - name: Generate immutable Football factual reference artifacts
         run: npm run pretest
       - name: Validate dual-game scoring and six-month rotation capacity
-        run: OCTAGON_WRITE_HL_AUDIT=1 npx vitest run src/features/play/higherLowerTwoGameSixMonthAudit.test.ts
-      - name: Upload all real dates, provisional boards, source identities and grading
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: higher-lower-two-game-six-month-date-and-comparison-audit
-          path: artifacts/higher-lower-two-game-six-month-audit.json
-          if-no-files-found: warn
+        run: npx vitest run src/features/play/higherLowerTwoGameSixMonthAudit.test.ts
