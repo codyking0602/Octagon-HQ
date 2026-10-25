@@ -25,15 +25,15 @@ export function ufcHigherLowerPublicQuestion(question: UfcHigherLowerQuestion, i
 }
 
 export function buildUfcHigherLowerDailyPublication(
-  day: string, scheduleVersion: string,
+  day: string, scheduleVersion: string, gameIndex = 0,
 ): OfficialDailySetupPublication {
   if (!scheduleVersion.trim()) throw new Error("UFC Higher or Lower needs a schedule version.");
-  const board = createUfcHigherLowerOfficialBoard(day);
+  const board = createUfcHigherLowerOfficialBoard(day, gameIndex);
   if (board.questions.length !== UFC_HIGHER_LOWER_QUESTION_COUNT) {
     throw new Error("UFC Higher or Lower Daily must publish ten verified comparisons.");
   }
   return {
-    setupKey: [UFC_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day].join(":"),
+    setupKey: [UFC_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, `game-${gameIndex + 1}`].join(":"),
     contentVersion: UFC_HIGHER_LOWER_OFFICIAL_VERSION,
     scoringVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
