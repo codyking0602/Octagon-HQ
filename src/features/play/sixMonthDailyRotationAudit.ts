@@ -6,8 +6,8 @@
  * Every candidate game (notably UFC Higher/Lower) still needs content signoff.
  */
 import { APPROVED_DAILY_ROTATION_WEIGHTS } from "./dailyContentQualityPolicy";
-import { FOOTBALL_LOCKED_WEIGHTED_CYCLE, UFC_LOCKED_WEIGHTED_CYCLE } from "./dailyChallengeRotation";
-import { NBA_DAILY_WEIGHTED_CYCLE, NBA_DAILY_WEIGHTS, NBA_REGULAR_SEASON_LAST_DAY } from "../nba/nbaDailySchedule";
+import { FOOTBALL_LOCKED_WEIGHTED_CYCLE, UFC_LOCKED_WEIGHTED_CYCLE, isUfcPublicationDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
+import { NBA_DAILY_WEIGHTED_CYCLE, NBA_DAILY_WEIGHTS, NBA_REGULAR_SEASON_LAST_DAY, nbaRegularSeasonDaily } from "../nba/nbaDailySchedule";
 
 export type AuditSport = "football" | "ufc" | "nba";
 export interface RotationAuditSlot {
@@ -152,7 +152,29 @@ export function previewApprovedDailyRotation(start = SIX_MONTH_AUDIT_START, days
     requiresGameCertification: ["football:higher_lower", "ufc:higher_lower"] as const,
   };
 }
-/** Actual client-side pre-Part-1 cycles, for apples-to-apples gap comparisons. */
+/** Certified cadence from merged Part 1 (PR #2104), not a future proposal.
+ * Existing v21 Football/UFC weighted cycles intentionally do NOT yet schedule
+ * Higher or Lower; those additional approved 2x weights need a separate
+ * content-certified, two-game publisher cutover.
+ * NBA stops with the last April 11 playable board.
+ */
+export function auditMergedPartOneCalendar(start = "2026-10-25", days = 182): RotationAuditSlot[] {
+  const slots: RotationAuditSlot[] = [];
+  for (let offset = 0; offset < days; offset++) {
+    const day = dayAt(start, offset);
+    slots.push({ day, sport: "football", game: lockedWeightedGameForDay("football", day) });
+    if (isUfcPublicationDay(day)) {
+      slots.push({ day, sport: "ufc", game: lockedWeightedGameForDay("ufc", day) });
+    }
+    const nba = nbaRegularSeasonDaily(day);
+    if (nba?.isPublicationDay) {
+      slots.push({ day, sport: "nba", game: nba.gameType });
+    }
+  }
+  return slots;
+}
+
+/** Historical pre-Part-1 cycles, for apples-to-apples gap comparisons. */
 export function auditCurrentMainBaseline(start = SIX_MONTH_AUDIT_START, days = SIX_MONTH_AUDIT_DAYS) {
   const slots: RotationAuditSlot[] = [];
   const anchor = ordinal("2026-10-01");
