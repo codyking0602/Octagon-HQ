@@ -25,3 +25,12 @@
 .nba-official-higher-lower__feedback {font-size:13px;font-weight:850;padding:10px;margin:12px 0;border-radius:8px;}
 .nba-official-higher-lower__feedback.is-correct {color:#81e6ad;}.nba-official-higher-lower__feedback.is-wrong {color:#ffa6a6;}
 @media(max-width:390px){.nba-official-daily__top{gap:5px;padding:10px 5px}.nba-official-daily__top span{font-size:9px}.nba-official-daily__top button{padding:8px 5px;font-size:10px}.nba-official-higher-lower__comparison{gap:7px}.nba-official-higher-lower__comparison article{padding:15px 7px}}
+
+/* Share the established basketball headshot identity across Official Daily games. */
+.nba-official-higher-lower__portrait {display:flex;align-items:center;justify-content:center;height:116px;max-width:100%;overflow:hidden;}
+.nba-official-higher-lower__portrait img {width:100%;height:100%;object-fit:contain;object-position:center bottom;}
+.nba-official-higher-lower__portrait strong {font-size:32px;letter-spacing:.09em;opacity:.55;}
+.nba-official-higher-lower__credits {font-size:11px;text-align:left;opacity:.8;margin:-8px 0 12px;}
+.nba-official-higher-lower__credits summary {cursor:pointer;}
+.nba-official-higher-lower__credits p {margin:4px 0;}
+@media(max-width:390px){.nba-official-higher-lower__portrait{height:94px}}
