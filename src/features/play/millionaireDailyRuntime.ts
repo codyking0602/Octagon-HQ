@@ -20,6 +20,13 @@ import {
 } from "./millionaireDailyQuestionBank";
 import { footballThemedMillionaireRunForDay } from "./footballTeamThemeDailyPacks";
 import type { OfficialDailySetupPublication } from "./todaysChallengeRuntime";
+import {
+  FOOTBALL_FUTURE_WEIGHTED_CYCLE,
+  UFC_FUTURE_WEIGHTED_CYCLE,
+  THREE_SPORT_CADENCE_CUTOVER_DAY,
+  isUfcPublicationDay,
+  lockedWeightedGameForDay,
+} from "./dailyChallengeRotation";
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
@@ -105,7 +112,33 @@ function appearanceIndex(
   return cycle * slots.length + position;
 }
 
+/**
+ * New v21 cadence differs from the historical 27/29-day cycles, and UFC
+ * publishes every 48 hours. Keep the old ordinal identities for every
+ * published pre-cutover board; index only the canonical v21 dates after it.
+ *
+ * Football appearances 0–4 and UFC appearances 0–6 were already reserved
+ * before the new schedules began (including Oct 25 UFC Millionaire).
+ */
+function futureMillionaireAppearance(sport: "football" | "ufc", day: string) {
+  if (lockedWeightedGameForDay(sport, day) !== "millionaire"
+    || (sport === "ufc" && !isUfcPublicationDay(day))) {
+    throw new Error(`${sport === "ufc" ? "UFC" : "Football"} Millionaire is not scheduled on ${day}.`);
+  }
+  const daysSinceCutover = centralDayNumber(day) - centralDayNumber(THREE_SPORT_CADENCE_CUTOVER_DAY);
+  const occurrence = sport === "ufc" ? Math.floor(daysSinceCutover / 2) : daysSinceCutover;
+  const cycle = sport === "ufc" ? UFC_FUTURE_WEIGHTED_CYCLE : FOOTBALL_FUTURE_WEIGHTED_CYCLE;
+  const completeCycles = Math.floor(occurrence / cycle.length);
+  const cycleIndex = occurrence % cycle.length;
+  const previous = completeCycles * cycle.filter(game => game === "millionaire").length
+    + cycle.slice(0, cycleIndex).filter(game => game === "millionaire").length;
+  return (sport === "ufc" ? 7 : 5) + previous;
+}
+
 export function millionaireFootballDailyAppearance(day: string) {
+  if (day >= THREE_SPORT_CADENCE_CUTOVER_DAY) {
+    return futureMillionaireAppearance("football", day);
+  }
   if (day < WEIGHTED_DAILY_CUTOVER) {
     return appearanceIndex(
       day,
@@ -143,6 +176,9 @@ export function millionaireFootballDailyAppearance(day: string) {
 }
 
 export function millionaireUfcDailyAppearance(day: string) {
+  if (day >= "2026-10-27") {
+    return futureMillionaireAppearance("ufc", day);
+  }
   if (day < WEIGHTED_DAILY_CUTOVER) {
     return appearanceIndex(
       day,
