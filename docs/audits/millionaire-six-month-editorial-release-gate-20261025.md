@@ -23,7 +23,7 @@ The unthemed run repetition instances are:
 - **CFB**: 4 (2026-10-31, 2027-03-20); 5 (2026-11-12, 2027-04-01); 6 (2026-11-28, 2027-04-17)
 - **UFC**: 6 (2026-10-25, 2027-03-22); 7 (2026-11-06, 2027-04-03); 8 (2026-11-22, 2027-04-19)
 
-**Reserve target, not achieved:** at least 15 independently verified ordinary NFL runs, 16 CFB runs, and 15 UFC runs (two-run reserve above ordinary demand); the currently available ten per league are insufficient.
+**Reserve target, not achieved:** at least 15 independently verified ordinary NFL runs, 15 CFB runs, and 15 UFC runs (two-run reserve above ordinary demand); the currently available ten per league are insufficient.
 
 ## Initial 240-question dispositions
 These labels record editorial triage, **not publication approval**. Every unverified candidate is held; flagged REWRITE candidates require source-backed replacement except six already changed on a future-only code path.
@@ -31,7 +31,7 @@ These labels record editorial triage, **not publication approval**. Every unveri
 |---|---:|---:|---:|---:|
 | NFL | 77 | 3 | 0 | 0 |
 | CFB | 71 | 9 | 0 | 0 |
-| UFC | 67 | 13 | 0 | 0 |
+| UFC | 70 | 10 | 0 | 0 |
 
 ### Six independently supported future-only corrections
 1. **NFL Run 1 Q6:** Stafford earned his first AP first-team All-Pro for 2025; the existing "never" premise is false. Rewrite to ask his first-selection year/season. NFL/AP primary [record](https://www.nfl.com/news/2025-all-pro-team-matthew-stafford-bijan-robinson-jaxon-smith-njigba-highlight-roster).
@@ -52,8 +52,8 @@ The fix applies only to future unpublished day identities (`day >= 2026-10-27`) 
 - **SEM-6**: `ufc-4-4` vs `ufc-9-5` (same or closely overlapping answer event/fact; full comparison required).
 - **SEM-7**: `cfb-1-5` vs `cfb-2-5` (same or closely overlapping answer event/fact; full comparison required).
 - **SEM-8**: `cfb-6-7` vs `cfb-7-8` (same or closely overlapping answer event/fact; full comparison required).
-- **SEM-9**: `ufc-1-6` vs `ufc-5-6` (same or closely overlapping answer event/fact; full comparison required).
-- **SEM-10**: `ufc-8-3` vs `ufc-8-4` (same or closely overlapping answer event/fact; full comparison required).
+
+**Distinct-fact clarification:** UFC Run 1 Q6 and Run 5 Q6 both involve Dominick Cruz, but test two different championship bouts; UFC Run 8 Q3 and Q4 are different legs of the Serra–St-Pierre rivalry. They require *variety* review, not automatic semantic deduplication.
 
 **UFC run-coherence defect:** Runs 7, 8 and 9 each revolve almost entirely around one named champion (Adesanya, GSP, Khabib). Rebuild each as a genuinely varied eight-question ladder rather than several consecutive prompts about the same career. Several other runs overuse title handoffs. NFL/CFB rely too heavily on MVPs, Heismans and championships. Q8 often defaults to arithmetic/comparison rather than memorable hard sports history.
 
