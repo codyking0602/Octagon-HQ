@@ -325,4 +325,60 @@ describe("compact two-game leaderboard result", () => {
     expect(container.querySelector(".hit-number-pick-breakdown li")!.textContent).toContain("—");
   });
 
+  it("renders the October 25 Football Hit the Number drill-down without raw source IDs, long decimals, or numeric overflow", () => {
+    const footballProjection = projection({
+      gameType: "hit_the_number",
+      publicSetup: { rounds: [
+        { metric_label: "Points Per Game", target: 201.399999999, candidates: [
+          { id: "2004-usc", name: "2004 Usc" },
+        ] },
+        { metric_label: "Passer Rating", target: 362.8936, candidates: [
+          { id: "nflverse-player-season-00-0023459-2024", name: "Nflverse Player Season 00 0023459 2024" },
+          { id: "nflverse-player-season-00-0021678-2010", name: "Nflverse Player Season 00 0021678 2010" },
+        ] },
+      ] },
+      officialAttempt: {
+        nativeScore: 71,
+        normalizedScore: 71,
+        completedAt: "2026-10-25T14:37:00Z",
+        publicResult: { daily_series: {
+          round_scores: [48, 94], average_score: 71,
+          rounds: [
+            { normalized_score: 48, target: 201.399999999, total: 211.7, status: "bust",
+              selected_ids: ["2004-usc"], selections: [{ fighterId: "2004-usc", value: 38.2 }] },
+            { normalized_score: 94, target: 362.8936, total: 321.85817,
+              distance: 41.03543, status: "under",
+              selections: [
+                { fighterId: "nflverse-player-season-00-0023459-2024", value: 90.53224886 },
+                { fighterId: "nflverse-player-season-00-0021678-2010", value: 94.9041471 },
+              ] },
+          ],
+        } },
+      },
+    });
+    const { container } = render(
+      <DailyTwoGameLeaderboardResult projection={footballProjection} resultDetail={{}} sport="football" />,
+    );
+    const games = container.querySelectorAll(".daily-two-game-result__game");
+    expect(games).toHaveLength(2);
+    expect(games[1]!.querySelector("summary")?.textContent).toContain("41.0 OFF");
+    const metricGroups = container.querySelectorAll(".daily-two-game-result__metrics--hit-number");
+    expect(metricGroups).toHaveLength(2);
+    expect(metricGroups[0]!.textContent).toContain("201.4");
+    expect(metricGroups[0]!.textContent).toContain("211.7");
+    expect(metricGroups[1]!.textContent).toContain("362.9");
+    expect(metricGroups[1]!.textContent).toContain("321.9");
+    expect(container.textContent).toContain("2004 USC");
+    expect(container.textContent).toContain("Aaron Rodgers · 2024");
+    expect(container.textContent).toContain("Tony Romo · 2010");
+    expect(container.textContent).toContain("90.5");
+    expect(container.textContent).toContain("94.9");
+    expect(container.textContent).not.toContain("Nflverse Player Season");
+    expect(container.textContent).not.toContain("201.399999");
+    expect(container.textContent).not.toContain("90.53224886");
+    expect(footballProjection.officialAttempt?.publicResult.daily_series).toMatchObject({
+      round_scores: [48, 94], average_score: 71,
+    });
+  });
+
 });

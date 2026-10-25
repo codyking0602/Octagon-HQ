@@ -10,6 +10,7 @@ import {
 } from "../back-room/footballHitTheNumberModel";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
+import { footballHitNumberDisplayName } from "./footballHitNumberDisplayName";
 import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
 import { buildTwoGameDailyPublication } from "./dailyTwoGameRuntime";
 import type {
@@ -66,7 +67,7 @@ function buildHitTheNumberSetup(day: string, scheduleVersion: string, gameIndex 
   const candidates = plan.subjectIds.map((id) => {
     const subject = getFootballHitTheNumberSubject(id);
     if (!subject) throw new Error(`Football Hit the Number subject ${id} is unavailable.`);
-    return { id: subject.id, name: subject.name, subtitle: subject.subtitle };
+    return { id: subject.id, name: footballHitNumberDisplayName(subject.id, subject.name), subtitle: subject.subtitle };
   });
   const valueMap = Object.fromEntries(plan.subjectIds.map((id, index) => [id, values[index]]));
   return {
