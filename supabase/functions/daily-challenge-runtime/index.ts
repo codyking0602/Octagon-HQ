@@ -802,8 +802,12 @@ async function handleNbaDaily(
     }
     throw new Error("NBA official Daily progress could not be persisted.");
   }
-  context = await getContext(admin, materialized.dailyChallengeId, profileId);
-  context = await finalizePending(userClient, admin, context, profileId);
+  if (advanced.complete) {
+    context = await getContext(admin, materialized.dailyChallengeId, profileId);
+    context = await finalizePending(userClient, admin, context, profileId);
+  } else {
+    context = acknowledgedUnfinishedProgress(context, saved.data, nextSubmissionState);
+  }
   return payload();
 }
 
@@ -814,6 +818,28 @@ async function getContext(admin: SupabaseClient, dailyChallengeId: string, profi
   });
   if (response.error) throw new Error("The official daily runtime state is unavailable.");
   return runtimeContext(response.data);
+}
+
+// For every unfinished Daily action the save RPC itself returns the durable
+// revision and saved public state. Avoid a second read/attempt-finalizer round
+// trip on EVERY tap. Terminal actions still re-read and finalize canonically.
+function acknowledgedUnfinishedProgress(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  savedResult: unknown,
+  submissionState: JsonRecord,
+) {
+  const saved = requiredRecord(savedResult, "Saved Daily progress");
+  const revision = Number(saved.revision);
+  if (!Number.isInteger(revision) || revision !== Number(context.progress_revision) + 1
+    || String(saved.daily_challenge_id ?? "") !== String(context.daily_challenge_id)) {
+    throw new Error("Saved Daily progress acknowledgement is invalid.");
+  }
+  return {
+    ...context,
+    progress_revision: revision,
+    submissionState,
+    publicState: requiredRecord(saved.public_state, "Saved Daily public progress"),
+  };
 }
 
 function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
@@ -1562,14 +1588,15 @@ Deno.serve(async (request) => {
           : advanceFootballRuntime(context, action);
       }
       const history = footballActionHistory(context);
+      const nextSubmissionState = submissionStateWithClientActionId({
+        ...advanced.submissionState,
+        action_history: [...history, action],
+      }, dailyClientActionIds(context), clientActionId);
       const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
         p_daily_challenge_id: materialized.dailyChallengeId,
         p_profile_id: profileId,
         p_expected_revision: Number(context.progress_revision),
-        p_submission_state: submissionStateWithClientActionId({
-          ...advanced.submissionState,
-          action_history: [...history, action],
-        }, dailyClientActionIds(context), clientActionId),
+        p_submission_state: nextSubmissionState,
         p_public_state: advanced.publicState,
       });
       if (saved.error) {
@@ -1579,8 +1606,12 @@ Deno.serve(async (request) => {
         throw new Error("The official Football daily progress could not be saved.");
       }
 
-      context = await getContext(admin, materialized.dailyChallengeId, profileId);
-      context = await finalizePending(userClient, admin, context, profileId);
+      if (advanced.complete) {
+        context = await getContext(admin, materialized.dailyChallengeId, profileId);
+        context = await finalizePending(userClient, admin, context, profileId);
+      } else {
+        context = acknowledgedUnfinishedProgress(context, saved.data, nextSubmissionState);
+      }
       return json(footballPublicPayload(context));
     }
 
@@ -1636,15 +1667,16 @@ Deno.serve(async (request) => {
           action_history: [...priorMillionaireActions, requiredRecord(body.action, "UFC Millionaire action")],
         }
       : advanced.submissionState;
+    const nextSubmissionState = submissionStateWithClientActionId(
+      persistedUfcSubmission,
+      dailyClientActionIds(context),
+      clientActionId,
+    );
     const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
       p_daily_challenge_id: materialized.dailyChallengeId,
       p_profile_id: profileId,
       p_expected_revision: Number(context.progress_revision),
-      p_submission_state: submissionStateWithClientActionId(
-        persistedUfcSubmission,
-        dailyClientActionIds(context),
-        clientActionId,
-      ),
+      p_submission_state: nextSubmissionState,
       p_public_state: advanced.publicState,
     });
     if (saved.error) {
@@ -1654,8 +1686,12 @@ Deno.serve(async (request) => {
       throw new Error("The official daily progress could not be saved.");
     }
 
-    context = await getContext(admin, materialized.dailyChallengeId, profileId);
-    context = await finalizePending(userClient, admin, context, profileId);
+    if (advanced.complete) {
+      context = await getContext(admin, materialized.dailyChallengeId, profileId);
+      context = await finalizePending(userClient, admin, context, profileId);
+    } else {
+      context = acknowledgedUnfinishedProgress(context, saved.data, nextSubmissionState);
+    }
     return json(publicPayload(context));
   } catch (error) {
     const message = error instanceof Error ? error.message : "The official daily runtime failed safely.";
