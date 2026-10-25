@@ -123,7 +123,7 @@ describe("six-month Official Hit the Number seed/content audit (merged canonical
       }
     }
     // Any failure in this test blocks prospective 2x content signoff, not old results.
-    expect(report.scheduledDates.football).toBe(15);
+    expect(report.scheduledDates.football).toBe(13);
     expect(report.scheduledDates.ufc).toBe(6);
     expect(report.uniqueBoards).toEqual(report.childBoards);
     console.info("SIX_MONTH_HIT_NUMBER_CANONICAL_PART1_AUDIT " + JSON.stringify(report));

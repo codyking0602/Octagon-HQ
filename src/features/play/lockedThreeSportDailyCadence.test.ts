@@ -6,6 +6,10 @@ import {
   UFC_LOCKED_WEIGHTED_CYCLE,
   FOOTBALL_FUTURE_WEIGHTED_CYCLE,
   UFC_FUTURE_WEIGHTED_CYCLE,
+  FOOTBALL_APPROVED_WEIGHTED_CYCLE,
+  UFC_APPROVED_WEIGHTED_CYCLE,
+  FOOTBALL_TWO_GAME_CUTOVER_DAY,
+  UFC_TWO_GAME_CUTOVER_DAY,
   THREE_SPORT_CADENCE_CUTOVER_DAY,
   footballBarTriviaLeagueForDay,
   lockedWeightedGameForDay,
@@ -42,6 +46,17 @@ describe("locked three-sport Daily scheduling policy", () => {
     expect(sqlCycle("football-daily-v21-locked-oct25")).toEqual(FOOTBALL_FUTURE_WEIGHTED_CYCLE);
     expect(sqlCycle("ufc-daily-v21-48h-oct25")).toEqual(UFC_FUTURE_WEIGHTED_CYCLE);
     expect(sqlCycle("nba-daily-regular-v2-locked")).toEqual(NBA_DAILY_WEIGHTED_CYCLE);
+    const approved = readFileSync("supabase/migrations/202612310408_activate_approved_three_sport_higher_lower.sql", "utf8");
+    function approvedCycle(version: string) {
+      const marker = `('${version}','America/Chicago'`;
+      const at = approved.indexOf(marker);
+      expect(at).toBeGreaterThanOrEqual(0);
+      const open = approved.indexOf("array[", at) + 6;
+      const close = approved.indexOf("]::text[]", open);
+      return [...approved.slice(open, close).matchAll(/'([a-z_]+)'/g)].map(match => match[1]);
+    }
+    expect(approvedCycle("football-daily-v22-higher-lower-oct27")).toEqual(FOOTBALL_APPROVED_WEIGHTED_CYCLE);
+    expect(approvedCycle("ufc-daily-v22-higher-lower-oct29")).toEqual(UFC_APPROVED_WEIGHTED_CYCLE);
   });
 
   it("preserves historical October boards and the Football NFL/CFB Bar Trivia parity", () => {
@@ -57,10 +72,12 @@ describe("locked three-sport Daily scheduling policy", () => {
     expect(lockedWeightedGameForDay("ufc", "2026-10-25")).toBe("millionaire");
     expect(footballBarTriviaLeagueForDay("2026-09-29")).toBe("nfl");
     expect(footballBarTriviaLeagueForDay("2026-10-22")).toBe("cfb");
-    expect(footballBarTriviaLeagueForDay("2026-11-05")).toBe("nfl");
+    expect(footballBarTriviaLeagueForDay("2026-10-29")).toBe("nfl");
+    expect(footballBarTriviaLeagueForDay("2026-11-09")).toBe("cfb");
+    expect(footballBarTriviaLeagueForDay("2026-12-07")).toBe("nfl");
   });
 
-  it("preserves all approved active weights without scheduling unfinished Higher or Lower", () => {
+  it("preserves immutable v21 history and activates approved 2x Higher or Lower in v22", () => {
     expect(counts(FOOTBALL_FUTURE_WEIGHTED_CYCLE)).toEqual({
       who_am_i: 3, millionaire: 4, find_leader: 3, hit_the_number: 2,
       wavelength: 3, sports_feud: 4, average_fan: 4, bar_trivia: 3,
@@ -73,6 +90,20 @@ describe("locked three-sport Daily scheduling policy", () => {
     expect(counts(NBA_DAILY_WEIGHTED_CYCLE)).toEqual(NBA_DAILY_WEIGHTS);
     expect(FOOTBALL_FUTURE_WEIGHTED_CYCLE).not.toContain("higher_lower");
     expect(UFC_FUTURE_WEIGHTED_CYCLE).not.toContain("higher_lower");
+    expect(counts(FOOTBALL_APPROVED_WEIGHTED_CYCLE)).toEqual({
+      who_am_i: 3, millionaire: 4, find_leader: 3, hit_the_number: 2,
+      wavelength: 3, sports_feud: 4, average_fan: 4, bar_trivia: 3, higher_lower: 2,
+    });
+    expect(counts(UFC_APPROVED_WEIGHTED_CYCLE)).toEqual({
+      find_leader: 3, sports_feud: 4, millionaire: 4, wavelength: 3,
+      bar_trivia: 3, average_fan: 4, blind_resume: 2,
+      who_am_i: 3, hit_the_number: 2, higher_lower: 2,
+    });
+    expect(FOOTBALL_TWO_GAME_CUTOVER_DAY).toBe("2026-10-27");
+    expect(UFC_TWO_GAME_CUTOVER_DAY).toBe("2026-10-29");
+    expect(lockedWeightedGameForDay("football", "2026-10-26")).toBe("millionaire");
+    expect(lockedWeightedGameForDay("football", "2026-11-27")).toBe("sports_feud");
+    expect(lockedWeightedGameForDay("football", "2026-12-07")).toBe("bar_trivia");
   });
 
   it("publishes Football daily, UFC on Oct 25/27/29, NBA on Nov 1/3/5, with no drift", () => {
@@ -111,8 +142,8 @@ describe("locked three-sport Daily scheduling policy", () => {
 
   it("bounds cyclic appearance spacing, including rollover, without misleading clusters", () => {
     for (const [cycle, daysPerSlot] of [
-      [FOOTBALL_FUTURE_WEIGHTED_CYCLE, 1],
-      [UFC_FUTURE_WEIGHTED_CYCLE, 2],
+      [FOOTBALL_APPROVED_WEIGHTED_CYCLE, 1],
+      [UFC_APPROVED_WEIGHTED_CYCLE, 2],
       [NBA_DAILY_WEIGHTED_CYCLE, 2],
     ] as const) {
       const byType = counts(cycle);

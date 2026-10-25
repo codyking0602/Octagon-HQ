@@ -18,8 +18,8 @@ describe("six-month future Daily planning (NON-PUBLISHING, Part 1 owns cutover)"
     const actual = summarizeRotation(calendar);
     expect(actual.totals).toEqual({ football: 182, ufc: 91, nba: 81 });
     expect(actual.collisions.total).toBe(0);
-    expect(actual.games.football.higher_lower).toBeUndefined();
-    expect(actual.games.ufc.higher_lower).toBeUndefined();
+    expect(actual.games.football.higher_lower?.count).toBe(13);
+    expect(actual.games.ufc.higher_lower?.count).toBe(6);
     const first = calendar.filter(slot => slot.day === "2026-10-25");
     expect(first.map(slot => slot.sport).sort()).toEqual(["football", "ufc"]);
     const lastNba = calendar.filter(slot => slot.sport === "nba").at(-1);

@@ -131,7 +131,7 @@ describe("Millionaire official Daily runtime", () => {
       }
     }
     expect(millionaireDailyRunIndex("ufc", "2026-10-25")).toBe(5);
-    expect(millionaireDailyRunIndex("ufc", "2026-10-29")).toBe(6);
+    expect(millionaireDailyRunIndex("ufc", "2026-11-06")).toBe(6);
     expect(appearance.football).toHaveLength(28);
     expect(appearance.ufc).toHaveLength(14);
     expect(() => millionaireDailyRunIndex("football", "2026-10-25")).toThrow("not scheduled");

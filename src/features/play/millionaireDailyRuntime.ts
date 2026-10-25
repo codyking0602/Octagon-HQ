@@ -23,6 +23,10 @@ import type { OfficialDailySetupPublication } from "./todaysChallengeRuntime";
 import {
   FOOTBALL_FUTURE_WEIGHTED_CYCLE,
   UFC_FUTURE_WEIGHTED_CYCLE,
+  FOOTBALL_APPROVED_WEIGHTED_CYCLE,
+  UFC_APPROVED_WEIGHTED_CYCLE,
+  FOOTBALL_TWO_GAME_CUTOVER_DAY,
+  UFC_TWO_GAME_CUTOVER_DAY,
   THREE_SPORT_CADENCE_CUTOVER_DAY,
   isUfcPublicationDay,
   lockedWeightedGameForDay,
@@ -124,6 +128,19 @@ function futureMillionaireAppearance(sport: "football" | "ufc", day: string) {
   if (lockedWeightedGameForDay(sport, day) !== "millionaire"
     || (sport === "ufc" && !isUfcPublicationDay(day))) {
     throw new Error(`${sport === "ufc" ? "UFC" : "Football"} Millionaire is not scheduled on ${day}.`);
+  }
+  if ((sport === "football" && day >= FOOTBALL_TWO_GAME_CUTOVER_DAY)
+    || (sport === "ufc" && day >= UFC_TWO_GAME_CUTOVER_DAY)) {
+    const start = sport === "football" ? FOOTBALL_TWO_GAME_CUTOVER_DAY : UFC_TWO_GAME_CUTOVER_DAY;
+    const index = sport === "football"
+      ? centralDayNumber(day) - centralDayNumber(start)
+      : Math.floor((centralDayNumber(day) - centralDayNumber(start)) / 2);
+    const cycle = sport === "football" ? FOOTBALL_APPROVED_WEIGHTED_CYCLE : UFC_APPROVED_WEIGHTED_CYCLE;
+    const previous = Math.floor(index / cycle.length) * cycle.filter(game => game === "millionaire").length
+      + cycle.slice(0, index % cycle.length).filter(game => game === "millionaire").length;
+    // Both sports had six immutable appearances before their v22 cutovers:
+    // Football includes Oct 26; UFC includes Oct 25.
+    return 6 + previous;
   }
   const daysSinceCutover = centralDayNumber(day) - centralDayNumber(THREE_SPORT_CADENCE_CUTOVER_DAY);
   const occurrence = sport === "ufc" ? Math.floor(daysSinceCutover / 2) : daysSinceCutover;
