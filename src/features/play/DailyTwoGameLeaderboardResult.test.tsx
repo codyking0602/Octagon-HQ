@@ -381,4 +381,74 @@ describe("compact two-game leaderboard result", () => {
     });
   });
 
+  it("uses the approved compact result drill-down for NBA career and season identities", () => {
+    const nba = projection({
+      gameType: "hit_the_number",
+      publicSetup: { rounds: [
+        { metric_label: "Career Points Per Game", target: 80.199999999, candidates: [] },
+        { metric_label: "Season Points Per Game", target: 55.099999999, candidates: [] },
+      ] },
+      officialAttempt: {
+        nativeScore: 92, normalizedScore: 92, completedAt: "2026-10-25T14:30:00Z",
+        publicResult: { daily_series: {
+          format_version: "daily-two-game-average-v1",
+          round_scores: [90, 94], average_score: 92,
+          rounds: [
+            { normalized_score: 90, status: "under", target: 80.199999999, total: 75.099999999,
+              distance: 5.10000001, selections: [
+                { fighterId: "career:Michael Jordan", value: 30.10000001 },
+              ] },
+            { normalized_score: 94, status: "bust", target: 55.099999999, total: 60.2999999,
+              distance: 5.19999999, selections: [
+                { fighterId: "season-2025:Stephen Curry", value: 24.5000001 },
+                { fighterId: "season-2026:Nikola Jokić", value: 27.8999999 },
+              ] },
+          ],
+        } },
+      },
+    });
+    const { container } = render(<DailyTwoGameLeaderboardResult projection={nba} resultDetail={{}} sport="nba" />);
+    expect(container.querySelector(".daily-two-game-result--nba")).not.toBeNull();
+    expect(container.querySelectorAll(".daily-two-game-result__metrics--hit-number")).toHaveLength(2);
+    expect(container.textContent).toContain("Michael Jordan");
+    expect(container.textContent).toContain("Stephen Curry · 2024–25");
+    expect(container.textContent).toContain("Nikola Jokić · 2025–26");
+    expect(container.textContent).toContain("80.2");
+    expect(container.textContent).toContain("75.1");
+    expect(container.textContent).toContain("24.5");
+    expect(container.textContent).not.toContain("season-2025");
+    expect(container.textContent).not.toContain("30.10000001");
+  });
+
+  it("retains UFC fighter names and the same mobile-friendly result breakdown", () => {
+    const ufc = projection({
+      gameType: "hit_the_number",
+      publicSetup: { rounds: [
+        { statId: "ufc-wins", target: 25 },
+        { statId: "ufc-title-fights", target: 15 },
+      ] },
+      officialAttempt: {
+        nativeScore: 88, normalizedScore: 88, completedAt: "2026-10-25T14:30:00Z",
+        publicResult: { daily_series: {
+          format_version: "daily-two-game-average-v1",
+          round_scores: [90, 86], average_score: 88,
+          rounds: [
+            { normalized_score: 90, status: "bust", target: 25, total: 27, distance: 2,
+              selections: [{ fighterId: "tony-ferguson", value: 11 }] },
+            { normalized_score: 86, status: "under", target: 15, total: 12, distance: 3,
+              selections: [{ fighterId: "amanda-nunes", value: 7 }] },
+          ],
+        } },
+      },
+    });
+    const { container } = render(<DailyTwoGameLeaderboardResult projection={ufc} resultDetail={{}} sport="ufc" />);
+    expect(container.querySelectorAll(".daily-two-game-result__metrics--hit-number")).toHaveLength(2);
+    expect(container.querySelectorAll(".hit-number-pick-breakdown")).toHaveLength(2);
+    expect(container.textContent).toContain("Tony Ferguson");
+    expect(container.textContent).toContain("Amanda Nunes");
+    expect(container.textContent).toContain("UFC Wins");
+    expect(container.textContent).toContain("UFC Title Fights");
+    expect(container.textContent).not.toContain("Tony Ferguson 00");
+  });
+
 });
