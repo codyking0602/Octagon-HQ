@@ -58,6 +58,7 @@ const NbaWhoAmIPage = lazy(() => import("../features/play/NbaWhoAmIPage"));
 const NbaHitTheNumberPage = lazy(() => import("../features/nba/NbaHitTheNumberPage"));
 const NbaFindTheLeaderPage = lazy(() => import("../features/nba/NbaFindTheLeaderPage"));
 const NbaHigherLowerPage = lazy(() => import("../features/nba/NbaHigherLowerPage"));
+const UfcHigherLowerPage = lazy(() => import("../features/play/UfcHigherLowerPage"));
 const NbaMillionairePage = lazy(() => import("../features/nba/NbaMillionairePage"));
 const NbaAverageFanPage = lazy(() => import("../features/nba/NbaAverageFanPage"));
 const NbaBarTriviaOwnerPreviewPage = lazy(() => import("../features/nba/NbaBarTriviaOwnerPreviewPage"));
@@ -105,6 +106,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/auction", element: <AuctionPage /> },
       { path: "play/wheel", element: <UfcWheelPage /> },
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
+      { path: "play/higher-lower", element: <TodayChallengeGameRoute gameType="higher_lower" casual={<UfcHigherLowerPage />} /> },
       { path: "play/20-questions", element: <Navigate to="/play/who-am-i" replace /> },
       { path: "play/who-am-i", element: <TodayChallengeGameRoute gameType="who_am_i" casual={<UfcWhoAmIPage />} /> },
       { path: "play/millionaire", element: <TodayChallengeGameRoute gameType="millionaire" casual={<MillionaireCasualPage scope="ufc" />} /> },

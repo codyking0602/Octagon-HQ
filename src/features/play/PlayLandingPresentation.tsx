@@ -15,6 +15,7 @@ export const PLAY_LANDING_UFC_GAME_ORDER = [
   "auction",
   "find-leader",
   "who-am-i",
+  "higher-lower",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_UFC_WHEEL_GAME = "wheel-ufc" as const satisfies PlayGameId;
