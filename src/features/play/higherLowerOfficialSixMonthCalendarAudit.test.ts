@@ -88,7 +88,7 @@ describe("Six-month Higher or Lower calendar-bound source and duplication audit"
     if(process.env.OCTAGON_WRITE_HL_AUDIT==="1"){
       mkdirSync("artifacts",{recursive:true});
       writeFileSync("artifacts/higher-lower-canonical-six-month-audit.json",
-        JSON.stringify({...result,certified:result.blockers.length===0},null,2)+"\\n");
+        JSON.stringify({...result,certified:result.blockers.length===0},null,2)+"\n");
     }
     console.info("HIGHER_LOWER_CALENDAR_AUDIT",JSON.stringify({
       appearances:result.appearances,requiredBoards:result.requiredBoards,
