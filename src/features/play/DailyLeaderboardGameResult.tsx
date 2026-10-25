@@ -1,5 +1,6 @@
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 import "./DailyLeaderboardGameResult.css";
+import "../../styles/football-higher-lower.css";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -1067,6 +1068,55 @@ function MillionaireLeaderboardResult({
   );
 }
 
+/**
+ * Existing standings RPC provides completed attempt answers and authoritative
+ * reveal evidence, without exposing unpublished comparisons to other members.
+ */
+function FootballHigherLowerLeaderboardResult({ resultDetail }: { resultDetail: JsonRecord }) {
+  const answers = records(resultDetail.answers);
+  const questions = records(resultDetail.reveal_questions);
+  if (answers.length !== 10 || questions.length !== 10) {
+    return <p>The official Higher or Lower question-by-question result is not available.</p>;
+  }
+  const byId = new Map(questions.map(question => [String(question.id ?? ""), question]));
+  const used = new Set<string>();
+  const rows = answers.flatMap((answer, index) => {
+    const id = String(answer.question_id ?? "");
+    if (!id || used.has(id)) return [];
+    used.add(id);
+    const question = byId.get(id);
+    if (!question) return [];
+    const known = record(question.known), hidden = record(question.hidden);
+    const knownValue = Number(known.value), hiddenValue = Number(hidden.value);
+    const correctAnswer = hiddenValue > knownValue ? "higher" : "lower";
+    const picked = String(answer.choice ?? "");
+    if (!Number.isFinite(knownValue) || !Number.isFinite(hiddenValue) || knownValue === hiddenValue
+      || !["higher", "lower"].includes(picked) || question.answer !== correctAnswer) return [];
+    return { id, index, question, known, hidden, picked, correctAnswer, correct: picked === correctAnswer };
+  });
+  if (rows.length !== 10) {
+    return <p>Some official Higher or Lower result details are unavailable; the saved score remains unchanged.</p>;
+  }
+  return <section className="page football-higher-lower" aria-label="Completed Football Higher or Lower result">
+    <section className="higher-lower-review">
+      <header><span>QUESTION + FINAL NUMBERS</span><strong>YOUR CALL</strong><em>ANSWER</em></header>
+      {rows.map(row => <div key={row.id} className={row.correct ? "is-correct" : "is-wrong"}>
+        <span className="higher-lower-review__question">
+          <small>Q{row.index + 1} · {String(row.question.metricLabel ?? "")}</small>
+          <span className="higher-lower-review__matchup">
+            <span><b>{String(row.known.name ?? "")}</b><em>{String(row.known.formattedValue ?? row.known.value ?? "")}</em></span>
+            <i aria-hidden="true">→</i>
+            <span><b>{String(row.hidden.name ?? "")}</b><em>{String(row.hidden.formattedValue ?? row.hidden.value ?? "")}</em></span>
+          </span>
+          <span className="higher-lower-review__context">{String(row.known.context ?? "")} vs {String(row.hidden.context ?? "")}</span>
+        </span>
+        <strong>{row.picked.toUpperCase()}</strong>
+        <em>{row.correctAnswer.toUpperCase()}</em>
+      </div>)}
+    </section>
+  </section>;
+}
+
 export function DailyLeaderboardGameResult({
   projection,
   resultDetail,
@@ -1074,6 +1124,9 @@ export function DailyLeaderboardGameResult({
   projection: TodayChallengeProjection;
   resultDetail: JsonRecord;
 }) {
+  if (projection.gameType === "higher_lower" && projection.sport === "football") {
+    return <FootballHigherLowerLeaderboardResult resultDetail={resultDetail} />;
+  }
   if (projection.gameType === "sports_feud") {
     return <SportsFeudLeaderboardResult projection={projection} resultDetail={resultDetail} />;
   }
