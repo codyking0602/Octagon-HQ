@@ -447,3 +447,29 @@ begin
 end;
 $function$
 ;
+-- Only the server publisher may read the private frozen comparison history.
+-- This rejects repeated/reversed pairings and source+subject reuse across
+-- all previously published Football Higher or Lower dates, not just Game 1/2.
+create or replace function public.get_football_higher_lower_publication_history(p_before_day date)
+returns jsonb language sql stable security definer set search_path = '' as $history$
+  select coalesce(jsonb_agg(b.board order by b.central_day, b.game_number), '[]'::jsonb)
+  from (
+    select daily.central_day, rounds.ordinality as game_number,
+      rounds.item #> '{private_setup_evidence,board}' as board
+    from private.daily_challenges daily
+    join private.daily_challenge_schedule_versions schedule on schedule.version=daily.schedule_version
+    join private.daily_challenge_setups setup on setup.id=daily.setup_id
+    cross join lateral jsonb_array_elements(
+      case when jsonb_typeof(setup.private_setup_evidence->'rounds')='array'
+        then setup.private_setup_evidence->'rounds'
+        else jsonb_build_array(jsonb_build_object('private_setup_evidence',setup.private_setup_evidence))
+      end
+    ) with ordinality as rounds(item,ordinality)
+    where schedule.sport='football'
+      and daily.game_type='higher_lower'
+      and daily.central_day < p_before_day
+  ) b
+  where b.board is not null;
+$history$;
+revoke all on function public.get_football_higher_lower_publication_history(date) from public, anon, authenticated;
+grant execute on function public.get_football_higher_lower_publication_history(date) to service_role;
