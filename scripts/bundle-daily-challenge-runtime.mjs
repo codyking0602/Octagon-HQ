@@ -21,6 +21,12 @@ const bundles = [
     requiredExports: ["advanceAverageFanDailyRuntime", "buildAverageFanDailySetup"],
   },
   {
+    label: "Millionaire lean Daily advance runtime",
+    entry: resolve(repoRoot, "src/features/play/millionaireDailyAdvanceRuntime.ts"),
+    fileName: "millionaire-advance.generated.mjs",
+    requiredExports: ["advanceMillionaireDailyRuntime"],
+  },
+  {
     label: "Football Daily publication runtime",
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationAll.ts"),
     fileName: "football-publication.generated.mjs",
