@@ -218,13 +218,14 @@ export default function HomePage() {
     projection: footballDailyRuntime.projection,
     sport: "football",
   });
-  const ufcDailyAdapter = todayChallengeAdapter(ufcDailyRuntime.projection?.gameType);
+  const ufcDailyAdapter = todayChallengeAdapter(ufcDailyRuntime.projection?.gameType, "ufc");
   const footballWeeklyAuctionGate = footballDailyRuntime.error instanceof TodayChallengeRepositoryError
     && footballDailyRuntime.error.code === "WEEKLY_AUCTION_REQUIRED"
     ? footballDailyRuntime.error
     : null;
   const footballDailyAdapter = todayChallengeAdapter(
     footballDailyRuntime.projection?.gameType ?? footballWeeklyAuctionGate?.previewGameType ?? undefined,
+    "football",
   );
   const footballDailyGatedPreview = Boolean(
     footballWeeklyAuctionGate?.previewGameType

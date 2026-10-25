@@ -156,6 +156,12 @@ describe("UFC Higher or Lower — six-month content readiness", () => {
     expect(official).toContain("higher-lower-feedback is-visible ");
   });
 
+  it("keeps Home's UFC and Football Daily adapters correctly sport-scoped", () => {
+    const source = readFileSync("src/features/home/HomePage.tsx", "utf8");
+    expect(source).toContain('todayChallengeAdapter(ufcDailyRuntime.projection?.gameType, "ufc")');
+    expect(source).toMatch(/footballDailyRuntime\.projection\?\.gameType[^]*?"football",\s*\)/);
+  });
+
   it("preserves the active UFC rotation, which has not yet activated Higher or Lower", () => {
     expect(UFC_LOCKED_WEIGHTED_CYCLE).not.toContain("higher_lower");
     expect(UFC_HIGHER_LOWER_RESERVED_SLOTS).toBeGreaterThanOrEqual(92);
