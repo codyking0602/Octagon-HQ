@@ -9,6 +9,7 @@ import { footballHitNumberDisplayName } from "./footballHitNumberDisplayName";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 import { wavelengthClues } from "./wavelengthEngine";
 import "./DailyTwoGameLeaderboardResult.css";
+import "../../styles/football-higher-lower.css";
 
 type JsonRecord = Record<string, unknown>;
 type Sport = "ufc" | "football" | "nba";
