@@ -19,7 +19,7 @@ export function flattenEspnRoster(payload) {
   if (!names.size) throw new Error("ESPN roster source contains no canonical athlete names.");
   return names;
 }
-export const gradeNameKey = value => String(value ?? "").normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+export const gradeNameKey = value => String(value ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
 export function wheelPriorityIdentityKeys({nfl,cfb,extraTeams=[]}) {
   const out = new Set();
   const families = ["QB", "RB", "WR", "TE", "Front Seven", "Secondary", "Head Coach"];
