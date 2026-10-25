@@ -9,7 +9,7 @@ fi
 db_url="$1"
 profile_id="73000000-0000-4000-8000-000000000001"
 today=$(psql "$db_url" --tuples-only --no-align --command \
-  "select private.daily_challenge_central_day(now());")
+  "select private.daily_challenge_active_day(private.daily_challenge_central_day(now()), 'ufc');")
 schedule_version="test-concurrency-find-leader-v1"
 
 psql "$db_url" --set ON_ERROR_STOP=on <<SQL
