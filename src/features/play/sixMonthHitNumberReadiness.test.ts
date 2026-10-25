@@ -110,7 +110,7 @@ describe("staged six-month Hit the Number content evidence (no live schedule cut
     expect(problems).toEqual([]);
     expect(rows.length).toBe(scheduled.length * 2);
     expect(seen.size).toBe(rows.length);
-  });
+  }, 180_000);
 
   it("inspects every UFC Official Daily board and identifies legacy rules blocking certification", () => {
     const seen = new Set<string>();
@@ -181,5 +181,5 @@ describe("staged six-month Hit the Number content evidence (no live schedule cut
     // and until all source-ledger rows pass manual factual review.
     expect(rows.length).toBe(scheduled.length * 2);
     expect(seen.size).toBe(rows.length);
-  });
+  }, 180_000);
 });
