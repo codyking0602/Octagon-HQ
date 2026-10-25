@@ -22,7 +22,10 @@ conservative classifications. `run.mjs` reads live private Wheel tables via
 the **existing** GitHub `SUPABASE_ACCESS_TOKEN` management API secret; compares
 canonical NFL grades and current ESPN NFL/CFB roster/ESPN AP information; parses
 UFC standard rankings; and writes no game state. A failed source query, incomplete
-roster, malformed poll, missing division or rank ambiguity must fail closed.
+roster, malformed poll, missing division or genuinely malformed rankings must fail closed.
+Official UFC ties (such as two #12 contenders followed by #14) are valid
+source facts. The collector preserves and reports them instead of fabricating
+unique positions.
 Never change a rating because of an absence, single week, or ranking shuffle.
 
 ## Checkpoints
@@ -33,12 +36,16 @@ live, end-to-end source and identity acceptance run passes. There is no second
 scheduled poll workflow: `monitor-wheel-cfb-ap-top25.yml` is manual-only.
 
 When the read-only workflow runs:
-1. Restore the artifact from the last **successful complete** run if available.
+1. Restore the artifact from the last **schema-2 source-certified** run if available.
+   Schema-1 artifacts incorrectly promoted review-held observations and cannot
+   serve as trusted baselines.
 2. Run deterministic tests, query current live identity authorities, fetch
    primary evidence and classify roster/AP/UFC changes.
 3. Preserve a factual review report; maintain explicit source errors,
    timestamps, previous values, source URL and action classifications.
-4. Promote a new snapshot artifact only after complete source validation.
+4. Promote a new snapshot artifact only after *all* certification gates pass.
+   Report-only runs still give independent NFL/CFB/UFC observations even when
+   another sport has a known grade gap; they produce no certified snapshot.
    On failure preserve the last good successful snapshot. No rating PR is
    created on an unchanged week or merely from a factual signal.
 
@@ -59,6 +66,29 @@ disabled. It was oversized; re-enabling it would create competing ownership.
 - NFL GM currently imports October 3 grade artifacts and October 5 contracts;
   detect current team/contract changes independent of ability before creating
   a fresh immutable snapshot. Preserve all historical versions.
+
+
+## October 25 live collector correction
+
+- Approved current identity counts are **626 NFL** and **1,277 CFB**, excluding
+  derived Flex. The first collector mislabeled 1,362 historical/latest CFB
+  authority rows as current. Active-only matching yields **1,264 CFB grades**,
+  leaving the 13 specific binding gaps in issue #2130. Stale historical rows are
+  reported separately, not treated as playable identities.
+- The official UFC All Rankings currently contain authentic ties at rank #12
+  in Welterweight and Heavyweight, where the next position is #14. Source
+  shape validation must accept these with explicit tie evidence, never force
+  the canonical game to misrepresent official positions.
+- Current GM contracts are only internally population-validated. An independent
+  provider refresh, economy test, head-coach source verification, headshot HTTP
+  audit, unranked UFC identity confirmation and performance-evidence filtering
+  must all pass before a baseline can be promoted.
+- Browser Vitest must never discover the monitor's `node:test` fixtures:
+  these live in `*.nodecheck.mjs` and run separately in GitHub Actions.
+- Expected review blockers produce a `review-blocked` diagnostic report;
+  a failed transport/SQL/execution stage writes `failed-not-promoted`.
+  Neither is a source-certified checkpoint. The disabled old grading task and
+  weekly replacement cron remain disabled.
 
 ## Not yet certified — prerequisites for the weekly cron
 
