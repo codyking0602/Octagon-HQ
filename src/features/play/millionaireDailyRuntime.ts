@@ -284,9 +284,12 @@ function withDitkaMemorialQuestion(run: MillionaireRun): MillionaireRun {
  * board: historical run identities and private proofs stay unchanged.
  *
  * Primary records:
- * NFL 2025 AP All-Pro (Jan 2026): nfl.com/news/2025-all-pro-team-matthew-stafford-bijan-robinson-jsn...
- * NCAA 2025 season CFP champion: ncaa.com/brackets/football/fbs/2025
- * UFC 285 official results: ufc.com/news/ufc-285-jones-vs-gane-results-highlights-winner-interviews-las-vegas
+ * NFL / AP January 2026 first-team All-Pro:
+ * https://www.nfl.com/news/2025-all-pro-team-matthew-stafford-bijan-robinson-jaxon-smith-njigba-highlight-roster
+ * College Football Playoff 2025-season national championship (January 2026):
+ * https://collegefootballplayoff.com/sports/2026/1/27/NCG-recap
+ * UFC athlete record for UFC 285 fourth-round flyweight title change:
+ * https://www.ufc.com/athlete/valentina-shevchenko
  */
 function futureMillionaireErrata(
   run: MillionaireRun,
