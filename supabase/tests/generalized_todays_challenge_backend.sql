@@ -38,6 +38,16 @@ declare
   v_streak jsonb;
   v_row public.find_leader_history;
 begin
+  -- Make the synthetic test board the canonical UFC version for this
+  -- transaction's current day. Production schedules are not changed.
+  insert into private.daily_challenge_schedule_versions (
+    version, time_zone, anchor_day, starts_on, game_cycle, sport, created_at
+  ) values (
+    'test-generalized-current-find-leader-v1', 'America/Chicago',
+    v_today, v_today, array['find_leader']::text[], 'ufc',
+    clock_timestamp() + interval '1 minute'
+  ) on conflict (version) do nothing;
+
   if private.daily_challenge_central_day(timestamptz '2026-03-08 05:59:59+00') <> date '2026-03-07'
     or private.daily_challenge_central_day(timestamptz '2026-03-08 06:00:00+00') <> date '2026-03-08'
     or private.daily_challenge_central_day(timestamptz '2026-11-01 04:59:59+00') <> date '2026-10-31'
@@ -51,16 +61,6 @@ begin
     or private.daily_challenge_expected_game('test-generalized-current-find-leader-v1', v_today + 1) <> 'find_leader' then
     raise exception 'Find the Leader-only schedule is not deterministic';
   end if;
-
-  -- Make the synthetic test board the canonical UFC version for this
-  -- transaction's current day. Production schedules are not changed.
-  insert into private.daily_challenge_schedule_versions (
-    version, time_zone, anchor_day, starts_on, game_cycle, sport, created_at
-  ) values (
-    'test-generalized-current-find-leader-v1', 'America/Chicago',
-    v_today, v_today, array['find_leader']::text[], 'ufc',
-    clock_timestamp() + interval '1 minute'
-  ) on conflict (version) do nothing;
 
   insert into auth.users (
     id,
