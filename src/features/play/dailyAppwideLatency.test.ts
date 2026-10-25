@@ -31,6 +31,9 @@ describe("all-sport Daily action latency invariants", () => {
     expect(bundler).toContain("millionaireDailyAdvanceRuntime.ts");
     expect(edge.match(/loadMillionaireAdvanceRuntime\(\)/g)?.length).toBeGreaterThanOrEqual(4);
     expect(MILLIONAIRE_TIME_BANK_MS).toBe(120_000);
+    expect(bundler).toContain("bar-trivia-advance.generated.mjs");
+    expect(bundler).toContain("barTriviaDailyAdvanceRuntime.ts");
+    expect(edge.match(/loadBarTriviaAdvanceRuntime\(\)/g)?.length).toBeGreaterThanOrEqual(4);
   });
 
   it("preserves the published Millionaire score and question progression", () => {
