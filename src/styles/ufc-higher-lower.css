@@ -91,7 +91,31 @@
 }
 .ufc-higher-lower .higher-lower-feedback.is-correct { color: #c9f2d4; }
 .ufc-higher-lower .higher-lower-feedback.is-wrong { color: #f5caca; }
+.ufc-higher-lower .higher-lower-review__matchup b,
+.ufc-higher-lower .higher-lower-review__context,
+.ufc-higher-lower .higher-lower-review__question > small {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.23;
+}
+.ufc-higher-lower .higher-lower-review > header,
+.ufc-higher-lower .higher-lower-review > div {
+  grid-template-columns: minmax(0, 1fr) 60px 58px;
+  column-gap: 6px;
+}
+.ufc-higher-lower .higher-lower-review > div { min-height: 80px; }
 @media (max-width: 520px) {
+  .ufc-higher-lower .higher-lower-review > header,
+  .ufc-higher-lower .higher-lower-review > div {
+    grid-template-columns: minmax(0, 1fr) 47px 47px;
+    column-gap: 4px;
+  }
+  .ufc-higher-lower .higher-lower-review > div { padding: 9px 6px; }
+  .ufc-higher-lower .higher-lower-review__matchup b { font-size: .61rem; }
+  .ufc-higher-lower .higher-lower-review > div > strong,
+  .ufc-higher-lower .higher-lower-review > div > em { font-size: .50rem; }
   .ufc-higher-lower .higher-lower-matchup { gap: 6px; padding: 6px; }
   .ufc-higher-lower .higher-lower-card.ufc-hl__card { padding: 6px; }
   .ufc-higher-lower .ufc-hl__portrait { height: 112px; }
