@@ -137,9 +137,10 @@ begin
   if v_schedule.version is null then raise exception 'unknown daily schedule version %',p_schedule_version; end if;
   v_length := array_length(v_schedule.game_cycle, 1);
   if v_length is null or v_length = 0 then raise exception 'empty Daily schedule %',p_schedule_version; end if;
-  -- Maintain the exact historical modulo expression for all previous UFC and
-  -- Football schedule versions. No historical reroll day may change.
-  if v_schedule.sport = 'ufc' and v_schedule.starts_on >= date '2026-10-25' then
+  -- Match the immutable version, not starts_on. Historical schedules were
+  -- created with deployment-relative starts_on values in fresh DB CI; a
+  -- historical reroll must NEVER inherit the new 48-hour UFC cadence.
+  if v_schedule.version = 'ufc-daily-v21-48h-oct25' then
     v_index := (private.daily_challenge_active_day(p_day,'ufc') - v_schedule.anchor_day) / 2;
     v_offset := ((v_index % v_length) + v_length) % v_length;
   else
