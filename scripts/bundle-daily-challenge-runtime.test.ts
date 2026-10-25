@@ -43,10 +43,10 @@ describe("daily challenge runtime bundle prerequisites", () => {
     expect(bundlerSource).toContain('generatedRuntime.buildNbaServerDailyPublication(');
     for (const [day,game] of [
       ["2026-11-01","average_fan"],["2026-11-03","sports_feud"],
-      ["2026-11-05","millionaire"],["2026-11-07","who_am_i"],
-      ["2026-11-09","find_leader"],["2026-11-11","wavelength"],
-      ["2026-11-13","bar_trivia"],["2026-11-15","hit_the_number"],
-      ["2026-11-17","higher_lower"],
+      ["2026-11-05","who_am_i"],["2026-11-07","millionaire"],
+      ["2026-11-09","hit_the_number"],["2026-11-11","find_leader"],
+      ["2026-11-13","wavelength"],["2026-11-15","sports_feud"],
+      ["2026-11-19","higher_lower"],
     ]) {
       expect(bundlerSource).toContain(`{ day: "${day}", gameType: "${game}" }`);
     }
