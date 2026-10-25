@@ -16,7 +16,10 @@ export const FOOTBALL_HIGHER_LOWER_VERSION = "football-higher-lower-v1" as const
 export const FOOTBALL_HIGHER_LOWER_QUESTION_COUNT = 10;
 export const FOOTBALL_HIGHER_LOWER_MODERN_QUESTION_MIN = 7;
 export const FOOTBALL_HIGHER_LOWER_MODERN_YEAR = 2010;
-export const FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP = 7;
+// Two boards per Official Daily appearance double the six-month question demand.
+// Preserve the canonical pair-exclusion and five-board subject/metric cooldown
+// while distributing a higher per-entity ceiling across 280 questions.
+export const FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP = 14;
 
 export type FootballHigherLowerScope = "NFL" | "CFB" | "MIXED";
 export type FootballHigherLowerLeague = "NFL" | "CFB";
