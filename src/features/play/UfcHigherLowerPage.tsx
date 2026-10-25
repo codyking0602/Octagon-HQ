@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { HigherLowerIntro, HigherLowerRoundHeader, HigherLowerPrompt, HigherLowerChoices, HigherLowerFeedback } from "./HigherLowerStandard";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FighterPhoto } from "../rankings/FighterPhoto";
 import { createReplaySeed } from "./lineupModel";
@@ -8,6 +9,7 @@ import {
 } from "./ufcHigherLowerModel";
 import "../../styles/football-higher-lower.css";
 import "../../styles/ufc-higher-lower.css";
+import "../../styles/higher-lower-standard.css";
 
 type Answer = { questionId: string; choice: UfcHigherLowerChoice; correct: boolean };
 function UfcCard({ name, context, portrait, value, hidden }: {
@@ -33,6 +35,9 @@ export default function UfcHigherLowerPage() {
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
   const [finished, setFinished] = useState(false);
   const hits = useMemo(() => answers.filter(a => a.correct).length, [answers]);
+  useLayoutEffect(() => {
+    if (board && !finished) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [index, board?.seed, finished]);
 
   function start() {
     if (timer.current) clearTimeout(timer.current);
@@ -50,17 +55,11 @@ export default function UfcHigherLowerPage() {
       if (index + 1 === UFC_HIGHER_LOWER_QUESTION_COUNT) setFinished(true);
       else setIndex(prev => prev + 1);
       setRevealed(null);
-    }, 1050);
+    }, 650);
   }
   const shell = "page football-higher-lower ufc-higher-lower";
   if (!board) return <main className={shell}>
-    <section className="higher-lower-hero ufc-hl__intro">
-      <p className="eyebrow">UFC CASUAL</p><h1>HIGHER OR LOWER</h1>
-      <strong>20 fighters. 10 comparisons. One shot at each.</strong>
-      <p>Compare real UFC career statistics: wins, finishes, knockouts, submissions and title-fight victories. No total MMA records.</p>
-      <p>Fights through August 18, 2026 · 3 approachable, 5 competitive, 2 tough.</p>
-    </section>
-    <button type="button" className="higher-lower-start" onClick={start}>START UFC BOARD</button>
+    <HigherLowerIntro sport="UFC" onStart={start} />
   </main>;
 
   if (finished) return <main className={shell}>
@@ -68,7 +67,7 @@ export default function UfcHigherLowerPage() {
       <p className="eyebrow">{hits === 10 ? "PERFECT BOARD" : "FINAL RESULT"}</p>
       <h1>{hits} / 10</h1>
       <strong>{hits === 10 ? "FLAWLESS" : hits >= 7 ? "STRONG WORK" : "RUN IT BACK"}</strong>
-      <p>UFC-only results, frozen through August 18, 2026.</p>
+      <p>10 UFC-only matchups. Ready for another?</p>
     </section>
     <section className="higher-lower-review">
       <header><span>COMPARISON + FINAL NUMBERS</span><strong>YOUR CALL</strong><em>ANSWER</em></header>
@@ -90,31 +89,17 @@ export default function UfcHigherLowerPage() {
   const current = board.questions[index]!;
   const correct = revealed === current.answer;
   return <main className={shell}>
-    <header className="higher-lower-game-header">
-      <button type="button" onClick={() => navigate("/play")} aria-label="Back to UFC Play">←</button>
-      <div><small>UFC · QUESTION {index + 1} OF 10</small><strong>HIGHER OR LOWER</strong></div>
-      <span>{hits}/{answers.length}</span>
-    </header>
-    <div className="higher-lower-progress" aria-hidden="true">
-      <i style={{ width: ((index + (revealed ? 1 : 0)) * 10) + "%" }} />
-    </div>
-    <section className="higher-lower-stat-label">
-      <small>{current.difficulty.toUpperCase()} · OFFICIAL UFC STATISTICS</small>
-      <h2>{current.metricLabel}</h2>
-      <p>UFC fights only · through August 18, 2026</p>
-    </section>
+    <HigherLowerRoundHeader sport="UFC" index={index} correct={hits}
+      completed={index + (revealed ? 1 : 0)}
+      onBack={() => navigate("/play")} backLabel="Back to UFC Play" />
+    <HigherLowerPrompt category={current.category} metric={current.metricLabel} />
     <section className="higher-lower-matchup">
       <UfcCard name={current.known.name} context={current.known.context} portrait={current.known.photoSrc} value={current.known.formattedValue} />
       <div className="higher-lower-vs">VS</div>
       <UfcCard name={current.hidden.name} context={current.hidden.context} portrait={current.hidden.photoSrc} value={revealed ? current.hidden.formattedValue : "?"} hidden={!revealed} />
     </section>
-    <section className="higher-lower-controls" aria-label="Higher or lower choice">
-      <button type="button" disabled={Boolean(revealed)} className={revealed && current.answer === "higher" ? "is-answer" : revealed === "higher" ? "is-miss" : ""} onClick={() => answer("higher")}>↑ HIGHER</button>
-      <button type="button" disabled={Boolean(revealed)} className={revealed && current.answer === "lower" ? "is-answer" : revealed === "lower" ? "is-miss" : ""} onClick={() => answer("lower")}>↓ LOWER</button>
-    </section>
-    {revealed ? <div role="status" className={"higher-lower-feedback is-visible " + (correct ? "is-correct" : "is-wrong")}>
-      <strong>{correct ? "CORRECT" : "NOT QUITE"}</strong>
-      <span>{current.hidden.name}: {current.hidden.formattedValue} · {current.answer.toUpperCase()}</span>
-    </div> : null}
+    <HigherLowerChoices revealed={revealed} answer={current.answer} onChoose={answer} />
+    <HigherLowerFeedback correct={revealed === null ? null : correct}
+      detail={revealed ? current.hidden.name + ": " + current.hidden.formattedValue : undefined} />
   </main>;
 }
