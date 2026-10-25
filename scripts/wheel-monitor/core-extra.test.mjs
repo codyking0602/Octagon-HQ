@@ -28,7 +28,7 @@ test('absence prompts a review but not an ability downgrade', () => {
   const next={...old,sourceStatus:'missing'};
   const [finding]=compareEvidence([next],{identities:[old]});
   assert.equal(finding.classification,'review-suggested');
-  assert.equal(finding.signals[0].kind,'roster-absence');
+  assert.equal(finding.signals[0].kind,'roster-absence-not-proof-of-release');
 });
 
 test('team change mandates reconciliation; position change deserves priority', () => {
