@@ -14,7 +14,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
     for (const id of FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS) expect(ids.has(id), id).toBe(false);
     for (const id of Object.keys(BAR_TRIVIA_EDITORIAL_RETIREMENTS)) expect(ids.has(id), id).toBe(false);
 
-    expect(FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS.size).toBe(71);
+    expect(FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS.size).toBe(72);
     expect(Object.keys(FOOTBALL_BAR_TRIVIA_V2_REWRITES)).toHaveLength(55);
     expect(FOOTBALL_BAR_TRIVIA_V2_LAST_CALL.filter((q) => q.league === "nfl")).toHaveLength(8);
     expect(FOOTBALL_BAR_TRIVIA_V2_LAST_CALL.filter((q) => q.league === "cfb")).toHaveLength(12);
@@ -25,7 +25,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
 
     for (const league of ["nfl", "cfb"] as const) {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
-      expect(bank).toHaveLength(league === "nfl" ? 214 : 211);
+      expect(bank).toHaveLength(league === "nfl" ? 213 : 211);
       const lastCall = bank.filter((question) => question.round === "last-call");
       expect(lastCall.length).toBeGreaterThanOrEqual(league === "nfl" ? 15 : 12);
     }
