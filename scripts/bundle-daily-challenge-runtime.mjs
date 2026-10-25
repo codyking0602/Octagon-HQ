@@ -51,14 +51,14 @@ const bundles = [
     requiredExports: ["buildNbaServerDailyPublication", "nbaDailyGameAppearance"],
     nbaSmokes: [
       { day: "2026-11-01", gameType: "average_fan" },
-      { day: "2026-11-03", gameType: "sports_feud" },
-      { day: "2026-11-05", gameType: "millionaire" },
-      { day: "2026-11-07", gameType: "who_am_i" },
-      { day: "2026-11-09", gameType: "find_leader" },
-      { day: "2026-11-11", gameType: "wavelength" },
-      { day: "2026-11-13", gameType: "bar_trivia" },
-      { day: "2026-11-15", gameType: "hit_the_number" },
-      { day: "2026-11-17", gameType: "higher_lower" },
+      { day: "2026-11-03", gameType: "bar_trivia" },
+      { day: "2026-11-05", gameType: "who_am_i" },
+      { day: "2026-11-07", gameType: "millionaire" },
+      { day: "2026-11-09", gameType: "hit_the_number" },
+      { day: "2026-11-11", gameType: "sports_feud" },
+      { day: "2026-11-13", gameType: "wavelength" },
+      { day: "2026-11-15", gameType: "find_leader" },
+      { day: "2026-11-19", gameType: "higher_lower" },
     ],
   },
   {
@@ -142,7 +142,7 @@ for (const bundle of bundles) {
       const publication = bundle.nbaSmokes
         ? generatedRuntime.buildNbaServerDailyPublication(
             smoke.day,
-            "nba-daily-regular-v1",
+            "nba-daily-regular-v2-locked",
             smoke.gameType,
           )
         : generatedRuntime.buildFootballDailyPersistenceSetup(
