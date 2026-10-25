@@ -273,7 +273,11 @@ const earlyEraIcons = new Set([
 function deepEarlyEra(row: Row) {
   return row.season != null && row.season < 1985 && !earlyEraIcons.has(row.key);
 }
-function buildAttempt(seed: string, attempt: number) {
+/** Reversed comparisons share the same immutable matchup identity. */
+export function nbaHigherLowerMatchupKey(question: Pick<NbaHigherLowerQuestion, "known" | "hidden">) {
+  return [question.known.subjectId, question.hidden.subjectId].sort().join("|");
+}
+function buildAttempt(seed: string, attempt: number, excludedPairs: ReadonlySet<string>) {
   const random = seededLineupRandom(NBA_HIGHER_LOWER_VERSION, seed, attempt);
   const categories = categoryPattern(random);
   const difficulty = shuffleLineup<NbaHigherLowerDifficulty>([
@@ -289,7 +293,8 @@ function buildAttempt(seed: string, attempt: number) {
     const category = categories[i]!;
     if (i > 0 && category === categories[i - 1]) return null;
     const eligible = (pairsByCategoryAndDifficulty.get(category + ":" + difficulty[i]!) ?? []).filter(pair =>
-      (!modernSlots[i] || pair.modern)
+      !excludedPairs.has([pair.left.id, pair.right.id].sort().join("|"))
+      && (!modernSlots[i] || pair.modern)
       && !usedPeople.has(pair.left.key) && !usedPeople.has(pair.right.key)
       && (counts.get(pair.key) ?? 0) < 2
     );
@@ -314,9 +319,9 @@ function buildAttempt(seed: string, attempt: number) {
   if (counts.size < 6) return null;
   return questions;
 }
-export function createNbaHigherLowerBoard(seed: string): NbaHigherLowerBoard {
+export function createNbaHigherLowerBoard(seed: string, excludedPairs: ReadonlySet<string> = new Set()): NbaHigherLowerBoard {
   for (let attempt = 0; attempt < 2_000; attempt++) {
-    const questions = buildAttempt(seed, attempt);
+    const questions = buildAttempt(seed, attempt, excludedPairs);
     if (questions) return { version: NBA_HIGHER_LOWER_VERSION, seed, questions };
   }
   throw new Error("NBA Higher or Lower could not build a qualified board.");
