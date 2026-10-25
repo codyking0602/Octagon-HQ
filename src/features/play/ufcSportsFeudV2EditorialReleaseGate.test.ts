@@ -8,15 +8,15 @@ import { UFC_SPORTS_FEUD_V2_MAIN_BATCH3 } from "./ufcSportsFeudV2MainBatch3";
 describe("UFC Sports Feud six-month release gate — content cannot publish prematurely",()=>{
   it("accounts for all novel drafts and never guesses approval from a raw row count",()=>{
     expect(UFC_V2_NEW_MAIN_DRAFTS).toHaveLength(68);
-    expect(UFC_V2_NEW_FAST_DRAFTS).toHaveLength(207);
+    expect(UFC_V2_NEW_FAST_DRAFTS).toHaveLength(219);
     const all=[...UFC_V2_NEW_MAIN_DRAFTS,...UFC_V2_NEW_FAST_DRAFTS];
-    expect(all).toHaveLength(275);
+    expect(all).toHaveLength(287);
     expect(new Set(all.map(q=>q.id)).size).toBe(all.length);
     expect(new Set(all.map(q=>q.prompt)).size).toBe(all.length);
     const allIds=new Set(all.map(q=>q.id));
     for(const id of UFC_V2_HELD_IDS)expect(allIds.has(id), "held ID missing from drafts: "+id).toBe(true);
     const inventory=ufcV2ProvisionalInventory();
-    expect(inventory.authoredNewMain+inventory.authoredNewFast).toBe(275);
+    expect(inventory.authoredNewMain+inventory.authoredNewFast).toBe(287);
     expect(inventory.stagedLegacyKeepMain).toBe(8);
     expect(inventory.stagedLegacyKeepFast).toBe(12);
     expect(inventory.unapprovedLegacyRewrites).toBe(15);

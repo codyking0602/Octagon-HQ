@@ -26,6 +26,7 @@ import { UFC_SPORTS_FEUD_V2_FAST_BATCH9 } from "./ufcSportsFeudV2FastBatch9";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH10 } from "./ufcSportsFeudV2FastBatch10";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH11 } from "./ufcSportsFeudV2FastBatch11";
 import { UFC_SPORTS_FEUD_V2_FAST_BATCH12 } from "./ufcSportsFeudV2FastBatch12";
+import { UFC_SPORTS_FEUD_V2_FAST_BATCH13 } from "./ufcSportsFeudV2FastBatch13";
 import { UFC_SPORTS_FEUD_V2_RETAINED_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_RETAINED_FAST_DRAFT } from "./ufcSportsFeudV2RetainedDraft";
 import { UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES } from "./ufcSportsFeudV2LegacyRewriteCandidates";
 
@@ -34,7 +35,7 @@ import { UFC_SPORTS_FEUD_V2_LEGACY_REWRITE_CANDIDATES } from "./ufcSportsFeudV2L
  * No candidate becomes live merely because the staging total reaches a quota.
  */
 export const UFC_V2_NEW_MAIN_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_MAIN_DRAFT, UFC_SPORTS_FEUD_V2_MAIN_BATCH2, UFC_SPORTS_FEUD_V2_MAIN_BATCH3, UFC_SPORTS_FEUD_V2_MAIN_BATCH4, UFC_SPORTS_FEUD_V2_MAIN_BATCH5, UFC_SPORTS_FEUD_V2_MAIN_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_MAIN_BATCH6, UFC_SPORTS_FEUD_V2_MAIN_BATCH8, UFC_SPORTS_FEUD_V2_MAIN_BATCH9, UFC_SPORTS_FEUD_V2_MAIN_BATCH10, UFC_SPORTS_FEUD_V2_MAIN_BATCH11, UFC_SPORTS_FEUD_V2_MAIN_BATCH12, UFC_SPORTS_FEUD_V2_MAIN_BATCH13].flat();
-export const UFC_V2_NEW_FAST_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_FAST_DRAFT, UFC_SPORTS_FEUD_V2_FAST_BATCH2, UFC_SPORTS_FEUD_V2_FAST_BATCH3, UFC_SPORTS_FEUD_V2_FAST_BATCH4, UFC_SPORTS_FEUD_V2_FAST_BATCH5, UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_FAST_BATCH6, UFC_SPORTS_FEUD_V2_FAST_BATCH7, UFC_SPORTS_FEUD_V2_FAST_BATCH8, UFC_SPORTS_FEUD_V2_FAST_BATCH9, UFC_SPORTS_FEUD_V2_FAST_BATCH10, UFC_SPORTS_FEUD_V2_FAST_BATCH11, UFC_SPORTS_FEUD_V2_FAST_BATCH12].flat();
+export const UFC_V2_NEW_FAST_DRAFTS: readonly UFCFeudDraft[] = [UFC_SPORTS_FEUD_V2_FAST_DRAFT, UFC_SPORTS_FEUD_V2_FAST_BATCH2, UFC_SPORTS_FEUD_V2_FAST_BATCH3, UFC_SPORTS_FEUD_V2_FAST_BATCH4, UFC_SPORTS_FEUD_V2_FAST_BATCH5, UFC_SPORTS_FEUD_V2_FAST_BATCH5_SUPPLEMENT, UFC_SPORTS_FEUD_V2_FAST_BATCH6, UFC_SPORTS_FEUD_V2_FAST_BATCH7, UFC_SPORTS_FEUD_V2_FAST_BATCH8, UFC_SPORTS_FEUD_V2_FAST_BATCH9, UFC_SPORTS_FEUD_V2_FAST_BATCH10, UFC_SPORTS_FEUD_V2_FAST_BATCH11, UFC_SPORTS_FEUD_V2_FAST_BATCH12, UFC_SPORTS_FEUD_V2_FAST_BATCH13].flat();
 
 export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast-faceoff-gestures",
@@ -132,6 +133,10 @@ export const UFC_V2_HELD_IDS: ReadonlySet<string> = new Set([
   "ufc-v2-fast11-fight-week-briefing",
   "ufc-v2-fast11-fighter-interview-lessons",
   "ufc-v2-fast11-cage-mistakes",
+  // Same semantic families as existing alternatives; not distinct rotation slots.
+  "ufc-v2-fast13-contract-negotiations",
+  "ufc-v2-fast13-suspension-recovery",
+  "ufc-v2-fast13-fouls-penalties",
 ]);
 // Only a complete reviewer fact/aliases signoff should add an ID here. The two
 // lists intentionally start empty; staging is not production certification.
