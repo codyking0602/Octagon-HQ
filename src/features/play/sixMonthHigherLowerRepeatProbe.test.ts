@@ -20,7 +20,8 @@ describe("Higher or Lower six-month reverse-pair audit (no activation)", () => {
       nba: { dates: 0, questions: 0, uniquePairs: 0 }, reversedOrRepeated: 0, examples: [] as string[] };
     for (const slot of slots) {
       if (slot.sport === "nba" && slot.day > NBA_REGULAR_SEASON_LAST_DAY) continue;
-      const version = slot.sport + "-six-month-candidate-v1-NOT-LIVE";
+      const sport = slot.sport === "football" ? "football" : "nba";
+      const version = sport + "-six-month-candidate-v1-NOT-LIVE";
       const questions = slot.sport === "football"
         ? createFootballHigherLowerBoard(
             [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, version, slot.day].join("|"), "MIXED",
@@ -30,10 +31,10 @@ describe("Higher or Lower six-month reverse-pair audit (no activation)", () => {
             known: { subjectId: string }; hidden: { subjectId: string }; metricKey?: string; category?: string;
           }>);
       expect(questions).toHaveLength(10);
-      output[slot.sport].dates++;
+      output[sport].dates++;
       for (const question of questions) {
-        output[slot.sport].questions++;
-        const key = slot.sport + "|" + undirectedPair(
+        output[sport].questions++;
+        const key = sport + "|" + undirectedPair(
           "metricKey" in question && question.metricKey
             ? question.metricKey : ("category" in question ? String(question.category) : "unknown"),
           question.known.subjectId, question.hidden.subjectId,
