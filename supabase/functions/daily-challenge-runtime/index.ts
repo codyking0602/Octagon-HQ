@@ -106,6 +106,9 @@ type NbaAdvanceRuntimeModule = {
 type NbaFeudAdvanceRuntimeModule = {
   advanceFamilyFeudDailyCore: DailyAdvanceRuntime;
 };
+type MillionaireAdvanceRuntimeModule = {
+  advanceMillionaireDailyRuntime: DailyAdvanceRuntime;
+};
 // Never open NBA Daily merely because November 1 arrives. The frontend and
 // leaderboard adapter must pass the exact-head release verification first.
 const NBA_DAILY_EDGE_RELEASE_READY = false;
@@ -127,6 +130,7 @@ let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
+let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
 
 function loadUfcRuntime() {
   if (!ufcRuntimePromise) {
@@ -167,6 +171,13 @@ function loadNbaFeudAdvanceRuntime() {
     nbaFeudAdvanceRuntimePromise = import("./nba-feud-advance.generated.mjs") as Promise<NbaFeudAdvanceRuntimeModule>;
   }
   return nbaFeudAdvanceRuntimePromise;
+}
+
+function loadMillionaireAdvanceRuntime() {
+  if (!millionaireAdvanceRuntimePromise) {
+    millionaireAdvanceRuntimePromise = import("./millionaire-advance.generated.mjs") as Promise<MillionaireAdvanceRuntimeModule>;
+  }
+  return millionaireAdvanceRuntimePromise;
 }
 
 function loadAverageFanRuntime() {
@@ -506,6 +517,37 @@ async function averageFanPublicationHistory(
   return response.data;
 }
 
+// An in-progress answer never needs to rerun publication/cutover/reset SQL.
+ // The authoritative database descriptor still verifies the current Central day
+ // and publication identity on EVERY action; a missing board falls back to the
+ // existing full materialization path. Initial reads and scheduled operations
+ // retain their historical recovery and publication behavior.
+async function resolveInteractiveDaily(
+  admin: SupabaseClient,
+  sport: "ufc" | "football",
+  mode: unknown,
+) {
+  const materialize = () => sport === "football"
+    ? materializeFootballToday(admin)
+    : materializeToday(admin);
+  if (mode !== "advance") return materialize();
+
+  const response = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: sport,
+  });
+  if (response.error) throw new Error("The current Daily publication identity is unavailable.");
+  const request = requiredRecord(response.data, "Current Daily publication identity");
+  if (request.required !== false) return materialize();
+
+  return {
+    dailyChallengeId: requiredString(request.daily_challenge_id, "Published Daily id"),
+    centralDay: requiredString(request.central_day, "Published Central day"),
+    scheduleVersion: requiredString(request.schedule_version, "Published schedule version"),
+    gameType: requiredString(request.published_game, "Published game type"),
+    created: false,
+  };
+}
+
 async function materializeToday(admin: SupabaseClient, at?: string) {
   const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "ufc" });
   if (prepared.error) {
@@ -802,8 +844,14 @@ async function handleNbaDaily(
     }
     throw new Error("NBA official Daily progress could not be persisted.");
   }
-  context = await getContext(admin, materialized.dailyChallengeId, profileId);
-  context = await finalizePending(userClient, admin, context, profileId);
+  context = advanced.complete
+    ? await finalizePending(
+        userClient,
+        admin,
+        await getContext(admin, materialized.dailyChallengeId, profileId),
+        profileId,
+      )
+    : savedIntermediateContext(context, saved.data, nextSubmissionState);
   return payload();
 }
 
@@ -914,6 +962,31 @@ function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
     reveal_setup: attempt ? context.reveal_setup : null,
     official_attempt: attempt,
     deployment_sha: DEPLOYED_SOURCE_SHA,
+  };
+}
+
+// The save RPC already returns the authoritative revision and public state.
+ // Intermediate actions need no second context read: private grading and
+ // immutable setup are unchanged, and final actions still run canonical
+ // grading/finalization on a fresh context.
+function savedIntermediateContext(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  savedData: unknown,
+  submissionState: JsonRecord,
+) {
+  const saved = requiredRecord(savedData, "Saved Daily progress");
+  const publicState = requiredRecord(saved.public_state, "Saved Daily public state");
+  const revision = Number(saved.revision);
+  if (!Number.isInteger(revision) || revision <= Number(context.progress_revision)) {
+    throw new Error("Saved Daily progress revision is invalid.");
+  }
+  return {
+    ...context,
+    progress_revision: revision,
+    submission_state: submissionState,
+    submissionState,
+    public_state: publicState,
+    publicState,
   };
 }
 
@@ -1519,7 +1592,7 @@ Deno.serve(async (request) => {
 
     if (body.sport === "football") {
       // Daily can load immediately, irrespective of Weekly Auction participation.
-      const materialized = await materializeFootballToday(admin);
+      const materialized = await resolveInteractiveDaily(admin, "football", body.mode);
       let context = await getContext(admin, materialized.dailyChallengeId, profileId);
       context = await finalizePending(userClient, admin, context, profileId);
       context = await continueTwoGameWithoutIntermission(admin, context, profileId);
@@ -1555,21 +1628,24 @@ Deno.serve(async (request) => {
       if (!advanced) {
         const advanceFootballRuntime = context.gameType === "average_fan"
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
-          : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
+          : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
+            ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
+            : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
         context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
         advanced = isDailyCombo(context)
           ? advanceDailyCombo(context, action, advanceFootballRuntime)
           : advanceFootballRuntime(context, action);
       }
       const history = footballActionHistory(context);
+      const nextSubmissionState = submissionStateWithClientActionId({
+        ...advanced.submissionState,
+        action_history: [...history, action],
+      }, dailyClientActionIds(context), clientActionId);
       const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
         p_daily_challenge_id: materialized.dailyChallengeId,
         p_profile_id: profileId,
         p_expected_revision: Number(context.progress_revision),
-        p_submission_state: submissionStateWithClientActionId({
-          ...advanced.submissionState,
-          action_history: [...history, action],
-        }, dailyClientActionIds(context), clientActionId),
+        p_submission_state: nextSubmissionState,
         p_public_state: advanced.publicState,
       });
       if (saved.error) {
@@ -1579,12 +1655,18 @@ Deno.serve(async (request) => {
         throw new Error("The official Football daily progress could not be saved.");
       }
 
-      context = await getContext(admin, materialized.dailyChallengeId, profileId);
-      context = await finalizePending(userClient, admin, context, profileId);
+      context = advanced.complete
+        ? await finalizePending(
+            userClient,
+            admin,
+            await getContext(admin, materialized.dailyChallengeId, profileId),
+            profileId,
+          )
+        : savedIntermediateContext(context, saved.data, nextSubmissionState);
       return json(footballPublicPayload(context));
     }
 
-    const materialized = await materializeToday(admin);
+    const materialized = await resolveInteractiveDaily(admin, "ufc", body.mode);
     let context = await getContext(admin, materialized.dailyChallengeId, profileId);
     context = await finalizePending(userClient, admin, context, profileId);
     context = await continueTwoGameWithoutIntermission(admin, context, profileId);
@@ -1617,7 +1699,9 @@ Deno.serve(async (request) => {
         ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
         : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
           ? advancePersistedBlindResumeV3
-          : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
+          : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
+            ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
+            : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
       advanced = isDailyCombo(context)
         ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
         : advanceUfcRuntime(context, body.action);
@@ -1636,15 +1720,16 @@ Deno.serve(async (request) => {
           action_history: [...priorMillionaireActions, requiredRecord(body.action, "UFC Millionaire action")],
         }
       : advanced.submissionState;
+    const nextSubmissionState = submissionStateWithClientActionId(
+      persistedUfcSubmission,
+      dailyClientActionIds(context),
+      clientActionId,
+    );
     const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
       p_daily_challenge_id: materialized.dailyChallengeId,
       p_profile_id: profileId,
       p_expected_revision: Number(context.progress_revision),
-      p_submission_state: submissionStateWithClientActionId(
-        persistedUfcSubmission,
-        dailyClientActionIds(context),
-        clientActionId,
-      ),
+      p_submission_state: nextSubmissionState,
       p_public_state: advanced.publicState,
     });
     if (saved.error) {
@@ -1654,8 +1739,14 @@ Deno.serve(async (request) => {
       throw new Error("The official daily progress could not be saved.");
     }
 
-    context = await getContext(admin, materialized.dailyChallengeId, profileId);
-    context = await finalizePending(userClient, admin, context, profileId);
+    context = advanced.complete
+      ? await finalizePending(
+          userClient,
+          admin,
+          await getContext(admin, materialized.dailyChallengeId, profileId),
+          profileId,
+        )
+      : savedIntermediateContext(context, saved.data, nextSubmissionState);
     return json(publicPayload(context));
   } catch (error) {
     const message = error instanceof Error ? error.message : "The official daily runtime failed safely.";
