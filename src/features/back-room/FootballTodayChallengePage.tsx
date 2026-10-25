@@ -91,32 +91,67 @@ function strings(value: unknown) {
   return Array.isArray(value) ? value.filter((row): row is string => typeof row === "string") : [];
 }
 
-function optimisticFootballHitNumberToggle(
+function footballHitNumberOptimisticProjection(
+  projection: TodayChallengeProjection,
+  selectedIds: string[],
+): TodayChallengeProjection {
+  const setup = projection.publicSetup;
+  const slots = records(setup.slots);
+  const pickCount = Number(setup.pick_count ?? 0);
+  const candidates = records(setup.candidates).map((candidate) => String(candidate.id ?? ""));
+  if (selectedIds.length > pickCount || new Set(selectedIds).size !== selectedIds.length) return projection;
+  if (selectedIds.some((id) => !candidates.includes(id))) return projection;
+
+  let nextPublicState: JsonRecord = {
+    ...projection.publicState,
+    complete: false,
+    selected_ids: selectedIds,
+  };
+  if (slots.length > 0) {
+    // All slot eligibility is already safe public information: never expose
+    // grading values. This is provided by the runtime for persisted boards too.
+    const rawEligibility = setup.slot_eligible_ids;
+    if (
+      !Array.isArray(rawEligibility)
+      || rawEligibility.length !== slots.length
+      || rawEligibility.some((row) => !Array.isArray(row) || row.some((id) => typeof id !== "string"))
+    ) return projection;
+    const eligibility = rawEligibility as string[][];
+    if (selectedIds.some((id, index) => !eligibility[index]?.includes(id))) return projection;
+    const index = selectedIds.length < slots.length ? selectedIds.length : null;
+    nextPublicState = {
+      ...nextPublicState,
+      active_slot: index === null ? null : { ...slots[index], index },
+      available_subject_ids: index === null
+        ? candidates
+        : eligibility[index]!.filter((id) => !selectedIds.includes(id)),
+    };
+  }
+  return { ...projection, publicState: nextPublicState };
+}
+
+export function optimisticFootballHitNumberToggle(
   projection: TodayChallengeProjection,
   fighterId: string,
-) {
-  const setup = projection.publicSetup;
-  // Progression boards expose only the current slot's eligible universe. The
-  // next slot is server-owned, so those boards intentionally wait for the
-  // authoritative response rather than guessing the next candidate set.
-  if (records(setup.slots).length > 0) return projection;
-
+): TodayChallengeProjection {
   const selected = strings(projection.publicState.selected_ids);
-  const pickCount = Number(setup.pick_count ?? 0);
+  const slots = records(projection.publicSetup.slots);
   const alreadySelected = selected.includes(fighterId);
-  if (!alreadySelected && selected.length >= pickCount) return projection;
+  if (alreadySelected && slots.length > 0 && selected.at(-1) !== fighterId) return projection;
   const next = alreadySelected
-    ? selected.filter((id) => id !== fighterId)
+    ? slots.length > 0 ? selected.slice(0, -1) : selected.filter((id) => id !== fighterId)
     : [...selected, fighterId];
+  return footballHitNumberOptimisticProjection(projection, next);
+}
 
-  return {
-    ...projection,
-    publicState: {
-      ...projection.publicState,
-      complete: false,
-      selected_ids: next,
-    },
-  };
+export function optimisticFootballHitNumberRewind(
+  projection: TodayChallengeProjection,
+  slotIndex: number,
+): TodayChallengeProjection {
+  const selected = strings(projection.publicState.selected_ids);
+  if (!records(projection.publicSetup.slots).length
+    || !Number.isInteger(slotIndex) || slotIndex < 0 || slotIndex >= selected.length) return projection;
+  return footballHitNumberOptimisticProjection(projection, selected.slice(0, slotIndex));
 }
 
 function item(value: unknown): PublicItem | null {
@@ -513,7 +548,7 @@ function HitTheNumber({ projection, advance }: GameProps) {
         selectedIds={selectedIds}
         slots={slots}
         activeSlotIndex={activeSlotIndex}
-        availableIds={availableIds.length ? availableIds : candidates.map((candidate) => candidate.id)}
+        availableIds={slots.length > 0 ? availableIds : availableIds.length ? availableIds : candidates.map((candidate) => candidate.id)}
         values={projection.officialAttempt ? values : undefined}
         result={projection.officialAttempt ? {
           status,
@@ -523,21 +558,18 @@ function HitTheNumber({ projection, advance }: GameProps) {
           score: dailyTwoGameActiveScore(projection) ?? projection.officialAttempt.normalizedScore,
         } : null}
         formatValue={formatValue}
-        onToggle={projection.officialAttempt ? null : (id) => {
-          const progression = slots.length > 0;
-          const selected = selectedIds.includes(id);
-          advance(
-            { fighter_id: id },
-            progression
-              ? undefined
-              : {
-                  dedupeKey: `football-hit-number:${id}:${selected ? "remove" : "add"}`,
-                  optimisticUpdate: (current) => optimisticFootballHitNumberToggle(current, id),
-                },
-          );
-        }}
-        onRewind={projection.officialAttempt ? null : (index) => advance({ rewind_to: index })}
-        onLock={projection.officialAttempt ? null : () => advance({ lock: true })}
+        onToggle={projection.officialAttempt ? null : (id) => advance(
+          { fighter_id: id },
+          { optimisticUpdate: (current) => optimisticFootballHitNumberToggle(current, id) },
+        )}
+        onRewind={projection.officialAttempt ? null : (index) => advance(
+          { rewind_to: index },
+          { optimisticUpdate: (current) => optimisticFootballHitNumberRewind(current, index) },
+        )}
+        onLock={projection.officialAttempt ? null : () => advance(
+          { lock: true },
+          { dedupeKey: `football-hit-number:lock:${projection.id}` },
+        )}
       />
     </div>
   );
