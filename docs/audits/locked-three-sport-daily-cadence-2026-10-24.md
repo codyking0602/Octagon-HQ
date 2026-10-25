@@ -10,7 +10,7 @@ The prior UFC schedule advances a 29-slot game cycle **every single calendar day
 
 - Football: daily; deterministic 26-slot future cycle. Existing NFL/CFB rules, four prior Bar Trivia league appearances, and approved Cowboys Oct 26 Millionaire, Longhorns Nov 27 Feud, and Cowboys Dec 7 Bar Trivia are preserved.
 - UFC: Oct 25/27/29/31, Nov 2/4/6, continuing on odd October / even November Central calendar dates. Each published board remains active on the intervening day. Future cycle has 28 game appearances (56 Central days).
-- NBA: Nov 1/3/5/.../Apr 11; 81 official regular-season publication dates, 28-slot cycle (56 Central days); owner-preview and public-launch gates remain separately closed until authorized.
+- NBA: Nov 1/3/5/.../Apr 10 openings, with the April 10 board playable through April 11; 81 official regular-season publication dates, 28-slot cycle (56 Central days); owner-preview and public-launch gates remain separately closed until authorized.
 - October 24 and earlier always resolve to the original immutable schedule versions. No prior attempt, streak, title or question board is rewritten. Unfinished Football/UFC Higher or Lower are absent from their active cycles; reserved Football 2x is a future activation gate, not a substitute game.
 - Approved active weights: Football and UFC Average Fan **4×** (correcting legacy 5×), both Hit the Number **2×**; Football Higher or Lower **future 2×** (inactive), UFC Higher or Lower inactive; NBA unchanged at 4/4/4, 3/3/3/3, 2/2.
 
