@@ -918,9 +918,41 @@ function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
 }
 
 function footballPublicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const payload = publicPayload(context);
+  if (context.gameType !== "hit_the_number") {
+    return { ...payload, sport: "football", action_history: footballActionHistory(context) };
+  }
+
+  // Publish only the per-slot *eligibility*, never grading/stat values. It is
+  // immutable for a board and lets the client advance its pick UI instantly
+  // while each authoritative selection remains queued for server persistence.
+  // Read it from the saved private setup so previously published boards also
+  // gain the same responsive experience without rewriting their identities.
+  const evidence = isTwoGameDaily(context)
+    ? requiredRecord(
+        twoGameChild(context, twoGameSeriesState(context).game_index).private_setup_evidence,
+        "Football Hit the Number child eligibility",
+      )
+    : context.privateSetupEvidence;
+  const setup = requiredRecord(payload.public_setup, "Football Hit the Number public setup");
+  const slots = setup.slots;
+  const candidates = setup.candidates;
+  const eligibleRows = evidence.progression_slot_subject_ids;
+  const candidateIds = Array.isArray(candidates)
+    ? new Set(candidates.map((candidate) => asRecord(candidate)?.id).filter((id): id is string => typeof id === "string"))
+    : new Set<string>();
+  const safeEligibility = Array.isArray(slots) && slots.length > 0
+    && slots.length === Number(setup.pick_count)
+    && Array.isArray(eligibleRows) && eligibleRows.length === slots.length
+    && eligibleRows.every((row) => Array.isArray(row)
+      && row.every((id) => typeof id === "string" && candidateIds.has(id)));
+
   return {
-    ...publicPayload(context),
+    ...payload,
     sport: "football",
+    public_setup: safeEligibility
+      ? { ...setup, slot_eligible_ids: eligibleRows }
+      : setup,
     action_history: footballActionHistory(context),
   };
 }
