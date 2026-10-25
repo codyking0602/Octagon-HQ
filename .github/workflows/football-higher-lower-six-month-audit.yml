@@ -23,6 +23,16 @@ jobs:
       - run: npm ci --silent --no-audit --no-fund
       - name: Generate pinned football factual projections
         run: npm run pretest
+      - name: Verify Official Daily, Casual game, leaderboard and NBA isolation
+        run: >
+          npx vitest run
+          src/features/play/footballHigherLowerDailyRuntime.test.ts
+          src/features/back-room/footballHigherLowerModel.test.ts
+          src/features/back-room/FootballHigherLowerPresentation.test.ts
+          src/features/play/footballHigherLowerChallenge.test.ts
+          src/features/play/footballDailyPublicationSplit.test.ts
+          src/features/nba/nbaHigherLowerModel.test.ts
+          src/features/nba/NbaHigherLowerLeaderboardResult.test.ts
       - name: Execute all provisional official Daily boards and assertions
         run: OCTAGON_WRITE_HL_AUDIT=1 npx vitest run src/features/play/footballHigherLowerSixMonthAudit.test.ts
       - name: Upload reproducible, question-level simulation

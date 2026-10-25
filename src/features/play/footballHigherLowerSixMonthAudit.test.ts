@@ -5,6 +5,7 @@ import {
   auditFootballHigherLowerDailyDates,
 } from "./footballHigherLowerSixMonthAudit";
 import { FOOTBALL_LOCKED_WEIGHTED_CYCLE } from "./dailyChallengeRotation";
+import { FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP } from "../back-room/footballHigherLowerModel";
 import { NBA_OFFICIAL_GAMES_RELEASE_READY } from "../nba/nbaDailySchedule";
 
 /**
@@ -40,6 +41,15 @@ describe("Football Higher or Lower six-month readiness / integration gate", () =
     expect(s.invalidBindings).toBe(0);
     expect(s.incorrectGrading).toBe(0);
     expect(s.duplicateBoards).toBe(0);
+    expect(s.mostRepeatedSubjects[0]?.appearances ?? 0).toBeLessThanOrEqual(
+      FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP,
+    );
+    expect(s.uniqueSubjectSeasons).toBeGreaterThanOrEqual(130);
+    expect(Object.keys(s.categoryCounts).length).toBeGreaterThanOrEqual(6);
+    const franchiseSubjects = result.boards.flatMap(board => board.questions.flatMap(q =>
+      [q.known, q.hidden].filter(side => side.evidence.kind === "franchise")));
+    expect(franchiseSubjects.length).toBeGreaterThan(0);
+    expect(franchiseSubjects.every(side => !/^[A-Z]{2,4}$/.test(side.name))).toBe(true);
     expect(s.difficultyCounts).toEqual({ approachable: 42, competitive: 70, tough: 28 });
     expect(result.boards.every(board => board.questions.length === 10)).toBe(true);
     expect(auditFootballHigherLowerDailyDates(
