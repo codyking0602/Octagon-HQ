@@ -9,6 +9,14 @@ import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./daily
 import type { BarTriviaQuestion } from "../games/barTriviaEngine";
 
 describe("Football Bar Trivia quality-first six-month bank", () => {
+  it("requires claim-specific verified sources for all 55 rewrites before the v22 release", () => {
+    for (const [id, rewrite] of Object.entries(FOOTBALL_BAR_TRIVIA_V2_REWRITES)) {
+      expect(rewrite.sourceId, id).not.toContain("fact-check-pending");
+      expect(rewrite.sourceUrl, id).toMatch(/^https:\/\//);
+      expect(rewrite.verifiedAt, id).toMatch(/^2026-/);
+    }
+  });
+
   it("honors every v2 retirement and preserves correct four-choice grading for replacements", () => {
     const ids = new Set(BAR_TRIVIA_QUESTION_BANK.map((question) => question.id));
     for (const id of FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS) expect(ids.has(id), id).toBe(false);
