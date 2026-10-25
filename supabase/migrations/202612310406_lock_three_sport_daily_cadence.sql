@@ -177,8 +177,12 @@ returns trigger language plpgsql set search_path = '' as $fn$
 declare v_sport text; v_canonical text;
 begin
   select sport into v_sport from private.daily_challenge_schedule_versions where version = new.schedule_version;
-  if (v_sport = 'ufc' and new.central_day >= date '2026-10-25')
+  if (v_sport in ('ufc','football') and new.central_day >= date '2026-10-25')
      or (v_sport = 'nba' and new.central_day >= date '2026-11-01') then
+    if new.fallback_reason is not null
+       or new.game_type is distinct from private.daily_challenge_expected_game(new.schedule_version,new.central_day) then
+      raise exception '% Daily may not silently substitute the locked game on %',v_sport,new.central_day;
+    end if;
     if private.daily_challenge_active_day(new.central_day,v_sport) <> new.central_day then
       raise exception '% Daily cannot publish on a non-opening day %',v_sport,new.central_day;
     end if;
