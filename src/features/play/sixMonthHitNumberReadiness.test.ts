@@ -119,7 +119,7 @@ describe("staged six-month Hit the Number content evidence (no live schedule cut
     const counts: Record<number, number> = {};
     const scheduled = schedule.ufc.filter(({ game }) => game === "hit_the_number");
     for (const { day } of scheduled) {
-      const publication = buildOfficialDailySetup(day, SIX_MONTH_PREVIEW_VERSION, "hit_the_number");
+      const publication = buildOfficialDailySetup("hit_the_number", day, SIX_MONTH_PREVIEW_VERSION);
       const rounds = childRounds(publication);
       for (const [index, { privateRound, publicRound }] of rounds.entries()) {
         const board = json(publicRound);
