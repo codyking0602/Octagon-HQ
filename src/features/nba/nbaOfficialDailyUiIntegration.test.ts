@@ -33,7 +33,8 @@ describe("NBA official Daily client release safety and all nine presentations", 
     expect(officialPageSource).toContain('onToggle={result || busy ? null');
     expect(officialPageSource).toContain('onEliminate={attempt || busy ? null');
     expect(officialPageSource).toContain('onAdvance({ choice: "higher" })'.replace("onAdvance", "advance"));
-    expect(officialPageSource).toContain('if (attempt) {\n    return <NbaHigherLowerLeaderboardResult');
+    expect(officialPageSource).toContain('return <DailyTwoGameLeaderboardResult projection={projection}');
+    expect(officialPageSource).toContain('return <NbaHigherLowerLeaderboardResult');
   });
   it("preserves NBA-specific identity, hosts and Average Fan subject formatting in shared official views", () => {
     expect(officialWhoSource).toContain('configuredSport === "nba"');
