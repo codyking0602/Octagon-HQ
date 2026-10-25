@@ -16,6 +16,7 @@ export const FOOTBALL_HIGHER_LOWER_VERSION = "football-higher-lower-v1" as const
 export const FOOTBALL_HIGHER_LOWER_QUESTION_COUNT = 10;
 export const FOOTBALL_HIGHER_LOWER_MODERN_QUESTION_MIN = 7;
 export const FOOTBALL_HIGHER_LOWER_MODERN_YEAR = 2010;
+export const FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP = 5;
 
 export type FootballHigherLowerScope = "NFL" | "CFB" | "MIXED";
 export type FootballHigherLowerLeague = "NFL" | "CFB";
@@ -86,6 +87,7 @@ export interface FootballHigherLowerPreviousComparisonKeys {
   subjectPairs: ReadonlySet<string>;
   /** An individual subject compared on the same metric on a previous date. */
   subjectMetrics: ReadonlySet<string>;
+  appearancesByEntity: ReadonlyMap<string, number>;
 }
 
 interface PairCandidate {
@@ -621,6 +623,10 @@ function metricReferenceYear(subject: FootballSubjectProfile, spec: MetricSpec) 
 }
 
 function displaySubjectName(subject: FootballSubjectProfile) {
+  if (subject.league === "NFL" && subject.kind === "franchise") {
+    const code = (subject.teamId?.replace(/^nfl:/, "") ?? subject.name).toLowerCase();
+    return NFL_TEAM_DISPLAY_NAMES[code] ?? subject.name;
+  }
   if (subject.kind === "player-season" && subject.season != null) {
     return subject.name.replace(new RegExp(`\\s+${subject.season}$`), "");
   }
@@ -638,6 +644,7 @@ function displaySubjectName(subject: FootballSubjectProfile) {
 }
 
 function subjectContext(subject: FootballSubjectProfile, spec: MetricSpec, referenceYear: number | null) {
+  if (subject.kind === "franchise") return "NFL FRANCHISE · 1999–2025";
   const position = subject.position ?? "PLAYER";
   if (spec.category === "draft") {
     return `${subject.draftYear ?? referenceYear ?? "NFL"} DRAFT · ${position}`;
@@ -981,7 +988,17 @@ export function footballHigherLowerSubjectMetricKey(subjectId: string, metricKey
 export function footballHigherLowerExclusionKeys(
   questions: readonly FootballHigherLowerQuestion[],
 ): FootballHigherLowerPreviousComparisonKeys {
+  const appearancesByEntity = new Map<string, number>();
+  for (const q of questions) {
+    for (const row of [q.known, q.hidden]) {
+      const subject = getFootballSubject(row.subjectId);
+      if (!subject) throw new Error("Higher or Lower history contains an unknown entity.");
+      const key = entityKey(subject);
+      appearancesByEntity.set(key, (appearancesByEntity.get(key) ?? 0) + 1);
+    }
+  }
   return {
+    appearancesByEntity,
     subjectPairs: new Set(questions.map(q => footballHigherLowerSemanticPairKey(q.known.subjectId, q.hidden.subjectId))),
     subjectMetrics: new Set(questions.flatMap(q => [
       footballHigherLowerSubjectMetricKey(q.known.subjectId, q.metricKey),
@@ -1043,6 +1060,8 @@ export function createFootballHigherLowerBoard(
   const sourceCandidates = officialDaily ? officialDailyPairCandidates : allPairCandidates;
   const candidates = excluded ? sourceCandidates.filter(pair => (
     !excluded.subjectPairs.has(footballHigherLowerSemanticPairKey(pair.left.subject.id, pair.right.subject.id))
+    && (excluded.appearancesByEntity.get(entityKey(pair.left.subject)) ?? 0) < FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP
+    && (excluded.appearancesByEntity.get(entityKey(pair.right.subject)) ?? 0) < FOOTBALL_HIGHER_LOWER_OFFICIAL_SUBJECT_REUSE_CAP
     && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.left.subject.id, pair.metricKey))
     && !excluded.subjectMetrics.has(footballHigherLowerSubjectMetricKey(pair.right.subject.id, pair.metricKey))
   )) : sourceCandidates;
