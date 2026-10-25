@@ -66,7 +66,8 @@ function sixMonthCalendar(): CalendarEntry[] {
         expect(question.choices.map(choice => choice.id).sort()).toEqual(["A", "B", "C", "D"]);
         expect(new Set(question.choices.map(choice => choice.text.toLowerCase().trim())).size).toBe(4);
         expect(question.choices.filter(choice => choice.id === question.correctChoiceId)).toHaveLength(1);
-        expect(question.statSheet).toBe(level === 7 ? null : expect.any(String));
+        if (level === 7) expect(question.statSheet).toBeNull();
+        else expect(typeof question.statSheet).toBe("string");
         if (level === 7) expect(question.lifelineCompatibility.statSheet).toBe(false);
       });
       expect(new Set(run.map(question => question.id)).size).toBe(8);
