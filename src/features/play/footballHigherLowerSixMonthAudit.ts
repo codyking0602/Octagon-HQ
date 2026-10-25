@@ -64,7 +64,13 @@ export function auditFootballHigherLowerDailyDates(
   let priorSubjects = new Set<string>();
 
   for (const day of dates) {
-    const publication = buildFootballHigherLowerDailyPublication(day, scheduleVersion, allPriorQuestions);
+    let publication;
+    try {
+      publication = buildFootballHigherLowerDailyPublication(day, scheduleVersion, allPriorQuestions);
+    } catch (error) {
+      throw new Error(`Six-month official board #${boardSnapshots.length + 1}, ${day}, after ${allPriorQuestions.length} questions: ${String(error)}`);
+    }
+    console.info("FOOTBALL_HL_BOARD_GENERATED", day, boardSnapshots.length + 1);
     const board = (publication.privateSetupEvidence as { board: { seed: string; questions: FootballHigherLowerQuestion[] } }).board;
     if (board.questions.length !== FOOTBALL_HIGHER_LOWER_QUESTION_COUNT
       || board.questions.filter(q => q.league === "NFL").length !== 5
