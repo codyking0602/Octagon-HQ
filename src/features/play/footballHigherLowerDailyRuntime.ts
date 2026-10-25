@@ -33,17 +33,24 @@ export function buildFootballHigherLowerDailyPublication(
   scheduleVersion: string,
   previousPublishedQuestions: readonly FootballHigherLowerQuestion[] = [],
   gameIndex = 0,
+  enforceCooldown = false,
 ): OfficialDailySetupPublication {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !scheduleVersion.trim()) {
     throw new Error("Football Higher or Lower requires a canonical Daily date and schedule.");
   }
   const seed = [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, scheduleVersion, day, ...(gameIndex ? ["game-2"] : [])].join("|");
-  const board = createFootballHigherLowerBoard(
-    seed, "MIXED", previousPublishedQuestions.length
-      ? footballHigherLowerExclusionKeys(previousPublishedQuestions)
-      : undefined,
-    true,
-  );
+  const history = previousPublishedQuestions.length
+    ? footballHigherLowerExclusionKeys(previousPublishedQuestions)
+    : undefined;
+  // Six-month Official 2× must protect every canonical pair and per-entity
+  // concentration without exhausting its smaller sourced CFB metric pool.
+  // Repeating one athlete/stat against a different opponent is only eligible
+  // after at least five *other* ten-question games. No pair can ever recur.
+  const metricCooldown = enforceCooldown && history
+    ? footballHigherLowerExclusionKeys(previousPublishedQuestions.slice(-50)).subjectMetrics
+    : history?.subjectMetrics;
+  const excluded = history ? { ...history, subjectMetrics: metricCooldown! } : undefined;
+  const board = createFootballHigherLowerBoard(seed, "MIXED", excluded, true);
   if (board.questions.length !== FOOTBALL_HIGHER_LOWER_QUESTION_COUNT) {
     throw new Error("Football Higher or Lower requires ten audited comparisons.");
   }
@@ -83,10 +90,10 @@ export function buildFootballHigherLowerTwoGameDailyPublication(
   day: string, scheduleVersion: string,
   previousPublishedQuestions: readonly FootballHigherLowerQuestion[] = [],
 ) {
-  const first = buildFootballHigherLowerDailyPublication(day, scheduleVersion, previousPublishedQuestions, 0);
+  const first = buildFootballHigherLowerDailyPublication(day, scheduleVersion, previousPublishedQuestions, 0, true);
   const firstBoard = (first.privateSetupEvidence as { board: { questions: FootballHigherLowerQuestion[] } }).board;
   const second = buildFootballHigherLowerDailyPublication(
-    day, scheduleVersion, [...previousPublishedQuestions, ...firstBoard.questions], 1,
+    day, scheduleVersion, [...previousPublishedQuestions, ...firstBoard.questions], 1, true,
   );
   return buildTwoGameDailyPublication({
     sport: "football", gameType: "higher_lower", day, scheduleVersion, children: [first, second],
