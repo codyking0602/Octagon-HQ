@@ -24,7 +24,7 @@ describe("future-only UFC Feud V2 Daily cutover and historical immutability",()=
     if(!readiness.ready){
       expect(buildUfcFeudV2DailyPack("2026-11-10")).toEqual(buildSportsFeudPack("ufc","2026-11-10"));
     }else{
-      const pack=buildUfcFeudV2DailyPack("2026-11-04");
+      const pack=buildUfcFeudV2DailyPack("2026-11-10");
       expect(pack.id).toContain("sports-feud-v2-ufc-2026-11-10");
       expect(pack.mainBoards).toHaveLength(2);
       expect(pack.fastMoney).toHaveLength(5);
