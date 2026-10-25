@@ -1,3 +1,15 @@
+# Updated integration gate — 2026-10-25 (after Part 1 merged)
+
+**Part 1 is merged**, main includes the future 48-hour UFC cadence, daily Football cadence, season-limited NBA cadence, and a no-collision canonical schedule. The historical discussion below is retained only as a comparison against the pre-Part-1 baseline; it is not current production state.
+
+New `auditMergedPartOneCalendar()` proves the **actual** Oct 25, 2026–Apr 24, 2027 schedule from current code: Football **182**, UFC **91**, NBA **81** (last NBA publication Apr 10; board playable Apr 11), **0 cross-sport same-game collisions**. Current future live cycles have 26 Football and 28 UFC entries because their **Higher or Lower 2× slots are still excluded pending the separate two-game content certification/integration**. All currently scheduled other weights remain at their previously approved 4×/3×/2× values (within active non-Higher-or-Lower games). NBA's 28-game cycle already contains Higher or Lower.
+
+Actual current Part 1 six-month Hit the Number demand: **15 Football appearances → 30 child boards**, **6 UFC appearances → 12 child boards**. The executable Hit the Number test now uses precisely those canonical dates and schedule versions (Football v20 only for the existing Oct 25 board, v21 afterward; UFC v21 after Oct 25). Production publication, content correctness, historical result preservation, and final six-month editorial certification remain contingent on passing CI and the separately owned question banks.
+
+The following **28/30-entry cycles remain proposed, NON-PUBLISHING**, not activated by this change, and their November–April preview extends NBA beyond the approved April 11 end for stress testing only. **Do not confuse a preview with a release-certified live schedule.**
+
+---
+
 # Octagon HQ — Parts 2 & 3: six-month rotation and content readiness
 
 **Status: PROVISIONAL / NOT RELEASE-CERTIFIED.** Last inspected main: \`8b9f2aed26ea10f56c8863e0a0cd5ce6c6d85195\`, October 24, 2026. Part 1 owns sport cadence and eventual immutable SQL schedule versions; **this draft does not update or deploy production schedules**.
@@ -113,7 +125,7 @@ The generator-backed test builds the **13 Football dates → 26 boards** and **6
 
 ## Blocking handoffs / release gates
 
-1. **Part 1** must finish its cadence and immutable production schedule version and clarify NBA publication after Apr 11; then rebase this branch on fresh main and rerun audit using exact production seeds.
+1. **Part 1 is merged.** Canonical schedule and season boundary are locked; Hit the Number and other-game probes now use its exact dates/seeds. The proposed 2× Higher or Lower frequencies still require a separate future-only schedule migration once the two-game content publisher is certified.
 2. **UFC Higher/Lower** stays under its other build owner. **Football Higher/Lower** requires a 130-comparison reversed/semantic-duplicate simulation before activation.
 3. **Bar Trivia** remains owned by separate NFL/CFB and UFC editorial draft PRs. Do not duplicate their changes here.
 4. **All other game banks** require production-generator question-level extraction and real unique-concept reports. This diagnostic report does not falsely label them Ready.
@@ -125,4 +137,4 @@ Artifacts:
 - \`src/features/play/sixMonthHitNumberReadiness.test.ts\` (production-generator rehearsal).
 - \`src/features/play/hitTheNumberDailyRuntime.ts\` (UFC new-Daily-only factual candidate and pick-count correction).
 
-**Release state: no merges, no deployment, no published Daily modifications.**
+**Release state of this PR: no cadence SQL changes, no backfill of published Daily attempts, and no permission to claim six-month editorial certification without the separate 2× Higher or Lower/Bar Trivia/factual content release gates.**
