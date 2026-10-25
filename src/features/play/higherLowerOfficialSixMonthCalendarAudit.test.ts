@@ -21,7 +21,7 @@ type Row = Record<string, unknown>;
 function record(x:unknown):Row { return x as Row; }
 function records(x:unknown):Row[]{ return x as Row[]; }
 function schedule() {
-  const rows=readFileSync(CALENDAR,"utf8").trim().split(/\\r?\\n/).map(row=>row.split(","));
+  const rows=readFileSync(CALENDAR,"utf8").trim().split(/\r?\n/).map(row=>row.split(","));
   const headers=rows.shift()!;
   for(const key of ["central_day","football_after","ufc_after","nba_after"]) {
     if(!headers.includes(key)) throw new Error("Canonical schedule is missing "+key);
