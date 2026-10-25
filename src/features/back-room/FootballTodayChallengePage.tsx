@@ -7,6 +7,7 @@ import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyVi
 import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView";
 import { OfficialBarTriviaDailyView } from "../play/OfficialBarTriviaDailyView";
 import { OfficialAverageFanDailyView } from "../play/OfficialAverageFanDailyView";
+import { OfficialFootballHigherLowerDailyView } from "../play/OfficialFootballHigherLowerDailyView";
 import {
   FootballSpecialDailyChrome,
   footballSpecialDailyStyle,
@@ -1028,6 +1029,19 @@ export default function FootballTodayChallengePage() {
         ) : null}
       </div>
     );
+  }
+
+  if (projection.gameType === "higher_lower") {
+    return <div className="page football-today-page">
+      {weeklyEditControl}
+      {error ? <div className="football-today-error">{error}</div> : null}
+      <OfficialFootballHigherLowerDailyView projection={projection} busy={busy} onAdvance={advance} />
+      {projection.officialAttempt ? <div className="football-today-result-actions">
+        <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+        <button type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+        {shareStatus ? <span role="status">{shareStatus}</span> : null}
+      </div> : null}
+    </div>;
   }
 
   return (
