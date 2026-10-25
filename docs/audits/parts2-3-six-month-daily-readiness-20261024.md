@@ -14,6 +14,16 @@ The following **28/30-entry cycles remain proposed, NON-PUBLISHING**, not activa
 
 **Status: PROVISIONAL / NOT RELEASE-CERTIFIED.** Last inspected main: \`8b9f2aed26ea10f56c8863e0a0cd5ce6c6d85195\`, October 24, 2026. Part 1 owns sport cadence and eventual immutable SQL schedule versions; **this draft does not update or deploy production schedules**.
 
+## Executed post-Part-1 generator findings (October 25, 2026)
+
+The canonical-date generator test passed for **15 Football Hit the Number appearances / 30 child boards** and **6 UFC appearances / 12 child boards**. All 42 are independently solvable, contain canonical sourced stat values, have 4–6 picks, satisfy approved Random Pool sizes (12/14/16), and have **no duplicate entire boards**. Football used 553 identified source subjects (526 NFL and 27 CFB) and 13 metrics; UFC used 82 fight-ledger fighters and 12 stat definitions, with sparser coverage of some special stats. The maximum athlete+metric reuse was **6**; full-board uniqueness does NOT establish 42 semantically unrelated games.
+
+The broader generator availability probe found a **real pre-fix regression**: legacy Millionaire appearance-index checks rejected 23 of 28 canonical Football Millionaire dates and 11 of 14 UFC dates. This PR changes the new-date runtime to count canonical Part 1 cycle entries, while preserving all historical ordinal/run identities; a six-month regression now **fails** if any actual Football or UFC Millionaire date cannot generate. The Oct 25 UFC v20 board remains immutable, with appearance index 5; the first new UFC v21 Millionaire board begins at index 6.
+
+Other-game prompt fingerprint counts in the generator probe are **diagnostics only** (not historical publication-aware): Football Feud had 21 repeated prompt fingerprints across 28 packs; Average Fan and Bar Trivia also showed substantial repeated prompt keys. This may include template recurrence or the same authored questions emitted more than once by test extraction. It has NOT passed the source-level semantic no-repeat and editorial fact review. Football/UFC Higher or Lower 2× activation and the separate Bar Trivia editorial drafts are also still outstanding; no new SQL cadence is applied by this PR.
+
+**Certification verdict:** The current 26/28-slot canonical cadence, scoped UFC Hit the Number rules, and Millionaire publication-availability regression are testable on exact CI. **Full 28/30-slot approved 2× Higher or Lower rotation and six-month all-game factual uniqueness remain UNVERIFIED**, and must not be represented as shipped by merging this focused PR.
+
 ## A. Rotation report
 
 Simulation window: **2026-11-01–2027-04-30, inclusive (181 Central calendar dates)**. This is a nonpublishing planning horizon, not an announced extension of the NBA season. The existing NBA \`NBA_REGULAR_SEASON_LAST_DAY\` is **2027-04-11**; extending publication for April 12–30 requires Part 1 / release-owner approval and corresponding backend changes.
