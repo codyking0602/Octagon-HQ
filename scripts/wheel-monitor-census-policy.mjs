@@ -19,10 +19,30 @@ export function flattenEspnRoster(payload) {
   if (!names.size) throw new Error("ESPN roster source contains no canonical athlete names.");
   return names;
 }
-export function inventoryFromAuthorities({football,ufc,rosters}) {
+export const gradeNameKey = value => String(value ?? "").normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+export function wheelPriorityIdentityKeys({nfl,cfb,extraTeams=[]}) {
+  const out = new Set();
+  const families = ["QB", "RB", "WR", "TE", "Front Seven", "Secondary", "Head Coach"];
+  for (const [sport,teams] of [["NFL", nfl?.teams], ["CFB", cfb?.teams], ["CFB", Object.fromEntries(extraTeams.map(a => [a.schoolId, a.priority]))]]) {
+    if (!teams || typeof teams !== "object") throw new Error(`Missing canonical ${sport} priority roster.`);
+    for (const [teamCode,team] of Object.entries(teams)) {
+      for (const family of families) {
+        for (const person of team[family] ?? []) {
+          const key = `${sport}:${teamCode}:${family}:${gradeNameKey(person)}`;
+          if (out.has(key)) throw new Error(`Duplicate canonical priority ${key}`);
+          out.add(key);
+        }
+      }
+    }
+  }
+  return out;
+}
+export function inventoryFromAuthorities({football,ufc,rosters,activePriorityKeys}) {
+  if (!(activePriorityKeys instanceof Set)) throw new Error("A canonical non-Flex active-priority inventory is required.");
   if (!Array.isArray(football) || !Array.isArray(ufc)) throw new Error("Incomplete authority snapshot.");
   const current = [];
-  const coverage = {NFL:0,CFB:0,UFC:0,rosterConfirmed:0,rosterMissing:0,rosterAmbiguous:0,coachUnverified:0};
+  const coverage = {NFL:0,CFB:0,UFC:0,rosterConfirmed:0,rosterMissing:0,rosterAmbiguous:0,coachUnverified:0,staleGradeIdentities:0};
+  const coveredPriorities = new Set();
   const found = new Set();
   for (const row of football) {
     const sport = /^[A-Z]{2,3}$/.test(row.team_code) ? "NFL" : "CFB";
@@ -30,6 +50,8 @@ export function inventoryFromAuthorities({football,ufc,rosters}) {
     const key = `${sport}:${identityKey}`;
     if (found.has(key)) throw new Error(`Current authority includes duplicate grade identity ${key}`);
     found.add(key);
+    if (!activePriorityKeys.has(key)) { coverage.staleGradeIdentities++; continue; }
+    coveredPriorities.add(key);
     const map = rosters?.[`${sport}:${row.team_code}`];
     const candidates = map?.get(normalizePerson(row.display_name)) ?? [];
     const rosterStatus = row.position_group === "Head Coach" ? "coach-external-check-required"
@@ -43,6 +65,8 @@ export function inventoryFromAuthorities({football,ufc,rosters}) {
     current.push({sport,identityKey,team:row.team_code,role:row.position_group,player:row.display_name,rosterStatus,
       canonicalGradeVersion:row.grade_version,gradeEffectiveDate:row.effective_date});
   }
+  const missing = [...activePriorityKeys].filter(key => !coveredPriorities.has(key));
+  if (missing.length) throw new Error(`Canonical priorities missing grade-authority rows: ${missing.slice(0,10).join(", ")} (${missing.length} total)`);
   const ranks = ufc.map(row => ({identityKey:row.fighter_id,division:row.division,ranking:row.ranking,
     isChampion:row.is_champion,active:row.active}));
   verifyUfcRankings(ranks);
