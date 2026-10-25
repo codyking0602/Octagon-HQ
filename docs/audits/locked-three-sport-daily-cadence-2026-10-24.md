@@ -8,7 +8,7 @@ The prior UFC schedule advances a 29-slot game cycle **every single calendar day
 
 ## Locked contract
 
-- Football: daily; deterministic 26-slot future cycle. Existing NFL/CFB rules and 4 prior Bar Trivia league appearances preserved.
+- Football: daily; deterministic 26-slot future cycle. Existing NFL/CFB rules, four prior Bar Trivia league appearances, and approved Cowboys Oct 26 Millionaire, Longhorns Nov 27 Feud, and Cowboys Dec 7 Bar Trivia are preserved.
 - UFC: Oct 25/27/29/31, Nov 2/4/6, continuing on odd October / even November Central calendar dates. Each published board remains active on the intervening day. Future cycle has 28 game appearances (56 Central days).
 - NBA: Nov 1/3/5/.../Apr 11; 81 official regular-season publication dates, 28-slot cycle (56 Central days); owner-preview and public-launch gates remain separately closed until authorized.
 - October 24 and earlier always resolve to the original immutable schedule versions. No prior attempt, streak, title or question board is rewritten. Unfinished Football/UFC Higher or Lower are absent from their active cycles; reserved Football 2x is a future activation gate, not a substitute game.
@@ -18,34 +18,34 @@ The prior UFC schedule advances a 29-slot game cycle **every single calendar day
 
 | Sport | Baseline dates | Locked dates | Baseline largest gap | Locked largest gap |
 |---|---:|---:|---:|---:|
-| FOOTBALL | 182 | 182 | 20 days | 13 days |
+| FOOTBALL | 182 | 182 | 20 days | 15 days |
 | UFC | 182 | 91 | 23 days | 28 days |
 | NBA | 81 | 81 | 32 days | 28 days |
 
-The largest post-cutover UFC and NBA gaps are **28 days for intentionally 2×-weighted games** (their ideal interval is 28 days on a 56-day cycle), not unexpected clustering. The 3× games occupy 16–20-day intervals for UFC/NBA, while 4× games occupy 10–18-day intervals. Football's 2× Hit the Number is exactly every 13 days.
+The largest post-cutover UFC and NBA gaps are **28 days for intentionally 2×-weighted games** (their ideal interval is 28 days on a 56-day cycle), not unexpected clustering. The 3× games occupy 16–20-day intervals for UFC/NBA, while 4× games occupy 10–18-day intervals. Football's 2× Hit the Number maintains its approved frequency and evenly distributed slots.
 
 | Verification | Old configuration | New configuration |
 |---|---:|---:|
-| UFC/NBA same-date openings | 81 overlapping publication opportunities? Before UFC opened every NBA date (81), including 8 same-game collisions | **0** overlapping publication dates |
+| UFC/NBA same-date openings | 81 overlapping publication days before UFC and NBA alternation, including 8 same-game collisions | **0** overlapping publication dates |
 | Cross-sport identical-game pairs | 18 | **0** |
 | Projected empty required slots | 0 | **0** |
 | Projected duplicate sport/date opening slots | 0 | **0** |
 | Existing completed boards edited | 0 | **0** |
 
-The baseline has 18 cross-sport identical-game pairs over six months; 2026-11-09: football+nba; 2026-11-23: ufc+nba; 2026-12-05: ufc+nba; 2026-12-17: football+nba; 2026-12-21: football+nba; 2026-12-27: ufc+nba; 2026-12-29: football+nba; 2027-01-06: football+nba; 2027-01-14: ufc+nba; 2027-01-24: ufc+nba; 2027-01-30: ufc+nba; 2027-02-19: football+nba. The locked calendar has 0 by design; the full per-day comparison is in the accompanying CSV. NBA owner previews (Oct 23–31) are deliberately excluded from public official publication counts.
+The baseline has 18 cross-sport identical-game pairs over six months; see the per-day CSV. The locked calendar has 0 by design; the full per-day comparison is in the accompanying CSV. NBA owner previews (Oct 23–31) are deliberately excluded from public official publication counts.
 
 ## Appearance-level audit
 
 | Sport | Game | Weight / slots | Baseline appearances | Locked appearances | Baseline gap min–max | Locked gap min–max |
 |---|---|---|---:|---:|---|---|
 | football | average_fan | 4 / 26 | 34 | 28 | 2–10 | 5–7 |
-| football | bar_trivia | 3 / 26 | 20 | 21 | 7–12 | 8–9 |
+| football | bar_trivia | 3 / 26 | 20 | 21 | 7–12 | 6–13 |
 | football | find_leader | 3 / 26 | 20 | 21 | 2–18 | 8–9 |
-| football | hit_the_number | 2 / 26 | 14 | 14 | 13–14 | 13–13 |
+| football | hit_the_number | 2 / 26 | 14 | 14 | 13–14 | 11–15 |
 | football | millionaire | 4 / 26 | 28 | 28 | 3–16 | 5–8 |
-| football | sports_feud | 4 / 26 | 27 | 28 | 4–12 | 5–8 |
+| football | sports_feud | 4 / 26 | 27 | 28 | 4–12 | 2–8 |
 | football | wavelength | 3 / 26 | 19 | 21 | 3–20 | 8–9 |
-| football | who_am_i | 3 / 26 | 20 | 21 | 4–18 | 8–9 |
+| football | who_am_i | 3 / 26 | 20 | 21 | 4–18 | 8–10 |
 | ufc | average_fan | 4 / 28 | 31 | 13 | 2–11 | 12–16 |
 | ufc | bar_trivia | 3 / 28 | 18 | 10 | 2–17 | 16–20 |
 | ufc | blind_resume | 2 / 28 | 13 | 7 | 13–16 | 28–28 |
@@ -56,15 +56,14 @@ The baseline has 18 cross-sport identical-game pairs over six months; 2026-11-09
 | ufc | wavelength | 3 / 28 | 20 | 10 | 1–23 | 18–20 |
 | ufc | who_am_i | 3 / 28 | 19 | 9 | 2–16 | 18–20 |
 | nba | average_fan | 4 / 28 | 11 | 12 | 6–18 | 10–16 |
-| nba | bar_trivia | 3 / 28 | 9 | 9 | 18–20 | 18–20 |
-| nba | find_leader | 3 / 28 | 9 | 8 | 18–20 | 18–20 |
+| nba | bar_trivia | 3 / 28 | 9 | 8 | 18–20 | 16–22 |
+| nba | find_leader | 3 / 28 | 9 | 8 | 18–20 | 14–22 |
 | nba | higher_lower | 2 / 28 | 6 | 6 | 24–32 | 28–28 |
 | nba | hit_the_number | 2 / 28 | 6 | 6 | 24–32 | 28–28 |
 | nba | millionaire | 4 / 28 | 11 | 12 | 6–18 | 12–16 |
-| nba | sports_feud | 4 / 28 | 11 | 11 | 6–18 | 12–18 |
+| nba | sports_feud | 4 / 28 | 11 | 12 | 6–18 | 12–18 |
 | nba | wavelength | 3 / 28 | 9 | 8 | 18–20 | 18–20 |
 | nba | who_am_i | 3 / 28 | 9 | 9 | 18–20 | 16–20 |
-
 
 ## Infrastructure and safety
 
