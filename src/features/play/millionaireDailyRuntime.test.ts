@@ -10,6 +10,8 @@ import {
   millionaireFootballDailyLeague,
 } from "./millionaireDailyRuntime";
 import type { OfficialDailyRuntimeContext } from "./todaysChallengeRuntime";
+import { isUfcPublicationDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
+import { nbaRegularSeasonDaily } from "../nba/nbaDailySchedule";
 
 function contextFor(sport: "ufc" | "football", day = "2026-09-19"): OfficialDailyRuntimeContext {
   const publication = buildMillionaireDailySetup(
@@ -75,17 +77,24 @@ describe("Millionaire official Daily runtime", () => {
   });
 
   it("rotates ten league-specific runs before repeating and advances hosts 1-2-3 by appearance", () => {
+    const from = Date.parse("2026-10-25T00:00:00Z");
+    const futureDates = Array.from({ length: 182 }, (_, index) =>
+      new Date(from + index * 86_400_000).toISOString().slice(0, 10));
     const ufcDays = [
       "2026-09-19", "2026-09-26", "2026-10-11", "2026-10-15", "2026-10-21",
-      "2026-10-25", "2026-11-09", "2026-11-13", "2026-11-19", "2026-11-23",
+      "2026-10-25",
+      ...futureDates.filter(day => day > "2026-10-25" && isUfcPublicationDay(day)
+        && lockedWeightedGameForDay("ufc", day) === "millionaire").slice(0, 4),
     ];
+    const futureFootball = futureDates.filter(day =>
+      lockedWeightedGameForDay("football", day) === "millionaire");
     const cfbDays = [
-      "2026-09-19", "2026-10-03", "2026-10-10", "2026-10-30", "2026-11-06",
-      "2026-11-26", "2026-12-03", "2026-12-23", "2026-12-30", "2027-01-19",
+      "2026-09-19", "2026-10-03", "2026-10-10",
+      ...futureFootball.filter(day => millionaireDailyLeague("football", day) === "cfb").slice(0, 7),
     ];
     const nflDays = [
-      "2026-09-24", "2026-10-07", "2026-10-26", "2026-11-03", "2026-11-22",
-      "2026-11-30", "2026-12-19", "2026-12-27", "2027-01-15", "2027-01-23",
+      "2026-09-24", "2026-10-07",
+      ...futureFootball.filter(day => millionaireDailyLeague("football", day) === "nfl").slice(0, 8),
     ];
 
     expect(ufcDays.map((day) => millionaireDailyRunIndex("ufc", day))).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -102,6 +111,30 @@ describe("Millionaire official Daily runtime", () => {
     expect(tenth.publicSetup).toMatchObject({ league: "cfb", run_number: 10, host_number: 1 });
     expect((debut.publicSetup.questions as Record<string, unknown>[])[0]!.id)
       .not.toBe((tenth.publicSetup.questions as Record<string, unknown>[])[0]!.id);
+  });
+
+  it("builds every Part 1 future Millionaire date, with no historical reseeding", () => {
+    const first = Date.parse("2026-10-25T00:00:00Z");
+    const appearance = { football: [] as number[], ufc: [] as number[] };
+    for (let index = 0; index < 182; index++) {
+      const day = new Date(first + index * 86_400_000).toISOString().slice(0, 10);
+      for (const sport of ["football", "ufc"] as const) {
+        if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
+        if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
+        const version = sport === "ufc"
+          ? day === "2026-10-25" ? "play-rotation-v20-resume-v18-oct3" : "ufc-daily-v21-48h-oct25"
+          : "football-daily-v21-locked-oct25";
+        const publication = buildMillionaireDailySetup(sport, day, version);
+        expect(publication.publicSetup.question_count, sport + ":" + day).toBe(8);
+        expect(publication.privateSetupEvidence.run, sport + ":" + day).toHaveLength(8);
+        appearance[sport].push(millionaireDailyRunIndex(sport, day));
+      }
+    }
+    expect(appearance.football).toHaveLength(28);
+    expect(appearance.ufc).toHaveLength(14);
+    expect(() => millionaireDailyRunIndex("football", "2026-10-25")).toThrow("not scheduled");
+    expect(() => millionaireDailyRunIndex("ufc", "2026-10-30")).toThrow("not scheduled");
+    expect(nbaRegularSeasonDaily("2027-04-12")).toBeNull();
   });
 
   it("accepts the historical weighted slots and the October 1 Average Fan rotation slots", () => {
