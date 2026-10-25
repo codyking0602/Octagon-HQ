@@ -90,7 +90,7 @@ $test$;
 -- A repeated materialization must resolve one immutable board identity, while
 -- attempting to create an extra board on the intervening day fails closed.
 do $publication$
-declare v_first jsonb;v_retry jsonb;v_rejected boolean:=false;
+declare v_first jsonb;v_retry jsonb;v_rejected boolean:=false; v_fallback_rejected boolean:=false;
 begin
   v_first:=public.publish_daily_challenge_setup(
     date '2026-10-25','ufc-daily-v21-48h-oct25','find_leader',
@@ -111,6 +111,14 @@ begin
   exception when others then v_rejected:=true;
   end;
   if not v_rejected then raise exception 'UFC off-day publication was allowed';end if;
+  begin
+    perform public.publish_daily_challenge_setup(
+      date '2026-10-25','football-daily-v21-locked-oct25','find_leader',
+      'cadence-proof:football:fallback','cadence-proof-v1','play-official-score-v1',
+      '{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'{}'::jsonb,'synthetic fallback');
+  exception when others then v_fallback_rejected:=true;
+  end;
+  if not v_fallback_rejected then raise exception 'unapproved fallback replaced the locked game';end if;
 end;
 $publication$;
 rollback;
