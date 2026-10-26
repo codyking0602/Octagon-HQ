@@ -29,7 +29,7 @@ function stageCheck(root,kind,sha,now) {
   if(metadata.artifactName!==spec.artifact || metadata.workflowName!==spec.workflow ||
      metadata.headSha!==sha || metadata.headBranch!=="main" ||
      metadata.conclusion!=="success" || metadata.status!=="completed" ||
-     metadata.event!=="workflow_dispatch" || !Number.isInteger(metadata.runId) ||
+     !["workflow_dispatch","schedule"].includes(metadata.event) || !Number.isInteger(metadata.runId) ||
      !validTime(metadata.completedAt,now)) {
     return {kind,status:"untrusted-staged-run-provenance",certified:false};
   }
