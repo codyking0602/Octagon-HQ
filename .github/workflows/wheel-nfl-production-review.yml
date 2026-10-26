@@ -1,0 +1,44 @@
+name: Wheel NFL Production Evidence Review (staged)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/wheel-monitor/nfl-production-monitor.py'
+      - 'scripts/wheel-monitor/test_nfl_production_monitor.py'
+      - '.github/workflows/wheel-nfl-production-review.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wheel-nfl-production-evidence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  production-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify stable windows, injury/usage uncertainty and no auto-grades
+        run: python -m unittest discover -s scripts/wheel-monitor -p 'test_nfl_production_monitor.py' -v
+      - name: Install pinned read-only nflverse loader
+        run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
+      - name: Collect current-season weekly production evidence
+        run: |
+          mkdir -p tmp/wheel-monitor/nfl
+          python scripts/wheel-monitor/nfl-production-monitor.py \
+            --season="$(date -u +%Y)" \
+            --out=tmp/wheel-monitor/nfl/production-evidence.json
+      - name: Preserve review-only production evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-production-evidence
+          path: tmp/wheel-monitor/nfl/production-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
