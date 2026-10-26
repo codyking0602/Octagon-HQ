@@ -70,28 +70,10 @@ describe("WeeklyChampionshipRecap", () => {
     });
   });
 
-  it("does not invent an auction section for UFC", async () => {
+  it("does not request the retired UFC weekly Play award", () => {
     const repo = repository();
-    vi.mocked(repo.load).mockResolvedValueOnce({
-      sport: "ufc",
-      weekStart: "2026-09-14",
-      weekEnd: "2026-09-20",
-      entries: [{
-        rank: 1,
-        profileId: "11111111-1111-4111-8111-111111111111",
-        displayName: "Amy",
-        initials: "AM",
-        avatarPhotoData: null,
-        wins: 5,
-        played: 7,
-        averageScore: 86.2,
-        isCurrentUser: false,
-      }],
-      auctionBonus: null,
-    });
-
     render(<WeeklyChampionshipRecap sport="ufc" repository={repo} />);
-    expect(await screen.findByText("UFC WEEKLY CHAMPION")).toBeInTheDocument();
-    expect(screen.queryByText("WEEKLY AUCTION BONUS")).not.toBeInTheDocument();
+    expect(repo.load).not.toHaveBeenCalled();
+    expect(screen.queryByText(/UFC WEEKLY CHAMPION/)).toBeNull();
   });
 });

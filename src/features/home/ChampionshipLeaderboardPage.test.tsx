@@ -5,13 +5,14 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import ChampionshipLeaderboardPage from "./ChampionshipLeaderboardPage";
 
-const mocked = vi.hoisted(() => ({ load: vi.fn(), weekly: vi.fn(), mlb: vi.fn() }));
+const mocked = vi.hoisted(() => ({ load: vi.fn(), weekly: vi.fn(), monthly: vi.fn(), mlb: vi.fn() }));
 vi.mock("../identity/IdentityProvider", () => ({
   useIdentity: () => ({ profile: { id: "11111111-1111-4111-8111-111111111111" } }),
 }));
 vi.mock("../play/sportChampionshipRepository", () => ({
   loadSportChampionship: (...args: unknown[]) => mocked.load(...args),
   loadSportChampionshipWeekly: (...args: unknown[]) => mocked.weekly(...args),
+  loadUfcMonthlyChampionship: (...args: unknown[]) => mocked.monthly(...args),
 }));
 vi.mock("../mlb/mlbChampionship", () => ({
   loadMlbChampionship: (...args: unknown[]) => mocked.mlb(...args),
@@ -54,6 +55,9 @@ describe("Unified Championship leaderboard", () => {
     mocked.weekly.mockResolvedValue({
       sport: "football", season: 2026, weeks: [], latest: null,
     });
+    mocked.monthly.mockResolvedValue({
+      sport: "ufc", season: 2026, months: [], latest: null,
+    });
   });
 
   it("shows one overall table and switches to Picks/Play standings", async () => {
@@ -66,6 +70,39 @@ describe("Unified Championship leaderboard", () => {
     expect(within(playTable).getByText("TYLER")).toBeInTheDocument();
     expect(within(playTable).getByText("97.0")).toBeInTheDocument();
     expect(screen.getByText(/Missing an event earns last-place points/)).toBeInTheDocument();
+  });
+
+  it("renders the UFC monthly champion without a new weekly award", async () => {
+    mocked.load.mockResolvedValueOnce({
+      sport: "ufc", season: 2026, field_size: 2, entries, own: entries[0],
+      weights: { picks: 60, daily: 40, featured: 0 },
+      event_counts: { picks: 3, daily: 15, featured: 0 },
+    });
+    const month = {
+      month_start: "2026-11-01", month_end: "2026-11-30",
+      winner: entries[0], entries,
+      weights: { picks: 60, daily: 40, featured: 0 },
+      event_counts: { picks: 3, daily: 15, featured: 0 },
+    };
+    mocked.monthly.mockResolvedValueOnce({
+      sport: "ufc", season: 2026, latest: month, months: [month],
+    });
+    open("/championship/ufc");
+    expect(await screen.findByText("CHAMPION OF THE MONTH")).toBeInTheDocument();
+    expect(screen.getByText("91.5 MONTHLY SCORE")).toBeInTheDocument();
+    expect(screen.queryByText("CHAMPION OF THE WEEK")).not.toBeInTheDocument();
+    expect(mocked.monthly).toHaveBeenCalledWith(2026);
+  });
+
+  it("shows the correct first-month release explanation before November's board closes", async () => {
+    mocked.load.mockResolvedValueOnce({
+      sport: "ufc", season: 2026, field_size: 2, entries, own: entries[0],
+      weights: { picks: 60, daily: 40, featured: 0 },
+      event_counts: { picks: 0, daily: 0, featured: 0 },
+    });
+    open("/championship/ufc");
+    expect(await screen.findByText("UFC MONTHLY CHAMPIONSHIP")).toBeInTheDocument();
+    expect(screen.getByText(/November 30–December 1 Daily board closes on December 2/)).toBeInTheDocument();
   });
 
   it("expands another competitor to show transparent event placements", async () => {
