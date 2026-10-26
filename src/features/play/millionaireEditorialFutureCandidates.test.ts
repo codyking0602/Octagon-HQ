@@ -55,6 +55,9 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
         if (level === 7) {
           expect(q.statSheet).toBeNull();
           expect(q.lifelineCompatibility).toMatchObject({ fiftyFifty: false, statSheet: false, doubleDip: false });
+          // Q8 needs a satisfying factual reveal, not a tautological answer label.
+          expect(q.explanation.length).toBeGreaterThan(80);
+          expect(q.explanation).not.toBe(`${answer(q)} is the correct answer.`);
         } else {
           expect(q.statSheet && q.statSheet.length > 30).toBe(true);
           expect(normalized(q.statSheet!)).not.toContain(normalized(answer(q)));
