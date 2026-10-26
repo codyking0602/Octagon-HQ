@@ -2,6 +2,7 @@ name: Wheel NFL Official Current Coach Evidence (staged)
 
 on:
   workflow_dispatch:
+  workflow_call:
   pull_request:
     paths:
       - 'scripts/wheel-monitor/nfl-coach-current-*.mjs'
