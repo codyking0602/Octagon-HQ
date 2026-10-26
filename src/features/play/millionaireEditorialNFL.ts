@@ -26,9 +26,9 @@ export const nflEditorialCandidateRuns = [
     ["teams", "Which franchise did J.J. Watt play for before joining Arizona?", ["Texans", "Cardinals", "Ravens", "Steelers"], "Texans", "He spent his first decade in the league with a Texas franchise."],
     ["milestones", "Which Tennessee running back topped 2,000 rushing yards in the 2009 season?", ["Chris Johnson", "Derrick Henry", "Eddie George", "DeMarco Murray"], "Chris Johnson", "He averaged more than five yards per carry across 16 games."],
     ["rushing-history", "Whose NFL career rushing record did Walter Payton break in 1984?", ["Jim Brown", "O.J. Simpson", "Eric Dickerson", "Gale Sayers"], "Jim Brown", "The previous record holder had retired after nine seasons with Cleveland."],
+    ["super-bowl-finishes","Who caught Eli Manning’s go-ahead touchdown pass with 35 seconds left in Super Bowl XLII?",["Plaxico Burress","David Tyree","Amani Toomer","Steve Smith"],"Plaxico Burress","The catch capped an 83-yard drive that ended New England’s perfect-season bid."],
     ["super-bowl-awards", "Which Cowboys defensive back won Super Bowl XXX MVP after two interceptions?", ["Larry Brown", "Darren Woodson", "Deion Sanders", "Kevin Smith"], "Larry Brown", "The turnovers came against Pittsburgh's Neil O'Donnell."],
     ["playoff-moments", "Who made a touchdown-saving tackle after the Colts recovered Jerome Bettis's late fumble in the 2005 season's divisional playoffs?", ["Ben Roethlisberger", "Troy Polamalu", "Joey Porter", "James Farrior"], "Ben Roethlisberger", "The tackle preserved Pittsburgh's lead just before Indianapolis missed a potential tying field goal."],
-    ["super-bowl-finishes","Who caught Eli Manning’s go-ahead touchdown pass with 35 seconds left in Super Bowl XLII?",["Plaxico Burress","David Tyree","Amani Toomer","Steve Smith"],"Plaxico Burress","The catch capped an 83-yard drive that ended New England’s perfect-season bid."],
     ["super-bowl-history", "Who became the first defensive back to win Super Bowl MVP?", ["Jake Scott", "Larry Brown", "Dexter Jackson", "Richard Sherman"], "Jake Scott", null],
   ],
   [
