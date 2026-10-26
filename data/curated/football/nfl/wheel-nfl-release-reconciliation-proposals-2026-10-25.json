@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "nfl-wheel-oct-2026-official-release-reconciliation-v1",
+  "version": "nfl-wheel-oct-2026-official-roster-discrepancy-reconciliation-v2",
   "status": "owner-review-only-not-runtime",
   "asOf": "2026-10-25",
   "releaseEvents": [
@@ -29,8 +29,9 @@
       "subsequentStatus": "not-fully-reconciled-league-wide"
     }
   ],
-  "interpretation": "Confirmed releases from prior teams. Not proof of present free agency, nor authorization for game population deletion, re-grade, replacement or GM ineligibility. Another player's identical name is never sufficient transfer evidence.",
+  "interpretation": "Confirmed releases from prior teams. Not proof of present free agency, nor authorization for game population deletion, re-grade, replacement or GM ineligibility. Another player's identical name is never sufficient transfer evidence. Separate confirmed October 12 Marvin Harrison Jr. Arizona-to-Houston trade is a genuine source affiliation discrepancy, not an ability signal.",
   "approvalGates": [
+    "Confirm officially documented October 12 Marvin Harrison Jr. ARI-to-HOU trade against receiving-team transaction log; owner must approve any curated affiliation change",
     "Check signed transactions across all 32 teams through approval date, plus recognized league transaction record",
     "Propose separately whether existing approved Wheel population retains inactive player or is replaced, with explicit owner approval of replacement identity and family",
     "Preserve historical grade rows; new active identity receives separately researched current ability authority",
@@ -38,5 +39,31 @@
     "Run full Wheel roster integrity, source identity and GM economy regressions with same publication gate",
     "Exact-head Validate V2 and explicit owner approval before merge"
   ],
-  "publishedRuntimeChanges": 0
+  "publishedRuntimeChanges": 0,
+  "tradeEvents": [
+    {
+      "fromTeamCode": "ARI",
+      "toTeamCode": "HOU",
+      "player": "Marvin Harrison Jr.",
+      "family": "WR",
+      "confirmedTradeDate": "2026-10-12",
+      "officialFromTeamSource": "https://www.azcardinals.com/news/marvin-harrison-jr-trade-from-cardinals-to-texans-becomes-official",
+      "officialReceivingTeamSource": "https://www.houstontexans.com/news/houston-texans-transactions-10-12-2026",
+      "leagueTransactionsSource": "https://www.nfl.com/transactions/",
+      "canonicalWheelStatus": "still-ARI-pending-owner-approval",
+      "proposal": "review-identity-team-binding-change-only; preserve approved overall, family and grade history until explicit authorization",
+      "candidateOwnerDecision": "retain approved identity and update ARI-to-HOU affiliation after exact roster/GM simulation and approval"
+    }
+  ],
+  "sourceDiscrepancySummary": {
+    "nflPlayerRosterUnmatched": 4,
+    "confirmedOfficialFormerTeamReleases": 3,
+    "confirmedOfficialTrade": 1,
+    "verifiedAsOf": "2026-10-25",
+    "openChecks": [
+      "Reconfirm releases have not signed with any NFL club since former-team transactions",
+      "Validate four identity/source bindings and current team status before publication",
+      "Run full 626 approved identity reconciliation and 594 current GM contracts through simulations before any approved population edits"
+    ]
+  }
 }
