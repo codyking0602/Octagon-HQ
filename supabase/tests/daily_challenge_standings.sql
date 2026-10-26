@@ -24,7 +24,9 @@ declare
   v_cody uuid := '76000000-0000-4000-8000-000000000001';
   v_shane uuid := '76000000-0000-4000-8000-000000000002';
   v_tony uuid := '76000000-0000-4000-8000-000000000003';
-  v_today date := private.daily_challenge_central_day(now());
+  -- Anchor synthetic five-day standings to the currently playable UFC date;
+  -- on a 48-hour hold day there is no new official board to count.
+  v_today date := private.daily_challenge_active_day(private.daily_challenge_central_day(now()), 'ufc');
   v_games text[] := array[
     'find_leader',
     'wavelength',
