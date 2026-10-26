@@ -557,14 +557,14 @@
       "draftYear": 2023,
       "draftRound": 2,
       "draftOverall": 53,
-      "salaryApy": 1680933,
-      "realContractEndSeason": 2026,
-      "gameContract": "1YR",
+      "salaryApy": 19500000,
+      "realContractEndSeason": 2030,
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/gervon-dexter/10877/",
         "otcId": 10877,
-        "yearSigned": 2023,
+        "yearSigned": 2026,
         "years": 4
       }
     },
@@ -6068,7 +6068,7 @@
       "draftYear": 2023,
       "draftRound": 3,
       "draftOverall": 69,
-      "salaryApy": 1700000,
+      "salaryApy": 2195000,
       "realContractEndSeason": 2026,
       "gameContract": "1YR",
       "source": {
