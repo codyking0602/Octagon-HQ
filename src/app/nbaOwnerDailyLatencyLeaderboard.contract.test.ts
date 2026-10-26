@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildNbaServerDailyPublication } from "../features/nba/nbaDailyServerPublication";
 import { advanceNbaOfficialDailyRuntime } from "../features/nba/nbaDailyServerAdvance";
+import { buildNbaWhoAmIDailyLeanPublication } from "../features/nba/nbaWhoAmIDailyPublicationLean";
 import { advanceCanonicalWhoAmIDailyRuntime } from "../features/play/whoAmITwoRoundDailyRuntime";
 import type { OfficialDailyRuntimeContext } from "../features/play/todaysChallengeRuntime";
 
@@ -17,9 +18,26 @@ describe("NBA owner-test latency and score visibility regressions", () => {
     expect(handler).toContain('context.gameType === "who_am_i"');
     expect(handler).toContain('(await loadWhoAmIAdvanceRuntime()).advanceCanonicalWhoAmIDailyRuntime(context, action)');
     expect(edge).toContain('import("./who-am-i-advance.generated.mjs")');
+    expect(edge).toContain('import("./nba-who-am-i-publication.generated.mjs")');
+    expect(edge).toContain('(await loadNbaWhoAmIPublicationRuntime()).buildNbaWhoAmIDailyLeanPublication(day, scheduleVersion, gameType)');
+    expect(bundler).toContain('fileName: "nba-who-am-i-publication.generated.mjs"');
+    expect(deployment).toContain("test -f supabase/functions/daily-challenge-runtime/nba-who-am-i-publication.generated.mjs");
     expect(bundler).toContain('fileName: "who-am-i-advance.generated.mjs"');
     expect(bundler).toContain('src/features/play/whoAmITwoRoundDailyRuntime.ts');
     expect(deployment).toContain("test -f supabase/functions/daily-challenge-runtime/who-am-i-advance.generated.mjs");
+  });
+
+  it("produces identical WHO AM I publish identities and evidence for owner and public dates", () => {
+    for (const [day, version] of [
+      ["2026-10-26", "nba-daily-owner-prelaunch-v1"],
+      ["2026-11-05", "nba-daily-regular-v2-locked"],
+      ["2026-11-29", "nba-daily-regular-v2-locked"],
+    ] as const) {
+      const canonical = buildNbaServerDailyPublication(day, version, "who_am_i");
+      const lean = buildNbaWhoAmIDailyLeanPublication(day, version, "who_am_i");
+      expect(lean).toEqual(canonical);
+    }
+    expect(() => buildNbaWhoAmIDailyLeanPublication("2026-10-27", "nba-daily-owner-prelaunch-v1", "who_am_i")).toThrow();
   });
 
   it("preserves the existing server-authoritative two-round scoring and transitions", () => {
