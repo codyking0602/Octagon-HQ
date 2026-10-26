@@ -16,12 +16,14 @@ from pathlib import Path
 TEAM_ALIAS = {"LA":"LAR","WAS":"WSH","JAC":"JAX","OAK":"LV"}
 FAMILIES = ("QB","RB","WR","TE","Front Seven","Secondary")
 METRICS = {
-    "QB": (("passing_yards",), ("attempts",), 35, 2.0),
-    "RB": (("rushing_yards",), ("carries",), 20, 1.4),
-    "WR": (("receiving_yards",), ("targets",), 8, 2.0),
-    "TE": (("receiving_yards",), ("targets",), 8, 2.0),
-    "Front Seven": (("def_qb_hits","def_sacks","def_tackles_for_loss"), None, 0, 1.5),
-    "Secondary": (("def_pass_defended","def_interceptions"), None, 0, 0.8),
+    "QB": (("passing_yards",), ("attempts",), 50, 2.0),
+    "RB": (("rushing_yards",), ("carries",), 25, 1.5),
+    "WR": (("receiving_yards",), ("targets",), 15, 2.5),
+    "TE": (("receiving_yards",), ("targets",), 12, 2.3),
+    # Defensive counting events are volatile and not complete ability metrics.
+    # Tighten triage: meaningful multiweek movement, not a stray breakup/hit.
+    "Front Seven": (("def_qb_hits","def_sacks","def_tackles_for_loss"), None, 0, 3.0),
+    "Secondary": (("def_pass_defended","def_interceptions"), None, 0, 1.8),
 }
 
 def name_key(name):
@@ -119,7 +121,8 @@ def review_production_evidence(rows,season,priorities,at):
                and abs(single-previous)>=threshold*0.6:
                 concordant+=1
         # Prevent a lone spectacular/awful game from driving a multiweek flag.
-        moved=(abs(delta)>=threshold and abs(delta)>=max(abs(previous),1)*0.35
+        required_relative=0.75 if family in ("Front Seven","Secondary") else 0.35
+        moved=(abs(delta)>=threshold and abs(delta)>=max(abs(previous),1)*required_relative
                and concordant>=2)
         decisions.append({**descriptor,
            "classification":"priority-performance-review" if moved else "no-sustained-metric-shift",
