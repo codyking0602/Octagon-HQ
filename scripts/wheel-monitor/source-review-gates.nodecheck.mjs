@@ -16,7 +16,7 @@ test("verified official UFC ties and normal AP changes are valid source observat
  assert.deepEqual(sourceReviewBlockers([
   {type:"verified-official-ranking-tie"},
   {type:"factual-correction",changes:[{rank:2}],newUnauditedSchools:[]},
- ],[{sport:"ufc",sourceStatus:"unranked-not-verified-by-ranked-table"}]),[]);
+ ],[{sport:"ufc",sourceStatus:"unranked-not-verified-by-ranked-table"}]),["ufc-unranked-source-unverified:1"]);
 });
 test("new unaudited AP participant must not enter global certified snapshot",()=>{
  assert.deepEqual(sourceReviewBlockers([
@@ -26,4 +26,19 @@ test("new unaudited AP participant must not enter global certified snapshot",()=
 test("malformed evidence cannot silently certify",()=>{
  assert.throws(()=>sourceReviewBlockers(null,[]),/Complete/);
  assert.throws(()=>sourceReviewBlockers([],null),/Complete/);
+});
+
+test("coaches and unranked fighter populations cannot be silently certified",()=>{
+ const blockers=sourceReviewBlockers([],[
+  {sport:"nfl",sourceStatus:"coaching-source-needed"},
+  {sport:"cfb",sourceStatus:"coaching-source-needed"},
+  {sport:"ufc",sourceStatus:"unranked-not-verified-by-ranked-table"},
+  {sport:"cfb",sourceStatus:"mystery-state"},
+ ]);
+ assert.deepEqual(blockers,[
+  "cfb-coaching-source-unverified:1",
+  "cfb-unclassified-source-identities:1",
+  "nfl-coaching-source-unverified:1",
+  "ufc-unranked-source-unverified:1",
+ ]);
 });
