@@ -58,7 +58,7 @@ const bundles = [
     fileName: "football-millionaire-publication.generated.mjs",
     requiredExports: ["buildFootballDailyPersistenceSetup"],
     smokes: [
-      { day: "2026-10-26", gameType: "millionaire" },
+      { day: "2026-10-26", gameType: "millionaire", scheduleVersion: "football-daily-v21-locked-oct25" },
     ],
   },
   {
@@ -170,7 +170,7 @@ for (const bundle of bundles) {
           )
         : generatedRuntime.buildFootballDailyPersistenceSetup(
             smoke.day,
-            footballScheduleVersion,
+            smoke.scheduleVersion ?? footballScheduleVersion,
             smoke.gameType,
           );
       if (
