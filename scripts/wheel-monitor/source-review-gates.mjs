@@ -19,7 +19,7 @@ export function sourceReviewBlockers(evidence, findings) {
     if(!Object.hasOwn(missing,finding.sport)) continue;
     const status=finding.sourceStatus;
     if(status==="missing" || status==="ambiguous") missing[finding.sport]++;
-    else if(status==="coaching-source-needed" && Object.hasOwn(coaching,finding.sport))
+    else if((status==="coaching-source-needed" || status==="coach-source-mismatch") && Object.hasOwn(coaching,finding.sport))
       coaching[finding.sport]++;
     else if(status==="unranked-not-verified-by-ranked-table" && finding.sport==="ufc")
       unranked.ufc++;

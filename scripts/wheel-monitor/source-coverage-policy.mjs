@@ -4,7 +4,7 @@
 const SPORTS = ["nfl","ufc"];
 const VERIFIED = "matched";
 const KNOWN_UNVERIFIED = new Set([
-  "missing", "ambiguous", "coaching-source-needed",
+  "missing", "ambiguous", "coaching-source-needed", "coach-source-mismatch",
   "unranked-not-verified-by-ranked-table",
 ]);
 

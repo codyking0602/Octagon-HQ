@@ -86,6 +86,11 @@ export function compareEvidence(current, previous=null) {
       level=LEVEL.FACT;
       reasons.push("official-ufc-ranking-or-champion-movement");
     }
+    if(row.sport==="nfl" && row.family==="Head Coach" &&
+      row.sourceStatus==="coach-source-mismatch" && level===LEVEL.NONE) {
+      level=LEVEL.REVIEW;
+      reasons.push("head-coach-independent-source-disagreement");
+    }
     if(row.sourceStatus==="missing" && prior?.sourceStatus!=="missing"
       && level===LEVEL.NONE) {
       level=LEVEL.REVIEW;
