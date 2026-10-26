@@ -73,6 +73,27 @@ jobs:
           else
             echo "PREVIOUS_SNAPSHOT=" >> "$GITHUB_ENV"
           fi
+      - name: Restore latest ungraded observation (not a certified snapshot)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tmp/wheel-monitor/observation-previous
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=wheel-monitor-observation&per_page=100" \
+            > tmp/wheel-monitor/observation-previous/artifacts.json
+          id=$(node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            import {selectLatestObservationArtifact} from "./scripts/wheel-monitor/checkpoint-policy.mjs";
+            const payload=JSON.parse(readFileSync("tmp/wheel-monitor/observation-previous/artifacts.json","utf8"));
+            process.stdout.write(String(selectLatestObservationArtifact(payload.artifacts)?.workflow_run.id ?? ""));
+          ')
+          if [[ -n "$id" ]]; then
+            gh run download "$id" --name wheel-monitor-observation --dir tmp/wheel-monitor/observation-previous
+            echo "PREVIOUS_OBSERVATION=tmp/wheel-monitor/observation-previous/observation.json" >> "$GITHUB_ENV"
+          else
+            echo "PREVIOUS_OBSERVATION=" >> "$GITHUB_ENV"
+          fi
       - name: Collect and reconcile full populations
         id: collect
         shell: bash
@@ -83,7 +104,9 @@ jobs:
             exit 1
           fi
           node scripts/wheel-monitor/run.mjs \
-            --previous="$PREVIOUS_SNAPSHOT" --out=tmp/wheel-monitor/current
+            --previous="$PREVIOUS_SNAPSHOT" \
+            --previous-observation="$PREVIOUS_OBSERVATION" \
+            --out=tmp/wheel-monitor/current
           if [[ -f tmp/wheel-monitor/current/snapshot.json ]]; then
             echo "snapshot_ready=true" >> "$GITHUB_OUTPUT"
           else
@@ -110,6 +133,14 @@ jobs:
             tmp/wheel-monitor/current/failure.json
           if-no-files-found: warn
           retention-days: 30
+      - name: Archive ungraded observation after fully successful source collection
+        if: steps.collect.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-monitor-observation
+          path: tmp/wheel-monitor/current/observation.json
+          if-no-files-found: error
+          retention-days: 45
       - name: Promote only fully verified source snapshot
         if: steps.collect.outputs.snapshot_ready == 'true'
         uses: actions/upload-artifact@v4
