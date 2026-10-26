@@ -8,7 +8,7 @@ export const nflEditorialCandidateRuns = [
     ["super-bowl", "Which team did Deion Sanders win his FIRST Super Bowl with?", ["49ers", "Cowboys", "Falcons", "Ravens"], "49ers", "He joined the champion on a one-year deal for the 1994 season."],
     ["coaching", "Who coached the Giants to BOTH Super Bowl victories over the Patriots?", ["Tom Coughlin", "Bill Parcells", "Jim Fassel", "Dan Reeves"], "Tom Coughlin", "Both wins came against Bill Belichick teams four seasons apart."],
     ["comeback", "Which team overcame a 32-point deficit to beat Houston in the 1992 season's AFC wild-card game?", ["Bills", "Oilers", "Broncos", "Chiefs"], "Bills", "A backup quarterback led the second-half rally in January 1993."],
-    ["playoff-history", "Who caught the winning touchdown in the 1981 season's NFC Championship play known as The Catch?", ["Dwight Clark", "Freddie Solomon", "Jerry Rice", "John Taylor"], "Dwight Clark", "Joe Montana's pass came in the final minute against Dallas."],
+    ["playoff-special-teams","Who returned a blocked punt for a touchdown during San Francisco's 2021 season divisional playoff win at Green Bay?",["Talanoa Hufanga","Deebo Samuel","Fred Warner","George Kittle"],"Talanoa Hufanga","The fourth-quarter special-teams play tied a freezing January game at 10–10."],
     ["super-bowl-surprises", "Which Patriots linebacker caught a touchdown pass from Tom Brady in Super Bowl XXXVIII?", ["Mike Vrabel", "Tedy Bruschi", "Willie McGinest", "Roman Phifer"], "Mike Vrabel", null],
   ],
   [
