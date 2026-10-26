@@ -33,11 +33,13 @@ Football has **27** Millionaire dates (NFL 14 / CFB 13), not 26. UFC has 12 futu
 | League | KEEP (narrow verified fact) | REWRITE | RETIRE | HOLD / unverified | Total |
 |---|---:|---:|---:|---:|---:|
 | NFL | 1 | 4 | 5 | 70 | 80 |
-| CFB | 9 | 3 | 4 | 64 | 80 |
+| CFB | 9 | 7 | 4 | 60 | 80 |
 | UFC | 2 | 18 | 5 | 55 | 80 |
-| **Total** | **12** | **25** | **14** | **189** | **240** |
+| **Total** | **12** | **29** | **14** | **185** | **240** |
 
 These dispositions do **not** remove active content. All rows, including provisional KEEP, require independent review of each distractor and Stat Sheet before publication. The ledger is intentionally conservative: mass-approving questions based on plausibility would create a false certification.
+
+- Four more CFB championship-year questions in the original bank are ambiguous without an explicit **season** qualifier: runs 2 Q1 (2005 Texas; 2006 game), 3 Q1 (2023 Michigan; 2024 game), 6 Q1 (2020 Alabama; 2021 game), and 8 Q1 (2019 LSU; 2020 game). Their entries now have provisional **REWRITE** dispositions backed by official [BCS history](https://collegefootballplayoff.com/sports/2021/9/7/bcs-history) and [CFP season history](https://collegefootballplayoff.com/sports/2026/8/10/cfp-history). Their historical published forms and private proofs remain unchanged; future-only corrections are still outstanding.
 
 ### Confirmed factual / clue defects
 
@@ -68,7 +70,7 @@ Direct or near-direct *source-bank* overlaps found in Bar Trivia:
 ## Minimum readiness work before an editorial go-live
 
 1. Independently check every surviving question, all four choices and useful/non-leaking Q1–Q7 Stat Sheets against authoritative primary records; capture source **evidence**, not just a URL. Confirm each complete ladder is satisfying from Q1 to Q8.
-2. Remove or substantively rewrite the 14 retirement candidates and 25 rewrite candidates; finalize the 189 holds. Retain existing correct content and preserve the historical published versions.
+2. Remove or substantively rewrite the 14 retirement candidates and 25 rewrite candidates; finalize the 185 holds. Retain existing correct content and preserve the historical published versions.
 3. Supply at least **15 distinct eligible eight-question regular runs per league** (13 regularly scheduled NFL + reserve; 13 CFB + reserve; UFC 12 future plus already published run + reserve). That is 40 extra question slots per league **before** replacements for retired questions. A meaningful reserve of 2 runs makes 15 a useful target. 120 additional slots, plus retirements, must each be independently authored and checked — remixing old questions to create different permutations is not the same as unique facts.
 4. Verify future-only versioned selection that never recycles full runs, individual questions or high-similarity semantic facts. Do not mutate a historical private proof or prior completed result, and do not touch NBA.
 5. Run actual canonical publications for all 40 dates, compare prompt and semantic IDs across all sports and active cross-game banks, then verify four choices, difficulty, grading/lifelines/recovery/timer/resume, exact PR-head Validate V2 and production.
