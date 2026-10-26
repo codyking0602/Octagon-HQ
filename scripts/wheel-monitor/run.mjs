@@ -15,6 +15,8 @@ import { verifyHeadshots } from "./headshot-policy.mjs";
 import { sourceReviewBlockers } from "./source-review-gates.mjs";
 import { buildSourceCoverageLedger } from "./source-coverage-policy.mjs";
 import { fetchWithRetry } from "./fetch-policy.mjs";
+import { OFFICIAL_NFL_COACHES_URL, extractOfficialNflCoaches,
+  reconcileOfficialNflCoach } from "./nfl-coach-source.mjs";
 
 const root = resolve(import.meta.dirname, "../..");
 const repoRead = p => readFileSync(resolve(root, p), "utf8");
@@ -181,7 +183,17 @@ async function rosters(nflTeams) {
     "Incomplete NFL roster source coverage; previous successful snapshot not superseded");
   return output;
 }
-function reconcile(rows, sourceRosters, ufcRanks, previous) {
+async function officialNflCoaches() {
+  const html=await (await fetchWithRetry(OFFICIAL_NFL_COACHES_URL,{
+    headers:{Accept:"text/html"},
+  })).text();
+  const byTeam=extractOfficialNflCoaches(html);
+  record("official-nfl-coaching-source",
+    "Verified 32 independent official NFL season-2026 head-coach names; not a live staff-change feed",
+    OFFICIAL_NFL_COACHES_URL,{covered:Object.keys(byTeam).length,liveFreshnessCertified:false});
+  return {url:OFFICIAL_NFL_COACHES_URL,byTeam};
+}
+function reconcile(rows, sourceRosters, ufcRanks, coaches, previous) {
   const externalByName=new Map();
   for (const [key,roster] of Object.entries(sourceRosters)) {
     for (const person of roster.players) {
@@ -216,8 +228,10 @@ function reconcile(rows, sourceRosters, ufcRanks, previous) {
     const r=sourceRosters[row.sport+"|"+row.team];
     updated.sourceUrl=r?.url??null;
     if(row.family==="Head Coach") {
-      // ESPN player roster is not coaching authority. Never claim coach checked by player roster.
-      updated.sourceStatus="coaching-source-needed";
+      // Coach identities are independently checked against the official NFL
+      // season guide, not the ESPN player roster. Separate live-freshness
+      // certification is still required before snapshot promotion.
+      Object.assign(updated,reconcileOfficialNflCoach(row,coaches.byTeam,nameKey));
       return updated;
     }
     const own=r?.players.filter(p=>nameKey(p.name)===nameKey(row.name))??[];
@@ -252,6 +266,8 @@ function reconcile(rows, sourceRosters, ufcRanks, previous) {
     officialRank:x.officialRank, officialChampion:x.officialChampion,
     sourceTeam:x.sourceTeam, sourceUrl:x.sourceUrl,
     sourcePlayerId:x.sourcePlayerId,
+    sourceCoachName:x.sourceCoachName, coachSourceKind:x.coachSourceKind,
+    coachSourceFreshnessCertified:x.coachSourceFreshnessCertified,
     transferCandidateTeam:x.transferCandidateTeam,
     transferCandidateId:x.transferCandidateId,
   }))};
@@ -333,8 +349,8 @@ async function main() {
   const liveGradeByKey=new Map(nflCoverage.selected.map(row=>[identity(row),row.grade]));
   assert(nfl.every(row=>row.grade===liveGradeByKey.get(identity(row))),
     "NFL backend/GM grade bindings differ from checked-in artifacts; do not publish a snapshot");
-  const [sourceRosters,ufcRanks]=await Promise.all([
-    rosters(teams.nfl),ufcExternal(),
+  const [sourceRosters,ufcRanks,coaches]=await Promise.all([
+    rosters(teams.nfl),ufcExternal(),officialNflCoaches(),
   ]);
   // A malformed official table cannot seed either kind of retained artifact.
   assert(!ufcRanks.structuralWarnings.length,
@@ -345,7 +361,7 @@ async function main() {
       finding.url??"live:private.wheel_ufc_fighters",{
         fighterId:finding.fighterId,division:finding.division});
   const {result,snapshot}=reconcile([...nfl,...db.ufc],
-    sourceRosters,ufcRanks,previous);
+    sourceRosters,ufcRanks,coaches,previous);
   // Unlike the catalog census, this ledger never counts unmatched identities,
   // coaches without a dedicated authority, or unranked fighters as source-verified.
   // CFB grade completeness is not a weekly certification input.
@@ -383,7 +399,7 @@ async function main() {
     ...ufcRanks.structuralWarnings.map(division=>"ufc-official-rank-shape:"+division),
     "nfl-gm-live-contract-source-comparison-pending",
     "nfl-gm-economy-regression-pending",
-    "independent-head-coach-verification-pending",
+    "independent-head-coach-live-freshness-pending",
     "performance-evidence-pending",
     ...headshots.missing.map(x=>"ufc-headshot-missing:"+x.fighterId),
     ...headshots.unverified.map(x=>"ufc-headshot-http-unverified:"+x.fighterId),
@@ -396,6 +412,9 @@ async function main() {
     previousObservation:previousObserved?.checkedAt??null,
     comparisonBaseline:previous?.checkedAt??null,
     summaries,gmContractAuthority:gm,sourceEvidence:evidence,
+    coachSource:{url:coaches.url,season:2026,matched:snapshot.filter(x=>x.sport==="nfl" &&
+      x.family==="Head Coach" && x.sourceStatus==="matched").length,
+      approved:32,liveFreshnessCertified:false},
     monitoringScope:{ratingRefresh:["nfl","ufc"],gmContracts:true,cfbRatingRefresh:false,
       cfbApTop25:"independent-factual-workflow"},
     sourceCoverage:sourceCoverage.bySport,
