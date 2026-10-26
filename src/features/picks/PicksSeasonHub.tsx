@@ -164,12 +164,12 @@ export function PicksSeasonHub({
             <span>{football ? `${season} FOOTBALL SEASON` : `${season} SEASON`}</span>
             <strong id="picks-season-title">Picks Results Archive</strong>
             <small>
-              {record.correct}-{record.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {recordPoints} PTS
+              {football ? "SEASON TOTAL · " : ""}{record.correct}-{record.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {recordPoints} PTS
             </small>
           </div>
           <div className="picks-season-hub__meta">
             <span>{standings.length} {standings.length === 1 ? "PLAYER" : "PLAYERS"}</span>
-            <em>FINISHED EVENTS</em>
+            <em>{football ? "FINISHED WEEKS" : "FINISHED EVENTS"}</em>
           </div>
         </summary>
 

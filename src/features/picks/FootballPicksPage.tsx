@@ -8,6 +8,7 @@ import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
 import { mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "../home/footballWeeklyPublication";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
+import { footballLiveStandingsForMembers, footballStandingRankLabel } from "./footballGroupLiveStandings";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
 import { PicksSeasonHub } from "./PicksSeasonHub";
@@ -102,6 +103,17 @@ export default function FootballPicksPage() {
 
     return { outcomes, wins, losses, pushes, settled: wins + losses + pushes };
   }, [games, picks.selections, picks.footballLocks]);
+  const weeklyStandings = useMemo(
+    () => footballLiveStandingsForMembers(
+      picks.groupProgress.filter((member) => member.completed > 0),
+      games.filter((game) => game.resultStatus !== "cancelled").slice().sort((a, b) => a.position - b.position),
+    ),
+    [picks.groupProgress, games],
+  );
+  const currentProfile = picks.groupProgress.find((member) => member.isCurrentUser);
+  const currentStanding = currentProfile ? weeklyStandings.get(currentProfile.profileId) : null;
+  const weeklyRank = currentStanding && currentStanding.settled > 0
+    ? footballStandingRankLabel(currentStanding.rank, currentStanding.tied) : "—";
   const matchupBreakdowns = useMemo(() => {
     return mergeFootballWeeklyMatchupBreakdowns(
       publishedFootballMatchupsForEvent(event, published ?? null),
@@ -211,7 +223,7 @@ export default function FootballPicksPage() {
         </div>
         <footer>
           <span>{hasFinalScore ? `FINAL · ${away.name} ${game.awayFinalScore}, ${home.name} ${game.homeFinalScore}` : locked ? "KICKED OFF · PICK LOCKED" : footballDateTimeLabel(kickoff)}</span>
-          {lockAllowance > 0 && !cancelled ? (
+          {lockAllowance > 0 && !cancelled && (game.resultStatus ?? "pending") === "pending" ? (
             <button
               type="button"
               className="football-pick-game__lock"
@@ -223,7 +235,14 @@ export default function FootballPicksPage() {
           ) : null}
           {picks.savingBoutId === game.boutId ? <strong role="status">SAVING…</strong> : null}
         </footer>
-        {locked ? <GroupPickReveal redFighterSlug={game.redFighterSlug} redFighterName={game.redFighterName} blueFighterSlug={game.blueFighterSlug} blueFighterName={game.blueFighterName} picks={game.groupPicks ?? []} /> : null}
+        {locked && (game.groupPicks?.length ?? 0) > 0 ? (
+          (game.resultStatus ?? "pending") !== "pending" ? (
+            <details className="football-pick-game__group-reveal">
+              <summary><span>HOW EVERYONE PICKED</span><small>{game.groupPicks?.length ?? 0} ENTERED</small></summary>
+              <GroupPickReveal redFighterSlug={game.redFighterSlug} redFighterName={game.redFighterName} blueFighterSlug={game.blueFighterSlug} blueFighterName={game.blueFighterName} picks={game.groupPicks ?? []} />
+            </details>
+          ) : <GroupPickReveal redFighterSlug={game.redFighterSlug} redFighterName={game.redFighterName} blueFighterSlug={game.blueFighterSlug} blueFighterName={game.blueFighterName} picks={game.groupPicks ?? []} />
+        ) : null}
       </article>
     );
   };
@@ -280,17 +299,16 @@ export default function FootballPicksPage() {
           {identity.profile ? (
             <details className="surface-card football-group-hub" data-football-section="group">
               <summary className="football-group-hub__summary">
-                <div className="football-group-hub__summary-copy">
-                  <span>PICKS &amp; STANDINGS</span>
-                  <small>{progress.completed} / {progress.total} PICKED{lockAllowance ? ` · ${usedLocks} / ${lockAllowance} LOCKS` : ""}</small>
+                <div className="football-group-hub__heading">
+                  <span>PICKS &amp; STANDINGS</span><small>{completedGames.length} FINAL · {currentGames.length} REMAINING</small>
                 </div>
-                <div className="football-group-hub__summary-meta">
-                  <strong>
-                    {liveAts.settled
-                      ? `LIVE ATS ${liveAts.wins}-${liveAts.losses}${liveAts.pushes ? ` · ${liveAts.pushes} PUSH${liveAts.pushes === 1 ? "" : "ES"}` : ""}`
-                      : seasonHub ? "WEEKLY + SEASON" : "WEEKLY PICKS"}
-                  </strong>
-                  <small>{liveAts.settled ? `${liveAts.settled} FINAL` : seasonHub ? "GROUP + SEASON" : "GROUP PICKS"}</small>
+                <div className="football-group-hub__scorecard">
+                  <div><strong>{liveAts.wins}-{liveAts.losses}-{liveAts.pushes}</strong><small>ATS RECORD</small></div>
+                  <div><strong>{weeklyRank}</strong><small>GROUP RANK</small></div>
+                  <div><strong>{progress.completed}/{progress.total}</strong><small>PICKS MADE</small></div>
+                </div>
+                <div className="football-group-hub__foot">
+                  <small>{usedLocks} / {lockAllowance} LOCKS PLACED</small><span>VIEW STANDINGS</span>
                 </div>
               </summary>
               <div className="football-group-hub__body">

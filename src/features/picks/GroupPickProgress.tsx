@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { gradeFootballAts } from "./footballPicksScoring";
+import { footballLiveStandingsForMembers } from "./footballGroupLiveStandings";
 import type { PickEvent } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 
@@ -45,100 +45,10 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
     .slice()
     .sort((left, right) => left.position - right.position), [event.bouts]);
 
-  const footballLiveStandings = useMemo(() => {
-    if (!isFootball) return new Map<string, {
-      rank: number;
-      tied: boolean;
-      wins: number;
-      losses: number;
-      pushes: number;
-      points: number;
-      lockWins: number;
-      lockLosses: number;
-      lockPushes: number;
-      settled: number;
-    }>();
-
-    const rows = visibleMembers.map((member) => {
-      let wins = 0;
-      let losses = 0;
-      let pushes = 0;
-      let points = 0;
-      let lockWins = 0;
-      let lockLosses = 0;
-      let lockPushes = 0;
-
-      for (const bout of eligibleBouts) {
-        if ((bout.resultStatus ?? "pending") === "pending" || bout.frozenSpreadHome == null) continue;
-        const memberSelection = bout.groupPicks?.find((pick) => pick.displayName === member.displayName) ?? null;
-        const selectedSlug = memberSelection?.pickedFighterSlug ?? null;
-        const pickedTeam = selectedSlug === bout.redFighterSlug
-          ? "home"
-          : selectedSlug === bout.blueFighterSlug ? "away" : null;
-        if (!pickedTeam) continue;
-
-        const grade = gradeFootballAts({
-          pickedTeam,
-          homeScore: bout.homeFinalScore ?? null,
-          awayScore: bout.awayFinalScore ?? null,
-          frozenSpreadHome: bout.frozenSpreadHome,
-          isFinal: bout.resultStatus !== "pending" && bout.resultStatus !== "cancelled",
-          isCancelled: bout.resultStatus === "cancelled",
-          isLock: memberSelection?.isLock === true,
-        });
-        if (grade.outcome === "unresolved") continue;
-
-        points += grade.points;
-        if (grade.outcome === "win") wins += 1;
-        if (grade.outcome === "loss") losses += 1;
-        if (grade.outcome === "push") pushes += 1;
-        if (memberSelection?.isLock === true) {
-          if (grade.outcome === "win") lockWins += 1;
-          if (grade.outcome === "loss") lockLosses += 1;
-          if (grade.outcome === "push") lockPushes += 1;
-        }
-      }
-
-      return {
-        profileId: member.profileId,
-        points,
-        wins,
-        losses,
-        pushes,
-        lockWins,
-        lockLosses,
-        lockPushes,
-        settled: wins + losses + pushes,
-      };
-    });
-
-    const ordered = rows.slice().sort((left, right) => (
-      right.points - left.points
-      || right.wins - left.wins
-      || left.losses - right.losses
-      || left.profileId.localeCompare(right.profileId)
-    ));
-    const rankByProfile = new Map<string, number>();
-    let previousPoints: number | null = null;
-    let previousRank = 0;
-    ordered.forEach((row, index) => {
-      const rank = previousPoints === row.points ? previousRank : index + 1;
-      previousPoints = row.points;
-      previousRank = rank;
-      rankByProfile.set(row.profileId, rank);
-    });
-    const rankCounts = new Map<number, number>();
-    rankByProfile.forEach((rank) => rankCounts.set(rank, (rankCounts.get(rank) ?? 0) + 1));
-
-    return new Map(rows.map((row) => {
-      const rank = rankByProfile.get(row.profileId) ?? 0;
-      return [row.profileId, {
-        ...row,
-        rank,
-        tied: (rankCounts.get(rank) ?? 0) > 1,
-      }];
-    }));
-  }, [eligibleBouts, isFootball, visibleMembers]);
+  const footballLiveStandings = useMemo(
+    () => isFootball ? footballLiveStandingsForMembers(visibleMembers, eligibleBouts) : new Map(),
+    [eligibleBouts, isFootball, visibleMembers],
+  );
 
   const selectedPicks = useMemo(() => {
     if (!selected) return [];
@@ -222,7 +132,7 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
                 {isFootball && live && live.settled > 0 ? (
                   <span className="football-group-live">
                     <b>{liveRecord(live.wins, live.losses, live.pushes)} · {ordinalPlace(live.rank, live.tied)}</b>
-                    <small>LOCKS {lockSettled ? liveRecord(live.lockWins, live.lockLosses, live.lockPushes) : "—"}</small>
+                    <small>{live.points} PTS · LOCKS {lockSettled ? liveRecord(live.lockWins, live.lockLosses, live.lockPushes) : "—"}</small>
                   </span>
                 ) : (
                   <b>{member.completed}/{member.total}</b>
@@ -235,7 +145,7 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
                       <span>{member.displayName}'S PICKS</span>
                       <strong>
                         {isFootball && live && live.settled > 0
-                          ? `${liveRecord(live.wins, live.losses, live.pushes)} · ${ordinalPlace(live.rank, live.tied)} · LOCKS ${lockSettled ? liveRecord(live.lockWins, live.lockLosses, live.lockPushes) : "—"}`
+                          ? `${liveRecord(live.wins, live.losses, live.pushes)} · ${ordinalPlace(live.rank, live.tied)} · ${live.points} PTS · LOCKS ${lockSettled ? liveRecord(live.lockWins, live.lockLosses, live.lockPushes) : "—"}`
                           : `${member.completed}/${member.total} COMPLETE`}
                       </strong>
                     </div>
