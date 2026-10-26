@@ -47,7 +47,7 @@ export const cfbEditorialCandidateRuns = [
     ["upsets", "Which team handed Alabama its only regular-season loss in Johnny Manziel's 2012 Heisman season?", ["Texas A&M", "LSU", "Ole Miss", "Georgia"], "Texas A&M", "The upset happened in Tuscaloosa in the Aggies' first SEC season."],
     ["heisman", "Who won the 2025 Heisman Trophy after quarterbacking Indiana's breakthrough season?", ["Fernando Mendoza", "Diego Pavia", "Julian Sayin", "Dante Moore"], "Fernando Mendoza", "The winner transferred from California before the season."],
     ["undefeated-seasons", "Who coached Auburn's undefeated 2004 football team?", ["Tommy Tuberville", "Gus Malzahn", "Gene Chizik", "Pat Dye"], "Tommy Tuberville", "The Tigers finished 13–0 with a Sugar Bowl victory."],
-    ["historical-titles", "Which program won the 1976 national championship behind Heisman runner Tony Dorsett?", ["Pittsburgh", "Penn State", "Syracuse", "West Virginia"], "Pittsburgh", "The Panthers finished 12–0 under coach Johnny Majors."],
+    ["historical-titles", "Which program won the 1976 national championship behind Heisman-winning running back Tony Dorsett?", ["Pittsburgh", "Penn State", "Syracuse", "West Virginia"], "Pittsburgh", "The Panthers finished 12–0 under coach Johnny Majors."],
     ["coaching-history", "Who coached Washington to a 12-0 season and a share of the 1991 national championship?", ["Don James", "Terry Donahue", "Dennis Erickson", "Mike Bellotti"], "Don James", "The Huskies finished first in the coaches' poll after a Rose Bowl win over Michigan."],
     ["army-football", "Which Army football star was nicknamed Mr. Outside alongside Doc Blanchard's Mr. Inside?", ["Glenn Davis", "Felix Blanchard", "Red Grange", "Tom Harmon"], "Glenn Davis", null],
   ],
