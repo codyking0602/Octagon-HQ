@@ -14,7 +14,7 @@ import { validateObservation } from "./observation-policy.mjs";
 import { verifyHeadshots } from "./headshot-policy.mjs";
 import { sourceReviewBlockers } from "./source-review-gates.mjs";
 import { buildSourceCoverageLedger } from "./source-coverage-policy.mjs";
-import { fetchWithRetry } from "./fetch-policy.mjs";
+import { fetchWithRetry, readStructurallyValidatedHtml } from "./fetch-policy.mjs";
 import { OFFICIAL_NFL_COACHES_URL, extractOfficialNflCoaches,
   reconcileOfficialNflCoach } from "./nfl-coach-source.mjs";
 
@@ -141,8 +141,12 @@ function extractUfcRankings(html) {
 }
 async function ufcExternal() {
   const url="https://www.ufc.com/rankings";
-  const html=await (await fetchWithRetry(url,{headers:{Accept:"text/html"}})).text();
-  const data=extractUfcRankings(html);
+  // UFC occasionally returns a valid HTTP 200 with a transient CDN/challenge
+  // document instead of rankings. Retry only structural invalidity, twice;
+  // never promote an incomplete page and never retry permanent HTTP failures.
+  const data=await readStructurallyValidatedHtml(
+    async()=> (await fetchWithRetry(url,{headers:{Accept:"text/html"}})).text(),
+    extractUfcRankings,2);
   if (data.structuralWarnings.length) {
     record("source-integrity-review","Official UFC table contains missing/duplicate ranks",
       url,{divisions:data.structuralWarnings});
