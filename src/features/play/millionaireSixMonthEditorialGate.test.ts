@@ -57,7 +57,8 @@ function sixMonthCalendar(): CalendarEntry[] {
     for (const sport of ["football", "ufc"] as const) {
       if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
       if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
-      const published = buildMillionaireDailySetup(sport, day, "millionaire-editorial-audit-v1");
+      const published = buildMillionaireDailySetup(sport, day, "millionaire-editorial-audit-v1",
+        { editorialCandidatePreview: true });
       const run = published.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
       const league = published.publicSetup.league as League;
       expect(run).toHaveLength(8);
