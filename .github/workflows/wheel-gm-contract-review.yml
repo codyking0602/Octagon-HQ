@@ -85,3 +85,19 @@ jobs:
             tmp/wheel-monitor/gm/comparison.json
           if-no-files-found: warn
           retention-days: 30
+
+  gm-economy-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Run reproducible published-authority GM economy simulations
+        run: |
+          npx vitest run \
+            src/features/back-room/wheelFootballGmEconomy.test.ts \
+            src/features/back-room/footballGmOutcomeCalibration.test.ts
