@@ -1,23 +1,38 @@
-# Wheel read-only census — staged acceptance contract
+# Wheel read-only monitoring — NFL/UFC/GM acceptance contract
 
-This is an infrastructure-only collector **foundation**, not approval to publish roster, ranking, contract or rating changes.
+The approved October 25, 2026 scope **excludes all weekly CFB player and
+head-coach rating refreshes**. Preserve the existing 1,277 approved CFB
+identities, grade infrastructure, historical versions and Wheel game behavior.
+No new CFB grade is authorized; draft PR #2143 remains unmerged.
 
-## Authorities
+## Required populations
 
-- Active NFL/CFB identities are driven by the approved **priority inventories**, excluding Flex aliases: 626 NFL and 1,258 base CFB plus 19 audited Boise State (1,277 CFB). Join each active priority to the latest effective grade in `private.wheel_football_grade_authority`; never mistake retired/versioned grade rows for the active player population. Extra old authority rows must be reported as stale, not selected.
-- Current UFC identities come from active `private.wheel_ufc_fighters`, with exactly one champion plus #1–15 per eight men's divisions. UFC source authority is official **All Rankings**, not Meta.
-- NFL grades consumed by GM remain `src/features/back-room/wheelFootballNflCurrentAuthority.ts`; no auto-generated alternative authority.
-- NFL/CFB ESPN rosters are comparison signals, not automatic delete/regrade authority. Coaches, performance trends, UFC authoritative source verification and GM contracts remain separately required inputs.
+- NFL: 626 approved identities, including 32 coaches monitored through
+  independent coaching sources, and 594 GM-eligible players.
+- UFC: 170 active fighter/division entries, including independently verified
+  unranked athletes, official rankings, and champion identities.
+- NFL GM: all 594 eligible contracts, age, roles, term, current independent
+  source freshness, grading-authority lineage, and economy simulation.
 
-## Stages and failure boundaries
+CFB AP Top 25 factual checks remain separate in the dedicated AP monitor.
+They can produce independently reviewable ranking correction receipts, but
+neither AP changes nor CFB missing grades are mandatory NFL/UFC/GM release gates.
 
-1. Collect entire production DB identity and grade-version census through a read-only credential, plus authenticated source receipts. Every identity gets accounted for, even if unchanged.
-2. Build ESPN roster presence/name evidence for all 32 NFL and 69 CFB teams (including Boise). Unmatched names must be reconciled, not silently deleted.
-3. Validate official UFC **All Rankings**, each division champion and contender #1–15, against current production. A rank change is a **factual correction**; it does not change a grade by itself.
-4. Independently refresh NFL GM contract source in an isolated output and compare with the versioned historical snapshot. Do not rewrite existing files.
-5. Classify changes, preserve all unchanged grades, produce a dated JSON evidence receipt with source URLs, previous state and reason. Deep evaluation is *editorial*, not automated grade arithmetic.
-6. Only after every required upstream gate passes, persist one last-good factual checkpoint. A partially failed cycle must keep the previous checkpoint, record the error and never publish partial ratings or silently claim freshness.
+## Stages and failure rules
 
-The pure policy and fixture tests ship first to enforce no-change stability, no automatic grading, mandatory source provenance, UFC rank shape and never-commit-partial behavior. A real collector/scheduler will only be enabled when the whole production sourced loop is proven; do not confuse **policy fixtures** with live source certification.
+1. Read current approved NFL and UFC identities; do not collect CFB player rosters
+   or query CFB grades as a weekly rating-monitor prerequisite.
+2. Compare source-backed facts, preserving source IDs, timestamps, conflicts and
+   missing coverage, without treating absence as proof of release or decline.
+3. In independent read-only stages, run NFL multiweek performance/snap/availability,
+   current UFC result/identity checks, and GM source comparison.
+4. Evaluate strong sustained changes selectively. Rank and roster movements are
+   **factual**, not automatic overalls.
+5. Never promote incomplete coverage, unfresh provider snapshots, unverified
+   coaches/unranked UFC athletes, missing-source cases, or missing GM economy gates.
+6. Observations are not certified checkpoints. Failed/partial runs preserve the
+   last-good certified checkpoint and never rewrite ratings/contracts.
 
-Do not enable the existing disabled Wheel Grade Refresh or restore the independent AP cron. NBA remains out of scope.
+Weekly activation remains disabled until exact-head CI, live source checks,
+recovery tests and complete reduced-scope certification pass. No owner-authority
+changes may be merged automatically.
