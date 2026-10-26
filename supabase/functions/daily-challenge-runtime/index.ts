@@ -103,6 +103,9 @@ type NbaPublicationRuntimeModule = {
 type NbaAdvanceRuntimeModule = {
   advanceNbaOfficialDailyRuntime: DailyAdvanceRuntime;
 };
+type WhoAmIAdvanceRuntimeModule = {
+  advanceCanonicalWhoAmIDailyRuntime: DailyAdvanceRuntime;
+};
 type NbaFeudAdvanceRuntimeModule = {
   advanceFamilyFeudDailyCore: DailyAdvanceRuntime;
 };
@@ -132,6 +135,7 @@ let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null 
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
+let whoAmIAdvanceRuntimePromise: Promise<WhoAmIAdvanceRuntimeModule> | null = null;
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
 let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
 let footballHitNumberAdvanceRuntimePromise: Promise<FootballHitNumberAdvanceRuntimeModule> | null = null;
@@ -168,6 +172,14 @@ function loadNbaAdvanceRuntime() {
     nbaAdvanceRuntimePromise = import("./nba-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
   }
   return nbaAdvanceRuntimePromise;
+}
+// Who Am I runs dozens of small actions. Avoid evaluating every NBA game bank
+// on each reveal or guess; the exact canonical two-round evaluator is reusable.
+function loadWhoAmIAdvanceRuntime() {
+  if (!whoAmIAdvanceRuntimePromise) {
+    whoAmIAdvanceRuntimePromise = import("./who-am-i-advance.generated.mjs") as Promise<WhoAmIAdvanceRuntimeModule>;
+  }
+  return whoAmIAdvanceRuntimePromise;
 }
 
 function loadNbaFeudAdvanceRuntime() {
@@ -843,7 +855,9 @@ async function handleNbaDaily(
   // all nine NBA game runtimes to resolve its small per-tile actions: the old
   // path exceeded CPU limits during live owner testing. Auth, revision checks,
   // idempotency, grading and persisted results still use the same trusted path.
-  const advanced = context.gameType === "average_fan"
+  const advanced = context.gameType === "who_am_i"
+    ? (await loadWhoAmIAdvanceRuntime()).advanceCanonicalWhoAmIDailyRuntime(context, action)
+    : context.gameType === "average_fan"
     ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)
     : context.gameType === "sports_feud"
       // Current NBA packs already carry their own authoritative candidates and
