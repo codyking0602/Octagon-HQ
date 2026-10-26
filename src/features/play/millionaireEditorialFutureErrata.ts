@@ -14,6 +14,29 @@ export type MillionaireFutureRewriteSeed = {
   evidence: readonly { authority: string; url: string; supportingDetail: string }[];
 };
 export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
+  // Future-only corrections to exact selectable Bar Trivia fact collisions.
+  // The published legacy Millionaire boards remain immutable.
+  "nfl:3:4": {
+    id: "millionaire-nfl-future-graham-strip-sack-sblii-q5",
+    type: "super-bowl-turning-points",
+    prompt: "Which Eagles defender strip-sacked Tom Brady with just over two minutes left in Super Bowl LII?",
+    choices: ["Brandon Graham", "Fletcher Cox", "Derek Barnett", "Chris Long"],
+    answer: "Brandon Graham",
+    statSheet: "The takeaway helped protect Philadelphia's 38–33 lead before an insurance field goal in the fourth quarter.",
+    explanation: "Brandon Graham strip-sacked Tom Brady with 2:09 remaining in Super Bowl LII. Derek Barnett recovered the fumble, and Philadelphia defeated New England 41–33.",
+    evidence: [{ authority: "NFL game analysis", url: "https://www.nfl.com/news/eagles-d-on-strip-sack-it-was-only-a-matter-of-time-0ap3000000914610", supportingDetail: "The NFL confirms Graham forced the fumble, Barnett recovered and the Eagles won 41–33." }],
+  },
+  "nfl:4:5": {
+    id: "millionaire-nfl-future-jefferson-2022-opoy-q6",
+    type: "modern-offensive-awards",
+    prompt: "Which receiver won AP NFL Offensive Player of the Year for the 2022 season with 1,809 receiving yards?",
+    choices: ["Justin Jefferson", "Tyreek Hill", "Davante Adams", "A.J. Brown"],
+    answer: "Justin Jefferson",
+    statSheet: "The award winner starred on a 13-win NFC North team under a first-year head coach.",
+    explanation: "Minnesota wide receiver Justin Jefferson won the AP 2022 Offensive Player of the Year award after making 128 catches for 1,809 receiving yards.",
+    evidence: [{ authority: "NFL Honors", url: "https://www.nfl.com/news/running-list-of-nfl-honors-award-winners-from-2022-nfl-season", supportingDetail: "NFL's awards list names Jefferson as 2022 AP Offensive Player of the Year." }],
+  },
+
   // Preview-only rewrite of a verbatim active Bar Trivia "Notorious" nickname.
   "ufc:1:0": {
     id: "millionaire-ufc-future-285-jones-heavyweight-q1",

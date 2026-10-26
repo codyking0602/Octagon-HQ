@@ -15,6 +15,20 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("excludes two exact active NFL Bar Trivia collisions from future candidates", () => {
+    const graham = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:3:4"]!;
+    const jefferson = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:4:5"]!;
+    expect(graham.answer).toBe("Brandon Graham");
+    expect(graham.choices).toContain("Derek Barnett");
+    expect(graham.prompt).toContain("Super Bowl LII");
+    expect(graham.statSheet).not.toContain("Brandon Graham");
+    expect(jefferson.answer).toBe("Justin Jefferson");
+    expect(jefferson.prompt).toContain("2022");
+    expect(jefferson.statSheet).not.toContain("Justin Jefferson");
+    expect(millionaireDailyRun("nfl", 3)[4]!.prompt).toContain("wild-card");
+    expect(millionaireDailyRun("nfl", 4)[5]!.prompt).toContain("kicker");
+  });
+
   it("retains three future-only removals of active UFC Bar Trivia fact collisions", () => {
     const jones = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:1:0"]!;
     expect(jones.answer).toBe("Jon Jones");
