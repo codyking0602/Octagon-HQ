@@ -121,3 +121,17 @@ Initial prompt/fact similarity comparisons covered original source files for por
 - **Remaining blockers:** independently validate *every* correct fact and three wrong choices for all publishable content; finish full active-game semantic deduplication; perform complete human difficulty/Stat Sheet signoff across all 45 boards; verify exact PR head; and move the **October 27, 2026** preview date safely beyond every published board before an authorized integration. Every candidate remains HOLD until then.
 
 **Final editorial release verdict: BLOCKED / NOT CERTIFIED / KEEP DRAFT.**
+
+## October 26 superseding addendum (draft / HOLD)
+
+Three focused, source-backed future-only Q8 corrections were committed with matching 178-row HOLD ledger edits:
+- UFC run 11: UFC 217's three incumbent championship losses, https://www.ufc.com/event/ufc-217, replaces obscure UFC 8 winner trivia.
+- NFL run 12: Mecole Hardman's overtime Super Bowl LVIII winning catch, https://www.nfl.com/news/chiefs-qb-patrick-mahomes-named-super-bowl-lviii-mvp, replaces Jack Squirek's Super Bowl XVIII interception trivia.
+- CFB run 15: Blake Corum's January 2024 Rose Bowl overtime touchdown, https://collegefootballplayoff.com/news/2024/1/1/rose-recap, replaces Glenn Davis's 1940s nickname trivia.
+The three Q8 outcomes and options were reviewed individually; selected Bar Trivia material showed no direct identical fact in those replacements. Full active-feud/fan/trivia uniqueness remains **unverified**.
+
+All 144 directly authored new/replacement candidate question slots passed a bounded parse-based check: four distinct choices, listed correct answer, no whole-answer Stat Sheet string leak, and all 18 authored Q8s have answer-containing explanations and no Stat Sheet. An existing future-candidate test now protects the three revised Q8s. This is **not** executed Vitest or human/factual certification of 360 slots.
+
+Previous backend CI on `2267bbdc` stopped at an exact-checkout trailing-whitespace error (not a SQL assertion); repaired in isolated branch. The old UFC streak fixture was separately reconciled to main's active UFC publication day with one test-only assignment; no backend logic changed. Exact-current-head CI is **unverified** and draft Validate V2 is skipped.
+
+**178/178 future ledger entries remain HOLD; 0/45 full runs and 0/360 slots fully independently certified.** Blockers: every answer/distractor/hint factual check, full active cross-game originality, difficulty, final six-month replay and exact-head CI. The Oct 27 preview cutover also needs safe future recalibration before any separately authorized integration. Do not merge, undraft, deploy or change production.
