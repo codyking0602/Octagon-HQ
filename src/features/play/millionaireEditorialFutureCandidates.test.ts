@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { MILLIONAIRE_FUTURE_Q8_REWRITES } from "./millionaireEditorialFutureQ8";
 import { MILLIONAIRE_DAILY_RUN_COUNT, MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT, millionaireDailyRun, millionaireFutureEditorialDailyRun } from "./millionaireDailyQuestionBank";
-import { buildMillionaireDailySetup, MILLIONAIRE_DAILY_CONTENT_VERSION, MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION, millionaireDailyRunIndex } from "./millionaireDailyRuntime";
+import { buildMillionaireDailySetup, MILLIONAIRE_DAILY_CONTENT_VERSION, COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION, MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION, millionaireDailyRunIndex } from "./millionaireDailyRuntime";
 import { isUfcPublicationDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import type { MillionaireRuntimeQuestion } from "../games/millionaireAuthority";
 
@@ -195,7 +195,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     const nextUfc = buildMillionaireDailySetup("ufc", "2026-11-06", "candidate-qa",
       { editorialCandidatePreview: true });
     expect(ufcHistory.contentVersion).toBe(MILLIONAIRE_DAILY_CONTENT_VERSION);
-    expect(footballTheme.contentVersion).toBe(MILLIONAIRE_DAILY_CONTENT_VERSION);
+    expect(footballTheme.contentVersion).toBe(COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION);
     expect((footballTheme.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some(q => q.id.startsWith("theme-"))).toBe(true);
     expect(nextUfc.contentVersion).toBe(MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION);
     expect(millionaireDailyRunIndex("ufc", "2026-10-25")).toBe(5);
