@@ -114,3 +114,30 @@ test('roster injury and reserve designations prompt cheap review, not a regrade'
  assert.ok(finding.signals.some(signal=>signal.kind==='roster-designation-change-requires-factual-reconciliation'));
  assert.equal(summarizeDecisions([finding]).deepReviewCandidates,0);
 });
+
+test("canonical unranked athlete in official top fifteen needs factual reconciliation",()=>{
+ const row={sport:"ufc",division:"Light Heavyweight",name:"Muhammad Saidov",
+  rank:null,champion:false,sourceStatus:"matched",
+  officialRank:13,officialChampion:false,grade:83};
+ const [finding]=compareEvidence([row],null);
+ assert.equal(finding.classification,"mandatory-factual-correction");
+ assert.equal(finding.gradePreserved,true);
+ assert.ok(finding.signals.some(x=>x.kind==="official-ufc-canonical-rank-mismatch"));
+ assert.equal(summarizeDecisions([finding]).deepReviewCandidates,0);
+});
+test("stale official rank never counts as no meaningful change even across unchanged observations",()=>{
+ const row={sport:"ufc",division:"Bantamweight",name:"Ranked Fighter",
+  rank:13,champion:false,sourceStatus:"matched",
+  officialRank:15,officialChampion:false,grade:88};
+ const old={...row};
+ const [finding]=compareEvidence([row],{identities:[old]});
+ assert.equal(finding.classification,"mandatory-factual-correction");
+ assert.ok(finding.signals.some(x=>x.kind==="official-ufc-canonical-rank-mismatch"));
+});
+test("official source match with correct rank is unchanged",()=>{
+ const row={sport:"ufc",division:"Heavyweight",name:"Correct",
+  rank:11,champion:false,sourceStatus:"matched",
+  officialRank:11,officialChampion:false,grade:90};
+ const [finding]=compareEvidence([row],{identities:[row]});
+ assert.equal(finding.classification,"no-meaningful-change");
+});
