@@ -61,8 +61,17 @@ describe("Shane's ranked watchlist", () => {
       rank: 2,
       previousRank: 3,
       lastReviewed: "October 2026",
+      ufcRecord: "4–0",
+      ufcWinStreak: "4",
+      ufcFinishes: "4",
+      photoUrl: "/assets/fighters/abdul-rakhman-yakhyaev-20261026-thumb.webp",
       videoUrl: "https://youtu.be/DLHnf12AAFM?is=GC_mx7BpYcnD9ZIS",
     });
+    expect(yakhyaev.scoutingSnapshot).toContain("Nikita Krylov");
+    expect(yakhyaev.scoutingSnapshot).toContain("UFC 333");
+    expect(yakhyaev.scoutingSnapshot).toContain("D’Arce choke");
+    expect(yakhyaev.scoutingSnapshot).not.toContain("latest by an eight-second knockout");
+    expect(existsSync("public/assets/fighters/abdul-rakhman-yakhyaev-20261026-thumb.webp")).toBe(true);
     expect(watchMovement(yakhyaev)).toEqual({ label: "↑1", direction: "up" });
 
     const bilal = shanesWatchlist.fighters[3];
@@ -288,12 +297,12 @@ describe("Shane's ranked watchlist", () => {
 
     const dialog = screen.getByRole("dialog", { name: "Abdul Rakhman Yakhyaev" });
     expect(within(dialog).getByText("SHANE’S RANKING · #2")).toBeInTheDocument();
-    expect(within(dialog).getByText(/Three straight first-round UFC finishes/)).toBeInTheDocument();
+    expect(within(dialog).getByText(/Four first-round UFC finishes in four starts/)).toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
       "https://youtu.be/DLHnf12AAFM?is=GC_mx7BpYcnD9ZIS",
     );
-    expect(within(dialog).getByText("3–0")).toBeInTheDocument();
+    expect(within(dialog).getByText("4–0")).toBeInTheDocument();
   });
 
   it("keeps Raul Rosas Jr. at #3 after Abdul moves above him", () => {
