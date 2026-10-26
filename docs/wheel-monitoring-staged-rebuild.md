@@ -1,136 +1,62 @@
-# Wheel player monitoring — staged replacement (October 25, 2026)
+# Weekly Wheel monitoring — certified scope after October 25, 2026 owner decision
 
-## Authority, scope and safety
+This is read-only infrastructure. **Mandatory weekly rating-monitor certification covers NFL
+(626 approved identities including 32 coaches), UFC (170 active fighter/division entries),
+and NFL GM contracts (594 eligible players). CFB player/coach rating refreshes are excluded.**
+Do not spend weekly source-collection or editorial regrading resources on approximately
+1,277 CFB player/coach entries. In particular, the 13 missing CFB Wheel grades are not
+NFL/UFC/GM release blockers, and draft PR #2143 is on hold.
 
-This is **read-only infrastructure**. It does not alter NFL/CFB/UFC overalls, current
-Wheel grades, UFC ranking/category rows, CFB AP 25 rows, NFL GM authority,
-historical grade files, contracts or completed games. Source changes create
-actionable evidence; human-reviewed content PRs are the only publication path.
+Existing CFB Wheel grades, private grade authority, source versions, AP game rules,
+eligibility, historical results, and historical snapshots must remain untouched.
+This monitoring change does **not** supply missing CFB grades or alter gameplay.
 
-Canonical data authorities remain:
-- NFL audited Wheel grade JSONs (QB/RB/WR/TE/Front Seven/Secondary/Head Coach)
-  and `src/features/back-room/wheelFootballNflCurrentAuthority.ts`;
-- CFB live `private.wheel_football_grade_authority`, including extra-team Boise
-  audit. Flex is derived from RB/WR/TE, never its own rating;
-- UFC live `private.wheel_ufc_fighters`; standard UFC.com **All Rankings**, not
-  **All Meta Rankings**;
-- GM existing canonical `scripts/refresh-wheel-nfl-gm-authority.mjs`, grade
-  imports, immutable dated contracts and separate outlook adjustments.
+## Authority and source boundaries
 
-`scripts/wheel-monitor/core.mjs` handles complete identity checks and
-conservative classifications. `run.mjs` reads live private Wheel tables via
-the **existing** GitHub `SUPABASE_ACCESS_TOKEN` management API secret; compares
-canonical NFL grades and current ESPN NFL/CFB roster/ESPN AP information; parses
-UFC standard rankings; and writes no game state. A failed source query, incomplete
-roster, malformed poll, missing division or genuinely malformed rankings must fail closed.
-Official UFC ties (such as two #12 contenders followed by #14) are valid
-source facts. The collector preserves and reports them instead of fabricating
-unique positions.
-Never change a rating because of an absence, single week, or ranking shuffle.
+- NFL grades and approved identity population: current Wheel NFL audit files, live
+  private grade authority for 32 NFL team codes, and the established GM TypeScript
+  authority. ESPN NFL rosters are evidence, not permission to release/reassign a player.
+- UFC: active private fighter rows, official UFC.com **All Rankings** (never Meta),
+  and additional independent evidence for all unranked fighters.
+- GM: current immutable dated contract snapshot and independently observed current
+  source facts; a source query timestamp is **not** proof of provider freshness.
+- CFB **AP Top 25 factual monitoring is independent**:
+  `.github/workflows/monitor-wheel-cfb-ap-top25.yml` /
+  `scripts/check-wheel-cfb-ap-top25.mjs`. Poll movements produce editorial receipts;
+  they do not trigger CFB rating work or block NFL/UFC/GM checkpoint promotion.
+  This AP workflow is currently manual-only, not a weekly grading job.
 
-## Checkpoints
+## Collection and checkpoint rules
 
-`.github/workflows/wheel-monitor.yml` currently has only **manual** and
-**one-off main push** triggers. The weekly cron is NOT enabled until the
-live, end-to-end source and identity acceptance run passes. There is no second
-scheduled poll workflow: `monitor-wheel-cfb-ap-top25.yml` is manual-only.
+The staged Wheel monitor performs read-only NFL roster and UFC ranking scans,
+reports evidence classifications, and retains an *observation* even when owner
+review/certification is pending. NFL performance and snap source monitors and the
+isolated GM contract comparison are separate staged inputs and **are not yet**
+promoted as a globally certified source bundle.
 
-When the read-only workflow runs:
-1. Resolve the newest non-expired **`wheel-monitor-snapshot`** artifact
-   from **main**; successful *report-only* runs have no such artifact and must
-   be skipped. Validate restored contents as schema-2 source-certified.
-   Schema-1 artifacts incorrectly promoted review-held observations and cannot
-   serve as trusted baselines. If no artifact exists, perform baseline review
-   rather than mistaking the latest successful report for a checkpoint.
-2. Run deterministic tests, query current live identity authorities, fetch
-   primary evidence and classify roster/AP/UFC changes.
-3. Preserve a factual review report; maintain explicit source errors,
-   timestamps, previous values, source URL and action classifications.
-4. Promote a new snapshot artifact only after *all* certification gates pass.
-   Report-only runs still give independent NFL/CFB/UFC observations even when
-   another sport has a known grade gap; they produce no certified snapshot.
-   On failure preserve the last good successful snapshot. No rating PR is
-   created on an unchanged week or merely from a factual signal.
+New read-only observations use schema 4 with NFL/UFC identities; legacy schema-3
+observations containing CFB remain readable only as historical comparison evidence.
+New source-certified checkpoints use schema 3 with `certifiedScope` indicating
+NFL/UFC/GM. Legacy checkpoint records are never rewritten.
 
-This intentionally leaves the old **Wheel Grade Refresh** ChatGPT task
-disabled. It was oversized; re-enabling it would create competing ownership.
+No CFB identity is counted as removed merely because it is out of the new
+monitoring scope. NFL and UFC grade changes, population changes, GM contract
+authority, and official published UFC rankings remain subject to owner-reviewed
+change PRs. Empty or failed sources preserve last-good checkpoints.
 
-## First audit findings; not a ratings proposal
+## Certification still required before coordinated weekly activation
 
-- October 12 and 19 AP CI runs failed because `check-wheel-cfb-ap-top25.mjs`
-  throws exit 1 on **expected poll differences** against the October 4 locked
-  snapshot; it did not distinguish changed source data from software error.
-- The October 14 draft PR #1916 updates AP October 11/UFC October 10 factual
-  sources but omits grading, GM and validation gates and is not merge-ready.
-  Do not merge it into the new architecture without renewed fact-checking.
-- October 25 live Supabase query still found the latest stored AP poll dated
-  October 4 and UFC ranking date September 29, with 170 UFC fighter-division
-  rows and one champion plus 15 contenders in each of eight divisions.
-- NFL GM currently imports October 3 grade artifacts and October 5 contracts;
-  detect current team/contract changes independent of ability before creating
-  a fresh immutable snapshot. Preserve all historical versions.
+- Full NFL identity/coach source coverage, stable ESPN/source IDs, transactions,
+  injury/playing-time evidence, and integration of conservative multiweek production.
+- All UFC ranked/champion/unranked source checks, official rank reconciliation,
+  fight results and meaningful changes.
+- Current and independently fresh GM contract coverage, release/free-agent handling,
+  role/development integrity and economy regressions.
+- Reproducible source receipts and strict freshness, failure, reentry and atomic
+  checkpoint promotion tests. A green workflow is not proof that these gates passed.
+- Exact-head Validate V2 and staged real-source runs; keep the weekly cron
+  disabled until a complete **NFL/UFC/GM** source-certified cycle exists.
 
-
-## October 25 live collector correction
-
-- Approved current identity counts are **626 NFL** and **1,277 CFB**, excluding
-  derived Flex. The first collector mislabeled 1,362 historical/latest CFB
-  authority rows as current. Active-only matching yields **1,264 CFB grades**,
-  leaving the 13 specific binding gaps in issue #2130. Stale historical rows are
-  reported separately, not treated as playable identities.
-- The official UFC All Rankings currently contain authentic ties at rank #12
-  in Welterweight and Heavyweight, where the next position is #14. Source
-  shape validation must accept these with explicit tie evidence, never force
-  the canonical game to misrepresent official positions.
-- Current GM contracts are only internally population-validated. An independent
-  provider refresh, economy test, head-coach source verification, headshot HTTP
-  audit, unranked UFC identity confirmation and performance-evidence filtering
-  must all pass before a baseline can be promoted.
-- Browser Vitest must never discover the monitor's `node:test` fixtures:
-  these live in `*.nodecheck.mjs` and run separately in GitHub Actions.
-- Expected review blockers produce a `review-blocked` diagnostic report;
-  a failed transport/SQL/execution stage writes `failed-not-promoted`.
-  Neither is a source-certified checkpoint. The disabled old grading task and
-  weekly replacement cron remain disabled.
-
-## GM contract live source — isolated staged verification
-
-The manual / PR-only `.github/workflows/wheel-gm-contract-review.yml`
-runs the **existing** NFL GM generator with a pinned nflreadpy provider.
-It writes both provider output and comparisons exclusively under
-`tmp/wheel-monitor/gm/`; **nothing under `data/generated` or the current
-GM TypeScript authority is ever rewritten**. The comparator compares canonical
-NFL identity coverage, APY, signed-contract season, 1YR/3YR classification,
-position, eligibility, age and OTC identifiers against the immutable published
-October 5 snapshot. Changes are evidence requiring review, never automatic
-contract or grade updates. Failed or partially matched source generation is
-marked blocked. The source query date is not an assertion that the underlying
-OTC dataset is current; provider freshness and GM economy simulation remain
-independent release gates.
-
-No schedule is enabled by this source-review workflow. Even if the isolated
-provider comparison completes, a dedicated economy simulation and reviewed
-contract snapshot are required before GM release or all-source certification.
-
-## Not yet certified — prerequisites for the weekly cron
-
-The full replacement must **not be declared operational** until:
-- Read-only GitHub Actions job completes against live Supabase and all
-  primary source endpoints; verify 100% active NFL/CFB/UFC identities, including
-  coaches and unranked UFC fighters.
-- Resolve unmatched source names, coach source authority and verified headshot
-  URLs; validate live UFC source ties and official standings integrity.
-- Add per-player snap/efficiency/result trends, with evidence windows and peer
-  references; CFB can have shorter stabilizing windows than NFL.
-- Verify NFL/GM contracts every week using the existing OTC/nflverse generator
-  without publishing, maintain GM coverage exactness and economy regression;
-  remove source gaps without hiding them as a successful cycle.
-- Exercise real provider failures and interrupted-run recovery; ensure API rate
-  limits and 19-minute timeout permit a full verified snapshot.
-- After passing all gates, add exactly one weekly cron and optional Wednesday
-  alternating editorial review cadence via a verified infrastructure PR,
-  requiring exact-head green CI and production readback.
-- Keep grading/population updates on **separate owner-approved** PRs.
-
-The completed infrastructure can be merged independently after full exact-head
-validation; enabling cron and claiming live monitoring are **separate acts**.
+Never restart the old oversized Wheel Grade Refresh task. Do not restore duplicate
+CFB player-rating jobs. Keep source observations and rating recommendations
+separate from automatic grade changes.
