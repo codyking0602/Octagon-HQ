@@ -124,11 +124,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "UFC official event", url: "https://www.ufc.com/event/ufc-1", supportingDetail: "The inaugural event results list Gordeau's KO of Tuli at 0:26, the promotion's opening bout." },
   ),
   "ufc:2:7": q8(
-    "millionaire-ufc-future-korean-zombie-first-twister-q8", "submission-history",
-    "Who earned the UFC's first-ever Twister submission by finishing Leonard Garcia in 2011?",
-    ["Chan Sung Jung", "Bryce Mitchell", "Charles Oliveira", "Ryan Hall"], "Chan Sung Jung",
-    "Chan Sung Jung, the Korean Zombie, submitted Leonard Garcia with the UFC's first Twister in March 2011.",
-    { authority: "UFC", url: "https://www.ufc.com/news/chan-sung-jung-and-year-zombie", supportingDetail: "UFC account specifies Jung's first-ever Twister over Garcia on March 26, 2011." },
+    "millionaire-ufc-future-113-shogun-machida-q8", "light-heavyweight-rematch",
+    "Who knocked out Lyoto Machida in their UFC 113 rematch to capture the light heavyweight title?",
+    ["Mauricio Rua", "Rashad Evans", "Quinton Jackson", "Jon Jones"], "Mauricio Rua",
+    "Mauricio 'Shogun' Rua knocked out Machida in the first round of their UFC 113 rematch after losing a disputed decision at UFC 104.",
+    { authority: "UFC", url: "https://www.ufc.com/news/light-heavyweight-title-fight-rematches?language_content_entity=en", supportingDetail: "UFC recounts the disputed UFC 104 decision and Rua's title-winning first-round knockout in the UFC 113 rematch." },
   ),
   "ufc:3:7": q8(
     "millionaire-ufc-future-253-blachowicz-q8", "vacant-title-fight",
