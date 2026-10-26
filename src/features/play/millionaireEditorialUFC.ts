@@ -23,7 +23,7 @@ export const ufcEditorialCandidateRuns = [
   ],
   [
     ["nicknames", "Which former UFC lightweight champion is nicknamed Do Bronx?", ["Charles Oliveira", "Rafael dos Anjos", "Jose Aldo", "Renato Moicano"], "Charles Oliveira", "The nickname refers to the Brazilian fighter's roots in Guaruja."],
-    ["nicknames", "Who is known to MMA fans as The Korean Zombie?", ["Chan Sung Jung", "Doo Ho Choi", "Song Yadong", "Yair Rodriguez"], "Chan Sung Jung", "The featherweight veteran fought for UFC gold twice."],
+    ["nicknames", "Which longtime UFC lightweight contender is nicknamed El Cucuy?", ["Tony Ferguson", "Nate Diaz", "Dustin Poirier", "Michael Chandler"], "Tony Ferguson", "The nickname alludes to a figure from Latin American folklore."],
     ["submission-history", "Who did Charles Oliveira submit at UFC 269 to defend his lightweight title?", ["Dustin Poirier", "Justin Gaethje", "Michael Chandler", "Tony Ferguson"], "Dustin Poirier", "The finish came via a standing rear-naked choke in Round 3."],
     ["rules-history", "Who received a disqualification victory over Jon Jones at The Ultimate Fighter 10 Finale?", ["Matt Hamill", "Ryan Bader", "Stephan Bonnar", "Brandon Vera"], "Matt Hamill", "The bout ended after illegal downward elbows in 2009."],
     ["knockouts", "Who scored the five-second flying-knee knockout over Ben Askren at UFC 239?", ["Jorge Masvidal", "Robbie Lawler", "Darren Till", "Nate Diaz"], "Jorge Masvidal", "The winner sprinted across the cage immediately after the opening bell."],
@@ -33,7 +33,7 @@ export const ufcEditorialCandidateRuns = [
   ],
   [
     ["national-firsts", "Who became the first Mexican-born UFC champion by winning the flyweight belt in 2021?", ["Brandon Moreno", "Yair Rodriguez", "Alexa Grasso", "Henry Cejudo"], "Brandon Moreno", "His title win came in the trilogy's second fight at UFC 263."],
-    ["origins", "Who won the tournament at the very first UFC event in 1993?", ["Royce Gracie", "Ken Shamrock", "Gerard Gordeau", "Art Jimmerson"], "Royce Gracie", "The Brazilian jiu-jitsu representative won multiple fights that night."],
+    ["reality-tv-history", "Who coached the first season of The Ultimate Fighter opposite Chuck Liddell?", ["Randy Couture", "Tito Ortiz", "Ken Shamrock", "Rich Franklin"], "Randy Couture", "The inaugural reality-show season aired in early 2005."],
     ["legends", "Who knocked out Michael Bisping with a jumping punch at UFC 100?", ["Dan Henderson", "Anderson Silva", "Vitor Belfort", "Wanderlei Silva"], "Dan Henderson", "The stoppage followed an overhand right remembered as an H-Bomb."],
     ["reality-tv-history", "Who beat Stephan Bonnar in the celebrated inaugural Ultimate Fighter finale?", ["Forrest Griffin", "Diego Sanchez", "Kenny Florian", "Josh Koscheck"], "Forrest Griffin", "The April 2005 bout helped establish the show and promotion on cable TV."],
     ["welterweight-history", "Who defeated B.J. Penn by stoppage at UFC 94 while defending the welterweight belt?", ["Georges St-Pierre", "Matt Hughes", "Jon Fitch", "Carlos Condit"], "Georges St-Pierre", "The corner stopped the contest after Round 4."],
