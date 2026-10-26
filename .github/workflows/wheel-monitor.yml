@@ -78,6 +78,7 @@ jobs:
     env:
       SUPABASE_PROJECT_ID: rvbspcjvebgwqzssayts
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      WHEEL_NFL_RATING_DUE: ${{ needs.cadence.outputs.rating_due }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
