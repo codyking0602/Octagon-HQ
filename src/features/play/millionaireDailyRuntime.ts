@@ -37,6 +37,7 @@ import {
 } from "./dailyChallengeRotation";
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
+export const COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION = "millionaire-daily-v5-cowboys-eagles-modern-replay-20261026" as const;
 /** Staged candidates only; not an approved or deployed content version. */
 export const MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION = "millionaire-daily-v6-editorial-candidates" as const;
 export const MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER = "2026-10-27" as const;
@@ -514,5 +515,8 @@ export function buildMillionaireDailySetup(
   assertMillionaireRun(run);
   return millionairePublicationFromRun(league, day, scheduleVersion, runIndex, hostNumber, run,
     editorialCandidatePreview
-      ? MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION : MILLIONAIRE_DAILY_CONTENT_VERSION);
+      ? MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION
+      : sport === "football" && day === "2026-10-26"
+        ? COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION
+        : MILLIONAIRE_DAILY_CONTENT_VERSION);
 }
