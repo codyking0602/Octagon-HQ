@@ -1,4 +1,6 @@
-import type { OfficialDailySetupPublication } from "../play/todaysChallengeRuntime";
+import { nbaDailyGameAppearance } from "./nbaDailyPublicationIdentity";
+export { nbaDailyGameAppearance } from "./nbaDailyPublicationIdentity";
+import { barTriviaPublication } from "./nbaBarTriviaDailyPublication";
 import { buildAverageFanDailySetup } from "../play/averageFanDailyRuntime";
 import { buildFamilyFeudDailySetup } from "../play/familyFeudDailyRuntime";
 import { BAR_TRIVIA_MAX_SCORE, createBarTriviaState, type BarTriviaQuestion } from "../games/barTriviaEngine";
@@ -30,18 +32,7 @@ export const NBA_SERVER_READY_GAME_TYPES = [
 
 export const NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION = "nba-bar-trivia-server-v1";
 
-/** Zero-based appearance of a single game on a scheduled publication date. */
-export function nbaDailyGameAppearance(day: string, gameType: NbaDailyGame): number {
-  const slot = nbaRegularSeasonDaily(day);
-  if (!slot || !slot.isPublicationDay || slot.gameType !== gameType) {
-    throw new Error("NBA Daily publication must match its scheduled Central day and game.");
-  }
-  let count = 0;
-  for (let index = 0; index < slot.appearanceIndex; index++) {
-    if (NBA_DAILY_WEIGHTED_CYCLE[index % NBA_DAILY_WEIGHTED_CYCLE.length] === gameType) count++;
-  }
-  return count;
-}
+
 
 function publicQuestion(question: BarTriviaQuestion) {
   return {
@@ -121,56 +112,12 @@ export function buildNbaServerDailyPublication(
   return { ...publication, gameType, scheduleVersion };
 }
 
-// Dedicated Edge entries statically retain only their own NBA publication bank.
-// The canonical all-games publisher above remains the equivalence baseline.
-function buildSingleNbaLeanPublication(
-  day: string, scheduleVersion: string, gameType: string,
-  expected: NbaDailyGame, builder: (ordinal: number) => OfficialDailySetupPublication,
-) {
-  if (!scheduleVersion.trim() || gameType !== expected) throw new Error("NBA Daily game identity mismatch.");
-  const ordinal = scheduleVersion === "nba-daily-owner-prelaunch-v1"
-    ? (nbaOwnerPreviewDaily(day) === expected ? 20 + NBA_OWNER_PREVIEW_ORDER.indexOf(expected)
-      : (() => { throw new Error("NBA owner prelaunch game/day mismatch."); })())
-    : nbaDailyGameAppearance(day, expected);
-  return { ...builder(ordinal), gameType: expected, scheduleVersion };
-}
-
-export function buildNbaAverageFanLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
-  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "average_fan",
-    (ordinal) => buildAverageFanDailySetup("nba", day, scheduleVersion, history));
-}
-
-export function buildNbaSportsFeudLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
-  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "sports_feud",
-    (ordinal) => buildFamilyFeudDailySetup(buildNbaSportsFeudDailyPack(ordinal), day, scheduleVersion));
-}
-
-export function buildNbaMillionaireLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
-  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "millionaire",
-    (ordinal) => buildNbaMillionaireDailySetup(day, scheduleVersion, ordinal, buildNbaOfficialMillionaireRun(ordinal)));
-}
-
-export function buildNbaHitNumberLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
-  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "hit_the_number",
-    (ordinal) => buildNbaHitNumberDailyPublication(day, scheduleVersion, ordinal));
-}
-
-export function buildNbaFindLeaderLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
-  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "find_leader",
-    (ordinal) => buildNbaFindLeaderDailyPublication(day, scheduleVersion, ordinal));
-}
-
-export function buildNbaWavelengthLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
-  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "wavelength",
-    (ordinal) => buildNbaWavelengthDailyPublication(day, scheduleVersion, ordinal));
-}
-
-export function buildNbaHigherLowerLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
-  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "higher_lower",
-    (ordinal) => buildNbaHigherLowerTwoGameDailyPublication(day, scheduleVersion, ordinal));
-}
-
-export function buildNbaBarTriviaLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
-  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "bar_trivia",
-    (ordinal) => barTriviaPublication(day, scheduleVersion, ordinal));
-}
+// The standalone Edge entries below import only their specific canonical author.
+export { buildNbaAverageFanLeanPublication } from "./lean/AverageFanPublication";
+export { buildNbaSportsFeudLeanPublication } from "./lean/SportsFeudPublication";
+export { buildNbaMillionaireLeanPublication } from "./lean/MillionairePublication";
+export { buildNbaHitNumberLeanPublication } from "./lean/HitNumberPublication";
+export { buildNbaFindLeaderLeanPublication } from "./lean/FindLeaderPublication";
+export { buildNbaWavelengthLeanPublication } from "./lean/WavelengthPublication";
+export { buildNbaHigherLowerLeanPublication } from "./lean/HigherLowerPublication";
+export { buildNbaBarTriviaLeanPublication } from "./lean/BarTriviaPublication";
