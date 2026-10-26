@@ -33,6 +33,7 @@ import {
 } from "./dailyChallengeRotation";
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
+export const COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION = "millionaire-daily-v5-cowboys-eagles-modern-replay-20261026" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
@@ -368,9 +369,9 @@ function futureMillionaireErrata(
   }) as unknown as MillionaireRun;
 }
 
-function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string) {
+function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string, contentVersion: string = MILLIONAIRE_DAILY_CONTENT_VERSION) {
   return [
-    MILLIONAIRE_DAILY_CONTENT_VERSION,
+    contentVersion,
     league,
     day,
     scheduleVersion,
@@ -385,15 +386,16 @@ function millionairePublicationFromRun(
   runIndex: number,
   hostNumber: number,
   run: MillionaireRun,
+  contentVersion: string = MILLIONAIRE_DAILY_CONTENT_VERSION,
 ): OfficialDailySetupPublication {
   const state = createMillionaireState(run);
-  const proof = proofFor(run, league, day, scheduleVersion);
+  const proof = proofFor(run, league, day, scheduleVersion, contentVersion);
   return {
-    setupKey: `${MILLIONAIRE_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:${league}`,
-    contentVersion: MILLIONAIRE_DAILY_CONTENT_VERSION,
+    setupKey: `${contentVersion}:${scheduleVersion}:${day}:${league}`,
+    contentVersion,
     scoringVersion: MILLIONAIRE_DAILY_SCORING_VERSION,
     publicSetup: {
-      runtime_version: MILLIONAIRE_DAILY_CONTENT_VERSION,
+      runtime_version: contentVersion,
       league,
       run_number: runIndex + 1,
       host_number: hostNumber,
@@ -459,5 +461,10 @@ export function buildMillionaireDailySetup(
     runIndex,
   );
   assertMillionaireRun(run);
-  return millionairePublicationFromRun(league, day, scheduleVersion, runIndex, hostNumber, run);
+  return millionairePublicationFromRun(
+    league, day, scheduleVersion, runIndex, hostNumber, run,
+    sport === "football" && day === "2026-10-26"
+      ? COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION
+      : MILLIONAIRE_DAILY_CONTENT_VERSION,
+  );
 }
