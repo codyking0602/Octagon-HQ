@@ -15,6 +15,7 @@ import { verifyHeadshots } from "./headshot-policy.mjs";
 import { sourceReviewBlockers } from "./source-review-gates.mjs";
 import { buildSourceCoverageLedger } from "./source-coverage-policy.mjs";
 import { inspectStagedEvidence } from "./staged-certification-policy.mjs";
+import { describeMonitoringOutcome } from "./monitor-health-policy.mjs";
 import { fetchWithRetry, readStructurallyValidatedHtml } from "./fetch-policy.mjs";
 import { OFFICIAL_NFL_COACHES_URL, extractOfficialNflCoaches,
   reconcileOfficialNflCoach } from "./nfl-coach-source.mjs";
@@ -420,7 +421,11 @@ async function main() {
     ...headshots.unverified.map(x=>"ufc-headshot-http-unverified:"+x.fighterId),
   ];
   const readiness=snapshotReadiness(blockers);
-  const output={status:readiness.status,checkedAt:at,
+  const monitoringHealth=describeMonitoringOutcome({
+    readiness,staged,decisions:result,
+    ratingReviewDue:process.env.WHEEL_NFL_RATING_DUE==="true",
+  });
+  const output={status:readiness.status,checkedAt:at,monitoringHealth,
     sourceCommit:all.sourceCommit,
     previousSnapshot:previousCertified?.checkedAt??null,
     previousObservation:previousObserved?.checkedAt??null,
@@ -467,7 +472,9 @@ async function main() {
   if (readiness.snapshotReady) {
     writeFileSync(resolve(outputDir,"snapshot.json"),JSON.stringify(all,null,2)+"\n");
   }
-  console.log(JSON.stringify({status:output.status,summaries,
+  console.log(JSON.stringify({status:output.status,execution:monitoringHealth.execution.status,
+    sourceQuality:monitoringHealth.sourceQuality.status,
+    publication:monitoringHealth.publication.status,summaries,
     evidenceCount:evidence.length,comparisonBaseline:output.comparisonBaseline,
     blockers:blockers.length,snapshotReady:readiness.snapshotReady,
     observationReady:true}));
