@@ -82,11 +82,28 @@ describe("Football team-themed Daily packs", () => {
     const seasons = pack.mainBoards.find((question) => question.id.endsWith("main-seasons"))!;
     expect(matchFamilyFeudAnswer(pack, seasons, "2005").status).toBe("matched");
 
+    // Main is readable for modern fans; Fast Money is broad and generous,
+    // without requiring pre-2000 player-history recall.
+    expect(matchFamilyFeudAnswer(pack, quarterbacks, "Arch Manning").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, quarterbacks, "David Ash").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, seasons, "2023").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, seasons, "2024").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, seasons, "2016").status).toBe("matched");
+    const offense = pack.fastMoney.find(question => question.id.endsWith("fast-offense"))!;
+    const defense = pack.fastMoney.find(question => question.id.endsWith("fast-defenders"))!;
+    expect(matchFamilyFeudAnswer(pack, offense, "Bijan").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, offense, "Jaydon Blue").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, defense, "Jahdae Barron").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, defense, "Jordan Hicks").status).toBe("matched");
+
     const showdown = pack.fastMoney.find((question) => question.id.endsWith("fast-lone-star-showdown"))!;
     expect(matchFamilyFeudAnswer(pack, showdown, "12th Man").status).toBe("matched");
 
     const rivals = pack.fastMoney.find((question) => question.id.endsWith("fast-rivals"))!;
     expect(matchFamilyFeudAnswer(pack, rivals, "A&M").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, rivals, "UGA").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, rivals, "Vanderbilt").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, rivals, "OSU").status).toBe("matched");
 
     const traditions = pack.fastMoney.find((question) => question.id.endsWith("fast-traditions"))!;
     expect(matchFamilyFeudAnswer(pack, traditions, "Hook em").status).toBe("matched");
@@ -117,18 +134,38 @@ describe("Football team-themed Daily packs", () => {
       "round3", "round3", "round3",
       "last-call",
     ]);
+    expect(run.map(question => question.difficulty)).toEqual([
+      "easy", "easy", "easy",
+      "medium", "medium", "medium",
+      "hard", "hard", "hard", "last-call",
+    ]);
     expect(run[6]).toMatchObject({
+      answer: "DK Metcalf",
+      category: "Cowboys–Seahawks",
+    });
+    expect(run[7]).toMatchObject({
       answer: "Terrance Williams",
-      category: "Cowboys-Seahawks",
+      category: "Cowboys–Seahawks",
     });
     expect(run[8]).toMatchObject({
-      answer: "Robert Newhouse",
-      category: "Super Bowl History",
+      answer: "Michael Gallup",
+      category: "Cowboys Playoff Moments",
     });
     expect(run[9]).toMatchObject({
-      answer: "Craig Morton",
+      answer: "Brandin Cooks",
       round: "last-call",
+      category: "Cowboys–Seahawks",
     });
+    expect(new Set(run.map(question => String(question.answer))).size).toBe(10);
+    expect(run.every(question => Array.isArray(question.choices)
+      && question.choices.length === 4
+      && new Set(question.choices as string[]).size === 4
+      && (question.choices as string[]).includes(String(question.answer)))).toBe(true);
+    expect(run.every(question => typeof question.sourceUrl === "string"
+      && (question.sourceUrl as string).startsWith("https://")
+      && question.verifiedAt === "2026-10-26")).toBe(true);
+    expect(run.filter(question => /2014|2016|2019|2020|2023/.test(String(question.prompt))).length)
+      .toBeGreaterThanOrEqual(7);
 
     const millionaire = buildFootballTodayPersistenceSetup("2026-10-26");
     const millionaireRun = millionaire.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
