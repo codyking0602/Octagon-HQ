@@ -116,3 +116,37 @@ export async function loadSportChampionshipWeekly(
   if (error) throw new Error(error.message || "Weekly Championship could not load.");
   return weeklySchema.parse(data);
 }
+
+
+const ufcMonthSchema = z.object({
+  month_start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  month_end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  winner: entrySchema,
+  entries: z.array(entrySchema).min(1),
+  weights: weightsSchema,
+  event_counts: countsSchema,
+});
+const ufcMonthlySchema = z.object({
+  sport: z.literal("ufc"),
+  season: z.number().int(),
+  latest: ufcMonthSchema.nullable(),
+  months: z.array(ufcMonthSchema),
+});
+export type UfcMonthlyChampionshipMonth = z.infer<typeof ufcMonthSchema>;
+export type UfcMonthlyChampionship = z.infer<typeof ufcMonthlySchema>;
+
+/** The existing 60% Picks / 40% Play Championship, finalized by calendar month. */
+export async function loadUfcMonthlyChampionship(
+  season = 2026,
+  suppliedClient?: ChampionshipClient | null,
+): Promise<UfcMonthlyChampionship> {
+  const client = suppliedClient === undefined
+    ? getSupabaseClient() as unknown as ChampionshipClient | null
+    : suppliedClient;
+  if (!client) throw new Error("UFC Monthly Championship is not connected.");
+  const { data, error } = await client.rpc("get_ufc_monthly_championship", {
+    p_season: season,
+  });
+  if (error) throw new Error(error.message || "UFC Monthly Championship could not load.");
+  return ufcMonthlySchema.parse(data);
+}

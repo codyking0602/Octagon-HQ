@@ -53,7 +53,7 @@ export function WeeklyChampionshipRecap({
     setRecap(null);
     setError("");
 
-    if (!repository) return () => { active = false; };
+    if (!repository || sport === "ufc") return () => { active = false; };
 
     repository.load(sport)
       .then((next) => {
@@ -66,7 +66,7 @@ export function WeeklyChampionshipRecap({
     return () => { active = false; };
   }, [repository, sport]);
 
-  if (!recap) return null;
+  if (sport === "ufc" || !recap) return null;
 
   const winners = recap.entries.filter((entry) => entry.rank === 1);
   const pluralChampion = winners.length > 1;

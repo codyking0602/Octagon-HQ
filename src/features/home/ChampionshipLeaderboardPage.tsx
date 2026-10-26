@@ -5,9 +5,11 @@ import { loadMlbChampionship, type MlbChampionship } from "../mlb/mlbChampionshi
 import {
   loadSportChampionship,
   loadSportChampionshipWeekly,
+  loadUfcMonthlyChampionship,
   type SportChampionship,
   type SportChampionshipEntry,
   type SportChampionshipWeekly,
+  type UfcMonthlyChampionship,
 } from "../play/sportChampionshipRepository";
 import "../../styles/championship-leaderboard.css";
 
@@ -105,16 +107,18 @@ export default function ChampionshipLeaderboardPage() {
   const identity = useIdentity();
   const [data, setData] = useState<SportChampionship | null>(null);
   const [weekly, setWeekly] = useState<SportChampionshipWeekly | null>(null);
+  const [monthly, setMonthly] = useState<UfcMonthlyChampionship | null>(null);
   const [mlb, setMlb] = useState<MlbChampionship | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [weekIndex, setWeekIndex] = useState(0);
+  const [legacyOpen, setLegacyOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
-    setData(null); setWeekly(null); setMlb(null);
-    setLoading(true); setError(""); setArchiveOpen(false); setWeekIndex(0);
+    setData(null); setWeekly(null); setMonthly(null); setMlb(null);
+    setLoading(true); setError(""); setArchiveOpen(false); setLegacyOpen(false); setWeekIndex(0);
     if (!identity.profile?.id) {
       setLoading(false);
       return () => { active = false; };
@@ -127,8 +131,11 @@ export default function ChampionshipLeaderboardPage() {
         } else {
           const next = await loadSportChampionship(sport, 2026);
           if (active) setData(next);
-          const weeks = await loadSportChampionshipWeekly(sport, 2026);
-          if (active) setWeekly(weeks);
+          const [weeks, months] = await Promise.all([
+            loadSportChampionshipWeekly(sport, 2026),
+            sport === "ufc" ? loadUfcMonthlyChampionship(2026) : Promise.resolve(null),
+          ]);
+          if (active) { setWeekly(weeks); setMonthly(months); }
         }
       } catch (reason) {
         if (active) setError(reason instanceof Error ? reason.message : "Could not load Championship standings.");
@@ -140,7 +147,20 @@ export default function ChampionshipLeaderboardPage() {
     return () => { active = false; };
   }, [sport, identity.profile?.id]);
 
-  const currentWeek = weekly?.weeks[weekIndex] ?? null;
+  const month = sport === "ufc" ? monthly?.months[weekIndex] ?? null : null;
+  const currentWeek = sport === "ufc" ? (month ? {
+    week_start: month.month_start,
+    week_end: month.month_end,
+    winner: month.winner,
+    entries: month.entries,
+    event_counts: month.event_counts,
+    weights: month.weights,
+  } : null) : weekly?.weeks[weekIndex] ?? null;
+  const periodHistory = sport === "ufc" ? (monthly?.months ?? []).map(value => ({
+    week_start: value.month_start, week_end: value.month_end,
+    winner: value.winner, entries: value.entries,
+    event_counts: value.event_counts, weights: value.weights,
+  })) : weekly?.weeks ?? [];
   const championshipTitle = sport === "football" ? "Football Championship" : sport === "ufc" ? "UFC Championship" : "MLB Postseason Championship";
   const changeTab = (value: Lane) => {
     const next = new URLSearchParams(search);
@@ -192,29 +212,29 @@ export default function ChampionshipLeaderboardPage() {
             <p>Every completed event earns placement points: 1st 100 · 2nd 92 · 3rd 85 · 4th 79 · 5th 74 · 6th 70. Missing an event earns last-place points for the Championship field.</p>
             <p>{data.weights.featured
               ? "Football: 60% Picks + 30% Daily + 10% Featured Weekly."
-              : "UFC: 60% Picks + 40% Daily until Featured Weekly games are available."} Weekly champions are crowned separately from these season scores.</p>
+              : "UFC: 60% Picks + 40% Daily. One monthly champion is crowned separately from the season score, starting November 2026."}{sport === "football" ? " Weekly champions are crowned separately from these season scores." : ""}</p>
           </div>
           {currentWeek ? (
-            <section className="champ-board__weekly" id="weekly-champions">
-              <header><span>CHAMPION OF THE WEEK</span><span>{formatWeek(currentWeek.week_start, currentWeek.week_end)}</span></header>
+            <section className="champ-board__weekly" id={sport === "ufc" ? "monthly-champions" : "weekly-champions"}>
+              <header><span>CHAMPION OF THE {sport === "ufc" ? "MONTH" : "WEEK"}</span><span>{formatWeek(currentWeek.week_start, currentWeek.week_end)}</span></header>
               <div className="champ-board__weekly-winner"><span>🏆</span>
                 <strong>{currentWeek.winner.display_name}</strong>
-                <b>{shortScore(currentWeek.winner.rating)} WEEKLY SCORE</b></div>
+                <b>{shortScore(currentWeek.winner.rating)} {sport === "ufc" ? "MONTHLY" : "WEEKLY"} SCORE</b></div>
               <p>{currentWeek.event_counts.picks} Picks · {currentWeek.event_counts.daily} Daily · {currentWeek.event_counts.featured} Featured</p>
               <button type="button" className="champ-board__weekly-toggle" onClick={() => setArchiveOpen(!archiveOpen)}>
-                {archiveOpen ? "Hide Weekly History" : "View Weekly Champions"} {archiveOpen ? "⌃" : "›"}
+                {archiveOpen ? "Hide " : "View "}{sport === "ufc" ? "Monthly Champions" : "Weekly Champions"} {archiveOpen ? "⌃" : "›"}
               </button>
               {archiveOpen ? (
                 <div className="champ-board__archive">
                   <div className="champ-board__archive-weeks">
-                    {weekly?.weeks.map((week, index) => (
+                    {periodHistory.map((week, index) => (
                       <button key={week.week_start} type="button" className={weekIndex === index ? "is-active" : ""}
                         onClick={() => setWeekIndex(index)}>
                         {formatWeek(week.week_start, week.week_end)}
                       </button>
                     ))}
                   </div>
-                  <div className="champ-board__table-heading"><span>WEEKLY PLAYER</span><span>WEEK SCORE</span></div>
+                  <div className="champ-board__table-heading"><span>{sport === "ufc" ? "MONTHLY" : "WEEKLY"} PLAYER</span><span>{sport === "ufc" ? "MONTH" : "WEEK"} SCORE</span></div>
                   {currentWeek.entries.map((entry) => (
                     <div key={entry.profile_id} className="champ-board__week-row">
                       <span>#{entry.rank} · {entry.display_name}</span><strong>{shortScore(entry.rating)}</strong>
@@ -222,6 +242,26 @@ export default function ChampionshipLeaderboardPage() {
                   ))}
                 </div>
               ) : null}
+            </section>
+          ) : sport === "ufc" ? (
+            <section className="champ-board__weekly" id="monthly-champions">
+              <header><span>UFC MONTHLY CHAMPIONSHIP</span><span>NOVEMBER 2026</span></header>
+              <p>The first monthly winner is crowned after the November 30–December 1 Daily board closes on December 2 (Central Time), provided the month's events are finalized.</p>
+            </section>
+          ) : null}
+          {sport === "ufc" && (weekly?.weeks.length ?? 0) > 0 ? (
+            <section className="champ-board__weekly" id="legacy-weekly-champions">
+              <button type="button" className="champ-board__weekly-toggle" onClick={() => setLegacyOpen(!legacyOpen)}>
+                {legacyOpen ? "Hide" : "View"} historical UFC weekly champions (through October 18, 2026)
+              </button>
+              {legacyOpen ? <div className="champ-board__archive">
+                {weekly?.weeks.map(week => (
+                  <div className="champ-board__week-row" key={week.week_start}>
+                    <span>{formatWeek(week.week_start, week.week_end)} · {week.winner.display_name}</span>
+                    <strong>{shortScore(week.winner.rating)}</strong>
+                  </div>
+                ))}
+              </div> : null}
             </section>
           ) : null}
         </>
