@@ -15,6 +15,29 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("isolates four sourced future-only CFB cross-game overlap repairs", () => {
+    const cases = [
+      ["cfb:7:6", "Mason Taylor"],
+      ["cfb:8:5", "Chase McGrath"],
+      ["cfb:8:6", "Bud Clark"],
+      ["cfb:9:3", "Vanderbilt"],
+    ] as const;
+    for (const [key, correct] of cases) {
+      const candidate = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(candidate.answer).toBe(correct);
+      expect(candidate.choices.filter(option => option === correct)).toHaveLength(1);
+      expect(new Set(candidate.choices.map(normalized)).size).toBe(4);
+      expect(normalized(candidate.statSheet ?? "")).not.toContain(normalized(correct));
+      expect(candidate.explanation).toContain(correct);
+      expect(candidate.evidence.length).toBeGreaterThan(0);
+    }
+    expect(millionaireDailyRun("cfb", 7)[6]!.prompt).toContain("double overtime");
+    expect(millionaireDailyRun("cfb", 8)[5]!.prompt).toContain("BCS bowl");
+    expect(millionaireDailyRun("cfb", 8)[6]!.prompt).toContain("Sugar Bowl");
+    expect(millionaireDailyRun("cfb", 9)[3]!.prompt).toContain("Ohio State");
+  });
+
+
   it("excludes two exact active NFL Bar Trivia collisions from future candidates", () => {
     const graham = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:3:4"]!;
     const jefferson = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:4:5"]!;

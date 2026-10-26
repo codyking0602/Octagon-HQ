@@ -14,6 +14,48 @@ export type MillionaireFutureRewriteSeed = {
   evidence: readonly { authority: string; url: string; supportingDetail: string }[];
 };
 export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
+  // Future-only repairs of verified selectable CFB Bar Trivia collisions.
+  "cfb:7:6": {
+    id: "millionaire-cfb-future-mason-taylor-bama-2022-q7",
+    type: "classic-overtime",
+    prompt: "Which LSU tight end caught Jayden Daniels' winning two-point pass to upset Alabama in overtime in 2022?",
+    choices: ["Mason Taylor", "Malik Nabers", "Brian Thomas Jr.", "Jack Bech"],
+    answer: "Mason Taylor",
+    statSheet: "The Tigers opted to go for two after matching Alabama's overtime touchdown in Baton Rouge.",
+    explanation: "LSU freshman tight end Mason Taylor caught Jayden Daniels' three-yard two-point conversion in overtime to defeat Alabama 32–31 on November 5, 2022.",
+    evidence: [{ authority: "Official school athletics", url: "https://lsusports.net/news/2022/11/5/lsu-tops-alabama-gutsy-ot-conversion-32-31", supportingDetail: "LSU's official 32–31 recap confirms Daniels' two-point pass to Mason Taylor." }],
+  },
+  "cfb:8:5": {
+    id: "millionaire-cfb-future-chase-mcgrath-bama-2022-q6",
+    type: "rivalry-clinchers",
+    prompt: "Which Tennessee kicker hit the walk-off 40-yard field goal to beat Alabama 52–49 in October 2022?",
+    choices: ["Chase McGrath", "Will Reichard", "Peyton Woodring", "Harrison Mevis"],
+    answer: "Chase McGrath",
+    statSheet: "The Vols ended a 15-game losing streak in the rivalry during the 2022 season.",
+    explanation: "Chase McGrath made a 40-yard field goal as time expired at Neyland Stadium on October 15, 2022, giving Tennessee a 52–49 win over Alabama.",
+    evidence: [{ authority: "Official school athletics", url: "https://utsports.com/news/2022/10/15/football-no-6-vols-take-down-3-tide-as-time-expires-52-49", supportingDetail: "University of Tennessee official recap confirms Chase McGrath's walk-off 40-yarder." }],
+  },
+  "cfb:8:6": {
+    id: "millionaire-cfb-future-bud-clark-tcu-2022-q7",
+    type: "cfp-defensive-moments",
+    prompt: "Which TCU defender returned J.J. McCarthy's interception 41 yards for the game's first touchdown against Michigan in the 2022 CFP Fiesta Bowl?",
+    choices: ["Bud Clark", "Dee Winters", "Tre'Vius Hodges-Tomlinson", "Mark Perry"],
+    answer: "Bud Clark",
+    statSheet: "The early pick-six set the tone for the Horned Frogs' 51–45 semifinal upset.",
+    explanation: "TCU defensive back Bud Clark intercepted J.J. McCarthy and returned it 41 yards for the opening touchdown against Michigan on December 31, 2022. Dee Winters added a different pick-six later.",
+    evidence: [{ authority: "Official school athletics", url: "https://gofrogs.com/news/2022/12/31/football-tcu-beats-michigan-advances-to-the-cfp-national-championship", supportingDetail: "TCU Athletics separately verifies Clark's 41-yard opening pick-six and Winters' later return; both are answer choices but only Clark satisfies the question." }],
+  },
+  "cfb:9:3": {
+    id: "millionaire-cfb-future-vandy-bama-first-no1-q4",
+    type: "signature-upsets",
+    prompt: "Which SEC school recorded its first win over an AP No. 1 team by beating Alabama 40–35 in October 2024?",
+    choices: ["Vanderbilt", "Tennessee", "Auburn", "Mississippi State"],
+    answer: "Vanderbilt",
+    statSheet: "Quarterback Diego Pavia led the upset in Nashville.",
+    explanation: "Vanderbilt defeated top-ranked Alabama 40–35 on October 5, 2024, earning its first win in program history over an AP No. 1 opponent behind quarterback Diego Pavia.",
+    evidence: [{ authority: "Official school athletics", url: "https://vucommodores.com/news/2024/10/05/this-magic-moment", supportingDetail: "Vanderbilt's official recap records the 40–35 score and the school's first No. 1-ranked victory." }],
+  },
+
   // Future-only corrections to exact selectable Bar Trivia fact collisions.
   // The published legacy Millionaire boards remain immutable.
   "nfl:3:4": {
