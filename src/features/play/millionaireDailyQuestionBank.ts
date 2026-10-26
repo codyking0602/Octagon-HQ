@@ -9,6 +9,7 @@ import type { MillionaireLeague } from "./MillionaireCasualModel";
 import { nflEditorialCandidateRuns } from "./millionaireEditorialNFL";
 import { cfbEditorialCandidateRuns } from "./millionaireEditorialCFB";
 import { ufcEditorialCandidateRuns } from "./millionaireEditorialUFC";
+import { UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS } from "./millionaireEditorialUfcLegacyOverrides";
 
 type DailyQuestionSeed = {
   type: string;
@@ -3063,6 +3064,16 @@ export function millionaireFutureEditorialDailyRun(
   }
   const normalized = ((runIndex % MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT)
     + MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT) % MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT;
+  if (league === "ufc" && normalized >= 6 && normalized <= 8) {
+    // Fully new (still pending independent editorial signoff) future content for
+    // the Adesanya / St-Pierre / Khabib single-fighter legacy boards. IDs must
+    // differ from immutable historic question IDs and persisted private proofs.
+    const replacements = UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS[normalized - 6]!;
+    return replacements.map(([type, prompt, choices, answer, statSheet], index) => ({
+      ...runtimeQuestion(league, normalized, index, { type, prompt, choices, answer, statSheet }),
+      id: `millionaire-ufc-editorial-v6-run-${normalized + 1}-q${index + 1}`,
+    })) as unknown as MillionaireRun;
+  }
   if (normalized < MILLIONAIRE_DAILY_RUN_COUNT) {
     return millionaireDailyRun(league, normalized);
   }
