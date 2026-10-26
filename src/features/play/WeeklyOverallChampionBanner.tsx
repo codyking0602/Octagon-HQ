@@ -17,6 +17,10 @@ type ChampionPeriod = {
   monthly: boolean;
 };
 const STORAGE_PREFIX = "the-hq:overall-champion:v2:";
+// The UFC monthly redesign changed the storage prefix for both sports. Honor
+// previously acknowledged Football weekly titles so a deployed upgrade never
+// reannounces an award already dismissed under the original key.
+const LEGACY_WEEKLY_STORAGE_PREFIX = "the-hq:overall-week-champion:v1:";
 // Only announce recently finalized awards. An old title must not suddenly
 // interrupt Play after a browser data reset, reinstall, or device change.
 const ANNOUNCEMENT_WINDOW_MS = 72 * 60 * 60 * 1000;
@@ -57,9 +61,10 @@ export function WeeklyOverallChampionBanner({ sport }: { sport: Sport }) {
       if (!active || !next || !isRecentFinalizedPeriod(next.end)) return;
       setPeriod(next);
       try {
-        setVisible(window.localStorage.getItem(
-          STORAGE_PREFIX + sport + ":" + next.start + ":" + identity.profile?.id
-        ) !== "seen");
+        const periodKey = sport + ":" + next.start + ":" + identity.profile?.id;
+        const acknowledged = window.localStorage.getItem(STORAGE_PREFIX + periodKey) === "seen"
+          || (!next.monthly && window.localStorage.getItem(LEGACY_WEEKLY_STORAGE_PREFIX + periodKey) === "seen");
+        setVisible(!acknowledged);
       } catch {
         setVisible(true);
       }
