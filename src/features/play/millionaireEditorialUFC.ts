@@ -8,7 +8,7 @@ export const ufcEditorialCandidateRuns = [
     ["title-defense", "Which heavyweight defeated Francis Ngannou by decision at UFC 220?", ["Stipe Miocic", "Daniel Cormier", "Ciryl Gane", "Alistair Overeem"], "Stipe Miocic", "The Cleveland firefighter wrestled his way through five rounds."],
     ["interim-welterweight-titles","Who defeated Nick Diaz by unanimous decision to claim the interim welterweight title at UFC 143?",["Carlos Condit","Georges St-Pierre","Robbie Lawler","Johny Hendricks"],"Carlos Condit","The five-round main event was held in Las Vegas in February 2012."],
     ["iconic-comebacks", "Who stopped Cung Le in the second round of their UFC 139 middleweight bout?", ["Wanderlei Silva", "Vitor Belfort", "Michael Bisping", "Anderson Silva"], "Wanderlei Silva", "The former PRIDE champion recovered from a difficult opening round before landing a flurry of knees and punches."],
-    ["bantamweight-upsets","Who dethroned Renan Barao at UFC 173 to win the bantamweight championship?",["T.J. Dillashaw","Dominick Cruz","Cody Garbrandt","Urijah Faber"],"T.J. Dillashaw","The underdog stopped a long-reigning champion in the fifth round of the 2014 main event."],
+    ["flyweight-title-history","Who defeated Brandon Moreno by split decision at UFC 290 to win the flyweight championship?",["Alexandre Pantoja","Deiveson Figueiredo","Kai Kara-France","Brandon Royval"],"Alexandre Pantoja","The five-round rematch was the co-main event in Las Vegas in July 2023."],
     ["early-ufc", "Who won all three fights to capture the UFC 8 tournament in Puerto Rico in 1996?", ["Don Frye", "Marco Ruas", "Mark Coleman", "Gary Goodridge"], "Don Frye", null],
   ],
   [
