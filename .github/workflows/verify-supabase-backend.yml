@@ -53,7 +53,7 @@ jobs:
         with:
           version: 2.109.1
 
-      - name: Prepull fresh-database images with bounded retries
+      - name: Prepull fresh-database Postgres image from official mirrors
         shell: bash
         run: |
           set -euo pipefail
@@ -62,10 +62,7 @@ jobs:
 
           : > "$RUNNER_TEMP/supabase-db-images.txt"
           for service in \
-            supabase/postgres \
-            supabase/gotrue \
-            supabase/realtime \
-            supabase/storage-api
+            supabase/postgres
           do
             version=$(printf '%s\n' "$service_table" | sed 's/│/|/g' | awk -F '|' -v service="$service" '
               {
@@ -88,22 +85,29 @@ jobs:
 
           echo "Fresh-database bootstrap images:"
           cat "$RUNNER_TEMP/supabase-db-images.txt"
-          # GHCR can throttle simultaneous Actions pulls (HTTP 429).
-          # Retry a real pull instead of treating a registry throttle as a SQL failure.
+          # supabase db start needs Postgres only. Pull the pinned official
+          # ECR mirror first, then tag it with the CLI's expected GHCR name.
+          # Avoid fetching unrelated services and hitting GHCR throttling.
           while IFS= read -r image; do
+            mirror="${image/ghcr.io\//public.ecr.aws\/}"
             pulled=false
-            for attempt in 1 2 3 4; do
+            for attempt in 1 2 3; do
+              if docker pull "$mirror"; then
+                docker tag "$mirror" "$image"
+                pulled=true
+                break
+              fi
               if docker pull "$image"; then
                 pulled=true
                 break
               fi
-              if [ "$attempt" -lt 4 ]; then
-                echo "::warning title=Supabase image pull retry::Retry $attempt for $image after registry failure."
+              if [ "$attempt" -lt 3 ]; then
+                echo "::warning title=Supabase official registries throttled::Retrying $image from the official mirrors."
                 sleep $((attempt * 10))
               fi
             done
             if [ "$pulled" != true ]; then
-              echo "::error title=Supabase image pull exhausted::Could not pull $image after 4 real attempts."
+              echo "::error title=Supabase Postgres image unavailable::Both official registries failed for $image."
               exit 1
             fi
           done < "$RUNNER_TEMP/supabase-db-images.txt"
