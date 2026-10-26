@@ -18,7 +18,16 @@ try {
     throw new Error("Missing canonical current NFL GM contracts binding");
   const published=JSON.parse(readFileSync(resolve("data/generated/football",file),"utf8"));
   const generated=JSON.parse(readFileSync(resolve(args.generated),"utf8"));
+  if(!args.byteReceipt) throw new Error('Exact GM published-asset byte attestation missing');
+  const receipt=JSON.parse(readFileSync(resolve(args.byteReceipt),'utf8'));
+  if(receipt.status!=='exact-published-GM-contract-bytes-verified' ||
+     receipt.usedByGmGenerator!==true ||
+     !/^[a-f0-9]{64}$/.test(String(receipt.assetSha256??'')))
+    throw new Error('GM provider asset bytes not verified and bound to comparator input');
   const report=compareGmContractSnapshots(published,generated,at);
+  report.sourceProvenanceStatus='exact-published-GM-contract-bytes-verified';
+  report.sourceAssetSha256=receipt.assetSha256;
+  report.sourceIdentityCompletenessCertified=false;
   const sourceExit=Number(args.sourceExit??"0");
   if(!Number.isInteger(sourceExit) || sourceExit!==0) {
     report.status="source-quality-review-blocked";

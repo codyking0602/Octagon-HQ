@@ -1,9 +1,9 @@
 // Select a durable GitHub artifact; reports are never grading checkpoints.
 // Only promotion artifacts from main are eligible for recovery.
-export function selectLatestCheckpointArtifact(artifacts, branch = "main") {
+function selectLatestArtifact(artifacts, name, branch = "main") {
   if (!Array.isArray(artifacts)) throw new Error("Missing GitHub Actions artifact list");
   return artifacts.filter(item =>
-    item?.name === "wheel-monitor-snapshot" &&
+    item?.name === name &&
     item.expired === false &&
     item.workflow_run?.head_branch === branch &&
     Number.isInteger(item.workflow_run?.id) &&
@@ -13,4 +13,13 @@ export function selectLatestCheckpointArtifact(artifacts, branch = "main") {
     Date.parse(right.created_at) - Date.parse(left.created_at)
     || right.id - left.id
   )[0] ?? null;
+}
+
+// Two entirely separate artifact classes. An observation can guide cheap weekly
+// evidence diffs, but must NEVER satisfy the certified-checkpoint gate.
+export function selectLatestCheckpointArtifact(artifacts, branch = "main") {
+  return selectLatestArtifact(artifacts, "wheel-monitor-snapshot", branch);
+}
+export function selectLatestObservationArtifact(artifacts, branch = "main") {
+  return selectLatestArtifact(artifacts, "wheel-monitor-observation", branch);
 }

@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "version": "cfb-wheel-missing-grade-nine-20261026-v1",
+  "status": "approved-current-ability-nine-identities",
+  "origin": "Isolated independently researched draft PR #2143 (kept untouched)",
+  "authorizedScope": "Owner requested implementation October 26, 2026; nine existing-population, existing-role, medium-or-better evidence cases only",
+  "excludedRoleDecisions": [
+    "CJ Jimcoily",
+    "John Curry",
+    "Luke Mergott",
+    "Braylan Lovelace"
+  ],
+  "expectedExistingCanonicalPopulation": 1277,
+  "requiresNoRosterMoves": true,
+  "appliedGradeVersion": "cfb-wheel-nine-missing-grade-additions-2026-10-26-v1",
+  "players": [
+    {
+      "school": "georgia",
+      "curatedFamily": "Front Seven",
+      "proposedFamily": "Front Seven",
+      "displayName": "Joseph Jonah-Ajonye",
+      "proposedHiddenGrade": 82,
+      "role": "Junior rotational defensive lineman",
+      "roleEvidence": "2025: 14 games/one start, 9 tackles, 11 QB hurries. Through Oct 17, 2026: 7 games, 10 tackles, 1 sack and forced fumble at Alabama, SEC Co-Defensive Lineman of Week. Meaningful flash but not sustained top Georgia volume.",
+      "peerCalibration": "Georgia front seven: Chris Cole 84, Gabe Harris Jr 82, Jordan Hall 81.",
+      "primarySources": [
+        "https://georgiadogs.com/sports/football/roster/joseph-jonah-ajonye/10574",
+        "https://www.sports-reference.com/cfb/players/joseph-jonah-ajonye-1/gamelog/2026/"
+      ],
+      "evidenceConfidence": "medium",
+      "familyDecision": "Current curated family supported"
+    },
+    {
+      "school": "missouri",
+      "curatedFamily": "Front Seven",
+      "proposedFamily": "Front Seven",
+      "displayName": "Darris Smith",
+      "proposedHiddenGrade": 81,
+      "role": "Senior defensive end/EDGE in a smaller 2026 role",
+      "roleEvidence": "2025: 16 tackles, 5.5 TFL, 4 sacks; 2026 through Oct 17: 5 combined tackles, 2 TFL, no sacks. Two missed games recorded; current production falls short of top Missouri peers, but 2025 rush ability has substance.",
+      "peerCalibration": "Missouri Front Seven: Marquis Gracial 82, Langden Kitchen 80; Hopkins 92 is a major tier higher.",
+      "primarySources": [
+        "https://www.ourlads.com/ncaa-football-depth-charts/player/darris-smith/168856",
+        "https://www.sports-reference.com/cfb/players/darris-smith-1/gamelog/2026"
+      ],
+      "evidenceConfidence": "medium",
+      "familyDecision": "Current curated family supported"
+    },
+    {
+      "school": "oklahoma",
+      "curatedFamily": "Front Seven",
+      "proposedFamily": "Front Seven",
+      "displayName": "Owen Heinecke",
+      "proposedHiddenGrade": 87,
+      "role": "Oklahoma starting linebacker with substantial 2026 volume",
+      "roleEvidence": "First six 2026 games: 44 tackles and 4.5 TFL, 1 sack; nine tackles against Michigan and Texas; consistent multiweek production against credible competition, rather than a one-game spike.",
+      "peerCalibration": "Oklahoma Front Seven: Kip Lewis 89, Taylor Wein 85, Jayden Jackson 84.",
+      "primarySources": [
+        "https://soonersports.com/sports/football/roster/owen-heinecke/20229"
+      ],
+      "evidenceConfidence": "medium-high",
+      "familyDecision": "Current curated family supported"
+    },
+    {
+      "school": "ohio-state",
+      "curatedFamily": "Front Seven",
+      "proposedFamily": "Front Seven",
+      "displayName": "Zion Grady",
+      "proposedHiddenGrade": 81,
+      "role": "Sophomore edge/defensive line rotational player, missed time after knee issue",
+      "roleEvidence": "Official Ohio State 2026 biography reports 30 snaps vs Ball State, 6 at Texas before knee injury, 25 at Iowa, 21 Maryland and 9 Indiana; 2025 108 total snaps with 13 tackles/2 TFL/1 sack. Has flashes and pedigree, but limited stable workload.",
+      "peerCalibration": "Ohio State Front Seven: Alliegro 82; Houston 83; Walker 84; Pettijohn 88.",
+      "primarySources": [
+        "https://ohiostatebuckeyes.com/sports/football/roster/zion-grady/13297",
+        "https://www.elevenwarriors.com/ohio-state-football/2026/09/163893/snap-counts-10-ohio-state-defenders-play-more-than-50-snaps-as-buckeye-defense-stays-on-field-for-80-plays-in-texas"
+      ],
+      "evidenceConfidence": "medium",
+      "familyDecision": "Current curated family supported"
+    },
+    {
+      "school": "penn-state",
+      "curatedFamily": "TE",
+      "proposedFamily": "TE",
+      "displayName": "Gabe Burkle",
+      "proposedHiddenGrade": 84,
+      "role": "Redshirt senior veteran tight end, 2026 Penn State transfer",
+      "roleEvidence": "2024-25 at Iowa State: two consecutive 26-reception seasons with 296/302 yards, 2025 seven starts in nine games; 2026 Penn State through Oct 21: six games, five catches, 53 yards and zero TD. Prior established receiving contribution but currently low usage; blocking evaluation remains an open editorial dimension.",
+      "peerCalibration": "Penn State TE: Benjamin Brahmer 90, Andrew Rappleyea 82.",
+      "primarySources": [
+        "https://gopsusports.com/sports/football/roster/player/gabe-burkle",
+        "https://cfbstats.com/2026/player/539/1174561/index.html"
+      ],
+      "evidenceConfidence": "medium",
+      "familyDecision": "Current curated family supported"
+    },
+    {
+      "school": "arizona",
+      "curatedFamily": "Front Seven",
+      "proposedFamily": "Front Seven",
+      "displayName": "Dominic Lolesio",
+      "proposedHiddenGrade": 80,
+      "role": "Senior rotational defensive lineman",
+      "roleEvidence": "2025 all 13 games, five starts, 285 defensive snaps, 19 tackles, 2 TFL, 1 sack. 2026 early five games: six tackles, three TFL, one sack; positive disruption without proven high sustained volume.",
+      "peerCalibration": "Arizona Front Seven: Tre Smith 80, Taye Brown 81, Cooper Blomstrom 82.",
+      "primarySources": [
+        "https://arizonawildcats.com/sports/football/roster/dominic-lolesio/19293",
+        "https://www.cfbstats.com/2026/player/29/2000677/index.html"
+      ],
+      "evidenceConfidence": "medium",
+      "familyDecision": "Current curated family supported"
+    },
+    {
+      "school": "utah",
+      "curatedFamily": "Front Seven",
+      "proposedFamily": "Front Seven",
+      "displayName": "Kash Dillon",
+      "proposedHiddenGrade": 82,
+      "role": "Junior DE in Utah rotation with prior starting experience",
+      "roleEvidence": "2025 played 13 games/three starts, 35 tackles, 4.5 TFL, 3.5 sacks and forced fumble; 2026 first six games/two starts, 11 tackles. A credible contributor, not Utah's lead impact defender.",
+      "peerCalibration": "Utah Front Seven: Lance Holtzclaw 82, Ethan Day 80, Elijah Elliss 85.",
+      "primarySources": [
+        "https://utahutes.com/sports/football/roster/kash-dillon/17514"
+      ],
+      "evidenceConfidence": "medium",
+      "familyDecision": "Current curated family supported"
+    },
+    {
+      "school": "boston-college",
+      "curatedFamily": "Front Seven",
+      "proposedFamily": "Front Seven",
+      "displayName": "Bodie Kahoun",
+      "proposedHiddenGrade": 81,
+      "role": "Redshirt sophomore starting linebacker, availability interrupted by injury",
+      "roleEvidence": "Joined from Notre Dame 2026, first LB start Sept 5 (three tackles), six vs Rutgers before injury, missed three games and returned Oct 17 (two tackles), Oct 24 five tackles. Early starting role evident; limited season before larger rating confidence.",
+      "peerCalibration": "Boston College Front Seven: Onye Nwosisi 82, Chris Marable Jr 80, Anthony Palano 87.",
+      "primarySources": [
+        "https://bceagles.com/sports/football/roster/bodie-kahoun/26861",
+        "https://www.cbssports.com/college-football/players/29422007/bodie-kahoun/game-log/"
+      ],
+      "evidenceConfidence": "medium",
+      "familyDecision": "Current curated family supported"
+    },
+    {
+      "school": "virginia",
+      "curatedFamily": "RB",
+      "proposedFamily": "RB",
+      "displayName": "Peyton Lewis",
+      "proposedHiddenGrade": 80,
+      "role": "Junior RB transfer in limited current Virginia role",
+      "roleEvidence": "At Tennessee 2024: 64 carries/339yd/3 TD and 2025: 70 carries/290yd/7 TD. Virginia 2026 through October available appearances: 10 carries/17yd/1 TD across 2 games, considerably smaller present role than prior seasons. Prior productive depth RB, no current evidence for top Virginia grade.",
+      "peerCalibration": "Virginia RB: Xavier Brown84, Jekail Middlebrook83, Xay Davis82.",
+      "primarySources": [
+        "https://virginiasports.com/sports/football/roster/player/peyton-lewis",
+        "https://www.sports-reference.com/cfb/players/peyton-lewis-1.html"
+      ],
+      "evidenceConfidence": "medium",
+      "familyDecision": "Current curated family supported"
+    }
+  ]
+}

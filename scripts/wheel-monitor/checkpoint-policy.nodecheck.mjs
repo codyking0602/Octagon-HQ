@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {selectLatestCheckpointArtifact} from "./checkpoint-policy.mjs";
+import {selectLatestCheckpointArtifact,selectLatestObservationArtifact} from "./checkpoint-policy.mjs";
 const artifact=(id, date, branch="main", expired=false, name="wheel-monitor-snapshot")=>({
   id,name,created_at:date,expired,workflow_run:{id:id*100,head_branch:branch},
 });
@@ -24,4 +24,14 @@ test("report-only history is valid and has no recovery artifact",()=>{
 test("malformed GitHub response must not silently count as empty history",()=>{
  assert.throws(()=>selectLatestCheckpointArtifact(null),/Missing GitHub/);
  assert.equal(selectLatestCheckpointArtifact([{name:"wheel-monitor-snapshot",expired:false,workflow_run:{head_branch:"main"}}]),null);
+});
+
+test("observations are never source-certified snapshots",()=>{
+ const artifacts=[
+  artifact(15,"2026-10-20T08:00:00Z"),
+  artifact(16,"2026-10-24T08:00:00Z","main",false,"wheel-monitor-observation"),
+  artifact(17,"2026-10-25T08:00:00Z","main",false,"wheel-monitor-run-report"),
+ ];
+ assert.equal(selectLatestCheckpointArtifact(artifacts).id,15);
+ assert.equal(selectLatestObservationArtifact(artifacts).id,16);
 });

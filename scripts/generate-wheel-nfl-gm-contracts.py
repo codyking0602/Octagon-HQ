@@ -60,6 +60,8 @@ SOURCE_FAMILY_OVERRIDES = {
 # OTC can retain void/proration mechanics after the actual playing contract.
 # These overrides are only for cases independently verified against current
 # contract reporting where the remaining playing term differs from those rows.
+# Deal-specific overrides must be tied to OTC identity + signing year so a
+# subsequent new contract does not inherit an obsolete playing term.
 CONTRACT_END_OVERRIDES = {
     "matthewstafford": 2027,
 }
@@ -135,6 +137,24 @@ def team_matches(team_code, contract_team):
     return bool(values & chunks)
 
 
+def resolved_playing_end(row, normalized_name):
+    """Separate actual playing terms from OTC void/cash accounting years.
+
+    Atlanta's Sept. 30, 2026 four-year Gervon Dexter Sr. *extension*
+    covers 2027 through 2030. OTC's cash-history years include 2031 and
+    later void/accounting rows; they are not an additional playing season.
+    Official: https://www.atlantafalcons.com/news/falcons-dt-gervon-dexter-sr-agree-to-terms-on-four-year-contract-extension
+    OTC: https://overthecap.com/player/gervon-dexter/10877
+    """
+    end = CONTRACT_END_OVERRIDES.get(normalized_name, season_end(row))
+    if (normalized_name == "gervondexter"
+            and str(row.get("otc_id") or "") == "10877"
+            and str(row.get("year_signed") or "") == "2026"
+            and team_matches("ATL", row.get("team"))):
+        return 2030
+    return end
+
+
 def to_money(value):
     if value is None:
         return None
@@ -172,6 +192,7 @@ def main():
     parser.add_argument("--window-end-season", type=int)
     parser.add_argument("--output", default="/tmp/gm-contracts.json")
     parser.add_argument("--report", default="/tmp/gm-contract-report.json")
+    parser.add_argument("--verified-contracts", help="Use separately digest-verified published contract parquet bytes")
     args = parser.parse_args()
 
     global SNAPSHOT_DATE, WINDOW_END_SEASON
@@ -205,7 +226,11 @@ def main():
     if unknown_adjustments:
         raise ValueError(f"GM projection adjustments reference identities outside the current Wheel population: {unknown_adjustments}")
 
-    frame = load_contracts()
+    if args.verified_contracts:
+        import polars as pl
+        frame = pl.read_parquet(args.verified_contracts)
+    else:
+        frame = load_contracts()
     rows = frame.to_dicts()
     player_rows = load_players().to_dicts()
     players_by_otc = {
@@ -267,7 +292,7 @@ def main():
             continue
 
         row = candidates[0]
-        end = CONTRACT_END_OVERRIDES.get(item["key"], row["_end"])
+        end = resolved_playing_end(row, item["key"])
         apy = to_money(row.get("apy"))
         player_meta = players_by_otc.get(str(row.get("otc_id"))) or {}
         birth_date = (

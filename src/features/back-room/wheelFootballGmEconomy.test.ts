@@ -101,9 +101,9 @@ describe("Wheel NFL GM contract authority", () => {
     }
   });
 
-  it("uses authentic contract coverage to arrive at 319 one-year and 275 three-year deals", () => {
-    expect(contracts.filter((player) => player.gameContract === "1YR")).toHaveLength(319);
-    expect(contracts.filter((player) => player.gameContract === "3YR")).toHaveLength(275);
+  it("uses authentic contract coverage to arrive at 318 one-year and 276 three-year deals", () => {
+    expect(contracts.filter((player) => player.gameContract === "1YR")).toHaveLength(318);
+    expect(contracts.filter((player) => player.gameContract === "3YR")).toHaveLength(276);
     expect(findContract("Matthew Stafford").gameContract).toBe("1YR");
     expect(findContract("Cameron Heyward").gameContract).toBe("1YR");
     expect(findContract("Fred Warner").gameContract).toBe("3YR");

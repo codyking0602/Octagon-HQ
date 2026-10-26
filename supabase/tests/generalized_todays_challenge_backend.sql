@@ -24,7 +24,8 @@ declare
   v_cody uuid := '71000000-0000-4000-8000-000000000001';
   v_shane uuid := '71000000-0000-4000-8000-000000000002';
   v_tony uuid := '71000000-0000-4000-8000-000000000003';
-  -- Use the currently playable UFC board date, not the calendar date, on the 48-hour cycle.
+  -- Use the currently playable UFC board day, not the raw Central date:
+  -- on off-cycle October 26 the live 48-hour board remains October 25.
   v_today date := private.daily_challenge_active_day(private.daily_challenge_central_day(now()), 'ufc');
   v_ftl uuid;
   v_resume uuid;

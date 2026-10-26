@@ -69,6 +69,37 @@ export function compareEvidence(current, previous=null) {
       level=LEVEL.FACT;
       reasons.push("new-canonical-identity-requires-reconciliation");
     }
+    // ESPN designation is a source claim (active, injured, reserve), not an
+    // ability score or a verified transaction. Only compare observed statuses.
+    if(prior?.sourceDesignation && row.sourceDesignation &&
+      prior.sourceDesignation!==row.sourceDesignation && level===LEVEL.NONE) {
+      level=LEVEL.REVIEW;
+      reasons.push("roster-designation-change-requires-factual-reconciliation");
+    }
+    // UFC official rank changes are factual movements, not mathematical
+    // ability changes. Compare official-to-official, not DB ranking-to-ESPN.
+    if(row.sport==="ufc" && prior?.sourceStatus==="matched" &&
+       row.sourceStatus==="matched" &&
+       prior.officialChampion!==undefined && row.officialChampion!==undefined &&
+       (prior.officialRank!==row.officialRank ||
+        prior.officialChampion!==row.officialChampion)) {
+      level=LEVEL.FACT;
+      reasons.push("official-ufc-ranking-or-champion-movement");
+    }
+    if(row.sport==="nfl" && row.family==="Head Coach" &&
+      row.sourceStatus==="coach-source-mismatch" && level===LEVEL.NONE) {
+      level=LEVEL.REVIEW;
+      reasons.push("head-coach-independent-source-disagreement");
+    }
+    // Source/canonical disagreement is a factual ranking review even if
+    // last week's observation was identically stale. Never report no-change.
+    if(row.sport==="ufc" && row.sourceStatus==="matched" &&
+       row.officialChampion!==undefined &&
+       (row.rank!==row.officialRank || row.champion!==row.officialChampion)) {
+      level=LEVEL.FACT;
+      if(!reasons.includes("official-ufc-canonical-rank-mismatch"))
+        reasons.push("official-ufc-canonical-rank-mismatch");
+    }
     if(row.sourceStatus==="missing" && prior?.sourceStatus!=="missing"
       && level===LEVEL.NONE) {
       level=LEVEL.REVIEW;

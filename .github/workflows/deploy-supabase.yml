@@ -274,7 +274,10 @@ jobs:
             node scripts/bundle-daily-challenge-runtime.mjs
             test -f supabase/functions/daily-challenge-runtime/runtime.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/average-fan.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/who-am-i-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-who-am-i-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs
+             test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs
             supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-docker
           else

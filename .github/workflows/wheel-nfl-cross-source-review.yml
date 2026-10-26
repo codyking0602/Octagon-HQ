@@ -1,0 +1,102 @@
+name: Wheel NFL Cross-Source Evidence (staged)
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  pull_request:
+    paths:
+      - 'scripts/wheel-monitor/nfl-production-monitor.py'
+      - 'scripts/wheel-monitor/nfl-snap-monitor.py'
+      - 'scripts/wheel-monitor/nfl-id-crosswalk-monitor.py'
+      - 'scripts/wheel-monitor/test_nfl_id_crosswalk_monitor.py'
+      - 'scripts/wheel-monitor/nfl-verified-source-assets.py'
+      - 'scripts/wheel-monitor/test_nfl_verified_source_assets.py'
+      - 'scripts/wheel-monitor/nfl-source-provenance.mjs'
+      - 'scripts/wheel-monitor/nfl-source-provenance.nodecheck.mjs'
+      - 'scripts/wheel-monitor/nfl-cross-source-review.mjs'
+      - 'scripts/wheel-monitor/nfl-cross-source-review.nodecheck.mjs'
+      - '.github/workflows/wheel-nfl-cross-source-review.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wheel-nfl-cross-source-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cross-source-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test individual full-population sources and safe joins
+        run: |
+          python -m unittest discover -s scripts/wheel-monitor -p 'test_nfl_production_monitor.py' -v
+          python -m unittest discover -s scripts/wheel-monitor -p 'test_nfl_snap_monitor.py' -v
+          python -m unittest discover -s scripts/wheel-monitor -p 'test_nfl_id_crosswalk_monitor.py' -v
+          python -m unittest discover -s scripts/wheel-monitor -p 'test_nfl_verified_source_assets.py' -v
+          node --test scripts/wheel-monitor/nfl-cross-source-review.nodecheck.mjs
+          node --test scripts/wheel-monitor/nfl-source-provenance.nodecheck.mjs
+      - name: Install pinned read-only nflverse loader
+        run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
+      - name: Verify independent NFL data asset publication before collection
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p tmp/wheel-monitor/nfl
+          node scripts/wheel-monitor/nfl-source-provenance.mjs \
+            --season="$(date -u +%Y)" \
+            --out=tmp/wheel-monitor/nfl/source-publications.json
+      - name: Verify exact published source SHA-256 digests and generate immutable inputs
+        run: |
+          python scripts/wheel-monitor/nfl-verified-source-assets.py \
+            --publications=tmp/wheel-monitor/nfl/source-publications.json \
+            --outdir=tmp/wheel-monitor/nfl/verified-assets
+      - name: Collect complete NFL multiweek and snap ledgers from verified bytes
+        run: |
+          set -euo pipefail
+          python scripts/wheel-monitor/nfl-production-monitor.py \
+            --season="$(date -u +%Y)" \
+            --fixture=tmp/wheel-monitor/nfl/verified-assets/production.json \
+            --out=tmp/wheel-monitor/nfl/production-evidence.json
+          python scripts/wheel-monitor/nfl-snap-monitor.py \
+            --season="$(date -u +%Y)" \
+            --fixture-snap-json=tmp/wheel-monitor/nfl/verified-assets/snaps.json \
+            --out=tmp/wheel-monitor/nfl/snap-evidence.json
+      - name: Reconcile independent GSIS/PFR IDs against same verified published bytes
+        run: |
+          python scripts/wheel-monitor/nfl-id-crosswalk-monitor.py \
+            --production=tmp/wheel-monitor/nfl/production-evidence.json \
+            --snap=tmp/wheel-monitor/nfl/snap-evidence.json \
+            --fixture-players=tmp/wheel-monitor/nfl/verified-assets/identityMaster.json \
+            --out=tmp/wheel-monitor/nfl/identity-master.json
+      - name: Reconcile full population without granting source certification
+        run: |
+          node scripts/wheel-monitor/nfl-cross-source-review.mjs \
+            --production=tmp/wheel-monitor/nfl/production-evidence.json \
+            --snap=tmp/wheel-monitor/nfl/snap-evidence.json \
+            --crosswalk=tmp/wheel-monitor/nfl/identity-master.json \
+            --publications=tmp/wheel-monitor/nfl/source-publications.json \
+            --byteReceipt=tmp/wheel-monitor/nfl/verified-assets/verification-receipt.json \
+            --out=tmp/wheel-monitor/nfl/cross-source-review.json
+      - name: Retain read-only cross-source evidence; never publish grades
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-cross-source-evidence
+          path: |
+            tmp/wheel-monitor/nfl/production-evidence.json
+            tmp/wheel-monitor/nfl/snap-evidence.json
+            tmp/wheel-monitor/nfl/identity-master.json
+            tmp/wheel-monitor/nfl/source-publications.json
+            tmp/wheel-monitor/nfl/verified-assets/verification-receipt.json
+            tmp/wheel-monitor/nfl/cross-source-review.json
+          retention-days: 30
+          if-no-files-found: warn

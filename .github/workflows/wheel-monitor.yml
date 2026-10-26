@@ -2,6 +2,9 @@ name: Wheel Monitor Read-Only (staged)
 
 on:
   workflow_dispatch:
+  # Read-only weekly factual monitoring; publishing still requires approval.
+  schedule:
+    - cron: '15 10 * * 2'
   pull_request:
     paths:
       - 'scripts/wheel-monitor/**'
@@ -11,7 +14,6 @@ on:
     paths:
       - "scripts/wheel-monitor/**"
       - ".github/workflows/wheel-monitor.yml"
-      - ".github/workflows/monitor-wheel-cfb-ap-top25.yml"
 
 permissions:
   contents: read
@@ -23,6 +25,7 @@ concurrency:
 
 jobs:
   verify:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,14 +35,50 @@ jobs:
       - run: npm ci --silent --no-audit --no-fund
       - run: node --check scripts/wheel-monitor/run.mjs
       - run: node --test scripts/wheel-monitor/*.nodecheck.mjs
+  # Weekly source checks; NFL performance evidence is every other week.
+  cadence:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    outputs:
+      rating_due: ${{ steps.cycle.outputs.rating_due }}
+    steps:
+      - id: cycle
+        shell: bash
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "rating_due=true" >> "$GITHUB_OUTPUT"
+          else
+            anchor=$(date -u -d '2026-10-26 00:00:00 UTC' +%s)
+            weeks=$(( ($(date -u +%s) - anchor) / 604800 ))
+            if (( weeks % 2 == 0 )); then
+              echo "rating_due=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "rating_due=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+  source_coach:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    uses: ./.github/workflows/wheel-nfl-coach-current-review.yml
+  source_performance:
+    needs: cadence
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && needs.cadence.outputs.rating_due == 'true')
+    uses: ./.github/workflows/wheel-nfl-cross-source-review.yml
+  source_gm:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    uses: ./.github/workflows/wheel-gm-contract-review.yml
+  source_ufc:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    uses: ./.github/workflows/wheel-ufc-unranked-profile-review.yml
+    secrets: inherit
   monitor:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    needs: verify
+    if: always() && (needs.verify.result == 'success' || (github.event_name == 'schedule' && needs.verify.result == 'skipped')) && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    needs: [verify, cadence, source_coach, source_performance, source_gm, source_ufc]
     runs-on: ubuntu-latest
     timeout-minutes: 19
     env:
       SUPABASE_PROJECT_ID: rvbspcjvebgwqzssayts
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      WHEEL_NFL_RATING_DUE: ${{ needs.cadence.outputs.rating_due }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,7 +86,8 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci --silent --no-audit --no-fund
-      - name: Verify conservative classifications
+      - name: Verify conservative classifications (code changes and manual runs)
+        if: github.event_name != 'schedule'
         run: node --test scripts/wheel-monitor/*.nodecheck.mjs
       - name: Restore last verified complete snapshot
         env:
@@ -73,7 +113,121 @@ jobs:
           else
             echo "PREVIOUS_SNAPSHOT=" >> "$GITHUB_ENV"
           fi
-      - name: Collect and reconcile full populations
+      - name: Restore latest ungraded observation (not a certified snapshot)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tmp/wheel-monitor/observation-previous
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=wheel-monitor-observation&per_page=100" \
+            > tmp/wheel-monitor/observation-previous/artifacts.json
+          id=$(node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            import {selectLatestObservationArtifact} from "./scripts/wheel-monitor/checkpoint-policy.mjs";
+            const payload=JSON.parse(readFileSync("tmp/wheel-monitor/observation-previous/artifacts.json","utf8"));
+            process.stdout.write(String(selectLatestObservationArtifact(payload.artifacts)?.workflow_run.id ?? ""));
+          ')
+          if [[ -n "$id" ]]; then
+            gh run download "$id" --name wheel-monitor-observation --dir tmp/wheel-monitor/observation-previous
+            echo "PREVIOUS_OBSERVATION=tmp/wheel-monitor/observation-previous/observation.json" >> "$GITHUB_ENV"
+          else
+            echo "PREVIOUS_OBSERVATION=" >> "$GITHUB_ENV"
+          fi
+      - name: Restore only exact-main successful staged source reports
+        if: github.event_name != 'workflow_dispatch' && github.event_name != 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tmp/wheel-monitor/staged
+          # Absence is a mandatory certification blocker, not a collection
+          # failure. No stale/PR/other-SHA artifact is allowed to certify.
+          while IFS='|' read -r artifact workflow; do
+            [[ -n "$artifact" ]] || continue
+            candidates=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$artifact&per_page=100")
+            run_id=$(jq -r --arg sha "$GITHUB_SHA" --arg name "$artifact" '
+              [.artifacts[] | select(.name == $name and .expired == false and
+                .workflow_run.head_sha == $sha and
+                .workflow_run.head_branch == "main")] |
+              sort_by(.created_at) | reverse | .[0].workflow_run.id // empty
+            ' <<<"$candidates")
+            [[ -n "$run_id" ]] || continue
+            run=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")
+            eligible=$(jq -r --arg sha "$GITHUB_SHA" --arg wf "$workflow" '
+              .head_sha == $sha and .head_branch == "main" and
+              .name == $wf and .event == "workflow_dispatch" and
+              .status == "completed" and .conclusion == "success"
+            ' <<<"$run")
+            [[ "$eligible" == "true" ]] || continue
+            folder="tmp/wheel-monitor/staged/$artifact"
+            mkdir -p "$folder"
+            if gh run download "$run_id" --name "$artifact" --dir "$folder"; then
+              jq -n --arg artifactName "$artifact" --arg workflowName "$workflow" \
+                --arg headSha "$GITHUB_SHA" --arg completedAt "$(jq -r .updated_at <<<"$run")" \
+                --argjson runId "$run_id" '{
+                  artifactName:$artifactName,workflowName:$workflowName,
+                  headSha:$headSha,completedAt:$completedAt,runId:$runId,
+                  headBranch:"main",status:"completed",conclusion:"success",
+                  event:"workflow_dispatch"
+                }' > "$folder/provenance.json"
+            else
+              rm -rf "$folder"
+              echo "::warning::Could not retrieve $artifact; certification stays blocked."
+            fi
+          done <<'STAGED'
+          wheel-nfl-current-coach-evidence|Wheel NFL Official Current Coach Evidence (staged)
+          wheel-nfl-cross-source-evidence|Wheel NFL Cross-Source Evidence (staged)
+          wheel-gm-contract-source-review|Wheel GM Contract Source Review (staged)
+          wheel-ufc-unranked-profile-evidence|Wheel UFC Unranked Profile Evidence (staged)
+          STAGED
+      - name: Download reports from this same monitoring run
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wheel-*
+          merge-multiple: false
+          path: tmp/wheel-monitor/staged
+      - name: Bind same-run evidence to successful independent source jobs
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+        shell: bash
+        env:
+          RESULT_COACH: ${{ needs.source_coach.result }}
+          RESULT_PERFORMANCE: ${{ needs.source_performance.result }}
+          RESULT_GM: ${{ needs.source_gm.result }}
+          RESULT_UFC: ${{ needs.source_ufc.result }}
+        run: |
+          set -euo pipefail
+          # No provenance receipt for skipped/failed source stages; a partial
+          # upload can never silently become authoritative.
+          while IFS='|' read -r kind artifact workflow file; do
+            case "$kind" in
+              coach) result="$RESULT_COACH" ;;
+              performance) result="$RESULT_PERFORMANCE" ;;
+              gm) result="$RESULT_GM" ;;
+              ufc) result="$RESULT_UFC" ;;
+            esac
+            folder="tmp/wheel-monitor/staged/$artifact"
+            if [[ "$result" != "success" || ! -f "$folder/$file" ]]; then
+              echo "::notice::$kind staged source absent/failed: mandatory hold retained."
+              continue
+            fi
+            jq -n --arg artifactName "$artifact" --arg workflowName "$workflow" \
+              --arg headSha "$GITHUB_SHA" --arg completedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              --argjson runId "$GITHUB_RUN_ID" --arg event "$GITHUB_EVENT_NAME" '{
+                artifactName:$artifactName,workflowName:$workflowName,
+                headSha:$headSha,completedAt:$completedAt,runId:$runId,
+                headBranch:"main",status:"completed",conclusion:"success",
+                event:$event
+              }' > "$folder/provenance.json"
+          done <<'STAGED'
+          coach|wheel-nfl-current-coach-evidence|Wheel NFL Official Current Coach Evidence (staged)|current-coaches.json
+          performance|wheel-nfl-cross-source-evidence|Wheel NFL Cross-Source Evidence (staged)|cross-source-review.json
+          gm|wheel-gm-contract-source-review|Wheel GM Contract Source Review (staged)|comparison.json
+          ufc|wheel-ufc-unranked-profile-evidence|Wheel UFC Unranked Profile Evidence (staged)|unranked-profiles.json
+          STAGED
+      - name: Collect and reconcile required NFL/UFC populations
         id: collect
         shell: bash
         run: |
@@ -83,7 +237,10 @@ jobs:
             exit 1
           fi
           node scripts/wheel-monitor/run.mjs \
-            --previous="$PREVIOUS_SNAPSHOT" --out=tmp/wheel-monitor/current
+            --previous="$PREVIOUS_SNAPSHOT" \
+            --previous-observation="$PREVIOUS_OBSERVATION" \
+            --stage-evidence-dir=tmp/wheel-monitor/staged \
+            --out=tmp/wheel-monitor/current
           if [[ -f tmp/wheel-monitor/current/snapshot.json ]]; then
             echo "snapshot_ready=true" >> "$GITHUB_OUTPUT"
           else
@@ -110,6 +267,14 @@ jobs:
             tmp/wheel-monitor/current/failure.json
           if-no-files-found: warn
           retention-days: 30
+      - name: Archive ungraded observation after fully successful source collection
+        if: steps.collect.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-monitor-observation
+          path: tmp/wheel-monitor/current/observation.json
+          if-no-files-found: error
+          retention-days: 45
       - name: Promote only fully verified source snapshot
         if: steps.collect.outputs.snapshot_ready == 'true'
         uses: actions/upload-artifact@v4

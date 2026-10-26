@@ -100,9 +100,19 @@ type NbaPublicationRuntimeModule = {
     day: string, scheduleVersion: string, gameType: string, history?: unknown
   ) => JsonRecord;
 };
+type NbaWhoAmIPublicationRuntimeModule = {
+  buildNbaWhoAmIDailyLeanPublication: (
+    day: string, scheduleVersion: string, gameType: string
+  ) => JsonRecord;
+};
+
 type NbaAdvanceRuntimeModule = {
   advanceNbaOfficialDailyRuntime: DailyAdvanceRuntime;
 };
+type WhoAmIAdvanceRuntimeModule = {
+  advanceCanonicalWhoAmIDailyRuntime: DailyAdvanceRuntime;
+};
+
 type NbaFeudAdvanceRuntimeModule = {
   advanceFamilyFeudDailyCore: DailyAdvanceRuntime;
 };
@@ -128,10 +138,15 @@ type AverageFanRuntimeModule = {
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
+// Millionaire publishing must not parse all Football game families in one
+// Edge invocation. The full Football publisher is retained for other modes.
+let footballMillionairePublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
+let nbaWhoAmIPublicationPromise: Promise<NbaWhoAmIPublicationRuntimeModule> | null = null;
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
+let whoAmIAdvanceRuntimePromise: Promise<WhoAmIAdvanceRuntimeModule> | null = null;
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
 let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
 let footballHitNumberAdvanceRuntimePromise: Promise<FootballHitNumberAdvanceRuntimeModule> | null = null;
@@ -143,7 +158,13 @@ function loadUfcRuntime() {
   return ufcRuntimePromise;
 }
 
-function loadFootballPublicationRuntime(_gameType: OfficialDailyGameType) {
+function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
+  if (gameType === "millionaire") {
+    if (!footballMillionairePublicationPromise) {
+      footballMillionairePublicationPromise = import("./football-millionaire-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+    }
+    return footballMillionairePublicationPromise;
+  }
   if (!footballPublicationRuntimePromise) {
     footballPublicationRuntimePromise = import("./football-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
   }
@@ -163,11 +184,25 @@ function loadNbaPublicationRuntime() {
   }
   return nbaPublicationRuntimePromise;
 }
+function loadNbaWhoAmIPublicationRuntime() {
+  if (!nbaWhoAmIPublicationPromise) {
+    nbaWhoAmIPublicationPromise = import("./nba-who-am-i-publication.generated.mjs") as Promise<NbaWhoAmIPublicationRuntimeModule>;
+  }
+  return nbaWhoAmIPublicationPromise;
+}
+
 function loadNbaAdvanceRuntime() {
   if (!nbaAdvanceRuntimePromise) {
     nbaAdvanceRuntimePromise = import("./nba-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
   }
   return nbaAdvanceRuntimePromise;
+}
+
+function loadWhoAmIAdvanceRuntime() {
+  if (!whoAmIAdvanceRuntimePromise) {
+    whoAmIAdvanceRuntimePromise = import("./who-am-i-advance.generated.mjs") as Promise<WhoAmIAdvanceRuntimeModule>;
+  }
+  return whoAmIAdvanceRuntimePromise;
 }
 
 function loadNbaFeudAdvanceRuntime() {
@@ -539,11 +574,10 @@ async function averageFanPublicationHistory(
   return response.data;
 }
 
-// An in-progress answer never needs to rerun publication/cutover/reset SQL.
- // The authoritative database descriptor still verifies the current Central day
- // and publication identity on EVERY action; a missing board falls back to the
- // existing full materialization path. Initial reads and scheduled operations
- // retain their historical recovery and publication behavior.
+// Published normal Daily reads and answers should only check the authoritative
+// Central-day descriptor, never rerun historical publication and reset SQL.
+// Unpublished boards and legacy two-game cutovers still use the full recovery
+// path; scheduled invocations retain the publisher and midnight prepublication.
 async function resolveInteractiveDaily(
   admin: SupabaseClient,
   sport: "ufc" | "football",
@@ -552,14 +586,20 @@ async function resolveInteractiveDaily(
   const materialize = () => sport === "football"
     ? materializeFootballToday(admin)
     : materializeToday(admin);
-  if (mode !== "advance") return materialize();
+  if (mode !== "advance" && mode !== "get-today" && mode !== undefined) return materialize();
 
   const response = await admin.rpc("get_daily_challenge_materialization_request", {
     p_sport: sport,
   });
   if (response.error) throw new Error("The current Daily publication identity is unavailable.");
   const request = requiredRecord(response.data, "Current Daily publication identity");
-  if (request.required !== false) return materialize();
+  // The retired single-board comparison games must still run the two-game
+  // migration guard before being served, even when a legacy board exists.
+  const migrationCandidate = ["find_leader", "wavelength", "hit_the_number"]
+    .includes(request.published_game as string);
+  if (request.required !== false || (mode !== "advance" && migrationCandidate)) {
+    return materialize();
+  }
 
   return {
     dailyChallengeId: requiredString(request.daily_challenge_id, "Published Daily id"),
@@ -581,7 +621,13 @@ async function materializeToday(admin: SupabaseClient, at?: string) {
     throw new Error("The September 24 UFC Sports Feud relaunch reset failed.");
   }
 
-  const requested = await admin.rpc("get_daily_challenge_materialization_request", at ? { p_at: at } : {});
+  // Always resolve UFC through the sport-aware 48-hour active-day schedule.
+  // The legacy one-argument overload incorrectly materializes off-cycle days
+  // (such as October 26) and can CPU-exhaust scheduled prepublication.
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: "ufc",
+    ...(at ? { p_at: at } : {}),
+  });
   if (requested.error) throw new Error("The official daily materialization request failed.");
   const request = requiredRecord(requested.data, "Daily materialization request");
   const day = requiredString(request.central_day, "Central day");
@@ -776,9 +822,11 @@ async function materializeNbaToday(admin: SupabaseClient, at?: string, preview =
       created: false,
     };
   }
-  const publishedSetup = (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(
-    day, scheduleVersion, gameType,
-  );
+  // Daily publication is rare but must not exceed Edge CPU on a cold start.
+  // Who Am I loads only its canonical round authorship, not all nine NBA banks.
+  const publishedSetup = gameType === "who_am_i"
+    ? (await loadNbaWhoAmIPublicationRuntime()).buildNbaWhoAmIDailyLeanPublication(day, scheduleVersion, gameType)
+    : (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(day, scheduleVersion, gameType);
   if (publishedSetup.scheduleVersion !== scheduleVersion || publishedSetup.gameType !== gameType) {
     throw new Error("NBA Daily publication differs from the locked 28-slot calendar.");
   }
@@ -843,7 +891,9 @@ async function handleNbaDaily(
   // all nine NBA game runtimes to resolve its small per-tile actions: the old
   // path exceeded CPU limits during live owner testing. Auth, revision checks,
   // idempotency, grading and persisted results still use the same trusted path.
-  const advanced = context.gameType === "average_fan"
+  const advanced = context.gameType === "who_am_i"
+    ? (await loadWhoAmIAdvanceRuntime()).advanceCanonicalWhoAmIDailyRuntime(context, action)
+    : context.gameType === "average_fan"
     ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)
     : context.gameType === "sports_feud"
       // Current NBA packs already carry their own authoritative candidates and
@@ -1561,9 +1611,10 @@ Deno.serve(async (request) => {
           throw new Error("Football Weekly Auction scheduled maintenance failed.");
         }
       }
-      const materialized = scheduledSport === "football"
-        ? await materializeFootballToday(admin)
-        : await materializeToday(admin);
+      // An already published normal board needs only an authoritative ID
+      // lookup. Re-running old cutover SQL every five minutes compounds CPU
+      // pressure across UFC and Football; unpublished boards still publish.
+      const materialized = await resolveInteractiveDaily(admin, scheduledSport, "get-today");
 
       // Prepublish tomorrow's immutable board before the Central midnight rollover.
       // The +30 minute window accommodates DST without assuming a UTC offset.
