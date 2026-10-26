@@ -1,7 +1,7 @@
 // Read-only reconciliation ledger. A canonical identity observed in the DB is
 // not automatically matched to a live source, and a source match is not a
 // certification of playing ability, performance, or an overall rating.
-const SPORTS = ["nfl","cfb","ufc"];
+const SPORTS = ["nfl","ufc"];
 const VERIFIED = "matched";
 const KNOWN_UNVERIFIED = new Set([
   "missing", "ambiguous", "coaching-source-needed",
