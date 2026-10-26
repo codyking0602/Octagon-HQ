@@ -8,7 +8,7 @@ export const cfbEditorialCandidateRuns = [
     ["coaches", "Who coached Nebraska to its dominant 1995 national championship season?", ["Tom Osborne", "Frank Solich", "Bob Devaney", "Barry Switzer"], "Tom Osborne", "The Cornhuskers routed Florida in the Fiesta Bowl to finish 12–0."],
     ["rivalries", "Who caught Doug Flutie's famous last-second touchdown against Miami in 1984?", ["Gerard Phelan", "Brian Brennan", "Mark Chmura", "Troy Brown"], "Gerard Phelan", "Boston College won 47–45 on a 48-yard desperation pass."],
     ["championship-history", "Which team beat top-ranked Miami in the Fiesta Bowl to win the 1986 season's national title?", ["Penn State", "Oklahoma", "Nebraska", "Notre Dame"], "Penn State", "The winning team intercepted Vinny Testaverde five times."],
-    ["title-upsets", "Which coach led Miami to its surprise 1983 national championship over Nebraska?", ["Howard Schnellenberger", "Jimmy Johnson", "Dennis Erickson", "Butch Davis"], "Howard Schnellenberger", "The title game ended 31–30 after Nebraska failed on a two-point conversion."],
+    ["heisman-history", "Who won the Heisman Trophy as Colorado's star running back in 1994?", ["Rashaan Salaam", "Ron Dayne", "Eddie George", "Ricky Williams"], "Rashaan Salaam", "He rushed for more than 2,000 yards in his award-winning season."],
     ["heisman-history", "Who won the exceptionally close 1985 Heisman vote over Iowa quarterback Chuck Long?", ["Bo Jackson", "Herschel Walker", "Doug Flutie", "Tim Brown"], "Bo Jackson", null],
   ],
   [
@@ -29,12 +29,12 @@ export const cfbEditorialCandidateRuns = [
     ["rivalry-moments", "Who scored Michigan State's winning touchdown after Michigan mishandled a punt snap in 2015?", ["Jalen Watts-Jackson", "LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson", "The return stunned the home crowd on the final play in Ann Arbor."],
     ["big-12", "Which quarterback led Baylor to its first Big 12 championship in 2013?", ["Bryce Petty", "Robert Griffin III", "Nick Florence", "Seth Russell"], "Bryce Petty", "He threw 32 touchdown passes during an 11-win regular season."],
     ["underdogs", "Who coached Hawaii's unbeaten 2007 regular season before its Sugar Bowl loss?", ["June Jones", "Nick Rolovich", "Greg McMackin", "Todd Graham"], "June Jones", "The team's run-and-shoot offense featured quarterback Colt Brennan."],
-    ["heisman-underdog", "Which Notre Dame player won the 1956 Heisman despite a 2–8 team record?", ["Paul Hornung", "Johnny Lujack", "Tim Brown", "Alan Ameche"], "Paul Hornung", null],
+    ["cross-sport-history", "Which Heisman winner also played in an NCAA men's basketball Final Four?", ["Terry Baker", "Roger Staubach", "Charlie Ward", "Paul Hornung"], "Terry Baker", null],
   ],
   [
     ["nicknames", "Which football program is known as the Fighting Irish?", ["Notre Dame", "Boston College", "Navy", "Michigan State"], "Notre Dame", "The independent program plays home games in South Bend."],
     ["heisman", "Which school did 2011 Heisman-winning quarterback Robert Griffin III attend?", ["Baylor", "Houston", "TCU", "Texas Tech"], "Baylor", "He helped transform a Big 12 program under Art Briles."],
-    ["heisman-milestones", "Who became the first primarily defensive player to win the Heisman in 1997?", ["Charles Woodson", "Champ Bailey", "Ndamukong Suh", "Tyrann Mathieu"], "Charles Woodson", "The Michigan star also contributed as a returner and receiver."],
+    ["quarterback-legends", "Which Nebraska quarterback won the 2001 Heisman Trophy?", ["Eric Crouch", "Tommy Frazier", "Scott Frost", "Turner Gill"], "Eric Crouch", "The winner helped keep the Huskers nationally prominent in the option era."],
     ["history", "Which program completed the 1994 season undefeated behind coach Tom Osborne?", ["Nebraska", "Miami", "Penn State", "Colorado"], "Nebraska", "Its national title was settled after an Orange Bowl victory over Miami."],
     ["heisman-history", "Who won the 2002 Heisman before Matt Leinart's and Reggie Bush's USC wins?", ["Carson Palmer", "Matt Barkley", "Mark Sanchez", "John David Booty"], "Carson Palmer", "The winner later became the No. 1 overall pick in the NFL Draft."],
     ["nfl-pipeline", "Which SEC school did Broncos running back Terrell Davis play for?", ["Georgia", "Florida", "Auburn", "Tennessee"], "Georgia", "He transferred after starting his college career at Long Beach State."],
