@@ -127,12 +127,13 @@ describe("Millionaire six-month editorial staging (NOT release-certified)", () =
     expect(ufc.find(item => item.day === "2026-10-25")).toBeDefined();
     expect(entries.every(item => item.questionIds.length === 8)).toBe(true);
     const repeats = exactRunRepeats(entries);
-    // This is the current, *uncertified* baseline, not a passing release gate:
-    // three regular repeated runs per league, including UFC Oct 25 history.
-    expect(repeats).toHaveLength(9);
-    expect(repeats.filter(item => item.league === "nfl")).toHaveLength(3);
-    expect(repeats.filter(item => item.league === "cfb")).toHaveLength(3);
-    expect(repeats.filter(item => item.league === "ufc")).toHaveLength(3);
+    // The 15-run FUTURE CANDIDATE path eliminates exact board repeats.
+    // This is still NOT editorial certification: most legacy rows remain HOLD
+    // and the 120 extra questions remain provisional until primary-source review.
+    expect(repeats).toEqual([]);
+    expect(nfl).toHaveLength(14);
+    expect(cfb).toHaveLength(13);
+    expect(ufc).toHaveLength(13);
   });
 
   it("refuses to represent the 10-run legacy bank as six-month ready", () => {
@@ -144,7 +145,8 @@ describe("Millionaire six-month editorial staging (NOT release-certified)", () =
     // Narrow primary-source checks are NOT full distractor / difficulty approval.
     expect(outstandingReviews.length).toBeGreaterThan(0);
     expect(completelyReviewed.length).toBeLessThan(240);
-    expect(repeats.length).toBeGreaterThan(0);
+    expect(repeats.length).toBe(0);
+    // This is a content-shape preview, not a signoff of the editorial candidates.
     const releaseCertified = repeats.length === 0
       && outstandingReviews.length === 0
       && completelyReviewed.length === 240;
