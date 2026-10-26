@@ -9,7 +9,7 @@ export const ufcEditorialCandidateRuns = [
     ["interim-welterweight-titles","Who defeated Nick Diaz by unanimous decision to claim the interim welterweight title at UFC 143?",["Carlos Condit","Georges St-Pierre","Robbie Lawler","Johny Hendricks"],"Carlos Condit","The five-round main event was held in Las Vegas in February 2012."],
     ["iconic-comebacks", "Who stopped Cung Le in the second round of their UFC 139 middleweight bout?", ["Wanderlei Silva", "Vitor Belfort", "Michael Bisping", "Anderson Silva"], "Wanderlei Silva", "The former PRIDE champion recovered from a difficult opening round before landing a flurry of knees and punches."],
     ["flyweight-title-history","Who defeated Brandon Moreno by split decision at UFC 290 to win the flyweight championship?",["Alexandre Pantoja","Deiveson Figueiredo","Kai Kara-France","Brandon Royval"],"Alexandre Pantoja","The five-round rematch was the co-main event in Las Vegas in July 2023."],
-    ["early-ufc", "Who won all three fights to capture the UFC 8 tournament in Puerto Rico in 1996?", ["Don Frye", "Marco Ruas", "Mark Coleman", "Gary Goodridge"], "Don Frye", null],
+    ["early-ufc", "Who won all three fights to capture the UFC 8 tournament in Puerto Rico in 1996?", ["Don Frye", "Marco Ruas", "Mark Coleman", "Gary Goodridge"], "Don Frye", null, "Don Frye won three fights at UFC 8 in Puerto Rico, finishing Gary Goodridge in the one-night tournament final in 1996."],
   ],
   [
     ["fighter-background", "Which former UFC heavyweight champion also worked as a firefighter near Cleveland?", ["Stipe Miocic", "Brock Lesnar", "Cain Velasquez", "Junior dos Santos"], "Stipe Miocic", "He won the UFC heavyweight title at UFC 198 in Brazil."],
@@ -19,7 +19,7 @@ export const ufcEditorialCandidateRuns = [
     ["womens-bantamweight-titles", "Who defeated Mayra Bueno Silva by decision to win the vacant UFC women’s bantamweight title at UFC 297?", ["Raquel Pennington", "Holly Holm", "Julianna Peña", "Ketlen Vieira"], "Raquel Pennington", "The five-round fight in Toronto crowned the division’s first champion after Amanda Nunes retired."],
     ["middleweight-knockouts", "Who knocked out Luke Rockhold in the third round of their UFC 221 main event?", ["Yoel Romero", "Michael Bisping", "Chris Weidman", "Paulo Costa"], "Yoel Romero", "The February 2018 main event in Perth ended at 1:48 of Round 3."],
     ["title-comebacks", "Who submitted Holly Holm at UFC 196 to win the women's bantamweight championship?", ["Miesha Tate", "Amanda Nunes", "Ronda Rousey", "Raquel Pennington"], "Miesha Tate", "The submission occurred in the fifth round after a close fight."],
-    ["title-upsets", "Who rallied to stop future champion Amanda Nunes in the third round at UFC 178 in 2014?", ["Cat Zingano", "Miesha Tate", "Holly Holm", "Valentina Shevchenko"], "Cat Zingano", null],
+    ["title-upsets", "Who rallied to stop future champion Amanda Nunes in the third round at UFC 178 in 2014?", ["Cat Zingano", "Miesha Tate", "Holly Holm", "Valentina Shevchenko"], "Cat Zingano", null, "Cat Zingano rallied and stopped Amanda Nunes with strikes at 1:21 of Round 3 at UFC 178 in September 2014."],
   ],
   [
     ["fighter-nicknames","Which UFC featherweight is nicknamed El Pantera?",["Yair Rodriguez","Brian Ortega","Jose Aldo","Chan Sung Jung"],"Yair Rodriguez","The Mexican-born striker has competed in the UFC since 2014."],
@@ -29,7 +29,7 @@ export const ufcEditorialCandidateRuns = [
     ["submission-history", "Who did Charles Oliveira submit at UFC 269 to defend his lightweight title?", ["Dustin Poirier", "Justin Gaethje", "Michael Chandler", "Tony Ferguson"], "Dustin Poirier", "The finish came via a standing rear-naked choke in Round 3."],
     ["iconic-finishes", "Who knocked out Frankie Edgar with a flying knee just 28 seconds into a 2021 UFC Fight Night bout?", ["Cory Sandhagen", "Marlon Vera", "Petr Yan", "T.J. Dillashaw"], "Cory Sandhagen", "The spectacular bantamweight finish took place in February 2021 in Las Vegas."],
     ["submissions", "Which light heavyweight became especially known for finishing fights with a Von Flue choke?", ["Ovince Saint Preux", "Glover Teixeira", "Anthony Smith", "Jan Blachowicz"], "Ovince Saint Preux", "The choke is often abbreviated with the fighter's initials by fans."],
-    ["submission-surprises", "Who submitted B.J. Penn by heel hook at UFC 232?", ["Ryan Hall", "Charles Oliveira", "Frankie Edgar", "Nate Diaz"], "Ryan Hall", null],
+    ["submission-surprises", "Who submitted B.J. Penn by heel hook at UFC 232?", ["Ryan Hall", "Charles Oliveira", "Frankie Edgar", "Nate Diaz"], "Ryan Hall", null, "Ryan Hall submitted B.J. Penn with a heel hook 2:46 into Round 1 at UFC 232, becoming the first man to submit Penn."],
   ],
   [
     ["nicknames","Which former UFC flyweight champion is nicknamed The Assassin Baby?",["Brandon Moreno","Deiveson Figueiredo","Alexandre Pantoja","Kai Kara-France"],"Brandon Moreno","The Mexican fighter developed a four-fight rivalry with Deiveson Figueiredo."],
@@ -39,7 +39,7 @@ export const ufcEditorialCandidateRuns = [
     ["welterweight-history", "Who defeated B.J. Penn by stoppage at UFC 94 while defending the welterweight belt?", ["Georges St-Pierre", "Matt Hughes", "Jon Fitch", "Carlos Condit"], "Georges St-Pierre", "The corner stopped the contest after Round 4."],
     ["classic-rivalries", "Who knocked out Tito Ortiz in the second round of their first fight at UFC 47?", ["Chuck Liddell", "Randy Couture", "Quinton Jackson", "Frank Shamrock"], "Chuck Liddell", "The 2004 Las Vegas victory launched a seven-fight winning streak."],
     ["international-history", "Which Japanese fighter submitted Anderson Silva with a spectacular flying scissor heel hook in PRIDE?", ["Ryo Chonan", "Kazushi Sakuraba", "Shinya Aoki", "Takanori Gomi"], "Ryo Chonan", "The submission occurred at PRIDE Shockwave 2004."],
-    ["early-tournaments", "Who won the UFC 6 tournament by submitting Tank Abbott in the final?", ["Oleg Taktarov", "Dan Severn", "Don Frye", "Marco Ruas"], "Oleg Taktarov", null],
+    ["early-tournaments", "Who won the UFC 6 tournament by submitting Tank Abbott in the final?", ["Oleg Taktarov", "Dan Severn", "Don Frye", "Marco Ruas"], "Oleg Taktarov", null, "Oleg Taktarov submitted Tank Abbott in the UFC 6 tournament final after 17 minutes and 45 seconds of action in 1995."],
   ],
   [
     ["hall-of-fame-firsts", "Who became the first woman inducted into the UFC Hall of Fame in 2018?", ["Ronda Rousey", "Amanda Nunes", "Holly Holm", "Cris Cyborg"], "Ronda Rousey", "Her UFC reign helped establish the women's bantamweight division."],
@@ -49,6 +49,6 @@ export const ufcEditorialCandidateRuns = [
     ["welterweight-finishes", "Who submitted Stephen Thompson late in Round 2 at UFC 296 to remain undefeated?", ["Shavkat Rakhmonov", "Gilbert Burns", "Belal Muhammad", "Khamzat Chimaev"], "Shavkat Rakhmonov", "The Kazakh welterweight secured a rear-naked choke with seconds left in the round."],
     ["bantamweight-title-defenses", "Who defeated Marlon Vera by unanimous decision to defend the bantamweight title at UFC 299?", ["Sean O’Malley", "Petr Yan", "Merab Dvalishvili", "Aljamain Sterling"], "Sean O’Malley", "The champion won all five rounds on every scorecard in Miami."],
     ["tuf-highlights", "Who landed the famous spinning hook-kick knockout of Adam Cella on The Ultimate Fighter 17?", ["Uriah Hall", "Kelvin Gastelum", "Josh Samman", "Dylan Andrews"], "Uriah Hall", "The knockout happened during Team Jones vs. Team Sonnen, before the live finale."],
-    ["pride-rivalry", "Who knocked out Wanderlei Silva at UFC 92 to avenge two earlier PRIDE losses?", ["Quinton Jackson", "Chuck Liddell", "Rich Franklin", "Michael Bisping"], "Quinton Jackson", null],
+    ["pride-rivalry", "Who knocked out Wanderlei Silva at UFC 92 to avenge two earlier PRIDE losses?", ["Quinton Jackson", "Chuck Liddell", "Rich Franklin", "Michael Bisping"], "Quinton Jackson", null, "Quinton Jackson knocked out Wanderlei Silva in Round 1 at UFC 92 after Silva had beaten him twice in PRIDE in 2003 and 2004."],
   ],
 ] as const;
