@@ -239,7 +239,7 @@ describe("Shane Contender Fight Spotlight treatment", () => {
 
   it("gives Raul Rosas Jr. the Shane badge on the prepared Picks main event", () => {
     const rosas = shanesWatchlist.fighters.find((fighter) => fighter.id === "raul-rosas-jr");
-    expect(rosas?.rank).toBe(2);
+    expect(rosas?.rank).toBe(3);
 
     render(
       <MemoryRouter>
@@ -247,9 +247,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #2")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #2")).toHaveLength(2);
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #3")).toHaveLength(2);
     expect(screen.getByText(rosas!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
       "href",
