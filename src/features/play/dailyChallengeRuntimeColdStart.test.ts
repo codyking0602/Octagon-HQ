@@ -87,11 +87,13 @@ describe("daily challenge runtime cold-start isolation", () => {
   });
 
   it("serves published Football Daily reads before loading the shared publication runtime", () => {
-    expect(runtime).toContain('function loadFootballPublicationRuntime(_gameType: OfficialDailyGameType)');
+    expect(runtime).toContain('function loadFootballPublicationRuntime(gameType: OfficialDailyGameType)');
     expect(runtime).toContain('function loadFootballAdvanceRuntime()');
     expect(runtime).toContain('function loadAverageFanRuntime()');
     expect(runtime).toContain('import("./average-fan.generated.mjs")');
     expect(runtime).toContain('import("./football-publication.generated.mjs")');
+    expect(runtime).toContain('import("./football-millionaire-publication.generated.mjs")');
+    expect(runtime).toContain('if (gameType === "millionaire")');
     expect(runtime).toContain('import("./football-advance.generated.mjs")');
     expect(runtime).not.toContain('import("./football-publication-who-am-i.generated.mjs")');
     expect(runtime).not.toContain('import("./football-publication-wavelength.generated.mjs")');
@@ -196,6 +198,9 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(bundler).toContain('fileName: "average-fan.generated.mjs"');
     expect(bundler).toContain('src/features/play/averageFanDailyRuntime.ts');
     expect(bundler).toContain('fileName: "football-publication.generated.mjs"');
+    expect(bundler).toContain('fileName: "football-millionaire-publication.generated.mjs"');
+    expect(bundler).toContain('src/features/play/footballDailyPublicationMillionaire.ts');
+    expect(bundler).toContain('{ day: "2026-10-26", gameType: "millionaire" }');
     expect(bundler).toContain('fileName: "football-advance.generated.mjs"');
     expect(bundler).not.toContain('fileName: "football-publication-who-am-i.generated.mjs"');
     expect(bundler).not.toContain('fileName: "football-publication-hit-the-number.generated.mjs"');
@@ -223,6 +228,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(backendWorkflow).toContain('node scripts/bundle-daily-challenge-runtime.mjs');
     expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/average-fan.generated.mjs');
     expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs');
+    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-who-am-i.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-wavelength.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-find-leader.generated.mjs');
