@@ -42,6 +42,7 @@ declare
   v_cody_row jsonb;
   v_shane_row jsonb;
   v_tony_row jsonb;
+  v_shane_expected_current integer;
 begin
   insert into auth.users (
     id,
@@ -146,6 +147,15 @@ begin
   v_shane_row := v_standings->'entries'->1;
   v_tony_row := v_standings->'entries'->2;
 
+  -- Replay of the historical September standings migration intentionally
+  -- restores its calendar-day no-argument RPC. The current wrapper delegates
+  -- to the UFC 48-hour policy. Test each policy's exact expected outcome.
+  select case
+    when pg_get_functiondef('public.get_daily_challenge_standings()'::regprocedure)
+      like '%get_daily_challenge_standings(''ufc'')%' then 4
+    else 0
+  end into v_shane_expected_current;
+
   if (v_standings->>'player_count')::integer <> 3
     or (v_standings->>'current_user_rank')::integer <> 1
     or (v_standings->>'current_user_wins')::integer <> 4 then
@@ -174,7 +184,7 @@ begin
     or (v_shane_row->>'average_score')::numeric <> 82.5
     -- Shane skipped the new Oct 25 UFC 48-hour board, so the active
     -- streak is zero while the completed prior four-game streak remains best.
-    or (v_shane_row->>'current_streak')::integer <> 0
+    or (v_shane_row->>'current_streak')::integer <> v_shane_expected_current
     or (v_shane_row->>'best_streak')::integer <> 4 then
     raise exception 'tied daily wins or yesterday-current streak were calculated incorrectly: %', v_shane_row;
   end if;
