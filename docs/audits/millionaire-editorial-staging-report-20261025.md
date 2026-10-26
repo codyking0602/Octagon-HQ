@@ -125,7 +125,7 @@ Initial prompt/fact similarity comparisons covered original source files for por
 ## October 26 superseding addendum (draft / HOLD)
 
 Three focused, source-backed future-only Q8 corrections were committed with matching 178-row HOLD ledger edits:
-- UFC run 11: UFC 217's three incumbent championship losses, https://www.ufc.com/event/ufc-217, replaces obscure UFC 8 winner trivia.
+- UFC run 11: Brian Ortega's dramatic failed guillotine and triangle attacks on Volkanovski at UFC 266, https://www.ufc.com/news/ufc-266-volkanovski-vs-ortega-results-shevchenko-murphy-diaz-lawler-highlights-interviews-winners. The intermediate UFC 217 draft was withdrawn after discovery that it duplicated original UFC run 2 Q8. It replaces the earlier obscure UFC 8 winner trivia.
 - NFL run 12: Mecole Hardman's overtime Super Bowl LVIII winning catch, https://www.nfl.com/news/chiefs-qb-patrick-mahomes-named-super-bowl-lviii-mvp, replaces Jack Squirek's Super Bowl XVIII interception trivia.
 - CFB run 15: Blake Corum's January 2024 Rose Bowl overtime touchdown, https://collegefootballplayoff.com/news/2024/1/1/rose-recap, replaces Glenn Davis's 1940s nickname trivia.
 The three Q8 outcomes and options were reviewed individually; selected Bar Trivia material showed no direct identical fact in those replacements. Full active-feud/fan/trivia uniqueness remains **unverified**.
