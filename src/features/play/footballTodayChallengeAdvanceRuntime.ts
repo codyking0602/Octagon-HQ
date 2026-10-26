@@ -307,3 +307,9 @@ export function advanceFootballOfficialDailyRuntime(
       )
     : advanceSingleFootballOfficialDailyRuntime(context, action);
 }
+
+// The NBA Find the Leader board uses the canonical Football elimination grader.
+export function advanceFindLeaderOnlyDailyRuntime(context: OfficialDailyRuntimeContext, action: unknown) {
+  if (context.gameType !== "find_leader") throw new Error("Daily Find the Leader game identity mismatch.");
+  return advanceFindLeader(context, asRecord(action));
+}

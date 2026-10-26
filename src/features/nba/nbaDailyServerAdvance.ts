@@ -162,3 +162,26 @@ export function advanceNbaOfficialDailyRuntime(context:NbaOfficialDailyRuntimeCo
   }
   return single(context,action);
 }
+
+// Isolated action entrypoints reuse native evaluators and child grading above.
+function advanceNbaOneGameLean(
+  context: NbaOfficialDailyRuntimeContext, action: unknown,
+  expected: NbaOfficialDailyRuntimeContext["gameType"],
+  native: (context: NbaOfficialDailyRuntimeContext, action: R) => OfficialDailyAdvanceResult,
+): OfficialDailyAdvanceResult {
+  if (context.gameType !== expected) throw new Error("NBA Daily action game identity mismatch.");
+  const step = (child: OfficialDailyRuntimeContext, nextAction: unknown) =>
+    native(child as NbaOfficialDailyRuntimeContext, record(nextAction, "NBA Daily action"));
+  return isTwoGameDailyContext(context)
+    ? advanceTwoGameDailyRuntime(context as OfficialDailyRuntimeContext, action, step, childScore)
+    : step(context as OfficialDailyRuntimeContext, action);
+}
+export function advanceNbaWavelengthLeanDailyRuntime(context: NbaOfficialDailyRuntimeContext, action: unknown) {
+  return advanceNbaOneGameLean(context, action, "wavelength", wavelength);
+}
+export function advanceNbaHitNumberLeanDailyRuntime(context: NbaOfficialDailyRuntimeContext, action: unknown) {
+  return advanceNbaOneGameLean(context, action, "hit_the_number", hit);
+}
+export function advanceNbaHigherLowerLeanDailyRuntime(context: NbaOfficialDailyRuntimeContext, action: unknown) {
+  return advanceNbaOneGameLean(context, action, "higher_lower", higher);
+}

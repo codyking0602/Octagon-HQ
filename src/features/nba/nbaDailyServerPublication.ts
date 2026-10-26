@@ -120,3 +120,57 @@ export function buildNbaServerDailyPublication(
       : barTriviaPublication(day, scheduleVersion, ordinal);
   return { ...publication, gameType, scheduleVersion };
 }
+
+// Dedicated Edge entries statically retain only their own NBA publication bank.
+// The canonical all-games publisher above remains the equivalence baseline.
+function buildSingleNbaLeanPublication(
+  day: string, scheduleVersion: string, gameType: string,
+  expected: NbaDailyGame, builder: (ordinal: number) => OfficialDailySetupPublication,
+) {
+  if (!scheduleVersion.trim() || gameType !== expected) throw new Error("NBA Daily game identity mismatch.");
+  const ordinal = scheduleVersion === "nba-daily-owner-prelaunch-v1"
+    ? (nbaOwnerPreviewDaily(day) === expected ? 20 + NBA_OWNER_PREVIEW_ORDER.indexOf(expected)
+      : (() => { throw new Error("NBA owner prelaunch game/day mismatch."); })())
+    : nbaDailyGameAppearance(day, expected);
+  return { ...builder(ordinal), gameType: expected, scheduleVersion };
+}
+
+export function buildNbaAverageFanLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
+  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "average_fan",
+    (ordinal) => buildAverageFanDailySetup("nba", day, scheduleVersion, history));
+}
+
+export function buildNbaSportsFeudLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
+  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "sports_feud",
+    (ordinal) => buildFamilyFeudDailySetup(buildNbaSportsFeudDailyPack(ordinal), day, scheduleVersion));
+}
+
+export function buildNbaMillionaireLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
+  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "millionaire",
+    (ordinal) => buildNbaMillionaireDailySetup(day, scheduleVersion, ordinal, buildNbaOfficialMillionaireRun(ordinal)));
+}
+
+export function buildNbaHitNumberLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
+  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "hit_the_number",
+    (ordinal) => buildNbaHitNumberDailyPublication(day, scheduleVersion, ordinal));
+}
+
+export function buildNbaFindLeaderLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
+  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "find_leader",
+    (ordinal) => buildNbaFindLeaderDailyPublication(day, scheduleVersion, ordinal));
+}
+
+export function buildNbaWavelengthLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
+  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "wavelength",
+    (ordinal) => buildNbaWavelengthDailyPublication(day, scheduleVersion, ordinal));
+}
+
+export function buildNbaHigherLowerLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
+  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "higher_lower",
+    (ordinal) => buildNbaHigherLowerTwoGameDailyPublication(day, scheduleVersion, ordinal));
+}
+
+export function buildNbaBarTriviaLeanPublication(day: string, scheduleVersion: string, gameType: string, history?: unknown) {
+  return buildSingleNbaLeanPublication(day, scheduleVersion, gameType, "bar_trivia",
+    (ordinal) => barTriviaPublication(day, scheduleVersion, ordinal));
+}
