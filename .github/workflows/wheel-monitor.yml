@@ -11,7 +11,6 @@ on:
     paths:
       - "scripts/wheel-monitor/**"
       - ".github/workflows/wheel-monitor.yml"
-      - ".github/workflows/monitor-wheel-cfb-ap-top25.yml"
 
 permissions:
   contents: read
@@ -94,7 +93,7 @@ jobs:
           else
             echo "PREVIOUS_OBSERVATION=" >> "$GITHUB_ENV"
           fi
-      - name: Collect and reconcile full populations
+      - name: Collect and reconcile required NFL/UFC populations
         id: collect
         shell: bash
         run: |
