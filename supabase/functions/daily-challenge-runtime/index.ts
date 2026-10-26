@@ -100,6 +100,11 @@ type NbaPublicationRuntimeModule = {
     day: string, scheduleVersion: string, gameType: string, history?: unknown
   ) => JsonRecord;
 };
+type NbaWhoAmIPublicationRuntimeModule = {
+  buildNbaWhoAmIDailyLeanPublication: (
+    day: string, scheduleVersion: string, gameType: string
+  ) => JsonRecord;
+};
 type NbaAdvanceRuntimeModule = {
   advanceNbaOfficialDailyRuntime: DailyAdvanceRuntime;
 };
@@ -134,6 +139,7 @@ let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule>
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
+let nbaWhoAmIPublicationPromise: Promise<NbaWhoAmIPublicationRuntimeModule> | null = null;
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
 let whoAmIAdvanceRuntimePromise: Promise<WhoAmIAdvanceRuntimeModule> | null = null;
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
@@ -166,6 +172,12 @@ function loadNbaPublicationRuntime() {
     nbaPublicationRuntimePromise = import("./nba-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
   }
   return nbaPublicationRuntimePromise;
+}
+function loadNbaWhoAmIPublicationRuntime() {
+  if (!nbaWhoAmIPublicationPromise) {
+    nbaWhoAmIPublicationPromise = import("./nba-who-am-i-publication.generated.mjs") as Promise<NbaWhoAmIPublicationRuntimeModule>;
+  }
+  return nbaWhoAmIPublicationPromise;
 }
 function loadNbaAdvanceRuntime() {
   if (!nbaAdvanceRuntimePromise) {
@@ -788,9 +800,11 @@ async function materializeNbaToday(admin: SupabaseClient, at?: string, preview =
       created: false,
     };
   }
-  const publishedSetup = (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(
-    day, scheduleVersion, gameType,
-  );
+  // Daily publication is rare but must not exceed Edge CPU on a cold start.
+  // Who Am I loads only its canonical round authorship, not all nine NBA banks.
+  const publishedSetup = gameType === "who_am_i"
+    ? (await loadNbaWhoAmIPublicationRuntime()).buildNbaWhoAmIDailyLeanPublication(day, scheduleVersion, gameType)
+    : (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(day, scheduleVersion, gameType);
   if (publishedSetup.scheduleVersion !== scheduleVersion || publishedSetup.gameType !== gameType) {
     throw new Error("NBA Daily publication differs from the locked 28-slot calendar.");
   }
