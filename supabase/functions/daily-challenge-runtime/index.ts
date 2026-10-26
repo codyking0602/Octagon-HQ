@@ -178,7 +178,15 @@ function loadFootballAdvanceRuntime() {
   return footballAdvanceRuntimePromise;
 }
 
-function loadNbaPublicationRuntime() {
+function loadNbaPublicationRuntime(gameType?: string) {
+  if (gameType === "average_fan") return import("./nba-average-fan-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "sports_feud") return import("./nba-sports-feud-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "millionaire") return import("./nba-millionaire-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "hit_the_number") return import("./nba-hit-the-number-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "find_leader") return import("./nba-find-leader-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "wavelength") return import("./nba-wavelength-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "higher_lower") return import("./nba-higher-lower-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "bar_trivia") return import("./nba-bar-trivia-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
   if (!nbaPublicationRuntimePromise) {
     nbaPublicationRuntimePromise = import("./nba-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
   }
@@ -191,7 +199,12 @@ function loadNbaWhoAmIPublicationRuntime() {
   return nbaWhoAmIPublicationPromise;
 }
 
-function loadNbaAdvanceRuntime() {
+function loadNbaAdvanceRuntime(gameType?: string) {
+  if (gameType === "bar_trivia") return import("./nba-bar-trivia-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "find_leader") return import("./nba-find-leader-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "wavelength") return import("./nba-wavelength-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "hit_the_number") return import("./nba-hit-the-number-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "higher_lower") return import("./nba-higher-lower-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
   if (!nbaAdvanceRuntimePromise) {
     nbaAdvanceRuntimePromise = import("./nba-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
   }
@@ -826,7 +839,7 @@ async function materializeNbaToday(admin: SupabaseClient, at?: string, preview =
   // Who Am I loads only its canonical round authorship, not all nine NBA banks.
   const publishedSetup = gameType === "who_am_i"
     ? (await loadNbaWhoAmIPublicationRuntime()).buildNbaWhoAmIDailyLeanPublication(day, scheduleVersion, gameType)
-    : (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(day, scheduleVersion, gameType);
+    : (await loadNbaPublicationRuntime(gameType)).buildNbaServerDailyPublication(day, scheduleVersion, gameType);
   if (publishedSetup.scheduleVersion !== scheduleVersion || publishedSetup.gameType !== gameType) {
     throw new Error("NBA Daily publication differs from the locked 28-slot calendar.");
   }
@@ -906,7 +919,7 @@ async function handleNbaDaily(
         // made the answer reveal wait on unnecessary cold-start CPU work.
         // Keep two-game publications on their canonical wrapper.
         ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime(context, action)
-        : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
+        : (await loadNbaAdvanceRuntime(context.gameType)).advanceNbaOfficialDailyRuntime(context, action);
   const history = footballActionHistory(context);
   const nextSubmissionState = submissionStateWithClientActionId({
     ...advanced.submissionState, action_history: [...history, action],
