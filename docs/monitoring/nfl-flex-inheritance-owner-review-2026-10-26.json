@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "preparedDate": "2026-10-26",
+  "status": "OWNER_REVIEW_ONLY",
+  "sport": "nfl",
+  "sourceCode": "scripts/wheel-monitor/run.mjs (priorityTeams Flex parent eligibility assertion)",
+  "canonicalSource": "data/generated/football/wheel-football-priorities.json",
+  "finding": "Two canonical Flex-only entries have no same-team RB/WR/TE parent in the approved NFL Wheel shortlist. Current official rosters list both as active tight ends; source affiliation is not the cause of the inheritance error.",
+  "exceptions": [
+    {
+      "team": "CAR",
+      "player": "Darren Waller",
+      "listedCanonicalFamilies": [
+        "Flex"
+      ],
+      "missingParentFamilies": [
+        "RB",
+        "WR",
+        "TE"
+      ],
+      "officialPosition": "TE",
+      "officialRosterUrl": "https://www.panthers.com/team/players-roster/darren-waller/",
+      "officialDepthChartUrl": "https://www.panthers.com/team/depth-chart",
+      "officialSignedAnnouncementUrl": "https://www.panthers.com/news/panthers-add-darren-waller-make-corresponding-roster-moves",
+      "clubJoiningAnnouncementDate": "2026-08-17",
+      "recommendation": "Owner to explicitly authorize adding Waller to the canonical TE population if TE+Flex eligibility is intended, or removing Flex eligibility if intentionally excluded; revalidate the 594/626 approved census and identity bindings before any authority edit."
+    },
+    {
+      "team": "CIN",
+      "player": "Mike Gesicki",
+      "listedCanonicalFamilies": [
+        "Flex"
+      ],
+      "missingParentFamilies": [
+        "RB",
+        "WR",
+        "TE"
+      ],
+      "officialPosition": "TE",
+      "officialRosterUrl": "https://www.bengals.com/team/players-roster/mike-gesicki/",
+      "officialRosterListUrl": "https://www.bengals.com/team/players-roster/",
+      "recommendation": "Owner to explicitly authorize TE+Flex parent inheritance or remove the unsupported Flex-only listing; verify impact on approved 594 GM pool and scored gameplay before any authority edit."
+    }
+  ],
+  "invariants": {
+    "gradesChanged": 0,
+    "gmContractsChanged": 0,
+    "curatedPlayersChanged": 0,
+    "prioritySourceChanged": false,
+    "gameplayChanged": false,
+    "cfbRatingRefresh": false,
+    "weeklyScheduleActivated": false
+  },
+  "approvalGate": "No parent shortlist, GM contract, player identity, grade, or roster authority edits before explicit owner approval, full census re-evaluation, GM economy regression, exact-head CI and production verification."
+}
