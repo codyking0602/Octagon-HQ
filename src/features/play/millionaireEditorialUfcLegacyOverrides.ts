@@ -24,7 +24,7 @@ export const UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS = [
     ["bantamweight-history", "Who stopped Jose Aldo at UFC 251 to win the vacant bantamweight championship?", ["Petr Yan", "Aljamain Sterling", "Cory Sandhagen", "T.J. Dillashaw"], "Petr Yan", "The Russian challenger finished Aldo in the fifth round on Fight Island."],
     ["title-milestones", "Which Nigerian-born fighter became UFC welterweight champion at UFC 235?", ["Kamaru Usman", "Israel Adesanya", "Francis Ngannou", "Leon Edwards"], "Kamaru Usman", "He won every round against Tyron Woodley at his first title opportunity."],
     ["london-highlights", "Who knocked out Darren Till in London in the UFC's March 2019 main event?", ["Jorge Masvidal", "Stephen Thompson", "Tyron Woodley", "Colby Covington"], "Jorge Masvidal", "The visitor silenced the home crowd in the second round."],
-    ["reality-tv", "Who won the middleweight division on Season 1 of The Ultimate Fighter?", ["Diego Sanchez", "Forrest Griffin", "Kenny Florian", "Chris Leben"], "Diego Sanchez", "The final was a stoppage against Kenny Florian."],
+    ["middleweight-finishes", "Who knocked out former champion Michael Bisping in the 2017 UFC Shanghai main event?", ["Kelvin Gastelum", "Anderson Silva", "Georges St-Pierre", "Luke Rockhold"], "Kelvin Gastelum", "A first-round left hand led to the stoppage of the short-notice main event."],
     ["comeback-knockouts", "Who knocked out Alexander Volkov with 15 seconds remaining at UFC 229 after trailing most of the fight?", ["Derrick Lewis", "Curtis Blaydes", "Francis Ngannou", "Tai Tuivasa"], "Derrick Lewis", "A dramatic late third-round surge turned a seemingly lost heavyweight fight into a stoppage."],
     ["strawweight-upsets", "Who beat Rose Namajunas by split decision in the UFC 274 strawweight title fight?", ["Carla Esparza", "Zhang Weili", "Joanna Jedrzejczyk", "Jessica Andrade"], "Carla Esparza", null],
   ],
@@ -36,6 +36,6 @@ export const UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS = [
     ["champion-origins", "Which fighter arrived in the UFC as the last reigning WEC bantamweight champion?", ["Dominick Cruz", "Urijah Faber", "Renan Barao", "Brian Bowles"], "Dominick Cruz", "The fighter had defended the WEC belt against Scott Jorgensen in 2010."],
     ["lightweight-history", "Who defeated Anthony Pettis at UFC 185 to win the lightweight championship?", ["Rafael dos Anjos", "Benson Henderson", "Eddie Alvarez", "Donald Cerrone"], "Rafael dos Anjos", "The Brazilian earned a dominant five-round decision in Dallas."],
     ["middleweight-grappling", "Who submitted former champion Robert Whittaker with a first-round face crank at UFC 308?", ["Khamzat Chimaev", "Dricus du Plessis", "Sean Strickland", "Paulo Costa"], "Khamzat Chimaev", "The 2024 Abu Dhabi co-main event ended before four minutes elapsed."],
-    ["comebacks", "Who did Matt Hughes submit after surviving a deep choke and rallying at UFC 52?", ["Frank Trigg", "Carlos Newton", "B.J. Penn", "Georges St-Pierre"], "Frank Trigg", null],
+    ["controversial-decisions", "Who retained the UFC light heavyweight title over Mauricio 'Shogun' Rua by disputed unanimous decision at UFC 104?", ["Lyoto Machida", "Quinton Jackson", "Rashad Evans", "Forrest Griffin"], "Lyoto Machida", null],
   ],
 ] as const;
