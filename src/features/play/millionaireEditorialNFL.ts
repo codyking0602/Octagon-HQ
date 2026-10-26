@@ -42,7 +42,7 @@ export const nflEditorialCandidateRuns = [
     ["super-bowl-defense", "Who recovered Tom Brady's late fumble after Brandon Graham's strip-sack in Super Bowl LII?", ["Derek Barnett", "Fletcher Cox", "Chris Long", "Tim Jernigan"], "Derek Barnett", null],
   ],
   [
-    ["fan-traditions", "Which NFL team's fans sing Fly, Eagles Fly after touchdowns?", ["Eagles", "Giants", "Commanders", "Steelers"], "Eagles", "The fight song is a staple at home games in South Philadelphia."],
+    ["stadium-sharing", "Which NFL team shares SoFi Stadium with the Los Angeles Chargers?", ["Rams", "49ers", "Raiders", "Cardinals"], "Rams", "Both franchises play their home games in Inglewood, California."],
     ["super-bowl", "Who was named Super Bowl LI MVP after New England's historic comeback?", ["Tom Brady", "James White", "Julian Edelman", "Dont'a Hightower"], "Tom Brady", "The winning team trailed 28–3 in the third quarter."],
     ["receivers", "Who formed the Rams' 1999 receiving duo with Isaac Bruce?", ["Torry Holt", "Az-Zahir Hakim", "Ricky Proehl", "Marshall Faulk"], "Torry Holt", "The rookie wideout became a fixture in the Greatest Show on Turf offense."],
     ["records", "Which Giants pass rusher set the NFL's 22.5-sack season record in 2001?", ["Michael Strahan", "Osi Umenyiora", "Lawrence Taylor", "Jason Pierre-Paul"], "Michael Strahan", "The record-setting sack came in the final game against Green Bay."],
