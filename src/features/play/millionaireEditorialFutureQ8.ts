@@ -46,6 +46,13 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "After a long catch-and-run on the first overtime drive, Larry Fitzgerald scored from five yards out on a shovel pass from Carson Palmer.",
     { authority: "NFL / Packers", url: "https://www.packers.com/news/packers-defense-had-its-chances-16708510", supportingDetail: "Packers' divisional-round recap describes Fitzgerald's overtime touchdown following his long catch-and-run." },
   ),
+  "nfl:6:7": q8(
+    "millionaire-nfl-future-2001-tuck-rule-woodson-q8", "playoff-controversy",
+    "Which Raiders defender knocked the ball from Tom Brady on the controversial Tuck Rule play in the 2001 season's AFC divisional playoff?",
+    ["Charles Woodson", "Greg Biekert", "Eric Allen", "Rod Woodson"], "Charles Woodson",
+    "Charles Woodson dislodged the ball and Greg Biekert recovered, but the replay ruling overturned the fumble. New England tied the game and won 16-13 in overtime.",
+    { authority: "New England Patriots", url: "https://www.patriots.com/news/patriots-earn-spot-in-afc-championship-game-120896", supportingDetail: "Patriots' Jan. 2002 game report identifies Woodson forcing the would-be fumble, reversal under the Tuck Rule, and overtime win." },
+  ),
   "nfl:7:7": q8(
     "millionaire-nfl-future-vernon-davis-saints-2011-q8", "playoff-finish",
     "Who caught Alex Smith's winning touchdown with nine seconds left against New Orleans in the 2011 season's NFC playoffs?",
