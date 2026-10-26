@@ -1,1 +1,1 @@
-export { advanceNbaWavelengthLeanDailyRuntime as advanceNbaOfficialDailyRuntime } from "../nbaDailyServerAdvance";
+export { advanceNbaWavelengthLeanDailyRuntime as advanceNbaOfficialDailyRuntime } from "../nbaDailyGameplayCore";

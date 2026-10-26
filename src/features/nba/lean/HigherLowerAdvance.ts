@@ -1,1 +1,1 @@
-export { advanceNbaHigherLowerLeanDailyRuntime as advanceNbaOfficialDailyRuntime } from "../nbaDailyServerAdvance";
+export { advanceNbaHigherLowerLeanDailyRuntime as advanceNbaOfficialDailyRuntime } from "../nbaDailyGameplayCore";
