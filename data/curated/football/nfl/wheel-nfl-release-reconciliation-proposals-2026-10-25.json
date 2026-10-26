@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-wheel-oct-2026-official-release-reconciliation-v1",
+  "status": "owner-review-only-not-runtime",
+  "asOf": "2026-10-25",
+  "releaseEvents": [
+    {
+      "teamCode": "CHI",
+      "player": "Xavier Woods",
+      "family": "Secondary",
+      "releaseDate": "2026-10-17",
+      "officialSource": "https://www.chicagobears.com/team/transactions/2026",
+      "subsequentStatus": "not-fully-reconciled-league-wide"
+    },
+    {
+      "teamCode": "IND",
+      "player": "Darius Slayton",
+      "family": "WR",
+      "releaseDate": "2026-10-16",
+      "officialSource": "https://www.colts.com/news/colts-release-wide-receiver-darius-slayton",
+      "subsequentStatus": "not-fully-reconciled-league-wide"
+    },
+    {
+      "teamCode": "NYG",
+      "player": "Najee Harris",
+      "family": "RB",
+      "releaseDate": "2026-10-20",
+      "officialSource": "https://www.giants.com/news/rb-najee-harris-olb-jihad-ward-released-among-series-of-roster-moves-trace-ford-active-roster-moves-week-7",
+      "subsequentStatus": "not-fully-reconciled-league-wide"
+    }
+  ],
+  "interpretation": "Confirmed releases from prior teams. Not proof of present free agency, nor authorization for game population deletion, re-grade, replacement or GM ineligibility. Another player's identical name is never sufficient transfer evidence.",
+  "approvalGates": [
+    "Check signed transactions across all 32 teams through approval date, plus recognized league transaction record",
+    "Propose separately whether existing approved Wheel population retains inactive player or is replaced, with explicit owner approval of replacement identity and family",
+    "Preserve historical grade rows; new active identity receives separately researched current ability authority",
+    "Recompute GM eligible counts (currently 591 source matches of 594), contract and eligibility artifacts without silent deletion",
+    "Run full Wheel roster integrity, source identity and GM economy regressions with same publication gate",
+    "Exact-head Validate V2 and explicit owner approval before merge"
+  ],
+  "publishedRuntimeChanges": 0
+}
