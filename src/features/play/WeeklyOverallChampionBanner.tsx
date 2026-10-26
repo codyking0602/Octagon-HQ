@@ -17,6 +17,14 @@ type ChampionPeriod = {
   monthly: boolean;
 };
 const STORAGE_PREFIX = "the-hq:overall-champion:v2:";
+// Only announce recently finalized awards. An old title must not suddenly
+// interrupt Play after a browser data reset, reinstall, or device change.
+const ANNOUNCEMENT_WINDOW_MS = 72 * 60 * 60 * 1000;
+
+function isRecentFinalizedPeriod(endDay: string, now = Date.now()) {
+  const end = Date.parse(`${endDay}T23:59:59Z`);
+  return Number.isFinite(end) && now >= end && now - end <= ANNOUNCEMENT_WINDOW_MS;
+}
 
 export function WeeklyOverallChampionBanner({ sport }: { sport: Sport }) {
   const identity = useIdentity();
@@ -46,7 +54,7 @@ export function WeeklyOverallChampionBanner({ sport }: { sport: Sport }) {
         }) : null);
 
     load.then(next => {
-      if (!active || !next) return;
+      if (!active || !next || !isRecentFinalizedPeriod(next.end)) return;
       setPeriod(next);
       try {
         setVisible(window.localStorage.getItem(
