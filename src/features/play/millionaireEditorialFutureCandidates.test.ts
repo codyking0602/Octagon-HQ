@@ -15,6 +15,17 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("retains three future-only removals of active UFC Bar Trivia fact collisions", () => {
+    const jones = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:1:0"]!;
+    expect(jones.answer).toBe("Jon Jones");
+    expect(jones.prompt).toContain("UFC 285");
+    expect(jones.statSheet).not.toContain("Jon Jones");
+    expect(millionaireDailyRun("ufc", 1)[0]!.prompt).toContain("The Notorious");
+    expect(answer(millionaireFutureEditorialDailyRun("ufc", 11)[2]!)).toBe("Alex Pereira");
+    expect(millionaireFutureEditorialDailyRun("ufc", 11)[2]!.prompt).toContain("UFC 303");
+    expect(answer(millionaireFutureEditorialDailyRun("ufc", 13)[6]!)).toBe("Khamzat Chimaev");
+  });
+
   it("removes the Notre Dame answer giveaway in future-only CFB run 8 without editing legacy proofs", () => {
     const legacy = millionaireDailyRun("cfb", 7)[5]!;
     expect(legacy.statSheet).toContain("Notre Dame");
@@ -37,7 +48,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb", 10, 5, "Max Duggan"],
       ["cfb", 10, 6, "Ashton Jeanty"],
       ["cfb", 14, 6, "Kalen DeBoer"],
-      ["ufc", 13, 6, "Yair Rodriguez"],
+      ["ufc", 13, 6, "Khamzat Chimaev"],
       ["ufc", 6, 7, "Ilia Topuria"],
       ["ufc", 12, 7, "Paddy Pimblett"],
       ["nfl", 12, 3, "Christian McCaffrey"],

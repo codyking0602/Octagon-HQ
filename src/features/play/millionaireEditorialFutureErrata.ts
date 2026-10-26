@@ -14,6 +14,18 @@ export type MillionaireFutureRewriteSeed = {
   evidence: readonly { authority: string; url: string; supportingDetail: string }[];
 };
 export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
+  // Preview-only rewrite of a verbatim active Bar Trivia "Notorious" nickname.
+  "ufc:1:0": {
+    id: "millionaire-ufc-future-285-jones-heavyweight-q1",
+    type: "heavyweight-title-return",
+    prompt: "Which former light heavyweight champion submitted Ciryl Gane to win the UFC heavyweight title at UFC 285?",
+    choices: ["Jon Jones", "Stipe Miocic", "Daniel Cormier", "Francis Ngannou"],
+    answer: "Jon Jones",
+    statSheet: "The March 2023 main event ended by guillotine choke just over two minutes into the first round.",
+    explanation: "Jon Jones returned from a three-year absence to submit Ciryl Gane at 2:04 of Round 1 at UFC 285, earning his first UFC heavyweight title.",
+    evidence: [{ authority: "UFC 285 official results", url: "https://www.ufc.com/news/official-judges-scorecards-ufc-285-jones-vs-gane", supportingDetail: "Jones defeated Gane by guillotine submission at 2:04 of the first round." }],
+  },
+
   // The 2020 Notre Dame CFP answer was literally named in the legacy Stat Sheet.
   // Preserve published proofs; fix only the future candidate's identity clue.
   "cfb:7:5": {
