@@ -2,6 +2,10 @@ name: Wheel UFC Unranked Profile Evidence (staged)
 
 on:
   workflow_dispatch:
+  workflow_call:
+    secrets:
+      SUPABASE_ACCESS_TOKEN:
+        required: true
   pull_request:
     paths:
       - 'scripts/wheel-monitor/ufc-profile-policy.mjs'

@@ -2,6 +2,7 @@ name: Wheel GM Contract Source Review (staged)
 
 on:
   workflow_dispatch:
+  workflow_call:
   pull_request:
     paths:
       - 'scripts/wheel-monitor/gm-contract-*.mjs'
