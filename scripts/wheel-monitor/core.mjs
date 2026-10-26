@@ -86,6 +86,16 @@ export function compareEvidence(current, previous=null) {
       level=LEVEL.FACT;
       reasons.push("official-ufc-ranking-or-champion-movement");
     }
+    // A disagreement with today's official UFC ranking is a factual change
+    // even when the historical read-only observation has the same stale
+    // canonical rank. Never label this as a clean no-change week.
+    if(row.sport==="ufc" && row.sourceStatus==="matched" &&
+       row.officialChampion!==undefined &&
+       (row.rank!==row.officialRank || row.champion!==row.officialChampion)) {
+      level=LEVEL.FACT;
+      if(!reasons.includes("official-ufc-canonical-rank-mismatch"))
+        reasons.push("official-ufc-canonical-rank-mismatch");
+    }
     if(row.sourceStatus==="missing" && prior?.sourceStatus!=="missing"
       && level===LEVEL.NONE) {
       level=LEVEL.REVIEW;
