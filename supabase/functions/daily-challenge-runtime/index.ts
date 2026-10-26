@@ -128,6 +128,9 @@ type AverageFanRuntimeModule = {
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
+// Millionaire publishing must not parse all Football game families in one
+// Edge invocation. The full Football publisher is retained for other modes.
+let footballMillionairePublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
@@ -143,7 +146,13 @@ function loadUfcRuntime() {
   return ufcRuntimePromise;
 }
 
-function loadFootballPublicationRuntime(_gameType: OfficialDailyGameType) {
+function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
+  if (gameType === "millionaire") {
+    if (!footballMillionairePublicationPromise) {
+      footballMillionairePublicationPromise = import("./football-millionaire-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+    }
+    return footballMillionairePublicationPromise;
+  }
   if (!footballPublicationRuntimePromise) {
     footballPublicationRuntimePromise = import("./football-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
   }
