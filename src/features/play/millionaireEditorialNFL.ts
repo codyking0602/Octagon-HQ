@@ -13,7 +13,7 @@ export const nflEditorialCandidateRuns = [
   ],
   [
     ["franchise-identities", "Which NFL franchise's helmet features a lightning-bolt design?", ["Chargers", "Titans", "Rams", "Broncos"], "Chargers", "The team used the look in both San Diego and Los Angeles."],
-    ["career-history", "Which NFL team did Larry Fitzgerald spend his entire playing career with?", ["Cardinals", "Steelers", "Seahawks", "49ers"], "Cardinals", "The receiver reached the Super Bowl after the 2008 regular season."],
+    ["super-bowl", "Which team did Rob Gronkowski help win Super Bowl LV after reuniting with Tom Brady?", ["Buccaneers", "Patriots", "Chiefs", "Eagles"], "Buccaneers", "The tight end caught two touchdown passes in the 2020 season's championship game."],
     ["quarterback-careers", "Which franchise did Brett Favre play for in his final two NFL seasons?", ["Vikings", "Jets", "Packers", "Falcons"], "Vikings", "His 2009 season included an NFC Championship Game appearance."],
     ["rushing", "Who became the first NFL quarterback to rush for 1,000 yards in a season?", ["Michael Vick", "Lamar Jackson", "Randall Cunningham", "Cam Newton"], "Michael Vick", "He accomplished the milestone with Atlanta during the 2006 season."],
     ["super-bowl-defensive-plays","Who returned a Kurt Warner interception 100 yards for a touchdown in Super Bowl XLIII?",["James Harrison","Troy Polamalu","Ryan Clark","Ike Taylor"],"James Harrison","The return happened on the final play of the first half against Arizona."],
@@ -32,7 +32,7 @@ export const nflEditorialCandidateRuns = [
     ["super-bowl-history", "Who became the first defensive back to win Super Bowl MVP?", ["Jake Scott", "Larry Brown", "Dexter Jackson", "Richard Sherman"], "Jake Scott", null],
   ],
   [
-    ["teams", "Which franchise is widely nicknamed America's Team?", ["Cowboys", "Patriots", "Steelers", "Packers"], "Cowboys", "The nickname became associated with a Texas franchise during its national-TV prominence."],
+    ["franchise-history", "Which current NFL franchise originally played as the Houston Oilers?", ["Titans", "Texans", "Jaguars", "Panthers"], "Titans", "The organization relocated to Tennessee before adopting its current nickname for the 1999 season."],
     ["quarterback-careers", "Where did Russell Wilson play his first ten NFL seasons?", ["Seahawks", "Broncos", "Giants", "Steelers"], "Seahawks", "He won Super Bowl XLVIII early in his career."],
     ["super-bowl", "Which franchise did the 2006 Indianapolis Colts defeat in Super Bowl XLI?", ["Bears", "Saints", "Patriots", "Panthers"], "Bears", "The title game featured two head coaches who were both Black for the first time."],
     ["playoff-history", "Which quarterback led The Drive against Cleveland in the 1986 season's AFC title game?", ["John Elway", "Bernie Kosar", "Jim Kelly", "Dan Marino"], "John Elway", "His team drove 98 yards in the fourth quarter before winning in overtime."],
@@ -42,7 +42,7 @@ export const nflEditorialCandidateRuns = [
     ["super-bowl-defense", "Who recovered Tom Brady's late fumble after Brandon Graham's strip-sack in Super Bowl LII?", ["Derek Barnett", "Fletcher Cox", "Chris Long", "Tim Jernigan"], "Derek Barnett", null],
   ],
   [
-    ["stadiums", "Which NFL team plays its home games at Lincoln Financial Field?", ["Eagles", "Giants", "Jets", "Commanders"], "Eagles", "The stadium opened in 2003 in Philadelphia's sports complex."],
+    ["fan-traditions", "Which NFL team's fans sing Fly, Eagles Fly after touchdowns?", ["Eagles", "Giants", "Commanders", "Steelers"], "Eagles", "The fight song is a staple at home games in South Philadelphia."],
     ["super-bowl", "Who was named Super Bowl LI MVP after New England's historic comeback?", ["Tom Brady", "James White", "Julian Edelman", "Dont'a Hightower"], "Tom Brady", "The winning team trailed 28–3 in the third quarter."],
     ["receivers", "Who formed the Rams' 1999 receiving duo with Isaac Bruce?", ["Torry Holt", "Az-Zahir Hakim", "Ricky Proehl", "Marshall Faulk"], "Torry Holt", "The rookie wideout became a fixture in the Greatest Show on Turf offense."],
     ["records", "Which Giants pass rusher set the NFL's 22.5-sack season record in 2001?", ["Michael Strahan", "Osi Umenyiora", "Lawrence Taylor", "Jason Pierre-Paul"], "Michael Strahan", "The record-setting sack came in the final game against Green Bay."],
