@@ -49,62 +49,9 @@ jobs:
           echo "Local SQL proof source verified: $checked_out_sha"
 
       - name: Set up Supabase CLI
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v3.0.1
         with:
           version: 2.109.1
-
-      - name: Prepull fresh-database images in parallel
-        shell: bash
-        run: |
-          set -euo pipefail
-          service_table=$(supabase services)
-          printf '%s\n' "$service_table"
-
-          : > "$RUNNER_TEMP/supabase-db-images.txt"
-          for service in \
-            supabase/postgres \
-            supabase/gotrue \
-            supabase/realtime \
-            supabase/storage-api
-          do
-            version=$(printf '%s\n' "$service_table" | sed 's/│/|/g' | awk -F '|' -v service="$service" '
-              {
-                image = $1
-                version = $2
-                gsub(/^[[:space:]]+|[[:space:]]+$/, "", image)
-                gsub(/^[[:space:]]+|[[:space:]]+$/, "", version)
-                if (image == service) {
-                  print version
-                  exit
-                }
-              }
-            ')
-            if [ -z "$version" ]; then
-              echo "::error title=Supabase service version missing::Could not resolve $service from supabase services."
-              exit 1
-            fi
-            echo "ghcr.io/${service}:${version}" >> "$RUNNER_TEMP/supabase-db-images.txt"
-          done
-
-          echo "Fresh-database bootstrap images:"
-          cat "$RUNNER_TEMP/supabase-db-images.txt"
-          while IFS= read -r image; do
-            pulled=false
-            for attempt in 1 2 3 4 5; do
-              if docker pull "$image"; then
-                pulled=true
-                break
-              fi
-              if [ "$attempt" -lt 5 ]; then
-                echo "Retrying rate-limited container registry image $image (attempt $((attempt + 1))/5)"
-                sleep "$((attempt * 5))"
-              fi
-            done
-            if [ "$pulled" != "true" ]; then
-              echo "::error title=Supabase bootstrap image unavailable::Failed to pull $image after 5 bounded attempts."
-              exit 1
-            fi
-          done < "$RUNNER_TEMP/supabase-db-images.txt"
 
       - name: Execute Auction lifecycle SQL tests on a fresh local database
         shell: bash
