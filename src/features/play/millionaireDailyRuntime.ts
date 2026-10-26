@@ -21,6 +21,7 @@ import {
   millionaireFutureEditorialDailyRun,
 } from "./millionaireDailyQuestionBank";
 import { footballThemedMillionaireRunForDay } from "./footballTeamThemeDailyPacks";
+import { MILLIONAIRE_FUTURE_TARGETED_REWRITES } from "./millionaireEditorialFutureErrata";
 import type { OfficialDailySetupPublication } from "./todaysChallengeRuntime";
 import {
   FOOTBALL_FUTURE_WEIGHTED_CYCLE,
@@ -305,6 +306,28 @@ function futureMillionaireErrata(
 ): MillionaireRun {
   if (day < "2026-10-27") return run;
   return run.map((question, index) => {
+    const newQuestion = MILLIONAIRE_FUTURE_TARGETED_REWRITES[`${league}:${runIndex}:${index}`];
+    if (newQuestion) {
+      // Do not mutate the legacy question authority or any persisted result.
+      // With independent future v6 IDs even historic caches remain auditable.
+      return {
+        ...question,
+        id: newQuestion.id,
+        type: newQuestion.type,
+        prompt: newQuestion.prompt,
+        choices: MILLIONAIRE_CHOICE_IDS.map((id, choiceIndex) => ({
+          id,
+          text: newQuestion.choices[choiceIndex]!,
+        })) as MillionaireRuntimeQuestion["choices"],
+        correctChoiceId: "A",
+        explanation: newQuestion.explanation,
+        statSheet: newQuestion.statSheet,
+        fiftyFifty: {
+          survivorChoiceIds: ["A", "B"],
+          removalChoiceIds: ["C", "D"],
+        },
+      };
+    }
     // In January 2026 Stafford became a first-team All-Pro; the legacy
     // "never first-team All-Pro" question is factually false.
     if (league === "nfl" && runIndex === 0 && index === 5) {
