@@ -494,7 +494,7 @@ const TEXAS_AM_SPORTS_FEUD_FAST: readonly SportsFeudAuthoredQuestion[] = [
       answer("Michigan", ["Michigan Wolverines", "Wolverines"]),
       answer("Washington", ["Washington Huskies", "Huskies"]),
       answer("Clemson", ["Clemson Tigers"]),
-      answer("Ohio State", ["OSU", "Ohio State Buckeyes", "Buckeyes"]),
+      answer("Ohio State", ["Ohio State Buckeyes", "Buckeyes"]),
     ],
     alsoAcceptedAnswers: [
       answer("Arkansas", ["Arkansas Razorbacks", "Razorbacks"]),
