@@ -28,7 +28,7 @@ describe("UFC monthly championship cutover", () => {
     expect(migration).toContain("event.status <> 'complete'");
     expect(migration).toContain("date '2026-12-02'");
     expect(migration).toContain("date '2027-01-01'");
-    expect(migration).toContain("date '2026-10-19'");
+    expect(migration).toContain("date ''2026-10-19''");
     expect(migration).toContain("date ''2026-10-12''");
     expect(migration).toContain("return null; end if");
     expect(migration).not.toContain("delete from private.daily_challenge_history");
