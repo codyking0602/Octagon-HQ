@@ -6,18 +6,15 @@ export function sourceReviewBlockers(evidence, findings) {
     throw new Error("Complete monitor evidence and findings required");
   const blockers=new Set();
   for(const entry of evidence) {
-    if(entry.type==="flex-inheritance-blocker")
+    if(entry.type==="flex-inheritance-blocker" && entry.sport==="nfl")
       blockers.add("invalid-flex-priority:"+entry.sport+":"+entry.team+":"+entry.player);
     if(entry.type==="source-integrity-review")
       blockers.add("source-integrity-review:"+String(entry.source??"unknown"));
-    if(entry.type==="factual-correction" &&
-       Array.isArray(entry.newUnauditedSchools) && entry.newUnauditedSchools.length)
-      blockers.add("cfb-unaudited-live-ap-schools:"+entry.newUnauditedSchools.length);
   }
-  const missing={nfl:0,cfb:0,ufc:0};
-  const coaching={nfl:0,cfb:0};
+  const missing={nfl:0,ufc:0};
+  const coaching={nfl:0};
   const unranked={ufc:0};
-  const unknown={nfl:0,cfb:0,ufc:0};
+  const unknown={nfl:0,ufc:0};
   for(const finding of findings) {
     if(!Object.hasOwn(missing,finding.sport)) continue;
     const status=finding.sourceStatus;
