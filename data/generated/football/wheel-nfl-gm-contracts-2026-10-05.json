@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "version": "nfl-gm-contracts-2026-10-05-v1",
-  "snapshotDate": "2026-10-05",
+  "version": "nfl-gm-contracts-2026-10-26-two-verified-corrections-v2",
+  "snapshotDate": "2026-10-26",
   "salaryBasis": "Current active contract APY from OverTheCap via nflverse",
   "gameContractRule": "Real contracts ending in 2026 or 2027 => 1YR; contracts covering all three seasons through 2028 or later => 3YR.",
   "threeYearWindow": [
@@ -15030,5 +15030,16 @@
         "years": 3
       }
     }
-  ]
+  ],
+  "verification": {
+    "scope": "two-verified-2026-contract-amendments",
+    "sourceVerifiedAt": "2026-10-26",
+    "sourceLinks": [
+      "https://overthecap.com/player/gervon-dexter/10877/",
+      "https://www.atlantafalcons.com/news/falcons-dt-gervon-dexter-sr-agree-to-terms-on-four-year-contract-extension",
+      "https://overthecap.com/player/tank-dell/10893/"
+    ],
+    "otherPublishedRowsRetainedFrom": "2026-10-05",
+    "notes": "No other contracts, identities, grades or GM economy parameters updated"
+  }
 }
