@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import type { MillionaireRuntimeQuestion } from "../games/millionaireAuthority";
@@ -27,7 +28,9 @@ function parseRow(line: string) {
   return [...line.matchAll(/"((?:[^"]|"")*)"(?:,|$)/g)].map(match =>
     match[1]!.replace(/""/g, '"'));
 }
-const ledgerPath = new URL("../../../docs/audits/millionaire-question-disposition-ledger-20261025.csv", import.meta.url);
+// Vitest can transform import.meta.url into a non-file URL in CI.
+// Locate the tracked ledger from the checkout root instead of module metadata.
+const ledgerPath = resolve(process.cwd(), "docs/audits/millionaire-question-disposition-ledger-20261025.csv");
 const [heading, ...lines] = readFileSync(ledgerPath, "utf8").trim().split("\n");
 const keys = parseRow(heading!);
 const ledger = lines.map(line =>
