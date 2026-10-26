@@ -91,7 +91,9 @@ test("verified GM bytes do not auto-approve material contracts or economy",()=>f
   const got=inspectStagedEvidence(root,sha,now);
   assert.equal(got.stages.gm.status,"gm-contract-review-held");
   assert.equal(got.stages.gm.certified,false);
-  assert.equal(got.blockers.includes("nfl-gm-economy-regression-pending"),true);
+  assert.equal(got.stages.gm.economyRegressionVerified,true);
+  assert.equal(got.blockers.includes("nfl-gm-economy-regression-pending"),false);
+  assert.equal(got.blockers.includes("nfl-gm-live-contract-source-comparison-pending"),true);
 }));
 test("UFC profile rows never imply approved ranked or active population",()=>fixture(root=>{
   save(root,"ufc",{
