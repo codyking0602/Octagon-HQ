@@ -146,7 +146,6 @@ describe("NBA Daily lean gameplay equivalence", () => {
     ];
     for (const item of cases) {
       const context = initial(item.day, "nba-daily-owner-prelaunch-v1", item.gameType);
-      const evidence = (context.privateSetupEvidence.rounds as Value[])[0]!.private_setup_evidence as Value;
       const action = item.gameType === "hit_the_number"
         ? { fighter_id: ((context.publicState.active_round as Value).available_subject_ids as string[])[0] ?? (context.publicState.active_round as Value).available_subject_ids }
         : item.action;
