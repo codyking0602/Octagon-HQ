@@ -20,7 +20,15 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       const all = Array.from({ length: 15 }, (_, i) => millionaireFutureEditorialDailyRun(league, i));
       expect(all).toHaveLength(15);
       for (let i = 0; i < 10; i += 1) {
-        expect(all[i]).toEqual(millionaireDailyRun(league, i));
+        if (league === "ufc" && i >= 6 && i <= 8) {
+          // UFC 7–9 are deliberately new future-only questions; their legacy
+          // IDs, historical proofs and original bank remain unchanged.
+          const historical = millionaireDailyRun(league, i);
+          expect(historical[0]!.id).not.toBe(all[i]![0]!.id);
+          expect(new Set(all[i]!.map(q => normalized(answer(q)))).size).toBe(8);
+        } else {
+          expect(all[i]).toEqual(millionaireDailyRun(league, i));
+        }
       }
       const ids = all.flat().map(q => q.id);
       expect(new Set(ids).size).toBe(120);
@@ -33,8 +41,9 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
-  it("checks new ladders for shape, distinct answer identities, answer leaks and no Q8 lifelines", () => {
-    for (const league of leagues) for (let i = 10; i < 15; i += 1) {
+  it("checks new and diversified UFC ladders for shape, distinct answers, leaks and no Q8 lifelines", () => {
+    for (const league of leagues) for (let i = 0; i < 15; i += 1) {
+      if (i < 10 && !(league === "ufc" && i >= 6 && i <= 8)) continue;
       const run = millionaireFutureEditorialDailyRun(league, i);
       expect(run).toHaveLength(8);
       expect(new Set(run.map(q => normalized(answer(q)))).size).toBe(8);
