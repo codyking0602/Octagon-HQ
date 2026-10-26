@@ -51,7 +51,7 @@ def source_index(rows, season):
         raise ValueError("Weekly player production dataset lacks minimum coverage")
     return source,max(observed_weeks)
 
-def metric_for_window(games, family):
+def metric_for_window(games, family, enforce_floor=True):
     numerator_fields,denominator_fields,min_attempts,_=METRICS[family]
     fields=(*numerator_fields,*(denominator_fields or ()))
     if any(any(game.get(k) is None for k in fields) for game in games):
@@ -62,7 +62,7 @@ def metric_for_window(games, family):
                      if denominator_fields else len(games))
     except (TypeError,ValueError,OverflowError):
         return None,"non-numeric-source-metric"
-    if denominator<min_attempts or denominator<=0:
+    if (enforce_floor and denominator<min_attempts) or denominator<=0:
         return None,"insufficient-position-specific-opportunities"
     if denominator_fields and numerator<0:
         return None,"negative-production-source-metric"
@@ -112,7 +112,15 @@ def review_production_evidence(rows,season,priorities,at):
         # Two independent windows, minimum opportunity volume, and BOTH a
         # material absolute and relative movement. This is only a review signal.
         delta=current-previous
-        moved=abs(delta)>=threshold and abs(delta)>=max(abs(previous),1)*0.35
+        concordant=0
+        for game in recent:
+            single,reason=metric_for_window([game],family,enforce_floor=False)
+            if not reason and single is not None and (single-previous)*delta>0 \
+               and abs(single-previous)>=threshold*0.6:
+                concordant+=1
+        # Prevent a lone spectacular/awful game from driving a multiweek flag.
+        moved=(abs(delta)>=threshold and abs(delta)>=max(abs(previous),1)*0.35
+               and concordant>=2)
         decisions.append({**descriptor,
            "classification":"priority-performance-review" if moved else "no-sustained-metric-shift",
            "reason":"multiweek-position-metric-shift" if moved else "no-material-multiweek-metric-shift",
