@@ -164,7 +164,14 @@ describe("daily challenge runtime cold-start isolation", () => {
     // The same canonical publisher handles today and the upcoming Central day.
     expect(runtime).toContain("async function materializeToday(admin: SupabaseClient, at?: string)");
     expect(runtime).toContain("async function materializeFootballToday(admin: SupabaseClient, at?: string)");
-    expect(runtime).toContain('at ? { p_at: at } : {}');
+    expect(runtime).toContain('p_sport: "ufc"');
+    expect(runtime).toContain('...(at ? { p_at: at } : {})');
+    const ufcPublisher = runtime.slice(
+      runtime.indexOf('async function materializeToday('),
+      runtime.indexOf('async function materializeFootballToday('),
+    );
+    expect(ufcPublisher).toContain('p_sport: "ufc"');
+    expect(ufcPublisher).not.toContain('at ? { p_at: at } : {});');
     expect(runtime).toContain("...(at ? { p_at: at } : {})");
     expect(runtime).toContain('timeZone: "America/Chicago"');
     expect(runtime).toContain("now.getTime() + 30 * 60 * 1000");
