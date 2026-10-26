@@ -11,6 +11,7 @@ import {
 } from "./core.mjs";
 import { wheelPriorityIdentityKeys } from "../wheel-monitor-census-policy.mjs";
 import { validateObservation } from "./observation-policy.mjs";
+import { fetchWithRetry } from "./fetch-policy.mjs";
 
 const root = resolve(import.meta.dirname, "../..");
 const repoRead = p => readFileSync(resolve(root, p), "utf8");
@@ -26,25 +27,6 @@ const evidence = [];
 
 function record(type, message, source, extra = {}) {
   evidence.push({type, message, source, checkedAt:at, ...extra});
-}
-async function fetchWithRetry(url, options = {}, attempts = 3) {
-  let last;
-  for (let i=0;i<attempts;i++) {
-    const ctl = new AbortController();
-    const timeout = setTimeout(()=>ctl.abort(), 15000);
-    try {
-      const r = await fetch(url, { ...options, signal:ctl.signal,
-        headers:{ "User-Agent":"OctagonHQ-WheelMonitor/3.0 (read-only)",
-          Accept:"application/json,text/html", ...options.headers }});
-      if (!r.ok) {
-        last = new Error(url + " returned HTTP " + r.status);
-        if (![429,500,502,503,504].includes(r.status)) throw last;
-      } else return r;
-    } catch (e) { last=e; if (i===attempts-1) break; }
-    finally { clearTimeout(timeout); }
-    if (i<attempts-1) await new Promise(ok=>setTimeout(ok, 500*(i+1)));
-  }
-  throw last ?? new Error("Source not available: " + url);
 }
 async function sql(query) {
   assert(sqlToken, "SUPABASE_ACCESS_TOKEN is required for live, complete coverage");
