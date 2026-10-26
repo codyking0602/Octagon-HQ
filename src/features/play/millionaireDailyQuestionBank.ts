@@ -17,6 +17,8 @@ type DailyQuestionSeed = {
   choices: readonly [string, string, string, string];
   answer: string;
   statSheet: string | null;
+  /** Optional editorial reveal; original historical seeds retain their existing explanation. */
+  explanation?: string;
 };
 
 const IDS = ["A", "B", "C", "D"] as const;
@@ -3001,7 +3003,7 @@ function runtimeQuestion(
       { id: "D"; text: string },
     ],
     correctChoiceId,
-    explanation: `${seed.answer} is the correct answer.`,
+    explanation: seed.explanation ?? `${seed.answer} is the correct answer.`, 
     statSheet: q8 ? null : seed.statSheet,
     fiftyFifty: {
       survivorChoiceIds,
@@ -3039,6 +3041,7 @@ type CandidateTuple = readonly [
   choices: readonly [string, string, string, string],
   answer: string,
   statSheet: string | null,
+  explanation?: string,
 ];
 const EDITORIAL_CANDIDATE_RUNS: Record<
   "nfl" | "cfb" | "ufc",
@@ -3069,8 +3072,8 @@ export function millionaireFutureEditorialDailyRun(
     // the Adesanya / St-Pierre / Khabib single-fighter legacy boards. IDs must
     // differ from immutable historic question IDs and persisted private proofs.
     const replacements = UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS[normalized - 6]!;
-    return replacements.map(([type, prompt, choices, answer, statSheet], index) => ({
-      ...runtimeQuestion(league, normalized, index, { type, prompt, choices, answer, statSheet }),
+    return replacements.map(([type, prompt, choices, answer, statSheet, explanation], index) => ({
+      ...runtimeQuestion(league, normalized, index, { type, prompt, choices, answer, statSheet, explanation }),
       id: `millionaire-ufc-editorial-v6-run-${normalized + 1}-q${index + 1}`,
     })) as unknown as MillionaireRun;
   }
@@ -3081,7 +3084,7 @@ export function millionaireFutureEditorialDailyRun(
   if (!seeds || seeds.length !== 8) {
     throw new Error(`Millionaire editorial ${league} run ${normalized + 1} is incomplete.`);
   }
-  return seeds.map(([type, prompt, choices, answer, statSheet], index) =>
-    runtimeQuestion(league, normalized, index, { type, prompt, choices, answer, statSheet }),
+  return seeds.map(([type, prompt, choices, answer, statSheet, explanation], index) =>
+    runtimeQuestion(league, normalized, index, { type, prompt, choices, answer, statSheet, explanation }),
   ) as unknown as MillionaireRun;
 }
