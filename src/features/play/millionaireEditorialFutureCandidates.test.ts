@@ -13,6 +13,22 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("preserves three sourced future-only editorial corrections in final candidate boards", () => {
+    const cfb = millionaireFutureEditorialDailyRun("cfb", 10)[7]!;
+    expect(answer(cfb)).toBe("Jeremiah Smith");
+    expect(cfb.prompt).toContain("56-yard third-and-11");
+    expect(cfb.statSheet).toBeNull();
+    const hendo = millionaireFutureEditorialDailyRun("ufc", 13)[1]!;
+    expect(answer(hendo)).toBe("Dan Henderson");
+    expect(hendo.prompt).toContain("right hand");
+    expect(hendo.prompt).not.toContain("jumping punch");
+    const kimbo = millionaireFutureEditorialDailyRun("ufc", 6)[5]!;
+    expect(answer(kimbo)).toBe("Roy Nelson");
+    expect(kimbo.prompt).toContain("ground-and-pound");
+    expect(kimbo.statSheet).toContain("mounted crucifix");
+    expect(kimbo.id).not.toBe(millionaireDailyRun("ufc", 6)[5]!.id);
+  });
+
   it("keeps the original ten-run bank unchanged while adding five new runs per league", () => {
     expect(MILLIONAIRE_DAILY_RUN_COUNT).toBe(10);
     expect(MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT).toBe(15);

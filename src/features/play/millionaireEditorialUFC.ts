@@ -33,7 +33,7 @@ export const ufcEditorialCandidateRuns = [
   ],
   [
     ["nicknames","Which former UFC flyweight champion is nicknamed The Assassin Baby?",["Brandon Moreno","Deiveson Figueiredo","Alexandre Pantoja","Kai Kara-France"],"Brandon Moreno","The Mexican fighter developed a four-fight rivalry with Deiveson Figueiredo."],
-    ["legends", "Who knocked out Michael Bisping with a jumping punch at UFC 100?", ["Dan Henderson", "Anderson Silva", "Vitor Belfort", "Wanderlei Silva"], "Dan Henderson", "The stoppage followed an overhand right remembered as an H-Bomb."],
+    ["legends", "Who knocked out Michael Bisping with a devastating right hand at UFC 100?", ["Dan Henderson", "Anderson Silva", "Vitor Belfort", "Wanderlei Silva"], "Dan Henderson", "The middleweight finish came in Round 2; the winner followed the knockout punch with a leaping forearm."],
     ["reality-tv-history", "Who coached the first season of The Ultimate Fighter opposite Chuck Liddell?", ["Randy Couture", "Tito Ortiz", "Ken Shamrock", "Rich Franklin"], "Randy Couture", "The inaugural reality-show season aired in early 2005."],
     ["reality-tv-history", "Who coached opposite Conor McGregor on Season 22 of The Ultimate Fighter?", ["Urijah Faber", "Chad Mendes", "Jose Aldo", "T.J. Dillashaw"], "Urijah Faber", "The 2015 season matched Team Europe against Team United States."],
     ["welterweight-history", "Who defeated B.J. Penn by stoppage at UFC 94 while defending the welterweight belt?", ["Georges St-Pierre", "Matt Hughes", "Jon Fitch", "Carlos Condit"], "Georges St-Pierre", "The corner stopped the contest after Round 4."],
