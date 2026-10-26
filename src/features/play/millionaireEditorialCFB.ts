@@ -9,7 +9,7 @@ export const cfbEditorialCandidateRuns = [
     ["rose-bowl-comebacks","Who quarterbacked USC’s 52–49 Rose Bowl comeback against Penn State in January 2017?",["Sam Darnold","Cody Kessler","Max Browne","Kedon Slovis"],"Sam Darnold","He threw five touchdown passes as USC erased a 14-point fourth-quarter deficit."],
     ["championship-history", "Which team beat top-ranked Miami in the Fiesta Bowl to win the 1986 season's national title?", ["Penn State", "Oklahoma", "Nebraska", "Notre Dame"], "Penn State", "The winning team intercepted Vinny Testaverde five times."],
     ["heisman-history", "Who won the Heisman Trophy as Colorado's star running back in 1994?", ["Rashaan Salaam", "Ron Dayne", "Eddie George", "Ricky Williams"], "Rashaan Salaam", "He rushed for more than 2,000 yards in his award-winning season."],
-    ["heisman-history", "Who won the exceptionally close 1985 Heisman vote over Iowa quarterback Chuck Long?", ["Bo Jackson", "Herschel Walker", "Doug Flutie", "Tim Brown"], "Bo Jackson", null],
+    ["heisman-history", "Who won the exceptionally close 1985 Heisman vote over Iowa quarterback Chuck Long?", ["Bo Jackson", "Herschel Walker", "Doug Flutie", "Tim Brown"], "Bo Jackson", null, "Auburn running back Bo Jackson edged Iowa quarterback Chuck Long by just 45 points in the 1985 Heisman vote, the closest result until 2009."],
   ],
   [
     ["campus-geography", "Which college football program plays its home games in Athens, Georgia?", ["Georgia", "Tennessee", "Auburn", "Clemson"], "Georgia", "The Bulldogs play their home games at Sanford Stadium."],
@@ -19,7 +19,7 @@ export const cfbEditorialCandidateRuns = [
     ["coaches", "Who led Florida State to its first national championship after the 1993 season?", ["Bobby Bowden", "Jimbo Fisher", "Mack Brown", "Steve Spurrier"], "Bobby Bowden", "The Seminoles won an Orange Bowl showdown against Nebraska."],
     ["passing-history", "Which quarterback won the 1989 Heisman while running Houston's high-powered Run and Shoot offense?", ["Andre Ware", "David Klingler", "Ty Detmer", "Colt Brennan"], "Andre Ware", "The winner produced huge passing totals under coach Jack Pardee."],
     ["offense-history", "Which quarterback guided Nebraska's explosive offense to the 1983 Orange Bowl against Miami?", ["Turner Gill", "Tommy Frazier", "Eric Crouch", "Scott Frost"], "Turner Gill", "His team scored more than 50 points per game in the regular season."],
-    ["streaks", "Which school ended Oklahoma's 47-game winning streak in 1957?", ["Notre Dame", "Texas", "Nebraska", "Kansas"], "Notre Dame", null],
+    ["streaks", "Which school ended Oklahoma's 47-game winning streak in 1957?", ["Notre Dame", "Texas", "Nebraska", "Kansas"], "Notre Dame", null, "Notre Dame shocked Oklahoma 7-0 on November 16, 1957, ending Bud Wilkinson's unbeaten streak at 47 consecutive games."],
   ],
   [
     ["mascots", "What is the name of Ohio State's famous mascot?", ["Brutus Buckeye", "Herbie Husker", "Bucky Badger", "Sparty"], "Brutus Buckeye", "The character is based on the state tree's nut."],
@@ -29,7 +29,7 @@ export const cfbEditorialCandidateRuns = [
     ["rivalry-moments", "Who scored Michigan State's winning touchdown after Michigan mishandled a punt snap in 2015?", ["Jalen Watts-Jackson", "LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson", "The return stunned the home crowd on the final play in Ann Arbor."],
     ["big-12", "Which quarterback led Baylor to its first Big 12 championship in 2013?", ["Bryce Petty", "Robert Griffin III", "Nick Florence", "Seth Russell"], "Bryce Petty", "He threw 32 touchdown passes during an 11-win regular season."],
     ["underdogs", "Who coached Hawaii's unbeaten 2007 regular season before its Sugar Bowl loss?", ["June Jones", "Nick Rolovich", "Greg McMackin", "Todd Graham"], "June Jones", "The team's run-and-shoot offense featured quarterback Colt Brennan."],
-    ["national-championship-quarterbacks", "Who started at quarterback for Michigan's undefeated 1997 national-title team?", ["Brian Griese", "Tom Brady", "Scott Dreisbach", "Elvis Grbac"], "Brian Griese", null],
+    ["national-championship-quarterbacks", "Who started at quarterback for Michigan's undefeated 1997 national-title team?", ["Brian Griese", "Tom Brady", "Scott Dreisbach", "Elvis Grbac"], "Brian Griese", null, "Brian Griese started at quarterback for Michigan's unbeaten 1997 team and threw three touchdowns against Washington State in the Rose Bowl."],
   ],
   [
     ["stadiums", "Which SEC football program plays its home games at Bryant-Denny Stadium?", ["Alabama", "Auburn", "LSU", "Georgia"], "Alabama", "The stadium is in Tuscaloosa near the university’s Walk of Champions."],
@@ -39,7 +39,7 @@ export const cfbEditorialCandidateRuns = [
     ["heisman-history", "Who won the 2002 Heisman before Matt Leinart's and Reggie Bush's USC wins?", ["Carson Palmer", "Matt Barkley", "Mark Sanchez", "John David Booty"], "Carson Palmer", "The winner later became the No. 1 overall pick in the NFL Draft."],
     ["nfl-pipeline", "Which SEC school did Broncos running back Terrell Davis play for?", ["Georgia", "Florida", "Auburn", "Tennessee"], "Georgia", "He transferred after starting his college career at Long Beach State."],
     ["undefeated-seasons", "Which Arizona State quarterback led an undefeated 1996 regular season before a narrow Rose Bowl loss to Ohio State?", ["Jake Plummer", "Rudy Carpenter", "Andrew Walter", "Taylor Kelly"], "Jake Plummer", "The future NFL starter earned the nickname Jake the Snake and finished third in Heisman voting."],
-    ["coaching-legends", "Who was Oklahoma's head coach during its 47-game winning streak in the 1950s?", ["Bud Wilkinson", "Barry Switzer", "Bennie Owen", "Bob Stoops"], "Bud Wilkinson", null],
+    ["coaching-legends", "Who was Oklahoma's head coach during its 47-game winning streak in the 1950s?", ["Bud Wilkinson", "Barry Switzer", "Bennie Owen", "Bob Stoops"], "Bud Wilkinson", null, "Bud Wilkinson coached Oklahoma throughout its 47-game winning streak, which Notre Dame ended with a 7-0 upset in November 1957."],
   ],
   [
     ["campus-geography", "Which college football program is based in South Bend, Indiana?", ["Notre Dame", "Purdue", "Indiana", "Ball State"], "Notre Dame", "Its storied home stadium opened for football in 1930."],
@@ -49,6 +49,6 @@ export const cfbEditorialCandidateRuns = [
     ["undefeated-seasons", "Who coached Auburn's undefeated 2004 football team?", ["Tommy Tuberville", "Gus Malzahn", "Gene Chizik", "Pat Dye"], "Tommy Tuberville", "The Tigers finished 13–0 with a Sugar Bowl victory."],
     ["historical-titles", "Which program won the 1976 national championship behind Heisman-winning running back Tony Dorsett?", ["Pittsburgh", "Penn State", "Syracuse", "West Virginia"], "Pittsburgh", "The Panthers finished 12–0 under coach Johnny Majors."],
     ["coaching-history", "Who coached Washington to a 12-0 season and a share of the 1991 national championship?", ["Don James", "Terry Donahue", "Dennis Erickson", "Mike Bellotti"], "Don James", "The Huskies finished first in the coaches' poll after a Rose Bowl win over Michigan."],
-    ["army-football", "Which Army football star was nicknamed Mr. Outside alongside Doc Blanchard's Mr. Inside?", ["Glenn Davis", "Felix Blanchard", "Red Grange", "Tom Harmon"], "Glenn Davis", null],
+    ["army-football", "Which Army football star was nicknamed Mr. Outside alongside Doc Blanchard's Mr. Inside?", ["Glenn Davis", "Felix Blanchard", "Red Grange", "Tom Harmon"], "Glenn Davis", null, "Army's Glenn Davis earned the nickname Mr. Outside alongside Felix Doc Blanchard's Mr. Inside and won the 1946 Heisman Trophy."],
   ],
 ] as const;
