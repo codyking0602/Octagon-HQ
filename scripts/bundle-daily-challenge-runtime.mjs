@@ -80,6 +80,12 @@ const bundles = [
     requiredExports: ["advanceFamilyFeudDailyCore"],
   },
   {
+    label: "NBA Who Am I canonical lean answer runtime",
+    entry: resolve(repoRoot, "src/features/play/whoAmITwoRoundDailyRuntime.ts"),
+    fileName: "who-am-i-advance.generated.mjs",
+    requiredExports: ["advanceCanonicalWhoAmIDailyRuntime"],
+  },
+  {
     label: "NBA daily advance runtime",
     entry: resolve(repoRoot, "src/features/nba/nbaDailyServerAdvance.ts"),
     fileName: "nba-advance.generated.mjs",
