@@ -11,6 +11,7 @@ import {
 } from "./core.mjs";
 import { wheelPriorityIdentityKeys } from "../wheel-monitor-census-policy.mjs";
 import { validateObservation } from "./observation-policy.mjs";
+import { verifyHeadshots } from "./headshot-policy.mjs";
 import { fetchWithRetry } from "./fetch-policy.mjs";
 
 const root = resolve(import.meta.dirname, "../..");
@@ -101,7 +102,8 @@ async function liveCatalog() {
   const ufc = ufcRows.map(x=>({
     sport:"ufc", division:x.division, name:x.display_name, grade:Number(x.hidden_grade),
     rank:x.ranking, champion:x.is_champion, fighterId:x.fighter_id,
-    photo:!!x.headshot_url, rankingsAsOf:x.rankings_as_of, rankingSource:x.ranking_source,
+    photo:!!x.headshot_url, headshotUrl:x.headshot_url,
+    rankingsAsOf:x.rankings_as_of, rankingSource:x.ranking_source,
   }));
   const nflLive = cfbRows.filter(x=>NFL_CODES.has(x.team_code)).map(x=>({
     sport:"nfl", team:x.team_code, family:x.position_group, name:x.display_name,nameKey:x.name_key, gradeVersion:x.grade_version,
@@ -404,6 +406,11 @@ async function main() {
   // A malformed official table cannot seed either kind of retained artifact.
   assert(!ufcRanks.structuralWarnings.length,
     "Official UFC rankings malformed; previous observations remain authoritative");
+  const headshots=await verifyHeadshots(db.ufc,{root});
+  for(const finding of [...headshots.missing,...headshots.unverified])
+    record("ufc-headshot-source-unverified",finding.reason,
+      finding.url??"live:private.wheel_ufc_fighters",{
+        fighterId:finding.fighterId,division:finding.division});
   const {result,snapshot}=reconcile([...nfl,...cfbCoverage.selected,...db.ufc],
     sourceRosters,ufcRanks,previous);
   const orphaned=(previous?.identities??[]).filter(x=>!snapshot.some(y=>identity(x)===identity(y)));
@@ -437,7 +444,9 @@ async function main() {
     "nfl-gm-live-contract-source-comparison-pending",
     "nfl-gm-economy-regression-pending",
     "independent-head-coach-verification-pending",
-    "performance-evidence-and-headshot-http-checks-pending",
+    "performance-evidence-pending",
+    ...headshots.missing.map(x=>"ufc-headshot-missing:"+x.fighterId),
+    ...headshots.unverified.map(x=>"ufc-headshot-http-unverified:"+x.fighterId),
     "ufc-unranked-source-coverage-pending",
   ];
   const readiness=snapshotReadiness(blockers);
@@ -453,7 +462,11 @@ async function main() {
       nfl:{approved:nflCoverage.expected,graded:nflCoverage.selected.length,missing:nflCoverage.missing,stale:nflCoverage.stale.length},
       cfb:{approved:cfbCoverage.expected,graded:cfbCoverage.selected.length,missing:cfbCoverage.missing,stale:cfbCoverage.stale.length},
       ufc:{active:db.ufc.length,officialSourceWarnings:ufcRanks.structuralWarnings,
-        officialRankTies:ufcRanks.officialTies},
+        officialRankTies:ufcRanks.officialTies,headshots:{
+          total:headshots.total,uniqueUrls:headshots.uniqueUrls,
+          verified:headshots.verified,missing:headshots.missing.length,
+          unverified:headshots.unverified.length,
+          localOrRemoteCounts:headshots.localOrRemoteCounts}},
     },
     reviews:result.filter(row=>row.classification!=="no-meaningful-change"),
     rosterSourceGaps:result.filter(x=>x.sourceStatus==="coaching-source-needed"
@@ -465,7 +478,8 @@ async function main() {
     errors,
     gradeChangesApplied:0, ratingPrCreated:false, gmContractsRefreshed:false,
     outstandingStages:["editorial-performance-review","GM-contract-snapshot-comparison",
-      "live-source-grade-headshot-HTTP-checks","owner-approved-factual-publishing"],
+      ...(headshots.fullyVerified?[]:["ufc-headshot-source-reconciliation"]),
+      "owner-approved-factual-publishing"],
   };
   mkdirSync(outputDir,{recursive:true});
   writeFileSync(resolve(outputDir,"report.json"),JSON.stringify(output,null,2)+"\n");
