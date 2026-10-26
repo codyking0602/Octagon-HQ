@@ -152,10 +152,10 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "UFC event coverage", url: "https://www.ufc.com/news/ufc-139-main-event-results-epic-henderson-ekes-rua-classic", supportingDetail: "Official report records Henderson's 48-47 unanimous decision over Rua." },
   ),
   "ufc:5:7": q8(
-    "millionaire-ufc-future-holloway-gaethje-300-q8", "bmf-buzzer-knockouts",
-    "Who knocked out Justin Gaethje with one second remaining in their UFC 300 BMF title fight?",
-    ["Max Holloway", "Dustin Poirier", "Charles Oliveira", "Michael Chandler"], "Max Holloway",
-    "Max Holloway knocked out Justin Gaethje with a right hand at 4:59 of Round 5 at UFC 300 after inviting him to exchange punches in the center of the Octagon.",
-    { authority: "UFC", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-300-pereira-vs-hill?language_content_entity=en", supportingDetail: "Official UFC 300 results confirm Holloway's 4:59 Round 5 knockout for the BMF belt." },
+    "millionaire-ufc-future-aspinall-pavlovich-295-q8", "interim-heavyweight-title",
+    "Who knocked out Sergei Pavlovich in 69 seconds to win the interim UFC heavyweight title at UFC 295?",
+    ["Tom Aspinall", "Ciryl Gane", "Stipe Miocic", "Curtis Blaydes"], "Tom Aspinall",
+    "Tom Aspinall knocked out Sergei Pavlovich at 1:09 of the opening round of their UFC 295 bout in November 2023 to win the interim heavyweight championship.",
+    { authority: "UFC", url: "https://www.ufc.com/event/ufc-295", supportingDetail: "UFC 295 results record Aspinall's first-round knockout over Pavlovich for the interim heavyweight title." },
   ),
 };
