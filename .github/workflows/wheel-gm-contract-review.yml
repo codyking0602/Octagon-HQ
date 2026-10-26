@@ -34,6 +34,16 @@ jobs:
           node --check scripts/wheel-monitor/gm-contract-review.mjs
           node --test scripts/wheel-monitor/gm-contract-compare.nodecheck.mjs
           python -m unittest discover -s scripts/wheel-monitor -p 'test_gm_contract_term.py' -v
+      - name: Independently inspect nflverse contract asset publication date
+        id: provenance
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node --check scripts/wheel-monitor/gm-contract-provenance.mjs
+          node --test scripts/wheel-monitor/gm-contract-provenance.nodecheck.mjs
+          node scripts/wheel-monitor/gm-contract-provenance.mjs \
+            --out=tmp/wheel-monitor/gm/provider-provenance.json
       - name: Install version-pinned read-only nflverse provider
         run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
       - name: Build ephemeral live-source contract evidence
@@ -71,6 +81,7 @@ jobs:
           name: wheel-gm-contract-source-review
           path: |
             tmp/wheel-monitor/gm/provider-report.json
+            tmp/wheel-monitor/gm/provider-provenance.json
             tmp/wheel-monitor/gm/comparison.json
           if-no-files-found: warn
           retention-days: 30
