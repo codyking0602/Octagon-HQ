@@ -115,15 +115,6 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     explanation: "Frank Solich coached Nebraska to the 2001 season's Rose Bowl BCS championship game, losing to Miami.",
     evidence: [{ authority: "Nebraska Athletics", url: "https://huskers.com/sports/football/roster/season/2001/staff/frank-solich", supportingDetail: "Nebraska identifies Solich as 2001 head coach and describes its BCS title game appearance." }],
   },
-  "ufc:0:6": {
-    id: "millionaire-ufc-31-newton-champion-q7",
-    type: "welterweight-history",
-    prompt: "Who submitted Pat Miletich to become UFC welterweight champion at UFC 31?",
-    choices: ["Carlos Newton", "B.J. Penn", "Matt Hughes", "Robbie Lawler"], answer: "Carlos Newton",
-    statSheet: "The championship changed hands via a third-round submission in Atlantic City.",
-    explanation: "Carlos Newton submitted Pat Miletich at UFC 31 on May 4, 2001, winning the welterweight championship.",
-    evidence: [{ authority: "UFC", url: "https://www.ufc.com/news/ufc-welterweight-title-lineage?language_content_entity=en", supportingDetail: "Official title lineage records Newton beating Miletich via submission at UFC 31." }],
-  },
   "ufc:4:1": {
     id: "millionaire-ufc-189-lawler-macdonald-q2",
     type: "classic-fights",
