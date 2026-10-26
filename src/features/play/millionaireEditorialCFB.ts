@@ -2,7 +2,7 @@
 // These cannot be included in an approved publication inventory without evidence review.
 export const cfbEditorialCandidateRuns = [
   [
-    ["legends", "Which school did two-sport star Bo Jackson play college football for?", ["Auburn", "Alabama", "Georgia", "Florida"], "Auburn", "The runner won the 1985 Heisman Trophy."],
+    ["stadiums","Which college football program calls Ben Hill Griffin Stadium 'The Swamp'?",["Florida","Florida State","Miami","South Carolina"],"Florida","The stadium is in Gainesville and originally opened in 1930."],
     ["stadiums", "Which Pac-12-era program plays its home games at Autzen Stadium?", ["Oregon", "Oregon State", "Washington", "Washington State"], "Oregon", "The Ducks' famously loud venue is in Eugene."],
     ["upsets", "Who quarterbacked Texas Tech to its dramatic 2008 victory over No. 1 Texas?", ["Graham Harrell", "Colt McCoy", "Michael Crabtree", "Sam Bradford"], "Graham Harrell", "The winning play was a late touchdown pass to Michael Crabtree."],
     ["coaches", "Who coached Nebraska to its dominant 1995 national championship season?", ["Tom Osborne", "Frank Solich", "Bob Devaney", "Barry Switzer"], "Tom Osborne", "The Cornhuskers routed Florida in the Fiesta Bowl to finish 12–0."],
