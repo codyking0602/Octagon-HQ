@@ -24,8 +24,15 @@ export function readOfficialAthleteProfile(html, expectedName) {
   const matched=heading.find(x=>nameKey(x)===nameKey(expectedName));
   if(!matched) return {status:"identity-unverified",designation:null,
     observedName:heading[0]??null};
+  // UFC status can be in a label plus sibling element; HTML textContent
+  // otherwise concatenates headings with neighboring fields without spaces.
+  const labels=[...doc.querySelectorAll("*")].filter(node=>
+    node.children.length===0 && node.textContent.trim().toLowerCase()==="status");
+  const contexts=labels.map(node=>
+    node.parentElement?.textContent?.replace(/\s+/g," ")??"");
   const text=doc.body?.textContent?.replace(/\s+/g," ").trim()??"";
-  const match=text.match(/Status\s+(Not Fighting|Active|Fighting)\b/i);
+  const match=contexts.map(context=>context.match(/Status\s*(Not Fighting|Active|Fighting)\b/i))
+    .find(Boolean)??text.match(/Status\s*(Not Fighting|Active|Fighting)\b/i);
   if(!match)return {status:"designation-unverified",designation:null,observedName:matched};
   const designation=match[1].toLowerCase().replace(/\s+/g,"-");
   return {status:designation==="active"||designation==="fighting"
