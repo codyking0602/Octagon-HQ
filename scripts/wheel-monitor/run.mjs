@@ -62,60 +62,37 @@ function footballCatalog() {
   return nfl;
 }
 function priorityTeams() {
+  // CFB player grades and rosters are intentionally excluded from the weekly
+  // rating monitor. AP Top 25 factual checks run in an independent workflow.
   const nfl=readJson("data/generated/football/wheel-football-priorities.json").teams;
-  const cfb=readJson("data/generated/football/cfb/wheel-football-current-priorities-2026.json").teams;
-  const extras=readdirSync(resolve(root,"data/curated/football/cfb"))
-    .filter(file=>/^wheel-football-.+-grading-audit-\d{4}-\d\d-\d\d\.json$/.test(file))
-    .map(file=>readJson("data/curated/football/cfb/"+file))
-    .filter(row=>row.status==="audit-locked-runtime" && row.auditResult?.result==="passed");
-  const teamInfo = Object.fromEntries(Object.entries(cfb).map(([key,t])=>[key, {name:t.school,id:String(t.espnId),buckets:t}]));
-  for (const extra of extras) {
-    assert(extra.auditResult?.priorityAndGradeStatus==="locked"
-      && extra.eaDiscrepancyAudit?.result==="passed"
-      && extra.coachExternalAudit?.result==="passed",
-      "Incomplete CFB extra-team full audit");
-    teamInfo[extra.schoolId] = { name:extra.priority?.school ?? extra.schoolId,
-      id:String(extra.priority?.espnId), buckets:extra.priority };
-  }
-  for (const [sport, teams] of [
-    ["nfl", nfl],
-    ["cfb", Object.fromEntries(Object.entries(teamInfo).map(([id,team])=>[id,team.buckets]))],
-  ]) {
-    for (const [team, buckets] of Object.entries(teams)) {
-      const allowed = new Set(["RB","WR","TE"].flatMap(f=>(buckets[f]??[]).map(nameKey)));
-      for (const player of buckets.Flex??[]) if (!allowed.has(nameKey(player))) {
-        record("flex-inheritance-blocker", "Flex name absent from its RB/WR/TE shortlist",
-          sport==="nfl"?"data/generated/football/wheel-football-priorities.json":
-          "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
-          {sport,team,player});
-      }
+  for (const [team,buckets] of Object.entries(nfl)) {
+    const allowed=new Set(["RB","WR","TE"].flatMap(f=>(buckets[f]??[]).map(nameKey)));
+    for (const player of buckets.Flex??[]) if(!allowed.has(nameKey(player))) {
+      record("flex-inheritance-blocker","Flex name absent from RB/WR/TE shortlist",
+        "data/generated/football/wheel-football-priorities.json",
+        {sport:"nfl",team,player});
     }
   }
   assert(Object.keys(nfl).length===32,"Expected all 32 NFL audited teams");
-  assert(Object.keys(teamInfo).length>=69, "Missing 68-school base or Boise extra-team audit");
-  return {nfl,teamInfo,cfb};
+  return {nfl};
 }
 async function liveCatalog() {
-  const [ufcRows, cfbRows, apRows] = await Promise.all([
+  const nflCodes=[...NFL_CODES].map(code=>"'"+code+"'").join(",");
+  const [ufcRows,nflRows]=await Promise.all([
     sql("select fighter_id, display_name, division, ranking, is_champion, hidden_grade, headshot_url, rankings_as_of, ranking_source from private.wheel_ufc_fighters where active = true order by division, fighter_id"),
-    sql("select distinct on (team_code, position_group, name_key) team_code, position_group, name_key, display_name, hidden_grade, grade_version, effective_date from private.wheel_football_grade_authority order by team_code, position_group, name_key, effective_date desc"),
-    sql("select season, poll_date, rank, team_code from private.wheel_football_ap_top_25 where poll_date = (select max(poll_date) from private.wheel_football_ap_top_25) order by rank"),
+    sql("select distinct on (team_code, position_group, name_key) team_code, position_group, name_key, display_name, hidden_grade, grade_version, effective_date from private.wheel_football_grade_authority where team_code in ("+nflCodes+") order by team_code, position_group, name_key, effective_date desc"),
   ]);
-  const ufc = ufcRows.map(x=>({
-    sport:"ufc", division:x.division, name:x.display_name, grade:Number(x.hidden_grade),
-    rank:x.ranking, champion:x.is_champion, fighterId:x.fighter_id,
-    photo:!!x.headshot_url, headshotUrl:x.headshot_url,
-    rankingsAsOf:x.rankings_as_of, rankingSource:x.ranking_source,
+  const ufc=ufcRows.map(x=>({
+    sport:"ufc",division:x.division,name:x.display_name,grade:Number(x.hidden_grade),
+    rank:x.ranking,champion:x.is_champion,fighterId:x.fighter_id,
+    photo:!!x.headshot_url,headshotUrl:x.headshot_url,
+    rankingsAsOf:x.rankings_as_of,rankingSource:x.ranking_source,
   }));
-  const nflLive = cfbRows.filter(x=>NFL_CODES.has(x.team_code)).map(x=>({
-    sport:"nfl", team:x.team_code, family:x.position_group, name:x.display_name,nameKey:x.name_key, gradeVersion:x.grade_version,
-    grade:Number(x.hidden_grade),
+  const nflLive=nflRows.map(x=>({
+    sport:"nfl",team:x.team_code,family:x.position_group,name:x.display_name,
+    nameKey:x.name_key,gradeVersion:x.grade_version,grade:Number(x.hidden_grade),
   }));
-  const cfb = cfbRows.filter(x=>!NFL_CODES.has(x.team_code)).map(x=>({
-    sport:"cfb", team:x.team_code, family:x.position_group, name:x.display_name,nameKey:x.name_key, gradeVersion:x.grade_version,
-    grade:Number(x.hidden_grade),
-  }));
-  return {ufc,cfb,nflLive,apRows};
+  return {ufc,nflLive};
 }
 function extractUfcRankings(html) {
   const doc=new JSDOM(html).window.document;
@@ -173,40 +150,6 @@ async function ufcExternal() {
     url,tie);
   return {url,...data};
 }
-function apSnapshotSource() {
-  const text=repoRead("src/features/back-room/wheelFootballApTop25.ts");
-  const rows=[...text.matchAll(/\{ rank: (\d+), schoolId: "([^"]+)" \}/g)]
-    .map(m=>({rank:Number(m[1]),team:m[2]}));
-  assert(rows.length===25, "Checked-in AP snapshot is not 25 teams");
-  return rows;
-}
-async function apExternal(teamInfo, applied) {
-  const url="https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings";
-  const body=await (await fetchWithRetry(url)).json();
-  const poll=body.rankings?.find(x=>/AP Top 25/i.test(x.name ?? x.shortName ?? ""));
-  assert(poll, "ESPN AP Top 25 mirror unavailable");
-  const rows=(poll.ranks??[]).map(row=>({rank:Number(row.current??row.rank??row.ranking),
-    id:String(row.team?.id??""),name:row.team?.displayName??row.team?.location??""}))
-    .filter(row=>row.rank>=1&&row.rank<=25&&Number.isInteger(row.rank)).sort((a,b)=>a.rank-b.rank);
-  assert(rows.length===25 && rows.every(x=>x.id)
-    && new Set(rows.map(x=>x.id)).size===25
-    && rows.every((x,i)=>i===0||x.rank>=rows[i-1].rank),
-    "ESPN AP Top 25 rows are incomplete/ambiguous; preserve last good snapshot");
-  // AP can officially tie positions (e.g., two #20 teams and no #21).
-  // A slot is only a comparison position, NEVER a fabricated official AP rank.
-  rows.forEach((row,i)=>row.position=i+1);
-  const duplicates=rows.filter((row,i)=>i>0&&row.rank===rows[i-1].rank);
-  if(duplicates.length) record("source-ranking-tie",
-    "Official AP poll contains tied positions; reviewed canonical publication needs a tie policy",
-    url,{officialTies:duplicates.map(row=>({rank:row.rank,id:row.id,name:row.name}))});
-  const idToSchool=new Map(Object.entries(teamInfo).map(([key,t])=>[t.id,key]));
-  const changed=rows.filter(row=>applied[row.position-1]?.team!==idToSchool.get(row.id));
-  if(changed.length) record("factual-correction",
-    "AP poll changed; reviewed versioned frontend/backend poll update required (not CI software failure)",
-    url,{changes:changed.map(x=>({...x,auditedSchool:idToSchool.get(x.id)??null})),
-      newUnauditedSchools:changed.filter(x=>!idToSchool.has(x.id))});
-  return rows;
-}
 function rosterPlayers(body) {
   const groups=body.athletes??[];
   const rows=groups.flatMap(g=>Array.isArray(g.items)?g.items:[]);
@@ -217,11 +160,8 @@ function rosterPlayers(body) {
     status:String(row.status?.type??row.status?.name??""),
   }));
 }
-async function rosters(nflTeams, cfbTeams) {
-  const tasks=[
-    ...Object.keys(nflTeams).map(team=>({sport:"nfl",team, id:team.toLowerCase()})),
-    ...Object.entries(cfbTeams).map(([team,info])=>({sport:"cfb",team,id:info.id})),
-  ];
+async function rosters(nflTeams) {
+  const tasks=Object.keys(nflTeams).map(team=>({sport:"nfl",team,id:team.toLowerCase()}));
   const output={};let cursor=0;
   async function worker() {
     while(cursor<tasks.length) {
@@ -238,7 +178,7 @@ async function rosters(nflTeams, cfbTeams) {
   }
   await Promise.all(Array.from({length:5},worker));
   assert(Object.keys(output).length===tasks.length,
-    "Incomplete NFL/CFB roster source coverage; previous successful snapshot not superseded");
+    "Incomplete NFL roster source coverage; previous successful snapshot not superseded");
   return output;
 }
 function reconcile(rows, sourceRosters, ufcRanks, previous) {
@@ -363,7 +303,7 @@ async function main() {
     ? JSON.parse(readFileSync(resolve(priorPath),"utf8")):null;
   // The original schema-1 baseline promoted review-held data as successful.
   // Never use that artifact as an authoritative last-good checkpoint.
-  const previousCertified=priorRaw?.schema===2 && priorRaw?.status==="source-certified"
+  const previousCertified=[2,3].includes(priorRaw?.schema) && priorRaw?.status==="source-certified"
     ? priorRaw : null;
   // Evidence continuity must not depend on promotion of globally certified
   // snapshots. An observation is read-only, ungraded and never certification.
@@ -378,17 +318,14 @@ async function main() {
   const nfl=footballCatalog();
   const db=await liveCatalog();
   const gm=gmCoverage(nfl);
-  const cfbPriorities=Object.fromEntries(Object.entries(teams.teamInfo)
-    .map(([team,info])=>[team,info.buckets]));
   const approved=wheelPriorityIdentityKeys({
-    nfl:{teams:teams.nfl},cfb:{teams:cfbPriorities},
+    nfl:{teams:teams.nfl},cfb:{teams:{}},
   });
   const nflCoverage=selectApprovedGrades(db.nflLive,"nfl",approved);
-  const cfbCoverage=selectApprovedGrades(db.cfb,"cfb",approved);
-  assert(nflCoverage.expected===626 && cfbCoverage.expected===1277,
-    "Approved Wheel roster count changed without a reviewed population update");
+  assert(nflCoverage.expected===626,
+    "Approved NFL Wheel roster count changed without a reviewed population update");
   validateCatalog(nfl,"nfl");validateCatalog(nflCoverage.selected,"nfl");
-  validateCatalog(cfbCoverage.selected,"cfb");validateCatalog(db.ufc,"ufc");
+  validateCatalog(db.ufc,"ufc");
   const nflKeys = new Set(nfl.map(identity));
   const liveKeys = new Set(nflCoverage.selected.map(identity));
   assert(nflKeys.size===liveKeys.size && [...nflKeys].every(key=>liveKeys.has(key)),
@@ -396,14 +333,8 @@ async function main() {
   const liveGradeByKey=new Map(nflCoverage.selected.map(row=>[identity(row),row.grade]));
   assert(nfl.every(row=>row.grade===liveGradeByKey.get(identity(row))),
     "NFL backend/GM grade bindings differ from checked-in artifacts; do not publish a snapshot");
-  // Verify live DB coverage against approved base and extra-team (not a new grading authority).
-  const missingCfb=cfbCoverage.selected.filter(r=>!teams.teamInfo[r.team]);
-  assert(missingCfb.length===0, "Unrecognized live CFB team(s): "+
-    [...new Set(missingCfb.map(r=>r.team))].join(", "));
-  const checkedIn=apSnapshotSource();
-  const [sourceRosters, ufcRanks, currentPoll] = await Promise.all([
-    rosters(teams.nfl,teams.teamInfo), ufcExternal(),
-    apExternal(teams.teamInfo,checkedIn),
+  const [sourceRosters,ufcRanks]=await Promise.all([
+    rosters(teams.nfl),ufcExternal(),
   ]);
   // A malformed official table cannot seed either kind of retained artifact.
   assert(!ufcRanks.structuralWarnings.length,
@@ -413,42 +344,42 @@ async function main() {
     record("ufc-headshot-source-unverified",finding.reason,
       finding.url??"live:private.wheel_ufc_fighters",{
         fighterId:finding.fighterId,division:finding.division});
-  const {result,snapshot}=reconcile([...nfl,...cfbCoverage.selected,...db.ufc],
+  const {result,snapshot}=reconcile([...nfl,...db.ufc],
     sourceRosters,ufcRanks,previous);
   // Unlike the catalog census, this ledger never counts unmatched identities,
   // coaches without a dedicated authority, or unranked fighters as source-verified.
-  // The missing 13 CFB grades remain in the approved denominator.
+  // CFB grade completeness is not a weekly certification input.
   const sourceCoverage=buildSourceCoverageLedger(snapshot,{
-    nfl:nflCoverage.expected,cfb:cfbCoverage.expected,ufc:db.ufc.length,
+    nfl:nflCoverage.expected,ufc:db.ufc.length,
   });
-  const orphaned=(previous?.identities??[]).filter(x=>!snapshot.some(y=>identity(x)===identity(y)));
+  const orphaned=(previous?.identities??[]).filter(x=>x.sport!=="cfb" &&
+    !snapshot.some(y=>identity(x)===identity(y)));
   for(const x of orphaned) record("mandatory-factual-correction",
     "Identity removed from active authority; verify retirement, transfer or offboarding before approval",
     "canonical",{oldIdentity:identity(x)});
   const all= {
-    schema:2, status:"source-certified", checkedAt:at, sourceCommit:process.env.GITHUB_SHA??null,
-    identities:snapshot, poll:currentPoll, ufcOfficialRanks:ufcRanks.rows, catalogCounts:{
-      nfl:nfl.length,cfb:cfbCoverage.selected.length,ufc:db.ufc.length,
+    schema:3,status:"source-certified",checkedAt:at,sourceCommit:process.env.GITHUB_SHA??null,
+    certifiedScope:["nfl","ufc","gm"],
+    identities:snapshot,ufcOfficialRanks:ufcRanks.rows,catalogCounts:{
+      nfl:nfl.length,ufc:db.ufc.length,
     },
-    sourceCounts:{nflTeams:Object.keys(teams.nfl).length,
-      cfbTeams:Object.keys(teams.teamInfo).length,ufcDivisions:DIVISIONS.length},
+    sourceCounts:{nflTeams:Object.keys(teams.nfl).length,ufcDivisions:DIVISIONS.length},
   };
   // Successful source observations are retained even when grade/GM/publishing
   // gates remain blocked. This is NOT a ratings or source-certified snapshot.
   const observation=validateObservation({
-    schema:3,status:"read-only-observation",checkedAt:at,
+    schema:4,status:"read-only-observation",checkedAt:at,
     sourceCommit:process.env.GITHUB_SHA??null,
-    identities:snapshot,poll:currentPoll,ufcOfficialRanks:ufcRanks.rows,
+    identities:snapshot,ufcOfficialRanks:ufcRanks.rows,
     catalogCounts:all.catalogCounts,sourceCounts:all.sourceCounts,
   });
-  const summaries=Object.fromEntries(["nfl","cfb","ufc"].map(sport=>
+  const summaries=Object.fromEntries(["nfl","ufc"].map(sport=>
     [sport,summarizeDecisions(result.filter(row=>row.sport===sport))]));
   // Independent read-only sport results survive other sports' review holds.
   // All-source snapshot promotion remains strict; a report is not certification.
   const blockers=[
     ...sourceReviewBlockers(evidence,result),
     ...nflCoverage.missing.map(key=>"nfl-missing-grade:"+key),
-    ...cfbCoverage.missing.map(key=>"cfb-missing-grade:"+key),
     ...ufcRanks.structuralWarnings.map(division=>"ufc-official-rank-shape:"+division),
     "nfl-gm-live-contract-source-comparison-pending",
     "nfl-gm-economy-regression-pending",
@@ -465,13 +396,14 @@ async function main() {
     previousObservation:previousObserved?.checkedAt??null,
     comparisonBaseline:previous?.checkedAt??null,
     summaries,gmContractAuthority:gm,sourceEvidence:evidence,
+    monitoringScope:{ratingRefresh:["nfl","ufc"],gmContracts:true,cfbRatingRefresh:false,
+      cfbApTop25:"independent-factual-workflow"},
     sourceCoverage:sourceCoverage.bySport,
     sourceIdentityReview:sourceCoverage.unresolved,
     performanceEvidenceStatus:"not-yet-certified",
     detailedReviewAvoidanceMeasured:false,
     readiness, coverage:{
       nfl:{approved:nflCoverage.expected,graded:nflCoverage.selected.length,missing:nflCoverage.missing,stale:nflCoverage.stale.length},
-      cfb:{approved:cfbCoverage.expected,graded:cfbCoverage.selected.length,missing:cfbCoverage.missing,stale:cfbCoverage.stale.length},
       ufc:{active:db.ufc.length,officialSourceWarnings:ufcRanks.structuralWarnings,
         officialRankTies:ufcRanks.officialTies,headshots:{
           total:headshots.total,uniqueUrls:headshots.uniqueUrls,
@@ -484,8 +416,6 @@ async function main() {
       ||x.sourceStatus==="ambiguous").map(x=>({key:x.key,status:x.sourceStatus})),
     removedIdentities:orphaned.map(identity),
     ufcSourceIntegrityWarnings:ufcRanks.structuralWarnings,
-    latestLiveApPoll:db.apRows[0]?.poll_date??null,
-    checkedInAp:checkedIn,
     errors,
     gradeChangesApplied:0, ratingPrCreated:false, gmContractsRefreshed:false,
     outstandingStages:["editorial-performance-review","GM-contract-snapshot-comparison",
@@ -499,7 +429,7 @@ async function main() {
   writeFileSync(resolve(outputDir,"observation.json"),
     JSON.stringify(observation,null,2)+"\n");
   // Never promote a blocker-bearing result or invent a successful baseline.
-  // Reporting read-only NFL/UFC observations continues while CFB grades are pending.
+  // Reporting read-only NFL/UFC observations continues while independent review is pending.
   if (readiness.snapshotReady) {
     writeFileSync(resolve(outputDir,"snapshot.json"),JSON.stringify(all,null,2)+"\n");
   }
