@@ -72,7 +72,8 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("retains pre-cutover history and October 26 Cowboys-themed publication", () => {
     const ufcHistory = buildMillionaireDailySetup("ufc", "2026-10-25", "candidate-qa");
     const footballTheme = buildMillionaireDailySetup("football", "2026-10-26", "candidate-qa");
-    const nextUfc = buildMillionaireDailySetup("ufc", "2026-11-06", "candidate-qa");
+    const nextUfc = buildMillionaireDailySetup("ufc", "2026-11-06", "candidate-qa",
+      { editorialCandidatePreview: true });
     expect(ufcHistory.contentVersion).toBe(MILLIONAIRE_DAILY_CONTENT_VERSION);
     expect(footballTheme.contentVersion).toBe(MILLIONAIRE_DAILY_CONTENT_VERSION);
     expect((footballTheme.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some(q => q.id.startsWith("theme-"))).toBe(true);
@@ -88,7 +89,8 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       for (const sport of ["football", "ufc"] as const) {
         if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
         if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
-        const published = buildMillionaireDailySetup(sport, day, "candidate-calendar");
+        const published = buildMillionaireDailySetup(sport, day, "candidate-calendar",
+          { editorialCandidatePreview: true });
         const league = published.publicSetup.league as typeof leagues[number];
         appearances[league] += 1;
         const run = published.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
