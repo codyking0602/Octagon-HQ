@@ -3073,7 +3073,10 @@ export function millionaireFutureEditorialDailyRun(
     // differ from immutable historic question IDs and persisted private proofs.
     const replacements = UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS[normalized - 6]!;
     return replacements.map(([type, prompt, choices, answer, statSheet, explanation], index) => ({
-      ...runtimeQuestion(league, normalized, index, { type, prompt, choices, answer, statSheet, explanation }),
+      ...runtimeQuestion(league, normalized, index, {
+        type, prompt, choices, answer, statSheet,
+        explanation: explanation ?? (statSheet ? `${answer}. ${statSheet}` : undefined),
+      }),
       id: `millionaire-ufc-editorial-v6-run-${normalized + 1}-q${index + 1}`,
     })) as unknown as MillionaireRun;
   }
@@ -3085,6 +3088,9 @@ export function millionaireFutureEditorialDailyRun(
     throw new Error(`Millionaire editorial ${league} run ${normalized + 1} is incomplete.`);
   }
   return seeds.map(([type, prompt, choices, answer, statSheet, explanation], index) =>
-    runtimeQuestion(league, normalized, index, { type, prompt, choices, answer, statSheet, explanation }),
+    runtimeQuestion(league, normalized, index, {
+      type, prompt, choices, answer, statSheet,
+      explanation: explanation ?? (statSheet ? `${answer}. ${statSheet}` : undefined),
+    }),
   ) as unknown as MillionaireRun;
 }

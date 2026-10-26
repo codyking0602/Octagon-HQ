@@ -72,6 +72,30 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("gives future candidates meaningful reveals without altering historical explanations", () => {
+    for (const league of leagues) {
+      for (let i = 10; i < 15; i += 1) {
+        for (const question of millionaireFutureEditorialDailyRun(league, i).slice(0, 7)) {
+          expect(question.explanation).not.toBe(`${answer(question)} is the correct answer.`);
+          expect(question.explanation.length).toBeGreaterThan(30);
+        }
+      }
+    }
+    for (let i = 6; i < 9; i += 1) {
+      for (const question of millionaireFutureEditorialDailyRun("ufc", i).slice(0, 7)) {
+        expect(question.explanation).not.toBe(`${answer(question)} is the correct answer.`);
+      }
+    }
+    const old = millionaireDailyRun("nfl", 0)[0]!;
+    expect(old.explanation).toBe(`${answer(old)} is the correct answer.`);
+    const preview = buildMillionaireDailySetup("football", "2026-11-04", "editorial-reveals-test",
+      { editorialCandidatePreview: true });
+    const futureRun = preview.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+    for (const question of futureRun.slice(0, 7)) {
+      expect(question.explanation).not.toBe(`${answer(question)} is the correct answer.`);
+    }
+  });
+
   it("retains pre-cutover history and October 26 Cowboys-themed publication", () => {
     const ufcHistory = buildMillionaireDailySetup("ufc", "2026-10-25", "candidate-qa");
     const footballTheme = buildMillionaireDailySetup("football", "2026-10-26", "candidate-qa");

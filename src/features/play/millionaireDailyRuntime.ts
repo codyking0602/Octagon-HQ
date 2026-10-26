@@ -404,6 +404,13 @@ function futureMillionaireErrata(
       };
     }
     return question;
+  }).map((question) => {
+    // Preview-only: turn the historic seed's otherwise tautological reveal
+    // into a useful factual explanation. Do not rewrite published proofs.
+    if (!editorialCandidatePreview || !question.statSheet) return question;
+    const correct = question.choices.find(choice => choice.id === question.correctChoiceId)?.text;
+    if (!correct || question.explanation !== `${correct} is the correct answer.`) return question;
+    return { ...question, explanation: `${correct}. ${question.statSheet}` };
   }) as unknown as MillionaireRun;
 }
 
