@@ -38,7 +38,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb", 10, 6, "Ashton Jeanty"],
       ["cfb", 14, 6, "Kalen DeBoer"],
       ["ufc", 13, 6, "Yair Rodriguez"],
-      ["ufc", 6, 7, "Islam Makhachev"],
+      ["ufc", 6, 7, "Ilia Topuria"],
       ["ufc", 12, 7, "Paddy Pimblett"],
       ["nfl", 12, 3, "Christian McCaffrey"],
       ["nfl", 12, 7, "Aaron Donald"],
