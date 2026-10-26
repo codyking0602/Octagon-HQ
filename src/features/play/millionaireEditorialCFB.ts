@@ -23,9 +23,9 @@ export const cfbEditorialCandidateRuns = [
   ],
   [
     ["mascots", "What is the name of Ohio State's famous mascot?", ["Brutus Buckeye", "Herbie Husker", "Bucky Badger", "Sparty"], "Brutus Buckeye", "The character is based on the state tree's nut."],
-    ["bowls", "Which school did Kansas beat to win the Orange Bowl after the 2007 season?", ["Virginia Tech", "West Virginia", "Boston College", "Clemson"], "Virginia Tech", "The Jayhawks completed a 12–1 campaign."],
-    ["bowl-moments", "Who scored Boise State's winning two-point conversion on a Statue of Liberty play in the 2007 Fiesta Bowl?", ["Ian Johnson", "Jared Zabransky", "Vinny Perretta", "Jeremy Childs"], "Ian Johnson", "The winning runner proposed to his cheerleader girlfriend immediately afterward."],
     ["heisman", "At which school did Travis Hunter win the 2024 Heisman Trophy?", ["Colorado", "Jackson State", "Florida State", "Georgia"], "Colorado", "The winner starred at both receiver and cornerback."],
+    ["bowl-moments", "Who scored Boise State's winning two-point conversion on a Statue of Liberty play in the 2007 Fiesta Bowl?", ["Ian Johnson", "Jared Zabransky", "Vinny Perretta", "Jeremy Childs"], "Ian Johnson", "The winning runner proposed to his cheerleader girlfriend immediately afterward."],
+    ["bowls", "Which school did Kansas beat to win the Orange Bowl after the 2007 season?", ["Virginia Tech", "West Virginia", "Boston College", "Clemson"], "Virginia Tech", "The Jayhawks completed a 12–1 campaign."],
     ["rivalry-moments", "Who scored Michigan State's winning touchdown after Michigan mishandled a punt snap in 2015?", ["Jalen Watts-Jackson", "LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson", "The return stunned the home crowd on the final play in Ann Arbor."],
     ["big-12", "Which quarterback led Baylor to its first Big 12 championship in 2013?", ["Bryce Petty", "Robert Griffin III", "Nick Florence", "Seth Russell"], "Bryce Petty", "He threw 32 touchdown passes during an 11-win regular season."],
     ["underdogs", "Who coached Hawaii's unbeaten 2007 regular season before its Sugar Bowl loss?", ["June Jones", "Nick Rolovich", "Greg McMackin", "Todd Graham"], "June Jones", "The team's run-and-shoot offense featured quarterback Colt Brennan."],
@@ -38,7 +38,7 @@ export const cfbEditorialCandidateRuns = [
     ["history", "Which program completed the 1994 season undefeated behind coach Tom Osborne?", ["Nebraska", "Miami", "Penn State", "Colorado"], "Nebraska", "Its national title was settled after an Orange Bowl victory over Miami."],
     ["heisman-history", "Who won the 2002 Heisman before Matt Leinart's and Reggie Bush's USC wins?", ["Carson Palmer", "Matt Barkley", "Mark Sanchez", "John David Booty"], "Carson Palmer", "The winner later became the No. 1 overall pick in the NFL Draft."],
     ["nfl-pipeline", "Which SEC school did Broncos running back Terrell Davis play for?", ["Georgia", "Florida", "Auburn", "Tennessee"], "Georgia", "He transferred after starting his college career at Long Beach State."],
-    ["bowl-history", "Which Florida State kicker made the winning field goal against Nebraska in the 1994 Orange Bowl?", ["Scott Bentley", "Janikowski", "Dustin Hopkins", "Roberto Aguayo"], "Scott Bentley", "His kick came with 21 seconds remaining in an 18–16 championship finish."],
+    ["undefeated-seasons", "Which Arizona State quarterback led an undefeated 1996 regular season before a narrow Rose Bowl loss to Ohio State?", ["Jake Plummer", "Rudy Carpenter", "Andrew Walter", "Taylor Kelly"], "Jake Plummer", "The future NFL starter earned the nickname Jake the Snake and finished third in Heisman voting."],
     ["coaching-legends", "Who was Oklahoma's head coach during its 47-game winning streak in the 1950s?", ["Bud Wilkinson", "Barry Switzer", "Bennie Owen", "Bob Stoops"], "Bud Wilkinson", null],
   ],
   [
