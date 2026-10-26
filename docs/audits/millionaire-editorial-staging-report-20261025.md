@@ -34,13 +34,35 @@ The new 173-row future candidate disposition ledger deliberately marks **every a
 
 ## Further independent spot-checks and corrections (October 25)
 
-- Rechecked **five** additional candidate questions against the league's official event/stadium records and reauthored their provisional future-only versions. Every one remains **HOLD** until the other choices, Stat Sheet, cross-game semantics, question-level progression and entire run are independently signed off. No released or historical bank was edited.
+- Rechecked **seven** additional candidate questions against the league's official event/stadium records and reauthored their provisional future-only versions. Every one remains **HOLD** until the other choices, Stat Sheet, cross-game semantics, question-level progression and entire run are independently signed off. No released or historical bank was edited.
 - CFB future run 11 Q1 now asks about Miami's "The U" identity instead of a second Bo Jackson question, and avoids back-to-back stadium questions ([University of Miami logo history](https://miamihurricanes.com/news/2009/06/11/205551818-2)).
 - NFL future run 12 Q5 now covers James Harrison's 100-yard Super Bowl XLIII interception return, removing a second Super Bowl XVIII question in the same run ([NFL account](https://www.nfl.com/news/harrison-s-100-yard-interception-return-for-td-paid-dividends-f-09000d5d80e979ba)).
 - UFC future run 11 was overly heavyweight-concentrated; Q3 now covers Usman's UFC 245 stoppage of Covington ([UFC 245 card](https://www.ufc.com/event/ufc-245)), Q5 covers Condit's interim UFC 143 decision over Diaz ([UFC 143 card](https://www.ufc.com/event/ufc-143)), and Q7 now covers Alexandre Pantoja's split-decision title win over Brandon Moreno at UFC 290 ([UFC official results](https://www.ufc.com/news/ufc-290-volkanovski-vs-rodriguez-results-highlights-winner-interviews?language_content_entity=en)). Two earlier UFC Q7 drafts were independently found to **repeat active Bar Trivia facts**: Sterling–Yan at UFC 259 (`ufc-r2-sterling-yan-dq`) and Dillashaw–Barao at UFC 173 (`ufc-r2-dillashaw-barao`). Both were replaced, with UFC 290 chosen to avoid those known overlaps. It remains HOLD pending full-bank comparison.
 - Draft head `4fce14e3cd5c1be2bcf404e349db5bab0b2e086b` passed standard TypeScript checks and 239 test files in Fast PR Feedback, but **the fast workflow FAILED** because `millionaireSixMonthEditorialGate.test.ts` called `readFileSync()` on a Vite-generated non-`file:` URL. That CI defect was corrected on the isolated branch by resolving the ledger under `process.cwd()`. This correction still requires a new exact-head green check. Generalized Daily Backend passed on the earlier head; Validate V2 was skipped as a draft, **not passed**.
 
 - Four original CFB Q1 championship-year prompts (runs 2, 3, 6 and 8) were escalated from HOLD to provisional REWRITE after checking CFP/BCS season-versus-calendar-year records. They remain unaltered in the immutable historical bank; future-safe rewrites have **not** been implemented or certified. See the updated original disposition ledger.
+
+### Verified active Bar Trivia collisions identified during an expanded semantic spot-check
+
+The following cross-game comparisons used the **current active** `BAR_TRIVIA_QUESTION_BANK` filtering logic, rather than raw authoring files alone. Active selection into a specific future Daily date was **not** proven. A question's same athlete is not automatically a conflict; these are the same memorable facts or inverse-question equivalents.
+
+| Provisional Millionaire question | Active Bar Trivia fact ID | Editorial action |
+|---|---|---|
+| NFL extra run 11 Q7: Dwight Clark, “The Catch” | `nfl-r1-the-catch-receiver` | **Replaced in draft only** with NFL-verified Talanoa Hufanga blocked punt TD against Green Bay (2021 season) |
+| UFC extra run 11 Q7: Sterling vs Yan, UFC 259 | `ufc-r2-sterling-yan-dq` | **Replaced in draft only**; initial alternative Dillashaw–Barao also collided with `ufc-r2-dillashaw-barao`; current candidate is UFC 290 Pantoja–Moreno |
+| UFC extra run 13 Q1: Charles Oliveira nickname Do Bronx | `ufc-r1-do-bronx` | **Replaced in draft only** with UFC-verified Yair Rodriguez nickname El Pantera |
+| CFB extra run 13 Q8: Terry Baker's Heisman/Final Four feat | `cfb-r3-terry-baker-final-four` | **UNRESOLVED — must replace** before certification |
+| CFB extra run 15 Q7: Ernie Davis, first Black Heisman recipient | `cfb-r1-first-black-heisman` | **UNRESOLVED — must replace** |
+| UFC future replacement run 9 Q3: Edson Barboza spinning wheel-kick KO | `ufc-final-barboza-etim` / `ufc-r3-first-wheel-kick-ko` | **UNRESOLVED — must replace** |
+| UFC new run 13 Q6: Anderson Silva's front-kick KO of Vitor Belfort | `ufc-r3-silva-belfort-front-kick` | **UNRESOLVED — must replace** |
+| UFC future Q8: Chan Sung Jung's first Twister submission | `ufc-r3-zombie-first-twister` | **UNRESOLVED — must replace** |
+| UFC future replacement run 8 Q3: Julianna Peña submission of Amanda Nunes | `ufc-r2-pena-nunes` | **UNRESOLVED — must replace** |
+| UFC new run 15 Q4: Leon Edwards' famous head-kick finish of Kamaru Usman | `ufc-r2-edwards-usman` | **UNRESOLVED — same iconic highlight tested from another angle** |
+| UFC targeted run 1 Q7: Carlos Newton submission of Pat Miletich | `ufc-r2-newton-title-opponent` | **UNRESOLVED — inverse question about same championship win** |
+
+The UFC v3 editorial retirement list removes various similar authored source entries (e.g., some UFC 1 trivia); those retired entries are *not* counted as currently active conflicts above. This list is a **bounded partial conflict audit**, not an exhaustive census of NFL, CFB, UFC Bar Trivia, Sports Feud, Average Fan or other Daily banks. Until all direct conflicts are resolved and all remaining questions independently checked, **there are zero certified runs** in any sport.
+
+Further citations: [NFL blocked punt return](https://www.nfl.com/news/matt-lafleur-takes-responsibility-for-special-teams-mistakes-following-packers-); [UFC fighter identity](https://www.ufc.com/athlete/yair-rodriguez); [UFC 290 title result](https://www.ufc.com/news/ufc-290-volkanovski-vs-rodriguez-results-highlights-winner-interviews?language_content_entity=en).
 
 ## Main codepaths and history
 
