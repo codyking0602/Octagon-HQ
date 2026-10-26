@@ -6,19 +6,6 @@ import { buildNbaBarTriviaDailyBoard } from "./nbaBarTriviaDailyRotation";
 
 export const NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION = "nba-bar-trivia-server-v1";
 
-/** Zero-based appearance of a single game on a scheduled publication date. */
-export function nbaDailyGameAppearance(day: string, gameType: NbaDailyGame): number {
-  const slot = nbaRegularSeasonDaily(day);
-  if (!slot || !slot.isPublicationDay || slot.gameType !== gameType) {
-    throw new Error("NBA Daily publication must match its scheduled Central day and game.");
-  }
-  let count = 0;
-  for (let index = 0; index < slot.appearanceIndex; index++) {
-    if (NBA_DAILY_WEIGHTED_CYCLE[index % NBA_DAILY_WEIGHTED_CYCLE.length] === gameType) count++;
-  }
-  return count;
-}
-
 function publicQuestion(question: BarTriviaQuestion) {
   return {
     id: question.id, league: question.league, round: question.round,
