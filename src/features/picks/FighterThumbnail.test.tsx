@@ -173,11 +173,19 @@ describe("Shane contender fighter-tile treatment", () => {
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
-  it("marks Raul Rosas Jr. with Shane’s #2 badge on the Picks fighter tile", () => {
-    render(<FighterThumbnail name="Raul Rosas Jr." slug="raul-rosas-jr" />);
+  it("marks Abdul Yakhyaev with Shane’s #2 badge on the Picks fighter tile", () => {
+    render(<FighterThumbnail name="Abdul Rakhman Yakhyaev" slug="abdul-rakhman-yakhyaev" />);
 
     const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
     expect(screen.getByText("SHANE’S CONTENDER SERIES · #2")).toBeInTheDocument();
+    expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
+  });
+
+  it("keeps Raul Rosas Jr. on the Picks fighter tile at #3", () => {
+    render(<FighterThumbnail name="Raul Rosas Jr." slug="raul-rosas-jr" />);
+
+    const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
