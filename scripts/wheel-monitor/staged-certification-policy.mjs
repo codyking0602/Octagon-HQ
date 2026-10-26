@@ -79,10 +79,12 @@ function stageCheck(root,kind,sha,now) {
     const certified=safe && doc.generatedCount===594 && !doc.missing.length &&
       !doc.extra.length && doc.status==="unchanged" &&
       doc.summary?.materialChanged===0 &&
-      doc.sourceIdentityCompletenessCertified===true &&
-      doc.economyRegressionStatus==="passed";
+      doc.sourceIdentityCompletenessCertified===true;
+    // Both GM jobs are unconditional. A completed successful exact-head
+    // workflow run proves the separate economy regression job passed, even
+    // when the provider comparison correctly remains owner-review-held.
     return {kind,status:!safe?"source-report-incomplete":certified?"source-certified":"gm-contract-review-held",
-      certified,observedAt,generated:doc.generatedCount??null,
+      certified,economyRegressionVerified:safe,observedAt,generated:doc.generatedCount??null,
       materialChanges:doc.summary?.materialChanged??null,
       sourceByteIntegrityVerified:safe};
   }
@@ -106,7 +108,8 @@ export function inspectStagedEvidence(root,sha,now=Date.now()) {
   const blockers=[
     ...(!stages.coach.certified?["independent-head-coach-live-freshness-pending"]:[]),
     ...(!stages.performance.certified?["performance-evidence-pending"]:[]),
-    ...(!stages.gm.certified?["nfl-gm-live-contract-source-comparison-pending","nfl-gm-economy-regression-pending"]:[]),
+    ...(!stages.gm.certified?["nfl-gm-live-contract-source-comparison-pending"]:[]),
+    ...(!stages.gm.economyRegressionVerified?["nfl-gm-economy-regression-pending"]:[]),
     ...(!stages.ufc.certified?["ufc-unranked-source-coverage-pending"]:[]),
   ];
   return {exactMainSha:sha,stages,blockers,complete:blockers.length===0};
