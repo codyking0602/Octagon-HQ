@@ -81,6 +81,46 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRunIndex("ufc", "2026-10-25")).toBe(5);
   });
 
+  it("keeps pending editorial candidates out of default Official Daily on every scheduled day", () => {
+    let scheduled = 0;
+    for (let offset = 0; offset < 182; offset += 1) {
+      const day = new Date(Date.UTC(2026, 9, 25 + offset)).toISOString().slice(0, 10);
+      for (const sport of ["football", "ufc"] as const) {
+        if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
+        if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
+        scheduled += 1;
+        const official = buildMillionaireDailySetup(sport, day, "isolation-regression");
+        const explicitlyDisabled = buildMillionaireDailySetup(sport, day, "isolation-regression",
+          { editorialCandidatePreview: false });
+        expect(official).toEqual(explicitlyDisabled);
+        expect(official.contentVersion).toBe(MILLIONAIRE_DAILY_CONTENT_VERSION);
+        expect(official.publicSetup.run_number).toBeLessThanOrEqual(10);
+        expect((official.privateSetupEvidence.run as MillionaireRuntimeQuestion[])
+          .every(question => !question.id.includes("editorial-v6")
+            && !/millionaire-(nfl|cfb|ufc)-run-1[1-5]-q/.test(question.id))).toBe(true);
+      }
+    }
+    expect(scheduled).toBe(40);
+  });
+
+  it("protects the five source-checked draft revisions against accidental reversion", () => {
+    const sourceChecked = [
+      ["cfb", 10, 0, "Florida"],
+      ["nfl", 11, 4, "James Harrison"],
+      ["ufc", 10, 2, "Kamaru Usman"],
+      ["ufc", 10, 4, "Carlos Condit"],
+      ["ufc", 10, 6, "Aljamain Sterling"],
+    ] as const;
+    for (const [league, runIndex, level, expected] of sourceChecked) {
+      const run = millionaireFutureEditorialDailyRun(league, runIndex);
+      expect(answer(run[level]!)).toBe(expected);
+      expect(run[level]!.statSheet).not.toContain(expected);
+    }
+    const heavyweights = millionaireFutureEditorialDailyRun("ufc", 10).filter(question =>
+      /heavyweight/.test(question.type));
+    expect(heavyweights).toHaveLength(2);
+  });
+
   it("has zero repeated complete run IDs in the actual six-month canonical publication calendar", () => {
     const seen = new Set<string>();
     const appearances: Record<typeof leagues[number], number> = { nfl: 0, cfb: 0, ufc: 0 };
