@@ -297,12 +297,12 @@ describe("Shane's ranked watchlist", () => {
 
     const dialog = screen.getByRole("dialog", { name: "Abdul Rakhman Yakhyaev" });
     expect(within(dialog).getByText("SHANE’S RANKING · #2")).toBeInTheDocument();
-    expect(within(dialog).getByText(/Three straight first-round UFC finishes/)).toBeInTheDocument();
+    expect(within(dialog).getByText(/Four first-round UFC finishes in four starts/)).toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
       "https://youtu.be/DLHnf12AAFM?is=GC_mx7BpYcnD9ZIS",
     );
-    expect(within(dialog).getByText("3–0")).toBeInTheDocument();
+    expect(within(dialog).getByText("4–0")).toBeInTheDocument();
   });
 
   it("keeps Raul Rosas Jr. at #3 after Abdul moves above him", () => {
