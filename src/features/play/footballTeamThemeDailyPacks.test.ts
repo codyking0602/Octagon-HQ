@@ -48,16 +48,20 @@ describe("Football team-themed Daily packs", () => {
     expect(setup.publicSetup.league).toBe("nfl");
     expect(run).toHaveLength(8);
     expect(run.every((question) => question.id.startsWith("theme-cowboys-eagles-2026-"))).toBe(true);
+    expect(setup.contentVersion).toBe("millionaire-daily-v5-cowboys-eagles-modern-replay-20261026");
+    expect(setup.setupKey).toContain("millionaire-daily-v5-cowboys-eagles-modern-replay-20261026");
+    expect(run.slice(4).every(question => question.statSheet === null || !question.statSheet.toLowerCase().includes(question.choices.find(choice => choice.id === question.correctChoiceId)!.text.toLowerCase()))).toBe(true);
+    expect(run[7]?.statSheet).toBeNull();
     expect(run.map((question) => question.choices.find((choice) => choice.id === question.correctChoiceId)?.text))
       .toEqual([
         "AT&T Stadium",
         "Emmitt Smith",
         "Tony Romo",
         "Jimmy Johnson",
-        "Bob Lilly",
-        "Chuck Howley",
-        "Randy White",
-        "Everson Walls",
+        "Trevon Diggs",
+        "Dak Prescott",
+        "Brett Maher",
+        "Amari Cooper",
       ]);
   });
 
