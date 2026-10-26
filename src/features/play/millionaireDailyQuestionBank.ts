@@ -6,6 +6,9 @@ import {
 } from "../games/millionaireAuthority";
 import type { MillionaireRun } from "../games/millionaireEngine";
 import type { MillionaireLeague } from "./MillionaireCasualModel";
+import { nflEditorialCandidateRuns } from "./millionaireEditorialNFL";
+import { cfbEditorialCandidateRuns } from "./millionaireEditorialCFB";
+import { ufcEditorialCandidateRuns } from "./millionaireEditorialUFC";
 
 type DailyQuestionSeed = {
   type: string;
@@ -3024,4 +3027,50 @@ export function millionaireDailyRun(league: MillionaireLeague, runIndex: number)
     throw new Error(`Millionaire ${league} run ${normalized + 1} is incomplete.`);
   }
   return seeds.map((seed, index) => runtimeQuestion(league, normalized, index, seed)) as unknown as MillionaireRun;
+}
+
+// PROVISIONAL: Five original additional ladders per league. All authored
+// questions remain HOLD for independent primary-source, distractor and
+// cross-game fact verification. Do not release this PR based on schema success.
+type CandidateTuple = readonly [
+  type: string,
+  prompt: string,
+  choices: readonly [string, string, string, string],
+  answer: string,
+  statSheet: string | null,
+];
+const EDITORIAL_CANDIDATE_RUNS: Record<
+  "nfl" | "cfb" | "ufc",
+  readonly (readonly CandidateTuple[])[]
+> = {
+  nfl: nflEditorialCandidateRuns,
+  cfb: cfbEditorialCandidateRuns,
+  ufc: ufcEditorialCandidateRuns,
+};
+export const MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT = 15;
+
+/**
+ * Future-only candidate selector: regular legacy run slots are preserved,
+ * while slots 11–15 have genuinely new (pending-review) questions.
+ * The legacy selector and its 10-run modulus are unchanged for historic days.
+ */
+export function millionaireFutureEditorialDailyRun(
+  league: MillionaireLeague,
+  runIndex: number,
+): MillionaireRun {
+  if (league === "mlb" || league === "nba") {
+    throw new Error("NBA/MLB use their own Millionaire content authorities.");
+  }
+  const normalized = ((runIndex % MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT)
+    + MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT) % MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT;
+  if (normalized < MILLIONAIRE_DAILY_RUN_COUNT) {
+    return millionaireDailyRun(league, normalized);
+  }
+  const seeds = EDITORIAL_CANDIDATE_RUNS[league][normalized - MILLIONAIRE_DAILY_RUN_COUNT];
+  if (!seeds || seeds.length !== 8) {
+    throw new Error(`Millionaire editorial ${league} run ${normalized + 1} is incomplete.`);
+  }
+  return seeds.map(([type, prompt, choices, answer, statSheet], index) =>
+    runtimeQuestion(league, normalized, index, { type, prompt, choices, answer, statSheet }),
+  ) as unknown as MillionaireRun;
 }
