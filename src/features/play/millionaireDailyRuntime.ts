@@ -318,7 +318,7 @@ function futureMillionaireErrata(
         choices: MILLIONAIRE_CHOICE_IDS.map((id, choiceIndex) => ({
           id,
           text: newQuestion.choices[choiceIndex]!,
-        })) as MillionaireRuntimeQuestion["choices"],
+        })) as unknown as MillionaireRuntimeQuestion["choices"],
         correctChoiceId: "A",
         explanation: newQuestion.explanation,
         statSheet: newQuestion.statSheet,
