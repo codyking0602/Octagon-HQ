@@ -2,7 +2,7 @@
 // Never publish or count as approved solely because these questions pass schema checks.
 export const nflEditorialCandidateRuns = [
   [
-    ["stadiums", "Which NFL team plays its home games at Lambeau Field?", ["Packers", "Bears", "Vikings", "Lions"], "Packers", "The venue is one of the league's oldest continuously used home stadiums."],
+    ["team-identity", "Which NFL franchise features a horseshoe on its traditional helmet logo?", ["Colts", "Broncos", "Titans", "Rams"], "Colts", "The AFC South franchise relocated from Baltimore to Indianapolis in 1984."],
     ["coaches", "Who coached the Tampa Bay Buccaneers to victory in Super Bowl XXXVII?", ["Jon Gruden", "Tony Dungy", "Bruce Arians", "Lovie Smith"], "Jon Gruden", "The coach faced the franchise that had traded him away before that season."],
     ["special-teams", "Who kicked the record 66-yard field goal for Baltimore in 2021?", ["Justin Tucker", "Harrison Butker", "Matt Prater", "Brandon McManus"], "Justin Tucker", "The record kick struck the crossbar before bouncing through against Detroit."],
     ["super-bowl", "Which team did Deion Sanders win his FIRST Super Bowl with?", ["49ers", "Cowboys", "Falcons", "Ravens"], "49ers", "He joined the champion on a one-year deal for the 1994 season."],
