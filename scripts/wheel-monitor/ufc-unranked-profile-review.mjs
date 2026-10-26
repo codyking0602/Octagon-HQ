@@ -64,7 +64,10 @@ try {
   writeFileSync(out,JSON.stringify(report,null,2)+"\n");
   console.log(JSON.stringify({status:report.status,summary,notFighting:results
     .filter(x=>x.status==="official-not-fighting-designation")
-    .map(x=>({name:x.name,division:x.division,url:x.sourceUrl}))}));
+    .map(x=>({name:x.name,division:x.division,url:x.sourceUrl})),
+    unresolvedProfiles:results.filter(x=>!["official-active-designation",
+      "official-not-fighting-designation"].includes(x.status))
+      .map(x=>({name:x.name,division:x.division,status:x.status,url:x.sourceUrl}))}));
 }catch(error){
   mkdirSync(dirname(out),{recursive:true});
   writeFileSync(out,JSON.stringify({status:"source-review-failed",observedAt:at,
