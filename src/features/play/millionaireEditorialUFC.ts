@@ -19,7 +19,7 @@ export const ufcEditorialCandidateRuns = [
     ["womens-bantamweight-titles", "Who defeated Mayra Bueno Silva by decision to win the vacant UFC women’s bantamweight title at UFC 297?", ["Raquel Pennington", "Holly Holm", "Julianna Peña", "Ketlen Vieira"], "Raquel Pennington", "The five-round fight in Toronto crowned the division’s first champion after Amanda Nunes retired."],
     ["middleweight-knockouts", "Who knocked out Luke Rockhold in the third round of their UFC 221 main event?", ["Yoel Romero", "Michael Bisping", "Chris Weidman", "Paulo Costa"], "Yoel Romero", "The February 2018 main event in Perth ended at 1:48 of Round 3."],
     ["title-comebacks", "Who submitted Holly Holm at UFC 196 to win the women's bantamweight championship?", ["Miesha Tate", "Amanda Nunes", "Ronda Rousey", "Raquel Pennington"], "Miesha Tate", "The submission occurred in the fifth round after a close fight."],
-    ["olympic-mma", "Which future UFC champion won an Olympic bronze medal in judo at the 2008 Beijing Games?", ["Ronda Rousey", "Kayla Harrison", "Holly Holm", "Cris Cyborg"], "Ronda Rousey", null],
+    ["title-upsets", "Who rallied to stop future champion Amanda Nunes in the third round at UFC 178 in 2014?", ["Cat Zingano", "Miesha Tate", "Holly Holm", "Valentina Shevchenko"], "Cat Zingano", null],
   ],
   [
     ["fighter-nicknames","Which UFC featherweight is nicknamed El Pantera?",["Yair Rodriguez","Brian Ortega","Jose Aldo","Chan Sung Jung"],"Yair Rodriguez","The Mexican-born striker has competed in the UFC since 2014."],
@@ -48,7 +48,7 @@ export const ufcEditorialCandidateRuns = [
     ["flyweight-title-defenses", "Who submitted debuting challenger Kai Asakura to defend the flyweight championship at UFC 310?", ["Alexandre Pantoja", "Brandon Moreno", "Deiveson Figueiredo", "Kai Kara-France"], "Alexandre Pantoja", "The champion finished the UFC newcomer with a rear-naked choke in Round 2."],
     ["welterweight-finishes", "Who submitted Stephen Thompson late in Round 2 at UFC 296 to remain undefeated?", ["Shavkat Rakhmonov", "Gilbert Burns", "Belal Muhammad", "Khamzat Chimaev"], "Shavkat Rakhmonov", "The Kazakh welterweight secured a rear-naked choke with seconds left in the round."],
     ["bantamweight-title-defenses", "Who defeated Marlon Vera by unanimous decision to defend the bantamweight title at UFC 299?", ["Sean O’Malley", "Petr Yan", "Merab Dvalishvili", "Aljamain Sterling"], "Sean O’Malley", "The champion won all five rounds on every scorecard in Miami."],
-    ["light-heavyweight", "Who knocked out Jamahal Hill in the main event of UFC 300?", ["Alex Pereira", "Jiri Prochazka", "Magomed Ankalaev", "Jan Blachowicz"], "Alex Pereira", "The champion scored a first-round left-hook finish in Las Vegas."],
+    ["tuf-highlights", "Who landed the famous spinning hook-kick knockout of Adam Cella on The Ultimate Fighter 17?", ["Uriah Hall", "Kelvin Gastelum", "Josh Samman", "Dylan Andrews"], "Uriah Hall", "The knockout happened during Team Jones vs. Team Sonnen, before the live finale."],
     ["pride-rivalry", "Who knocked out Wanderlei Silva at UFC 92 to avenge two earlier PRIDE losses?", ["Quinton Jackson", "Chuck Liddell", "Rich Franklin", "Michael Bisping"], "Quinton Jackson", null],
   ],
 ] as const;
