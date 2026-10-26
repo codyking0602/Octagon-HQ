@@ -9,7 +9,7 @@ export const nflEditorialCandidateRuns = [
     ["coaching", "Who coached the Giants to BOTH Super Bowl victories over the Patriots?", ["Tom Coughlin", "Bill Parcells", "Jim Fassel", "Dan Reeves"], "Tom Coughlin", "Both wins came against Bill Belichick teams four seasons apart."],
     ["comeback", "Which team overcame a 32-point deficit to beat Houston in the 1992 season's AFC wild-card game?", ["Bills", "Oilers", "Broncos", "Chiefs"], "Bills", "A backup quarterback led the second-half rally in January 1993."],
     ["super-bowl-surprises", "Which Patriots linebacker caught a touchdown pass from Tom Brady in Super Bowl XXXVIII?", ["Mike Vrabel", "Tedy Bruschi", "Willie McGinest", "Roman Phifer"], "Mike Vrabel", "The defender also lined up as an occasional short-yardage receiver for New England."],
-    ["playoff-special-teams","Who returned a blocked punt for a touchdown during San Francisco's 2021 season divisional playoff win at Green Bay?",["Talanoa Hufanga","Deebo Samuel","Fred Warner","George Kittle"],"Talanoa Hufanga",null],
+    ["playoff-special-teams","Who returned a blocked punt for a touchdown during San Francisco's 2021 season divisional playoff win at Green Bay?",["Talanoa Hufanga","Deebo Samuel","Fred Warner","George Kittle"],"Talanoa Hufanga", null, "Jordan Willis blocked the Packers punt, and Talanoa Hufanga returned it six yards for the tying touchdown in San Francisco's 13-10 divisional playoff win."],
   ],
   [
     ["franchise-identities", "Which NFL franchise's helmet features a lightning-bolt design?", ["Chargers", "Titans", "Rams", "Broncos"], "Chargers", "The team used the look in both San Diego and Los Angeles."],
@@ -19,7 +19,7 @@ export const nflEditorialCandidateRuns = [
     ["super-bowl-defensive-plays","Who returned a Kurt Warner interception 100 yards for a touchdown in Super Bowl XLIII?",["James Harrison","Troy Polamalu","Ryan Clark","Ike Taylor"],"James Harrison","The return happened on the final play of the first half against Arizona."],
     ["playoff-upsets", "Which team upset the 15-1 Packers in the 2011 season's divisional round?", ["Giants", "Saints", "Falcons", "49ers"], "Giants", "The team went on to win the Super Bowl after entering as a wild card."],
     ["super-bowl-awards", "Which Bears pass rusher won Super Bowl XX MVP?", ["Richard Dent", "Mike Singletary", "William Perry", "Dan Hampton"], "Richard Dent", "Chicago's defense dominated New England in January 1986."],
-    ["super-bowl-defense", "Who returned a late first-half interception for a Raiders touchdown in Super Bowl XVIII?", ["Jack Squirek", "Lester Hayes", "Mike Haynes", "Matt Millen"], "Jack Squirek", null],
+    ["super-bowl-defense", "Who returned a late first-half interception for a Raiders touchdown in Super Bowl XVIII?", ["Jack Squirek", "Lester Hayes", "Mike Haynes", "Matt Millen"], "Jack Squirek", null, "Jack Squirek intercepted Joe Theismann and scored just before halftime as the Los Angeles Raiders beat Washington 38-9 in Super Bowl XVIII."],
   ],
   [
     ["quarterback-identities", "Which quarterback wore No. 18 for both Indianapolis and Denver?", ["Peyton Manning", "Tom Brady", "Drew Brees", "Aaron Rodgers"], "Peyton Manning", "He led the Colts to a Super Bowl win and later helped Denver win Super Bowl 50."],
@@ -29,7 +29,7 @@ export const nflEditorialCandidateRuns = [
     ["super-bowl-finishes","Who caught Eli Manning’s go-ahead touchdown pass with 35 seconds left in Super Bowl XLII?",["Plaxico Burress","David Tyree","Amani Toomer","Steve Smith"],"Plaxico Burress","The catch capped an 83-yard drive that ended New England’s perfect-season bid."],
     ["super-bowl-awards", "Which Cowboys defensive back won Super Bowl XXX MVP after two interceptions?", ["Larry Brown", "Darren Woodson", "Deion Sanders", "Kevin Smith"], "Larry Brown", "The turnovers came against Pittsburgh's Neil O'Donnell."],
     ["playoff-moments", "Who made a touchdown-saving tackle after the Colts recovered Jerome Bettis's late fumble in the 2005 season's divisional playoffs?", ["Ben Roethlisberger", "Troy Polamalu", "Joey Porter", "James Farrior"], "Ben Roethlisberger", "The tackle preserved Pittsburgh's lead just before Indianapolis missed a potential tying field goal."],
-    ["super-bowl-history", "Who became the first defensive back to win Super Bowl MVP?", ["Jake Scott", "Larry Brown", "Dexter Jackson", "Richard Sherman"], "Jake Scott", null],
+    ["super-bowl-history", "Who became the first defensive back to win Super Bowl MVP?", ["Jake Scott", "Larry Brown", "Dexter Jackson", "Richard Sherman"], "Jake Scott", null, "Miami Dolphins safety Jake Scott made two interceptions and was named Super Bowl VII MVP, completing Miami's perfect 1972 season."],
   ],
   [
     ["franchise-history", "Which current NFL franchise originally played as the Houston Oilers?", ["Titans", "Texans", "Jaguars", "Panthers"], "Titans", "The organization relocated to Tennessee before adopting its current nickname for the 1999 season."],
@@ -39,7 +39,7 @@ export const nflEditorialCandidateRuns = [
     ["history", "Which quarterback threw a touchdown pass to himself after it was deflected in a playoff game against Tennessee?", ["Marcus Mariota", "Patrick Mahomes", "Alex Smith", "Andrew Luck"], "Marcus Mariota", "The unusual play occurred during a Chiefs–Titans postseason comeback in January 2018."],
     ["super-bowl-upsets", "Which backup quarterback led the Giants to victory in Super Bowl XXV after Phil Simms was injured?", ["Jeff Hostetler", "Dave Brown", "Kerry Collins", "Scott Brunner"], "Jeff Hostetler", "The Giants defeated Buffalo 20–19 when a last-second field goal went wide."],
     ["coaches", "Who succeeded Bill Walsh as 49ers head coach and won Super Bowl XXIV?", ["George Seifert", "Steve Mariucci", "Dennis Erickson", "Mike Shanahan"], "George Seifert", "His first season as San Francisco's head coach ended 14-2 and with a title."],
-    ["super-bowl-defense","Which Packers safety returned Ben Roethlisberger’s interception for a touchdown in Super Bowl XLV?",["Nick Collins","Tramon Williams","Charles Woodson","Morgan Burnett"],"Nick Collins",null],
+    ["super-bowl-defense","Which Packers safety returned Ben Roethlisberger’s interception for a touchdown in Super Bowl XLV?",["Nick Collins","Tramon Williams","Charles Woodson","Morgan Burnett"],"Nick Collins", null, "Packers safety Nick Collins returned Ben Roethlisberger's first-quarter interception 37 yards for a touchdown in Green Bay's Super Bowl XLV victory."],
   ],
   [
     ["stadium-sharing", "Which NFL team shares SoFi Stadium with the Los Angeles Chargers?", ["Rams", "49ers", "Raiders", "Cardinals"], "Rams", "Both franchises play their home games in Inglewood, California."],
@@ -49,6 +49,6 @@ export const nflEditorialCandidateRuns = [
     ["playoff", "Who caught the 70-yard Mile High Miracle touchdown for Baltimore against Denver?", ["Jacoby Jones", "Torrey Smith", "Anquan Boldin", "Dennis Pitta"], "Jacoby Jones", "The tying touchdown came with less than a minute remaining in regulation."],
     ["super-bowl-receivers","Who caught Russell Wilson’s final touchdown pass in Seattle’s 43–8 Super Bowl XLVIII victory?",["Doug Baldwin","Jermaine Kearse","Golden Tate","Percy Harvin"],"Doug Baldwin","The 10-yard reception came early in the fourth quarter against Denver."],
     ["draft-history", "Who was the first player selected in the NFL's inaugural 1936 draft?", ["Jay Berwanger", "Don Hutson", "Sammy Baugh", "Bronko Nagurski"], "Jay Berwanger", "He never played an NFL game after being selected by Philadelphia."],
-    ["playoff-history", "Who stripped Earnest Byner on the goal line in the 1987 season's AFC Championship Game?", ["Jeremiah Castille", "Karl Mecklenburg", "Steve Atwater", "Dennis Smith"], "Jeremiah Castille", null],
+    ["playoff-history", "Who stripped Earnest Byner on the goal line in the 1987 season's AFC Championship Game?", ["Jeremiah Castille", "Karl Mecklenburg", "Steve Atwater", "Dennis Smith"], "Jeremiah Castille", null, "Jeremiah Castille forced and recovered Earnest Byner's late goal-line fumble to preserve Denver's 38-33 AFC title victory after the 1987 season."],
   ],
 ] as const;
