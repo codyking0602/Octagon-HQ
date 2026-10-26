@@ -51,6 +51,17 @@ const bundles = [
     ],
   },
   {
+    // October 26 Football Millionaire and all later Millionaire boards must
+    // publish without evaluating unrelated large Football question banks.
+    label: "Football Millionaire Daily lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationMillionaire.ts"),
+    fileName: "football-millionaire-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smokes: [
+      { day: "2026-10-26", gameType: "millionaire", scheduleVersion: "football-daily-v21-locked-oct25" },
+    ],
+  },
+  {
     label: "Football daily advance runtime",
     entry: resolve(repoRoot, "src/features/play/footballTodayChallengeAdvanceRuntime.ts"),
     fileName: "football-advance.generated.mjs",
@@ -171,7 +182,7 @@ for (const bundle of bundles) {
           )
         : generatedRuntime.buildFootballDailyPersistenceSetup(
             smoke.day,
-            footballScheduleVersion,
+            smoke.scheduleVersion ?? footballScheduleVersion,
             smoke.gameType,
           );
       if (

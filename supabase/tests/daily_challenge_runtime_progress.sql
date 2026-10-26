@@ -1,9 +1,43 @@
 \set ON_ERROR_STOP on
 begin;
 
+-- This older persistence fixture deliberately publishes a synthetic board on
+-- the current Central date, including non-opening UFC 48-hour days. Disable
+-- the new cadence trigger inside this rollback-only transaction; the separate
+-- locked_three_sport_daily_cadence.sql proof keeps the live guard enforced.
+do $legacy_runtime_fixture$
+begin
+  if exists (
+    select 1 from pg_trigger
+    where tgname = 'enforce_future_daily_publication_cadence'
+      and tgrelid = 'private.daily_challenges'::regclass
+      and not tgisinternal
+  ) then
+    execute 'alter table private.daily_challenges disable trigger enforce_future_daily_publication_cadence';
+  end if;
+end;
+$legacy_runtime_fixture$;
+
 select private.daily_challenge_central_day(now()) as today \gset
 
 select set_config('request.jwt.claim.role', 'service_role', true);
+
+-- This pre-cadence RPC/progress fixture deliberately publishes the Central
+-- calendar day, even on UFC's newer 48-hour hold days. Preserve its legacy
+-- identity assertions in a rolled-back transaction, with the live cadence
+-- trigger separately certified in locked_three_sport_daily_cadence.sql.
+do $legacy_fixture$
+begin
+  if exists (
+    select 1 from pg_trigger
+    where tgname = 'enforce_future_daily_publication_cadence'
+      and tgrelid = 'private.daily_challenges'::regclass
+      and not tgisinternal
+  ) then
+    execute 'alter table private.daily_challenges disable trigger enforce_future_daily_publication_cadence';
+  end if;
+end;
+$legacy_fixture$;
 
 insert into auth.users (
   id,

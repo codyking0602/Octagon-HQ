@@ -28,11 +28,13 @@ jobs:
       - name: Verify Football media processing offline
         run: python -m unittest scripts/test_football_editorial_assets.py
       - name: Process queued assets
+        id: process
         shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
           files=(.asset-ingest/*.json)
+          ufc_media=false
           if [ ${#files[@]} -eq 0 ]; then
             echo "No manifests."
             exit 0
@@ -43,11 +45,13 @@ jobs:
               football-spotlight|football-game-header)
                 python scripts/football_editorial_assets.py "$manifest" ;;
               thumb|spotlight)
+                ufc_media=true
                 python scripts/asset_ingest.py "$manifest" ;;
               *) echo "Unsupported asset kind: $kind" >&2; exit 1 ;;
             esac
             rm "$manifest"
           done
+          echo "ufc_media=$ufc_media" >> "$GITHUB_OUTPUT"
       - name: Commit generated assets
         id: commit
         shell: bash
@@ -126,8 +130,16 @@ jobs:
             exit 1
           fi
 
+      # Technical validation cannot certify correct identity, face framing, or clean
+      # background removal. UFC asset PRs must remain open for a human visual
+      # review before an authorized exact-head merge/deployment.
+      - name: UFC visual review handoff
+        if: steps.commit.outputs.generated == 'true' && steps.process.outputs.ufc_media == 'true'
+        run: |
+          echo '::notice title=UFC visual approval required::Generated UFC fighter assets are technically validated but NOT merged. Review every image for identity, crop and residual backgrounds before merging the exact validated PR head.'
+
       - name: Merge validated asset PR
-        if: steps.commit.outputs.generated == 'true'
+        if: steps.commit.outputs.generated == 'true' && steps.process.outputs.ufc_media != 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -144,7 +156,7 @@ jobs:
           gh pr merge "$PR_NUMBER"             --repo "$GITHUB_REPOSITORY"             --merge             --match-head-commit "$EXPECTED_SHA"
 
       - name: Deploy merged fighter asset
-        if: steps.commit.outputs.generated == 'true'
+        if: steps.commit.outputs.generated == 'true' && steps.process.outputs.ufc_media != 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}

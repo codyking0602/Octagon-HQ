@@ -31,19 +31,21 @@ function gameContext(sport: "ufc" | "football"): OfficialDailyRuntimeContext {
 }
 
 describe("all-sport official Daily action latency safeguards", () => {
-  it("avoids publication recovery SQL only for an existing published action board", () => {
+  it("bypasses recovery SQL for published reads and actions while preserving legacy cutover", () => {
     const fastPath = edge.slice(
       edge.indexOf("async function resolveInteractiveDaily("),
       edge.indexOf("async function materializeToday("),
     );
-    expect(fastPath).toContain('if (mode !== "advance") return materialize()');
+    expect(fastPath).toContain('if (mode !== "advance" && mode !== "get-today" && mode !== undefined) return materialize()');
     expect(fastPath).toContain('get_daily_challenge_materialization_request');
-    expect(fastPath).toContain("if (request.required !== false) return materialize()");
+    expect(fastPath).toContain('if (request.required !== false || (mode !== "advance" && migrationCandidate)) {');
+    expect(fastPath).toContain('const migrationCandidate = ["find_leader", "wavelength", "hit_the_number"]');
     expect(fastPath).toContain('requiredString(request.daily_challenge_id');
     expect(fastPath).toContain('requiredString(request.central_day');
     expect(fastPath).toContain('requiredString(request.schedule_version');
     expect(edge).toContain('resolveInteractiveDaily(admin, "football", body.mode)');
     expect(edge).toContain('resolveInteractiveDaily(admin, "ufc", body.mode)');
+    expect(edge).toContain('resolveInteractiveDaily(admin, scheduledSport, "get-today")');
     expect(edge).toContain('admin.auth.getUser(token)');
   });
 

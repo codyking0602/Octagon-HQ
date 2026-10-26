@@ -47,6 +47,19 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(ufcAdvanceLoad).toBeGreaterThan(ufcReadReturn);
   });
 
+  it("fast-paths published UFC and Football reads while preserving legacy two-game cutovers", () => {
+    const resolve = runtime.slice(
+      runtime.indexOf("async function resolveInteractiveDaily("),
+      runtime.indexOf("async function materializeToday("),
+    );
+    expect(resolve).toContain('mode !== "advance" && mode !== "get-today" && mode !== undefined');
+    expect(resolve).toContain('get_daily_challenge_materialization_request');
+    expect(resolve).toContain('request.required !== false');
+    expect(resolve).toContain('"find_leader", "wavelength", "hit_the_number"');
+    expect(resolve).toContain('mode !== "advance" && migrationCandidate');
+    expect(resolve).toContain('return materialize();');
+  });
+
   it("advances published UFC Blind Resume V3 without importing the heavyweight UFC generator", () => {
     const persistedAdvance = readFileSync(
       "supabase/functions/daily-challenge-runtime/blindResumeAdvance.ts",
@@ -87,11 +100,13 @@ describe("daily challenge runtime cold-start isolation", () => {
   });
 
   it("serves published Football Daily reads before loading the shared publication runtime", () => {
-    expect(runtime).toContain('function loadFootballPublicationRuntime(_gameType: OfficialDailyGameType)');
+    expect(runtime).toContain('function loadFootballPublicationRuntime(gameType: OfficialDailyGameType)');
     expect(runtime).toContain('function loadFootballAdvanceRuntime()');
     expect(runtime).toContain('function loadAverageFanRuntime()');
     expect(runtime).toContain('import("./average-fan.generated.mjs")');
     expect(runtime).toContain('import("./football-publication.generated.mjs")');
+    expect(runtime).toContain('import("./football-millionaire-publication.generated.mjs")');
+    expect(runtime).toContain('if (gameType === "millionaire")');
     expect(runtime).toContain('import("./football-advance.generated.mjs")');
     expect(runtime).not.toContain('import("./football-publication-who-am-i.generated.mjs")');
     expect(runtime).not.toContain('import("./football-publication-wavelength.generated.mjs")');
@@ -133,8 +148,8 @@ describe("daily challenge runtime cold-start isolation", () => {
   it("pre-materializes UFC and Football Daily in separate scheduled invocations", () => {
     expect(runtime).toContain('const scheduledSport = body.sport == null ? "ufc" : body.sport;');
     expect(runtime).toContain('scheduledSport === "football"');
-    expect(runtime).toContain("await materializeFootballToday(admin)");
-    expect(runtime).toContain("await materializeToday(admin)");
+    expect(runtime).toContain('resolveInteractiveDaily(admin, scheduledSport, "get-today")');
+    expect(runtime).toContain('const materialize = () => sport === "football"');
     expect(footballSchedulerMigration).toContain('{"mode":"scheduled","sport":"ufc"}');
     expect(footballSchedulerMigration).toContain('{"mode":"scheduled","sport":"football"}');
     expect(footballSchedulerMigration.match(/functions\/v1\/daily-challenge-runtime/g)).toHaveLength(2);
@@ -149,7 +164,14 @@ describe("daily challenge runtime cold-start isolation", () => {
     // The same canonical publisher handles today and the upcoming Central day.
     expect(runtime).toContain("async function materializeToday(admin: SupabaseClient, at?: string)");
     expect(runtime).toContain("async function materializeFootballToday(admin: SupabaseClient, at?: string)");
-    expect(runtime).toContain('at ? { p_at: at } : {}');
+    expect(runtime).toContain('p_sport: "ufc"');
+    expect(runtime).toContain('...(at ? { p_at: at } : {})');
+    const ufcPublisher = runtime.slice(
+      runtime.indexOf('async function materializeToday('),
+      runtime.indexOf('async function materializeFootballToday('),
+    );
+    expect(ufcPublisher).toContain('p_sport: "ufc"');
+    expect(ufcPublisher).not.toContain('at ? { p_at: at } : {});');
     expect(runtime).toContain("...(at ? { p_at: at } : {})");
     expect(runtime).toContain('timeZone: "America/Chicago"');
     expect(runtime).toContain("now.getTime() + 30 * 60 * 1000");
@@ -157,7 +179,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).toContain("await materializeFootballToday(admin, soon.toISOString())");
     expect(runtime).toContain("await materializeToday(admin, soon.toISOString())");
     expect(runtime.indexOf('if (centralDay(now) !== centralDay(soon))')).toBeGreaterThan(
-      runtime.indexOf('const materialized = scheduledSport === "football"'),
+      runtime.indexOf('const materialized = await resolveInteractiveDaily(admin, scheduledSport, "get-today")'),
     );
 
     // No new server polling during normal play. Transient failures self-heal,
@@ -196,6 +218,9 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(bundler).toContain('fileName: "average-fan.generated.mjs"');
     expect(bundler).toContain('src/features/play/averageFanDailyRuntime.ts');
     expect(bundler).toContain('fileName: "football-publication.generated.mjs"');
+    expect(bundler).toContain('fileName: "football-millionaire-publication.generated.mjs"');
+    expect(bundler).toContain('src/features/play/footballDailyPublicationMillionaire.ts');
+    expect(bundler).toContain('{ day: "2026-10-26", gameType: "millionaire", scheduleVersion: "football-daily-v21-locked-oct25" }');
     expect(bundler).toContain('fileName: "football-advance.generated.mjs"');
     expect(bundler).not.toContain('fileName: "football-publication-who-am-i.generated.mjs"');
     expect(bundler).not.toContain('fileName: "football-publication-hit-the-number.generated.mjs"');
@@ -223,6 +248,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(backendWorkflow).toContain('node scripts/bundle-daily-challenge-runtime.mjs');
     expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/average-fan.generated.mjs');
     expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs');
+    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-who-am-i.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-wavelength.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-find-leader.generated.mjs');

@@ -24,9 +24,8 @@ declare
   v_cody uuid := '71000000-0000-4000-8000-000000000001';
   v_shane uuid := '71000000-0000-4000-8000-000000000002';
   v_tony uuid := '71000000-0000-4000-8000-000000000003';
-  -- Match the active UFC board on off-cycle days. Identical to the pending
-  -- Football Daily incident fix in PR #2162; carried here only so the exact
-  -- NBA hotfix head can pass the shared backend integration suite.
+  -- Use the currently playable UFC board day, not the raw Central date:
+  -- on off-cycle October 26 the live 48-hour board remains October 25.
   v_today date := private.daily_challenge_active_day(private.daily_challenge_central_day(now()), 'ufc');
   v_ftl uuid;
   v_resume uuid;
