@@ -119,7 +119,7 @@ describe("PicksSeasonHub with unified Championship", () => {
     expect(screen.getByText("12-5 · 70.6% WIN · 48 PTS")).toBeInTheDocument();
     expect(screen.getByText("FINISHED EVENTS").closest("details")).not.toHaveAttribute("open");
     expect(screen.queryByText("Season leaderboard")).not.toBeInTheDocument();
-    fireEvent.click(screen.getByText("FINISHED WEEKS"));
+    fireEvent.click(screen.getByText("FINISHED EVENTS"));
     expect(screen.getByRole("link", { name: "Open Picks Championship leaderboard" }))
       .toHaveAttribute("href", "/championship/ufc?tab=picks");
     expect(screen.getByText("3 COMPLETED EVENTS")).toBeInTheDocument();
@@ -141,7 +141,7 @@ describe("PicksSeasonHub with unified Championship", () => {
     render(<MemoryRouter initialEntries={["/football/picks"]}>
       <PicksSeasonHub history={{ ...history, events: [footballEvent] }} loading={false} sport="football" />
     </MemoryRouter>);
-    fireEvent.click(screen.getByText("FINISHED EVENTS"));
+    fireEvent.click(screen.getByText("FINISHED WEEKS"));
     expect(screen.getByRole("link", { name: "Open Picks Championship leaderboard" }))
       .toHaveAttribute("href", "/championship/football?tab=picks");
     expect(screen.getByText("WEEK 1 · FINAL")).toBeInTheDocument();
