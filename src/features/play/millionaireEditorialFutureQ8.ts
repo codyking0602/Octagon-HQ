@@ -102,13 +102,6 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "In his first Auburn season, Terry Bowden coached the Tigers to 11-0 despite restrictions on postseason play and television.",
     { authority: "Auburn Athletics", url: "https://auburntigers.com/news/2020/05/1/auburns-perfect-1993-season", supportingDetail: "Official retrospective names Bowden and 1993 11-0 season while on probation." },
   ),
-  "cfb:6:7": q8(
-    "millionaire-cfb-future-colorado-mccartney-1990-q8", "title-coaching",
-    "Who coached Colorado to its first national football championship for the 1990 season?",
-    ["Bill McCartney", "Gary Barnett", "Rick Neuheisel", "Dan Hawkins"], "Bill McCartney",
-    "Bill McCartney guided Colorado to its first national football title in 1990.",
-    { authority: "Colorado Athletics", url: "https://cubuffs.com/honors/cu-athletic-hall-of-fame/bill-mccartney/63", supportingDetail: "University coaching biography names McCartney as the 1990 national champion." },
-  ),
   "cfb:8:7": q8(
     "millionaire-cfb-future-1993-ward-heisman-nba-q8", "two-sport-careers",
     "Which 1993 Heisman winner later played professional basketball in the NBA instead of pursuing an NFL career?",
