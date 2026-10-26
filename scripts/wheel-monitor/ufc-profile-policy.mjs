@@ -25,7 +25,7 @@ export function readOfficialAthleteProfile(html, expectedName) {
   if(!matched) return {status:"identity-unverified",designation:null,
     observedName:heading[0]??null};
   const text=doc.body?.textContent?.replace(/\s+/g," ").trim()??"";
-  const match=text.match(/\bStatus\s+(Not Fighting|Active|Fighting)\b/i);
+  const match=text.match(/Status\s+(Not Fighting|Active|Fighting)\b/i);
   if(!match)return {status:"designation-unverified",designation:null,observedName:matched};
   const designation=match[1].toLowerCase().replace(/\s+/g,"-");
   return {status:designation==="active"||designation==="fighting"
