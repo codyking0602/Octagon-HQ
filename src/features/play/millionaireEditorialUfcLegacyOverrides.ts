@@ -16,7 +16,7 @@ export const UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS = [
     ["light-heavyweight", "Who submitted Anthony Johnson at UFC 187 to win the vacant light heavyweight championship?", ["Daniel Cormier", "Jon Jones", "Alexander Gustafsson", "Rashad Evans"], "Daniel Cormier", "The former Olympic wrestler completed a third-round rear-naked choke."],
     ["reality-tv", "Who knocked out Kimbo Slice on Season 10 of The Ultimate Fighter?", ["Roy Nelson", "Brendan Schaub", "Matt Mitrione", "James McSweeney"], "Roy Nelson", "The victor later won the heavyweight tournament on that season of the show."],
     ["bantamweight-history", "Who took the UFC bantamweight belt from Sean O'Malley at UFC 306?", ["Merab Dvalishvili", "Petr Yan", "Aljamain Sterling", "Cory Sandhagen"], "Merab Dvalishvili", "The challenger controlled the five-round fight with wrestling in Las Vegas."],
-    ["title-origins", "Who became the UFC's inaugural 155-pound champion by beating Caol Uno at UFC 30?", ["Jens Pulver", "B.J. Penn", "Sean Sherk", "Frankie Edgar"], "Jens Pulver", null],
+    ["title-origins", "Who became the UFC's inaugural 155-pound champion by beating Caol Uno at UFC 30?", ["Jens Pulver", "B.J. Penn", "Sean Sherk", "Frankie Edgar"], "Jens Pulver", null, "Jens Pulver beat Caol Uno by unanimous decision at UFC 30 in February 2001 to become the UFC's first lightweight champion."],
   ],
   [
     ["nicknames", "Which bantamweight star is nicknamed Sugar?", ["Sean O'Malley", "Petr Yan", "Cory Sandhagen", "Dominick Cruz"], "Sean O'Malley", "The colorful striker won a UFC championship in Boston in 2023."],
@@ -26,7 +26,7 @@ export const UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS = [
     ["london-highlights", "Who knocked out Darren Till in London in the UFC's March 2019 main event?", ["Jorge Masvidal", "Stephen Thompson", "Tyron Woodley", "Colby Covington"], "Jorge Masvidal", "The visitor silenced the home crowd in the second round."],
     ["middleweight-finishes", "Who knocked out former champion Michael Bisping in the 2017 UFC Shanghai main event?", ["Kelvin Gastelum", "Anderson Silva", "Georges St-Pierre", "Luke Rockhold"], "Kelvin Gastelum", "A first-round left hand led to the stoppage of the short-notice main event."],
     ["comeback-knockouts", "Who knocked out Alexander Volkov with 15 seconds remaining at UFC 229 after trailing most of the fight?", ["Derrick Lewis", "Curtis Blaydes", "Francis Ngannou", "Tai Tuivasa"], "Derrick Lewis", "A dramatic late third-round surge turned a seemingly lost heavyweight fight into a stoppage."],
-    ["strawweight-upsets", "Who beat Rose Namajunas by split decision in the UFC 274 strawweight title fight?", ["Carla Esparza", "Zhang Weili", "Joanna Jedrzejczyk", "Jessica Andrade"], "Carla Esparza", null],
+    ["strawweight-upsets", "Who beat Rose Namajunas by split decision in the UFC 274 strawweight title fight?", ["Carla Esparza", "Zhang Weili", "Joanna Jedrzejczyk", "Jessica Andrade"], "Carla Esparza", null, "Carla Esparza regained the strawweight title by split decision over Rose Namajunas at UFC 274, eight years after first winning the division's belt."],
   ],
   [
     ["nicknames", "Which former two-division UFC champion is nicknamed The Lioness?", ["Amanda Nunes", "Valentina Shevchenko", "Cris Cyborg", "Holly Holm"], "Amanda Nunes", "The Brazilian held championships at both 135 and 145 pounds."],
@@ -36,6 +36,6 @@ export const UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS = [
     ["champion-origins", "Which fighter arrived in the UFC as the last reigning WEC bantamweight champion?", ["Dominick Cruz", "Urijah Faber", "Renan Barao", "Brian Bowles"], "Dominick Cruz", "The fighter had defended the WEC belt against Scott Jorgensen in 2010."],
     ["lightweight-history", "Who defeated Anthony Pettis at UFC 185 to win the lightweight championship?", ["Rafael dos Anjos", "Benson Henderson", "Eddie Alvarez", "Donald Cerrone"], "Rafael dos Anjos", "The Brazilian earned a dominant five-round decision in Dallas."],
     ["middleweight-grappling", "Who submitted former champion Robert Whittaker with a first-round face crank at UFC 308?", ["Khamzat Chimaev", "Dricus du Plessis", "Sean Strickland", "Paulo Costa"], "Khamzat Chimaev", "The 2024 Abu Dhabi co-main event ended before four minutes elapsed."],
-    ["controversial-decisions", "Who retained the UFC light heavyweight title over Mauricio 'Shogun' Rua by disputed unanimous decision at UFC 104?", ["Lyoto Machida", "Quinton Jackson", "Rashad Evans", "Forrest Griffin"], "Lyoto Machida", null],
+    ["controversial-decisions", "Who retained the UFC light heavyweight title over Mauricio 'Shogun' Rua by disputed unanimous decision at UFC 104?", ["Lyoto Machida", "Quinton Jackson", "Rashad Evans", "Forrest Griffin"], "Lyoto Machida", null, "Lyoto Machida retained his light heavyweight title by disputed unanimous decision against Mauricio Rua at UFC 104; Rua won their rematch."],
   ],
 ] as const;
