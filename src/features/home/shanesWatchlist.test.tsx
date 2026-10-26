@@ -61,9 +61,18 @@ describe("Shane's ranked watchlist", () => {
       rank: 2,
       previousRank: 3,
       lastReviewed: "October 2026",
+      ufcRecord: "4–0",
+      ufcWinStreak: "4",
+      ufcFinishes: "4",
+      photoUrl: "/assets/fighters/abdul-rakhman-yakhyaev-20261026-thumb.webp",
       videoUrl: "https://youtu.be/DLHnf12AAFM?is=GC_mx7BpYcnD9ZIS",
     });
     expect(watchMovement(yakhyaev)).toEqual({ label: "↑1", direction: "up" });
+    expect(yakhyaev.whyOnBoard).toContain("Nikita Krylov");
+    expect(yakhyaev.scoutingSnapshot).toContain("2:38 of Round 1");
+    expect(yakhyaev.scoutingSnapshot).toContain("D’Arce choke");
+    expect(yakhyaev.scoutingSnapshot).toContain("four first-round finishes");
+    expect(existsSync("public/assets/fighters/abdul-rakhman-yakhyaev-20261026-thumb.webp")).toBe(true);
 
     const bilal = shanesWatchlist.fighters[3];
     expect(bilal).toMatchObject({
