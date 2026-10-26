@@ -105,12 +105,12 @@ export default function FootballPicksPage() {
   }, [games, picks.selections, picks.footballLocks]);
   const weeklyStandings = useMemo(
     () => footballLiveStandingsForMembers(
-      picks.groupProgress.filter((member) => member.completed > 0),
+      (picks.groupProgress ?? []).filter((member) => member.completed > 0),
       games.filter((game) => game.resultStatus !== "cancelled").slice().sort((a, b) => a.position - b.position),
     ),
     [picks.groupProgress, games],
   );
-  const currentProfile = picks.groupProgress.find((member) => member.isCurrentUser);
+  const currentProfile = (picks.groupProgress ?? []).find((member) => member.isCurrentUser);
   const currentStanding = currentProfile ? weeklyStandings.get(currentProfile.profileId) : null;
   const weeklyRank = currentStanding && currentStanding.settled > 0
     ? footballStandingRankLabel(currentStanding.rank, currentStanding.tied) : "—";
