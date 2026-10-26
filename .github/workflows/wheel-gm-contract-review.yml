@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/wheel-monitor/gm-contract-*.mjs'
       - 'scripts/wheel-monitor/gm-contract-*.nodecheck.mjs'
+      - 'scripts/wheel-monitor/test_gm_contract_term.py'
+      - 'scripts/generate-wheel-nfl-gm-contracts.py'
       - '.github/workflows/wheel-gm-contract-review.yml'
 
 permissions:
@@ -31,6 +33,7 @@ jobs:
         run: |
           node --check scripts/wheel-monitor/gm-contract-review.mjs
           node --test scripts/wheel-monitor/gm-contract-compare.nodecheck.mjs
+          python -m unittest discover -s scripts/wheel-monitor -p 'test_gm_contract_term.py' -v
       - name: Install version-pinned read-only nflverse provider
         run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
       - name: Build ephemeral live-source contract evidence
