@@ -93,6 +93,53 @@ jobs:
           else
             echo "PREVIOUS_OBSERVATION=" >> "$GITHUB_ENV"
           fi
+      - name: Restore only exact-main successful staged source reports
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tmp/wheel-monitor/staged
+          # Absence is a mandatory certification blocker, not a collection
+          # failure. No stale/PR/other-SHA artifact is allowed to certify.
+          while IFS='|' read -r artifact workflow; do
+            [[ -n "$artifact" ]] || continue
+            candidates=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$artifact&per_page=100")
+            run_id=$(jq -r --arg sha "$GITHUB_SHA" --arg name "$artifact" '
+              [.artifacts[] | select(.name == $name and .expired == false and
+                .workflow_run.head_sha == $sha and
+                .workflow_run.head_branch == "main")] |
+              sort_by(.created_at) | reverse | .[0].workflow_run.id // empty
+            ' <<<"$candidates")
+            [[ -n "$run_id" ]] || continue
+            run=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")
+            eligible=$(jq -r --arg sha "$GITHUB_SHA" --arg wf "$workflow" '
+              .head_sha == $sha and .head_branch == "main" and
+              .name == $wf and .event == "workflow_dispatch" and
+              .status == "completed" and .conclusion == "success"
+            ' <<<"$run")
+            [[ "$eligible" == "true" ]] || continue
+            folder="tmp/wheel-monitor/staged/$artifact"
+            mkdir -p "$folder"
+            if gh run download "$run_id" --name "$artifact" --dir "$folder"; then
+              jq -n --arg artifactName "$artifact" --arg workflowName "$workflow" \
+                --arg headSha "$GITHUB_SHA" --arg completedAt "$(jq -r .updated_at <<<"$run")" \
+                --argjson runId "$run_id" '{
+                  artifactName:$artifactName,workflowName:$workflowName,
+                  headSha:$headSha,completedAt:$completedAt,runId:$runId,
+                  headBranch:"main",status:"completed",conclusion:"success",
+                  event:"workflow_dispatch"
+                }' > "$folder/provenance.json"
+            else
+              rm -rf "$folder"
+              echo "::warning::Could not retrieve $artifact; certification stays blocked."
+            fi
+          done <<'STAGED'
+          wheel-nfl-current-coach-evidence|Wheel NFL Official Current Coach Evidence (staged)
+          wheel-nfl-cross-source-evidence|Wheel NFL Cross-Source Evidence (staged)
+          wheel-gm-contract-source-review|Wheel GM Contract Source Review (staged)
+          wheel-ufc-unranked-profile-evidence|Wheel UFC Unranked Profile Evidence (staged)
+          STAGED
       - name: Collect and reconcile required NFL/UFC populations
         id: collect
         shell: bash
@@ -105,6 +152,7 @@ jobs:
           node scripts/wheel-monitor/run.mjs \
             --previous="$PREVIOUS_SNAPSHOT" \
             --previous-observation="$PREVIOUS_OBSERVATION" \
+            --stage-evidence-dir=tmp/wheel-monitor/staged \
             --out=tmp/wheel-monitor/current
           if [[ -f tmp/wheel-monitor/current/snapshot.json ]]; then
             echo "snapshot_ready=true" >> "$GITHUB_OUTPUT"
