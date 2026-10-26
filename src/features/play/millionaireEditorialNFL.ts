@@ -39,7 +39,7 @@ export const nflEditorialCandidateRuns = [
     ["history", "Which quarterback threw a touchdown pass to himself after it was deflected in a playoff game against Tennessee?", ["Marcus Mariota", "Patrick Mahomes", "Alex Smith", "Andrew Luck"], "Marcus Mariota", "The unusual play occurred during a Chiefs–Titans postseason comeback in January 2018."],
     ["super-bowl-upsets", "Which backup quarterback led the Giants to victory in Super Bowl XXV after Phil Simms was injured?", ["Jeff Hostetler", "Dave Brown", "Kerry Collins", "Scott Brunner"], "Jeff Hostetler", "The Giants defeated Buffalo 20–19 when a last-second field goal went wide."],
     ["coaches", "Who succeeded Bill Walsh as 49ers head coach and won Super Bowl XXIV?", ["George Seifert", "Steve Mariucci", "Dennis Erickson", "Mike Shanahan"], "George Seifert", "His first season as San Francisco's head coach ended 14-2 and with a title."],
-    ["super-bowl-defense", "Who recovered Tom Brady's late fumble after Brandon Graham's strip-sack in Super Bowl LII?", ["Derek Barnett", "Fletcher Cox", "Chris Long", "Tim Jernigan"], "Derek Barnett", null],
+    ["super-bowl-defense","Which Packers safety returned Ben Roethlisberger’s interception for a touchdown in Super Bowl XLV?",["Nick Collins","Tramon Williams","Charles Woodson","Morgan Burnett"],"Nick Collins",null],
   ],
   [
     ["stadium-sharing", "Which NFL team shares SoFi Stadium with the Los Angeles Chargers?", ["Rams", "49ers", "Raiders", "Cardinals"], "Rams", "Both franchises play their home games in Inglewood, California."],
