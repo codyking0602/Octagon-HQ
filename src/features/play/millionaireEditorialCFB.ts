@@ -3,7 +3,7 @@
 export const cfbEditorialCandidateRuns = [
   [
     ["legends", "Which school did two-sport star Bo Jackson play college football for?", ["Auburn", "Alabama", "Georgia", "Florida"], "Auburn", "The runner won the 1985 Heisman Trophy."],
-    ["stadiums", "Which program calls Ben Hill Griffin Stadium The Swamp?", ["Florida", "Florida State", "Miami", "UCF"], "Florida", "The nickname became popular during the Steve Spurrier coaching era."],
+    ["stadiums", "Which Pac-12-era program plays its home games at Autzen Stadium?", ["Oregon", "Oregon State", "Washington", "Washington State"], "Oregon", "The Ducks' famously loud venue is in Eugene."],
     ["upsets", "Who quarterbacked Texas Tech to its dramatic 2008 victory over No. 1 Texas?", ["Graham Harrell", "Colt McCoy", "Michael Crabtree", "Sam Bradford"], "Graham Harrell", "The winning play was a late touchdown pass to Michael Crabtree."],
     ["coaches", "Who coached Nebraska to its dominant 1995 national championship season?", ["Tom Osborne", "Frank Solich", "Bob Devaney", "Barry Switzer"], "Tom Osborne", "The Cornhuskers routed Florida in the Fiesta Bowl to finish 12–0."],
     ["rivalries", "Who caught Doug Flutie's famous last-second touchdown against Miami in 1984?", ["Gerard Phelan", "Brian Brennan", "Mark Chmura", "Troy Brown"], "Gerard Phelan", "Boston College won 47–45 on a 48-yard desperation pass."],
@@ -49,6 +49,6 @@ export const cfbEditorialCandidateRuns = [
     ["undefeated-seasons", "Who coached Auburn's undefeated 2004 football team?", ["Tommy Tuberville", "Gus Malzahn", "Gene Chizik", "Pat Dye"], "Tommy Tuberville", "The Tigers finished 13–0 with a Sugar Bowl victory."],
     ["upsets", "Which team handed Alabama its only regular-season loss in Johnny Manziel's 2012 Heisman season?", ["Texas A&M", "LSU", "Ole Miss", "Georgia"], "Texas A&M", "The upset happened in Tuscaloosa in the Aggies' first SEC season."],
     ["milestones", "Who became the first Black recipient of the Heisman Trophy in 1961?", ["Ernie Davis", "Archie Griffin", "O.J. Simpson", "Jim Brown"], "Ernie Davis", "The Syracuse runner followed a trailblazing college career by Jim Brown."],
-    ["heisman-origins", "Which school did the inaugural Heisman winner Jay Berwanger represent in 1935?", ["Chicago", "Notre Dame", "Illinois", "Northwestern"], "Chicago", null],
+    ["army-football", "Which Army football star was nicknamed Mr. Outside alongside Doc Blanchard's Mr. Inside?", ["Glenn Davis", "Felix Blanchard", "Red Grange", "Tom Harmon"], "Glenn Davis", null],
   ],
 ] as const;
