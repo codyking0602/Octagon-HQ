@@ -126,9 +126,10 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(heavyweights.length).toBeLessThanOrEqual(2);
   });
 
-  it("preserves three source-checked, future-only featured finals without restoring obscure predecessors", () => {
+  it("preserves four source-checked, future-only featured finals without restoring obscure predecessors", () => {
     const revisedFinals = [
       ["nfl", 11, "Mecole Hardman", "Super Bowl LVIII"],
+      ["cfb", 13, "Jack Sawyer", "January 2025 Cotton Bowl"],
       ["cfb", 14, "Blake Corum", "January 2024 Rose Bowl"],
       ["ufc", 10, "Brian Ortega", "UFC 266"],
     ] as const;
