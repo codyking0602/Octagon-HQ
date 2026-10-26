@@ -27,14 +27,14 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "NFL game analysis", url: "https://www.nfl.com/news/eagles-d-on-strip-sack-it-was-only-a-matter-of-time-0ap3000000914610", supportingDetail: "The NFL confirms Graham forced the fumble, Barnett recovered and the Eagles won 41–33." }],
   },
   "nfl:4:5": {
-    id: "millionaire-nfl-future-jefferson-2022-opoy-q6",
-    type: "modern-offensive-awards",
-    prompt: "Which receiver won AP NFL Offensive Player of the Year for the 2022 season with 1,809 receiving yards?",
-    choices: ["Justin Jefferson", "Tyreek Hill", "Davante Adams", "A.J. Brown"],
-    answer: "Justin Jefferson",
-    statSheet: "The award winner starred on a 13-win NFC North team under a first-year head coach.",
-    explanation: "Minnesota wide receiver Justin Jefferson won the AP 2022 Offensive Player of the Year award after making 128 catches for 1,809 receiving yards.",
-    evidence: [{ authority: "NFL Honors", url: "https://www.nfl.com/news/running-list-of-nfl-honors-award-winners-from-2022-nfl-season", supportingDetail: "NFL's awards list names Jefferson as 2022 AP Offensive Player of the Year." }],
+    id: "millionaire-nfl-future-geno-smith-comeback-2022-q6",
+    type: "modern-comeback-awards",
+    prompt: "Which quarterback won AP NFL Comeback Player of the Year for 2022 after leading Seattle to the playoffs?",
+    choices: ["Geno Smith", "Jared Goff", "Baker Mayfield", "Marcus Mariota"],
+    answer: "Geno Smith",
+    statSheet: "The winner threw for a career-high 4,282 yards in his first full season as a starter since 2014.",
+    explanation: "Geno Smith won the AP 2022 NFL Comeback Player of the Year award after replacing Russell Wilson as Seattle's starting quarterback and throwing 30 touchdown passes.",
+    evidence: [{ authority: "NFL Honors", url: "https://www.nfl.com/news/seahawks-qb-geno-smith-earns-ap-nfl-comeback-player-of-the-year-honors", supportingDetail: "NFL's award announcement confirms Smith won the 2022 Comeback Player of the Year honor after 4,282 yards and 30 touchdowns." }],
   },
 
   // Preview-only rewrite of a verbatim active Bar Trivia "Notorious" nickname.

@@ -22,9 +22,9 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(graham.choices).toContain("Derek Barnett");
     expect(graham.prompt).toContain("Super Bowl LII");
     expect(graham.statSheet).not.toContain("Brandon Graham");
-    expect(jefferson.answer).toBe("Justin Jefferson");
+    expect(jefferson.answer).toBe("Geno Smith");
     expect(jefferson.prompt).toContain("2022");
-    expect(jefferson.statSheet).not.toContain("Justin Jefferson");
+    expect(jefferson.statSheet).not.toContain("Geno Smith");
     expect(millionaireDailyRun("nfl", 3)[4]!.prompt).toContain("wild-card");
     expect(millionaireDailyRun("nfl", 4)[5]!.prompt).toContain("kicker");
   });
