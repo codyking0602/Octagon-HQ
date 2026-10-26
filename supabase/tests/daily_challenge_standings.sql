@@ -174,7 +174,7 @@ begin
     or (v_shane_row->>'average_score')::numeric <> 82.5
     or (v_shane_row->>'current_streak')::integer <> 4
     or (v_shane_row->>'best_streak')::integer <> 4 then
-    raise exception 'tied daily wins or yesterday-current streak were calculated incorrectly';
+    raise exception 'tied daily wins or yesterday-current streak were calculated incorrectly: %', v_shane_row;
   end if;
 
   if v_tony_row->>'display_name' <> 'TONY'
