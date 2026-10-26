@@ -126,6 +126,28 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(heavyweights.length).toBeLessThanOrEqual(2);
   });
 
+  it("preserves three source-checked, future-only featured finals without restoring obscure predecessors", () => {
+    const revisedFinals = [
+      ["nfl", 11, "Mecole Hardman", "Super Bowl LVIII"],
+      ["cfb", 14, "Blake Corum", "January 2024 Rose Bowl"],
+      ["ufc", 10, "All three defending champions lost", "UFC 217"],
+    ] as const;
+    for (const [league, runIndex, correct, occasion] of revisedFinals) {
+      const run = millionaireFutureEditorialDailyRun(league, runIndex);
+      const final = run[7]!;
+      expect(final.level).toBe("Q8");
+      expect(final.prompt).toContain(occasion);
+      expect(answer(final)).toBe(correct);
+      expect(final.explanation).toContain(correct);
+      expect(final.explanation.length).toBeGreaterThan(80);
+      expect(new Set(final.choices.map(option => normalized(option.text))).size).toBe(4);
+      expect(final.statSheet).toBeNull();
+      expect(final.lifelineCompatibility).toMatchObject({
+        fiftyFifty: false, statSheet: false, doubleDip: false,
+      });
+    }
+  });
+
   it("has zero repeated complete run IDs in the actual six-month canonical publication calendar", () => {
     const seen = new Set<string>();
     const appearances: Record<typeof leagues[number], number> = { nfl: 0, cfb: 0, ufc: 0 };
