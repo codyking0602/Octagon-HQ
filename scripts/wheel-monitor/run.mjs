@@ -224,6 +224,17 @@ function reconcile(rows, sourceRosters, ufcRanks, coaches, previous) {
               canonical:{rank:row.rank,champion:row.champion},
               official:{rank:candidate.rank,champion:candidate.champion}});
         }
+      } else if(candidate) {
+        // A previously unranked canonical fighter can enter UFC's official
+        // top 15. Reconcile the factual source only; never regrade.
+        updated.sourceStatus="matched";
+        updated.officialRank=candidate.rank;
+        updated.officialChampion=candidate.champion;
+        record("factual-correction",
+          "Previously unranked UFC athlete now appears in official All Rankings",
+          ufcRanks.url,{fighterId:row.fighterId,division:row.division,
+            canonical:{rank:row.rank,champion:row.champion},
+            official:{rank:candidate.rank,champion:candidate.champion}});
       } else updated.sourceStatus="unranked-not-verified-by-ranked-table";
       if(!row.photo) record("factual-correction","Missing UFC canonical headshot",
         "live:private.wheel_ufc_fighters",{fighterId:row.fighterId,division:row.division});
