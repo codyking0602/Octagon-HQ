@@ -91,6 +91,15 @@ export function compareEvidence(current, previous=null) {
       level=LEVEL.REVIEW;
       reasons.push("head-coach-independent-source-disagreement");
     }
+    // Source/canonical disagreement is a factual ranking review even if
+    // last week's observation was identically stale. Never report no-change.
+    if(row.sport==="ufc" && row.sourceStatus==="matched" &&
+       row.officialChampion!==undefined &&
+       (row.rank!==row.officialRank || row.champion!==row.officialChampion)) {
+      level=LEVEL.FACT;
+      if(!reasons.includes("official-ufc-canonical-rank-mismatch"))
+        reasons.push("official-ufc-canonical-rank-mismatch");
+    }
     if(row.sourceStatus==="missing" && prior?.sourceStatus!=="missing"
       && level===LEVEL.NONE) {
       level=LEVEL.REVIEW;
