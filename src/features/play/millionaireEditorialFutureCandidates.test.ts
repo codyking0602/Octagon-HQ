@@ -109,7 +109,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["nfl", 11, 4, "James Harrison"],
       ["ufc", 10, 2, "Kamaru Usman"],
       ["ufc", 10, 4, "Carlos Condit"],
-      ["ufc", 10, 6, "T.J. Dillashaw"],
+      ["ufc", 10, 6, "Alexandre Pantoja"],
     ] as const;
     for (const [league, runIndex, level, expected] of sourceChecked) {
       const run = millionaireFutureEditorialDailyRun(league, runIndex);
