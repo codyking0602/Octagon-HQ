@@ -22,6 +22,7 @@ import {
 } from "./millionaireDailyQuestionBank";
 import { footballThemedMillionaireRunForDay } from "./footballTeamThemeDailyPacks";
 import { MILLIONAIRE_FUTURE_TARGETED_REWRITES } from "./millionaireEditorialFutureErrata";
+import { MILLIONAIRE_FUTURE_Q8_REWRITES } from "./millionaireEditorialFutureQ8";
 import type { OfficialDailySetupPublication } from "./todaysChallengeRuntime";
 import {
   FOOTBALL_FUTURE_WEIGHTED_CYCLE,
@@ -306,7 +307,8 @@ function futureMillionaireErrata(
 ): MillionaireRun {
   if (day < "2026-10-27") return run;
   return run.map((question, index) => {
-    const newQuestion = MILLIONAIRE_FUTURE_TARGETED_REWRITES[`${league}:${runIndex}:${index}`];
+    const newQuestion = MILLIONAIRE_FUTURE_TARGETED_REWRITES[`${league}:${runIndex}:${index}`]
+      ?? MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${runIndex}:${index}`];
     if (newQuestion) {
       // Do not mutate the legacy question authority or any persisted result.
       // With independent future v6 IDs even historic caches remain auditable.
