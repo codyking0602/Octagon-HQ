@@ -88,7 +88,25 @@ jobs:
 
           echo "Fresh-database bootstrap images:"
           cat "$RUNNER_TEMP/supabase-db-images.txt"
-          xargs -r -n 1 -P 4 docker pull < "$RUNNER_TEMP/supabase-db-images.txt"
+          # GHCR rate limits concurrent layer downloads across busy PR runs.
+          # Keep fresh-db proof authoritative; retry transient pulls rather than
+          # recording an infrastructure 429 as a failed SQL migration.
+          while IFS= read -r image; do
+            pulled=false
+            for attempt in 1 2 3 4 5; do
+              if docker pull "$image"; then
+                pulled=true
+                break
+              fi
+              echo "::warning title=Retrying database image pull::${image} failed on attempt ${attempt}; retrying after backoff."
+              sleep $((attempt * 10))
+            done
+            if [ "$pulled" != true ]; then
+              echo "::error title=Database image unavailable::Failed to pull $image after five attempts."
+              exit 1
+            fi
+            sleep 2
+          done < "$RUNNER_TEMP/supabase-db-images.txt"
 
       - name: Execute Auction lifecycle SQL tests on a fresh local database
         shell: bash
