@@ -102,7 +102,8 @@ describe("Football team-themed Daily packs", () => {
     const rivals = pack.fastMoney.find((question) => question.id.endsWith("fast-rivals"))!;
     expect(matchFamilyFeudAnswer(pack, rivals, "A&M").status).toBe("matched");
     expect(matchFamilyFeudAnswer(pack, rivals, "UGA").status).toBe("matched");
-    expect(matchFamilyFeudAnswer(pack, rivals, "Texas Tech").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, rivals, "Vanderbilt").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, rivals, "OSU").status).toBe("matched");
 
     const traditions = pack.fastMoney.find((question) => question.id.endsWith("fast-traditions"))!;
     expect(matchFamilyFeudAnswer(pack, traditions, "Hook em").status).toBe("matched");
