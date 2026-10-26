@@ -1,0 +1,44 @@
+name: Wheel NFL Official Current Coach Evidence (staged)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/wheel-monitor/nfl-coach-current-*.mjs'
+      - 'scripts/wheel-monitor/nfl-coach-current-*.nodecheck.mjs'
+      - '.github/workflows/wheel-nfl-coach-current-review.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wheel-nfl-current-coaches-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  current-coaches:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Verify current official coach extraction and freshness gates
+        run: |
+          node --check scripts/wheel-monitor/nfl-coach-current-review.mjs
+          node --test scripts/wheel-monitor/nfl-coach-current-source.nodecheck.mjs
+      - name: Collect 32 official live NFL team pages
+        run: |
+          node scripts/wheel-monitor/nfl-coach-current-review.mjs \
+            --out=tmp/wheel-monitor/nfl/current-coaches.json
+      - name: Preserve isolated coach-source evidence, never alter authority
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-current-coach-evidence
+          path: tmp/wheel-monitor/nfl/current-coaches.json
+          retention-days: 30
+          if-no-files-found: warn
