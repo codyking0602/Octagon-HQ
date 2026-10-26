@@ -32,7 +32,7 @@ export const ufcEditorialCandidateRuns = [
     ["submission-surprises", "Who submitted B.J. Penn by heel hook at UFC 232?", ["Ryan Hall", "Charles Oliveira", "Frankie Edgar", "Nate Diaz"], "Ryan Hall", null],
   ],
   [
-    ["olympic-champions", "Which two-division UFC champion won Olympic wrestling gold in Beijing in 2008?", ["Henry Cejudo", "Daniel Cormier", "Jon Jones", "Rashad Evans"], "Henry Cejudo", "He later held the UFC flyweight and bantamweight championships."],
+    ["nicknames","Which former UFC flyweight champion is nicknamed The Assassin Baby?",["Brandon Moreno","Deiveson Figueiredo","Alexandre Pantoja","Kai Kara-France"],"Brandon Moreno","The Mexican fighter developed a four-fight rivalry with Deiveson Figueiredo."],
     ["legends", "Who knocked out Michael Bisping with a jumping punch at UFC 100?", ["Dan Henderson", "Anderson Silva", "Vitor Belfort", "Wanderlei Silva"], "Dan Henderson", "The stoppage followed an overhand right remembered as an H-Bomb."],
     ["reality-tv-history", "Who coached the first season of The Ultimate Fighter opposite Chuck Liddell?", ["Randy Couture", "Tito Ortiz", "Ken Shamrock", "Rich Franklin"], "Randy Couture", "The inaugural reality-show season aired in early 2005."],
     ["reality-tv-history", "Who coached opposite Conor McGregor on Season 22 of The Ultimate Fighter?", ["Urijah Faber", "Chad Mendes", "Jose Aldo", "T.J. Dillashaw"], "Urijah Faber", "The 2015 season matched Team Europe against Team United States."],
