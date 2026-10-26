@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "version": "wheel-gm-contract-source-proposals-2026-10-25-v1",
+  "status": "draft-owner-review-only-not-published",
+  "sourceScan": "2026-10-26",
+  "publishedFile": "wheel-nfl-gm-contracts-2026-10-05.json",
+  "provider": "OverTheCap via nflverse (nflreadpy pinned 0.1.5)",
+  "providerFreshnessCertified": false,
+  "authorityChangeAuthorized": false,
+  "eligiblePopulation": 594,
+  "sourceMatched": 591,
+  "unmatched": 3,
+  "unchanged": 551,
+  "ageOnly": 38,
+  "material": 2,
+  "sourceQuality": "review-blocked-unmatched-identities",
+  "proposals": [
+    {
+      "team": "ATL",
+      "family": "Front Seven",
+      "name": "Gervon Dexter Sr.",
+      "previous": {
+        "salaryApy": 1680933,
+        "gameContract": "1YR",
+        "realContractEndSeason": 2026
+      },
+      "proposed": {
+        "salaryApy": 19500000,
+        "gameContract": "3YR",
+        "realContractEndSeason": 2030
+      },
+      "reason": "Sept 30, 2026 Falcons four-year $78M extension; actual 2027-30 playing terms, OTC retains 2031 and beyond cash/void-related history. Source generator now correctly reports 2030; publication is still gated on owner economy review.",
+      "sources": [
+        "https://www.atlantafalcons.com/news/falcons-dt-gervon-dexter-sr-agree-to-terms-on-four-year-contract-extension",
+        "https://overthecap.com/player/gervon-dexter/10877"
+      ]
+    },
+    {
+      "team": "HOU",
+      "family": "WR",
+      "name": "Tank Dell",
+      "previous": {
+        "salaryApy": 1700000
+      },
+      "proposed": {
+        "salaryApy": 2195000
+      },
+      "classificationUnchanged": true,
+      "reason": "OTC provider active APY has increased to $2,195,000. The gameContract classification is unchanged; retain it and other metadata until reconciled against published authority and team extension information.",
+      "sources": [
+        "https://overthecap.com/player/nathaniel-dell/10893"
+      ]
+    }
+  ],
+  "pendingIdentityReviews": [
+    {
+      "name": "Xavier Woods",
+      "priorTeam": "CHI",
+      "released": "2026-10-17",
+      "source": "https://www.chicagobears.com/team/transactions/2026"
+    },
+    {
+      "name": "Darius Slayton",
+      "priorTeam": "IND",
+      "released": "2026-10-16",
+      "source": "https://www.colts.com/news/colts-release-wide-receiver-darius-slayton"
+    },
+    {
+      "name": "Najee Harris",
+      "priorTeam": "NYG",
+      "released": "2026-10-20",
+      "source": "https://www.giants.com/news/rb-najee-harris-olb-jihad-ward-released-among-series-of-roster-moves-trace-ford-active-roster-moves-week-7"
+    }
+  ],
+  "publicationGates": [
+    "Resolve all 594 eligible source identities or explicitly approved population edits",
+    "Verify provider source dataset timestamp independent of report generation timestamp",
+    "Produce complete authority snapshot preserving manually approved projection adjustments",
+    "Run GM economy and simulated-player-choice regression across updated contract terms",
+    "Owner approval of contract and roster changes",
+    "Exact final PR-head Validate V2 green before merge"
+  ]
+}
