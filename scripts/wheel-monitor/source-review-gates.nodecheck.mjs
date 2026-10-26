@@ -32,3 +32,19 @@ test("malformed evidence cannot silently certify",()=>{
  assert.throws(()=>sourceReviewBlockers(null,[]),/Complete/);
  assert.throws(()=>sourceReviewBlockers([],null),/Complete/);
 });
+
+test("an official UFC rank correction blocks promotion even for matched fighters",()=>{
+  const evidence=[
+    {type:"factual-correction",source:"https://www.ufc.com/rankings",fighterId:21,division:"Lightweight"},
+    {type:"factual-correction",source:"https://www.ufc.com/rankings",fighterId:21,division:"Lightweight"},
+    {type:"factual-correction",source:"https://www.ufc.com/rankings",fighterId:22,division:"Middleweight"},
+  ];
+  assert.deepEqual(sourceReviewBlockers(evidence,[
+    {sport:"ufc",sourceStatus:"matched"},
+  ]),["ufc-official-ranking-factual-differences:2"]);
+});
+test("removal of canonical identity requires explicit reconciliation",()=>{
+  assert.deepEqual(sourceReviewBlockers([
+    {type:"mandatory-factual-correction",oldIdentity:"nfl|DAL|WR|example"},
+  ],[]),["unapproved-removed-canonical-identity:nfl|DAL|WR|example"]);
+});
