@@ -28,7 +28,7 @@ export const nflEditorialCandidateRuns = [
     ["rushing-history", "Whose NFL career rushing record did Walter Payton break in 1984?", ["Jim Brown", "O.J. Simpson", "Eric Dickerson", "Gale Sayers"], "Jim Brown", "The previous record holder had retired after nine seasons with Cleveland."],
     ["super-bowl-awards", "Which Cowboys defensive back won Super Bowl XXX MVP after two interceptions?", ["Larry Brown", "Darren Woodson", "Deion Sanders", "Kevin Smith"], "Larry Brown", "The turnovers came against Pittsburgh's Neil O'Donnell."],
     ["playoff-moments", "Who made a touchdown-saving tackle after the Colts recovered Jerome Bettis's late fumble in the 2005 season's divisional playoffs?", ["Ben Roethlisberger", "Troy Polamalu", "Joey Porter", "James Farrior"], "Ben Roethlisberger", "The tackle preserved Pittsburgh's lead just before Indianapolis missed a potential tying field goal."],
-    ["super-bowl-moments", "Who caught Joe Montana's late winning touchdown against Cincinnati in Super Bowl XXIII?", ["John Taylor", "Jerry Rice", "Dwight Clark", "Brent Jones"], "John Taylor", "The catch capped a 92-yard drive in the final minutes."],
+    ["super-bowl-finishes","Who caught Eli Manning’s go-ahead touchdown pass with 35 seconds left in Super Bowl XLII?",["Plaxico Burress","David Tyree","Amani Toomer","Steve Smith"],"Plaxico Burress","The catch capped an 83-yard drive that ended New England’s perfect-season bid."],
     ["super-bowl-history", "Who became the first defensive back to win Super Bowl MVP?", ["Jake Scott", "Larry Brown", "Dexter Jackson", "Richard Sherman"], "Jake Scott", null],
   ],
   [
