@@ -67,7 +67,7 @@ describe("Supabase backend verification workflow contract", () => {
     expect(localSql).toContain('docker tag "$mirror" "$image"');
     expect(localSql).toContain('docker pull "$image"');
     expect(localSql).toContain("Supabase Postgres image unavailable");
-    expect(localSql).not.toMatch(/ghcr\\.io\\/supabase\\/postgres:[0-9]/);
+    expect(localSql).not.toMatch(new RegExp("ghcr[.]io/supabase/postgres:[0-9]"));
     expect(liveBackend).not.toContain("docker pull");
     expect(liveWebkit).not.toContain("docker pull");
   });
