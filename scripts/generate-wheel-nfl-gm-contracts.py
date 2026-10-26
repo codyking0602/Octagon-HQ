@@ -8,6 +8,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 from nflreadpy import load_contracts, load_players
+import polars as pl
 
 FAMILIES = ("QB", "RB", "WR", "TE", "Front Seven", "Secondary")
 POSITION_FAMILY = {
@@ -192,6 +193,7 @@ def main():
     parser.add_argument("--window-end-season", type=int)
     parser.add_argument("--output", default="/tmp/gm-contracts.json")
     parser.add_argument("--report", default="/tmp/gm-contract-report.json")
+    parser.add_argument("--verified-contracts", help="Use separately digest-verified published contract parquet bytes")
     args = parser.parse_args()
 
     global SNAPSHOT_DATE, WINDOW_END_SEASON
@@ -225,7 +227,7 @@ def main():
     if unknown_adjustments:
         raise ValueError(f"GM projection adjustments reference identities outside the current Wheel population: {unknown_adjustments}")
 
-    frame = load_contracts()
+    frame = pl.read_parquet(args.verified_contracts) if args.verified_contracts else load_contracts()
     rows = frame.to_dicts()
     player_rows = load_players().to_dicts()
     players_by_otc = {
