@@ -1,3 +1,8 @@
+import { advanceNbaOfficialDailyRuntime } from "../features/nba/nbaDailyServerAdvance";
+import { advanceNbaHitNumberLeanDailyRuntime, advanceNbaWavelengthLeanDailyRuntime, advanceNbaHigherLowerLeanDailyRuntime } from "../features/nba/nbaDailyServerAdvance";
+import { advanceFindLeaderOnlyDailyRuntime } from "../features/play/footballTodayChallengeAdvanceRuntime";
+import { advanceBarTriviaDailyRuntime } from "../features/play/barTriviaDailyRuntime";
+import type { OfficialDailyRuntimeContext } from "../features/play/todaysChallengeRuntime";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildNbaServerDailyPublication } from "../features/nba/nbaDailyServerPublication";
@@ -81,5 +86,80 @@ describe("NBA Daily all-nine-mode CPU isolation", () => {
     expect(deploy).toContain('nba-hit-the-number-advance.generated.mjs');
     expect(bundler).toContain('nba-higher-lower-advance.generated.mjs');
     expect(deploy).toContain('nba-higher-lower-advance.generated.mjs');
+  });
+});
+
+type Value = Record<string, unknown>;
+function initial(day: string, version: string, gameType: "find_leader" | "hit_the_number" | "wavelength" | "higher_lower" | "bar_trivia"): OfficialDailyRuntimeContext {
+  const p = buildNbaServerDailyPublication(day, version, gameType);
+  return {
+    gameType,
+    setupKey: p.setupKey,
+    publicSetup: p.publicSetup,
+    revealSetup: p.revealSetup,
+    privateSetupEvidence: p.privateSetupEvidence,
+    privateGradingEvidence: p.privateGradingEvidence,
+    submissionState: {},
+    publicState: p.publicSetup.initial_state as Value,
+  };
+}
+function update(previous: OfficialDailyRuntimeContext, result: ReturnType<typeof advanceNbaOfficialDailyRuntime>) {
+  return { ...previous, submissionState: result.submissionState, publicState: result.publicState };
+}
+
+describe("NBA Daily lean gameplay equivalence", () => {
+  it("preserves Find the Leader elimination, both game transitions, and average score", () => {
+    let context = initial("2026-10-27", "nba-daily-owner-prelaunch-v1", "find_leader");
+    const children = context.privateSetupEvidence.rounds as Value[];
+    expect(children).toHaveLength(2);
+    for (const child of children) {
+      const evidence = child.private_setup_evidence as Value;
+      const choices = (evidence.candidate_ids as string[]).filter(id => id !== evidence.leader_id);
+      expect(choices).toHaveLength(9);
+      for (const eliminated_id of choices) {
+        const action = { eliminated_id };
+        const canonical = advanceNbaOfficialDailyRuntime(context, action);
+        const isolated = advanceFindLeaderOnlyDailyRuntime(context, action);
+        expect(isolated).toEqual(canonical);
+        context = update(context, isolated);
+      }
+    }
+    expect(context.publicState.complete).toBe(true);
+    expect(context.publicState.round_scores).toEqual([100, 100]);
+    expect(context.publicState.score).toBe(100);
+  });
+
+  it("keeps NBA Wavelength, Hit the Number, and Higher or Lower canonical actions identical", () => {
+    const cases = [
+      {
+        day: "2026-10-28", gameType: "wavelength" as const, action: { guess: 50 },
+        isolated: advanceNbaWavelengthLeanDailyRuntime,
+      },
+      {
+        day: "2026-10-30", gameType: "hit_the_number" as const, action: null,
+        isolated: advanceNbaHitNumberLeanDailyRuntime,
+      },
+      {
+        day: "2026-10-31", gameType: "higher_lower" as const, action: { choice: "higher" },
+        isolated: advanceNbaHigherLowerLeanDailyRuntime,
+      },
+    ];
+    for (const item of cases) {
+      const context = initial(item.day, "nba-daily-owner-prelaunch-v1", item.gameType);
+      const evidence = (context.privateSetupEvidence.rounds as Value[])[0]!.private_setup_evidence as Value;
+      const action = item.gameType === "hit_the_number"
+        ? { fighter_id: (evidence.fighter_ids as string[])[0] }
+        : item.action;
+      const canonical = advanceNbaOfficialDailyRuntime(context, action);
+      const isolated = item.isolated(context, action);
+      expect(isolated).toEqual(canonical);
+    }
+  });
+
+  it("keeps NBA Bar Trivia initial answer identical", () => {
+    const context = initial("2026-10-29", "nba-daily-owner-prelaunch-v1", "bar_trivia");
+    const question = context.publicState.current_question as Value;
+    const action = { choice: (question.choices as string[])[0] };
+    expect(advanceBarTriviaDailyRuntime(context, action)).toEqual(advanceNbaOfficialDailyRuntime(context, action));
   });
 });
