@@ -51,9 +51,9 @@ jobs:
         run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
       - name: Require exact published provider contract bytes before comparison
         run: |
-          python scripts/wheel-monitor/gm-verified-contract-assets.py \\
-            --provenance=tmp/wheel-monitor/gm/provider-provenance.json \\
-            --out=tmp/wheel-monitor/gm/verified-contracts.parquet \\
+          python scripts/wheel-monitor/gm-verified-contract-assets.py \
+            --provenance=tmp/wheel-monitor/gm/provider-provenance.json \
+            --out=tmp/wheel-monitor/gm/verified-contracts.parquet \
             --receipt=tmp/wheel-monitor/gm/contract-byte-receipt.json
       - name: Build ephemeral live-source contract evidence
         id: generate
@@ -67,7 +67,7 @@ jobs:
             --snapshot-date="$(date -u +%F)" \
             --window-end-season="$((year+2))" \
             --output=tmp/wheel-monitor/gm/live-contracts.json \
-            --report=tmp/wheel-monitor/gm/provider-report.json \\
+            --report=tmp/wheel-monitor/gm/provider-report.json \
             --verified-contracts=tmp/wheel-monitor/gm/verified-contracts.parquet
           status=$?
           set -e
