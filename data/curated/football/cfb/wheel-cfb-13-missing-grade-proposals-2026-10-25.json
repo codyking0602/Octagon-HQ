@@ -11,10 +11,10 @@
   "publicationAuthorized": false,
   "scope": "Proposed grade records and possible family corrections. No source authority or backend migration in this PR; approval of both ratings and family moves precedes any separate controlled publishing work.",
   "blockedFamilyDecisions": [
-    "Duke/Luke Mergott: Secondary→Front Seven",
-    "Pittsburgh/Braylan Lovelace: Secondary→Front Seven",
-    "LSU/CJ Jimcoily: contradictory official Safety vs linebacker labels",
-    "Texas Tech/John Curry: confirm star/DB usage"
+    "Duke/Luke Mergott: official linebacker; proposed Secondary→Front Seven still owner approval",
+    "Pittsburgh/Braylan Lovelace: official linebacker; proposed Secondary→Front Seven still owner approval",
+    "LSU/CJ Jimcoily: official player biography says transitioned from safety to LB; obtain current defensive alignments before deciding Front Seven vs Secondary",
+    "Texas Tech/John Curry: 2025 STAR start is official; 2026 continued STAR alignment appears on depth-chart source, retain Secondary conditionally"
   ],
   "players": [
     {
@@ -47,8 +47,8 @@
         "https://lsusports.net/sports/fb/roster/player/cj-jimcoily",
         "https://lsusports.net/sports/fb/roster/season/2026"
       ],
-      "evidenceConfidence": "low",
-      "familyDecision": "Official page and roster conflict: retain curated Secondary as *proposed temporary assumption* only; obtain position-coach/actual snap verification before publishing.",
+      "evidenceConfidence": "low-current-defensive-snap-family-evidence",
+      "familyDecision": "LSU 2026 individual biography explicitly states post-recruitment safety-to-linebacker conversion, despite stale conflicting roster labels. Recommend Front Seven review, but retain proposal as held current Secondary until actual 2026 defensive playing alignment is verified and owner authorizes any switch.",
       "mustNotApplyUntilOwnerApproval": true
     },
     {
@@ -148,8 +148,8 @@
         "https://texastech.com/sports/football/roster/john%20-curry/14279",
         "https://www.ourlads.com/ncaa-football-depth-charts/player/john-curry/161348"
       ],
-      "evidenceConfidence": "medium-high",
-      "familyDecision": "Retain Secondary *conditionally* for the 2025/26 hybrid star role; confirm current star/coverage snaps prior to publishing.",
+      "evidenceConfidence": "medium-high-for-star-role",
+      "familyDecision": "Texas Tech official biography confirms 2025 all-14-game STAR usage after inside-LB conversion; supplemental October 21, 2026 depth chart places him at STAR in nickel. Retain Secondary as conditional proposal pending actual 2026 coverage/box split.",
       "mustNotApplyUntilOwnerApproval": true
     },
     {
@@ -236,6 +236,46 @@
       "evidenceConfidence": "medium",
       "familyDecision": "Current curated family supported",
       "mustNotApplyUntilOwnerApproval": true
+    }
+  ],
+  "roleVerificationAsOf": "2026-10-25",
+  "roleVerification": [
+    {
+      "player": "Luke Mergott",
+      "school": "Duke",
+      "officialRole": "Linebacker",
+      "proposal": "Secondary to Front Seven",
+      "confidence": "high-for-roster-position",
+      "source": "https://goduke.com/sports/football/roster/luke-mergott/24430",
+      "note": "Duke calls him a returning starting linebacker; position move remains owner gated"
+    },
+    {
+      "player": "Braylan Lovelace",
+      "school": "Pittsburgh",
+      "officialRole": "Linebacker",
+      "proposal": "Secondary to Front Seven",
+      "confidence": "high-for-roster-position",
+      "source": "https://pittsburghpanthers.com/sports/football/roster/braylan-lovelace/15016",
+      "note": "Pitt 2026 roster directly lists LB; family correction still owner gated"
+    },
+    {
+      "player": "CJ Jimcoily",
+      "school": "LSU",
+      "officialRole": "Linebacker transition (from safety)",
+      "proposal": "Review Front Seven family rather than treating stale Safety label as definitive",
+      "confidence": "high-for-official-conversion-but-2026-defensive-alignment-unconfirmed",
+      "source": "https://lsusports.net/sports/fb/roster/player/cj-jimcoily",
+      "note": "LSU individual 2026 bio explicitly says signed as safety and transitioned to linebacker on arrival; special teams evidence alone cannot establish defensive snap alignment"
+    },
+    {
+      "player": "John Curry",
+      "school": "Texas Tech",
+      "officialRole": "Linebacker who started STAR hybrid role",
+      "proposal": "Conditional Secondary if STAR coverage duties persist in 2026",
+      "confidence": "high-for-2025-star-conversion-medium-for-2026-usage",
+      "source": "https://texastech.com/sports/football/roster/john%20-curry/14279",
+      "supplementarySource": "https://www.thetwodeep.com/college/texas-tech/formation?player=john-curry&pside=def",
+      "note": "Texas Tech says he moved from inside linebacker to STAR in 2025 and started all 14; supplemental 2026 nickel package still labels him STAR but not verified 2026 season-long snap split"
     }
   ]
 }
