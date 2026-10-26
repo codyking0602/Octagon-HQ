@@ -57,10 +57,8 @@ describe("Millionaire official Daily runtime", () => {
     expect(pastQuestion.prompt).toContain("never been named first-team All-Pro");
     expect(pastQuestion.id).toBe("millionaire-nfl-run-1-q6");
 
-    // New 15-run rotation postpones legacy run 1's next appearance beyond
-    // the 182-day window. Verify its future-only errata at the next genuine
-    // official slot, not on a made-up date.
-    const days = Array.from({ length: 540 }, (_, offset) =>
+    // Official Daily still uses the original ten-run bank; staging is explicit.
+    const days = Array.from({ length: 182 }, (_, offset) =>
       new Date(Date.parse("2026-10-25T00:00:00Z") + offset * 86400000).toISOString().slice(0, 10));
     const target = days.find(day => day >= "2026-10-27"
       && lockedWeightedGameForDay("football", day) === "millionaire"
@@ -140,12 +138,7 @@ describe("Millionaire official Daily runtime", () => {
       }
       expect(run[7]!.statSheet).toBeNull();
     }
-    // All future UFC dates have distinct slots across the candidate
-    // six-month window; the historic run indices 3–5 are not recycled.
-    expect(inspected.size).toBe(12);
-    for (const index of [6, 7, 8, 9, 10, 11, 12, 13, 14]) {
-      expect(inspected.has(index)).toBe(true);
-    }
+    expect(inspected).toEqual(new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
   });
 
   it("debuts CFB for Football and UFC for UFC on September 19", () => {
