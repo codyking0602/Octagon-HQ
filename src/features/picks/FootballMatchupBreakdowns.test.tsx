@@ -200,7 +200,12 @@ describe("FootballMatchupBreakdowns", () => {
     render(<MemoryRouter><FootballMatchupBreakdowns breakdowns={[]} /></MemoryRouter>);
 
     fireEvent.click(screen.getByText("OWNER TOOLS ⚙"));
+    const sheet = screen.getByRole("dialog", { name: "Football owner tools" });
+    expect(sheet).toBeInTheDocument();
+    expect(sheet.parentElement).toBe(document.body.querySelector(".football-picks-owner-backdrop"));
     expect(screen.getByRole("button", { name: "SEND PUSH" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "MANAGE HEADERS →" })).toHaveAttribute("href", "/picks/control?sport=football&event=football-picks-2026-09-08#header");
+    fireEvent.click(screen.getByRole("button", { name: "Close owner tools" }));
+    expect(screen.queryByRole("dialog", { name: "Football owner tools" })).not.toBeInTheDocument();
   });
 });
