@@ -5,12 +5,22 @@ export function sourceReviewBlockers(evidence, findings) {
   if(!Array.isArray(evidence) || !Array.isArray(findings))
     throw new Error("Complete monitor evidence and findings required");
   const blockers=new Set();
+  const officialUfcRankChanges=new Set();
   for(const entry of evidence) {
     if(entry.type==="flex-inheritance-blocker" && entry.sport==="nfl")
       blockers.add("invalid-flex-priority:"+entry.sport+":"+entry.team+":"+entry.player);
+    if(entry.type==="mandatory-factual-correction")
+      blockers.add("unapproved-removed-canonical-identity:"+String(entry.oldIdentity??"unknown"));
+    if(entry.type==="factual-correction" && entry.source==="https://www.ufc.com/rankings") {
+      if(entry.fighterId==null || !entry.division)
+        blockers.add("ufc-official-ranking-factual-change-unresolved");
+      else officialUfcRankChanges.add(String(entry.division)+"|"+String(entry.fighterId));
+    }
     if(entry.type==="source-integrity-review")
       blockers.add("source-integrity-review:"+String(entry.source??"unknown"));
   }
+  if(officialUfcRankChanges.size)
+    blockers.add("ufc-official-ranking-factual-differences:"+officialUfcRankChanges.size);
   const missing={nfl:0,ufc:0};
   const coaching={nfl:0};
   const unranked={ufc:0};
