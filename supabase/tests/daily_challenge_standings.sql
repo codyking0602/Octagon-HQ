@@ -172,7 +172,9 @@ begin
     or (v_shane_row->>'wins')::integer <> 2
     or (v_shane_row->>'played')::integer <> 4
     or (v_shane_row->>'average_score')::numeric <> 82.5
-    or (v_shane_row->>'current_streak')::integer <> 4
+    -- Shane skipped the new Oct 25 UFC 48-hour board, so the active
+    -- streak is zero while the completed prior four-game streak remains best.
+    or (v_shane_row->>'current_streak')::integer <> 0
     or (v_shane_row->>'best_streak')::integer <> 4 then
     raise exception 'tied daily wins or yesterday-current streak were calculated incorrectly: %', v_shane_row;
   end if;
