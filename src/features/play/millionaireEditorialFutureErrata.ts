@@ -14,6 +14,53 @@ export type MillionaireFutureRewriteSeed = {
   evidence: readonly { authority: string; url: string; supportingDetail: string }[];
 };
 export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
+  // Published source/history stays immutable. Future preview clarifies season
+  // instead of conflating the season year with the January championship date.
+  "cfb:1:0": {
+    id: "millionaire-cfb-future-2005-season-texas-q1",
+    type: "championship-season",
+    prompt: "Which school won the 2005 season's national title in the January 2006 Rose Bowl?",
+    choices: ["Texas", "USC", "Penn State", "Ohio State"], answer: "Texas",
+    statSheet: "The game ended 41–38 after a famous fourth-down touchdown run.",
+    explanation: "Texas won the 2005 season's national championship, beating USC on January 4, 2006.",
+    evidence: [{ authority: "Texas Athletics", url: "https://texaslonghorns.com/sports/2013/7/21/FB_0721132407", supportingDetail: "The school documents Texas defeating USC in the January 4, 2006 Rose Bowl national-title game." }],
+  },
+  "cfb:2:0": {
+    id: "millionaire-cfb-future-2023-season-michigan-q1",
+    type: "championship-season",
+    prompt: "Which team won the 2023 season's CFP national title in January 2024?",
+    choices: ["Michigan", "Washington", "Alabama", "Texas"], answer: "Michigan",
+    statSheet: "The undefeated winner beat Washington 34–13 in Houston.",
+    explanation: "Michigan won the 2023 season's national championship in the CFP final on January 8, 2024.",
+    evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2024/1/31/ncg-recap-2024", supportingDetail: "The CFP confirms Michigan's 34–13 win over Washington in the January 2024 final." }],
+  },
+  "cfb:5:0": {
+    id: "millionaire-cfb-future-2020-season-alabama-q1",
+    type: "championship-season",
+    prompt: "Which school won the 2020 season's CFP national title in January 2021?",
+    choices: ["Alabama", "Ohio State", "Clemson", "LSU"], answer: "Alabama",
+    statSheet: "The champion beat Ohio State 52–24 in Miami Gardens.",
+    explanation: "Alabama won the 2020 season's national championship in the January 11, 2021 title game.",
+    evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2025/3/20/cfp-recap-2021", supportingDetail: "The CFP records Alabama beating Ohio State 52–24 in the 2020–21 postseason." }],
+  },
+  "cfb:7:0": {
+    id: "millionaire-cfb-future-2019-season-lsu-q1",
+    type: "championship-season",
+    prompt: "Which school won the 2019 season's CFP national title in January 2020?",
+    choices: ["LSU", "Clemson", "Alabama", "Ohio State"], answer: "LSU",
+    statSheet: "The 15–0 champion defeated Clemson 42–25 in New Orleans.",
+    explanation: "LSU finished the 2019 season 15–0 and won the CFP title game on January 13, 2020.",
+    evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2026/8/10/ncg-history", supportingDetail: "The CFP's title history lists LSU's 42–25 January 2020 championship win." }],
+  },
+  "ufc:0:6": {
+    id: "millionaire-ufc-future-maurice-smith-coleman-ufc14-q7",
+    type: "heavyweight-history",
+    prompt: "Who defeated Mark Coleman by decision at UFC 14 to become UFC heavyweight champion?",
+    choices: ["Maurice Smith", "Bas Rutten", "Randy Couture", "Don Frye"], answer: "Maurice Smith",
+    statSheet: "A former kickboxer survived the wrestler's early pressure to win in 1997.",
+    explanation: "Maurice Smith defeated Mark Coleman by unanimous decision at UFC 14 to win the heavyweight title.",
+    evidence: [{ authority: "UFC", url: "https://www.ufc.com/news/15-ufc-heavyweight-champions", supportingDetail: "The UFC heavyweight lineage identifies Smith's UFC 14 victory over Coleman." }],
+  },
   "nfl:9:0": {
     id: "millionaire-nfl-2026-editorial-brees-first-team-q1",
     type: "career-history",
