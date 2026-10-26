@@ -1581,9 +1581,10 @@ Deno.serve(async (request) => {
           throw new Error("Football Weekly Auction scheduled maintenance failed.");
         }
       }
-      const materialized = scheduledSport === "football"
-        ? await materializeFootballToday(admin)
-        : await materializeToday(admin);
+      // An already published normal board needs only an authoritative ID
+      // lookup. Re-running old cutover SQL every five minutes compounds CPU
+      // pressure across UFC and Football; unpublished boards still publish.
+      const materialized = await resolveInteractiveDaily(admin, scheduledSport, "get-today");
 
       // Prepublish tomorrow's immutable board before the Central midnight rollover.
       // The +30 minute window accommodates DST without assuming a UTC offset.
