@@ -53,7 +53,7 @@ jobs:
         with:
           version: 2.109.1
 
-      - name: Prepull fresh-database images in parallel
+      - name: Prepull fresh-database images with rate-limit retries
         shell: bash
         run: |
           set -euo pipefail
