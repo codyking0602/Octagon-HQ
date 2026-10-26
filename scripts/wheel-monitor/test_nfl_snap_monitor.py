@@ -34,6 +34,10 @@ class NflSnapReviewTests(unittest.TestCase):
         self.assertEqual(out["abilityEvaluationsPerformed"],0)
         self.assertFalse(out["detailedReviewAvoidanceCertified"])
         self.assertEqual(out["priorityReviews"][0]["changePercentagePoints"],55.0)
+        self.assertEqual(len(out["decisions"]),594)
+        self.assertTrue(out["decisionLedgerComplete"])
+        self.assertEqual(sum(row["classification"]=="unobserved" for row in out["decisions"]),593)
+        self.assertEqual(sum(row["classification"]=="priority-factual-review" for row in out["decisions"]),1)
 
     def test_one_weird_game_does_not_trigger_review(self):
         rows=[sample(share=v,week=i+1) for i,v in
