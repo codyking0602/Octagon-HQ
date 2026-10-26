@@ -348,14 +348,14 @@ function futureMillionaireErrata(
         statSheet: "The belt changed hands in Brazil via a second-round slam finish at UFC 237.",
       };
     }
-    if (league === "ufc" && runIndex === 6 && index === 3) {
+    if (league === "ufc" && runIndex === 6 && index === 3 && question.id === "millionaire-ufc-run-7-q4") {
       return {
         ...question,
         id: "millionaire-ufc-281-middleweight-q4-future",
         statSheet: "A dramatic fifth-round stoppage at Madison Square Garden ended the champion's title reign.",
       };
     }
-    if (league === "ufc" && runIndex === 7 && index === 2) {
+    if (league === "ufc" && runIndex === 7 && index === 2 && question.id === "millionaire-ufc-run-8-q3") {
       return {
         ...question,
         id: "millionaire-ufc-69-welterweight-q3-future",
