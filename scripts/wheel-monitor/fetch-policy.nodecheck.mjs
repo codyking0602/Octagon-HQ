@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {fetchWithRetry} from "./fetch-policy.mjs";
+import {fetchWithRetry,readStructurallyValidatedHtml} from "./fetch-policy.mjs";
 const response=(status,after=null)=>({
  status,ok:status>=200&&status<300,headers:{get:key=>key==="retry-after"?after:null},
 });
@@ -55,4 +55,30 @@ test("retry attempts are bounded and malformed invocation is rejected",async()=>
    fetchImpl:async()=>{calls++;throw new Error("timeout")},
  }),/timeout/);
  assert.equal(calls,1);
+});
+
+test("a transient HTTP 200 challenge page can recover without accepting it",async()=>{
+ let calls=0;
+ const waits=[];
+ const parsed=await readStructurallyValidatedHtml(
+   async()=>++calls===1?"<html>challenge</html>":"<h1>All Rankings</h1>",
+   html=>{if(!html.includes("All Rankings"))throw new Error("official ranking headers absent");return {certified:true};},
+   2,{sleep:async ms=>waits.push(ms)});
+ assert.deepEqual(parsed,{certified:true});
+ assert.equal(calls,2);
+ assert.deepEqual(waits,[500]);
+});
+test("persistently malformed 200 HTML fails closed with bounded retries",async()=>{
+ let calls=0;
+ await assert.rejects(readStructurallyValidatedHtml(
+   async()=>{calls++;return "<html>cdn block</html>";},
+   ()=>{throw new Error("rankings shape invalid");},2,{sleep:async()=>{}}),/rankings shape invalid/);
+ assert.equal(calls,2);
+});
+test("permanent transport failure is not retried by the shape policy",async()=>{
+ let calls=0;
+ await assert.rejects(readStructurallyValidatedHtml(
+   async()=>{calls++;throw new Error("HTTP 403");},()=>true,2,{sleep:async()=>{}}),/HTTP 403/);
+ assert.equal(calls,1);
+ await assert.rejects(readStructurallyValidatedHtml(()=>"",()=>true,4),/Invalid structurally/);
 });
