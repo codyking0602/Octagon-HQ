@@ -15,13 +15,25 @@ export function sourceReviewBlockers(evidence, findings) {
       blockers.add("cfb-unaudited-live-ap-schools:"+entry.newUnauditedSchools.length);
   }
   const missing={nfl:0,cfb:0,ufc:0};
+  const coaching={nfl:0,cfb:0};
+  const unranked={ufc:0};
+  const unknown={nfl:0,cfb:0,ufc:0};
   for(const finding of findings) {
-    if((finding.sourceStatus==="missing" || finding.sourceStatus==="ambiguous")
-       && Object.hasOwn(missing,finding.sport))
-      missing[finding.sport]++;
+    if(!Object.hasOwn(missing,finding.sport)) continue;
+    const status=finding.sourceStatus;
+    if(status==="missing" || status==="ambiguous") missing[finding.sport]++;
+    else if(status==="coaching-source-needed" && Object.hasOwn(coaching,finding.sport))
+      coaching[finding.sport]++;
+    else if(status==="unranked-not-verified-by-ranked-table" && finding.sport==="ufc")
+      unranked.ufc++;
+    else if(status!=="matched") unknown[finding.sport]++;
   }
-  for(const [sport,count] of Object.entries(missing)) {
+  for(const [sport,count] of Object.entries(missing))
     if(count) blockers.add(sport+"-unresolved-source-identities:"+count);
-  }
+  for(const [sport,count] of Object.entries(coaching))
+    if(count) blockers.add(sport+"-coaching-source-unverified:"+count);
+  if(unranked.ufc) blockers.add("ufc-unranked-source-unverified:"+unranked.ufc);
+  for(const [sport,count] of Object.entries(unknown))
+    if(count) blockers.add(sport+"-unclassified-source-identities:"+count);
   return [...blockers].sort();
 }
