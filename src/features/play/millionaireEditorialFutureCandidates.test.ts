@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { MILLIONAIRE_FUTURE_Q8_REWRITES } from "./millionaireEditorialFutureQ8";
 import { MILLIONAIRE_DAILY_RUN_COUNT, MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT, millionaireDailyRun, millionaireFutureEditorialDailyRun } from "./millionaireDailyQuestionBank";
 import { buildMillionaireDailySetup, MILLIONAIRE_DAILY_CONTENT_VERSION, MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION, millionaireDailyRunIndex } from "./millionaireDailyRuntime";
 import { isUfcPublicationDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
@@ -13,6 +14,72 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("protects fifteen additional future question replacements and Q8 option mappings", () => {
+    const newRunCorrections = [
+      ["nfl", 10, 6, "Travis Kelce"],
+      ["nfl", 14, 2, "Ja'Marr Chase"],
+      ["cfb", 10, 2, "Michael Penix Jr."],
+      ["cfb", 10, 5, "Max Duggan"],
+      ["cfb", 10, 6, "Ashton Jeanty"],
+      ["cfb", 14, 6, "Kalen DeBoer"],
+      ["ufc", 13, 6, "Yair Rodriguez"],
+      ["ufc", 6, 7, "Islam Makhachev"],
+    ] as const;
+    for (const [league, runIndex, slot, expected] of newRunCorrections) {
+      const question = millionaireFutureEditorialDailyRun(league, runIndex)[slot]!;
+      expect(answer(question)).toBe(expected);
+      expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
+      expect(question.explanation).toContain(expected);
+      if (slot === 7) {
+        expect(question.statSheet).toBeNull();
+        expect(question.lifelineCompatibility).toMatchObject({
+          fiftyFifty: false, statSheet: false, doubleDip: false,
+        });
+      } else {
+        expect(question.statSheet).not.toContain(expected);
+      }
+    }
+    const finalCorrections = [
+      ["nfl:0:7", "Cooper DeJean"],
+      ["nfl:2:7", "Sam Hubbard"],
+      ["nfl:9:7", "Noah Brown"],
+      ["cfb:4:7", "Matthew Golden"],
+      ["cfb:5:7", "Adonai Mitchell"],
+      ["ufc:2:7", "Jiří Procházka"],
+      ["ufc:5:7", "Max Holloway"],
+    ] as const;
+    for (const [key, expected] of finalCorrections) {
+      const question = MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
+      expect(question.answer).toBe(expected);
+      expect(question.choices.filter(choice => choice === expected)).toHaveLength(1);
+      expect(new Set(question.choices.map(normalized)).size).toBe(4);
+      expect(question.statSheet).toBeNull();
+      expect(question.explanation).toContain(expected);
+      expect(question.explanation.length).toBeGreaterThan(80);
+      expect(question.evidence.length).toBeGreaterThan(0);
+    }
+    let runtimeCorrectionsFound = 0;
+    for (let offset = 0; offset < 182; offset += 1) {
+      const day = new Date(Date.UTC(2026, 9, 25 + offset)).toISOString().slice(0, 10);
+      for (const sport of ["football", "ufc"] as const) {
+        if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
+        if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
+        const publication = buildMillionaireDailySetup(sport, day, "editorial-15-slot-regression",
+          { editorialCandidatePreview: true });
+        const league = publication.publicSetup.league;
+        const index = millionaireDailyRunIndex(sport, day, { editorialCandidatePreview: true });
+        const rewrite = MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${index}:7`];
+        if (!rewrite) continue;
+        const final = (publication.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[7]!;
+        expect(final.id).toBe(rewrite.id);
+        expect(final.prompt).toBe(rewrite.prompt);
+        expect(answer(final)).toBe(rewrite.answer);
+        runtimeCorrectionsFound += 1;
+      }
+    }
+    expect(runtimeCorrectionsFound).toBeGreaterThan(0);
+  });
+
   it("preserves three sourced future-only editorial corrections in final candidate boards", () => {
     const cfb = millionaireFutureEditorialDailyRun("cfb", 10)[7]!;
     expect(answer(cfb)).toBe("Jeremiah Smith");
