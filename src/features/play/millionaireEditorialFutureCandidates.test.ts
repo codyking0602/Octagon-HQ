@@ -14,7 +14,7 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
-  it("protects twenty-four additional future question replacements and Q8 option mappings", () => {
+  it("protects twenty-seven additional future question replacements and Q8 option mappings", () => {
     const newRunCorrections = [
       ["nfl", 10, 6, "Travis Kelce"],
       ["nfl", 14, 2, "Ja'Marr Chase"],
@@ -24,6 +24,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb", 14, 6, "Kalen DeBoer"],
       ["ufc", 13, 6, "Yair Rodriguez"],
       ["ufc", 6, 7, "Islam Makhachev"],
+      ["ufc", 12, 7, "Paddy Pimblett"],
       ["nfl", 12, 3, "Christian McCaffrey"],
       ["nfl", 12, 7, "Aaron Donald"],
       ["nfl", 13, 3, "Trevor Lawrence"],
@@ -31,7 +32,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb", 10, 3, "Kirby Smart"],
       ["cfb", 12, 6, "Luke Fickell"],
       ["cfb", 13, 2, "J.J. McCarthy"],
-      ["cfb", 13, 3, "Georgia"],
+      ["cfb", 13, 3, "Trevor Etienne"],
       ["cfb", 13, 6, "Michael Crabtree"],
     ] as const;
     for (const [league, runIndex, slot, expected] of newRunCorrections) {
@@ -55,7 +56,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb:4:7", "Matthew Golden"],
       ["cfb:5:7", "Adonai Mitchell"],
       ["ufc:2:7", "Jiří Procházka"],
-      ["ufc:5:7", "Max Holloway"],
+      ["ufc:5:7", "Tom Aspinall"],
     ] as const;
     for (const [key, expected] of finalCorrections) {
       const question = MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
