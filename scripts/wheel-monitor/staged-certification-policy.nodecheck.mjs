@@ -107,3 +107,15 @@ test("UFC profile rows never imply approved ranked or active population",()=>fix
   assert.equal(got.stages.ufc.status,"ufc-profile-review-held");
   assert.equal(got.stages.ufc.certified,false);
 }));
+
+test("verified exact-main scheduled coach evidence may certify its own source, not other held stages",()=>fixture(root=>{
+  save(root,"coach",coaches(),{event:"schedule"});
+  const got=inspectStagedEvidence(root,sha,now);
+  assert.equal(got.stages.coach.certified,true);
+  assert.equal(got.complete,false);
+  assert.equal(got.blockers.includes("performance-evidence-pending"),true);
+}));
+test("unknown event never certifies staged source evidence",()=>fixture(root=>{
+  save(root,"coach",coaches(),{event:"push"});
+  assert.equal(inspectStagedEvidence(root,sha,now).stages.coach.certified,false);
+}));
