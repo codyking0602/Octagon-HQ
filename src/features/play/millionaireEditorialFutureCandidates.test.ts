@@ -105,7 +105,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("protects the five source-checked draft revisions against accidental reversion", () => {
     const sourceChecked = [
-      ["cfb", 10, 0, "Florida"],
+      ["cfb", 10, 0, "Miami"],
       ["nfl", 11, 4, "James Harrison"],
       ["ufc", 10, 2, "Kamaru Usman"],
       ["ufc", 10, 4, "Carlos Condit"],
