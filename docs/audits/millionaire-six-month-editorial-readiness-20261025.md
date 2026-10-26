@@ -1,6 +1,6 @@
 # Millionaire six-month editorial audit — staging, NOT certified
-**Inspection baseline:** `main` at `25d5a49c4e8acc4b411f047a6fb579d9865c4930`, October 25, 2026.  
-**Window:** 2026-10-25 through 2027-04-24 inclusive (182 calendar days).  
+**Inspection baseline:** `main` at `25d5a49c4e8acc4b411f047a6fb579d9865c4930`, October 25, 2026.
+**Window:** 2026-10-25 through 2027-04-24 inclusive (182 calendar days).
 **Status:** **NOT READY TO MERGE OR DEPLOY AS A SIX-MONTH CONTENT REBUILD.**
 
 This is a question-by-question **triage inventory**, not 240 completed factual approvals. See [the 240-row CSV](millionaire-question-disposition-ledger-20261025.csv). A KEEP proposal means the narrow underlying fact has been corroborated; it **does not** certify distractors, clue quality, difficulty, or cross-game originality. A source URL is never a substitute for review. Rows without a checked claim remain HOLD. The existing production bank and archived boards were not modified by this audit PR.
