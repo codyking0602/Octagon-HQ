@@ -22,7 +22,7 @@ export const ufcEditorialCandidateRuns = [
     ["olympic-mma", "Which future UFC champion won an Olympic bronze medal in judo at the 2008 Beijing Games?", ["Ronda Rousey", "Kayla Harrison", "Holly Holm", "Cris Cyborg"], "Ronda Rousey", null],
   ],
   [
-    ["nicknames", "Which former UFC lightweight champion is nicknamed Do Bronx?", ["Charles Oliveira", "Rafael dos Anjos", "Jose Aldo", "Renato Moicano"], "Charles Oliveira", "The nickname refers to the Brazilian fighter's roots in Guaruja."],
+    ["fighter-nicknames","Which UFC featherweight is nicknamed El Pantera?",["Yair Rodriguez","Brian Ortega","Jose Aldo","Chan Sung Jung"],"Yair Rodriguez","The Mexican-born striker has competed in the UFC since 2014."],
     ["nicknames", "Which longtime UFC lightweight contender is nicknamed El Cucuy?", ["Tony Ferguson", "Nate Diaz", "Dustin Poirier", "Michael Chandler"], "Tony Ferguson", "The nickname alludes to a figure from Latin American folklore."],
     ["submission-history", "Who did Charles Oliveira submit at UFC 269 to defend his lightweight title?", ["Dustin Poirier", "Justin Gaethje", "Michael Chandler", "Tony Ferguson"], "Dustin Poirier", "The finish came via a standing rear-naked choke in Round 3."],
     ["rules-history", "Who received a disqualification victory over Jon Jones at The Ultimate Fighter 10 Finale?", ["Matt Hamill", "Ryan Bader", "Stephan Bonnar", "Brandon Vera"], "Matt Hamill", "The bout ended after illegal downward elbows in 2009."],
