@@ -595,7 +595,13 @@ async function materializeToday(admin: SupabaseClient, at?: string) {
     throw new Error("The September 24 UFC Sports Feud relaunch reset failed.");
   }
 
-  const requested = await admin.rpc("get_daily_challenge_materialization_request", at ? { p_at: at } : {});
+  // Always resolve UFC through the sport-aware 48-hour active-day schedule.
+  // The legacy one-argument overload incorrectly materializes off-cycle days
+  // (such as October 26) and can CPU-exhaust scheduled prepublication.
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: "ufc",
+    ...(at ? { p_at: at } : {}),
+  });
   if (requested.error) throw new Error("The official daily materialization request failed.");
   const request = requiredRecord(requested.data, "Daily materialization request");
   const day = requiredString(request.central_day, "Central day");
