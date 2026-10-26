@@ -311,5 +311,10 @@ export function advanceFootballOfficialDailyRuntime(
 // The NBA Find the Leader board uses the canonical Football elimination grader.
 export function advanceFindLeaderOnlyDailyRuntime(context: OfficialDailyRuntimeContext, action: unknown) {
   if (context.gameType !== "find_leader") throw new Error("Daily Find the Leader game identity mismatch.");
-  return advanceFindLeader(context, asRecord(action));
+  // NBA has two Find-the-Leader boards. Preserve the canonical two-game
+  // transition, per-child scoring, and final average instead of short-circuiting.
+  const single = (child: OfficialDailyRuntimeContext, nextAction: unknown) => advanceFindLeader(child, asRecord(nextAction));
+  return isTwoGameDailyContext(context)
+    ? advanceTwoGameDailyRuntime(context, action, single, scoreTwoGameFootballChild)
+    : single(context, action);
 }
