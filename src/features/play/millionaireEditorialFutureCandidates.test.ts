@@ -110,7 +110,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc", 10, 2, "Kamaru Usman"],
       ["ufc", 10, 4, "Carlos Condit"],
       ["ufc", 10, 6, "Alexandre Pantoja"],
-      ["nfl", 10, 6, "Talanoa Hufanga"],
+      ["nfl", 10, 7, "Talanoa Hufanga"],
       ["ufc", 12, 0, "Yair Rodriguez"],
     ] as const;
     for (const [league, runIndex, level, expected] of sourceChecked) {
