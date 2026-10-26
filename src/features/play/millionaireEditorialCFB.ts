@@ -12,7 +12,7 @@ export const cfbEditorialCandidateRuns = [
     ["heisman-history", "Who won the exceptionally close 1985 Heisman vote over Iowa quarterback Chuck Long?", ["Bo Jackson", "Herschel Walker", "Doug Flutie", "Tim Brown"], "Bo Jackson", null],
   ],
   [
-    ["rivalries", "Which two schools play the annual Iron Bowl?", ["Alabama and Auburn", "Georgia and Florida", "Michigan and Ohio State", "Texas and Oklahoma"], "Alabama and Auburn", "The rivalry is a major in-state SEC showdown."],
+    ["campus-geography", "Which college football program plays its home games in Athens, Georgia?", ["Georgia", "Tennessee", "Auburn", "Clemson"], "Georgia", "The Bulldogs play their home games at Sanford Stadium."],
     ["stadiums", "Which Big Ten program plays its home games at Camp Randall Stadium?", ["Wisconsin", "Iowa", "Minnesota", "Nebraska"], "Wisconsin", "The Badgers have played in Madison's historic stadium since 1917."],
     ["rivalries", "Which team beat Michigan in the famous double-overtime edition of The Game in 2016?", ["Ohio State", "Michigan State", "Penn State", "Wisconsin"], "Ohio State", "The fourth-down spot late in the game remained controversial."],
     ["rivalry-moments", "Who returned the missed field goal for Auburn's Kick Six victory over Alabama in 2013?", ["Chris Davis", "Tre Mason", "Nick Marshall", "Sammie Coates"], "Chris Davis", "The return covered the entire field with no time remaining."],
@@ -42,7 +42,7 @@ export const cfbEditorialCandidateRuns = [
     ["coaching-legends", "Who was Oklahoma's head coach during its 47-game winning streak in the 1950s?", ["Bud Wilkinson", "Barry Switzer", "Bennie Owen", "Bob Stoops"], "Bud Wilkinson", null],
   ],
   [
-    ["nicknames", "Which school uses the nickname Crimson Tide?", ["Alabama", "Arkansas", "South Carolina", "Ole Miss"], "Alabama", "The program's home stadium bears the names Bryant and Denny."],
+    ["campus-geography", "Which college football program is based in South Bend, Indiana?", ["Notre Dame", "Purdue", "Indiana", "Ball State"], "Notre Dame", "Its storied home stadium opened for football in 1930."],
     ["quarterback-careers", "Where did Patrick Mahomes play college football?", ["Texas Tech", "Oklahoma State", "TCU", "Baylor"], "Texas Tech", "He threw for more than 5,000 yards in his final season."],
     ["upsets", "Which team handed Alabama its only regular-season loss in Johnny Manziel's 2012 Heisman season?", ["Texas A&M", "LSU", "Ole Miss", "Georgia"], "Texas A&M", "The upset happened in Tuscaloosa in the Aggies' first SEC season."],
     ["heisman", "Who won the 2025 Heisman Trophy after quarterbacking Indiana's breakthrough season?", ["Fernando Mendoza", "Diego Pavia", "Julian Sayin", "Dante Moore"], "Fernando Mendoza", "The winner transferred from California before the season."],
