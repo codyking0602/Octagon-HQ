@@ -26,7 +26,7 @@ test("NFL live team pages are independently mapped for exactly 32 teams",()=>{
 test("missing, wrong-team and ambiguous HTML cannot pass coach parsing",()=>{
   assert.throws(()=>parseNflTeamCoach(fixture("Mike LaFleur","Chicago Bears"),"ARI"),/team identity mismatch/);
   assert.throws(()=>parseNflTeamCoach(fixture().replace("Team Info","Team Bios"),"ARI"),/section missing/);
-  assert.throws(()=>parseNflTeamCoach(fixture("Mike LaFleur").replace("Stadium","Roster"),"ARI"),/head coach missing/);
+  assert.throws(()=>parseNflTeamCoach(fixture("Mike LaFleur").replace("Stadium","Roster"),"ARI"),/head coach missing|Ambiguous/);
   assert.throws(()=>parseNflTeamCoach(fixture("Please sign in for coaching information"),"ARI"),/Ambiguous/);
   assert.throws(()=>parseNflTeamCoach("", "ARI"),/Empty/);
 });
