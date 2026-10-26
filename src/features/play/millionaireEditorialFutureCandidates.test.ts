@@ -121,6 +121,18 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(kimbo.id).not.toBe(millionaireDailyRun("ufc", 6)[5]!.id);
   });
 
+  it("uses the modern 2025 Orange Bowl interception for future CFB run 12 final only", () => {
+    const final = millionaireFutureEditorialDailyRun("cfb", 11)[7]!;
+    expect(answer(final)).toBe("Christian Gray");
+    expect(final.prompt).toContain("January 2025 Orange Bowl");
+    expect(final.explanation).toContain("41-yard field goal");
+    expect(final.statSheet).toBeNull();
+    expect(final.lifelineCompatibility).toMatchObject({
+      fiftyFifty: false, statSheet: false, doubleDip: false,
+    });
+    expect(new Set(final.choices.map(option => normalized(option.text))).size).toBe(4);
+  });
+
   it("keeps the original ten-run bank unchanged while adding five new runs per league", () => {
     expect(MILLIONAIRE_DAILY_RUN_COUNT).toBe(10);
     expect(MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT).toBe(15);
