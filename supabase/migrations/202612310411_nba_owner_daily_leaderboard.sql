@@ -336,4 +336,4 @@ begin
     'entries', coalesce(v_entries, '[]'::jsonb)
   );
 end;
-$function$
+$function$;
