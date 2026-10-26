@@ -98,8 +98,8 @@ describe("Football live ATS results", () => {
     const { container } = render(<FootballPicksPage />);
 
     expect(screen.getByText("✓ COVERED")).toBeInTheDocument();
-    expect(screen.getByText("LIVE ATS 1-0")).toBeInTheDocument();
-    expect(container.querySelector(".football-group-hub__summary-meta small")).toHaveTextContent("1 FINAL");
+    expect(screen.getByText("1-0-0")).toBeInTheDocument();
+    expect(container.querySelector(".football-group-hub__heading small")).toHaveTextContent("1 FINAL");
     expect(screen.getByText("FINAL · Ohio State Buckeyes 20, Texas Longhorns 24")).toBeInTheDocument();
     expect(screen.getByText("LOCKED")).toBeInTheDocument();
   });
@@ -110,7 +110,7 @@ describe("Football live ATS results", () => {
     const { container } = render(<FootballPicksPage />);
 
     expect(container.querySelector(".football-pick-game__status.is-push")).toHaveTextContent("PUSH");
-    expect(screen.getByText("LIVE ATS 0-0 · 1 PUSH")).toBeInTheDocument();
-    expect(container.querySelector(".football-group-hub__summary-meta small")).toHaveTextContent("1 FINAL");
+    expect(screen.getByText("0-0-1")).toBeInTheDocument();
+    expect(container.querySelector(".football-group-hub__heading small")).toHaveTextContent("1 FINAL");
   });
 });

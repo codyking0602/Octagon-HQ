@@ -223,6 +223,11 @@ describe("FootballPicksPage", () => {
     expect(within(completed as HTMLElement).getAllByText("New York Giants").length).toBeGreaterThan(0);
     expect(completed?.querySelector(".football-pick-game")).not.toBeNull();
     expect(screen.getByText("PICKS & STANDINGS")).toBeInTheDocument();
+    expect(screen.getByText("ATS RECORD")).toBeInTheDocument();
+    expect(screen.getByText("GROUP RANK")).toBeInTheDocument();
+    expect(screen.getByText("PICKS MADE")).toBeInTheDocument();
+    expect(screen.getByText("VIEW STANDINGS")).toBeInTheDocument();
+    expect(within(completed as HTMLElement).queryByRole("button", { name: /Make Lock|Remove Lock/ })).not.toBeInTheDocument();
   });
 
   it("keeps the football season hub and persisted Futures visible when there is no active slate", () => {
@@ -265,8 +270,8 @@ describe("FootballPicksPage", () => {
 
     expect(screen.getByText("This week’s slate is being set.")).toBeInTheDocument();
     expect(screen.getByText("2026 FOOTBALL SEASON")).toBeInTheDocument();
-    expect(screen.getByText("4-2 ATS · 66.7% WIN · 6 PTS")).toBeInTheDocument();
-    expect(screen.getByText("FINISHED EVENTS")).toBeInTheDocument();
+    expect(screen.getByText("SEASON TOTAL · 4-2 ATS · 66.7% WIN · 6 PTS")).toBeInTheDocument();
+    expect(screen.getByText("FINISHED WEEKS")).toBeInTheDocument();
     expect(screen.getByText("SEASON FUTURES")).toBeInTheDocument();
     expect(screen.getByText("78 POTENTIAL PTS")).toBeInTheDocument();
     expect(screen.getByText("GROUP PICKS REVEALED")).toBeInTheDocument();
