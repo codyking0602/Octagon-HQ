@@ -10,7 +10,8 @@ const out=resolve(process.argv.find(arg=>arg.startsWith("--out="))?.slice(6)
 const now=new Date().toISOString();
 async function run(){
   const response=await fetchWithRetry(CONTRACT_RELEASE_API,{
-    headers:{Accept:"application/vnd.github+json"},
+    headers:{Accept:"application/vnd.github+json",
+      ...(process.env.GITHUB_TOKEN?{Authorization:"Bearer "+process.env.GITHUB_TOKEN}:{})},
   });
   const release=await response.json();
   const report=verifyContractReleaseProvenance(release,now);
