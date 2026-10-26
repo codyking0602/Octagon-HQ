@@ -14,6 +14,7 @@ import { validateObservation } from "./observation-policy.mjs";
 import { verifyHeadshots } from "./headshot-policy.mjs";
 import { sourceReviewBlockers } from "./source-review-gates.mjs";
 import { buildSourceCoverageLedger } from "./source-coverage-policy.mjs";
+import { inspectStagedEvidence } from "./staged-certification-policy.mjs";
 import { fetchWithRetry, readStructurallyValidatedHtml } from "./fetch-policy.mjs";
 import { OFFICIAL_NFL_COACHES_URL, extractOfficialNflCoaches,
   reconcileOfficialNflCoach } from "./nfl-coach-source.mjs";
@@ -408,17 +409,15 @@ async function main() {
     [sport,summarizeDecisions(result.filter(row=>row.sport===sport))]));
   // Independent read-only sport results survive other sports' review holds.
   // All-source snapshot promotion remains strict; a report is not certification.
+  const staged=inspectStagedEvidence(resolve(cli["stage-evidence-dir"]??"tmp/wheel-monitor/staged"),
+    process.env.GITHUB_SHA??cli["source-commit"]);
   const blockers=[
     ...sourceReviewBlockers(evidence,result),
+    ...staged.blockers,
     ...nflCoverage.missing.map(key=>"nfl-missing-grade:"+key),
     ...ufcRanks.structuralWarnings.map(division=>"ufc-official-rank-shape:"+division),
-    "nfl-gm-live-contract-source-comparison-pending",
-    "nfl-gm-economy-regression-pending",
-    "independent-head-coach-live-freshness-pending",
-    "performance-evidence-pending",
     ...headshots.missing.map(x=>"ufc-headshot-missing:"+x.fighterId),
     ...headshots.unverified.map(x=>"ufc-headshot-http-unverified:"+x.fighterId),
-    "ufc-unranked-source-coverage-pending",
   ];
   const readiness=snapshotReadiness(blockers);
   const output={status:readiness.status,checkedAt:at,
@@ -427,15 +426,16 @@ async function main() {
     previousObservation:previousObserved?.checkedAt??null,
     comparisonBaseline:previous?.checkedAt??null,
     summaries,gmContractAuthority:gm,sourceEvidence:evidence,
+    stagedSourceCertification:staged,
     coachSource:{url:coaches.url,season:2026,matched:snapshot.filter(x=>x.sport==="nfl" &&
       x.family==="Head Coach" && x.sourceStatus==="matched").length,
-      approved:32,liveFreshnessCertified:false},
+      approved:32,liveFreshnessCertified:staged.stages.coach.certified},
     monitoringScope:{ratingRefresh:["nfl","ufc"],gmContracts:true,cfbRatingRefresh:false,
       cfbApTop25:"independent-factual-workflow"},
     sourceCoverage:sourceCoverage.bySport,
     sourceIdentityReview:sourceCoverage.unresolved,
-    performanceEvidenceStatus:"not-yet-certified",
-    detailedReviewAvoidanceMeasured:false,
+    performanceEvidenceStatus:staged.stages.performance.status,
+    detailedReviewAvoidanceMeasured:staged.stages.performance.certified,
     readiness, coverage:{
       nfl:{approved:nflCoverage.expected,graded:nflCoverage.selected.length,missing:nflCoverage.missing,stale:nflCoverage.stale.length},
       ufc:{active:db.ufc.length,officialSourceWarnings:ufcRanks.structuralWarnings,
