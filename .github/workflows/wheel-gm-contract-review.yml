@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - 'scripts/wheel-monitor/gm-provider-provenance.mjs'
+      - 'scripts/wheel-monitor/gm-provider-provenance.nodecheck.mjs'
       - 'scripts/wheel-monitor/gm-contract-*.mjs'
       - 'scripts/wheel-monitor/gm-contract-*.nodecheck.mjs'
       - 'scripts/wheel-monitor/test_gm_contract_term.py'
@@ -33,7 +35,19 @@ jobs:
         run: |
           node --check scripts/wheel-monitor/gm-contract-review.mjs
           node --test scripts/wheel-monitor/gm-contract-compare.nodecheck.mjs
+          node --test scripts/wheel-monitor/gm-provider-provenance.nodecheck.mjs
           python -m unittest discover -s scripts/wheel-monitor -p 'test_gm_contract_term.py' -v
+      - name: Install locked development dependencies for GM economy simulation
+        run: npm ci --silent --no-audit --no-fund
+      - name: Re-run existing reproducible GM economy and development simulations
+        run: npx vitest run src/features/back-room/wheelFootballGmEconomy.test.ts
+      - name: Inspect independently published contract provider asset
+        id: provenance
+        continue-on-error: true
+        run: |
+          mkdir -p tmp/wheel-monitor/gm
+          node scripts/wheel-monitor/gm-provider-provenance.mjs \
+            --out=tmp/wheel-monitor/gm/provider-provenance.json
       - name: Install version-pinned read-only nflverse provider
         run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
       - name: Build ephemeral live-source contract evidence
@@ -70,6 +84,7 @@ jobs:
         with:
           name: wheel-gm-contract-source-review
           path: |
+            tmp/wheel-monitor/gm/provider-provenance.json
             tmp/wheel-monitor/gm/provider-report.json
             tmp/wheel-monitor/gm/comparison.json
           if-no-files-found: warn
