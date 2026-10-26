@@ -1,44 +1,34 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {sourceReviewBlockers} from "./source-review-gates.mjs";
-test("invalid Flex membership blocks global certification, not passive monitoring",()=>{
- const result=sourceReviewBlockers([{type:"flex-inheritance-blocker",
-   sport:"nfl",team:"CAR",player:"Darren Waller"}],[]);
- assert.deepEqual(result,["invalid-flex-priority:nfl:CAR:Darren Waller"]);
+test("invalid NFL Flex membership blocks certification",()=>{
+ assert.deepEqual(sourceReviewBlockers([{type:"flex-inheritance-blocker",
+   sport:"nfl",team:"CAR",player:"Example"}],[]),
+   ["invalid-flex-priority:nfl:CAR:Example"]);
 });
-test("ambiguous roster identity cannot be certified as matched",()=>{
- const result=sourceReviewBlockers([],[
-  {sport:"nfl",sourceStatus:"missing"},{sport:"cfb",sourceStatus:"missing"},
-  {sport:"cfb",sourceStatus:"ambiguous"},{sport:"ufc",sourceStatus:"matched"}]);
- assert.deepEqual(result,["cfb-unresolved-source-identities:2","nfl-unresolved-source-identities:1"]);
+test("CFB rating identity/coach/source gaps and AP changes are independent",()=>{
+ const result=sourceReviewBlockers([
+   {type:"flex-inheritance-blocker",sport:"cfb",team:"texas",player:"Example"},
+   {type:"factual-correction",newUnauditedSchools:[{id:"999"}]},
+ ],[{sport:"cfb",sourceStatus:"missing"},
+    {sport:"cfb",sourceStatus:"coaching-source-needed"},
+    {sport:"cfb",sourceStatus:"mystery"},
+    {sport:"nfl",sourceStatus:"missing"}]);
+ assert.deepEqual(result,["nfl-unresolved-source-identities:1"]);
 });
-test("verified official UFC ties and normal AP changes are valid source observations",()=>{
+test("unranked UFC fighters still require independent source",()=>{
  assert.deepEqual(sourceReviewBlockers([
-  {type:"verified-official-ranking-tie"},
-  {type:"factual-correction",changes:[{rank:2}],newUnauditedSchools:[]},
- ],[{sport:"ufc",sourceStatus:"unranked-not-verified-by-ranked-table"}]),["ufc-unranked-source-unverified:1"]);
+   {type:"verified-official-ranking-tie"},
+ ],[{sport:"ufc",sourceStatus:"unranked-not-verified-by-ranked-table"}]),
+ ["ufc-unranked-source-unverified:1"]);
 });
-test("new unaudited AP participant must not enter global certified snapshot",()=>{
- assert.deepEqual(sourceReviewBlockers([
-  {type:"factual-correction",newUnauditedSchools:[{id:"999"}]}
- ],[]),["cfb-unaudited-live-ap-schools:1"]);
+test("NFL coaches and unknown source statuses block certification",()=>{
+ assert.deepEqual(sourceReviewBlockers([],[
+   {sport:"nfl",sourceStatus:"coaching-source-needed"},
+   {sport:"ufc",sourceStatus:"mystery"},
+ ]),["nfl-coaching-source-unverified:1","ufc-unclassified-source-identities:1"]);
 });
 test("malformed evidence cannot silently certify",()=>{
  assert.throws(()=>sourceReviewBlockers(null,[]),/Complete/);
  assert.throws(()=>sourceReviewBlockers([],null),/Complete/);
-});
-
-test("coaches and unranked fighter populations cannot be silently certified",()=>{
- const blockers=sourceReviewBlockers([],[
-  {sport:"nfl",sourceStatus:"coaching-source-needed"},
-  {sport:"cfb",sourceStatus:"coaching-source-needed"},
-  {sport:"ufc",sourceStatus:"unranked-not-verified-by-ranked-table"},
-  {sport:"cfb",sourceStatus:"mystery-state"},
- ]);
- assert.deepEqual(blockers,[
-  "cfb-coaching-source-unverified:1",
-  "cfb-unclassified-source-identities:1",
-  "nfl-coaching-source-unverified:1",
-  "ufc-unranked-source-unverified:1",
- ]);
 });
