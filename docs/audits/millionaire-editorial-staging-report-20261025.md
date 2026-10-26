@@ -106,3 +106,18 @@ Initial prompt/fact similarity comparisons covered original source files for por
 - Owner authorization remains mandatory for any later integration. No green CI result allows merging this PR automatically.
 
 **Release decision: NOT CERTIFIED. KEEP IN DRAFT. NO PRODUCTION ACTION.**
+
+## October 25 follow-on editorial pass — supersedes the earlier draft inventory
+
+**Draft only. Still NOT fact-/difficulty-certified and NOT authorized for release.** The preceding tables and collision statuses record the *earlier* baseline; this section records the later isolated-branch changes.
+
+- Future-only candidate ledger now has **178 HOLD entries**: 120 new-run questions, 24 replacement UFC board questions, 15 targeted future rewrites (previously 10), and 19 Q8 rewrites. Existing 240 original questions and historic Daily proofs remain immutable.
+- Inspected the complete question/answer progression of **all 45 draft 8-question runs** (360 slots). A structural pass across the current authored modules found 15 new boards, 27 carried-forward boards, three UFC fully replaced boards, and no identical authored prompts across the 360 positions. This is **not** a visual user playtest or complete independent verification of all 1,080 wrong answers and 360 correct answers.
+- Re-sequenced early/middle difficulty in selected NFL, CFB and UFC ladders. Specifically moved easier college identities, Travis Hunter and memorable knockout moments toward Q1–Q3; moved more esoteric history to later positions; replaced an obscure 1994 FSU kicker question with Jake Plummer's iconic 1996 Arizona State run; replaced a low-stakes UFC Hall of Fame Q8 with the Jackson–Silva PRIDE rivalry payoff.
+- Replaced direct overlaps with currently authored Bar Trivia facts involving Terry Baker's Final Four, Ernie Davis's first Heisman, Edson Barboza–Etim, Julianna Peña–Nunes, Anderson Silva–Belfort, Leon Edwards–Usman, Carlos Newton–Miletich, the Korean Zombie's Twister, UFC 113 Rua–Machida, UFC 302 Makhachev–Poirier, and the first BMF belt. **Active-selection/exhaustive cross-game checks remain pending**, so replacement does not mean that cross-game originality has been certified. UFC 113 and UFC 302 candidates were themselves replaced again when the expanded Bar Trivia lookup found the overlap.
+- Four legacy CFB championship-year ambiguities have future-only season-explicit replacement questions: Texas 2005 season (January 2006 game), Michigan 2023 (January 2024), Alabama 2020 (January 2021), and LSU 2019 (January 2020). No historical question or October 26 Cowboys content was edited.
+- Corrected a duplicate key for a future-only UFC rewrite after an exact-head CI TypeScript failure; one key now selects Maurice Smith at UFC 14 without silently shadowing the old Carlos Newton proposal.
+- The existing candidate-calendar regression expects **40 actual Millionaire publication appearances over 182 days** (14 NFL, 13 CFB, 13 UFC), no identical complete-run repeats, unchanged historical setup and disabled candidates in default Official Daily. Structural results remain conditional on the latest exact-head CI; test success cannot certify question meaning.
+- **Remaining blockers:** independently validate *every* correct fact and three wrong choices for all publishable content; finish full active-game semantic deduplication; perform complete human difficulty/Stat Sheet signoff across all 45 boards; verify exact PR head; and move the **October 27, 2026** preview date safely beyond every published board before an authorized integration. Every candidate remains HOLD until then.
+
+**Final editorial release verdict: BLOCKED / NOT CERTIFIED / KEEP DRAFT.**
