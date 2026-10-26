@@ -12,6 +12,7 @@ import {
 import { wheelPriorityIdentityKeys } from "../wheel-monitor-census-policy.mjs";
 import { validateObservation } from "./observation-policy.mjs";
 import { verifyHeadshots } from "./headshot-policy.mjs";
+import { sourceReviewBlockers } from "./source-review-gates.mjs";
 import { fetchWithRetry } from "./fetch-policy.mjs";
 
 const root = resolve(import.meta.dirname, "../..");
@@ -438,6 +439,7 @@ async function main() {
   // Independent read-only sport results survive other sports' review holds.
   // All-source snapshot promotion remains strict; a report is not certification.
   const blockers=[
+    ...sourceReviewBlockers(evidence,result),
     ...nflCoverage.missing.map(key=>"nfl-missing-grade:"+key),
     ...cfbCoverage.missing.map(key=>"cfb-missing-grade:"+key),
     ...ufcRanks.structuralWarnings.map(division=>"ufc-official-rank-shape:"+division),
