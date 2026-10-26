@@ -548,11 +548,10 @@ async function averageFanPublicationHistory(
   return response.data;
 }
 
-// An in-progress answer never needs to rerun publication/cutover/reset SQL.
- // The authoritative database descriptor still verifies the current Central day
- // and publication identity on EVERY action; a missing board falls back to the
- // existing full materialization path. Initial reads and scheduled operations
- // retain their historical recovery and publication behavior.
+// Published normal Daily reads and answers should only check the authoritative
+// Central-day descriptor, never rerun historical publication and reset SQL.
+// Unpublished boards and legacy two-game cutovers still use the full recovery
+// path; scheduled invocations retain the publisher and midnight prepublication.
 async function resolveInteractiveDaily(
   admin: SupabaseClient,
   sport: "ufc" | "football",
@@ -561,14 +560,20 @@ async function resolveInteractiveDaily(
   const materialize = () => sport === "football"
     ? materializeFootballToday(admin)
     : materializeToday(admin);
-  if (mode !== "advance") return materialize();
+  if (mode !== "advance" && mode !== "get-today" && mode !== undefined) return materialize();
 
   const response = await admin.rpc("get_daily_challenge_materialization_request", {
     p_sport: sport,
   });
   if (response.error) throw new Error("The current Daily publication identity is unavailable.");
   const request = requiredRecord(response.data, "Current Daily publication identity");
-  if (request.required !== false) return materialize();
+  // The retired single-board comparison games must still run the two-game
+  // migration guard before being served, even when a legacy board exists.
+  const migrationCandidate = ["find_leader", "wavelength", "hit_the_number"]
+    .includes(request.published_game as string);
+  if (request.required !== false || (mode !== "advance" && migrationCandidate)) {
+    return materialize();
+  }
 
   return {
     dailyChallengeId: requiredString(request.daily_challenge_id, "Published Daily id"),
