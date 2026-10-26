@@ -148,8 +148,8 @@ describe("daily challenge runtime cold-start isolation", () => {
   it("pre-materializes UFC and Football Daily in separate scheduled invocations", () => {
     expect(runtime).toContain('const scheduledSport = body.sport == null ? "ufc" : body.sport;');
     expect(runtime).toContain('scheduledSport === "football"');
-    expect(runtime).toContain("await materializeFootballToday(admin)");
-    expect(runtime).toContain("await materializeToday(admin)");
+    expect(runtime).toContain('resolveInteractiveDaily(admin, scheduledSport, "get-today")');
+    expect(runtime).toContain('const materialize = () => sport === "football"');
     expect(footballSchedulerMigration).toContain('{"mode":"scheduled","sport":"ufc"}');
     expect(footballSchedulerMigration).toContain('{"mode":"scheduled","sport":"football"}');
     expect(footballSchedulerMigration.match(/functions\/v1\/daily-challenge-runtime/g)).toHaveLength(2);
@@ -179,7 +179,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).toContain("await materializeFootballToday(admin, soon.toISOString())");
     expect(runtime).toContain("await materializeToday(admin, soon.toISOString())");
     expect(runtime.indexOf('if (centralDay(now) !== centralDay(soon))')).toBeGreaterThan(
-      runtime.indexOf('const materialized = scheduledSport === "football"'),
+      runtime.indexOf('const materialized = await resolveInteractiveDaily(admin, scheduledSport, "get-today")'),
     );
 
     // No new server polling during normal play. Transient failures self-heal,
