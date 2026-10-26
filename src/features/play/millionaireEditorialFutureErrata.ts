@@ -14,6 +14,22 @@ export type MillionaireFutureRewriteSeed = {
   evidence: readonly { authority: string; url: string; supportingDetail: string }[];
 };
 export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
+  // The 2020 Notre Dame CFP answer was literally named in the legacy Stat Sheet.
+  // Preserve published proofs; fix only the future candidate's identity clue.
+  "cfb:7:5": {
+    id: "millionaire-cfb-future-2020-acc-title-game-q6",
+    type: "playoff-history",
+    prompt: "Which team became the first CFP participant to make the field after losing its conference championship game?",
+    choices: ["Notre Dame 2020", "Georgia 2021", "TCU 2022", "Wisconsin 2017"],
+    answer: "Notre Dame 2020",
+    statSheet: "The team fell to Clemson in the December 2020 ACC title game, but still made the four-team playoff as the No. 4 seed.",
+    explanation: "Notre Dame lost the December 2020 ACC championship to Clemson, 34–10, yet became the first team selected for the four-team CFP after a conference title-game defeat.",
+    evidence: [
+      { authority: "College Football Playoff", url: "https://collegefootballplayoff.com/news/2020/12/20/cfp-rankings-122020", supportingDetail: "The selection committee ranked Notre Dame fourth after the 2020 conference championship weekend." },
+      { authority: "Atlantic Coast Conference", url: "https://theacc.com/news/2020/12/19/football-clemson-rolls-notre-dame-34-10-for-6th-straight-acc-championship.aspx", supportingDetail: "Notre Dame lost 34–10 to Clemson in the 2020 ACC championship." },
+    ],
+  },
+
   // Published source/history stays immutable. Future preview clarifies season
   // instead of conflating the season year with the January championship date.
   "cfb:1:0": {

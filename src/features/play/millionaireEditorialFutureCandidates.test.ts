@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { MILLIONAIRE_FUTURE_Q8_REWRITES } from "./millionaireEditorialFutureQ8";
+import { MILLIONAIRE_FUTURE_TARGETED_REWRITES } from "./millionaireEditorialFutureErrata";
 import { MILLIONAIRE_DAILY_RUN_COUNT, MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT, millionaireDailyRun, millionaireFutureEditorialDailyRun } from "./millionaireDailyQuestionBank";
 import { buildMillionaireDailySetup, MILLIONAIRE_DAILY_CONTENT_VERSION, COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION, MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION, millionaireDailyRunIndex } from "./millionaireDailyRuntime";
 import { isUfcPublicationDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
@@ -14,6 +15,20 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("removes the Notre Dame answer giveaway in future-only CFB run 8 without editing legacy proofs", () => {
+    const legacy = millionaireDailyRun("cfb", 7)[5]!;
+    expect(legacy.statSheet).toContain("Notre Dame");
+    const preview = buildMillionaireDailySetup("football", "2027-04-01", "cfb-acc-leak-preview",
+      { editorialCandidatePreview: true });
+    // Directly assert the keyed Q6 future candidate source; the live publisher
+    // uses this exact override for future CFB run 8 when selected.
+    const rewritten = MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:7:5"]!;
+    expect(rewritten.answer).toBe("Notre Dame 2020");
+    expect(rewritten.statSheet).not.toMatch(/Notre Dame/i);
+    expect(rewritten.choices.filter(choice => choice === rewritten.answer)).toHaveLength(1);
+    expect(preview.contentVersion).toBe(MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION);
+  });
+
   it("protects twenty-seven additional future question replacements and Q8 option mappings", () => {
     const newRunCorrections = [
       ["nfl", 10, 6, "Travis Kelce"],
