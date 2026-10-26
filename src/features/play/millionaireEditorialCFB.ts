@@ -18,7 +18,7 @@ export const cfbEditorialCandidateRuns = [
     ["rose-bowl-upsets","Which TCU quarterback led the Horned Frogs past Wisconsin in the January 2011 Rose Bowl?",["Andy Dalton","Trevone Boykin","Casey Pachall","Max Duggan"],"Andy Dalton","He accounted for both a passing touchdown and a rushing touchdown in TCU’s 21–19 win."],
     ["coaches", "Who led Florida State to its first national championship after the 1993 season?", ["Bobby Bowden", "Jimbo Fisher", "Mack Brown", "Steve Spurrier"], "Bobby Bowden", "The Seminoles won an Orange Bowl showdown against Nebraska."],
     ["passing-history", "Which quarterback won the 1989 Heisman while running Houston's high-powered Run and Shoot offense?", ["Andre Ware", "David Klingler", "Ty Detmer", "Colt Brennan"], "Andre Ware", "The winner produced huge passing totals under coach Jack Pardee."],
-    ["offense-history", "Which quarterback guided Nebraska's explosive offense to the 1983 Orange Bowl against Miami?", ["Turner Gill", "Tommy Frazier", "Eric Crouch", "Scott Frost"], "Turner Gill", "His team scored more than 50 points per game in the regular season."],
+    ["iron-bowl-heroics", "Who caught Jalen Milroe's fourth-and-31 game-winning touchdown pass against Auburn in the 2023 Iron Bowl?", ["Isaiah Bond","Jermaine Burton","Kobe Prentice","Amari Niblack"], "Isaiah Bond", "The receiver hauled in the 31-yard score with 32 seconds left as Alabama escaped with a three-point win.", ""],
     ["streaks", "Which school ended Oklahoma's 47-game winning streak in 1957?", ["Notre Dame", "Texas", "Nebraska", "Kansas"], "Notre Dame", null, "Notre Dame shocked Oklahoma 7-0 on November 16, 1957, ending Bud Wilkinson's unbeaten streak at 47 consecutive games."],
   ],
   [
