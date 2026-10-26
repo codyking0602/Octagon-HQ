@@ -2,11 +2,21 @@ name: Monitor Wheel CFB AP Top 25
 
 on:
   workflow_dispatch:
-  # Old independent cron retired. The coordinated Wheel monitor will own cadence
-  # only after full-source coverage and recovery gates have been certified.
+  # Lightweight factual AP poll check, fully independent of NFL/UFC/GM
+  # rating-source certification. Does not grade CFB athletes or publish polls.
+  schedule:
+    - cron: "20 11 * * 2"
+  pull_request:
+    paths:
+      - 'scripts/check-wheel-cfb-ap-top25.mjs'
+      - '.github/workflows/monitor-wheel-cfb-ap-top25.yml'
 
 permissions:
   contents: read
+
+concurrency:
+  group: cfb-ap-factual-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   verify-ap-top-25:
