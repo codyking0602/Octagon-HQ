@@ -26,6 +26,10 @@ class ProductionTests(unittest.TestCase):
         self.assertEqual(report["abilityGradesChanged"],0)
         self.assertFalse(report["detailedReviewAvoidanceCertified"])
         self.assertEqual(report["fullApprovedNflDenominator"],626)
+        self.assertEqual(len(report["decisions"]),594)
+        self.assertTrue(report["decisionLedgerComplete"])
+        self.assertEqual(sum(row["classification"]=="unobserved" for row in report["decisions"]),593)
+        self.assertEqual(sum(row["classification"]=="priority-performance-review" for row in report["decisions"]),1)
 
     def test_single_outlier_never_triggers_an_ability_review(self):
         rows=[game(w,yards=280 if w<6 else 640) for w in range(1,7)]
