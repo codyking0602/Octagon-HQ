@@ -88,7 +88,23 @@ jobs:
 
           echo "Fresh-database bootstrap images:"
           cat "$RUNNER_TEMP/supabase-db-images.txt"
-          xargs -r -n 1 -P 4 docker pull < "$RUNNER_TEMP/supabase-db-images.txt"
+          while IFS= read -r image; do
+            pulled=false
+            for attempt in 1 2 3 4 5; do
+              if docker pull "$image"; then
+                pulled=true
+                break
+              fi
+              if [ "$attempt" -lt 5 ]; then
+                echo "Retrying rate-limited container registry image $image (attempt $((attempt + 1))/5)"
+                sleep "$((attempt * 5))"
+              fi
+            done
+            if [ "$pulled" != "true" ]; then
+              echo "::error title=Supabase bootstrap image unavailable::Failed to pull $image after 5 bounded attempts."
+              exit 1
+            fi
+          done < "$RUNNER_TEMP/supabase-db-images.txt"
 
       - name: Execute Auction lifecycle SQL tests on a fresh local database
         shell: bash
