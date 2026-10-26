@@ -3003,7 +3003,7 @@ function runtimeQuestion(
       { id: "D"; text: string },
     ],
     correctChoiceId,
-    explanation: seed.explanation ?? `${seed.answer} is the correct answer.`, 
+    explanation: seed.explanation ?? `${seed.answer} is the correct answer.`,
     statSheet: q8 ? null : seed.statSheet,
     fiftyFifty: {
       survivorChoiceIds,
