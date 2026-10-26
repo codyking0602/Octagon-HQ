@@ -200,7 +200,7 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(bundler).toContain('fileName: "football-publication.generated.mjs"');
     expect(bundler).toContain('fileName: "football-millionaire-publication.generated.mjs"');
     expect(bundler).toContain('src/features/play/footballDailyPublicationMillionaire.ts');
-    expect(bundler).toContain('{ day: "2026-10-26", gameType: "millionaire" }');
+    expect(bundler).toContain('{ day: "2026-10-26", gameType: "millionaire", scheduleVersion: "football-daily-v21-locked-oct25" }');
     expect(bundler).toContain('fileName: "football-advance.generated.mjs"');
     expect(bundler).not.toContain('fileName: "football-publication-who-am-i.generated.mjs"');
     expect(bundler).not.toContain('fileName: "football-publication-hit-the-number.generated.mjs"');
