@@ -259,7 +259,7 @@ const COWBOYS_SEAHAWKS_BAR_TRIVIA: readonly BarTriviaQuestion[] = [
     answer: "88",
     explanation: "No. 88 has become a signature Cowboys receiver number across multiple eras.",
     sourceId: "cowboys-seahawks-modern-editorial-20261026",
-    sourceUrl: "https://www.dallascowboys.com/news/no-88-celebration-continues-with-ceedee-lamb",
+    sourceUrl: "https://www.dallascowboys.com/news/ceedee-lamb-latest-cowboys-wr-to-wear-88",
     verifiedAt: "2026-10-26",
   }),
   barTriviaQuestion({
@@ -294,7 +294,7 @@ const COWBOYS_SEAHAWKS_BAR_TRIVIA: readonly BarTriviaQuestion[] = [
     round: "round3",
     category: "Cowboys–Seahawks",
     prompt: "Which Seattle receiver caught three touchdown passes against Dallas in the teams' 2023 meeting?",
-    choices: ["Tyler Lockett","Jaxon Smith-Njigba","DK Metcalf","Noah Fant"],
+    choices: ["Tyler Lockett","Jaxon Smith-Njigba","DK Metcalf","Jake Bobo"],
     answer: "DK Metcalf",
     explanation: "Seattle's DK Metcalf scored three receiving touchdowns against Dallas on November 30, 2023, although the Cowboys won 41–35.",
     sourceId: "cowboys-seahawks-modern-editorial-20261026",
