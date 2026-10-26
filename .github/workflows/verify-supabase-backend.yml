@@ -88,24 +88,36 @@ jobs:
 
           echo "Fresh-database bootstrap images:"
           cat "$RUNNER_TEMP/supabase-db-images.txt"
-          # GHCR rate limits concurrent layer downloads across busy PR runs.
-          # Keep fresh-db proof authoritative; retry transient pulls rather than
-          # recording an infrastructure 429 as a failed SQL migration.
+          # Use Supabase's official Docker Hub namespace first to avoid
+          # transient GHCR rate limits shared across busy Actions runners.
+          # Retag the exact same version to the CLI's expected GHCR image
+          # name; fallback to GHCR if the Hub tag is temporarily absent.
           while IFS= read -r image; do
+            mirror="${image#ghcr.io/}"
             pulled=false
-            for attempt in 1 2 3 4 5; do
-              if docker pull "$image"; then
+            for attempt in 1 2 3; do
+              if docker pull "$mirror"; then
+                docker tag "$mirror" "$image"
                 pulled=true
                 break
               fi
-              echo "::warning title=Retrying database image pull::${image} failed on attempt ${attempt}; retrying after backoff."
-              sleep $((attempt * 10))
+              echo "::warning title=Retrying official Supabase Docker Hub image::${mirror} failed on attempt ${attempt}."
+              sleep $((attempt * 5))
             done
             if [ "$pulled" != true ]; then
-              echo "::error title=Database image unavailable::Failed to pull $image after five attempts."
+              for attempt in 1 2 3; do
+                if docker pull "$image"; then
+                  pulled=true
+                  break
+                fi
+                echo "::warning title=Retrying Supabase GHCR image::${image} failed on attempt ${attempt}."
+                sleep $((attempt * 10))
+              done
+            fi
+            if [ "$pulled" != true ]; then
+              echo "::error title=Database image unavailable::Neither official registry could provide $image."
               exit 1
             fi
-            sleep 2
           done < "$RUNNER_TEMP/supabase-db-images.txt"
 
       - name: Execute Auction lifecycle SQL tests on a fresh local database
