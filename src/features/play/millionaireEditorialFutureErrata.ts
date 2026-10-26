@@ -70,6 +70,15 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     explanation: "Brees spent his first five NFL seasons with the San Diego Chargers before joining New Orleans in 2006.",
     evidence: [],
   },
+  "nfl:4:1": {
+    id: "millionaire-nfl-future-stafford-rams-sb-lvi-q2",
+    type: "super-bowl-quarterbacks",
+    prompt: "Which quarterback led the Los Angeles Rams to victory in Super Bowl LVI?",
+    choices: ["Matthew Stafford", "Jared Goff", "Joe Burrow", "Jimmy Garoppolo"], answer: "Matthew Stafford",
+    statSheet: "The winning team took the lead for good on a late touchdown pass to Cooper Kupp.",
+    explanation: "Matthew Stafford quarterbacked the Rams' 23–20 victory over Cincinnati in Super Bowl LVI following the 2021 season.",
+    evidence: [{ authority: "Los Angeles Rams", url: "https://www.therams.com/news/super-bowl-lvi-game-recap-vs-bengals-matthew-stafford-cooper-kupp-aaron-donald", supportingDetail: "The team's official recap identifies Stafford as its quarterback and the game-winning touchdown passer against Cincinnati." }],
+  },
   "nfl:7:5": {
     id: "millionaire-nfl-2009-woodson-dpoy-q6",
     type: "defensive-awards",
