@@ -103,13 +103,15 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(scheduled).toBe(40);
   });
 
-  it("protects the five source-checked draft revisions against accidental reversion", () => {
+  it("protects source-checked draft revisions against accidental reversion", () => {
     const sourceChecked = [
       ["cfb", 10, 0, "Miami"],
       ["nfl", 11, 4, "James Harrison"],
       ["ufc", 10, 2, "Kamaru Usman"],
       ["ufc", 10, 4, "Carlos Condit"],
       ["ufc", 10, 6, "Alexandre Pantoja"],
+      ["nfl", 10, 6, "Talanoa Hufanga"],
+      ["ufc", 12, 0, "Yair Rodriguez"],
     ] as const;
     for (const [league, runIndex, level, expected] of sourceChecked) {
       const run = millionaireFutureEditorialDailyRun(league, runIndex);
