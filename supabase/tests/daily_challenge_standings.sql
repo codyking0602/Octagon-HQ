@@ -2,6 +2,23 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
+-- Historical leaderboard fixture intentionally creates five consecutive UFC
+-- boards. Since October 25, official UFC publication is every 48 hours.
+-- Exercise this historical fixture in rollback-only isolation; the separate
+-- locked_three_sport_daily_cadence.sql test certifies the live publish gate.
+do $legacy_fixture$
+begin
+  if exists (
+    select 1 from pg_trigger
+    where tgname = 'enforce_future_daily_publication_cadence'
+      and tgrelid = 'private.daily_challenges'::regclass
+      and not tgisinternal
+  ) then
+    execute 'alter table private.daily_challenges disable trigger enforce_future_daily_publication_cadence';
+  end if;
+end;
+$legacy_fixture$;
+
 do $$
 declare
   v_cody uuid := '76000000-0000-4000-8000-000000000001';
