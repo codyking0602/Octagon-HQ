@@ -100,9 +100,19 @@ type NbaPublicationRuntimeModule = {
     day: string, scheduleVersion: string, gameType: string, history?: unknown
   ) => JsonRecord;
 };
+type NbaWhoAmIPublicationRuntimeModule = {
+  buildNbaWhoAmIDailyLeanPublication: (
+    day: string, scheduleVersion: string, gameType: string
+  ) => JsonRecord;
+};
+
 type NbaAdvanceRuntimeModule = {
   advanceNbaOfficialDailyRuntime: DailyAdvanceRuntime;
 };
+type WhoAmIAdvanceRuntimeModule = {
+  advanceCanonicalWhoAmIDailyRuntime: DailyAdvanceRuntime;
+};
+
 type NbaFeudAdvanceRuntimeModule = {
   advanceFamilyFeudDailyCore: DailyAdvanceRuntime;
 };
@@ -134,7 +144,9 @@ let footballMillionairePublicationPromise: Promise<FootballPublicationRuntimeMod
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
+let nbaWhoAmIPublicationPromise: Promise<NbaWhoAmIPublicationRuntimeModule> | null = null;
 let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
+let whoAmIAdvanceRuntimePromise: Promise<WhoAmIAdvanceRuntimeModule> | null = null;
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
 let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
 let footballHitNumberAdvanceRuntimePromise: Promise<FootballHitNumberAdvanceRuntimeModule> | null = null;
@@ -172,11 +184,25 @@ function loadNbaPublicationRuntime() {
   }
   return nbaPublicationRuntimePromise;
 }
+function loadNbaWhoAmIPublicationRuntime() {
+  if (!nbaWhoAmIPublicationPromise) {
+    nbaWhoAmIPublicationPromise = import("./nba-who-am-i-publication.generated.mjs") as Promise<NbaWhoAmIPublicationRuntimeModule>;
+  }
+  return nbaWhoAmIPublicationPromise;
+}
+
 function loadNbaAdvanceRuntime() {
   if (!nbaAdvanceRuntimePromise) {
     nbaAdvanceRuntimePromise = import("./nba-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
   }
   return nbaAdvanceRuntimePromise;
+}
+
+function loadWhoAmIAdvanceRuntime() {
+  if (!whoAmIAdvanceRuntimePromise) {
+    whoAmIAdvanceRuntimePromise = import("./who-am-i-advance.generated.mjs") as Promise<WhoAmIAdvanceRuntimeModule>;
+  }
+  return whoAmIAdvanceRuntimePromise;
 }
 
 function loadNbaFeudAdvanceRuntime() {
@@ -796,9 +822,11 @@ async function materializeNbaToday(admin: SupabaseClient, at?: string, preview =
       created: false,
     };
   }
-  const publishedSetup = (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(
-    day, scheduleVersion, gameType,
-  );
+  // Daily publication is rare but must not exceed Edge CPU on a cold start.
+  // Who Am I loads only its canonical round authorship, not all nine NBA banks.
+  const publishedSetup = gameType === "who_am_i"
+    ? (await loadNbaWhoAmIPublicationRuntime()).buildNbaWhoAmIDailyLeanPublication(day, scheduleVersion, gameType)
+    : (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(day, scheduleVersion, gameType);
   if (publishedSetup.scheduleVersion !== scheduleVersion || publishedSetup.gameType !== gameType) {
     throw new Error("NBA Daily publication differs from the locked 28-slot calendar.");
   }
@@ -863,7 +891,9 @@ async function handleNbaDaily(
   // all nine NBA game runtimes to resolve its small per-tile actions: the old
   // path exceeded CPU limits during live owner testing. Auth, revision checks,
   // idempotency, grading and persisted results still use the same trusted path.
-  const advanced = context.gameType === "average_fan"
+  const advanced = context.gameType === "who_am_i"
+    ? (await loadWhoAmIAdvanceRuntime()).advanceCanonicalWhoAmIDailyRuntime(context, action)
+    : context.gameType === "average_fan"
     ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)
     : context.gameType === "sports_feud"
       // Current NBA packs already carry their own authoritative candidates and

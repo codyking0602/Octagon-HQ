@@ -85,10 +85,22 @@ const bundles = [
     ],
   },
   {
+    label: "NBA Who Am I lean publication runtime",
+    entry: resolve(repoRoot, "src/features/nba/nbaWhoAmIDailyPublicationLean.ts"),
+    fileName: "nba-who-am-i-publication.generated.mjs",
+    requiredExports: ["buildNbaWhoAmIDailyLeanPublication"],
+  },
+  {
     label: "NBA Sports Feud lean advance runtime",
     entry: resolve(repoRoot, "src/features/play/familyFeudDailyCore.ts"),
     fileName: "nba-feud-advance.generated.mjs",
     requiredExports: ["advanceFamilyFeudDailyCore"],
+  },
+  {
+    label: "NBA Who Am I canonical lean answer runtime",
+    entry: resolve(repoRoot, "src/features/play/whoAmITwoRoundDailyRuntime.ts"),
+    fileName: "who-am-i-advance.generated.mjs",
+    requiredExports: ["advanceCanonicalWhoAmIDailyRuntime"],
   },
   {
     label: "NBA daily advance runtime",
