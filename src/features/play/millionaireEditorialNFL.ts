@@ -8,8 +8,8 @@ export const nflEditorialCandidateRuns = [
     ["super-bowl", "Which team did Deion Sanders win his FIRST Super Bowl with?", ["49ers", "Cowboys", "Falcons", "Ravens"], "49ers", "He joined the champion on a one-year deal for the 1994 season."],
     ["coaching", "Who coached the Giants to BOTH Super Bowl victories over the Patriots?", ["Tom Coughlin", "Bill Parcells", "Jim Fassel", "Dan Reeves"], "Tom Coughlin", "Both wins came against Bill Belichick teams four seasons apart."],
     ["comeback", "Which team overcame a 32-point deficit to beat Houston in the 1992 season's AFC wild-card game?", ["Bills", "Oilers", "Broncos", "Chiefs"], "Bills", "A backup quarterback led the second-half rally in January 1993."],
-    ["super-bowl-surprises", "Which Patriots linebacker caught a touchdown pass from Tom Brady in Super Bowl XXXVIII?", ["Mike Vrabel", "Tedy Bruschi", "Willie McGinest", "Roman Phifer"], "Mike Vrabel", null],
-    ["playoff-special-teams","Who returned a blocked punt for a touchdown during San Francisco's 2021 season divisional playoff win at Green Bay?",["Talanoa Hufanga","Deebo Samuel","Fred Warner","George Kittle"],"Talanoa Hufanga","The fourth-quarter special-teams play tied a freezing January game at 10–10."],
+    ["super-bowl-surprises", "Which Patriots linebacker caught a touchdown pass from Tom Brady in Super Bowl XXXVIII?", ["Mike Vrabel", "Tedy Bruschi", "Willie McGinest", "Roman Phifer"], "Mike Vrabel", "The defender also lined up as an occasional short-yardage receiver for New England."],
+    ["playoff-special-teams","Who returned a blocked punt for a touchdown during San Francisco's 2021 season divisional playoff win at Green Bay?",["Talanoa Hufanga","Deebo Samuel","Fred Warner","George Kittle"],"Talanoa Hufanga",null],
   ],
   [
     ["franchise-identities", "Which NFL franchise's helmet features a lightning-bolt design?", ["Chargers", "Titans", "Rams", "Broncos"], "Chargers", "The team used the look in both San Diego and Los Angeles."],
