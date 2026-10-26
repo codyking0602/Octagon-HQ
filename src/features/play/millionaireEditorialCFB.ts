@@ -32,7 +32,7 @@ export const cfbEditorialCandidateRuns = [
     ["national-championship-quarterbacks", "Who started at quarterback for Michigan's undefeated 1997 national-title team?", ["Brian Griese", "Tom Brady", "Scott Dreisbach", "Elvis Grbac"], "Brian Griese", null],
   ],
   [
-    ["nicknames", "Which football program is known as the Fighting Irish?", ["Notre Dame", "Boston College", "Navy", "Michigan State"], "Notre Dame", "The independent program plays home games in South Bend."],
+    ["stadiums", "Which SEC football program plays its home games at Bryant-Denny Stadium?", ["Alabama", "Auburn", "LSU", "Georgia"], "Alabama", "The stadium is in Tuscaloosa near the university’s Walk of Champions."],
     ["heisman", "Which school did 2011 Heisman-winning quarterback Robert Griffin III attend?", ["Baylor", "Houston", "TCU", "Texas Tech"], "Baylor", "He helped transform a Big 12 program under Art Briles."],
     ["quarterback-legends", "Which Nebraska quarterback won the 2001 Heisman Trophy?", ["Eric Crouch", "Tommy Frazier", "Scott Frost", "Turner Gill"], "Eric Crouch", "The winner helped keep the Huskers nationally prominent in the option era."],
     ["history", "Which program completed the 1994 season undefeated behind coach Tom Osborne?", ["Nebraska", "Miami", "Penn State", "Colorado"], "Nebraska", "Its national title was settled after an Orange Bowl victory over Miami."],
