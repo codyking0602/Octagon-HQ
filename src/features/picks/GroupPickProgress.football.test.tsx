@@ -122,9 +122,9 @@ describe("GroupPickProgress football live standings", () => {
     expect(codyRow).not.toBeNull();
     expect(shaneRow).not.toBeNull();
     expect(within(codyRow!).getByText("1-1 · 1ST")).toBeInTheDocument();
-    expect(within(codyRow!).getByText("LOCKS 1-0")).toBeInTheDocument();
+    expect(within(codyRow!).getByText("3 PTS · LOCKS 1-0")).toBeInTheDocument();
     expect(within(shaneRow!).getByText("1-1 · 2ND")).toBeInTheDocument();
-    expect(within(shaneRow!).getByText("LOCKS 0-1")).toBeInTheDocument();
+    expect(within(shaneRow!).getByText(/PTS · LOCKS 0-1/)).toBeInTheDocument();
     expect(screen.queryByText("Brock")).not.toBeInTheDocument();
 
     fireEvent.click(codyRow!);
