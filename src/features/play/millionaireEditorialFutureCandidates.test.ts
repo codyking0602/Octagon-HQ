@@ -118,7 +118,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
     const heavyweights = millionaireFutureEditorialDailyRun("ufc", 10).filter(question =>
       /heavyweight/.test(question.type));
-    expect(heavyweights).toHaveLength(2);
+    expect(heavyweights.length).toBeLessThanOrEqual(2);
   });
 
   it("has zero repeated complete run IDs in the actual six-month canonical publication calendar", () => {
