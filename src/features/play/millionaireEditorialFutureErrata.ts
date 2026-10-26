@@ -14,6 +14,18 @@ export type MillionaireFutureRewriteSeed = {
   evidence: readonly { authority: string; url: string; supportingDetail: string }[];
 };
 export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
+  // Avoid inverse of active Bar Trivia's 2001 Miami/Ken Dorsey identity fact.
+  "cfb:5:2": {
+    id: "millionaire-cfb-future-tcu-sonny-dykes-cfp-q3",
+    type: "cfp-breakthrough",
+    prompt: "Which school reached the 2022 season's CFP national-title game in Sonny Dykes' first year as head coach?",
+    choices: ["TCU", "Baylor", "Oklahoma State", "Texas Tech"],
+    answer: "TCU",
+    statSheet: "The unranked preseason Big 12 team upset Michigan 51–45 in its semifinal.",
+    explanation: "Sonny Dykes led TCU to a 13–2 record and the January 2023 CFP championship game in his first season, beating Michigan in the Fiesta Bowl semifinal before losing to Georgia.",
+    evidence: [{ authority: "TCU Athletics", url: "https://gofrogs.com/news/2023/1/11/football-dykes-named-afca-national-coach-of-the-year", supportingDetail: "TCU confirms Dykes took the Horned Frogs to their first CFP title game in his first season." }],
+  },
+
   // Future-only repairs of verified selectable CFB Bar Trivia collisions.
   "cfb:7:6": {
     id: "millionaire-cfb-future-mason-taylor-bama-2022-q7",

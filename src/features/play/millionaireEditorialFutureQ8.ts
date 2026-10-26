@@ -103,11 +103,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "Texas Athletics", url: "https://texaslonghorns.com/news/2025/1/22/no-4-3-3-footballs-ewers-named-to-davey-o-brien-postseason-great-8", supportingDetail: "Texas confirms Golden's 28-yard first-OT conversion and double-overtime win." },
   ),
   "cfb:5:7": q8(
-    "millionaire-cfb-future-adonai-mitchell-peach-2022-q8", "playoff-comebacks",
-    "Who caught Georgia's go-ahead touchdown with 54 seconds left against Ohio State in the December 2022 Peach Bowl?",
-    ["Adonai Mitchell", "Arian Smith", "Ladd McConkey", "Brock Bowers"], "Adonai Mitchell",
-    "Adonai Mitchell caught Stetson Bennett's 10-yard touchdown with 54 seconds left, lifting Georgia to a 42–41 win over Ohio State in the CFP semifinal.",
-    { authority: "SEC", url: "https://www.secsports.com/news/2023/01/no-1-georgia-stuns-no-4-ohio-state-in-cfp-semifinal", supportingDetail: "SEC recap confirms Mitchell's late 10-yard touchdown to complete the comeback." },
+    "millionaire-cfb-future-rod-moore-2023-game-q8", "rivalry-clinchers",
+    "Which Michigan defender intercepted Kyle McCord with 25 seconds left to seal the 2023 win over Ohio State?",
+    ["Rod Moore", "Will Johnson", "Mike Sainristil", "Junior Colson"], "Rod Moore",
+    "Michigan safety Rod Moore picked off Ohio State quarterback Kyle McCord with 25 seconds remaining on November 25, 2023, sealing a 30–24 win. Will Johnson also intercepted McCord earlier in the game.",
+    { authority: "Michigan Athletics", url: "https://mgoblue.com/news/2023/11/25/football-corum-late-game-heroics-lift-michigan-to-another-victory-over-no-2-ohio-state", supportingDetail: "Michigan's official recap names Rod Moore's interception at 25 seconds remaining; the 30–24 win secured Big Ten East title." },
   ),
   "cfb:8:7": q8(
     "millionaire-cfb-future-1993-ward-heisman-nba-q8", "two-sport-careers",

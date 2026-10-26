@@ -15,6 +15,20 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("replaces 2001 quarterback trivia and consecutive Auburn facts in CFB future run 6", () => {
+    const school = MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:5:2"]!;
+    const final = MILLIONAIRE_FUTURE_Q8_REWRITES["cfb:5:7"]!;
+    expect(school.answer).toBe("TCU");
+    expect(school.prompt).toContain("Sonny Dykes");
+    expect(normalized(school.statSheet ?? "")).not.toContain("tcu");
+    expect(final.answer).toBe("Rod Moore");
+    expect(final.prompt).toContain("25 seconds");
+    expect(final.statSheet).toBeNull();
+    expect(final.choices).toContain("Will Johnson");
+    expect(final.explanation).toContain("Will Johnson");
+    expect(millionaireDailyRun("cfb", 5)[2]!.prompt).toContain("Ken Dorsey");
+  });
+
   it("isolates four sourced future-only CFB cross-game overlap repairs", () => {
     const cases = [
       ["cfb:7:6", "Mason Taylor"],
