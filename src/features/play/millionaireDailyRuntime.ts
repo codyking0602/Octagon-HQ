@@ -16,7 +16,9 @@ import {
 } from "./MillionaireCasualModel";
 import {
   MILLIONAIRE_DAILY_RUN_COUNT,
+  MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT,
   millionaireDailyRun,
+  millionaireFutureEditorialDailyRun,
 } from "./millionaireDailyQuestionBank";
 import { footballThemedMillionaireRunForDay } from "./footballTeamThemeDailyPacks";
 import type { OfficialDailySetupPublication } from "./todaysChallengeRuntime";
@@ -33,6 +35,9 @@ import {
 } from "./dailyChallengeRotation";
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
+/** Staged candidates only; not an approved or deployed content version. */
+export const MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION = "millionaire-daily-v6-editorial-candidates" as const;
+export const MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER = "2026-10-27" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
@@ -247,8 +252,9 @@ export function millionaireDailyLeagueAppearance(sport: "ufc" | "football", day:
 
 export function millionaireDailyRunIndex(sport: "ufc" | "football", day: string) {
   const appearance = millionaireDailyLeagueAppearance(sport, day);
-  return ((appearance % MILLIONAIRE_DAILY_RUN_COUNT) + MILLIONAIRE_DAILY_RUN_COUNT)
-    % MILLIONAIRE_DAILY_RUN_COUNT;
+  const count = day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER
+    ? MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT : MILLIONAIRE_DAILY_RUN_COUNT;
+  return ((appearance % count) + count) % count;
 }
 
 export function millionaireDailyHostNumber(sport: "ufc" | "football", day: string) {
@@ -368,9 +374,10 @@ function futureMillionaireErrata(
   }) as unknown as MillionaireRun;
 }
 
-function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string) {
+function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string,
+  contentVersion: string = MILLIONAIRE_DAILY_CONTENT_VERSION) {
   return [
-    MILLIONAIRE_DAILY_CONTENT_VERSION,
+    contentVersion,
     league,
     day,
     scheduleVersion,
@@ -385,15 +392,16 @@ function millionairePublicationFromRun(
   runIndex: number,
   hostNumber: number,
   run: MillionaireRun,
+  contentVersion: string = MILLIONAIRE_DAILY_CONTENT_VERSION,
 ): OfficialDailySetupPublication {
   const state = createMillionaireState(run);
-  const proof = proofFor(run, league, day, scheduleVersion);
+  const proof = proofFor(run, league, day, scheduleVersion, contentVersion);
   return {
-    setupKey: `${MILLIONAIRE_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:${league}`,
-    contentVersion: MILLIONAIRE_DAILY_CONTENT_VERSION,
+    setupKey: `${contentVersion}:${scheduleVersion}:${day}:${league}`,
+    contentVersion,
     scoringVersion: MILLIONAIRE_DAILY_SCORING_VERSION,
     publicSetup: {
-      runtime_version: MILLIONAIRE_DAILY_CONTENT_VERSION,
+      runtime_version: contentVersion,
       league,
       run_number: runIndex + 1,
       host_number: hostNumber,
@@ -450,7 +458,9 @@ export function buildMillionaireDailySetup(
   const hostNumber = millionaireDailyHostNumber(sport, day);
   const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
   const baseRun = futureMillionaireErrata(
-    themedRun ?? millionaireDailyRun(league, runIndex), league, runIndex, day,
+    themedRun ?? (day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER
+      ? millionaireFutureEditorialDailyRun(league, runIndex)
+      : millionaireDailyRun(league, runIndex)), league, runIndex, day,
   );
   const run = balanceRun(
     sport === "football" && day === "2026-10-10" && league === "cfb"
@@ -459,5 +469,7 @@ export function buildMillionaireDailySetup(
     runIndex,
   );
   assertMillionaireRun(run);
-  return millionairePublicationFromRun(league, day, scheduleVersion, runIndex, hostNumber, run);
+  return millionairePublicationFromRun(league, day, scheduleVersion, runIndex, hostNumber, run,
+    day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER
+      ? MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION : MILLIONAIRE_DAILY_CONTENT_VERSION);
 }
