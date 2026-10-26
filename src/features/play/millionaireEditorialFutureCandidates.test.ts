@@ -133,6 +133,17 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(new Set(final.choices.map(option => normalized(option.text))).size).toBe(4);
   });
 
+  it("keeps the recent Alabama–Georgia signature moment in future CFB run 13 finale", () => {
+    const final = millionaireFutureEditorialDailyRun("cfb", 12)[7]!;
+    expect(answer(final)).toBe("Ryan Williams");
+    expect(final.prompt).toContain("September 2024");
+    expect(final.explanation).toContain("41–34");
+    expect(final.statSheet).toBeNull();
+    expect(final.lifelineCompatibility).toMatchObject({
+      fiftyFifty: false, statSheet: false, doubleDip: false,
+    });
+  });
+
   it("keeps the original ten-run bank unchanged while adding five new runs per league", () => {
     expect(MILLIONAIRE_DAILY_RUN_COUNT).toBe(10);
     expect(MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT).toBe(15);
