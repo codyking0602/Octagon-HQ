@@ -40,7 +40,13 @@ jobs:
       - name: Install locked development dependencies for GM economy simulation
         run: npm ci --silent --no-audit --no-fund
       - name: Re-run existing reproducible GM economy and development simulations
-        run: npx vitest run src/features/back-room/wheelFootballGmEconomy.test.ts
+        run: |
+          npx vitest run \
+            src/features/back-room/wheelFootballGmEconomy.test.ts \
+            src/features/back-room/footballGmFullDevelopmentCalibration.test.ts \
+            src/features/back-room/footballGmLeagueSimulation.test.ts \
+            src/features/back-room/footballGmOutcomeCalibration.test.ts \
+            src/features/back-room/footballGmRosterFlow.test.ts
       - name: Inspect independently published contract provider asset
         id: provenance
         continue-on-error: true
