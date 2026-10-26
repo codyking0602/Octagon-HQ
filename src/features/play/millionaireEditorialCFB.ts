@@ -13,7 +13,7 @@ export const cfbEditorialCandidateRuns = [
   ],
   [
     ["rivalries", "Which two schools play the annual Iron Bowl?", ["Alabama and Auburn", "Georgia and Florida", "Michigan and Ohio State", "Texas and Oklahoma"], "Alabama and Auburn", "The rivalry is a major in-state SEC showdown."],
-    ["rivalries", "The Red River Rivalry is traditionally played between which schools?", ["Texas and Oklahoma", "Oklahoma and Oklahoma State", "Texas and Texas A&M", "TCU and Baylor"], "Texas and Oklahoma", "The game is traditionally held at the State Fair in Dallas."],
+    ["stadiums", "Which Big Ten program plays its home games at Camp Randall Stadium?", ["Wisconsin", "Iowa", "Minnesota", "Nebraska"], "Wisconsin", "The Badgers have played in Madison's historic stadium since 1917."],
     ["rivalries", "Which team beat Michigan in the famous double-overtime edition of The Game in 2016?", ["Ohio State", "Michigan State", "Penn State", "Wisconsin"], "Ohio State", "The fourth-down spot late in the game remained controversial."],
     ["rivalry-moments", "Who returned the missed field goal for Auburn's Kick Six victory over Alabama in 2013?", ["Chris Davis", "Tre Mason", "Nick Marshall", "Sammie Coates"], "Chris Davis", "The return covered the entire field with no time remaining."],
     ["coaches", "Who led Florida State to its first national championship after the 1993 season?", ["Bobby Bowden", "Jimbo Fisher", "Mack Brown", "Steve Spurrier"], "Bobby Bowden", "The Seminoles won an Orange Bowl showdown against Nebraska."],
@@ -29,7 +29,7 @@ export const cfbEditorialCandidateRuns = [
     ["rivalry-moments", "Who scored Michigan State's winning touchdown after Michigan mishandled a punt snap in 2015?", ["Jalen Watts-Jackson", "LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson", "The return stunned the home crowd on the final play in Ann Arbor."],
     ["big-12", "Which quarterback led Baylor to its first Big 12 championship in 2013?", ["Bryce Petty", "Robert Griffin III", "Nick Florence", "Seth Russell"], "Bryce Petty", "He threw 32 touchdown passes during an 11-win regular season."],
     ["underdogs", "Who coached Hawaii's unbeaten 2007 regular season before its Sugar Bowl loss?", ["June Jones", "Nick Rolovich", "Greg McMackin", "Todd Graham"], "June Jones", "The team's run-and-shoot offense featured quarterback Colt Brennan."],
-    ["cross-sport-history", "Which Heisman winner also played in an NCAA men's basketball Final Four?", ["Terry Baker", "Roger Staubach", "Charlie Ward", "Paul Hornung"], "Terry Baker", null],
+    ["national-championship-quarterbacks", "Who started at quarterback for Michigan's undefeated 1997 national-title team?", ["Brian Griese", "Tom Brady", "Scott Dreisbach", "Elvis Grbac"], "Brian Griese", null],
   ],
   [
     ["nicknames", "Which football program is known as the Fighting Irish?", ["Notre Dame", "Boston College", "Navy", "Michigan State"], "Notre Dame", "The independent program plays home games in South Bend."],
@@ -43,12 +43,12 @@ export const cfbEditorialCandidateRuns = [
   ],
   [
     ["nicknames", "Which school uses the nickname Crimson Tide?", ["Alabama", "Arkansas", "South Carolina", "Ole Miss"], "Alabama", "The program's home stadium bears the names Bryant and Denny."],
-    ["heisman", "Who won the 2025 Heisman Trophy after quarterbacking Indiana's breakthrough season?", ["Fernando Mendoza", "Diego Pavia", "Julian Sayin", "Dante Moore"], "Fernando Mendoza", "The winner transferred from California before the season."],
-    ["historical-titles", "Which program won the 1976 national championship behind Heisman runner Tony Dorsett?", ["Pittsburgh", "Penn State", "Syracuse", "West Virginia"], "Pittsburgh", "The Panthers finished 12–0 under coach Johnny Majors."],
     ["quarterback-careers", "Where did Patrick Mahomes play college football?", ["Texas Tech", "Oklahoma State", "TCU", "Baylor"], "Texas Tech", "He threw for more than 5,000 yards in his final season."],
-    ["undefeated-seasons", "Who coached Auburn's undefeated 2004 football team?", ["Tommy Tuberville", "Gus Malzahn", "Gene Chizik", "Pat Dye"], "Tommy Tuberville", "The Tigers finished 13–0 with a Sugar Bowl victory."],
     ["upsets", "Which team handed Alabama its only regular-season loss in Johnny Manziel's 2012 Heisman season?", ["Texas A&M", "LSU", "Ole Miss", "Georgia"], "Texas A&M", "The upset happened in Tuscaloosa in the Aggies' first SEC season."],
-    ["milestones", "Who became the first Black recipient of the Heisman Trophy in 1961?", ["Ernie Davis", "Archie Griffin", "O.J. Simpson", "Jim Brown"], "Ernie Davis", "The Syracuse runner followed a trailblazing college career by Jim Brown."],
+    ["heisman", "Who won the 2025 Heisman Trophy after quarterbacking Indiana's breakthrough season?", ["Fernando Mendoza", "Diego Pavia", "Julian Sayin", "Dante Moore"], "Fernando Mendoza", "The winner transferred from California before the season."],
+    ["undefeated-seasons", "Who coached Auburn's undefeated 2004 football team?", ["Tommy Tuberville", "Gus Malzahn", "Gene Chizik", "Pat Dye"], "Tommy Tuberville", "The Tigers finished 13–0 with a Sugar Bowl victory."],
+    ["historical-titles", "Which program won the 1976 national championship behind Heisman runner Tony Dorsett?", ["Pittsburgh", "Penn State", "Syracuse", "West Virginia"], "Pittsburgh", "The Panthers finished 12–0 under coach Johnny Majors."],
+    ["coaching-history", "Who coached Washington to a 12-0 season and a share of the 1991 national championship?", ["Don James", "Terry Donahue", "Dennis Erickson", "Mike Bellotti"], "Don James", "The Huskies finished first in the coaches' poll after a Rose Bowl win over Michigan."],
     ["army-football", "Which Army football star was nicknamed Mr. Outside alongside Doc Blanchard's Mr. Inside?", ["Glenn Davis", "Felix Blanchard", "Red Grange", "Tom Harmon"], "Glenn Davis", null],
   ],
 ] as const;
