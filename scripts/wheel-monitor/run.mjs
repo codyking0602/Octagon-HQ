@@ -13,6 +13,7 @@ import { wheelPriorityIdentityKeys } from "../wheel-monitor-census-policy.mjs";
 import { validateObservation } from "./observation-policy.mjs";
 import { verifyHeadshots } from "./headshot-policy.mjs";
 import { sourceReviewBlockers } from "./source-review-gates.mjs";
+import { buildSourceCoverageLedger } from "./source-coverage-policy.mjs";
 import { fetchWithRetry } from "./fetch-policy.mjs";
 
 const root = resolve(import.meta.dirname, "../..");
@@ -414,6 +415,12 @@ async function main() {
         fighterId:finding.fighterId,division:finding.division});
   const {result,snapshot}=reconcile([...nfl,...cfbCoverage.selected,...db.ufc],
     sourceRosters,ufcRanks,previous);
+  // Unlike the catalog census, this ledger never counts unmatched identities,
+  // coaches without a dedicated authority, or unranked fighters as source-verified.
+  // The missing 13 CFB grades remain in the approved denominator.
+  const sourceCoverage=buildSourceCoverageLedger(snapshot,{
+    nfl:nflCoverage.expected,cfb:cfbCoverage.expected,ufc:db.ufc.length,
+  });
   const orphaned=(previous?.identities??[]).filter(x=>!snapshot.some(y=>identity(x)===identity(y)));
   for(const x of orphaned) record("mandatory-factual-correction",
     "Identity removed from active authority; verify retirement, transfer or offboarding before approval",
@@ -458,6 +465,8 @@ async function main() {
     previousObservation:previousObserved?.checkedAt??null,
     comparisonBaseline:previous?.checkedAt??null,
     summaries,gmContractAuthority:gm,sourceEvidence:evidence,
+    sourceCoverage:sourceCoverage.bySport,
+    sourceIdentityReview:sourceCoverage.unresolved,
     performanceEvidenceStatus:"not-yet-certified",
     detailedReviewAvoidanceMeasured:false,
     readiness, coverage:{
