@@ -19,8 +19,8 @@ describe("UFC 333 fight-week readiness", () => {
     expect(migration).toContain("red_american_odds = -120, blue_american_odds = 100");
   });
   it("recognizes Shane's prospect regardless of official UFC slug variant", () => {
-    expect(shaneContenderForSlug("abdulrakhman-yakhyaev")?.rank).toBe(3);
-    expect(shaneContenderForSlug("abdul-rakhman-yakhyaev")?.rank).toBe(3);
+    expect(shaneContenderForSlug("abdulrakhman-yakhyaev")?.rank).toBe(2);
+    expect(shaneContenderForSlug("abdul-rakhman-yakhyaev")?.rank).toBe(2);
   });
   it("has verified biographical data and actual editorial analysis for both special matchups", () => {
     for (const [name,slug] of [
