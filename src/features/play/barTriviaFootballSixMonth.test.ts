@@ -82,6 +82,11 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
     expect(questions).toHaveLength(10);
     expect(questions.every((question) => question.id.startsWith("theme-cowboys-seahawks-2026-"))).toBe(true);
     expect(new Set(questions.map((question) => question.factKey ?? question.id)).size).toBe(10);
-    expect(questions.some((question) => question.prompt.includes("1992-season NFC Championship"))).toBe(true);
+    // The themed run is intentionally modern and its late rounds emphasize
+    // notable rivalry/game moments rather than pre-2000 specialist trivia.
+    expect(questions.filter((question) => /2014|2016|2019|2020|2023/.test(question.prompt)).length)
+      .toBeGreaterThanOrEqual(7);
+    expect(questions.filter((question) => /Seattle|Seahawks/i.test(question.prompt)).length)
+      .toBeGreaterThanOrEqual(3);
   });
 });
