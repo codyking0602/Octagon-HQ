@@ -22,7 +22,7 @@ export const nflEditorialCandidateRuns = [
     ["super-bowl-defense", "Who returned a late first-half interception for a Raiders touchdown in Super Bowl XVIII?", ["Jack Squirek", "Lester Hayes", "Mike Haynes", "Matt Millen"], "Jack Squirek", null],
   ],
   [
-    ["nicknames", "Which Hall of Fame running back was nicknamed Sweetness?", ["Walter Payton", "Barry Sanders", "Emmitt Smith", "Eric Dickerson"], "Walter Payton", "The nickname belonged to a Chicago Bears legend."],
+    ["quarterback-identities", "Which quarterback wore No. 18 for both Indianapolis and Denver?", ["Peyton Manning", "Tom Brady", "Drew Brees", "Aaron Rodgers"], "Peyton Manning", "He led the Colts to a Super Bowl win and later helped Denver win Super Bowl 50."],
     ["teams", "Which franchise did J.J. Watt play for before joining Arizona?", ["Texans", "Cardinals", "Ravens", "Steelers"], "Texans", "He spent his first decade in the league with a Texas franchise."],
     ["milestones", "Which Tennessee running back topped 2,000 rushing yards in the 2009 season?", ["Chris Johnson", "Derrick Henry", "Eddie George", "DeMarco Murray"], "Chris Johnson", "He averaged more than five yards per carry across 16 games."],
     ["rushing-history", "Whose NFL career rushing record did Walter Payton break in 1984?", ["Jim Brown", "O.J. Simpson", "Eric Dickerson", "Gale Sayers"], "Jim Brown", "The previous record holder had retired after nine seasons with Cleveland."],
