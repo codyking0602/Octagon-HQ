@@ -3,9 +3,11 @@
 -- 18 unambiguous rank updates + three confirmed departures from the ranked 15.
 -- Fighter identities, active population, champions, hidden grades and historical picks
 -- remain unchanged. Published source: https://www.ufc.com/rankings (October 20).
--- Official HW #12 is tied Tyrell Fortune / Derrick Lewis. Wheel currently
--- requires distinct #1-15 slots. Hold the Derrick Lewis #13=>#12 conflict for
--- a separate rules decision; do NOT silently manufacture a distinct rank.
+-- Official HW #12 is tied Tyrell Fortune / Derrick Lewis and WW #12 is
+-- tied Joaquin Buckley / Uros Medic. Wheel requires unique #1-15 slots.
+-- Keep Derrick Lewis in HW slot #13 and place Joaquin Buckley in WW slot
+-- #13 as tie-normalized GAME slots, clearly separate from official positions.
+-- Preserve both official tie cases as unresolved source-vs-canonical exceptions.
 create temporary table wheel_ufc_oct26_rank_corrections (
   division text not null,
   fighter_id text not null,
@@ -37,7 +39,7 @@ insert into wheel_ufc_oct26_rank_corrections (division,fighter_id,previous_rank,
   ('Light Heavyweight','jamahal-hill',7,null),
   ('Light Heavyweight','johnny-walker',13,null),
 
-  ('Welterweight','joaquin-buckley',10,12),
+  ('Welterweight','joaquin-buckley',10,13),
   ('Welterweight','mike-malott',13,10);
 
 do $preflight$
