@@ -49,6 +49,6 @@ export const ufcEditorialCandidateRuns = [
     ["interim-titles", "Which English heavyweight won the interim UFC title by finishing Sergei Pavlovich at UFC 295?", ["Tom Aspinall", "Ciryl Gane", "Curtis Blaydes", "Jailton Almeida"], "Tom Aspinall", "The short-notice fight took place at Madison Square Garden."],
     ["title-history", "Who knocked out Max Holloway for the first time in his career at UFC 308?", ["Ilia Topuria", "Alexander Volkanovski", "Yair Rodriguez", "Brian Ortega"], "Ilia Topuria", "The result defended the UFC featherweight championship in Abu Dhabi."],
     ["light-heavyweight", "Who knocked out Jamahal Hill in the main event of UFC 300?", ["Alex Pereira", "Jiri Prochazka", "Magomed Ankalaev", "Jan Blachowicz"], "Alex Pereira", "The champion scored a first-round left-hook finish in Las Vegas."],
-    ["hall-of-fame", "Who became the first female fighter inducted into the UFC Hall of Fame in 2018?", ["Ronda Rousey", "Miesha Tate", "Holly Holm", "Cris Cyborg"], "Ronda Rousey", null],
+    ["pride-rivalry", "Who knocked out Wanderlei Silva at UFC 92 to avenge two earlier PRIDE losses?", ["Quinton Jackson", "Chuck Liddell", "Rich Franklin", "Michael Bisping"], "Quinton Jackson", null],
   ],
 ] as const;
