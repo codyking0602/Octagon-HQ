@@ -47,6 +47,19 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(ufcAdvanceLoad).toBeGreaterThan(ufcReadReturn);
   });
 
+  it("fast-paths published UFC and Football reads while preserving legacy two-game cutovers", () => {
+    const resolve = runtime.slice(
+      runtime.indexOf("async function resolveInteractiveDaily("),
+      runtime.indexOf("async function materializeToday("),
+    );
+    expect(resolve).toContain('mode !== "advance" && mode !== "get-today" && mode !== undefined');
+    expect(resolve).toContain('get_daily_challenge_materialization_request');
+    expect(resolve).toContain('request.required !== false');
+    expect(resolve).toContain('"find_leader", "wavelength", "hit_the_number"');
+    expect(resolve).toContain('mode !== "advance" && migrationCandidate');
+    expect(resolve).toContain('return materialize();');
+  });
+
   it("advances published UFC Blind Resume V3 without importing the heavyweight UFC generator", () => {
     const persistedAdvance = readFileSync(
       "supabase/functions/daily-challenge-runtime/blindResumeAdvance.ts",
