@@ -252,9 +252,12 @@ export function millionaireDailyLeagueAppearance(sport: "ufc" | "football", day:
   return Math.floor(millionaireFootballDailyAppearance(day) / 2);
 }
 
-export function millionaireDailyRunIndex(sport: "ufc" | "football", day: string) {
+/** Candidate preview is EXPLICIT. Official Daily callers always retain the legacy bank. */
+export type MillionaireEditorialPreview = { readonly editorialCandidatePreview?: boolean };
+export function millionaireDailyRunIndex(sport: "ufc" | "football", day: string,
+  options?: MillionaireEditorialPreview) {
   const appearance = millionaireDailyLeagueAppearance(sport, day);
-  const count = day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER
+  const count = options?.editorialCandidatePreview && day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER
     ? MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT : MILLIONAIRE_DAILY_RUN_COUNT;
   return ((appearance % count) + count) % count;
 }
@@ -304,11 +307,16 @@ function futureMillionaireErrata(
   league: MillionaireLeague,
   runIndex: number,
   day: string,
+  editorialCandidatePreview = false,
 ): MillionaireRun {
   if (day < "2026-10-27") return run;
   return run.map((question, index) => {
-    const newQuestion = MILLIONAIRE_FUTURE_TARGETED_REWRITES[`${league}:${runIndex}:${index}`]
-      ?? MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${runIndex}:${index}`];
+    // HOLD questions cannot be published accidentally: staging is opt-in
+    // within tests / editorial audit only, never by Official Daily callers.
+    const newQuestion = editorialCandidatePreview
+      ? (MILLIONAIRE_FUTURE_TARGETED_REWRITES[`${league}:${runIndex}:${index}`]
+        ?? MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${runIndex}:${index}`])
+      : undefined;
     if (newQuestion) {
       // Do not mutate the legacy question authority or any persisted result.
       // With independent future v6 IDs even historic caches remain auditable.
@@ -477,15 +485,18 @@ export function buildMillionaireDailySetup(
   sport: "ufc" | "football",
   day: string,
   scheduleVersion: string,
+  options?: MillionaireEditorialPreview,
 ): OfficialDailySetupPublication {
+  const editorialCandidatePreview = options?.editorialCandidatePreview === true
+    && day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER;
   const league = millionaireDailyLeague(sport, day);
-  const runIndex = millionaireDailyRunIndex(sport, day);
+  const runIndex = millionaireDailyRunIndex(sport, day, options);
   const hostNumber = millionaireDailyHostNumber(sport, day);
   const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
   const baseRun = futureMillionaireErrata(
-    themedRun ?? (day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER
+    themedRun ?? (editorialCandidatePreview
       ? millionaireFutureEditorialDailyRun(league, runIndex)
-      : millionaireDailyRun(league, runIndex)), league, runIndex, day,
+      : millionaireDailyRun(league, runIndex)), league, runIndex, day, editorialCandidatePreview,
   );
   const run = balanceRun(
     sport === "football" && day === "2026-10-10" && league === "cfb"
@@ -495,6 +506,6 @@ export function buildMillionaireDailySetup(
   );
   assertMillionaireRun(run);
   return millionairePublicationFromRun(league, day, scheduleVersion, runIndex, hostNumber, run,
-    day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER
+    editorialCandidatePreview
       ? MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION : MILLIONAIRE_DAILY_CONTENT_VERSION);
 }
