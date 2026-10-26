@@ -17,7 +17,7 @@ permissions:
 
 concurrency:
   group: wheel-gm-contract-source-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   provider-review:
