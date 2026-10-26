@@ -159,4 +159,3 @@ export function advanceNbaHitNumberLeanDailyRuntime(context: NbaOfficialDailyRun
 export function advanceNbaHigherLowerLeanDailyRuntime(context: NbaOfficialDailyRuntimeContext, action: unknown) {
   return advanceNbaOneGameLean(context, action, "higher_lower", higher);
 }
-

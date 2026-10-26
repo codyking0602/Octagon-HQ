@@ -59,4 +59,3 @@ export function advanceFindLeaderOnlyDailyRuntime(context: OfficialDailyRuntimeC
     ? advanceTwoGameDailyRuntime(context, action, single, scoreFindLeader)
     : single(context, action);
 }
-
