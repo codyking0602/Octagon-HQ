@@ -3,6 +3,11 @@ import { canonicalRankingInputs } from "./rankingInputs";
 import { ufcStatsSupplementalFactsSnapshot } from "./ufcStatsSupplementalFacts";
 
 const EXPECTED_UNRECONCILED = [
+  "Petr Yan|2026-10-24-merab-dvalishvili",
+  "Merab Dvalishvili|2026-10-24-petr-yan",
+  "Alexander Volkanovski|2026-10-24-movsar-evloev",
+  "Deiveson Figueiredo|2026-10-03-payton-talbott",
+  "Rafael dos Anjos|2026-10-03-alexander-hernandez",
   "Royce Gracie|1993-11-12-art-jimmerson",
   "Royce Gracie|1993-11-12-gerard-gordeau",
   "Royce Gracie|1993-11-12-ken-shamrock",
@@ -97,10 +102,14 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
           expect(snapshotRow).toMatchObject({
             reconciliation: "unavailable",
             source: { provider: "ufcstats" },
-            reason: "no-unique-source-match",
+            reason: fight.date >= "2026-10-03" && fighter.fighter !== "Natalia Silva"
+              ? "source-export-predates-fight"
+              : "no-unique-source-match",
           });
           expect(snapshotRow.source.checkedAt).toBe(
-            fighter.fighter === "Royce Gracie"
+            fight.date >= "2026-10-03" && fighter.fighter !== "Natalia Silva"
+              ? "2026-10-27"
+              : fighter.fighter === "Royce Gracie"
               ? "2026-08-18"
               : fighter.fighter === "Natalia Silva"
                 ? "2026-10-27"
