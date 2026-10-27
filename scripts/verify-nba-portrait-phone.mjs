@@ -237,11 +237,24 @@ try {
       url: `http://127.0.0.1:${vitePort}/scripts/nba-portrait-phone/index.html?game=${game}`,
     });
     const result = await waitForFixture(client, game);
-    if (result.viewportWidth !== 390) {
-      throw new Error(`${game} rendered at ${result.viewportWidth}px instead of 390px.`);
-    }
-    if (result.documentWidth > 390 || result.bodyWidth > 390) {
-      throw new Error(`${game} overflowed horizontally: document ${result.documentWidth}px, body ${result.bodyWidth}px.`);
+    if (result.viewportWidth !== 390 || result.documentWidth > 390 || result.bodyWidth > 390) {
+      const diagnosis = await client.send("Runtime.evaluate", {
+        expression: `(() => ({
+          width: window.innerWidth, document: document.documentElement.scrollWidth,
+          body: document.body.scrollWidth,
+          overflow: [...document.querySelectorAll('body *')].map(element => ({
+            tag: element.tagName.toLowerCase(),
+            cls: String(element.className || '').slice(0,90),
+            text: (element.textContent || '').slice(0,60),
+            right: Math.round(element.getBoundingClientRect().right),
+            width: Math.round(element.getBoundingClientRect().width)
+          })).filter(item => item.right > 390 || item.width > 390).slice(0,25)
+        }))()`,
+        returnByValue: true,
+      });
+      const shot = await client.send("Page.captureScreenshot", {format:"png", captureBeyondViewport:true});
+      writeFileSync(join(proofDir, `${game}-overflow-390x844.png`), Buffer.from(shot.data,"base64"));
+      throw new Error(`${game} iPhone viewport/overflow regression: ${JSON.stringify(result)} DIAG=${JSON.stringify(diagnosis.result.value)}`);
     }
     if (!String(result.text).includes(expectedText)) {
       throw new Error(`${game} did not render its expected progressive control: ${expectedText}`);
