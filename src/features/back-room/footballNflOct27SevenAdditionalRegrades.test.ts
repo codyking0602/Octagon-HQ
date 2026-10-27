@@ -31,7 +31,7 @@ describe("seven additional NFL Week 7 ability revisions, separate from merged fi
     expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
     expect(FOOTBALL_GM_CURRENT_PLAYER_POOL).toHaveLength(591);
     for(const x of revisions.changes){
-      expect(FOOTBALL_GM_PLAYER_POOL.find(p=>p.team===x.team&&p.family===x.family&&p.name===x.player)?.currentGrade).toBe(x.oldGrade);
+      expect(FOOTBALL_GM_PLAYER_POOL.find(p=>p.team===x.team&&p.family===x.family&&p.name===x.player)?.currentGrade).toBe(x.newGrade);
     }
     expect(migration).toContain("order by a.effective_date desc limit 1");
     expect(migration).toContain("NFL seven-player ability preflight changed baseline");
