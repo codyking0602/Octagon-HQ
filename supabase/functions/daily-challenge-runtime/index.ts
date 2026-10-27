@@ -187,7 +187,15 @@ function loadFootballAdvanceRuntime() {
   return footballAdvanceRuntimePromise;
 }
 
-function loadNbaPublicationRuntime() {
+function loadNbaPublicationRuntime(gameType?: string) {
+  if (gameType === "average_fan") return import("./nba-average-fan-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "sports_feud") return import("./nba-sports-feud-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "millionaire") return import("./nba-millionaire-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "hit_the_number") return import("./nba-hit-the-number-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "find_leader") return import("./nba-find-leader-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "wavelength") return import("./nba-wavelength-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "higher_lower") return import("./nba-higher-lower-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "bar_trivia") return import("./nba-bar-trivia-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
   if (!nbaPublicationRuntimePromise) {
     nbaPublicationRuntimePromise = import("./nba-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
   }
@@ -200,11 +208,35 @@ function loadNbaWhoAmIPublicationRuntime() {
   return nbaWhoAmIPublicationPromise;
 }
 
-function loadNbaAdvanceRuntime() {
+function loadNbaAdvanceRuntime(gameType?: string) {
+  if (gameType === "bar_trivia") return import("./nba-bar-trivia-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "find_leader") return import("./nba-find-leader-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "wavelength") return import("./nba-wavelength-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "hit_the_number") return import("./nba-hit-the-number-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "higher_lower") return import("./nba-higher-lower-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
   if (!nbaAdvanceRuntimePromise) {
     nbaAdvanceRuntimePromise = import("./nba-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
   }
   return nbaAdvanceRuntimePromise;
+}
+
+// Keep already-published boards and legacy grading intact; only isolate the
+// per-tap evaluator. Each module is a Vite tree-shaken action-only bundle.
+async function loadIsolatedDailyAction(sport: "football" | "ufc", gameType: string): Promise<DailyAdvanceRuntime | null> {
+  if (sport === "football" && ["blind_resume", "blind_rank_5", "keep_4_cut_4"].includes(gameType)) return (await import("./football-comparison-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (gameType === "who_am_i") return (await loadWhoAmIAdvanceRuntime()).advanceCanonicalWhoAmIDailyRuntime;
+  if (sport === "football" && gameType === "find_leader") return (await import("./football-find-leader-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "higher_lower") return (await import("./football-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "bar_trivia") return (await import("./bar-trivia-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "sports_feud") return (await import("./legacy-feud-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && ["blind_rank_5", "keep_4_cut_4"].includes(gameType)) return (await import("./ufc-comparison-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "find_leader") return (await import("./ufc-find-leader-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "wavelength") return (await import("./ufc-wavelength-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "higher_lower") return (await import("./ufc-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "hit_the_number") return (await import("./ufc-hit-number-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "bar_trivia") return (await import("./bar-trivia-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "sports_feud") return (await import("./legacy-feud-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  return null;
 }
 
 function loadWhoAmIAdvanceRuntime() {
@@ -840,7 +872,7 @@ async function materializeNbaToday(admin: SupabaseClient, at?: string, preview =
   // Who Am I loads only its canonical round authorship, not all nine NBA banks.
   const publishedSetup = gameType === "who_am_i"
     ? (await loadNbaWhoAmIPublicationRuntime()).buildNbaWhoAmIDailyLeanPublication(day, scheduleVersion, gameType)
-    : (await loadNbaPublicationRuntime()).buildNbaServerDailyPublication(day, scheduleVersion, gameType);
+    : (await loadNbaPublicationRuntime(gameType)).buildNbaServerDailyPublication(day, scheduleVersion, gameType);
   if (publishedSetup.scheduleVersion !== scheduleVersion || publishedSetup.gameType !== gameType) {
     throw new Error("NBA Daily publication differs from the locked 28-slot calendar.");
   }
@@ -920,7 +952,7 @@ async function handleNbaDaily(
         // made the answer reveal wait on unnecessary cold-start CPU work.
         // Keep two-game publications on their canonical wrapper.
         ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime(context, action)
-        : (await loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action);
+        : (await loadNbaAdvanceRuntime(context.gameType)).advanceNbaOfficialDailyRuntime(context, action);
   const history = footballActionHistory(context);
   const nextSubmissionState = submissionStateWithClientActionId({
     ...advanced.submissionState, action_history: [...history, action],
@@ -1721,7 +1753,8 @@ Deno.serve(async (request) => {
       // acknowledge its persisted handoff (a source of Edge CPU-limit errors).
       let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, action);
       if (!advanced) {
-        const advanceFootballRuntime = context.gameType === "average_fan"
+        const isolatedFootballRuntime = isDailyCombo(context) ? null : await loadIsolatedDailyAction("football", context.gameType);
+        const advanceFootballRuntime = isolatedFootballRuntime ?? (context.gameType === "average_fan"
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
           : context.gameType === "hit_the_number" && !isDailyCombo(context)
             ? (await loadFootballHitNumberAdvanceRuntime()).advanceFootballHitNumberDailyRuntime
@@ -1729,7 +1762,7 @@ Deno.serve(async (request) => {
               ? (await loadFootballWavelengthAdvanceRuntime()).advanceFootballWavelengthDailyRuntime
             : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
               ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
-              : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
+              : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime);
         context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
         advanced = isDailyCombo(context)
           ? advanceDailyCombo(context, action, advanceFootballRuntime)
@@ -1794,13 +1827,14 @@ Deno.serve(async (request) => {
 
     let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, body.action);
     if (!advanced) {
-      const advanceUfcRuntime = context.gameType === "average_fan"
+      const isolatedUfcRuntime = isDailyCombo(context) ? null : await loadIsolatedDailyAction("ufc", context.gameType);
+      const advanceUfcRuntime = isolatedUfcRuntime ?? (context.gameType === "average_fan"
         ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
         : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
           ? advancePersistedBlindResumeV3
           : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
             ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
-            : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
+            : (await loadUfcRuntime()).advanceOfficialDailyRuntime);
       advanced = isDailyCombo(context)
         ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
         : advanceUfcRuntime(context, body.action);

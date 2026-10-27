@@ -42,9 +42,11 @@ describe("daily challenge runtime cold-start isolation", () => {
     const ufcReadReturn = runtime.lastIndexOf(
       'if (body.mode === "get-today" || body.mode === undefined) {\n      return json(publicPayload(context));',
     );
-    const ufcAdvanceLoad = runtime.lastIndexOf('const advanceUfcRuntime = context.gameType === "average_fan"');
+    const ufcIsolationLoad = runtime.lastIndexOf('const isolatedUfcRuntime = isDailyCombo(context) ? null : await loadIsolatedDailyAction("ufc", context.gameType);');
+    const ufcAdvanceLoad = runtime.lastIndexOf('const advanceUfcRuntime = isolatedUfcRuntime ?? (');
     expect(ufcReadReturn).toBeGreaterThan(-1);
-    expect(ufcAdvanceLoad).toBeGreaterThan(ufcReadReturn);
+    expect(ufcIsolationLoad).toBeGreaterThan(ufcReadReturn);
+    expect(ufcAdvanceLoad).toBeGreaterThan(ufcIsolationLoad);
   });
 
   it("fast-paths published UFC and Football reads while preserving legacy two-game cutovers", () => {
@@ -125,7 +127,8 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).toContain('if (request.required !== true)');
     expect(runtime).toContain('loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType)');
     expect(runtime).toContain('buildFootballDailyPersistenceSetup(');
-    expect(runtime).toContain('const advanceFootballRuntime = context.gameType === "average_fan"');
+    expect(runtime).toContain('const isolatedFootballRuntime = isDailyCombo(context) ? null : await loadIsolatedDailyAction("football", context.gameType);');
+    expect(runtime).toContain('const advanceFootballRuntime = isolatedFootballRuntime ?? (context.gameType === "average_fan"');
     expect(runtime).toContain('(await loadAverageFanRuntime()).advanceAverageFanDailyRuntime');
     expect(runtime).not.toContain('import("./football-runtime.generated.mjs")');
   });
