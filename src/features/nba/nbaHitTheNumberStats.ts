@@ -1,3 +1,4 @@
+import { nbaPortraitSource } from "./nbaHigherLowerPortraits";
 /**
  * Snapshot of audited NBA regular-season *per-game* stats. Career figures are
  * NBA-only completed-career averages (not ABA or playoffs). Season figures are
@@ -71,5 +72,5 @@ export function nbaHitValue(subject: NbaHitSubject, statId: NbaHitStat) {
   return subject.values[stat];
 }
 export function nbaHitHeadshot(subject: NbaHitSubject) {
-  return subject.nbaId == null ? null : `https://cdn.nba.com/headshots/nba/latest/1040x760/${subject.nbaId}.png`;
+  return nbaPortraitSource(subject);
 }
