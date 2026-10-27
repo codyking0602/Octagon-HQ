@@ -448,7 +448,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     type: "strawweight-title-changes",
     prompt: "Who stopped Jessica Andrade in just 42 seconds in Shenzhen to become UFC strawweight champion in 2019?",
     choices: ["Zhang Weili","Joanna Jędrzejczyk","Rose Namajunas","Carla Esparza"], answer: "Zhang Weili",
-    statSheet: "The August 2019 main event crowned China's first UFC champion.",
+    statSheet: "The August 2019 strawweight title fight ended just 42 seconds into Round 1.",
     explanation: "Zhang Weili stopped Jessica Andrade with strikes at 0:42 of Round 1 in Shenzhen on August 31, 2019, winning the UFC strawweight title and becoming the first fighter from China to capture a UFC championship.",
     evidence: [{ authority: "UFC official event records", url: "https://www.ufc.com/news/ufc-shenzhen-results", supportingDetail: "Zhang Weili stopped Jessica Andrade with strikes at 0:42 of Round 1 in Shenzhen on August 31, 2019, winning the UFC strawweight title and becoming the first fighter from China to capture a UFC championship." }],
   },
