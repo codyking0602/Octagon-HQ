@@ -15,6 +15,38 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("covers ten additional preview-only title and playoff reveals across NFL CFB UFC", () => {
+    const finals = [
+      ["nfl:1:7","Willie Brown","36-year-old"],
+      ["nfl:9:7","Noah Brown","52-yard"],
+    ] as const;
+    for(const [key,winner,detail] of finals){
+      const q=MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
+      expect(q.answer).toBe(winner);
+      expect(q.explanation).toContain(detail);
+      expect(q.statSheet).toBeNull();
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+    }
+    const overlays = [
+      ["cfb:1:0","Texas","19 seconds"],
+      ["cfb:2:0","Michigan","15–0"],
+      ["cfb:5:0","Alabama","215 yards"],
+      ["cfb:7:0","LSU","463 yards"],
+      ["cfb:7:6","Mason Taylor","front-right"],
+      ["cfb:8:6","Bud Clark","Dee Winters"],
+      ["ufc:1:0","Francis Ngannou","left uppercut"],
+      ["ufc:1:5","Arman Tsarukyan","1:04"],
+    ] as const;
+    for(const [key,winner,detail] of overlays){
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(winner);
+      expect(q.explanation).toContain(detail);
+      expect(q.choices.filter(c=>c===winner)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+  });
+
   it("keeps six additional sourced future-only Q8 reveals correct", () => {
     const cases = [
       ["nfl:0:7","Cooper DeJean","22nd birthday"],

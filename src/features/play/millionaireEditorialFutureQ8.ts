@@ -45,7 +45,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-nfl-future-willie-brown-super-bowl-xi-q8", "super-bowl-interception-history",
     "Which Raiders defender returned an interception 75 yards for a touchdown in Super Bowl XI against Minnesota?",
     ["Willie Brown", "Jack Tatum", "Skip Thomas", "George Atkinson"], "Willie Brown",
-    "Willie Brown intercepted Vikings quarterback Fran Tarkenton and returned it 75 yards for a touchdown in the fourth quarter of Super Bowl XI, helping Oakland defeat Minnesota 32–14 in January 1977.",
+    "Willie Brown intercepted Minnesota quarterback Fran Tarkenton in the fourth quarter of Super Bowl XI and ran 75 yards along the sideline for a touchdown. The 36-year-old Raiders cornerback helped Oakland secure a 32–14 championship victory in January 1977.",
     { authority: "Raiders official Super Bowl XI history", url: "https://www.raiders.com/history/super-bowl-xi", supportingDetail: "The Raiders' own championship account confirms Willie Brown's 75-yard interception-return touchdown against Minnesota in Super Bowl XI." },
   ),
   "nfl:2:7": q8(
@@ -80,7 +80,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-nfl-future-noah-brown-hail-mary-q8", "late-game-heaves",
     "Which Washington receiver caught Jayden Daniels' tipped, game-winning Hail Mary against Chicago in October 2024?",
     ["Noah Brown", "Terry McLaurin", "Zach Ertz", "Luke McCaffrey"], "Noah Brown",
-    "Noah Brown secured the deflected 52-yard touchdown pass as time expired on October 27, 2024, giving the Commanders an 18–15 victory over the Bears.",
+    "Washington receiver Noah Brown came down with Jayden Daniels' deflected 52-yard Hail Mary as time expired against Chicago on October 27, 2024. The walk-off touchdown turned a late deficit into the Commanders' 18–15 win over the Bears.",
     { authority: "NFL", url: "https://www.nfl.com/news/bears-cb-tyrique-stevenson-taunts-commanders-fans-during-final-play-hail-mary", supportingDetail: "NFL describes the tipped Daniels pass that Brown caught to defeat Chicago." },
   ),
   "cfb:0:7": q8(

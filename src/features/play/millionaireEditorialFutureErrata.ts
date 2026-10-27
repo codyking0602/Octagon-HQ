@@ -67,7 +67,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Mason Taylor", "Malik Nabers", "Brian Thomas Jr.", "Jack Bech"],
     answer: "Mason Taylor",
     statSheet: "The Tigers opted to go for two after matching Alabama's overtime touchdown in Baton Rouge.",
-    explanation: "LSU freshman tight end Mason Taylor caught Jayden Daniels' three-yard two-point conversion in overtime to defeat Alabama 32–31 on November 5, 2022.",
+    explanation: "LSU freshman tight end Mason Taylor caught Jayden Daniels' three-yard two-point pass just inside the front-right pylon in overtime against Alabama on November 5, 2022. Brian Kelly went for two after Daniels' 25-yard overtime touchdown, giving LSU a 32–31 win.",
     evidence: [{ authority: "Official school athletics", url: "https://lsusports.net/news/2022/11/5/lsu-tops-alabama-gutsy-ot-conversion-32-31", supportingDetail: "LSU's official 32–31 recap confirms Daniels' two-point pass to Mason Taylor." }],
   },
   "cfb:8:5": {
@@ -87,7 +87,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Bud Clark", "Dee Winters", "Tre'Vius Hodges-Tomlinson", "Mark Perry"],
     answer: "Bud Clark",
     statSheet: "The early pick-six set the tone for the Horned Frogs' 51–45 semifinal upset.",
-    explanation: "TCU defensive back Bud Clark intercepted J.J. McCarthy and returned it 41 yards for the opening touchdown against Michigan on December 31, 2022. Dee Winters added a different pick-six later.",
+    explanation: "TCU defensive back Bud Clark returned J.J. McCarthy's interception 41 yards for the first touchdown of the December 31, 2022 Fiesta Bowl against Michigan. Dee Winters later added a separate pick-six as the Horned Frogs prevailed 51–45 to reach the CFP final.",
     evidence: [{ authority: "Official school athletics", url: "https://gofrogs.com/news/2022/12/31/football-tcu-beats-michigan-advances-to-the-cfp-national-championship", supportingDetail: "TCU Athletics separately verifies Clark's 41-yard opening pick-six and Winters' later return; both are answer choices but only Clark satisfies the question." }],
   },
   "cfb:9:3": {
@@ -132,7 +132,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Francis Ngannou","Stipe Miocic","Curtis Blaydes","Derrick Lewis"],
     answer: "Francis Ngannou",
     statSheet: "The December 2017 Detroit finish earned the winner a shot at the heavyweight belt.",
-    explanation: "Francis Ngannou knocked out Alistair Overeem with a devastating left uppercut in Round 1 at UFC 218 in Detroit on December 2, 2017, earning a shot at Stipe Miocic's heavyweight championship.",
+    explanation: "Francis Ngannou knocked out Alistair Overeem with a crushing left uppercut in Round 1 of UFC 218 in Detroit on December 2, 2017. The stoppage extended Ngannou's UFC finishing streak and earned him a heavyweight title shot against Stipe Miocic.",
     evidence: [{"authority":"UFC 218 official final results","url":"https://www.ufc.com/news/ufc-218-holloway-vs-aldo-2-final-results","supportingDetail":"UFC confirms Ngannou's left-uppercut first-round KO against Alistair Overeem at UFC 218 in Detroit."}],
   },
 
@@ -160,7 +160,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Which school won the 2005 season's national title in the January 2006 Rose Bowl?",
     choices: ["Texas", "USC", "Penn State", "Ohio State"], answer: "Texas",
     statSheet: "The game ended 41–38 after a famous fourth-down touchdown run.",
-    explanation: "Texas won the 2005 season's national championship, beating USC on January 4, 2006.",
+    explanation: "Texas defeated USC 41–38 in the January 4, 2006 Rose Bowl for the 2005-season national championship. Quarterback Vince Young scored on an eight-yard fourth-and-five run with 19 seconds remaining and added the decisive two-point conversion.",
     evidence: [{ authority: "Texas Athletics", url: "https://texaslonghorns.com/sports/2013/7/21/FB_0721132407", supportingDetail: "The school documents Texas defeating USC in the January 4, 2006 Rose Bowl national-title game." }],
   },
   "cfb:2:0": {
@@ -169,7 +169,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Which team won the 2023 season's CFP national title in January 2024?",
     choices: ["Michigan", "Washington", "Alabama", "Texas"], answer: "Michigan",
     statSheet: "The undefeated winner beat Washington 34–13 in Houston.",
-    explanation: "Michigan won the 2023 season's national championship in the CFP final on January 8, 2024.",
+    explanation: "Michigan finished the 2023 season 15–0 and defeated Washington 34–13 in Houston on January 8, 2024 to win its first College Football Playoff national championship. Blake Corum earned the title game's offensive player of the game honor.",
     evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2024/1/31/ncg-recap-2024", supportingDetail: "The CFP confirms Michigan's 34–13 win over Washington in the January 2024 final." }],
   },
   "cfb:5:0": {
@@ -178,7 +178,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Which school won the 2020 season's CFP national title in January 2021?",
     choices: ["Alabama", "Ohio State", "Clemson", "LSU"], answer: "Alabama",
     statSheet: "The champion beat Ohio State 52–24 in Miami Gardens.",
-    explanation: "Alabama won the 2020 season's national championship in the January 11, 2021 title game.",
+    explanation: "Alabama beat Ohio State 52–24 at Hard Rock Stadium in Miami Gardens on January 11, 2021 to win the 2020-season national championship. Heisman winner DeVonta Smith caught 12 passes for 215 yards and three touchdowns in the title game.",
     evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2025/3/20/cfp-recap-2021", supportingDetail: "The CFP records Alabama beating Ohio State 52–24 in the 2020–21 postseason." }],
   },
   "cfb:7:0": {
@@ -187,7 +187,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Which school won the 2019 season's CFP national title in January 2020?",
     choices: ["LSU", "Clemson", "Alabama", "Ohio State"], answer: "LSU",
     statSheet: "The 15–0 champion defeated Clemson 42–25 in New Orleans.",
-    explanation: "LSU finished the 2019 season 15–0 and won the CFP title game on January 13, 2020.",
+    explanation: "LSU finished the 2019 season 15–0 and defeated Clemson 42–25 in the January 13, 2020 CFP title game. Heisman Trophy winner Joe Burrow threw for 463 yards and five touchdowns, giving the Tigers their first CFP-era championship.",
     evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2026/8/10/ncg-history", supportingDetail: "The CFP's title history lists LSU's 42–25 January 2020 championship win." }],
   },
   "ufc:0:6": {
@@ -358,7 +358,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Arman Tsarukyan","Mateusz Gamrot","Islam Makhachev","Rafael Fiziev"],
     answer: "Arman Tsarukyan",
     statSheet: "The decisive right hand came in the opening round at the Moody Center in Austin.",
-    explanation: "Arman Tsarukyan knocked out Beneil Dariush at 1:04 of Round 1 in their December 2, 2023 UFC Austin main event, ending Dariush's night and strengthening Tsarukyan's lightweight title contention.",
+    explanation: "Arman Tsarukyan knocked out top-five lightweight contender Beneil Dariush at 1:04 of Round 1 in the December 2, 2023 UFC Austin main event. The rapid finish at Moody Center gave Tsarukyan another high-profile result in the lightweight title race.",
     evidence: [{"authority":"UFC Austin official event results","url":"https://www.ufc.com/news/ufc-fight-night-dariush-vs-tsarukyan-results-highlights-interviews-ufc-austin","supportingDetail":"UFC records Tsarukyan knocking out Beneil Dariush at 1:04 of Round 1 on December 2, 2023."}],
   },
   // Active Bar Trivia fact collision retired from future-preview run 3 Q1.
