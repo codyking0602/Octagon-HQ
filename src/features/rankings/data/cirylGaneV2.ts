@@ -31,8 +31,8 @@ export const cirylGaneV2 = {
         "championshipOpponentStrength": null,
         "championshipManualCredit": null,
         "rounds": {
-          "status": "audited",
-          "won": 1,
+          "status": "unavailable",
+          "won": 0,
           "lost": 0,
           "drawn": 0
         },
@@ -256,9 +256,9 @@ export const cirylGaneV2 = {
         "championshipOpponentStrength": null,
         "championshipManualCredit": null,
         "rounds": {
-          "status": "audited",
+          "status": "unavailable",
           "won": 0,
-          "lost": 1,
+          "lost": 0,
           "drawn": 0
         },
         "lossClassification": {
