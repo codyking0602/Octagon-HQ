@@ -205,7 +205,8 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
         const league = publication.publicSetup.league;
         const index = millionaireDailyRunIndex(sport, day, { editorialCandidatePreview: true });
         const rewrite = MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${index}:7`];
-        if (!rewrite) continue;
+        // October 25 UFC is a persisted historical board, not a future v6 preview.
+        if (!rewrite || day < "2026-10-27") continue;
         const final = (publication.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[7]!;
         expect(final.id).toBe(rewrite.id);
         expect(final.prompt).toBe(rewrite.prompt);
