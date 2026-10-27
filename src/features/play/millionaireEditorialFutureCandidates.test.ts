@@ -190,6 +190,8 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb:9:7", "Javon Bullard"],
       ["ufc:2:7", "Dustin Poirier"],
       ["ufc:5:7", "Nate Diaz"],
+      ["ufc:0:7", "Francis Ngannou"],
+      ["ufc:4:7", "Lyoto Machida"],
     ] as const;
     for (const [key, expected] of finalCorrections) {
       const question = MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
@@ -200,6 +202,21 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       expect(question.explanation).toContain(expected);
       expect(question.explanation.length).toBeGreaterThan(80);
       expect(question.evidence.length).toBeGreaterThan(0);
+    }
+    for (const [league, runIndex, avoided, newAnchor] of [
+      ["cfb", 9, "Kelee Ringo", "Javon Bullard"],
+      ["ufc", 0, "Gerard Gordeau", "Francis Ngannou"],
+      ["ufc", 2, "Glover Teixeira", "Benoit Saint Denis"],
+      ["ufc", 4, "Dan Henderson", "Rashad Evans"],
+      ["ufc", 5, "Sergei Pavlovich", "Tony Ferguson"],
+    ] as const) {
+      const final = millionaireFutureEditorialDailyRun(league, runIndex)[7]!;
+      expect(final.prompt).not.toContain(avoided);
+      expect(final.prompt + " " + answer(final)).toContain(newAnchor);
+      expect(final.statSheet).toBeNull();
+      expect(final.lifelineCompatibility).toMatchObject({
+        fiftyFifty: false, statSheet: false, doubleDip: false,
+      });
     }
     let runtimeCorrectionsFound = 0;
     for (let offset = 0; offset < 182; offset += 1) {
