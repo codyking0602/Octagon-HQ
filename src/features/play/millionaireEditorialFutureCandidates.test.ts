@@ -1437,6 +1437,27 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("cfb", 3)[6]!.prompt).toContain("AP poll in 2003");
   });
 
+  it("keeps sourced NFL future-only replacements distinct from active Average Fan overlaps", () => {
+    for (const [key, expected, marker] of [
+      ["nfl:6:2", "Mike Jones", "Super Bowl XXXIV"],
+      ["nfl:6:4", "Evan McPherson", "January 2022"],
+      ["nfl:7:4", "Devin White", "Super Bowl LV"],
+    ] as const) {
+      const edited = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(edited).toBeDefined();
+      expect(edited.answer).toBe(expected);
+      expect(edited.prompt).toContain(marker);
+      expect(edited.choices).toHaveLength(4);
+      expect(edited.choices.filter(choice => choice === expected)).toHaveLength(1);
+      expect(new Set(edited.choices.map(normalized)).size).toBe(4);
+      expect(normalized(edited.statSheet ?? "")).not.toContain(normalized(expected));
+      expect(edited.explanation).toContain(expected);
+      expect(edited.evidence[0]?.url.startsWith("https://")).toBe(true);
+      const [league, run, index] = key.split(":");
+      expect(millionaireDailyRun(league as "nfl", Number(run))[Number(index)]!.prompt).not.toBe(edited.prompt);
+    }
+  });
+
   it("preserves six new sourced UFC preview-only answers that replace active Bar Trivia same-fact duplicates", () => {
     for (const [run, questionIndex, correct, marker] of [
       [7, 0, "Miesha Tate", "UFC 200"],
