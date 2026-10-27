@@ -148,7 +148,8 @@ export function validateWavelengthCalibrationAudit() {
 
   for (const evidence of WAVELENGTH_INHERITED_REVIEW_EVIDENCE) {
     const item = itemsById.get(evidence.currentId);
-    if (!item || item.rating !== evidence.reviewedRating || item.status !== "approved") return false;
+    // Historical ratings remain valid when a clue is later retired for accessibility.
+    if (!item || item.rating !== evidence.reviewedRating || (item.status !== "approved" && item.status !== "retired")) return false;
 
     const difference = Math.abs(evidence.reviewedRating - evidence.baselineRating);
     if (difference >= WAVELENGTH_CALIBRATION_DISAGREEMENT_THRESHOLD) {
