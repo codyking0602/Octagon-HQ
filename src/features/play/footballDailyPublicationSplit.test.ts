@@ -60,6 +60,16 @@ describe("split Football Daily publication runtimes", () => {
     }
   }, 60_000);
 
+  it("preserves the exact two-game October 27 Wavelength publication without unrelated game banks", () => {
+    const day = "2026-10-27";
+    const scheduleVersion = footballTodayScheduleVersionForDay(day);
+    expect(footballTodayGameForDay(day)).toBe("wavelength");
+    expect(scheduleVersion).toBe("football-daily-v22-higher-lower-oct27");
+    const standalone = buildWavelength(day, scheduleVersion, "wavelength");
+    expect(standalone).toEqual(buildFootballTodayPersistenceSetup(day));
+    expect(standalone.publicSetup).toHaveProperty("format_version", "daily-two-game-average-v1");
+  });
+
   it("preserves standalone Blind Resume and Blind Rank publication semantics", () => {
     const day = "2026-09-21";
     const scheduleVersion = footballTodayScheduleVersionForDay(day);
