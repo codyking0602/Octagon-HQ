@@ -71,7 +71,7 @@ describe("Football Find the Leader maturity", () => {
       "qb-games", "qb-attempts", "qb-td-int-ratio", "rb-games",
       "rb-receiving-touchdowns", "nfl-team-wins",
       "cfb-srs", "cfb-sos", "cfb-team-season-wins",
-    ]) {
+    ] as const) {
       expect(active.has(muted), muted).toBe(false);
     }
     for (const question of footballFindLeaderFeaturedQuestions) {
