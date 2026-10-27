@@ -257,3 +257,14 @@ export function prepAssetSummary(prep: UfcPickPrep | null) {
     previewTotal: mainBouts.length,
   };
 }
+
+/** The display must fail closed if an automation prematurely marks incomplete prep ready. */
+export function effectiveUfcPrepStatus(prep: UfcPickPrep | null): UfcPrepStatus | null {
+  if (!prep) return null;
+  if (prep.status !== "ready") return prep.status;
+  const summary = prepAssetSummary(prep);
+  return summary.requiredSpotlightReady === summary.requiredSpotlightTotal
+    && summary.previewReady === summary.previewTotal
+    ? "ready"
+    : "review-needed";
+}
