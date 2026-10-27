@@ -483,10 +483,10 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
               </p>
               <div className="picks-setup-prep__stats">
                 <span><b>{prepSummary.thumbReady}/{prepSummary.thumbTotal}</b><small>THUMBS READY</small></span>
-                <span><b>{prepSummary.spotlightReady}/{prepSummary.spotlightTotal}</b><small>SPOTLIGHT IMAGES</small></span>
-                <span><b>{prep.spotlights.length}</b><small>PREVIEWS WRITTEN</small></span>
+                <span><b>{prepSummary.requiredSpotlightReady}/{prepSummary.requiredSpotlightTotal}</b><small>MAIN EVENT PHOTOS</small></span>
+                <span><b>{prepSummary.previewReady}/{prepSummary.previewTotal}</b><small>FIGHT PREVIEWS</small></span>
               </div>
-              <small>Prepared {displayTime(prep.preparedAt)} · Verified {displayTime(prep.verifiedAt)}</small>
+              <small>Optional main-card photos: {prepSummary.optionalSpotlightReady}/{prepSummary.optionalSpotlightTotal} · Prepared {displayTime(prep.preparedAt)} · Verified {displayTime(prep.verifiedAt)}</small>
               {prep.verificationNotes.length ? (
                 <div className="picks-setup-prep__notes">
                   {prep.verificationNotes.map((note) => <em key={note}>{note}</em>)}
