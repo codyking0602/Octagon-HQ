@@ -15,6 +15,41 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+
+  it("keeps three active UFC V3 same-fact collisions out of the playable candidate preview", () => {
+    const oldFirst = millionaireDailyRun("ufc", 1)[0]!;
+    expect(oldFirst.prompt).toContain("The Notorious");
+    const ngannou = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:1:0"]!;
+    expect(ngannou.answer).toBe("Francis Ngannou");
+    expect(ngannou.prompt).toContain("UFC 218");
+    expect(ngannou.prompt).not.toContain("Ciryl Gane");
+    const arman = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:1:5"]!;
+    expect(arman.answer).toBe("Arman Tsarukyan");
+    expect(arman.prompt).toContain("UFC Austin");
+    expect(arman.prompt).not.toContain("Tony Ferguson");
+    const aspinall = MILLIONAIRE_FUTURE_Q8_REWRITES["ufc:5:7"]!;
+    expect(aspinall.answer).toBe("Tom Aspinall");
+    expect(aspinall.prompt).toContain("Alexander Volkov");
+    expect(aspinall.prompt).not.toContain("Tony Ferguson");
+    expect(aspinall.statSheet).toBeNull();
+    for (const q of [ngannou, arman, aspinall]) {
+      expect(q.choices).toHaveLength(4);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(q.choices.filter(choice => choice === q.answer)).toHaveLength(1);
+      expect(q.evidence[0]?.url).toContain("ufc.com");
+      expect(q.explanation).toContain(q.answer);
+    }
+    const previewRun2 = millionaireFutureEditorialDailyRun("ufc", 1);
+    expect(new Set(previewRun2.map(answer)).size).toBe(8);
+    expect(answer(previewRun2[0]!)).toBe("Francis Ngannou");
+    expect(answer(previewRun2[5]!)).toBe("Arman Tsarukyan");
+    const final = millionaireFutureEditorialDailyRun("ufc",5)[7]!;
+    expect(answer(final)).toBe("Tom Aspinall");
+    expect(final.lifelineCompatibility).toMatchObject({
+      fiftyFifty:false, statSheet:false, doubleDip:false
+    });
+  });
+
   it("keeps nine future NFL/CFB/UFC Q8 playoffs and championship explanations substantive", () => {
     const approved = [
       ["nfl:5:7", "Larry Fitzgerald", "26–20"],
@@ -25,7 +60,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb:8:7", "Charlie Ward", "Knicks"],
       ["ufc:3:7", "Jan Błachowicz", "4:36"],
       ["ufc:4:7", "Lyoto Machida", "3:57"],
-      ["ufc:5:7", "Nate Diaz", "2:52"],
+      ["ufc:5:7", "Tom Aspinall", "3:45"],
     ] as const;
     for (const [key, expected, detail] of approved) {
       const q = MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
@@ -181,10 +216,10 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   });
 
   it("retains three future-only removals of active UFC Bar Trivia fact collisions", () => {
-    const jones = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:1:0"]!;
-    expect(jones.answer).toBe("Jon Jones");
-    expect(jones.prompt).toContain("UFC 285");
-    expect(jones.statSheet).not.toContain("Jon Jones");
+    const overeem = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:1:0"]!;
+    expect(overeem.answer).toBe("Francis Ngannou");
+    expect(overeem.prompt).toContain("UFC 218");
+    expect(overeem.statSheet).not.toContain("Francis Ngannou");
     expect(millionaireDailyRun("ufc", 1)[0]!.prompt).toContain("The Notorious");
     expect(answer(millionaireFutureEditorialDailyRun("ufc", 11)[2]!)).toBe("Alex Pereira");
     expect(millionaireFutureEditorialDailyRun("ufc", 11)[2]!.prompt).toContain("UFC 303");
@@ -317,7 +352,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb:5:7", "Rod Moore"],
       ["cfb:9:7", "Javon Bullard"],
       ["ufc:2:7", "Dustin Poirier"],
-      ["ufc:5:7", "Nate Diaz"],
+      ["ufc:5:7", "Tom Aspinall"],
       ["ufc:0:7", "Francis Ngannou"],
       ["ufc:4:7", "Lyoto Machida"],
     ] as const;

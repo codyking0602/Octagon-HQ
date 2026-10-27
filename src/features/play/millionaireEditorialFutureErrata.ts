@@ -126,14 +126,14 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
 
   // Preview-only rewrite of a verbatim active Bar Trivia "Notorious" nickname.
   "ufc:1:0": {
-    id: "millionaire-ufc-future-285-jones-heavyweight-q1",
-    type: "heavyweight-title-return",
-    prompt: "Which former light heavyweight champion submitted Ciryl Gane to win the UFC heavyweight title at UFC 285?",
-    choices: ["Jon Jones", "Stipe Miocic", "Daniel Cormier", "Francis Ngannou"],
-    answer: "Jon Jones",
-    statSheet: "The March 2023 main event ended by guillotine choke just over two minutes into the first round.",
-    explanation: "Jon Jones returned from a three-year absence to submit Ciryl Gane at 2:04 of Round 1 at UFC 285, earning his first UFC heavyweight title.",
-    evidence: [{ authority: "UFC 285 official results", url: "https://www.ufc.com/news/official-judges-scorecards-ufc-285-jones-vs-gane", supportingDetail: "Jones defeated Gane by guillotine submission at 2:04 of the first round." }],
+    id: "millionaire-ufc-future-218-ngannou-overeem-q1",
+    type: "heavyweight-knockouts",
+    prompt: "Who knocked out Alistair Overeem with a spectacular first-round uppercut at UFC 218?",
+    choices: ["Francis Ngannou","Stipe Miocic","Curtis Blaydes","Derrick Lewis"],
+    answer: "Francis Ngannou",
+    statSheet: "The December 2017 Detroit finish earned the winner a shot at the heavyweight belt.",
+    explanation: "Francis Ngannou knocked out Alistair Overeem with a devastating left uppercut in Round 1 at UFC 218 in Detroit on December 2, 2017, earning a shot at Stipe Miocic's heavyweight championship.",
+    evidence: [{"authority":"UFC 218 official final results","url":"https://www.ufc.com/news/ufc-218-holloway-vs-aldo-2-final-results","supportingDetail":"UFC confirms Ngannou's left-uppercut first-round KO against Alistair Overeem at UFC 218 in Detroit."}],
   },
 
   // The 2020 Notre Dame CFP answer was literally named in the legacy Stat Sheet.
@@ -352,13 +352,14 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   },
   // Active Bar Trivia fact collision retired from future-preview run 2 Q6.
   "ufc:1:5": {
-    id: "millionaire-ufc-future-rewrite-r2-q6",
-    type: "highlight-reel-knockouts",
-    prompt: "Who knocked out Tony Ferguson with a front kick early in Round 2 at UFC 274?",
-    choices: ["Michael Chandler","Justin Gaethje","Charles Oliveira","Beneil Dariush"], answer: "Michael Chandler",
-    statSheet: "The lightweight finish occurred just 17 seconds into the second round.",
-    explanation: "Michael Chandler knocked out Tony Ferguson with a front kick at 0:17 of Round 2 at UFC 274 in Phoenix on May 7, 2022.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/event/ufc-274", supportingDetail: "Michael Chandler knocked out Tony Ferguson with a front kick at 0:17 of Round 2 at UFC 274 in Phoenix on May 7, 2022." }],
+    id: "millionaire-ufc-future-tsarukyan-dariush-austin-q6",
+    type: "lightweight-knockouts",
+    prompt: "Who knocked out Beneil Dariush in just 64 seconds during the December 2023 UFC Austin main event?",
+    choices: ["Arman Tsarukyan","Mateusz Gamrot","Islam Makhachev","Rafael Fiziev"],
+    answer: "Arman Tsarukyan",
+    statSheet: "The decisive right hand came in the opening round at the Moody Center in Austin.",
+    explanation: "Arman Tsarukyan knocked out Beneil Dariush at 1:04 of Round 1 in their December 2, 2023 UFC Austin main event, ending Dariush's night and strengthening Tsarukyan's lightweight title contention.",
+    evidence: [{"authority":"UFC Austin official event results","url":"https://www.ufc.com/news/ufc-fight-night-dariush-vs-tsarukyan-results-highlights-interviews-ufc-austin","supportingDetail":"UFC records Tsarukyan knocking out Beneil Dariush at 1:04 of Round 1 on December 2, 2023."}],
   },
   // Active Bar Trivia fact collision retired from future-preview run 3 Q1.
   "ufc:2:0": {

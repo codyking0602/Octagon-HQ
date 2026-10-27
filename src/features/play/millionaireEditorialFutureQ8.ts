@@ -168,11 +168,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "UFC light heavyweight title history", url: "https://www.ufc.com/news/10-best-light-heavyweight-title-fights", supportingDetail: "UFC confirms Machida's knockout of Evans at 3:57 of Round 2 to capture the title." },
   ),
   "ufc:5:7": q8(
-    "millionaire-ufc-future-diaz-ferguson-279-q8", "late-submission-finishes",
-    "Who submitted Tony Ferguson with a guillotine in Round 4 of the rearranged UFC 279 main event?",
-    ["Nate Diaz", "Khamzat Chimaev", "Michael Chandler", "Justin Gaethje"], "Nate Diaz",
-    "Nate Diaz submitted Tony Ferguson by guillotine choke at 2:52 of Round 4 at UFC 279 on September 10, 2022. The main event was rearranged after Khamzat Chimaev missed weight, making Diaz–Ferguson a last-minute matchup.",
-    { authority: "UFC official UFC 279 results", url: "https://www.ufc.com/news/ufc-279-diaz-vs-ferguson-results-highlights-winner-interviews", supportingDetail: "UFC states Diaz defeated Ferguson with a Round 4 guillotine at 2:52, after the fight-week change of opponents." },
+    "millionaire-ufc-future-aspinall-volkov-london-q8", "heavyweight-submissions",
+    "Who submitted Alexander Volkov with a straight armlock in the first round of the March 2022 UFC London main event?",
+    ["Tom Aspinall","Curtis Blaydes","Ciryl Gane","Sergei Pavlovich"], "Tom Aspinall",
+    "Tom Aspinall submitted Alexander Volkov with a straight armlock at 3:45 of Round 1 in the UFC London main event on March 19, 2022, a breakout win on his rise through the heavyweight division.",
+    {"authority":"UFC London official results","url":"https://www.ufc.com/news/ufc-fight-night-volkov-vs-aspinall-results-highlights-winners-interviews-ufc-london","supportingDetail":"UFC confirms Aspinall submitted Volkov with a straight armlock in Round 1 at 3:45 on March 19, 2022."},
   ),
 
 };
