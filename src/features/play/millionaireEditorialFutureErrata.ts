@@ -74,7 +74,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     id: "millionaire-cfb-future-chase-mcgrath-bama-2022-q6",
     type: "rivalry-clinchers",
     prompt: "Which Tennessee kicker hit the walk-off 40-yard field goal to beat Alabama 52–49 in October 2022?",
-    choices: ["Chase McGrath", "Will Reichard", "Peyton Woodring", "Harrison Mevis"],
+    choices: ["Chase McGrath", "Will Reichard", "Jack Podlesny", "Harrison Mevis"],
     answer: "Chase McGrath",
     statSheet: "The Vols ended a 15-game losing streak in the rivalry during the 2022 season.",
     explanation: "Chase McGrath made a 40-yard field goal as time expired at Neyland Stadium on October 15, 2022, giving Tennessee a 52–49 win over Alabama.",
@@ -104,14 +104,14 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Future-only corrections to exact selectable Bar Trivia fact collisions.
   // The published legacy Millionaire boards remain immutable.
   "nfl:3:4": {
-    id: "millionaire-nfl-future-graham-strip-sack-sblii-q5",
-    type: "super-bowl-turning-points",
-    prompt: "Which Eagles defender strip-sacked Tom Brady with just over two minutes left in Super Bowl LII?",
-    choices: ["Brandon Graham", "Fletcher Cox", "Derek Barnett", "Chris Long"],
-    answer: "Brandon Graham",
-    statSheet: "The takeaway helped protect Philadelphia's 38–33 lead before an insurance field goal in the fourth quarter.",
-    explanation: "Brandon Graham strip-sacked Tom Brady with 2:09 remaining in Super Bowl LII. Derek Barnett recovered the fumble, and Philadelphia defeated New England 41–33.",
-    evidence: [{ authority: "NFL game analysis", url: "https://www.nfl.com/news/eagles-d-on-strip-sack-it-was-only-a-matter-of-time-0ap3000000914610", supportingDetail: "The NFL confirms Graham forced the fumble, Barnett recovered and the Eagles won 41–33." }],
+    id: "millionaire-nfl-future-malik-jackson-super-bowl-50-q5",
+    type: "super-bowl-defensive-touchdowns",
+    prompt: "Which Broncos defender recovered Von Miller's strip-sack of Cam Newton in the end zone for a touchdown in Super Bowl 50?",
+    choices: ["Malik Jackson", "DeMarcus Ware", "Derek Wolfe", "Sylvester Williams"],
+    answer: "Malik Jackson",
+    statSheet: "The first-quarter scoop-and-score gave Denver a 10–0 lead over Carolina.",
+    explanation: "Malik Jackson recovered the fumble in Carolina's end zone after Von Miller stripped Cam Newton in the first quarter of Super Bowl 50. The touchdown gave Denver a 10–0 lead on its way to a 24–10 championship victory.",
+    evidence: [{ authority: "NFL official Super Bowl 50 analysis", url: "https://www.nfl.com/news/von-miller-broncos-defense-dominates-panthers-0ap3000000634501", supportingDetail: "NFL recaps Miller's strip, Malik Jackson's recovery touchdown and Denver's 10–0 lead." }],
   },
   "nfl:4:5": {
     id: "millionaire-nfl-future-geno-smith-comeback-2022-q6",
@@ -283,10 +283,10 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   "ufc:9:7": {
     id: "millionaire-ufc-289-nunes-last-opponent-q8",
     type: "retirement-fights",
-    prompt: "Who did Amanda Nunes defeat by decision in her final UFC fight before retiring in 2023?",
+    prompt: "Who did Amanda Nunes defeat by unanimous decision at UFC 289 immediately before announcing her retirement in June 2023?",
     choices: ["Irene Aldana", "Julianna Peña", "Raquel Pennington", "Holly Holm"], answer: "Irene Aldana",
     statSheet: null,
-    explanation: "Amanda Nunes defeated Irene Aldana by unanimous decision at UFC 289 before announcing her retirement.",
+    explanation: "Amanda Nunes defeated Irene Aldana by unanimous decision (50–44, 50–44, 50–43) at UFC 289 in Vancouver on June 10, 2023. She then announced her retirement in the Octagon after successfully defending the women's bantamweight title.",
     evidence: [{ authority: "UFC", url: "https://www.ufc.com/news/ufc-289-nunes-vs-aldana-results-highlights-winner-interviews-vancouver", supportingDetail: "UFC 289 main-event report records Nunes' unanimous decision over Aldana." }],
   },
   // Second batch: future-only removals of answer-identical selected Bar Trivia questions.

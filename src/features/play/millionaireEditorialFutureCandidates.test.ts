@@ -15,6 +15,24 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("prevents late 2026 historical and roster errors in NFL CFB and UFC candidate repairs", () => {
+    const broncos = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:3:4"]!;
+    expect(broncos.answer).toBe("Malik Jackson");
+    expect(broncos.prompt).toContain("Cam Newton");
+    expect(broncos.explanation).toContain("24–10");
+    expect(broncos.choices).toEqual(["Malik Jackson", "DeMarcus Ware", "Derek Wolfe", "Sylvester Williams"]);
+    const kicker = MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:8:5"]!;
+    expect(kicker.answer).toBe("Chase McGrath");
+    expect(kicker.choices).toContain("Jack Podlesny");
+    expect(kicker.choices).not.toContain("Peyton Woodring");
+    const retirement = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:9:7"]!;
+    expect(retirement.prompt).toContain("UFC 289");
+    expect(retirement.prompt).toContain("June 2023");
+    expect(retirement.explanation).toContain("50–43");
+    expect(retirement.statSheet).toBeNull();
+    expect(new Set(retirement.choices.map(normalized)).size).toBe(4);
+  });
+
 
   it("keeps three active UFC V3 same-fact collisions out of the playable candidate preview", () => {
     const oldFirst = millionaireDailyRun("ufc", 1)[0]!;
@@ -202,12 +220,14 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
 
   it("excludes two exact active NFL Bar Trivia collisions from future candidates", () => {
-    const graham = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:3:4"]!;
+    const jackson = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:3:4"]!;
     const jefferson = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:4:5"]!;
-    expect(graham.answer).toBe("Brandon Graham");
-    expect(graham.choices).toContain("Derek Barnett");
-    expect(graham.prompt).toContain("Super Bowl LII");
-    expect(graham.statSheet).not.toContain("Brandon Graham");
+    expect(jackson.answer).toBe("Malik Jackson");
+    expect(jackson.choices).toContain("DeMarcus Ware");
+    expect(jackson.prompt).toContain("Super Bowl 50");
+    expect(jackson.prompt).not.toContain("Super Bowl LII");
+    expect(jackson.statSheet).not.toContain("Malik Jackson");
+    expect(jackson.explanation).toContain("Von Miller");
     expect(jefferson.answer).toBe("Geno Smith");
     expect(jefferson.prompt).toContain("2022");
     expect(jefferson.statSheet).not.toContain("Geno Smith");
