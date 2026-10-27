@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   compareUfcPrepToSource,
+  effectiveUfcPrepStatus,
   mapUfcPickPrep,
   prepAssetSummary,
   preparedMainEventSpotlight,
@@ -89,6 +90,21 @@ describe("UFC Picks prep", () => {
       previewReady: 0,
       previewTotal: 2,
     });
+  });
+
+  it("downgrades premature ready status when required photos or card previews are absent", () => {
+    expect(effectiveUfcPrepStatus(mapUfcPickPrep(prepPayload))).toBe("review-needed");
+    const complete = {
+      ...prepPayload,
+      spotlights: prepPayload.spotlights.concat({
+        ...prepPayload.spotlights[0],
+        bout_id: "main-gamma-delta",
+        red: { ...prepPayload.spotlights[0].red, fighter_slug: "gamma" },
+        blue: { ...prepPayload.spotlights[0].blue, fighter_slug: "delta" },
+      }),
+    };
+    expect(effectiveUfcPrepStatus(mapUfcPickPrep(complete))).toBe("ready");
+    expect(effectiveUfcPrepStatus(mapUfcPickPrep({ ...complete, status: "blocked" }))).toBe("blocked");
   });
 
   it("accepts null asset paths for legitimately missing prep assets", () => {
