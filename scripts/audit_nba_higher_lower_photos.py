@@ -13,6 +13,8 @@ import json
 import sys
 import time
 import urllib.request
+import urllib.error
+import threading
 from collections import defaultdict
 from PIL import Image
 
@@ -20,14 +22,24 @@ MANIFEST = "nba-photo-audit-manifest.json"
 REPORT = "nba-photo-audit-report.json"
 PHONE_CACHE = Path("scripts/nba-portrait-phone/audited")
 PHONE_CACHE_MANIFEST = "nba-photo-audit-browser-manifest.json"
+WIKI_RATE_LOCK = threading.Lock()
+WIKI_LAST_REQUEST = [0.0]
 
 def fetch_image(entry):
     url = entry["url"]
     if not url:
         return dict(entry, status="no-photo", reason="missing portrait URL")
     error = None
-    for retry in range(2):
+    for retry in range(4):
         try:
+            # Commons throttles bursts of parallel image downloads. Respect its
+            # rate limit rather than treating HTTP 429 as a missing portrait.
+            if "wikimedia.org" in url:
+                with WIKI_RATE_LOCK:
+                    wait = max(0, 1.1 - (time.monotonic() - WIKI_LAST_REQUEST[0]))
+                    if wait:
+                        time.sleep(wait)
+                    WIKI_LAST_REQUEST[0] = time.monotonic()
             request = urllib.request.Request(url, headers={
                 "User-Agent": "Mozilla/5.0 (compatible; OctagonHQ-photo-integrity-audit/1.0)",
                 "Accept": "image/webp,image/png,image/jpeg,image/*",
@@ -71,9 +83,19 @@ def fetch_image(entry):
                 flatGrayFraction=round(flat_fraction, 4),
                 sha256=hashlib.sha256(content).hexdigest(),
                 visualHash=visual_hash, distinctColors=distinct_colors)
+        except urllib.error.HTTPError as exc:
+            error = str(exc)
+            if exc.code == 429 and retry < 3:
+                try:
+                    retry_after = float(exc.headers.get("Retry-After", "0"))
+                except ValueError:
+                    retry_after = 0
+                time.sleep(min(20, max(2.5 * (retry + 1), retry_after)))
+            else:
+                time.sleep(.4 * (retry + 1))
         except Exception as exc:
             error = str(exc)
-            time.sleep(.25 * (retry+1))
+            time.sleep(.4 * (retry+1))
     return dict(entry, status="unavailable", reason=error or "unknown retrieval error")
 
 def main():
