@@ -1,5 +1,5 @@
-import priorities from "../../../data/generated/football/cfb/wheel-football-current-priorities-2026.json";
-import evidence from "../../../data/curated/football/cfb/wheel-cfb-three-verified-role-grades-2026-10-26.json";
+import priorities from "../../data/generated/football/cfb/wheel-football-current-priorities-2026.json";
+import evidence from "../../data/curated/football/cfb/wheel-cfb-three-verified-role-grades-2026-10-26.json";
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 
