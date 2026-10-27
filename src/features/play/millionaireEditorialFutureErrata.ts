@@ -758,14 +758,13 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   },
   // Four supported retained-legacy future-preview questions; original bank/history remains immutable.
   "nfl:3:2": {
-    id: "millionaire-nfl-future-matt-ryan-2016-ap-mvp-q3", type: "season-awards",
-    prompt: "Which quarterback won the AP NFL Most Valuable Player award for the 2016 season?",
-    choices: ["Matt Ryan", "Cam Newton", "Aaron Rodgers", "Tom Brady"], answer: "Matt Ryan",
-    statSheet: "The winner led Atlanta to Super Bowl LI after throwing 38 touchdown passes in the regular season.",
-    explanation: "Matt Ryan won the 2016 Associated Press NFL Most Valuable Player award after leading the Atlanta Falcons to Super Bowl LI. Ryan threw 38 touchdowns during that regular season and the award was announced on February 4, 2017.",
-    evidence: [{ authority: "NFL", url: "https://www.nfl.com/news/matt-ryan-named-nfl-s-most-valuable-player-for-2016-0ap3000000782775", supportingDetail: "NFL AP MVP reporting confirms Matt Ryan won the 2016 award over Tom Brady and other contenders." }],
-  },
-  "nfl:6:6": {
+    id: "millionaire-nfl-future-blake-bortles-2017-afc-title-q3", type: "afc-playoff-quarterbacks",
+    prompt: "Which Jacksonville quarterback led the Jaguars to the AFC Championship Game following the 2017 NFL season?",
+    choices: ["Blake Bortles", "David Garrard", "Chad Henne", "Blaine Gabbert"], answer: "Blake Bortles",
+    statSheet: "Jacksonville won the AFC South and beat Pittsburgh in the divisional round before falling to New England.",
+    explanation: "Blake Bortles started all 16 games for the 2017 Jacksonville Jaguars and guided them to a 10–6 record and AFC South championship. He threw for 293 yards in the January 2018 AFC Championship Game, which Jacksonville lost to New England after a playoff upset of Pittsburgh.",
+    evidence: [{ authority: "Jacksonville Jaguars", url: "https://www.jaguars.com/news/the-offseason-quarterbacks-20347940", supportingDetail: "Jaguars' official 2017 quarterback retrospective documents Bortles starting all 16, 10–6 AFC South title, divisional upset of Pittsburgh and 293 passing yards in AFC title game." }],
+  },  "nfl:6:6": {
     id: "millionaire-nfl-future-ed-reed-2004-dpoy-q7", type: "defensive-awards",
     prompt: "Which defensive back won AP NFL Defensive Player of the Year for the 2004 season?",
     choices: ["Ed Reed", "Troy Polamalu", "Bob Sanders", "Charles Woodson"], answer: "Ed Reed",
@@ -823,7 +822,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Matthew Stafford", "Drake Maye", "Josh Allen", "Lamar Jackson"], answer: "Matthew Stafford",
     statSheet: "The 17th-year veteran led the league with 4,707 passing yards and 46 touchdowns.",
     explanation: "Los Angeles Rams quarterback Matthew Stafford earned his first Associated Press first-team All-Pro honor for the 2025 season, announced January 2026, after throwing for an NFL-leading 4,707 yards and 46 touchdowns. Drake Maye earned second-team honors; Josh Allen received another first-team vote and Lamar Jackson made the first team for 2024, not 2025.",
-    evidence: [{ authority: "Associated Press via NFL", url: "https://www.nfl.com/2025-all-pro-team-matthew-stafford-bijan-robinson-jaxon-smith-njigba-highlight-roster", supportingDetail: "AP/NFL All-Pro announcement confirms Stafford was first-team quarterback in 2025, his first selection in 17 seasons; Maye was second team, Jackson previous year." }],
+    evidence: [{ authority: "Associated Press via NFL", url: "https://www.nfl.com/news/2025-all-pro-team-matthew-stafford-bijan-robinson-jaxon-smith-njigba-highlight-roster", supportingDetail: "AP/NFL All-Pro announcement confirms Stafford was first-team quarterback in 2025, his first selection in 17 seasons; Maye was second team, Jackson previous year." }],
   },
   "ufc:2:1": {
     id: "millionaire-ufc-future-woodley-lawler-ufc201-q2", type: "welterweight-title-changes",
@@ -905,6 +904,16 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Joanna Jedrzejczyk", "Jessica Eye", "Katlyn Chookagian", "Lauren Murphy"], answer: "Joanna Jedrzejczyk",
     statSheet: "The December 2018 co-main event in Toronto went all five rounds and ended 49–46 on every card.", explanation: "Valentina Shevchenko defeated former strawweight champion Joanna Jędrzejczyk by unanimous decision, 49–46 on all three cards, at UFC 231 on December 8, 2018, taking the women's flyweight belt vacated by Nicco Montaño.",
     evidence: [{ authority: "UFC women's flyweight title lineage", url: "https://www.ufc.com/news/ufc-womens-flyweight-title-lineage", supportingDetail: "Valentina Shevchenko defeated former strawweight champion Joanna Jędrzejczyk by unanimous decision, 49–46 on all three cards, at UFC 231 on December 8, 2018, taking the women's flyweight belt vacated by Nicco Montaño." }],
+  },
+
+  // End a late-round career-volume oddity with the Giants' documented Super Bowl XXV QB story.
+  "nfl:0:6": {
+    id: "millionaire-nfl-future-jeff-hostetler-super-bowl-xxv-q7", type: "super-bowl-backup-heroes",
+    prompt: "Which backup quarterback replaced injured Phil Simms and started the Giants' Super Bowl XXV victory over Buffalo?",
+    choices: ["Jeff Hostetler", "Kerry Collins", "Dave Brown", "Kent Graham"], answer: "Jeff Hostetler",
+    statSheet: "The 1990 champions beat Buffalo 20–19 when Scott Norwood's last-second attempt missed wide right.",
+    explanation: "After Phil Simms fractured his foot late in the 1990 season, Jeff Hostetler replaced him as New York's starter and guided the Giants through the playoffs to a 20–19 victory over Buffalo in Super Bowl XXV on January 27, 1991. He was the unlikely starting quarterback for the Giants' second Super Bowl title.",
+    evidence: [{ authority: "New York Giants", url: "https://www.giants.com/news/phil-ing-the-void", supportingDetail: "Giants original 1990 season retrospective confirms Simms broke his foot December 15, Hostetler replaced him, and New York won Super Bowl XXV over Buffalo." }],
   },
 
 };

@@ -18,7 +18,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("locks four sourced retained-legacy replacements to preview-only errata without changing historical questions", () => {
     for (const [key, correct, evidence] of [
-      ["nfl:3:2", "Matt Ryan", "https://www.nfl.com/news/matt-ryan-named-nfl-s-most-valuable-player-for-2016-0ap3000000782775"],
+      ["nfl:3:2", "Blake Bortles", "https://www.jaguars.com/news/the-offseason-quarterbacks-20347940"],
       ["nfl:6:6", "Ed Reed", "https://www.profootballhof.com/news/class-of-2019-finalists"],
       ["cfb:0:4", "Marvin Harrison Jr.", "https://ohiostatebuckeyes.com/news/2023/12/8/football-marvin-harrison-jr-is-the-2023-biletnikoff-award-winner"],
       ["cfb:9:0", "Indiana", "https://collegefootballplayoff.com/sports/2026/1/27/NCG-recap"],
@@ -67,7 +67,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("retains sourced Stafford correction, Woodley title and UFC 217 final in future preview only", () => {
     const corrections = [
-      ["nfl:0:5", "Matthew Stafford", "https://www.nfl.com/2025-all-pro-team-matthew-stafford-bijan-robinson-jaxon-smith-njigba-highlight-roster"],
+      ["nfl:0:5", "Matthew Stafford", "https://www.nfl.com/news/2025-all-pro-team-matthew-stafford-bijan-robinson-jaxon-smith-njigba-highlight-roster"],
       ["ufc:2:1", "Tyron Woodley", "https://www.ufc.com/news/woodley-kos-lawler-one-take-title"],
       ["ufc:1:7", "UFC 217", "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results"],
     ] as const;
@@ -120,6 +120,28 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
     expect(millionaireDailyRun("ufc", 5)[6]!.statSheet).toContain("Aldo");
     expect(MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:5:6"]!.statSheet).not.toContain("Aldo");
+  });
+
+  it("swaps duplicate Matt Ryan trivia and stale 4,000-yard comparison for factual NFL playoff identities", () => {
+    for (const [key, answerText, url, oldFact] of [
+      ["nfl:3:2", "Blake Bortles", "https://www.jaguars.com/news/the-offseason-quarterbacks-20347940", "AP NFL Most Valuable Player"],
+      ["nfl:0:6", "Jeff Hostetler", "https://www.giants.com/news/phil-ing-the-void", "4,000-yard passing"],
+    ] as const) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(answerText);
+      expect(q.choices.filter(c => c === answerText)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(answerText));
+      expect(q.explanation).toContain(answerText);
+      expect(q.explanation.length).toBeGreaterThan(125);
+      expect(q.evidence[0]?.url).toBe(url);
+      expect(q.prompt).not.toContain(oldFact);
+      const [league, idx, level] = key.split(":");
+      const historic = millionaireDailyRun(league as "nfl", Number(idx))[Number(level)]!;
+      expect(historic.prompt).not.toBe(q.prompt);
+      expect(historic.id).not.toBe(q.id);
+    }
+    expect(millionaireDailyRun("nfl",3)[2]!.prompt).toContain("AP NFL MVP");
   });
 
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
