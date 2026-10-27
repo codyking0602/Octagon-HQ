@@ -178,6 +178,26 @@ describe("public Football weekly release projection", () => {
     expect(separate[0]?.id).toBe(weekly[0]?.id);
   });
 
+  it("publishes the screenshot's three-section GOTW without a generated header", () => {
+    const bottomLine = "If Miami controls the early downs and avoids giveaways, it can dictate the game.";
+    const newWeek = parsePublishedFootballWeek({ cfb: {
+      ...sport, week_of: "2026-10-27",
+      game: { home_team: "North Carolina", away_team: "Miami",
+        kickoff_at: "2026-10-31T18:30:00-05:00" },
+      breakdown: {
+        setup: [paragraph],
+        things: [1, 2, 3].map((i) => ({ title: "Factor " + i, body: paragraph })),
+        bottom_line: bottomLine,
+      },
+    }, nfl: null }).cfb!;
+    const display = publishedFootballMatchup("cfb", newWeek);
+    expect(display.headerAssetPath).toBeUndefined();
+    expect(display.compact?.setup).toEqual([{ text: paragraph }]);
+    expect(display.compact?.things).toHaveLength(3);
+    expect(display.compact?.bottomLine).toEqual([{ text: bottomLine }]);
+    expect(display.pathsToWin).toBeUndefined();
+  });
+
   it("rejects incomplete or unexpected live Spotlight and editorial contracts", () => {
     expect(() => parsePublishedFootballWeek({ cfb: {
       ...sport, spotlight: { ...sport.spotlight, stats: [] },
