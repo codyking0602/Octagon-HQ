@@ -9,6 +9,42 @@ const outDir = resolve(repoRoot, "supabase/functions/daily-challenge-runtime");
 const footballScheduleVersion = "football-daily-v18-average-fan-oct1";
 const bundles = [
   {
+    label: "legacy-feud action-only Daily runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/LegacyFeudAdvance.ts"),
+    fileName: "legacy-feud-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
+    label: "bar-trivia action-only Daily runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/BarTriviaAdvance.ts"),
+    fileName: "bar-trivia-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
+    label: "ufc-higher-lower action-only Daily runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/UfcHigherLowerAdvance.ts"),
+    fileName: "ufc-higher-lower-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
+    label: "football-higher-lower action-only Daily runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/FootballHigherLowerAdvance.ts"),
+    fileName: "football-higher-lower-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
+    label: "ufc-hit-number action-only Daily runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/UfcHitNumberAdvance.ts"),
+    fileName: "ufc-hit-number-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
+    label: "football-find-leader action-only Daily runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/FootballFindLeaderAdvance.ts"),
+    fileName: "football-find-leader-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
     label: "UFC daily runtime",
     entry: resolve(repoRoot, "src/features/play/todaysChallengeRuntime.ts"),
     fileName: "runtime.generated.mjs",

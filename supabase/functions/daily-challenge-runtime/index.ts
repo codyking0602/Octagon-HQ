@@ -220,6 +220,20 @@ function loadNbaAdvanceRuntime(gameType?: string) {
   return nbaAdvanceRuntimePromise;
 }
 
+// Keep already-published boards and legacy grading intact; only isolate the
+// per-tap evaluator. Each module is a Vite tree-shaken action-only bundle.
+async function loadIsolatedDailyAction(sport: "football" | "ufc", gameType: string): Promise<DailyAdvanceRuntime | null> {
+  if (sport === "football" && gameType === "find_leader") return (await import("./football-find-leader-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "higher_lower") return (await import("./football-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "bar_trivia") return (await import("./bar-trivia-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "sports_feud") return (await import("./legacy-feud-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "higher_lower") return (await import("./ufc-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "hit_the_number") return (await import("./ufc-hit-number-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "bar_trivia") return (await import("./bar-trivia-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "sports_feud") return (await import("./legacy-feud-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  return null;
+}
+
 function loadWhoAmIAdvanceRuntime() {
   if (!whoAmIAdvanceRuntimePromise) {
     whoAmIAdvanceRuntimePromise = import("./who-am-i-advance.generated.mjs") as Promise<WhoAmIAdvanceRuntimeModule>;
@@ -1734,7 +1748,8 @@ Deno.serve(async (request) => {
       // acknowledge its persisted handoff (a source of Edge CPU-limit errors).
       let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, action);
       if (!advanced) {
-        const advanceFootballRuntime = context.gameType === "average_fan"
+        const isolatedFootballRuntime = await loadIsolatedDailyAction("football", context.gameType);
+        const advanceFootballRuntime = isolatedFootballRuntime ?? (context.gameType === "average_fan"
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
           : context.gameType === "hit_the_number" && !isDailyCombo(context)
             ? (await loadFootballHitNumberAdvanceRuntime()).advanceFootballHitNumberDailyRuntime
@@ -1742,7 +1757,7 @@ Deno.serve(async (request) => {
               ? (await loadFootballWavelengthAdvanceRuntime()).advanceFootballWavelengthDailyRuntime
             : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
               ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
-              : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
+              : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime);
         context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
         advanced = isDailyCombo(context)
           ? advanceDailyCombo(context, action, advanceFootballRuntime)
@@ -1807,13 +1822,14 @@ Deno.serve(async (request) => {
 
     let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, body.action);
     if (!advanced) {
-      const advanceUfcRuntime = context.gameType === "average_fan"
+      const isolatedUfcRuntime = await loadIsolatedDailyAction("ufc", context.gameType);
+      const advanceUfcRuntime = isolatedUfcRuntime ?? (context.gameType === "average_fan"
         ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
         : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
           ? advancePersistedBlindResumeV3
           : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
             ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
-            : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
+            : (await loadUfcRuntime()).advanceOfficialDailyRuntime);
       advanced = isDailyCombo(context)
         ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
         : advanceUfcRuntime(context, body.action);
