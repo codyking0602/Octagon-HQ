@@ -4,7 +4,7 @@ import revisions from "../../../data/curated/football/nfl/wheel-nfl-current-abil
 import oldQb from "../../../data/generated/football/wheel-nfl-qb-grades-2026-10-03.json";
 import { FOOTBALL_GM_PLAYER_POOL, footballGmPlayerById } from "./footballGmEngine";
 import profiles from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
-const sql=readFileSync("supabase/migrations/202612310492_nfl_cj_stroud_current_ability_grade.sql","utf8");
+const sql=readFileSync("supabase/migrations/202612310602_nfl_cj_stroud_current_ability_grade.sql","utf8");
 
 describe("Stroud Oct 26 current NFL grade and historical GM development continuity",()=>{
   it("versions one researched Texans Wheel grade, preserving all 594 historical GM identities",()=>{
