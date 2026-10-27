@@ -35,8 +35,8 @@ describe("Football Wavelength future-only editorial and six-month readiness", ()
     expect(footballWavelengthClues).toHaveLength(540);
     expect(footballWavelengthPlayableClues).toHaveLength(540);
     expect(footballWavelengthAvailableClues).toHaveLength(540 + FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.length);
-    expect(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS).toHaveLength(31);
-    expect(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.filter((row) => row.kind === "rewrite")).toHaveLength(21);
+    expect(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS).toHaveLength(101);
+    expect(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.filter((row) => row.kind === "rewrite")).toHaveLength(91);
     expect(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.filter((row) => row.kind === "replace")).toHaveLength(10);
     const old = new Map(footballWavelengthClues.map((clue) => [clue.id, clue]));
     const newIds = new Set(footballWavelengthPlayableClues.map((clue) => clue.id));
