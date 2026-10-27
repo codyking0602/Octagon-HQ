@@ -16,9 +16,13 @@ import {
 } from "./MillionaireCasualModel";
 import {
   MILLIONAIRE_DAILY_RUN_COUNT,
+  MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT,
   millionaireDailyRun,
+  millionaireFutureEditorialDailyRun,
 } from "./millionaireDailyQuestionBank";
 import { footballThemedMillionaireRunForDay } from "./footballTeamThemeDailyPacks";
+import { MILLIONAIRE_FUTURE_TARGETED_REWRITES } from "./millionaireEditorialFutureErrata";
+import { MILLIONAIRE_FUTURE_Q8_REWRITES } from "./millionaireEditorialFutureQ8";
 import type { OfficialDailySetupPublication } from "./todaysChallengeRuntime";
 import {
   FOOTBALL_FUTURE_WEIGHTED_CYCLE,
@@ -34,6 +38,11 @@ import {
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
 export const COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION = "millionaire-daily-v5-cowboys-eagles-modern-replay-20261026" as const;
+/** Future-only v6 content, independent from historic official submissions. */
+export const MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION = "millionaire-daily-v6-six-month-20261028" as const;
+export const MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER = "2026-10-27" as const;
+/** First unpublished Central calendar day eligible for approved v6 content. */
+export const MILLIONAIRE_FUTURE_EDITORIAL_RELEASE_DAY = "2026-10-28" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
@@ -246,10 +255,15 @@ export function millionaireDailyLeagueAppearance(sport: "ufc" | "football", day:
   return Math.floor(millionaireFootballDailyAppearance(day) / 2);
 }
 
-export function millionaireDailyRunIndex(sport: "ufc" | "football", day: string) {
+/** Candidate preview is EXPLICIT. Official Daily callers always retain the legacy bank. */
+export type MillionaireEditorialPreview = { readonly editorialCandidatePreview?: boolean };
+export function millionaireDailyRunIndex(sport: "ufc" | "football", day: string,
+  options?: MillionaireEditorialPreview) {
   const appearance = millionaireDailyLeagueAppearance(sport, day);
-  return ((appearance % MILLIONAIRE_DAILY_RUN_COUNT) + MILLIONAIRE_DAILY_RUN_COUNT)
-    % MILLIONAIRE_DAILY_RUN_COUNT;
+  const candidatesActive = day >= MILLIONAIRE_FUTURE_EDITORIAL_RELEASE_DAY
+    || (options?.editorialCandidatePreview === true && day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER);
+  const count = candidatesActive ? MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT : MILLIONAIRE_DAILY_RUN_COUNT;
+  return ((appearance % count) + count) % count;
 }
 
 export function millionaireDailyHostNumber(sport: "ufc" | "football", day: string) {
@@ -297,9 +311,50 @@ function futureMillionaireErrata(
   league: MillionaireLeague,
   runIndex: number,
   day: string,
+  editorialCandidatePreview = false,
 ): MillionaireRun {
   if (day < "2026-10-27") return run;
   return run.map((question, index) => {
+    // Future-only overlay: historical Daily runs and completed proofs stay immutable.
+    // This path is also exercised by opt-in editorial preview before release.
+    const newQuestion = editorialCandidatePreview
+      ? (MILLIONAIRE_FUTURE_TARGETED_REWRITES[`${league}:${runIndex}:${index}`]
+        ?? MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${runIndex}:${index}`])
+      : undefined;
+    if (newQuestion) {
+      // Editorial overlays do not guarantee that the correct answer occupies A.
+      // Resolve the authored answer before applying the canonical balancing pass;
+      // otherwise a non-A answer silently grades the wrong choice as correct.
+      const authoredCorrectIndices = newQuestion.choices.flatMap((choice, choiceIndex) =>
+        choice === newQuestion.answer ? [choiceIndex] : []);
+      if (authoredCorrectIndices.length !== 1) {
+        throw new Error(`Millionaire editorial overlay ${league} run ${runIndex + 1} Q${index + 1} must have one designated answer.`);
+      }
+      const correctChoiceId = MILLIONAIRE_CHOICE_IDS[authoredCorrectIndices[0]!]!;
+      const survivorChoiceId = MILLIONAIRE_CHOICE_IDS[(authoredCorrectIndices[0]! + 1) % 4]!;
+      const removalChoiceIds = MILLIONAIRE_CHOICE_IDS.filter(
+        id => id !== correctChoiceId && id !== survivorChoiceId,
+      );
+      // Do not mutate the legacy question authority or any persisted result.
+      // With independent future v6 IDs even historic caches remain auditable.
+      return {
+        ...question,
+        id: newQuestion.id,
+        type: newQuestion.type,
+        prompt: newQuestion.prompt,
+        choices: MILLIONAIRE_CHOICE_IDS.map((id, choiceIndex) => ({
+          id,
+          text: newQuestion.choices[choiceIndex]!,
+        })) as unknown as MillionaireRuntimeQuestion["choices"],
+        correctChoiceId,
+        explanation: newQuestion.explanation,
+        statSheet: newQuestion.statSheet,
+        fiftyFifty: {
+          survivorChoiceIds: [correctChoiceId, survivorChoiceId],
+          removalChoiceIds: [removalChoiceIds[0]!, removalChoiceIds[1]!],
+        },
+      };
+    }
     // In January 2026 Stafford became a first-team All-Pro; the legacy
     // "never first-team All-Pro" question is factually false.
     if (league === "nfl" && runIndex === 0 && index === 5) {
@@ -343,14 +398,14 @@ function futureMillionaireErrata(
         statSheet: "The belt changed hands in Brazil via a second-round slam finish at UFC 237.",
       };
     }
-    if (league === "ufc" && runIndex === 6 && index === 3) {
+    if (league === "ufc" && runIndex === 6 && index === 3 && question.id === "millionaire-ufc-run-7-q4") {
       return {
         ...question,
         id: "millionaire-ufc-281-middleweight-q4-future",
         statSheet: "A dramatic fifth-round stoppage at Madison Square Garden ended the champion's title reign.",
       };
     }
-    if (league === "ufc" && runIndex === 7 && index === 2) {
+    if (league === "ufc" && runIndex === 7 && index === 2 && question.id === "millionaire-ufc-run-8-q3") {
       return {
         ...question,
         id: "millionaire-ufc-69-welterweight-q3-future",
@@ -366,10 +421,18 @@ function futureMillionaireErrata(
       };
     }
     return question;
+  }).map((question) => {
+    // Preview-only: turn the historic seed's otherwise tautological reveal
+    // into a useful factual explanation. Do not rewrite published proofs.
+    if (!editorialCandidatePreview || !question.statSheet) return question;
+    const correct = question.choices.find(choice => choice.id === question.correctChoiceId)?.text;
+    if (!correct || question.explanation !== `${correct} is the correct answer.`) return question;
+    return { ...question, explanation: `${correct}. ${question.statSheet}` };
   }) as unknown as MillionaireRun;
 }
 
-function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string, contentVersion: string = MILLIONAIRE_DAILY_CONTENT_VERSION) {
+function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string,
+  contentVersion: string = MILLIONAIRE_DAILY_CONTENT_VERSION) {
   return [
     contentVersion,
     league,
@@ -446,13 +509,20 @@ export function buildMillionaireDailySetup(
   sport: "ufc" | "football",
   day: string,
   scheduleVersion: string,
+  options?: MillionaireEditorialPreview,
 ): OfficialDailySetupPublication {
+  // Only change newly published setups, never already-serialized Daily attempts.
+  // Pre-release preview remains explicitly opt-in on October 27.
+  const editorialCandidatePreview = day >= MILLIONAIRE_FUTURE_EDITORIAL_RELEASE_DAY
+    || (options?.editorialCandidatePreview === true && day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER);
   const league = millionaireDailyLeague(sport, day);
-  const runIndex = millionaireDailyRunIndex(sport, day);
+  const runIndex = millionaireDailyRunIndex(sport, day, options);
   const hostNumber = millionaireDailyHostNumber(sport, day);
   const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
   const baseRun = futureMillionaireErrata(
-    themedRun ?? millionaireDailyRun(league, runIndex), league, runIndex, day,
+    themedRun ?? (editorialCandidatePreview
+      ? millionaireFutureEditorialDailyRun(league, runIndex)
+      : millionaireDailyRun(league, runIndex)), league, runIndex, day, editorialCandidatePreview,
   );
   const run = balanceRun(
     sport === "football" && day === "2026-10-10" && league === "cfb"
@@ -461,10 +531,10 @@ export function buildMillionaireDailySetup(
     runIndex,
   );
   assertMillionaireRun(run);
-  return millionairePublicationFromRun(
-    league, day, scheduleVersion, runIndex, hostNumber, run,
-    sport === "football" && day === "2026-10-26"
-      ? COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION
-      : MILLIONAIRE_DAILY_CONTENT_VERSION,
-  );
+  return millionairePublicationFromRun(league, day, scheduleVersion, runIndex, hostNumber, run,
+    editorialCandidatePreview
+      ? MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION
+      : sport === "football" && day === "2026-10-26"
+        ? COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION
+        : MILLIONAIRE_DAILY_CONTENT_VERSION);
 }

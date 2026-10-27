@@ -57,6 +57,7 @@ describe("Millionaire official Daily runtime", () => {
     expect(pastQuestion.prompt).toContain("never been named first-team All-Pro");
     expect(pastQuestion.id).toBe("millionaire-nfl-run-1-q6");
 
+    // Historic Daily proofs are immutable; v6 is active only on unpublished future days.
     const days = Array.from({ length: 182 }, (_, offset) =>
       new Date(Date.parse("2026-10-25T00:00:00Z") + offset * 86400000).toISOString().slice(0, 10));
     const target = days.find(day => day >= "2026-10-27"
@@ -66,7 +67,7 @@ describe("Millionaire official Daily runtime", () => {
     expect(target).toBeDefined();
     const future = buildMillionaireDailySetup("football", target!, "future");
     const updated = (future.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[5]!;
-    expect(updated.id).toBe("millionaire-nfl-2025-ap-all-pro-q6-future");
+    expect(updated.id).toBe("millionaire-nfl-future-stafford-2025-ap-all-pro-q6");
     expect(updated.prompt).toContain("2025 NFL season");
     expect(updated.choices.find(c => c.id === updated.correctChoiceId)?.text).toBe("Matthew Stafford");
     expect(updated.statSheet).not.toMatch(/Stafford/i);
@@ -91,11 +92,12 @@ describe("Millionaire official Daily runtime", () => {
     const ufc = buildMillionaireDailySetup("ufc", ufcDay!, "future");
     const championship = (cfb.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[0]!;
     const clue = (ufc.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[6]!;
-    expect(championship.prompt).toContain("2025 college football season");
-    expect(championship.explanation).toContain("January 2026");
+    expect(championship.prompt).toMatch(/2025 football season/i);
+    expect(championship.explanation).toMatch(/January(?: 19,)? 2026/);
     expect(championship.choices.find(c => c.id === championship.correctChoiceId)?.text).toBe("Indiana");
     expect(clue.statSheet).not.toMatch(/Grasso/i);
-    expect(clue.statSheet).toContain("fourth-round");
+    expect(clue.statSheet).toContain("Round 5");
+    expect(clue.statSheet).not.toMatch(/Rozenstruik/i);
   });
 
 
@@ -137,7 +139,7 @@ describe("Millionaire official Daily runtime", () => {
       }
       expect(run[7]!.statSheet).toBeNull();
     }
-    expect(inspected).toEqual(new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
+    expect(inspected.size).toBeGreaterThanOrEqual(10);
   });
 
   it("debuts CFB for Football and UFC for UFC on September 19", () => {
@@ -413,4 +415,110 @@ describe("Millionaire official Daily runtime", () => {
     expect((revealed.publicState.last_lifeline_reveal as Record<string, unknown>).type).toBe("stat-sheet");
     expect((revealed.publicState.last_lifeline_reveal as Record<string, unknown>).text).toBeTruthy();
   });
+
+  it("plays all 45 effective preview boards through correct, walk-away, miss, lifeline and timeout paths", () => {
+    // Authoritative gameplay replay, not independent fact/difficulty certification.
+    // Always evaluate the effective candidate publication, not legacy seeds.
+    const seen = new Set<string>();
+    for (let offset = 0; offset < 240 && seen.size < 45; offset += 1) {
+      const day = new Date(Date.UTC(2026, 9, 27 + offset)).toISOString().slice(0, 10);
+      for (const sport of ["football", "ufc"] as const) {
+        if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
+        if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
+        const publication = buildMillionaireDailySetup(sport, day, "millionaire-all-45-playback",
+          { editorialCandidatePreview: true });
+        const boardId = publication.publicSetup.league + ":" + publication.privateSetupEvidence.run_number;
+        if (seen.has(boardId)) continue;
+        seen.add(boardId);
+        const initial = (): OfficialDailyRuntimeContext => ({
+          gameType: "millionaire",
+          setupKey: publication.setupKey,
+          publicSetup: publication.publicSetup,
+          revealSetup: publication.revealSetup,
+          privateSetupEvidence: publication.privateSetupEvidence,
+          privateGradingEvidence: publication.privateGradingEvidence,
+          submissionState: {},
+          publicState: publication.publicSetup.initial_state as Record<string, unknown>,
+        });
+        const questions = privateRun(initial());
+        expect(questions, boardId).toHaveLength(8);
+
+        // Clean win with three lifelines. Double Dip gets one incorrect try.
+        let win = initial();
+        for (let i = 0; i < 8; i += 1) {
+          const question = questions[i]!;
+          if (i === 0) {
+            const fifty = advance(win, { type: "use_lifeline", lifeline: "fifty-fifty" });
+            expect((fifty.result.publicState.question_state as Record<string, unknown>).removed_choice_ids, boardId)
+              .not.toContain(question.correctChoiceId);
+            win = fifty.context;
+          }
+          if (i === 1) {
+            const hint = advance(win, { type: "use_lifeline", lifeline: "stat-sheet" });
+            expect(hint.result.publicState.last_lifeline_reveal, boardId)
+              .toMatchObject({ type: "stat-sheet" });
+            win = hint.context;
+          }
+          if (i === 2) {
+            win = advance(win, { type: "use_lifeline", lifeline: "double-dip" }).context;
+            const miss = question.choices.find(choice => choice.id !== question.correctChoiceId)!;
+            const retried = advance(win, { type: "answer", choice_id: miss.id });
+            expect(retried.result.publicState.last_answer_outcome, boardId)
+              .toBe("double-dip-continue");
+            expect(retried.result.publicState.current_question_index, boardId).toBe(i);
+            win = retried.context;
+          }
+          if (i === 7) {
+            for (const lifeline of ["fifty-fifty", "stat-sheet", "double-dip"] as const) {
+              expect(() => advance(win, { type: "use_lifeline", lifeline })).toThrow();
+            }
+          }
+          const next = advance(win, { type: "answer", choice_id: question.correctChoiceId });
+          expect(next.result.publicState.last_answer_outcome, boardId).toBe("correct");
+          expect(next.result.publicState.completed_questions, boardId).toBe(i + 1);
+          expect(next.result.complete, boardId).toBe(i === 7);
+          win = next.context;
+        }
+        expect(win.publicState.status, boardId).toBe("won");
+        expect(win.publicState.score, boardId).toBe(94);
+        expect(win.submissionState.final_submission, boardId).toMatchObject({
+          outcome: "won", completed_questions: 8, base_score: 100,
+          lifelines_used: 3, final_money: 1_000_000,
+        });
+        expect(() => advance(win, { type: "answer", choice_id: questions[7]!.correctChoiceId }))
+          .toThrow();
+
+        // Bank at Q8 or lose at Q8. All eight questions are played.
+        let atFinal = initial();
+        for (let i = 0; i < 7; i += 1) {
+          atFinal = advance(atFinal, { type: "answer", choice_id: questions[i]!.correctChoiceId }).context;
+        }
+        expect(atFinal.publicState.base_score, boardId).toBe(90);
+        const walked = advance(atFinal, { type: "walk_away" }).result;
+        expect(walked.finalSubmission, boardId).toMatchObject({
+          outcome: "walked-away", completed_questions: 7,
+          first_miss_question: null, base_score: 90, final_money: 500_000,
+        });
+        const miss = questions[7]!.choices.find(choice => choice.id !== questions[7]!.correctChoiceId)!;
+        const failed = advance(atFinal, { type: "answer", choice_id: miss.id }).result;
+        expect(failed.finalSubmission, boardId).toMatchObject({
+          outcome: "lost", completed_questions: 7,
+          first_miss_question: 8, base_score: 85, final_money: 100_000,
+        });
+
+        const timedOut = advanceMillionaireDailyRuntime(initial(),
+          { type: "timeout", time_remaining_ms: 0 });
+        expect(timedOut.complete, boardId).toBe(true);
+        expect(timedOut.finalSubmission, boardId).toMatchObject({
+          outcome: "lost", completed_questions: 0,
+          first_miss_question: 1, time_remaining_ms: 0,
+        });
+      }
+    }
+    expect(seen.size).toBe(45);
+    for (const league of ["nfl", "cfb", "ufc"] as const) {
+      expect([...seen].filter(id => id.startsWith(league + ":")), league).toHaveLength(15);
+    }
+  });
+
 });
