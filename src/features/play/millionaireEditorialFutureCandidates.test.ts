@@ -1439,7 +1439,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("preserves six new sourced UFC preview-only answers that replace active Bar Trivia same-fact duplicates", () => {
     for (const [run, questionIndex, correct, marker] of [
-      [7, 0, "Conor McGregor", "UFC 194"],
+      [7, 0, "Miesha Tate", "UFC 200"],
       [8, 0, "Amanda Nunes", "bantamweight and featherweight"],
       [10, 0, "Francis Ngannou", "UFC 270"],
       [0, 3, "Tom Aspinall", "UFC 304"],
