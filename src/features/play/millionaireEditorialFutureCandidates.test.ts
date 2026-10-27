@@ -581,8 +581,9 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     // Future-only NFL facts must not recreate active Average Fan's exact Super Bowl / records trivia.
     expect(answer(millionaireFutureEditorialDailyRun("nfl", 11)[4]!)).toBe("Troy Polamalu");
     expect(millionaireFutureEditorialDailyRun("nfl", 11)[4]!.prompt).not.toContain("Kurt Warner");
-    expect(answer(millionaireFutureEditorialDailyRun("nfl", 14)[3]!)).toBe("Corey Webster");
-    expect(millionaireFutureEditorialDailyRun("nfl", 14)[3]!.prompt).not.toContain("22.5");
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 14)[6]!)).toBe("Corey Webster");
+    expect(millionaireFutureEditorialDailyRun("nfl", 14)[6]!.prompt).not.toContain("22.5");
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 14)[3]!)).toBe("Myles Garrett");
     expect(answer(millionaireFutureEditorialDailyRun("nfl", 14)[4]!)).toBe("Mike Alstott");
     expect(millionaireFutureEditorialDailyRun("nfl", 14)[4]!.prompt).not.toContain("Mile High Miracle");
     const dramaticFinal = millionaireFutureEditorialDailyRun("ufc", 7)[7]!;
