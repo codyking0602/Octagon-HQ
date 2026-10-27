@@ -80,5 +80,142 @@
   "selection": {
     "player_id": "keyone-jenkins",
     "game_id": "miami-at-north-carolina"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Keyone Jenkins",
+      "team": "UCF",
+      "position": "QB",
+      "stats": [
+        {
+          "label": "PASS YDS",
+          "value": "293"
+        },
+        {
+          "label": "PASS TD",
+          "value": "3"
+        },
+        {
+          "label": "RUSH YDS",
+          "value": "35"
+        },
+        {
+          "label": "RUSH TD",
+          "value": "1"
+        }
+      ],
+      "result": "VS NO. 2 BYU · W 39–31 (2OT)",
+      "measurements": "6 ft 0 in · 200 lbs",
+      "team_color": "#B4975A",
+      "highlight_url": "https://www.youtube.com/watch?v=9PeHoZE98f8",
+      "photo_source": "https://a.espncdn.com/i/headshots/college-football/players/full/5085337.png",
+      "photo_kind": "portrait",
+      "photo_asset_path": "/assets/football/weekly/2026-10-27/cfb/spotlight.webp"
+    },
+    "game": {
+      "away_team": "Miami",
+      "home_team": "North Carolina",
+      "kickoff_at": "2026-10-31T18:30:00-05:00",
+      "header_asset_path": "/assets/football/weekly/2026-10-27/cfb/game-header.webp",
+      "header_photo_sources": [
+        "https://seatgeekimages.com/matchup/v3_6e917b14/5521/5519/450x450.jpg"
+      ]
+    },
+    "editorial": {
+      "source_urls": [
+        "https://miamihurricanes.com/news/2026/10/26/mensah-toney-named-acc-players-of-the-week",
+        "https://goheels.com/game-center/26883",
+        "https://goheels.com/game-center/26881",
+        "https://goheels.com/news/2026/10/3/football-recap-vs-notre-dame",
+        "https://www.si.com/betting/miami-vs-north-carolina-prediction-odds-and-key-players-to-watch-for-college-football-week-9-2026"
+      ],
+      "breakdown": {
+        "setup": [
+          "Unbeaten, top-ranked Miami visits Chapel Hill at 7:30 p.m. Eastern on ABC after scoring 52 points against Pittsburgh. Darian Mensah and Malachi Toney powered that win, while North Carolina hopes to deliver a major ACC upset in front of its home crowd.",
+          "Miami brings an explosive, efficient passing attack and a 7–0 start. The 4–3 Tar Heels have shown they can win close conference games, including road victories at Pittsburgh and Duke, but they need steadier offensive possessions against the Hurricanes."
+        ],
+        "things": [
+          {
+            "title": "Containing Miami's aerial attack",
+            "body": "Mensah threw four touchdowns without a pick against Pitt, three to Toney. North Carolina must communicate against motion, contest throws at the catch point and force Miami to earn points in longer drives.",
+            "edge": "Miami"
+          },
+          {
+            "title": "Can UNC keep the ball?",
+            "body": "Billy Edwards Jr. and the Tar Heels need sustained first downs, fewer stalled drives and reliable field position. Giving Miami short fields or repeated quick possessions magnifies the mismatch.",
+            "edge": "Miami"
+          },
+          {
+            "title": "Third-down protection",
+            "body": "North Carolina has to protect Edwards well enough to hit Jordan Shipp and tight end Jelani Thurman on intermediate routes. Miami can play aggressively if UNC falls into predictable long-yardage downs.",
+            "edge": "Miami"
+          }
+        ],
+        "paths_to_win": [
+          {
+            "team": "Miami",
+            "body": "Keep Mensah upright, make Toney a consistent target and spread the ball around when Carolina shades coverage. Miami can create separation by turning early possessions into touchdowns and preventing extended UNC drives."
+          },
+          {
+            "team": "North Carolina",
+            "body": "Play disciplined defense against explosive passes, finish tackles immediately and control the clock with Edwards and the rushing rotation. A turnover advantage and strong red-zone execution would keep the upset possible into the fourth."
+          }
+        ],
+        "players_to_watch": [
+          {
+            "team": "Miami",
+            "players": [
+              {
+                "name": "Darian Mensah",
+                "position": "QB",
+                "body": "The efficient Hurricanes passer has 22 touchdown passes and only one interception through seven games."
+              },
+              {
+                "name": "Malachi Toney",
+                "position": "WR",
+                "body": "The record-setting receiver enters after 16 catches, 194 yards and three touchdowns against Pitt."
+              },
+              {
+                "name": "Mark Fletcher Jr.",
+                "position": "RB",
+                "body": "Miami's physical running option helps punish defenses that overplay its passing threats."
+              }
+            ]
+          },
+          {
+            "team": "North Carolina",
+            "players": [
+              {
+                "name": "Billy Edwards Jr.",
+                "position": "QB",
+                "body": "His quick decisions and ball security will be essential against Miami's pressure."
+              },
+              {
+                "name": "Jordan Shipp",
+                "position": "WR",
+                "body": "North Carolina's leading receiver offers a route-running answer when defenses crowd the line."
+              },
+              {
+                "name": "Benjamin Hall",
+                "position": "RB",
+                "body": "The Tar Heels' leading rusher must help establish manageable third downs."
+              }
+            ]
+          }
+        ],
+        "unit_edges": [
+          {
+            "title": "Miami passing game vs Carolina secondary",
+            "body": "Miami's passing efficiency and Toney's recent production give the Hurricanes an advantage downfield. UNC's coverage has to prevent repeated explosive gains and limit yards after the catch.",
+            "edge": "Miami"
+          },
+          {
+            "title": "UNC offense vs Miami defense",
+            "body": "North Carolina has moved the ball in stretches but faces a sharper test of protection and situational execution. Miami can control the game by pressing Edwards and shutting down early-down rushing lanes.",
+            "edge": "Miami"
+          }
+        ]
+      }
+    }
   }
 }
