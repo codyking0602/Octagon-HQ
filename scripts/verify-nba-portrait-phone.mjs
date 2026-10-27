@@ -1,8 +1,12 @@
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+
+// Browser receives the exact source bytes already downloaded and pixel-audited
+// by the preceding CI step; no alternative/player-substituted images are used.
+const auditedSourceFiles = JSON.parse(readFileSync("nba-photo-audit-browser-manifest.json", "utf8"));
 
 const games = [
   ["find_leader", "Who averaged the most assists per game?"],
@@ -77,6 +81,8 @@ class CdpClient {
     this.pending = new Map();
     this.networkErrors = [];
     this.networkResponses = [];
+    this.interceptionErrors = [];
+    this.fulfilledImages = 0;
   }
 
   async open() {
@@ -88,6 +94,29 @@ class CdpClient {
     }
     this.socket.addEventListener("message", (event) => {
       const message = JSON.parse(String(event.data));
+      if (message.method === "Fetch.requestPaused") {
+        const url = message.params.request.url;
+        const requestId = message.params.requestId;
+        const file = auditedSourceFiles[url];
+        if (!file) {
+          this.interceptionErrors.push("Unverified browser image URL: " + url);
+          void this.send("Fetch.failRequest", { requestId, errorReason:"BlockedByClient" })
+            .catch(error => this.interceptionErrors.push(String(error)));
+        } else {
+          try {
+            const body = readFileSync(file).toString("base64");
+            void this.send("Fetch.fulfillRequest", {
+              requestId, responseCode:200,
+              responseHeaders:[{name:"Content-Type",value:"image/png"},{name:"Access-Control-Allow-Origin",value:"*"}],
+              body,
+            }).then(() => { this.fulfilledImages++; })
+              .catch(error => this.interceptionErrors.push(String(error)));
+          } catch (error) {
+            this.interceptionErrors.push(url + ": " + String(error));
+            void this.send("Fetch.failRequest", {requestId,errorReason:"Failed"}).catch(() => {});
+          }
+        }
+      }
       if (message.method === "Network.loadingFailed") this.networkErrors.push(message.params);
       if (message.method === "Network.responseReceived") this.networkResponses.push({url:message.params.response?.url,status:message.params.response?.status});
       if (!message.id) return;
@@ -193,6 +222,7 @@ try {
   await client.send("Page.enable");
   await client.send("Runtime.enable");
   await client.send("Network.enable");
+  await client.send("Fetch.enable", {patterns:[{urlPattern:"https://*",resourceType:"Image",requestStage:"Request"}]});
   await client.send("Emulation.setDeviceMetricsOverride", {
     width: 390,
     height: 844,
@@ -238,7 +268,7 @@ try {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     if (!loadedPortraits || loadedPortraits.total !== expectedPortraits ||
-        loadedPortraits.decoded !== expectedPortraits || loadedPortraits.failed.length) {
+        loadedPortraits.decoded !== expectedPortraits || loadedPortraits.failed.length || client.interceptionErrors.length) {
       const diagnosis = await client.send("Runtime.evaluate", {
         expression: `(() => {
           const shell = document.querySelector('[data-game="${game}"]');
@@ -250,7 +280,7 @@ try {
         })()`,
         returnByValue: true,
       });
-      throw new Error(`${game} failed iPhone pixel loading: ${JSON.stringify(loadedPortraits)} DOM=${JSON.stringify(diagnosis.result.value)} NetworkErrors=${JSON.stringify(client.networkErrors.slice(-20))} Responses=${JSON.stringify(client.networkResponses.filter(x=>/nba|wikimedia|hardaway|legit/.test(x.url||"")).slice(-20))}`);
+      throw new Error(`${game} failed iPhone pixel loading: ${JSON.stringify(loadedPortraits)} DOM=${JSON.stringify(diagnosis.result.value)} InterceptErrors=${JSON.stringify(client.interceptionErrors)} NetworkErrors=${JSON.stringify(client.networkErrors.slice(-20))} Responses=${JSON.stringify(client.networkResponses.filter(x=>/nba|wikimedia|hardaway|legit/.test(x.url||"")).slice(-20))}`);
     }
     // Ensure no successfully loaded NBA CDN silhouette remained in frame.
     const rendered = await client.send("Runtime.evaluate", {
@@ -269,7 +299,7 @@ try {
     if (rendered.result.value.some(image => !image.rect.width || !image.rect.height)) {
       throw new Error(`${game} contained clipped/zero-size image frames`);
     }
-    console.log(`PASS: ${game} loaded ${loadedPortraits.decoded} full NBA portraits on iPhone.`);
+    console.log(`PASS: ${game} loaded ${loadedPortraits.decoded} full independently-audited NBA portrait pixels on iPhone. Intercepted=${client.fulfilledImages}`);
     // Advance a real game control: this catches fixture renders that pass
     // static screenshots but have disconnected gameplay interactions.
     const interacted = await client.send("Runtime.evaluate", {
