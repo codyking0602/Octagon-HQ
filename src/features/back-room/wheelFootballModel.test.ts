@@ -282,7 +282,7 @@ describe("Wheel of Football current NFL + CFB model", () => {
       "Henry To'oTo'o",
     ]);
     expect(wheelPriorityJson.teams.IND.WR).toEqual([
-      "Keenan Allen", "Josh Downs", "Alec Pierce", "Darius Slayton",
+      "Keenan Allen", "Josh Downs", "Alec Pierce",
     ]);
     expect(wheelPriorityJson.teams.JAX.WR).toEqual([
       "Brian Thomas Jr.", "Travis Hunter", "Jakobi Meyers", "Parker Washington",
