@@ -842,18 +842,18 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
 
   // All nine previously untracked retained UFC legacy slots; opt-in preview only.
   "ufc:0:1": {
-    id: "millionaire-ufc-future-retained-holly-holm-rousey-193-q2", type: "title-upsets",
-    prompt: "Who ended Ronda Rousey's unbeaten MMA record by knockout at UFC 193 in November 2015?",
-    choices: ["Holly Holm", "Miesha Tate", "Amanda Nunes", "Cat Zingano"], answer: "Holly Holm",
-    statSheet: "The November 2015 Melbourne fight ended by a second-round head kick and follow-up punches.", explanation: "Holly Holm stopped previously undefeated Ronda Rousey 59 seconds into the second round at UFC 193 in Melbourne on November 14, 2015, claiming the bantamweight belt in one of MMA's biggest upsets.",
-    evidence: [{ authority: "UFC 193 official results", url: "https://www.ufc.com/news/ufc-193-rousey-vs-holm-final-results", supportingDetail: "Holly Holm stopped previously undefeated Ronda Rousey 59 seconds into the second round at UFC 193 in Melbourne on November 14, 2015, claiming the bantamweight belt in one of MMA's biggest upsets." }],
+    id: "millionaire-ufc-strickland-adesanya-ufc293-q2", type: "middleweight-title-upsets",
+    prompt: "Who upset Israel Adesanya by unanimous decision to win the UFC middleweight title at UFC 293 in Sydney?",
+    choices: ["Sean Strickland","Robert Whittaker","Dricus du Plessis","Jared Cannonier"], answer: "Sean Strickland",
+    statSheet: "All three judges scored the September 2023 championship fight 49–46.", explanation: "Sean Strickland defeated defending middleweight champion Israel Adesanya by unanimous decision at UFC 293 on September 9, 2023, in Sydney. All three judges scored the five-round title fight 49–46 for Strickland.",
+    evidence: [{authority: "UFC 293 official event results", url: "https://www.ufc.com/news/ufc-293-adesanya-vs-strickland-results-highlights-winner-interviews-sydney", supportingDetail: "Sean Strickland defeated defending middleweight champion Israel Adesanya by unanimous decision at UFC 293 on September 9, 2023, in Sydney. All three judges scored the five-round title fight 49–46 for Strickland."}],
   },
   "ufc:1:1": {
-    id: "millionaire-ufc-future-retained-weidman-silva-162-q2", type: "middleweight-shocks",
-    prompt: "Which undefeated contender knocked out Anderson Silva at UFC 162 to end Silva's historic middleweight reign?",
-    choices: ["Chris Weidman", "Chael Sonnen", "Vitor Belfort", "Michael Bisping"], answer: "Chris Weidman",
-    statSheet: "The challenger finished the champion at 1:18 of Round 2 in July 2013 after entering without a professional loss.", explanation: "Chris Weidman knocked out Anderson Silva at 1:18 of Round 2 in the July 6, 2013 UFC 162 middleweight championship match, ending Silva's long title reign in the American wrestler's first UFC title fight.",
-    evidence: [{ authority: "UFC 162 official event result", url: "https://www.ufc.com/event/ufc-162", supportingDetail: "Chris Weidman knocked out Anderson Silva at 1:18 of Round 2 in the July 6, 2013 UFC 162 middleweight championship match, ending Silva's long title reign in the American wrestler's first UFC title fight." }],
+    id: "millionaire-ufc-pena-nunes-ufc269-q2", type: "bantamweight-title-upsets",
+    prompt: "Who submitted Amanda Nunes at UFC 269 to end her women's bantamweight title reign?",
+    choices: ["Julianna Peña","Holly Holm","Valentina Shevchenko","Miesha Tate"], answer: "Julianna Peña",
+    statSheet: "The December 2021 Las Vegas upset ended by rear-naked choke in Round 2.", explanation: "Julianna Peña stunned Amanda Nunes in the UFC 269 co-main event on December 11, 2021, submitting the champion by rear-naked choke at 3:23 of Round 2 to claim the women's bantamweight title.",
+    evidence: [{authority: "UFC 269 official event results", url: "https://www.ufc.com/news/ufc-269-oliveira-vs-poirier-results-fight-night-highlights-winners-interviews", supportingDetail: "Julianna Peña stunned Amanda Nunes in the UFC 269 co-main event on December 11, 2021, submitting the champion by rear-naked choke at 3:23 of Round 2 to claim the women's bantamweight title."}],
   },
   "ufc:1:6": {
     id: "millionaire-ufc-future-retained-benson-henderson-preceded-pettis-q7", type: "lightweight-lineage",
@@ -863,11 +863,11 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "UFC lightweight title lineage", url: "https://www.ufc.com/news/ufc-lightweight-title-lineage-khabib-mcgregor-penn-poirier-oliveira", supportingDetail: "Anthony Pettis submitted incumbent lightweight champion Benson Henderson in Round 1 of UFC 164 on August 31, 2013. Henderson had previously held the belt after beating Frankie Edgar; Pettis' win began his 2013–15 UFC lightweight title reign." }],
   },
   "ufc:2:5": {
-    id: "millionaire-ufc-future-retained-nate-diaz-mcgregor-196-q6", type: "welterweight-upsets",
-    prompt: "Who submitted Conor McGregor with a rear-naked choke at UFC 196 after replacing Rafael dos Anjos on short notice?",
-    choices: ["Nate Diaz", "Dustin Poirier", "Khabib Nurmagomedov", "Chad Mendes"], answer: "Nate Diaz",
-    statSheet: "The finish came 4:12 into Round 2 during a March 2016 welterweight main event in Las Vegas.", explanation: "Nate Diaz submitted Conor McGregor via rear-naked choke at 4:12 of Round 2 at UFC 196 on March 5, 2016, after taking the fight on short notice and moving the bout to welterweight. It was one of the sport's signature 2016 upsets.",
-    evidence: [{ authority: "UFC 196 results", url: "https://www.ufc.com/news/ufc-196-results-and-news", supportingDetail: "Nate Diaz submitted Conor McGregor via rear-naked choke at 4:12 of Round 2 at UFC 196 on March 5, 2016, after taking the fight on short notice and moving the bout to welterweight. It was one of the sport's signature 2016 upsets." }],
+    id: "millionaire-ufc-ferguson-kevin-lee-ufc216-q6", type: "interim-lightweight-title-history",
+    prompt: "Who submitted Kevin Lee in Round 3 at UFC 216 to win the interim UFC lightweight championship?",
+    choices: ["Tony Ferguson","Dustin Poirier","Justin Gaethje","Eddie Alvarez"], answer: "Tony Ferguson",
+    statSheet: "The October 2017 main event ended with a triangle choke at T-Mobile Arena.", explanation: "Tony Ferguson submitted Kevin Lee by triangle choke in the third round at UFC 216 on October 7, 2017, to claim the interim lightweight championship. It marked Ferguson's tenth consecutive win in the promotion.",
+    evidence: [{authority: "UFC 216 official event recap", url: "https://www.ufc.com/news/ferguson-claims-interim-lightweight-belt-calls-out-mcgregor", supportingDetail: "Tony Ferguson submitted Kevin Lee by triangle choke in the third round at UFC 216 on October 7, 2017, to claim the interim lightweight championship. It marked Ferguson's tenth consecutive win in the promotion."}],
   },
   "ufc:3:1": {
     id: "millionaire-ufc-future-retained-joanna-loss-namajunas-217-q2", type: "strawweight-title-upsets",

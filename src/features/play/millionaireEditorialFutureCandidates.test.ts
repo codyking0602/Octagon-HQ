@@ -148,10 +148,10 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("reviews all nine formerly untracked legacy UFC preview question positions", () => {
     const checked = [
-      ["ufc:0:1", "Holly Holm", "https://www.ufc.com/news/ufc-193-rousey-vs-holm-final-results"],
-      ["ufc:1:1", "Chris Weidman", "https://www.ufc.com/event/ufc-162"],
+      ["ufc:0:1", "Sean Strickland", "https://www.ufc.com/news/ufc-293-adesanya-vs-strickland-results-highlights-winner-interviews-sydney"],
+      ["ufc:1:1", "Julianna Peña", "https://www.ufc.com/news/ufc-269-oliveira-vs-poirier-results-fight-night-highlights-winners-interviews"],
       ["ufc:1:6", "Benson Henderson", "https://www.ufc.com/news/ufc-lightweight-title-lineage-khabib-mcgregor-penn-poirier-oliveira"],
-      ["ufc:2:5", "Nate Diaz", "https://www.ufc.com/news/ufc-196-results-and-news"],
+      ["ufc:2:5", "Tony Ferguson", "https://www.ufc.com/news/ferguson-claims-interim-lightweight-belt-calls-out-mcgregor"],
       ["ufc:3:1", "Joanna Jedrzejczyk", "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results"],
       ["ufc:3:2", "Randy Couture", "https://www.ufc.com/news/history-two-division-champions-part-1-ufc-freedom-250"],
       ["ufc:4:5", "T.J. Dillashaw", "https://www.ufc.com/news/fight-night-dillashaw-vs-cruz-final-results"],
