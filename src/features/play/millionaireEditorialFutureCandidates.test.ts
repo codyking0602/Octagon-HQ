@@ -65,6 +65,32 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("ufc", 2)[6]!.prompt).toContain("Rich Franklin");
   });
 
+  it("retains sourced Stafford correction, Woodley title and UFC 217 final in future preview only", () => {
+    const corrections = [
+      ["nfl:0:5", "Matthew Stafford", "https://www.nfl.com/2025-all-pro-team-matthew-stafford-bijan-robinson-jaxon-smith-njigba-highlight-roster"],
+      ["ufc:2:1", "Tyron Woodley", "https://www.ufc.com/news/woodley-kos-lawler-one-take-title"],
+      ["ufc:1:7", "UFC 217", "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results"],
+    ] as const;
+    for (const [key, expected, url] of corrections) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q).toBeDefined();
+      expect(q.answer).toBe(expected);
+      expect(q.choices.filter(c => c === expected)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(expected));
+      expect(q.explanation).toContain(expected);
+      expect(q.explanation.length).toBeGreaterThan(110);
+      expect(q.evidence[0]?.url).toBe(url);
+      const [league, run, question] = key.split(":");
+      const original = millionaireDailyRun(league as "nfl" | "cfb" | "ufc", Number(run))[Number(question)]!;
+      expect(original.id).not.toBe(q.id);
+      expect(original.prompt).not.toBe(q.prompt);
+      if (key.endsWith(":7")) expect(q.statSheet).toBeNull();
+    }
+    expect(millionaireDailyRun("nfl", 0)[5]!.prompt).toContain("never been named first-team All-Pro");
+    expect(millionaireDailyRun("ufc", 2)[1]!.prompt).toContain("UFC 100");
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],

@@ -816,4 +816,30 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "UFC official results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2", supportingDetail: "UFC 299 official report confirms Jack Della Maddalena knocked out Gilbert Burns with a knee and elbows at 3:43 of Round 3." }],
   },
 
+  // Primary-sourced late-October retained historical spot corrections; future preview only.
+  "nfl:0:5": {
+    id: "millionaire-nfl-future-stafford-2025-ap-all-pro-q6", type: "current-era-awards",
+    prompt: "Which quarterback earned his first AP first-team All-Pro selection for the 2025 NFL season?",
+    choices: ["Matthew Stafford", "Drake Maye", "Josh Allen", "Lamar Jackson"], answer: "Matthew Stafford",
+    statSheet: "The 17th-year veteran led the league with 4,707 passing yards and 46 touchdowns.",
+    explanation: "Los Angeles Rams quarterback Matthew Stafford earned his first Associated Press first-team All-Pro honor for the 2025 season, announced January 2026, after throwing for an NFL-leading 4,707 yards and 46 touchdowns. Drake Maye earned second-team honors; Josh Allen received another first-team vote and Lamar Jackson made the first team for 2024, not 2025.",
+    evidence: [{ authority: "Associated Press via NFL", url: "https://www.nfl.com/2025-all-pro-team-matthew-stafford-bijan-robinson-jaxon-smith-njigba-highlight-roster", supportingDetail: "AP/NFL All-Pro announcement confirms Stafford was first-team quarterback in 2025, his first selection in 17 seasons; Maye was second team, Jackson previous year." }],
+  },
+  "ufc:2:1": {
+    id: "millionaire-ufc-future-woodley-lawler-ufc201-q2", type: "welterweight-title-changes",
+    prompt: "Who knocked out Robbie Lawler in the opening round of UFC 201 to capture the welterweight championship?",
+    choices: ["Tyron Woodley", "Stephen Thompson", "Carlos Condit", "Johny Hendricks"], answer: "Tyron Woodley",
+    statSheet: "An overhand right ended the July 2016 Atlanta main event after just over two minutes.",
+    explanation: "Tyron Woodley knocked out Robbie Lawler at 2:12 of Round 1 in the UFC 201 main event on July 30, 2016, claiming the UFC welterweight championship. The former Strikeforce contender became the ninth undisputed champion in the 170-pound division.",
+    evidence: [{ authority: "UFC official results", url: "https://www.ufc.com/news/woodley-kos-lawler-one-take-title", supportingDetail: "UFC reports Woodley knocked out Lawler in Round 1 at 2:12 in Atlanta in July 2016 to become welterweight champion." }],
+  },
+  "ufc:1:7": {
+    id: "millionaire-ufc-future-ufc217-triple-title-changes-q8", type: "ufc-card-history",
+    prompt: "Which UFC pay-per-view produced THREE new champions on one night: Georges St-Pierre, TJ Dillashaw and Rose Namajunas?",
+    choices: ["UFC 217", "UFC 205", "UFC 259", "UFC 268"], answer: "UFC 217",
+    statSheet: null,
+    explanation: "At UFC 217 on November 4, 2017, in Madison Square Garden, Georges St-Pierre submitted Michael Bisping for the middleweight title, TJ Dillashaw stopped Cody Garbrandt for the bantamweight belt, and Rose Namajunas stopped Joanna Jędrzejczyk to capture strawweight gold. Three championship fights produced three new champions.",
+    evidence: [{ authority: "UFC official event recap", url: "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results", supportingDetail: "UFC 217 results confirm St-Pierre, Dillashaw and Namajunas each dethroned the champion in their championship fights on November 4, 2017." }],
+  },
+
 };
