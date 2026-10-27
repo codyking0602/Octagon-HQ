@@ -18,21 +18,21 @@ function q8(
   return { id, type, prompt, choices, answer, explanation, statSheet: null, evidence: evidence ? [evidence] : [] };
 }
 export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
-  // Replace arcane Craig Morton multi-franchise trivia with an unforgettable 2011-season playoff moment.
+  // Replace Craig Morton trivia with the 2021-season AFC title overtime turnover.
   "nfl:3:7": q8(
-    "millionaire-nfl-future-demaryius-tebow-2012-ot-q8", "playoff-walkoffs",
-    "Which Broncos receiver caught Tim Tebow's 80-yard walk-off touchdown on the FIRST play of overtime against Pittsburgh in January 2012?",
-    ["Demaryius Thomas", "Eric Decker", "Eddie Royal", "Brandon Lloyd"], "Demaryius Thomas",
-    "Demaryius Thomas caught an 80-yard pass from Tim Tebow on the first overtime play in the January 8, 2012 AFC wild-card game, giving Denver a 29–23 victory over Pittsburgh.",
-    { authority: "Denver Broncos", url: "https://www.denverbroncos.com/news/broncos-advance-with-postseason-thriller-6775656", supportingDetail: "Official Broncos recap confirms Tebow-to-Thomas, an 80-yard touchdown on the first play of overtime, and a 29–23 win." },
+    "millionaire-nfl-future-vonn-bell-bengals-afc-title-2022-q8", "afc-championship-turnovers",
+    "Which Bengals safety intercepted Patrick Mahomes in overtime to set up Cincinnati's January 2022 AFC title victory?",
+    ["Vonn Bell", "Jessie Bates III", "Mike Hilton", "Chidobe Awuzie"], "Vonn Bell",
+    "Jessie Bates III tipped Mahomes' overtime pass, and Vonn Bell secured the interception. The turnover led to Evan McPherson's game-winning field goal as Cincinnati beat Kansas City 27–24.",
+    { authority: "NFL", url: "https://amp.nfl.com/news/bengals-defense-never-batted-an-eye-chiefs-bell-mahomes-hubbard-bates", supportingDetail: "NFL confirms Bates deflected Mahomes' deep ball, Bell intercepted it in overtime, and Cincinnati won the AFC Championship 27–24." },
   ),
-  // Replace sixth-QB-of-the-1983-draft trivia with a famous Super Bowl LI finish.
+  // Replace 1983 draft trivia with a memorable Super Bowl LIV comeback.
   "nfl:4:7": q8(
-    "millionaire-nfl-future-james-white-super-bowl-li-ot-q8", "super-bowl-walkoffs",
-    "Which Patriots running back scored the overtime touchdown that completed the 28–3 comeback against Atlanta in Super Bowl LI?",
-    ["James White", "LeGarrette Blount", "Dion Lewis", "Rex Burkhead"], "James White",
-    "James White scored on a two-yard touchdown run on New England's first overtime drive to beat Atlanta 34–28 in Super Bowl LI on February 5, 2017.",
-    { authority: "New England Patriots", url: "https://www.patriots.com/press-room/super-bowl-li", supportingDetail: "Official Patriots Super Bowl LI recap identifies White's two-yard overtime winner in the 34–28 comeback." },
+    "millionaire-nfl-future-damien-williams-sb-liv-double-td-q8", "super-bowl-comebacks",
+    "Which Chiefs running back scored BOTH a receiving touchdown and a rushing touchdown in the fourth quarter of Super Bowl LIV?",
+    ["Damien Williams", "LeSean McCoy", "Darwin Thompson", "Anthony Sherman"], "Damien Williams",
+    "Damien Williams caught Patrick Mahomes' go-ahead five-yard touchdown pass, then sealed Kansas City's 31–20 Super Bowl LIV win over San Francisco with a 38-yard rushing touchdown.",
+    { authority: "Kansas City Chiefs", url: "https://www.chiefs.com/news/upon-further-review-10-quick-facts-following-the-chiefs-victory-in-super-bowl-li", supportingDetail: "Official Chiefs account confirms Williams caught a fourth-quarter TD pass and scored the late rushing TD in Super Bowl LIV." },
   ),
   "nfl:0:7": q8(
     "millionaire-nfl-future-dejean-super-bowl-lix-q8", "super-bowl-pick-six",

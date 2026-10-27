@@ -17,8 +17,8 @@ function normalized(text: string) {
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
   it("uses two source-backed iconic future-only NFL finals instead of obscure stat trivia", () => {
     for (const [key, expected, fragment] of [
-      ["nfl:3:7", "Demaryius Thomas", "FIRST play of overtime"],
-      ["nfl:4:7", "James White", "28–3 comeback"],
+      ["nfl:3:7", "Vonn Bell", "January 2022 AFC title"],
+      ["nfl:4:7", "Damien Williams", "Super Bowl LIV"],
     ] as const) {
       const q = MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
       expect(q.answer).toBe(expected);
@@ -54,13 +54,13 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("cfb", 6)[1]!.prompt).toContain("2011 national championship");
   });
 
-  it("replaces same-run repeated heavyweight subject with UFC 300 Holloway finale", () => {
+  it("replaces same-run repeated heavyweight subject with Poirier-Chandler UFC 281", () => {
     const q = millionaireFutureEditorialDailyRun("ufc", 10)[3]!;
-    expect(q.prompt).toContain("UFC 300");
-    expect(answer(q)).toBe("Max Holloway");
-    expect(q.statSheet).not.toContain("Max Holloway");
+    expect(q.prompt).toContain("UFC 281");
+    expect(answer(q)).toBe("Dustin Poirier");
+    expect(q.statSheet).not.toContain("Dustin Poirier");
     expect(q.choices.map(choice => choice.text)).toEqual([
-      "Max Holloway", "Dustin Poirier", "Charles Oliveira", "Dan Hooker",
+      "Dustin Poirier", "Justin Gaethje", "Charles Oliveira", "Tony Ferguson",
     ]);
   });
 
