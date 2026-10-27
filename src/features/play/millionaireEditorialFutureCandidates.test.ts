@@ -149,7 +149,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("reviews all nine formerly untracked legacy UFC preview question positions", () => {
     const checked = [
       ["ufc:0:1", "Alex Pereira", "https://www.ufc.com/news/ufc-281-adesanya-vs-pereira-esparza-vs-zhang-results-winner-interviews"],
-      ["ufc:1:1", "Julianna Peña", "https://www.ufc.com/news/ufc-269-oliveira-vs-poirier-results-fight-night-highlights-winners-interviews"],
+      ["ufc:1:1", "Jon Jones", "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-309-jones-vs-miocic"],
       ["ufc:1:6", "Benson Henderson", "https://www.ufc.com/news/ufc-lightweight-title-lineage-khabib-mcgregor-penn-poirier-oliveira"],
       ["ufc:2:5", "Tony Ferguson", "https://www.ufc.com/news/ferguson-claims-interim-lightweight-belt-calls-out-mcgregor"],
       ["ufc:3:1", "Joanna Jedrzejczyk", "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results"],

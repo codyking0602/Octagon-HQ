@@ -853,11 +853,10 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{authority: "UFC 281 official results", url: "https://www.ufc.com/news/ufc-281-adesanya-vs-pereira-esparza-vs-zhang-results-winner-interviews", supportingDetail: "Alex Pereira stopped Israel Adesanya by TKO with punches 2:01 into Round 5 of the UFC 281 main event on November 12, 2022. Pereira captured the middleweight championship in only his fourth UFC appearance after rallying late."}],
   },
   "ufc:1:1": {
-    id: "millionaire-ufc-pena-nunes-ufc269-q2", type: "bantamweight-title-upsets",
-    prompt: "Who submitted Amanda Nunes at UFC 269 to end her women's bantamweight title reign?",
-    choices: ["Julianna Peña","Holly Holm","Valentina Shevchenko","Miesha Tate"], answer: "Julianna Peña",
-    statSheet: "The December 2021 Las Vegas upset ended by rear-naked choke in Round 2.", explanation: "Julianna Peña stunned Amanda Nunes in the UFC 269 co-main event on December 11, 2021, submitting the champion by rear-naked choke at 3:23 of Round 2 to claim the women's bantamweight title.",
-    evidence: [{authority: "UFC 269 official event results", url: "https://www.ufc.com/news/ufc-269-oliveira-vs-poirier-results-fight-night-highlights-winners-interviews", supportingDetail: "Julianna Peña stunned Amanda Nunes in the UFC 269 co-main event on December 11, 2021, submitting the champion by rear-naked choke at 3:23 of Round 2 to claim the women's bantamweight title."}],
+    id: "millionaire-ufc-jones-miocic-ufc309-q2", type: "heavyweight-title-finishes",
+    prompt: "Who stopped Stipe Miocic with a spinning back kick and punches to defend the heavyweight title at UFC 309?", choices: ["Jon Jones","Francis Ngannou","Tom Aspinall","Daniel Cormier"], answer: "Jon Jones",
+    statSheet: "The November 2024 fight at Madison Square Garden ended in Round 3.", explanation: "Jon Jones defended the UFC heavyweight championship by stopping Stipe Miocic with a spinning back kick followed by punches at 4:29 of Round 3 at UFC 309 on November 16, 2024. Miocic announced his retirement after the bout.",
+    evidence: [{authority: "UFC 309 official results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-309-jones-vs-miocic", supportingDetail: "Jon Jones defended the UFC heavyweight championship by stopping Stipe Miocic with a spinning back kick followed by punches at 4:29 of Round 3 at UFC 309 on November 16, 2024. Miocic announced his retirement after the bout."}],
   },
   "ufc:1:6": {
     id: "millionaire-ufc-future-retained-benson-henderson-preceded-pettis-q7", type: "lightweight-lineage",
