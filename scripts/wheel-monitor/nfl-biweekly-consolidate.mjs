@@ -54,9 +54,16 @@ const c=data.contracts;
 if(c){
   if(!["unchanged","contract-fact-review-required","metadata-review-required","identity-review-blocked"].includes(c.status))
     blockers.push("contracts:"+String(c.status));
-  for(const row of c.changes??[])add(row.team,row.player,"contracts",row.differences.join(", "),row.reviewKind==="contract-fact"?"high":"medium",row);
+  // Age/position metadata differences are reported, not editorial contract changes.
+  const material=(c.changes??[]).filter(row=>row.reviewKind==="contract-fact");
+  const metadata=(c.changes??[]).filter(row=>row.reviewKind!=="contract-fact");
+  for(const row of material)add(row.team,row.player,"contracts",row.differences.join(", "),"high",row);
   for(const row of c.transfers??[])add(row.fromTeam,row.player,"transfers","unconfirmed-OTC-transfer","high",row);
-  counts.contractChanges=c.summary?.changed??null;counts.contractTransfers=c.transfers?.length??0;
+  counts.contractMaterialChanges=material.length;
+  counts.contractMetadataOnly=metadata.length;
+  counts.contractMissingIdentities=c.summary?.missing??null;
+  counts.contractChanges=material.length;
+  counts.contractTransfers=c.transfers?.length??0;
   if(c.sourceIdentityCompletenessCertified===false)blockers.push("contracts:source-identity-completeness-not-certified");
 }
 const coach=data.coaches;
