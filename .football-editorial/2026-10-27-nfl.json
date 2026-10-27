@@ -115,11 +115,7 @@
     "game": {
       "away_team": "Cleveland Browns",
       "home_team": "Pittsburgh Steelers",
-      "kickoff_at": "2026-11-01T12:00:00-06:00",
-      "header_asset_path": "/assets/football/weekly/2026-10-27/nfl/game-header.webp",
-      "header_photo_sources": [
-        "https://seatgeekimages.com/matchup/v3_3362f95b/2073/2056/600x600.jpg"
-      ]
+      "kickoff_at": "2026-11-01T12:00:00-06:00"
     },
     "editorial": {
       "source_urls": [
@@ -127,94 +123,30 @@
         "https://www.clevelandbrowns.com/news/deshaun-watson-records-first-300-yard-passing-game-with-browns-by-the-numbers",
         "https://www.steelers.com/news/metcalf-is-the-player-of-the-week",
         "https://www.steelers.com/team/stats/",
-        "https://www.steelers.com/team/depth-chart/"
+        "https://www.steelers.com/team/depth-chart/",
+        "https://www.clevelandbrowns.com/game-day/2026/reg-week4/browns-vs-steelers/recap",
+        "https://www.clevelandbrowns.com/news/browns-announce-the-2026-schedule",
+        "https://www.steelers.com/news/steelers-edged-by-browns-27-24"
       ],
       "breakdown": {
         "setup": [
-          "Cleveland and Pittsburgh renew their AFC North rivalry with matching 5–2 records, and the rematch comes a month after the Browns' 27–24 win on October 1. This time the Steelers have the home field and a chance to answer the earlier result.",
-          "The Browns bring Deshaun Watson's improving passing production and a hard-running Quinshon Judkins, while Pittsburgh leans on Aaron Rodgers, Jaylen Warren and DK Metcalf. Field position and protection could decide another close divisional contest."
+          "The Browns and Steelers renew their AFC North rivalry Sunday at 1 p.m. ET in Pittsburgh with identical 5–2 records. Cleveland won the October 1 meeting 27–24 on Andre Szmyt's 56-yard field goal with 10 seconds left, after Aaron Rodgers erased an 11-point deficit. The rematch shifts to Acrisure Stadium, with Deshaun Watson and Quinshon Judkins trying to keep the Browns on schedule against a Steelers defense eager to force longer downs."
         ],
         "things": [
           {
-            "title": "Rodgers against Cleveland's rush",
-            "body": "Cleveland's front can make even quick-release quarterback Aaron Rodgers uncomfortable. Pittsburgh must avoid long third downs and create safe outlets for its backs and tight ends before pressure arrives.",
-            "edge": "Even"
+            "title": "PITTSBURGH'S PASS RUSH VS. WATSON",
+            "body": "Cleveland's protection has been vulnerable when the offense slips behind schedule. Watson needs quick answers and manageable third downs against a Pittsburgh front that can turn hurried throws into turnovers. In the first meeting, the Browns built their lead by sustaining drives and kept their final possession clean enough to set up the winning kick."
           },
           {
-            "title": "Judkins on early downs",
-            "body": "Quinshon Judkins has shown he can finish drives and create tough yards. Cleveland will look to build favorable second downs rather than forcing Watson into constant obvious passing situations.",
-            "edge": "Cleveland Browns"
+            "title": "RODGERS AND METCALF LOOK FOR EXPLOSIVES",
+            "body": "Rodgers threw three touchdowns in the first meeting and DK Metcalf topped 100 receiving yards. Cleveland has to keep Pittsburgh's downfield passing game from creating short scoring drives while still generating pressure. The Steelers need those strikes to supplement an offense that has had uneven stretches sustaining possessions."
           },
           {
-            "title": "Metcalf's big-play threat",
-            "body": "DK Metcalf produced 115 receiving yards in their October meeting, including key second-half gains. Cleveland must limit his explosive receptions while accounting for Pittsburgh's intermediate targets.",
-            "edge": "Pittsburgh Steelers"
+            "title": "JUDKINS AND WARREN SET THE EARLY-DOWN TONE",
+            "body": "Both teams have productive running backs in Quinshon Judkins and Jaylen Warren, but neither wants to spend the afternoon facing predictable third-and-long. Cleveland can protect Watson by gaining useful yards on first down; Pittsburgh can ease Rodgers' workload by finding Warren touches before the Browns' front gets upfield."
           }
         ],
-        "paths_to_win": [
-          {
-            "team": "Cleveland Browns",
-            "body": "Win the line of scrimmage with Judkins, keep Watson clean and pressure Rodgers without allowing a long catch-and-run. Recreating the defensive stops that helped win the first matchup would give Cleveland the edge late."
-          },
-          {
-            "team": "Pittsburgh Steelers",
-            "body": "Balance Warren's touches with quick throws, get Metcalf involved early, and keep turnovers down. If the defense gets Cleveland behind schedule, Pittsburgh can control field position and make its home-field advantage matter."
-          }
-        ],
-        "players_to_watch": [
-          {
-            "team": "Cleveland Browns",
-            "players": [
-              {
-                "name": "Deshaun Watson",
-                "position": "QB",
-                "body": "His decisions against the Steelers' pressure determine Cleveland's passing efficiency."
-              },
-              {
-                "name": "Quinshon Judkins",
-                "position": "RB",
-                "body": "The Browns' featured runner helps set the pace and convert short-yardage situations."
-              },
-              {
-                "name": "Myles Garrett",
-                "position": "EDGE",
-                "body": "Cleveland's pass-rush centerpiece can disrupt Rodgers' preferred timing."
-              }
-            ]
-          },
-          {
-            "team": "Pittsburgh Steelers",
-            "players": [
-              {
-                "name": "Aaron Rodgers",
-                "position": "QB",
-                "body": "The veteran must diagnose blitzes and protect the ball against Cleveland."
-              },
-              {
-                "name": "Jaylen Warren",
-                "position": "RB",
-                "body": "His burst as a runner and receiving outlet gives Pittsburgh balance."
-              },
-              {
-                "name": "DK Metcalf",
-                "position": "WR",
-                "body": "The downfield target already hurt Cleveland in the teams' October game."
-              }
-            ]
-          }
-        ],
-        "unit_edges": [
-          {
-            "title": "Cleveland front vs Pittsburgh blockers",
-            "body": "Cleveland can dictate down-and-distance if its defensive line creates early penetration. Pittsburgh has to protect Rodgers and get Warren into space before the Browns' edge pressure closes in.",
-            "edge": "Even"
-          },
-          {
-            "title": "Pittsburgh front vs Cleveland rushing game",
-            "body": "Pittsburgh's run fits and linebacker tackling are tested by Judkins. If the Steelers force Watson into longer dropbacks, the defense can attack the passer instead of chasing the run.",
-            "edge": "Even"
-          }
-        ]
+        "bottom_line": "Their first meeting swung from a Cleveland second-quarter surge to a Pittsburgh fourth-quarter comeback, then one decisive field goal. This rematch has similar margins: whichever front controls early downs and protects its quarterback will dictate the pace. Turnover avoidance and red-zone finishing matter more here than raw yardage, especially if the teams trade long possessions into the fourth."
       }
     }
   }
