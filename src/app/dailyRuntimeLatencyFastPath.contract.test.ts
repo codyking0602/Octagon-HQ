@@ -118,6 +118,20 @@ describe("all-sport official Daily action latency safeguards", () => {
     }
   });
 
+  it("publishes October 27 Football Wavelength without importing all Football Daily banks", () => {
+    const publishing = edge.slice(
+      edge.indexOf("function loadFootballPublicationRuntime("),
+      edge.indexOf("function loadFootballAdvanceRuntime("),
+    );
+    expect(publishing).toContain('gameType === "wavelength"');
+    expect(publishing).toContain('import("./football-wavelength-publication.generated.mjs")');
+    expect(bundler).toContain('entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWavelength.ts")');
+    expect(bundler).toContain('fileName: "football-wavelength-publication.generated.mjs"');
+    expect(bundler).toContain('day: "2026-10-27", gameType: "wavelength"');
+    const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
+    expect(deploy).toContain("test -f supabase/functions/daily-challenge-runtime/football-wavelength-publication.generated.mjs");
+  });
+
   it("isolates Millionaire answer logic from all-game publication and preserves outcome parity", () => {
     expect(bundler).toContain('fileName: "millionaire-advance.generated.mjs"');
     expect(edge).toContain('import("./millionaire-advance.generated.mjs")');
