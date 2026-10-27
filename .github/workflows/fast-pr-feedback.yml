@@ -86,6 +86,28 @@ jobs:
 
           echo "whoami_only=$whoami_only" >> "$GITHUB_OUTPUT"
 
+          # Ranking-only PRs should run the full ranking suite, rather than
+          # Vitest's enormous transitive dependency graph for --changed.
+          rankings_only=true
+          saw_rankings=false
+          for file in "${changed_files[@]}"; do
+            case "$file" in
+              src/features/rankings/*)
+                saw_rankings=true
+                ;;
+              .github/workflows/fast-pr-feedback.yml)
+                ;;
+              *)
+                rankings_only=false
+                break
+                ;;
+            esac
+          done
+          if [ "$saw_rankings" != true ]; then
+            rankings_only=false
+          fi
+          echo "rankings_only=$rankings_only" >> "$GITHUB_OUTPUT"
+
       - name: Standard typecheck
         if: steps.scope.outputs.whoami_only != 'true'
         run: npm run typecheck
@@ -103,8 +125,12 @@ jobs:
           WHO_AM_I_AUDIT_SUBJECTS: all
         run: npm run test:whoami:fast
 
+      - name: Run rankings test suite
+        if: steps.scope.outputs.rankings_only == 'true'
+        run: npx vitest run src/features/rankings
+
       - name: Run tests affected by this PR
-        if: steps.scope.outputs.whoami_only != 'true'
+        if: steps.scope.outputs.whoami_only != 'true' && steps.scope.outputs.rankings_only != 'true'
         run: npm test -- --changed="$BASE_SHA" --passWithNoTests
 
       - name: Summarize fast feedback

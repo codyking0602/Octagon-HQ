@@ -143,8 +143,13 @@ function buildLedger() {
     slugs.add(subject.slug);
     identities.add(identity);
   }
-  if (subjects.length !== ufcFactualExpansion.targetTotalSubjects) {
-    throw new Error(`UFC factual ledger has ${subjects.length} subjects; expected ${ufcFactualExpansion.targetTotalSubjects}.`);
+  // The generated expansion target is a snapshot from the time it was pinned.
+  // New V2 ranking additions join the ranked core without regenerating or
+  // silently dropping any of the recognizability-expansion subjects.
+  const rankedDelta = canonicalRankingInputs.counts.fighters - ufcFactualExpansion.rankedSubjectCountAtGeneration;
+  const expectedTotal = ufcFactualExpansion.targetTotalSubjects + rankedDelta;
+  if (subjects.length !== expectedTotal) {
+    throw new Error(`UFC factual ledger has ${subjects.length} subjects; expected ${expectedTotal}.`);
   }
   return subjects;
 }

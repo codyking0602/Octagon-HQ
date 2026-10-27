@@ -38525,6 +38525,80 @@
         },
         "reason": "no-unique-source-match"
       }
+    },
+    "natalia-silva": {
+      "2022-06-18-jasmine-jasudavicius": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      },
+      "2022-11-19-tereza-bleda": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      },
+      "2023-05-20-victoria-leonardo": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      },
+      "2023-08-19-andrea-lee": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      },
+      "2024-02-03-viviane-araujo": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      },
+      "2024-09-07-jessica-andrade": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      },
+      "2025-05-10-alexa-grasso": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      },
+      "2026-01-24-rose-namajunas": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      },
+      "2026-10-03-wang-cong": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "no-unique-source-match"
+      }
     }
   }
 }
