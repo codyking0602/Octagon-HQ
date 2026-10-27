@@ -14,11 +14,22 @@ describe("UFC factual ledger", () => {
     expect(ufcFactualExpansion.targetTotalSubjects).toBe(
       ufcFactualExpansion.rankedSubjectCountAtGeneration + ufcFactualExpansion.expansionSubjectCount,
     );
-    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount);
+    // Ciryl Gane was previously in the expansion, but now comes from the
+    // canonical ranked ledger; his pinned expansion source is not deleted.
+    const promoted = ufcFactualExpansion.subjects.filter((subject) =>
+      ranked.some((fighter) => fighter.id === subject.id),
+    );
+    expect(promoted.map((subject) => subject.id)).toEqual(["ufc:ciryl-gane"]);
+    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount - promoted.length);
     expect(ufcFactualLedgerSubjects).toHaveLength(
       ufcFactualExpansion.targetTotalSubjects
-        + canonicalRankingInputs.counts.fighters - ufcFactualExpansion.rankedSubjectCountAtGeneration,
+        + canonicalRankingInputs.counts.fighters
+        - ufcFactualExpansion.rankedSubjectCountAtGeneration
+        - promoted.length,
     );
+    expect(ufcFactualLedgerSubjects.filter((subject) => subject.slug === "ciryl-gane")).toEqual([
+      expect.objectContaining({ name: "Ciryl Gane", scope: "ranked-core", gender: "men" }),
+    ]);
     expect(ufcFactualLedgerSubjects.filter((subject) => subject.slug === "natalia-silva")).toEqual([
       expect.objectContaining({ name: "Natalia Silva", scope: "ranked-core", gender: "women" }),
     ]);
