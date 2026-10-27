@@ -7,6 +7,7 @@ import type { TodayChallengeProjection } from "../../src/features/play/todayChal
 import "../../src/styles/tokens.css";
 import "../../src/styles/global.css";
 import "../../src/styles/play.css";
+import "../../src/styles/hit-the-number.css";
 
 type Json = Record<string, unknown>;
 function projection(gameType: "find_leader" | "hit_the_number" | "higher_lower", setup: Json, state: Json): TodayChallengeProjection {
