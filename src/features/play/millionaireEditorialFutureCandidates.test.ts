@@ -1142,8 +1142,8 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("replaces twelve inverse or identical active UFC Bar Trivia facts only in future preview", () => {
     const updated: readonly [string, string][] = [
       ["ufc:0:2", "Who submitted Renato Moic"],
-      ["ufc:0:3", "Who upset Israel Adesanya"],
-      ["ufc:0:4", "Who submitted Amanda Nune"],
+      ["ufc:0:3", "Who stopped Curtis Blaydes"],
+      ["ufc:0:4", "Who submitted Rose Namajunas"],
       ["ufc:0:5", "Who defended the UFC bant"],
       ["ufc:1:3", "Who stopped Jamahal Hill "],
       ["ufc:1:4", "Who submitted Justin Gaet"],
@@ -1151,7 +1151,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:2:0", "Who knocked out Jamahal H"],
       ["ufc:2:3", "Who submitted Valentina S"],
       ["ufc:2:4", "Who knocked out Joanna Ję"],
-      ["ufc:3:0", "Who scored the fifth-roun"],
+      ["ufc:3:0", "Who landed the jumping spi"],
       ["ufc:3:3", "Who submitted Holly Holm "]
     ];
     expect(updated).toHaveLength(12);
@@ -1414,6 +1414,26 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(replacement.evidence).toHaveLength(2);
     expect(replacement.evidence[0]!.url).toContain("collegefootballplayoff.com");
     expect(millionaireDailyRun("cfb", 3)[6]!.prompt).toContain("AP poll in 2003");
+  });
+
+  it("preserves six new sourced UFC preview-only answers that replace active Bar Trivia same-fact duplicates", () => {
+    for (const [run, questionIndex, correct, marker] of [
+      [7, 0, "Conor McGregor", "UFC 194"],
+      [8, 0, "Amanda Nunes", "UFC 232"],
+      [10, 0, "Francis Ngannou", "UFC 260"],
+      [0, 3, "Tom Aspinall", "UFC 304"],
+      [0, 4, "Carla Esparza", "2014 TUF 20"],
+      [3, 0, "Joaquin Buckley", "2020"],
+    ] as const) {
+      const question = millionaireFutureEditorialDailyRun("ufc", run)[questionIndex]!;
+      expect(answer(question)).toBe(correct);
+      expect(question.prompt).toContain(marker);
+      expect(question.choices).toHaveLength(4);
+      expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
+      expect(normalized(question.statSheet ?? "")).not.toContain(normalized(correct));
+      expect(question.explanation).toContain(correct);
+      expect(question.explanation.length).toBeGreaterThan(100);
+    }
   });
 
 });

@@ -364,22 +364,22 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Active Bar Trivia fact collision retired from future-preview run 1 Q4.
   "ufc:0:3": {
     id: "millionaire-ufc-future-rewrite-r1-q4",
-    type: "middleweight-upsets",
-    prompt: "Who upset Israel Adesanya by unanimous decision to win the UFC middleweight title at UFC 293?",
-    choices: ["Sean Strickland","Dricus du Plessis","Robert Whittaker","Jared Cannonier"], answer: "Sean Strickland",
-    statSheet: "All three judges scored the Sydney main event 49–46 for the challenger.",
-    explanation: "Sean Strickland defeated Israel Adesanya by unanimous decision (49–46 on all three cards) at UFC 293 in Sydney on September 9, 2023, taking the middleweight championship.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-293-adesanya-vs-strickland-results-highlights-winner-interviews-sydney", supportingDetail: "Sean Strickland defeated Israel Adesanya by unanimous decision (49–46 on all three cards) at UFC 293 in Sydney on September 9, 2023, taking the middleweight championship." }],
+    type: "heavyweight-title-rematches",
+    prompt: "Who stopped Curtis Blaydes in just one minute during their interim heavyweight title rematch at UFC 304?",
+    choices: ["Tom Aspinall","Ciryl Gane","Sergei Pavlovich","Derrick Lewis"], answer: "Tom Aspinall",
+    statSheet: "The rematch took place in Manchester in July 2024.",
+    explanation: "Tom Aspinall stopped Curtis Blaydes by strikes at exactly 1:00 of Round 1 at UFC 304 in Manchester, retaining the interim UFC heavyweight championship. Their earlier 2022 bout ended when Aspinall suffered a knee injury.",
+    evidence: [{ authority: "UFC official event/results", url: "https://www.ufc.com/news/official-judges-scorecards-ufc-304-edwards-vs-muhammad-2", supportingDetail: "Tom Aspinall stopped Curtis Blaydes by strikes at exactly 1:00 of Round 1 at UFC 304 in Manchester, retaining the interim UFC heavyweight championship. Their earlier 2022 bout ended when Aspinall suffered a knee injury." }],
   },
   // Active Bar Trivia fact collision retired from future-preview run 1 Q5.
   "ufc:0:4": {
     id: "millionaire-ufc-future-rewrite-r1-q5",
-    type: "championship-upsets",
-    prompt: "Who submitted Amanda Nunes to win the women's bantamweight championship at UFC 269?",
-    choices: ["Julianna Peña","Holly Holm","Raquel Pennington","Miesha Tate"], answer: "Julianna Peña",
-    statSheet: "The dramatic Las Vegas upset ended by rear-naked choke in Round 2.",
-    explanation: "Julianna Peña shocked Amanda Nunes with a rear-naked choke at 3:23 of Round 2 at UFC 269 in December 2021 to claim the UFC women's bantamweight championship.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/10-biggest-best-upsets-2021-pena-poirier-dariush-blachowicz?language_content_entity=en", supportingDetail: "Julianna Peña shocked Amanda Nunes with a rear-naked choke at 3:23 of Round 2 at UFC 269 in December 2021 to claim the UFC women's bantamweight championship." }],
+    type: "inaugural-strawweight-championship",
+    prompt: "Who submitted Rose Namajunas in the 2014 TUF 20 Finale to become the first UFC strawweight champion?",
+    choices: ["Carla Esparza","Joanna Jędrzejczyk","Jessica Penne","Tecia Torres"], answer: "Carla Esparza",
+    statSheet: "The title was decided with a rear-naked choke in Round 3.",
+    explanation: "Carla Esparza submitted Rose Namajunas by rear-naked choke in the third round of The Ultimate Fighter 20 Finale on December 12, 2014, becoming the UFC's inaugural women's strawweight champion.",
+    evidence: [{ authority: "UFC official event/results", url: "https://www.ufc.com/news/wire-wire-esparza-wins-strawweight-crown", supportingDetail: "Carla Esparza submitted Rose Namajunas by rear-naked choke in the third round of The Ultimate Fighter 20 Finale on December 12, 2014, becoming the UFC's inaugural women's strawweight champion." }],
   },
   // Active Bar Trivia fact collision retired from future-preview run 1 Q6.
   "ufc:0:5": {
@@ -455,12 +455,12 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Active Bar Trivia fact collision retired from future-preview run 4 Q1.
   "ufc:3:0": {
     id: "millionaire-ufc-future-rewrite-r4-q1",
-    type: "welterweight-comebacks",
-    prompt: "Who scored the fifth-round head-kick knockout of Kamaru Usman at UFC 278?",
-    choices: ["Leon Edwards","Colby Covington","Gilbert Burns","Jorge Masvidal"], answer: "Leon Edwards",
-    statSheet: "The challenger was behind on the judges' scorecards late in the title fight.",
-    explanation: "Leon Edwards knocked out Kamaru Usman with a left high kick at 4:04 of Round 5 at UFC 278 in August 2022, winning the UFC welterweight title.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-278-usman-vs-edwards-2-results-highlights-winner-interviews-salt-lake-city", supportingDetail: "Leon Edwards knocked out Kamaru Usman with a left high kick at 4:04 of Round 5 at UFC 278 in August 2022, winning the UFC welterweight title." }],
+    type: "viral-knockouts",
+    prompt: "Who landed the jumping spinning-back-kick knockout of Impa Kasanganay in October 2020?",
+    choices: ["Joaquin Buckley","Kevin Holland","Michel Pereira","Stephen Thompson"], answer: "Joaquin Buckley",
+    statSheet: "The viral finish occurred after the opponent caught a kick in Round 2.",
+    explanation: "Joaquin Buckley knocked out Impa Kasanganay with a jumping spinning back kick in Round 2 of their October 2020 UFC Fight Night bout, after Kasanganay caught his initial kick. The finish won widespread knockout-of-the-year recognition.",
+    evidence: [{ authority: "UFC official event/results", url: "https://www.ufc.com/news/10-best-knockouts-2020", supportingDetail: "Joaquin Buckley knocked out Impa Kasanganay with a jumping spinning back kick in Round 2 of their October 2020 UFC Fight Night bout, after Kasanganay caught his initial kick. The finish won widespread knockout-of-the-year recognition." }],
   },
   // Active Bar Trivia fact collision retired from future-preview run 4 Q4.
   "ufc:3:3": {
