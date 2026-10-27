@@ -4,7 +4,7 @@ import { cirylGaneV2 } from "./cirylGaneV2";
 import { v2RankingRoster } from "./v2RankingRoster";
 import { calculatedRankingProjection, getFighter } from "../rankingModel";
 import { divisionRankingReport } from "../rankingControls";
-import { resolveProfileWatchAction } from "../rankingPresentation";
+import { resolveProfileWatchAction, resolveWatchMomentAction } from "../rankingPresentation";
 import { rankingContract } from "../engine/rankingContract";
 import { calculateWeightedScore } from "../engine/rankingEngine";
 
@@ -28,6 +28,7 @@ describe("October 2026 isolated Ciryl Gane V2 all-time addition", () => {
     expect(current?.presentation.photoUrl).toBe("assets/fighters/ciryl-gane-thumb.webp");
     expect(current?.presentation.thumbUrl).toBe("assets/fighters/ciryl-gane-thumb.webp");
     expect(current?.presentation.watchUrl).toBe("https://youtu.be/5kk1024Kwb4?is=n4SJoj9qe4ZAKMSc");
+    expect(resolveWatchMomentAction("ciryl-gane")?.url).toBe("https://youtu.be/5kk1024Kwb4?is=n4SJoj9qe4ZAKMSc");
     expect(current?.presentation.signatureFightUrl).toBe("https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL");
     expect(resolveProfileWatchAction("ciryl-gane")?.url).toBe("https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL");
     expect(canonicalRankingInputs.source.modelAsOfDate).toBe("2026-09-19");
