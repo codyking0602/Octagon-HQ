@@ -150,7 +150,8 @@ for (const [family, artifact] of gradeArtifacts) {
 }
 
 function playerId(contract: WheelFootballGmContractRow) {
-  return gradeKey(contract.team, contract.family, contract.player);
+  // IDs are saved in historical GM matches; preserve a pre-trade ID explicitly.
+  return contract.stablePlayerId ?? gradeKey(contract.team, contract.family, contract.player);
 }
 
 function extensionRisk(contract: WheelFootballGmContractRow, extensionApy: number): FootballGmExtensionRisk {
