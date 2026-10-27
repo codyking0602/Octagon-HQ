@@ -249,10 +249,28 @@ export function createNbaFindLeaderChallenge(seed: string, definitionId: string,
 const VERIFIED_NBA_PORTRAIT_OVERRIDES: Readonly<Record<string, string>> = {
   "gailgoodrich": "https://cdn.nba.com/manage/2021/08/GettyImages-1148261504.jpg",
 };
-export function nbaFindLeaderHeadshot(candidate: Pick<NbaLeaderCandidate,"name"|"nbaId">) {
-  const override = VERIFIED_NBA_PORTRAIT_OVERRIDES[normalizedName(candidate.name)];
+// Daily snapshots intentionally omit portrait IDs from public setup, but the
+// canonical historical season roster already has those player-verified NBA IDs.
+// Resolve them here without changing any published Daily payload or reveal.
+const historicalPortraitIds = new Map<string, number>();
+const ambiguousPortraitNames = new Set<string>();
+for (const subject of [...historical, ...recent]) {
+  if (subject.nbaId == null) continue;
+  const key = normalizedName(subject.name);
+  const previous = historicalPortraitIds.get(key);
+  if (previous != null && previous !== subject.nbaId) ambiguousPortraitNames.add(key);
+  else historicalPortraitIds.set(key, subject.nbaId);
+}
+export function nbaFindLeaderHeadshot(
+  candidate: Pick<NbaLeaderCandidate, "name" | "nbaId"> & { season?: number },
+) {
+  const key = normalizedName(candidate.name);
+  const override = VERIFIED_NBA_PORTRAIT_OVERRIDES[key];
   if (override) return override;
-  const id = candidate.nbaId ?? currentByName.get(normalizedName(candidate.name))?.nbaId ?? null;
+  const seasonId = candidate.season == null ? null
+    : nbaFindLeaderSubjects.find(s => s.season === candidate.season && normalizedName(s.name) === key)?.nbaId ?? null;
+  const historicalId = ambiguousPortraitNames.has(key) ? null : historicalPortraitIds.get(key) ?? null;
+  const id = candidate.nbaId ?? seasonId ?? currentByName.get(key)?.nbaId ?? historicalId;
   return id == null ? null : "https://cdn.nba.com/headshots/nba/latest/1040x760/" + id + ".png";
 }
 export function formatNbaFindLeaderValue(value: number) { return value.toFixed(1); }

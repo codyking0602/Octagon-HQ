@@ -80,6 +80,22 @@ describe("NBA Find the Leader factual and gameplay quality", () => {
     expect(nbaFindLeaderHeadshot({ name: "Kareem Abdul-Jabbar", nbaId: 76003 }))
       .toBe("https://cdn.nba.com/headshots/nba/latest/1040x760/76003.png");
   });
+  it("resolves all ten historical 1992-93/1995-96 Daily portraits from canonical identities", () => {
+    const screenshots = [
+      ["Gary Payton", 1996, 56], ["Clyde Drexler", 1993, 17],
+      ["Shawn Kemp", 1996, 431], ["Michael Finley", 1996, 714],
+      ["Tim Hardaway", 1993, 896], ["Glen Rice", 1993, 779],
+      ["Reggie Miller", 1996, 397], ["Robert Parish", 1993, 305],
+      ["Jerry Stackhouse", 1996, 711], ["Grant Hill", 1996, 255],
+    ] as const;
+    for (const [name, season, id] of screenshots) {
+      // Historical snapshots may supply name/season but no nbaId.
+      expect(nbaFindLeaderHeadshot({ name, season, nbaId: null }))
+        .toBe(`https://cdn.nba.com/headshots/nba/latest/1040x760/${id}.png`);
+      expect(nbaFindLeaderHeadshot({ name, nbaId: null }))
+        .toBe(`https://cdn.nba.com/headshots/nba/latest/1040x760/${id}.png`);
+    }
+  });
   it("supports deterministic owner daily previews and identical challenge reconstructions", () => {
     const daily = createNbaFindLeaderDailyPreview("2026-10-19");
     const replay = createNbaFindLeaderDailyPreview("2026-10-19");
