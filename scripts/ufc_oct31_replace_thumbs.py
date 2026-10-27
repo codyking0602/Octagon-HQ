@@ -96,6 +96,31 @@ def remove_connected_white(im):
         q.extend(((x-1,y),(x+1,y),(x,y-1),(x,y+1)))
     if found<w*h*0.06:
         raise ValueError(f"Source has no safely removable plain white backdrop ({found/(w*h):.1%})")
+    # Some publisher-transparent cutouts leave enclosed pale background pockets
+    # between arms/head. Erase only sizable connected neutral regions; preserve
+    # small white printing on UFC gloves and textured skin/hair.
+    pocket_seen=bytearray(w*h)
+    for yy in range(h):
+        for xx in range(w):
+            idx=yy*w+xx
+            if visited[idx] or pocket_seen[idx] or not white(xx,yy):
+                continue
+            region=[]
+            queue=deque([(xx,yy)])
+            while queue:
+                x,y=queue.popleft()
+                if x<0 or x>=w or y<0 or y>=h:continue
+                k=y*w+x
+                if visited[k] or pocket_seen[k] or not white(x,y):continue
+                pocket_seen[k]=1
+                region.append((x,y))
+                queue.extend(((x-1,y),(x+1,y),(x,y-1),(x,y+1)))
+            if len(region)<90:continue
+            x0=min(t[0] for t in region);x1=max(t[0] for t in region)
+            y0=min(t[1] for t in region);y1=max(t[1] for t in region)
+            # Large, near-flat areas above the waist are clearly background.
+            if x1-x0>=11 and y1-y0>=8 and y0<h*0.72:
+                for x,y in region:visited[y*w+x]=1
     alpha=Image.new("L",(w,h),255)
     a=alpha.load()
     for y in range(h):
