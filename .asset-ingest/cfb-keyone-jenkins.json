@@ -1,0 +1,14 @@
+{
+  "week_of": "2026-10-27",
+  "sport": "cfb",
+  "kind": "football-spotlight",
+  "destination": "public/assets/football/weekly/2026-10-27/cfb/spotlight.webp",
+  "player_name": "Keyone Jenkins",
+  "photos": [
+    {
+      "url": "https://a.espncdn.com/i/headshots/college-football/players/full/5085337.png",
+      "kind": "portrait",
+      "identity_reference_url": "https://www.espn.com/college-football/player/_/id/5085337/keyone-jenkins"
+    }
+  ]
+}
