@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "agent/**"
+      - "editorial/ufc-v2-*"
     paths:
       - .github/workflows/validate-ranking-engine.yml
       - src/features/rankings/**
