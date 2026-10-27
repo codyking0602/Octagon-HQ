@@ -61,7 +61,7 @@ describe("Wheel NFL grade distribution sanity", () => {
       }
     }
 
-    expect(expected.size).toBe(626);
+    expect(expected.size).toBe(623); // 3 officially released players retained only as historical grade authority
     expect(grades.size).toBe(626);
   });
 

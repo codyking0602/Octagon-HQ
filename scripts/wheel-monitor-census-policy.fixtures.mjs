@@ -38,14 +38,14 @@ test("malformed UFC active contender set fails closed",()=>{
  assert.throws(()=>inventoryFromAuthorities({football:[],ufc:fighters.slice(1),rosters:{},activePriorityKeys:new Set()}),/expected one/);
 });
 
-test("canonical wheel priorities are 626 NFL and 1277 CFB non-Flex identities",()=>{
+test("canonical wheel priorities are 623 current NFL and 1277 CFB non-Flex identities",()=>{
  const nfl=JSON.parse(readFileSync("data/generated/football/wheel-football-priorities.json","utf8"));
  const cfb=JSON.parse(readFileSync("data/generated/football/cfb/wheel-football-current-priorities-2026.json","utf8"));
  const boise=JSON.parse(readFileSync("data/curated/football/cfb/wheel-football-boise-state-grading-audit-2026-10-03.json","utf8"));
  const keys=wheelPriorityIdentityKeys({nfl,cfb,extraTeams:[boise]});
- assert.equal([...keys].filter(k=>k.startsWith("NFL:")).length,626);
+ assert.equal([...keys].filter(k=>k.startsWith("NFL:")).length,623);
  assert.equal([...keys].filter(k=>k.startsWith("CFB:")).length,1277);
- assert.equal(keys.size,1903);
+ assert.equal(keys.size,1900);
 });
 test("unselected old grading rows do not create fake active identities",()=>{
  const scoped=inventoryFromAuthorities({football:[
