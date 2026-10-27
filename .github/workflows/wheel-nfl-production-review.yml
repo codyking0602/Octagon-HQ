@@ -78,6 +78,10 @@ jobs:
           node scripts/wheel-monitor/nfl-madden-review.mjs \
             --baseline=tmp/wheel-monitor/madden/pr-temporary-baseline.json \
             --out=tmp/wheel-monitor/madden/pr-source-check.json
+      - name: Prove EA archived Week 3 historical source is retrievable on PR
+        if: github.event_name == 'pull_request'
+        run: |
+          node scripts/wheel-monitor/nfl-madden-oct3-baseline.mjs --out=tmp/wheel-monitor/madden/pr-oct03-source.json
       - name: Restore locked Madden baseline (never silently reset a prior baseline)
         if: github.event_name != 'pull_request' && !inputs.historical_oct03
         env:
