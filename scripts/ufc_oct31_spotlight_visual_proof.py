@@ -14,3 +14,5 @@ for n in ("renato-moicano","tom-nolan"):
     file=p/("_visual-proof-"+n+".png")
     out.save(file,"PNG",optimize=True)
     print(n,"alpha coverage",sum(a>20 for a in im.getchannel("A").getdata())/(w*h),"written",file)
+
+# Regenerated proof after Nolan glove-edge correction.
