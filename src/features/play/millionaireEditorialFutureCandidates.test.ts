@@ -1561,50 +1561,50 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(normalized(ufc8.statSheet ?? "")).not.toContain("tai tuivasa");
     expect(millionaireDailyRun("ufc", 7)[0]!.prompt).not.toBe(ufc8.prompt);
   });
-  it("prevents five reintroduced selectable cross-game facts in repaired future-preview slots", () => {
+  it("verifies the five cross-game fixes on the effective canonical preview, not stale legacy seeds", () => {
     const replacements = [
-      [
-            "nfl",
-            6,
-            2,
-            "Gabriel Davis"
-      ],
-      [
-            "nfl",
-            6,
-            5,
-            "Mike Tomlin"
-      ],
-      [
-            "cfb",
-            11,
-            4,
-            "Mike Norvell"
-      ],
-      [
-            "ufc",
-            0,
-            0,
-            "Robbie Lawler"
-      ],
-      [
-            "ufc",
-            2,
-            0,
-            "Israel Adesanya"
-      ]
-] as const;
+      ["nfl", 6, 2, "Gabriel Davis"],
+      ["nfl", 6, 5, "Mike Tomlin"],
+      ["cfb", 11, 4, "Mike Norvell"],
+      ["ufc", 0, 0, "Robbie Lawler"],
+      ["ufc", 2, 0, "Israel Adesanya"],
+    ] as const;
+    const remaining = new Set(replacements.map(([league, index, level]) =>
+      `${league}:${index}:${level}`));
+    const seen = new Map<string, MillionaireRuntimeQuestion>();
+    for (let offset = 0; offset < 240 && remaining.size > 0; offset += 1) {
+      const day = new Date(Date.UTC(2026, 9, 27 + offset)).toISOString().slice(0, 10);
+      for (const sport of ["football", "ufc"] as const) {
+        if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
+        if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
+        const publication = buildMillionaireDailySetup(sport, day, "millionaire-effective-preview-cross-game-regression",
+          { editorialCandidatePreview: true });
+        const league = publication.publicSetup.league as typeof leagues[number];
+        const runIndex = Number(publication.privateSetupEvidence.run_number) - 1;
+        const run = publication.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+        for (const [targetLeague, targetRun, targetLevel] of replacements) {
+          const key = `${targetLeague}:${targetRun}:${targetLevel}`;
+          if (league === targetLeague && runIndex === targetRun && remaining.has(key)) {
+            seen.set(key, run[targetLevel]!);
+            remaining.delete(key);
+          }
+        }
+      }
+    }
+    expect([...remaining]).toEqual([]);
     for (const [league, runIndex, levelIndex, correct] of replacements) {
-      const q = millionaireFutureEditorialDailyRun(league, runIndex)[levelIndex]!;
+      const q = seen.get(`${league}:${runIndex}:${levelIndex}`)!;
       expect(answer(q)).toBe(correct);
       expect(new Set(q.choices.map(choice => normalized(choice.text))).size).toBe(4);
       expect(normalized(q.statSheet ?? "")).not.toContain(normalized(correct));
+      expect(q.explanation).toContain(correct);
     }
-    expect(millionaireFutureEditorialDailyRun("nfl", 6)[2]!.prompt).not.toContain("Mike Jones");
-    expect(millionaireFutureEditorialDailyRun("nfl", 6)[5]!.prompt).not.toContain("Aaron Donald");
-    expect(millionaireFutureEditorialDailyRun("cfb", 11)[4]!.prompt).not.toContain("Bobby Bowden");
-    expect(millionaireFutureEditorialDailyRun("ufc", 0)[0]!.prompt).not.toContain("Michael Chandler");
-    expect(millionaireFutureEditorialDailyRun("ufc", 2)[0]!.prompt).not.toContain("Jamahal Hill");
+    // Old authoring seeds stay immutable. These are only opt-in preview revisions.
+    expect(millionaireDailyRun("nfl", 6)[2]!.prompt).toContain("Rams linebacker");
+    expect(millionaireDailyRun("nfl", 6)[5]!.prompt).toContain("Defensive Player of the Year");
+    expect(millionaireDailyRun("cfb", 11)[4]!.prompt).toContain("Mike Norvell");
+    expect(millionaireDailyRun("ufc", 0)[0]!.prompt).not.toContain("Niko Price");
+    expect(millionaireDailyRun("ufc", 2)[0]!.prompt).not.toContain("UFC 234");
   });
 
 });
