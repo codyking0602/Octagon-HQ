@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import authority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
 import audit from "../../../data/curated/football/gm-nfl-development-review-audit-2026-10-08.json";
+import stroudRevision from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-26.json";
+import fiveQbRevisions from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json";
+import sevenRevisions from "../../../data/curated/football/nfl/wheel-nfl-skill-and-qb-ability-revisions-2026-10-27.json";
 import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_PLAYER_POOL,
@@ -25,6 +28,15 @@ import {
   footballGmSeasonResultV2,
 } from "./footballGmStrategy";
 import { footballGmCpuOffseason } from "./footballGmCpu";
+
+// Development scouting was calibrated against earlier HQ grades. Those original
+// grades are historical research, not an instruction to hold new GM ability stale.
+const historicalRevisions = [...stroudRevision.changes, ...fiveQbRevisions.changes, ...sevenRevisions.changes];
+const originalGradeByIdentity = new Map(historicalRevisions.map(row =>
+  [row.team + "|" + row.family + "|" + row.player, row.oldGrade]));
+function atCalibrationGrade(player: { team: string; family: string; name: string; currentGrade: number }) {
+  return originalGradeByIdentity.get(player.team + "|" + player.family + "|" + player.name) ?? player.currentGrade;
+}
 
 const seed = (i: number) => `full-development-audit-${i}${FOOTBALL_GM_DEVELOPMENT_SEED_TAG}`;
 
@@ -98,7 +110,7 @@ describe("full NFL GM development calibration", () => {
     for (const review of audit.reviews) {
       const player = FOOTBALL_GM_PLAYER_POOL.find((p) => p.id === review.id);
       expect(player, review.id).not.toBeUndefined();
-      expect(player!.currentGrade).toBe(review.gradeAtReview);
+      expect(atCalibrationGrade(player!)).toBe(review.gradeAtReview);
       expect(review.reviewRationale.length, review.id).toBeGreaterThan(65);
     }
     for (const profile of profiles) {
@@ -107,7 +119,7 @@ describe("full NFL GM development calibration", () => {
       expect(footballGmDevelopmentProfile(profile.id)).toEqual(profile);
       expect(profile.name).toBe(player.name);
       expect(profile.ageAtCalibration).toBe(player.age);
-      expect(profile.gradeAtCalibration).toBe(player.currentGrade);
+      expect(profile.gradeAtCalibration).toBe(atCalibrationGrade(player));
       expect(profile.breakoutPct).toBeGreaterThanOrEqual(0);
       expect(profile.improvePct).toBeGreaterThanOrEqual(0);
       expect(profile.declinePct).toBeGreaterThanOrEqual(0);
