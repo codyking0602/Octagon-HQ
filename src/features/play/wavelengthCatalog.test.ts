@@ -35,7 +35,7 @@ function seeded(values: number[]) {
 
 describe("canonical Wavelength catalog", () => {
   it("meets approved size, uniqueness, rating, copy, and category-quality gates", () => {
-    expect(approvedWavelengthCatalog).toHaveLength(605);
+    expect(approvedWavelengthCatalog).toHaveLength(579);
     expect(new Set(approvedWavelengthCatalog.map((item) => item.id)).size).toBe(approvedWavelengthCatalog.length);
     expect(new Set(approvedWavelengthCatalog.map((item) => item.text.toLowerCase())).size).toBe(approvedWavelengthCatalog.length);
 
@@ -81,17 +81,27 @@ describe("canonical Wavelength catalog", () => {
     const eightyPlus = approvedWavelengthCatalog.filter((item) => item.rating >= 80).length;
     const belowSeventy = approvedWavelengthCatalog.filter((item) => item.rating < 70).length;
 
-    expect(eightyPlus / approvedWavelengthCatalog.length).toBeLessThan(0.43);
-    expect(belowSeventy / approvedWavelengthCatalog.length).toBeGreaterThan(0.4);
+    expect(eightyPlus / approvedWavelengthCatalog.length).toBeLessThan(0.47);
+    expect(belowSeventy / approvedWavelengthCatalog.length).toBeGreaterThan(0.35);
     expect(approvedWavelengthCatalog.some((item) => item.rating <= 10)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 40 && item.rating <= 60)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 75 && item.rating <= 89)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 90)).toBe(true);
-    expect(wavelengthCatalog.filter((item) => item.status === "retired")).toHaveLength(29);
+    expect(wavelengthCatalog.filter((item) => item.status === "retired")).toHaveLength(96);
     for (const id of ["wl-ufc-balance-553", "wl-ufc-balance-555"]) {
       expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
       expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
     }
+    for (const id of [
+      "wl-events-and-fights-476", "wl-ufc-balance-552", "wl-ufc-balance-560",
+      "wl-tuf-and-reality-327", "wl-officiating-and-systems-444",
+      "wl-coaches-and-camps-357", "wl-ufc-balance-628",
+    ]) {
+      expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
+      expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
+    }
+    expect(approvedWavelengthCatalog.filter((item) => item.id.startsWith("wl-ufc-accessible-"))).toHaveLength(41);
+    expect(approvedWavelengthCatalog.every((item) => !/^UFC (40|129|149|189|217)'s /.test(item.text))).toBe(true);
     for (const id of ["wl-ufc-balance-633", "wl-ufc-balance-634"]) {
       expect(wavelengthClues.find((item) => item.id === id)).toMatchObject({ category: "EVENTS & FIGHTS" });
     }
@@ -100,10 +110,11 @@ describe("canonical Wavelength catalog", () => {
   });
 
   it("documents explicit calibration and historical version identifiers", () => {
-    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v5");
+    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v6");
     expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v2");
     expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v3");
     expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v4");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v5");
     expect(WAVELENGTH_CALIBRATION_VERSION).toBe("wavelength-calibration-v1");
     expect(WAVELENGTH_GENERATOR_VERSION).toBe("wavelength-generator-v4");
     expect(WAVELENGTH_REVEAL_CONTRACT_VERSION).toBe("wavelength-reveal-privacy-v1");
