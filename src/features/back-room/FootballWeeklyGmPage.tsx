@@ -31,8 +31,8 @@ const OCT20_SCENARIOS: typeof OCT13_SCENARIOS = [
 ];
 
 const OCT27_SCENARIOS: typeof OCT13_SCENARIOS = [
-  { id: "elite", title: "CHOOSE YOUR RECEIVER", quarterback: "WR Run", development: "Choose from 12 approved wide receivers. Normal progression and real GM contracts." },
-  { id: "young", title: "CHOOSE YOUR RUNNING BACK", quarterback: "RB Run", development: "Choose from five running backs, including McCaffrey as a Decline Risk wildcard." },
+  { id: "elite", title: "CHOOSE YOUR RECEIVER", quarterback: "WR Run", development: "" },
+  { id: "young", title: "CHOOSE YOUR RUNNING BACK", quarterback: "RB Run", development: "" },
 ];
 
 function scenariosForWeek(weekStart: string, preview: boolean) {
@@ -230,7 +230,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
             <Link to={preview ? "/football/weekly-gm" : "/football"}>← {preview ? "OFFICIAL GM WEEK" : "FOOTBALL PLAY"}</Link>
             <p className="eyebrow">{preview ? "OWNER PLAYTEST" : "WEEKLY FEATURED · CHAMPIONSHIP 10%"}</p>
             <h1>{preview ? "TEST WEEKLY GM" : "NFL GM CHAMPIONSHIP"}</h1>
-            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · Two official franchises · $150M cap · Six spins each{isOct27Week ? " · Choose your WR and RB" : ""}</p>
+            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · Two official franchises · $150M cap · Six spins each</p>
             <p className="football-weekly-gm__progress">
               <strong>{myTotal.toFixed(1)} / 200</strong>
               <span>{Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</span>
@@ -270,7 +270,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
                   <h2>{isOct27Week && item?.starting_player_id
                     ? footballGmPlayerById(item.starting_player_id)?.name ?? scenario.quarterback
                     : scenario.quarterback}</h2>
-                  <p>{scenario.development}</p>
+                  {scenario.development ? <p>{scenario.development}</p> : null}
                   <strong>{item?.completed ? item.score?.toFixed(1) + " / 100" : item ? "IN PROGRESS" : "NOT STARTED"}</strong>
                   {item?.completed ? <button type="button" onClick={() => void inspect(null, scenario.id)}>VIEW RESULT →</button>
                     : state.status === "active" ? (
