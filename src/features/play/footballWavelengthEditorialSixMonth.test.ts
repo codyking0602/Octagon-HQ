@@ -51,6 +51,29 @@ describe("Football Wavelength future-only editorial and six-month readiness", ()
     }
   });
 
+  it("reserves extreme opinion ratings for exceptional examples with explicit player-facing anchors", () => {
+    const expectedHighRatingCaps: Readonly<Record<string, number>> = {
+      "FANBASE INSANITY": 5,
+      "UNIFORM QUALITY": 6,
+      "COACHING GENIUS": 9,
+      "FOOTBALL VILLAINY": 2,
+    };
+    for (const [category, maxHigh] of Object.entries(expectedHighRatingCaps)) {
+      const examples = footballWavelengthPlayableClues.filter((clue) => clue.category === category);
+      expect(examples, category).toHaveLength(20);
+      expect(examples.filter((clue) => clue.rating >= 90).length, category).toBeLessThanOrEqual(maxHigh);
+      expect(Math.min(...examples.map((clue) => clue.rating)), category).toBeLessThanOrEqual(45);
+      expect(examples.some((clue) => clue.rating >= 70 && clue.rating < 90), category).toBe(true);
+    }
+    const revised = new Map(footballWavelengthPlayableClues.map((clue) => [clue.id, clue]));
+    expect(revised.get("fans-rams-editorial-2026")?.rating).toBe(34);
+    expect(revised.get("uniform-browns-editorial-2026")?.rating).toBe(64);
+    expect(revised.get("genius-lincoln-riley-editorial-2026")?.rating).toBe(77);
+    expect(revised.get("villainy-tom-brady-editorial-2026")?.rating).toBe(85);
+    expect(revised.get("choke-bills-four-super-bowls-editorial-2026")?.rating).toBe(64);
+    expect(revised.get("rivalry-rams-49ers-editorial-2026")?.rating).toBe(77);
+  });
+
   it("does not change candidate eligibility or replay mechanics for published days", () => {
     expect(FOOTBALL_WAVELENGTH_EDITORIAL_CUTOVER_DAY).toBe("2026-11-02");
     const oldSeed = `football-daily-v22-higher-lower-oct27|wavelength|${scheduleVersion}|2026-10-27`;
