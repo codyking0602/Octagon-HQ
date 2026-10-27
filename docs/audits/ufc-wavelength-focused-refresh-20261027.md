@@ -49,3 +49,20 @@ Scope: UFC Wavelength only. No Daily calendar, historical submission, backend da
 The canonical UFC 48-hour publication schedule between October 29, 2026 and April 24, 2027 contains **nine Wavelength publications** (18 playable games, four adaptive clues per game). There are 500 eligible active clues. Test coverage models each of those publication dates, exercises one entire two-game server-owned Daily and verifies the rounded mean, and confirms historical retired IDs still resolve in ongoing games. Other daily games and their published schedules are unchanged.
 
 No numerical UFC opinion is claimed to be universally correct. The remaining calibration is still entertainment-oriented editorial judgment; only clearly problematic items were changed. Mobile clue typography and wrapping were inspected at the existing CSS contract, with no layout redesign.
+
+
+## October 27 quality-first score distribution follow-up
+
+Per owner direction, **no previously approved clue rating was lowered just to reshape the histogram**. Existing text and numerical scores are unchanged. Seven redundant or overly generic clues were retired (IDs preserved for published results), and 112 genuinely different UFC clue prompts were added across all 16 categories, primarily covering missing weak, average, and solid-but-not-elite examples. New entries also include a few genuinely excellent examples; ratings are not capped artificially.
+
+| Active catalog | Before | After |
+| --- | ---: | ---: |
+| Approved clues | 500 | 605 |
+| Below 40 | 66 | 90 |
+| 40–79 | 198 | 268 |
+| 80–100 | 236 (47.2%) | 247 (40.8%) |
+| 90–100 | 118 | 121 |
+
+Retired on qualitative grounds rather than score: `wl-personality-and-promotion-166`, `wl-crossover-and-celebrity-399`, `wl-crossover-and-celebrity-378`, `wl-events-and-fights-104`, `wl-ufc-culture-408`, `wl-venue-and-atmosphere-128`, `wl-venue-and-atmosphere-142`. Reasons: Jon Anik broadcast overlap; two redundant White House/presidential promotion questions; generic 'strong co-main' and 'great nicknames' abstractions; two overlapping Apex-atmosphere questions. All retired records keep their original ratings and texts for historical official games. New calibrated prompts have distinct IDs `wl-ufc-balance-521` through `wl-ufc-balance-632`. Catalog version advances to v4 while v3 and prior versions remain historical. No generator, targets, scoring or published results change.
+
+This distribution describes editorial subject selection, not an arbitrary desired quota or an instruction to downgrade excellent achievements. Ratings remain subjective UFC-context judgments.
