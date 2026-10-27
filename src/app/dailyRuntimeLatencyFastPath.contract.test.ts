@@ -118,6 +118,15 @@ describe("all-sport official Daily action latency safeguards", () => {
     }
   });
 
+  it("routes all Football Wavelength answers through the lean two-game bundle", () => {
+    expect(bundler).toContain('entry: resolve(repoRoot, "src/features/play/footballWavelengthDailyAdvance.ts")');
+    expect(bundler).toContain('fileName: "football-wavelength-advance.generated.mjs"');
+    expect(edge).toContain('loadFootballWavelengthAdvanceRuntime()');
+    expect(edge).toContain('advanceFootballWavelengthDailyRuntime');
+    const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
+    expect(deploy).toContain("test -f supabase/functions/daily-challenge-runtime/football-wavelength-advance.generated.mjs");
+  });
+
   it("isolates Millionaire answer logic from all-game publication and preserves outcome parity", () => {
     expect(bundler).toContain('fileName: "millionaire-advance.generated.mjs"');
     expect(edge).toContain('import("./millionaire-advance.generated.mjs")');
