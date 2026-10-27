@@ -28,6 +28,24 @@ env:
   VITE_EXPECTED_SUPABASE_HOSTNAME: octagon-validation.supabase.co
 
 jobs:
+  # Keep a fast, independently observable exact-head editorial result while
+  # the much larger repository-wide ranking validation suite runs.
+  gane-targeted-verification:
+    if: startsWith(github.ref, 'refs/heads/editorial/ufc-v2-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out exact feature commit
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Install locked dependencies
+        run: npm ci --silent --no-audit --no-fund
+      - name: Calculate Gane all-time placement and verify V2 integrity
+        run: npx vitest run src/features/rankings/data/cirylGaneV2.test.ts src/features/rankings/data/v2RankingRoster.test.ts src/features/rankings/fighterAssets.test.ts
+
   validate-ranking-engine:
     runs-on: ubuntu-latest
     timeout-minutes: 15
