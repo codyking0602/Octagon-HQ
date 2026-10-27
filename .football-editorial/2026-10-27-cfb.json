@@ -1,0 +1,80 @@
+{
+  "week_of": "2026-10-27",
+  "sport": "cfb",
+  "candidates": {
+    "players": [
+      {
+        "id": "malachi-toney",
+        "name": "Malachi Toney",
+        "team": "Miami",
+        "position": "WR",
+        "summary": "Set Miami's single-game receptions record with 16 catches for 194 yards and three touchdowns in the 52–23 win over Pittsburgh on October 24."
+      },
+      {
+        "id": "keyone-jenkins",
+        "name": "Keyone Jenkins",
+        "team": "UCF",
+        "position": "QB",
+        "summary": "Passed for 293 yards and three touchdowns, added a rushing score and led UCF's 39–31 double-overtime upset of No. 2 BYU on October 24."
+      },
+      {
+        "id": "devon-dampier",
+        "name": "Devon Dampier",
+        "team": "Utah",
+        "position": "QB",
+        "summary": "Rushed for 150 yards and two touchdowns as unbeaten Utah rallied past No. 14 Houston 21–13 on October 24."
+      },
+      {
+        "id": "drew-mestemaker",
+        "name": "Drew Mestemaker",
+        "team": "Oklahoma State",
+        "position": "QB",
+        "summary": "Threw for 386 yards and four touchdowns in Oklahoma State's 57–24 win over Colorado, including a 34–0 second-half surge."
+      },
+      {
+        "id": "jahiem-white",
+        "name": "Jahiem White",
+        "team": "North Texas",
+        "position": "RB",
+        "summary": "Ran for 174 yards and two touchdowns and added 58 receiving yards in North Texas' 49–39 win at Navy on October 24."
+      }
+    ],
+    "games": [
+      {
+        "id": "florida-vs-georgia",
+        "away_team": "Florida",
+        "home_team": "Georgia",
+        "kickoff_at": "2026-10-31T14:30:00-05:00",
+        "summary": "The annual Florida–Georgia rivalry moves to Atlanta; Georgia enters 6–1 and Florida 5–2, with both teams ranked in the October 26 preview."
+      },
+      {
+        "id": "ohio-state-at-usc",
+        "away_team": "Ohio State",
+        "home_team": "USC",
+        "kickoff_at": "2026-10-31T18:30:00-05:00",
+        "summary": "A ranked Big Ten road showdown at the Coliseum, televised by NBC, between Ohio State and USC."
+      },
+      {
+        "id": "utah-at-cincinnati",
+        "away_team": "Utah",
+        "home_team": "Cincinnati",
+        "kickoff_at": "2026-10-31T14:45:00-05:00",
+        "summary": "Unbeaten 7–0 Utah visits 5–2 Cincinnati in a Big 12 test after rallying to beat ranked Houston."
+      },
+      {
+        "id": "arizona-state-at-byu",
+        "away_team": "Arizona State",
+        "home_team": "BYU",
+        "kickoff_at": "2026-10-31T14:30:00-05:00",
+        "summary": "BYU returns home 6–1 after a double-overtime loss at UCF, hosting Arizona State in a Big 12 matchup on FOX."
+      },
+      {
+        "id": "miami-at-north-carolina",
+        "away_team": "Miami",
+        "home_team": "North Carolina",
+        "kickoff_at": "2026-10-31T18:30:00-05:00",
+        "summary": "No. 1 Miami visits Chapel Hill after Malachi Toney's record-setting performance against Pittsburgh; ABC prime-time ACC matchup."
+      }
+    ]
+  }
+}

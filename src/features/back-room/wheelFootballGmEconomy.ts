@@ -41,6 +41,8 @@ export type WheelFootballGmContractRow = {
   draftRound: number | null;
   draftOverall: number | null;
   projectionAdjustment?: number;
+  /** Keep historical saved GM player IDs stable when a verified transaction changes teams. */
+  stablePlayerId?: string;
 };
 
 type MarketPoint = readonly [grade: number, apy: number];

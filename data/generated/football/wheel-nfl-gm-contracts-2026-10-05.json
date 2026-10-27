@@ -467,7 +467,7 @@
       }
     },
     {
-      "team": "ARI",
+      "team": "HOU",
       "family": "WR",
       "player": "Marvin Harrison Jr.",
       "normalizedName": "marvinharrison",
@@ -490,7 +490,8 @@
         "otcId": 11612,
         "yearSigned": 2024,
         "years": 4
-      }
+      },
+      "stablePlayerId": "ARI|WR|marvinharrison"
     },
     {
       "team": "ARI",

@@ -44,7 +44,12 @@ describe("Wheel of Football locked grading runtime", () => {
       for (const row of artifact.grades) {
         const name = row.player ?? row.coach;
         expect(name).toBeTruthy();
-        expected.set(`${row.team}|${family}|${normalized(name!)}`, row.grade);
+        // This assertion certifies the historical October 3 seed (not today's clubs).
+        // Marvin Harrison Jr. moved ARI -> HOU October 12; the current WR artifact
+        // carries HOU, while migration 243 must permanently keep its ARI snapshot.
+        const historicalTeam = family === "WR"
+          && name === "Marvin Harrison Jr." && row.team === "HOU" ? "ARI" : row.team;
+        expected.set(`${historicalTeam}|${family}|${normalized(name!)}`, row.grade);
       }
     }
 
