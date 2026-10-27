@@ -9,6 +9,7 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import { footballWavelengthExpansionCategories } from "./footballWavelengthExpansionCatalog";
+import { FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS, usesFootballWavelengthEditorialPool } from "./footballWavelengthEditorial2026";
 import { footballWavelengthCanonicalSubjectForClue } from "./footballWavelengthSubjectAuthority";
 
 export const FOOTBALL_WAVELENGTH_GAME_ID = "football-wavelength";
@@ -129,25 +130,25 @@ export const FOOTBALL_WAVELENGTH_CATEGORY_ANCHORS: readonly FootballWavelengthCa
   { category: "GUNSLINGER", ratingQuestion: "How strong is the gunslinger tendency?", bottomTier: "Risk-averse distributor", average: "Will challenge windows", exceptional: "Lives for the dangerous throw" },
   { category: "QB CARRY JOB", ratingQuestion: "How much does the quarterback feel like the engine carrying the offense?", bottomTier: "Mostly along for the ride", average: "Important co-driver", exceptional: "The offense lives or dies with him" },
   { category: "SCHEME & PLAY CREATIVITY", ratingQuestion: "How creative or unconventional is this scheme or play?", bottomTier: "Rigid and conventional", average: "Some creative wrinkles", exceptional: "Constantly invents problems defenses have not seen" },
-  { category: "FANBASE INSANITY", ratingQuestion: "How irrationally intense is the fanbase?", bottomTier: "Detached", average: "Normal committed fandom", exceptional: "Football is a civic religion" },
+  { category: "FANBASE INSANITY", ratingQuestion: "How deep and unmistakable are the fanbase's football rituals and devotion?", bottomTier: "Detached", average: "Normal committed fandom", exceptional: "Football is a civic religion" },
   { category: "PROGRAM TRADITION", ratingQuestion: "How deep is the college program's football tradition?", bottomTier: "Little historical weight", average: "Real regional history", exceptional: "Foundational blue-blood tradition" },
-  { category: "UNIFORM QUALITY", ratingQuestion: "How good is the football uniform identity?", bottomTier: "Design liability", average: "Perfectly fine look", exceptional: "Untouchable football aesthetic" },
-  { category: "STADIUM ATMOSPHERE", ratingQuestion: "How intimidating and memorable is the live football atmosphere?", bottomTier: "Sterile", average: "Solid game-day energy", exceptional: "Bucket-list football environment" },
-  { category: "RIVALRY HATRED", ratingQuestion: "How much genuine hatred and emotional weight does the rivalry carry?", bottomTier: "Mostly schedule trivia", average: "Real rivalry", exceptional: "365-day identity-level hatred" },
+  { category: "UNIFORM QUALITY", ratingQuestion: "How iconic, coherent, and lasting is this particular uniform look?", bottomTier: "Design liability", average: "Perfectly fine look", exceptional: "Untouchable football aesthetic" },
+  { category: "STADIUM ATMOSPHERE", ratingQuestion: "How memorable and intense is the atmosphere for a meaningful home game?", bottomTier: "Sterile", average: "Solid game-day energy", exceptional: "Bucket-list football environment" },
+  { category: "RIVALRY HATRED", ratingQuestion: "How fierce and emotionally important is the rivalry, including mutual respect?", bottomTier: "Mostly schedule trivia", average: "Real rivalry", exceptional: "365-day identity-level hatred" },
   { category: "SYSTEM QB PERCEPTION", ratingQuestion: "How strong is the perception that the quarterback's success is system-driven?", bottomTier: "Seen as system-proof", average: "Scheme gets real credit", exceptional: "The system-QB label defines the conversation" },
-  { category: "COACHING CHAOS", ratingQuestion: "How chaotic is the coach's football orbit?", bottomTier: "Corporate calm", average: "Normal coaching drama", exceptional: "Every week can become a documentary" },
+  { category: "COACHING CHAOS", ratingQuestion: "How much recurring football drama surrounds this coach, beyond simple enthusiasm?", bottomTier: "Corporate calm", average: "Normal coaching drama", exceptional: "Every week can become a documentary" },
   { category: "OFFENSIVE INNOVATION", ratingQuestion: "How innovative is the offensive football idea or coach?", bottomTier: "Actively stale", average: "Useful modern offense", exceptional: "Changed how football is played" },
   { category: "DEFENSIVE TERROR", ratingQuestion: "How terrifying is this defense or defender to face?", bottomTier: "Offenses circle the matchup", average: "Respectable resistance", exceptional: "Historic nightmare fuel" },
   { category: "DRAFT BUST", ratingQuestion: "How severe is the draft-bust reputation?", bottomTier: "Massive draft value", average: "Disappointing relative to cost", exceptional: "All-time draft disaster" },
-  { category: "CLUTCH REPUTATION", ratingQuestion: "How strong is the subject's clutch football reputation?", bottomTier: "Fans expect the late failure", average: "Mixed big-moment record", exceptional: "Late-game mythology" },
-  { category: "CHOKE REPUTATION", ratingQuestion: "How strong is the choke reputation?", bottomTier: "Almost immune to the label", average: "Some painful scars", exceptional: "The collapse became the identity" },
+  { category: "CLUTCH REPUTATION", ratingQuestion: "How strongly is the subject associated with delivering in defining football moments?", bottomTier: "Fans expect the late failure", average: "Mixed big-moment record", exceptional: "Late-game mythology" },
+  { category: "CHOKE REPUTATION", ratingQuestion: "How strongly is this subject remembered for squandered chances rather than merely losing?", bottomTier: "Almost immune to the label", average: "Some painful scars", exceptional: "The collapse became the identity" },
   { category: "FRANCHISE TRADITION", ratingQuestion: "How deep is the NFL franchise's tradition?", bottomTier: "Young or historically thin", average: "Real league history", exceptional: "Foundational NFL institution" },
   { category: "FOOTBALL WEIRDNESS", ratingQuestion: "How weird is this football moment, rule, or tradition?", bottomTier: "Completely ordinary", average: "Noticeably quirky", exceptional: "Only football could produce this" },
   { category: "MEDIA ENERGY", ratingQuestion: "How much football-media personality energy does this subject create?", bottomTier: "Deliberately low-key", average: "Useful football personality", exceptional: "Content machine" },
-  { category: "TAILGATE CULTURE", ratingQuestion: "How strong is the tailgate and pregame culture?", bottomTier: "Minimal ritual", average: "Good parking-lot scene", exceptional: "Destination-level football pilgrimage" },
-  { category: "COACHING GENIUS", ratingQuestion: "How strong is the case that this coach is a football genius?", bottomTier: "Actively outcoached", average: "Credible high-level coach", exceptional: "Changed what elite coaching looks like" },
+  { category: "TAILGATE CULTURE", ratingQuestion: "How distinctive and participatory is the fanbase's pregame ritual?", bottomTier: "Minimal ritual", average: "Good parking-lot scene", exceptional: "Destination-level football pilgrimage" },
+  { category: "COACHING GENIUS", ratingQuestion: "How compelling is the case for sustained coaching excellence and football ingenuity?", bottomTier: "Actively outcoached", average: "Credible high-level coach", exceptional: "Changed what elite coaching looks like" },
   { category: "HOME-FIELD ADVANTAGE", ratingQuestion: "How much real home-field advantage does this environment create?", bottomTier: "Barely feels like home", average: "Useful home edge", exceptional: "The venue changes the game" },
-  { category: "FOOTBALL VILLAINY", ratingQuestion: "How strong is the football-villain aura?", bottomTier: "Almost impossible to hate", average: "Draws real opposing heat", exceptional: "The sport needs them as the bad guy" },
+  { category: "FOOTBALL VILLAINY", ratingQuestion: "How strongly does the subject draw lasting heat from opposing football fans?", bottomTier: "Almost impossible to hate", average: "Draws real opposing heat", exceptional: "The sport needs them as the bad guy" },
   { category: "FRANCHISE DYSFUNCTION", ratingQuestion: "How dysfunctional is the NFL franchise or era?", bottomTier: "Model stability", average: "Normal NFL messiness", exceptional: "Organizational chaos is the brand" },
   { category: "OFFENSIVE FIREPOWER", ratingQuestion: "How overwhelming is the offensive firepower?", bottomTier: "Points feel accidental", average: "Functional scoring offense", exceptional: "Every possession threatens a touchdown" },
   { category: "BIG ARM TALENT", ratingQuestion: "How freakish is the quarterback's raw arm talent?", bottomTier: "Arm strength is a limitation", average: "Enough arm for every normal throw", exceptional: "The field has almost no arm-strength limit" },
@@ -516,6 +517,26 @@ export const footballWavelengthClues: readonly FootballWavelengthClue[] = [
   ...expansionFootballWavelengthClues,
 ];
 
+/** All retired clues remain available to historical reveals, shared challenges and replay. */
+const footballWavelengthEditorialClues: readonly FootballWavelengthClue[] = FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.map(
+  ({ legacyId, category, text, rating }) => ({
+    id: `${legacyId}-editorial-2026`,
+    category: category as FootballWavelengthCategory,
+    text,
+    rating,
+  }),
+);
+const retiredClueIds = new Set<string>(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.map(({ legacyId }) => legacyId));
+export const footballWavelengthAvailableClues: readonly FootballWavelengthClue[] = [
+  ...footballWavelengthClues,
+  ...footballWavelengthEditorialClues,
+];
+/** Exactly one playable successor per retired clue; the 540-item footprint stays stable. */
+export const footballWavelengthPlayableClues: readonly FootballWavelengthClue[] = [
+  ...footballWavelengthClues.filter((clue) => !retiredClueIds.has(clue.id)),
+  ...footballWavelengthEditorialClues,
+];
+
 function chooseFootballWavelengthClue(
   desiredRating: number,
   options: {
@@ -523,6 +544,7 @@ function chooseFootballWavelengthClue(
     direction?: number;
     usedClues?: readonly FootballWavelengthClue[];
     random: () => number;
+    editorialPool: boolean;
   },
 ) {
   const usedClues = options.usedClues ?? [];
@@ -536,7 +558,8 @@ function chooseFootballWavelengthClue(
   const usedThemeFamilies = new Set(
     usedClues.map((clue) => footballWavelengthThemeFamilyForCategory(clue.category)),
   );
-  const base = footballWavelengthClues.filter((clue) => {
+  const pool = options.editorialPool ? footballWavelengthPlayableClues : footballWavelengthClues;
+  const base = pool.filter((clue) => {
     if (usedIds.has(clue.id)) return false;
     const canonicalSubjectId = footballWavelengthCanonicalSubjectForClue(clue)?.id;
     return !canonicalSubjectId || !usedCanonicalSubjectIds.has(canonicalSubjectId);
@@ -572,6 +595,7 @@ export function createFootballWavelengthRound(seed: string): FootballWavelengthR
   const opening = chooseFootballWavelengthClue(target + (random() > 0.5 ? 3 : -3), {
     target,
     random,
+    editorialPool: usesFootballWavelengthEditorialPool(seed),
   });
   return { target, clues: [opening] };
 }
@@ -598,6 +622,7 @@ export function nextFootballWavelengthClue(
     direction,
     usedClues: round.clues,
     random,
+    editorialPool: usesFootballWavelengthEditorialPool(seed),
   });
 }
 

@@ -27,5 +27,9 @@ for (const subject of footballSubjects) {
 export function footballWavelengthCanonicalSubjectForClue(clue: FootballWavelengthClue) {
   const direct = getFootballSubject(clue.id);
   if (direct) return direct;
-  return canonicalSubjectByUniqueName.get(normalizedSubjectName(clue.text)) ?? null;
+  // Editorial context after an em dash must not break same-athlete deduplication.
+  const subjectText = clue.text.split(" — ")[0]!;
+  return canonicalSubjectByUniqueName.get(normalizedSubjectName(subjectText))
+    ?? canonicalSubjectByUniqueName.get(normalizedSubjectName(clue.text))
+    ?? null;
 }

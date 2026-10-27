@@ -13,7 +13,7 @@ import {
   FOOTBALL_WAVELENGTH_TARGET_POLICY_VERSION,
   createFootballWavelengthRound,
   createFootballWavelengthRun,
-  footballWavelengthClues,
+  footballWavelengthAvailableClues,
   nextFootballWavelengthClue,
   type FootballWavelengthRound,
   type FootballWavelengthRun,
@@ -36,7 +36,7 @@ function resolveChallengeRun(
   if (!seed) return null;
   const generatedRound = createFootballWavelengthRound(seed);
   const storedOpening = storedOpeningClueId
-    ? footballWavelengthClues.find((clue) => clue.id === storedOpeningClueId)
+    ? footballWavelengthAvailableClues.find((clue) => clue.id === storedOpeningClueId)
     : null;
   const initialRound = Number.isInteger(storedTarget) && storedOpening
     ? { target: clampWavelength(storedTarget!), clues: [storedOpening] }
