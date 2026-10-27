@@ -558,8 +558,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     statSheet: "The March 2024 Miami bout ended at 3:43 of the final round of the scheduled three.",
     explanation: "Jack Della Maddalena knocked out Gilbert Burns at 3:43 of Round 3 at UFC 299 on March 9, 2024, landing a knee during a takedown attempt and following with elbows for the stoppage.",
     evidence: [{ authority: "UFC 299 official main-card results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2", supportingDetail: "The official UFC recap confirms a Jack Della Maddalena knockout over Gilbert Burns with a knee and elbows at 3:43 of Round 3." }],
-  }
-  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  },  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:5:4": {
     id: "millionaire-ufc-future-rewrite-r6-q5",
     type: "featherweight-contenders", prompt: "Who defeated Brian Ortega by unanimous decision in the UFC 306 featherweight feature bout?",
@@ -880,8 +879,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     statSheet: "The December 2018 bout in Inglewood followed their acclaimed five-round meeting in 2013.",
     explanation: "Jon Jones stopped Alexander Gustafsson at 2:02 of Round 3 in their December 29, 2018 UFC 232 rematch, regaining the vacant light heavyweight championship five years after their first title-fight meeting.",
     evidence: [{ authority: "UFC 232 official main-event report", url: "https://www.ufc.com/news/ufc-232-main-event-report", supportingDetail: "UFC confirms Jones stopped Gustafsson at 2:02 of the third round to reclaim the vacant 205-pound title at UFC 232." }],
-  }
-  "ufc:3:2": {
+  },  "ufc:3:2": {
     id: "millionaire-ufc-future-retained-couture-first-two-divisions-q3", type: "two-weight-champions",
     prompt: "Who became the first UFC athlete to win championships in both heavyweight and light heavyweight?",
     choices: ["Randy Couture", "B.J. Penn", "Conor McGregor", "Dan Henderson"], answer: "Randy Couture",
