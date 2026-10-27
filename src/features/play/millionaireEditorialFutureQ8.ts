@@ -42,11 +42,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "NFL", url: "https://www.nfl.com/_amp/eagles-birthday-boy-cooper-dejean-super-bowl-pick-six-still-doesnt-feel-real", supportingDetail: "NFL confirms the rookie cornerback's 38-yard pick-six against Mahomes in Super Bowl LIX." },
   ),
   "nfl:1:7": q8(
-    "millionaire-nfl-future-tracy-porter-two-playoffs-q8", "postseason-turnovers",
-    "Which Saints cornerback intercepted BOTH Brett Favre in the NFC Championship and Peyton Manning in Super Bowl XLIV?",
-    ["Tracy Porter", "Darren Sharper", "Roman Harper", "Malcolm Jenkins"], "Tracy Porter",
-    "Tracy Porter intercepted Favre during the 2009 season's NFC title game and returned a Manning interception for a touchdown in Super Bowl XLIV.",
-    { authority: "NFL", url: "https://www.nfl.com/news/louisiana-native-porter-seals-saints-super-bowl-win-with-int-09000d5d816473bd", supportingDetail: "NFL 2010 Super Bowl reporting describes Porter's interception of Manning and his postseason play." },
+    "millionaire-nfl-future-willie-brown-super-bowl-xi-q8", "super-bowl-interception-history",
+    "Which Raiders defender returned an interception 75 yards for a touchdown in Super Bowl XI against Minnesota?",
+    ["Willie Brown", "Jack Tatum", "Skip Thomas", "George Atkinson"], "Willie Brown",
+    "Willie Brown intercepted Vikings quarterback Fran Tarkenton and returned it 75 yards for a touchdown in the fourth quarter of Super Bowl XI, helping Oakland defeat Minnesota 32–14 in January 1977.",
+    { authority: "Raiders official Super Bowl XI history", url: "https://www.raiders.com/history/super-bowl-xi", supportingDetail: "The Raiders' own championship account confirms Willie Brown's 75-yard interception-return touchdown against Minnesota in Super Bowl XI." },
   ),
   "nfl:2:7": q8(
     "millionaire-nfl-future-hubbard-ravens-fumble-q8", "playoff-turning-points",
