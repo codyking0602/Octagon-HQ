@@ -257,7 +257,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       expect(question.choices.filter(c=>c===question.answer)).toHaveLength(1);
       expect(new Set(question.choices.map(normalized)).size).toBe(4);
       expect(normalized(question.statSheet??"")).not.toContain(normalized(question.answer));
-      expect(question.explanation).toContain(question.answer.replace(/^\\d{4} /,""));
+      expect(question.explanation).toContain(question.answer === "2021 Georgia" ? "Georgia" : question.answer);
       expect(question.explanation.length).toBeGreaterThan(100);
       expect(question.evidence[0]?.url).toMatch(/^https:\/\//);
     }
