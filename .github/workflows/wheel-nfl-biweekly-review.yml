@@ -18,3 +18,4 @@ jobs:
       - run: node --check scripts/wheel-monitor/nfl-madden-review.mjs
       - run: node --check scripts/wheel-monitor/nfl-roster-integrity-pilot.mjs
       - run: node --check scripts/wheel-monitor/nfl-biweekly-consolidate.mjs
+      - run: node scripts/wheel-monitor/nfl-biweekly-consolidate.mjs
