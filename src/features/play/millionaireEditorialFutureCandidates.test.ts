@@ -91,6 +91,37 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("ufc", 2)[1]!.prompt).toContain("UFC 100");
   });
 
+  it("reviews all nine formerly untracked legacy UFC preview question positions", () => {
+    const checked = [
+      ["ufc:0:1", "Holly Holm", "https://www.ufc.com/news/ufc-193-rousey-vs-holm-final-results"],
+      ["ufc:1:1", "Chris Weidman", "https://www.ufc.com/event/ufc-162"],
+      ["ufc:1:6", "Benson Henderson", "https://www.ufc.com/news/ufc-lightweight-title-lineage-khabib-mcgregor-penn-poirier-oliveira"],
+      ["ufc:2:5", "Nate Diaz", "https://www.ufc.com/news/ufc-196-results-and-news"],
+      ["ufc:3:1", "Joanna Jedrzejczyk", "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results"],
+      ["ufc:3:2", "Randy Couture", "https://www.ufc.com/news/history-two-division-champions-part-1-ufc-freedom-250"],
+      ["ufc:4:5", "T.J. Dillashaw", "https://www.ufc.com/news/fight-night-dillashaw-vs-cruz-final-results"],
+      ["ufc:5:6", "Jose Aldo", "https://www.ufc.com/athlete/jose-aldo"],
+      ["ufc:9:4", "Joanna Jedrzejczyk", "https://www.ufc.com/news/ufc-womens-flyweight-title-lineage"],
+    ] as const;
+    expect(checked).toHaveLength(9);
+    for (const [key, answerText, url] of checked) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q).toBeDefined();
+      expect(q.answer).toBe(answerText);
+      expect(q.choices.filter(choice => choice === answerText)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(answerText));
+      expect(q.explanation).toContain(answerText === "Jose Aldo" ? "Aldo" : answerText === "Joanna Jedrzejczyk" ? "Joanna" : answerText);
+      expect(q.explanation.length).toBeGreaterThan(100);
+      expect(q.evidence[0]?.url).toBe(url);
+      const [league, runIndex, level] = key.split(":");
+      const historic = millionaireDailyRun(league as "ufc", Number(runIndex))[Number(level)]!;
+      expect(historic.id).not.toBe(q.id);
+    }
+    expect(millionaireDailyRun("ufc", 5)[6]!.statSheet).toContain("Aldo");
+    expect(MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:5:6"]!.statSheet).not.toContain("Aldo");
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],

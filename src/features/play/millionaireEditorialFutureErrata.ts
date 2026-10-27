@@ -842,4 +842,69 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "UFC official event recap", url: "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results", supportingDetail: "UFC 217 results confirm St-Pierre, Dillashaw and Namajunas each dethroned the champion in their championship fights on November 4, 2017." }],
   },
 
+  // All nine previously untracked retained UFC legacy slots; opt-in preview only.
+  "ufc:0:1": {
+    id: "millionaire-ufc-future-retained-holly-holm-rousey-193-q2", type: "title-upsets",
+    prompt: "Who ended Ronda Rousey's unbeaten MMA record by knockout at UFC 193 in November 2015?",
+    choices: ["Holly Holm", "Miesha Tate", "Amanda Nunes", "Cat Zingano"], answer: "Holly Holm",
+    statSheet: "The November 2015 Melbourne fight ended by a second-round head kick and follow-up punches.", explanation: "Holly Holm stopped previously undefeated Ronda Rousey 59 seconds into the second round at UFC 193 in Melbourne on November 14, 2015, claiming the bantamweight belt in one of MMA's biggest upsets.",
+    evidence: [{ authority: "UFC 193 official results", url: "https://www.ufc.com/news/ufc-193-rousey-vs-holm-final-results", supportingDetail: "Holly Holm stopped previously undefeated Ronda Rousey 59 seconds into the second round at UFC 193 in Melbourne on November 14, 2015, claiming the bantamweight belt in one of MMA's biggest upsets." }],
+  },
+  "ufc:1:1": {
+    id: "millionaire-ufc-future-retained-weidman-silva-162-q2", type: "middleweight-shocks",
+    prompt: "Which undefeated contender knocked out Anderson Silva at UFC 162 to end Silva's historic middleweight reign?",
+    choices: ["Chris Weidman", "Chael Sonnen", "Vitor Belfort", "Michael Bisping"], answer: "Chris Weidman",
+    statSheet: "The challenger finished the champion at 1:18 of Round 2 in July 2013 after entering without a professional loss.", explanation: "Chris Weidman knocked out Anderson Silva at 1:18 of Round 2 in the July 6, 2013 UFC 162 middleweight championship match, ending Silva's long title reign in the American wrestler's first UFC title fight.",
+    evidence: [{ authority: "UFC 162 official event result", url: "https://www.ufc.com/event/ufc-162", supportingDetail: "Chris Weidman knocked out Anderson Silva at 1:18 of Round 2 in the July 6, 2013 UFC 162 middleweight championship match, ending Silva's long title reign in the American wrestler's first UFC title fight." }],
+  },
+  "ufc:1:6": {
+    id: "millionaire-ufc-future-retained-benson-henderson-preceded-pettis-q7", type: "lightweight-lineage",
+    prompt: "Who held the UFC lightweight championship immediately before Anthony Pettis captured it at UFC 164?",
+    choices: ["Benson Henderson", "Frankie Edgar", "Rafael dos Anjos", "Gilbert Melendez"], answer: "Benson Henderson",
+    statSheet: "The new champion submitted his former WEC rival by armbar in the first round in Milwaukee in August 2013.", explanation: "Anthony Pettis submitted incumbent lightweight champion Benson Henderson in Round 1 of UFC 164 on August 31, 2013. Henderson had previously held the belt after beating Frankie Edgar; Pettis' win began his 2013–15 UFC lightweight title reign.",
+    evidence: [{ authority: "UFC lightweight title lineage", url: "https://www.ufc.com/news/ufc-lightweight-title-lineage-khabib-mcgregor-penn-poirier-oliveira", supportingDetail: "Anthony Pettis submitted incumbent lightweight champion Benson Henderson in Round 1 of UFC 164 on August 31, 2013. Henderson had previously held the belt after beating Frankie Edgar; Pettis' win began his 2013–15 UFC lightweight title reign." }],
+  },
+  "ufc:2:5": {
+    id: "millionaire-ufc-future-retained-nate-diaz-mcgregor-196-q6", type: "welterweight-upsets",
+    prompt: "Who submitted Conor McGregor with a rear-naked choke at UFC 196 after replacing Rafael dos Anjos on short notice?",
+    choices: ["Nate Diaz", "Dustin Poirier", "Khabib Nurmagomedov", "Chad Mendes"], answer: "Nate Diaz",
+    statSheet: "The finish came 4:12 into Round 2 during a March 2016 welterweight main event in Las Vegas.", explanation: "Nate Diaz submitted Conor McGregor via rear-naked choke at 4:12 of Round 2 at UFC 196 on March 5, 2016, after taking the fight on short notice and moving the bout to welterweight. It was one of the sport's signature 2016 upsets.",
+    evidence: [{ authority: "UFC 196 results", url: "https://www.ufc.com/news/ufc-196-results-and-news", supportingDetail: "Nate Diaz submitted Conor McGregor via rear-naked choke at 4:12 of Round 2 at UFC 196 on March 5, 2016, after taking the fight on short notice and moving the bout to welterweight. It was one of the sport's signature 2016 upsets." }],
+  },
+  "ufc:3:1": {
+    id: "millionaire-ufc-future-retained-joanna-loss-namajunas-217-q2", type: "strawweight-title-upsets",
+    prompt: "Which previously unbeaten champion did Rose Namajunas knock out to capture the strawweight belt at UFC 217?",
+    choices: ["Joanna Jedrzejczyk", "Jessica Andrade", "Zhang Weili", "Carla Esparza"], answer: "Joanna Jedrzejczyk",
+    statSheet: "The Madison Square Garden upset came at 3:03 of Round 1 in November 2017.", explanation: "Rose Namajunas knocked out then-unbeaten strawweight champion Joanna Jędrzejczyk at 3:03 of the first round at UFC 217 on November 4, 2017, breaking one of the division's longest reigning champions' streaks.",
+    evidence: [{ authority: "UFC 217 results", url: "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results", supportingDetail: "Rose Namajunas knocked out then-unbeaten strawweight champion Joanna Jędrzejczyk at 3:03 of the first round at UFC 217 on November 4, 2017, breaking one of the division's longest reigning champions' streaks." }],
+  },
+  "ufc:3:2": {
+    id: "millionaire-ufc-future-retained-couture-first-two-divisions-q3", type: "two-weight-champions",
+    prompt: "Who became the first UFC athlete to win championships in both heavyweight and light heavyweight?",
+    choices: ["Randy Couture", "B.J. Penn", "Conor McGregor", "Dan Henderson"], answer: "Randy Couture",
+    statSheet: "The pioneering champion captured UFC heavyweight gold in 1997 and a second division's belt in September 2003.", explanation: "Randy Couture first claimed UFC heavyweight gold at UFC Japan on December 21, 1997, and added the light heavyweight championship at UFC 44 on September 26, 2003, making him the first UFC champion in two weight classes.",
+    evidence: [{ authority: "UFC's two-division champion history", url: "https://www.ufc.com/news/history-two-division-champions-part-1-ufc-freedom-250", supportingDetail: "Randy Couture first claimed UFC heavyweight gold at UFC Japan on December 21, 1997, and added the light heavyweight championship at UFC 44 on September 26, 2003, making him the first UFC champion in two weight classes." }],
+  },
+  "ufc:4:5": {
+    id: "millionaire-ufc-future-retained-cruz-dillashaw-2016-title-q6", type: "bantamweight-comebacks",
+    prompt: "Which defending champion did Dominick Cruz edge by split decision to reclaim the bantamweight title in January 2016?",
+    choices: ["T.J. Dillashaw", "Cody Garbrandt", "Urijah Faber", "Renan Barao"], answer: "T.J. Dillashaw",
+    statSheet: "The five-round Boston bout ended with scorecards of 48–47, 49–46, and 46–49.", explanation: "Dominick Cruz defeated T.J. Dillashaw by split decision at UFC Fight Night in Boston on January 17, 2016, reclaiming the UFC bantamweight belt after multiple years of injuries and inactivity. The judges scored the five-round matchup 48–47, 49–46 and 46–49.",
+    evidence: [{ authority: "UFC official Dillashaw–Cruz results", url: "https://www.ufc.com/news/fight-night-dillashaw-vs-cruz-final-results", supportingDetail: "Dominick Cruz defeated T.J. Dillashaw by split decision at UFC Fight Night in Boston on January 17, 2016, reclaiming the UFC bantamweight belt after multiple years of injuries and inactivity. The judges scored the five-round matchup 48–47, 49–46 and 46–49." }],
+  },
+  "ufc:5:6": {
+    id: "millionaire-ufc-future-retained-aldo-inaugural-ufc-featherweight-q7", type: "division-history",
+    prompt: "Who was awarded the UFC's inaugural featherweight championship in 2010 when the WEC division joined the UFC?",
+    choices: ["Jose Aldo", "Urijah Faber", "Chad Mendes", "Mike Brown"], answer: "Jose Aldo",
+    statSheet: "The incoming champion won WEC gold in 2009 and defended it twice before the UFC transition.", explanation: "José Aldo received the UFC's first featherweight championship belt in November 2010 while already reigning as WEC featherweight champion. He had won that WEC belt in November 2009 and was unbeaten in all eight of his WEC appearances.",
+    evidence: [{ authority: "José Aldo UFC official fighter history", url: "https://www.ufc.com/athlete/jose-aldo", supportingDetail: "José Aldo received the UFC's first featherweight championship belt in November 2010 while already reigning as WEC featherweight champion. He had won that WEC belt in November 2009 and was unbeaten in all eight of his WEC appearances." }],
+  },
+  "ufc:9:4": {
+    id: "millionaire-ufc-future-retained-joanna-shevchenko-231-title-q5", type: "women-flyweight-lineage",
+    prompt: "Who lost to Valentina Shevchenko by unanimous decision in the vacant flyweight title bout at UFC 231?",
+    choices: ["Joanna Jedrzejczyk", "Jessica Eye", "Katlyn Chookagian", "Lauren Murphy"], answer: "Joanna Jedrzejczyk",
+    statSheet: "The December 2018 co-main event in Toronto went all five rounds and ended 49–46 on every card.", explanation: "Valentina Shevchenko defeated former strawweight champion Joanna Jędrzejczyk by unanimous decision, 49–46 on all three cards, at UFC 231 on December 8, 2018, taking the women's flyweight belt vacated by Nicco Montaño.",
+    evidence: [{ authority: "UFC women's flyweight title lineage", url: "https://www.ufc.com/news/ufc-womens-flyweight-title-lineage", supportingDetail: "Valentina Shevchenko defeated former strawweight champion Joanna Jędrzejczyk by unanimous decision, 49–46 on all three cards, at UFC 231 on December 8, 2018, taking the women's flyweight belt vacated by Nicco Montaño." }],
+  },
+
 };
