@@ -558,7 +558,7 @@ export const cirylGaneV2 = {
       "Prime begins with the February 2021 Rozenstruik win; early UFC fights are retained as pre-prime evidence.",
       "Only independently confirmed decision rounds are audited; other rounds are unavailable rather than invented."
     ],
-    "photoUrl": "assets/fighters/ciryl-gane-thumb.webp",
+    "photoUrl": "assets/fighters/ciryl-gane.webp",
     "thumbUrl": "assets/fighters/ciryl-gane-thumb.webp",
     "watchUrl": "https://youtu.be/5kk1024Kwb4?is=n4SJoj9qe4ZAKMSc",
     "watchLabel": "Watch: Alex Pereira interim-title moment",
