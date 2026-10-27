@@ -374,12 +374,12 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Active Bar Trivia fact collision retired from future-preview run 1 Q5.
   "ufc:0:4": {
     id: "millionaire-ufc-future-rewrite-r1-q5",
-    type: "inaugural-strawweight-championship",
-    prompt: "Who submitted Rose Namajunas in the 2014 TUF 20 Finale to become the first UFC strawweight champion?",
-    choices: ["Carla Esparza","Joanna Jędrzejczyk","Jessica Penne","Tecia Torres"], answer: "Carla Esparza",
-    statSheet: "The title was decided with a rear-naked choke in Round 3.",
-    explanation: "Carla Esparza submitted Rose Namajunas by rear-naked choke in the third round of The Ultimate Fighter 20 Finale on December 12, 2014, becoming the UFC's inaugural women's strawweight champion.",
-    evidence: [{ authority: "UFC official event/results", url: "https://www.ufc.com/news/wire-wire-esparza-wins-strawweight-crown", supportingDetail: "Carla Esparza submitted Rose Namajunas by rear-naked choke in the third round of The Ultimate Fighter 20 Finale on December 12, 2014, becoming the UFC's inaugural women's strawweight champion." }],
+    type: "heavyweight-defense-record",
+    prompt: "Who became the first UFC heavyweight champion to defend his title three straight times, defeating Francis Ngannou at UFC 220?",
+    choices: ["Stipe Miocic","Cain Velasquez","Daniel Cormier","Fabricio Werdum"], answer: "Stipe Miocic",
+    statSheet: "All three judges scored the January 2018 Boston fight 50–44 for the champion.",
+    explanation: "Stipe Miocic defeated Francis Ngannou by unanimous decision (50–44 on all three scorecards) at UFC 220 in January 2018, becoming the first UFC heavyweight champion to defend his title successfully three consecutive times.",
+    evidence: [{ authority: "UFC official result", url: "https://www.ufc.com/news/miocic-breaks-heavyweight-title-record-win-over-ngannou", supportingDetail: "Stipe Miocic defeated Francis Ngannou by unanimous decision (50–44 on all three scorecards) at UFC 220 in January 2018, becoming the first UFC heavyweight champion to defend his title successfully three consecutive times." }],
   },
   // Active Bar Trivia fact collision retired from future-preview run 1 Q6.
   "ufc:0:5": {

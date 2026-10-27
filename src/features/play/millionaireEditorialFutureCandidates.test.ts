@@ -1143,7 +1143,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     const updated: readonly [string, string][] = [
       ["ufc:0:2", "Who submitted Renato Moic"],
       ["ufc:0:3", "Who stopped Curtis Blaydes"],
-      ["ufc:0:4", "Who submitted Rose Namajunas"],
+      ["ufc:0:4", "Who became the first UFC heavyweight"],
       ["ufc:0:5", "Who defended the UFC bant"],
       ["ufc:1:3", "Who stopped Jamahal Hill "],
       ["ufc:1:4", "Who submitted Justin Gaet"],
@@ -1422,7 +1422,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       [8, 0, "Amanda Nunes", "UFC 232"],
       [10, 0, "Francis Ngannou", "UFC 260"],
       [0, 3, "Tom Aspinall", "UFC 304"],
-      [0, 4, "Carla Esparza", "2014 TUF 20"],
+      [0, 4, "Stipe Miocic", "UFC 220"],
       [3, 0, "Joaquin Buckley", "2020"],
     ] as const) {
       // New-run and replaced legacy questions are in the authored run; targeted
