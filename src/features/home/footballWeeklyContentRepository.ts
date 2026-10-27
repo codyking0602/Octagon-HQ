@@ -146,15 +146,21 @@ const editorialPlayerTeam = z.strictObject({
   team: z.string().trim().min(1), players: z.array(editorialPlayer).length(3),
 });
 
+const legacyMatchupProof = z.strictObject({
+  setup: z.array(z.string().trim().min(40)).length(2),
+  things: z.array(editorialBattle).length(3),
+  paths_to_win: z.array(editorialTeamPath).length(2),
+  players_to_watch: z.array(editorialPlayerTeam).length(2),
+  unit_edges: z.array(editorialBattle).length(2),
+});
+const lockedGOTWProof = z.strictObject({
+  setup: z.array(z.string().trim().min(40)).length(1),
+  things: z.array(z.strictObject({ title: z.string().trim().min(1), body: editorialText })).length(3),
+  bottom_line: z.string().trim().min(40),
+});
 export const footballWeeklyEditorialProofSchema = z.strictObject({
   source_urls: z.array(z.url().refine((url) => url.startsWith("https://"))).min(2),
-  breakdown: z.strictObject({
-    setup: z.array(z.string().trim().min(40)).length(2),
-    things: z.array(editorialBattle).length(3),
-    paths_to_win: z.array(editorialTeamPath).length(2),
-    players_to_watch: z.array(editorialPlayerTeam).length(2),
-    unit_edges: z.array(editorialBattle).length(2),
-  }),
+  breakdown: z.union([lockedGOTWProof, legacyMatchupProof]),
 });
 const preparedEditorial = footballWeeklyEditorialProofSchema.extend({
   prepared_at: z.iso.datetime({ offset: true }),
@@ -165,7 +171,7 @@ const preparedEditorial = footballWeeklyEditorialProofSchema.extend({
   armed_by: z.uuid().nullable().optional(),
   media_verification: z.strictObject({
     spotlight_url: z.url(),
-    header_url: z.url(),
+    header_url: z.url().optional(),
     deployed_sha: z.string().regex(/^[0-9a-f]{40}$/),
   }).optional(),
 });
@@ -185,11 +191,11 @@ export const footballWeeklyPreparedSpotlightSchema = footballWeeklySpotlightSche
 // One original SeatGeek matchup image contains both teams. Never accept a
 // two-player montage or arbitrary third-party image as new weekly artwork.
 export const footballWeeklyPreparedGameSchema = footballWeeklyGameSchema.safeExtend({
-  header_asset_path: z.string().regex(/^\/assets\/football\/weekly\/\d{4}-\d{2}-\d{2}\/(cfb|nfl)\/game-header[.]webp$/),
+  header_asset_path: z.string().regex(/^\/assets\/football\/weekly\/\d{4}-\d{2}-\d{2}\/(cfb|nfl)\/game-header[.]webp$/).optional(),
   header_photo_sources: z.array(z.url().refine((url) =>
     /^https:\/\/(www\.)?seatgeekimages\.com\/matchup\/[^?#]+\.(jpg|jpeg|png|webp)(\?[^#]*)?$/.test(url),
     "A real SeatGeek matchup graphic URL is required",
-  )).length(1),
+  )).length(1).optional(),
 });
 
 export const footballWeeklyContentPackageSchema = z.object({
@@ -212,7 +218,7 @@ export const footballWeeklyContentPackageSchema = z.object({
 
 export const footballWeeklyMediaVerificationSchema = z.strictObject({
   spotlight_url: z.url(),
-  header_url: z.url(),
+  header_url: z.url().optional(),
   deployed_sha: z.string().regex(/^[0-9a-f]{40}$/),
 });
 

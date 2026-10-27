@@ -124,19 +124,20 @@ export default function FootballPicksPage() {
   // They always take priority over the published weekly SeatGeek fallback,
   // even when both the NFL and CFB weekly breakdowns are present.
   const weeklyHeroes = useMemo(() => matchupBreakdowns
-    .filter((game) => Boolean(game.headerAssetPath))
     .map((game) => ({
       id: game.id,
       artwork: resolveFootballWeeklyHeaderArtwork(game),
-    })), [matchupBreakdowns]);
+    }))
+    .filter((game) => Boolean(game.artwork.primary))
+    // Approved weekly owner artwork runs NFL first, then CFB.
+    .sort((a, b) => Number(!a.id.endsWith("-nfl")) - Number(!b.id.endsWith("-nfl"))), [matchupBreakdowns]);
   const posters = useMemo(() => pickEventPosters(event), [event]);
   const [failedPosterSources, setFailedPosterSources] = useState<string[]>([]);
   const [failedWeeklyHeaderSources, setFailedWeeklyHeaderSources] = useState<string[]>([]);
   const usablePosters = posters.filter((image) => !failedPosterSources.includes(image.src));
   const poster = usablePosters[0] ?? null;
   const showOwnerGallery = usablePosters.length > 0;
-  // If the owner gallery is absent or every upload fails, revert to
-  // published SeatGeek images, then the quiet CSS background as last resort.
+  // Use the quiet existing background until owner-supplied custom artwork arrives.
   const visibleWeeklyHeroes = showOwnerGallery ? [] : weeklyHeroes;
   const slideCount = showOwnerGallery ? usablePosters.length : visibleWeeklyHeroes.length;
   const hasHero = slideCount > 0;

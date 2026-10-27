@@ -59,6 +59,29 @@ describe("Football weekly editorial package Phase 1", () => {
     expect(() => footballWeeklyDraftPatchSchema.parse({ status: "published" })).toThrow();
   });
 
+  it("allows researched screenshot-format GOTW without an uploaded header", () => {
+    const proof = {
+      source_urls: ["https://example.com/recap", "https://example.com/pregame"],
+      breakdown: {
+        setup: ["Both teams enter the weekend with meaningful strengths and some clear vulnerabilities."],
+        things: [1, 2, 3].map((i) => ({
+          title: "Deciding matchup " + i,
+          body: "The offense must win on early downs and avoid predictable passing situations.",
+        })),
+        bottom_line: "A clean first half and consistent third-down execution should decide the matchup.",
+      },
+    };
+    expect(footballWeeklyEditorialProofSchema.parse(proof)).toEqual(proof);
+    expect(() => footballWeeklyEditorialProofSchema.parse({
+      ...proof, breakdown: { ...proof.breakdown, things: proof.breakdown.things.slice(1) },
+    })).toThrow();
+    const game = footballWeeklyPreparedGameSchema.parse({
+      away_team: "Miami", home_team: "North Carolina",
+      kickoff_at: "2026-10-31T18:30:00-05:00",
+    });
+    expect(game.header_asset_path).toBeUndefined();
+  });
+
   it("stores nullable pending slots without publishing them", () => {
     const data = footballWeeklyContentPackageSchema.parse({
       week_of: "2026-10-13", release_at: "2026-10-13T05:00:00+00:00",
