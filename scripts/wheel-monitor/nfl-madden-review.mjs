@@ -88,8 +88,10 @@ export function flagDevelopmentProfiles(profiles,maddenFlags,gradeRows=[],contra
   const results=[],screened=[];
   for(const row of profiles){
     const reasons=[],age=Number(row.ageAtCalibration),decline=Number(row.declinePct);
-    const live=current.get(key(row.team,row.name,row.family));
-    const deal=contract.get(key(row.team,row.name,row.family));
+    const live=current.get(key(row.team,row.name,row.family)) ??
+      current.get(key(row.team,row.name,""));
+    const deal=contract.get(key(row.team,row.name,row.family)) ??
+      contract.get(key(row.team,row.name,""));
     const draftYear=Number(deal?.draftYear);
     if(draftYear===2025 || draftYear===2026){
       screened.push(row.id);
