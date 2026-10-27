@@ -48,8 +48,8 @@
 }
 .nba-find-leader-page .football-find-card__season { flex-shrink: 0; }
 .nba-find-leader-page .nba-find-card__photo.is-editorial img {
-  object-fit: cover;
-  object-position: center 25%;
+  object-fit: contain;
+  object-position: center top;
 }
 @media (max-width: 640px) {
   .nba-find-leader-page .football-find-card {
@@ -66,8 +66,8 @@
     font-size: 8px;
   }
   .nba-find-leader-page .nba-find-card__photo.is-editorial img {
-    object-fit: cover;
-    object-position: center 25%;
+    object-fit: contain;
+    object-position: center top;
   }
 }
 
