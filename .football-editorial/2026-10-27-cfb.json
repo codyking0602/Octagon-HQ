@@ -116,10 +116,11 @@
       "away_team": "Miami",
       "home_team": "North Carolina",
       "kickoff_at": "2026-10-31T18:30:00-05:00",
-      "header_asset_path": "/assets/football/weekly/2026-10-27/cfb/game-header.webp",
-      "header_photo_sources": [
-        "https://seatgeekimages.com/matchup/v3_6e917b14/5521/5519/450x450.jpg"
-      ]
+      "ranking_source": "AP",
+      "away_rank": 1,
+      "home_rank": null,
+      "away_record": "7-0",
+      "home_record": "4-3"
     },
     "editorial": {
       "source_urls": [
@@ -127,94 +128,29 @@
         "https://goheels.com/game-center/26883",
         "https://goheels.com/game-center/26881",
         "https://goheels.com/news/2026/10/3/football-recap-vs-notre-dame",
-        "https://www.si.com/betting/miami-vs-north-carolina-prediction-odds-and-key-players-to-watch-for-college-football-week-9-2026"
+        "https://www.si.com/betting/miami-vs-north-carolina-prediction-odds-and-key-players-to-watch-for-college-football-week-9-2026",
+        "https://www.collegepollarchive.com/football/ap/seasons.cfm",
+        "https://abc11.com/post/north-carolina-hosts-no-1-miami-fl-acc-matchup/19978829/"
       ],
       "breakdown": {
         "setup": [
-          "Unbeaten, top-ranked Miami visits Chapel Hill at 7:30 p.m. Eastern on ABC after scoring 52 points against Pittsburgh. Darian Mensah and Malachi Toney powered that win, while North Carolina hopes to deliver a major ACC upset in front of its home crowd.",
-          "Miami brings an explosive, efficient passing attack and a 7–0 start. The 4–3 Tar Heels have shown they can win close conference games, including road victories at Pittsburgh and Duke, but they need steadier offensive possessions against the Hurricanes."
+          "No. 1 Miami travels to Chapel Hill at 7:30 p.m. Eastern on ABC carrying a 7–0 record and the nation's most prolific offense at 49.0 points and 551.9 yards per game. Quarterback Darian Mensah and receiver Malachi Toney just fueled a 52–23 win over Pitt; North Carolina (4–3) has battled through a more uneven season and must find ways to keep the Hurricanes from turning this into a track meet."
         ],
         "things": [
           {
-            "title": "Containing Miami's aerial attack",
-            "body": "Mensah threw four touchdowns without a pick against Pitt, three to Toney. North Carolina must communicate against motion, contest throws at the catch point and force Miami to earn points in longer drives.",
-            "edge": "Miami"
+            "title": "MIAMI'S PASSING GAME VS. UNC'S COVERAGE",
+            "body": "Miami averages 340.7 passing yards per game, while Toney caught 16 passes for 194 yards and three scores against Pittsburgh. UNC must tackle immediately after the catch and keep Mensah from finding one-on-one shots downfield; asking its secondary to survive a steady diet of isolated matchups is dangerous."
           },
           {
-            "title": "Can UNC keep the ball?",
-            "body": "Billy Edwards Jr. and the Tar Heels need sustained first downs, fewer stalled drives and reliable field position. Giving Miami short fields or repeated quick possessions magnifies the mismatch.",
-            "edge": "Miami"
+            "title": "NORTH CAROLINA MUST STAY ON THE FIELD",
+            "body": "Miami converts 54.5% of its third downs, among the best marks nationally; North Carolina's defense allows a 43.1% conversion rate. The Tar Heels need to reverse that trend, avoid quick three-and-outs from Billy Edwards Jr.'s offense and shorten the game enough to reduce Miami's possessions."
           },
           {
-            "title": "Third-down protection",
-            "body": "North Carolina has to protect Edwards well enough to hit Jordan Shipp and tight end Jelani Thurman on intermediate routes. Miami can play aggressively if UNC falls into predictable long-yardage downs.",
-            "edge": "Miami"
+            "title": "THE GROUND GAME SETS THE TERMS",
+            "body": "Miami averages 211.1 rushing yards per game and holds opponents to only 60.0, the nation's stingiest rushing allowance. North Carolina has managed just 114.0 on the ground, so staying balanced without wasting early downs is a tall order. Negative rushing plays would leave Edwards facing a dangerous pressure defense."
           }
         ],
-        "paths_to_win": [
-          {
-            "team": "Miami",
-            "body": "Keep Mensah upright, make Toney a consistent target and spread the ball around when Carolina shades coverage. Miami can create separation by turning early possessions into touchdowns and preventing extended UNC drives."
-          },
-          {
-            "team": "North Carolina",
-            "body": "Play disciplined defense against explosive passes, finish tackles immediately and control the clock with Edwards and the rushing rotation. A turnover advantage and strong red-zone execution would keep the upset possible into the fourth."
-          }
-        ],
-        "players_to_watch": [
-          {
-            "team": "Miami",
-            "players": [
-              {
-                "name": "Darian Mensah",
-                "position": "QB",
-                "body": "The efficient Hurricanes passer has 22 touchdown passes and only one interception through seven games."
-              },
-              {
-                "name": "Malachi Toney",
-                "position": "WR",
-                "body": "The record-setting receiver enters after 16 catches, 194 yards and three touchdowns against Pitt."
-              },
-              {
-                "name": "Mark Fletcher Jr.",
-                "position": "RB",
-                "body": "Miami's physical running option helps punish defenses that overplay its passing threats."
-              }
-            ]
-          },
-          {
-            "team": "North Carolina",
-            "players": [
-              {
-                "name": "Billy Edwards Jr.",
-                "position": "QB",
-                "body": "His quick decisions and ball security will be essential against Miami's pressure."
-              },
-              {
-                "name": "Jordan Shipp",
-                "position": "WR",
-                "body": "North Carolina's leading receiver offers a route-running answer when defenses crowd the line."
-              },
-              {
-                "name": "Benjamin Hall",
-                "position": "RB",
-                "body": "The Tar Heels' leading rusher must help establish manageable third downs."
-              }
-            ]
-          }
-        ],
-        "unit_edges": [
-          {
-            "title": "Miami passing game vs Carolina secondary",
-            "body": "Miami's passing efficiency and Toney's recent production give the Hurricanes an advantage downfield. UNC's coverage has to prevent repeated explosive gains and limit yards after the catch.",
-            "edge": "Miami"
-          },
-          {
-            "title": "UNC offense vs Miami defense",
-            "body": "North Carolina has moved the ball in stretches but faces a sharper test of protection and situational execution. Miami can control the game by pressing Edwards and shutting down early-down rushing lanes.",
-            "edge": "Miami"
-          }
-        ]
+        "bottom_line": "North Carolina has a path if it limits explosive plays, wins the turnover battle and protects long possessions. Miami can take control much more simply: establish early-down balance, keep Mensah comfortable and make UNC answer an offense averaging seven touchdowns' worth of points every Saturday. The first few third-down series should reveal whether this can stay competitive."
       }
     }
   }
