@@ -601,9 +601,10 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("cfb", 0)[1]!.prompt).toContain("first College Football Playoff");
   });
 
-  it("uses modern facts instead of four older repetitive future questions", () => {
+  it("uses modern facts and the verified NFL run-14 ladder order", () => {
     const expected = [
-      ["nfl", 13, 5, "DeVonta Smith"],
+      ["nfl", 13, 3, "DeVonta Smith"],
+      ["nfl", 13, 5, "Brandon Aiyuk"],
       ["cfb", 14, 5, "Cam Skattebo"],
       ["ufc", 13, 3, "Dricus du Plessis"],
       ["ufc", 14, 6, "Alex Pereira"],
