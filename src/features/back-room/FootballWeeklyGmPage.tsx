@@ -31,8 +31,8 @@ const OCT20_SCENARIOS: typeof OCT13_SCENARIOS = [
 ];
 
 const OCT27_SCENARIOS: typeof OCT13_SCENARIOS = [
-  { id: "elite", title: "CHOOSE YOUR RECEIVER", quarterback: "WR Run", development: "Choose from 12 approved wide receivers. Normal progression and real GM contracts." },
-  { id: "young", title: "CHOOSE YOUR RUNNING BACK", quarterback: "RB Run", development: "Choose from five running backs, including McCaffrey as a Decline Risk wildcard." },
+  { id: "elite", title: "CHOOSE YOUR RECEIVER", quarterback: "WR Run", development: "Pick your starting receiver." },
+  { id: "young", title: "CHOOSE YOUR RUNNING BACK", quarterback: "RB Run", development: "Pick your starting running back." },
 ];
 
 function scenariosForWeek(weekStart: string, preview: boolean) {
@@ -230,7 +230,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
             <Link to={preview ? "/football/weekly-gm" : "/football"}>← {preview ? "OFFICIAL GM WEEK" : "FOOTBALL PLAY"}</Link>
             <p className="eyebrow">{preview ? "OWNER PLAYTEST" : "WEEKLY FEATURED · CHAMPIONSHIP 10%"}</p>
             <h1>{preview ? "TEST WEEKLY GM" : "NFL GM CHAMPIONSHIP"}</h1>
-            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · Two official franchises · $150M cap · Six spins each{isOct27Week ? " · Choose your WR and RB" : ""}</p>
+            <p className="football-weekly-gm__summary">{formatWeek(state.week_start)} · $150M cap · Six spins each</p>
             <p className="football-weekly-gm__progress">
               <strong>{myTotal.toFixed(1)} / 200</strong>
               <span>{Number(state.attempts.elite?.completed ?? false) + Number(state.attempts.young?.completed ?? false)} of 2 completed</span>
@@ -293,7 +293,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
               <details className="football-weekly-gm__scout-key">
                 <summary>WHAT DO THE SCOUTING BADGES MEAN?</summary>
                 <p><strong>ELITE / IMPACT</strong> describe current talent. Exact overall ratings stay hidden, just as in regular GM.</p>
-                <p><strong>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</strong> summarize player-specific development probabilities, not guaranteed improvement or decline. McCaffrey is the one permitted Decline Risk pick.</p>
+                <p><strong>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</strong> summarize player-specific development probabilities, not guaranteed improvement or decline.</p>
                 <p><strong>1YR</strong> means the salary reprices in the offseason; LOW / MED / HIGH REPRICE estimates the increase. <strong>3YR · SALARY LOCKED</strong> means the existing salary stays fixed over the three-season run.</p>
               </details>
               <div className="football-weekly-gm__picker-list" role="group" aria-label="Approved franchise starters">
