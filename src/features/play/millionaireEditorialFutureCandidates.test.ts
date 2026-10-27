@@ -182,6 +182,25 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireFutureEditorialDailyRun("nfl", 14)[2]!.statSheet).not.toContain("LSU");
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[3]!.statSheet).not.toContain("Vanderbilt");
     expect(millionaireFutureEditorialDailyRun("ufc", 14)[4]!.statSheet).not.toContain("Kazakh");
+    // CFB run 14's locally source-reviewed progression must preserve eight distinct
+    // historically anchored facts without answer leakage or mismapped options.
+    const cfbRun14 = millionaireFutureEditorialDailyRun("cfb", 13);
+    expect(cfbRun14.map(answer)).toEqual([
+      "Alabama", "Baylor", "J.J. McCarthy", "Trevor Etienne",
+      "Carson Palmer", "Georgia", "Michael Crabtree", "Jack Sawyer",
+    ]);
+    cfbRun14.forEach((question, index) => {
+      expect(question.choices).toHaveLength(4);
+      expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
+      expect(question.explanation.length).toBeGreaterThan(100);
+      if (index === 7) {
+        expect(question.statSheet).toBeNull();
+        expect(question.lifelineCompatibility).toMatchObject({ fiftyFifty: false, statSheet: false, doubleDip: false });
+      } else {
+        expect(question.statSheet).toBeTruthy();
+        expect(normalized(question.statSheet!)).not.toContain(normalized(answer(question)));
+      }
+    });
     // Keep known cross-game overlaps out of the actual preview board.
     expect(answer(millionaireFutureEditorialDailyRun("cfb", 14)[3]!)).toBe("Diego Pavia");
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[3]!.prompt).not.toContain("Who won the 2025 Heisman");
