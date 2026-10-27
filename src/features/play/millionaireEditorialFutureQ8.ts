@@ -65,7 +65,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
   "nfl:6:7": q8(
     "millionaire-nfl-future-2001-tuck-rule-woodson-q8", "playoff-controversy",
     "Which Raiders defender knocked the ball from Tom Brady on the controversial Tuck Rule play in the 2001 season's AFC divisional playoff?",
-    ["Charles Woodson", "Greg Biekert", "Eric Allen", "Rod Woodson"], "Charles Woodson",
+    ["Charles Woodson", "Greg Biekert", "Eric Allen", "Tory James"], "Charles Woodson",
     "Charles Woodson dislodged the ball and Greg Biekert recovered, but the replay ruling overturned the fumble. New England tied the game and won 16-13 in overtime.",
     { authority: "New England Patriots", url: "https://www.patriots.com/news/patriots-earn-spot-in-afc-championship-game-120896", supportingDetail: "Patriots' Jan. 2002 game report identifies Woodson forcing the would-be fumble, reversal under the Tuck Rule, and overtime win." },
   ),

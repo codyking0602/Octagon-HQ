@@ -15,6 +15,18 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+
+  it("uses four true 2001 Raiders on the Tuck Rule future final", () => {
+    const q = MILLIONAIRE_FUTURE_Q8_REWRITES["nfl:6:7"]!;
+    expect(q.answer).toBe("Charles Woodson");
+    expect(q.prompt).toContain("Tuck Rule");
+    expect(q.choices).toEqual(["Charles Woodson", "Greg Biekert", "Eric Allen", "Tory James"]);
+    expect(q.choices).not.toContain("Rod Woodson");
+    expect(q.statSheet).toBeNull();
+    expect(q.evidence[0]!.url).toContain("patriots.com");
+    expect(answer(millionaireFutureEditorialDailyRun("nfl",6)[7]!)).toBe("Charles Woodson");
+  });
+
   it("retains eight sourced NFL CFB UFC legacy-preview factual reveals", () => {
     const cases = [
       ["nfl:9:0","Chargers","2001–2005"],
