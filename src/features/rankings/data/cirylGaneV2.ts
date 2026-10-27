@@ -545,8 +545,8 @@ export const cirylGaneV2 = {
     "divisionLabel": "Heavyweight",
     "resumeTag": "Two-time interim heavyweight title winner; undisputed champion by elevation",
     "oneLiner": "A mobile, technically sophisticated heavyweight striker with two interim-title wins, wins over deep contender opposition, and an undisputed belt awarded after Aspinall vacated.",
-    "whyRankedHere": "Gane stopped Derrick Lewis for the 2021 interim title, beat ranked heavyweights including Alexander Volkov twice, Rozenstruik, Tuivasa and Spivac, and knocked out two-division champion Alex Pereira for a second interim title in 2026. He was subsequently elevated to undisputed champion after Tom Aspinall vacated.",
-    "whyNotHigher": "He lost his unification bid to Francis Ngannou and was submitted quickly by Jon Jones for the vacant undisputed belt. The 2025 Aspinall eye-poke result is a no contest, not a victory; the September 2026 promotion is administrative, not a new title-fight win. No undisputed title defense has been completed as of October 27, 2026.",
+    "whyRankedHere": "Gane stopped Derrick Lewis for interim gold, defeated heavyweight contenders Alexander Volkov twice, Jairzinho Rozenstruik, Tai Tuivasa and Serghei Spivac, then knocked out Alex Pereira for a second interim title before being elevated to undisputed champion.",
+    "whyNotHigher": "Ngannou beat him in a five-round unification, and Jon Jones submitted him in the opening round. The Aspinall bout ended in a no contest; promotion to undisputed champion brought no completed title defense.",
     "finalTakeaway": "A legitimate all-time heavyweight contender with two interim-title wins and a long top-tier run, but no completed successful undisputed defense and defining losses against the strongest champions of his era.",
     "keyJudgmentCalls": [
       "Only 14 completed UFC appearances through October 27, 2026 (11-2, one no contest); the scheduled Josh Hokit bout is excluded.",
