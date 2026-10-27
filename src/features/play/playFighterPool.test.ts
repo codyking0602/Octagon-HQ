@@ -60,12 +60,21 @@ describe("canonical Play fighter pool", () => {
     const rankingSlugs = new Set(allTime.map((fighter) => fighter.slug));
     const rankingNames = new Set(allTime.map((fighter) => normalized(fighter.name)));
 
+    // Keep the sealed Play-only editorial audit, but a later all-time ranking
+    // promotion must use the ranking owner's grade and identity in actual Play.
+    const promoted = playOnlyFighterRatings.filter((fighter) => rankingSlugs.has(fighter.id));
+    expect(promoted.map((fighter) => fighter.id)).toEqual(["ciryl-gane"]);
     for (const fighter of playOnlyFighterRatings) {
-      expect(rankingSlugs.has(fighter.id), `${fighter.id} must not be a ranked duplicate`).toBe(false);
+      if (rankingSlugs.has(fighter.id)) {
+        expect(rankingNames.has(normalized(fighter.name))).toBe(true);
+        expect(playFighters.filter((row) => row.id === fighter.id)).toHaveLength(1);
+        expect(playFighters.find((row) => row.id === fighter.id)?.model).not.toBeNull();
+        continue;
+      }
       expect(rankingNames.has(normalized(fighter.name)), `${fighter.name} must not be a ranked duplicate`).toBe(false);
     }
 
-    expect(playOnly.length).toBe(playOnlyFighterRatings.length);
+    expect(playOnly.length).toBe(playOnlyFighterRatings.length - promoted.length);
   });
 
   it("has one stable identity per Play fighter with canonical Play-only slugs", () => {
