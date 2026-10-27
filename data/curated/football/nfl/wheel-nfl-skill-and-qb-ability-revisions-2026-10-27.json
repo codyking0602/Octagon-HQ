@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-wheel-week7-seven-additional-ability-2026-10-27-v1",
+  "effectiveDate": "2026-10-27",
+  "sport": "NFL",
+  "asOf": "2026-10-25",
+  "semantics": "Seven additional evidence-backed current NFL ability corrections; separate from the five-QB Week 7 revision already merged in #2207. Current grades are not three-season GM projections.",
+  "changes": [
+    {
+      "team": "CAR",
+      "family": "QB",
+      "player": "Bryce Young",
+      "oldGrade": 83,
+      "newGrade": 86,
+      "priorEffectiveDate": "2026-10-08",
+      "reason": "Six 2026 starts total 1,712 passing yards, 12 TD and 4 INT, with at least two passing TD and at most one interception in four of his first five starts and NFL's Week 7 QB Index placing him seventh among starters entering Week 7. A very poor Week 7 (163 yards, two INT) and 60%-range accuracy prevent an elite regrade; modestly above average current-ability grade acknowledges sustained improvements over his prior baseline.",
+      "sourceUrls": [
+        "https://www.nfl.com/players/bryce-young/stats/logs/2026/",
+        "https://www.nfl.com/news/nfl-qb-rankings-index-week-7-2026-nfl-season"
+      ]
+    },
+    {
+      "team": "DAL",
+      "family": "QB",
+      "player": "Dak Prescott",
+      "oldGrade": 92,
+      "newGrade": 88,
+      "priorEffectiveDate": "2026-10-03",
+      "reason": "Through six 2026 starts: 1,639 yards, 10 TD and 5 INT. Consecutive losses vs Tampa Bay and Green Bay included four interceptions and poor blitz handling; NFL Week 7 QB Index dropped him to No. 19 and documented decision/pressure issues. Preserve above-average veteran ability in 88 rather than overreacting to two games, but the Oct 3 near-elite 92 no longer reflects current execution.",
+      "sourceUrls": [
+        "https://www.nfl.com/players/dak-prescott/stats/logs/2026/",
+        "https://www.nfl.com/news/nfl-qb-rankings-index-week-7-2026-nfl-season",
+        "https://www.nfl.com/news/the-cowboys-have-played-poorly-vs-the-blitz-the-past-2-weeks-what-s-the-problem"
+      ]
+    },
+    {
+      "team": "SEA",
+      "family": "QB",
+      "player": "Sam Darnold",
+      "oldGrade": 88,
+      "newGrade": 83,
+      "priorEffectiveDate": "2026-10-03",
+      "reason": "After a Super Bowl season, his 2026 line is 1,290 yards and 8 TD/8 INT across six appearances (five full starts), with 62.1% completions. At least one interception in all five full starts through Week 7, with two picks in three of those games and increased sacks/pressure warrant a meaningful current-ability reset, balanced against Week 7's improved efficiency, 2025 performance, and the early hip/line context; this is not a projection of permanent decline.",
+      "sourceUrls": [
+        "https://www.nfl.com/players/sam-darnold/stats/logs/2026/",
+        "https://www.nfl.com/news/sam-darnold-hasn-t-picked-up-where-he-left-off-how-concerning-is-his-sluggish-start",
+        "https://www.seahawks.com/news/sam-darnold-and-offense-have-more-effective-cleaner-showing-in-week-7-win"
+      ]
+    },
+    {
+      "team": "KC",
+      "family": "RB",
+      "player": "Kenneth Walker",
+      "oldGrade": 91,
+      "newGrade": 94,
+      "priorEffectiveDate": "2026-10-08",
+      "reason": "NFL official 2026 rushing leaderboard through Week 7: 701 yards on 120 carries (5.8 YPC), six rushing TD, no rushing fumbles, plus 116 receiving yards and two receiving TD in only six games. At roughly 117 rush yards per appearance and a 2025 Super Bowl MVP foundation, present ability belongs alongside Cook/Henry's 94 rather than at 91; cap under Bijan/Gibbs ceiling.",
+      "sourceUrls": [
+        "https://www.nfl.com/players/kenneth-walker-iii/stats/career",
+        "https://www.nfl.com/stats/player-stats/category/rushing/2026/REG/all/rushingyards/DESC"
+      ]
+    },
+    {
+      "team": "NYJ",
+      "family": "RB",
+      "player": "Braelon Allen",
+      "oldGrade": 78,
+      "newGrade": 82,
+      "priorEffectiveDate": "2026-10-03",
+      "reason": "Seven 2026 appearances yielded 418 rush yards on 91 carries (4.6 YPC), including 357 on 72 carries (5.0) in four October games and 24 first-down carries overall. The larger October workload shows real current rotational/starter utility versus an original shaky 78; limited overall receiving/TD impact and shorter peak justify 82, not a star tier.",
+      "sourceUrls": [
+        "https://www.nfl.com/players/braelon-allen/stats/splits/2026/",
+        "https://www.pro-football-reference.com/years/2026/rushing.htm"
+      ]
+    },
+    {
+      "team": "GB",
+      "family": "WR",
+      "player": "Matthew Golden",
+      "oldGrade": 81,
+      "newGrade": 85,
+      "priorEffectiveDate": "2026-10-03",
+      "reason": "Seven 2026 games: 36 catches, 540 yards (15 yards per catch) and 3 TD, up from 29/361/0 across 14 games in 2025. Three 100-plus yard games by Week 6 and repeatable explosive production are a genuine breakout, not an assumed depth-chart upgrade; 85 recognizes strong present play while remaining below proven top receivers.",
+      "sourceUrls": [
+        "https://www.nfl.com/players/matthew-golden/stats/career",
+        "https://www.nfl.com/players/matthew-golden/stats/logs/2026/"
+      ]
+    },
+    {
+      "team": "GB",
+      "family": "WR",
+      "player": "Christian Watson",
+      "oldGrade": 85,
+      "newGrade": 89,
+      "priorEffectiveDate": "2026-10-03",
+      "reason": "Seven straight 2026 starts with 34 catches, 595 yards at 17.5 yards/catch and six TD, including 147-yard and 143-yard games. This follows a 2025 611-yard/six-TD campaign in only ten appearances. Consistent verified explosive ability merits 89 vs original 85, short of the 90+ high-volume elite WR tier given prior availability/target concerns.",
+      "sourceUrls": [
+        "https://www.nfl.com/players/christian-watson/stats/career",
+        "https://www.nfl.com/players/christian-watson/stats/logs/2026/"
+      ]
+    }
+  ],
+  "historicalRule": "Append future Wheel grade authority rows only. Preserve existing #2207 five-QB revision, October 3/8 baselines, completed Wheel games, all 594 historical NFL GM identities, salaries, development profiles, and save outcomes."
+}
