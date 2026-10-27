@@ -53,9 +53,11 @@ if(m){
   if(m.baselineProvenance?.kind==="EA archived historical iteration" &&
      m.exactOctober3SourceCertified!==true)
     blockers.push("madden:archived-week-3-is-not-a-certified-october-3-capture");
+  const archived=m.baselineProvenance?.kind==="EA archived historical iteration";
   const start=Date.parse(m.baselineObservedAt??"");
   const end=Date.parse(m.currentObservedAt??"");
-  if(Number.isFinite(start)&&Number.isFinite(end)){
+  counts.maddenComparisonDays=null;
+  if(!archived&&Number.isFinite(start)&&Number.isFinite(end)){
     const days=(end-start)/86400000;
     counts.maddenComparisonDays=Math.round(days*100)/100;
     if(days<7)blockers.push("madden:short-comparison-window-not-a-representative-biweekly-cycle");
