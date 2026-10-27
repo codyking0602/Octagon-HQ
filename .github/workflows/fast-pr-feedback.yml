@@ -110,7 +110,7 @@ jobs:
           millionaire_only=true
           for file in "${files[@]}"; do
             case "$file" in
-              src/features/play/millionaire*.ts|docs/audits/millionaire*.csv|docs/audits/millionaire*.md|.github/workflows/fast-pr-feedback.yml)
+              src/features/play/millionaire*.ts|docs/audits/millionaire*.csv|docs/audits/millionaire*.md|supabase/tests/daily_challenge_standings.sql|.github/workflows/fast-pr-feedback.yml)
                 ;;
               *)
                 millionaire_only=false
