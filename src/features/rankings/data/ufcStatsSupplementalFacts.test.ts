@@ -21,6 +21,15 @@ const EXPECTED_UNRECONCILED = [
   "Joshua Van|2025-12-06-alexandre-pantoja",
   "Joshua Van|2026-05-09-tatsuro-taira",
   "Joshua Van|2026-09-19-alexandre-pantoja",
+  "Natalia Silva|2022-06-18-jasmine-jasudavicius",
+  "Natalia Silva|2022-11-19-tereza-bleda",
+  "Natalia Silva|2023-05-20-victoria-leonardo",
+  "Natalia Silva|2023-08-19-andrea-lee",
+  "Natalia Silva|2024-02-03-viviane-araujo",
+  "Natalia Silva|2024-09-07-jessica-andrade",
+  "Natalia Silva|2025-05-10-alexa-grasso",
+  "Natalia Silva|2026-01-24-rose-namajunas",
+  "Natalia Silva|2026-10-03-wang-cong",
 ].sort();
 
 describe("canonical UFCStats supplemental fight snapshot", () => {
@@ -45,14 +54,13 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
   });
 
   it("covers every canonical ranked UFC fight without inventing source matches or zeroes", () => {
-    // The sealed UFCStats export predates the October 2026 Gane addition.
-    // Preserve complete coverage of all previously reconciled fighters;
-    // expressly mark his new fights as awaiting a source-ID audit instead
-    // of inventing supplemental UFCStats IDs or zero-value statistics.
-    const awaitingUfcStatsAudit = new Set(["ciryl-gane"]);
+    // The historical UFCStats snapshot has been explicitly reconciled for Natalia,
+    // but Gane has not yet been mapped to provider-specific fight IDs. Do not
+    // invent supplemental source IDs or imply missing statistics are zero.
+    const pendingSourceAudit = new Set(["ciryl-gane"]);
     const expectedSlugs = canonicalRankingInputs.fighters
       .map((fighter) => fighter.presentation.slug)
-      .filter((slug) => !awaitingUfcStatsAudit.has(slug))
+      .filter((slug) => !pendingSourceAudit.has(slug))
       .sort();
     expect(Object.keys(ufcStatsSupplementalFactsSnapshot.fighters).sort()).toEqual(expectedSlugs);
 
@@ -67,7 +75,7 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
     let unavailableKnockdownRows = 0;
 
     for (const fighter of canonicalRankingInputs.fighters) {
-      if (awaitingUfcStatsAudit.has(fighter.presentation.slug)) {
+      if (pendingSourceAudit.has(fighter.presentation.slug)) {
         expect(fighter.fighter).toBe("Ciryl Gane");
         expect(fighter.facts.fights).toHaveLength(14);
         expect(fighter.facts.fights.every((fight) => fight.supplementalFacts === undefined)).toBe(true);
@@ -92,7 +100,11 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
             reason: "no-unique-source-match",
           });
           expect(snapshotRow.source.checkedAt).toBe(
-            fighter.fighter === "Royce Gracie" ? "2026-08-18" : "2026-09-29",
+            fighter.fighter === "Royce Gracie"
+              ? "2026-08-18"
+              : fighter.fighter === "Natalia Silva"
+                ? "2026-10-27"
+                : "2026-09-29",
           );
           expect(fight.supplementalFacts).toBeUndefined();
           continue;

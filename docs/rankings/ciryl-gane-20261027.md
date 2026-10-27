@@ -42,7 +42,7 @@ Decision-scorecard confirmations: [UFC Rozenstruik 50-45 sweep](https://www.ufc.
 
 ## Calculation and population verification
 
-The canonical roster uses `src/features/rankings/data/v2RankingRoster.ts` with this fighter supplied by `cirylGaneV2.ts`; the sealed 80-fighter migration JSON is untouched, as are every existing fighter's fights and judgments. Population: **83 total V2 fighters** (the historical 80 + RDA + Joshua Van + Ciryl Gane). The shared model-as-of anchor remains **2026-09-19** so already-ranked active fighters' longevity totals cannot shift just because this isolated candidate is added; the fight audit includes all completed Gane appearances through **October 27, 2026**.
+The canonical roster uses `src/features/rankings/data/v2RankingRoster.ts` with this fighter supplied by `cirylGaneV2.ts`; the sealed 80-fighter migration JSON is untouched, as are every existing fighter's fights and judgments. Population: **84 total V2 fighters** (historical 80 + RDA + Joshua Van + Natalia Silva + Ciryl Gane). The existing main model-as-of anchor remains **2026-10-27**; Natalia Silva and every other fighter's existing score-bearing inputs are preserved. Actual placement must be recalculated on the reconciled head.
 
 The engine owns rank, score, category contributions and division-relative placement. `cirylGaneV2.test.ts` emits the exact actual calculated score and immediate overall/heavyweight neighbors to CI under `[GANE_V2_CALCULATED]` for auditable reconciliation. Do **not** state a rank or score without reading this actual calculation from exact-head CI.
 

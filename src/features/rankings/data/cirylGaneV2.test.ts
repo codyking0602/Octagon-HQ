@@ -20,7 +20,7 @@ describe("October 2026 isolated Ciryl Gane V2 all-time addition", () => {
       primary: "new-blood",
       secondary: null,
     });
-    expect(canonicalRankingInputs.counts.fighters).toBe(83);
+    expect(canonicalRankingInputs.counts.fighters).toBe(84);
     expect(canonicalRankingInputs.counts.men).toBe(
       canonicalRankingInputs.fighters.filter((f) => f.board === "men").length,
     );
@@ -34,7 +34,7 @@ describe("October 2026 isolated Ciryl Gane V2 all-time addition", () => {
     expect(resolveWatchMomentAction("ciryl-gane")?.url).toBe("https://youtu.be/5kk1024Kwb4?is=n4SJoj9qe4ZAKMSc");
     expect(current?.presentation.signatureFightUrl).toBe("https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL");
     expect(resolveProfileWatchAction("ciryl-gane")?.url).toBe("https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL");
-    expect(canonicalRankingInputs.source.modelAsOfDate).toBe("2026-09-19");
+    expect(canonicalRankingInputs.source.modelAsOfDate).toBe("2026-10-27");
     expect(getFighter("ciryl-gane")?.fighter).toBe("Ciryl Gane");
   });
 

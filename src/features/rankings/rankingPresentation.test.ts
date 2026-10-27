@@ -35,6 +35,15 @@ describe("ranking profile watch actions", () => {
     expect(resolveWatchMomentAction("joshua-van")?.url).toBe(
       "https://youtube.com/shorts/owyAiZa33XY?is=vNNc2me-zGbAnNZ3",
     );
+    expect(resolveProfileWatchAction("natalia-silva")).toMatchObject({
+      source: "signature",
+      url: "https://youtu.be/E-UiQ6go8gg?is=akiwYYjzjt2EIfTo",
+    });
+    expect(resolveWatchMomentAction("natalia-silva")).toMatchObject({
+      source: "watch-moment",
+      label: "Watch Moment",
+      url: "https://youtube.com/shorts/TifIqSRo9_o?is=qzR-PQaz55qb05YI",
+    });
   });
 
   it("never routes a signature-fight action to UFC Fight Pass search", () => {

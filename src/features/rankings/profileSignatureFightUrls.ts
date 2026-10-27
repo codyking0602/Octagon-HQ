@@ -36,7 +36,6 @@ export const profileSignatureFightUrls = {
   "glover-teixeira": "https://www.youtube.com/watch?v=dAsCS4R0cuE",
   "dustin-poirier": "https://youtu.be/m3N1WuErSlg?is=_jDLz8z8YOZmGC9q",
   "alex-pantoja": "https://youtu.be/7sj-snC5qWk?is=_DkasmmAc4OA-IDR",
-  "ciryl-gane": "https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL",
   "joshua-van": "https://youtu.be/nwO2UPz7p28?is=YgmgRj5wjPQQuw8i",
   "rafael-dos-anjos": "https://youtu.be/PQhcgZ4uulQ?is=ih4Qv5lsthLNKgkS",
   "leon-edwards": "https://youtu.be/cBa12HbgdpA?is=394cct3V_dK5UMpz",
@@ -82,6 +81,9 @@ export const profileSignatureFightUrls = {
   "cris-cyborg": "https://www.youtube.com/watch?v=cQN5Jd6WBms",
   "carla-esparza": "https://youtu.be/jJeZ2wZv0YQ?is=QOK9v0B_kfqvZgqd",
   "alexa-grasso": "https://youtu.be/P0U_W35_cJw?is=mRmw6BHCQGDfTygx",
+  // Owner-provided Natalia Silva full-fight destination (October 27, 2026).
+  "natalia-silva": "https://youtu.be/E-UiQ6go8gg?is=akiwYYjzjt2EIfTo",
+  "ciryl-gane": "https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL",
   "kayla-harrison": "https://youtu.be/UUMlLth-4uQ?is=ZmRXsN5bIzaY1_rq",
   "mackenzie-dern": "https://youtu.be/Gnf14OGq9VY?is=AWeo4KKp08bB0v5k",
   "julianna-pena": "https://youtu.be/tB_Xg1LbMVQ?is=cMc6BXC1LV3u8rJa",

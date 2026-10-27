@@ -1,4 +1,5 @@
 import historicalMigrationSeedJson from "./generated/canonical-ranking-inputs-842ba06e.json";
+import { nataliaSilvaRankingInput } from "./nataliaSilvaRanking";
 import { cirylGaneV2 } from "./cirylGaneV2";
 
 export interface V2RankingRosterOverlay {
@@ -1679,6 +1680,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     ),
     joshuaVan,
     cirylGaneV2,
+    nataliaSilvaRankingInput,
   ],
   replacements: {
     "Jon Jones": intentionalEditorialReview(
@@ -2573,14 +2575,18 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       primary: "new-blood",
       secondary: null,
     },
+    "Natalia Silva": {
+      primary: "new-blood",
+      secondary: null,
+    },
     "Ciryl Gane": {
       primary: "new-blood",
       secondary: null,
     },
   },
-  modelAsOfDate: "2026-09-19",
-  factsVersion: "octagon-hq-v2-gane-facts-20261027",
-  judgmentVersion: "octagon-hq-v2-gane-judgments-20261027",
-  eraDepthVersion: "octagon-hq-v2-van-era-depth-20260919",
-  eraDepthResolutionVersion: "octagon-hq-v2-van-era-depth-20260919",
+  modelAsOfDate: "2026-10-27",
+  factsVersion: "octagon-hq-v2-natalia-silva-facts-20261027",
+  judgmentVersion: "octagon-hq-v2-natalia-silva-judgments-20261027",
+  eraDepthVersion: "octagon-hq-v2-natalia-silva-era-depth-20261027",
+  eraDepthResolutionVersion: "octagon-hq-v2-natalia-silva-era-depth-20261027",
 };

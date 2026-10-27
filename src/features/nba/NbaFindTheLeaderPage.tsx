@@ -139,7 +139,7 @@ export default function NbaFindTheLeaderPage() {
       onEliminate={result ? null : eliminate} renderVisual={visual}
       formatValue={formatNbaFindLeaderValue}
     />
-    <NbaPortraitCredits names={board.candidates.map(candidate => candidate.name)} />
+    {result && <NbaPortraitCredits names={board.candidates.map(candidate => candidate.name)} />}
     {result && <GameResultActions onChallenge={() => void challengeSomeone()}
       onReplay={replay} onAllGames={() => navigate("/nba")}
       replayLabel={isDaily ? "REPLAY TODAY" : isShared ? "REPLAY CHALLENGE" : "NEW LINEUP"}
