@@ -551,4 +551,32 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
     expect(appearances).toEqual({ nfl: 14, cfb: 13, ufc: 13 });
   });
+
+  it("gives every future-only UFC legacy replacement an informative reveal and an intact 8-step ladder", () => {
+    for (const index of [6, 7, 8]) {
+      const run = millionaireFutureEditorialDailyRun("ufc", index);
+      expect(run).toHaveLength(8);
+      run.forEach((question, i) => {
+        const correct = answer(question);
+        expect(question.explanation, `UFC run ${index + 1} Q${i + 1}`).toContain(correct);
+        expect(question.explanation.length).toBeGreaterThan(100);
+        expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
+        expect(question.level).toBe(`Q${i + 1}`);
+        if (i === 7) {
+          expect(question.statSheet).toBeNull();
+          expect(question.lifelineCompatibility).toMatchObject({ fiftyFifty: false, statSheet: false, doubleDip: false });
+        } else {
+          expect(question.statSheet).toBeTruthy();
+          expect(normalized(question.statSheet!)).not.toContain(normalized(correct));
+        }
+      });
+    }
+    const dramaticFinal = millionaireFutureEditorialDailyRun("ufc", 7)[7]!;
+    expect(answer(dramaticFinal)).toBe("Cory Sandhagen");
+    expect(dramaticFinal.prompt).toContain("28 seconds");
+    expect(dramaticFinal.explanation).toContain("flying knee");
+    const volkov = millionaireFutureEditorialDailyRun("ufc", 7)[6]!;
+    expect(volkov.prompt).not.toContain("15 seconds remaining");
+  });
+
 });

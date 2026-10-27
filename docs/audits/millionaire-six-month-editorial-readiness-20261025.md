@@ -157,3 +157,14 @@ Compared 160 old NFL and college Millionaire questions with current selectable B
 ### Four polished future-only replacements in run 14/15
 
 Replaced the 1990 Giants backup quarterback and 1976 Pitt title questions with DeVonta Smith's Super Bowl LIX 46-yard touchdown and Cam Skattebo's 2025 Peach Bowl trick-pass touchdown. Replaced a redundant TUF coaches question with Dricus du Plessis' UFC 305 title defense and obscure early-TUF knockout trivia with Ilia Topuria's UFC 317 knockout of Charles Oliveira. All four source-supported with precise winners, three distractors, answer-safe hints, and new answer reveals; original future question IDs stay within their 8-question run and current historic Daily is unchanged. **Future ledger: 121 KEEP / 111 HOLD / 232 entries.** Release still blocked pending independent review of all 360 effective positions and cross-game full bank.
+
+
+### Oct 26: UFC replacement runs 7–9 substantive playable reveal repair (draft-only)
+
+- Replaced the auto-generated answer-plus-hint reveal with 21 standalone, informative post-answer explanations across UFC future-only legacy replacement runs 7–9. All 24 question positions now have authored payoff reveals, including three previously explicit Q8s (one now replaced).
+- Corrected UFC replacement run 8 Q7's overly precise 15-seconds-remaining Volkov description to the source-safe 'closing seconds'; UFC reporting varies slightly on exact stoppage timestamp. Correct fighter is Derrick Lewis, and his comeback remains intact.
+- Replaced UFC replacement run 8 Q8's underwhelming Esparza–Namajunas UFC 274 decision with Cory Sandhagen's officially documented 28-second flying-knee knockout of Frankie Edgar. The four options and spoiler-free Q8/no-lifeline format are retained. An alternative Yair Rodriguez–Korean Zombie final was **rejected** because active Bar Trivia Evergreen UFC Wave 5 already asks about that same last-second elbow fact.
+- Synchronized all 24 UFC replacement ledger rows and added explicit tests for those authored explanations, choice integrity, non-leaking Stat Sheets and the changed final. This work is actual future candidate content, not a certification framework. The ledger's 111 remaining HOLD labels are **not** promoted by these changes; editorial verification of the full 360 effective positions remains outstanding.
+- Sources checked for the two repaired finishes: https://www.ufc.com/news/lewis-stuns-reyes-impresses-ufc-229-main-card and https://www.ufc.com/news/ufc-fight-night-overeem-vs-volkov-results-winners-vegas-18. This does not establish comprehensive source review or active-bank collision clearance.
+
+**Status stays DRAFT / NOT CERTIFIED / no main or production changes.**
