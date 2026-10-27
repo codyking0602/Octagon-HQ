@@ -30,6 +30,7 @@ import {
   keepCutTier,
 } from "./keepCutEngine";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
+import { advanceUfcFindLeader as advanceFindLeader, advanceUfcWavelength as advanceWavelength } from "./ufcDailyActionCore";
 import { buildUfcHigherLowerTwoGameDailyPublication, advanceUfcHigherLowerDailyRuntime } from "./ufcHigherLowerDailyRuntime";
 import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
 import { createUfcWhoAmIAuthoredDailyRounds } from "./ufcWhoAmIAuthoredDaily";
@@ -726,108 +727,6 @@ export function buildOfficialDailySetup(
     }
     default: throw new Error(`Unsupported official daily game ${String(gameType)}.`);
   }
-}
-
-function advanceFindLeader(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
-  const evidence = context.privateSetupEvidence;
-  const candidateIds = stringArray(evidence.candidate_ids, "Find the Leader candidate ids");
-  const leaderId = String(evidence.leader_id ?? "");
-  const prior = stringArray(context.submissionState.eliminated_ids ?? [], "Find the Leader progress");
-  const eliminatedId = String(action.eliminated_id ?? "");
-  if (!candidateIds.includes(eliminatedId)) throw new Error("That fighter is not on the official board.");
-  if (prior.includes(eliminatedId)) throw new Error("That fighter has already been eliminated.");
-  const eliminatedIds = [...prior, eliminatedId];
-  const complete = eliminatedId === leaderId || eliminatedIds.length === candidateIds.length - 1;
-  const finalSubmission = complete ? { eliminated_ids: eliminatedIds } : null;
-  return {
-    submissionState: { eliminated_ids: eliminatedIds, final_submission: finalSubmission },
-    publicState: {
-      complete,
-      eliminated_ids: eliminatedIds,
-      native_progress: complete && eliminatedId !== leaderId ? 10 : eliminatedIds.length,
-    },
-    complete,
-    finalSubmission,
-  };
-}
-
-function wavelengthClueFor(id: string) {
-  const clue = wavelengthClues.find((row) => row.id === id);
-  if (!clue) throw new Error(`Official Wavelength clue ${id} is unavailable.`);
-  return clue;
-}
-
-function wavelengthRecentHistoryFromEvidence(evidence: JsonRecord): WavelengthRecentHistory {
-  const targets = integerArray(evidence.recent_targets ?? [], "Wavelength recent targets", 1, 100);
-  const clueIds = stringArray(evidence.recent_clue_ids ?? [], "Wavelength recent clue ids");
-  return {
-    targets,
-    clueIds,
-    categories: [...new Set(clueIds.map((id) => wavelengthClueFor(id).category))],
-    clueSequenceKeys: stringArray(
-      evidence.recent_clue_sequence_keys ?? [],
-      "Wavelength recent clue sequence keys",
-    ),
-  };
-}
-
-function advanceWavelength(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
-  const target = integer(context.privateSetupEvidence.target, "Wavelength target", 1, 100);
-  const priorGuesses = Array.isArray(context.submissionState.guesses)
-    ? context.submissionState.guesses.map((value) => integer(value, "Wavelength guess", 1, 100))
-    : [];
-  if (priorGuesses.length >= 4) throw new Error("The official Wavelength round is already complete.");
-  const guess = integer(action.guess, "Wavelength guess", 1, 100);
-  const guesses = [...priorGuesses, guess];
-  const openingClueId = String(context.privateSetupEvidence.opening_clue_id ?? "");
-  const priorClueIds = stringArray(context.submissionState.clue_ids ?? [openingClueId], "Wavelength clue ids");
-  let clueIds = [...priorClueIds];
-
-  if (guesses.length < 4) {
-    const round: WavelengthRound = {
-      target,
-      clues: clueIds.map(wavelengthClueFor),
-      versions: WAVELENGTH_CONTRACT_VERSIONS,
-    };
-    const random = seededLineupRandom(
-      OFFICIAL_DAILY_RUNTIME_VERSION,
-      context.setupKey,
-      "clue",
-      guesses.join(","),
-      guesses.length,
-    );
-    const nextClue = nextWavelengthClue(
-      round,
-      guess,
-      guesses.length,
-      random,
-      wavelengthRecentHistoryFromEvidence(context.privateSetupEvidence),
-    );
-    clueIds = [...clueIds, nextClue.id];
-  }
-
-  const complete = guesses.length === 4;
-  const finalSubmission = complete ? { guesses } : null;
-  return {
-    submissionState: { guesses, clue_ids: clueIds, final_submission: finalSubmission },
-    publicState: {
-      complete,
-      guesses,
-      clues: clueIds.map((id) => cluePresentation(wavelengthClueFor(id))),
-      next_guess_number: complete ? null : guesses.length + 1,
-      reveal: complete
-        ? {
-            target,
-            clues: clueIds.map((id) => {
-              const clue = wavelengthClueFor(id);
-              return { ...cluePresentation(clue), rating: clue.rating };
-            }),
-          }
-        : null,
-    },
-    complete,
-    finalSubmission,
-  };
 }
 
 function advanceBlindResumeV2(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {

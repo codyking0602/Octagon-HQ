@@ -9,6 +9,18 @@ const outDir = resolve(repoRoot, "supabase/functions/daily-challenge-runtime");
 const footballScheduleVersion = "football-daily-v18-average-fan-oct1";
 const bundles = [
   {
+    label: "UFC Find the Leader action-only runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/UfcFindLeaderAdvance.ts"),
+    fileName: "ufc-find-leader-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
+    label: "UFC Wavelength action-only runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/UfcWavelengthAdvance.ts"),
+    fileName: "ufc-wavelength-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
     label: "legacy-feud action-only Daily runtime",
     entry: resolve(repoRoot, "src/features/play/leanDaily/LegacyFeudAdvance.ts"),
     fileName: "legacy-feud-advance.generated.mjs",
