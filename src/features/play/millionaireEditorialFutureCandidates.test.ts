@@ -475,7 +475,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["nfl", 13, 5, "DeVonta Smith"],
       ["cfb", 14, 5, "Cam Skattebo"],
       ["ufc", 13, 3, "Dricus du Plessis"],
-      ["ufc", 14, 6, "Ilia Topuria"],
+      ["ufc", 14, 6, "Alex Pereira"],
     ] as const;
     for (const [league, index, level, winner] of expected) {
       const question = millionaireFutureEditorialDailyRun(league, index)[level]!;

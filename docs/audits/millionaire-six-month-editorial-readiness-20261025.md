@@ -168,3 +168,11 @@ Replaced the 1990 Giants backup quarterback and 1976 Pitt title questions with D
 - Sources checked for the two repaired finishes: https://www.ufc.com/news/lewis-stuns-reyes-impresses-ufc-229-main-card and https://www.ufc.com/news/ufc-fight-night-overeem-vs-volkov-results-winners-vegas-18. This does not establish comprehensive source review or active-bank collision clearance.
 
 **Status stays DRAFT / NOT CERTIFIED / no main or production changes.**
+
+### October 26 — fix duplicate UFC title finish across distinct candidate runs
+
+Future UFC new run 15 Q7 had repeated the **exact same UFC 317 Topuria–Oliveira first-round lightweight title knockout** already present in the UFC future replacement run 7 Q8. Replaced only run 15 Q7 with **Pereira's 80-second TKO of Ankalaev at UFC 320**, checked against UFC's official Oct 4, 2025 main-card report. Kept four distinct alternatives, answer-safe hint and explanatory reveal, updated regression expectation and changed this slot from provisional KEEP to **HOLD** pending distinct-fact and all-choice certification. This is a genuine within-Millionaire factual collision, not merely a repeat athlete. Same source bank, feature branch and draft PR; no main or production changes.
+
+Source: https://www.ufc.com/news/ufc-320-ankalaev-vs-pereira-2-event-tonight-main-card-results-recaps-highlights-interviews
+
+The candidate ledger should now read **120 KEEP / 112 HOLD / 232 total**; no blanket certification is claimed.
