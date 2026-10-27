@@ -47,6 +47,20 @@ const sport = {
 const item = parsePublishedFootballWeek({ cfb: sport, nfl: null });
 
 describe("public Football weekly release projection", () => {
+  it("provides canonical NFL logos automatically for the October 27 Bears-Seahawks release", () => {
+    const week = parsePublishedFootballWeek({ cfb: null, nfl: {
+      ...sport,
+      week_of: "2026-10-27",
+      game: { ...sport.game, away_team: "Chicago Bears", home_team: "Seattle Seahawks",
+        kickoff_at: "2026-11-03T01:15:00Z" },
+    } });
+    const matchup = publishedFootballMatchup("nfl", week.nfl!);
+    expect(matchup.teams.map((team) => team.logoUrl)).toEqual([
+      "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png",
+      "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png",
+    ]);
+  });
+
   it("maps published data into established Home Spotlight without changing its layout", () => {
     const spotlight = footballPublishedSpotlight(item.cfb!);
     expect(spotlight.teamColor).toBe("#008435");

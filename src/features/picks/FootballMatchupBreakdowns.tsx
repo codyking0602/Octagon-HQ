@@ -6,6 +6,7 @@ import FootballPushControl from "../picks-control/FootballPushControl";
 import { createPickControlRepository } from "../picks-control/pickControlRepository";
 import type { FootballMatchupBreakdown, FootballMatchupRichTextPart } from "./footballMatchupBreakdowns";
 import { footballDateTimeLabel } from "./footballTime";
+import { footballNflMatchupTeamLogoUrl } from "./footballNflMatchupTeamLogo";
 import { usePicks } from "./PicksProvider";
 
 function MatchupRichText({ parts }: { parts: FootballMatchupRichTextPart[] }) {
@@ -71,7 +72,9 @@ function CompactMatchupHeader({
     identity: ReturnType<typeof footballWeeklySuperteamIdentity>;
     side: "away" | "home";
   }) {
-    const logoSrc = team.logoUrl ?? identity.logoSrc;
+    const logoSrc = team.logoUrl ?? (leagueLabel === "NFL"
+      ? footballNflMatchupTeamLogoUrl(team.name)
+      : identity.logoSrc);
     const rankLabel = rankingSource && team.rank != null ? `${rankingSource} #${team.rank}` : null;
 
     const contents = (
