@@ -249,6 +249,20 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("cfb",7)[2]!.prompt).toContain("fourth-down");
   });
 
+  it("preserves eight sourced CFB historical award and upset facts without hint leakage", () => {
+    const entries = ["cfb:0:5","cfb:1:2","cfb:1:3","cfb:2:4","cfb:2:5","cfb:2:6","cfb:3:0","cfb:3:3"] as const;
+    for (const key of entries) {
+      const question=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(question).toBeDefined();
+      expect(question.choices.filter(c=>c===question.answer)).toHaveLength(1);
+      expect(new Set(question.choices.map(normalized)).size).toBe(4);
+      expect(normalized(question.statSheet??"")).not.toContain(normalized(question.answer));
+      expect(question.explanation).toContain(question.answer.replace(/^\\d{4} /,""));
+      expect(question.explanation.length).toBeGreaterThan(100);
+      expect(question.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
