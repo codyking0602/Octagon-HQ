@@ -3,7 +3,6 @@ name: Wheel NFL Production Evidence Review (staged)
 on:
   workflow_dispatch:
   workflow_call:
-  workflow_call:
   push:
     branches: [main]
     paths:
@@ -130,14 +129,6 @@ jobs:
         with:
           name: wheel-nfl-madden-biweekly-checkpoint
           path: tmp/wheel-monitor/madden/rolling-baseline.json
-          if-no-files-found: error
-          retention-days: 90
-      - name: Preserve biweekly rolling checkpoint (never overwrite frozen original)
-        if: github.event_name == 'workflow_call' && success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: wheel-nfl-madden-biweekly-checkpoint
-          path: tmp/wheel-monitor/madden/checkpoint.json
           if-no-files-found: error
           retention-days: 90
       - name: Publish read-only candidate flags
