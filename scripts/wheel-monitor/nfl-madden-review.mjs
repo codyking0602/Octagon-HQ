@@ -164,7 +164,22 @@ async function main(){
   const contractsFile=authority.match(/contractFile:\s*"([^"]+)"/)?.[1];
   if(!contractsFile)throw new Error("GM contracts binding is missing");
   const contracts=JSON.parse(readFileSync("data/generated/football/"+contractsFile,"utf8")).players;
-  report.developmentReview=flagDevelopmentProfiles(profiles,report.flags,currentGrades,contracts,report.rosterHints);
+  // Development recalibration is deliberately a SECOND stage, after HQ ratings
+  // decisions are made and their approved grades are merged. Madden is not a
+  // substitute for the owner's football judgment or development calibration.
+  report.developmentReview={
+    status:"deferred-until-hq-rating-review-complete",
+    population:profiles.length,firstTwoSeasonsScreened:0,candidates:[],
+    unmatchedMaddenFlags:[],
+    note:"Run the independent post-rating development workflow after approved HQ grades are published."
+  };
+  report.baselineProvenance=baseline.provenance??{
+    kind:"captured-EA-snapshot",
+    observedAt:baseline.observedAt
+  };
+  report.exactOctober3SourceCertified=false;
+  report.reviewSequence=["madden-overall-flags","owner-ratings-decisions",
+    "approved-hq-grade-publication","post-rating-development-review"];
   mkdirSync(dirname(baselinePath),{recursive:true});
   mkdirSync(dirname(output),{recursive:true});
   if(!hadBaseline)writeFileSync(baselinePath,JSON.stringify(baseline,null,2)+"\n");
