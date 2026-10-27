@@ -377,6 +377,10 @@ describe("Auction catalog expansion migration", () => {
     const normalize = (value: string) => value.replaceAll("’", "'").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     const ranked = new Map(rankedPlayFighters.map((fighter) => [normalize(fighter.name), fighter]));
     const facts = new Map(canonicalRankingInputs.fighters.map((fighter) => [normalize(fighter.fighter), fighter]));
+    // The original released KO Auction grade is frozen at its publication-era
+    // five-knockout record. Volkanovski earned another KO in October 2026,
+    // but that later all-time ledger change must not regrade past auctions.
+    const sealedKnockoutScores: Record<string, number> = { "Alexander Volkanovski": 85 };
     for (const mode of ["strikers", "grapplers", "knockout-artists"] as const) {
       const rows = [...catalogSql.matchAll(new RegExp(`'${mode}-(?:1[7-9]|[2-4][0-9])','((?:[^']|'')*)'.*?jsonb_build_object\\('overall',(\\d+)`, "g"))];
       expect(rows, mode).toHaveLength(32);
@@ -389,7 +393,7 @@ describe("Auction catalog expansion migration", () => {
         if (mode === "knockout-artists") {
           const koWins = facts.get(normalize(name))!.facts.fights.filter((fight) => fight.officialResult === "win" && fight.methodCategory === "ko-tko").length;
           expect(koWins, `${name} has no completed UFC knockout`).toBeGreaterThan(0);
-          expect(Number(row[2]), name).toBe(Math.min(95, 75 + koWins * 2));
+          expect(Number(row[2]), name).toBe(sealedKnockoutScores[name] ?? Math.min(95, 75 + koWins * 2));
         }
       }
     }
