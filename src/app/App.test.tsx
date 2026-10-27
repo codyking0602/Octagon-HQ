@@ -5,7 +5,7 @@ import { AppProviders } from "./providers";
 import { appRoutes } from "./router";
 import { categoryBoard } from "../features/rankings/rankingControls";
 import { categoryDisplayRating } from "../features/rankings/rankingDisplay";
-import { allTime, getFighter } from "../features/rankings/rankingModel";
+import { allTime, getFighter, menAllTime } from "../features/rankings/rankingModel";
 import { categoryBarFillPercent, profileCategories, profileCategoryRows, profileDisplayName, tierForRating } from "../features/rankings/profilePresentation";
 import { profileCopy, whyNotProfileCopy } from "../features/rankings/FighterProfilePage";
 import { resolveProfileWatchAction } from "../features/rankings/rankingPresentation";
@@ -41,7 +41,7 @@ describe("Octagon HQ V2", () => {
     expect(screen.queryByText(/UFC-only/i)).not.toBeInTheDocument();
 
     const summary = screen.getByLabelText("P4P ranking summary");
-    expect(summary).toHaveTextContent("67");
+    expect(summary).toHaveTextContent(String(menAllTime.length));
 
     const jonProfile = screen.getByRole("link", { name: "View Jon Jones profile" });
     expect(jonProfile).toHaveAttribute("href", "/fighters/jon-jones");
@@ -119,14 +119,14 @@ describe("Octagon HQ V2", () => {
     renderRoute("/rankings");
     await screen.findByRole("heading", { name: "UFC All-Time P4P" });
 
-    const search = screen.getByPlaceholderText("Search 67 fighters");
+    const search = screen.getByPlaceholderText(`Search ${menAllTime.length} fighters`);
     fireEvent.change(search, { target: { value: "Matt Hughes" } });
     expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("1");
     expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Clear ranking filters" }));
     expect(search).toHaveValue("");
-    expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("67");
+    expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent(String(menAllTime.length));
     expect(screen.queryByRole("button", { name: "Clear ranking filters" })).not.toBeInTheDocument();
   });
 
