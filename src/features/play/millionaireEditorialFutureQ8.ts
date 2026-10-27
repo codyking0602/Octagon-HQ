@@ -140,11 +140,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2023/1/26/ncg-recap-2023", supportingDetail: "CFP identifies Bullard as Defensive Player of the Game with two interceptions and a fumble recovery against TCU." },
   ),
   "ufc:0:7": q8(
-    "millionaire-ufc-future-first-fight-gordeau-q8", "ufc-origins",
-    "Who won the first bout in UFC history by stopping Teila Tuli at UFC 1 in 1993?",
-    ["Gerard Gordeau", "Royce Gracie", "Ken Shamrock", "Patrick Smith"], "Gerard Gordeau",
-    "Gerard Gordeau knocked out Teila Tuli in 26 seconds in the first fight on UFC 1's card.",
-    { authority: "UFC official event", url: "https://www.ufc.com/event/ufc-1", supportingDetail: "The inaugural event results list Gordeau's KO of Tuli at 0:26, the promotion's opening bout." },
+    "millionaire-ufc-future-ngannou-rozenstruik-249-q8", "heavyweight-finishes",
+    "Who knocked out Jairzinho Rozenstruik in only 20 seconds at UFC 249?",
+    ["Francis Ngannou", "Derrick Lewis", "Curtis Blaydes", "Alexander Volkov"], "Francis Ngannou",
+    "Francis Ngannou stopped Jairzinho Rozenstruik in only 20 seconds of Round 1 at UFC 249 in May 2020, halting the previously undefeated contender's rise.",
+    { authority: "UFC official UFC 249 results", url: "https://www.ufc.com/news/ufc-249-results-ferguson-gaethje-cruz-cejudo", supportingDetail: "UFC records Ngannou's first-round knockout of Rozenstruik at 0:20." },
   ),
   "ufc:2:7": q8(
     "millionaire-ufc-future-poirier-saint-denis-299-q8", "lightweight-comebacks",
@@ -161,11 +161,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "UFC title lineage", url: "https://www.ufc.com/news/ufc-light-heavyweight-title-lineage-jones-cormier-blachowicz-teixeira-prochazka", supportingDetail: "Official lineage records Blachowicz taking the vacant belt from Reyes at UFC 253." },
   ),
   "ufc:4:7": q8(
-    "millionaire-ufc-future-139-shogun-henderson-q8", "classic-fights",
-    "Who defeated Mauricio 'Shogun' Rua by decision in their celebrated five-round UFC 139 main event?",
-    ["Dan Henderson", "Forrest Griffin", "Jon Jones", "Lyoto Machida"], "Dan Henderson",
-    "Dan Henderson defeated Mauricio Rua by unanimous decision after a five-round classic at UFC 139.",
-    { authority: "UFC event coverage", url: "https://www.ufc.com/news/ufc-139-main-event-results-epic-henderson-ekes-rua-classic", supportingDetail: "Official report records Henderson's 48-47 unanimous decision over Rua." },
+    "millionaire-ufc-future-machida-evans-98-q8", "light-heavyweight-history",
+    "Who knocked out Rashad Evans in Round 2 at UFC 98 to win the light heavyweight championship?",
+    ["Lyoto Machida", "Quinton Jackson", "Jon Jones", "Forrest Griffin"], "Lyoto Machida",
+    "Lyoto Machida knocked out previously unbeaten champion Rashad Evans at 3:57 of Round 2 at UFC 98 in May 2009, beginning his reign as UFC light heavyweight champion.",
+    { authority: "UFC light heavyweight title history", url: "https://www.ufc.com/news/10-best-light-heavyweight-title-fights", supportingDetail: "UFC confirms Machida's knockout of Evans at 3:57 of Round 2 to capture the title." },
   ),
   "ufc:5:7": q8(
     "millionaire-ufc-future-diaz-ferguson-279-q8", "late-submission-finishes",
