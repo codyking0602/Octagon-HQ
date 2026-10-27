@@ -263,6 +263,17 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("checks eight further sourced CFB awards, championship paths and season distinctions", () => {
+    for (const key of ["cfb:4:0","cfb:4:3","cfb:4:4","cfb:4:5","cfb:4:6","cfb:5:4","cfb:5:5","cfb:5:6"] as const) {
+      const question=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(question.choices.filter(c=>c===question.answer)).toHaveLength(1);
+      expect(new Set(question.choices.map(normalized)).size).toBe(4);
+      expect(normalized(question.statSheet??"")).not.toContain(normalized(question.answer));
+      expect(question.explanation.length).toBeGreaterThan(110);
+      expect(question.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
