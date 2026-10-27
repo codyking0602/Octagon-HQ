@@ -87,15 +87,23 @@ describe("canonical Wavelength catalog", () => {
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 40 && item.rating <= 60)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 75 && item.rating <= 89)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 90)).toBe(true);
-    expect(wavelengthCatalog.filter((item) => item.status === "retired")).toHaveLength(27);
+    expect(wavelengthCatalog.filter((item) => item.status === "retired")).toHaveLength(29);
+    for (const id of ["wl-ufc-balance-553", "wl-ufc-balance-555"]) {
+      expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
+      expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
+    }
+    for (const id of ["wl-ufc-balance-633", "wl-ufc-balance-634"]) {
+      expect(wavelengthClues.find((item) => item.id === id)).toMatchObject({ category: "EVENTS & FIGHTS" });
+    }
     expect(wavelengthCatalog.some((item) => item.status === "quarantined")).toBe(true);
     expect(wavelengthClues.some((item) => item.id.includes("quarantine"))).toBe(false);
   });
 
   it("documents explicit calibration and historical version identifiers", () => {
-    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v4");
+    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v5");
     expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v2");
     expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v3");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v4");
     expect(WAVELENGTH_CALIBRATION_VERSION).toBe("wavelength-calibration-v1");
     expect(WAVELENGTH_GENERATOR_VERSION).toBe("wavelength-generator-v4");
     expect(WAVELENGTH_REVEAL_CONTRACT_VERSION).toBe("wavelength-reveal-privacy-v1");
