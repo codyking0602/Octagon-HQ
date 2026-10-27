@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 
 describe("October 2026 Marvin Harrison Jr. verified ARI -> HOU trade", () => {
   const mhj = "Marvin Harrison Jr.";
-  it("selects the WR on Houston, not Arizona, without changing 32 clubs / 626 non-Flex records", () => {
+  it("selects the WR on Houston, not Arizona, while preserving 32 clubs and excluding three verified released players", () => {
     expect(priorities.teams.ARI.WR).not.toContain(mhj);
     expect(priorities.teams.ARI.Flex).not.toContain(mhj);
     expect(priorities.teams.HOU.WR[0]).toBe(mhj);
@@ -16,7 +16,7 @@ describe("October 2026 Marvin Harrison Jr. verified ARI -> HOU trade", () => {
     const all = Object.values(priorities.teams).reduce((sum, t) =>
       sum + Object.entries(t).filter(([slot]) => slot !== "Flex")
         .reduce((n, [,names]) => n + names.length, 0), 0);
-    expect(all).toBe(626);
+    expect(all).toBe(623);
   });
   it("keeps 594 GM identities, player grade/salary/term, and original saved playerId", () => {
     expect(contracts.players).toHaveLength(594);

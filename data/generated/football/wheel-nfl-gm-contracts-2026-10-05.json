@@ -2764,7 +2764,8 @@
         "otcId": 5777,
         "yearSigned": 2026,
         "years": 1
-      }
+      },
+      "currentRosterEligible": false
     },
     {
       "team": "CHI",
@@ -6533,7 +6534,8 @@
         "otcId": 7962,
         "yearSigned": 2026,
         "years": 1
-      }
+      },
+      "currentRosterEligible": false
     },
     {
       "team": "IND",
@@ -11009,7 +11011,8 @@
         "otcId": 9488,
         "yearSigned": 2026,
         "years": 1
-      }
+      },
+      "currentRosterEligible": false
     },
     {
       "team": "NYG",
