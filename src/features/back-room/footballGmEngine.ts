@@ -1,3 +1,4 @@
+import nflCurrentAbilityRevisions from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-26.json";
 import {
   contractsArtifact,
   frontSevenGradesArtifact,
@@ -147,6 +148,16 @@ for (const [family, artifact] of gradeArtifacts) {
   for (const row of artifact.grades) {
     gradeByKey.set(gradeKey(row.team, family, row.player), row.grade);
   }
+}
+/** Exact-identity, evidence-backed current upgrades. Original October 3 grades
+ * remain the historical seed, and backend Wheel picks remain immutable snapshots.
+ */
+for (const revision of nflCurrentAbilityRevisions.changes) {
+  const key = gradeKey(revision.team, revision.family, revision.player);
+  if (gradeByKey.get(key) !== revision.oldGrade) {
+    throw new Error(`Unexpected original NFL ability for ${key}`);
+  }
+  gradeByKey.set(key, revision.newGrade);
 }
 
 function playerId(contract: WheelFootballGmContractRow) {
