@@ -388,9 +388,6 @@ const footballCompetitionConfig = {
   getValue: (row: ScoredRow) => row.competitionValue,
   competitiveWindowSize: 8,
   supportEndIndex: 9,
-  closestCount: 5,
-  supportCount: 3,
-  wildcardCount: 1,
   leaderScoreAdjustment: (leader: ScoredRow, nearest: readonly ScoredRow[]) => {
     const gapShare = footballFindLeaderRunnerUpGapShare(leader, nearest);
     return gapShare == null
@@ -398,6 +395,13 @@ const footballCompetitionConfig = {
       : Math.abs(gapShare - FOOTBALL_FIND_LEADER_TARGET_RUNNER_UP_GAP_SHARE)
         * FOOTBALL_FIND_LEADER_RUNNER_UP_GAP_SCORE_WEIGHT;
   },
+};
+
+const featuredFootballCompetitionConfig = {
+  ...footballCompetitionConfig,
+  closestCount: 5,
+  supportCount: 3,
+  wildcardCount: 1,
 };
 
 export function buildFootballFindLeaderBoard(
@@ -419,7 +423,11 @@ export function buildFootballFindLeaderBoard(
     : metricRows;
   if (pool.length < FOOTBALL_FIND_LEADER_CANDIDATE_COUNT) return null;
   const random = seededLineupRandom(FOOTBALL_FIND_LEADER_VERSION, seed, definition.id);
-  const option = selectFindLeaderCompetition(pool, random, footballCompetitionConfig);
+  const option = selectFindLeaderCompetition(
+    pool,
+    random,
+    rotation === "featured" ? featuredFootballCompetitionConfig : footballCompetitionConfig,
+  );
   if (!option) return null;
   const challengers = option.challengers;
   if (challengers.length !== FOOTBALL_FIND_LEADER_CANDIDATE_COUNT - 1) return null;

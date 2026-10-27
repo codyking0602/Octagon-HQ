@@ -47,7 +47,7 @@ describe("Football Find the Leader candidate identity presentation", () => {
       />,
     );
     const reveal = html.slice(html.indexOf('class="football-find-reveal"'));
-    expect(reveal).toMatch(/#1<\\/em><span><strong>Georgia<\\/strong><small>2021<\\/small>/);
+    expect(reveal).toContain("<em>#1</em><span><strong>Georgia</strong><small>2021</small>");
     expect(reveal.indexOf("Georgia")).toBeLessThan(reveal.indexOf("Alabama"));
     expect(reveal.indexOf("Alabama")).toBeLessThan(reveal.indexOf("LSU"));
   });
