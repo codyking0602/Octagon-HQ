@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { shareCanonicalDestination } from "../../app/nativeShare";
 import { copyText, whyPromptFor } from "../intelligence/intelligence";
 import { FighterPhoto } from "./FighterPhoto";
+import { fighterProfilePhotoFraming } from "./fighterProfilePhotoFraming";
 import { getFighter } from "./rankingModel";
 import { resolveProfileWatchAction } from "./rankingPresentation";
 import { profileCategoryRows, profileDisplayName } from "./profilePresentation";
@@ -64,6 +65,7 @@ export default function FighterProfilePage() {
   const watchAction = resolveProfileWatchAction(fighter.slug);
   const whyNotHeading = fighter.rank === 1 ? "Why Not Lower?" : "Why Not Ranked Higher?";
   const whyNotCopy = whyNotProfileCopy(fighter);
+  const photoFraming = fighterProfilePhotoFraming(fighter.slug);
 
   function openComparison() {
     if (!fighter) return;
@@ -88,8 +90,8 @@ export default function FighterProfilePage() {
         <Link className="back-link" to="/rankings">‹ Back to Rankings</Link>
       </div>
 
-      <section className="profile-photo-card" aria-label={`${fighter.name} photo`}>
-        <FighterPhoto name={fighter.name} src={fighter.profileUrl} className="profile-photo-card__image" />
+      <section className={`profile-photo-card${photoFraming ? " profile-photo-card--focal" : ""}`} aria-label={`${fighter.name} photo`}>
+        <FighterPhoto name={fighter.name} src={fighter.profileUrl} className="profile-photo-card__image" style={photoFraming} />
         <span className="profile-photo-card__ovr" data-testid="photo-ovr-badge"><strong>{fighter.ovr}</strong><small>OVR</small></span>
       </section>
 

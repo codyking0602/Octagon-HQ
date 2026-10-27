@@ -18,12 +18,12 @@ describe("Natalia Silva UFC V2 all-time ranking dossier", () => {
 
   it("adds one woman without rewriting sealed or existing UFC V2 fighter inputs", () => {
     expect(historicalRankingMigrationInputs.counts).toEqual({ fighters: 80, men: 65, women: 15 });
-    expect(canonicalRankingInputs.counts).toEqual({ fighters: 83, men: 67, women: 16 });
+    expect(canonicalRankingInputs.counts).toEqual({ fighters: 84, men: 68, women: 16 });
     expect(v2RankingRoster.additions.map((row) => (row as { fighter: string }).fighter)).toContain(name);
     expect(canonicalRankingInputs.source.modelAsOfDate).toBe(asOf);
     expect(fighter?.board).toBe("women");
     expect(fighter?.presentation.slug).toBe("natalia-silva");
-    expect(new Set(canonicalRankingInputs.fighters.map((entry) => entry.fighter)).size).toBe(83);
+    expect(new Set(canonicalRankingInputs.fighters.map((entry) => entry.fighter)).size).toBe(84);
     for (const historical of historicalRankingMigrationInputs.fighters) {
       expect(v2RankingRoster.replacements).toHaveProperty(historical.fighter);
     }
@@ -104,6 +104,7 @@ describe("Natalia Silva UFC V2 all-time ranking dossier", () => {
     expect(projected!.modifiers).toEqual({ apex: 4.44, penalty: 0, eraDepth: 0.18 });
     expect(projected!.totals.totalScore).toBe(41.55);
     expect(projected!.ovr).toBe(88);
+    expect(fighter!.presentation.photoUrl).toBe("assets/fighters/natalia-silva-profile.webp");
     expect(existsSync(resolve("public", fighter!.presentation.photoUrl!))).toBe(true);
     expect(existsSync(resolve("public", fighter!.presentation.thumbUrl!))).toBe(true);
     console.info("NATALIA_SILVA_ENGINE_RESULT", JSON.stringify({

@@ -111,6 +111,9 @@ describe("Auction PR 5 private content and grader", () => {
     const immutableRankingSnapshots: Record<string, Partial<Record<"overall" | "Striking" | "Grappling", number>>> = {
       "Islam Makhachev": { overall: 93 },
       "Dricus du Plessis": { overall: 88, Grappling: 42 },
+      // The October 2026 all-time refresh moves live OVR, not sealed Auction cards.
+      "Alexander Volkanovski": { overall: 93 },
+      "Petr Yan": { overall: 89 },
     };
     const mismatches: string[] = [];
     for (const item of ultimate) {

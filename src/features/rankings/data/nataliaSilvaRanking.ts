@@ -446,7 +446,7 @@ export const nataliaSilvaRankingInput = {
       "Elite flyweight era multipliers follow the established women’s flyweight comparator; 0.18 era-depth adjustment matches Grasso's existing V2 calibration.",
       "Score and rank are derived by the current category calculators and ranking engine; no manual overall rating."
     ],
-    "photoUrl": "assets/fighters/natalia-silva-spotlight.webp",
+    "photoUrl": "assets/fighters/natalia-silva-profile.webp",
     "thumbUrl": "assets/fighters/natalia-silva-thumb.webp",
     "watchUrl": "https://youtube.com/shorts/TifIqSRo9_o?is=qzR-PQaz55qb05YI",
     "watchLabel": "Watch Moment",

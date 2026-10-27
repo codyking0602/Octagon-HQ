@@ -22,6 +22,27 @@ afterEach(() => {
 });
 
 describe("FootballMatchupBreakdowns", () => {
+  it("always renders real NFL logos for a weekly Bears-Seahawks Game of the Week without authored logo URLs", () => {
+    const compact = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-49ers-seahawks")!;
+    const weekly = {
+      ...compact,
+      id: "weekly-2026-10-27-nfl",
+      title: "Chicago Bears at Seattle Seahawks",
+      teams: [
+        { name: "Chicago Bears", aliases: ["Chicago Bears"] },
+        { name: "Seattle Seahawks", aliases: ["Seattle Seahawks"] },
+      ] as typeof compact.teams,
+    };
+    render(<FootballMatchupBreakdowns breakdowns={[weekly]} />);
+    fireEvent.click(screen.getByRole("button", { name: "MATCHUP BREAKDOWN" }));
+    const dialog = screen.getByRole("dialog");
+    const images = dialog.querySelectorAll(".football-matchup-breakdown-feature-team__logo img");
+    expect(images).toHaveLength(2);
+    expect(images[0]).toHaveAttribute("src", "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png");
+    expect(images[1]).toHaveAttribute("src", "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png");
+    expect(dialog.querySelectorAll(".football-matchup-breakdown-feature-team__logo b")).toHaveLength(0);
+  });
+
   it("opens the featured breakdown sheet and switches between authored matchups without a read or prediction section", () => {
     render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
 

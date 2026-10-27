@@ -33,7 +33,9 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
 
     for (const league of ["nfl", "cfb"] as const) {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
-      expect(bank).toHaveLength(league === "nfl" ? 213 : 211);
+      // Weekly dated news is supplemental; only the certified evergreen inventory is fixed.
+      expect(bank.filter((question) => question.contentType === "evergreen"))
+        .toHaveLength(league === "nfl" ? 199 : 197);
       const lastCall = bank.filter((question) => question.round === "last-call");
       expect(lastCall.length).toBeGreaterThanOrEqual(league === "nfl" ? 15 : 12);
     }

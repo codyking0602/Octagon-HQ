@@ -119,8 +119,17 @@ function normalize(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+const promotedSubjectIds = new Set(
+  ufcFactualExpansion.subjects
+    .filter((subject) => canonicalRankingInputs.fighters.some(
+      (fighter) => `ufc:${fighter.presentation.slug}` === subject.id,
+    ))
+    .map((subject) => subject.id),
+);
 const expectedTotal = ufcFactualExpansion.targetTotalSubjects
-  + canonicalRankingInputs.counts.fighters - ufcFactualExpansion.rankedSubjectCountAtGeneration;
+  + canonicalRankingInputs.counts.fighters
+  - ufcFactualExpansion.rankedSubjectCountAtGeneration
+  - promotedSubjectIds.size;
 
 describe("Who Am I PR10 UFC person identity knowledge", () => {
   it("keeps the original PR10 research population while the canonical ranked universe expands", () => {
@@ -141,7 +150,8 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
       .toHaveLength(canonicalRankingInputs.counts.fighters);
 
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
-    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount);
+    expect(promotedSubjectIds).toEqual(new Set(["ufc:ciryl-gane"]));
+    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount - promotedSubjectIds.size);
     expect(expansion.every((subject) => subject.recognizabilityTier === "A")).toBe(true);
   });
 

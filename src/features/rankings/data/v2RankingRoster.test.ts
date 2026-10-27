@@ -22,6 +22,10 @@ const refreshedRankingData = new Set([
   "Alexandre Pantoja",
   "Brandon Moreno",
   "Alexa Grasso",
+  "Petr Yan",
+  "Merab Dvalishvili",
+  "Alexander Volkanovski",
+  "Deiveson Figueiredo",
 ]);
 
 describe("V2 ranking roster overlay", () => {
@@ -34,7 +38,7 @@ describe("V2 ranking roster overlay", () => {
         historicalRankingMigrationInputs.fighters.map(({ fighter }) => fighter),
       ),
     );
-    expect(v2RankingRoster.additions).toHaveLength(3);
+    expect(v2RankingRoster.additions).toHaveLength(4);
     expect(canonicalRankingInputs.counts.fighters).toBe(
       canonicalRankingInputs.fighters.length,
     );
@@ -115,5 +119,6 @@ describe("V2 ranking roster overlay", () => {
         ({ fighter, board }) => fighter === "Natalia Silva" && board === "women",
       ),
     ).toHaveLength(1);
+    expect(canonicalRankingInputs.fighters.filter(({ fighter, board }) => fighter === "Ciryl Gane" && board === "men")).toHaveLength(1);
   });
 });

@@ -1662,6 +1662,14 @@
           "for": 0,
           "against": 0
         }
+      },
+      "2026-10-24-movsar-evloev": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "source-export-predates-fight"
       }
     },
     "aljamain-sterling": {
@@ -10710,6 +10718,14 @@
           "for": 0,
           "against": 0
         }
+      },
+      "2026-10-03-payton-talbott": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "source-export-predates-fight"
       }
     },
     "demetrious-johnson": {
@@ -26027,6 +26043,14 @@
           "for": 0,
           "against": 0
         }
+      },
+      "2026-10-24-petr-yan": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "source-export-predates-fight"
       }
     },
     "michael-bisping": {
@@ -27754,6 +27778,14 @@
           "for": 0,
           "against": 0
         }
+      },
+      "2026-10-24-merab-dvalishvili": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "source-export-predates-fight"
       }
     },
     "quinton-jackson": {
@@ -28982,6 +29014,14 @@
           "for": 0,
           "against": 1
         }
+      },
+      "2026-10-03-alexander-hernandez": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-10-27"
+        },
+        "reason": "source-export-predates-fight"
       }
     },
     "randy-couture": {
