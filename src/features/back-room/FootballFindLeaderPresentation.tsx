@@ -105,6 +105,7 @@ export function FootballFindLeaderPresentation({
   candidates,
   leaderId,
   eliminatedIds,
+  direction = "higher",
   result,
   busy = false,
   eyebrow,
@@ -122,6 +123,7 @@ export function FootballFindLeaderPresentation({
   candidates: readonly FootballFindLeaderPresentationCandidate[];
   leaderId?: string | null;
   eliminatedIds: readonly string[];
+  direction?: "higher" | "lower";
   result?: FootballFindLeaderPresentationResult | null;
   busy?: boolean;
   eyebrow: string;
@@ -137,7 +139,7 @@ export function FootballFindLeaderPresentation({
   if (result) {
     const revealed = [...candidates]
       .filter((candidate): candidate is FootballFindLeaderPresentationCandidate & { value: number } => typeof candidate.value === "number")
-      .sort((left, right) => right.value - left.value || left.name.localeCompare(right.name));
+      .sort((left, right) => (direction === "lower" ? left.value - right.value : right.value - left.value) || left.name.localeCompare(right.name));
     const leader = revealed.find((candidate) => candidate.id === leaderId) ?? revealed[0];
     const fatalRound = result.perfect ? null : result.score / 10;
     const candidatesById = new Map(candidates.map((candidate) => [candidate.id, candidate]));
@@ -160,8 +162,8 @@ export function FootballFindLeaderPresentation({
               {renderVisual(leader, true)}
               <span>
                 <small>GROUP LEADER</small>
-                <strong>{leader.name}</strong>
-                {leader.seasonLabel ? <small>{leader.seasonLabel}</small> : null}
+                <strong>{footballFindLeaderVisibleIdentity(leader).displayName}</strong>
+                {footballFindLeaderVisibleIdentity(leader).season != null ? <small>{footballFindLeaderVisibleIdentity(leader).season}</small> : null}
                 {showCandidateContext ? <em>{leader.subtitle}</em> : null}
                 <b>{formatValue(leader.value)} {shortLabel}</b>
               </span>
@@ -205,8 +207,8 @@ export function FootballFindLeaderPresentation({
               <article className={`${candidate.id === leaderId ? "is-leader" : ""}${candidate.id === result.fatalId ? " is-fatal" : ""}`} key={candidate.id}>
                 <em>{footballFindLeaderRankLabel(revealed, index)}</em>
                 <span>
-                  <strong>{candidate.name}</strong>
-                  {candidate.seasonLabel ? <small>{candidate.seasonLabel}</small> : null}
+                  <strong>{footballFindLeaderVisibleIdentity(candidate).displayName}</strong>
+                  {footballFindLeaderVisibleIdentity(candidate).season != null ? <small>{footballFindLeaderVisibleIdentity(candidate).season}</small> : null}
                   {showCandidateContext ? <small>{candidate.subtitle}</small> : null}
                 </span>
                 <b>{formatValue(candidate.value)}<small>{shortLabel || statLabel}</small></b>

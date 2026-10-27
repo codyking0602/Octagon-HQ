@@ -21,6 +21,7 @@ import {
 } from "./footballFactualStats";
 import {
   footballFindLeaderLeagueForDomain,
+  FOOTBALL_FIND_LEADER_FEATURED_METRIC_IDS,
   footballFindLeaderMetricDefinitions,
   footballFindLeaderMetricDirection,
   footballFindLeaderMetricEditoriallyEligible,
@@ -358,6 +359,16 @@ export const footballFindLeaderEnabledMetricDefinitions: readonly FootballFindLe
 
 export const footballFindLeaderQuestions: readonly FootballFindLeaderQuestionDefinition[] = footballFindLeaderEnabledMetricDefinitions.flatMap(questionVariants);
 
+/** Active slate is smaller; the full legacy catalog stays addressable. */
+const featuredMetricIds = new Set(FOOTBALL_FIND_LEADER_FEATURED_METRIC_IDS);
+export const footballFindLeaderFeaturedMetricDefinitions = footballFindLeaderEnabledMetricDefinitions
+  .filter((definition) => featuredMetricIds.has(definition.id));
+export const footballFindLeaderFeaturedQuestions: readonly FootballFindLeaderQuestionDefinition[] =
+  footballFindLeaderFeaturedMetricDefinitions.flatMap(questionVariants);
+if (footballFindLeaderFeaturedMetricDefinitions.length !== featuredMetricIds.size) {
+  throw new Error("Football Find the Leader featured slate has an ineligible or missing metric.");
+}
+
 /** Declarative bridge from enabled game copy to the canonical registry and factual ledger. */
 export const footballFindLeaderPools: readonly FootballFindLeaderPoolDefinition[] = footballFindLeaderEnabledMetricDefinitions.map((definition) => {
   const pool = footballFindLeaderCandidatePools.find((candidate) => candidate.metricId === definition.id);
@@ -377,6 +388,9 @@ const footballCompetitionConfig = {
   getValue: (row: ScoredRow) => row.competitionValue,
   competitiveWindowSize: 8,
   supportEndIndex: 9,
+  closestCount: 5,
+  supportCount: 3,
+  wildcardCount: 1,
   leaderScoreAdjustment: (leader: ScoredRow, nearest: readonly ScoredRow[]) => {
     const gapShare = footballFindLeaderRunnerUpGapShare(leader, nearest);
     return gapShare == null
@@ -386,8 +400,23 @@ const footballCompetitionConfig = {
   },
 };
 
-export function buildFootballFindLeaderBoard(definition: FootballFindLeaderQuestionDefinition, seed: string): FootballFindLeaderBoard | null {
-  const pool = footballFindLeaderMetricRows(definition.metricId);
+export function buildFootballFindLeaderBoard(
+  definition: FootballFindLeaderQuestionDefinition,
+  seed: string,
+  rotation: "legacy" | "featured" = "legacy",
+): FootballFindLeaderBoard | null {
+  const metricRows = footballFindLeaderMetricRows(definition.metricId);
+  // A featured QB-season board compares peak seasons by DIFFERENT quarterbacks.
+  // Older published/shared boards keep their exact original selection behavior.
+  const seenNames = new Set<string>();
+  const pool = rotation === "featured" && definition.domainId === "nfl-qb-season"
+    ? metricRows.filter((row) => {
+        const name = row.displayName ?? row.name;
+        if (seenNames.has(name)) return false;
+        seenNames.add(name);
+        return true;
+      })
+    : metricRows;
   if (pool.length < FOOTBALL_FIND_LEADER_CANDIDATE_COUNT) return null;
   const random = seededLineupRandom(FOOTBALL_FIND_LEADER_VERSION, seed, definition.id);
   const option = selectFindLeaderCompetition(pool, random, footballCompetitionConfig);
@@ -441,7 +470,6 @@ const nflDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "nfl-defense-career",
   "nfl-rb-career",
   "nfl-qb-season",
-  "nfl-team-season",
 ] as const;
 
 /** CFB keeps the same half of all boards with equal rotation weight across its five distinct lanes. */
@@ -450,7 +478,6 @@ const cfbDomainCycle: readonly FootballFindLeaderDomainId[] = [
   "cfb-player-rushing",
   "cfb-player-receiving",
   "cfb-coach-career",
-  "cfb-team-season",
 ] as const;
 
 function chooseQuestion(seed: string, history: PlayLineupHistory) {
@@ -465,7 +492,7 @@ function chooseQuestion(seed: string, history: PlayLineupHistory) {
 
   for (let offset = 0; offset < domainCycle.length; offset += 1) {
     const domainId = domainCycle[(targetIndex + offset) % domainCycle.length]!;
-    const domainQuestions = footballFindLeaderQuestions.filter((question) => question.domainId === domainId);
+    const domainQuestions = footballFindLeaderFeaturedQuestions.filter((question) => question.domainId === domainId);
     if (domainQuestions.length === 0) continue;
     const start = stableLineupHash(`${FOOTBALL_FIND_LEADER_VERSION}|question|${seed}|${domainId}`) % domainQuestions.length;
     const rotated = domainQuestions.map((_, index) => domainQuestions[(start + index) % domainQuestions.length]!);
@@ -482,10 +509,10 @@ function chooseQuestion(seed: string, history: PlayLineupHistory) {
 
 export function createFootballFindLeaderBoard(seed: string, history: PlayLineupHistory = loadLineupHistory(FOOTBALL_FIND_LEADER_GAME_ID)) {
   const first = chooseQuestion(seed, history);
-  const ordered = [first, ...footballFindLeaderQuestions.filter((question) => question.id !== first.id)
+  const ordered = [first, ...footballFindLeaderFeaturedQuestions.filter((question) => question.id !== first.id)
     .sort((left, right) => stableLineupHash(`${seed}|${left.id}`) - stableLineupHash(`${seed}|${right.id}`))];
   for (const definition of ordered) {
-    const board = buildFootballFindLeaderBoard(definition, seed);
+    const board = buildFootballFindLeaderBoard(definition, seed, "featured");
     if (board) return board;
   }
   throw new Error("Football Find the Leader could not build a competitive ten-item board.");
@@ -493,10 +520,10 @@ export function createFootballFindLeaderBoard(seed: string, history: PlayLineupH
 
 export function createFootballFindLeaderRun(): FootballFindLeaderRun {
   const validItemIds = new Set<string>();
-  footballFindLeaderEnabledMetricDefinitions.forEach((definition) => {
+  footballFindLeaderFeaturedMetricDefinitions.forEach((definition) => {
     footballFindLeaderMetricRows(definition.id).forEach((row) => validItemIds.add(row.id));
   });
-  footballFindLeaderQuestions.forEach((question) => {
+  footballFindLeaderFeaturedQuestions.forEach((question) => {
     validItemIds.add(token("question", question.id));
     validItemIds.add(token("metric", question.metricId));
     validItemIds.add(token("family", question.family));

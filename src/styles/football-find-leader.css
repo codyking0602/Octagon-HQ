@@ -588,7 +588,9 @@
     letter-spacing: -.025em;
   }
   .football-find-hero__copy > p:not(.eyebrow) {
-    display: none;
+    display: block;
+    font-size: 9px;
+    line-height: 1.2;
   }
   .football-find-hero__category {
     font-size: 6px;

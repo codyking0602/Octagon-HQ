@@ -129,6 +129,37 @@ export const footballFindLeaderMetricDefinitions: readonly FootballFindLeaderMet
 
 export const FOOTBALL_FIND_LEADER_METRIC_COUNT = footballFindLeaderMetricDefinitions.length;
 
+/**
+ * The featured slate intentionally does not delete the wider factual catalog:
+ * historic Daily setups and existing challenge links still need exact replay.
+ * Only proven fan-interest categories enter new Casual/Future Daily rotations.
+ */
+export const FOOTBALL_FIND_LEADER_FEATURED_METRIC_IDS: readonly FootballFindLeaderMetricId[] = [
+  "qb-passing-yards",
+  "qb-passing-touchdowns",
+  "rb-rushing-yards",
+  "rb-rushing-touchdowns",
+  "rb-scrimmage-yards",
+  "rb-scrimmage-touchdowns",
+  "qb-season-passing-yards",
+  "qb-season-passing-touchdowns",
+  "nfl-receiving-receptions",
+  "nfl-receiving-yards",
+  "nfl-receiving-touchdowns",
+  "nfl-defense-sacks",
+  "nfl-defense-interceptions",
+  "cfb-points-per-game",
+  "cfb-opponent-points-per-game",
+  "cfb-scoring-margin-per-game",
+  "cfb-player-rushing-yards",
+  "cfb-player-rushing-touchdowns",
+  "cfb-player-receiving-yards",
+  "cfb-player-receiving-touchdowns",
+  "cfb-coach-career-wins",
+] as const;
+
+export const FOOTBALL_FIND_LEADER_FEATURED_START_DAY = "2026-10-28";
+
 export function footballFindLeaderLeagueForDomain(domainId: FootballFindLeaderDomainId): FootballFindLeaderLeagueId {
   return domainId.startsWith("cfb-") ? "cfb" : "nfl";
 }

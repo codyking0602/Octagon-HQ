@@ -1,8 +1,9 @@
 import {
   buildFootballFindLeaderBoard,
   footballFindLeaderQuestions,
+  footballFindLeaderFeaturedQuestions,
 } from "../back-room/footballFindLeaderModel";
-import { footballFindLeaderLeagueForDomain } from "../back-room/footballFindLeaderStats";
+import { FOOTBALL_FIND_LEADER_FEATURED_START_DAY, footballFindLeaderLeagueForDomain } from "../back-room/footballFindLeaderStats";
 import { stableLineupHash } from "./lineupModel";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
 import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
@@ -23,7 +24,9 @@ function dailyLeague(day: string, gameIndex = 0) {
 
 function buildFindLeaderSetup(day: string, scheduleVersion: string, gameIndex = 0): OfficialDailySetupPublication {
   const desiredLeague = dailyLeague(day, gameIndex).toLowerCase();
-  const questions = footballFindLeaderQuestions.filter((question) =>
+  // Never change the inputs for previously published dates.
+  const featured = day >= FOOTBALL_FIND_LEADER_FEATURED_START_DAY;
+  const questions = (featured ? footballFindLeaderFeaturedQuestions : footballFindLeaderQuestions).filter((question) =>
     footballFindLeaderLeagueForDomain(question.domainId) === desiredLeague);
   const startSeed = gameIndex === 0
     ? `${scheduleVersion}|${day}|football-find-leader`
@@ -37,6 +40,7 @@ function buildFindLeaderSetup(day: string, scheduleVersion: string, gameIndex = 
       gameIndex === 0
         ? `${FOOTBALL_DAILY_RUNTIME_VERSION}|${scheduleVersion}|${day}|${offset}`
         : `${FOOTBALL_DAILY_RUNTIME_VERSION}|${scheduleVersion}|${day}|game-2|${offset}`,
+      featured ? "featured" : "legacy",
     );
     if (board) break;
   }

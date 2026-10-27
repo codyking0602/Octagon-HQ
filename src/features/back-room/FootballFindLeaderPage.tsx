@@ -181,6 +181,7 @@ export default function FootballFindLeaderPage() {
           shortLabel={board.shortLabel}
           candidates={board.candidates}
           leaderId={board.leaderId}
+          direction={board.direction}
           eliminatedIds={eliminated}
           result={result}
           eyebrow={shared ? "CHALLENGE BOARD" : "REPLAYABLE GAME"}
@@ -223,10 +224,11 @@ export default function FootballFindLeaderPage() {
         shortLabel={board.shortLabel}
         candidates={board.candidates}
         leaderId={board.leaderId}
+        direction={board.direction}
         eliminatedIds={eliminated}
         result={null}
         eyebrow={shared ? "CHALLENGE BOARD" : "REPLAYABLE GAME"}
-        intro="Eliminate nine decoys until only the leader remains."
+        intro="Eliminate nine decoys. Only the highest or lowest stat among these ten wins."
         onNewLineup={shared ? null : startNew}
         onEliminate={eliminate}
         formatValue={(value) => formatFootballFindLeaderValue(board, value)}
