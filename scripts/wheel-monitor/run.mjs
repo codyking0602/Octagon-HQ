@@ -9,7 +9,7 @@ import {
   compareEvidence, summarizeDecisions, selectApprovedGrades, snapshotReadiness,
   validateOfficialUfcTable,
 } from "./core.mjs";
-import { wheelPriorityIdentityKeys } from "../wheel-monitor-census-policy.mjs";
+import { wheelPriorityIdentityKeys, gradeNameKey } from "../wheel-monitor-census-policy.mjs";
 import { validateObservation } from "./observation-policy.mjs";
 import { verifyHeadshots } from "./headshot-policy.mjs";
 import { sourceReviewBlockers } from "./source-review-gates.mjs";
@@ -355,16 +355,19 @@ async function main() {
     nfl:{teams:teams.nfl},cfb:{teams:{}},
   });
   const nflCoverage=selectApprovedGrades(db.nflLive,"nfl",approved);
-  assert(nflCoverage.expected===626,
-    "Approved NFL Wheel roster count changed without a reviewed population update");
-  validateCatalog(nfl,"nfl");validateCatalog(nflCoverage.selected,"nfl");
+  // Three verified released players remain in historical grade/GM authority (626/594)
+  // but are excluded from new Wheel and GM drafts (623/591).
+  assert(nflCoverage.expected===623,
+    "Approved current NFL Wheel roster count differs from reviewed 2026 releases");
+  const currentNfl=nfl.filter(row=>approved.has(`NFL:${row.team}:${row.family}:${gradeNameKey(row.name)}`));
+  validateCatalog(nfl,"nfl");validateCatalog(currentNfl,"nfl");validateCatalog(nflCoverage.selected,"nfl");
   validateCatalog(db.ufc,"ufc");
-  const nflKeys = new Set(nfl.map(identity));
+  const nflKeys = new Set(currentNfl.map(identity));
   const liveKeys = new Set(nflCoverage.selected.map(identity));
   assert(nflKeys.size===liveKeys.size && [...nflKeys].every(key=>liveKeys.has(key)),
     "NFL checked-in artifact identities differ from active live Wheel authority; review required");
   const liveGradeByKey=new Map(nflCoverage.selected.map(row=>[identity(row),row.grade]));
-  assert(nfl.every(row=>row.grade===liveGradeByKey.get(identity(row))),
+  assert(currentNfl.every(row=>row.grade===liveGradeByKey.get(identity(row))),
     "NFL backend/GM grade bindings differ from checked-in artifacts; do not publish a snapshot");
   const [sourceRosters,ufcRanks,coaches]=await Promise.all([
     rosters(teams.nfl),ufcExternal(),officialNflCoaches(),
@@ -377,7 +380,7 @@ async function main() {
     record("ufc-headshot-source-unverified",finding.reason,
       finding.url??"live:private.wheel_ufc_fighters",{
         fighterId:finding.fighterId,division:finding.division});
-  const {result,snapshot}=reconcile([...nfl,...db.ufc],
+  const {result,snapshot}=reconcile([...currentNfl,...db.ufc],
     sourceRosters,ufcRanks,coaches,previous);
   // Unlike the catalog census, this ledger never counts unmatched identities,
   // coaches without a dedicated authority, or unranked fighters as source-verified.
@@ -394,7 +397,7 @@ async function main() {
     schema:3,status:"source-certified",checkedAt:at,sourceCommit:process.env.GITHUB_SHA??null,
     certifiedScope:["nfl","ufc","gm"],
     identities:snapshot,ufcOfficialRanks:ufcRanks.rows,catalogCounts:{
-      nfl:nfl.length,ufc:db.ufc.length,
+      nfl:currentNfl.length,ufc:db.ufc.length,
     },
     sourceCounts:{nflTeams:Object.keys(teams.nfl).length,ufcDivisions:DIVISIONS.length},
   };

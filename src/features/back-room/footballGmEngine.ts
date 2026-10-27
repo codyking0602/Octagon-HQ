@@ -68,6 +68,8 @@ export interface FootballGmPlayer {
   family: WheelFootballGmContractRow["family"];
   name: string;
   position: string;
+  /** Ineligible for new drafts after verified release; retained for prior saved seasons. */
+  currentRosterEligible: boolean;
   eligibleSlots: readonly FootballGmRosterSlot[];
   marketPosition: WheelFootballGmMarketPosition;
   age: number;
@@ -160,6 +162,7 @@ for (const revision of nflCurrentAbilityRevisions.changes) {
   gradeByKey.set(key, revision.newGrade);
 }
 
+
 function playerId(contract: WheelFootballGmContractRow) {
   // IDs are saved in historical GM matches; preserve a pre-trade ID explicitly.
   return contract.stablePlayerId ?? gradeKey(contract.team, contract.family, contract.player);
@@ -198,6 +201,7 @@ export const FOOTBALL_GM_PLAYER_POOL: readonly FootballGmPlayer[] = contracts.ma
     family: contract.family,
     name: contract.player,
     position: contract.position,
+    currentRosterEligible: contract.currentRosterEligible !== false,
     // Both defensive roster spots accept any Front Seven player; contract
     // markets remain based on each player's original distinct DL/LB family.
     eligibleSlots: contract.family === "Front Seven" ? ["DL", "LB"] : [...contract.gmEligibleSlots],
@@ -227,9 +231,13 @@ export const FOOTBALL_GM_PLAYER_POOL: readonly FootballGmPlayer[] = contracts.ma
   };
 });
 
+/** Current candidate authority; historical playerById still includes the original 594. */
+export const FOOTBALL_GM_CURRENT_PLAYER_POOL: readonly FootballGmPlayer[] =
+  FOOTBALL_GM_PLAYER_POOL.filter((player) => player.currentRosterEligible);
+
 const playerById = new Map(FOOTBALL_GM_PLAYER_POOL.map((player) => [player.id, player]));
 const playersByTeam = new Map<string, FootballGmPlayer[]>();
-for (const player of FOOTBALL_GM_PLAYER_POOL) {
+for (const player of FOOTBALL_GM_CURRENT_PLAYER_POOL) {
   const list = playersByTeam.get(player.team) ?? [];
   list.push(player);
   playersByTeam.set(player.team, list);
@@ -329,7 +337,7 @@ export function footballGmRosterCap(roster: readonly FootballGmRosterEntry[], ye
 
 function minSalaryForSlot(slot: FootballGmRosterSlot, year: 1 | 2 | 3, excludedIds: ReadonlySet<string>) {
   let minimum = Number.POSITIVE_INFINITY;
-  for (const player of FOOTBALL_GM_PLAYER_POOL) {
+  for (const player of FOOTBALL_GM_CURRENT_PLAYER_POOL) {
     if (excludedIds.has(player.id) || !player.eligibleSlots.includes(slot)) continue;
     minimum = Math.min(minimum, footballGmSalaryForYear(player, year));
   }
@@ -361,6 +369,7 @@ function canAddPlayerToSlot(input: {
   excludedPlayerIds?: readonly string[];
 }) {
   const { player, slot, year } = input;
+  if (!player.currentRosterEligible) return false;
   const roster = footballGmReflowRoster(input.roster);
   if (!roster) return false;
   const globallyExcluded = new Set(input.excludedPlayerIds ?? []);
@@ -495,7 +504,7 @@ export function footballGmReplacePlayer(
 ) {
   const outgoing = roster.find((entry) => entry.slot === slot);
   const incoming = footballGmPlayerById(incomingPlayerId);
-  if (!outgoing || !incoming || !incoming.eligibleSlots.includes(slot)) {
+  if (!outgoing || !incoming || !incoming.currentRosterEligible || !incoming.eligibleSlots.includes(slot)) {
     throw new Error("That replacement is unavailable.");
   }
   const stripped = roster.filter((entry) => entry.slot !== slot);
@@ -668,7 +677,7 @@ export function footballGmTradeOffers(
 
   for (const { entry, player: outgoing } of rows) {
     const stripped = roster.filter((row) => row.slot !== entry.slot);
-    const alternatives = FOOTBALL_GM_PLAYER_POOL
+    const alternatives = FOOTBALL_GM_CURRENT_PLAYER_POOL
       .filter((incoming) => incoming.team !== outgoing.team)
       .filter((incoming) => !usedIncoming.has(incoming.id))
       .filter((incoming) => incoming.eligibleSlots.includes(entry.slot))
