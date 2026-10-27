@@ -73,7 +73,7 @@ describe("NBA official two-game active-round binding", () => {
     expect(pageSource).toContain("const { state, score } = nbaOfficialActiveRound(projection)");
     expect(pageSource).toContain("key={projection.setupKey + \":\" + String(projection.publicState.round_index ?? 0)}");
     expect(pageSource).toContain("completeReveal");
-    expect(pageSource).toContain("projection.officialAttempt.normalizedScore}/100");
+    expect(pageSource).toContain("dailyOfficialDisplayScore(projection)}/100");
     expect(pageSource).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY");
   });
 });
