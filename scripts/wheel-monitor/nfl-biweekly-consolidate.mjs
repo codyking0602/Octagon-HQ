@@ -23,7 +23,10 @@ const TEAM_ABBREVS={ARI:"Arizona Cardinals",ATL:"Atlanta Falcons",BAL:"Baltimore
   SF:"San Francisco 49ers",TB:"Tampa Bay Buccaneers",TEN:"Tennessee Titans",WSH:"Washington Commanders"};
 const teamCodes=new Map(Object.entries(TEAM_ABBREVS).map(([code,name])=>[name,code]));
 const standardTeam=team=>teamCodes.get(team)??team;
-const candidates=new Map(),key=(team,name)=>standardTeam(team)+"|"+String(name??"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const normName=name=>String(name??"").normalize("NFKD")
+  .replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"")
+  .replace(/(?:iii|ii|iv|jr|sr|v)$/,"");
+const candidates=new Map(),key=(team,name)=>standardTeam(team)+"|"+normName(name);
 function add(team,name,monitor,reason,priority="medium",details={}){
   const id=key(team,name);if(!team||!name)return;
   team=standardTeam(team);
@@ -41,7 +44,15 @@ if(m){
   if(!Array.isArray(m.flags)||!m.developmentReview?.candidates)blockers.push("madden:incomplete-output");
   const relevant=(m.flags??[]).filter(row=>gmKeys.has(key(row.team,row.name)));
   for(const row of relevant)add(row.team,row.name,"madden","overall-"+row.overallDelta+"-review",Math.abs(row.overallDelta)>=4?"high":"medium",row);
-  for(const row of m.developmentReview?.candidates??[])add(row.team,row.name,"development",row.reasons.join(", "),row.priority,row);
+  // Stage 1 is ratings research only. Development can be recalibrated only
+  // after HQ has made and published its approved rating decisions.
+  counts.developmentStage="deferred-until-approved-hq-rating-decisions";
+  counts.developmentFlagged=0;
+  if(m.developmentReview?.status!=="deferred-until-hq-rating-review-complete")
+    blockers.push("development:legacy-pre-rating-review-output-ignored");
+  if(m.baselineProvenance?.kind==="EA archived historical iteration" &&
+     m.exactOctober3SourceCertified!==true)
+    blockers.push("madden:archived-week-3-is-not-a-certified-october-3-capture");
   const start=Date.parse(m.baselineObservedAt??"");
   const end=Date.parse(m.currentObservedAt??"");
   if(Number.isFinite(start)&&Number.isFinite(end)){
@@ -53,9 +64,9 @@ if(m){
   counts.maddenFlags=m.flags?.length??0;
   counts.maddenGmFlags=relevant.length;
   counts.maddenOutsideGm=(m.flags?.length??0)-relevant.length;
-  counts.developmentFlagged=m.developmentReview?.candidates?.length??0;
-  counts.earlyCareerScreened=m.developmentReview?.firstTwoSeasonsScreened??null;
-  counts.unmatchedMaddenFlags=m.developmentReview?.unmatchedMaddenFlags?.length??null;
+  counts.earlyCareerScreened=null; // Checked only by post-rating development monitor.
+  counts.unmatchedMaddenFlags=null;
+  counts.maddenBaselineProvenance=m.baselineProvenance??null;
 }
 const c=data.contracts;
 if(c){
@@ -73,11 +84,22 @@ if(c){
   if(c.sourceIdentityCompletenessCertified===false)blockers.push("contracts:source-identity-completeness-not-certified");
 }
 const coach=data.coaches;
+const coachGradeReviewQueue=coach?.reviews??[];
 if(coach){
-  if(coach.reviewCount!==32)blockers.push("coaches:not-all-32-reviewed");
-  for(const row of coach.reviews??[])if(row.officialStatus!=="matched"||row.currentOfficialCoach!==row.coach||row.priority==="owner-requested-grade-review")
-    add(row.team,row.coach,"coaches",row.officialStatus??"mismatched-coach","high",row);
+  if(coach.reviewCount!==32||coachGradeReviewQueue.length!==32)
+    blockers.push("coaches:missing-full-32-editorial-ledger");
+  for(const row of coachGradeReviewQueue){
+    if(row.officialStatus!=="matched"||row.currentOfficialCoach!==row.coach)
+      add(row.team,row.coach,"coaches",row.officialStatus??"mismatched-coach","high",row);
+  }
   counts.coachesScreened=coach.reviewCount??0;
+  counts.coachesMandatoryGradeReviews=coachGradeReviewQueue.length;
+  counts.coachesEditorialDecisionsCompleted=coachGradeReviewQueue.filter(row=>
+    row.reviewedThisCycle===true&&row.reviewDecision!=="pending-editorial-judgment").length;
+  counts.coachesPendingEditorialDecisions=coachGradeReviewQueue.length-
+    counts.coachesEditorialDecisionsCompleted;
+  if(counts.coachesPendingEditorialDecisions)
+    blockers.push("coaches:"+counts.coachesPendingEditorialDecisions+"-mandatory-editorial-grade-decisions-pending");
 }
 const roster=data.roster;
 if(roster){
@@ -90,7 +112,12 @@ const combined=[...candidates.values()].sort((a,b)=>(a.priority==="high"?0:1)-(b
 const report={schema:1,sport:"NFL",mode:"biweekly-read-only-pilot",observedAt:new Date().toISOString(),
   maddenRule:"overall +/-2 only; attributes disabled",monitors:["madden","contracts-transfers","head-coaches","roster-integrity","development"],
   counts:{...counts,uniqueReviewCandidates:combined.length},
-  sourceBlockers:blockers,reviewCandidates:combined,automaticChangesApplied:0,
+  sourceBlockers:blockers,reviewCandidates:combined,
+  coachGradeReviewQueue,postRatingDevelopment:{
+    status:"awaiting-hq-rating-decisions",
+    trigger:"Run separate NFL post-rating development monitor after approved HQ grades land in main",
+    automaticChangesApplied:0
+  },automaticChangesApplied:0,
   note:"Candidate means research needed, NOT an approved grade, development or transaction change; sources can be incomplete."};
 mkdirSync(dirname(out),{recursive:true});writeFileSync(out,JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify({counts:report.counts,sourceBlockers:blockers}));
