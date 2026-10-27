@@ -218,8 +218,8 @@ export const FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS = [
   {
     "legacyId": "media-joe-buck",
     "category": "MEDIA ENERGY",
-    "text": "Gus Johnson's college football calls",
-    "rating": 92,
+    "text": "Ryan Clark on NFL studio panels",
+    "rating": 74,
     "kind": "replace"
   },
   {
