@@ -13,8 +13,8 @@ export function buildPostRatingReview(profiles,grades,contracts,at){
   const normalized=s=>String(s??"").normalize("NFKD")
     .replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"")
     .replace(/(?:iii|ii|iv|jr|sr|v)$/,"");
-  const gradeMap=new Map(grades.map(row=>[row.team+"|"+normalized(row.player),row]));
-  const calibration=new Map(profiles.map(row=>[row.team+"|"+normalized(row.name),row]));
+  const gradeMap=new Map(grades.map(row=>[row.team+"|"+row.family+"|"+normalized(row.player),row]));
+  const calibration=new Map(profiles.map(row=>[row.team+"|"+row.family+"|"+normalized(row.name),row]));
   if(gradeMap.size!==594||calibration.size!==594)
     throw new Error("Duplicate or ambiguous canonical NFL player identity");
   const gradeChanges=[];
