@@ -3,6 +3,12 @@ name: Wheel NFL Production Evidence Review (staged)
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      historical_oct03:
+        description: "Use EA's archived Week 3 as October 3 historical reference (manual pilot only)"
+        type: boolean
+        required: false
+        default: false
   push:
     branches: [main]
     paths:
@@ -63,15 +69,21 @@ jobs:
         with:
           node-version: '22'
       - name: Verify Madden review flags, thresholds and identity rules
-        run: node --test scripts/wheel-monitor/nfl-madden-review.nodecheck.mjs
+        run: |
+          node --test scripts/wheel-monitor/nfl-madden-review.nodecheck.mjs
+          node --test scripts/wheel-monitor/nfl-madden-oct3-baseline.nodecheck.mjs
       - name: Read official EA Madden live ratings on PR without changing baseline
         if: github.event_name == 'pull_request'
         run: |
           node scripts/wheel-monitor/nfl-madden-review.mjs \
             --baseline=tmp/wheel-monitor/madden/pr-temporary-baseline.json \
             --out=tmp/wheel-monitor/madden/pr-source-check.json
+      - name: Prove EA archived Week 3 historical source is retrievable on PR
+        if: github.event_name == 'pull_request'
+        run: |
+          node scripts/wheel-monitor/nfl-madden-oct3-baseline.mjs --out=tmp/wheel-monitor/madden/pr-oct03-source.json
       - name: Restore locked Madden baseline (never silently reset a prior baseline)
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && !inputs.historical_oct03
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -88,11 +100,15 @@ jobs:
             if (( ever > 0 )); then echo "::error::Madden baseline expired; manual recovery required."; exit 1; fi
             echo "::notice::Initial Madden baseline will be captured from EA this run."
           fi
+      - name: Recover EA archived Week 3 as October 3 reference, never replace locked baseline
+        if: inputs.historical_oct03
+        run: |
+          node scripts/wheel-monitor/nfl-madden-oct3-baseline.mjs --out=tmp/wheel-monitor/madden/rolling-baseline.json
       - name: Default Madden review reference is the preserved initial capture
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && !inputs.historical_oct03
         run: cp tmp/wheel-monitor/madden/baseline.json tmp/wheel-monitor/madden/rolling-baseline.json
       - name: Restore prior biweekly Madden checkpoint (locked historical baseline stays intact)
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && !inputs.historical_oct03
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -116,7 +132,7 @@ jobs:
             --next=tmp/wheel-monitor/madden/next-baseline.json \
             --out=tmp/wheel-monitor/madden/review.json
       - name: Preserve frozen baseline and weekly flags
-        if: github.event_name != 'pull_request' && success()
+        if: github.event_name != 'pull_request' && !inputs.historical_oct03 && success()
         uses: actions/upload-artifact@v4
         with:
           name: wheel-nfl-madden-locked-baseline
@@ -134,6 +150,14 @@ jobs:
           path: tmp/wheel-monitor/madden/rolling-baseline.json
           if-no-files-found: error
           retention-days: 90
+      - name: Preserve October 3 historical source evidence, not the normal rolling checkpoint
+        if: inputs.historical_oct03 && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-madden-oct3-source
+          path: tmp/wheel-monitor/madden/rolling-baseline.json
+          retention-days: 90
+          if-no-files-found: error
       - name: Publish read-only candidate flags
         if: github.event_name != 'pull_request' && always()
         uses: actions/upload-artifact@v4

@@ -2,6 +2,15 @@ name: Wheel NFL Biweekly Editorial Review
 
 on:
   workflow_dispatch:
+    inputs:
+      reference:
+        description: "Comparison baseline (rolling or October 3 historical)"
+        type: choice
+        required: true
+        default: rolling
+        options:
+          - rolling
+          - oct3
   # The merge itself can start the first pilot if scheduled-indexing/CI misses 16:45.
   push:
     branches: [main]
@@ -16,6 +25,7 @@ on:
       - '.github/workflows/wheel-nfl-biweekly-editorial.yml'
       - 'scripts/wheel-monitor/nfl-roster-integrity-pilot.mjs'
       - 'scripts/wheel-monitor/nfl-biweekly-consolidate.mjs'
+      - 'scripts/wheel-monitor/nfl-madden-oct3-baseline*.mjs'
 
 permissions:
   contents: read
@@ -63,6 +73,8 @@ jobs:
     needs: cycle
     if: needs.cycle.outputs.run == 'true'
     uses: ./.github/workflows/wheel-nfl-production-review.yml
+    with:
+      historical_oct03: ${{ inputs.reference == 'oct3' }}
 
   contracts-transfers:
     needs: cycle
