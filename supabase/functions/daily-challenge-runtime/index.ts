@@ -138,6 +138,8 @@ type AverageFanRuntimeModule = {
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
+// Wavelength publishes its own small two-game board without importing every Football game bank.
+let footballWavelengthPublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
 // Millionaire publishing must not parse all Football game families in one
 // Edge invocation. The full Football publisher is retained for other modes.
 let footballMillionairePublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
@@ -159,6 +161,12 @@ function loadUfcRuntime() {
 }
 
 function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
+  if (gameType === "wavelength") {
+    if (!footballWavelengthPublicationPromise) {
+      footballWavelengthPublicationPromise = import("./football-wavelength-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+    }
+    return footballWavelengthPublicationPromise;
+  }
   if (gameType === "millionaire") {
     if (!footballMillionairePublicationPromise) {
       footballMillionairePublicationPromise = import("./football-millionaire-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
