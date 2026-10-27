@@ -52,6 +52,27 @@ export function compareGmContractSnapshots(published,generated,observedAt) {
       });
     }
   }
+
+  // A trade changes the team-qualified identity key. Pair only unambiguous
+  // matching provider identities; never silently treat the move as a new player.
+  const unmatchedOld=missing.map(key=>({key,row:old.get(key)}));
+  const unmatchedNew=extra.map(key=>({key,row:next.get(key)}));
+  const transfers=[];
+  const claimed=new Set();
+  for (const prev of unmatchedOld) {
+    const id=prev.row.source?.otcId;
+    if(id==null) continue;
+    const candidates=unmatchedNew.filter(cur=>cur.row.source?.otcId===id &&
+      cur.row.family===prev.row.family && nameKey(cur.row.player)===nameKey(prev.row.player));
+    if(candidates.length!==1 || claimed.has(candidates[0].key)) continue;
+    const cur=candidates[0];
+    if(cur.row.team===prev.row.team) continue;
+    claimed.add(cur.key);
+    transfers.push({player:cur.row.player,family:cur.row.family,
+      fromTeam:prev.row.team,toTeam:cur.row.team,providerId:id,
+      sourceUrl:cur.row.source?.playerPage??null,
+      action:"verify-official-transaction-before-updating-HQ"});
+  }
   const sourceUrl=generated.source??"https://nflreadr.nflverse.com/reference/load_contracts.html";
   const materialChanged=changes.filter(row=>row.reviewKind==="contract-fact").length;
   const metadataOnly=changes.length-materialChanged;
@@ -61,11 +82,11 @@ export function compareGmContractSnapshots(published,generated,observedAt) {
       metadataOnly?"metadata-review-required":"unchanged",
     observedAt,sourceUrl,
     publishedDate:published.snapshotDate,sourceQueryDate:generated.snapshotDate,
-    publishedCount:old.size,generatedCount:next.size,missing,extra,changes,
+    publishedCount:old.size,generatedCount:next.size,missing,extra,transfers,changes,
     summary:{changed:changes.length,materialChanged,metadataOnly,
       fieldCounts:Object.fromEntries([...new Set(changes.flatMap(x=>x.differences))]
         .sort().map(field=>[field,changes.filter(x=>x.differences.includes(field)).length])),
-      missing:missing.length,extra:extra.length,
+      missing:missing.length,extra:extra.length,teamTransfers:transfers.length,
       unchanged:[...next.keys()].filter(key=>old.has(key)).length-changes.length},
     sourceProvenanceStatus:"provider-dataset-freshness-not-independently-certified",
     economyRegressionStatus:"not-run",

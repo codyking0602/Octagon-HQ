@@ -2,6 +2,8 @@ name: Wheel GM Contract Source Review (staged)
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '20 12 * * 1-5' # Weekday NFL contract/roster identity checks
   workflow_call:
   pull_request:
     paths:

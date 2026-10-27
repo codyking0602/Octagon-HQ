@@ -2,6 +2,8 @@ name: Wheel NFL Production Evidence Review (staged)
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '15 12 * * 4' # Weekly Madden comparison, Thursday UTC
   pull_request:
     paths:
       - 'scripts/wheel-monitor/nfl-production-monitor.py'
@@ -10,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: wheel-nfl-production-evidence-${{ github.ref }}
@@ -17,6 +20,7 @@ concurrency:
 
 jobs:
   production-evidence:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 14
     steps:
@@ -40,5 +44,55 @@ jobs:
         with:
           name: wheel-nfl-production-evidence
           path: tmp/wheel-monitor/nfl/production-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  madden-ratings:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Madden review flags, thresholds and identity rules
+        run: node --test scripts/wheel-monitor/nfl-madden-review.nodecheck.mjs
+      - name: Restore locked Madden baseline (never silently reset a prior baseline)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tmp/wheel-monitor/madden
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=wheel-nfl-madden-locked-baseline&per_page=100" > tmp/wheel-monitor/madden/artifacts.json
+          id=$(jq -r '[.artifacts[] | select(.name == "wheel-nfl-madden-locked-baseline" and .expired == false and .workflow_run.head_branch == "main")] | sort_by(.created_at) | reverse | .[0].workflow_run.id // empty' tmp/wheel-monitor/madden/artifacts.json)
+          if [[ -n "$id" ]]; then
+            gh run download "$id" --name wheel-nfl-madden-locked-baseline --dir tmp/wheel-monitor/madden
+          else
+            # No baseline is acceptable only for first deployment, not when expired.
+            ever=$(jq '[.artifacts[] | select(.name == "wheel-nfl-madden-locked-baseline")] | length' tmp/wheel-monitor/madden/artifacts.json)
+            if (( ever > 0 )); then echo "::error::Madden baseline expired; manual recovery required."; exit 1; fi
+            echo "::notice::Initial Madden baseline will be captured from EA this run."
+          fi
+      - name: Compare official EA Madden ratings against frozen baseline (review only)
+        run: |
+          node scripts/wheel-monitor/nfl-madden-review.mjs \
+            --baseline=tmp/wheel-monitor/madden/baseline.json \
+            --out=tmp/wheel-monitor/madden/review.json
+      - name: Preserve frozen baseline and weekly flags
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-madden-locked-baseline
+          path: tmp/wheel-monitor/madden/baseline.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Publish read-only candidate flags
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-madden-review-flags
+          path: tmp/wheel-monitor/madden/review.json
           if-no-files-found: warn
           retention-days: 30
