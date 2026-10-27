@@ -129,3 +129,7 @@ Eight NFL future run 12 questions verified against Chargers uniform history, Buc
 ### CFB future run 12 independently reviewed
 
 Checked all eight CFB run 12 questions against Georgia, Wisconsin, Ohio State, TCU, Florida State, the Heisman Trust, Alabama and Notre Dame primary sources, including alternative answers, clues, selected Bar Trivia concepts and 8-step difficulty. Filled six missing explanations; the Isaiah Bond Q7 and Christian Gray Q8 already had detailed reveals. All eight source-backed questions individually KEEP; **46 KEEP / 147 HOLD** future ledger. The remaining future program remains isolated, not release-ready.
+
+### Future NFL run 13 individual source/ladder pass
+
+All eight NFL future run 13 questions read and checked using Broncos, NFL Football Operations, NFL postseason/Super Bowl records and Pittsburgh Steelers official accounts, including the often-confused Super Bowl XLII Helmet Catch versus Burress' actual game-winning touchdown. All four options, stat clues, 50/50 compatibility and progressive Q1–Q8 difficulty reviewed; new substantive answer explanations written for 0 slots, Q8 already detailed. **Future intervention ledger 70 KEEP / 123 HOLD** of 193 entries, with 0 more individual confirmations. Whole six-month inventory remains opt-in and NOT certified.

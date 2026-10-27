@@ -185,3 +185,7 @@ Seven specifically reviewed, sourced, alternate-checked future interventions now
 - Source-reviewed all eight NFL future run 12 questions, completed seven full explanations, checked per-round difficulty and active Bar Trivia concept overlap. Ledger now 38 KEEP / 155 HOLD, with Q8 Mecole Hardman confirmed by NFL. Not release certified.
 
 - Completed CFB future run 12, six missing full reveal explanations added and eight ledger questions source-checked KEEP; **46 KEEP / 147 HOLD** of 193 interventions. Historical boards untouched.
+
+### Future NFL run 13 individual source/ladder pass
+
+All eight NFL future run 13 questions read and checked using Broncos, NFL Football Operations, NFL postseason/Super Bowl records and Pittsburgh Steelers official accounts, including the often-confused Super Bowl XLII Helmet Catch versus Burress' actual game-winning touchdown. All four options, stat clues, 50/50 compatibility and progressive Q1–Q8 difficulty reviewed; new substantive answer explanations written for 0 slots, Q8 already detailed. **Future intervention ledger 70 KEEP / 123 HOLD** of 193 entries, with 0 more individual confirmations. Whole six-month inventory remains opt-in and NOT certified.
