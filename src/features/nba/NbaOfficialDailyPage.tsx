@@ -18,7 +18,7 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
-import { nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerPortraitSource, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
 import { DailyTwoGameLeaderboardResult } from "../play/DailyTwoGameLeaderboardResult";
 import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLeaderModel";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
