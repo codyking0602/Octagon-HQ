@@ -1157,28 +1157,40 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRunIndex("ufc", "2026-10-25")).toBe(5);
   });
 
-  it("keeps pending editorial candidates out of default Official Daily on every scheduled day", () => {
+  it("releases future v6 on October 28 without republishing October 27 or historical proofs", () => {
     let scheduled = 0;
+    let released = 0;
     for (let offset = 0; offset < 182; offset += 1) {
       const day = new Date(Date.UTC(2026, 9, 25 + offset)).toISOString().slice(0, 10);
       for (const sport of ["football", "ufc"] as const) {
         if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
         if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
         scheduled += 1;
-        const official = buildMillionaireDailySetup(sport, day, "isolation-regression");
-        const explicitlyDisabled = buildMillionaireDailySetup(sport, day, "isolation-regression",
+        const official = buildMillionaireDailySetup(sport, day, "release-v6-regression");
+        const explicitlyDisabled = buildMillionaireDailySetup(sport, day, "release-v6-regression",
           { editorialCandidatePreview: false });
         expect(official).toEqual(explicitlyDisabled);
-        expect(official.contentVersion).toBe(day === "2026-10-26" && sport === "football"
-          ? COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION : MILLIONAIRE_DAILY_CONTENT_VERSION);
-        expect(official.publicSetup.run_number).toBeLessThanOrEqual(10);
-        expect((official.privateSetupEvidence.run as MillionaireRuntimeQuestion[])
-          .every(question => !question.id.includes("editorial-v6")
-            && !/millionaire-(nfl|cfb|ufc)-run-1[1-5]-q/.test(question.id))).toBe(true);
+        if (day < "2026-10-28") {
+          expect(official.contentVersion).toBe(day === "2026-10-26" && sport === "football"
+            ? COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION : MILLIONAIRE_DAILY_CONTENT_VERSION);
+          expect(official.publicSetup.run_number).toBeLessThanOrEqual(10);
+        } else {
+          released += 1;
+          const preview = buildMillionaireDailySetup(sport, day, "release-v6-regression",
+            { editorialCandidatePreview: true });
+          expect(official.contentVersion).toBe(MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION);
+          expect(official).toEqual(preview);
+          expect(official.publicSetup.run_number).toBeLessThanOrEqual(15);
+          expect((official.privateSetupEvidence.run as MillionaireRuntimeQuestion[])).toHaveLength(8);
+        }
       }
     }
     expect(scheduled).toBe(40);
+    expect(released).toBeGreaterThan(0);
+    const oldFootball = buildMillionaireDailySetup("football", "2026-10-26", "archive");
+    expect(oldFootball.contentVersion).toBe(COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION);
   });
+
 
   it("replaces twelve inverse or identical active UFC Bar Trivia facts only in future preview", () => {
     const updated: readonly [string, string][] = [

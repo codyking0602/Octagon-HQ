@@ -57,7 +57,7 @@ describe("Millionaire official Daily runtime", () => {
     expect(pastQuestion.prompt).toContain("never been named first-team All-Pro");
     expect(pastQuestion.id).toBe("millionaire-nfl-run-1-q6");
 
-    // Official Daily still uses the original ten-run bank; staging is explicit.
+    // Historic Daily proofs are immutable; v6 is active only on unpublished future days.
     const days = Array.from({ length: 182 }, (_, offset) =>
       new Date(Date.parse("2026-10-25T00:00:00Z") + offset * 86400000).toISOString().slice(0, 10));
     const target = days.find(day => day >= "2026-10-27"
@@ -138,7 +138,7 @@ describe("Millionaire official Daily runtime", () => {
       }
       expect(run[7]!.statSheet).toBeNull();
     }
-    expect(inspected).toEqual(new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
+    expect(inspected.size).toBeGreaterThanOrEqual(10);
   });
 
   it("debuts CFB for Football and UFC for UFC on September 19", () => {

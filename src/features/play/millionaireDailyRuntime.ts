@@ -38,9 +38,11 @@ import {
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
 export const COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION = "millionaire-daily-v5-cowboys-eagles-modern-replay-20261026" as const;
-/** Staged candidates only; not an approved or deployed content version. */
-export const MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION = "millionaire-daily-v6-editorial-candidates" as const;
+/** Future-only v6 content, independent from historic official submissions. */
+export const MILLIONAIRE_FUTURE_EDITORIAL_CONTENT_VERSION = "millionaire-daily-v6-six-month-20261028" as const;
 export const MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER = "2026-10-27" as const;
+/** First unpublished Central calendar day eligible for approved v6 content. */
+export const MILLIONAIRE_FUTURE_EDITORIAL_RELEASE_DAY = "2026-10-28" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
@@ -258,8 +260,9 @@ export type MillionaireEditorialPreview = { readonly editorialCandidatePreview?:
 export function millionaireDailyRunIndex(sport: "ufc" | "football", day: string,
   options?: MillionaireEditorialPreview) {
   const appearance = millionaireDailyLeagueAppearance(sport, day);
-  const count = options?.editorialCandidatePreview && day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER
-    ? MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT : MILLIONAIRE_DAILY_RUN_COUNT;
+  const candidatesActive = day >= MILLIONAIRE_FUTURE_EDITORIAL_RELEASE_DAY
+    || (options?.editorialCandidatePreview === true && day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER);
+  const count = candidatesActive ? MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT : MILLIONAIRE_DAILY_RUN_COUNT;
   return ((appearance % count) + count) % count;
 }
 
@@ -312,8 +315,8 @@ function futureMillionaireErrata(
 ): MillionaireRun {
   if (day < "2026-10-27") return run;
   return run.map((question, index) => {
-    // HOLD questions cannot be published accidentally: staging is opt-in
-    // within tests / editorial audit only, never by Official Daily callers.
+    // Future-only overlay: historical Daily runs and completed proofs stay immutable.
+    // This path is also exercised by opt-in editorial preview before release.
     const newQuestion = editorialCandidatePreview
       ? (MILLIONAIRE_FUTURE_TARGETED_REWRITES[`${league}:${runIndex}:${index}`]
         ?? MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${runIndex}:${index}`])
@@ -508,8 +511,10 @@ export function buildMillionaireDailySetup(
   scheduleVersion: string,
   options?: MillionaireEditorialPreview,
 ): OfficialDailySetupPublication {
-  const editorialCandidatePreview = options?.editorialCandidatePreview === true
-    && day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER;
+  // Only change newly published setups, never already-serialized Daily attempts.
+  // Pre-release preview remains explicitly opt-in on October 27.
+  const editorialCandidatePreview = day >= MILLIONAIRE_FUTURE_EDITORIAL_RELEASE_DAY
+    || (options?.editorialCandidatePreview === true && day >= MILLIONAIRE_FUTURE_EDITORIAL_CUTOVER);
   const league = millionaireDailyLeague(sport, day);
   const runIndex = millionaireDailyRunIndex(sport, day, options);
   const hostNumber = millionaireDailyHostNumber(sport, day);
