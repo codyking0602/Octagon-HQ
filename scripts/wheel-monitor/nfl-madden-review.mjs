@@ -60,7 +60,7 @@ const normName=value=>String(value??"").normalize("NFKD")
 export function flagDevelopmentProfiles(profiles,maddenFlags,gradeRows=[],contracts=[],rosterHints=[]){
   if(!Array.isArray(profiles)||!Array.isArray(maddenFlags)||!Array.isArray(gradeRows)||
     !Array.isArray(contracts)||!Array.isArray(rosterHints)) throw new Error("Invalid NFL editorial inputs");
-  const key=(team,name,family)=>team+"|"+family+"|"+normName(name);
+  const key=(team,name,family="")=>team+"|"+family+"|"+normName(name);
   const byIdentity=new Map(profiles.map(row=>[key(row.team,row.name,row.family),row]));
   const current=new Map(gradeRows.map(row=>[key(row.team,row.player,row.family),row]));
   const contract=new Map(contracts.map(row=>[key(row.team,row.player,row.family),row]));
