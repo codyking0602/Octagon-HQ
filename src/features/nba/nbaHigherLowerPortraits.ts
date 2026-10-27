@@ -1,4 +1,3 @@
-import { nbaFindLeaderHeadshot } from "./nbaFindTheLeaderModel";
 import type { NbaHigherLowerSubject } from "./nbaHigherLowerModel";
 
 /**
@@ -56,13 +55,23 @@ export function nbaHigherLowerPortraitCredit(subject: Pick<NbaHigherLowerSubject
 export const NBA_HIGHER_LOWER_EDITORIAL_PHOTOS: Readonly<Record<string, string>> = {
   lamarodom: "https://cdn.legit.ng/images/1120/8b381781755bce3c.jpeg?v=1",
   timhardaway: "https://cdn.nba.com/teams/uploads/sites/1610612744/2022/09/hardaway-1920.jpg",
+  gailgoodrich: "https://cdn.nba.com/manage/2021/08/GettyImages-1148261504.jpg",
   ...Object.fromEntries(Object.entries(NBA_HIGHER_LOWER_RESTORED_PORTRAITS).map(([key, value]) => [key, value.url])),
 };
-export function nbaHigherLowerPortraitSource(subject: Pick<NbaHigherLowerSubject,"name"|"nbaId">) {
-  const key = photoKey(subject.name);
-  return NBA_HIGHER_LOWER_EDITORIAL_PHOTOS[key]
-    ?? nbaFindLeaderHeadshot(subject);
+/**
+ * Canonical NBA portrait source for every photo-bearing NBA game.
+ * Player IDs are resolved by the owning game's season/identity roster; never
+ * infer a different person's ID from a fuzzy name. Named editorial overrides
+ * are source-identified photographs for CDN 200-OK gray placeholders.
+ */
+export function nbaPortraitSource(subject: Pick<NbaHigherLowerSubject, "name" | "nbaId">): string | null {
+  const editorial = NBA_HIGHER_LOWER_EDITORIAL_PHOTOS[photoKey(subject.name)];
+  if (editorial) return editorial;
+  return subject.nbaId == null ? null
+    : "https://cdn.nba.com/headshots/nba/latest/1040x760/" + subject.nbaId + ".png";
 }
+/** Backwards-compatible game-specific name; no second portrait registry. */
+export const nbaHigherLowerPortraitSource = nbaPortraitSource;
 /**
  * Guard against "successful" CDN placeholder images on browsers where canvas
  * inspection is permitted. A real photograph has many different tones; the
