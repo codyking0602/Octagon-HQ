@@ -181,6 +181,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[3]!.prompt).not.toContain("Who won the 2025 Heisman");
     expect(answer(millionaireFutureEditorialDailyRun("cfb", 14)[6]!)).toBe("Donovan Edwards");
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[6]!.prompt).not.toContain("Kalen DeBoer");
+    expect(millionaireFutureEditorialDailyRun("cfb", 14)[6]!.choices.map(choice => choice.text)).toEqual(["Donovan Edwards", "Blake Corum", "Kalel Mullings", "Benjamin Hall"]);
     const finalCorrections = [
       ["nfl:0:7", "Cooper DeJean"],
       ["nfl:2:7", "Sam Hubbard"],
