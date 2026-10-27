@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import authority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
-import nflCurrentAbilityRevisions from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-26.json";
 import audit from "../../../data/curated/football/gm-nfl-development-review-audit-2026-10-08.json";
 import {
   FOOTBALL_GM_CAP,
@@ -96,16 +95,10 @@ describe("full NFL GM development calibration", () => {
     expect(new Set(audit.reviews.map(p => p.id)).size).toBe(594);
     // None of the long scouting-review notes should ship in the player-facing bundle.
     expect(profiles.every((p) => !("reviewRationale" in p) && !("recentEvidence" in p))).toBe(true);
-    const gradedAfterReview = new Map(nflCurrentAbilityRevisions.changes.map(c => [
-      `${c.team}|${c.family}|${c.player.toLowerCase().replace(/[^a-z0-9]/g,"")}`,
-      c
-    ]));
     for (const review of audit.reviews) {
       const player = FOOTBALL_GM_PLAYER_POOL.find((p) => p.id === review.id);
       expect(player, review.id).not.toBeUndefined();
-      const revision = gradedAfterReview.get(review.id);
-      // A later version changes current gameplay without rewriting the Oct 8 review.
-      expect(player!.currentGrade).toBe(revision?.newGrade ?? review.gradeAtReview);
+      expect(player!.currentGrade).toBe(review.gradeAtReview);
       expect(review.reviewRationale.length, review.id).toBeGreaterThan(65);
     }
     for (const profile of profiles) {
@@ -114,9 +107,7 @@ describe("full NFL GM development calibration", () => {
       expect(footballGmDevelopmentProfile(profile.id)).toEqual(profile);
       expect(profile.name).toBe(player.name);
       expect(profile.ageAtCalibration).toBe(player.age);
-      // Oct 7 calibration is historical; new versioned grade is not retroactive.
-      const revision = gradedAfterReview.get(profile.id);
-      expect(profile.gradeAtCalibration).toBe(revision?.oldGrade ?? player.currentGrade);
+      expect(profile.gradeAtCalibration).toBe(player.currentGrade);
       expect(profile.breakoutPct).toBeGreaterThanOrEqual(0);
       expect(profile.improvePct).toBeGreaterThanOrEqual(0);
       expect(profile.declinePct).toBeGreaterThanOrEqual(0);
