@@ -100,6 +100,7 @@ on:
 permissions:
   actions: read
   contents: read
+  packages: read
 
 jobs:
   fresh-and-legacy-database-proof:
@@ -139,6 +140,13 @@ jobs:
         with:
           version: 2.109.1
 
+      - name: Authenticate GitHub Container Registry for Supabase test images
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+
       - name: Start isolated fresh Supabase stack
         shell: bash
         run: |
@@ -159,9 +167,17 @@ jobs:
           verify_jwt = false
           EOF
 
-          # SQL/RPC and the local Daily Edge Function are the only services used
-          # by this proof. Avoid unnecessary image pulls and registry rate limits.
-          supabase start -x imgproxy,vector,studio,logflare,mailpit,supavisor,realtime,storage-api,postgres-meta
+          for attempt in 1 2 3; do
+            if supabase start; then
+              break
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "::error title=Supabase test images unavailable::Authenticated GHCR retry exhausted."
+              exit 1
+            fi
+            supabase stop --no-backup || true
+            sleep $((attempt * 30))
+          done
           db_url=$(supabase status -o env | sed -n 's/^DB_URL=//p' | tr -d '"')
           if [ -z "$db_url" ]; then
             echo "::error title=Local database unavailable::Supabase did not report DB_URL."
