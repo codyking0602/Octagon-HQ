@@ -8,6 +8,7 @@ export interface FighterNamePresentation {
 }
 
 export const fighterNamePresentationBySlug: Readonly<Record<string, FighterNamePresentation>> = {
+  "ciryl-gane": { nickname: "Bon Gamin", position: "middle" },
   "jon-jones": { nickname: "Bones", position: "middle" },
   "georges-st-pierre": { nickname: "Rush", position: "middle" },
   "demetrious-johnson": { nickname: "Mighty Mouse", position: "middle" },
