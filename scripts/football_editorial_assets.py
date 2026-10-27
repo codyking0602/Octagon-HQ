@@ -224,7 +224,9 @@ def game_header(spec, away_photo, home_photo, away_logo=None, home_logo=None):
 
 def publisher_game_header(photo):
     """Fit the ENTIRE SeatGeek artwork to 16:9, without cutting logos or inventing graphics."""
-    if photo.width < 500 or photo.height < 280:
+    # SeatGeek serves authentic 450px square matchup marks for some NCAA pairs.
+    # Accept the published native size; the output still receives the 1600x900 WebP gate.
+    if photo.width < 450 or photo.height < 280:
         raise AssetError("Publisher header resolution too small")
     original = ImageOps.contain(photo.convert("RGB"), HEADER_SIZE, Image.Resampling.LANCZOS)
     canvas = Image.new("RGB", HEADER_SIZE, (12, 17, 27))
