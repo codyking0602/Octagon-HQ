@@ -1,6 +1,47 @@
 import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
 
 export const BAR_TRIVIA_CURRENT_EVENT_QUESTIONS: readonly BarTriviaQuestion[] = [
+  // October 27, 2026 weekly editorial review — verified, dated current events.
+  barTriviaQuestion({
+    id: "nfl-current-2026-w7-first-france-game",
+    league: "nfl",
+    round: "round1",
+    difficulty: "easy",
+    category: "Global Firsts",
+    prompt: "Which two NFL teams met in the league's first regular-season game in France in October 2026?",
+    choices: [
+      "Pittsburgh Steelers and New Orleans Saints",
+      "Miami Dolphins and Atlanta Falcons",
+      "New England Patriots and New York Jets",
+      "Kansas City Chiefs and Seattle Seahawks",
+    ],
+    answer: "Pittsburgh Steelers and New Orleans Saints",
+    explanation: "Pittsburgh beat New Orleans 16–10 at Stade de France on October 25, 2026, in the first NFL game held in France.",
+    contentType: "current-event",
+    activeFrom: "2026-10-27T00:00:00-05:00",
+    expiresAt: "2026-11-10T23:59:59-06:00",
+    sourceId: "nfl-2026-first-game-in-france-steelers-saints",
+    sourceUrl: "https://www.nfl.com/news/2026-nfl-season-week-7-what-we-learned-from-sunday-s-games",
+    verifiedAt: "2026-10-27",
+  }),
+  barTriviaQuestion({
+    id: "ufc-current-2026-10-24-volk-evloev-first-loss",
+    league: "ufc",
+    round: "round2",
+    difficulty: "medium",
+    category: "Title Fight Turning Points",
+    prompt: "Which previously unbeaten challenger suffered his first professional loss when Alexander Volkanovski defended his featherweight title at UFC 333?",
+    choices: ["Movsar Evloev", "Lerone Murphy", "Diego Lopes", "Arnold Allen"],
+    answer: "Movsar Evloev",
+    explanation: "Volkanovski stopped Movsar Evloev in Round 2 of their October 24, 2026 title fight in Abu Dhabi, handing Evloev his first professional defeat.",
+    contentType: "current-event",
+    activeFrom: "2026-10-27T00:00:00-05:00",
+    expiresAt: "2026-11-17T23:59:59-06:00",
+    sourceId: "ufc-333-volkanovski-evloev-first-loss",
+    sourceUrl: "https://www.ufc.com/news/ufc-333-volkanovski-vs-evloev-results",
+    verifiedAt: "2026-10-27",
+  }),
+
   barTriviaQuestion({
     id: "nfl-current-2026-w5-commanders-clock-tie",
     league: "nfl",
