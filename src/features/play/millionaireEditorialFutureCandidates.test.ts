@@ -232,6 +232,23 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("guards six sourced CFB legacy-preview corrections including 2022 Rose Bowl", () => {
+    for (const key of ["cfb:6:2","cfb:6:3","cfb:7:2","cfb:7:4","cfb:9:2","cfb:9:5"] as const) {
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.choices).toHaveLength(4);
+      expect(q.choices.filter(c=>c===q.answer)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(q.answer));
+      expect(q.explanation.length).toBeGreaterThan(110);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+    const rose=MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:7:2"]!;
+    expect(rose.answer).toBe("Ohio State");
+    expect(rose.prompt).toContain("2022 Rose Bowl");
+    expect(rose.prompt).not.toContain("Vince Young");
+    expect(millionaireDailyRun("cfb",7)[2]!.prompt).toContain("fourth-down");
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
