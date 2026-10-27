@@ -234,6 +234,6 @@ export const FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS = [
 export function usesFootballWavelengthEditorialPool(seed: string) {
   // Persisted Daily seeds contain an ISO day; an undated Casual seed uses the new pool.
   // Never change the candidate order or calibration for earlier published Daily boards.
-  const day = seed.match(/(?:^|\\|)(20\\d{2}-\\d{2}-\\d{2})(?:\\||$)/)?.[1];
+  const day = seed.match(/(?:^|\|)(20\d{2}-\d{2}-\d{2})(?:\||$)/)?.[1];
   return !day || day >= FOOTBALL_WAVELENGTH_EDITORIAL_CUTOVER_DAY;
 }
