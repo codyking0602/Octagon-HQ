@@ -8,8 +8,7 @@ import { challengeCounterpartId, challengeDirection, challengeStatus } from "../
 import { challengePlayRoute, challengeSport } from "../challenges/challengeRuntime";
 import { useIdentity } from "../identity/IdentityProvider";
 import { isDailyRankKeepCombo } from "./DailyRankKeepComboStatus";
-import { dailyTwoGameOfficialAverageScore } from "./DailyTwoGameStatus";
-import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
+import { dailyOfficialDisplayScore } from "./DailyTwoGameStatus";
 import { WeeklyOverallChampionBanner } from "./WeeklyOverallChampionBanner";
 import { WeeklyGmChampionAnnouncement } from "./WeeklyGmChampionAnnouncement";
 import { playLandingDestination, playLandingGameIds } from "./PlayLandingPresentation";
@@ -62,12 +61,7 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
   const dailyRoute = sport === "football" ? "/football/today" : adapter?.dailyRoute ?? "/play";
   const ownLeaderboardEntry = overview.leaderboard?.entries.find((entry) => entry.isCurrentUser);
   const ownPlace = ownLeaderboardEntry?.rank;
-  const isTwoGameDaily = projection ? dailyUsesTwoGameAverage(projection.gameType, projection.centralDay) : false;
-  const officialDailyScore = projection?.officialAttempt
-    ? (isTwoGameDaily
-      ? dailyTwoGameOfficialAverageScore(projection) ?? ownLeaderboardEntry?.normalizedScore
-      : null) ?? projection.officialAttempt.normalizedScore
-    : null;
+  const officialDailyScore = dailyOfficialDisplayScore(projection, ownLeaderboardEntry?.normalizedScore);
   const [showResults, setShowResults] = useState(false);
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const selectedEntry = overview.leaderboard?.entries.find((entry) => entry.profileId === selectedProfileId) ?? null;

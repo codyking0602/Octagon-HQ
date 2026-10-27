@@ -12,7 +12,7 @@ import { OfficialBarTriviaDailyView } from "../play/OfficialBarTriviaDailyView";
 import {
   DailyTwoGamePresentationIntermission, DailyTwoGameStatus,
   dailyTwoGamePresentationIntermissionState,
-  dailyTwoGameSeriesState,
+  dailyTwoGameSeriesState, dailyOfficialDisplayScore,
 } from "../play/DailyTwoGameStatus";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
@@ -334,7 +334,7 @@ export default function NbaOfficialDailyPage() {
       onExit={() => navigate("/nba")}
     />
     {projection.officialAttempt ? <section className="nba-official-daily__saved-score" aria-label="Official NBA Daily total score">
-      {ownerTest ? "SAVED TEST SCORE" : "OFFICIAL SAVED SCORE"} · <strong>{projection.officialAttempt.normalizedScore}/100</strong>
+      {ownerTest ? "SAVED TEST SCORE" : "OFFICIAL SAVED SCORE"} · <strong>{dailyOfficialDisplayScore(projection)}/100</strong>
     </section> : null}
     {ownerTest ? <p className="play-v2__muted">Owner-only rehearsal · no championship points or public ranking.</p> : null}
     {projection.officialAttempt ? <footer className="nba-official-daily__footer">

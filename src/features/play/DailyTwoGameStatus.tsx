@@ -1,4 +1,5 @@
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
+import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -94,6 +95,28 @@ export function dailyTwoGameOfficialAverageScore(projection: TodayChallengeProje
     return Math.round((series.roundScores[0]! + series.roundScores[1]!) / 2);
   }
   return series.averageScore;
+}
+
+/**
+ * Every completed two-game Daily must show its rounded combined score on
+ * Home, Play, saved results and overview cards; the last child score is not
+ * the Daily result. Other games keep their recorded single-game score.
+ *
+ * Older saved projections can omit the two child scores: fall back to the
+ * server's current-user leaderboard score before the legacy attempt field.
+ */
+export function dailyOfficialDisplayScore(
+  projection: TodayChallengeProjection | null | undefined,
+  leaderboardScore?: number | null,
+): number | null {
+  if (!projection?.officialAttempt) return null;
+  const twoGame = dailyUsesTwoGameAverage(projection.gameType, projection.centralDay)
+    || dailyTwoGameSeriesState(projection) !== null;
+  if (!twoGame) return projection.officialAttempt.normalizedScore;
+  const average = dailyTwoGameOfficialAverageScore(projection);
+  if (average !== null) return average;
+  if (typeof leaderboardScore === "number" && Number.isFinite(leaderboardScore)) return leaderboardScore;
+  return projection.officialAttempt.normalizedScore;
 }
 
 export function dailyTwoGameActiveScore(projection: TodayChallengeProjection) {

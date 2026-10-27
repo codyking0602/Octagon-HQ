@@ -10,7 +10,7 @@ import {
   footballSpecialDailyStyle,
   footballSpecialDailyThemeForDay,
 } from "./footballSpecialDailyTheme";
-import { dailyTwoGameLeaderboardPublicState, dailyTwoGameSeriesState } from "./DailyTwoGameStatus";
+import { dailyOfficialDisplayScore, dailyTwoGameLeaderboardPublicState, dailyTwoGameSeriesState } from "./DailyTwoGameStatus";
 import {
   dailyRankKeepComboStage,
   isDailyRankKeepCombo,
@@ -399,6 +399,8 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
   }
 
   const completed = Boolean(projection.officialAttempt);
+  const ownLeaderboardScore = overview.leaderboard?.entries.find(entry => entry.isCurrentUser)?.normalizedScore;
+  const completedScore = dailyOfficialDisplayScore(projection, ownLeaderboardScore);
   const combo = isDailyRankKeepCombo(projection);
   const title = combo ? "Blind Rank + Keep/Cut" : adapter.title;
   const instructions = combo
@@ -452,7 +454,7 @@ export default function TodayChallengeHub({ sport = "ufc", initialPanel = "chall
           <div className="today-hub-card__body">
             <small>
               {completed && projection.officialAttempt
-                ? `${sport === "nba_preview" ? "SAVED TEST SCORE" : "OFFICIAL RESULT"} · ${projection.officialAttempt.normalizedScore}`
+                ? `${sport === "nba_preview" ? "SAVED TEST SCORE" : "OFFICIAL RESULT"} · ${completedScore}`
                 : projection.progressRevision > 0
                   ? `SAVED · ${gameProgress(projection)}`
                   : gameProgress(projection)}
