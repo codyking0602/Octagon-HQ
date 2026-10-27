@@ -206,3 +206,94 @@ begin
     'release_at',v_package.week_of::timestamp at time zone 'America/Chicago');
 end;
 $$;
+
+create or replace function public.arm_football_weekly_editorial(
+  p_week_of date, p_sport text, p_verified_assets jsonb
+) returns jsonb
+language plpgsql security definer set search_path = '' as $$
+declare
+  v_package public.football_weekly_content_packages;
+  v_spotlight jsonb;
+  v_game jsonb;
+  v_editorial jsonb;
+  v_receipt jsonb;
+  v_prefix text;
+  v_other text;
+  v_ready timestamptz;
+begin
+  -- Verify the deployed Spotlight portrait independently. The owner-supplied
+  -- GOTW header is optional and may arrive after the content is published.
+  if auth.role() is distinct from 'service_role'
+     and (auth.uid() is null or not public.is_pick_control_owner(auth.uid())) then
+    raise exception 'Football editorial owner access required';
+  end if;
+  if p_week_of is null or extract(isodow from p_week_of) <> 2
+    or p_sport not in ('cfb','nfl') then
+    raise exception 'Invalid Tuesday editorial week or sport';
+  end if;
+
+  select * into v_package from public.football_weekly_content_packages p
+    where p.week_of=p_week_of for update;
+  if not found or v_package.status not in ('draft','ready')
+     or now() >= ((v_package.week_of + 7)::timestamp at time zone 'America/Chicago') then
+    raise exception 'Football package must be armed during its editorial week';
+  end if;
+  if v_package.production->p_sport->>'ready_at' is not null then
+    raise exception 'Sport already armed for this Football week';
+  end if;
+
+  v_spotlight := case when p_sport='cfb' then v_package.cfb_spotlight else v_package.nfl_spotlight end;
+  v_game := case when p_sport='cfb' then v_package.cfb_game_of_week else v_package.nfl_game_of_week end;
+  v_editorial := v_package.production->p_sport;
+  v_receipt := v_package.choices->p_sport;
+  v_prefix := '/assets/football/weekly/' || p_week_of::text || '/' || p_sport || '/';
+  v_other := case when p_sport='cfb' then 'nfl' else 'cfb' end;
+
+  if v_receipt is null or v_spotlight is null or v_game is null or v_editorial is null
+     or v_spotlight->>'name' is distinct from v_receipt->'player'->>'name'
+     or v_spotlight->>'team' is distinct from v_receipt->'player'->>'team'
+     or v_spotlight->>'position' is distinct from v_receipt->'player'->>'position'
+     or v_game->>'home_team' is distinct from v_receipt->'game'->>'home_team'
+     or v_game->>'away_team' is distinct from v_receipt->'game'->>'away_team'
+     or (v_game->>'kickoff_at')::timestamptz
+          is distinct from (v_receipt->'game'->>'kickoff_at')::timestamptz
+     or v_editorial->>'player_id' is distinct from v_receipt->'player'->>'id'
+     or v_editorial->>'game_id' is distinct from v_receipt->'game'->>'id'
+     or v_spotlight->>'photo_asset_path' is distinct from v_prefix || 'spotlight.webp'
+     or jsonb_typeof(v_spotlight->'stats') is distinct from 'array'
+     or jsonb_array_length(v_spotlight->'stats') <> 4
+     or jsonb_typeof(v_editorial->'breakdown') is distinct from 'object'
+     or jsonb_typeof(v_editorial->'source_urls') is distinct from 'array'
+     or jsonb_array_length(v_editorial->'source_urls') < 2 then
+    raise exception 'Selected Football content is incomplete or mismatched';
+  end if;
+
+  if p_verified_assets is null or jsonb_typeof(p_verified_assets) <> 'object'
+     or p_verified_assets->>'spotlight_url'
+          is distinct from 'https://octagon.hq-app.workers.dev' || v_prefix || 'spotlight.webp'
+     or coalesce(p_verified_assets->>'deployed_sha','') !~ '^[0-9a-f]{40}$' then
+    raise exception 'Exact deployed Football image URLs and commit SHA are required';
+  end if;
+  -- The binary WebP/dimension/identity checks are performed by the verified
+  -- deployment checker before invoking this owner-only RPC, never by trusting a draft path.
+  v_ready := now();
+  update public.football_weekly_content_packages p
+  set production = jsonb_set(p.production, array[p_sport],
+        v_editorial || jsonb_build_object('ready_at',v_ready,
+          'armed_by',auth.uid(),'media_verification',p_verified_assets), true),
+      status = case when p.production->v_other->>'ready_at' is not null then 'ready' else 'draft' end,
+      approved_at = coalesce(p.approved_at,v_ready),
+      ready_at = case when p.production->v_other->>'ready_at' is not null then v_ready else p.ready_at end,
+      updated_at = v_ready
+  where p.week_of=p_week_of returning p.* into v_package;
+
+  return to_jsonb(v_package) || jsonb_build_object(
+    'release_at',(v_package.week_of::timestamp + interval '8 hours') at time zone 'America/Chicago');
+end;
+$$;
+
+revoke all on function public.prepare_football_weekly_editorial(date,text,jsonb,jsonb,jsonb) from public, anon;
+grant execute on function public.prepare_football_weekly_editorial(date,text,jsonb,jsonb,jsonb) to authenticated, service_role;
+revoke all on function public.arm_football_weekly_editorial(date,text,jsonb) from public, anon;
+grant execute on function public.arm_football_weekly_editorial(date,text,jsonb) to authenticated, service_role;
+notify pgrst,'reload schema';
