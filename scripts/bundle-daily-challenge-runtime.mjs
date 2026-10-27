@@ -21,6 +21,12 @@ const bundles = [
     requiredExports: ["advanceOfficialDailyGameRuntime"],
   },
   {
+    label: "Football comparison action-only runtime",
+    entry: resolve(repoRoot, "src/features/play/leanDaily/FootballComparisonAdvance.ts"),
+    fileName: "football-comparison-advance.generated.mjs",
+    requiredExports: ["advanceOfficialDailyGameRuntime"],
+  },
+  {
     label: "legacy-feud action-only Daily runtime",
     entry: resolve(repoRoot, "src/features/play/leanDaily/LegacyFeudAdvance.ts"),
     fileName: "legacy-feud-advance.generated.mjs",

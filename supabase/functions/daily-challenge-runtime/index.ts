@@ -223,6 +223,8 @@ function loadNbaAdvanceRuntime(gameType?: string) {
 // Keep already-published boards and legacy grading intact; only isolate the
 // per-tap evaluator. Each module is a Vite tree-shaken action-only bundle.
 async function loadIsolatedDailyAction(sport: "football" | "ufc", gameType: string): Promise<DailyAdvanceRuntime | null> {
+  if (sport === "football" && ["blind_resume", "blind_rank_5", "keep_4_cut_4"].includes(gameType)) return (await import("./football-comparison-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (gameType === "who_am_i") return (await loadWhoAmIAdvanceRuntime()).advanceCanonicalWhoAmIDailyRuntime;
   if (sport === "football" && gameType === "find_leader") return (await import("./football-find-leader-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
   if (sport === "football" && gameType === "higher_lower") return (await import("./football-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
   if (sport === "football" && gameType === "bar_trivia") return (await import("./bar-trivia-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
@@ -1750,7 +1752,7 @@ Deno.serve(async (request) => {
       // acknowledge its persisted handoff (a source of Edge CPU-limit errors).
       let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, action);
       if (!advanced) {
-        const isolatedFootballRuntime = await loadIsolatedDailyAction("football", context.gameType);
+        const isolatedFootballRuntime = isDailyCombo(context) ? null : await loadIsolatedDailyAction("football", context.gameType);
         const advanceFootballRuntime = isolatedFootballRuntime ?? (context.gameType === "average_fan"
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
           : context.gameType === "hit_the_number" && !isDailyCombo(context)
@@ -1824,7 +1826,7 @@ Deno.serve(async (request) => {
 
     let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, body.action);
     if (!advanced) {
-      const isolatedUfcRuntime = await loadIsolatedDailyAction("ufc", context.gameType);
+      const isolatedUfcRuntime = isDailyCombo(context) ? null : await loadIsolatedDailyAction("ufc", context.gameType);
       const advanceUfcRuntime = isolatedUfcRuntime ?? (context.gameType === "average_fan"
         ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
         : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
