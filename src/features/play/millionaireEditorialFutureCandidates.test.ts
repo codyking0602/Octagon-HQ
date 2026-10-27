@@ -147,7 +147,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb", 10, 2, "Michael Penix Jr."],
       ["cfb", 10, 5, "Max Duggan"],
       ["cfb", 10, 6, "Ashton Jeanty"],
-      ["cfb", 14, 6, "Kalen DeBoer"],
+      ["cfb", 14, 6, "Donovan Edwards"],
       ["ufc", 13, 6, "Khamzat Chimaev"],
       ["ufc", 6, 7, "Ilia Topuria"],
       ["ufc", 12, 7, "Paddy Pimblett"],
@@ -160,6 +160,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["cfb", 13, 2, "J.J. McCarthy"],
       ["cfb", 13, 3, "Trevor Etienne"],
       ["cfb", 13, 6, "Michael Crabtree"],
+      ["cfb", 14, 3, "Diego Pavia"],
     ] as const;
     for (const [league, runIndex, slot, expected] of newRunCorrections) {
       const question = millionaireFutureEditorialDailyRun(league, runIndex)[slot]!;
@@ -175,14 +176,20 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
         expect(question.statSheet).not.toContain(expected);
       }
     }
+    // Keep known cross-game overlaps out of the actual preview board.
+    expect(answer(millionaireFutureEditorialDailyRun("cfb", 14)[3]!)).toBe("Diego Pavia");
+    expect(millionaireFutureEditorialDailyRun("cfb", 14)[3]!.prompt).not.toContain("Who won the 2025 Heisman");
+    expect(answer(millionaireFutureEditorialDailyRun("cfb", 14)[6]!)).toBe("Donovan Edwards");
+    expect(millionaireFutureEditorialDailyRun("cfb", 14)[6]!.prompt).not.toContain("Kalen DeBoer");
     const finalCorrections = [
       ["nfl:0:7", "Cooper DeJean"],
       ["nfl:2:7", "Sam Hubbard"],
       ["nfl:9:7", "Noah Brown"],
       ["cfb:4:7", "Matthew Golden"],
       ["cfb:5:7", "Rod Moore"],
-      ["ufc:2:7", "Jiří Procházka"],
-      ["ufc:5:7", "Tom Aspinall"],
+      ["cfb:9:7", "Javon Bullard"],
+      ["ufc:2:7", "Dustin Poirier"],
+      ["ufc:5:7", "Nate Diaz"],
     ] as const;
     for (const [key, expected] of finalCorrections) {
       const question = MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
