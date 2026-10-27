@@ -138,12 +138,11 @@ type AverageFanRuntimeModule = {
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
+// Wavelength publishes its own small two-game board without importing every Football game bank.
+let footballWavelengthPublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
 // Millionaire publishing must not parse all Football game families in one
 // Edge invocation. The full Football publisher is retained for other modes.
 let footballMillionairePublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
-// Load Wavelength independently: parsing the full Football bank on an unpublished
-// Central-day rollover can exhaust the Supabase Edge CPU budget (HTTP 546).
-let footballWavelengthPublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
@@ -153,6 +152,7 @@ let whoAmIAdvanceRuntimePromise: Promise<WhoAmIAdvanceRuntimeModule> | null = nu
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
 let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
 let footballHitNumberAdvanceRuntimePromise: Promise<FootballHitNumberAdvanceRuntimeModule> | null = null;
+let footballWavelengthAdvanceRuntimePromise: Promise<{ advanceFootballWavelengthDailyRuntime: DailyAdvanceRuntime }> | null = null;
 
 function loadUfcRuntime() {
   if (!ufcRuntimePromise) {
@@ -226,6 +226,11 @@ function loadFootballHitNumberAdvanceRuntime() {
     footballHitNumberAdvanceRuntimePromise = import("./football-hit-number-advance.generated.mjs") as Promise<FootballHitNumberAdvanceRuntimeModule>;
   }
   return footballHitNumberAdvanceRuntimePromise;
+}
+
+function loadFootballWavelengthAdvanceRuntime() {
+  if (!footballWavelengthAdvanceRuntimePromise) footballWavelengthAdvanceRuntimePromise = import("./football-wavelength-advance.generated.mjs") as Promise<{ advanceFootballWavelengthDailyRuntime: DailyAdvanceRuntime }>;
+  return footballWavelengthAdvanceRuntimePromise;
 }
 
 function loadMillionaireAdvanceRuntime() {
@@ -1720,6 +1725,8 @@ Deno.serve(async (request) => {
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
           : context.gameType === "hit_the_number" && !isDailyCombo(context)
             ? (await loadFootballHitNumberAdvanceRuntime()).advanceFootballHitNumberDailyRuntime
+            : context.gameType === "wavelength" && !isDailyCombo(context)
+              ? (await loadFootballWavelengthAdvanceRuntime()).advanceFootballWavelengthDailyRuntime
             : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
               ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
               : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;

@@ -21,6 +21,12 @@ const bundles = [
     requiredExports: ["advanceFootballHitNumberDailyRuntime"],
   },
   {
+    label: "Football Wavelength Daily answer-only runtime",
+    entry: resolve(repoRoot, "src/features/play/footballWavelengthDailyAdvance.ts"),
+    fileName: "football-wavelength-advance.generated.mjs",
+    requiredExports: ["advanceFootballWavelengthDailyRuntime"],
+  },
+  {
     label: "Millionaire Daily answer-only runtime",
     entry: resolve(repoRoot, "src/features/play/millionaireDailyAdvance.ts"),
     fileName: "millionaire-advance.generated.mjs",
@@ -51,8 +57,8 @@ const bundles = [
     ],
   },
   {
-    // Rollovers must load only the Wavelength bank; the all-Football bundle
-    // exceeded the Edge CPU budget and left October 27 unpublished.
+    // The October 27 Wavelength board requires two canonical rounds; importing
+    // unrelated Football question banks can exceed the Edge CPU allocation.
     label: "Football Wavelength Daily lean publication runtime",
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWavelength.ts"),
     fileName: "football-wavelength-publication.generated.mjs",
