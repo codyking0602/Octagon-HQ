@@ -153,7 +153,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc", 12, 7, "Paddy Pimblett"],
       ["nfl", 12, 3, "Christian McCaffrey"],
       ["nfl", 12, 7, "Aaron Donald"],
-      ["nfl", 13, 3, "Trevor Lawrence"],
+      ["nfl", 13, 3, "Riley Patterson"],
       ["nfl", 13, 6, "Brandon Aiyuk"],
       ["cfb", 10, 3, "Kirby Smart"],
       ["cfb", 12, 6, "Luke Fickell"],
@@ -176,6 +176,12 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
         expect(question.statSheet).not.toContain(expected);
       }
     }
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 13)[3]!)).toBe("Riley Patterson");
+    expect(millionaireFutureEditorialDailyRun("nfl", 13)[3]!.prompt).toContain("36-yard field goal");
+    expect(millionaireFutureEditorialDailyRun("nfl", 13)[3]!.choices.map(choice => choice.text)).toEqual(["Riley Patterson", "Cameron Dicker", "Brandon McManus", "Evan McPherson"]);
+    expect(millionaireFutureEditorialDailyRun("nfl", 14)[2]!.statSheet).not.toContain("LSU");
+    expect(millionaireFutureEditorialDailyRun("cfb", 14)[3]!.statSheet).not.toContain("Vanderbilt");
+    expect(millionaireFutureEditorialDailyRun("ufc", 14)[4]!.statSheet).not.toContain("Kazakh");
     // Keep known cross-game overlaps out of the actual preview board.
     expect(answer(millionaireFutureEditorialDailyRun("cfb", 14)[3]!)).toBe("Diego Pavia");
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[3]!.prompt).not.toContain("Who won the 2025 Heisman");
