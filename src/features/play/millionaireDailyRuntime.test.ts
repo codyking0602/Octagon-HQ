@@ -93,7 +93,7 @@ describe("Millionaire official Daily runtime", () => {
     const championship = (cfb.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[0]!;
     const clue = (ufc.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[6]!;
     expect(championship.prompt).toMatch(/2025 football season/i);
-    expect(championship.explanation).toContain("January 2026");
+    expect(championship.explanation).toMatch(/January(?: 19,)? 2026/);
     expect(championship.choices.find(c => c.id === championship.correctChoiceId)?.text).toBe("Indiana");
     expect(clue.statSheet).not.toMatch(/Grasso/i);
     expect(clue.statSheet).toContain("Round 5");
