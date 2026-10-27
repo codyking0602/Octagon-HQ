@@ -29,11 +29,11 @@ function gameContext(setup: ReturnType<typeof buildOfficialDailySetup>): Officia
 }
 
 describe("UFC Wavelength focused six-month readiness", () => {
-  it("keeps old published clue identities readable while selecting only the refreshed 500", () => {
-    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v3");
-    expect(wavelengthCatalog.filter((clue) => clue.status === "retired")).toHaveLength(20);
+  it("keeps prior published clue identities readable while drawing only from the expanded approved catalog", () => {
+    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v4");
+    expect(wavelengthCatalog.filter((clue) => clue.status === "retired")).toHaveLength(27);
     expect(wavelengthCatalog.filter((clue) => clue.status === "quarantined")).toHaveLength(1);
-    expect(approvedWavelengthCatalog).toHaveLength(500);
+    expect(approvedWavelengthCatalog).toHaveLength(605);
     expect(approvedWavelengthCatalog.filter((clue) => clue.id.startsWith("wl-ufc-refresh-"))).toHaveLength(20);
     expect(approvedWavelengthCatalog.some((clue) => clue.id === "wl-fighter-skill-005")).toBe(false);
 
