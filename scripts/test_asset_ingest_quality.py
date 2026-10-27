@@ -1,6 +1,8 @@
 """Regression coverage for transparent UFC fighter crop/quality gates."""
 import sys
 import unittest
+from contextlib import redirect_stderr
+from io import StringIO
 from types import SimpleNamespace
 
 from PIL import Image, ImageDraw
@@ -24,6 +26,13 @@ def fake_fighter(width=160, height=480):
 
 
 class AssetIngestQualityTests(unittest.TestCase):
+    def assert_rejected(self, image, kind, reason):
+        stderr = StringIO()
+        with redirect_stderr(stderr):
+            with self.assertRaises(SystemExit):
+                validate_asset_quality(image, kind)
+        self.assertIn(reason, stderr.getvalue())
+
     def test_tall_fighter_thumb_is_upper_body_not_full_length(self):
         source = fake_fighter()
         thumbnail = render_thumb(source, (320, 320))
@@ -36,8 +45,7 @@ class AssetIngestQualityTests(unittest.TestCase):
     def test_framed_rectangular_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
         ImageDraw.Draw(image).rectangle((10, 10, 309, 309), fill=(220, 220, 220, 255))
-        with self.assertRaisesRegex(SystemExit, "background artifact"):
-            validate_asset_quality(image, "thumb")
+        self.assert_rejected(image, "thumb", "background artifact")
 
     def test_full_bleed_opaque_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (200, 200, 200, 255))
@@ -57,8 +65,7 @@ class AssetIngestQualityTests(unittest.TestCase):
     def test_too_small_subject_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
         ImageDraw.Draw(image).rectangle((150, 40, 160, 90), fill=(120, 80, 60, 255))
-        with self.assertRaisesRegex(SystemExit, "too small or narrow"):
-            validate_asset_quality(image, "thumb")
+        self.assert_rejected(image, "thumb", "too small or narrow")
 
 
 if __name__ == "__main__":
