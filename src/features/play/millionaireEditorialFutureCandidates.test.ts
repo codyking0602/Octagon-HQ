@@ -440,6 +440,36 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("ufc", 9)[0]!.prompt).toContain("women's champion");
   });
 
+  it("retains twelve official-source NFL and CFB future-only collision fixes", () => {
+    const cases: readonly [string, string, string][] = [
+      ["nfl:1:4", "Derrick Henry", "Which Tennessee r"],
+      ["nfl:2:1", "Jalen Hurts", "Which Eagles quar"],
+      ["nfl:4:6", "Stephon Gilmore", "Which New England"],
+      ["nfl:5:5", "Nick Bolton", "Which Chiefs line"],
+      ["nfl:6:1", "Jayden Daniels", "Which Washington "],
+      ["nfl:8:1", "Patrick Mahomes", "Who earned Super "],
+      ["cfb:0:1", "Ohio State", "Which school won "],
+      ["cfb:8:3", "Jim Harbaugh", "Which head coach "],
+      ["cfb:3:5", "Notre Dame", "Which team defeat"],
+      ["cfb:6:6", "Curt Cignetti", "Which coach guide"],
+      ["cfb:8:1", "Penn State", "Which school beat"],
+      ["cfb:8:2", "Riley Leonard", "Which Notre Dame "],
+    ];
+    expect(cases).toHaveLength(12);
+    for (const [key, answerText, promptStart] of cases) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.prompt).toContain(promptStart);
+      expect(q.answer).toBe(answerText);
+      expect(q.choices[0]).toBe(answerText);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(answerText));
+      expect(q.explanation).toContain(answerText);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+    expect(millionaireDailyRun("nfl", 2)[1]!.prompt).toContain("Helmet Catch");
+    expect(millionaireDailyRun("cfb", 0)[1]!.prompt).toContain("first College Football Playoff");
+  });
+
   it("protects source-checked draft revisions against accidental reversion", () => {
     const sourceChecked = [
       ["cfb", 10, 0, "Miami"],

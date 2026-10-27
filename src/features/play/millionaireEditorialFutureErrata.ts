@@ -533,4 +533,102 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-261-usman-vs-masvidal-2-zhang-namajunas-results-highlights-interviews-winners", supportingDetail: "Valentina Shevchenko stopped Jessica Andrade by TKO at 3:19 of Round 2 at UFC 261 in April 2021, retaining her women's flyweight championship." }],
   },
 
+  // Future-only NFL and CFB concept replacement batch.
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "nfl:1:4": {
+    id: "millionaire-nfl-future-semantic-r2-q5",
+    type: "rushing-seasons", prompt: "Which Tennessee running back rushed for 2,027 yards during the 2020 season?",
+    choices: ["Derrick Henry","Jonathan Taylor","Saquon Barkley","Dalvin Cook"], answer: "Derrick Henry",
+    statSheet: "He led the NFL in carries, rushing yards and rushing touchdowns.", explanation: "Derrick Henry rushed for 2,027 yards and 17 touchdowns for Tennessee in 2020, surpassing the 2,000-yard barrier.",
+    evidence: [{ authority: "NFL official report", url: "https://www.nfl.com/players/derrick-henry/stats/career", supportingDetail: "Derrick Henry rushed for 2,027 yards and 17 touchdowns for Tennessee in 2020, surpassing the 2,000-yard barrier." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "nfl:2:1": {
+    id: "millionaire-nfl-future-semantic-r3-q2",
+    type: "super-bowl-mvps", prompt: "Which Eagles quarterback was named MVP of Super Bowl LIX after defeating Kansas City?",
+    choices: ["Jalen Hurts","Patrick Mahomes","Nick Foles","Kenny Pickett"], answer: "Jalen Hurts",
+    statSheet: "The champion won 40–22 and its quarterback rushed for 72 yards.", explanation: "Jalen Hurts was named Super Bowl LIX MVP in February 2025 after throwing for 221 yards and two touchdowns and rushing for 72 yards as Philadelphia beat Kansas City 40–22.",
+    evidence: [{ authority: "NFL official report", url: "https://amp.nfl.com/news/eagles-qb-jalen-hurts-named-super-bowl-lix-most-valuable-player", supportingDetail: "Jalen Hurts was named Super Bowl LIX MVP in February 2025 after throwing for 221 yards and two touchdowns and rushing for 72 yards as Philadelphia beat Kansas City 40–22." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "nfl:4:6": {
+    id: "millionaire-nfl-future-semantic-r5-q7",
+    type: "defensive-awards", prompt: "Which New England cornerback won AP Defensive Player of the Year for the 2019 season?",
+    choices: ["Stephon Gilmore","Devin McCourty","J.C. Jackson","Patrick Chung"], answer: "Stephon Gilmore",
+    statSheet: "The winner intercepted six passes and broke up 20 during that season.", explanation: "Stephon Gilmore won the 2019 AP Defensive Player of the Year award as a Patriots cornerback after registering six interceptions and 20 passes defended.",
+    evidence: [{ authority: "NFL official report", url: "https://www.nfl.com/_amp/stephon-gilmore-named-2019-defensive-player-of-year-0ap3000001100158", supportingDetail: "Stephon Gilmore won the 2019 AP Defensive Player of the Year award as a Patriots cornerback after registering six interceptions and 20 passes defended." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "nfl:5:5": {
+    id: "millionaire-nfl-future-semantic-r6-q6",
+    type: "super-bowl-defensive-tds", prompt: "Which Chiefs linebacker returned a Jalen Hurts fumble 36 yards for a touchdown in Super Bowl LVII?",
+    choices: ["Nick Bolton","Willie Gay","Chris Jones","Leo Chenal"], answer: "Nick Bolton",
+    statSheet: "The scoop-and-score came during the second quarter of the 2023 championship game.", explanation: "Nick Bolton scooped up Jalen Hurts' fumble and returned it 36 yards for a touchdown in Super Bowl LVII, a 38–35 Kansas City win against Philadelphia.",
+    evidence: [{ authority: "NFL official report", url: "https://www.nfl.com/news/neil-reynolds-super-bowl-lvii-wrap-up", supportingDetail: "Nick Bolton scooped up Jalen Hurts' fumble and returned it 36 yards for a touchdown in Super Bowl LVII, a 38–35 Kansas City win against Philadelphia." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "nfl:6:1": {
+    id: "millionaire-nfl-future-semantic-r7-q2",
+    type: "rookie-awards", prompt: "Which Washington quarterback earned AP Offensive Rookie of the Year for the 2024 NFL season?",
+    choices: ["Jayden Daniels","Bo Nix","Drake Maye","Caleb Williams"], answer: "Jayden Daniels",
+    statSheet: "The dual-threat quarterback rushed for 891 yards and reached the NFC Championship Game.", explanation: "Jayden Daniels won AP Offensive Rookie of the Year for 2024 after throwing for 3,568 yards, rushing for 891 and taking Washington to the NFC title game.",
+    evidence: [{ authority: "NFL official report", url: "https://www.nfl.com/news/commanders-qb-jayden-daniels-named-2024-ap-nfl-offensive-rookie-of-the-year", supportingDetail: "Jayden Daniels won AP Offensive Rookie of the Year for 2024 after throwing for 3,568 yards, rushing for 891 and taking Washington to the NFC title game." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "nfl:8:1": {
+    id: "millionaire-nfl-future-semantic-r9-q2",
+    type: "super-bowl-awards", prompt: "Who earned Super Bowl LIV MVP after Kansas City rallied past San Francisco in February 2020?",
+    choices: ["Patrick Mahomes","Damien Williams","Travis Kelce","Tyrann Mathieu"], answer: "Patrick Mahomes",
+    statSheet: "The winner led three fourth-quarter touchdown drives after trailing 20–10.", explanation: "Patrick Mahomes won Super Bowl LIV MVP as the Chiefs scored 21 fourth-quarter points to defeat San Francisco 31–20 in February 2020.",
+    evidence: [{ authority: "NFL official report", url: "https://www.nfl.com/news/patrick-mahomes-is-super-bowl-mvp-after-comeback-0ap3000001100779", supportingDetail: "Patrick Mahomes won Super Bowl LIV MVP as the Chiefs scored 21 fourth-quarter points to defeat San Francisco 31–20 in February 2020." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "cfb:0:1": {
+    id: "millionaire-cfb-future-semantic-r1-q2",
+    type: "expanded-playoff-titles", prompt: "Which school won the first 12-team CFP national championship after the 2024 season?",
+    choices: ["Ohio State","Notre Dame","Texas","Oregon"], answer: "Ohio State",
+    statSheet: "The No. 8 seed defeated Notre Dame 34–23 in January 2025.", explanation: "Ohio State won the first expanded 12-team CFP championship with a 34–23 victory over Notre Dame on January 20, 2025, finishing the 2024 season 14–2.",
+    evidence: [{ authority: "CFP/university athletics", url: "https://collegefootballplayoff.com/sports/2025/1/21/NCG-recap", supportingDetail: "Ohio State won the first expanded 12-team CFP championship with a 34–23 victory over Notre Dame on January 20, 2025, finishing the 2024 season 14–2." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "cfb:8:3": {
+    id: "millionaire-cfb-future-semantic-r9-q4",
+    type: "modern-championship-coaches", prompt: "Which head coach led Michigan to an undefeated 15–0 national-title season in 2023?",
+    choices: ["Jim Harbaugh","Sherrone Moore","Ryan Day","Kirby Smart"], answer: "Jim Harbaugh",
+    statSheet: "The Wolverines ended their 2023 season by defeating Washington 34–13.", explanation: "Jim Harbaugh led Michigan to the 2023 season's national championship and a 15–0 record, capped by a 34–13 win over Washington on January 8, 2024.",
+    evidence: [{ authority: "CFP/university athletics", url: "https://mgoblue.com/news/2024/1/8/football-mission-accomplished-u-m-takes-down-no-2-washington-to-capture-cfp-national-championship", supportingDetail: "Jim Harbaugh led Michigan to the 2023 season's national championship and a 15–0 record, capped by a 34–13 win over Washington on January 8, 2024." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "cfb:3:5": {
+    id: "millionaire-cfb-future-semantic-r4-q6",
+    type: "modern-bowl-upsets", prompt: "Which team defeated Georgia 23–10 in the January 2025 Sugar Bowl CFP quarterfinal?",
+    choices: ["Notre Dame","Ole Miss","Texas","Tennessee"], answer: "Notre Dame",
+    statSheet: "The winner returned the second-half opening kickoff 98 yards for a touchdown.", explanation: "Notre Dame beat Georgia 23–10 in the January 2, 2025 CFP Sugar Bowl quarterfinal, aided by Jayden Harrison's 98-yard kickoff return touchdown.",
+    evidence: [{ authority: "CFP/university athletics", url: "https://collegefootballplayoff.com/sports/2025/1/3/QF-Sugar-recap", supportingDetail: "Notre Dame beat Georgia 23–10 in the January 2, 2025 CFP Sugar Bowl quarterfinal, aided by Jayden Harrison's 98-yard kickoff return touchdown." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "cfb:6:6": {
+    id: "millionaire-cfb-future-semantic-r7-q7",
+    type: "modern-title-coaches", prompt: "Which coach guided Indiana to its 16–0 national-championship season in 2025?",
+    choices: ["Curt Cignetti","Marcus Freeman","Mario Cristobal","Lane Kiffin"], answer: "Curt Cignetti",
+    statSheet: "The undefeated champion beat Miami 27–21 in the title game in January 2026.", explanation: "Curt Cignetti led Indiana to a 16–0 record for the 2025 season and a 27–21 victory over Miami in the January 2026 College Football Playoff championship.",
+    evidence: [{ authority: "CFP/university athletics", url: "https://iuhoosiers.com/news/2026/1/20/football-cfp-ncg-recap-PETE", supportingDetail: "Curt Cignetti led Indiana to a 16–0 record for the 2025 season and a 27–21 victory over Miami in the January 2026 College Football Playoff championship." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "cfb:8:1": {
+    id: "millionaire-cfb-future-semantic-r9-q2",
+    type: "expanded-playoff-quarterfinals", prompt: "Which school beat Boise State 31–14 in the 2024 season's Fiesta Bowl quarterfinal?",
+    choices: ["Penn State","Arizona State","SMU","Clemson"], answer: "Penn State",
+    statSheet: "Drew Allar threw three touchdown passes in the December 2024 win.", explanation: "Penn State defeated Boise State 31–14 in the December 31, 2024 Fiesta Bowl quarterfinal as quarterback Drew Allar threw three touchdown passes.",
+    evidence: [{ authority: "CFP/university athletics", url: "https://collegefootballplayoff.com/sports/2025/1/1/QF-Fiesta-recap", supportingDetail: "Penn State defeated Boise State 31–14 in the December 31, 2024 Fiesta Bowl quarterfinal as quarterback Drew Allar threw three touchdown passes." }],
+  },
+  // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
+  "cfb:8:2": {
+    id: "millionaire-cfb-future-semantic-r9-q3",
+    type: "modern-title-quarterbacks", prompt: "Which Notre Dame quarterback started the national-title game against Ohio State in January 2025?",
+    choices: ["Riley Leonard","Drew Allar","Quinn Ewers","Will Howard"], answer: "Riley Leonard",
+    statSheet: "The title-game starter transferred from Duke before the 2024 season.", explanation: "Riley Leonard started at quarterback for Notre Dame against Ohio State in the January 2025 CFP national championship after transferring from Duke.",
+    evidence: [{ authority: "CFP/university athletics", url: "https://collegefootballplayoff.com/sports/2025/1/21/NCG-recap", supportingDetail: "Riley Leonard started at quarterback for Notre Dame against Ohio State in the January 2025 CFP national championship after transferring from Duke." }],
+  },
+
 };
