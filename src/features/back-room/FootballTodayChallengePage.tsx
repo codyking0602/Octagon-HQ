@@ -243,7 +243,7 @@ function FindLeader({ projection, advance }: GameProps) {
         fatalId,
       } : null}
       eyebrow="TODAY’S CHALLENGE"
-      intro="Eliminate nine decoys. Only the leader among these ten matters."
+      intro="Eliminate nine decoys until only the leader remains. Compare only these ten."
       onEliminate={attempt ? null : (id) => advance({ eliminated_id: id })}
       renderVisual={(candidate, compact) => (
         <FootballFindLeaderVisual
