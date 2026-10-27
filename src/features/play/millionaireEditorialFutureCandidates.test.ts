@@ -1035,4 +1035,20 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("nfl", 0)[1]!.prompt).toContain("Super Bowl XLIX");
   });
 
+
+  it("separates the CFB 2003 split-title trivia from the 2015 Sugar Bowl winning run", () => {
+    const replacement = MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:3:6"]!;
+    expect(replacement.id).toContain("elliott-85-yard");
+    expect(replacement.answer).toBe("Ezekiel Elliott");
+    expect(replacement.prompt).toContain("January 2015 Sugar Bowl");
+    expect(replacement.prompt).not.toContain("2003");
+    expect(replacement.choices).toEqual(["Ezekiel Elliott", "Carlos Hyde", "J.K. Dobbins", "Mike Weber"]);
+    expect(replacement.statSheet).not.toContain("Elliott");
+    expect(replacement.explanation).toContain("85-yard");
+    expect(replacement.explanation).toContain("42–35");
+    expect(replacement.evidence).toHaveLength(2);
+    expect(replacement.evidence[0]!.url).toContain("collegefootballplayoff.com");
+    expect(millionaireDailyRun("cfb", 3)[6]!.prompt).toContain("AP poll in 2003");
+  });
+
 });
