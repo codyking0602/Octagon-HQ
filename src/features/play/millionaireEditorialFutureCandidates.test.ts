@@ -190,6 +190,22 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("verifies five sourced college Heisman previews", () => {
+    const entries = [
+      ["cfb:4:1","Marcus Mariota"], ["cfb:5:1","Caleb Williams"],
+      ["cfb:6:0","Sam Bradford"], ["cfb:7:1","Derrick Henry"],
+      ["cfb:9:1","Jayden Daniels"]
+    ] as const;
+    for (const [key,winner] of entries) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(winner);
+      expect(q.choices.filter(c=>c===winner)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(winner));
+      expect(q.explanation).toContain(winner);
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
