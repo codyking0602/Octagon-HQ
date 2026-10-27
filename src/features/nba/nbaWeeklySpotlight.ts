@@ -26,6 +26,9 @@ export type NbaWeeklySpotlight = {
     ppg: string;
     oppPpg: string;
     netMargin: string;
+    /** Aggregate shooting over verified weekly final boxscores. */
+    fgPct?: string;
+    threePct?: string;
   };
 };
 function isHttpsFrom(url: unknown, host: RegExp) {
@@ -46,6 +49,8 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
   const string = (v: unknown) => typeof v === "string" && v.trim().length > 0;
   if (![player.name,player.team,player.position,team.name,team.teamId,
     team.record,team.ppg,team.oppPpg,team.netMargin].every(string)) return null;
+  if (team.fgPct !== undefined && !/^\d{1,3}\.\d$/.test(team.fgPct)) return null;
+  if (team.threePct !== undefined && !/^\d{1,3}\.\d$/.test(team.threePct)) return null;
   if (!Number.isInteger(player.gamesPlayed) || player.gamesPlayed < 1 || player.gamesPlayed > 7
     || !player.stats.every(s => s && string(s.label) && string(s.value))) return null;
   if (!isHttpsFrom(player.headshotUrl, /(^|\.)espncdn\.com$/i)
