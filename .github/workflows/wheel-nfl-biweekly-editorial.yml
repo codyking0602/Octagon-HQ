@@ -2,6 +2,11 @@ name: Wheel NFL Biweekly Editorial Review
 
 on:
   workflow_dispatch:
+  # The merge itself can start the first pilot if scheduled-indexing/CI misses 16:45.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wheel-nfl-biweekly-editorial.yml'
   # Both UTC hours cover 16:45 America/Chicago across DST changes.
   schedule:
     - cron: '45 21 * * 2'
@@ -35,7 +40,13 @@ jobs:
           anchor=$(date -u -d '2026-10-27' +%s)
           days=$(( (epoch - anchor) / 86400 ))
           weeks=$(( days / 7 ))
-          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            # First deployment pilot: never start ahead of the owner's 16:45 local target.
+            target=$(TZ=America/Chicago date -d "$(TZ=America/Chicago date +%F) 16:45" +%s)
+            now=$(date +%s)
+            if (( target > now && target - now < 3600 )); then sleep $((target-now)); fi
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           elif [[ "$GITHUB_EVENT_NAME" == "schedule" && "$local_hour" == "16" && $((weeks % 2)) -eq 0 ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
