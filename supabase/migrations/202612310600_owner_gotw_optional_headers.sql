@@ -85,7 +85,7 @@ begin
     raise exception 'New GOTW header is supplied exclusively by the owner';
   end if;
 
-  -- Preserve strict legacy SeatGeek source checks for historical packages.
+  -- Keep old publisher-source checks for historical weeks; new weeks accept no generated headers.
   if p_week_of < date '2026-10-27' then
     if p_game->>'header_asset_path' is distinct from v_asset_prefix || 'game-header.webp'
       or jsonb_typeof(p_game->'header_photo_sources') is distinct from 'array'
@@ -94,7 +94,14 @@ begin
     end if;
     for v_stat in select value from jsonb_array_elements(p_game->'header_photo_sources') loop
       if jsonb_typeof(v_stat) <> 'string'
-        or (v_stat#>>'{}') !~ '^https://(www[.])?seatgeekimages[.]com/matchup/[^?#]+[.](jpg|jpeg|png|webp)([?][^#]*)?
+        or (v_stat#>>'{}') !~ '^https://(www[.])?seatgeekimages[.]com/matchup/[^?#]+[.](jpg|jpeg|png|webp)([?][^#]*)?$' then
+        raise exception 'Legacy matchup publisher is unapproved';
+      end if;
+    end loop;
+  end if;
+
+  if p_week_of >= date '2026-10-27' then
+    v_section := p_editorial->'breakdown';
   if jsonb_typeof(v_section) is distinct from 'object'
     or (select count(*) from jsonb_object_keys(v_section)) <> 3
     or not (v_section ? 'setup' and v_section ? 'things' and v_section ? 'bottom_line')
