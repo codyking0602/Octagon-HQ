@@ -13,6 +13,7 @@ import {
   type WavelengthCategory,
 } from "./wavelengthCatalog";
 import {
+  chooseWavelengthClue,
   createWavelengthRound,
   nextWavelengthClue,
   wavelengthClues,
@@ -143,6 +144,18 @@ describe("canonical Wavelength catalog", () => {
 });
 
 describe("Wavelength generator protections", () => {
+  it("relaxes the impossible low-side filter before repeating an already-used category", () => {
+    const clue = chooseWavelengthClue(1, {
+      target: 4,
+      direction: -1,
+      usedCategories: ["UFC RESUME", "EVENTS & FIGHTS"],
+      random: () => 0,
+    });
+    expect(clue).toBeDefined();
+    expect(clue?.category).not.toBe("UFC RESUME");
+    expect(clue?.category).not.toBe("EVENTS & FIGHTS");
+  });
+
   it("is deterministic for seeded random inputs and varies across different seeds", () => {
     const first = createWavelengthRound({ random: seeded([0.12, 0.9, 0.1]) });
     const second = createWavelengthRound({ random: seeded([0.12, 0.9, 0.1]) });
