@@ -147,11 +147,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "UFC official event", url: "https://www.ufc.com/event/ufc-1", supportingDetail: "The inaugural event results list Gordeau's KO of Tuli at 0:26, the promotion's opening bout." },
   ),
   "ufc:2:7": q8(
-    "millionaire-ufc-future-prochazka-teixeira-275-q8", "fifth-round-comebacks",
-    "Who submitted Glover Teixeira with only 28 seconds left at UFC 275 to claim the light heavyweight title?",
-    ["Jiří Procházka", "Jan Błachowicz", "Jamahal Hill", "Magomed Ankalaev"], "Jiří Procházka",
-    "Jiří Procházka applied a rear-naked choke at 4:32 of Round 5 against Glover Teixeira at UFC 275 in Singapore, winning the light heavyweight championship.",
-    { authority: "UFC", url: "https://www.ufc.com/news/ufc-275-teixeira-vs-prochazka-fight-results-highlights-winner-interviews-singapore?language_content_entity=fr", supportingDetail: "UFC 275 records Procházka's submission at 4:32 of Round 5." },
+    "millionaire-ufc-future-poirier-saint-denis-299-q8", "lightweight-comebacks",
+    "Who knocked out Benoit Saint Denis in Round 2 of their UFC 299 lightweight showdown?",
+    ["Dustin Poirier", "Justin Gaethje", "Arman Tsarukyan", "Charles Oliveira"], "Dustin Poirier",
+    "Dustin Poirier weathered Saint Denis' early pressure before scoring a knockout at 2:32 of Round 2 at UFC 299 in March 2024.",
+    { authority: "UFC official UFC 299 results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2", supportingDetail: "UFC records Poirier defeating Benoit Saint Denis by second-round KO at 2:32." },
   ),
   "ufc:3:7": q8(
     "millionaire-ufc-future-253-blachowicz-q8", "vacant-title-fight",
@@ -168,10 +168,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "UFC event coverage", url: "https://www.ufc.com/news/ufc-139-main-event-results-epic-henderson-ekes-rua-classic", supportingDetail: "Official report records Henderson's 48-47 unanimous decision over Rua." },
   ),
   "ufc:5:7": q8(
-    "millionaire-ufc-future-aspinall-pavlovich-295-q8", "interim-heavyweight-title",
-    "Who knocked out Sergei Pavlovich in 69 seconds to win the interim UFC heavyweight title at UFC 295?",
-    ["Tom Aspinall", "Ciryl Gane", "Stipe Miocic", "Curtis Blaydes"], "Tom Aspinall",
-    "Tom Aspinall knocked out Sergei Pavlovich at 1:09 of the opening round of their UFC 295 bout in November 2023 to win the interim heavyweight championship.",
-    { authority: "UFC", url: "https://www.ufc.com/event/ufc-295", supportingDetail: "UFC 295 results record Aspinall's first-round knockout over Pavlovich for the interim heavyweight title." },
+    "millionaire-ufc-future-diaz-ferguson-279-q8", "late-submission-finishes",
+    "Who submitted Tony Ferguson with a guillotine in Round 4 of the rearranged UFC 279 main event?",
+    ["Nate Diaz", "Khamzat Chimaev", "Michael Chandler", "Justin Gaethje"], "Nate Diaz",
+    "After a late main-event shuffle caused by Khamzat Chimaev missing weight, Nate Diaz submitted Tony Ferguson by guillotine at 2:52 of Round 4 in September 2022.",
+    { authority: "UFC official UFC 279 results", url: "https://www.ufc.com/news/ufc-279-diaz-vs-ferguson-results-highlights-winner-interviews", supportingDetail: "UFC states Diaz defeated Ferguson with a Round 4 guillotine at 2:52, after the fight-week change of opponents." },
   ),
+
 };
