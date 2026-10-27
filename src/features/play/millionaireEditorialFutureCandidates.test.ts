@@ -201,6 +201,22 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
         expect(normalized(question.statSheet!)).not.toContain(normalized(answer(question)));
       }
     });
+    const ufcRun14 = millionaireFutureEditorialDailyRun("ufc", 13);
+    expect(ufcRun14.map(answer)).toEqual([
+      "Brandon Moreno", "Dan Henderson", "Randy Couture", "Dricus du Plessis",
+      "Georges St-Pierre", "Chuck Liddell", "Khamzat Chimaev", "Francis Ngannou",
+    ]);
+    ufcRun14.forEach((question, index) => {
+      expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
+      expect(question.explanation.length).toBeGreaterThan(100);
+      if (index === 7) {
+        expect(question.statSheet).toBeNull();
+        expect(question.lifelineCompatibility).toMatchObject({ fiftyFifty: false, statSheet: false, doubleDip: false });
+      } else {
+        expect(question.statSheet).toBeTruthy();
+        expect(normalized(question.statSheet!)).not.toContain(normalized(answer(question)));
+      }
+    });
     // Keep known cross-game overlaps out of the actual preview board.
     expect(answer(millionaireFutureEditorialDailyRun("cfb", 14)[3]!)).toBe("Diego Pavia");
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[3]!.prompt).not.toContain("Who won the 2025 Heisman");
