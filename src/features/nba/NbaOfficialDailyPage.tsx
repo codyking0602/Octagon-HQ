@@ -18,7 +18,7 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
-import { nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit, nbaHigherLowerIsGenericSilhouette, nbaPortraitBackupSource } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
 import { DailyTwoGameLeaderboardResult } from "../play/DailyTwoGameLeaderboardResult";
 import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLeaderModel";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
@@ -154,14 +154,10 @@ function NBAPlayerMark({ id, className }: { id: string; className: string }) {
   const subject = nbaHitSubjectById.get(id);
   const src = subject ? nbaHitHeadshot(subject) : null;
   const [failed, setFailed] = useState(false);
-  const [backup, setBackup] = useState(false);
-  const shown = backup ? nbaPortraitBackupSource(src) : src;
-  const fail = () => { if (!backup && nbaPortraitBackupSource(src)) setBackup(true); else setFailed(true); };
-  useEffect(() => { setFailed(false); setBackup(false); }, [src]);
   return <span className={className} aria-label={subject?.name ?? "NBA player"}>
-    {shown && !failed ? <img src={shown} alt="" loading="lazy" referrerPolicy="no-referrer"
-      onError={fail}
-      onLoad={event => { if (nbaHigherLowerIsGenericSilhouette(event.currentTarget)) fail(); }} /> :
+    {src && !failed ? <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer"
+      onError={() => setFailed(true)}
+      onLoad={event => { if (src.includes("/headshots/nba/latest/") && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true); }} /> :
       <b aria-hidden="true">{subject?.name.split(" ").map(x => x[0]).slice(0, 2).join("") ?? "NBA"}</b>}
   </span>;
 }
@@ -213,16 +209,13 @@ function NbaOfficialHigherLowerPortrait({ subject }: { subject: Json }) {
   const nbaId = subject.nbaId == null || !Number.isInteger(rawId) ? null : rawId;
   const url = nbaHigherLowerPortraitSource({ name, nbaId });
   const [failed, setFailed] = useState(false);
-  const [backup, setBackup] = useState(false);
-  const shown = backup ? nbaPortraitBackupSource(url) : url;
-  const fail = () => { if (!backup && nbaPortraitBackupSource(url)) setBackup(true); else setFailed(true); };
-  useEffect(() => { setFailed(false); setBackup(false); }, [name, url]);
+  useEffect(() => setFailed(false), [name, url]);
   const editorial = Boolean(url && !url.includes("/headshots/nba/latest/"));
   return <span className="nba-official-higher-lower__portrait">
-    {shown && !failed ? <img src={shown} alt="" loading="eager" referrerPolicy="no-referrer"
-      onError={fail}
+    {url && !failed ? <img src={url} alt="" loading="eager" referrerPolicy="no-referrer"
+      onError={() => setFailed(true)}
       onLoad={event => {
-        if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) fail();
+        if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true);
       }} /> : <strong aria-hidden="true">{name.split(/\\s+/).slice(0, 2).map(part => part[0] ?? "").join("") || "NBA"}</strong>}
   </span>;
 }

@@ -8,7 +8,7 @@ import "../../styles/higher-lower-standard.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { asChallengeJson, challengeRecord, footballChallengeUrl } from "../back-room/footballChallengeRuntime";
-import { nbaHigherLowerIsGenericSilhouette, nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit, nbaPortraitBackupSource } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerIsGenericSilhouette, nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit } from "./nbaHigherLowerPortraits";
 import {
   NBA_HIGHER_LOWER_VERSION, createNbaHigherLowerBoard, createNbaHigherLowerRun,
   createNbaHigherLowerDailyPreview, nbaHigherLowerAnswerIsCorrect,
@@ -46,19 +46,16 @@ function reviewContext(question: NbaHigherLowerQuestion): string | null {
 }
 function NbaPortrait({ subject }: { subject: NbaHigherLowerSubject }) {
   const [failed, setFailed] = useState(false);
-  const [backup, setBackup] = useState(false);
   const url = nbaHigherLowerPortraitSource(subject);
-  const shown = backup ? nbaPortraitBackupSource(url) : url;
-  const fail = () => { if (!backup && nbaPortraitBackupSource(url)) setBackup(true); else setFailed(true); };
   const editorial = url != null && !url.includes("/headshots/nba/latest/");
-  useEffect(() => { setFailed(false); setBackup(false); }, [url, subject.name]);
+  useEffect(() => setFailed(false), [url, subject.name]);
   const initials = subject.name.split(/\s+/).map(part => part[0]).filter(Boolean).slice(0, 2).join("");
   return <span className={"nba-higher-lower-portrait" + (editorial ? " is-editorial" : "")} role="img" aria-label={subject.name + " portrait"}>
-    {shown && !failed
-      ? <img src={shown} alt="" loading="eager" referrerPolicy="no-referrer"
-          onError={fail}
+    {url && !failed
+      ? <img src={url} alt="" loading="eager" referrerPolicy="no-referrer"
+          onError={() => setFailed(true)}
           onLoad={event => {
-            if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) fail();
+            if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true);
           }} />
       : <b aria-hidden="true">{initials || "NBA"}</b>}
   </span>;

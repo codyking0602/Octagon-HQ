@@ -11,7 +11,7 @@ import {
   createNbaFindLeaderRun, formatNbaFindLeaderValue, nbaFindLeaderHeadshot,
   type NbaLeaderBoard, type NbaLeaderCandidate, type NbaLeaderRun,
 } from "./nbaFindTheLeaderModel";
-import { nbaHigherLowerIsGenericSilhouette, nbaPortraitBackupSource } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
 import { NbaPortraitCredits } from "./NbaPortraitCredits";
 import "../../styles/football-find-leader.css";
 import "../../styles/nba-find-the-leader.css";
@@ -31,18 +31,15 @@ function chicagoDay() {
 }
 function NbaHeadshot({ candidate, compact = false }: { candidate: NbaLeaderCandidate; compact?: boolean }) {
   const [failed, setFailed] = useState(false);
-  const [backup, setBackup] = useState(false);
   const image = nbaFindLeaderHeadshot(candidate);
-  const shown = backup ? nbaPortraitBackupSource(image) : image;
-  const fail = () => { if (!backup && nbaPortraitBackupSource(image)) setBackup(true); else setFailed(true); };
   const editorial = Boolean(image && !image.includes("/headshots/nba/latest/"));
-  useEffect(() => { setFailed(false); setBackup(false); }, [image, candidate.id]);
+  useEffect(() => setFailed(false), [image, candidate.id]);
   const initials = candidate.name.split(" ").map(part => part[0]).filter(Boolean).slice(0, 2).join("");
   return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "") + (editorial ? " is-editorial" : "")}
-    aria-label={candidate.name + (shown && !failed ? " player portrait" : " player initials")}>
-    {shown && !failed ? <img src={shown} alt="" loading="lazy" referrerPolicy="no-referrer"
-      onError={fail}
-      onLoad={event => { if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) fail(); }} /> : <b aria-hidden="true">{initials || "NBA"}</b>}
+    aria-label={candidate.name + (image && !failed ? " player portrait" : " player initials")}>
+    {image && !failed ? <img src={image} alt="" loading="lazy" referrerPolicy="no-referrer"
+      onError={() => setFailed(true)}
+      onLoad={event => { if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true); }} /> : <b aria-hidden="true">{initials || "NBA"}</b>}
   </span>;
 }
 function findCandidate(board: NbaLeaderBoard, id: string): NbaLeaderCandidate {
