@@ -322,7 +322,7 @@ begin
   return to_jsonb(v_package) || jsonb_build_object(
     'release_at',v_package.week_of::timestamp at time zone 'America/Chicago');
 end;
-$function$
+$function$;
 
 revoke all on function public.ingest_football_weekly_editorial_handoff(date,text,jsonb,text,text,text,text) from public,anon,authenticated;
 grant execute on function public.ingest_football_weekly_editorial_handoff(date,text,jsonb,text,text,text,text) to service_role;
