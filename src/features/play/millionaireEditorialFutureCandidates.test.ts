@@ -15,6 +15,32 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+
+  it("prevents nine multi-sport source-bank answer leaks and ineligible distractors from returning", () => {
+    const cases = [
+      ["nfl",13,2,"Bears","opening kickoff"],["nfl",13,4,"Marcus Mariota","Corey Davis"],
+      ["nfl",14,4,"Mike Alstott","second-quarter"],["cfb",11,0,"Georgia","hedges"],
+      ["cfb",13,4,"Carson Palmer","No. 1"],["cfb",13,6,"Michael Crabtree","28-yard"],
+      ["cfb",14,2,"Texas A&M","345 yards"],["ufc",13,2,"Randy Couture","heavyweight"],
+      ["ufc",14,1,"Ciryl Gane","kicks"]
+    ] as const;
+    for (const [sport, run, level, correct, hint] of cases) {
+      const q = millionaireFutureEditorialDailyRun(sport,run)[level]!;
+      expect(answer(q)).toBe(correct);
+      expect(q.statSheet).toContain(hint);
+      expect(normalized(q.prompt)).not.toContain(normalized(correct));
+      expect(normalized(q.statSheet!)).not.toContain(normalized(correct));
+      expect(q.explanation).toContain(correct);
+      expect(new Set(q.choices.map(c => normalized(c.text))).size).toBe(4);
+    }
+    expect(millionaireFutureEditorialDailyRun("nfl",14)[4]!.choices.map(c=>c.text))
+      .toEqual(["Mike Alstott","Michael Pittman","Aaron Stecker","Jameel Cook"]);
+    expect(millionaireFutureEditorialDailyRun("cfb",13)[6]!.choices.map(c=>c.text))
+      .not.toContain("Danny Amendola");
+    expect(millionaireFutureEditorialDailyRun("ufc",14)[1]!.prompt).not.toContain("French");
+    expect(millionaireFutureEditorialDailyRun("cfb",14)[2]!.prompt).not.toContain("Manziel");
+  });
+
   it("uses two source-backed iconic future-only NFL finals instead of obscure stat trivia", () => {
     for (const [key, expected, fragment] of [
       ["nfl:3:7", "Vonn Bell", "January 2022 AFC title"],
