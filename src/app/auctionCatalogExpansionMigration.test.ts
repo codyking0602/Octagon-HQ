@@ -279,6 +279,16 @@ describe("Auction catalog expansion migration", () => {
         Power: 74,
         Heart: 65,
       },
+      // Silva's October 2026 ranking addition advances the global model date;
+      // this pre-existing auction card retains its original Heart 71 grade.
+      "Sean Strickland": {
+        overall: 89,
+        Striking: 58,
+        Grappling: 52,
+        Frame: 86,
+        Power: 74,
+        Heart: 71,
+      },
     };
     const additions = [...catalogSql.matchAll(/'ultimate-fighter-(\d+)','((?:[^']|'')*)'.*?jsonb_build_object\(([^)]*)\)/g)]
       .filter((match) => Number(match[1]) >= 31);
@@ -307,6 +317,7 @@ describe("Auction catalog expansion migration", () => {
       "Sean O'Malley",
       "Brandon Moreno",
       "Alexa Grasso",
+      "Sean Strickland",
     ]);
   });
 
