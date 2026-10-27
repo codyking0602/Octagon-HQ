@@ -5,11 +5,9 @@ import {
   footballBlindResumeRoundPoints,
 } from "../back-room/footballBlindResumeModel";
 import {
-  footballWavelengthClues,
-  nextFootballWavelengthClue,
-  type FootballWavelengthClue,
-} from "../back-room/footballWavelengthModel";
-import { wavelengthScore } from "./wavelengthEngine";
+  advanceFootballWavelengthRound,
+  scoreFootballWavelengthTwoGameChild,
+} from "./footballWavelengthDailyAdvance";
 import {
   advanceTwoGameDailyRuntime,
   isTwoGameDailyContext,
@@ -58,16 +56,6 @@ function integer(value: unknown, label: string, min: number, max: number) {
 function presentationFor(evidence: JsonRecord, id: string) {
   const presentations = asRecord(evidence.presentations);
   return asRecord(presentations[id]);
-}
-
-function cluePresentation(clue: FootballWavelengthClue) {
-  return { id: clue.id, category: clue.category, text: clue.text };
-}
-
-function clueFor(id: string) {
-  const clue = footballWavelengthClues.find((row) => row.id === id);
-  if (!clue) throw new Error(`Football Wavelength clue ${id} is unavailable.`);
-  return clue;
 }
 
 function blindResumeRevealCounts(round: JsonRecord): readonly [number, number, number] {
@@ -123,30 +111,6 @@ function advanceFindLeader(context: OfficialDailyRuntimeContext, action: JsonRec
       native_progress: complete && eliminatedId !== leaderId ? 10 : eliminated.length,
       revealed_candidates: revealedCandidates,
     },
-    complete,
-    finalSubmission,
-  };
-}
-
-function advanceWavelength(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
-  const target = integer(context.privateSetupEvidence.target, "Football Wavelength target", 1, 100);
-  const seed = String(context.privateSetupEvidence.seed ?? "");
-  const guesses = Array.isArray(context.submissionState.guesses) ? context.submissionState.guesses.map((value) => integer(value, "Football Wavelength guess", 1, 100)) : [];
-  if (guesses.length >= 4) throw new Error("The Football Wavelength round is complete.");
-  const guess = integer(action.guess, "Football Wavelength guess", 1, 100);
-  const nextGuesses = [...guesses, guess];
-  const clueIds = stringArray(context.submissionState.clue_ids ?? [String(context.privateSetupEvidence.opening_clue_id ?? "")], "Football Wavelength clues");
-  let nextClueIds = [...clueIds];
-  if (nextGuesses.length < 4) {
-    const round = { target, clues: clueIds.map(clueFor) };
-    const clue = nextFootballWavelengthClue(round, guess, nextGuesses.length, seed, guesses);
-    nextClueIds = [...nextClueIds, clue.id];
-  }
-  const complete = nextGuesses.length === 4;
-  const finalSubmission = complete ? { guesses: nextGuesses } : null;
-  return {
-    submissionState: { guesses: nextGuesses, clue_ids: nextClueIds, final_submission: finalSubmission },
-    publicState: { complete, guesses: nextGuesses, clues: nextClueIds.map((id) => cluePresentation(clueFor(id))), next_guess_number: complete ? null : nextGuesses.length + 1, reveal: complete ? { target, clues: nextClueIds.map((id) => ({ ...cluePresentation(clueFor(id)), rating: clueFor(id).rating })) } : null },
     complete,
     finalSubmission,
   };
@@ -254,7 +218,7 @@ function advanceSingleFootballOfficialDailyRuntime(
   const parsed = asRecord(action);
   switch (context.gameType) {
     case "find_leader": return advanceFindLeader(context, parsed);
-    case "wavelength": return advanceWavelength(context, parsed);
+    case "wavelength": return advanceFootballWavelengthRound(context, parsed);
     case "blind_resume": return advanceBlindResume(context, parsed);
     case "blind_rank_5": return advanceBlindRank(context, parsed);
     case "keep_4_cut_4": return advanceKeepCut(context, parsed);
@@ -276,17 +240,7 @@ function scoreTwoGameFootballChild(
   if (context.gameType === "find_leader") {
     return Number(advanced.publicState.native_progress ?? 0) * 10;
   }
-  if (context.gameType === "wavelength") {
-    const guesses = Array.isArray(advanced.submissionState.guesses)
-      ? advanced.submissionState.guesses.map(Number)
-      : [];
-    const finalGuess = guesses.at(-1);
-    const target = Number(context.privateSetupEvidence.target);
-    if (!Number.isFinite(finalGuess) || !Number.isFinite(target)) {
-      throw new Error("Football two-game Wavelength score evidence is unavailable.");
-    }
-    return wavelengthScore(Number(finalGuess), target);
-  }
+  if (context.gameType === "wavelength") return scoreFootballWavelengthTwoGameChild(context, advanced);
   if (context.gameType === "hit_the_number") {
     return scoreFootballHitNumberTwoGameChild(context, advanced);
   }
