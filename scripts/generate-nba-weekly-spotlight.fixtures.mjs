@@ -24,8 +24,8 @@ const events=Array.from({length:8},(_,i)=>({
 const boxscores=new Map(events.map(event=>[event.id,{boxscore:{players:[{
   team:teams[0],
   statistics:[{
-    names:["points","assists","rebounds","fieldGoalsMade-fieldGoalsAttempted","steals","blocks"],
-    athletes:[{athlete:player,stats:["30","5","7","11-20","2","1"],didNotPlay:false}],
+    names:["points","assists","rebounds","fieldGoalsMade-fieldGoalsAttempted","steals","blocks","threePointFieldGoalsMade-threePointFieldGoalsAttempted"],
+    athletes:[{athlete:player,stats:["30","5","7","11-20","2","1","4-10"],didNotPlay:false}],
   }],
 }]}}]));
 const xml='<feed><entry><yt:videoId>ABCdefghi12</yt:videoId><title>Sample Star 30 Point Highlights</title><published>2026-10-26T00:00:00Z</published></entry></feed>';
@@ -48,6 +48,8 @@ test("uses only completed NBA results and calculates weekly stats from actual at
   assert.deepEqual(data.player.stats.map(x=>x.value),["30.0","5.0","7.0","55.0"]);
   assert.equal(data.team.record,"8-0");
   assert.equal(data.team.netMargin,"+15.0");
+  assert.equal(data.team.fgPct,"55.0");
+  assert.equal(data.team.threePct,"40.0");
   assert.equal(data.player.profileUrl, "https://www.basketball-reference.com/search/search.fcgi?search=Sample%20Star");
   assert.equal(data.team.profileUrl, "https://www.basketball-reference.com/teams/ATL/2027.html");
   assert.equal(Object.hasOwn(data.player,"summary"),false);

@@ -12,6 +12,7 @@ import { footballPublishedSpotlight, mergeFootballWeeklyMatchupBreakdowns, publi
 import { footballDateTimeLabel } from "../picks/footballTime";
 import { footballSpotlightForDisplay } from "./footballSpotlightPresentation";
 import { footballTeamSportsReferenceUrl } from "./footballTeamSportsReference";
+import { footballPlayerSportsReferenceUrl } from "./footballPlayerSportsReference";
 import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
 import { picksSeasonStandings } from "../picks/picksSeasonStandings";
@@ -188,17 +189,21 @@ function playerSpotlightSecondaryColor(spotlight: FootballPlayerSpotlight): stri
 function PlayerSpotlight({
   spotlight,
   photoSource,
+  spotlightKind,
   canManagePhoto,
   onManagePhoto,
   memorial = false,
 }: {
   spotlight: FootballPlayerSpotlight;
   photoSource: string | null;
+  spotlightKind: FootballSpotlightKind;
   canManagePhoto: boolean;
   memorial?: boolean;
   onManagePhoto?: () => void;
 }) {
   const holdTimer = useRef<number | null>(null);
+  const managedByHold = useRef(false);
+  const profileUrl = footballPlayerSportsReferenceUrl(spotlight.name, spotlightKind);
 
   function clearHold() {
     if (holdTimer.current !== null) {
@@ -212,6 +217,7 @@ function PlayerSpotlight({
     clearHold();
     holdTimer.current = window.setTimeout(() => {
       holdTimer.current = null;
+      managedByHold.current = true;
       onManagePhoto();
     }, 650);
   }
@@ -228,27 +234,17 @@ function PlayerSpotlight({
     ? <img src={photoSource} alt={spotlight.name} loading="lazy" />
     : <span className="football-player-spotlight__placeholder" aria-hidden="true">{initials}</span>;
 
-  const media = canManagePhoto ? (
-    <button
-      className="football-player-spotlight__media is-manageable"
-      type="button"
-      aria-label="Manage player spotlight photo"
-      onPointerDown={beginHold}
-      onPointerUp={clearHold}
-      onPointerCancel={clearHold}
-      onPointerLeave={clearHold}
-      onContextMenu={(event) => event.preventDefault()}
-      onKeyDown={(event) => {
-        if ((event.key === "Enter" || event.key === " ") && onManagePhoto) {
-          event.preventDefault();
-          onManagePhoto();
-        }
-      }}
-    >
-      {photo}
-    </button>
-  ) : (
+  const media = memorial ? (
     <div className="football-player-spotlight__media">{photo}</div>
+  ) : (
+    <a className={`football-player-spotlight__media${canManagePhoto ? " is-manageable" : ""}`}
+      href={profileUrl} target="_blank" rel="noopener noreferrer"
+      aria-label={`Open ${spotlight.name} 2026 ${spotlightKind === "cfb" ? "college" : "NFL"} player stats`}
+      onPointerDown={() => { managedByHold.current = false; beginHold(); }}
+      onPointerUp={clearHold} onPointerCancel={clearHold} onPointerLeave={clearHold}
+      onClick={(event) => { if (managedByHold.current) { event.preventDefault(); managedByHold.current = false; } }}
+      onContextMenu={(event) => { if (canManagePhoto) event.preventDefault(); }}
+    >{photo}</a>
   );
 
   return (
@@ -263,7 +259,7 @@ function PlayerSpotlight({
       {media}
       <div className="football-player-spotlight__copy">
         <span>{memorial ? "IN MEMORY · 1939–2026" : "PLAYER SPOTLIGHT"}</span>
-        <h3>{spotlight.name}</h3>
+        <h3>{memorial ? spotlight.name : <a className="football-player-spotlight__name-link" href={profileUrl} target="_blank" rel="noopener noreferrer">{spotlight.name}</a>}</h3>
         <strong>{spotlight.team.toUpperCase()} · {spotlight.position}</strong>
         <div className="football-player-spotlight__stats" aria-label={memorial ? `${spotlight.name} career milestones` : `${spotlight.name} featured-game stats`}>
           {spotlight.stats.map((stat) => (
@@ -593,6 +589,7 @@ export function FootballHq({
       <div style={{ opacity: published === undefined && !memorial ? 0 : 1 }}>
         <PlayerSpotlight
           spotlight={activeSpotlight}
+          spotlightKind={activeSpotlightKind}
           photoSource={activeSpotlightPhoto}
           memorial={memorial}
           canManagePhoto={!memorial && canManagePlayerPhoto}

@@ -447,3 +447,14 @@
   .nba-hq-owner__team-copy > strong { font-size: 12px; }
   .nba-hq-owner__team-stats { gap: 2px; }
 }
+
+/* Four non-redundant stats, compact spacing and restrained team identity. */
+.nba-hq-owner__team { height:104px;min-height:104px;gap:2px;padding:8px 11px;border-color:color-mix(in srgb,var(--nba-week-team,#f2a341) 45%,#34383b);background:radial-gradient(ellipse at 6% 70%,color-mix(in srgb,var(--nba-week-team,#f2a341) 28%,transparent),transparent 62%),linear-gradient(145deg,#202124,#17181b); }
+.nba-hq-owner__team > header h3 { color:color-mix(in srgb,var(--nba-week-team,#f2a341) 65%,white); }
+.nba-hq-owner__team-link { grid-template-columns:48px minmax(0,1fr);gap:9px; }
+.nba-hq-owner__team-link img { width:48px;height:48px; }
+.nba-hq-owner__team-copy { gap:2px; }
+.nba-hq-owner__team-copy > strong { font-size:13px; }
+.nba-hq-owner__team-stats { grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:2px 0 0; }
+.nba-hq-owner__team-stats b { font-size:10px; }
+.nba-hq-owner__team-stats small { font-size:6px; }

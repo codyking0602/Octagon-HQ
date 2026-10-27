@@ -188,6 +188,36 @@ export function teamEditorialScore(t, teams) {
   return 45*winRate+25*clamp01((margin+10)/40)
     +15*clamp01((125-allowed)/40)+15*opponentStrength;
 }
+/** Aggregate verified NBA final boxscores, weighted by actual field-goal attempts. */
+export function teamShootingFromBoxscores(boxscores, team) {
+  let made=0, attempts=0, threes=0, threeAttempts=0;
+  for (const gameId of team.games) {
+    const summary=boxscores.get(String(gameId));
+    if (!summary?.boxscore?.players?.length) throw Error(`Missing NBA shooting boxscore for ${gameId}`);
+    let gameAttempts=0, gameThreeAttempts=0;
+    for (const group of summary.boxscore.players) {
+      if (String(group?.team?.abbreviation??"").toUpperCase()!==String(team.abbreviation).toUpperCase()) continue;
+      for (const block of group.statistics??[]) {
+        const names=(block.names??block.labels??[]).map(n=>normal(n).replaceAll(" ",""));
+        const fgIndex=names.findIndex(n=>["fieldgoalsmadefieldgoalsattempted","fieldgoals","fg"].includes(n));
+        const thIndex=names.findIndex(n=>["threepointfieldgoalsmadethreepointfieldgoalsattempted","threepointfieldgoals","3pt","3p"].includes(n));
+        if (fgIndex<0 || thIndex<0) continue;
+        for (const row of block.athletes??[]) {
+          if (row.didNotPlay||row.athlete?.didNotPlay||!Array.isArray(row.stats)) continue;
+          const pair=(index)=>String(row.stats[index]??"").split("-").map(Number);
+          const fg=pair(fgIndex), three=pair(thIndex);
+          if(fg.length!==2||three.length!==2||![...fg,...three].every(Number.isFinite)
+            || fg[0]>fg[1]||three[0]>three[1]) throw Error(`Invalid NBA shooting line ${gameId}`);
+          made+=fg[0];attempts+=fg[1];threes+=three[0];threeAttempts+=three[1];
+          gameAttempts+=fg[1];gameThreeAttempts+=three[1];
+        }
+      }
+    }
+    if (!gameAttempts || !gameThreeAttempts) throw Error(`No verified NBA team shooting lines for ${gameId}`);
+  }
+  return {fgPct:round(100*made/attempts),threePct:round(100*threes/threeAttempts)};
+}
+
 // Sports Reference labels NBA seasons by the ending year: 2026–27 => /2027.html.
 const BASKETBALL_REFERENCE_TEAM_CODES = new Set([
   "ATL","BOS","BRK","CHI","CHO","CLE","DAL","DEN","DET","GSW","HOU",
@@ -256,6 +286,7 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
   })).find(x=>x.video);
   if (!selected) throw Error("No eligible weekly player has a verified matching NBA YouTube highlight");
   const p=selected.player,g=p.games.size,t=candidateTeams[0],tg=t.games.size;
+  const shooting=teamShootingFromBoxscores(boxscores,t);
   const fg=p.attempts>0?round(p.made/p.attempts*100):"—";
   const winner={
     weekStart,weekEnd,publishedAt,
@@ -274,6 +305,7 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
       record:`${t.wins}-${t.losses}`,
       ppg:round(t.for/tg),oppPpg:round(t.against/tg),
       netMargin:(t.for>=t.against?"+":"")+round((t.for-t.against)/tg),
+      ...shooting,
     },
   };
   return winner;
