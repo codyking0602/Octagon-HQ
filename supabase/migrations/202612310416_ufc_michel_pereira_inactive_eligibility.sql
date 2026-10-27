@@ -33,6 +33,12 @@ where fighter_id='michel-pereira'
   and division='Middleweight'
   and active and ranking is null and hidden_grade=74;
 
+update private.wheel_ufc_fighters
+set active=false
+where fighter_id='rinat-fakhretdinov'
+  and division='Welterweight'
+  and active and ranking is null and hidden_grade=78.50;
+
 do $postflight$
 begin
   if (select count(*) from private.wheel_ufc_fighters) <> 170
