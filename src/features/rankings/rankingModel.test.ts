@@ -25,6 +25,10 @@ const refreshedFighters = new Set([
   "Alexandre Pantoja",
   "Brandon Moreno",
   "Alexa Grasso",
+  "Petr Yan",
+  "Merab Dvalishvili",
+  "Alexander Volkanovski",
+  "Deiveson Figueiredo",
 ]);
 
 function calculatedRow(fighter: string) {
