@@ -55,12 +55,15 @@ export async function retrieveOct3Benchmark(){
   }
   if(all.length!==total)
     throw new Error("EA historical census mismatch: expected "+total+"; got "+all.length);
-  // The observedAt cutoff is NOT a claim that this data was downloaded October 3.
-  const baseline=canonicalize(all,AS_OF+"T23:59:59Z");
-  baseline.provenance={kind:"EA archived historical iteration",asOfDate:AS_OF,
+  // Archived Week 3 has NOT been proven to be the October 3 snapshot.
+  // Never manufacture an October 3 observedAt timestamp.
+  const retrievedAt=new Date().toISOString();
+  const baseline=canonicalize(all,retrievedAt);
+  baseline.provenance={kind:"EA archived historical iteration",
+    targetComparisonDate:AS_OF,exactTargetDateCertified:false,
     referenceWeek:REFERENCE_WEEK,iterationId:iteration.id,
-    iterationLabel:iteration.label??null,retrievedAt:new Date().toISOString(),
-    observationNote:"Week 3 version as an October 3 historical reference, not a contemporaneous capture."};
+    iterationLabel:iteration.label??null,retrievedAt,
+    observationNote:"Historical EA Week 3 version; NOT a certified October 3 capture. Reproduce original 575-player October 2-3 source before comparing to the earlier 120 flags."};
   return baseline;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
