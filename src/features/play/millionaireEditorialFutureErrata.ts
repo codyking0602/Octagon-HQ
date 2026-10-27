@@ -790,4 +790,30 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2026/1/27/NCG-recap", supportingDetail: "CFP's January 2026 official recap establishes Indiana 27, Miami 21, Indiana 16–0 for the 2025 season." }],
   },
 
+  // Exact active Trivia shared-event facts replaced only for future candidate preview.
+  "nfl:7:0": {
+    id: "millionaire-nfl-future-lynch-buffalo-draft-2007-q1", type: "draft-team-origins",
+    prompt: "Which NFL franchise drafted Marshawn Lynch 12th overall in 2007, before his famous Seattle years?",
+    choices: ["Bills", "Seahawks", "Raiders", "Saints"], answer: "Bills",
+    statSheet: "He entered the league with an AFC East club before his 2010 trade west.",
+    explanation: "The Buffalo Bills selected Marshawn Lynch from California with the 12th overall pick in the 2007 NFL Draft. He played for Buffalo until the Bills traded him to Seattle in October 2010, years before the famous Beast Quake touchdown run.",
+    evidence: [{ authority: "Buffalo Bills", url: "https://www.buffalobills.com/news/bills-connections-to-super-bowl-xlviii-12555328", supportingDetail: "Bills team history states Lynch was its 12th overall selection in 2007, played for Buffalo through 2010 and later starred for Seattle." }],
+  },
+  "ufc:0:0": {
+    id: "millionaire-ufc-future-oliveira-chandler-262-q1", type: "lightweight-champions",
+    prompt: "Who stopped Michael Chandler just 19 seconds into Round 2 at UFC 262 to win the vacant lightweight title?",
+    choices: ["Charles Oliveira", "Justin Gaethje", "Dustin Poirier", "Tony Ferguson"], answer: "Charles Oliveira",
+    statSheet: "The May 2021 Houston title fight crowned a successor after Khabib Nurmagomedov retired.",
+    explanation: "Charles Oliveira stopped Michael Chandler by TKO only 19 seconds into Round 2 of the UFC 262 main event in Houston on May 15, 2021. It made Oliveira the undisputed lightweight champion after Khabib Nurmagomedov vacated the belt.",
+    evidence: [{ authority: "UFC official results", url: "https://www.ufc.com/news/ufc-262-oliveira-vs-chandler-results-highlights-interviews-winners-houston", supportingDetail: "UFC 262 results name Oliveira the winner by TKO at 0:19 of Round 2 over Chandler for the vacant lightweight belt." }],
+  },
+  "ufc:2:6": {
+    id: "millionaire-ufc-future-jdm-burns-ufc299-q7", type: "welterweight-breakthroughs",
+    prompt: "Who knocked out Gilbert Burns with a knee and follow-up elbows late in Round 3 at UFC 299?",
+    choices: ["Jack Della Maddalena", "Michael Page", "Shavkat Rakhmonov", "Sean Brady"], answer: "Jack Della Maddalena",
+    statSheet: "The Australian welterweight scored the finish at 3:43 of the final round in Miami.",
+    explanation: "Jack Della Maddalena finished Gilbert Burns by knockout with a knee and follow-up elbows at 3:43 of Round 3 at UFC 299 on March 9, 2024. He remained unbeaten in his UFC appearances at the time and established himself as a leading welterweight contender.",
+    evidence: [{ authority: "UFC official results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2", supportingDetail: "UFC 299 official report confirms Jack Della Maddalena knocked out Gilbert Burns with a knee and elbows at 3:43 of Round 3." }],
+  },
+
 };

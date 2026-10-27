@@ -39,6 +39,32 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("replaces three direct active Bar Trivia shared-fact duplicates in future preview only", () => {
+    const edits = [
+      ["nfl:7:0", "Bills", "https://www.buffalobills.com/news/bills-connections-to-super-bowl-xlviii-12555328"],
+      ["ufc:0:0", "Charles Oliveira", "https://www.ufc.com/news/ufc-262-oliveira-vs-chandler-results-highlights-interviews-winners-houston"],
+      ["ufc:2:6", "Jack Della Maddalena", "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2"],
+    ] as const;
+    for (const [key, correct, evidence] of edits) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(correct);
+      expect(q.choices).toHaveLength(4);
+      expect(q.choices.filter(v => v === correct)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(correct));
+      expect(q.explanation).toContain(correct);
+      expect(q.explanation.length).toBeGreaterThan(100);
+      expect(q.evidence[0]?.url).toBe(evidence);
+      const [league, run, level] = key.split(":");
+      const original = millionaireDailyRun(league as "nfl" | "cfb" | "ufc", Number(run))[Number(level)]!;
+      expect(original.id).not.toBe(q.id);
+      expect(original.prompt).not.toBe(q.prompt);
+    }
+    expect(millionaireDailyRun("nfl", 7)[0]!.prompt).toContain("Beast Quake");
+    expect(millionaireDailyRun("ufc", 0)[0]!.prompt).toContain("Jose Aldo");
+    expect(millionaireDailyRun("ufc", 2)[6]!.prompt).toContain("Rich Franklin");
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
