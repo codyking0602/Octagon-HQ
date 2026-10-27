@@ -30,14 +30,16 @@ function gameContext(setup: ReturnType<typeof buildOfficialDailySetup>): Officia
 
 describe("UFC Wavelength focused six-month readiness", () => {
   it("keeps prior published clue identities readable while drawing only from the expanded approved catalog", () => {
-    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v5");
-    expect(wavelengthCatalog.filter((clue) => clue.status === "retired")).toHaveLength(29);
+    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v6");
+    expect(wavelengthCatalog.filter((clue) => clue.status === "retired")).toHaveLength(96);
     expect(wavelengthCatalog.filter((clue) => clue.status === "quarantined")).toHaveLength(1);
-    expect(approvedWavelengthCatalog).toHaveLength(605);
+    expect(approvedWavelengthCatalog).toHaveLength(579);
     expect(approvedWavelengthCatalog.filter((clue) => clue.id.startsWith("wl-ufc-refresh-"))).toHaveLength(20);
     expect(approvedWavelengthCatalog.some((clue) => clue.id === "wl-fighter-skill-005")).toBe(false);
     expect(approvedWavelengthCatalog.some((clue) => clue.id === "wl-ufc-balance-553")).toBe(false);
     expect(approvedWavelengthCatalog.some((clue) => clue.id === "wl-ufc-balance-555")).toBe(false);
+    expect(approvedWavelengthCatalog.some((clue) => clue.id === "wl-events-and-fights-476")).toBe(false);
+    expect(approvedWavelengthCatalog.filter((clue) => clue.id.startsWith("wl-ufc-accessible-"))).toHaveLength(41);
 
     const setup = buildOfficialDailySetup("wavelength", "2026-10-31", "ufc-wavelength-refresh-test");
     const historical = {
