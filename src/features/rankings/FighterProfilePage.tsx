@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { shareCanonicalDestination } from "../../app/nativeShare";
 import { copyText, whyPromptFor } from "../intelligence/intelligence";
 import { FighterPhoto } from "./FighterPhoto";
+import { fighterProfilePhotoFraming } from "./fighterProfilePhotoFraming";
 import { getFighter } from "./rankingModel";
 import { resolveProfileWatchAction } from "./rankingPresentation";
 import { profileCategoryRows, profileDisplayName } from "./profilePresentation";
@@ -89,7 +90,7 @@ export default function FighterProfilePage() {
       </div>
 
       <section className="profile-photo-card" aria-label={`${fighter.name} photo`}>
-        <FighterPhoto name={fighter.name} src={fighter.profileUrl} className="profile-photo-card__image" />
+        <FighterPhoto name={fighter.name} src={fighter.profileUrl} className="profile-photo-card__image" style={fighterProfilePhotoFraming(fighter.slug)} />
         <span className="profile-photo-card__ovr" data-testid="photo-ovr-badge"><strong>{fighter.ovr}</strong><small>OVR</small></span>
       </section>
 
