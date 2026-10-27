@@ -693,4 +693,22 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "CFP/university athletics", url: "https://collegefootballplayoff.com/sports/2025/1/21/NCG-recap", supportingDetail: "Riley Leonard started at quarterback for Notre Dame against Ohio State in the January 2025 CFP national championship after transferring from Duke." }],
   },
 
+
+  // A retained future run also revisited Grasso's UFC 285 submission, already
+  // covered by another effective Millionaire run. Keep all historic seeds intact;
+  // this distinct five-round comeback occupies the future-preview slot only.
+  "ufc:9:6": {
+    id: "millionaire-ufc-future-rozenstruik-overeem-dc-2019-q7",
+    type: "heavyweight-comebacks",
+    prompt: "Who knocked out Alistair Overeem with just four seconds remaining in their December 2019 UFC Washington, D.C. main event?",
+    choices: ["Jairzinho Rozenstruik", "Francis Ngannou", "Derrick Lewis", "Alexander Volkov"],
+    answer: "Jairzinho Rozenstruik",
+    statSheet: "The heavyweight was trailing on all three judges' scorecards when the finish came at 4:56 of Round 5.",
+    explanation: "Jairzinho Rozenstruik knocked out Alistair Overeem at 4:56 of the fifth round on December 7, 2019, in Washington, D.C. Overeem was ahead four rounds to zero on all three judges' cards before a last-second right hand forced the stoppage.",
+    evidence: [{
+      authority: "UFC official Washington, D.C. fight result and recap",
+      url: "https://www.ufc.com/news/ufc-washington-dc-results-alistair-overeem-jairzinho-rozenstruik?language_content_entity=fr-ca",
+      supportingDetail: "Official UFC recap names Rozenstruik, Overeem, and Round 5 at 4:56; states Overeem led all three judges' cards four rounds to zero at the stoppage.",
+    }],
+  },
 };
