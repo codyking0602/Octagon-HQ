@@ -16,6 +16,22 @@ function normalized(text: string) {
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
 
+  it("preserves the further AFC title and SoFi hint improvements without answer leaks", () => {
+    const polamalu = millionaireFutureEditorialDailyRun("nfl",11)[4]!;
+    expect(answer(polamalu)).toBe("Troy Polamalu");
+    expect(polamalu.prompt).toContain("Steelers defender");
+    expect(polamalu.prompt).not.toContain("Steelers safety");
+    const sofi = millionaireFutureEditorialDailyRun("nfl",14)[0]!;
+    expect(answer(sofi)).toBe("Rams");
+    expect(sofi.statSheet).toContain("Super Bowl LVI");
+    expect(sofi.statSheet).not.toContain("Rams");
+    for (const q of [polamalu, sofi]) {
+      expect(q.choices).toHaveLength(4);
+      expect(new Set(q.choices.map(c => normalized(c.text))).size).toBe(4);
+    }
+  });
+
+
   it("prevents nine multi-sport source-bank answer leaks and ineligible distractors from returning", () => {
     const cases = [
       ["nfl",13,2,"Bears","opening kickoff"],["nfl",13,4,"Marcus Mariota","Corey Davis"],
