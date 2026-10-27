@@ -405,6 +405,41 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("ufc", 0)[2]!.prompt).toContain("Charles Oliveira");
   });
 
+  it("preserves fifteen further sourced future-only UFC Bar Trivia collision repairs", () => {
+    const expected: readonly [string, string][] = [
+      ["ufc:3:4", "Jiří Procházka"],
+      ["ufc:3:5", "Dricus du Plessis"],
+      ["ufc:3:6", "Sean O’Malley"],
+      ["ufc:4:0", "Merab Dvalishvili"],
+      ["ufc:4:2", "Arman Tsarukyan"],
+      ["ufc:4:3", "Valentina Shevchenko"],
+      ["ufc:4:4", "Zhang Weili"],
+      ["ufc:5:0", "Justin Gaethje"],
+      ["ufc:5:2", "Deiveson Figueiredo"],
+      ["ufc:5:3", "Kamaru Usman"],
+      ["ufc:5:4", "Diego Lopes"],
+      ["ufc:9:0", "Rose Namajunas"],
+      ["ufc:9:1", "Amanda Nunes"],
+      ["ufc:9:2", "Brandon Moreno"],
+      ["ufc:9:5", "Valentina Shevchenko"],
+    ];
+    expect(expected).toHaveLength(15);
+    for (const [key, correct] of expected) {
+      const revision = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(revision.id).toContain("future-rewrite");
+      expect(revision.answer).toBe(correct);
+      expect(revision.choices).toHaveLength(4);
+      expect(new Set(revision.choices.map(normalized)).size).toBe(4);
+      expect(revision.choices.filter(choice => choice === correct)).toHaveLength(1);
+      expect(normalized(revision.statSheet ?? "")).not.toContain(normalized(correct));
+      expect(revision.explanation).toContain(correct);
+      expect(revision.explanation.length).toBeGreaterThan(80);
+      expect(revision.evidence[0]?.url).toContain("ufc.com");
+    }
+    expect(millionaireDailyRun("ufc", 3)[4]!.prompt).toContain("Max Holloway");
+    expect(millionaireDailyRun("ufc", 9)[0]!.prompt).toContain("women's champion");
+  });
+
   it("protects source-checked draft revisions against accidental reversion", () => {
     const sourceChecked = [
       ["cfb", 10, 0, "Miami"],

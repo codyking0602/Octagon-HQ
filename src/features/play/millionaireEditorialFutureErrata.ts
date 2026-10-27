@@ -411,4 +411,126 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-300-pereira-vs-hill?language_content_entity=en", supportingDetail: "Kayla Harrison submitted Holly Holm by rear-naked choke at 1:47 of Round 2 at UFC 300 in April 2024, winning her UFC debut." }],
   },
 
+  // Third batch: fifteen more verified legacy/Bar-Trivia answer collisions removed.
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:3:4": {
+    id: "millionaire-ufc-future-rewrite-r4-q5",
+    type: "light-heavyweight-title-finishes", prompt: "Who submitted Glover Teixeira late in Round 5 to win the UFC light heavyweight belt at UFC 275?",
+    choices: ["Jiří Procházka","Alex Pereira","Jan Błachowicz","Magomed Ankalaev"], answer: "Jiří Procházka",
+    statSheet: "The closely contested championship ended with under 30 seconds left in the final round.", explanation: "Jiří Procházka submitted Glover Teixeira by rear-naked choke at 4:32 of Round 5 of their UFC 275 championship fight in June 2022.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-275-teixeira-vs-prochazka-fight-results-highlights-winner-interviews-singapore?language_content_entity=fr", supportingDetail: "Jiří Procházka submitted Glover Teixeira by rear-naked choke at 4:32 of Round 5 of their UFC 275 championship fight in June 2022." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:3:5": {
+    id: "millionaire-ufc-future-rewrite-r4-q6",
+    type: "middleweight-title-changes", prompt: "Who defeated Sean Strickland by split decision to win the UFC middleweight title at UFC 297?",
+    choices: ["Dricus du Plessis","Israel Adesanya","Robert Whittaker","Jared Cannonier"], answer: "Dricus du Plessis",
+    statSheet: "The January 2024 main event in Toronto went the full five rounds.", explanation: "Dricus du Plessis beat Sean Strickland by split decision at UFC 297 in January 2024, with the three judges scoring it 47–48, 48–47, and 48–47.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-297-strickland-vs-du-plessis-results-highlights-winner-interviews", supportingDetail: "Dricus du Plessis beat Sean Strickland by split decision at UFC 297 in January 2024, with the three judges scoring it 47–48, 48–47, and 48–47." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:3:6": {
+    id: "millionaire-ufc-future-rewrite-r4-q7",
+    type: "bantamweight-title-upsets", prompt: "Who stopped Aljamain Sterling in Round 2 to win the bantamweight belt at UFC 292?",
+    choices: ["Sean O’Malley","Merab Dvalishvili","Petr Yan","Cory Sandhagen"], answer: "Sean O’Malley",
+    statSheet: "The new champion scored a 51-second finish early in Round 2 in Boston.", explanation: "Sean O’Malley defeated Aljamain Sterling by TKO at 0:51 of Round 2 of the UFC 292 main event in Boston in August 2023, winning the bantamweight championship.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-292-sterling-vs-omalley-results-highlights-winner-interviews-boston?language_content_entity=en", supportingDetail: "Sean O’Malley defeated Aljamain Sterling by TKO at 0:51 of Round 2 of the UFC 292 main event in Boston in August 2023, winning the bantamweight championship." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:4:0": {
+    id: "millionaire-ufc-future-rewrite-r5-q1",
+    type: "noche-ufc-title-change", prompt: "Who dethroned Sean O’Malley by unanimous decision in the UFC 306 main event at Sphere?",
+    choices: ["Merab Dvalishvili","Petr Yan","Cory Sandhagen","Henry Cejudo"], answer: "Merab Dvalishvili",
+    statSheet: "The September 2024 title fight at a landmark Las Vegas venue went five rounds.", explanation: "Merab Dvalishvili defeated Sean O’Malley by unanimous decision at UFC 306 in September 2024, winning the bantamweight title by scores of 49–46, 48–47, and 48–47.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-306-omalley-vs-dvalishvili-noche-ufc-sphere", supportingDetail: "Merab Dvalishvili defeated Sean O’Malley by unanimous decision at UFC 306 in September 2024, winning the bantamweight title by scores of 49–46, 48–47, and 48–47." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:4:2": {
+    id: "millionaire-ufc-future-rewrite-r5-q3",
+    type: "ufc-300-lightweight-upsets", prompt: "Who defeated Charles Oliveira by split decision in their UFC 300 lightweight fight?",
+    choices: ["Arman Tsarukyan","Islam Makhachev","Beneil Dariush","Dustin Poirier"], answer: "Arman Tsarukyan",
+    statSheet: "The April 2024 contender bout went all three rounds, with two judges backing the challenger.", explanation: "Arman Tsarukyan beat Charles Oliveira by split decision (28–29, 29–28, 29–28) at UFC 300 in April 2024, earning an important lightweight contender victory.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-300-pereira-vs-hill?language_content_entity=en", supportingDetail: "Arman Tsarukyan beat Charles Oliveira by split decision (28–29, 29–28, 29–28) at UFC 300 in April 2024, earning an important lightweight contender victory." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:4:3": {
+    id: "millionaire-ufc-future-rewrite-r5-q4",
+    type: "flyweight-trilogy", prompt: "Who beat Alexa Grasso by unanimous decision at UFC 306 to regain the women's flyweight title?",
+    choices: ["Valentina Shevchenko","Manon Fiorot","Erin Blanchfield","Taila Santos"], answer: "Valentina Shevchenko",
+    statSheet: "The third meeting occurred at Sphere and all three judges scored it 50–45.", explanation: "Valentina Shevchenko defeated Alexa Grasso by unanimous decision, 50–45 on all three cards, in their UFC 306 trilogy fight in September 2024, reclaiming her flyweight title.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-306-omalley-vs-dvalishvili-noche-ufc-sphere", supportingDetail: "Valentina Shevchenko defeated Alexa Grasso by unanimous decision, 50–45 on all three cards, in their UFC 306 trilogy fight in September 2024, reclaiming her flyweight title." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:4:4": {
+    id: "millionaire-ufc-future-rewrite-r5-q5",
+    type: "strawweight-title-defenses", prompt: "Who defeated Yan Xiaonan by unanimous decision in UFC 300's strawweight championship bout?",
+    choices: ["Zhang Weili","Rose Namajunas","Jessica Andrade","Amanda Lemos"], answer: "Zhang Weili",
+    statSheet: "Both fighters represented China in the five-round title matchup in Las Vegas.", explanation: "Zhang Weili defeated Yan Xiaonan by unanimous decision (49–45 on all three cards) at UFC 300 in April 2024, defending her strawweight championship.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-300-pereira-vs-hill?language_content_entity=en", supportingDetail: "Zhang Weili defeated Yan Xiaonan by unanimous decision (49–45 on all three cards) at UFC 300 in April 2024, defending her strawweight championship." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:5:0": {
+    id: "millionaire-ufc-future-rewrite-r6-q1",
+    type: "bmf-championship-knockouts", prompt: "Who knocked out Dustin Poirier with a second-round head kick to win the BMF belt at UFC 291?",
+    choices: ["Justin Gaethje","Max Holloway","Michael Chandler","Charles Oliveira"], answer: "Justin Gaethje",
+    statSheet: "The rematch in Salt Lake City ended at 1:00 of the second round.", explanation: "Justin Gaethje knocked out Dustin Poirier with a right high kick at 1:00 of Round 2 at UFC 291 in July 2023, winning the BMF title.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-291-poirier-vs-gaethje-2-results-highlights-winner-interviews-salt-lake-city", supportingDetail: "Justin Gaethje knocked out Dustin Poirier with a right high kick at 1:00 of Round 2 at UFC 291 in July 2023, winning the BMF title." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:5:2": {
+    id: "millionaire-ufc-future-rewrite-r6-q3",
+    type: "ufc-300-bantamweight-finishes", prompt: "Who submitted former champion Cody Garbrandt at UFC 300?",
+    choices: ["Deiveson Figueiredo","Dominick Cruz","Petr Yan","Sean O’Malley"], answer: "Deiveson Figueiredo",
+    statSheet: "The flyweight-turned-bantamweight finished with a rear-naked choke in Round 2.", explanation: "Deiveson Figueiredo submitted Cody Garbrandt by rear-naked choke at 4:02 of Round 2 during UFC 300 in April 2024.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-300-pereira-vs-hill?language_content_entity=en", supportingDetail: "Deiveson Figueiredo submitted Cody Garbrandt by rear-naked choke at 4:02 of Round 2 during UFC 300 in April 2024." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:5:3": {
+    id: "millionaire-ufc-future-rewrite-r6-q4",
+    type: "welterweight-title-knockouts", prompt: "Who knocked out Jorge Masvidal in the second round of their UFC 261 title rematch?",
+    choices: ["Kamaru Usman","Colby Covington","Gilbert Burns","Leon Edwards"], answer: "Kamaru Usman",
+    statSheet: "The championship rematch finished at 1:02 of Round 2 in Jacksonville.", explanation: "Kamaru Usman knocked out Jorge Masvidal at 1:02 of Round 2 in the UFC 261 main event in April 2021, defending his welterweight title.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-261-usman-vs-masvidal-2-zhang-namajunas-results-highlights-interviews-winners", supportingDetail: "Kamaru Usman knocked out Jorge Masvidal at 1:02 of Round 2 in the UFC 261 main event in April 2021, defending his welterweight title." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:5:4": {
+    id: "millionaire-ufc-future-rewrite-r6-q5",
+    type: "featherweight-contenders", prompt: "Who defeated Brian Ortega by unanimous decision in the UFC 306 featherweight feature bout?",
+    choices: ["Diego Lopes","Yair Rodriguez","Max Holloway","Ilia Topuria"], answer: "Diego Lopes",
+    statSheet: "The September 2024 fight at Sphere lasted all three rounds.", explanation: "Diego Lopes defeated Brian Ortega by unanimous decision (30–26, 30–27, 30–27) at UFC 306 in September 2024, improving his featherweight contender standing.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-306-omalley-vs-dvalishvili-noche-ufc-sphere", supportingDetail: "Diego Lopes defeated Brian Ortega by unanimous decision (30–26, 30–27, 30–27) at UFC 306 in September 2024, improving his featherweight contender standing." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:9:0": {
+    id: "millionaire-ufc-future-rewrite-r10-q1",
+    type: "strawweight-title-knockouts", prompt: "Who knocked out Zhang Weili with a first-round head kick to regain the strawweight title at UFC 261?",
+    choices: ["Rose Namajunas","Jessica Andrade","Joanna Jędrzejczyk","Carla Esparza"], answer: "Rose Namajunas",
+    statSheet: "The knockout occurred just 78 seconds into the Jacksonville co-main event.", explanation: "Rose Namajunas knocked out Zhang Weili at 1:18 of Round 1 at UFC 261 in April 2021, using a left head kick to regain the strawweight title.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-261-usman-vs-masvidal-2-zhang-namajunas-results-highlights-interviews-winners", supportingDetail: "Rose Namajunas knocked out Zhang Weili at 1:18 of Round 1 at UFC 261 in April 2021, using a left head kick to regain the strawweight title." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:9:1": {
+    id: "millionaire-ufc-future-rewrite-r10-q2",
+    type: "bantamweight-title-rematches", prompt: "Who beat Julianna Peña by unanimous decision at UFC 277 to reclaim the women's bantamweight belt?",
+    choices: ["Amanda Nunes","Holly Holm","Raquel Pennington","Miesha Tate"], answer: "Amanda Nunes",
+    statSheet: "The July 2022 rematch took place in Dallas after a major upset seven months earlier.", explanation: "Amanda Nunes beat Julianna Peña by unanimous decision (50–45, 50–44, 50–43) at UFC 277 in July 2022 to regain the women's bantamweight title.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-277-pena-vs-nunes-2-results", supportingDetail: "Amanda Nunes beat Julianna Peña by unanimous decision (50–45, 50–44, 50–43) at UFC 277 in July 2022 to regain the women's bantamweight title." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:9:2": {
+    id: "millionaire-ufc-future-rewrite-r10-q3",
+    type: "interim-flyweight-titles", prompt: "Who stopped Kai Kara-France in Round 3 to win the UFC interim flyweight championship at UFC 277?",
+    choices: ["Brandon Moreno","Alexandre Pantoja","Deiveson Figueiredo","Brandon Royval"], answer: "Brandon Moreno",
+    statSheet: "The co-main event in Dallas concluded at 4:34 of Round 3 after a body kick.", explanation: "Brandon Moreno defeated Kai Kara-France by third-round TKO at 4:34 at UFC 277 in July 2022, winning the interim flyweight belt.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-277-pena-vs-nunes-2-results", supportingDetail: "Brandon Moreno defeated Kai Kara-France by third-round TKO at 4:34 at UFC 277 in July 2022, winning the interim flyweight belt." }],
+  },
+  // Future-only replacement of a selected Bar Trivia answer/fact repeat.
+  "ufc:9:5": {
+    id: "millionaire-ufc-future-rewrite-r10-q6",
+    type: "flyweight-title-defenses", prompt: "Who stopped Jessica Andrade in Round 2 of their women's flyweight title bout at UFC 261?",
+    choices: ["Valentina Shevchenko","Alexa Grasso","Manon Fiorot","Erin Blanchfield"], answer: "Valentina Shevchenko",
+    statSheet: "The champion won by grounded strikes after securing a crucifix position.", explanation: "Valentina Shevchenko stopped Jessica Andrade by TKO at 3:19 of Round 2 at UFC 261 in April 2021, retaining her women's flyweight championship.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-261-usman-vs-masvidal-2-zhang-namajunas-results-highlights-interviews-winners", supportingDetail: "Valentina Shevchenko stopped Jessica Andrade by TKO at 3:19 of Round 2 at UFC 261 in April 2021, retaining her women's flyweight championship." }],
+  },
+
 };
