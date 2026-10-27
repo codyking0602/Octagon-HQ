@@ -1,10 +1,11 @@
-export const WAVELENGTH_CATALOG_VERSION = "wavelength-catalog-v2" as const;
+export const WAVELENGTH_CATALOG_VERSION = "wavelength-catalog-v3" as const;
 export const WAVELENGTH_CALIBRATION_VERSION = "wavelength-calibration-v1" as const;
 export const WAVELENGTH_GENERATOR_VERSION = "wavelength-generator-v4" as const;
 export const WAVELENGTH_REVEAL_CONTRACT_VERSION = "wavelength-reveal-privacy-v1" as const;
 
 export const WAVELENGTH_HISTORICAL_VERSION_IDS = [
   "wavelength-catalog-v1",
+  "wavelength-catalog-v2",
   WAVELENGTH_CATALOG_VERSION,
   WAVELENGTH_CALIBRATION_VERSION,
   "wavelength-generator-v2",
@@ -31,7 +32,8 @@ export type WavelengthCategory =
   | "COACHES & CAMPS"
   | "CROSSOVER & CELEBRITY";
 
-export type WavelengthCatalogStatus = "approved" | "quarantined";
+/** Retired clues stay addressable for already-published Dailies and saved results. */
+export type WavelengthCatalogStatus = "approved" | "quarantined" | "retired";
 
 export interface WavelengthCatalogItem {
   id: string;
@@ -96,7 +98,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-fighter-skill-002", category: "FIGHTER SKILL", text: "Ben Askren's UFC striking threat", rating: 18, status: "approved" },
   { id: "wl-fighter-skill-003", category: "FIGHTER SKILL", text: "Derrick Lewis's submission game", rating: 28, status: "approved" },
   { id: "wl-fighter-skill-004", category: "FIGHTER SKILL", text: "Nate Diaz's defensive wrestling", rating: 43, status: "approved" },
-  { id: "wl-fighter-skill-005", category: "FIGHTER SKILL", text: "Justin Gaethje's offensive wrestling in UFC fights", rating: 62, status: "approved" },
+  { id: "wl-fighter-skill-005", category: "FIGHTER SKILL", text: "Justin Gaethje's offensive wrestling in UFC fights", rating: 62, status: "retired" },
   { id: "wl-fighter-skill-006", category: "FIGHTER SKILL", text: "Sean O'Malley's range striking", rating: 83, status: "approved" },
   { id: "wl-fighter-skill-007", category: "FIGHTER SKILL", text: "Islam Makhachev's top control", rating: 92, status: "approved" },
   { id: "wl-fighter-skill-008", category: "FIGHTER SKILL", text: "Georges St-Pierre's jab", rating: 94, status: "approved" },
@@ -142,11 +144,11 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-ufc-resume-048", category: "UFC RESUME", text: "Jorge Masvidal's UFC-only résumé", rating: 61, status: "approved" },
   { id: "wl-ufc-resume-049", category: "UFC RESUME", text: "Colby Covington's UFC-only résumé", rating: 64, status: "approved" },
   { id: "wl-ufc-resume-050", category: "UFC RESUME", text: "Belal Muhammad's UFC-only résumé through winning the belt", rating: 78, status: "approved" },
-  { id: "wl-championship-051", category: "CHAMPIONSHIP", text: "A short-notice replacement title shot as pure merit", rating: 24, status: "approved" },
+  { id: "wl-championship-051", category: "CHAMPIONSHIP", text: "A short-notice replacement title shot as pure merit", rating: 24, status: "retired" },
   { id: "wl-championship-052", category: "CHAMPIONSHIP", text: "A typical interim belt's historical clarity", rating: 43, status: "approved" },
   { id: "wl-championship-053", category: "CHAMPIONSHIP", text: "The BMF belt's championship meaning", rating: 47, status: "approved" },
-  { id: "wl-championship-054", category: "CHAMPIONSHIP", text: "Chael Sonnen's UFC championship résumé", rating: 48, status: "approved" },
-  { id: "wl-championship-055", category: "CHAMPIONSHIP", text: "Jorge Masvidal's UFC championship résumé", rating: 45, status: "approved" },
+  { id: "wl-championship-054", category: "CHAMPIONSHIP", text: "Chael Sonnen's UFC championship résumé", rating: 48, status: "retired" },
+  { id: "wl-championship-055", category: "CHAMPIONSHIP", text: "Jorge Masvidal's UFC championship résumé", rating: 45, status: "retired" },
   { id: "wl-championship-056", category: "CHAMPIONSHIP", text: "Dustin Poirier's UFC championship résumé", rating: 63, status: "approved" },
   { id: "wl-championship-057", category: "CHAMPIONSHIP", text: "Colby Covington's UFC championship credibility", rating: 57, status: "approved" },
   { id: "wl-championship-058", category: "CHAMPIONSHIP", text: "Robert Whittaker's championship résumé", rating: 78, status: "approved" },
@@ -167,7 +169,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-championship-073", category: "CHAMPIONSHIP", text: "Valentina Shevchenko's flyweight title reign", rating: 93, status: "approved" },
   { id: "wl-championship-074", category: "CHAMPIONSHIP", text: "Charles Oliveira's lightweight title claim", rating: 82, status: "approved" },
   { id: "wl-championship-075", category: "CHAMPIONSHIP", text: "Alex Pereira's two-division UFC title achievement", rating: 89, status: "approved" },
-  { id: "wl-ufc-culture-076", category: "UFC CULTURE", text: "UFC hot-dog-branding era aesthetics", rating: 16, status: "approved" },
+  { id: "wl-ufc-culture-076", category: "UFC CULTURE", text: "UFC hot-dog-branding era aesthetics", rating: 16, status: "retired" },
   { id: "wl-ufc-culture-077", category: "UFC CULTURE", text: "The Reebok fight-kit reveal as fan excitement", rating: 22, status: "approved" },
   { id: "wl-ufc-culture-078", category: "UFC CULTURE", text: "Dana White's press-conference transparency", rating: 26, status: "approved" },
   { id: "wl-ufc-culture-079", category: "UFC CULTURE", text: "The official rankings as argument-enders", rating: 34, status: "approved" },
@@ -184,14 +186,14 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-ufc-culture-090", category: "UFC CULTURE", text: "The black-and-gold UFC 300 branding", rating: 78, status: "approved" },
   { id: "wl-ufc-culture-091", category: "UFC CULTURE", text: "Ceremonial weigh-in stare-downs", rating: 74, status: "approved" },
   { id: "wl-ufc-culture-092", category: "UFC CULTURE", text: "Walkout flags as atmosphere", rating: 69, status: "approved" },
-  { id: "wl-ufc-culture-093", category: "UFC CULTURE", text: "Coach cam advice between rounds", rating: 58, status: "approved" },
+  { id: "wl-ufc-culture-093", category: "UFC CULTURE", text: "Coach cam advice between rounds", rating: 58, status: "retired" },
   { id: "wl-ufc-culture-094", category: "UFC CULTURE", text: "Power Slap overlap with UFC credibility", rating: 18, status: "approved" },
   { id: "wl-ufc-culture-095", category: "UFC CULTURE", text: "Crypto sponsor patches as visual charm", rating: 20, status: "approved" },
   { id: "wl-ufc-culture-096", category: "UFC CULTURE", text: "A fighter missing weight by one pound as professionalism", rating: 12, status: "approved" },
   { id: "wl-ufc-culture-097", category: "UFC CULTURE", text: "Championship double-champ photos", rating: 84, status: "approved" },
   { id: "wl-ufc-culture-098", category: "UFC CULTURE", text: "Custom shorts returning for stars", rating: 71, status: "approved" },
   { id: "wl-ufc-culture-099", category: "UFC CULTURE", text: "Old-school gladiator intro nostalgia", rating: 67, status: "approved" },
-  { id: "wl-ufc-culture-100", category: "UFC CULTURE", text: "The red UFC gloves reveal as product excitement", rating: 62, status: "approved" },
+  { id: "wl-ufc-culture-100", category: "UFC CULTURE", text: "The red UFC gloves reveal as product excitement", rating: 62, status: "retired" },
   { id: "wl-events-and-fights-101", category: "EVENTS & FIGHTS", text: "A forgettable Apex prelim card's rewatch value", rating: 18, status: "approved" },
   { id: "wl-events-and-fights-102", category: "EVENTS & FIGHTS", text: "A sloppy heavyweight gas-out fight's technical value", rating: 25, status: "approved" },
   { id: "wl-events-and-fights-103", category: "EVENTS & FIGHTS", text: "A typical ranked Fight Night main event", rating: 58, status: "approved" },
@@ -244,7 +246,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-venue-and-atmosphere-150", category: "VENUE & ATMOSPHERE", text: "A last-minute venue change's fan experience", rating: 15, status: "approved" },
   { id: "wl-personality-and-promotion-151", category: "PERSONALITY & PROMOTION", text: "A monotone media-day answer as promotion", rating: 22, status: "approved" },
   { id: "wl-personality-and-promotion-152", category: "PERSONALITY & PROMOTION", text: "Hasbulla's UFC product relevance", rating: 25, status: "approved" },
-  { id: "wl-personality-and-promotion-153", category: "PERSONALITY & PROMOTION", text: "Tito Ortiz's public speaking", rating: 29, status: "approved" },
+  { id: "wl-personality-and-promotion-153", category: "PERSONALITY & PROMOTION", text: "Tito Ortiz's public speaking", rating: 29, status: "retired" },
   { id: "wl-personality-and-promotion-154", category: "PERSONALITY & PROMOTION", text: "Colby Covington's trash talk originality", rating: 46, status: "approved" },
   { id: "wl-personality-and-promotion-155", category: "PERSONALITY & PROMOTION", text: "Chael Sonnen's trash talk craft", rating: 88, status: "approved" },
   { id: "wl-personality-and-promotion-156", category: "PERSONALITY & PROMOTION", text: "Conor McGregor's promotional impact", rating: 99, status: "approved" },
@@ -266,7 +268,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-personality-and-promotion-172", category: "PERSONALITY & PROMOTION", text: "Tony Ferguson's unpredictable quote value", rating: 75, status: "approved" },
   { id: "wl-personality-and-promotion-173", category: "PERSONALITY & PROMOTION", text: "Dustin Poirier's likability", rating: 82, status: "approved" },
   { id: "wl-personality-and-promotion-174", category: "PERSONALITY & PROMOTION", text: "Max Holloway's fan connection", rating: 86, status: "approved" },
-  { id: "wl-personality-and-promotion-175", category: "PERSONALITY & PROMOTION", text: "Amanda Nunes's self-promotion volume", rating: 55, status: "approved" },
+  { id: "wl-personality-and-promotion-175", category: "PERSONALITY & PROMOTION", text: "Amanda Nunes's self-promotion volume", rating: 55, status: "retired" },
   { id: "wl-broadcast-and-presentation-176", category: "BROADCAST & PRESENTATION", text: "A generic modern UFC poster", rating: 38, status: "approved" },
   { id: "wl-broadcast-and-presentation-177", category: "BROADCAST & PRESENTATION", text: "The Reebok era visual identity", rating: 33, status: "approved" },
   { id: "wl-broadcast-and-presentation-178", category: "BROADCAST & PRESENTATION", text: "Crypto-heavy canvas ads as presentation", rating: 24, status: "approved" },
@@ -314,9 +316,9 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-officiating-and-systems-220", category: "OFFICIATING & SYSTEMS", text: "Interim belts during clear injuries", rating: 61, status: "approved" },
   { id: "wl-officiating-and-systems-221", category: "OFFICIATING & SYSTEMS", text: "Interim belts during short business delays", rating: 32, status: "approved" },
   { id: "wl-officiating-and-systems-222", category: "OFFICIATING & SYSTEMS", text: "Dana White contender-series contracts as opportunity", rating: 68, status: "approved" },
-  { id: "wl-officiating-and-systems-223", category: "OFFICIATING & SYSTEMS", text: "Regional judging variance as trust builder", rating: 19, status: "approved" },
+  { id: "wl-officiating-and-systems-223", category: "OFFICIATING & SYSTEMS", text: "Regional judging variance as trust builder", rating: 19, status: "retired" },
   { id: "wl-officiating-and-systems-224", category: "OFFICIATING & SYSTEMS", text: "Fence grabs enforcement consistency", rating: 31, status: "approved" },
-  { id: "wl-officiating-and-systems-225", category: "OFFICIATING & SYSTEMS", text: "Eye-poke deterrence under current gloves", rating: 27, status: "approved" },
+  { id: "wl-officiating-and-systems-225", category: "OFFICIATING & SYSTEMS", text: "Eye-poke deterrence under current gloves", rating: 27, status: "retired" },
   { id: "wl-legacy-and-history-226", category: "LEGACY & HISTORY", text: "Greg Hardy's UFC legacy", rating: 9, status: "approved" },
   { id: "wl-legacy-and-history-227", category: "LEGACY & HISTORY", text: "Sage Northcutt's UFC legacy", rating: 34, status: "approved" },
   { id: "wl-legacy-and-history-228", category: "LEGACY & HISTORY", text: "Tito Ortiz's relevance to modern UFC fans", rating: 48, status: "approved" },
@@ -342,9 +344,9 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-legacy-and-history-248", category: "LEGACY & HISTORY", text: "Max Holloway's UFC legacy", rating: 86, status: "approved" },
   { id: "wl-legacy-and-history-249", category: "LEGACY & HISTORY", text: "Dustin Poirier's UFC legacy", rating: 80, status: "approved" },
   { id: "wl-legacy-and-history-250", category: "LEGACY & HISTORY", text: "Donald Cerrone's UFC legacy", rating: 75, status: "approved" },
-  { id: "wl-fighter-trait-251", category: "FIGHTER TRAIT", text: "An average heavyweight's five-round cardio", rating: 17, status: "approved" },
-  { id: "wl-fighter-trait-252", category: "FIGHTER TRAIT", text: "Michael Chandler's ability to follow a calm game plan", rating: 35, status: "approved" },
-  { id: "wl-fighter-trait-253", category: "FIGHTER TRAIT", text: "Tony Ferguson's late-career durability", rating: 24, status: "approved" },
+  { id: "wl-fighter-trait-251", category: "FIGHTER TRAIT", text: "An average heavyweight's five-round cardio", rating: 17, status: "retired" },
+  { id: "wl-fighter-trait-252", category: "FIGHTER TRAIT", text: "Michael Chandler's ability to follow a calm game plan", rating: 35, status: "retired" },
+  { id: "wl-fighter-trait-253", category: "FIGHTER TRAIT", text: "Tony Ferguson's late-career durability", rating: 24, status: "retired" },
   { id: "wl-fighter-trait-254", category: "FIGHTER TRAIT", text: "Max Holloway's chin", rating: 94, status: "approved" },
   { id: "wl-fighter-trait-255", category: "FIGHTER TRAIT", text: "Justin Gaethje's willingness to create chaos", rating: 91, status: "approved" },
   { id: "wl-fighter-trait-256", category: "FIGHTER TRAIT", text: "Dustin Poirier's mid-fight composure", rating: 84, status: "approved" },
@@ -431,7 +433,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-tuf-and-reality-335", category: "TUF & REALITY", text: "The Ultimate Fighter Season 25's Redemption concept", rating: 68, status: "approved" },
   { id: "wl-tuf-and-reality-336", category: "TUF & REALITY", text: "The Ultimate Fighter Season 26's title-tournament stakes", rating: 65, status: "approved" },
   { id: "wl-tuf-and-reality-337", category: "TUF & REALITY", text: "The Ultimate Fighter Season 27's undefeated-prospect hook", rating: 54, status: "approved" },
-  { id: "wl-tuf-and-reality-338", category: "TUF & REALITY", text: "The Ultimate Fighter Season 28's rewatch value", rating: 46, status: "approved" },
+  { id: "wl-tuf-and-reality-338", category: "TUF & REALITY", text: "The Ultimate Fighter Season 28's rewatch value", rating: 46, status: "retired" },
   { id: "wl-tuf-and-reality-339", category: "TUF & REALITY", text: "The Ultimate Fighter Season 29's Ortega-Volkanovski coach dynamic", rating: 52, status: "approved" },
   { id: "wl-tuf-and-reality-340", category: "TUF & REALITY", text: "The Ultimate Fighter Season 30's Peña-Nunes coach dynamic", rating: 49, status: "approved" },
   { id: "wl-tuf-and-reality-341", category: "TUF & REALITY", text: "The Ultimate Fighter Season 31's McGregor-Chandler star power", rating: 72, status: "approved" },
@@ -474,7 +476,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-crossover-and-celebrity-376", category: "CROSSOVER & CELEBRITY", text: "Donald Trump's cage-side UFC appearances as spectacle", rating: 83, status: "approved" },
   { id: "wl-crossover-and-celebrity-377", category: "CROSSOVER & CELEBRITY", text: "UFC Freedom 250's White House setting as crossover spectacle", rating: 96, status: "approved" },
   { id: "wl-crossover-and-celebrity-378", category: "CROSSOVER & CELEBRITY", text: "White House fighter faceoffs as UFC promotion", rating: 90, status: "approved" },
-  { id: "wl-crossover-and-celebrity-379", category: "CROSSOVER & CELEBRITY", text: "UFC Freedom 250 as a mainstream UFC event", rating: 95, status: "approved" },
+  { id: "wl-crossover-and-celebrity-379", category: "CROSSOVER & CELEBRITY", text: "UFC Freedom 250 as a mainstream UFC event", rating: 95, status: "retired" },
   { id: "wl-crossover-and-celebrity-380", category: "CROSSOVER & CELEBRITY", text: "Repeated celebrity crowd shots during a UFC broadcast", rating: 46, status: "approved" },
   { id: "wl-crossover-and-celebrity-381", category: "CROSSOVER & CELEBRITY", text: "The Drake curse meme as UFC culture", rating: 52, status: "approved" },
   { id: "wl-crossover-and-celebrity-382", category: "CROSSOVER & CELEBRITY", text: "The Rock presenting the BMF belt", rating: 70, status: "approved" },
@@ -483,7 +485,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-crossover-and-celebrity-385", category: "CROSSOVER & CELEBRITY", text: "Shaquille O'Neal's UFC fan crossover", rating: 61, status: "approved" },
   { id: "wl-crossover-and-celebrity-386", category: "CROSSOVER & CELEBRITY", text: "Mike Tyson cage-side aura at UFC events", rating: 78, status: "approved" },
   { id: "wl-crossover-and-celebrity-387", category: "CROSSOVER & CELEBRITY", text: "A superstar NFL player cage-side at a UFC pay-per-view", rating: 64, status: "approved" },
-  { id: "wl-crossover-and-celebrity-388", category: "CROSSOVER & CELEBRITY", text: "NFL stars attending UFC events as crossover value", rating: 62, status: "approved" },
+  { id: "wl-crossover-and-celebrity-388", category: "CROSSOVER & CELEBRITY", text: "NFL stars attending UFC events as crossover value", rating: 62, status: "retired" },
   { id: "wl-crossover-and-celebrity-389", category: "CROSSOVER & CELEBRITY", text: "NBA stars attending UFC events as crossover value", rating: 59, status: "approved" },
   { id: "wl-crossover-and-celebrity-390", category: "CROSSOVER & CELEBRITY", text: "WWE-UFC crossover under the same corporate umbrella", rating: 72, status: "approved" },
   { id: "wl-crossover-and-celebrity-391", category: "CROSSOVER & CELEBRITY", text: "Brock Lesnar's pro-wrestling crossover into UFC stardom", rating: 95, status: "approved" },
@@ -497,7 +499,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-crossover-and-celebrity-399", category: "CROSSOVER & CELEBRITY", text: "A sitting U.S. president cage-side as a UFC image moment", rating: 88, status: "approved" },
   { id: "wl-crossover-and-celebrity-400", category: "CROSSOVER & CELEBRITY", text: "UFC references and cameos in mainstream pop culture", rating: 68, status: "approved" },
 
-  { id: "wl-ufc-culture-401", category: "UFC CULTURE", text: "The Drake curse meme during UFC fight weeks", rating: 52, status: "approved" },
+  { id: "wl-ufc-culture-401", category: "UFC CULTURE", text: "The Drake curse meme during UFC fight weeks", rating: 52, status: "retired" },
   { id: "wl-ufc-culture-402", category: "UFC CULTURE", text: "Generic fight-week influencer content", rating: 42, status: "approved" },
   { id: "wl-ufc-culture-403", category: "UFC CULTURE", text: "Obviously manufactured fighter beef", rating: 49, status: "approved" },
   { id: "wl-ufc-culture-404", category: "UFC CULTURE", text: "Ceremonial weigh-in towel drama", rating: 63, status: "approved" },
@@ -578,7 +580,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-legacy-and-history-475", category: "LEGACY & HISTORY", text: "UFC 100 as a milestone in company history", rating: 91, status: "approved" },
 
   { id: "wl-events-and-fights-476", category: "EVENTS & FIGHTS", text: "UFC 40's event-level historical impact", rating: 90, status: "approved" },
-  { id: "wl-events-and-fights-477", category: "EVENTS & FIGHTS", text: "A solid but forgettable numbered UFC card", rating: 72, status: "approved" },
+  { id: "wl-events-and-fights-477", category: "EVENTS & FIGHTS", text: "A solid but forgettable numbered UFC card", rating: 72, status: "retired" },
   { id: "wl-events-and-fights-478", category: "EVENTS & FIGHTS", text: "A competitive five-round Fight Night with little title relevance", rating: 68, status: "approved" },
   { id: "wl-events-and-fights-479", category: "EVENTS & FIGHTS", text: "UFC 129's event scale", rating: 91, status: "approved" },
   { id: "wl-events-and-fights-480", category: "EVENTS & FIGHTS", text: "UFC 189's overall entertainment value", rating: 94, status: "approved" },
@@ -591,7 +593,7 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-venue-and-atmosphere-486", category: "VENUE & ATMOSPHERE", text: "The White House South Lawn as a one-off UFC venue", rating: 97, status: "approved" },
   { id: "wl-venue-and-atmosphere-487", category: "VENUE & ATMOSPHERE", text: "Sphere as a one-off UFC presentation venue", rating: 96, status: "approved" },
   { id: "wl-venue-and-atmosphere-488", category: "VENUE & ATMOSPHERE", text: "The O2 Arena for a major London UFC card", rating: 84, status: "approved" },
-  { id: "wl-venue-and-atmosphere-489", category: "VENUE & ATMOSPHERE", text: "Mexico City altitude as part of a UFC event's atmosphere", rating: 74, status: "approved" },
+  { id: "wl-venue-and-atmosphere-489", category: "VENUE & ATMOSPHERE", text: "Mexico City altitude as part of a UFC event's atmosphere", rating: 74, status: "retired" },
   { id: "wl-venue-and-atmosphere-490", category: "VENUE & ATMOSPHERE", text: "The Apex after years of regular use as a special-event venue", rating: 28, status: "approved" },
 
   { id: "wl-fighter-skill-491", category: "FIGHTER SKILL", text: "Kimbo Slice's ground game in UFC competition", rating: 38, status: "approved" },
@@ -604,6 +606,28 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-fighter-trait-498", category: "FIGHTER TRAIT", text: "Brendan Schaub's athleticism as a UFC heavyweight", rating: 62, status: "approved" },
   { id: "wl-goat-and-prime-499", category: "GOAT & PRIME", text: "Brock Lesnar's UFC heavyweight GOAT case", rating: 55, status: "approved" },
   { id: "wl-goat-and-prime-500", category: "GOAT & PRIME", text: "BJ Penn's UFC lightweight GOAT case", rating: 82, status: "approved" },
+
+  // Editorial refresh: retired identities remain stable for historical published rounds.
+  { id: "wl-ufc-refresh-501", category: "FIGHTER SKILL", text: "Justin Gaethje's leg kicks as a UFC lightweight weapon", rating: 89, status: "approved" },
+  { id: "wl-ufc-refresh-502", category: "CHAMPIONSHIP", text: "A UFC title shot granted for short-notice availability rather than contender wins", rating: 24, status: "approved" },
+  { id: "wl-ufc-refresh-503", category: "CHAMPIONSHIP", text: "Chael Sonnen's credibility as a UFC middleweight title challenger", rating: 72, status: "approved" },
+  { id: "wl-ufc-refresh-504", category: "CHAMPIONSHIP", text: "Jorge Masvidal's record in undisputed UFC title fights", rating: 25, status: "approved" },
+  { id: "wl-ufc-refresh-505", category: "UFC CULTURE", text: "Sponsor-covered fight shorts as a classic UFC look", rating: 26, status: "approved" },
+  { id: "wl-ufc-refresh-506", category: "UFC CULTURE", text: "An underdog winning a title in front of a stunned UFC crowd", rating: 85, status: "approved" },
+  { id: "wl-ufc-refresh-507", category: "UFC CULTURE", text: "The UFC's discontinued 2024 glove design as a visual upgrade", rating: 35, status: "approved" },
+  { id: "wl-ufc-refresh-508", category: "PERSONALITY & PROMOTION", text: "Tito Ortiz's clarity in post-fight interviews", rating: 31, status: "approved" },
+  { id: "wl-ufc-refresh-509", category: "PERSONALITY & PROMOTION", text: "Amanda Nunes's ability to hype a fight through trash talk", rating: 43, status: "approved" },
+  { id: "wl-ufc-refresh-510", category: "OFFICIATING & SYSTEMS", text: "A referee immediately pausing a fight for a clear eye poke", rating: 83, status: "approved" },
+  { id: "wl-ufc-refresh-511", category: "OFFICIATING & SYSTEMS", text: "The discontinued 2024 UFC glove design's eye-poke prevention", rating: 24, status: "approved" },
+  { id: "wl-ufc-refresh-512", category: "FIGHTER TRAIT", text: "Zhang Weili's five-round pace against Joanna Jędrzejczyk at UFC 248", rating: 93, status: "approved" },
+  { id: "wl-ufc-refresh-513", category: "FIGHTER TRAIT", text: "Michael Chandler's patience when a UFC fight turns chaotic", rating: 34, status: "approved" },
+  { id: "wl-ufc-refresh-514", category: "FIGHTER TRAIT", text: "Tony Ferguson's ability to avoid damage during his later UFC losses", rating: 19, status: "approved" },
+  { id: "wl-ufc-refresh-515", category: "TUF & REALITY", text: "The Ultimate Fighter Season 3's Ortiz-Shamrock coaching rivalry", rating: 90, status: "approved" },
+  { id: "wl-ufc-refresh-516", category: "CROSSOVER & CELEBRITY", text: "Brock Lesnar's return at UFC 200 as a wrestling-to-MMA spectacle", rating: 83, status: "approved" },
+  { id: "wl-ufc-refresh-517", category: "CROSSOVER & CELEBRITY", text: "Holly Holm's boxing résumé boosting her early UFC credibility", rating: 77, status: "approved" },
+  { id: "wl-ufc-refresh-518", category: "UFC CULTURE", text: "Max Holloway pointing to the center against Justin Gaethje at UFC 300", rating: 99, status: "approved" },
+  { id: "wl-ufc-refresh-519", category: "EVENTS & FIGHTS", text: "A forgettable numbered UFC card's rewatch appeal", rating: 29, status: "approved" },
+  { id: "wl-ufc-refresh-520", category: "VENUE & ATMOSPHERE", text: "A hometown contender's walkout in a packed Mexico City UFC arena", rating: 85, status: "approved" },
 
   { id: "wl-quarantine-temporary-rank", category: "OFFICIATING & SYSTEMS", text: "This week's pound-for-pound ranking accuracy", rating: 50, status: "quarantined" },
 ] as const;
