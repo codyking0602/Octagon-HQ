@@ -69,12 +69,16 @@
         "summary": "NFC East rivalry in Washington under the Sunday-night national spotlight."
       },
       {
-        "id": "bears-at-seahawks",
-        "away_team": "Chicago Bears",
-        "home_team": "Seattle Seahawks",
-        "kickoff_at": "2026-11-02T19:15:00-06:00",
-        "summary": "Monday Night Football in Seattle, which just held the Chiefs to three points; Chicago arrives for an NFC test."
+        "id": "browns-at-steelers",
+        "away_team": "Cleveland Browns",
+        "home_team": "Pittsburgh Steelers",
+        "kickoff_at": "2026-11-01T12:00:00-06:00",
+        "summary": "The 5-2 Browns visit the 5-2 Steelers for an AFC North rivalry at Acrisure Stadium, Sunday at 1 p.m. ET on CBS."
       }
     ]
+  },
+  "selection": {
+    "player_id": "cam-skattebo",
+    "game_id": "browns-at-steelers"
   }
 }
