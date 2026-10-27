@@ -1,6 +1,6 @@
 /** October 27, 2026 UFC V2 review: Ciryl Gane. Source links and editorial rationale:
  * docs/rankings/ciryl-gane-20261027.md. Existing curated thumbnail reused
- * for both surfaces; no unverified watch clip or new fighter image is invented.
+ * for both surfaces; the watch clip is the UFC channel's confirmed June 2026 highlight; no new fighter image is invented.
  */
 export const cirylGaneV2 = {
   "fighter": "Ciryl Gane",
@@ -560,8 +560,8 @@ export const cirylGaneV2 = {
     ],
     "photoUrl": "assets/fighters/ciryl-gane-thumb.webp",
     "thumbUrl": "assets/fighters/ciryl-gane-thumb.webp",
-    "watchUrl": null,
-    "watchLabel": null,
+    "watchUrl": "https://www.youtube.com/watch?v=5kk1024Kwb4",
+    "watchLabel": "Watch: Alex Pereira interim-title moment",
     "signatureFightUrl": null,
     "signatureFightLabel": null
   }
