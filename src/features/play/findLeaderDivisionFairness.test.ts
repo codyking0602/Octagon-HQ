@@ -25,6 +25,12 @@ describe("UFC Find the Leader divisional statistical integrity", () => {
     expect(october22.definitionId).toBe("heavyweight-ufc-finishes-all-time");
     expect(october22.leaderId).toBe("jon-jones");
     expect(october22.leaderValue).toBe(12);
+    expect(october22.candidates.some((candidate) => candidate.id === "ciryl-gane")).toBe(false);
+    // October 27 began before Gane was promoted into the ranked Find Leader
+    // candidate pool. Preserve the still-published day's eligible roster too.
+    expect(dailyFindLeaderBoard("2026-10-27")?.candidates.some(
+      (candidate) => candidate.id === "ciryl-gane",
+    )).toBe(false);
     expect(october22.version).toBe("find-leader-daily-v2");
     expect(october22.statLabel).toBe("UFC finishes by a heavyweight");
     expect(findLeaderDailyContentVersionForDay("2026-10-23")).toBe("find-leader-daily-v3-division-bout-scoped");

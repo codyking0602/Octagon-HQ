@@ -1,5 +1,6 @@
 import historicalMigrationSeedJson from "./generated/canonical-ranking-inputs-842ba06e.json";
 import { nataliaSilvaRankingInput } from "./nataliaSilvaRanking";
+import { cirylGaneV2 } from "./cirylGaneV2";
 
 export interface V2RankingRosterOverlay {
   additions: readonly unknown[];
@@ -1678,6 +1679,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     joshuaVan,
+    cirylGaneV2,
     nataliaSilvaRankingInput,
   ],
   replacements: {
@@ -2574,6 +2576,10 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       secondary: null,
     },
     "Natalia Silva": {
+      primary: "new-blood",
+      secondary: null,
+    },
+    "Ciryl Gane": {
       primary: "new-blood",
       secondary: null,
     },

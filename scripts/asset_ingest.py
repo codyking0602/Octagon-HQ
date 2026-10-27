@@ -203,6 +203,66 @@ def crop_box(im, crop):
     )
 
 
+
+# Exact owner-approved Ciryl Gane profile photo (the same CBS frame supplied by
+# the owner). This single-source exception does NOT expand the general ESPN/UFC
+# source-host allowlist or affect transparent fighter thumbs/Spotlights.
+OWNER_GANE_PROFILE_SOURCE = (
+    "https://sportshub.cbsistatic.com/i/2026/06/15/"
+    "2b1cb9a4-9aa1-47e5-8afa-d75bea65dbc3/gane.jpg"
+)
+OWNER_GANE_PROFILE_DEST = "public/assets/fighters/ciryl-gane.webp"
+
+
+def ingest_owner_gane_profile(spec):
+    if (
+        spec.get("destination") != OWNER_GANE_PROFILE_DEST
+        or spec.get("source_url") != OWNER_GANE_PROFILE_SOURCE
+        or spec.get("source_page_url")
+        or spec.get("fighter_name") != "Ciryl Gane"
+        or spec.get("crop") != [0.25, 0.0, 0.50, 1.0]
+    ):
+        fail("profile ingest is restricted to the approved Ciryl Gane frame and crop")
+
+    data = request_bytes(OWNER_GANE_PROFILE_SOURCE, MAX_BYTES)
+    try:
+        source = Image.open(BytesIO(data)).convert("RGB")
+    except Exception as exc:
+        fail(f"cannot decode approved profile photo: {exc}")
+
+    if source.width < 700 or source.height < 480 or source.width / source.height < 1.4:
+        fail(f"unexpected Gane photo dimensions: {source.size}")
+
+    # Keep both UFC belts, the head, and blue gloves visible on portrait cards.
+    subject = source.crop(crop_box(source, spec["crop"]))
+    size = (720, 800)
+    target_ratio = size[0] / size[1]
+    ratio = subject.width / subject.height
+    if ratio > target_ratio:
+        new_width = round(subject.height * target_ratio)
+        left = (subject.width - new_width) // 2
+        subject = subject.crop((left, 0, left + new_width, subject.height))
+    elif ratio < target_ratio:
+        new_height = round(subject.width / target_ratio)
+        top = (subject.height - new_height) // 2
+        subject = subject.crop((0, top, subject.width, top + new_height))
+
+    result = subject.resize(size, Image.Resampling.LANCZOS)
+    result = result.filter(ImageFilter.UnsharpMask(radius=0.6, percent=90, threshold=2))
+    os.makedirs(os.path.dirname(OWNER_GANE_PROFILE_DEST), exist_ok=True)
+    result.save(OWNER_GANE_PROFILE_DEST, "WEBP", quality=88, method=6)
+    verified = Image.open(OWNER_GANE_PROFILE_DEST)
+    if verified.size != size or verified.format != "WEBP":
+        fail("Gane profile image failed WebP or dimension verification")
+    print(json.dumps({
+        "destination": OWNER_GANE_PROFILE_DEST,
+        "size": list(verified.size),
+        "source_dimensions": list(source.size),
+        "source_host": urlparse(OWNER_GANE_PROFILE_SOURCE).hostname,
+        "source": "owner-approved Gane champion photograph",
+    }))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("manifest")
@@ -212,6 +272,8 @@ def main():
         spec = json.load(handle)
 
     kind = spec.get("kind")
+    if kind == "profile":
+        return ingest_owner_gane_profile(spec)
     if kind not in {"thumb", "spotlight"}:
         fail("kind must be thumb or spotlight")
 

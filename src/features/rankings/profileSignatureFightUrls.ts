@@ -83,6 +83,7 @@ export const profileSignatureFightUrls = {
   "alexa-grasso": "https://youtu.be/P0U_W35_cJw?is=mRmw6BHCQGDfTygx",
   // Owner-provided Natalia Silva full-fight destination (October 27, 2026).
   "natalia-silva": "https://youtu.be/E-UiQ6go8gg?is=akiwYYjzjt2EIfTo",
+  "ciryl-gane": "https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL",
   "kayla-harrison": "https://youtu.be/UUMlLth-4uQ?is=ZmRXsN5bIzaY1_rq",
   "mackenzie-dern": "https://youtu.be/Gnf14OGq9VY?is=AWeo4KKp08bB0v5k",
   "julianna-pena": "https://youtu.be/tB_Xg1LbMVQ?is=cMc6BXC1LV3u8rJa",

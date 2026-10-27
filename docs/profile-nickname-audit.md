@@ -87,3 +87,4 @@ V1 repository access: blocked by `CONNECT tunnel failed, response 403`, so displ
 | rafael-dos-anjos | Rafael dos Anjos | No verified nickname; canonical V2 name used |
 | joshua-van | Joshua “The Fearless” Van | Established common/UFC nickname override |
 | natalia-silva | Natalia Silva | No verified nickname; canonical V2 name used |
+| ciryl-gane | Ciryl “Bon Gamin” Gane | UFC athlete profile https://www.ufc.com/athlete/ciryl-gane |
