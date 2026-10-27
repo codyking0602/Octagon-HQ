@@ -34,7 +34,7 @@ describe("UFC Wavelength focused six-month readiness", () => {
     expect(wavelengthCatalog.filter((clue) => clue.status === "retired")).toHaveLength(113);
     expect(wavelengthCatalog.filter((clue) => clue.status === "quarantined")).toHaveLength(1);
     expect(approvedWavelengthCatalog).toHaveLength(578);
-    expect(approvedWavelengthCatalog.filter((clue) => clue.id.startsWith("wl-ufc-refresh-"))).toHaveLength(20);
+    expect(approvedWavelengthCatalog.filter((clue) => clue.id.startsWith("wl-ufc-refresh-"))).toHaveLength(16);
     expect(approvedWavelengthCatalog.some((clue) => clue.id === "wl-fighter-skill-005")).toBe(false);
     expect(approvedWavelengthCatalog.some((clue) => clue.id === "wl-ufc-balance-553")).toBe(false);
     expect(approvedWavelengthCatalog.some((clue) => clue.id === "wl-ufc-balance-555")).toBe(false);
