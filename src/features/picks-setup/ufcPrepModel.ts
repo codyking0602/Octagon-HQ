@@ -225,16 +225,35 @@ export function compareUfcPrepToSource(prep: UfcPickPrep | null, preview: PickSe
 }
 
 export function prepAssetSummary(prep: UfcPickPrep | null) {
-  if (!prep) return { thumbReady: 0, thumbTotal: 0, spotlightReady: 0, spotlightTotal: 0 };
-  const mainCardSlugs = new Set(
-    prep.bouts
-      .filter((bout) => bout.section === "main-event" || bout.section === "main")
-      .flatMap((bout) => [bout.redFighterSlug, bout.blueFighterSlug]),
-  );
+  const empty = {
+    thumbReady: 0,
+    thumbTotal: 0,
+    requiredSpotlightReady: 0,
+    requiredSpotlightTotal: 0,
+    optionalSpotlightReady: 0,
+    optionalSpotlightTotal: 0,
+    previewReady: 0,
+    previewTotal: 0,
+  };
+  if (!prep) return empty;
+  const mainBouts = prep.bouts.filter((bout) => bout.section === "main-event" || bout.section === "main");
+  const mainEvent = mainBouts.find((bout) => bout.section === "main-event") ?? mainBouts[0];
+  const requiredSlugs = new Set(mainEvent ? [mainEvent.redFighterSlug, mainEvent.blueFighterSlug] : []);
+  const mainCardSlugs = new Set(mainBouts.flatMap((bout) => [bout.redFighterSlug, bout.blueFighterSlug]));
+  const readySlugs = new Set(prep.assets.filter((asset) => asset.spotlightReady).map((asset) => asset.fighterSlug));
+  const previewReady = mainBouts.filter((bout) => prep.spotlights.some((spotlight) => (
+    spotlight.boutId === bout.boutId
+    && spotlight.red.fighterSlug === bout.redFighterSlug
+    && spotlight.blue.fighterSlug === bout.blueFighterSlug
+  ))).length;
   return {
     thumbReady: prep.assets.filter((asset) => asset.thumbReady).length,
     thumbTotal: prep.assets.length,
-    spotlightReady: prep.assets.filter((asset) => mainCardSlugs.has(asset.fighterSlug) && asset.spotlightReady).length,
-    spotlightTotal: prep.assets.filter((asset) => mainCardSlugs.has(asset.fighterSlug)).length,
+    requiredSpotlightReady: [...requiredSlugs].filter((slug) => readySlugs.has(slug)).length,
+    requiredSpotlightTotal: requiredSlugs.size,
+    optionalSpotlightReady: [...mainCardSlugs].filter((slug) => !requiredSlugs.has(slug) && readySlugs.has(slug)).length,
+    optionalSpotlightTotal: [...mainCardSlugs].filter((slug) => !requiredSlugs.has(slug)).length,
+    previewReady,
+    previewTotal: mainBouts.length,
   };
 }
