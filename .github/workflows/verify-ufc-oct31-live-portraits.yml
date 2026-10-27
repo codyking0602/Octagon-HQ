@@ -1,0 +1,23 @@
+name: Verify Oct31 UFC Portrait Live Delivery (one-time)
+on:
+  push:
+    branches:
+      - verify/ufc-oct31-live-portraits-20261027
+    paths:
+      - scripts/verify_oct31_ufc_live_portraits.py
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 0c1e47c24125c723d8f7421adac5e620f9b728c7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pillow
+      - name: Verify live SHA, 14 exact WebPs, both legacy Spotlight URLs
+        run: python scripts/verify_oct31_ufc_live_portraits.py
