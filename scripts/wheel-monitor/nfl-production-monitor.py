@@ -12,6 +12,7 @@ import unicodedata
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from nfl_canonical_population import canonical_priorities_from_contracts
 
 TEAM_ALIAS = {"LA":"LAR","WAS":"WSH","JAC":"JAX","OAK":"LV"}
 FAMILIES = ("QB","RB","WR","TE","Front Seven","Secondary")
@@ -153,26 +154,6 @@ def review_production_evidence(rows,season,priorities,at):
               ("priority-performance-review","no-sustained-metric-shift")],
         "method":"Two 3-week windows, 2 observed games per window, position volume floors and absolute+relative metric movement; factual review only"
     }
-
-def canonical_priorities_from_contracts(path):
-    """Use the 594 GM contract identities; never the older 591-priority list."""
-    players=json.loads(Path(path).read_text()).get("players",[])
-    if len(players)!=594:
-        raise ValueError("NFL GM contract authority is not 594 players")
-    teams=defaultdict(lambda:defaultdict(list))
-    identities=set()
-    for row in players:
-        team,family,name=row.get("team"),row.get("family"),row.get("player")
-        if not team or family not in FAMILIES or not name:
-            raise ValueError("Invalid GM contract player identity")
-        identity=(team,family,name_key(name))
-        if identity in identities:
-            raise ValueError("Duplicate canonical GM contract player identity")
-        identities.add(identity)
-        teams[team][family].append(name)
-    if len(identities)!=594 or len(teams)!=32:
-        raise ValueError("NFL GM contract population is not 594 across 32 teams")
-    return {"teams":dict(teams)}
 
 def main():
     parser=argparse.ArgumentParser()
