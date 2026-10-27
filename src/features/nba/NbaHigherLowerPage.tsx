@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-higher-lower.css";
 import "../../styles/nba-higher-lower.css";
+import "./NbaPortraitCredits.css";
 import "../../styles/nba-game-actions.css";
 import "../../styles/higher-lower-standard.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
