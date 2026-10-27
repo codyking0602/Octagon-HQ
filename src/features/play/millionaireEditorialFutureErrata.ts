@@ -604,11 +604,10 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Future-only NFL and CFB concept replacement batch.
   // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
   "nfl:1:4": {
-    id: "millionaire-nfl-future-semantic-r2-q5",
-    type: "rushing-seasons", prompt: "Which Tennessee running back rushed for 2,027 yards during the 2020 season?",
-    choices: ["Derrick Henry","Jonathan Taylor","Saquon Barkley","Dalvin Cook"], answer: "Derrick Henry",
-    statSheet: "He led the NFL in carries, rushing yards and rushing touchdowns.", explanation: "Derrick Henry rushed for 2,027 yards and 17 touchdowns for Tennessee in 2020, surpassing the 2,000-yard barrier.",
-    evidence: [{ authority: "NFL official report", url: "https://www.nfl.com/players/derrick-henry/stats/career", supportingDetail: "Derrick Henry rushed for 2,027 yards and 17 touchdowns for Tennessee in 2020, surpassing the 2,000-yard barrier." }],
+    id: "millionaire-nfl-mcnair-2003-co-mvp-q5", type: "mvp-history", prompt: "Which quarterback shared the 2003 AP NFL MVP award with Peyton Manning?",
+    choices: ["Steve McNair","Tom Brady","Rich Gannon","Brett Favre"], answer: "Steve McNair",
+    statSheet: "The co-winner quarterbacked Tennessee to a 12–4 record in that season.", explanation: "Tennessee Titans quarterback Steve McNair shared the 2003 Associated Press NFL Most Valuable Player award with Indianapolis quarterback Peyton Manning. Both quarterbacks received 16 first-place votes as their teams finished 12–4.",
+    evidence: [{ authority: "Tennessee Titans / Associated Press", url: "https://www.tennesseetitans.com/news/a-look-back-at-the-career-of-steve-mcnair-543596%26lang%3Den", supportingDetail: "Tennessee Titans quarterback Steve McNair shared the 2003 Associated Press NFL Most Valuable Player award with Indianapolis quarterback Peyton Manning. Both quarterbacks received 16 first-place votes as their teams finished 12–4." }],
   },
   // Primary-source-supported future-only replacement for selected Bar Trivia fact collision.
   "nfl:2:1": {
@@ -979,11 +978,10 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.nfl.com/stats/player-stats/category/receiving/2012/reg/all/receivingyards/desc", supportingDetail: "Calvin Johnson caught 122 passes for 1,964 yards with the Detroit Lions in 2012, setting the NFL's single-season receiving-yards record. Andre Johnson finished second that season with 1,598 yards, while Brandon Marshall had 1,508 and Demaryius Thomas 1,434." }],
   },
   "nfl:5:4": {
-    id: "millionaire-eric-dickerson-1984-rushing-future-q5", type: "rushing-records",
-    prompt: "Who set the NFL single-season rushing record with 2,105 yards in 1984?",
-    choices: ["Eric Dickerson", "Adrian Peterson", "Barry Sanders", "Jamal Lewis"], answer: "Eric Dickerson",
-    statSheet: "The Hall of Fame runner achieved the milestone with the Los Angeles Rams.", explanation: "Eric Dickerson carried the ball 379 times for a record 2,105 rushing yards with the Los Angeles Rams in 1984, averaging 5.6 yards per rush with 14 rushing touchdowns. The mark has remained the NFL single-season rushing standard.",
-    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.nfl.com/players/eric-dickerson/stats/career", supportingDetail: "Eric Dickerson carried the ball 379 times for a record 2,105 rushing yards with the Los Angeles Rams in 1984, averaging 5.6 yards per rush with 14 rushing touchdowns. The mark has remained the NFL single-season rushing standard." }],
+    id: "millionaire-nfl-malcolm-smith-super-bowl-xlviii-mvp-q5", type: "super-bowl-defense", prompt: "Which Seahawks linebacker was named MVP of Super Bowl XLVIII after returning an interception for a touchdown against Denver?",
+    choices: ["Malcolm Smith","Bobby Wagner","K.J. Wright","Bruce Irvin"], answer: "Malcolm Smith",
+    statSheet: "His 69-yard pick-six helped Seattle build a 22–0 first-half lead.", explanation: "Seattle linebacker Malcolm Smith intercepted Peyton Manning and returned it 69 yards for a touchdown in Super Bowl XLVIII on February 2, 2014. Smith added a fumble recovery and nine tackles to earn MVP honors in the Seahawks' 43–8 victory.",
+    evidence: [{ authority: "Seattle Seahawks", url: "https://www.seahawks.com/news/super-bowl-xlviii-10-years-later-whenever-you-think-about-the-seattle-seahawks-you-re-going-to-think-about-this-team", supportingDetail: "Seattle linebacker Malcolm Smith intercepted Peyton Manning and returned it 69 yards for a touchdown in Super Bowl XLVIII on February 2, 2014. Smith added a fumble recovery and nine tackles to earn MVP honors in the Seahawks' 43–8 victory." }],
   },
   "nfl:6:0": {
     id: "millionaire-nfl-mccaffrey-2022-trade-q1", type: "roster-history",

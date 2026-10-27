@@ -209,7 +209,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["nfl:2:0", "Texans", "https://www.profootballhof.com/players/andre-johnson"],
       ["nfl:4:0", "49ers", "https://www.profootballhof.com/football-history/nfl-draft-history/1940/1985"],
       ["nfl:4:4", "Calvin Johnson", "https://www.nfl.com/stats/player-stats/category/receiving/2012/reg/all/receivingyards/desc"],
-      ["nfl:5:4", "Eric Dickerson", "https://www.nfl.com/players/eric-dickerson/stats/career"],
+      ["nfl:5:4", "Malcolm Smith", "https://www.seahawks.com/news/super-bowl-xlviii-10-years-later-whenever-you-think-about-the-seattle-seahawks-you-re-going-to-think-about-this-team"],
       ["nfl:6:0", "49ers", "https://www.49ers.com/news/49ers-announce-trade-for-running-back-christian-mccaffrey-panthers-nfl"],
     ] as const;
     expect(checked).toHaveLength(10);
@@ -1207,7 +1207,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("retains twelve official-source NFL and CFB future-only collision fixes", () => {
     const cases: readonly [string, string, string][] = [
-      ["nfl:1:4", "Derrick Henry", "Which Tennessee r"],
+      ["nfl:1:4", "Steve McNair", "Which quarterback shared"],
       ["nfl:2:1", "Jalen Hurts", "Which Eagles quar"],
       ["nfl:4:6", "Stephon Gilmore", "Which New England"],
       ["nfl:5:5", "Nick Bolton", "Which Chiefs line"],
