@@ -182,8 +182,11 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(answer(millionaireFutureEditorialDailyRun("cfb", 14)[6]!)).toBe("Donovan Edwards");
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[6]!.prompt).not.toContain("Kalen DeBoer");
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[6]!.choices.map(choice => choice.text)).toEqual(["Donovan Edwards", "Blake Corum", "Kalel Mullings", "Benjamin Hall"]);
+    expect(MILLIONAIRE_FUTURE_Q8_REWRITES["nfl:1:7"]!.prompt).toContain("Super Bowl XI");
+    expect(MILLIONAIRE_FUTURE_Q8_REWRITES["nfl:1:7"]!.prompt).not.toContain("Tracy Porter");
     const finalCorrections = [
       ["nfl:0:7", "Cooper DeJean"],
+      ["nfl:1:7", "Willie Brown"],
       ["nfl:2:7", "Sam Hubbard"],
       ["nfl:9:7", "Noah Brown"],
       ["cfb:4:7", "Matthew Golden"],
