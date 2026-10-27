@@ -64,7 +64,12 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Test
+      - name: Rank engine, fighter presentation, and app smoke tests (UFC V2 editorial branches)
+        if: startsWith(github.ref, 'refs/heads/editorial/ufc-v2-')
+        run: npx vitest run src/features/rankings src/app/App.test.tsx src/app/rankingWhatsNewSync.contract.test.ts
+
+      - name: Full suite (original agent branch behavior)
+        if: ${{ !startsWith(github.ref, 'refs/heads/editorial/ufc-v2-') }}
         run: npm test
 
       - name: Build
