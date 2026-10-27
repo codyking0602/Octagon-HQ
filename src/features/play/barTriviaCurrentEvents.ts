@@ -1,6 +1,24 @@
 import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
 
 export const BAR_TRIVIA_CURRENT_EVENT_QUESTIONS: readonly BarTriviaQuestion[] = [
+  barTriviaQuestion({
+    id: "cfb-current-2026-10-26-dante-moore-season",
+    league: "cfb",
+    round: "round1",
+    difficulty: "easy",
+    category: "Major Player News",
+    prompt: "Which Oregon quarterback was not expected to return for the rest of the 2026 season following a September concussion?",
+    choices: ["Dante Moore", "Dylan Raiola", "Brock Thomas", "Akili Smith Jr."],
+    answer: "Dante Moore",
+    explanation: "Oregon coach Dan Lanning said on October 26 he did not anticipate Moore returning in 2026 after his concussion against USC.",
+    contentType: "current-event",
+    activeFrom: "2026-10-27T00:00:00-05:00",
+    expiresAt: "2026-11-10T23:59:59-06:00",
+    sourceId: "oregon-2026-10-26-dante-moore-unlikely-return",
+    sourceUrl: "https://goducks.com/news/2026/10/26/football-moore-unlikely-to-return-for-ducks-in-2026",
+    verifiedAt: "2026-10-27",
+  }),
+
   // October 27, 2026 weekly editorial review — verified, dated current events.
   barTriviaQuestion({
     id: "nfl-current-2026-w7-first-france-game",
