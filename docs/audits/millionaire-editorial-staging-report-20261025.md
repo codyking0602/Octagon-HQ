@@ -171,3 +171,7 @@ A source-to-final-candidate static review assembled **45 playable eight-question
 - Resolved three newly identified active Bar Trivia collisions: Tebow/Thomas, James White Super Bowl LI, and Holloway/Gaethje UFC 300. Final future-only replacements: Vonn Bell's January 2022 overtime interception, Damien Williams' Super Bowl LIV fourth-quarter touchdowns, and Poirier's UFC 281 R3 rear-naked choke. Verified via NFL/Chiefs/UFC primary sources, synchronized regression checks and existing future ledger. None is being represented as exhaustive cross-game certification.
 
 - Replaced future CFB run 5 Q3 again because DeVonta Smith's 2018 title-game walk-off duplicated the same play already asked in the opposite direction by active Bar Trivia Last Call. New Tulane/USC January 2023 Cotton Bowl comeback is independently corroborated by Tulane University Athletics, has four distinct choices, and leaves the 2017-title legacy question untouched. Existing ledger row updated; still 193 intervention entries.
+
+### Latest limited individual dispositions
+
+Seven specifically reviewed, sourced, alternate-checked future interventions now receive **KEEP** at the question level, and **186 stay HOLD**. These are 7 distinct effective playable positions, not seven certified eight-question ladders; **353 of 360 effective question positions still require independent full-content review**. Complete release certification remains blocked. The scoped existing draft tests and backend workflow should be judged on their exact new head, not historical cancellations.
