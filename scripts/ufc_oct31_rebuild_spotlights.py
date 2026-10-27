@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 
 root=Path("public/assets/fighters")
-for slug in ("renato-moicano","tom-nolan"):
+for slug in ("tom-nolan",):
     path=root/(slug+"-spotlight.webp")
     im=Image.open(path).convert("RGBA")
     if im.size!=(626,800):raise RuntimeError("Unexpected Spotlight dimensions")
@@ -31,7 +31,7 @@ for slug in ("renato-moicano","tom-nolan"):
                 must_clear=right_head_plate or plate_red or edge_strip
             else:
                 # Thin red plate behind head, above fighter's right glove.
-                right_head_plate=(398<=x<=453 and 54<=y<=228)
+                right_head_plate=(398<=x<=453 and 54<=y<=180)
                 # Gray right-side rectangular publisher banner lies beyond arm.
                 right_side_plate=(x>=550 and 440<=y<=578)
                 must_clear=right_head_plate or right_side_plate or plate_red
