@@ -18,7 +18,7 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
-import { nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerPortraitSource, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
 import { DailyTwoGameLeaderboardResult } from "../play/DailyTwoGameLeaderboardResult";
 import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLeaderModel";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
@@ -113,7 +113,7 @@ export function NbaOfficialFindLeader({ projection, advance, busy }: { projectio
       renderVisual={(candidate, compact) => <NBAHeadshot name={candidate.name} season={candidate.season} compact={compact} />}
       formatValue={formatNbaFindLeaderValue}
     />
-    <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />
+    {attempt && <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />}
   </div>;
 }
 
@@ -198,7 +198,7 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
       renderSubjectMark={(id, className) => <NBAPlayerMark id={id} className={className} />}
       busy={busy}
     />
-    <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />
+    {result && <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />}
   </div>;
 }
 
@@ -249,15 +249,6 @@ export function NbaOfficialHigherLower({ projection, advance, busy }: { projecti
         <b>?</b><small>{String(hidden.context ?? "")}</small>
       </article>
     </div>
-    {([known, hidden].map(row => nbaHigherLowerPortraitCredit({ name: String(row.name ?? "") }))
-      .filter((row): row is NonNullable<typeof row> => row != null).length > 0) ? (
-      <details className="nba-official-higher-lower__credits">
-        <summary>Historical portrait credits</summary>
-        {[known, hidden].map(row => nbaHigherLowerPortraitCredit({ name: String(row.name ?? "") }))
-          .filter((row): row is NonNullable<typeof row> => row != null)
-          .map(credit => <p key={credit.name}>{credit.name}: {credit.author} · {credit.license} · <a href={credit.source} target="_blank" rel="noopener noreferrer">Source</a></p>)}
-      </details>
-    ) : null}
     <p>Was {String(hidden.name ?? "the other player")} higher or lower?</p>
     <div className="nba-official-higher-lower__actions">
       <button type="button" disabled={busy} onClick={() => advance({ choice: "higher" })}>↑ HIGHER</button>
