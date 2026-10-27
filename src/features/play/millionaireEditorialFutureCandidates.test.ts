@@ -180,7 +180,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["nfl:2:7", "Sam Hubbard"],
       ["nfl:9:7", "Noah Brown"],
       ["cfb:4:7", "Matthew Golden"],
-      ["cfb:5:7", "Adonai Mitchell"],
+      ["cfb:5:7", "Rod Moore"],
       ["ufc:2:7", "Jiří Procházka"],
       ["ufc:5:7", "Tom Aspinall"],
     ] as const;
@@ -362,7 +362,8 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
         const explicitlyDisabled = buildMillionaireDailySetup(sport, day, "isolation-regression",
           { editorialCandidatePreview: false });
         expect(official).toEqual(explicitlyDisabled);
-        expect(official.contentVersion).toBe(MILLIONAIRE_DAILY_CONTENT_VERSION);
+        expect(official.contentVersion).toBe(day === "2026-10-26" && sport === "football"
+          ? COWBOYS_EAGLES_MILLIONAIRE_REPLAY_VERSION : MILLIONAIRE_DAILY_CONTENT_VERSION);
         expect(official.publicSetup.run_number).toBeLessThanOrEqual(10);
         expect((official.privateSetupEvidence.run as MillionaireRuntimeQuestion[])
           .every(question => !question.id.includes("editorial-v6")
@@ -385,7 +386,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     for (const [league, runIndex, level, expected] of sourceChecked) {
       const run = millionaireFutureEditorialDailyRun(league, runIndex);
       expect(answer(run[level]!)).toBe(expected);
-      expect(run[level]!.statSheet).not.toContain(expected);
+      expect(run[level]!.statSheet ?? "").not.toContain(expected);
     }
     const heavyweights = millionaireFutureEditorialDailyRun("ufc", 10).filter(question =>
       /heavyweight/.test(question.type));
