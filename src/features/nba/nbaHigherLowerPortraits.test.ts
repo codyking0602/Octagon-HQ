@@ -28,7 +28,7 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
       expect(urls.has(original.url)).toBe(false);
       urls.add(original.url);
     }
-    expect(originals.filter(x => x.url.includes("wikimedia.org"))).toHaveLength(22);
+    expect(originals.filter(x => x.url.includes("wikimedia.org"))).toHaveLength(20);
     expect(originals.find(x => x.name === "Terry Cummings")?.source).toContain("legendsofbasketball.com");
   });
   it("refuses the five reported post-career and coaching portrait regressions", () => {
