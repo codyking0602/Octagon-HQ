@@ -12,7 +12,8 @@ function population(){
       ageAtCalibration:24,gradeAtCalibration:83,declinePct:20,
       breakoutPct:25,improvePct:40});
     grades.push({team,family,player:name,grade:i===0?84:83});
-    contracts.push({team,family,player:name,draftYear:2023});
+    contracts.push({team,family,player:name,draftYear:2023,
+      stablePlayerId:team+"|"+family+"|"+i});
   }
   return {profiles,grades,contracts};
 }
@@ -37,4 +38,15 @@ test("untrusted duplicated grade identities are blocked",()=>{
   const p=population();
   p.grades[1].family="WR";
   assert.throws(()=>buildPostRatingReview(p.profiles,p.grades,p.contracts,"now"),/Duplicate/);
+});
+
+test("player team transfer never disconnects original stable development identity",()=>{
+  const p=population();
+  p.grades[2].team="HOU";
+  p.contracts[2].team="HOU";
+  const out=buildPostRatingReview(p.profiles,p.grades,p.contracts,"now");
+  assert.equal(out.eligiblePlayers,594);
+  assert.equal(out.stableIdentityTeamTransitions.length,1);
+  assert.equal(out.stableIdentityTeamTransitions[0].id,p.profiles[2].id);
+  assert.equal(out.stableIdentityTeamTransitions[0].currentTeam,"HOU");
 });
