@@ -560,9 +560,9 @@ export const cirylGaneV2 = {
     ],
     "photoUrl": "assets/fighters/ciryl-gane-thumb.webp",
     "thumbUrl": "assets/fighters/ciryl-gane-thumb.webp",
-    "watchUrl": "https://www.youtube.com/watch?v=5kk1024Kwb4",
+    "watchUrl": "https://youtu.be/5kk1024Kwb4?is=n4SJoj9qe4ZAKMSc",
     "watchLabel": "Watch: Alex Pereira interim-title moment",
-    "signatureFightUrl": "https://www.youtube.com/watch?v=0FoGPyGexbM",
-    "signatureFightLabel": "Signature Fight: Derrick Lewis"
+    "signatureFightUrl": "https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL",
+    "signatureFightLabel": "Signature Fight: Ciryl Gane"
   }
 };
