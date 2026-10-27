@@ -38,7 +38,7 @@ Decision-scorecard confirmations: [UFC Rozenstruik 50-45 sweep](https://www.ufc.
 - **Apex:** Lewis interim-title stoppage and Pereira interim-title stoppage. Reviewed component total 4.48 / 6 (1.88 + 1.20 + 0.75 + 0.65). Neither is an undisputed defense.
 - **Longevity:** Open elite window from February 2021 through 2026, using the engine's shared 18-month inactivity cap, status multiplier 1.05, heavyweight division multiplier 1.05. Promotion does not create activity.
 - **Era:** New-blood era, heavyweight depth index 0.90, calculated depth correction, no manual rank or preassigned OVR.
-- **Presentation:** Existing local `ciryl-gane-thumb.webp` is reused in both slots pending a separately curated high-resolution profile. An [official UFC-channel Pereira/Gane video](https://www.youtube.com/watch?v=5kk1024Kwb4) supplies the Watch Moment; the [official UFC Brasil full Gane–Lewis fight](https://www.youtube.com/watch?v=0FoGPyGexbM) supplies his Signature Fight. His nickname **Bon Gamin** is verified on the [UFC athlete profile](https://www.ufc.com/athlete/ciryl-gane). No unreliable remote image asset is introduced.
+- **Presentation:** Existing local `ciryl-gane-thumb.webp` is reused in both slots pending a separately curated high-resolution profile. An [official UFC-channel Pereira/Gane video](https://youtu.be/5kk1024Kwb4?is=n4SJoj9qe4ZAKMSc) supplies the Watch Moment; the [owner-selected Gane full fight](https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL) supplies his Signature Fight. His nickname **Bon Gamin** is verified on the [UFC athlete profile](https://www.ufc.com/athlete/ciryl-gane). No unreliable remote image asset is introduced.
 
 ## Calculation and population verification
 
