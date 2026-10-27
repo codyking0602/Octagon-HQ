@@ -572,9 +572,15 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       });
     }
     const dramaticFinal = millionaireFutureEditorialDailyRun("ufc", 7)[7]!;
-    expect(answer(dramaticFinal)).toBe("Cory Sandhagen");
-    expect(dramaticFinal.prompt).toContain("28 seconds");
-    expect(dramaticFinal.explanation).toContain("flying knee");
+    expect(answer(dramaticFinal)).toBe("Jack Della Maddalena");
+    expect(dramaticFinal.prompt).toContain("UFC 315");
+    expect(dramaticFinal.explanation).toContain("Belal Muhammad");
+    // These were caught as duplicate facts across different candidate runs.
+    expect(millionaireFutureEditorialDailyRun("ufc", 12)[5]!.prompt).not.toBe(dramaticFinal.prompt);
+    expect(millionaireFutureEditorialDailyRun("ufc", 12)[5]!.prompt).toContain("Frankie Edgar");
+    const lateUfcTitle = millionaireFutureEditorialDailyRun("ufc", 14)[6]!;
+    expect(lateUfcTitle.prompt).toContain("UFC 320");
+    expect(lateUfcTitle.prompt).not.toContain("Charles Oliveira");
     const volkov = millionaireFutureEditorialDailyRun("ufc", 7)[6]!;
     expect(volkov.prompt).not.toContain("15 seconds remaining");
   });

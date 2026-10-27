@@ -176,3 +176,7 @@ Future UFC new run 15 Q7 had repeated the **exact same UFC 317 Topuria–Oliveir
 Source: https://www.ufc.com/news/ufc-320-ankalaev-vs-pereira-2-event-tonight-main-card-results-recaps-highlights-interviews
 
 The candidate ledger should now read **120 KEEP / 112 HOLD / 232 total**; no blanket certification is claimed.
+
+### Oct 26 — superseding Q8 uniqueness correction after 360-position similarity scan
+
+The proposed Sandhagen–Edgar UFC replacement run 8 Q8 was rejected after scanning all 360 authored effective positions: UFC newly authored run 13 Q6 already uses the **identical 28-second Frankie Edgar flying-knee finish**. The Q8 now instead asks about **Jack Della Maddalena defeating Belal Muhammad at UFC 315** (official UFC 315 main-card recap confirms 48–47, 48–47, 49–46). Four valid unique options, independent payoff and no Stat Sheet/lifelines. Kept HOLD. Source: https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-315-muhammad-vs-della-maddalena-montreal . Added targeted guard against repeating the Sandhagen finish or the Topuria UFC 317 title result between the specific future runs. Automated lexical analysis flags many common labels/athletes as possible overlaps; these are **not** blanket content defects or an exhaustive semantic clearance. Full signoff of 360 still outstanding.
