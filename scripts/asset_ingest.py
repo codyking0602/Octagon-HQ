@@ -267,6 +267,8 @@ def validate_asset_quality(im, kind):
         fail("fighter asset retains an opaque rectangular background")
     if coverage > 0.82:
         fail("fighter asset covers too much of the frame; likely background artifact")
+    if upper_side_background_band(im):
+        fail("fighter asset retains a rectangular upper-side background artifact")
     if box[1] < max(2, round(height * 0.015)):
         fail("fighter head has no top safety margin")
     if (box[2] - box[0]) < width * 0.28 or (box[3] - box[1]) < height * 0.42:
@@ -275,6 +277,21 @@ def validate_asset_quality(im, kind):
         "alpha_coverage": round(coverage, 3),
         "visible_bbox": list(box),
     }
+
+
+
+def upper_side_background_band(im):
+    """Detect hard, broad upper-corner background strips common in UFC CDN art."""
+    alpha = im.getchannel("A")
+    width, height = im.size
+    sample_height = max(1, round(height * 0.60))
+    # Sample inside output padding as well as at the actual source side.
+    for x in (round(width * 0.045), round(width * 0.955)):
+        filled = sum(alpha.getpixel((x, y)) >= 128 for y in range(sample_height))
+        if filled / sample_height > 0.24:
+            return True
+    return False
+
 
 
 def main():
@@ -308,7 +325,7 @@ def main():
     except Exception as exc:
         fail(f"cannot decode source image: {exc}")
 
-    if im.getchannel("A").getextrema() == (255, 255):
+    if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
         try:
             im = remove(im).convert("RGBA")
         except Exception as exc:
