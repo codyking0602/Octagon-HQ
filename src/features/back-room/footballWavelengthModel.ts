@@ -526,7 +526,7 @@ const footballWavelengthEditorialClues: readonly FootballWavelengthClue[] = FOOT
     rating,
   }),
 );
-const retiredClueIds = new Set(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.map(({ legacyId }) => legacyId));
+const retiredClueIds = new Set<string>(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.map(({ legacyId }) => legacyId));
 export const footballWavelengthAvailableClues: readonly FootballWavelengthClue[] = [
   ...footballWavelengthClues,
   ...footballWavelengthEditorialClues,
