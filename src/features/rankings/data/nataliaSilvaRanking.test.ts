@@ -104,6 +104,7 @@ describe("Natalia Silva UFC V2 all-time ranking dossier", () => {
     expect(projected!.modifiers).toEqual({ apex: 4.44, penalty: 0, eraDepth: 0.18 });
     expect(projected!.totals.totalScore).toBe(41.55);
     expect(projected!.ovr).toBe(88);
+    expect(fighter!.presentation.photoUrl).toBe("assets/fighters/natalia-silva-profile.webp");
     expect(existsSync(resolve("public", fighter!.presentation.photoUrl!))).toBe(true);
     expect(existsSync(resolve("public", fighter!.presentation.thumbUrl!))).toBe(true);
     console.info("NATALIA_SILVA_ENGINE_RESULT", JSON.stringify({
