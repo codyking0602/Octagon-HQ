@@ -177,6 +177,19 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(newer.prompt).not.toContain("drafted");
   });
 
+  it("checks five historical CFB Heisman candidates against the official winners list", () => {
+    for (const [key, winner] of [["cfb:0:0","Joe Burrow"],["cfb:0:3","Bryce Young"],["cfb:1:1","Jameis Winston"],["cfb:2:1","DeVonta Smith"],["cfb:3:1","Jason White"]] as const) {
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(winner);
+      expect(q.choices).toHaveLength(4);
+      expect(q.choices.filter(c=>c===winner)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(winner));
+      expect(q.explanation).toContain(winner);
+      expect(q.evidence[0]?.url).toBe("https://www.heisman.com/heisman-winners/");
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
