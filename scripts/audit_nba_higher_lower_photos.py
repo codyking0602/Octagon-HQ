@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit every possible NBA Higher or Lower player's actual remote image pixels.
+"""Audit actual pixels for every NBA game's eligible player portrait inventory.
 
 HTTP 200 / valid NBA IDs are not proof of a real portrait: the official
 headshot endpoint sometimes serves an identical gray silhouette to multiple
@@ -37,13 +37,18 @@ def fetch_image(entry):
                 size = img.size
                 thumb = img.convert("RGBA").resize((80, 60))
                 px = list(thumb.getdata())
+                visual_hash = hashlib.sha256(thumb.tobytes()).hexdigest()
+                distinct_colors = len(set(px))
             visible = [p for p in px if p[3] >= 110]
             gray = sum(1 for r,g,b,_ in visible
                 if 112 <= r <= 195 and max(r,g,b)-min(r,g,b) <= 12)
             flat_fraction = gray / max(1, len(visible))
-            if len(visible) < 40:
+            if len(visible) < 40 or min(size) < 64:
                 category = "no-photo"
-                reason = "image has insufficient visible pixels"
+                reason = "image is too small or has insufficient visible pixels"
+            elif distinct_colors < 12:
+                category = "blank"
+                reason = "image has too few distinct pixel colors"
             elif flat_fraction >= .68:
                 category = "silhouette"
                 reason = f"flat gray body/image ({flat_fraction:.0%} of visible pixels)"
@@ -53,7 +58,8 @@ def fetch_image(entry):
             return dict(entry, status=category, reason=reason,
                 http=status, imageSize=list(size), bytes=len(content),
                 flatGrayFraction=round(flat_fraction, 4),
-                sha256=hashlib.sha256(content).hexdigest())
+                sha256=hashlib.sha256(content).hexdigest(),
+                visualHash=visual_hash, distinctColors=distinct_colors)
         except Exception as exc:
             error = str(exc)
             time.sleep(.25 * (retry+1))
@@ -68,8 +74,8 @@ def main():
         results = list(executor.map(fetch_image, entries))
     fingerprints = defaultdict(list)
     for item in results:
-        if item.get("sha256"):
-            fingerprints[item["sha256"]].append(item)
+        if item.get("visualHash"):
+            fingerprints[item["visualHash"]].append(item)
     for duplicates in fingerprints.values():
         if len(duplicates) > 1:
             for item in duplicates:
@@ -80,13 +86,13 @@ def main():
                   needsAttention=bad, entries=results)
     with open(REPORT, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
-    print(f"NBA photo audit: {report['verified']}/{report['total']} eligible players have distinct accessible non-gray images")
+    print(f"NBA photo audit: {report['verified']}/{report['total']} eligible players have distinct decodable non-placeholder images")
     for item in bad:
         print(f"PHOTO ISSUE: {item['name']} NBA_ID={item['nbaId']} [{item['status']}] {item['reason']}")
     if bad:
         print(f"FAIL: {len(bad)} portraits must be remedied or excluded before calling photo coverage verified.")
         sys.exit(1)
-    print("PASS: all eligible player photo URLs fetched, decoded and screened for gray placeholders and duplicates")
+    print("PASS: every eligible player image decoded and screened for blanks, gray placeholders and visual duplicates; human identity still requires editorial/source evidence")
 
 if __name__ == "__main__":
     main()
