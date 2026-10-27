@@ -21,6 +21,15 @@ const EXPECTED_UNRECONCILED = [
   "Joshua Van|2025-12-06-alexandre-pantoja",
   "Joshua Van|2026-05-09-tatsuro-taira",
   "Joshua Van|2026-09-19-alexandre-pantoja",
+  "Natalia Silva|2022-06-18-jasmine-jasudavicius",
+  "Natalia Silva|2022-11-19-tereza-bleda",
+  "Natalia Silva|2023-05-20-victoria-leonardo",
+  "Natalia Silva|2023-08-19-andrea-lee",
+  "Natalia Silva|2024-02-03-viviane-araujo",
+  "Natalia Silva|2024-09-07-jessica-andrade",
+  "Natalia Silva|2025-05-10-alexa-grasso",
+  "Natalia Silva|2026-01-24-rose-namajunas",
+  "Natalia Silva|2026-10-03-wang-cong",
 ].sort();
 
 describe("canonical UFCStats supplemental fight snapshot", () => {
@@ -80,7 +89,11 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
             reason: "no-unique-source-match",
           });
           expect(snapshotRow.source.checkedAt).toBe(
-            fighter.fighter === "Royce Gracie" ? "2026-08-18" : "2026-09-29",
+            fighter.fighter === "Royce Gracie"
+              ? "2026-08-18"
+              : fighter.fighter === "Natalia Silva"
+                ? "2026-10-27"
+                : "2026-09-29",
           );
           expect(fight.supplementalFacts).toBeUndefined();
           continue;
