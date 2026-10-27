@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { MILLIONAIRE_FUTURE_Q8_REWRITES } from "./millionaireEditorialFutureQ8";
 import { MILLIONAIRE_FUTURE_TARGETED_REWRITES } from "./millionaireEditorialFutureErrata";
@@ -15,6 +17,56 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("reconciles all 360 provisional ledger slots with effective future-only Daily publications", () => {
+    // A 360-row KEEP ledger is a tracking milestone, not an originality or
+    // independent 45-run gameplay/difficulty certification.
+    const ledgerFile = resolve(process.cwd(), "docs/audits/millionaire-future-candidate-disposition-ledger-20261025.csv");
+    const csv = readFileSync(ledgerFile, "utf8").trim().split("\n");
+    const parseCsv = (line: string) => [...line.matchAll(/"((?:[^"]|"")*)"(?:,|$)/g)]
+      .map(match => match[1]!.replace(/""/g, '"'));
+    const columns = parseCsv(csv[0]!);
+    const positions = new Map(csv.slice(1).map(line => {
+      const values = parseCsv(line);
+      const item = Object.fromEntries(values.map((value, index) => [columns[index]!, value]));
+      const key = `${item.league}:${item.run_number}:${item.question_level}`;
+      return [key, item] as const;
+    }));
+    expect(csv).toHaveLength(361);
+    expect(positions.size).toBe(360);
+    const seen = new Set<string>();
+    for (let offset = 0; offset < 240 && seen.size < 45; offset += 1) {
+      const day = new Date(Date.UTC(2026, 9, 27 + offset)).toISOString().slice(0, 10);
+      for (const sport of ["football", "ufc"] as const) {
+        if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
+        const publication = buildMillionaireDailySetup(sport, day, "editorial-ledger-reconciliation",
+          { editorialCandidatePreview: true });
+        const league = publication.publicSetup.league as typeof leagues[number];
+        const runNumber = Number(publication.privateSetupEvidence.run_number);
+        const identifier = `${league}:${runNumber}`;
+        if (seen.has(identifier)) continue;
+        seen.add(identifier);
+        const run = publication.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+        expect(run, identifier).toHaveLength(8);
+        run.forEach((question, i) => {
+          const key = `${identifier}:${i + 1}`;
+          const row = positions.get(key);
+          expect(row, key).toBeDefined();
+          expect(row!.proposed_disposition, key).toBe("KEEP");
+          expect(row!.question_id, key).toBe(question.id);
+          expect(row!.type, key).toBe(question.type);
+          expect(row!.prompt, key).toBe(question.prompt);
+          expect(row!.choices, key).toBe(question.choices.map(choice => choice.text).join(" | "));
+          expect(row!.answer, key).toBe(answer(question));
+          expect(row!.stat_sheet, key).toBe(question.statSheet ?? "");
+          expect(row!.evidence_url, key).toMatch(/^https:\\/\\//);
+          expect(new Set(question.choices.map(choice => normalized(choice.text))).size, key).toBe(4);
+        });
+      }
+    }
+    expect(seen.size).toBe(45);
+  });
+
+
 
   it("locks four sourced retained-legacy replacements to preview-only errata without changing historical questions", () => {
     for (const [key, correct, evidence] of [
