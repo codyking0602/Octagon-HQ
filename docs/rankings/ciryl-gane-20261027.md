@@ -38,7 +38,7 @@ Decision-scorecard confirmations: [UFC Rozenstruik 50-45 sweep](https://www.ufc.
 - **Apex:** Lewis interim-title stoppage and Pereira interim-title stoppage. Reviewed component total 4.48 / 6 (1.88 + 1.20 + 0.75 + 0.65). Neither is an undisputed defense.
 - **Longevity:** Open elite window from February 2021 through 2026, using the engine's shared 18-month inactivity cap, status multiplier 1.05, heavyweight division multiplier 1.05. Promotion does not create activity.
 - **Era:** New-blood era, heavyweight depth index 0.90, calculated depth correction, no manual rank or preassigned OVR.
-- **Presentation:** Existing local `ciryl-gane-thumb.webp` is reused in both slots pending a separately curated high-resolution profile. An [official UFC-channel Pereira/Gane video](https://www.youtube.com/watch?v=5kk1024Kwb4) supplies the verified watch moment; no unreliable remote image asset is introduced.
+- **Presentation:** Existing local `ciryl-gane-thumb.webp` is reused in both slots pending a separately curated high-resolution profile. An [official UFC-channel Pereira/Gane video](https://www.youtube.com/watch?v=5kk1024Kwb4) supplies the Watch Moment; the [official UFC Brasil full Gane–Lewis fight](https://www.youtube.com/watch?v=0FoGPyGexbM) supplies his Signature Fight. His nickname **Bon Gamin** is verified on the [UFC athlete profile](https://www.ufc.com/athlete/ciryl-gane). No unreliable remote image asset is introduced.
 
 ## Calculation and population verification
 
@@ -48,3 +48,7 @@ The engine owns rank, score, category contributions and division-relative placem
 
 ### Isolation
 No Supabase migration, UFC official divisional ranks, Wheel of UFC, Natalia Silva files, other games, main, or production touched. Draft PR only; do not merge or deploy.
+
+### Supplemental-stat audit boundary
+
+The sealed UFCStats provider-ID snapshot predates this October 2026 fighter addition. Gane's 14 source-verified canonical fights are integrated for all V2 score calculations, but **unverified UFCStats per-fight IDs, bonuses, knockdown counts and finish timestamps have not been fabricated**. The existing snapshot is preserved for all 82 prior fighters, with an explicit regression-test exception for Gane until a separate source-ID audit can be completed. This does not alter Gane's score-bearing fight outcomes, title credits or calculated ranking.
