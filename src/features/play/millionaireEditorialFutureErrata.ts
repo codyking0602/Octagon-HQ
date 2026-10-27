@@ -25,16 +25,16 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     explanation: "Clemson beat Alabama 35–31 on January 9, 2017, to win the 2016 season's championship; Alabama, by contrast, won the title game played in January 2016.",
     evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2021/9/7/ncg-recap-2017", supportingDetail: "Official 2017 championship recap: Clemson 35, Alabama 31, January 9, 2017; Watson threw the game winner with a second left." }],
   },
-  // DeVonta Smith's 2nd-and-26 overtime TD won the 2017 SEASON title in January 2018.
+  // Avoid the active Bar Trivia inverse fact about Tua-to-Smith by using a distinct modern Cotton Bowl upset.
   "cfb:4:2": {
-    id: "millionaire-cfb-future-devonta-smith-2017-season-title-q3",
-    type: "championship-moment",
-    prompt: "Who caught Alabama's walk-off overtime touchdown against Georgia in the January 2018 CFP title game?",
-    choices: ["DeVonta Smith", "Calvin Ridley", "O.J. Howard", "Jerry Jeudy"],
-    answer: "DeVonta Smith",
-    statSheet: "A freshman receiver caught Tua Tagovailoa's 41-yard pass on second-and-26.",
-    explanation: "DeVonta Smith caught a 41-yard overtime touchdown pass from Tua Tagovailoa on January 8, 2018, as Alabama defeated Georgia 26–23 for the 2017 season's national championship.",
-    evidence: [{ authority: "Alabama Athletics", url: "https://rolltide.com/news/2018/1/8/alabama-football-wins-2018-national-championship-in-overtime-thriller-against-georgia-26-23", supportingDetail: "Official 2018 game recap confirms Smith, Tagovailoa, Georgia, the 41-yard overtime touchdown and Alabama's 26–23 win." }],
+    id: "millionaire-cfb-future-tulane-cotton-bowl-usc-2023-q3",
+    type: "modern-bowl-upsets",
+    prompt: "Which team rallied from 15 points down in the fourth quarter to upset Caleb Williams and USC 46–45 in the January 2023 Cotton Bowl?",
+    choices: ["Tulane", "UCF", "Houston", "Cincinnati"],
+    answer: "Tulane",
+    statSheet: "The winner recovered from a late 45–30 deficit to score 16 unanswered points, with the decisive touchdown coming in the final seconds.",
+    explanation: "Tulane scored 16 unanswered points in the fourth quarter of the January 2, 2023 Cotton Bowl, capped by Michael Pratt's touchdown pass to Alex Bauman with nine seconds left, to stun USC 46–45.",
+    evidence: [{ authority: "Tulane Athletics", url: "https://tulanegreenwave.com/news/2023/1/2/football-tulane-wins-the-cotton-bowl", supportingDetail: "Official Tulane recap and scoring log confirm the 45–30 fourth-quarter deficit, 16 unanswered points, 46–45 final, and Bauman's touchdown with nine seconds left." }],
   },
   // The Tide's LSU shutout was for the 2011 season, played January 2012.
   "cfb:6:1": {

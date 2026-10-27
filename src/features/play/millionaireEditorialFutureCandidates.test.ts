@@ -33,10 +33,10 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("nfl", 4)[7]!.prompt).toContain("SIXTH quarterback");
   });
 
-  it("keeps three ambiguous CFB championship years repaired only in future preview", () => {
+  it("keeps two ambiguous CFB title years fixed and swaps one active trivia overlap only in future preview", () => {
     const changes = [
       ["cfb:0:2", "Alabama", "January 2017", "2016 SEASON"],
-      ["cfb:4:2", "DeVonta Smith", "January 2018", "overtime"],
+      ["cfb:4:2", "Tulane", "January 2023", "Cotton Bowl"],
       ["cfb:6:1", "LSU", "January 2012", "2011 season"],
     ] as const;
     for (const [key, correct, occasion, scope] of changes) {
