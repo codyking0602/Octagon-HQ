@@ -1019,4 +1019,20 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(replacement.evidence[0]?.url).toMatch(/^https:\/\/www\.ufc\.com\//);
   });
 
+
+  it("replaces an NFL Malcolm Butler duplicate with sourced A.J. Brown team history only in future preview", () => {
+    const replacement = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:0:1"]!;
+    expect(replacement.id).toContain("aj-brown");
+    expect(replacement.answer).toBe("Titans");
+    expect(replacement.prompt).toContain("2022 Draft");
+    expect(replacement.prompt).not.toContain("Super Bowl XLIX");
+    expect(replacement.choices).toEqual(["Titans", "Jets", "Vikings", "Chargers"]);
+    expect(replacement.statSheet?.toLowerCase()).not.toContain("titans");
+    expect(replacement.explanation).toContain("No. 18");
+    expect(replacement.explanation).toContain("No. 101");
+    expect(replacement.evidence).toHaveLength(2);
+    expect(replacement.evidence[0]!.url).toContain("philadelphiaeagles.com");
+    expect(millionaireDailyRun("nfl", 0)[1]!.prompt).toContain("Super Bowl XLIX");
+  });
+
 });
