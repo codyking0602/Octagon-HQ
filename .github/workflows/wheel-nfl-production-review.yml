@@ -65,6 +65,12 @@ jobs:
           node-version: '22'
       - name: Verify Madden review flags, thresholds and identity rules
         run: node --test scripts/wheel-monitor/nfl-madden-review.nodecheck.mjs
+      - name: Read official EA Madden live ratings on PR without changing baseline
+        if: github.event_name == 'pull_request'
+        run: |
+          node scripts/wheel-monitor/nfl-madden-review.mjs \
+            --baseline=tmp/wheel-monitor/madden/pr-temporary-baseline.json \
+            --out=tmp/wheel-monitor/madden/pr-source-check.json
       - name: Restore locked Madden baseline (never silently reset a prior baseline)
         if: github.event_name != 'pull_request'
         env:
