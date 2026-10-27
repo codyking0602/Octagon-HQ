@@ -429,7 +429,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     const revisedFinals = [
       ["nfl", 11, "Mecole Hardman", "Super Bowl LVIII"],
       ["cfb", 13, "Jack Sawyer", "January 2025 Cotton Bowl"],
-      ["cfb", 14, "Blake Corum", "January 2024 Rose Bowl"],
+      ["cfb", 14, "Adonai Mitchell", "December 2022 Peach Bowl"],
       ["ufc", 10, "Brian Ortega", "UFC 266"],
     ] as const;
     for (const [league, runIndex, correct, occasion] of revisedFinals) {
