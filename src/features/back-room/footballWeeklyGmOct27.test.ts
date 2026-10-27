@@ -21,6 +21,7 @@ describe("Oct 27 Weekly GM choose-your-WR/RB pools", () => {
   });
 
   it("keeps October 27 franchise cards concise without leaking individual scouting selections", () => {
+    const page = readFileSync("src/features/back-room/FootballWeeklyGmPage.tsx", "utf8");
     expect(page).toContain('quarterback: "WR Run", development: ""');
     expect(page).toContain('quarterback: "RB Run", development: ""');
     expect(page).toContain("scenario.development ? <p>{scenario.development}</p> : null");
