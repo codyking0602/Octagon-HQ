@@ -28,6 +28,19 @@ describe("owner-provided Football weekly art", () => {
     expect(usableFootballWeeklyHeaderArtwork(art, [owner.asset_path])).toBe(game.headerAssetPath);
     expect(usableFootballWeeklyHeaderArtwork(art, [owner.asset_path, game.headerAssetPath])).toBeNull();
   });
+  it("never fabricates or substitutes art for future weeks", () => {
+    const newGame = { ...game, id: "weekly-2026-10-27-cfb" };
+    const missing = resolveFootballWeeklyHeaderArtwork(newGame, []);
+    expect(missing).toEqual({ primary: null, fallback: null, ownerProvided: false });
+    const uploaded: FootballOwnerHeader = {
+      ...owner, week_of: "2026-10-27",
+      asset_path: "/assets/football/weekly/2026-10-27/cfb/owner-header-a1b2c3d4.webp",
+    };
+    const supplied = resolveFootballWeeklyHeaderArtwork(newGame, [uploaded]);
+    expect(supplied).toEqual({ primary: uploaded.asset_path, fallback: null, ownerProvided: true });
+    expect(usableFootballWeeklyHeaderArtwork(supplied, [uploaded.asset_path])).toBeNull();
+  });
+
   it("never leaks a graphic to another week, game, or sport", () => {
     for (const other of [
       { ...game, id: "weekly-2026-10-27-cfb" },
