@@ -562,6 +562,14 @@ export function footballGmProjectedGradeForPlayer(
   year: 1 | 2 | 3,
   seed?: string,
 ) {
+  // Preserve Oct 20 published Weekly GM Year 1 ability on its original seed.
+  // Current Oct 27 grades apply to brand-new runs and all other unpinned seeds.
+  // Published future-years overrides below already remain anchored to that week.
+  if (year === 1 && seed?.startsWith("weekly-gm:2026-10-20:elite:")
+    && player.id === "DAL|QB|dakprescott") return 92;
+  if (year === 1 && seed?.startsWith("weekly-gm:2026-10-20:young:")
+    && player.id === "ATL|QB|michaelpenix") return 78;
+
   // Weekly Featured's assigned QB has a fixed, transparent development result.
   // Other players and all Casual GM seeds retain the authored random model.
   if (year > 1 && seed?.startsWith("weekly-gm:2026-10-13:elite:") && player.id === "BUF|QB|joshallen") return player.currentGrade;

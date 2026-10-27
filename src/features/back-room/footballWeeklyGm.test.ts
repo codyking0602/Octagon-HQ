@@ -32,8 +32,8 @@ describe("Weekly NFL GM October 20 Dak / Penix rollover", () => {
   it("preserves each quarterback's actual Year 1 authority and fixes only his featured future", () => {
     const dak = footballGmPlayerById("DAL|QB|dakprescott");
     const penix = footballGmPlayerById("ATL|QB|michaelpenix");
-    expect(dak?.currentGrade).toBe(92);
-    expect(penix?.currentGrade).toBe(78);
+    expect(dak?.currentGrade).toBe(88);
+    expect(penix?.currentGrade).toBe(83);
     expect(dak?.gameContract).toBe("3YR");
     expect(penix?.gameContract).toBe("1YR");
     if (!dak || !penix) return;
@@ -42,6 +42,9 @@ describe("Weekly NFL GM October 20 Dak / Penix rollover", () => {
 
     expect(footballGmProjectedGradeForPlayer(dak, 1, veteranSeed)).toBe(92);
     expect(footballGmProjectedGradeForPlayer(penix, 1, youngSeed)).toBe(78);
+    // Fresh games outside the published Oct 20 seed use the newly approved ratings.
+    expect(footballGmProjectedGradeForPlayer(dak, 1, "new-gm:gmdev1")).toBe(88);
+    expect(footballGmProjectedGradeForPlayer(penix, 1, "new-gm:gmdev1")).toBe(83);
     for (const year of [2, 3] as const) {
       expect(footballGmProjectedGradeForPlayer(dak, year, veteranSeed)).toBe(89);
       expect(footballGmProjectedGradeForPlayer(penix, year, youngSeed)).toBe(83);
