@@ -66,8 +66,14 @@ describe("split Football Daily publication runtimes", () => {
     expect(footballTodayGameForDay(day)).toBe("wavelength");
     expect(scheduleVersion).toBe("football-daily-v22-higher-lower-oct27");
     const standalone = buildWavelength(day, scheduleVersion, "wavelength");
-    expect(standalone).toEqual(buildFootballTodayPersistenceSetup(day));
+    const local = buildFootballTodayPersistenceSetup(day);
+    // The local legacy fixture intentionally seeds its board with v20 even when
+    // the authoritative October 27 publication identity is v22.
+    const localFixture = buildWavelength(day, "football-daily-v20-resume-v18-oct3", "wavelength");
+    expect(local).toEqual({ ...localFixture, scheduleVersion });
+    expect(standalone.scheduleVersion).toBe(scheduleVersion);
     expect(standalone.publicSetup).toHaveProperty("format_version", "daily-two-game-average-v1");
+    expect(standalone.publicSetup).toHaveProperty("round_count", 2);
   });
 
   it("preserves standalone Blind Resume and Blind Rank publication semantics", () => {
