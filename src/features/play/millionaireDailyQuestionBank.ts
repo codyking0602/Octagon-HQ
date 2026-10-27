@@ -6,6 +6,10 @@ import {
 } from "../games/millionaireAuthority";
 import type { MillionaireRun } from "../games/millionaireEngine";
 import type { MillionaireLeague } from "./MillionaireCasualModel";
+import { nflEditorialCandidateRuns } from "./millionaireEditorialNFL";
+import { cfbEditorialCandidateRuns } from "./millionaireEditorialCFB";
+import { ufcEditorialCandidateRuns } from "./millionaireEditorialUFC";
+import { UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS } from "./millionaireEditorialUfcLegacyOverrides";
 
 type DailyQuestionSeed = {
   type: string;
@@ -13,6 +17,8 @@ type DailyQuestionSeed = {
   choices: readonly [string, string, string, string];
   answer: string;
   statSheet: string | null;
+  /** Optional editorial reveal; original historical seeds retain their existing explanation. */
+  explanation?: string;
 };
 
 const IDS = ["A", "B", "C", "D"] as const;
@@ -2997,7 +3003,7 @@ function runtimeQuestion(
       { id: "D"; text: string },
     ],
     correctChoiceId,
-    explanation: `${seed.answer} is the correct answer.`,
+    explanation: seed.explanation ?? `${seed.answer} is the correct answer.`,
     statSheet: q8 ? null : seed.statSheet,
     fiftyFifty: {
       survivorChoiceIds,
@@ -3024,4 +3030,67 @@ export function millionaireDailyRun(league: MillionaireLeague, runIndex: number)
     throw new Error(`Millionaire ${league} run ${normalized + 1} is incomplete.`);
   }
   return seeds.map((seed, index) => runtimeQuestion(league, normalized, index, seed)) as unknown as MillionaireRun;
+}
+
+// PROVISIONAL: Five original additional ladders per league. All authored
+// questions remain HOLD for independent primary-source, distractor and
+// cross-game fact verification. Do not release this PR based on schema success.
+type CandidateTuple = readonly [
+  type: string,
+  prompt: string,
+  choices: readonly [string, string, string, string],
+  answer: string,
+  statSheet: string | null,
+  explanation?: string,
+];
+const EDITORIAL_CANDIDATE_RUNS: Record<
+  "nfl" | "cfb" | "ufc",
+  readonly (readonly CandidateTuple[])[]
+> = {
+  nfl: nflEditorialCandidateRuns,
+  cfb: cfbEditorialCandidateRuns,
+  ufc: ufcEditorialCandidateRuns,
+};
+export const MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT = 15;
+
+/**
+ * Future-only candidate selector: regular legacy run slots are preserved,
+ * while slots 11–15 have genuinely new (pending-review) questions.
+ * The legacy selector and its 10-run modulus are unchanged for historic days.
+ */
+export function millionaireFutureEditorialDailyRun(
+  league: MillionaireLeague,
+  runIndex: number,
+): MillionaireRun {
+  if (league === "mlb" || league === "nba") {
+    throw new Error("NBA/MLB use their own Millionaire content authorities.");
+  }
+  const normalized = ((runIndex % MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT)
+    + MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT) % MILLIONAIRE_FUTURE_EDITORIAL_RUN_COUNT;
+  if (league === "ufc" && normalized >= 6 && normalized <= 8) {
+    // Fully new (still pending independent editorial signoff) future content for
+    // the Adesanya / St-Pierre / Khabib single-fighter legacy boards. IDs must
+    // differ from immutable historic question IDs and persisted private proofs.
+    const replacements = UFC_LEGACY_EDITORIAL_REPLACEMENT_RUNS[normalized - 6]!;
+    return replacements.map(([type, prompt, choices, answer, statSheet, explanation], index) => ({
+      ...runtimeQuestion(league, normalized, index, {
+        type, prompt, choices, answer, statSheet,
+        explanation: explanation ?? (statSheet ? `${answer}. ${statSheet}` : undefined),
+      }),
+      id: `millionaire-ufc-editorial-v6-run-${normalized + 1}-q${index + 1}`,
+    })) as unknown as MillionaireRun;
+  }
+  if (normalized < MILLIONAIRE_DAILY_RUN_COUNT) {
+    return millionaireDailyRun(league, normalized);
+  }
+  const seeds = EDITORIAL_CANDIDATE_RUNS[league][normalized - MILLIONAIRE_DAILY_RUN_COUNT];
+  if (!seeds || seeds.length !== 8) {
+    throw new Error(`Millionaire editorial ${league} run ${normalized + 1} is incomplete.`);
+  }
+  return seeds.map(([type, prompt, choices, answer, statSheet, explanation], index) =>
+    runtimeQuestion(league, normalized, index, {
+      type, prompt, choices, answer, statSheet,
+      explanation: explanation ?? (statSheet ? `${answer}. ${statSheet}` : undefined),
+    }),
+  ) as unknown as MillionaireRun;
 }
