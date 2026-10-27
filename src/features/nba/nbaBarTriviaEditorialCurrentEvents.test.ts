@@ -44,7 +44,7 @@ describe("NBA Bar Trivia semantic duplicates and difficulty calibration", () => 
 
 describe("NBA Bar Trivia current-event editorial publishing", () => {
   it("only stages verified, bounded and sourced NBA current events", () => {
-    expect(NBA_BAR_TRIVIA_CURRENT_EVENTS).toHaveLength(5);
+    expect(NBA_BAR_TRIVIA_CURRENT_EVENTS).toHaveLength(6);
     expect(() => validateNbaBarTriviaCurrentEvents(NBA_BAR_TRIVIA_CURRENT_EVENTS)).not.toThrow();
     for (const q of NBA_BAR_TRIVIA_CURRENT_EVENTS) {
       expect(q.contentType).toBe("current-event");
@@ -52,9 +52,9 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
       expect(q.activeFrom).toBeTruthy();
       expect(q.expiresAt).toBeTruthy();
       expect(q.verifiedAt).toBeTruthy();
-      expect(isBarTriviaQuestionActive(q, "2026-10-22T12:00:00Z")).toBe(false);
-      expect(isBarTriviaQuestionActive(q, "2026-10-23T18:00:00Z")).toBe(true);
-      expect(isBarTriviaQuestionActive(q, "2026-11-08T18:00:00Z")).toBe(false);
+      expect(isBarTriviaQuestionActive(q, new Date(Date.parse(q.activeFrom!) - 60_000))).toBe(false);
+      expect(isBarTriviaQuestionActive(q, new Date(Date.parse(q.activeFrom!) + 60_000))).toBe(true);
+      expect(isBarTriviaQuestionActive(q, new Date(Date.parse(q.expiresAt!) + 60_000))).toBe(false);
     }
     expect(() => validateNbaBarTriviaCurrentEvents([
       { ...NBA_BAR_TRIVIA_CURRENT_EVENTS[0]!, expiresAt: "2028-01-01T00:00:00Z" },
@@ -76,6 +76,23 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
     }
     expect(newsCount).toBe(5);
     expect(seen.size).toBe(200);
+  });
+
+  it("keeps all 20 appearances unique with the October 27 news addition", () => {
+    const seen = new Set<string>();
+    const news = new Set<string>();
+    for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot++) {
+      const board = buildNbaBarTriviaDailyBoard(slot, "2026-10-27");
+      expect(board.questions.filter(q => q.contentType === "current-event").length).toBeLessThanOrEqual(2);
+      for (const q of board.questions) {
+        expect(seen.has(q.id), `Repeated at appearance ${slot}: ${q.id}`).toBe(false);
+        seen.add(q.id);
+        if (q.contentType === "current-event") news.add(q.id);
+      }
+    }
+    expect(seen.size).toBe(200);
+    expect(news.size).toBe(6);
+    expect(NBA_BAR_TRIVIA_QUESTION_BANK).toHaveLength(200);
   });
 
   it("expires stories and falls back to all 200 evergreen questions without filler", () => {

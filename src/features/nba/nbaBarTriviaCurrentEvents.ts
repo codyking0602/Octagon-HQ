@@ -6,6 +6,24 @@ import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEng
  * Each story has a short explicit window. Expired stories are never playable.
  */
 export const NBA_BAR_TRIVIA_CURRENT_EVENTS: readonly BarTriviaQuestion[] = [
+  barTriviaQuestion({
+    id: "nba-current-2026-sixers-29-point-comeback",
+    league: "nba",
+    round: "round1",
+    difficulty: "easy",
+    category: "Historic Comebacks",
+    prompt: "Which NBA team erased a 29-point deficit to beat Cleveland during opening week of the 2026–27 season?",
+    choices: ["Philadelphia 76ers", "New York Knicks", "Boston Celtics", "Indiana Pacers"],
+    answer: "Philadelphia 76ers",
+    explanation: "Philadelphia rallied from 29 points down to defeat Cleveland 114–106 on October 22, 2026, the largest comeback of LeBron James' career.",
+    contentType: "current-event",
+    activeFrom: "2026-10-27T00:00:00-05:00",
+    expiresAt: "2026-11-07T23:59:59-06:00",
+    sourceId: "nba-2026-10-22-sixers-cavs-comeback",
+    sourceUrl: "https://www.nba.com/news/4-takeaways-76ers-cavaliers-2026-27",
+    verifiedAt: "2026-10-27",
+  }),
+
   barTriviaQuestion({"id":"nba-current-2026-opening-lebron-sixers","round":"round1","category":"Opening Week Moves","prompt":"Which team did LeBron James debut for in the 2026-27 NBA season after leaving the Lakers?","choices":["Philadelphia 76ers","Cleveland Cavaliers","New York Knicks","Miami Heat"],"answer":"Philadelphia 76ers","explanation":"LeBron James opened 2026-27 as a 76er and had 14 points, nine rebounds and seven assists in his first game with Philadelphia.","league":"nba","contentType":"current-event","activeFrom":"2026-10-23T00:00:00-05:00","expiresAt":"2026-11-06T23:59:59-06:00","sourceId":"nba-current-2026-opening-lebron-sixers","sourceUrl":"https://www.nba.com/news/starting-5-october-22-2026","verifiedAt":"2026-10-23"}),
   barTriviaQuestion({"id":"nba-current-2026-opening-kawhi-raptors","round":"round1","category":"Opening Week Returns","prompt":"Which former Finals MVP returned to the Raptors for their 2026-27 season opener against Chicago?","choices":["Kawhi Leonard","Pascal Siakam","DeMar DeRozan","Fred VanVleet"],"answer":"Kawhi Leonard","explanation":"Kawhi Leonard received a standing ovation on his Toronto return and scored 23 points in a 135-92 win over Chicago.","league":"nba","contentType":"current-event","activeFrom":"2026-10-23T00:00:00-05:00","expiresAt":"2026-11-06T23:59:59-06:00","sourceId":"nba-current-2026-opening-kawhi-raptors","sourceUrl":"https://www.nba.com/news/starting-5-october-22-2026","verifiedAt":"2026-10-23"}),
   barTriviaQuestion({"id":"nba-current-2026-opening-ad-wizards","round":"round1","category":"Opening Week Debuts","prompt":"Which team received 34 points from Anthony Davis in his 2026-27 season-opening debut against Milwaukee?","choices":["Washington Wizards","Los Angeles Lakers","Dallas Mavericks","Brooklyn Nets"],"answer":"Washington Wizards","explanation":"Anthony Davis scored 34 points and grabbed 12 rebounds in his first game for Washington, a 128-116 win over the Bucks.","league":"nba","contentType":"current-event","activeFrom":"2026-10-23T00:00:00-05:00","expiresAt":"2026-11-06T23:59:59-06:00","sourceId":"nba-current-2026-opening-ad-wizards","sourceUrl":"https://www.nba.com/news/starting-5-october-22-2026","verifiedAt":"2026-10-23"}),
