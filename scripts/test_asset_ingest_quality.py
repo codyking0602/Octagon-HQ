@@ -1,8 +1,12 @@
 """Regression coverage for transparent UFC fighter crop/quality gates."""
+import sys
 import unittest
+from types import SimpleNamespace
 
 from PIL import Image, ImageDraw
 
+# Unit-test the pure crop/quality gates without loading the heavyweight rembg ML runtime.
+sys.modules.setdefault("rembg", SimpleNamespace(remove=lambda image: image))
 from scripts.asset_ingest import (
     render_thumb,
     source_looks_clipped,
