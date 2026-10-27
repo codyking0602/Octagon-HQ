@@ -434,9 +434,9 @@ export const nataliaSilvaRankingInput = {
     "secondaryDivision": null,
     "divisionLabel": "WFLW",
     "resumeTag": "UFC flyweight champion • 9-0 UFC • 0 defenses",
-    "oneLiner": "Explosive taekwondo footwork, clean counters, and rapid angles carried a perfect UFC climb to the flyweight championship.",
-    "whyRankedHere": "Silva won nine straight UFC bouts and took the vacant flyweight title from Wang Cong at UFC 332. She shut out former champions Alexa Grasso and Jéssica Andrade on all three judges' cards, then defeated two-time strawweight champion Rose Namajunas.",
-    "whyNotHigher": "The title was vacant and came against No. 8 Wang Cong, not the long-reigning Valentina Shevchenko. Silva has no title defenses, her Namajunas decision was close and disputed by much of the media, and nine UFC fights provide far less longevity than historic champions.",
+    "oneLiner": "Silva's explosive taekwondo footwork, sharp counters, and sudden angle changes powered a nine-fight unbeaten UFC ascent. She dismantled established champions in high-level striking battles, then claimed the vacant flyweight crown in 2026.",
+    "whyRankedHere": "Silva entered the UFC in 2022 and won nine consecutive fights, defeating former champions Jessica Andrade, Alexa Grasso, and Rose Namajunas before capturing the vacant flyweight title against Wang Cong in October 2026. Her one-sided decisions over Andrade and Grasso established the technical level behind her undefeated run.",
+    "whyNotHigher": "Her first title victory came against the eighth-ranked Wang Cong after Valentina Shevchenko vacated the belt, and she has yet to defend it. The Namajunas decision was competitive and heavily disputed by media, while nine UFC bouts cannot match the long championship reigns of the women above her.",
     "finalTakeaway": "A verified UFC flyweight champion with an unbeaten nine-fight UFC record and excellent former-champion wins; future title defenses—not hypothetical peak talent—must determine whether she approaches the division's all-time greats.",
     "keyJudgmentCalls": [
       "Only nine UFC bouts from June 2022 through October 3, 2026 are score-bearing; no regional fights.",
@@ -450,7 +450,7 @@ export const nataliaSilvaRankingInput = {
     "thumbUrl": "assets/fighters/natalia-silva-thumb.webp",
     "watchUrl": null,
     "watchLabel": null,
-    "signatureFightUrl": "https://www.ufc.com/event/ufc-332",
-    "signatureFightLabel": "Signature Fight: Wang Cong (UFC 332)"
+    "signatureFightUrl": "https://www.youtube.com/watch?v=RJKsVW9VhTo",
+    "signatureFightLabel": "Signature Fight: Wang Cong (UFC 332 highlights)"
   }
 } satisfies RankingInputFighter;
