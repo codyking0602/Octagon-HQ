@@ -127,6 +127,54 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Preview-only rewrite of a verbatim active Bar Trivia "Notorious" nickname.
   // Future-only replacement: legacy UFC run 6 Q6 Stat Sheet named Jessica Andrade,
   // and active Bar Trivia V3 tests the identical UFC 237 Namajunas title-changing slam.
+  // Future-only distinct fact: active Bar Trivia ufc-r3-first-flyweight already tests Demetrious Johnson first UFC flyweight title.
+  // Future-only distinct fact: active Bar Trivia ufc-bt-v3-m-002 already tests Jon Jones defeated Mauricio Rua UFC128.
+  // Future-only distinct fact: active Bar Trivia ufc-bt-v3-h-016 already tests Justin Gaethje interim title UFC249 over Tony Ferguson.
+  // Future-only distinct fact: active Bar Trivia ufc-bt-v3-m-006 already tests Conor McGregor debut win versus Marcus Brimage.
+  "ufc:5:1": {
+    id: "millionaire-ufc-future-edwards-usman-ufc286-q2",
+    type: "welterweight-trilogy-title-defenses",
+    prompt: "Who retained the welterweight championship by majority decision over Kamaru Usman at UFC 286?",
+    choices: ["Leon Edwards","Colby Covington","Belal Muhammad","Jorge Masvidal"],
+    answer: "Leon Edwards",
+    statSheet: "The March 2023 London rematch concluded with scorecards of 48–46, 48–46 and 47–47.",
+    explanation: "Leon Edwards defended the welterweight title against Kamaru Usman in their third meeting at UFC 286 on March 18, 2023, winning a majority decision by scores of 48–46, 48–46 and 47–47 at London's O2 Arena.",
+    evidence: [{"authority":"UFC 286 official results and scorecards","url":"https://www.ufc.com/news/results-ufc-286-edwards-vs-usman-3-results-highlights-winner-interview-o2-arena","supportingDetail":"Official UFC 286 summary confirms Leon Edwards retained title over Kamaru Usman by majority decision (48-46,48-46,47-47)."}],
+  },
+
+  "ufc:4:6": {
+    id: "millionaire-ufc-future-yan-aldo-ufc251-q7",
+    type: "bantamweight-vacant-title-finishes",
+    prompt: "Who stopped José Aldo in Round 5 at UFC 251 to win the vacant bantamweight championship?",
+    choices: ["Petr Yan","Aljamain Sterling","Marlon Moraes","Cory Sandhagen"],
+    answer: "Petr Yan",
+    statSheet: "The championship bout was fought on Fight Island and ended at 3:24 of the final round.",
+    explanation: "Petr Yan defeated José Aldo by strikes at 3:24 of Round 5 at UFC 251 in July 2020 on Yas Island, Abu Dhabi, winning the vacant bantamweight title left open by Henry Cejudo's retirement.",
+    evidence: [{"authority":"UFC 251 official full results","url":"https://www.ufc.com/news/ufc-251-results-usman-masvidal-yan-aldo-holloway-volkanovski-fight-island","supportingDetail":"Official UFC 251 result confirms Petr Yan stopped José Aldo at 3:24 of Round 5 for vacant bantamweight title."}],
+  },
+
+  "ufc:2:2": {
+    id: "millionaire-ufc-future-griffin-jackson-ufc86-q3",
+    type: "light-heavyweight-title-upsets",
+    prompt: "Who defeated Quinton 'Rampage' Jackson by unanimous decision to win the light heavyweight title at UFC 86?",
+    choices: ["Forrest Griffin","Rashad Evans","Lyoto Machida","Dan Henderson"],
+    answer: "Forrest Griffin",
+    statSheet: "The July 2008 title fight lasted all five rounds in Las Vegas.",
+    explanation: "Forrest Griffin beat champion Quinton 'Rampage' Jackson by unanimous decision over five rounds at UFC 86 on July 5, 2008, becoming the UFC light heavyweight champion after his breakout on The Ultimate Fighter.",
+    evidence: [{"authority":"UFC official light heavyweight title lineage","url":"https://www.ufc.com/news/ufc-light-heavyweight-title-lineage-jones-cormier-blachowicz-teixeira-prochazka","supportingDetail":"UFC title lineage lists Forrest Griffin defeating Quinton Jackson by unanimous decision at UFC 86 on July 5, 2008."}],
+  },
+
+  "ufc:1:2": {
+    id: "millionaire-ufc-future-evans-liddell-ufc88-q3",
+    type: "light-heavyweight-highlight-finishes",
+    prompt: "Which light heavyweight knocked out Chuck Liddell with a right hand in the UFC 88 main event?",
+    choices: ["Rashad Evans","Quinton Jackson","Keith Jardine","Tito Ortiz"],
+    answer: "Rashad Evans",
+    statSheet: "The September 2008 Atlanta main event ended at 1:51 of Round 2.",
+    explanation: "Rashad Evans knocked out former champion Chuck Liddell with a right hand at 1:51 of Round 2 at UFC 88 in Atlanta on September 6, 2008. The victory extended Evans' unbeaten run and launched him toward the light heavyweight championship.",
+    evidence: [{"authority":"UFC official UFC 88 recap","url":"https://www.ufc.com/news/evans-fires-perfect-game-knocks-liddell-out-ufc-88-main-event-0","supportingDetail":"Official UFC report confirms Evans KO'd Liddell at 1:51 of Round 2 at UFC 88, September 6 2008."}],
+  },
+
   "ufc:5:5": {
     id: "millionaire-ufc-future-blanchfield-andrade-2023-q6",
     type: "flyweight-main-events",

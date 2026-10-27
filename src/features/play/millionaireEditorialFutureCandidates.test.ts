@@ -15,6 +15,37 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+
+  it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
+    const cases = [
+      ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
+      ["ufc:2:2", "Forrest Griffin", "UFC 86", "Mauricio Rua"],
+      ["ufc:4:6", "Petr Yan", "UFC 251", "Justin Gaethje"],
+      ["ufc:5:1", "Leon Edwards", "UFC 286", "Marcus Brimage"]
+    ] as const;
+    for (const [key, winner, event, formerAnswer] of cases) {
+      const preview = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(preview.answer).toBe(winner);
+      expect(preview.prompt).toContain(event);
+      expect(preview.prompt).not.toContain(formerAnswer);
+      expect(preview.choices.filter(c => c === winner)).toHaveLength(1);
+      expect(new Set(preview.choices.map(normalized)).size).toBe(4);
+      expect(normalized(preview.statSheet!)).not.toContain(normalized(winner));
+      expect(preview.explanation).toContain(winner);
+      expect(preview.evidence[0]?.url.startsWith("https://www.ufc.com/")).toBe(true);
+      const [, runIndex, questionIndex] = key.split(":");
+      const original = millionaireDailyRun("ufc", Number(runIndex))[Number(questionIndex)]!;
+      expect(answer(original)).not.toBe(winner);
+    }
+    const mappedAnswers = (run: number) =>
+      millionaireFutureEditorialDailyRun("ufc", run).map((q, i) =>
+        MILLIONAIRE_FUTURE_TARGETED_REWRITES[`ufc:${run}:${i}`]?.answer ??
+        MILLIONAIRE_FUTURE_Q8_REWRITES[`ufc:${run}:${i}`]?.answer ?? answer(q));
+    for (const run of [1, 2, 4, 5]) {
+      expect(new Set(mappedAnswers(run)).size).toBe(8);
+    }
+  });
+
   it("protects eight remaining October 27 sourced intervention candidate fixes", () => {
     const finals = [
       ["nfl:6:7","Charles Woodson","Greg Biekert"],
