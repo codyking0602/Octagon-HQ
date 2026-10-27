@@ -76,5 +76,9 @@
         "summary": "No. 1 Miami visits Chapel Hill after Malachi Toney's record-setting performance against Pittsburgh; ABC prime-time ACC matchup."
       }
     ]
+  },
+  "selection": {
+    "player_id": "keyone-jenkins",
+    "game_id": "miami-at-north-carolina"
   }
 }
