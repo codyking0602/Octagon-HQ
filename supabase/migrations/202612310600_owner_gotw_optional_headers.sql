@@ -289,8 +289,15 @@ begin
      or coalesce(p_verified_assets->>'deployed_sha','') !~ '^[0-9a-f]{40}$' then
     raise exception 'Exact deployed Football image URLs and commit SHA are required';
   end if;
-  -- The binary WebP/dimension/identity checks are performed by the verified
-  -- deployment checker before invoking this owner-only RPC, never by trusting a draft path.
+  -- Older published packages retain their original verified SeatGeek art contract.
+  -- The owner-only/no-substitute rule is exclusive to October 27 and later.
+  if p_week_of < date '2026-10-27' and
+    (v_game->>'header_asset_path' is distinct from v_prefix || 'game-header.webp'
+      or p_verified_assets->>'header_url' is distinct from
+        'https://octagon.hq-app.workers.dev' || v_prefix || 'game-header.webp') then
+    raise exception 'Legacy header verification is required for historical packages';
+  end if;
+  -- Verify only the Spotlight image for new weeks; the user's header is optional.
   v_ready := now();
   update public.football_weekly_content_packages p
   set production = jsonb_set(p.production, array[p_sport],
