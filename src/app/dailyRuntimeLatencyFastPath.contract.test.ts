@@ -81,7 +81,9 @@ describe("all-sport official Daily action latency safeguards", () => {
     );
     expect(nba).toContain('context.gameType === "millionaire" && !isTwoGameDaily(context)');
     expect(nba).toContain('(await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime(context, action)');
-    expect(nba).toContain('loadNbaAdvanceRuntime()).advanceNbaOfficialDailyRuntime(context, action)');
+    expect(nba).toContain('loadNbaAdvanceRuntime(context.gameType)).advanceNbaOfficialDailyRuntime(context, action)');
+    expect(edge).toContain('if (gameType === "hit_the_number") return import("./nba-hit-the-number-advance.generated.mjs")');
+    expect(edge).toContain('if (gameType === "wavelength") return import("./nba-wavelength-advance.generated.mjs")');
     expect(nba).toContain('dailyClientActionIds(context).includes(clientActionId)');
     expect(nba).toContain('save_daily_challenge_runtime_progress');
     expect(nba).toContain('savedIntermediateContext(context, saved.data, nextSubmissionState)');

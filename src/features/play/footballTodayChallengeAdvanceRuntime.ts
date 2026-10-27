@@ -1,4 +1,6 @@
 import { advanceHitTheNumber, scoreFootballHitNumberTwoGameChild } from "./footballHitNumberAdvanceCore";
+import { advanceFindLeader, scoreFindLeader } from "./findLeaderDailyAdvanceCore";
+export { advanceFindLeaderOnlyDailyRuntime } from "./findLeaderDailyAdvanceCore";
 import {
   footballBlindResumeNextRevealCount,
   footballBlindResumeRevealStage,
@@ -83,36 +85,6 @@ function visibleBlindResumeRound(round: JsonRecord, revealedCount: number) {
     reveal_counts: [...revealCounts],
     max_revealed_count: allStats.length,
     stats: allStats.slice(0, revealedCount),
-  };
-}
-
-function advanceFindLeader(context: OfficialDailyRuntimeContext, action: JsonRecord): OfficialDailyAdvanceResult {
-  const candidateIds = stringArray(context.privateSetupEvidence.candidate_ids, "Football Find the Leader candidates");
-  const leaderId = String(context.privateSetupEvidence.leader_id ?? "");
-  const prior = stringArray(context.submissionState.eliminated_ids ?? [], "Football Find the Leader progress");
-  const eliminatedId = String(action.eliminated_id ?? "");
-  if (!candidateIds.includes(eliminatedId) || prior.includes(eliminatedId)) throw new Error("That subject cannot be eliminated.");
-  const eliminated = [...prior, eliminatedId];
-  const complete = eliminatedId === leaderId || eliminated.length === candidateIds.length - 1;
-  const finalSubmission = complete ? { eliminated_ids: eliminated } : null;
-  const revealedCandidates = recordArray(context.revealSetup.candidates, "Football Find the Leader reveal candidates")
-    .filter((candidate) => eliminated.includes(String(candidate.id ?? "")) && String(candidate.id ?? "") !== leaderId)
-    .map((candidate) => ({
-      id: candidate.id,
-      name: candidate.name,
-      subtitle: candidate.subtitle,
-      value: candidate.value,
-    }));
-  return {
-    submissionState: { eliminated_ids: eliminated, final_submission: finalSubmission },
-    publicState: {
-      complete,
-      eliminated_ids: eliminated,
-      native_progress: complete && eliminatedId !== leaderId ? 10 : eliminated.length,
-      revealed_candidates: revealedCandidates,
-    },
-    complete,
-    finalSubmission,
   };
 }
 
@@ -238,7 +210,7 @@ function scoreTwoGameFootballChild(
   advanced: OfficialDailyAdvanceResult,
 ) {
   if (context.gameType === "find_leader") {
-    return Number(advanced.publicState.native_progress ?? 0) * 10;
+    return scoreFindLeader(context, advanced);
   }
   if (context.gameType === "wavelength") return scoreFootballWavelengthTwoGameChild(context, advanced);
   if (context.gameType === "hit_the_number") {

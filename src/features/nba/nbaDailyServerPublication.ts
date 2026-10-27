@@ -1,4 +1,6 @@
-import type { OfficialDailySetupPublication } from "../play/todaysChallengeRuntime";
+import { nbaDailyGameAppearance } from "./nbaDailyPublicationIdentity";
+export { nbaDailyGameAppearance } from "./nbaDailyPublicationIdentity";
+import { barTriviaPublication } from "./nbaBarTriviaDailyPublication";
 import { buildAverageFanDailySetup } from "../play/averageFanDailyRuntime";
 import { buildFamilyFeudDailySetup } from "../play/familyFeudDailyRuntime";
 import { BAR_TRIVIA_MAX_SCORE, createBarTriviaState, type BarTriviaQuestion } from "../games/barTriviaEngine";
@@ -28,61 +30,7 @@ export const NBA_SERVER_READY_GAME_TYPES = [
   "average_fan", "sports_feud", "bar_trivia", "millionaire", "who_am_i", "find_leader", "wavelength", "hit_the_number", "higher_lower",
 ] as const satisfies readonly NbaDailyGame[];
 
-export const NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION = "nba-bar-trivia-server-v1";
-
-/** Zero-based appearance of a single game on a scheduled publication date. */
-export function nbaDailyGameAppearance(day: string, gameType: NbaDailyGame): number {
-  const slot = nbaRegularSeasonDaily(day);
-  if (!slot || !slot.isPublicationDay || slot.gameType !== gameType) {
-    throw new Error("NBA Daily publication must match its scheduled Central day and game.");
-  }
-  let count = 0;
-  for (let index = 0; index < slot.appearanceIndex; index++) {
-    if (NBA_DAILY_WEIGHTED_CYCLE[index % NBA_DAILY_WEIGHTED_CYCLE.length] === gameType) count++;
-  }
-  return count;
-}
-
-function publicQuestion(question: BarTriviaQuestion) {
-  return {
-    id: question.id, league: question.league, round: question.round,
-    difficulty: question.difficulty, category: question.category,
-    prompt: question.prompt, choices: [...question.choices], contentType: question.contentType,
-  };
-}
-
-function barTriviaPublication(day: string, scheduleVersion: string, ordinal: number): OfficialDailySetupPublication {
-  const { questions, doubleRound } = buildNbaBarTriviaDailyBoard(ordinal, day);
-  const initial = createBarTriviaState(doubleRound);
-  const proof = `${NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION}:${stableLineupHash(
-    [scheduleVersion, day, ordinal, doubleRound, ...questions.map(q => q.id)].join("|"),
-  )}`;
-
-  return {
-    setupKey: `${NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:${ordinal}`,
-    contentVersion: NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION,
-    scoringVersion: BAR_TRIVIA_DAILY_SCORING_VERSION,
-    publicSetup: {
-      league: "nba",
-      question_count: questions.length,
-      initial_state: {
-        complete: initial.complete, index: initial.index,
-        score: initial.score, raw_score: initial.rawScore,
-        streak: initial.streak, best_streak: initial.bestStreak,
-        correct_count: initial.correctCount, wager: initial.wager,
-        double_round: doubleRound, answers: [],
-        current_question: questions[0] ? publicQuestion(questions[0]) : null,
-        last_result: null, last_question: null,
-      },
-    },
-    revealSetup: {
-      league: "nba",
-      questions: questions.map(q => ({ ...publicQuestion(q), answer: q.answer, explanation: q.explanation })),
-    },
-    privateSetupEvidence: { league: "nba", questions, double_round: doubleRound, proof },
-    privateGradingEvidence: { league: "nba", proof, max_score: BAR_TRIVIA_MAX_SCORE },
-  };
-}
+export { NBA_BAR_TRIVIA_DAILY_CONTENT_VERSION } from "./nbaBarTriviaDailyPublication";
 
 export function buildNbaServerDailyPublication(
   day: string,
@@ -120,3 +68,13 @@ export function buildNbaServerDailyPublication(
       : barTriviaPublication(day, scheduleVersion, ordinal);
   return { ...publication, gameType, scheduleVersion };
 }
+
+// The standalone Edge entries below import only their specific canonical author.
+export { buildNbaAverageFanLeanPublication } from "./lean/AverageFanPublication";
+export { buildNbaSportsFeudLeanPublication } from "./lean/SportsFeudPublication";
+export { buildNbaMillionaireLeanPublication } from "./lean/MillionairePublication";
+export { buildNbaHitNumberLeanPublication } from "./lean/HitNumberPublication";
+export { buildNbaFindLeaderLeanPublication } from "./lean/FindLeaderPublication";
+export { buildNbaWavelengthLeanPublication } from "./lean/WavelengthPublication";
+export { buildNbaHigherLowerLeanPublication } from "./lean/HigherLowerPublication";
+export { buildNbaBarTriviaLeanPublication } from "./lean/BarTriviaPublication";

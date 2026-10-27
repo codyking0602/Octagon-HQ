@@ -276,6 +276,19 @@ jobs:
             test -f supabase/functions/daily-challenge-runtime/average-fan.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/who-am-i-advance.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/nba-who-am-i-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-average-fan-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-sports-feud-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-millionaire-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-hit-the-number-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-find-leader-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-wavelength-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-higher-lower-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-bar-trivia-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-bar-trivia-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-find-leader-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-wavelength-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-hit-the-number-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-higher-lower-advance.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-wavelength-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-wavelength-advance.generated.mjs
