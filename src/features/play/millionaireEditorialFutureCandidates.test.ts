@@ -300,6 +300,17 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("source-reconciles nine more inherited NFL drafted-player and Super Bowl records", () => {
+    for (const key of ["nfl:3:3","nfl:3:5","nfl:3:6","nfl:5:0","nfl:5:2","nfl:5:6","nfl:6:2","nfl:6:3","nfl:6:4"] as const) {
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.choices.filter(c=>c===q.answer)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(q.answer));
+      expect(q.explanation.length).toBeGreaterThan(105);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
