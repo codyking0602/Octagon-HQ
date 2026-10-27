@@ -40,6 +40,17 @@ declare
   v_cody_row jsonb;
   v_shane_row jsonb;
   v_tony_row jsonb;
+  -- Before Oct 25 each calendar day was eligible; from Oct 25 onward only
+  -- alternating days count. The five fixture boards span the cutover until
+  -- November 2, so their consecutive eligible streak grows as time advances.
+  v_expected_cody_streak integer := case
+    when v_today < date '2026-10-25' then 1
+    else least(5, 1 + (v_today - date '2026-10-25') / 2)
+  end;
+  v_expected_shane_streak integer := case
+    when v_today < date '2026-10-27' then 0
+    else least(4, (v_today - date '2026-10-25') / 2)
+  end;
 begin
   insert into auth.users (
     id,
@@ -155,8 +166,8 @@ begin
     or (v_cody_row->>'wins')::integer <> 4
     or (v_cody_row->>'played')::integer <> 5
     or (v_cody_row->>'average_score')::numeric <> 88.0
-    or (v_cody_row->>'current_streak')::integer <> 5
-    or (v_cody_row->>'best_streak')::integer <> 5
+    or (v_cody_row->>'current_streak')::integer <> v_expected_cody_streak
+    or (v_cody_row->>'best_streak')::integer <> v_expected_cody_streak
     or (v_cody_row->'game_averages'->>'find_leader')::numeric <> 80.0
     or (v_cody_row->'game_averages'->>'wavelength')::numeric <> 90.0
     or (v_cody_row->'game_averages'->>'blind_resume')::numeric <> 100.0
@@ -170,9 +181,10 @@ begin
     or (v_shane_row->>'wins')::integer <> 2
     or (v_shane_row->>'played')::integer <> 4
     or (v_shane_row->>'average_score')::numeric <> 82.5
-    -- Shane played four consecutive eligible dates but skipped the latest one.
-    or (v_shane_row->>'current_streak')::integer <> 0
-    or (v_shane_row->>'best_streak')::integer <> 4 then
+    -- Shane played the first four eligible fixtures, but not the latest.
+    -- The last eligible played day still counts toward his current streak.
+    or (v_shane_row->>'current_streak')::integer <> v_expected_shane_streak
+    or (v_shane_row->>'best_streak')::integer <> greatest(1, v_expected_shane_streak) then
     raise exception 'tied daily wins or yesterday-current streak were calculated incorrectly: %', v_shane_row;
   end if;
 
