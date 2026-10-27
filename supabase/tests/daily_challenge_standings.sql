@@ -2,10 +2,9 @@ begin;
 
 select set_config('request.jwt.claim.role', 'service_role', true);
 
--- Historical leaderboard fixture intentionally creates five consecutive UFC
--- boards. Since October 25, official UFC publication is every 48 hours.
--- Exercise this historical fixture in rollback-only isolation; the separate
--- locked_three_sport_daily_cadence.sql test certifies the live publish gate.
+-- Standings fixture must use actual playable UFC dates. Since October 25,
+-- UFC Daily is every 48 hours; consecutive calendar-day fixtures incorrectly
+-- split streaks at off-cycle days. Run in rollback-only isolation.
 do $legacy_fixture$
 begin
   if exists (
@@ -24,8 +23,7 @@ declare
   v_cody uuid := '76000000-0000-4000-8000-000000000001';
   v_shane uuid := '76000000-0000-4000-8000-000000000002';
   v_tony uuid := '76000000-0000-4000-8000-000000000003';
-  -- Anchor synthetic five-day standings to the currently playable UFC date;
-  -- on a 48-hour hold day there is no new official board to count.
+  -- Anchor five playable UFC boards to the active 48-hour date.
   v_today date := private.daily_challenge_active_day(private.daily_challenge_central_day(now()), 'ufc');
   v_games text[] := array[
     'find_leader',
@@ -42,7 +40,6 @@ declare
   v_cody_row jsonb;
   v_shane_row jsonb;
   v_tony_row jsonb;
-  v_shane_expected_current integer;
 begin
   insert into auth.users (
     id,
@@ -74,8 +71,8 @@ begin
   ) values (
     'daily-standings-test-v1',
     'America/Chicago',
-    v_today - 4,
-    v_today - 4,
+    v_today - 8,
+    v_today - 8,
     v_games
   );
 
@@ -108,7 +105,7 @@ begin
       content_version,
       scoring_version
     ) values (
-      v_today - (5 - v_index),
+      v_today - 2 * (5 - v_index),
       'daily-standings-test-v1',
       v_games[v_index],
       v_setup_id,
@@ -129,15 +126,15 @@ begin
     content_version,
     scoring_version
   ) values
-    (v_daily_ids[1], v_cody, 'official_first', 8, 80, now() - interval '4 days', 'standings-content-v1', 'play-official-score-v1'),
-    (v_daily_ids[2], v_cody, 'official_first', 90, 90, now() - interval '3 days', 'standings-content-v1', 'play-official-score-v1'),
-    (v_daily_ids[3], v_cody, 'official_first', 5, 100, now() - interval '2 days', 'standings-content-v1', 'play-official-score-v1'),
-    (v_daily_ids[4], v_cody, 'official_first', 8, 80, now() - interval '1 day', 'standings-content-v1', 'play-official-score-v1'),
+    (v_daily_ids[1], v_cody, 'official_first', 8, 80, now() - interval '8 days', 'standings-content-v1', 'play-official-score-v1'),
+    (v_daily_ids[2], v_cody, 'official_first', 90, 90, now() - interval '6 days', 'standings-content-v1', 'play-official-score-v1'),
+    (v_daily_ids[3], v_cody, 'official_first', 5, 100, now() - interval '4 days', 'standings-content-v1', 'play-official-score-v1'),
+    (v_daily_ids[4], v_cody, 'official_first', 8, 80, now() - interval '2 days', 'standings-content-v1', 'play-official-score-v1'),
     (v_daily_ids[5], v_cody, 'official_first', 14, 90, now(), 'standings-content-v1', 'play-official-score-v1'),
-    (v_daily_ids[1], v_shane, 'official_first', 9, 90, now() - interval '4 days', 'standings-content-v1', 'play-official-score-v1'),
-    (v_daily_ids[2], v_shane, 'official_first', 90, 90, now() - interval '3 days', 'standings-content-v1', 'play-official-score-v1'),
-    (v_daily_ids[3], v_shane, 'official_first', 4, 80, now() - interval '2 days', 'standings-content-v1', 'play-official-score-v1'),
-    (v_daily_ids[4], v_shane, 'official_first', 7, 70, now() - interval '1 day', 'standings-content-v1', 'play-official-score-v1');
+    (v_daily_ids[1], v_shane, 'official_first', 9, 90, now() - interval '8 days', 'standings-content-v1', 'play-official-score-v1'),
+    (v_daily_ids[2], v_shane, 'official_first', 90, 90, now() - interval '6 days', 'standings-content-v1', 'play-official-score-v1'),
+    (v_daily_ids[3], v_shane, 'official_first', 4, 80, now() - interval '4 days', 'standings-content-v1', 'play-official-score-v1'),
+    (v_daily_ids[4], v_shane, 'official_first', 7, 70, now() - interval '2 days', 'standings-content-v1', 'play-official-score-v1');
 
   perform set_config('request.jwt.claim.role', 'authenticated', true);
   perform set_config('request.jwt.claim.sub', v_cody::text, true);
@@ -146,15 +143,6 @@ begin
   v_cody_row := v_standings->'entries'->0;
   v_shane_row := v_standings->'entries'->1;
   v_tony_row := v_standings->'entries'->2;
-
-  -- Replay of the historical September standings migration intentionally
-  -- restores its calendar-day no-argument RPC. The current wrapper delegates
-  -- to the UFC 48-hour policy. Test each policy's exact expected outcome.
-  select case
-    when pg_get_functiondef('public.get_daily_challenge_standings()'::regprocedure)
-      like '%get_daily_challenge_standings(''ufc'')%' then 4
-    else 0
-  end into v_shane_expected_current;
 
   if (v_standings->>'player_count')::integer <> 3
     or (v_standings->>'current_user_rank')::integer <> 1
@@ -182,9 +170,8 @@ begin
     or (v_shane_row->>'wins')::integer <> 2
     or (v_shane_row->>'played')::integer <> 4
     or (v_shane_row->>'average_score')::numeric <> 82.5
-    -- Shane skipped the new Oct 25 UFC 48-hour board, so the active
-    -- streak is zero while the completed prior four-game streak remains best.
-    or (v_shane_row->>'current_streak')::integer <> v_shane_expected_current
+    -- Shane played four consecutive eligible dates but skipped the latest one.
+    or (v_shane_row->>'current_streak')::integer <> 0
     or (v_shane_row->>'best_streak')::integer <> 4 then
     raise exception 'tied daily wins or yesterday-current streak were calculated incorrectly: %', v_shane_row;
   end if;
