@@ -3,3 +3,8 @@
 .nba-whoami-owner-daily span{color:#c8c2b9}
 .nba-whoami-owner-daily button{border:1px solid #bd824b;border-radius:7px;background:#51351c;padding:7px 10px;color:#fff;font-size:10px;font-weight:900}
 .nba-hit-owner-daily{margin:8px 0;color:#efb977;font-size:10px;font-weight:900;letter-spacing:.04em}
+
+/* Mobile Hit the Number's shared negative dock gutters caused 3px of horizontal overflow. */
+@media (max-width: 760px) {
+  .nba-hit-number-page .hit-number-lock-dock { margin-inline: 0; }
+}
