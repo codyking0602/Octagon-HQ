@@ -571,6 +571,10 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
         }
       });
     }
+    const openingUfc250 = millionaireFutureEditorialDailyRun("ufc", 7)[1]!;
+    expect(answer(openingUfc250)).toBe("Cody Garbrandt");
+    expect(openingUfc250.prompt).toContain("UFC 250");
+    expect(openingUfc250.prompt).not.toContain("Cain Velasquez");
     const dramaticFinal = millionaireFutureEditorialDailyRun("ufc", 7)[7]!;
     expect(answer(dramaticFinal)).toBe("Jack Della Maddalena");
     expect(dramaticFinal.prompt).toContain("UFC 315");
