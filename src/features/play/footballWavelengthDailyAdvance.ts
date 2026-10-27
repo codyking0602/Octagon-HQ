@@ -50,15 +50,16 @@ function clueFor(id: string) {
 // small Wavelength-only Edge bundle. No client-created clues or scores.
 export function advanceFootballWavelengthRound(
   context: OfficialDailyRuntimeContext,
-  action: JsonRecord,
+  action: unknown,
 ): OfficialDailyAdvanceResult {
+  const parsedAction = record(action);
   const target = integer(context.privateSetupEvidence.target, "Football Wavelength target", 1, 100);
   const seed = String(context.privateSetupEvidence.seed ?? "");
   const guesses = Array.isArray(context.submissionState.guesses)
     ? context.submissionState.guesses.map((value) => integer(value, "Football Wavelength guess", 1, 100))
     : [];
   if (guesses.length >= 4) throw new Error("The Football Wavelength round is complete.");
-  const guess = integer(action.guess, "Football Wavelength guess", 1, 100);
+  const guess = integer(parsedAction.guess, "Football Wavelength guess", 1, 100);
   const nextGuesses = [...guesses, guess];
   const clueIds = stringArray(
     context.submissionState.clue_ids ?? [String(context.privateSetupEvidence.opening_clue_id ?? "")],
@@ -113,5 +114,5 @@ export function advanceFootballWavelengthDailyRuntime(
   }
   return isTwoGameDailyContext(context)
     ? advanceTwoGameDailyRuntime(context, action, advanceFootballWavelengthRound, scoreFootballWavelengthTwoGameChild)
-    : advanceFootballWavelengthRound(context, record(action));
+    : advanceFootballWavelengthRound(context, action);
 }
