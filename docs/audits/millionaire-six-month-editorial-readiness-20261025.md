@@ -125,3 +125,7 @@ Confirmed the full UFC run 11 (8 questions) with UFC official event records: Nga
 ### NFL future run 12 complete individual editorial review
 
 Eight NFL future run 12 questions verified against Chargers uniform history, Buccaneers official 2020 recap, NFL player season statistics and NFL's Super Bowl/playoff reports. Corrected seven generic reveals with detailed verified explanations. Active selected Bar Trivia contains overlapping athletes but no direct shared correct-answer fact in this ladder. Q8 Hardman's Super Bowl LVIII overtime touchdown retains zero lifelines, and its winner is verified. **Ledger now 38 KEEP / 155 HOLD** of 193 intervention entries; four future ladders fully reviewed (NFL 11–12, CFB 11, UFC 11). Six-month publication remains blocked.
+
+### CFB future run 12 independently reviewed
+
+Checked all eight CFB run 12 questions against Georgia, Wisconsin, Ohio State, TCU, Florida State, the Heisman Trust, Alabama and Notre Dame primary sources, including alternative answers, clues, selected Bar Trivia concepts and 8-step difficulty. Filled six missing explanations; the Isaiah Bond Q7 and Christian Gray Q8 already had detailed reveals. All eight source-backed questions individually KEEP; **46 KEEP / 147 HOLD** future ledger. The remaining future program remains isolated, not release-ready.

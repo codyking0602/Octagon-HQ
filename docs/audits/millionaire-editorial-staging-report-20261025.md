@@ -183,3 +183,5 @@ Seven specifically reviewed, sourced, alternate-checked future interventions now
 - Completed UFC future run 11 primary-source review against UFC bout results for all eight; added seven explanatory reveals and approved seven additional previously HOLD rows (UFC Q4 already approved). Approved NFL future run 11 Q8 Hufanga via 49ers official recap. 30 individual interventions now KEEP / 163 HOLD. This is 3 complete future ladders with source-backed local signoffs, but not 45 complete games.
 
 - Source-reviewed all eight NFL future run 12 questions, completed seven full explanations, checked per-round difficulty and active Bar Trivia concept overlap. Ledger now 38 KEEP / 155 HOLD, with Q8 Mecole Hardman confirmed by NFL. Not release certified.
+
+- Completed CFB future run 12, six missing full reveal explanations added and eight ledger questions source-checked KEEP; **46 KEEP / 147 HOLD** of 193 interventions. Historical boards untouched.
