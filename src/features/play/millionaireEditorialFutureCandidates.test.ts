@@ -274,6 +274,21 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("checks the last eight retained CFB candidate facts, distractors and finals", () => {
+    for (const key of ["cfb:6:4","cfb:6:5","cfb:7:3","cfb:7:7","cfb:8:0","cfb:8:4","cfb:9:4","cfb:9:6"] as const) {
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.choices.filter(c=>c===q.answer)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(q.answer));
+      expect(q.explanation.length).toBeGreaterThan(110);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+    const final=MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:7:7"]!;
+    expect(final.answer).toBe("Cardale Jones");
+    expect(final.statSheet).toBeNull();
+    expect(final.explanation).toContain("Oregon");
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
