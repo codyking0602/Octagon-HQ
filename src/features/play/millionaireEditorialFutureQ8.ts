@@ -136,7 +136,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-cfb-future-bullard-2023-tcu-q8", "championship-defense",
     "Which Georgia defender intercepted two passes AND recovered a fumble against TCU in the January 2023 national championship?",
     ["Javon Bullard", "Kelee Ringo", "Malaki Starks", "Christopher Smith"], "Javon Bullard",
-    "Javon Bullard forced three TCU turnovers with two interceptions and a fumble recovery, earning defensive player of the game honors in Georgia's 65–7 title-game win.",
+    "Javon Bullard accounted for all three TCU turnovers with two interceptions and a fumble recovery, earning defensive player of the game honors in Georgia's 65–7 title-game win.",
     { authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2023/1/26/ncg-recap-2023", supportingDetail: "CFP identifies Bullard as Defensive Player of the Game with two interceptions and a fumble recovery against TCU." },
   ),
   "ufc:0:7": q8(
