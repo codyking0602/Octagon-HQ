@@ -445,12 +445,12 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Active Bar Trivia fact collision retired from future-preview run 3 Q5.
   "ufc:2:4": {
     id: "millionaire-ufc-future-rewrite-r3-q5",
-    type: "strawweight-rivalries",
-    prompt: "Who knocked out Joanna Jędrzejczyk with a spinning backfist in their UFC 275 rematch?",
-    choices: ["Zhang Weili","Rose Namajunas","Jessica Andrade","Carla Esparza"], answer: "Zhang Weili",
-    statSheet: "The second meeting ended in Round 2 in Singapore, after the first had gone five rounds.",
-    explanation: "Zhang Weili knocked out Joanna Jędrzejczyk by spinning backfist at 2:28 of Round 2 at UFC 275 in June 2022. Joanna announced her retirement afterward.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/knockouts-2022-ufc-awards-edwards-chandler-zhang-pereira", supportingDetail: "Zhang Weili knocked out Joanna Jędrzejczyk by spinning backfist at 2:28 of Round 2 at UFC 275 in June 2022. Joanna announced her retirement afterward." }],
+    type: "strawweight-title-changes",
+    prompt: "Who stopped Jessica Andrade in just 42 seconds in Shenzhen to become UFC strawweight champion in 2019?",
+    choices: ["Zhang Weili","Joanna Jędrzejczyk","Rose Namajunas","Carla Esparza"], answer: "Zhang Weili",
+    statSheet: "The August 2019 main event crowned China's first UFC champion.",
+    explanation: "Zhang Weili stopped Jessica Andrade with strikes at 0:42 of Round 1 in Shenzhen on August 31, 2019, winning the UFC strawweight title and becoming the first fighter from China to capture a UFC championship.",
+    evidence: [{ authority: "UFC official event records", url: "https://www.ufc.com/news/ufc-shenzhen-results", supportingDetail: "Zhang Weili stopped Jessica Andrade with strikes at 0:42 of Round 1 in Shenzhen on August 31, 2019, winning the UFC strawweight title and becoming the first fighter from China to capture a UFC championship." }],
   },
   // Active Bar Trivia fact collision retired from future-preview run 4 Q1.
   "ufc:3:0": {
@@ -477,10 +477,12 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:3:4": {
     id: "millionaire-ufc-future-rewrite-r4-q5",
-    type: "light-heavyweight-title-finishes", prompt: "Who submitted Glover Teixeira late in Round 5 to win the UFC light heavyweight belt at UFC 275?",
-    choices: ["Jiří Procházka","Alex Pereira","Jan Błachowicz","Magomed Ankalaev"], answer: "Jiří Procházka",
-    statSheet: "The closely contested championship ended with under 30 seconds left in the final round.", explanation: "Jiří Procházka submitted Glover Teixeira by rear-naked choke at 4:32 of Round 5 of their UFC 275 championship fight in June 2022.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-275-teixeira-vs-prochazka-fight-results-highlights-winner-interviews-singapore?language_content_entity=fr", supportingDetail: "Jiří Procházka submitted Glover Teixeira by rear-naked choke at 4:32 of Round 5 of their UFC 275 championship fight in June 2022." }],
+    type: "light-heavyweight-highlight-knockouts",
+    prompt: "Who knocked out Dominick Reyes with a spinning back elbow late in Round 2 of their May 2021 UFC main event?",
+    choices: ["Jiří Procházka","Jan Błachowicz","Aleksandar Rakić","Anthony Smith"], answer: "Jiří Procházka",
+    statSheet: "The fight ended with 31 seconds remaining in Round 2.",
+    explanation: "Jiří Procházka knocked out Dominick Reyes with a spinning left elbow at 4:29 of Round 2 of their May 1, 2021 UFC Fight Night main event in Las Vegas, producing one of that year's signature finishes.",
+    evidence: [{ authority: "UFC official event records", url: "https://www.ufc.com/news/ufc-fight-night-reyes-vs-prochazka-results-highlights-interviews-winners-ufc-vegas-25", supportingDetail: "Jiří Procházka knocked out Dominick Reyes with a spinning left elbow at 4:29 of Round 2 of their May 1, 2021 UFC Fight Night main event in Las Vegas, producing one of that year's signature finishes." }],
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:3:5": {
@@ -493,10 +495,12 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:3:6": {
     id: "millionaire-ufc-future-rewrite-r4-q7",
-    type: "bantamweight-title-upsets", prompt: "Who stopped Aljamain Sterling in Round 2 to win the bantamweight belt at UFC 292?",
-    choices: ["Sean O’Malley","Merab Dvalishvili","Petr Yan","Cory Sandhagen"], answer: "Sean O’Malley",
-    statSheet: "The new champion scored a 51-second finish early in Round 2 in Boston.", explanation: "Sean O’Malley defeated Aljamain Sterling by TKO at 0:51 of Round 2 of the UFC 292 main event in Boston in August 2023, winning the bantamweight championship.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-292-sterling-vs-omalley-results-highlights-winner-interviews-boston?language_content_entity=en", supportingDetail: "Sean O’Malley defeated Aljamain Sterling by TKO at 0:51 of Round 2 of the UFC 292 main event in Boston in August 2023, winning the bantamweight championship." }],
+    type: "bantamweight-title-rematches",
+    prompt: "Who avenged his 2020 defeat to Marlon Vera with a five-round title-defense victory at UFC 299?",
+    choices: ["Sean O’Malley","Petr Yan","Aljamain Sterling","Cory Sandhagen"], answer: "Sean O’Malley",
+    statSheet: "All three March 2024 judges scored the rematch decisively in Miami.",
+    explanation: "Sean O’Malley defended the UFC bantamweight title with a unanimous decision over Marlon Vera at UFC 299 on March 9, 2024, by scores of 50–45, 50–45 and 50–44, avenging his 2020 stoppage loss to Vera.",
+    evidence: [{ authority: "UFC official event records", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2", supportingDetail: "Sean O’Malley defended the UFC bantamweight title with a unanimous decision over Marlon Vera at UFC 299 on March 9, 2024, by scores of 50–45, 50–45 and 50–44, avenging his 2020 stoppage loss to Vera." }],
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:4:0": {
@@ -565,10 +569,12 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:9:0": {
     id: "millionaire-ufc-future-rewrite-r10-q1",
-    type: "strawweight-title-knockouts", prompt: "Who knocked out Zhang Weili with a first-round head kick to regain the strawweight title at UFC 261?",
+    type: "strawweight-title-rematches",
+    prompt: "Who defended the UFC women's strawweight title against Zhang Weili by split decision at UFC 268?",
     choices: ["Rose Namajunas","Jessica Andrade","Joanna Jędrzejczyk","Carla Esparza"], answer: "Rose Namajunas",
-    statSheet: "The knockout occurred just 78 seconds into the Jacksonville co-main event.", explanation: "Rose Namajunas knocked out Zhang Weili at 1:18 of Round 1 at UFC 261 in April 2021, using a left head kick to regain the strawweight title.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-261-usman-vs-masvidal-2-zhang-namajunas-results-highlights-interviews-winners", supportingDetail: "Rose Namajunas knocked out Zhang Weili at 1:18 of Round 1 at UFC 261 in April 2021, using a left head kick to regain the strawweight title." }],
+    statSheet: "The November 2021 five-round rematch took place at Madison Square Garden.",
+    explanation: "Rose Namajunas retained the UFC women's strawweight championship by split decision over Zhang Weili at UFC 268 in Madison Square Garden on November 6, 2021. The rematch followed Namajunas's knockout title win earlier that year.",
+    evidence: [{ authority: "UFC official event records", url: "https://www.ufc.com/event/ufc-268", supportingDetail: "Rose Namajunas retained the UFC women's strawweight championship by split decision over Zhang Weili at UFC 268 in Madison Square Garden on November 6, 2021. The rematch followed Namajunas's knockout title win earlier that year." }],
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:9:1": {

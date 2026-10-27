@@ -1150,7 +1150,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:1:5", "Who knocked out Beneil Dariush"],
       ["ufc:2:0", "Who knocked out Jamahal H"],
       ["ufc:2:3", "Who submitted Valentina S"],
-      ["ufc:2:4", "Who knocked out Joanna Ję"],
+      ["ufc:2:4", "Who stopped Jessica Andrade"],
       ["ufc:3:0", "Who landed the jumping spi"],
       ["ufc:3:3", "Who submitted Holly Holm "]
     ];
