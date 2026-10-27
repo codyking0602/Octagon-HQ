@@ -33,8 +33,10 @@ jobs:
     steps:
       - id: gate
         shell: bash
+        env:
+          SCHEDULE_CRON: ${{ github.event.schedule }}
         run: |
-          local_hour=$(TZ=America/Chicago date +%H)
+          central_offset=$(TZ=America/Chicago date +%z)
           local_day=$(TZ=America/Chicago date +%F)
           epoch=$(date -u -d "$local_day" +%s)
           anchor=$(date -u -d '2026-10-27' +%s)
@@ -48,7 +50,9 @@ jobs:
             echo "run=true" >> "$GITHUB_OUTPUT"
           elif [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
-          elif [[ "$GITHUB_EVENT_NAME" == "schedule" && "$local_hour" == "16" && $((weeks % 2)) -eq 0 ]]; then
+          elif [[ "$GITHUB_EVENT_NAME" == "schedule" && $((weeks % 2)) -eq 0 ]] &&
+            { [[ "$SCHEDULE_CRON" == "45 21 * * 2" && "$central_offset" == "-0500" ]] ||
+              [[ "$SCHEDULE_CRON" == "45 22 * * 2" && "$central_offset" == "-0600" ]]; }; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
