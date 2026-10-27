@@ -233,6 +233,14 @@ function loadFootballWavelengthAdvanceRuntime() {
   return footballWavelengthAdvanceRuntimePromise;
 }
 
+/** Only post-Oct-26 UFC Feud packs embed the current approved aliases.
+ * Earlier historical boards still use the full metadata-refresh grader. */
+function canUseLeanUfcFeudAdvance(context: OfficialDailyRuntimeContext): boolean {
+  if (context.gameType !== "sports_feud" || isDailyCombo(context)) return false;
+  const day = /^family-feud-daily-v2:[^:]+:(\d{4}-\d{2}-\d{2}):ufc:/.exec(context.setupKey)?.[1];
+  return day != null && day >= "2026-10-27";
+}
+
 function loadMillionaireAdvanceRuntime() {
   if (!millionaireAdvanceRuntimePromise) {
     millionaireAdvanceRuntimePromise = import("./millionaire-advance.generated.mjs") as Promise<MillionaireAdvanceRuntimeModule>;
@@ -1798,6 +1806,8 @@ Deno.serve(async (request) => {
         ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
         : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
           ? advancePersistedBlindResumeV3
+          : canUseLeanUfcFeudAdvance(context)
+            ? (await loadNbaFeudAdvanceRuntime()).advanceFamilyFeudDailyCore
           : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
             ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
             : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
