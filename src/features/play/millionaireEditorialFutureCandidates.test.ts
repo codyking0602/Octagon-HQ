@@ -15,6 +15,26 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("keeps six additional sourced future-only Q8 reveals correct", () => {
+    const cases = [
+      ["nfl:0:7","Cooper DeJean","22nd birthday"],
+      ["nfl:2:7","Sam Hubbard","Tyler Huntley"],
+      ["cfb:1:7","Barry Sanders","37 touchdowns"],
+      ["ufc:0:7","Francis Ngannou","20 seconds"],
+      ["ufc:2:7","Dustin Poirier","2:32"],
+      ["ufc:5:7","Tom Aspinall","3:45"],
+    ] as const;
+    for(const [key,winner,detail] of cases){
+      const q=MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
+      expect(q.answer).toBe(winner);
+      expect(q.explanation).toContain(detail);
+      expect(q.choices.filter(choice=>choice===winner)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(q.statSheet).toBeNull();
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+  });
+
 
   it("uses four true 2001 Raiders on the Tuck Rule future final", () => {
     const q = MILLIONAIRE_FUTURE_Q8_REWRITES["nfl:6:7"]!;

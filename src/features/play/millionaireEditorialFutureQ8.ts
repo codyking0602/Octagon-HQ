@@ -38,7 +38,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-nfl-future-dejean-super-bowl-lix-q8", "super-bowl-pick-six",
     "Which Eagles rookie cornerback intercepted Patrick Mahomes for a touchdown in Super Bowl LIX?",
     ["Cooper DeJean", "Quinyon Mitchell", "Darius Slay", "C.J. Gardner-Johnson"], "Cooper DeJean",
-    "Cooper DeJean scored on a 38-yard interception return against Kansas City in the Eagles' 40–22 Super Bowl LIX victory on February 9, 2025.",
+    "Cooper DeJean intercepted Patrick Mahomes and returned it 38 yards for a touchdown in the second quarter of Super Bowl LIX on February 9, 2025—his 22nd birthday. Philadelphia's defense helped the Eagles defeat Kansas City 40–22.",
     { authority: "NFL", url: "https://www.nfl.com/_amp/eagles-birthday-boy-cooper-dejean-super-bowl-pick-six-still-doesnt-feel-real", supportingDetail: "NFL confirms the rookie cornerback's 38-yard pick-six against Mahomes in Super Bowl LIX." },
   ),
   "nfl:1:7": q8(
@@ -52,7 +52,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-nfl-future-hubbard-ravens-fumble-q8", "playoff-turning-points",
     "Which Bengals defender returned a Ravens goal-line fumble 98 yards for a touchdown in the January 2023 playoffs?",
     ["Sam Hubbard", "Logan Wilson", "Trey Hendrickson", "Joseph Ossai"], "Sam Hubbard",
-    "Sam Hubbard scooped up a fumble forced by Logan Wilson and returned it 98 yards in the fourth quarter of Cincinnati's 24–17 wild-card victory over Baltimore.",
+    "With Baltimore threatening from Cincinnati's one-yard line in the fourth quarter of the January 2023 AFC wild-card game, Logan Wilson dislodged Tyler Huntley's goal-line fumble. Bengals defender Sam Hubbard recovered it and raced 98 yards for a touchdown in the 24–17 win.",
     { authority: "NFL", url: "https://www.nfl.com/news/bengals-sam-hubbard-on-game-winning-fumble-return-you-can-t-replicate-a-feeling-", supportingDetail: "NFL recaps Wilson's forced fumble and Hubbard's 98-yard touchdown against Baltimore." },
   ),
   "nfl:5:7": q8(
@@ -94,7 +94,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-cfb-future-barry-sanders-2628-q8", "heisman-milestone",
     "Which Oklahoma State star rushed for 2,628 yards in the 1988 regular season on his way to the Heisman Trophy?",
     ["Barry Sanders", "Marcus Allen", "Mike Rozier", "Ricky Williams"], "Barry Sanders",
-    "Barry Sanders rushed for 2,628 yards in 11 games at Oklahoma State during his historic 1988 Heisman season.",
+    "Barry Sanders rushed for 2,628 yards and 37 touchdowns across 11 regular-season games for Oklahoma State in 1988, averaging 238.9 rushing yards per game. He earned the Heisman Trophy for his historic season.",
     { authority: "Heisman Trust", url: "https://www.heisman.com/records-statistics/", supportingDetail: "Trust's season rushing leaders list Sanders with 2,628 rushing yards in 1988." },
   ),
   "cfb:2:7": q8(
@@ -143,14 +143,14 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-ufc-future-ngannou-rozenstruik-249-q8", "heavyweight-finishes",
     "Who knocked out Jairzinho Rozenstruik in only 20 seconds at UFC 249?",
     ["Francis Ngannou", "Derrick Lewis", "Curtis Blaydes", "Alexander Volkov"], "Francis Ngannou",
-    "Francis Ngannou stopped Jairzinho Rozenstruik in only 20 seconds of Round 1 at UFC 249 in May 2020, halting the previously undefeated contender's rise.",
+    "Francis Ngannou floored previously unbeaten Jairzinho Rozenstruik with a left hand and finished him just 20 seconds into Round 1 at UFC 249 on May 9, 2020, stopping the contender's undefeated rise.",
     { authority: "UFC official UFC 249 results", url: "https://www.ufc.com/news/ufc-249-results-ferguson-gaethje-cruz-cejudo", supportingDetail: "UFC records Ngannou's first-round knockout of Rozenstruik at 0:20." },
   ),
   "ufc:2:7": q8(
     "millionaire-ufc-future-poirier-saint-denis-299-q8", "lightweight-comebacks",
     "Who knocked out Benoit Saint Denis in Round 2 of their UFC 299 lightweight showdown?",
     ["Dustin Poirier", "Justin Gaethje", "Arman Tsarukyan", "Charles Oliveira"], "Dustin Poirier",
-    "Dustin Poirier weathered Saint Denis' early pressure before scoring a knockout at 2:32 of Round 2 at UFC 299 in March 2024.",
+    "Dustin Poirier survived Benoît Saint Denis' early pressure before scoring a knockout at 2:32 of Round 2 in their UFC 299 lightweight fight on March 9, 2024 in Miami.",
     { authority: "UFC official UFC 299 results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2", supportingDetail: "UFC records Poirier defeating Benoit Saint Denis by second-round KO at 2:32." },
   ),
   "ufc:3:7": q8(
@@ -171,7 +171,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-ufc-future-aspinall-volkov-london-q8", "heavyweight-submissions",
     "Who submitted Alexander Volkov with a straight armlock in the first round of the March 2022 UFC London main event?",
     ["Tom Aspinall","Curtis Blaydes","Ciryl Gane","Sergei Pavlovich"], "Tom Aspinall",
-    "Tom Aspinall submitted Alexander Volkov with a straight armlock at 3:45 of Round 1 in the UFC London main event on March 19, 2022, a breakout win on his rise through the heavyweight division.",
+    "Tom Aspinall took Alexander Volkov down twice during Round 1, then secured a straight armlock submission at 3:45 of that round in the March 19, 2022 UFC London main event. The victory marked a major heavyweight breakthrough before his home crowd.",
     {"authority":"UFC London official results","url":"https://www.ufc.com/news/ufc-fight-night-volkov-vs-aspinall-results-highlights-winners-interviews-ufc-london","supportingDetail":"UFC confirms Aspinall submitted Volkov with a straight armlock in Round 1 at 3:45 on March 19, 2022."},
   ),
 

@@ -306,3 +306,7 @@ Improved eight playable future candidate explanations across NFL (Drew Brees), C
 ### October 27 — Season-accurate 2001 Raiders Tuck Rule distractor repair
 
 NFL legacy future run 7 Q8 (Charles Woodson's Tuck Rule forced fumble) now uses **Tory James**, a genuine 2001 Oakland Raiders defensive back, instead of **Rod Woodson**, who played for Baltimore in 2001 and did not join Oakland until 2002. Cross-checked with the NFL's official 2001 Raiders roster and Rod Woodson's NFL career-year record. Correct answer and historical content unchanged; question remains HOLD while bankwide clearance is incomplete. Updated the existing preview regression and the exact existing ledger row. No historical board, main, or production change.
+
+### October 27 — six more future-only Q8 reveals corrected
+
+Improved playable Q8 questions about Cooper DeJean's Super Bowl LIX birthday pick-six, Sam Hubbard's 98-yard Ravens fumble return, Barry Sanders' 2,628-yard 1988 season, Ngannou's UFC 249 20-second KO, Poirier's UFC 299 finish and Aspinall's UFC London straight armlock. NFL, Heisman Trust and UFC official events support all six conclusions; four distinct alternatives, no Stat Sheet/lifelines, test assertions and intervention ledger synchronized. **215 individual provisional KEEP / 17 HOLD of 232 intervention entries** (6 new individual reviews). Full bankwide 360 effective slot and 45-run difficulty/originality certification and current exact-head CI remain pending; stay Draft, no merge/production.
