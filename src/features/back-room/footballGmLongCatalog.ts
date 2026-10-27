@@ -85,6 +85,8 @@ export const NFL_GM_LONG_PLAYER_POOL: readonly NflGmLongPlayer[] = [...normal, .
 export const NFL_GM_LONG_BY_ID: ReadonlyMap<string, NflGmLongPlayer> = new Map(NFL_GM_LONG_PLAYER_POOL.map(player => [player.id, player]));
 const teamsMap = new Map<string, NflGmLongPlayer[]>();
 for (const player of NFL_GM_LONG_PLAYER_POOL) {
+  // Preserve lookup of old GM saves, but exclude released NFL players from new drafts.
+  if (player.family !== "OL" && !FOOTBALL_GM_PLAYER_POOL.find(p => p.id === player.id)?.currentRosterEligible) continue;
   const arr = teamsMap.get(player.team) ?? [];
   arr.push(player); teamsMap.set(player.team, arr);
 }

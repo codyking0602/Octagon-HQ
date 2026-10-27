@@ -3,13 +3,13 @@ import contracts from "../../../data/generated/football/wheel-nfl-gm-contracts-2
 import { describe, expect, it } from "vitest";
 
 describe("NFL Wheel Flex parent integrity - October 26 current rosters", () => {
-  it("keeps all 32 clubs, 626 non-Flex entries and 594 original GM identities", () => {
+  it("keeps all 32 clubs, 623 current non-Flex entries and 594 original GM identities", () => {
     const teams = Object.values(priorities.teams);
     expect(teams).toHaveLength(32);
     const nonFlex = teams.reduce((count, team) => count +
       Object.entries(team).filter(([slot]) => slot !== "Flex")
         .reduce((sum, [, names]) => sum + names.length, 0), 0);
-    expect(nonFlex).toBe(626);
+    expect(nonFlex).toBe(623);
     expect(contracts.players).toHaveLength(594);
     const gmKeys = contracts.players.map((p) => `${p.team}|${p.family}|${p.normalizedName}`);
     expect(new Set(gmKeys).size).toBe(594);
