@@ -34,7 +34,7 @@ describe("V2 ranking roster overlay", () => {
         historicalRankingMigrationInputs.fighters.map(({ fighter }) => fighter),
       ),
     );
-    expect(v2RankingRoster.additions).toHaveLength(2);
+    expect(v2RankingRoster.additions).toHaveLength(3);
     expect(canonicalRankingInputs.counts.fighters).toBe(
       canonicalRankingInputs.fighters.length,
     );
@@ -92,13 +92,13 @@ describe("V2 ranking roster overlay", () => {
     );
   });
 
-  it("advances source versions and owns both V2 additions", () => {
+  it("advances source versions and owns the V2 additions", () => {
     expect(v2RankingRoster).toMatchObject({
-      modelAsOfDate: "2026-09-19",
-      factsVersion: "octagon-hq-v2-noche-repair-facts-20260929",
-      judgmentVersion: "octagon-hq-v2-noche-repair-judgments-20260929",
-      eraDepthVersion: "octagon-hq-v2-van-era-depth-20260919",
-      eraDepthResolutionVersion: "octagon-hq-v2-van-era-depth-20260919",
+      modelAsOfDate: "2026-10-27",
+      factsVersion: "octagon-hq-v2-natalia-silva-facts-20261027",
+      judgmentVersion: "octagon-hq-v2-natalia-silva-judgments-20261027",
+      eraDepthVersion: "octagon-hq-v2-natalia-silva-era-depth-20261027",
+      eraDepthResolutionVersion: "octagon-hq-v2-natalia-silva-era-depth-20261027",
     });
     expect(
       canonicalRankingInputs.fighters.some(
@@ -108,6 +108,11 @@ describe("V2 ranking roster overlay", () => {
     expect(
       canonicalRankingInputs.fighters.filter(
         ({ fighter }) => fighter === "Joshua Van",
+      ),
+    ).toHaveLength(1);
+    expect(
+      canonicalRankingInputs.fighters.filter(
+        ({ fighter }) => fighter === "Natalia Silva" && fighter.board === "women",
       ),
     ).toHaveLength(1);
   });
