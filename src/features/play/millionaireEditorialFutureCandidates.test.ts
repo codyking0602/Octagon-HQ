@@ -582,7 +582,9 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(lateUfcTitle.prompt).toContain("UFC 320");
     expect(lateUfcTitle.prompt).not.toContain("Charles Oliveira");
     const volkov = millionaireFutureEditorialDailyRun("ufc", 7)[6]!;
-    expect(volkov.prompt).not.toContain("15 seconds remaining");
+    expect(answer(volkov)).toBe("Josh Emmett");
+    expect(volkov.prompt).toContain("UFC 296");
+    expect(volkov.prompt).not.toContain("Alexander Volkov");
   });
 
 });
