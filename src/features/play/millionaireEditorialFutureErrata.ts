@@ -486,11 +486,13 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:3:5": {
-    id: "millionaire-ufc-future-rewrite-r4-q6",
-    type: "middleweight-title-changes", prompt: "Who defeated Sean Strickland by split decision to win the UFC middleweight title at UFC 297?",
-    choices: ["Dricus du Plessis","Israel Adesanya","Robert Whittaker","Jared Cannonier"], answer: "Dricus du Plessis",
-    statSheet: "The January 2024 main event in Toronto went the full five rounds.", explanation: "Dricus du Plessis beat Sean Strickland by split decision at UFC 297 in January 2024, with the three judges scoring it 47–48, 48–47, and 48–47.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-297-strickland-vs-du-plessis-results-highlights-winner-interviews", supportingDetail: "Dricus du Plessis beat Sean Strickland by split decision at UFC 297 in January 2024, with the three judges scoring it 47–48, 48–47, and 48–47." }],
+    id: "millionaire-ufc-future-rewrite-yair-emmett-284-q6",
+    type: "interim-featherweight-title-submissions",
+    prompt: "Who submitted Josh Emmett with a second-round triangle choke to win the interim featherweight championship at UFC 284?",
+    choices: ["Yair Rodriguez", "Ilia Topuria", "Brian Ortega", "Calvin Kattar"], answer: "Yair Rodriguez",
+    statSheet: "The February 2023 Perth co-main event ended at 4:19 of Round 2.",
+    explanation: "Yair Rodriguez submitted Josh Emmett at 4:19 of Round 2 at UFC 284 on February 12, 2023, winning the interim UFC featherweight championship with a triangle choke.",
+    evidence: [{ authority: "UFC 284 official results", url: "https://www.ufc.com/news/ufc-284-makhachev-vs-volkanovski-results-winner-interviews-lightweight-featherweight", supportingDetail: "UFC confirms Rodriguez submitted Emmett by triangle choke at 4:19 of Round 2 to capture the interim featherweight belt." }],
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:3:6": {
@@ -579,11 +581,13 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:9:1": {
-    id: "millionaire-ufc-future-rewrite-r10-q2",
-    type: "bantamweight-title-rematches", prompt: "Who beat Julianna Peña by unanimous decision at UFC 277 to reclaim the women's bantamweight belt?",
-    choices: ["Amanda Nunes","Holly Holm","Raquel Pennington","Miesha Tate"], answer: "Amanda Nunes",
-    statSheet: "The July 2022 rematch took place in Dallas after a major upset seven months earlier.", explanation: "Amanda Nunes beat Julianna Peña by unanimous decision (50–45, 50–44, 50–43) at UFC 277 in July 2022 to regain the women's bantamweight title.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-277-pena-vs-nunes-2-results", supportingDetail: "Amanda Nunes beat Julianna Peña by unanimous decision (50–45, 50–44, 50–43) at UFC 277 in July 2022 to regain the women's bantamweight title." }],
+    id: "millionaire-ufc-future-rewrite-chimaev-usman-294-q2",
+    type: "middleweight-contender-decisions",
+    prompt: "Who defeated former welterweight champion Kamaru Usman by majority decision in a UFC 294 middleweight bout?",
+    choices: ["Khamzat Chimaev", "Paulo Costa", "Sean Strickland", "Robert Whittaker"], answer: "Khamzat Chimaev",
+    statSheet: "The October 2023 Abu Dhabi bout went all three rounds, with one judge scoring it a draw.",
+    explanation: "Khamzat Chimaev defeated Kamaru Usman by majority decision at UFC 294 in October 2023. The three scorecards were 29–27, 29–27 and 28–28 in their middleweight bout.",
+    evidence: [{ authority: "UFC 294 official results", url: "https://www.ufc.com/news/ufc-294-makhachev-vs-volkanovski-2-results-highlights-winner-interviews", supportingDetail: "Official results confirm Chimaev's majority decision over Usman at UFC 294 with scores 29–27, 29–27 and 28–28." }],
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:9:2": {
