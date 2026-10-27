@@ -54,9 +54,25 @@ const c=data.contracts;
 if(c){
   if(!["unchanged","contract-fact-review-required","metadata-review-required","identity-review-blocked"].includes(c.status))
     blockers.push("contracts:"+String(c.status));
-  for(const row of c.changes??[])add(row.team,row.player,"contracts",row.differences.join(", "),row.reviewKind==="contract-fact"?"high":"medium",row);
+  // Birthdays/age are metadata only. Report them without flooding the actionable queue.
+  const changes=c.changes??[];
+  const ageOnly=changes.filter(row=>row.reviewKind==="metadata-only" &&
+    row.differences?.length===1 && row.differences[0]==="age");
+  const meaningful=changes.filter(row=>!ageOnly.includes(row));
+  for(const row of meaningful)
+    add(row.team,row.player,"contracts",row.differences.join(", "),
+      row.reviewKind==="contract-fact"?"high":"medium",row);
   for(const row of c.transfers??[])add(row.fromTeam,row.player,"transfers","unconfirmed-OTC-transfer","high",row);
-  counts.contractChanges=c.summary?.changed??null;counts.contractTransfers=c.transfers?.length??0;
+  counts.contractChanges=c.summary?.materialChanged??null;
+  counts.contractMetadataOnly=changes.filter(row=>row.reviewKind==="metadata-only").length;
+  counts.contractAgeOnlySuppressed=ageOnly.length;
+  counts.contractOtherReviewCandidates=meaningful.length;
+  counts.contractTransfers=c.transfers?.length??0;
+  counts.contractMissingIdentities=c.missing?.length??0;
+  counts.contractExtraIdentities=c.extra?.length??0;
+  if((c.missing?.length??0)||(c.extra?.length??0))
+    blockers.push("contracts:identity-mismatch-missing="+String(c.missing?.length??0)+
+      "-extra="+String(c.extra?.length??0));
   if(c.sourceIdentityCompletenessCertified===false)blockers.push("contracts:source-identity-completeness-not-certified");
 }
 const coach=data.coaches;
