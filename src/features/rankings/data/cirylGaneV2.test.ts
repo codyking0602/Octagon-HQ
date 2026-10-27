@@ -27,6 +27,9 @@ describe("October 2026 isolated Ciryl Gane V2 all-time addition", () => {
     expect(current?.presentation.slug).toBe("ciryl-gane");
     expect(current?.presentation.photoUrl).toBe("assets/fighters/ciryl-gane.webp");
     expect(current?.presentation.thumbUrl).toBe("assets/fighters/ciryl-gane-thumb.webp");
+    expect(getFighter("ciryl-gane")?.profileUrl).toBe("/assets/fighters/ciryl-gane.webp");
+    expect(getFighter("ciryl-gane")?.thumbUrl).toBe("/assets/fighters/ciryl-gane-thumb.webp");
+    expect(getFighter("ciryl-gane")?.profileUrl).not.toBe(getFighter("ciryl-gane")?.thumbUrl);
     expect(current?.presentation.watchUrl).toBe("https://youtu.be/5kk1024Kwb4?is=n4SJoj9qe4ZAKMSc");
     expect(resolveWatchMomentAction("ciryl-gane")?.url).toBe("https://youtu.be/5kk1024Kwb4?is=n4SJoj9qe4ZAKMSc");
     expect(current?.presentation.signatureFightUrl).toBe("https://youtu.be/VIT91lzhQEs?is=fGjFM70jLg0zqnqL");
