@@ -5,15 +5,7 @@ import {readFileSync, existsSync, mkdirSync, writeFileSync} from "node:fs";
 import {dirname,resolve} from "node:path";
 import {pathToFileURL} from "node:url";
 const EA="https://www.ea.com/games/madden-nfl/ratings";
-export const OVERALL_DELTA=3;
-export const ATTRIBUTE_DELTA=5;
-export const KEY_ATTRIBUTES=Object.freeze([
-  "speed","acceleration","strength","agility","changeOfDirection","awareness",
-  "catching","breakTackle","carrying","shortRouteRunning","mediumRouteRunning",
-  "deepRouteRunning","throwPower","throwAccuracyShort","throwAccuracyMid",
-  "throwAccuracyDeep","throwUnderPressure","manCoverage","zoneCoverage",
-  "playRecognition","blockShedding","tackle","passBlock","runBlock"
-]);
+export const OVERALL_DELTA=2;
 const valued=x=>x===null||x===undefined||x===""?null:
   Number.isFinite(Number(x))?Number(x):null;
 export function canonicalize(players,observedAt){
@@ -23,11 +15,9 @@ export function canonicalize(players,observedAt){
     const id=String(row.id??"").trim();
     if(!id || keys.has(id)) throw new Error("Duplicate/missing Madden player ID "+id);
     keys.add(id);
-    const attributes={};
-    for(const key of KEY_ATTRIBUTES) attributes[key]=valued(row.stats?.[key]?.value);
     return {id,name:[row.firstName,row.lastName].filter(Boolean).join(" ").trim(),
       team:String(row.team?.label??""),position:String(row.position?.id??""),
-      overall:valued(row.overallRating),attributes};
+      overall:valued(row.overallRating)};
   });
   if(data.some(row=>!row.name||row.overall===null||row.overall<0||row.overall>99))
     throw new Error("EA Madden ratings contain missing/invalid identity or grade");
@@ -48,24 +38,17 @@ export function compareMadden(baseline,current){
     const old=prior.get(row.id);
     if(!old) continue; // Newly listed Madden players require separate identity review.
     const overallDelta=row.overall-old.overall;
-    const attributeDeltas=Object.entries(row.attributes).flatMap(([key,value])=>{
-      const previous=old.attributes?.[key];
-      return typeof previous==="number"&&typeof value==="number"
-        &&Math.abs(value-previous)>=ATTRIBUTE_DELTA
-        ? [{attribute:key,from:previous,to:value,delta:value-previous}]:[];
-    });
-    if(Math.abs(overallDelta)>=OVERALL_DELTA||attributeDeltas.length)
+    if(Math.abs(overallDelta)>=OVERALL_DELTA)
       flags.push({id:row.id,name:row.name,team:row.team,position:row.position,
         overallBefore:old.overall,overallNow:row.overall,overallDelta,
-        attributeDeltas,decision:"HQ-editorial-review-required"});
+        decision:"HQ-editorial-review-required"});
     if(old.team&&row.team&&old.team!==row.team)
       rosterHints.push({id:row.id,name:row.name,fromTeam:old.team,toTeam:row.team,
         decision:"verify-NFL-transaction-before-roster-change"});
   }
   for(const old of baseline.players) if(!now.has(old.id)) missing.push(old.id);
   return {sport:"NFL",source:EA,baselineObservedAt:baseline.observedAt,
-    currentObservedAt:current.observedAt,thresholds:{overall:OVERALL_DELTA,
-      keyAttribute:ATTRIBUTE_DELTA},baselineCount:baseline.playerCount,
+    currentObservedAt:current.observedAt,thresholds:{overall:OVERALL_DELTA,attributeMonitoring:false},baselineCount:baseline.playerCount,
     currentCount:current.playerCount,flags,rosterHints,
     newIds:current.players.filter(row=>!prior.has(row.id)).map(row=>row.id),
     missingIds:missing,gradeChangesApplied:0,contractChangesApplied:0};
@@ -74,9 +57,13 @@ export function compareMadden(baseline,current){
 const normName=value=>String(value??"").normalize("NFKD")
   .replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"")
   .replace(/(?:iii|ii|iv|jr|sr|v)$/,"");
-export function flagDevelopmentProfiles(profiles,maddenFlags){
-  if(!Array.isArray(profiles)||!Array.isArray(maddenFlags))throw new Error("Missing development profiles or Madden flags");
-  const byIdentity=new Map(profiles.map(row=>[row.team+"|"+normName(row.name),row]));
+export function flagDevelopmentProfiles(profiles,maddenFlags,gradeRows=[],contracts=[],rosterHints=[]){
+  if(!Array.isArray(profiles)||!Array.isArray(maddenFlags)||!Array.isArray(gradeRows)||
+    !Array.isArray(contracts)||!Array.isArray(rosterHints)) throw new Error("Invalid NFL editorial inputs");
+  const key=(team,name)=>team+"|"+normName(name);
+  const byIdentity=new Map(profiles.map(row=>[key(row.team,row.name),row]));
+  const current=new Map(gradeRows.map(row=>[key(row.team,row.player),row]));
+  const contract=new Map(contracts.map(row=>[key(row.team,row.player),row]));
   const teamNames={ARI:"Arizona Cardinals",ATL:"Atlanta Falcons",BAL:"Baltimore Ravens",BUF:"Buffalo Bills",
     CAR:"Carolina Panthers",CHI:"Chicago Bears",CIN:"Cincinnati Bengals",CLE:"Cleveland Browns",
     DAL:"Dallas Cowboys",DEN:"Denver Broncos",DET:"Detroit Lions",GB:"Green Bay Packers",
@@ -85,28 +72,52 @@ export function flagDevelopmentProfiles(profiles,maddenFlags){
     MIN:"Minnesota Vikings",NE:"New England Patriots",NO:"New Orleans Saints",NYG:"New York Giants",
     NYJ:"New York Jets",PHI:"Philadelphia Eagles",PIT:"Pittsburgh Steelers",SEA:"Seattle Seahawks",
     SF:"San Francisco 49ers",TB:"Tampa Bay Buccaneers",TEN:"Tennessee Titans",WSH:"Washington Commanders"};
-  const code=new Map(Object.entries(teamNames).map(([key,value])=>[value,key]));
-  const maddenChangeIds=new Set();
-  const noMatch=[];
-  const results=[];
+  const teamCode=new Map(Object.entries(teamNames).map(([code,name])=>[name,code]));
+  const flagged=new Set(),teamChanges=new Set(),unmatched=[];
   for(const flag of maddenFlags){
-    const row=byIdentity.get(code.get(flag.team)+"|"+normName(flag.name));
-    if(row){maddenChangeIds.add(row.id);}else noMatch.push(flag.name+" ("+flag.team+")");
+    const row=byIdentity.get(key(teamCode.get(flag.team),flag.name));
+    if(row)flagged.add(row.id);else unmatched.push(flag.name+" ("+flag.team+")");
   }
+  for(const flag of rosterHints){
+    const row=byIdentity.get(key(teamCode.get(flag.fromTeam),flag.name));
+    if(row)teamChanges.add(row.id);
+  }
+  const results=[],screened=[];
   for(const row of profiles){
-    const reasons=[];
-    const age=Number(row.ageAtCalibration), breakout=Number(row.breakoutPct), improve=Number(row.improvePct);
-    const riskAge=row.family==="QB"?35:row.family==="RB"?29:row.family==="WR"||row.family==="TE"?31:33;
-    if(age>=riskAge && breakout+improve>=35)reasons.push("aging-player-high-upside-odds");
-    if(maddenChangeIds.has(row.id)){
-      reasons.push("madden-material-rating-change");
-      if(age<=25 && breakout<=10)reasons.push("young-breakout-low-progression-probability");
+    const reasons=[],age=Number(row.ageAtCalibration),decline=Number(row.declinePct);
+    const live=current.get(key(row.team,row.name));
+    const deal=contract.get(key(row.team,row.name));
+    const draftYear=Number(deal?.draftYear);
+    if(draftYear===2025 || draftYear===2026){
+      screened.push(row.id);
+      if(Number(row.breakoutPct)<=5 || decline>=40)
+        reasons.push("early-career-progression-risk-outlier");
     }
-    if(reasons.length)results.push({id:row.id,name:row.name,team:row.team,age,
-      breakoutPct:breakout,improvePct:improve,reasons,action:"editorial-review-not-auto-adjust"});
+    const riskAge=row.family==="QB"?33:row.family==="RB"?28:
+      row.family==="WR"||row.family==="TE"?30:31;
+    if(age>=riskAge && decline<30)
+      reasons.push("aging-player-low-decline-probability");
+    if(live && Math.abs(Number(live.grade)-Number(row.gradeAtCalibration))>=2)
+      reasons.push("hq-grade-changed-since-development-calibration");
+    if(flagged.has(row.id)){
+      reasons.push("madden-overall-change-2plus");
+      if(age<=25&&Number(row.breakoutPct)<=10)
+        reasons.push("young-breakout-low-progression-probability");
+    }
+    if(teamChanges.has(row.id))reasons.push("madden-team-change-confirm-transaction");
+    if(reasons.length)results.push({id:row.id,name:row.name,team:row.team,family:row.family,
+      age,gradeAtCalibration:row.gradeAtCalibration,currentHqGrade:live?.grade??null,
+      draftYear:Number.isInteger(draftYear)?draftYear:null,declinePct:decline,
+      breakoutPct:row.breakoutPct,improvePct:row.improvePct,reasons,
+      priority:reasons.includes("hq-grade-changed-since-development-calibration")||
+        reasons.includes("madden-overall-change-2plus")?"high":"medium",
+      action:"editorial-review-only-no-auto-adjust"});
   }
-  return {candidates:results,unmatchedMaddenFlags:noMatch,gmSimulationEvidence:"not-available-in-this-read-only-run"};
+  return {population:profiles.length,firstTwoSeasonsScreened:screened.length,
+    candidates:results,unmatchedMaddenFlags:unmatched,
+    gmSimulationEvidence:"not-available-in-this-read-only-run"};
 }
+
 async function getText(url){
   for(let attempt=0;attempt<3;attempt++){
     try{
@@ -146,10 +157,22 @@ async function main(){
   const profiles=JSON.parse(readFileSync(
     "data/curated/football/gm-nfl-development-profiles-2026-10-07.json","utf8")).profiles;
   if(profiles.length!==594)throw new Error("GM development profile census incomplete");
-  report.developmentReview=flagDevelopmentProfiles(profiles,report.flags);
+  const authority=readFileSync("src/features/back-room/wheelFootballNflCurrentAuthority.ts","utf8");
+  const files=[...new Set([...authority.matchAll(/wheel-nfl-(?:qb|rb|wr|te|front-seven|secondary)-grades-\d{4}-\d\d-\d\d\.json/g)].map(x=>x[0]))];
+  if(files.length!==6)throw new Error("Current GM grade authority bindings are incomplete");
+  const currentGrades=files.flatMap(name=>JSON.parse(readFileSync("data/generated/football/"+name,"utf8")).grades);
+  const contractsFile=authority.match(/contractFile:\s*"([^"]+)"/)?.[1];
+  if(!contractsFile)throw new Error("GM contracts binding is missing");
+  const contracts=JSON.parse(readFileSync("data/generated/football/"+contractsFile,"utf8")).players;
+  report.developmentReview=flagDevelopmentProfiles(profiles,report.flags,currentGrades,contracts,report.rosterHints);
   mkdirSync(dirname(baselinePath),{recursive:true});
   mkdirSync(dirname(output),{recursive:true});
   if(!hadBaseline)writeFileSync(baselinePath,JSON.stringify(baseline,null,2)+"\n");
+  if(args.next) {
+    const nextPath=resolve(args.next);
+    mkdirSync(dirname(nextPath),{recursive:true});
+    writeFileSync(nextPath,JSON.stringify(current,null,2)+"\n");
+  }
   writeFileSync(output,JSON.stringify(report,null,2)+"\n");
   console.log(JSON.stringify({baselineCreated:!hadBaseline,compared:report.currentCount,
     reviewFlags:report.flags.length,rosterHints:report.rosterHints.length}));
