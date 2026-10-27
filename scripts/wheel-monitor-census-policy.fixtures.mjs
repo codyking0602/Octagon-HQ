@@ -45,7 +45,7 @@ test("canonical wheel priorities are 623 current NFL and 1277 CFB non-Flex ident
  const keys=wheelPriorityIdentityKeys({nfl,cfb,extraTeams:[boise]});
  assert.equal([...keys].filter(k=>k.startsWith("NFL:")).length,623);
  assert.equal([...keys].filter(k=>k.startsWith("CFB:")).length,1277);
- assert.equal(keys.size,1903);
+ assert.equal(keys.size,1900);
 });
 test("unselected old grading rows do not create fake active identities",()=>{
  const scoped=inventoryFromAuthorities({football:[
