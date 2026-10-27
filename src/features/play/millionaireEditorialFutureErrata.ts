@@ -196,7 +196,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Who defeated Mark Coleman by decision at UFC 14 to become UFC heavyweight champion?",
     choices: ["Maurice Smith", "Bas Rutten", "Randy Couture", "Don Frye"], answer: "Maurice Smith",
     statSheet: "A former kickboxer survived the wrestler's early pressure to win in 1997.",
-    explanation: "Maurice Smith defeated Mark Coleman by unanimous decision at UFC 14 to win the heavyweight title.",
+    explanation: "Maurice Smith, a decorated kickboxer, defeated wrestler Mark Coleman by unanimous decision at UFC 14 in Birmingham, Alabama on July 27, 1997. The upset earned Smith the UFC heavyweight championship.",
     evidence: [{ authority: "UFC", url: "https://www.ufc.com/news/15-ufc-heavyweight-champions", supportingDetail: "The UFC heavyweight lineage identifies Smith's UFC 14 victory over Coleman." }],
   },
   "nfl:9:0": {
@@ -205,7 +205,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Which NFL team did Drew Brees play for before he joined the New Orleans Saints?",
     choices: ["Chargers", "Dolphins", "Colts", "Broncos"], answer: "Chargers",
     statSheet: "The 2001 second-round pick earned his first Pro Bowl selection and an NFL Comeback Player of the Year award for 2004.",
-    explanation: "Drew Brees was the San Diego Chargers' 2001 second-round pick, started for the team from 2002 through 2005 and won the NFL's 2004 Comeback Player of the Year award before joining New Orleans in 2006.",
+    explanation: "Drew Brees was selected 32nd overall by San Diego in 2001 and played five seasons (2001–2005) with the Chargers, earning a Pro Bowl selection in 2004. He joined New Orleans in 2006 and later led the Saints to a Super Bowl XLIV title.",
     evidence: [{ authority: "Chargers official Drew Brees retrospective", url: "https://www.chargers.com/news/drew-brees-chargers-days", supportingDetail: "The Chargers selected Brees in the second round in 2001, kept him for five seasons and awarded his 2004 breakout first Pro Bowl and Comeback Player of the Year honors." }],
   },
   "nfl:4:1": {
@@ -232,7 +232,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Who coached BYU to its undefeated 1984 national championship season?",
     choices: ["LaVell Edwards", "Don James", "Barry Switzer", "Dennis Erickson"], answer: "LaVell Edwards",
     statSheet: "The independent program finished 13-0 with a victory over Michigan in the Holiday Bowl.",
-    explanation: "LaVell Edwards led the 1984 BYU Cougars to a perfect 13-0 season and national championship.",
+    explanation: "LaVell Edwards coached BYU to a perfect 13–0 record and the 1984 national championship. Behind quarterback Robbie Bosco, the Cougars beat Michigan 24–17 in the Holiday Bowl to finish No. 1 in the national polls.",
     evidence: [{ authority: "BYU Athletics", url: "https://byucougars.com/staff/1984-national-champions", supportingDetail: "The school lists Edwards as 1984 coach and reports a 13-0 national-title season." }],
   },
   "cfb:2:3": {
@@ -241,7 +241,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Which program did Mike Leach coach immediately before becoming Mississippi State's head coach?",
     choices: ["Washington State", "Texas Tech", "Houston", "Oregon State"], answer: "Washington State",
     statSheet: "The Air Raid coach's 2018 team won 11 games and finished in the AP Top 10.",
-    explanation: "Mike Leach coached Washington State from 2012 through 2019, led the Cougars to an 11–2 season in 2018, and was named Mississippi State's head coach in January 2020.",
+    explanation: "Mike Leach coached Washington State from 2012 to 2019, producing an 11–2 campaign in 2018 and a 55–47 overall record. Mississippi State named him head coach in January 2020; Texas Tech had been his earlier head-coaching stop from 2000 through 2009.",
     evidence: [{ authority: "Mississippi State university coach biography", url: "https://www.msstate.edu/newsroom/article/2022/12/msu-bulldog-family-college-football-community-mourn-death-coach-mike-leach", supportingDetail: "Mississippi State confirms Leach coached Washington State for eight seasons, including 11 wins in 2018, before taking its head-coaching position in January 2020." }],
   },
   "cfb:3:4": {
@@ -250,7 +250,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Who coached Auburn's undefeated 2010 national championship team?",
     choices: ["Gene Chizik", "Tommy Tuberville", "Gus Malzahn", "Nick Saban"], answer: "Gene Chizik",
     statSheet: "His second Auburn season ended with a 22–19 BCS title-game win over Oregon.",
-    explanation: "Gene Chizik coached Auburn to a 14–0 record and the 2010 season's national championship, won in January 2011.",
+    explanation: "Gene Chizik led Auburn to a 14–0 record in the 2010 season, capped by a 22–19 BCS national-title victory over Oregon in January 2011. Heisman winner Cam Newton quarterbacked the unbeaten Tigers.",
     evidence: [{ authority: "Auburn Athletics", url: "https://auburntigers.com/news/2020/10/29/auburn-unveils-2010-national-championship-banner-chizik-recalls-incredible-journey", supportingDetail: "The school's retrospective identifies Chizik as head coach of undefeated 2010 Auburn." }],
   },
   "cfb:6:7": {
@@ -259,7 +259,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Which Georgia running back scored the 27-yard double-overtime walk-off touchdown against Oklahoma in the January 2018 Rose Bowl?",
     choices: ["Sony Michel", "Nick Chubb", "D'Andre Swift", "Elijah Holyfield"], answer: "Sony Michel",
     statSheet: null,
-    explanation: "Sony Michel's 27-yard touchdown run ended Georgia's 54–48 double-overtime semifinal thriller against Oklahoma on January 1, 2018.",
+    explanation: "Sony Michel took a direct snap and ran 27 yards for Georgia's winning touchdown in the second overtime of the January 2018 Rose Bowl. The 54–48 semifinal victory over Oklahoma followed Lorenzo Carter's block of the Sooners' field-goal attempt.",
     evidence: [{ authority: "Georgia Athletics", url: "https://georgiadogs.com/news/2018/1/1/football-georgia-beats-oklahoma-to-win-rose-bowl-game?path=football", supportingDetail: "The official Rose Bowl recap documents Michel's 27-yard walk-off score following a blocked Oklahoma field goal." }],
   },
   "ufc:4:1": {
@@ -268,7 +268,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Who knocked out Alex Pereira at UFC 287 to regain the middleweight championship?",
     choices: ["Israel Adesanya", "Robert Whittaker", "Sean Strickland", "Dricus du Plessis"], answer: "Israel Adesanya",
     statSheet: "The Miami title rematch ended late in Round 2 in April 2023.",
-    explanation: "Israel Adesanya knocked out Alex Pereira at 4:21 of Round 2 at UFC 287 to regain the UFC middleweight title.",
+    explanation: "Israel Adesanya knocked out Alex Pereira with a right hand at 4:21 of Round 2 at UFC 287 in Miami on April 8, 2023. The comeback finish recaptured the UFC middleweight championship after Pereira had dethroned him in their previous UFC meeting.",
     evidence: [{ authority: "UFC 287 official results", url: "https://www.ufc.com/news/ufc-287-pereira-vs-adesanya-2-results-highlights-winner-interviews-miami?language_content_entity=en", supportingDetail: "Official fight results confirm Adesanya KO over Pereira, 4:21 of Round 2." }],
   },
   "ufc:9:3": {
@@ -277,7 +277,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     prompt: "Who challenged Cris Cyborg for the UFC women's featherweight championship at UFC 219?",
     choices: ["Holly Holm", "Ronda Rousey", "Amanda Nunes", "Germaine de Randamie"], answer: "Holly Holm",
     statSheet: "The Las Vegas main event in December 2017 went the full five rounds.",
-    explanation: "Holly Holm challenged champion Cris Cyborg in UFC 219's main event, losing by decision.",
+    explanation: "Holly Holm challenged Cris Cyborg for the UFC women's featherweight championship in the December 30, 2017 UFC 219 main event in Las Vegas. Cyborg retained the belt after five rounds by unanimous decision, 49–46, 48–47 and 48–47.",
     evidence: [{ authority: "UFC", url: "https://www.ufc.com/event/ufc-219", supportingDetail: "Official UFC 219 event result lists Cyborg vs Holm, five-round unanimous decision." }],
   },
   "ufc:9:7": {

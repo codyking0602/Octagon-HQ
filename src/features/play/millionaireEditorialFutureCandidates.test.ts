@@ -15,6 +15,30 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("retains eight sourced NFL CFB UFC legacy-preview factual reveals", () => {
+    const cases = [
+      ["nfl:9:0","Chargers","2001–2005"],
+      ["cfb:2:3","Washington State","55–47"],
+      ["cfb:1:4","LaVell Edwards","24–17"],
+      ["cfb:3:4","Gene Chizik","14–0"],
+      ["cfb:6:7","Sony Michel","Lorenzo Carter"],
+      ["ufc:9:3","Holly Holm","49–46"],
+      ["ufc:0:6","Maurice Smith","Birmingham"],
+      ["ufc:4:1","Israel Adesanya","4:21"],
+    ] as const;
+    for(const [key,winner,fact] of cases){
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(winner);
+      expect(q.explanation).toContain(winner);
+      expect(q.explanation).toContain(fact);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(q.choices.filter(choice=>choice===winner)).toHaveLength(1);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+      if(key.endsWith(":7"))expect(q.statSheet).toBeNull();
+      else expect(normalized(q.statSheet??"")).not.toContain(normalized(winner));
+    }
+  });
+
 
   it("keeps two official-source-backed career and coaching clues spoiler-safe", () => {
     const brees = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:9:0"]!;
