@@ -37,6 +37,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     for (let offset = 0; offset < 240 && seen.size < 45; offset += 1) {
       const day = new Date(Date.UTC(2026, 9, 27 + offset)).toISOString().slice(0, 10);
       for (const sport of ["football", "ufc"] as const) {
+        if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
         if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
         const publication = buildMillionaireDailySetup(sport, day, "editorial-ledger-reconciliation",
           { editorialCandidatePreview: true });
