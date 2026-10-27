@@ -53,7 +53,11 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
     expect(people.length).toBe(184);
     expect(Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)).toHaveLength(25);
     const eligible = new Set(people.map(x => x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g,"")));
-    for (const key of Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)) expect(eligible.has(key)).toBe(true);
+    // The shared registry also contains restorations needed only by Find the Leader
+    // (Brandon Roy); they must not be incorrectly required in this game's pool.
+    const sharedEligible = new Set([...eligible, ...nbaFindLeaderSubjects.map(x =>
+      x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g, ""))]);
+    for (const key of Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)) expect(sharedEligible.has(key)).toBe(true);
     expect(new Set(people.map(x => x.name)).size).toBe(people.length);
     expect(people.some(x => x.name === "Lamar Odom")).toBe(true);
     expect(people.some(x => x.name === "Jason Kidd")).toBe(true);
