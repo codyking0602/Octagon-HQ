@@ -173,7 +173,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:1:1", "Jon Jones", "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-309-jones-vs-miocic"],
       ["ufc:1:6", "Benson Henderson", "https://www.ufc.com/news/ufc-lightweight-title-lineage-khabib-mcgregor-penn-poirier-oliveira"],
       ["ufc:2:5", "Tony Ferguson", "https://www.ufc.com/news/ferguson-claims-interim-lightweight-belt-calls-out-mcgregor"],
-      ["ufc:3:1", "Joanna Jedrzejczyk", "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results"],
+      ["ufc:3:1", "Jon Jones", "https://www.ufc.com/news/ufc-232-main-event-report"],
       ["ufc:3:2", "Randy Couture", "https://www.ufc.com/news/history-two-division-champions-part-1-ufc-freedom-250"],
       ["ufc:4:5", "T.J. Dillashaw", "https://www.ufc.com/news/fight-night-dillashaw-vs-cruz-final-results"],
       ["ufc:5:6", "Jose Aldo", "https://www.ufc.com/athlete/jose-aldo"],
@@ -1222,7 +1222,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:4:4", "Zhang Weili"],
       ["ufc:5:0", "Justin Gaethje"],
       ["ufc:5:2", "Deiveson Figueiredo"],
-      ["ufc:5:3", "Kamaru Usman"],
+      ["ufc:5:3", "Jack Della Maddalena"],
       ["ufc:5:4", "Diego Lopes"],
       ["ufc:9:0", "Rose Namajunas"],
       ["ufc:9:1", "Amanda Nunes"],
@@ -1516,4 +1516,24 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+
+  it("keeps two active Average Fan same-fact UFC overlaps off future-only boards", () => {
+    const repairs = [
+      ["ufc:3:1", 3, 1, "Jon Jones", "UFC 232", "UFC 217"],
+      ["ufc:5:3", 5, 3, "Jack Della Maddalena", "UFC 299", "UFC 261"],
+    ] as const;
+    for (const [key, runIndex, index, correct, newEvent, oldEvent] of repairs) {
+      const revision = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(revision.answer).toBe(correct);
+      expect(revision.prompt).toContain(newEvent);
+      expect(revision.prompt).not.toContain(oldEvent);
+      expect(revision.choices).toHaveLength(4);
+      expect(new Set(revision.choices.map(normalized)).size).toBe(4);
+      expect(normalized(revision.statSheet ?? "")).not.toContain(normalized(correct));
+      expect(revision.explanation).toContain(correct);
+      expect(revision.evidence[0]?.url).toContain("ufc.com");
+      const original = millionaireDailyRun("ufc", runIndex)[index]!;
+      expect(original.prompt).not.toBe(revision.prompt);
+    }
+  });
 });
