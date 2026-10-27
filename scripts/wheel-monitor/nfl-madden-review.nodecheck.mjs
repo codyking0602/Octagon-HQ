@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {compareMadden,canonicalize} from "./nfl-madden-review.mjs";
+import {compareMadden,canonicalize,flagDevelopmentProfiles} from "./nfl-madden-review.mjs";
 const make=(id,overall,team="Buffalo Bills",speed=85)=>({
  id,firstName:"Sample",lastName:id,overallRating:overall,
  team:{label:team},position:{id:"WR"},stats:{speed:{value:speed}}
@@ -25,4 +25,13 @@ test("cannot compare incomplete or duplicate Madden census",()=>{
  assert.throws(()=>canonicalize([make("a",80)],"now"),/incomplete/);
  const duplicate=rows({overall:84,team:"Buffalo Bills",speed:85});duplicate[1].id=duplicate[0].id;
  assert.throws(()=>canonicalize(duplicate,"now"),/Duplicate/);
+});
+test("development flags use aged-player risk and material Madden moves without auto-editing",()=>{
+ const result=flagDevelopmentProfiles([
+   {id:"LAR|QB|vet",name:"Veteran",team:"LAR",family:"QB",ageAtCalibration:36,breakoutPct:17,improvePct:24},
+   {id:"BUF|WR|sample0",name:"Sample 0",team:"BUF",family:"WR",ageAtCalibration:23,breakoutPct:5,improvePct:38}
+ ],[{id:"0",name:"Sample 0",team:"Buffalo Bills",overallDelta:3}]);
+ assert.equal(result.candidates.length,2);
+ assert.equal(result.candidates[0].reasons[0],"aging-player-high-upside-odds");
+ assert.ok(result.candidates[1].reasons.includes("young-breakout-low-progression-probability"));
 });

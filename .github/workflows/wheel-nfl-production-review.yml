@@ -48,7 +48,7 @@ jobs:
           retention-days: 30
 
   madden-ratings:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -59,6 +59,7 @@ jobs:
       - name: Verify Madden review flags, thresholds and identity rules
         run: node --test scripts/wheel-monitor/nfl-madden-review.nodecheck.mjs
       - name: Restore locked Madden baseline (never silently reset a prior baseline)
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -76,12 +77,13 @@ jobs:
             echo "::notice::Initial Madden baseline will be captured from EA this run."
           fi
       - name: Compare official EA Madden ratings against frozen baseline (review only)
+        if: github.event_name != 'pull_request'
         run: |
           node scripts/wheel-monitor/nfl-madden-review.mjs \
             --baseline=tmp/wheel-monitor/madden/baseline.json \
             --out=tmp/wheel-monitor/madden/review.json
       - name: Preserve frozen baseline and weekly flags
-        if: success()
+        if: github.event_name != 'pull_request' && success()
         uses: actions/upload-artifact@v4
         with:
           name: wheel-nfl-madden-locked-baseline
@@ -89,7 +91,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
       - name: Publish read-only candidate flags
-        if: always()
+        if: github.event_name != 'pull_request' && always()
         uses: actions/upload-artifact@v4
         with:
           name: wheel-nfl-madden-review-flags

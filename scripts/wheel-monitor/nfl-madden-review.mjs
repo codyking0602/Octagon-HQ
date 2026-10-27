@@ -70,6 +70,43 @@ export function compareMadden(baseline,current){
     newIds:current.players.filter(row=>!prior.has(row.id)).map(row=>row.id),
     missingIds:missing,gradeChangesApplied:0,contractChangesApplied:0};
 }
+
+const normName=value=>String(value??"").normalize("NFKD")
+  .replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"")
+  .replace(/(?:iii|ii|iv|jr|sr|v)$/,"");
+export function flagDevelopmentProfiles(profiles,maddenFlags){
+  if(!Array.isArray(profiles)||!Array.isArray(maddenFlags))throw new Error("Missing development profiles or Madden flags");
+  const byIdentity=new Map(profiles.map(row=>[row.team+"|"+normName(row.name),row]));
+  const teamNames={ARI:"Arizona Cardinals",ATL:"Atlanta Falcons",BAL:"Baltimore Ravens",BUF:"Buffalo Bills",
+    CAR:"Carolina Panthers",CHI:"Chicago Bears",CIN:"Cincinnati Bengals",CLE:"Cleveland Browns",
+    DAL:"Dallas Cowboys",DEN:"Denver Broncos",DET:"Detroit Lions",GB:"Green Bay Packers",
+    HOU:"Houston Texans",IND:"Indianapolis Colts",JAX:"Jacksonville Jaguars",KC:"Kansas City Chiefs",
+    LAC:"Los Angeles Chargers",LAR:"Los Angeles Rams",LV:"Las Vegas Raiders",MIA:"Miami Dolphins",
+    MIN:"Minnesota Vikings",NE:"New England Patriots",NO:"New Orleans Saints",NYG:"New York Giants",
+    NYJ:"New York Jets",PHI:"Philadelphia Eagles",PIT:"Pittsburgh Steelers",SEA:"Seattle Seahawks",
+    SF:"San Francisco 49ers",TB:"Tampa Bay Buccaneers",TEN:"Tennessee Titans",WSH:"Washington Commanders"};
+  const code=new Map(Object.entries(teamNames).map(([key,value])=>[value,key]));
+  const maddenChangeIds=new Set();
+  const noMatch=[];
+  const results=[];
+  for(const flag of maddenFlags){
+    const row=byIdentity.get(code.get(flag.team)+"|"+normName(flag.name));
+    if(row){maddenChangeIds.add(row.id);}else noMatch.push(flag.name+" ("+flag.team+")");
+  }
+  for(const row of profiles){
+    const reasons=[];
+    const age=Number(row.ageAtCalibration), breakout=Number(row.breakoutPct), improve=Number(row.improvePct);
+    const riskAge=row.family==="QB"?35:row.family==="RB"?29:row.family==="WR"||row.family==="TE"?31:33;
+    if(age>=riskAge && breakout+improve>=35)reasons.push("aging-player-high-upside-odds");
+    if(maddenChangeIds.has(row.id)){
+      reasons.push("madden-material-rating-change");
+      if(age<=25 && breakout<=10)reasons.push("young-breakout-low-progression-probability");
+    }
+    if(reasons.length)results.push({id:row.id,name:row.name,team:row.team,age,
+      breakoutPct:breakout,improvePct:improve,reasons,action:"editorial-review-not-auto-adjust"});
+  }
+  return {candidates:results,unmatchedMaddenFlags:noMatch,gmSimulationEvidence:"not-available-in-this-read-only-run"};
+}
 async function getText(url){
   for(let attempt=0;attempt<3;attempt++){
     try{
@@ -106,6 +143,10 @@ async function main(){
   const baseline=hadBaseline?JSON.parse(readFileSync(baselinePath,"utf8")):current;
   const report=compareMadden(baseline,current);
   report.baselineCreated=!hadBaseline;
+  const profiles=JSON.parse(readFileSync(
+    "data/curated/football/gm-nfl-development-profiles-2026-10-07.json","utf8")).profiles;
+  if(profiles.length!==594)throw new Error("GM development profile census incomplete");
+  report.developmentReview=flagDevelopmentProfiles(profiles,report.flags);
   mkdirSync(dirname(baselinePath),{recursive:true});
   mkdirSync(dirname(output),{recursive:true});
   if(!hadBaseline)writeFileSync(baselinePath,JSON.stringify(baseline,null,2)+"\n");
