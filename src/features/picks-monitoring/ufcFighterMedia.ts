@@ -172,6 +172,8 @@ function metaImage(html: string) {
 const ufcAthleteSlugAliases = new Map([
   ["tina-black", "valesca-machado"],
   ["mahammadali-osmanli", "mehemmedeli-osmanli"],
+  // UFC lists Muhammad Saidov under this official source-page slug.
+  ["muhammad-saidov", "muhammad-said"],
 ]);
 
 export function ufcAthletePageUrl(fighterSlug: string) {

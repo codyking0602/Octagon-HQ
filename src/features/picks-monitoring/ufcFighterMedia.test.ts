@@ -132,6 +132,8 @@ describe("UFC fighter media discovery", () => {
 
     expect(ufcAthletePageUrl("mahammadali-osmanli"))
       .toBe("https://www.ufc.com/athlete/mehemmedeli-osmanli");
+    expect(ufcAthletePageUrl("muhammad-saidov"))
+      .toBe("https://www.ufc.com/athlete/muhammad-said");
     expect(ufcAthletePageUrl("tina-black"))
       .toBe("https://www.ufc.com/athlete/valesca-machado");
   });
