@@ -15,6 +15,29 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("keeps nine future NFL/CFB/UFC Q8 playoffs and championship explanations substantive", () => {
+    const approved = [
+      ["nfl:5:7", "Larry Fitzgerald", "26–20"],
+      ["nfl:7:7", "Vernon Davis", "14-yard"],
+      ["cfb:0:7", "Jerard Rabb", "fourth-and-18"],
+      ["cfb:2:7", "Gary Patterson", "13–0"],
+      ["cfb:3:7", "Justin Blackmon", "1,782"],
+      ["cfb:8:7", "Charlie Ward", "Knicks"],
+      ["ufc:3:7", "Jan Błachowicz", "4:36"],
+      ["ufc:4:7", "Lyoto Machida", "3:57"],
+      ["ufc:5:7", "Nate Diaz", "2:52"],
+    ] as const;
+    for (const [key, expected, detail] of approved) {
+      const q = MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
+      expect(q.answer).toBe(expected);
+      expect(q.explanation).toContain(detail);
+      expect(q.statSheet).toBeNull();
+      expect(q.choices.filter(c => c === expected)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+  });
+
 
   it("preserves the further AFC title and SoFi hint improvements without answer leaks", () => {
     const polamalu = millionaireFutureEditorialDailyRun("nfl",11)[4]!;

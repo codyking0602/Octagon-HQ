@@ -59,7 +59,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-nfl-future-larry-fitzgerald-ot-2015-q8", "playoff-finish",
     "Who scored Arizona's walk-off overtime touchdown against Green Bay in the 2015 season's NFC divisional playoffs?",
     ["Larry Fitzgerald", "John Brown", "Michael Floyd", "David Johnson"], "Larry Fitzgerald",
-    "After a long catch-and-run on the first overtime drive, Larry Fitzgerald scored from five yards out on a shovel pass from Carson Palmer.",
+    "Larry Fitzgerald first took a Carson Palmer pass 75 yards to the Packers' five-yard line in overtime, then caught Palmer's five-yard shovel pass for the winner. Arizona defeated Green Bay 26–20 in the January 2016 divisional round.",
     { authority: "NFL / Packers", url: "https://www.packers.com/news/packers-defense-had-its-chances-16708510", supportingDetail: "Packers' divisional-round recap describes Fitzgerald's overtime touchdown following his long catch-and-run." },
   ),
   "nfl:6:7": q8(
@@ -73,7 +73,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-nfl-future-vernon-davis-saints-2011-q8", "playoff-finish",
     "Who caught Alex Smith's winning touchdown with nine seconds left against New Orleans in the 2011 season's NFC playoffs?",
     ["Vernon Davis", "Michael Crabtree", "Delanie Walker", "Ted Ginn Jr."], "Vernon Davis",
-    "Vernon Davis caught the winning touchdown pass from Alex Smith in San Francisco's January 2012 divisional-round victory.",
+    "Vernon Davis caught Alex Smith's 14-yard touchdown pass with nine seconds remaining on January 14, 2012, giving San Francisco a 36–32 divisional playoff victory over New Orleans. The play became known as 'The Catch III' in 49ers postseason lore.",
     { authority: "San Francisco 49ers", url: "https://www.49ers.com/news/49ers-top-100-games-history", supportingDetail: "Team history identifies Davis as the nine-seconds-remaining winning receiver." },
   ),
   "nfl:9:7": q8(
@@ -87,7 +87,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-cfb-future-2007-fiesta-rabb-q8", "bowl-iconic-play",
     "Who scored Boise State's tying touchdown on the hook-and-lateral in the final seconds of the 2007 Fiesta Bowl?",
     ["Jerard Rabb", "Drisan James", "Ian Johnson", "Jared Zabransky"], "Jerard Rabb",
-    "Jared Zabransky passed to Drisan James, who pitched to Jerard Rabb for a 50-yard tying touchdown against Oklahoma.",
+    "On fourth-and-18 while Boise State trailed Oklahoma 35–28 in the January 2007 Fiesta Bowl, Jared Zabransky threw to Drisan James, who lateraled to Jerard Rabb. Rabb completed the 50-yard tying touchdown with seven seconds left before Boise State won 43–42 in overtime.",
     { authority: "College Football Hall of Fame", url: "https://www.cfbhall.com/news-and-happenings/blog/greatest-moments-in-college-football-boise-state-vs-oklahoma-2007-fiesta-bowl-game/", supportingDetail: "Hall history traces the 4th-and-18 hook-and-lateral from James to Rabb and his touchdown." },
   ),
   "cfb:1:7": q8(
@@ -101,14 +101,14 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-cfb-future-tcu-2010-patterson-q8", "bowl-coaching",
     "Who coached TCU to a 13-0 season capped by a Rose Bowl victory over Wisconsin after the 2010 season?",
     ["Gary Patterson", "Sonny Dykes", "Dennis Franchione", "Pat Fitzgerald"], "Gary Patterson",
-    "Gary Patterson led TCU to 13-0 and a 21-19 victory over Wisconsin in the Rose Bowl.",
+    "Gary Patterson coached TCU to a perfect 13–0 season in 2010, capped by its 21–19 Rose Bowl victory over Wisconsin on January 1, 2011. The Horned Frogs finished ranked No. 2 nationally and Patterson earned a national coaching award.",
     { authority: "TCU Athletics", url: "https://gofrogs.com/news/2011/1/20/Patterson_Receives_National_Coaching_Honor", supportingDetail: "TCU's 2011 coaches award report names Patterson and the 13-0 Rose Bowl campaign." },
   ),
   "cfb:3:7": q8(
     "millionaire-cfb-future-blackmon-biletnikoff-q8", "college-receivers",
     "Which Oklahoma State receiver won the Biletnikoff Award in BOTH 2010 and 2011?",
     ["Justin Blackmon", "Dez Bryant", "James Washington", "Michael Crabtree"], "Justin Blackmon",
-    "Justin Blackmon won consecutive Biletnikoff Awards while starring at Oklahoma State in 2010 and 2011.",
+    "Justin Blackmon won the Fred Biletnikoff Award at Oklahoma State in both 2010 and 2011, one of only two receivers to win the award twice. He gained 1,782 receiving yards and scored 20 receiving touchdowns as a sophomore in 2010.",
     { authority: "Oklahoma State Athletics", url: "https://okstate.com/sports/2015/3/17/GEN_2014010114", supportingDetail: "School Hall of Honor biography lists Blackmon's 2010 and 2011 Biletnikoff awards." },
   ),
   "cfb:4:7": q8(
@@ -129,7 +129,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-cfb-future-1993-ward-heisman-nba-q8", "two-sport-careers",
     "Which 1993 Heisman winner later played professional basketball in the NBA instead of pursuing an NFL career?",
     ["Charlie Ward", "Chris Weinke", "Jameis Winston", "Danny Kanell"], "Charlie Ward",
-    "Charlie Ward won the 1993 Heisman at Florida State and played in the NBA rather than the NFL.",
+    "Florida State quarterback Charlie Ward won the 1993 Heisman Trophy during the Seminoles' national championship season, but chose basketball rather than the NFL. The New York Knicks drafted him 26th overall in 1994, beginning a 12-season NBA career.",
     { authority: "Heisman Trust", url: "https://www.heisman.com/heisman-winners/charlie-ward/", supportingDetail: "Trust's player profile confirms both the 1993 Heisman and his NBA career." },
   ),
   "cfb:9:7": q8(
@@ -157,21 +157,21 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-ufc-future-253-blachowicz-q8", "vacant-title-fight",
     "Who defeated Dominick Reyes at UFC 253 to win the vacant light heavyweight championship?",
     ["Jan Błachowicz", "Glover Teixeira", "Jiri Prochazka", "Alex Pereira"], "Jan Błachowicz",
-    "Jan Błachowicz defeated Dominick Reyes at UFC 253 to win the vacant light heavyweight title.",
-    { authority: "UFC title lineage", url: "https://www.ufc.com/news/ufc-light-heavyweight-title-lineage-jones-cormier-blachowicz-teixeira-prochazka", supportingDetail: "Official lineage records Blachowicz taking the vacant belt from Reyes at UFC 253." },
+    "Jan Błachowicz defeated Dominick Reyes by TKO at 4:36 of Round 2 at UFC 253 in September 2020, capturing the vacant light heavyweight championship after Jon Jones relinquished the belt.",
+    { authority: "UFC title lineage", url: "https://www.ufc.com/news/ufc-253-adesanya-vs-costa-live-fight-island-results", supportingDetail: "Official lineage records Blachowicz taking the vacant belt from Reyes at UFC 253." },
   ),
   "ufc:4:7": q8(
     "millionaire-ufc-future-machida-evans-98-q8", "light-heavyweight-history",
     "Who knocked out Rashad Evans in Round 2 at UFC 98 to win the light heavyweight championship?",
     ["Lyoto Machida", "Quinton Jackson", "Jon Jones", "Forrest Griffin"], "Lyoto Machida",
-    "Lyoto Machida knocked out previously unbeaten champion Rashad Evans at 3:57 of Round 2 at UFC 98 in May 2009, beginning his reign as UFC light heavyweight champion.",
+    "Lyoto Machida handed unbeaten Rashad Evans his first professional loss with a knockout at 3:57 of Round 2 at UFC 98 in May 2009, taking the light heavyweight championship from Evans.",
     { authority: "UFC light heavyweight title history", url: "https://www.ufc.com/news/10-best-light-heavyweight-title-fights", supportingDetail: "UFC confirms Machida's knockout of Evans at 3:57 of Round 2 to capture the title." },
   ),
   "ufc:5:7": q8(
     "millionaire-ufc-future-diaz-ferguson-279-q8", "late-submission-finishes",
     "Who submitted Tony Ferguson with a guillotine in Round 4 of the rearranged UFC 279 main event?",
     ["Nate Diaz", "Khamzat Chimaev", "Michael Chandler", "Justin Gaethje"], "Nate Diaz",
-    "After a late main-event shuffle caused by Khamzat Chimaev missing weight, Nate Diaz submitted Tony Ferguson by guillotine at 2:52 of Round 4 in September 2022.",
+    "Nate Diaz submitted Tony Ferguson by guillotine choke at 2:52 of Round 4 at UFC 279 on September 10, 2022. The main event was rearranged after Khamzat Chimaev missed weight, making Diaz–Ferguson a last-minute matchup.",
     { authority: "UFC official UFC 279 results", url: "https://www.ufc.com/news/ufc-279-diaz-vs-ferguson-results-highlights-winner-interviews", supportingDetail: "UFC states Diaz defeated Ferguson with a Round 4 guillotine at 2:52, after the fight-week change of opponents." },
   ),
 
