@@ -70,9 +70,10 @@ export function nbaOfficialActiveRound(projection: TodayChallengeProjection) {
   return { index, setup, state, reveal, score };
 }
 
-function NBAHeadshot({ name, compact = false }: { name: string; compact?: boolean }) {
+function NBAHeadshot({ name, season, compact = false }: { name: string; season?: number; compact?: boolean }) {
   const [failed, setFailed] = useState(false);
-  const src = nbaFindLeaderHeadshot({ name, nbaId: null });
+  const src = nbaFindLeaderHeadshot({ name, season, nbaId: null });
+  useEffect(() => setFailed(false), [src]);
   const initials = name.split(/\s+/).map(x => x[0]).slice(0, 2).join("");
   return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "")} aria-label={name + " portrait"}>
     {src && !failed ? <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" onError={() => setFailed(true)} />
@@ -106,7 +107,7 @@ export function NbaOfficialFindLeader({ projection, advance, busy }: { projectio
       result={attempt ? { score: score ?? attempt.normalizedScore, perfect, fatalId: perfect ? null : chosen.at(-1) ?? null } : null}
       eyebrow="TODAY'S NBA CHALLENGE" intro="Eliminate nine decoys. Leave the leader standing."
       onEliminate={attempt || busy ? null : id => advance({ eliminated_id: id })}
-      renderVisual={(candidate, compact) => <NBAHeadshot name={candidate.name} compact={compact} />}
+      renderVisual={(candidate, compact) => <NBAHeadshot name={candidate.name} season={candidate.season} compact={compact} />}
       formatValue={formatNbaFindLeaderValue}
     />
   </div>;
