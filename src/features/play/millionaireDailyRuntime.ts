@@ -319,6 +319,19 @@ function futureMillionaireErrata(
         ?? MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${runIndex}:${index}`])
       : undefined;
     if (newQuestion) {
+      // Editorial overlays do not guarantee that the correct answer occupies A.
+      // Resolve the authored answer before applying the canonical balancing pass;
+      // otherwise a non-A answer silently grades the wrong choice as correct.
+      const authoredCorrectIndices = newQuestion.choices.flatMap((choice, choiceIndex) =>
+        choice === newQuestion.answer ? [choiceIndex] : []);
+      if (authoredCorrectIndices.length !== 1) {
+        throw new Error(`Millionaire editorial overlay ${league} run ${runIndex + 1} Q${index + 1} must have one designated answer.`);
+      }
+      const correctChoiceId = MILLIONAIRE_CHOICE_IDS[authoredCorrectIndices[0]!]!;
+      const survivorChoiceId = MILLIONAIRE_CHOICE_IDS[(authoredCorrectIndices[0]! + 1) % 4]!;
+      const removalChoiceIds = MILLIONAIRE_CHOICE_IDS.filter(
+        id => id !== correctChoiceId && id !== survivorChoiceId,
+      );
       // Do not mutate the legacy question authority or any persisted result.
       // With independent future v6 IDs even historic caches remain auditable.
       return {
@@ -330,12 +343,12 @@ function futureMillionaireErrata(
           id,
           text: newQuestion.choices[choiceIndex]!,
         })) as unknown as MillionaireRuntimeQuestion["choices"],
-        correctChoiceId: "A",
+        correctChoiceId,
         explanation: newQuestion.explanation,
         statSheet: newQuestion.statSheet,
         fiftyFifty: {
-          survivorChoiceIds: ["A", "B"],
-          removalChoiceIds: ["C", "D"],
+          survivorChoiceIds: [correctChoiceId, survivorChoiceId],
+          removalChoiceIds: [removalChoiceIds[0]!, removalChoiceIds[1]!],
         },
       };
     }
