@@ -45,6 +45,12 @@ begin
      or (select count(*) from private.wheel_ufc_fighters
        where fighter_id='rinat-fakhretdinov' and division='Welterweight'
          and not active and hidden_grade=78.50) <> 1 then
-    raise exception 'Michel Pereira current eligibility postflight failed';
+    raise exception 'UFC postflight: rows %, active %, ranked %, champions %, Pereira inactive %, Rinat inactive %',
+      (select count(*) from private.wheel_ufc_fighters),
+      (select count(*) from private.wheel_ufc_fighters where active),
+      (select count(*) from private.wheel_ufc_fighters where active and ranking between 1 and 15),
+      (select count(*) from private.wheel_ufc_fighters where active and is_champion),
+      (select count(*) from private.wheel_ufc_fighters where fighter_id='michel-pereira' and division='Middleweight' and not active and hidden_grade=74),
+      (select count(*) from private.wheel_ufc_fighters where fighter_id='rinat-fakhretdinov' and division='Welterweight' and not active and hidden_grade=78.50);
   end if;
 end $postflight$;
