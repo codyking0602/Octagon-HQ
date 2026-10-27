@@ -229,6 +229,7 @@ async function loadIsolatedDailyAction(sport: "football" | "ufc", gameType: stri
   if (sport === "football" && gameType === "higher_lower") return (await import("./football-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
   if (sport === "football" && gameType === "bar_trivia") return (await import("./bar-trivia-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
   if (sport === "football" && gameType === "sports_feud") return (await import("./legacy-feud-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && ["blind_rank_5", "keep_4_cut_4"].includes(gameType)) return (await import("./ufc-comparison-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
   if (sport === "ufc" && gameType === "find_leader") return (await import("./ufc-find-leader-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
   if (sport === "ufc" && gameType === "wavelength") return (await import("./ufc-wavelength-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
   if (sport === "ufc" && gameType === "higher_lower") return (await import("./ufc-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;

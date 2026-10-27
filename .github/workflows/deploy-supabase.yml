@@ -276,6 +276,7 @@ jobs:
             test -f supabase/functions/daily-challenge-runtime/average-fan.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/who-am-i-advance.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/nba-who-am-i-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/ufc-comparison-advance.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/ufc-find-leader-advance.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/ufc-wavelength-advance.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-comparison-advance.generated.mjs
