@@ -51,7 +51,7 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
   it("exposes the entire eligible player pool for full image-content auditing", () => {
     const people = NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS;
     expect(people.length).toBe(184);
-    expect(Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)).toHaveLength(24);
+    expect(Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)).toHaveLength(25);
     const eligible = new Set(people.map(x => x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g,"")));
     for (const key of Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)) expect(eligible.has(key)).toBe(true);
     expect(new Set(people.map(x => x.name)).size).toBe(people.length);
