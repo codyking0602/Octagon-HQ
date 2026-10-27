@@ -30,11 +30,11 @@ describe("NFL-only five-QB current-ability correction batch (2026 Week 7)", () =
     }
   });
 
-  it("versions private Wheel authority without touching historical GM player IDs or development odds", () => {
+  it("flows approved current Wheel grades into newly generated GM candidates without changing identities or development profiles", () => {
     expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
     expect(profiles.profiles).toHaveLength(594);
     for (const item of expected) {
-      expect(footballGmPlayerById(item.playerId)).toEqual(expect.objectContaining({team:item.team,position:"QB",currentGrade:item.oldGrade}));
+      expect(footballGmPlayerById(item.playerId)).toEqual(expect.objectContaining({team:item.team,position:"QB",currentGrade:item.newGrade}));
       expect(profiles.profiles.find(p => p.id === item.playerId)).toBeDefined();
     }
     expect(migration).toContain("insert into private.wheel_football_grade_authority");

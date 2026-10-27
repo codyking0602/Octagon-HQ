@@ -7,7 +7,7 @@ import profiles from "../../../data/curated/football/gm-nfl-development-profiles
 const sql=readFileSync("supabase/migrations/202612310602_nfl_cj_stroud_current_ability_grade.sql","utf8");
 
 describe("Stroud Oct 26 current NFL grade and historical GM development continuity",()=>{
-  it("versions one researched Texans Wheel grade, preserving all 594 historical GM identities",()=>{
+  it("versions Texans Wheel authority and binds the refreshed GM grade, preserving 594 identities",()=>{
     expect(revisions.changes).toHaveLength(1);
     const revision=revisions.changes[0]!;
     expect(revision).toEqual(expect.objectContaining({team:"HOU",family:"QB",player:"C.J. Stroud",oldGrade:82,newGrade:88}));
@@ -15,7 +15,7 @@ describe("Stroud Oct 26 current NFL grade and historical GM development continui
     expect(oldQb.grades.find(x=>x.player==="C.J. Stroud")?.grade).toBe(82);
     expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
     expect(footballGmPlayerById("HOU|QB|cjstroud")).toEqual(
-      expect.objectContaining({team:"HOU",currentGrade:82,position:"QB"}));
+      expect.objectContaining({team:"HOU",currentGrade:88,position:"QB"}));
   });
   it("preserves historic GM development odds and completed/in-progress seasons",()=>{
     const profile=profiles.profiles.find(p=>p.id==="HOU|QB|cjstroud");

@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-wheel-qb-grades-2026-10-27-current-ability-v1",
+  "status": "current-NFL-GM-grade-authority",
+  "effectiveDate": "2026-10-27",
+  "sourceBaseline": "data/generated/football/wheel-nfl-qb-grades-2026-10-03.json",
+  "rationale": "Versioned current-ability grades already approved and present in private Wheel authority; historical Oct 3 artifacts remain untouched. No contracts, rosters, development profiles, saved runs or prior Wheel scores rewritten.",
+  "revisions": [
+    {
+      "team": "HOU",
+      "player": "C.J. Stroud",
+      "oldGrade": 82,
+      "newGrade": 88,
+      "sourceVersion": "nfl-wheel-stroud-current-ability-2026-10-26-v1"
+    },
+    {
+      "team": "ATL",
+      "player": "Michael Penix Jr.",
+      "oldGrade": 78,
+      "newGrade": 83,
+      "sourceVersion": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "DET",
+      "player": "Jared Goff",
+      "oldGrade": 89,
+      "newGrade": 92,
+      "sourceVersion": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "JAX",
+      "player": "Trevor Lawrence",
+      "oldGrade": 87,
+      "newGrade": 90,
+      "sourceVersion": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "LV",
+      "player": "Kirk Cousins",
+      "oldGrade": 80,
+      "newGrade": 85,
+      "sourceVersion": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "NYJ",
+      "player": "Geno Smith",
+      "oldGrade": 82,
+      "newGrade": 85,
+      "sourceVersion": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "CAR",
+      "player": "Bryce Young",
+      "oldGrade": 83,
+      "newGrade": 86,
+      "sourceVersion": "nfl-wheel-week7-seven-additional-ability-2026-10-27-v1"
+    },
+    {
+      "team": "DAL",
+      "player": "Dak Prescott",
+      "oldGrade": 92,
+      "newGrade": 88,
+      "sourceVersion": "nfl-wheel-week7-seven-additional-ability-2026-10-27-v1"
+    },
+    {
+      "team": "SEA",
+      "player": "Sam Darnold",
+      "oldGrade": 88,
+      "newGrade": 83,
+      "sourceVersion": "nfl-wheel-week7-seven-additional-ability-2026-10-27-v1"
+    }
+  ],
+  "grades": [
+    {
+      "team": "BUF",
+      "player": "Josh Allen",
+      "grade": 99,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Current ceiling: complete passing/creation/rushing profile; one early-2026 turnover game is ordinary noise, not a level change."
+    },
+    {
+      "team": "KC",
+      "player": "Patrick Mahomes",
+      "grade": 97,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Elite processing, arm talent and creation remain established; 2026 start is again high-end, but 2025 prevents a reputation-only 99/100."
+    },
+    {
+      "team": "BAL",
+      "player": "Lamar Jackson",
+      "grade": 96,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Elite passer plus unmatched quarterback rushing stress; current dual-threat level remains just below the absolute ceiling."
+    },
+    {
+      "team": "LAR",
+      "player": "Matthew Stafford",
+      "grade": 95,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "2025 MVP and elite full-season passing baseline; early pressure struggles in 2026 are too small a sample for a major downgrade."
+    },
+    {
+      "team": "CIN",
+      "player": "Joe Burrow",
+      "grade": 95,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Elite placement, processing and pocket passing with a strong 2026 start; no meaningful current gap from Stafford."
+    },
+    {
+      "team": "DAL",
+      "player": "Dak Prescott",
+      "grade": 88,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Through six 2026 starts: 1,639 yards, 10 TD and 5 INT. Consecutive losses vs Tampa Bay and Green Bay included four interceptions and poor blitz handling; NFL Week 7 QB Index dropped him to No. 19 and documented decision/pressure issues. Preserve above-average veteran ability in 88 rather than overreacting to two games, but the Oct 3 near-elite 92 no longer reflects current execution.",
+      "currentGradeRevision": "nfl-wheel-week7-seven-additional-ability-2026-10-27-v1"
+    },
+    {
+      "team": "NE",
+      "player": "Drake Maye",
+      "grade": 88,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "2025 was MVP-caliber, but a 1:6 TD/INT start through three 2026 games is too severe to leave him in the 90 tier. The established ceiling keeps him above the good-starter band."
+    },
+    {
+      "team": "PHI",
+      "player": "Jalen Hurts",
+      "grade": 85,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Strong 2024-25 efficiency and major rushing value remain real, but his current passing level does not support the prior 90 placement. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "SF",
+      "player": "Brock Purdy",
+      "grade": 90,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Owner-approved Oct 8 increase from 89 to 90. Sustained efficient 2025 quarterbacking plus a strong early 2026 showing justify modest placement above Jared Goff 89 and below Dak Prescott 92. This is current functional passing and anticipation, not a small-sample projection bonus."
+    },
+    {
+      "team": "DET",
+      "player": "Jared Goff",
+      "grade": 92,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Sustained elite structured passing in 2024-25 followed by 1,788 yards, 14 TD, 0 INT, and a 112.5 rating through six 2026 starts. The multi-season evidence supports elevating him from very good to high-end in the current NFL grade ladder. Pocket dependence and more limited off-script creation still keep him below the elite upper-90s group; calibrated near Dak Prescott at 92.",
+      "currentGradeRevision": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "LAC",
+      "player": "Justin Herbert",
+      "grade": 88,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Top physical toolkit remains, but 2025 and early-2026 mistakes/volatility do not support grading the idea of Herbert above his actual recent quarterback play."
+    },
+    {
+      "team": "JAX",
+      "player": "Trevor Lawrence",
+      "grade": 90,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "2025 season produced 4,007 yards and 29 TD; through six 2026 starts he added 1,480 yards, 14 TD, 4 INT and a 106.25 passer rating (8.0 Y/A). Consecutive productive seasons and improved downfield command support a meaningful step above the earlier good-starter 87, with turnover exposure and ceiling consistency short of the elite mid-90s. Current ability 90 aligns with Brock Purdy's tier.",
+      "currentGradeRevision": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "WSH",
+      "player": "Jayden Daniels",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Special rushing/creation ability and a proven high-end rookie season remain real; shortened and less efficient 2025-26 evidence prevents a higher current grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "GB",
+      "player": "Jordan Love",
+      "grade": 85,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Three solid starter seasons through 2025 matter, but a 52.4% completion rate and 83.5 passer rating through three 2026 games pull him back to the solid-starter tier."
+    },
+    {
+      "team": "TB",
+      "player": "Baker Mayfield",
+      "grade": 86,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "2024 showed a high ceiling, while 2025 and the 2026 opening regressed; current thumb availability is an eligibility issue, not an ability penalty."
+    },
+    {
+      "team": "HOU",
+      "player": "C.J. Stroud",
+      "grade": 88,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Seven full 2026 starts, 1,867 passing yards at 7.6 Y/A, 11 TD and just one INT (100.7 passer rating); improved quick game vs blitz and recent sustained passing efficiency. 2024-25 inconsistency prevents elite-tier 92+, and 2023 rookie high-end ability is supported by 2026 return. 88 slots below Purdy 90/Goff 89 and just above Trevor Lawrence 87. Peer-calibrated +6 is supported by material performance reversal, not single-game luck.",
+      "currentGradeRevision": "nfl-wheel-stroud-current-ability-2026-10-26-v1"
+    },
+    {
+      "team": "SEA",
+      "player": "Sam Darnold",
+      "grade": 83,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "After a Super Bowl season, his 2026 line is 1,290 yards and 8 TD/8 INT across six appearances (five full starts), with 62.1% completions. At least one interception in all five full starts through Week 7, with two picks in three of those games and increased sacks/pressure warrant a meaningful current-ability reset, balanced against Week 7's improved efficiency, 2025 performance, and the early hip/line context; this is not a projection of permanent decline.",
+      "currentGradeRevision": "nfl-wheel-week7-seven-additional-ability-2026-10-27-v1"
+    },
+    {
+      "team": "NYJ",
+      "player": "Geno Smith",
+      "grade": 85,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Seven 2026 Jets games: 1,623 yards, 70.0% completions, 7.8 Y/A, 10 TD and only 2 INT (105.2 rating), reversing the 2025 Raiders season's 19 TD, 17 INT and 84.7 rating. The rebuilt efficiency and ball security warrant above-average starter status. A 21-sack start and recent high-turnover season keep him out of the upper-80s group despite his hot 2026 opening.",
+      "currentGradeRevision": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "CHI",
+      "player": "Caleb Williams",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Clear development in 2025, especially reducing sacks, plus real creation ability; accuracy/consistency remain uneven enough to stay below the 85 anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "MIN",
+      "player": "Kyler Murray",
+      "grade": 80,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Established dual-threat ability remains above replacement-level starter quality; small recent samples are weak, while injury/availability is kept separate from ability. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules. Final discrepancy reconciliation 82→80."
+    },
+    {
+      "team": "IND",
+      "player": "Daniel Jones",
+      "grade": 80,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Strong 2025 resurgence is real, but early 2026 regression plus a long prior record of volatility prevents treating that season as a fully established new level. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "LV",
+      "player": "Kirk Cousins",
+      "grade": 85,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Seven 2026 starts at Las Vegas have produced 1,877 passing yards, 16 TD, 5 INT, 7.3 yards/attempt and a 97.4 passer rating; this is a substantive rebound from a constrained 2024-25 baseline. Re-established anticipation and accuracy support an above-average current starter, while age, reduced mobility and the prior two-season regression prevent an elite or high-end grade.",
+      "currentGradeRevision": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "NYG",
+      "player": "Jaxson Dart",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Positive 2025 starter sample with meaningful rushing value and a strong two-game 2026 start; still too little NFL evidence for a larger move. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "ARI",
+      "player": "Jacoby Brissett",
+      "grade": 80,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "The approved average/solid starter line: competent, stable NFL quarterbacking without high-end creation or sustained difference-making. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "NO",
+      "player": "Tyler Shough",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Thirteen-game body shows credible starter-level efficiency and enough mobility; ball-security volatility keeps him at the Brissett line."
+    },
+    {
+      "team": "CAR",
+      "player": "Bryce Young",
+      "grade": 86,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Six 2026 starts total 1,712 passing yards, 12 TD and 4 INT, with at least two passing TD and at most one interception in four of his first five starts and NFL's Week 7 QB Index placing him seventh among starters entering Week 7. A very poor Week 7 (163 yards, two INT) and 60%-range accuracy prevent an elite regrade; modestly above average current-ability grade acknowledges sustained improvements over his prior baseline.",
+      "currentGradeRevision": "nfl-wheel-week7-seven-additional-ability-2026-10-27-v1"
+    },
+    {
+      "team": "DEN",
+      "player": "Bo Nix",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Owner-approved Oct 8 increase from 79 to 82. Two years of functional NFL starting performance, processing, mobility, and sack avoidance merit the same broadly solid-starter tier as Tyler Shough and Geno Smith (82) and above Jacoby Brissett (80), while inconsistent 2026 deeper accuracy keeps him below Bryce Young (83)."
+    },
+    {
+      "team": "CLE",
+      "player": "Deshaun Watson",
+      "grade": 78,
+      "kind": "graded",
+      "confidence": "low",
+      "reason": "Four encouraging 2026 games now justify a real move upward, but the weak 2022-24 sample and 2025 absence prevent treating the rebound as fully established high-end play. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules. Final discrepancy reconciliation 80→78."
+    },
+    {
+      "team": "PIT",
+      "player": "Aaron Rodgers",
+      "grade": 79,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Below-average current starter anchor: still capable of high-level pocket stretches, but 2025 and 2026 efficiency no longer support an above-average grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "ATL",
+      "player": "Michael Penix Jr.",
+      "grade": 83,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Five 2026 starts through Week 7: 1,157 yards, 9 passing TD against 1 interception on 144 attempts, 8.0 yards/attempt and 109.1 passer rating. His arm talent and decisiveness have materially improved over the 2024-25 baseline. A limited 2026 sample and pressure volatility prevent grading this as a high-end 87+ starter. 83 reflects credible present starter ability, not projected ceiling.",
+      "currentGradeRevision": "nfl-wheel-qb-week7-current-ability-2026-10-27-v1"
+    },
+    {
+      "team": "MIA",
+      "player": "Malik Willis",
+      "grade": 76,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Physical/rushing tools and strong prior spot starts remain useful, but his 2026 starter sample shows accuracy and drive-finishing limitations. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "TEN",
+      "player": "Cam Ward",
+      "grade": 75,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "A full 2025 season and early 2026 both show below-average efficiency; enough arm talent and creation keep him above the weakest Wheel options. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "LV",
+      "player": "Fernando Mendoza",
+      "grade": 73,
+      "kind": "graded",
+      "confidence": "low",
+      "reason": "No regular-season NFL snaps. Promising flashes were offset by a rough preseason and losing the starting job to Cousins; grade is deliberately provisional and contains no draft-slot projection bonus. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "NYG",
+      "player": "Jameis Winston",
+      "grade": 72,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Weak current Wheel option anchor: NFL arm talent still creates plays, but current reliability, efficiency and decision volatility are clearly below the starter line. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    }
+  ]
+}
