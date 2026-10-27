@@ -24,7 +24,9 @@ export function nbaCompletePortraitInventory() {
   const candidates: Candidate[] = [
     ...nbaFindLeaderSubjects.map(s => ({
       name: s.name, nbaId: s.nbaId, season: s.season ?? undefined,
-      game: "find-leader", url: nbaFindLeaderHeadshot(s),
+      game: "find-leader", url: nbaFindLeaderHeadshot({ name: s.name, nbaId: s.nbaId,
+        ...(s.season != null ? { season: s.season } : {}),
+      }),
     })),
     ...NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS.map(s => ({
       name: s.name, nbaId: s.nbaId, game: "higher-lower",
