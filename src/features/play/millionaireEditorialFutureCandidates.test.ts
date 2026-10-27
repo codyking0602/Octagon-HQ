@@ -289,6 +289,17 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(final.explanation).toContain("Oregon");
   });
 
+  it("validates nine inherited NFL draft, awards and Super Bowl facts against source reviews", () => {
+    for (const key of ["nfl:0:3","nfl:0:4","nfl:1:3","nfl:1:5","nfl:1:6","nfl:2:3","nfl:2:5","nfl:2:6","nfl:3:0"] as const) {
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.choices.filter(c=>c===q.answer)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(q.answer));
+      expect(q.explanation.length).toBeGreaterThan(95);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
