@@ -4,6 +4,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '25 11 * * 2' # Biweekly editorial cycle gate below
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wheel-nfl-coach-current-review.yml'
   workflow_call:
   pull_request:
     paths:

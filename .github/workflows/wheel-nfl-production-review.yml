@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '15 12 * * 4' # Weekly Madden comparison, Thursday UTC
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wheel-nfl-production-review.yml'
+      - 'scripts/wheel-monitor/nfl-madden-review*.mjs'
   pull_request:
     paths:
       - 'scripts/wheel-monitor/nfl-production-monitor.py'
@@ -50,7 +55,7 @@ jobs:
           retention-days: 30
 
   madden-ratings:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
