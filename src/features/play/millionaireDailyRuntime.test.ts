@@ -448,7 +448,7 @@ describe("Millionaire official Daily runtime", () => {
           const question = questions[i]!;
           if (i === 0) {
             const fifty = advance(win, { type: "use_lifeline", lifeline: "fifty-fifty" });
-            expect(fifty.result.publicState.question_state.removed_choice_ids, boardId)
+            expect((fifty.result.publicState.question_state as Record<string, unknown>).removed_choice_ids, boardId)
               .not.toContain(question.correctChoiceId);
             win = fifty.context;
           }
