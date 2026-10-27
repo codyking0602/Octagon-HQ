@@ -113,7 +113,7 @@ export function NbaOfficialFindLeader({ projection, advance, busy }: { projectio
       renderVisual={(candidate, compact) => <NBAHeadshot name={candidate.name} season={candidate.season} compact={compact} />}
       formatValue={formatNbaFindLeaderValue}
     />
-    <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />
+    {attempt && <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />}
   </div>;
 }
 
@@ -198,7 +198,7 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
       renderSubjectMark={(id, className) => <NBAPlayerMark id={id} className={className} />}
       busy={busy}
     />
-    <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />
+    {attempt && <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />}
   </div>;
 }
 
