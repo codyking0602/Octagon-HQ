@@ -357,6 +357,7 @@ function canAddPlayerToSlot(input: {
   excludedPlayerIds?: readonly string[];
 }) {
   const { player, slot, year } = input;
+  if (!player.currentRosterEligible) return false;
   const roster = footballGmReflowRoster(input.roster);
   if (!roster) return false;
   const globallyExcluded = new Set(input.excludedPlayerIds ?? []);
@@ -491,7 +492,7 @@ export function footballGmReplacePlayer(
 ) {
   const outgoing = roster.find((entry) => entry.slot === slot);
   const incoming = footballGmPlayerById(incomingPlayerId);
-  if (!outgoing || !incoming || !incoming.eligibleSlots.includes(slot)) {
+  if (!outgoing || !incoming || !incoming.currentRosterEligible || !incoming.eligibleSlots.includes(slot)) {
     throw new Error("That replacement is unavailable.");
   }
   const stripped = roster.filter((entry) => entry.slot !== slot);
