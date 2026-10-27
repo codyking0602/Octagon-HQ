@@ -10,6 +10,7 @@ import {
 } from "./footballWeeklyContentRepository";
 import type { FootballPlayerSpotlight, FootballSpotlightKind } from "./footballPlayerSpotlightSchedule";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
+import { footballNflMatchupTeamLogoUrl } from "../picks/footballNflMatchupTeamLogo";
 import type { PickEvent } from "../picks/picksModel";
 
 const publishedSport = z.object({
@@ -87,10 +88,12 @@ export function publishedFootballMatchup(
     teams: [
       {
         name: away, aliases: [away], rank: awayRank, record: awayRecord,
+        ...(sport === "nfl" ? { logoUrl: footballNflMatchupTeamLogoUrl(away) ?? undefined } : {}),
         sportsReferenceUrl: footballTeamSportsReferenceUrl(away, sport === "cfb" ? "CFB" : "NFL", season) ?? undefined,
       },
       {
         name: home, aliases: [home], rank: homeRank, record: homeRecord,
+        ...(sport === "nfl" ? { logoUrl: footballNflMatchupTeamLogoUrl(home) ?? undefined } : {}),
         sportsReferenceUrl: footballTeamSportsReferenceUrl(home, sport === "cfb" ? "CFB" : "NFL", season) ?? undefined,
       },
     ],
