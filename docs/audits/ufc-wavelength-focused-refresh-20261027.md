@@ -76,3 +76,35 @@ On October 27, the owner rejected the two newly added weak-card rewatch prompts 
 - `wl-ufc-balance-634` — The McGregor–Poirier III leg-injury stoppage as a satisfying trilogy ending — **12**. [UFC official results](https://www.ufc.com/news/ufc-264-poirier-vs-mcgregor-3-results-wonderboy-burns-highlights-interviews-winners).
 
 **Active 605 clues remain unchanged in number and overall rating bands.** Total stored IDs 635: 605 approved, 29 retired, 1 quarantined. No changes to the other eight showcased clues, any approved legacy rating, gameplay, calendar, scoring, or previous submissions. Catalog v5 preserves v4 in the historical version list. The selection principle is *recognizable UFC situations before obscure card/trivia recall*.
+
+
+## Full active-catalog accessibility audit — all 605 clues reviewed
+
+Owner requested **every active clue** be checked after rejecting low-scored questions that forced players to remember obscure event details. Review considered all 605 active prompts existing at catalog v5, grouped across the 16 UFC-specific categories; each was judged for whether a typical UFC fan can identify the person or situation, understand exactly what is being rated from the wording, and reasonably compare it to rating anchors without remembering an obscure UFC number, TUF season, undercard result, or niche camp/referee/media reputation.
+
+**Verdict:** 538/605 existing active prompts KEEP unchanged; 67 RETIRE with original IDs, wording, and ratings preserved for historical result resolution; 41 curated, self-explanatory replacement prompts added at IDs `wl-ufc-accessible-635` through `wl-ufc-accessible-675`. New active total **579**; stored total **676** (579 approved, 96 retired, 1 quarantined). The drop from 605 is intentional: no filler needed to maintain an arbitrary catalog size. No previously approved rating was mass-adjusted. Every existing status/published record remains addressable.
+
+| Primary accessibility problem | Retired | Examples / decision |
+| --- | ---: | --- |
+| Fighter skill/resume/title familiarity without helpful context | 5 | Rothwell footwork, niche early UFC résumé labels, duplicate Garbrandt pocket-defence framing, Montaño title claim |
+| UFC culture wording not grounded or requiring product trivia | 3 | Defunct 2024 gloves, vague scorecard meme, contradictory sponsorship-shorts grade |
+| Opaque event numbers, forgettable cards, less-recognizable fight rewatch judgments | 11 | UFC 40/129/189/217, Cannonier–Strickland, Pereira–Błachowicz, UFC 279 without named fighters |
+| UFC venue/event years with no recognizable headline | 7 | UFC 193/189/205/229 presented by number alone, generic South Korea/Sweden/Singapore crowd grade |
+| Vague personality or specialist show presentation | 2 | Burns's nondescript pre-fight demeanor, Road to UFC polish |
+| Lower-recognition referees or discontinued glove trivia | 6 | Five bare referee reputations, withdrawn 2024 glove claims |
+| Opaque early history or specialist media | 4 | Broad first-in-Brazil and Canada milestones; two niche UFC media rankings |
+| TUF season-number recall rather than named, comprehensible concepts | 17 | Seasons 5/14/20/24–27/29–34 and obscure season-specific rivalries without enough framing |
+| Niche camp names without star/technical context | 8 | Factory X, Fortis, Fight Ready, Sayif Saud and other generic camp grades |
+| Hypothetical celebrity references with no real subject | 4 | A nameless 'viral comedian,' 'major soccer star,' or weigh-in host; celebrity-shot duplicate |
+| **Total** | **67** | Six-month cadence retains ample variety with 579 playable clues in 16 categories |
+
+All 41 replacement clues have explicitly named UFC fighters/moments or self-contained game scenarios: McGregor bus incident; Silva–Weidman taunting; GSP and a 55,000-person Toronto event; McGregor–Mendes/Lawler–MacDonald on one card; UFC 217's three champions; named Chimaev/Diaz/Ferguson reshuffle; Jones–Gane quick submission; recognizable TUF contract/coaching/weight-cut formats; clear refereeing, training, presentation and crossover situations.
+
+### Verification anchors for new event facts
+
+- [UFC 129: Georges St-Pierre before 55,000+ fans in Toronto](https://www.ufc.com/news/georges-st-pierre-remembers-ufc-129-day-canada-ufc-fight-pass-read)
+- [UFC 189: McGregor–Mendes and Lawler–MacDonald II on one card](https://www.ufc.com/event/ufc-189)
+- [UFC 217: St-Pierre, Namajunas and Dillashaw title results](https://www.ufc.com/event/ufc-217)
+- [UFC 279: Diaz–Ferguson headliner change and Chimaev weight problems](https://www.ufc.com/news/updates-ufc-279)
+
+The 16 categories remain intact; smallest category still has 26 playable prompts. Player-only clues, major UFC fighters and familiar historic moments remain, as do recognizable TUF and broadcast concepts. All replay tests should continue to select approved prompts only, while resolving retired IDs in prior official Daily sessions. Catalog v6 adds v5 to the historical-version list. New content is editorial judgment, not a claim of statistically validated audience familiarity.
