@@ -112,7 +112,7 @@ describe("V2 ranking roster overlay", () => {
     ).toHaveLength(1);
     expect(
       canonicalRankingInputs.fighters.filter(
-        ({ fighter }) => fighter === "Natalia Silva" && fighter.board === "women",
+        ({ fighter, board }) => fighter === "Natalia Silva" && board === "women",
       ),
     ).toHaveLength(1);
   });
