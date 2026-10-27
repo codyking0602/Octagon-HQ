@@ -51,6 +51,17 @@ const bundles = [
     ],
   },
   {
+    // Rollovers must load only the Wavelength bank; the all-Football bundle
+    // exceeded the Edge CPU budget and left October 27 unpublished.
+    label: "Football Wavelength Daily lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWavelength.ts"),
+    fileName: "football-wavelength-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smokes: [
+      { day: "2026-10-27", gameType: "wavelength", scheduleVersion: "football-daily-v22-higher-lower-oct27" },
+    ],
+  },
+  {
     // October 26 Football Millionaire and all later Millionaire boards must
     // publish without evaluating unrelated large Football question banks.
     label: "Football Millionaire Daily lean publication runtime",

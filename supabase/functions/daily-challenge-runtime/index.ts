@@ -141,6 +141,9 @@ let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule>
 // Millionaire publishing must not parse all Football game families in one
 // Edge invocation. The full Football publisher is retained for other modes.
 let footballMillionairePublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
+// Load Wavelength independently: parsing the full Football bank on an unpublished
+// Central-day rollover can exhaust the Supabase Edge CPU budget (HTTP 546).
+let footballWavelengthPublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
@@ -159,6 +162,12 @@ function loadUfcRuntime() {
 }
 
 function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
+  if (gameType === "wavelength") {
+    if (!footballWavelengthPublicationPromise) {
+      footballWavelengthPublicationPromise = import("./football-wavelength-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+    }
+    return footballWavelengthPublicationPromise;
+  }
   if (gameType === "millionaire") {
     if (!footballMillionairePublicationPromise) {
       footballMillionairePublicationPromise = import("./football-millionaire-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
