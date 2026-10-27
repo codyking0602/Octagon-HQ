@@ -67,103 +67,19 @@ def real_source(name, profile_slug):
 
 
 def remove_connected_white(im):
-    im = im.copy()
-    w,h=im.size
-    if im.getchannel("A").getextrema()[0] < 190:
-        # UFC-style PNG cutouts already contain transparency but may also
-        # have large *opaque pale publisher patches* outside the person.
-        # The previous all-transparent fast path skipped these entirely.
-        px=im.load()
-        seen=bytearray(w*h)
-        cleared=0
-        def plate(x,y):
-            r,g,b,a=px[x,y]
-            return a>=25 and min(r,g,b)>=130 and max(r,g,b)-min(r,g,b)<=45
-        for y0 in range(h):
-            for x0 in range(w):
-                i=y0*w+x0
-                if seen[i] or not plate(x0,y0):
-                    continue
-                q=deque([(x0,y0)]);region=[];touches_clear=False
-                while q:
-                    x,y=q.popleft()
-                    if x<0 or x>=w or y<0 or y>=h:continue
-                    k=y*w+x
-                    if seen[k] or not plate(x,y):continue
-                    seen[k]=1;region.append((x,y))
-                    for xx,yy in ((x-1,y),(x+1,y),(x,y-1),(x,y+1)):
-                        if xx<0 or xx>=w or yy<0 or yy>=h or px[xx,yy][3]<25:
-                            touches_clear=True
-                        else:q.append((xx,yy))
-                if len(region)<65 or not touches_clear:continue
-                xmin=min(x for x,_ in region);xmax=max(x for x,_ in region)
-                ymin=min(y for _,y in region);ymax=max(y for _,y in region)
-                if xmax-xmin<8 or ymax-ymin<5:continue
-                for x,y in region:
-                    rr,gg,bb,a=px[x,y];px[x,y]=(rr,gg,bb,0)
-                cleared+=len(region)
-        print(f"REAL TRANSPARENT SOURCE: removed {cleared} neutral publisher pixels",flush=True)
-        return im
-    px=im.load()
-    # Plain background on these specific portraits is white, not a UFC
-    # graphic plate. Only erase whites connected to the outer photo border.
-    def white(x,y):
-        r,g,b,a=px[x,y]
-        return min(r,g,b)>=143 and max(r,g,b)-min(r,g,b)<=36
-    visited=bytearray(w*h)
-    q=deque()
-    for x in range(w):
-        for y in (0,h-1):
-            if white(x,y):q.append((x,y))
-    for y in range(h):
-        for x in (0,w-1):
-            if white(x,y):q.append((x,y))
-    found=0
-    while q:
-        x,y=q.popleft()
-        if x<0 or x>=w or y<0 or y>=h: continue
-        p=y*w+x
-        if visited[p] or not white(x,y):continue
-        visited[p]=1
-        found+=1
-        q.extend(((x-1,y),(x+1,y),(x,y-1),(x,y+1)))
-    if found<w*h*0.06:
-        raise ValueError(f"Source has no safely removable plain white backdrop ({found/(w*h):.1%})")
-    # Some publisher-transparent cutouts leave enclosed pale background pockets
-    # between arms/head. Erase only sizable connected neutral regions; preserve
-    # small white printing on UFC gloves and textured skin/hair.
-    pocket_seen=bytearray(w*h)
-    for yy in range(h):
-        for xx in range(w):
-            idx=yy*w+xx
-            if visited[idx] or pocket_seen[idx] or not white(xx,yy):
-                continue
-            region=[]
-            queue=deque([(xx,yy)])
-            while queue:
-                x,y=queue.popleft()
-                if x<0 or x>=w or y<0 or y>=h:continue
-                k=y*w+x
-                if visited[k] or pocket_seen[k] or not white(x,y):continue
-                pocket_seen[k]=1
-                region.append((x,y))
-                queue.extend(((x-1,y),(x+1,y),(x,y-1),(x,y+1)))
-            if len(region)<90:continue
-            x0=min(t[0] for t in region);x1=max(t[0] for t in region)
-            y0=min(t[1] for t in region);y1=max(t[1] for t in region)
-            # Large, near-flat areas above the waist are clearly background.
-            if x1-x0>=11 and y1-y0>=8 and y0<h*0.72:
-                for x,y in region:visited[y*w+x]=1
-    alpha=Image.new("L",(w,h),255)
-    a=alpha.load()
-    for y in range(h):
-        for x in range(w):
-            if visited[y*w+x]:a[x,y]=0
-    # Soft edge removes hard white halos; never recolors or paints real skin.
-    alpha=alpha.filter(ImageFilter.GaussianBlur(0.45))
-    im.putalpha(alpha)
-    return im
-
+    # Re-segment the genuine named fighter photo, composited onto uniform
+    # white, instead of performing destructive pixel-color subtraction.
+    # The original third-party cutout has a few opaque publisher remnants.
+    from rembg import new_session, remove
+    if not hasattr(remove_connected_white,"session"):
+        remove_connected_white.session=new_session("isnet-general-use")
+    rgb=Image.new("RGB",im.size,(255,255,255))
+    rgb.paste(im,mask=im.getchannel("A"))
+    result=remove(rgb,session=remove_connected_white.session).convert("RGBA")
+    alpha=result.getchannel("A")
+    if alpha.getextrema()[0]>0 or sum(v>=50 for v in alpha.getdata())<im.width*im.height*.12:
+        raise ValueError("Clean real-photo segmentation failed")
+    return result
 
 def render(im):
     alpha=im.getchannel("A")
