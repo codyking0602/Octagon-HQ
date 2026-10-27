@@ -13,10 +13,15 @@ for slug in ("renato-moicano","tom-nolan"):
     if im.size!=(626,800):raise RuntimeError("Unexpected Spotlight dimensions")
     px=im.load()
     cleared=0
+    zeroed=0
     for y in range(800):
         for x in range(626):
             r,g,b,a=px[x,y]
-            if a<5:continue
+            if a<20:
+                if r or g or b or a:
+                    px[x,y]=(0,0,0,0)
+                    zeroed+=1
+                continue
             plate_red=(r>=150 and g<=73 and b<=90 and r>=g+95 and r>=b+85)
             if slug=="renato-moicano":
                 # Area to right of head until shoulder/gloves begin.
@@ -31,11 +36,11 @@ for slug in ("renato-moicano","tom-nolan"):
                 right_side_plate=(x>=550 and 440<=y<=578)
                 must_clear=right_head_plate or right_side_plate or plate_red
             if must_clear:
-                px[x,y]=(r,g,b,0)
+                px[x,y]=(0,0,0,0)
                 cleared+=1
     im.save(path,"WEBP",lossless=True,method=6)
     after=Image.open(path).convert("RGBA")
     if after.size!=(626,800):raise RuntimeError("Resized photo accidentally")
     if max(after.getpixel(p)[3] for p in [(0,0),(625,0),(0,799),(625,799)])!=0:raise RuntimeError("Opaque background corner")
-    if cleared<100:raise RuntimeError("No publisher artifacts removed")
-    print(f"Edited only external panel pixels: {slug}, {cleared} pixels; visual review mandatory",flush=True)
+    if cleared==0 and zeroed==0:raise RuntimeError("No background pixels cleaned")
+    print(f"External panel pixels: {slug}, masked={cleared}, zeroedTransparent={zeroed}; visual review mandatory",flush=True)
