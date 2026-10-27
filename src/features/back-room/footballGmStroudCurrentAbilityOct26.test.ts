@@ -15,7 +15,7 @@ describe("Stroud Oct 26 current NFL grade and historical GM development continui
     expect(oldQb.grades.find(x=>x.player==="C.J. Stroud")?.grade).toBe(82);
     expect(FOOTBALL_GM_PLAYER_POOL).toHaveLength(594);
     expect(footballGmPlayerById("HOU|QB|cjstroud")).toEqual(
-      expect.objectContaining({team:"HOU",currentGrade:82,position:"QB"}));
+      expect.objectContaining({team:"HOU",currentGrade:88,position:"QB"}));
   });
   it("preserves historic GM development odds and completed/in-progress seasons",()=>{
     const profile=profiles.profiles.find(p=>p.id==="HOU|QB|cjstroud");

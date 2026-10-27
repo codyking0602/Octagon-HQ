@@ -1,3 +1,17 @@
+import stroudRevision from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-26.json";
+import fiveQbRevisions from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json";
+import sevenRevisions from "../../../data/curated/football/nfl/wheel-nfl-skill-and-qb-ability-revisions-2026-10-27.json";
+
+// Research/odds remain tied to the original October calibration rather than
+// retroactively adopting the October 26–27 changes in present-day ability.
+const approvedCurrentGradeRevisions = new Map(
+  [...stroudRevision.changes, ...fiveQbRevisions.changes, ...sevenRevisions.changes]
+    .map(change => [`${change.team}|${change.family}|${change.player}`, change] as const)
+);
+function originalResearchGrade(player: { team: string; family: string; name: string; currentGrade: number }) {
+  return approvedCurrentGradeRevisions.get(`${player.team}|${player.family}|${player.name}`)?.oldGrade
+    ?? player.currentGrade;
+}
 import { describe, expect, it } from "vitest";
 import authority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
 import audit from "../../../data/curated/football/gm-nfl-development-review-audit-2026-10-08.json";
@@ -98,7 +112,7 @@ describe("full NFL GM development calibration", () => {
     for (const review of audit.reviews) {
       const player = FOOTBALL_GM_PLAYER_POOL.find((p) => p.id === review.id);
       expect(player, review.id).not.toBeUndefined();
-      expect(player!.currentGrade).toBe(review.gradeAtReview);
+      expect(originalResearchGrade(player!)).toBe(review.gradeAtReview);
       expect(review.reviewRationale.length, review.id).toBeGreaterThan(65);
     }
     for (const profile of profiles) {
@@ -107,7 +121,7 @@ describe("full NFL GM development calibration", () => {
       expect(footballGmDevelopmentProfile(profile.id)).toEqual(profile);
       expect(profile.name).toBe(player.name);
       expect(profile.ageAtCalibration).toBe(player.age);
-      expect(profile.gradeAtCalibration).toBe(player.currentGrade);
+      expect(profile.gradeAtCalibration).toBe(originalResearchGrade(player));
       expect(profile.breakoutPct).toBeGreaterThanOrEqual(0);
       expect(profile.improvePct).toBeGreaterThanOrEqual(0);
       expect(profile.declinePct).toBeGreaterThanOrEqual(0);
