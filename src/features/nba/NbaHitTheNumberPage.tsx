@@ -16,7 +16,7 @@ import {
   type NbaHitPlan, type NbaHitResult, type NbaHitRun,
 } from "./nbaHitTheNumberModel";
 import { nbaHitHeadshot, nbaHitSubjectById, nbaHitValue } from "./nbaHitTheNumberStats";
-import { nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerIsGenericSilhouette, nbaPortraitBackupSource } from "./nbaHigherLowerPortraits";
 import { NbaPortraitCredits } from "./NbaPortraitCredits";
 
 const nbaTheme = {
@@ -41,14 +41,17 @@ function resultPayload(result:NbaHitResult) {
 }
 function NbaPlayerMark({subjectId,className}:{subjectId:string;className:string}) {
   const [failedId,setFailedId]=useState<string|null>(null);
+  const [backupId,setBackupId]=useState<string|null>(null);
   const subject=nbaHitSubjectById.get(subjectId);
   if(!subject)return null;
   const src=nbaHitHeadshot(subject);
-  if(!src || failedId===subjectId) return <span className={className} aria-hidden="true" style={{display:"grid",placeItems:"center",
+  const shown=backupId===subjectId ? nbaPortraitBackupSource(src) : src;
+  const fail=()=>{ if(backupId!==subjectId && nbaPortraitBackupSource(src))setBackupId(subjectId); else setFailedId(subjectId); };
+  if(!shown || failedId===subjectId) return <span className={className} aria-hidden="true" style={{display:"grid",placeItems:"center",
     background:"rgba(242,163,65,.15)",fontSize:".65rem",fontWeight:900}}>NBA</span>;
-  return <img alt="" className={className} src={src} loading="lazy" referrerPolicy="no-referrer"
-    onError={()=>setFailedId(subjectId)}
-    onLoad={event=>{ if(src.includes("/headshots/nba/latest/") && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailedId(subjectId); }}
+  return <img alt="" className={className} src={shown} loading="lazy" referrerPolicy="no-referrer"
+    onError={fail}
+    onLoad={event=>{ if(nbaHigherLowerIsGenericSilhouette(event.currentTarget)) fail(); }}
     style={{objectFit:"contain",objectPosition:"center top",background:"rgba(255,255,255,.08)"}} />;
 }
 export default function NbaHitTheNumberPage() {
