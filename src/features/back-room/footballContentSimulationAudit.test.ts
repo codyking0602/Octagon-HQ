@@ -11,10 +11,10 @@ import {
   footballBlindResumeSubjectIdentityId,
 } from "./footballBlindResumeModel";
 import {
-  FOOTBALL_FIND_LEADER_FAMILY_CYCLE,
+  footballFindLeaderFeaturedQuestions,
   createFootballFindLeaderBoard,
   footballFindLeaderCompetitionAudit,
-  footballFindLeaderQuestions,
+  footballFindLeaderFeaturedQuestions,
 } from "./footballFindLeaderModel";
 import {
   FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE,
@@ -351,11 +351,11 @@ describe("Football PR10 content simulation / replay audit", () => {
     }
 
     const uniqueBoardShare = share(signatures.size, FIND_LEADER_RUNS);
-    const enabledMetricCount = new Set(footballFindLeaderQuestions.map((question) => question.metricId)).size;
-    const enabledDomainCount = new Set(footballFindLeaderQuestions.map((question) => question.domainId)).size;
-    expect(share(questionCounts.size, footballFindLeaderQuestions.length)).toBeGreaterThanOrEqual(0.95);
+    const enabledMetricCount = new Set(footballFindLeaderFeaturedQuestions.map((question) => question.metricId)).size;
+    const enabledDomainCount = new Set(footballFindLeaderFeaturedQuestions.map((question) => question.domainId)).size;
+    expect(share(questionCounts.size, footballFindLeaderFeaturedQuestions.length)).toBeGreaterThanOrEqual(0.95);
     expect(metricCounts.size).toBe(enabledMetricCount);
-    expect(familyCounts.size).toBe(new Set(FOOTBALL_FIND_LEADER_FAMILY_CYCLE).size);
+    expect(familyCounts.size).toBe(new Set(footballFindLeaderFeaturedQuestions.map((question) => question.family)).size);
     expect(domainCounts.size).toBe(enabledDomainCount);
     expect(immediateQuestionRepeats).toBe(0);
     expect(immediateMetricRepeats).toBe(0);
@@ -365,7 +365,7 @@ describe("Football PR10 content simulation / replay audit", () => {
     let maxQuestionVsDomainAverage = 0;
     let maxMetricVsDomainAverage = 0;
     for (const [domainId, domainBoardCount] of domainCounts) {
-      const domainQuestions = footballFindLeaderQuestions.filter((question) => question.domainId === domainId);
+      const domainQuestions = footballFindLeaderFeaturedQuestions.filter((question) => question.domainId === domainId);
       const domainMetricIds = [...new Set(domainQuestions.map((question) => question.metricId))];
       const questionAverage = domainBoardCount / domainQuestions.length;
       const metricAverage = domainBoardCount / domainMetricIds.length;
@@ -381,7 +381,7 @@ describe("Football PR10 content simulation / replay audit", () => {
 
     console.info("PR10 Find the Leader audit", JSON.stringify({
       questionsSeen: questionCounts.size,
-      questionCatalogSize: footballFindLeaderQuestions.length,
+      questionCatalogSize: footballFindLeaderFeaturedQuestions.length,
       metricsSeen: metricCounts.size,
       familiesSeen: familyCounts.size,
       domainsSeen: domainCounts.size,
