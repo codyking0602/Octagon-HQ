@@ -80,5 +80,77 @@
   "selection": {
     "player_id": "keyone-jenkins",
     "game_id": "miami-at-north-carolina"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Keyone Jenkins",
+      "team": "UCF",
+      "position": "QB",
+      "stats": [
+        {
+          "value": "293",
+          "label": "PASS YDS"
+        },
+        {
+          "value": "3",
+          "label": "PASS TD"
+        },
+        {
+          "value": "35",
+          "label": "RUSH YDS"
+        },
+        {
+          "value": "1",
+          "label": "RUSH TD"
+        }
+      ],
+      "result": "W 39–31 (2OT) vs No. 2 BYU",
+      "measurements": "6 ft 0 in · 200 lbs",
+      "team_color": "#BA9B37",
+      "highlight_url": "https://www.youtube.com/watch?v=Cz00i0n5O_o",
+      "photo_source": "https://a.espncdn.com/i/headshots/college-football/players/full/5085337.png",
+      "photo_asset_path": "/assets/football/weekly/2026-10-27/cfb/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Miami",
+      "home_team": "North Carolina",
+      "kickoff_at": "2026-10-31T18:30:00-05:00",
+      "ranking_source": "AP",
+      "away_rank": 1,
+      "home_rank": null,
+      "away_record": "7-0",
+      "home_record": "4-3"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.cbssports.com/college-football/rankings/ap/",
+        "https://www.cbssports.com/college-football/teams/UNC/north-carolina-tar-heels/schedule/",
+        "https://www.cbssports.com/college-football/teams/MIAMI/miami-fla-hurricanes/",
+        "https://theacc.com/news/2026/10/26/acc-football-players-of-the-week-for-week-8.aspx",
+        "https://www.sports-reference.com/cfb/players/keyone-jenkins-1.html",
+        "https://ucfknights.com/news/2026/10/26/quarterback-keyone-jenkins-earns-trio-of-awards-for-showing-vs-2-byu"
+      ],
+      "breakdown": {
+        "setup": [
+          "No. 1 Miami brings a 7–0 record and an unbeaten ACC run to Chapel Hill after scoring 52 points against Pittsburgh. North Carolina is 4–3 following a 31–30 overtime loss to Syracuse, so this meeting puts the Hurricanes’ explosive passing offense against a Tar Heels team trying to regain its late-game composure."
+        ],
+        "things": [
+          {
+            "title": "Can UNC disrupt Mensah’s rhythm?",
+            "body": "Miami quarterback Darian Mensah completed 31 of 37 passes for 387 yards and four touchdowns against Pittsburgh. UNC needs pressure and tighter coverage windows to prevent another game dictated by early, efficient Hurricane drives."
+          },
+          {
+            "title": "Keeping Malachi Toney from taking over",
+            "body": "Toney caught a Miami single-game record 16 passes for 194 yards and three scores against Pittsburgh. North Carolina must tackle promptly underneath and avoid giving Miami's leading target room to turn ordinary completions into explosive gains."
+          },
+          {
+            "title": "North Carolina’s response after Syracuse",
+            "body": "The Tar Heels lost 31–30 in overtime after giving up late scoring opportunities to Syracuse. Billy Edwards Jr. and the UNC offense need sustained possessions and cleaner finishing to keep their defense from facing Miami’s attack repeatedly on short rest."
+          }
+        ],
+        "bottom_line": "Miami’s high-efficiency passing game and North Carolina’s ability to sustain drives define this matchup. If the Tar Heels limit explosive catches and finish their own possessions, the game becomes a different test from the wide-open contest Miami played against Pittsburgh."
+      }
+    }
   }
 }
