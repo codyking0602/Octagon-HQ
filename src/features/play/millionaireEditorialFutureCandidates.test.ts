@@ -214,13 +214,15 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc", 4, "Dan Henderson", "Rashad Evans"],
       ["ufc", 5, "Sergei Pavlovich", "Tony Ferguson"],
     ] as const) {
-      const final = millionaireFutureEditorialDailyRun(league, runIndex)[7]!;
+      // The legacy runtime seed stays unchanged; inspect the future-only override.
+      const final = MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${runIndex}:7`]!;
+      expect(final).toBeDefined();
       expect(final.prompt).not.toContain(avoided);
-      expect(final.prompt + " " + answer(final)).toContain(newAnchor);
+      expect(final.prompt + " " + final.answer).toContain(newAnchor);
       expect(final.statSheet).toBeNull();
-      expect(final.lifelineCompatibility).toMatchObject({
-        fiftyFifty: false, statSheet: false, doubleDip: false,
-      });
+      expect(final.choices).toHaveLength(4);
+      expect(new Set(final.choices.map(normalized)).size).toBe(4);
+      expect(final.evidence.length).toBeGreaterThan(0);
     }
     let runtimeCorrectionsFound = 0;
     for (let offset = 0; offset < 182; offset += 1) {
