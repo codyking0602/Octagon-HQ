@@ -1208,7 +1208,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("retains twelve official-source NFL and CFB future-only collision fixes", () => {
     const cases: readonly [string, string, string][] = [
       ["nfl:1:4", "Steve McNair", "Which quarterback shared"],
-      ["nfl:2:1", "Jalen Hurts", "Which Eagles quar"],
+      ["nfl:2:1", "C.J. Stroud", "Which Texans quar"],
       ["nfl:4:6", "Stephon Gilmore", "Which New England"],
       ["nfl:5:5", "Nick Bolton", "Which Chiefs line"],
       ["nfl:6:1", "Jayden Daniels", "Which Washington "],
