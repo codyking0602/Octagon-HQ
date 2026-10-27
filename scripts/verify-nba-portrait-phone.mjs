@@ -75,6 +75,8 @@ class CdpClient {
     this.socket = new WebSocket(url);
     this.nextId = 1;
     this.pending = new Map();
+    this.networkErrors = [];
+    this.networkResponses = [];
   }
 
   async open() {
@@ -86,6 +88,8 @@ class CdpClient {
     }
     this.socket.addEventListener("message", (event) => {
       const message = JSON.parse(String(event.data));
+      if (message.method === "Network.loadingFailed") this.networkErrors.push(message.params);
+      if (message.method === "Network.responseReceived") this.networkResponses.push({url:message.params.response?.url,status:message.params.response?.status});
       if (!message.id) return;
       const pending = this.pending.get(message.id);
       if (!pending) return;
@@ -183,6 +187,7 @@ try {
   await client.open();
   await client.send("Page.enable");
   await client.send("Runtime.enable");
+  await client.send("Network.enable");
   await client.send("Emulation.setDeviceMetricsOverride", {
     width: 390,
     height: 844,
@@ -208,6 +213,7 @@ try {
     }
     // These are actual NBA game components. Do not accept an image element
     // merely because it has a valid URL: confirm the browser decoded pixels.
+    const expectedPortraits = {find_leader:10,hit_the_number:14,higher_lower:2}[game];
     let loadedPortraits = null;
     for (let poll = 0; poll < 200; poll += 1) {
       const inspected = await client.send("Runtime.evaluate", {
@@ -223,12 +229,23 @@ try {
         returnByValue: true,
       });
       loadedPortraits = inspected?.result?.value;
-      if (loadedPortraits.total >= 2 && loadedPortraits.decoded === loadedPortraits.total) break;
+      if (loadedPortraits.total === expectedPortraits && loadedPortraits.decoded === expectedPortraits) break;
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    if (!loadedPortraits || loadedPortraits.total < 2 ||
-        loadedPortraits.decoded !== loadedPortraits.total || loadedPortraits.failed.length) {
-      throw new Error(`${game} failed iPhone pixel loading: ${JSON.stringify(loadedPortraits)}`);
+    if (!loadedPortraits || loadedPortraits.total !== expectedPortraits ||
+        loadedPortraits.decoded !== expectedPortraits || loadedPortraits.failed.length) {
+      const diagnosis = await client.send("Runtime.evaluate", {
+        expression: `(() => {
+          const shell = document.querySelector('[data-game="${game}"]');
+          return { html: shell?.innerHTML.slice(0, 2400),
+            text: shell?.innerText.slice(0, 500),
+            allImages: [...shell.querySelectorAll("img")].map(x => ({src:x.src,complete:x.complete,width:x.naturalWidth})),
+            fallbacks: [...shell.querySelectorAll("b")].map(x => x.textContent).filter(Boolean).slice(0,30)
+          };
+        })()`,
+        returnByValue: true,
+      });
+      throw new Error(`${game} failed iPhone pixel loading: ${JSON.stringify(loadedPortraits)} DOM=${JSON.stringify(diagnosis.result.value)} NetworkErrors=${JSON.stringify(client.networkErrors.slice(-20))} Responses=${JSON.stringify(client.networkResponses.filter(x=>/nba|wikimedia|hardaway|legit/.test(x.url||"")).slice(-20))}`);
     }
     // Ensure no successfully loaded NBA CDN silhouette remained in frame.
     const rendered = await client.send("Runtime.evaluate", {
