@@ -130,7 +130,22 @@ function normalizeIdentity(value: string) {
 }
 
 function buildLedger() {
-  const subjects = [...rankedSubjects(), ...expansionSubjects()];
+  const ranked = rankedSubjects();
+  const rankedById = new Map(ranked.map((subject) => [subject.id, subject]));
+  // A recognized fighter can graduate from the pinned non-ranked expansion
+  // to the live all-time board. Keep the ranked, newer fight record and retain
+  // the pinned expansion's source evidence; never publish the identity twice.
+  const promoted = new Set<string>();
+  const expansion = expansionSubjects().filter((subject) => {
+    const current = rankedById.get(subject.id);
+    if (!current) return true;
+    if (current.slug !== subject.slug || normalizeIdentity(current.name) !== normalizeIdentity(subject.name)) {
+      throw new Error(`Conflicting UFC ranked/expansion identity for ${subject.id}.`);
+    }
+    promoted.add(subject.id);
+    return false;
+  });
+  const subjects = [...ranked, ...expansion];
   const ids = new Set<string>();
   const slugs = new Set<string>();
   const identities = new Set<string>();
@@ -143,11 +158,10 @@ function buildLedger() {
     slugs.add(subject.slug);
     identities.add(identity);
   }
-  // The generated expansion target is a snapshot from the time it was pinned.
-  // New V2 ranking additions join the ranked core without regenerating or
-  // silently dropping any of the recognizability-expansion subjects.
+  // Do not count a promoted expansion subject twice. The pinned source remains
+  // untouched; distinct non-ranked expansion subjects are all preserved.
   const rankedDelta = canonicalRankingInputs.counts.fighters - ufcFactualExpansion.rankedSubjectCountAtGeneration;
-  const expectedTotal = ufcFactualExpansion.targetTotalSubjects + rankedDelta;
+  const expectedTotal = ufcFactualExpansion.targetTotalSubjects + rankedDelta - promoted.size;
   if (subjects.length !== expectedTotal) {
     throw new Error(`UFC factual ledger has ${subjects.length} subjects; expected ${expectedTotal}.`);
   }
