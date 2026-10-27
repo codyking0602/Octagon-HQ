@@ -125,6 +125,19 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   },
 
   // Preview-only rewrite of a verbatim active Bar Trivia "Notorious" nickname.
+  // Future-only replacement: legacy UFC run 6 Q6 Stat Sheet named Jessica Andrade,
+  // and active Bar Trivia V3 tests the identical UFC 237 Namajunas title-changing slam.
+  "ufc:5:5": {
+    id: "millionaire-ufc-future-blanchfield-andrade-2023-q6",
+    type: "flyweight-main-events",
+    prompt: "Who submitted former strawweight champion Jéssica Andrade in the second round of their February 2023 UFC Vegas main event?",
+    choices: ["Erin Blanchfield","Manon Fiorot","Alexa Grasso","Maycee Barber"],
+    answer: "Erin Blanchfield",
+    statSheet: "The bout ended by rear-naked choke at the UFC APEX in Las Vegas.",
+    explanation: "Erin Blanchfield submitted Jéssica Andrade by rear-naked choke at 1:37 of Round 2 in the February 18, 2023 UFC Fight Night main event in Las Vegas, elevating Blanchfield into the women's flyweight title picture.",
+    evidence: [{"authority":"UFC Andrade vs Blanchfield official result","url":"https://www.ufc.com/news/ufc-fight-night-andrade-vs-blanchfield-results-highlights-winner-interviews","supportingDetail":"UFC official event results confirm Blanchfield defeated former strawweight champion Andrade by rear-naked choke at 1:37 of round two on February 18, 2023."}],
+  },
+
   "ufc:1:0": {
     id: "millionaire-ufc-future-218-ngannou-overeem-q1",
     type: "heavyweight-knockouts",

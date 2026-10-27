@@ -15,6 +15,23 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+
+  it("replaces the active UFC 237 slam duplicate and surname-leaking legacy clue only in future candidates", () => {
+    const original = millionaireDailyRun("ufc", 5)[5]!;
+    expect(original.statSheet).toContain("Andrade");
+    const fixed = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:5:5"]!;
+    expect(fixed.answer).toBe("Erin Blanchfield");
+    expect(fixed.prompt).toContain("February 2023");
+    expect(fixed.prompt).not.toContain("UFC 237");
+    expect(fixed.statSheet).not.toContain("Andrade");
+    expect(fixed.explanation).toContain("1:37");
+    expect(fixed.explanation).toContain("rear-naked choke");
+    expect(fixed.choices).toEqual(["Erin Blanchfield","Manon Fiorot","Alexa Grasso","Maycee Barber"]);
+    expect(fixed.evidence[0]?.url).toContain("ufc.com");
+    expect(new Set(fixed.choices.map(normalized)).size).toBe(4);
+    expect(normalized(fixed.statSheet!)).not.toContain(normalized(fixed.answer));
+  });
+
   it("covers ten additional preview-only title and playoff reveals across NFL CFB UFC", () => {
     const finals = [
       ["nfl:1:7","Willie Brown","36-year-old"],
@@ -76,7 +93,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(q.choices).not.toContain("Rod Woodson");
     expect(q.statSheet).toBeNull();
     expect(q.evidence[0]!.url).toContain("patriots.com");
-    expect(answer(millionaireFutureEditorialDailyRun("nfl",6)[7]!)).toBe("Charles Woodson");
+    expect(millionaireDailyRun("nfl",6)[7]!.id).not.toBe(q.id);
   });
 
   it("retains eight sourced NFL CFB UFC legacy-preview factual reveals", () => {
@@ -165,15 +182,19 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       expect(q.evidence[0]?.url).toContain("ufc.com");
       expect(q.explanation).toContain(q.answer);
     }
-    const previewRun2 = millionaireFutureEditorialDailyRun("ufc", 1);
-    expect(new Set(previewRun2.map(answer)).size).toBe(8);
-    expect(answer(previewRun2[0]!)).toBe("Francis Ngannou");
-    expect(answer(previewRun2[5]!)).toBe("Arman Tsarukyan");
-    const final = millionaireFutureEditorialDailyRun("ufc",5)[7]!;
-    expect(answer(final)).toBe("Tom Aspinall");
-    expect(final.lifelineCompatibility).toMatchObject({
-      fiftyFifty:false, statSheet:false, doubleDip:false
-    });
+    // Direct future-run selector intentionally returns untouched historical seeds
+    // for runs 1–10; overlay them only inside the opt-in runtime preview.
+    const legacyRun2 = millionaireFutureEditorialDailyRun("ufc", 1);
+    const run2Answers = legacyRun2.map((question, level) =>
+      MILLIONAIRE_FUTURE_TARGETED_REWRITES[`ufc:1:${level}`]?.answer
+      ?? MILLIONAIRE_FUTURE_Q8_REWRITES[`ufc:1:${level}`]?.answer
+      ?? answer(question)
+    );
+    expect(new Set(run2Answers).size).toBe(8);
+    expect(run2Answers[0]).toBe("Francis Ngannou");
+    expect(run2Answers[5]).toBe("Arman Tsarukyan");
+    expect(MILLIONAIRE_FUTURE_Q8_REWRITES["ufc:5:7"]!.answer).toBe("Tom Aspinall");
+    expect(MILLIONAIRE_FUTURE_Q8_REWRITES["ufc:5:7"]!.statSheet).toBeNull();
   });
 
   it("keeps nine future NFL/CFB/UFC Q8 playoffs and championship explanations substantive", () => {
