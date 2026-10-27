@@ -490,7 +490,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("protects source-checked draft revisions against accidental reversion", () => {
     const sourceChecked = [
       ["cfb", 10, 0, "Miami"],
-      ["nfl", 11, 4, "James Harrison"],
+      ["nfl", 11, 4, "Troy Polamalu"],
       ["ufc", 10, 2, "Kamaru Usman"],
       ["ufc", 10, 4, "Carlos Condit"],
       ["ufc", 10, 6, "Alexandre Pantoja"],
@@ -578,6 +578,13 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(answer(openingUfc250)).toBe("Cody Garbrandt");
     expect(openingUfc250.prompt).toContain("UFC 250");
     expect(openingUfc250.prompt).not.toContain("Cain Velasquez");
+    // Future-only NFL facts must not recreate active Average Fan's exact Super Bowl / records trivia.
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 11)[4]!)).toBe("Troy Polamalu");
+    expect(millionaireFutureEditorialDailyRun("nfl", 11)[4]!.prompt).not.toContain("Kurt Warner");
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 14)[3]!)).toBe("Corey Webster");
+    expect(millionaireFutureEditorialDailyRun("nfl", 14)[3]!.prompt).not.toContain("22.5");
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 14)[4]!)).toBe("Mike Alstott");
+    expect(millionaireFutureEditorialDailyRun("nfl", 14)[4]!.prompt).not.toContain("Mile High Miracle");
     const dramaticFinal = millionaireFutureEditorialDailyRun("ufc", 7)[7]!;
     expect(answer(dramaticFinal)).toBe("Jack Della Maddalena");
     expect(dramaticFinal.prompt).toContain("UFC 315");
