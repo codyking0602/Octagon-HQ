@@ -6,6 +6,7 @@ import {
 import { selectFindLeaderCompetition } from "../play/findLeaderCompetition";
 import { nbaHitSubjects, type NbaHitSubject } from "./nbaHitTheNumberStats";
 import { NBA_FIND_HISTORICAL_SEASONS } from "./nbaFindTheLeaderHistoricalSeasons";
+import { nbaPortraitSource } from "./nbaHigherLowerPortraits";
 
 export const NBA_FIND_LEADER_GAME_ID = "nba-find-leader";
 export const NBA_FIND_LEADER_VERSION = "nba-find-leader-v1";
@@ -244,11 +245,6 @@ export function createNbaFindLeaderChallenge(seed: string, definitionId: string,
     type: "curated", challengeId: NBA_FIND_LEADER_GAME_ID + ":challenge:" + challengeId,
     replayBehavior: "same-curated-challenge" } };
 }
-// Use an NBA-hosted, player-identified editorial photo when the NBA historical
-// headshot CDN displays a generic silhouette. Do not substitute a lookalike.
-const VERIFIED_NBA_PORTRAIT_OVERRIDES: Readonly<Record<string, string>> = {
-  "gailgoodrich": "https://cdn.nba.com/manage/2021/08/GettyImages-1148261504.jpg",
-};
 // Daily snapshots intentionally omit portrait IDs from public setup, but the
 // canonical historical season roster already has those player-verified NBA IDs.
 // Resolve them here without changing any published Daily payload or reveal.
@@ -265,13 +261,11 @@ export function nbaFindLeaderHeadshot(
   candidate: Pick<NbaLeaderCandidate, "name" | "nbaId"> & { season?: number },
 ) {
   const key = normalizedName(candidate.name);
-  const override = VERIFIED_NBA_PORTRAIT_OVERRIDES[key];
-  if (override) return override;
   const seasonId = candidate.season == null ? null
     : nbaFindLeaderSubjects.find(s => s.season === candidate.season && normalizedName(s.name) === key)?.nbaId ?? null;
   const historicalId = ambiguousPortraitNames.has(key) ? null : historicalPortraitIds.get(key) ?? null;
   const id = candidate.nbaId ?? seasonId ?? currentByName.get(key)?.nbaId ?? historicalId;
-  return id == null ? null : "https://cdn.nba.com/headshots/nba/latest/1040x760/" + id + ".png";
+  return nbaPortraitSource({ name: candidate.name, nbaId: id });
 }
 export function formatNbaFindLeaderValue(value: number) { return value.toFixed(1); }
 export function nbaFindLeaderAudit(sampleSize = 300) {

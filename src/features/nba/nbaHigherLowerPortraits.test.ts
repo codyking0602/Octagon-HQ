@@ -13,9 +13,9 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
     expect(hardaway).toContain("cdn.nba.com/teams/uploads/");
     expect(nbaHigherLowerPortraitSource({name:"Tim Hardaway Jr.",nbaId:203501})).not.toBe(hardaway);
   });
-  it("restores all 24 former silhouette players with identifiable sources and photo credits", () => {
+  it("restores all 25 former silhouette players with identifiable sources and photo credits", () => {
     const originals = Object.values(NBA_HIGHER_LOWER_RESTORED_PORTRAITS);
-    expect(originals).toHaveLength(24);
+    expect(originals).toHaveLength(25);
     const urls = new Set<string>();
     for (const original of originals) {
       expect(original.name.length).toBeGreaterThan(5);
@@ -27,7 +27,7 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
       expect(urls.has(original.url)).toBe(false);
       urls.add(original.url);
     }
-    expect(originals.filter(x => x.url.includes("wikimedia.org"))).toHaveLength(23);
+    expect(originals.filter(x => x.url.includes("wikimedia.org"))).toHaveLength(24);
     expect(originals.find(x => x.name === "Terry Cummings")?.source).toContain("legendsofbasketball.com");
   });
   it("all sampled subjects resolve a correctly named, player-ID-bound photo URL or an explicit missing-photo fallback", () => {
@@ -51,9 +51,13 @@ describe("NBA Higher or Lower portrait coverage and player identity", () => {
   it("exposes the entire eligible player pool for full image-content auditing", () => {
     const people = NBA_HIGHER_LOWER_ELIGIBLE_PHOTO_SUBJECTS;
     expect(people.length).toBe(184);
-    expect(Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)).toHaveLength(24);
+    expect(Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)).toHaveLength(25);
     const eligible = new Set(people.map(x => x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g,"")));
-    for (const key of Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)) expect(eligible.has(key)).toBe(true);
+    // The shared registry also contains restorations needed only by Find the Leader
+    // (Brandon Roy); they must not be incorrectly required in this game's pool.
+    const sharedEligible = new Set([...eligible, ...nbaFindLeaderSubjects.map(x =>
+      x.name.normalize("NFD").toLowerCase().replace(/[^a-z0-9]/g, ""))]);
+    for (const key of Object.keys(NBA_HIGHER_LOWER_RESTORED_PORTRAITS)) expect(sharedEligible.has(key)).toBe(true);
     expect(new Set(people.map(x => x.name)).size).toBe(people.length);
     expect(people.some(x => x.name === "Lamar Odom")).toBe(true);
     expect(people.some(x => x.name === "Jason Kidd")).toBe(true);

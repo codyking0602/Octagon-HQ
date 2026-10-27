@@ -24,6 +24,7 @@ import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLea
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
 import { nbaHitHeadshot, nbaHitSubjectById } from "./nbaHitTheNumberStats";
+import { NbaPortraitCredits } from "./NbaPortraitCredits";
 import { formatNbaHitNumber } from "./nbaHitTheNumberModel";
 import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaOwnerPreviewDaily, nbaRegularSeasonDaily, nbaCentralDay, type NbaDailyGame } from "./nbaDailySchedule";
 import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
@@ -73,10 +74,12 @@ export function nbaOfficialActiveRound(projection: TodayChallengeProjection) {
 function NBAHeadshot({ name, season, compact = false }: { name: string; season?: number; compact?: boolean }) {
   const [failed, setFailed] = useState(false);
   const src = nbaFindLeaderHeadshot({ name, season, nbaId: null });
+  const editorial = Boolean(src && !src.includes("/headshots/nba/latest/"));
   useEffect(() => setFailed(false), [src]);
   const initials = name.split(/\s+/).map(x => x[0]).slice(0, 2).join("");
-  return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "")} aria-label={name + " portrait"}>
-    {src && !failed ? <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" onError={() => setFailed(true)} />
+  return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "") + (editorial ? " is-editorial" : "")} aria-label={name + " portrait"}>
+    {src && !failed ? <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" onError={() => setFailed(true)}
+      onLoad={event => { if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true); }} />
       : <b aria-hidden="true">{initials || "NBA"}</b>}
   </span>;
 }
@@ -110,6 +113,7 @@ export function NbaOfficialFindLeader({ projection, advance, busy }: { projectio
       renderVisual={(candidate, compact) => <NBAHeadshot name={candidate.name} season={candidate.season} compact={compact} />}
       formatValue={formatNbaFindLeaderValue}
     />
+    <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />
   </div>;
 }
 
@@ -151,7 +155,9 @@ function NBAPlayerMark({ id, className }: { id: string; className: string }) {
   const src = subject ? nbaHitHeadshot(subject) : null;
   const [failed, setFailed] = useState(false);
   return <span className={className} aria-label={subject?.name ?? "NBA player"}>
-    {src && !failed ? <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} /> :
+    {src && !failed ? <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer"
+      onError={() => setFailed(true)}
+      onLoad={event => { if (src.includes("/headshots/nba/latest/") && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true); }} /> :
       <b aria-hidden="true">{subject?.name.split(" ").map(x => x[0]).slice(0, 2).join("") ?? "NBA"}</b>}
   </span>;
 }
@@ -192,6 +198,7 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
       renderSubjectMark={(id, className) => <NBAPlayerMark id={id} className={className} />}
       busy={busy}
     />
+    <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />
   </div>;
 }
 

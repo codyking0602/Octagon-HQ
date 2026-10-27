@@ -814,3 +814,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* NBA phone proof: the shared lock dock's -3px horizontal margins pushed
+   this NBA game 3px beyond a 390px iPhone viewport. Preserve other sports. */
+@media (max-width: 760px) {
+  .nba-hit-number-page .hit-number-lock-dock {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

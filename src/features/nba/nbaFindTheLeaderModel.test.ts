@@ -90,10 +90,13 @@ describe("NBA Find the Leader factual and gameplay quality", () => {
     ] as const;
     for (const [name, season, id] of screenshots) {
       // Historical snapshots may supply name/season but no nbaId.
-      expect(nbaFindLeaderHeadshot({ name, season, nbaId: null }))
-        .toBe(`https://cdn.nba.com/headshots/nba/latest/1040x760/${id}.png`);
-      expect(nbaFindLeaderHeadshot({ name, nbaId: null }))
-        .toBe(`https://cdn.nba.com/headshots/nba/latest/1040x760/${id}.png`);
+      const portrait = nbaFindLeaderHeadshot({ name, season, nbaId: null });
+      expect(portrait).toBe(nbaFindLeaderHeadshot({ name, nbaId: null }));
+      if (["Michael Finley", "Tim Hardaway", "Glen Rice", "Jerry Stackhouse"].includes(name)) {
+        expect(portrait).not.toContain("/headshots/nba/latest/");
+      } else {
+        expect(portrait).toBe(`https://cdn.nba.com/headshots/nba/latest/1040x760/${id}.png`);
+      }
     }
   });
   it("supports deterministic owner daily previews and identical challenge reconstructions", () => {

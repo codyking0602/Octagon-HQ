@@ -1,0 +1,11 @@
+.nba-shared-photo-credits {
+  margin: 8px 0 2px;
+  padding: 7px 10px;
+  color: #aab7c4;
+  font-size: .69rem;
+  line-height: 1.4;
+}
+.nba-shared-photo-credits summary { cursor: pointer; font-weight: 700; }
+.nba-shared-photo-credits ul { margin: 7px 0; padding-left: 16px; }
+.nba-shared-photo-credits li { margin: 3px 0; overflow-wrap: anywhere; }
+.nba-shared-photo-credits a { color: #f2bc78; text-decoration: underline; }
