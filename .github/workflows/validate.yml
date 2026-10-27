@@ -63,10 +63,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate deterministic Football editorial photo templates
+      - name: Validate deterministic Football and UFC asset framing
         run: |
           python -m pip install --disable-pip-version-check pillow
-          python -m unittest scripts/test_football_editorial_assets.py
+          python -m unittest scripts/test_football_editorial_assets.py scripts/test_asset_ingest_quality.py
 
       - name: Verify deterministic Wheel monitoring change policy
         run: node --test scripts/wheel-monitor-change-policy.fixtures.mjs scripts/wheel-monitor-census-policy.fixtures.mjs

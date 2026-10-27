@@ -18,6 +18,7 @@ import {
 import { PicksSpotlightSetup } from "./PicksSpotlightSetup";
 import {
   compareUfcPrepToSource,
+  effectiveUfcPrepStatus,
   prepAssetSummary,
   preparedMainEventSpotlight,
   type UfcPickPrep,
@@ -248,6 +249,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
   );
   const prepChanges = useMemo(() => compareUfcPrepToSource(prep, sourcePreview), [prep, sourcePreview]);
   const prepSummary = useMemo(() => prepAssetSummary(prep), [prep]);
+  const prepStatus = useMemo(() => effectiveUfcPrepStatus(prep), [prep]);
 
   async function runAction<T>(key: string, action: () => Promise<T>, reload = true) {
     setBusyAction(key);
@@ -467,13 +469,13 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
       ) : null}
 
       {identity.profile && !loading ? (
-        <section className={`surface-card picks-setup-prep is-${prep?.status ?? "missing"}`} aria-label="UFC prep status">
+        <section className={`surface-card picks-setup-prep is-${prepStatus ?? "missing"}`} aria-label="UFC prep status">
           <div className="picks-setup-prep__heading">
             <div>
               <p className="eyebrow">UFC PREP</p>
               <h2>{prep ? prep.eventName : "No prep package yet"}</h2>
             </div>
-            <strong>{prep ? prep.status.replace("-", " ").toUpperCase() : "NOT PREPARED"}</strong>
+            <strong>{prepStatus ? prepStatus.replace("-", " ").toUpperCase() : "NOT PREPARED"}</strong>
           </div>
           {prep ? (
             <>
@@ -483,10 +485,10 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
               </p>
               <div className="picks-setup-prep__stats">
                 <span><b>{prepSummary.thumbReady}/{prepSummary.thumbTotal}</b><small>THUMBS READY</small></span>
-                <span><b>{prepSummary.spotlightReady}/{prepSummary.spotlightTotal}</b><small>SPOTLIGHT IMAGES</small></span>
-                <span><b>{prep.spotlights.length}</b><small>PREVIEWS WRITTEN</small></span>
+                <span><b>{prepSummary.requiredSpotlightReady}/{prepSummary.requiredSpotlightTotal}</b><small>MAIN EVENT PHOTOS</small></span>
+                <span><b>{prepSummary.previewReady}/{prepSummary.previewTotal}</b><small>FIGHT PREVIEWS</small></span>
               </div>
-              <small>Prepared {displayTime(prep.preparedAt)} · Verified {displayTime(prep.verifiedAt)}</small>
+              <small>Optional main-card photos: {prepSummary.optionalSpotlightReady}/{prepSummary.optionalSpotlightTotal} · Prepared {displayTime(prep.preparedAt)} · Verified {displayTime(prep.verifiedAt)}</small>
               {prep.verificationNotes.length ? (
                 <div className="picks-setup-prep__notes">
                   {prep.verificationNotes.map((note) => <em key={note}>{note}</em>)}
