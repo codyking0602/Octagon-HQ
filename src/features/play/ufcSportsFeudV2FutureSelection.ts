@@ -33,6 +33,15 @@ function topicGroups(source:readonly SportsFeudAuthoredQuestion[]){
   }
   return groups;
 }
+/** Prior published UFC Feud used legacy topic variants. Start the new V2
+ * schedule with genuinely new questions, keeping all retained source material
+ * eligible later in the 24-appearance no-repeat cycle. */
+function novelTopicsFirst(
+  groups:Map<string,SportsFeudAuthoredQuestion[]>,keys:readonly string[],
+){
+  const retained=(key:string)=>(groups.get(key)??[]).every(q=>q.id.startsWith("ufc-v2-retained-"));
+  return [...keys].sort((a,b)=>Number(retained(a))-Number(retained(b)));
+}
 function chooseQuestion(questions:readonly SportsFeudAuthoredQuestion[],cycle:number,group:string){
   const sorted=[...questions].sort((a,b)=>a.id.localeCompare(b.id));
   return sorted[stableHash("ufc-feud-v2|"+cycle+"|"+group)%sorted.length]!;
@@ -76,12 +85,12 @@ export function planUfcFeudV2Appearance(
   const mainOnly=[...main.keys()].filter(k=>!fast.has(k));
   const shared=[...main.keys()].filter(k=>fast.has(k));
   const selectedMainKeys=[
-    ...seedOrder(mainOnly,"ufc-v2-main-only-topic-schedule",x=>x),
-    ...seedOrder(shared,"ufc-v2-main-shared-topic-schedule",x=>x),
+    ...novelTopicsFirst(main,seedOrder(mainOnly,"ufc-v2-main-only-topic-schedule",x=>x)),
+    ...novelTopicsFirst(main,seedOrder(shared,"ufc-v2-main-shared-topic-schedule",x=>x)),
   ].slice(0,requiredMain);
   const reserved=new Set(selectedMainKeys);
-  const selectedFastKeys=seedOrder([...fast.keys()].filter(k=>!reserved.has(k)),
-    "ufc-v2-fast-topic-schedule",x=>x).slice(0,requiredFast);
+  const selectedFastKeys=novelTopicsFirst(fast,seedOrder([...fast.keys()].filter(k=>!reserved.has(k)),
+    "ufc-v2-fast-topic-schedule",x=>x)).slice(0,requiredFast);
   if(selectedMainKeys.length!==requiredMain||selectedFastKeys.length!==requiredFast)
     throw new Error("UFC Feud V2 insufficient unique Main/Fast topic allocation");
 
