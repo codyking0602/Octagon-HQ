@@ -69,7 +69,7 @@ jobs:
         # Exclude the pre-existing unrelated /play route smoke test, which
         # hangs at 30s independently of all-time ranking additions. Every
         # ranking test and every other App profile/navigation test still runs.
-        run: npx vitest run src/features/rankings src/app/App.test.tsx src/app/rankingWhatsNewSync.contract.test.ts --maxWorkers=2 --testNamePattern='^(?!.*keeps unfinished destinations isolated).*
+        run: npx vitest run src/features/rankings src/app/App.test.tsx src/app/rankingWhatsNewSync.contract.test.ts --maxWorkers=2 --testNamePattern="^(?!.*keeps unfinished destinations isolated)"
 
       - name: Full suite (original agent branch behavior)
         if: ${{ !startsWith(github.ref, 'refs/heads/editorial/ufc-v2-') }}
