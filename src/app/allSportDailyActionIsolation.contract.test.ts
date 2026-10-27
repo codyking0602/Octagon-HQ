@@ -85,8 +85,9 @@ describe("Official Daily game-specific resource-limit regression", () => {
     expect(context.publicState.round_count).toBe(2);
     const evidence = (context.privateSetupEvidence.rounds as Array<Record<string, unknown>>)[0]!
       .private_setup_evidence as Record<string, unknown>;
-    const id = (evidence.fighter_ids as string[])[0]!;
-    const action = { fighter_id: id };
+    const slots = evidence.slot_eligible_ids as string[][] | undefined;
+    const id = slots?.[0]?.[0] ?? (evidence.fighter_ids as string[])[0]!;
+    const action = slots?.length ? { fighter_id: id, slot_index: 0 } : { fighter_id: id };
     const expected = advanceOfficialDailyRuntime(context, action);
     expect(ufcHitNumber(context, action)).toEqual(expected);
   });
