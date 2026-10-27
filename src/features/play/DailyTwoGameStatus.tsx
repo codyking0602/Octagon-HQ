@@ -110,8 +110,7 @@ export function dailyOfficialDisplayScore(
   leaderboardScore?: number | null,
 ): number | null {
   if (!projection?.officialAttempt) return null;
-  const twoGame = dailyUsesTwoGameAverage(projection.gameType, projection.centralDay)
-    || dailyTwoGameSeriesState(projection) !== null;
+  const twoGame = dailyUsesTwoGameAverage(projection.gameType, projection.centralDay);
   if (!twoGame) return projection.officialAttempt.normalizedScore;
   const average = dailyTwoGameOfficialAverageScore(projection);
   if (average !== null) return average;
