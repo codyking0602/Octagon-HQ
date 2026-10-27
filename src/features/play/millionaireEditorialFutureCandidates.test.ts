@@ -219,6 +219,19 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("checks six retained college title and draft facts in preview only", () => {
+    for (const key of ["cfb:0:6","cfb:1:5","cfb:1:6","cfb:2:2","cfb:3:2","cfb:5:3"] as const) {
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.choices).toHaveLength(4);
+      expect(q.choices.filter(v=>v===q.answer)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(q.answer));
+      expect(q.explanation).toContain(q.answer.replace(/^\d{4} /,""));
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+      expect(q.explanation.length).toBeGreaterThan(110);
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
