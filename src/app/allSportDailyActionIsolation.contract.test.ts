@@ -58,7 +58,7 @@ describe("Official Daily game-specific resource-limit regression", () => {
   it("preserves UFC and Football Higher/Lower two-game progression and answer safety", () => {
     const cases = [
       {
-        context: initial("higher_lower", buildUfcHigherLowerTwoGameDailyPublication("2026-10-27", "play-rotation-v9-millionaire-no-double")),
+        context: initial("higher_lower", buildUfcHigherLowerTwoGameDailyPublication("2026-11-02", "play-rotation-v9-millionaire-no-double")),
         isolated: ufcHigherLower,
         canonical: advanceOfficialDailyRuntime,
       },
