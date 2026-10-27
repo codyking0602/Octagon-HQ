@@ -67,7 +67,7 @@ describe("Millionaire official Daily runtime", () => {
     expect(target).toBeDefined();
     const future = buildMillionaireDailySetup("football", target!, "future");
     const updated = (future.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[5]!;
-    expect(updated.id).toBe("millionaire-nfl-2025-ap-all-pro-q6-future");
+    expect(updated.id).toBe("millionaire-nfl-future-stafford-2025-ap-all-pro-q6");
     expect(updated.prompt).toContain("2025 NFL season");
     expect(updated.choices.find(c => c.id === updated.correctChoiceId)?.text).toBe("Matthew Stafford");
     expect(updated.statSheet).not.toMatch(/Stafford/i);
@@ -92,11 +92,12 @@ describe("Millionaire official Daily runtime", () => {
     const ufc = buildMillionaireDailySetup("ufc", ufcDay!, "future");
     const championship = (cfb.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[0]!;
     const clue = (ufc.privateSetupEvidence.run as MillionaireRuntimeQuestion[])[6]!;
-    expect(championship.prompt).toContain("2025 college football season");
+    expect(championship.prompt).toMatch(/2025 football season/i);
     expect(championship.explanation).toContain("January 2026");
     expect(championship.choices.find(c => c.id === championship.correctChoiceId)?.text).toBe("Indiana");
     expect(clue.statSheet).not.toMatch(/Grasso/i);
-    expect(clue.statSheet).toContain("fourth-round");
+    expect(clue.statSheet).toContain("Round 5");
+    expect(clue.statSheet).not.toMatch(/Rozenstruik/i);
   });
 
 
