@@ -153,6 +153,7 @@ let whoAmIAdvanceRuntimePromise: Promise<WhoAmIAdvanceRuntimeModule> | null = nu
 let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
 let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
 let footballHitNumberAdvanceRuntimePromise: Promise<FootballHitNumberAdvanceRuntimeModule> | null = null;
+let footballWavelengthAdvanceRuntimePromise: Promise<{ advanceFootballWavelengthDailyRuntime: DailyAdvanceRuntime }> | null = null;
 
 function loadUfcRuntime() {
   if (!ufcRuntimePromise) {
@@ -226,6 +227,11 @@ function loadFootballHitNumberAdvanceRuntime() {
     footballHitNumberAdvanceRuntimePromise = import("./football-hit-number-advance.generated.mjs") as Promise<FootballHitNumberAdvanceRuntimeModule>;
   }
   return footballHitNumberAdvanceRuntimePromise;
+}
+
+function loadFootballWavelengthAdvanceRuntime() {
+  if (!footballWavelengthAdvanceRuntimePromise) footballWavelengthAdvanceRuntimePromise = import("./football-wavelength-advance.generated.mjs") as Promise<{ advanceFootballWavelengthDailyRuntime: DailyAdvanceRuntime }>;
+  return footballWavelengthAdvanceRuntimePromise;
 }
 
 function loadMillionaireAdvanceRuntime() {
@@ -1720,6 +1726,8 @@ Deno.serve(async (request) => {
           ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
           : context.gameType === "hit_the_number" && !isDailyCombo(context)
             ? (await loadFootballHitNumberAdvanceRuntime()).advanceFootballHitNumberDailyRuntime
+            : context.gameType === "wavelength" && !isDailyCombo(context)
+              ? (await loadFootballWavelengthAdvanceRuntime()).advanceFootballWavelengthDailyRuntime
             : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
               ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
               : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
