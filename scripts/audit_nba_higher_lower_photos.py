@@ -8,6 +8,7 @@ identities. Download and inspect each eligible player's actual bytes instead.
 import concurrent.futures
 import hashlib
 import io
+from pathlib import Path
 import json
 import sys
 import time
@@ -17,6 +18,8 @@ from PIL import Image
 
 MANIFEST = "nba-photo-audit-manifest.json"
 REPORT = "nba-photo-audit-report.json"
+PHONE_CACHE = Path("scripts/nba-portrait-phone/audited")
+PHONE_CACHE_MANIFEST = "nba-photo-audit-browser-manifest.json"
 
 def fetch_image(entry):
     url = entry["url"]
@@ -55,6 +58,14 @@ def fetch_image(entry):
             else:
                 category = "image"
                 reason = ""
+            if category == "image" and __import__("os").environ.get("NBA_PHONE_FIXTURE") == "1":
+                # Preserve actual audited pixels locally for deterministic
+                # headless Chrome rendering. This is a test-only cache, never
+                # a production photo URL or a checked-in redistribution.
+                PHONE_CACHE.mkdir(parents=True, exist_ok=True)
+                with Image.open(io.BytesIO(content)) as original:
+                    filename = hashlib.sha256(url.encode("utf-8")).hexdigest() + ".png"
+                    original.convert("RGBA").save(PHONE_CACHE / filename, "PNG")
             return dict(entry, status=category, reason=reason,
                 http=status, imageSize=list(size), bytes=len(content),
                 flatGrayFraction=round(flat_fraction, 4),
@@ -89,6 +100,12 @@ def main():
     print(f"NBA photo audit: {report['verified']}/{report['total']} eligible players have distinct decodable non-placeholder images")
     for item in bad:
         print(f"PHOTO ISSUE: {item['name']} NBA_ID={item['nbaId']} [{item['status']}] {item['reason']}")
+    if not bad and __import__("os").environ.get("NBA_PHONE_FIXTURE") == "1":
+        cached = {row["url"]: str(PHONE_CACHE / (
+            hashlib.sha256(row["url"].encode("utf-8")).hexdigest() + ".png"))
+            for row in results}
+        with open(PHONE_CACHE_MANIFEST, "w", encoding="utf-8") as f:
+            json.dump(cached, f, indent=2)
     if bad:
         print(f"FAIL: {len(bad)} portraits must be remedied or excluded before calling photo coverage verified.")
         sys.exit(1)
