@@ -1,7 +1,6 @@
 -- One-time owner-approved Oct 27 NFL GOTW replacement. Never alter CFB or Spotlights.
 -- The armed-content immutability guard is narrowly extended only WITHIN THIS TRANSACTION
 -- and restored before COMMIT; an immutable before/after audit receipt is retained.
-begin;
 create table if not exists public.football_weekly_owner_corrections (
   week_of date not null, sport text not null, recorded_at timestamptz not null default now(),
   approval text not null, prior_state jsonb not null, corrected_state jsonb not null,
@@ -145,7 +144,6 @@ begin
 end;
 $guard$;
 -- The prior immutable-game guard is restored before commit.
-commit;
 
 -- Already-armed signed manifests are safe to replay only as exact read-only receipts.
 create or replace function public.ingest_football_weekly_editorial_preparation(
