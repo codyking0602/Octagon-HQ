@@ -14,6 +14,39 @@ export type MillionaireFutureRewriteSeed = {
   evidence: readonly { authority: string; url: string; supportingDetail: string }[];
 };
 export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
+  // The 2016 SEASON championship was won in January 2017, not at the January 2016 game.
+  "cfb:0:2": {
+    id: "millionaire-cfb-future-clemson-2016-season-title-q3",
+    type: "championship-season",
+    prompt: "Who did Clemson beat for the 2016 SEASON's CFP championship in January 2017?",
+    choices: ["Alabama", "Ohio State", "Oklahoma", "Florida State"],
+    answer: "Alabama",
+    statSheet: "Deshaun Watson threw the winning touchdown with one second remaining in the title game.",
+    explanation: "Clemson beat Alabama 35–31 on January 9, 2017, to win the 2016 season's championship; Alabama, by contrast, won the title game played in January 2016.",
+    evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2021/9/7/ncg-recap-2017", supportingDetail: "Official 2017 championship recap: Clemson 35, Alabama 31, January 9, 2017; Watson threw the game winner with a second left." }],
+  },
+  // DeVonta Smith's 2nd-and-26 overtime TD won the 2017 SEASON title in January 2018.
+  "cfb:4:2": {
+    id: "millionaire-cfb-future-devonta-smith-2017-season-title-q3",
+    type: "championship-moment",
+    prompt: "Who caught Alabama's walk-off overtime touchdown against Georgia in the January 2018 CFP title game?",
+    choices: ["DeVonta Smith", "Calvin Ridley", "O.J. Howard", "Jerry Jeudy"],
+    answer: "DeVonta Smith",
+    statSheet: "A freshman receiver caught Tua Tagovailoa's 41-yard pass on second-and-26.",
+    explanation: "DeVonta Smith caught a 41-yard overtime touchdown pass from Tua Tagovailoa on January 8, 2018, as Alabama defeated Georgia 26–23 for the 2017 season's national championship.",
+    evidence: [{ authority: "Alabama Athletics", url: "https://rolltide.com/news/2018/1/8/alabama-football-wins-2018-national-championship-in-overtime-thriller-against-georgia-26-23", supportingDetail: "Official 2018 game recap confirms Smith, Tagovailoa, Georgia, the 41-yard overtime touchdown and Alabama's 26–23 win." }],
+  },
+  // The Tide's LSU shutout was for the 2011 season, played January 2012.
+  "cfb:6:1": {
+    id: "millionaire-cfb-future-alabama-lsu-2011-season-title-q2",
+    type: "championship-season",
+    prompt: "Which team did Alabama shut out 21–0 for the 2011 season's BCS title in January 2012?",
+    choices: ["LSU", "Oklahoma State", "Oregon", "Stanford"],
+    answer: "LSU",
+    statSheet: "The championship was a rematch of a 9–6 overtime regular-season meeting.",
+    explanation: "Alabama defeated LSU 21–0 on January 9, 2012, for the 2011 season's BCS national championship, avenging its November 2011 overtime loss.",
+    evidence: [{ authority: "Alabama Athletics", url: "https://rolltide.com/news/2012/1/9/Crimson_Tide_Wins_14th_National_Championship_21_0_Over_LSU", supportingDetail: "Official title-game account confirms Alabama's 21–0 victory over LSU on January 9, 2012." }],
+  },
   // Avoid inverse of active Bar Trivia's 2001 Miami/Ken Dorsey identity fact.
   "cfb:5:2": {
     id: "millionaire-cfb-future-tcu-sonny-dykes-cfp-q3",

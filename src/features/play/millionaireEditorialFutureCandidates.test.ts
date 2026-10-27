@@ -15,6 +15,37 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("keeps three ambiguous CFB championship years repaired only in future preview", () => {
+    const changes = [
+      ["cfb:0:2", "Alabama", "January 2017", "2016 SEASON"],
+      ["cfb:4:2", "DeVonta Smith", "January 2018", "overtime"],
+      ["cfb:6:1", "LSU", "January 2012", "2011 season"],
+    ] as const;
+    for (const [key, correct, occasion, scope] of changes) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(correct);
+      expect(q.prompt).toContain(occasion);
+      expect(q.prompt.toLowerCase()).toContain(scope.toLowerCase());
+      expect(q.choices.filter(choice => choice === correct)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(correct));
+      expect(q.evidence).toHaveLength(1);
+    }
+    expect(millionaireDailyRun("cfb", 0)[2]!.prompt).toBe("Who did Clemson defeat to win the 2016 national championship?");
+    expect(millionaireDailyRun("cfb", 4)[2]!.prompt).toContain("2017 national championship game");
+    expect(millionaireDailyRun("cfb", 6)[1]!.prompt).toContain("2011 national championship");
+  });
+
+  it("replaces same-run repeated heavyweight subject with UFC 300 Holloway finale", () => {
+    const q = millionaireFutureEditorialDailyRun("ufc", 10)[3]!;
+    expect(q.prompt).toContain("UFC 300");
+    expect(answer(q)).toBe("Max Holloway");
+    expect(q.statSheet).not.toContain("Max Holloway");
+    expect(q.choices.map(choice => choice.text)).toEqual([
+      "Max Holloway", "Dustin Poirier", "Charles Oliveira", "Dan Hooker",
+    ]);
+  });
+
   it("replaces 2001 quarterback trivia and consecutive Auburn facts in CFB future run 6", () => {
     const school = MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:5:2"]!;
     const final = MILLIONAIRE_FUTURE_Q8_REWRITES["cfb:5:7"]!;
