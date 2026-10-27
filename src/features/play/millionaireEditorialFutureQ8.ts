@@ -133,11 +133,11 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     { authority: "Heisman Trust", url: "https://www.heisman.com/heisman-winners/charlie-ward/", supportingDetail: "Trust's player profile confirms both the 1993 Heisman and his NBA career." },
   ),
   "cfb:9:7": q8(
-    "millionaire-cfb-future-ringo-2022-title-q8", "national-championship-finish",
-    "Who returned a late interception for a touchdown to seal Georgia's national championship win over Alabama in January 2022?",
-    ["Kelee Ringo", "Nakobe Dean", "Lewis Cine", "Derion Kendrick"], "Kelee Ringo",
-    "Kelee Ringo returned a Bryce Young pass 79 yards for a touchdown with 54 seconds remaining to seal Georgia's 33-18 victory.",
-    { authority: "Georgia Athletics", url: "https://georgiadogs.com/news/2022/1/10/football-bulldogs-capture-national-title-with-33-18-win-over-alabama", supportingDetail: "UGA's game recap gives Ringo's 79-yard interception TD with 54 seconds remaining." },
+    "millionaire-cfb-future-bullard-2023-tcu-q8", "championship-defense",
+    "Which Georgia defender intercepted two passes AND recovered a fumble against TCU in the January 2023 national championship?",
+    ["Javon Bullard", "Kelee Ringo", "Malaki Starks", "Christopher Smith"], "Javon Bullard",
+    "Javon Bullard forced three TCU turnovers with two interceptions and a fumble recovery, earning defensive player of the game honors in Georgia's 65–7 title-game win.",
+    { authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2023/1/26/ncg-recap-2023", supportingDetail: "CFP identifies Bullard as Defensive Player of the Game with two interceptions and a fumble recovery against TCU." },
   ),
   "ufc:0:7": q8(
     "millionaire-ufc-future-first-fight-gordeau-q8", "ufc-origins",
