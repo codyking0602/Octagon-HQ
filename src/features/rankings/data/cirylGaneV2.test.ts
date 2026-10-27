@@ -62,7 +62,7 @@ describe("October 2026 isolated Ciryl Gane V2 all-time addition", () => {
     expect(getFighter("ciryl-gane")?.visibleStats.titleFightWins).toBe(2);
     expect(current!.judgments.championship.inputs).toHaveLength(2);
     expect(current!.judgments.championship.inputs.map((x) => x.finalAdjustedCredit)).toEqual([0.65, 0.75]);
-    expect(current!.presentation.keyJudgmentCalls.some((x) => x.includes("promotion"))).toBe(true);
+    expect(current!.presentation.keyJudgmentCalls.some((x) => x.includes("elevation"))).toBe(true);
   });
 
   it("has fight-keyed, source-reviewed opponent and apex inputs; losses do not earn win credits", () => {
