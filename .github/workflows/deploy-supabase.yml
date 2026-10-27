@@ -283,26 +283,30 @@ jobs:
             test -f supabase/functions/daily-challenge-runtime/football-wavelength-advance.generated.mjs
              test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs
-            # Authenticate before pulling the edge runtime image to avoid public GHCR throttling.
-          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+            # Cache the official Docker Hub mirror under the image name the
+          # pinned Supabase CLI expects, avoiding the current GHCR throttle.
           image="ghcr.io/supabase/edge-runtime:v1.74.2"
+          mirror="docker.io/supabase/edge-runtime:v1.74.2"
           image_ready=false
-          for attempt in 1 2 3 4; do
-            if docker pull "$image"; then
-              image_ready=true
-              break
-            fi
-            if [ "$attempt" -lt 4 ]; then
-              echo "::warning title=GHCR image pull throttled::Retrying authenticated image pull (attempt $attempt of 4)."
-              sleep $((attempt * 10))
-            fi
-          done
-          if [ "$image_ready" = true ]; then
-            supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-docker
+          if docker pull "$mirror"; then
+            docker tag "$mirror" "$image"
+            image_ready=true
           else
-            echo "::warning title=GHCR image pull unavailable::Attempting Supabase API bundling without Docker."
-            supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+            echo "::warning title=Docker Hub runtime pull unavailable::Trying authenticated GHCR."
+            printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+            for attempt in 1 2 3; do
+              if docker pull "$image"; then
+                image_ready=true
+                break
+              fi
+              if [ "$attempt" -lt 3 ]; then sleep $((attempt * 10)); fi
+            done
           fi
+          if [ "$image_ready" != true ]; then
+            echo "::error title=Runtime image unavailable::Both official registries failed; Docker packaging is required because API upload exceeds the function size limit."
+            exit 1
+          fi
+          supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-docker
           else
             echo "daily-challenge-runtime is not present in this exact deployment source; skipping."
           fi
