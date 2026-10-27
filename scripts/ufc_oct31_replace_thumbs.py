@@ -70,7 +70,40 @@ def remove_connected_white(im):
     im = im.copy()
     w,h=im.size
     if im.getchannel("A").getextrema()[0] < 190:
-        return im # the original photograph already has transparent edges
+        # UFC-style PNG cutouts already contain transparency but may also
+        # have large *opaque pale publisher patches* outside the person.
+        # The previous all-transparent fast path skipped these entirely.
+        px=im.load()
+        seen=bytearray(w*h)
+        cleared=0
+        def plate(x,y):
+            r,g,b,a=px[x,y]
+            return a>=25 and min(r,g,b)>=130 and max(r,g,b)-min(r,g,b)<=45
+        for y0 in range(h):
+            for x0 in range(w):
+                i=y0*w+x0
+                if seen[i] or not plate(x0,y0):
+                    continue
+                q=deque([(x0,y0)]);region=[];touches_clear=False
+                while q:
+                    x,y=q.popleft()
+                    if x<0 or x>=w or y<0 or y>=h:continue
+                    k=y*w+x
+                    if seen[k] or not plate(x,y):continue
+                    seen[k]=1;region.append((x,y))
+                    for xx,yy in ((x-1,y),(x+1,y),(x,y-1),(x,y+1)):
+                        if xx<0 or xx>=w or yy<0 or yy>=h or px[xx,yy][3]<25:
+                            touches_clear=True
+                        else:q.append((xx,yy))
+                if len(region)<65 or not touches_clear:continue
+                xmin=min(x for x,_ in region);xmax=max(x for x,_ in region)
+                ymin=min(y for _,y in region);ymax=max(y for _,y in region)
+                if xmax-xmin<8 or ymax-ymin<5:continue
+                for x,y in region:
+                    rr,gg,bb,a=px[x,y];px[x,y]=(rr,gg,bb,0)
+                cleared+=len(region)
+        print(f"REAL TRANSPARENT SOURCE: removed {cleared} neutral publisher pixels",flush=True)
+        return im
     px=im.load()
     # Plain background on these specific portraits is white, not a UFC
     # graphic plate. Only erase whites connected to the outer photo border.
