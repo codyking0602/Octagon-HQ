@@ -81,6 +81,8 @@ export const profileSignatureFightUrls = {
   "cris-cyborg": "https://www.youtube.com/watch?v=cQN5Jd6WBms",
   "carla-esparza": "https://youtu.be/jJeZ2wZv0YQ?is=QOK9v0B_kfqvZgqd",
   "alexa-grasso": "https://youtu.be/P0U_W35_cJw?is=mRmw6BHCQGDfTygx",
+  // Verified 2026 UFC 332 championship-fight highlights (public YouTube video).
+  "natalia-silva": "https://www.youtube.com/watch?v=RJKsVW9VhTo",
   "kayla-harrison": "https://youtu.be/UUMlLth-4uQ?is=ZmRXsN5bIzaY1_rq",
   "mackenzie-dern": "https://youtu.be/Gnf14OGq9VY?is=AWeo4KKp08bB0v5k",
   "julianna-pena": "https://youtu.be/tB_Xg1LbMVQ?is=cMc6BXC1LV3u8rJa",
