@@ -33,13 +33,19 @@ function add(team,name,monitor,reason,priority="medium",details={}){
   existing.details[monitor]=details;
   candidates.set(id,existing);
 }
+const gmProfiles=JSON.parse(readFileSync("data/curated/football/gm-nfl-development-profiles-2026-10-07.json","utf8")).profiles;
+if(gmProfiles.length!==594)throw new Error("Canonical NFL GM development population changed");
+const gmKeys=new Set(gmProfiles.map(p=>key(p.team,p.name)));
 const m=data.madden;
 if(m){
   if(!Array.isArray(m.flags)||!m.developmentReview?.candidates)blockers.push("madden:incomplete-output");
-  for(const row of m.flags??[])add(row.team,row.name,"madden","overall-"+row.overallDelta+"-review",Math.abs(row.overallDelta)>=4?"high":"medium",row);
+  const relevant=(m.flags??[]).filter(row=>gmKeys.has(key(row.team,row.name)));
+  for(const row of relevant)add(row.team,row.name,"madden","overall-"+row.overallDelta+"-review",Math.abs(row.overallDelta)>=4?"high":"medium",row);
   for(const row of m.developmentReview?.candidates??[])add(row.team,row.name,"development",row.reasons.join(", "),row.priority,row);
   counts.maddenFullPopulation=m.currentCount??0;
   counts.maddenFlags=m.flags?.length??0;
+  counts.maddenGmFlags=relevant.length;
+  counts.maddenOutsideGm=(m.flags?.length??0)-relevant.length;
   counts.developmentFlagged=m.developmentReview?.candidates?.length??0;
   counts.earlyCareerScreened=m.developmentReview?.firstTwoSeasonsScreened??null;
   counts.unmatchedMaddenFlags=m.developmentReview?.unmatchedMaddenFlags?.length??null;
