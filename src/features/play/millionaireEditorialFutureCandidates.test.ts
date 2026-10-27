@@ -374,6 +374,37 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(scheduled).toBe(40);
   });
 
+  it("replaces twelve inverse or identical active UFC Bar Trivia facts only in future preview", () => {
+    const updated: readonly [string, string][] = [
+      ["ufc:0:2", "Who submitted Renato Moic"],
+      ["ufc:0:3", "Who upset Israel Adesanya"],
+      ["ufc:0:4", "Who submitted Amanda Nune"],
+      ["ufc:0:5", "Who defended the UFC bant"],
+      ["ufc:1:3", "Who stopped Jamahal Hill "],
+      ["ufc:1:4", "Who submitted Justin Gaet"],
+      ["ufc:1:5", "Who knocked out Tony Ferg"],
+      ["ufc:2:0", "Who knocked out Jamahal H"],
+      ["ufc:2:3", "Who submitted Valentina S"],
+      ["ufc:2:4", "Who knocked out Joanna Ję"],
+      ["ufc:3:0", "Who scored the fifth-roun"],
+      ["ufc:3:3", "Who submitted Holly Holm "]
+    ];
+    expect(updated).toHaveLength(12);
+    for (const [key, promptLead] of updated) {
+      const revision = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(revision.id).toContain("future-rewrite");
+      expect(revision.prompt).toContain(promptLead);
+      expect(revision.choices).toHaveLength(4);
+      expect(new Set(revision.choices.map(normalized)).size).toBe(4);
+      expect(revision.choices.filter(choice => choice === revision.answer)).toHaveLength(1);
+      expect(revision.statSheet?.toLowerCase()).not.toContain(revision.answer.toLowerCase());
+      expect(revision.explanation.length).toBeGreaterThan(85);
+      expect(revision.explanation).toContain(revision.answer);
+      expect(revision.evidence[0]?.url).toMatch(/^https:\/\/www\.ufc\.com\//);
+    }
+    expect(millionaireDailyRun("ufc", 0)[2]!.prompt).toContain("Charles Oliveira");
+  });
+
   it("protects source-checked draft revisions against accidental reversion", () => {
     const sourceChecked = [
       ["cfb", 10, 0, "Miami"],

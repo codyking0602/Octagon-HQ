@@ -289,4 +289,126 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     explanation: "Amanda Nunes defeated Irene Aldana by unanimous decision at UFC 289 before announcing her retirement.",
     evidence: [{ authority: "UFC", url: "https://www.ufc.com/news/ufc-289-nunes-vs-aldana-results-highlights-winner-interviews-vancouver", supportingDetail: "UFC 289 main-event report records Nunes' unanimous decision over Aldana." }],
   },
+  // Second batch: future-only removals of answer-identical selected Bar Trivia questions.
+  // Active Bar Trivia fact collision retired from future-preview run 1 Q3.
+  "ufc:0:2": {
+    id: "millionaire-ufc-future-rewrite-r1-q3",
+    type: "vacant-lightweight-defense",
+    prompt: "Who submitted Renato Moicano with a D’Arce choke to defend the UFC lightweight title at UFC 311?",
+    choices: ["Islam Makhachev","Charles Oliveira","Arman Tsarukyan","Mateusz Gamrot"], answer: "Islam Makhachev",
+    statSheet: "The challenger was a late replacement in the January 2025 main event.",
+    explanation: "Islam Makhachev submitted Renato Moicano with a D'Arce choke at 4:05 of Round 1 at UFC 311 in Los Angeles, retaining his lightweight championship.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-311-makhachev-vs-moicano-los-angeles", supportingDetail: "Islam Makhachev submitted Renato Moicano with a D'Arce choke at 4:05 of Round 1 at UFC 311 in Los Angeles, retaining his lightweight championship." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 1 Q4.
+  "ufc:0:3": {
+    id: "millionaire-ufc-future-rewrite-r1-q4",
+    type: "middleweight-upsets",
+    prompt: "Who upset Israel Adesanya by unanimous decision to win the UFC middleweight title at UFC 293?",
+    choices: ["Sean Strickland","Dricus du Plessis","Robert Whittaker","Jared Cannonier"], answer: "Sean Strickland",
+    statSheet: "All three judges scored the Sydney main event 49–46 for the challenger.",
+    explanation: "Sean Strickland defeated Israel Adesanya by unanimous decision (49–46 on all three cards) at UFC 293 in Sydney on September 9, 2023, taking the middleweight championship.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-293-adesanya-vs-strickland-results-highlights-winner-interviews-sydney", supportingDetail: "Sean Strickland defeated Israel Adesanya by unanimous decision (49–46 on all three cards) at UFC 293 in Sydney on September 9, 2023, taking the middleweight championship." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 1 Q5.
+  "ufc:0:4": {
+    id: "millionaire-ufc-future-rewrite-r1-q5",
+    type: "championship-upsets",
+    prompt: "Who submitted Amanda Nunes to win the women's bantamweight championship at UFC 269?",
+    choices: ["Julianna Peña","Holly Holm","Raquel Pennington","Miesha Tate"], answer: "Julianna Peña",
+    statSheet: "The dramatic Las Vegas upset ended by rear-naked choke in Round 2.",
+    explanation: "Julianna Peña shocked Amanda Nunes with a rear-naked choke at 3:23 of Round 2 at UFC 269 in December 2021 to claim the UFC women's bantamweight championship.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/10-biggest-best-upsets-2021-pena-poirier-dariush-blachowicz?language_content_entity=en", supportingDetail: "Julianna Peña shocked Amanda Nunes with a rear-naked choke at 3:23 of Round 2 at UFC 269 in December 2021 to claim the UFC women's bantamweight championship." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 1 Q6.
+  "ufc:0:5": {
+    id: "millionaire-ufc-future-rewrite-r1-q6",
+    type: "bantamweight-defenses",
+    prompt: "Who defended the UFC bantamweight title against Umar Nurmagomedov at UFC 311?",
+    choices: ["Merab Dvalishvili","Sean O’Malley","Petr Yan","Aljamain Sterling"], answer: "Merab Dvalishvili",
+    statSheet: "The champion won a five-round decision over a previously unbeaten challenger.",
+    explanation: "Merab Dvalishvili beat Umar Nurmagomedov by unanimous decision (48–47, 48–47, 49–46) at UFC 311 on January 18, 2025, handing Umar his first professional loss.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-311-makhachev-vs-moicano-los-angeles", supportingDetail: "Merab Dvalishvili beat Umar Nurmagomedov by unanimous decision (48–47, 48–47, 49–46) at UFC 311 on January 18, 2025, handing Umar his first professional loss." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 2 Q4.
+  "ufc:1:3": {
+    id: "millionaire-ufc-future-rewrite-r2-q4",
+    type: "light-heavyweight-comebacks",
+    prompt: "Who stopped Jamahal Hill in Round 3 of their light heavyweight fight at UFC 311?",
+    choices: ["Jiří Procházka","Alex Pereira","Magomed Ankalaev","Glover Teixeira"], answer: "Jiří Procházka",
+    statSheet: "The January 2025 matchup featured two former light heavyweight champions.",
+    explanation: "Jiří Procházka defeated Jamahal Hill by TKO at 3:01 of Round 3 at UFC 311 on January 18, 2025, in Los Angeles.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-311-makhachev-vs-moicano-los-angeles", supportingDetail: "Jiří Procházka defeated Jamahal Hill by TKO at 3:01 of Round 3 at UFC 311 on January 18, 2025, in Los Angeles." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 2 Q5.
+  "ufc:1:4": {
+    id: "millionaire-ufc-future-rewrite-r2-q5",
+    type: "lightweight-submissions",
+    prompt: "Who submitted Justin Gaethje in Round 1 of the UFC 274 main event?",
+    choices: ["Charles Oliveira","Dustin Poirier","Islam Makhachev","Michael Chandler"], answer: "Charles Oliveira",
+    statSheet: "The former champion missed weight before winning by rear-naked choke in Phoenix.",
+    explanation: "Charles Oliveira submitted Justin Gaethje with a rear-naked choke at 3:22 of Round 1 at UFC 274 in May 2022; Oliveira had missed weight and was stripped of the lightweight belt beforehand.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-274-oliveira-vs-gaethje-namajunas-esparza-2-results-highlights-winner-interviews", supportingDetail: "Charles Oliveira submitted Justin Gaethje with a rear-naked choke at 3:22 of Round 1 at UFC 274 in May 2022; Oliveira had missed weight and was stripped of the lightweight belt beforehand." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 2 Q6.
+  "ufc:1:5": {
+    id: "millionaire-ufc-future-rewrite-r2-q6",
+    type: "highlight-reel-knockouts",
+    prompt: "Who knocked out Tony Ferguson with a front kick early in Round 2 at UFC 274?",
+    choices: ["Michael Chandler","Justin Gaethje","Charles Oliveira","Beneil Dariush"], answer: "Michael Chandler",
+    statSheet: "The lightweight finish occurred just 17 seconds into the second round.",
+    explanation: "Michael Chandler knocked out Tony Ferguson with a front kick at 0:17 of Round 2 at UFC 274 in Phoenix on May 7, 2022.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/event/ufc-274", supportingDetail: "Michael Chandler knocked out Tony Ferguson with a front kick at 0:17 of Round 2 at UFC 274 in Phoenix on May 7, 2022." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 3 Q1.
+  "ufc:2:0": {
+    id: "millionaire-ufc-future-rewrite-r3-q1",
+    type: "ufc-300-main-event",
+    prompt: "Who knocked out Jamahal Hill in the first round to retain the light heavyweight belt at UFC 300?",
+    choices: ["Alex Pereira","Jiří Procházka","Magomed Ankalaev","Jan Błachowicz"], answer: "Alex Pereira",
+    statSheet: "The milestone Las Vegas event ended with a Round 1 knockout.",
+    explanation: "Alex Pereira knocked out Jamahal Hill at 3:14 of Round 1 in the UFC 300 main event in April 2024, retaining his light heavyweight championship.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-300-pereira-vs-hill?language_content_entity=en", supportingDetail: "Alex Pereira knocked out Jamahal Hill at 3:14 of Round 1 in the UFC 300 main event in April 2024, retaining his light heavyweight championship." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 3 Q4.
+  "ufc:2:3": {
+    id: "millionaire-ufc-future-rewrite-r3-q4",
+    type: "flyweight-title-upsets",
+    prompt: "Who submitted Valentina Shevchenko to take the women's flyweight title at UFC 285?",
+    choices: ["Alexa Grasso","Manon Fiorot","Erin Blanchfield","Taila Santos"], answer: "Alexa Grasso",
+    statSheet: "The champion missed a spinning attack before the challenger took her back.",
+    explanation: "Alexa Grasso submitted Valentina Shevchenko with a rear-naked choke at 4:34 of Round 4 at UFC 285 in March 2023 to capture the women's flyweight championship.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-285-jones-vs-gane-results-highlights-winner-interviews-las-vegas", supportingDetail: "Alexa Grasso submitted Valentina Shevchenko with a rear-naked choke at 4:34 of Round 4 at UFC 285 in March 2023 to capture the women's flyweight championship." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 3 Q5.
+  "ufc:2:4": {
+    id: "millionaire-ufc-future-rewrite-r3-q5",
+    type: "strawweight-rivalries",
+    prompt: "Who knocked out Joanna Jędrzejczyk with a spinning backfist in their UFC 275 rematch?",
+    choices: ["Zhang Weili","Rose Namajunas","Jessica Andrade","Carla Esparza"], answer: "Zhang Weili",
+    statSheet: "The second meeting ended in Round 2 in Singapore, after the first had gone five rounds.",
+    explanation: "Zhang Weili knocked out Joanna Jędrzejczyk by spinning backfist at 2:28 of Round 2 at UFC 275 in June 2022. Joanna announced her retirement afterward.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/knockouts-2022-ufc-awards-edwards-chandler-zhang-pereira", supportingDetail: "Zhang Weili knocked out Joanna Jędrzejczyk by spinning backfist at 2:28 of Round 2 at UFC 275 in June 2022. Joanna announced her retirement afterward." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 4 Q1.
+  "ufc:3:0": {
+    id: "millionaire-ufc-future-rewrite-r4-q1",
+    type: "welterweight-comebacks",
+    prompt: "Who scored the fifth-round head-kick knockout of Kamaru Usman at UFC 278?",
+    choices: ["Leon Edwards","Colby Covington","Gilbert Burns","Jorge Masvidal"], answer: "Leon Edwards",
+    statSheet: "The challenger was behind on the judges' scorecards late in the title fight.",
+    explanation: "Leon Edwards knocked out Kamaru Usman with a left high kick at 4:04 of Round 5 at UFC 278 in August 2022, winning the UFC welterweight title.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-278-usman-vs-edwards-2-results-highlights-winner-interviews-salt-lake-city", supportingDetail: "Leon Edwards knocked out Kamaru Usman with a left high kick at 4:04 of Round 5 at UFC 278 in August 2022, winning the UFC welterweight title." }],
+  },
+  // Active Bar Trivia fact collision retired from future-preview run 4 Q4.
+  "ufc:3:3": {
+    id: "millionaire-ufc-future-rewrite-r4-q4",
+    type: "ufc-300-debuts",
+    prompt: "Who submitted Holly Holm in Round 2 of her UFC debut at UFC 300?",
+    choices: ["Kayla Harrison","Raquel Pennington","Julianna Peña","Amanda Nunes"], answer: "Kayla Harrison",
+    statSheet: "The two-time Olympic gold medalist won with a rear-naked choke on the landmark card.",
+    explanation: "Kayla Harrison submitted Holly Holm by rear-naked choke at 1:47 of Round 2 at UFC 300 in April 2024, winning her UFC debut.",
+    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-300-pereira-vs-hill?language_content_entity=en", supportingDetail: "Kayla Harrison submitted Holly Holm by rear-naked choke at 1:47 of Round 2 at UFC 300 in April 2024, winning her UFC debut." }],
+  },
+
 };
