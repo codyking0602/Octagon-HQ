@@ -17,6 +17,7 @@ on:
       - "src/features/nba/NbaHigherLower*"
       - "src/styles/nba-higher-lower.css"
       - "src/styles/nba-find-the-leader.css"
+      - "src/styles/nba-owner-daily.css"
       - "scripts/audit_nba_higher_lower_photos.py"
       - "scripts/verify-nba-portrait-phone.mjs"
       - "scripts/nba-portrait-phone/**"
