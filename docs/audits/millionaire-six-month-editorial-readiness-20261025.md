@@ -109,3 +109,7 @@ The future-only CFB run 5 Q3 calendar-year correction about DeVonta Smith's 2018
 ### Continued exact-head failing-test repair
 
 Addressed two remaining diagnosed failures: filled the formerly empty Isaiah Bond 2023 Iron Bowl explanation with its play and 27–24 result; corrected a Q8 preview regression assertion to exclude October 25 historical UFC publication (which correctly does not apply post-cutover future Q8 overlays). Both fix test-observed defects while preserving immutable Daily publication. Further exact-head test execution required; the candidate still remains opt-in and Draft.
+
+### Additional full NFL run 11 editorial pass
+
+Independently inspected all eight questions in NFL future run 11 using Colts, Buccaneers, NFL, Pro Football HOF, Giants, and 49ers primary reporting, with full four-choice, answer, clue, explanation, active selectable Bar Trivia semantic overlaps, and Q1–Q8 order. Added seven factual post-answer explanations to source (the Q8 Hufanga blocked-punt explanation already existed). Closed **seven more individual question HOLDs**. **Ledger now 14 KEEP / 179 HOLD out of 193 interventions.** NFL future run 11 has eight source-reviewed questions; eight-question ladder has a familiar entry, midround coaching/kicking/championships and a distinctive 2022 playoff finish. Q8 is a harder but documented blocked-punt return. Release of the six-month bank is **still blocked** because most 360 effective positions have not received the same independent review.
