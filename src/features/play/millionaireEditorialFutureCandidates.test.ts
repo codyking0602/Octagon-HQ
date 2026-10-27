@@ -582,7 +582,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc", 0, "Gerard Gordeau", "Francis Ngannou"],
       ["ufc", 2, "Glover Teixeira", "Benoit Saint Denis"],
       ["ufc", 4, "Dan Henderson", "Rashad Evans"],
-      ["ufc", 5, "Sergei Pavlovich", "Tony Ferguson"],
+      ["ufc", 5, "Sergei Pavlovich", "Tom Aspinall"],
     ] as const) {
       // The legacy runtime seed stays unchanged; inspect the future-only override.
       const final = MILLIONAIRE_FUTURE_Q8_REWRITES[`${league}:${runIndex}:7`]!;
@@ -792,7 +792,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(updated).toHaveLength(12);
     for (const [key, promptLead] of updated) {
       const revision = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
-      expect(revision.id).toContain("future-rewrite");
+      expect(revision.id).toMatch(/^millionaire-ufc-future-/);
       expect(revision.prompt).toContain(promptLead);
       expect(revision.choices).toHaveLength(4);
       expect(new Set(revision.choices.map(normalized)).size).toBe(4);
