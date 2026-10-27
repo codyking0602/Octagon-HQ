@@ -414,4 +414,110 @@ describe("Millionaire official Daily runtime", () => {
     expect((revealed.publicState.last_lifeline_reveal as Record<string, unknown>).type).toBe("stat-sheet");
     expect((revealed.publicState.last_lifeline_reveal as Record<string, unknown>).text).toBeTruthy();
   });
+
+  it("plays all 45 effective preview boards through correct, walk-away, miss, lifeline and timeout paths", () => {
+    // Authoritative gameplay replay, not independent fact/difficulty certification.
+    // Always evaluate the effective candidate publication, not legacy seeds.
+    const seen = new Set<string>();
+    for (let offset = 0; offset < 240 && seen.size < 45; offset += 1) {
+      const day = new Date(Date.UTC(2026, 9, 27 + offset)).toISOString().slice(0, 10);
+      for (const sport of ["football", "ufc"] as const) {
+        if (sport === "ufc" && !isUfcPublicationDay(day)) continue;
+        if (lockedWeightedGameForDay(sport, day) !== "millionaire") continue;
+        const publication = buildMillionaireDailySetup(sport, day, "millionaire-all-45-playback",
+          { editorialCandidatePreview: true });
+        const boardId = publication.publicSetup.league + ":" + publication.privateSetupEvidence.run_number;
+        if (seen.has(boardId)) continue;
+        seen.add(boardId);
+        const initial = (): OfficialDailyRuntimeContext => ({
+          gameType: "millionaire",
+          setupKey: publication.setupKey,
+          publicSetup: publication.publicSetup,
+          revealSetup: publication.revealSetup,
+          privateSetupEvidence: publication.privateSetupEvidence,
+          privateGradingEvidence: publication.privateGradingEvidence,
+          submissionState: {},
+          publicState: publication.publicSetup.initial_state as Record<string, unknown>,
+        });
+        const questions = privateRun(initial());
+        expect(questions, boardId).toHaveLength(8);
+
+        // Clean win with three lifelines. Double Dip gets one incorrect try.
+        let win = initial();
+        for (let i = 0; i < 8; i += 1) {
+          const question = questions[i]!;
+          if (i === 0) {
+            const fifty = advance(win, { type: "use_lifeline", lifeline: "fifty-fifty" });
+            expect(fifty.result.publicState.question_state.removed_choice_ids, boardId)
+              .not.toContain(question.correctChoiceId);
+            win = fifty.context;
+          }
+          if (i === 1) {
+            const hint = advance(win, { type: "use_lifeline", lifeline: "stat-sheet" });
+            expect(hint.result.publicState.last_lifeline_reveal, boardId)
+              .toMatchObject({ type: "stat-sheet" });
+            win = hint.context;
+          }
+          if (i === 2) {
+            win = advance(win, { type: "use_lifeline", lifeline: "double-dip" }).context;
+            const miss = question.choices.find(choice => choice.id !== question.correctChoiceId)!;
+            const retried = advance(win, { type: "answer", choice_id: miss.id });
+            expect(retried.result.publicState.last_answer_outcome, boardId)
+              .toBe("double-dip-continue");
+            expect(retried.result.publicState.current_question_index, boardId).toBe(i);
+            win = retried.context;
+          }
+          if (i === 7) {
+            for (const lifeline of ["fifty-fifty", "stat-sheet", "double-dip"] as const) {
+              expect(() => advance(win, { type: "use_lifeline", lifeline })).toThrow();
+            }
+          }
+          const next = advance(win, { type: "answer", choice_id: question.correctChoiceId });
+          expect(next.result.publicState.last_answer_outcome, boardId).toBe("correct");
+          expect(next.result.publicState.completed_questions, boardId).toBe(i + 1);
+          expect(next.result.complete, boardId).toBe(i === 7);
+          win = next.context;
+        }
+        expect(win.publicState.status, boardId).toBe("won");
+        expect(win.publicState.score, boardId).toBe(94);
+        expect(win.submissionState.final_submission, boardId).toMatchObject({
+          outcome: "won", completed_questions: 8, base_score: 100,
+          lifelines_used: 3, final_money: 1_000_000,
+        });
+        expect(() => advance(win, { type: "answer", choice_id: questions[7]!.correctChoiceId }))
+          .toThrow();
+
+        // Bank at Q8 or lose at Q8. All eight questions are played.
+        let atFinal = initial();
+        for (let i = 0; i < 7; i += 1) {
+          atFinal = advance(atFinal, { type: "answer", choice_id: questions[i]!.correctChoiceId }).context;
+        }
+        expect(atFinal.publicState.base_score, boardId).toBe(90);
+        const walked = advance(atFinal, { type: "walk_away" }).result;
+        expect(walked.finalSubmission, boardId).toMatchObject({
+          outcome: "walked-away", completed_questions: 7,
+          first_miss_question: null, base_score: 90, final_money: 500_000,
+        });
+        const miss = questions[7]!.choices.find(choice => choice.id !== questions[7]!.correctChoiceId)!;
+        const failed = advance(atFinal, { type: "answer", choice_id: miss.id }).result;
+        expect(failed.finalSubmission, boardId).toMatchObject({
+          outcome: "lost", completed_questions: 7,
+          first_miss_question: 8, base_score: 85, final_money: 100_000,
+        });
+
+        const timedOut = advanceMillionaireDailyRuntime(initial(),
+          { type: "timeout", time_remaining_ms: 0 });
+        expect(timedOut.complete, boardId).toBe(true);
+        expect(timedOut.finalSubmission, boardId).toMatchObject({
+          outcome: "lost", completed_questions: 0,
+          first_miss_question: 1, time_remaining_ms: 0,
+        });
+      }
+    }
+    expect(seen.size).toBe(45);
+    for (const league of ["nfl", "cfb", "ufc"] as const) {
+      expect([...seen].filter(id => id.startsWith(league + ":")), league).toHaveLength(15);
+    }
+  });
+
 });
