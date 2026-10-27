@@ -1457,6 +1457,15 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("cfb", 3)[6]!.prompt).toContain("AP poll in 2003");
   });
 
+  it("avoids Deion Sanders title-fact duplication on future NFL run 11", () => {
+    const question = millionaireFutureEditorialDailyRun("nfl", 10)[3]!;
+    expect(question.prompt).toContain("75-yard run");
+    expect(answer(question)).toBe("Willie Parker");
+    expect(question.choices).toHaveLength(4);
+    expect(question.statSheet).not.toContain("Parker");
+    expect(question.explanation).toContain("Willie Parker");
+  });
+
   it("keeps sourced NFL future-only replacements distinct from active Average Fan overlaps", () => {
     for (const [key, expected, marker] of [
       ["nfl:6:2", "Mike Jones", "Super Bowl XXXIV"],
