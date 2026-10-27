@@ -69,17 +69,17 @@
         "summary": "NFC East rivalry in Washington under the Sunday-night national spotlight."
       },
       {
-        "id": "browns-at-steelers",
-        "away_team": "Cleveland Browns",
-        "home_team": "Pittsburgh Steelers",
-        "kickoff_at": "2026-11-01T12:00:00-06:00",
-        "summary": "The 5-2 Browns visit the 5-2 Steelers for an AFC North rivalry at Acrisure Stadium, Sunday at 1 p.m. ET on CBS."
+        "id": "bears-at-seahawks",
+        "away_team": "Chicago Bears",
+        "home_team": "Seattle Seahawks",
+        "kickoff_at": "2026-11-02T19:15:00-06:00",
+        "summary": "The 5–2 Bears visit the 4–3 Seahawks at Lumen Field on Monday Night Football, after Chicago beat New England 30–24 and Seattle held Kansas City to three points."
       }
     ]
   },
   "selection": {
     "player_id": "cam-skattebo",
-    "game_id": "browns-at-steelers"
+    "game_id": "bears-at-seahawks"
   },
   "preparation": {
     "spotlight": {
@@ -113,37 +113,38 @@
       "photo_kind": "portrait"
     },
     "game": {
-      "away_team": "Cleveland Browns",
-      "home_team": "Pittsburgh Steelers",
-      "kickoff_at": "2026-11-01T12:00:00-06:00"
+      "away_team": "Chicago Bears",
+      "home_team": "Seattle Seahawks",
+      "kickoff_at": "2026-11-02T19:15:00-06:00"
     },
     "editorial": {
       "source_urls": [
-        "https://www.clevelandbrowns.com/news/browns-continue-to-stack-fourth-quarter-game-winning-drives-news-notes",
-        "https://www.clevelandbrowns.com/news/browns-27-titans-24-final-score-stats-game-recap",
-        "https://www.si.com/nfl/scoreboard/browns-vs-steelers-11-1-2026-494",
-        "https://www.giants.com/team/players-roster/cam-skattebo/logs/",
-        "https://www.giants.com/news/game-balls-key-performances-week-7-john-harbaugh-jj-mccarthy-cam-skattebo-devin-singletary-deonte-banks-micah-mcfadden-houston-texans"
+        "https://www.chicagobears.com/schedule/2026/",
+        "https://www.seahawks.com/schedule/",
+        "https://www.chicagobears.com/news/game-recap-bears-knock-off-patriots-on-thursday-night-football-improve-to-5-2",
+        "https://www.seahawks.com/news/rapid-reactions-seahawks-defense-shines-in-dominant-20-3-victory-over-chiefs",
+        "https://www.seahawks.com/news/seahawks-receiver-jaxon-smith-njigba-adds-another-tremendous-game-to-his-2026-season",
+        "https://www.giants.com/team/players-roster/cam-skattebo/logs/"
       ],
       "breakdown": {
         "setup": [
-          "Cleveland and Pittsburgh enter their AFC North rematch at 5–2 after the Browns won the first meeting 27–24. Cleveland has repeatedly delivered late go-ahead drives, most recently in a 27–24 win at Tennessee, while Pittsburgh has steadied itself with a three-game winning streak. The division lead and a season-series sweep are both in play."
+          "Chicago travels to Seattle at 5–2 after a 30–24 win over New England, while the 4–3 Seahawks just held previously unbeaten Kansas City to three points. Caleb Williams and the Bears bring a passing attack producing explosive plays, but Seattle's defense showed how effectively it can disrupt a top quarterback and keep opponents off the scoreboard."
         ],
         "things": [
           {
-            "title": "Cleveland’s late-game execution",
-            "body": "The Browns have produced a fourth-quarter go-ahead scoring drive in each of their five wins. Deshaun Watson threw for 308 yards against Tennessee and moved Cleveland into position for Andre Szmyt’s walk-off field goal, so Pittsburgh must prevent another final-possession escape."
+            "title": "Caleb Williams against Seattle’s defense",
+            "body": "Williams threw for 308 yards and two touchdowns against New England, including several chunk gains to Chicago's receivers. Seattle held Patrick Mahomes to 165 passing yards and forced an interception against Kansas City. Protection and avoiding long-yardage downs are central to keeping Chicago's offense moving."
           },
           {
-            "title": "Rodgers and the Steelers’ offensive balance",
-            "body": "Pittsburgh enters with Aaron Rodgers directing the passing attack and Jaylen Warren leading the ground game. Warren’s 561 rushing yards give the Steelers a way to control tempo, while Cleveland must force the home team into predictable passing situations."
+            "title": "Containing Jaxon Smith-Njigba",
+            "body": "Smith-Njigba caught nine passes for 150 yards and a touchdown against the Chiefs, taking his season totals to 867 receiving yards and eight scores. The Bears must decide how much coverage help to commit to Seattle's top target without creating room for Sam Darnold's other options."
           },
           {
-            "title": "Pass protection against Pittsburgh pressure",
-            "body": "T.J. Watt has 5.5 sacks through seven games and anchors a Steelers defense that can disrupt a drive without a turnover. Cleveland’s offensive line has to keep Watson upright and avoid long-yardage situations that would undermine the Browns’ recent fourth-quarter efficiency."
+            "title": "Who controls the ground game?",
+            "body": "Emanuel Wilson rushed for 100 yards and a touchdown in Seattle's win over Kansas City. Chicago got a rushing touchdown from D'Andre Swift against New England, but sustaining early-down gains on the road matters especially with Seattle's pass defense coming off a dominant outing."
           }
         ],
-        "bottom_line": "The first meeting was decided by three points, and both clubs now have matching records. The rematch turns on whether Pittsburgh can pressure Watson without surrendering late drives, and whether Cleveland can keep the Steelers from controlling possessions through their run game."
+        "bottom_line": "Seattle's defense and Smith-Njigba's explosive receiving challenge Chicago on both sides of the ball. The matchup turns on whether Williams can find consistent protection and explosive throws while the Bears keep Seattle balanced rather than letting its passing game dictate field position."
       }
     }
   }
