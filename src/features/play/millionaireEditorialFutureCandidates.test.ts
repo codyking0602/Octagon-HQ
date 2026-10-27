@@ -708,7 +708,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("prevents nine multi-sport source-bank answer leaks and ineligible distractors from returning", () => {
     const cases = [
       ["nfl",13,2,"Bears","opening kickoff"],["nfl",13,4,"Marcus Mariota","Corey Davis"],
-      ["nfl",14,4,"Mike Alstott","second-quarter"],["cfb",11,0,"Georgia","hedges"],
+      ["nfl",14,4,"Mike Alstott","second-quarter"],["cfb",11,0,"Mississippi State","first No. 1 AP ranking"],
       ["cfb",13,4,"Carson Palmer","No. 1"],["cfb",13,6,"Michael Crabtree","28-yard"],
       ["cfb",14,2,"Texas A&M","345 yards"],["ufc",13,2,"Randy Couture","heavyweight"],
       ["ufc",14,1,"Ciryl Gane","kicks"]
@@ -1189,7 +1189,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:1:3", "Who stopped Jamahal Hill "],
       ["ufc:1:4", "Who submitted Justin Gaet"],
       ["ufc:1:5", "Who knocked out Beneil Dariush"],
-      ["ufc:2:0", "Who defeated Anderson Silva"],
+      ["ufc:2:0", "Who defeated former middleweight champion Anderson Silva"],
       ["ufc:2:3", "Who submitted Valentina S"],
       ["ufc:2:4", "Who stopped Jessica Andrade"],
       ["ufc:3:0", "Who knocked out Robert Whittaker"],
