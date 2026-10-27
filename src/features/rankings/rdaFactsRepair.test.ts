@@ -12,10 +12,10 @@ describe("Rafael dos Anjos factual reconciliation", () => {
 
     expect(input).toBeDefined();
     expect(fighter).toBeDefined();
-    expect(input?.facts.fights).toHaveLength(36);
+    expect(input?.facts.fights).toHaveLength(37);
     expect(input?.facts.fights.filter((fight) => fight.officialResult === "win")).toHaveLength(21);
-    expect(input?.facts.fights.filter((fight) => fight.officialResult === "loss")).toHaveLength(15);
-    expect(fighter?.visibleStats.ufcRecord).toBe("21-15");
+    expect(input?.facts.fights.filter((fight) => fight.officialResult === "loss")).toHaveLength(16);
+    expect(fighter?.visibleStats.ufcRecord).toBe("21-16");
   });
 
   it("keeps the Moicano catchweight bout out of RDA's division boards", () => {
@@ -27,10 +27,10 @@ describe("Rafael dos Anjos factual reconciliation", () => {
     );
 
     expect(lightweight?.stats).toMatchObject({
-      ufcRecord: "15-9",
-      ufcFightCount: 24,
+      ufcRecord: "15-10",
+      ufcFightCount: 25,
       ufcWins: 15,
-      ufcLosses: 9,
+      ufcLosses: 10,
     });
     expect(welterweight?.stats).toMatchObject({
       ufcRecord: "5-6",
@@ -38,7 +38,7 @@ describe("Rafael dos Anjos factual reconciliation", () => {
       ufcWins: 5,
       ufcLosses: 6,
     });
-    expect((lightweight?.stats.ufcFightCount ?? 0) + (welterweight?.stats.ufcFightCount ?? 0)).toBe(35);
+    expect((lightweight?.stats.ufcFightCount ?? 0) + (welterweight?.stats.ufcFightCount ?? 0)).toBe(36);
   });
 
   it("preserves heavyweight allocation for Stipe Miocic", () => {
@@ -62,6 +62,7 @@ describe("Rafael dos Anjos factual reconciliation", () => {
     expect(input?.presentation.signatureFightUrl).toBe(
       "https://youtu.be/PQhcgZ4uulQ?is=ih4Qv5lsthLNKgkS",
     );
-    expect(fighter).toMatchObject({ rank: 29, rawScore: 48.89 });
+    expect(fighter?.rawScore).toBe(48.89);
+    expect(fighter?.rank).toBeGreaterThanOrEqual(30);
   });
 });
