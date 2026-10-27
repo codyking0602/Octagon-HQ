@@ -459,8 +459,17 @@ function scoreFighter(input: RankingInputFighter, definition: FindLeaderQuestion
 
 type ScoredFindLeaderRow = { input: RankingInputFighter; value: number };
 
+// Publishing a new ranking profile must never silently rewrite earlier
+// Daily Find the Leader boards. Gane joined the ranked source on October 27;
+// the October 27 daily board may already be in progress, so he becomes an
+// eligible candidate only for newly scheduled days starting October 28.
+const RANKING_CANDIDATE_FIRST_DAY: Readonly<Record<string, string>> = {
+  "ciryl-gane": "2026-10-28",
+};
+
 function scoredPool(definition: FindLeaderQuestionDefinition, day: string): ScoredFindLeaderRow[] {
   return canonicalRankingInputs.fighters
+    .filter((input) => day >= (RANKING_CANDIDATE_FIRST_DAY[input.presentation.slug] ?? "0000-01-01"))
     .map((input) => ({ input, value: scoreFighter(input, definition, day) }))
     .filter((row): row is ScoredFindLeaderRow => Number.isFinite(row.value))
     .sort((left, right) => right.value - left.value || left.input.fighter.localeCompare(right.input.fighter));

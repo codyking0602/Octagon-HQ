@@ -11,6 +11,8 @@ import {
   createNbaFindLeaderRun, formatNbaFindLeaderValue, nbaFindLeaderHeadshot,
   type NbaLeaderBoard, type NbaLeaderCandidate, type NbaLeaderRun,
 } from "./nbaFindTheLeaderModel";
+import { nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { NbaPortraitCredits } from "./NbaPortraitCredits";
 import "../../styles/football-find-leader.css";
 import "../../styles/nba-find-the-leader.css";
 import "../../styles/nba-game-actions.css";
@@ -30,12 +32,14 @@ function chicagoDay() {
 function NbaHeadshot({ candidate, compact = false }: { candidate: NbaLeaderCandidate; compact?: boolean }) {
   const [failed, setFailed] = useState(false);
   const image = nbaFindLeaderHeadshot(candidate);
+  const editorial = Boolean(image && !image.includes("/headshots/nba/latest/"));
   useEffect(() => setFailed(false), [image, candidate.id]);
   const initials = candidate.name.split(" ").map(part => part[0]).filter(Boolean).slice(0, 2).join("");
-  return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "") + (candidate.name === "Gail Goodrich" ? " is-editorial" : "")}
+  return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "") + (editorial ? " is-editorial" : "")}
     aria-label={candidate.name + (image && !failed ? " player portrait" : " player initials")}>
     {image && !failed ? <img src={image} alt="" loading="lazy" referrerPolicy="no-referrer"
-      onError={() => setFailed(true)} /> : <b aria-hidden="true">{initials || "NBA"}</b>}
+      onError={() => setFailed(true)}
+      onLoad={event => { if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true); }} /> : <b aria-hidden="true">{initials || "NBA"}</b>}
   </span>;
 }
 function findCandidate(board: NbaLeaderBoard, id: string): NbaLeaderCandidate {
@@ -135,6 +139,7 @@ export default function NbaFindTheLeaderPage() {
       onEliminate={result ? null : eliminate} renderVisual={visual}
       formatValue={formatNbaFindLeaderValue}
     />
+    {result && <NbaPortraitCredits names={board.candidates.map(candidate => candidate.name)} />}
     {result && <GameResultActions onChallenge={() => void challengeSomeone()}
       onReplay={replay} onAllGames={() => navigate("/nba")}
       replayLabel={isDaily ? "REPLAY TODAY" : isShared ? "REPLAY CHALLENGE" : "NEW LINEUP"}

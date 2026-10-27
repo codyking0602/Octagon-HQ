@@ -26,6 +26,17 @@ describe("UFC V2 official release topic and Daily selection coverage",()=>{
      expect(new Set(keys).size,"window "+start).toBe(168);
    }
  });
+ it("holds back prior V1 question repeats throughout the first 20 V2 appearances",()=>{
+   const firstTwenty=Array.from({length:20},(_,i)=>planUfcFeudV2Appearance(main,fast,i));
+   expect(firstTwenty.flatMap(pack=>[...pack.main,...pack.fast]).every(
+     q=>!q.id.startsWith("ufc-v2-retained-"),
+   )).toBe(true);
+   const fullCycle=Array.from({length:24},(_,i)=>planUfcFeudV2Appearance(main,fast,i))
+     .flatMap(pack=>[...pack.main,...pack.fast]);
+   // Only seven of the twenty legacy-review candidates earned final approval.
+   expect(fullCycle.filter(q=>q.id.startsWith("ufc-v2-retained-"))).toHaveLength(7);
+   expect(new Set(fullCycle.map(ufcFeudSemanticFamily)).size).toBe(168);
+ });
  it("publishes two Main and five Fast on exactly 24 official future calendar days",()=>{
    // The release begins on the forward-only V2 cutover. Earlier 2026
    // published Feud appearances keep their original V1 question IDs.

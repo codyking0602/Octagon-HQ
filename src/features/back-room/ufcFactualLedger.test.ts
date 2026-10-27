@@ -10,9 +10,29 @@ describe("UFC factual ledger", () => {
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
 
     expect(ranked).toHaveLength(canonicalRankingInputs.counts.fighters);
-    expect(canonicalRankingInputs.counts.fighters).toBe(ufcFactualExpansion.rankedSubjectCountAtGeneration);
-    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount);
-    expect(ufcFactualLedgerSubjects).toHaveLength(ufcFactualExpansion.targetTotalSubjects);
+    // The archived expansion snapshot stays sealed; the ranked core can grow.
+    expect(ufcFactualExpansion.targetTotalSubjects).toBe(
+      ufcFactualExpansion.rankedSubjectCountAtGeneration + ufcFactualExpansion.expansionSubjectCount,
+    );
+    // Ciryl Gane was previously in the expansion, but now comes from the
+    // canonical ranked ledger; his pinned expansion source is not deleted.
+    const promoted = ufcFactualExpansion.subjects.filter((subject) =>
+      ranked.some((fighter) => fighter.id === subject.id),
+    );
+    expect(promoted.map((subject) => subject.id)).toEqual(["ufc:ciryl-gane"]);
+    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount - promoted.length);
+    expect(ufcFactualLedgerSubjects).toHaveLength(
+      ufcFactualExpansion.targetTotalSubjects
+        + canonicalRankingInputs.counts.fighters
+        - ufcFactualExpansion.rankedSubjectCountAtGeneration
+        - promoted.length,
+    );
+    expect(ufcFactualLedgerSubjects.filter((subject) => subject.slug === "ciryl-gane")).toEqual([
+      expect.objectContaining({ name: "Ciryl Gane", scope: "ranked-core", gender: "men" }),
+    ]);
+    expect(ufcFactualLedgerSubjects.filter((subject) => subject.slug === "natalia-silva")).toEqual([
+      expect.objectContaining({ name: "Natalia Silva", scope: "ranked-core", gender: "women" }),
+    ]);
     expect(ranked.map((subject) => subject.name)).toEqual(canonicalRankingInputs.fighters.map((fighter) => fighter.fighter));
     expect(ufcFactualExpansion.subjects.some((subject) => subject.slug === "joshua-van")).toBe(false);
     expect(ufcFactualLedgerSubjects.filter((subject) => subject.slug === "joshua-van")).toEqual([

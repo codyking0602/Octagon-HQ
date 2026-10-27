@@ -47,6 +47,20 @@ const sport = {
 const item = parsePublishedFootballWeek({ cfb: sport, nfl: null });
 
 describe("public Football weekly release projection", () => {
+  it("provides canonical NFL logos automatically for the October 27 Bears-Seahawks release", () => {
+    const week = parsePublishedFootballWeek({ cfb: null, nfl: {
+      ...sport,
+      week_of: "2026-10-27",
+      game: { ...sport.game, away_team: "Chicago Bears", home_team: "Seattle Seahawks",
+        kickoff_at: "2026-11-03T01:15:00Z" },
+    } });
+    const matchup = publishedFootballMatchup("nfl", week.nfl!);
+    expect(matchup.teams.map((team) => team.logoUrl)).toEqual([
+      "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png",
+      "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png",
+    ]);
+  });
+
   it("maps published data into established Home Spotlight without changing its layout", () => {
     const spotlight = footballPublishedSpotlight(item.cfb!);
     expect(spotlight.teamColor).toBe("#008435");
@@ -176,6 +190,26 @@ describe("public Football weekly release projection", () => {
     const separate = mergeFootballWeeklyMatchupBreakdowns(weekly, [nextWeek]);
     expect(separate).toHaveLength(2);
     expect(separate[0]?.id).toBe(weekly[0]?.id);
+  });
+
+  it("publishes the screenshot's three-section GOTW without a generated header", () => {
+    const bottomLine = "If Miami controls the early downs and avoids giveaways, it can dictate the game.";
+    const newWeek = parsePublishedFootballWeek({ cfb: {
+      ...sport, week_of: "2026-10-27",
+      game: { home_team: "North Carolina", away_team: "Miami",
+        kickoff_at: "2026-10-31T18:30:00-05:00" },
+      breakdown: {
+        setup: [paragraph],
+        things: [1, 2, 3].map((i) => ({ title: "Factor " + i, body: paragraph })),
+        bottom_line: bottomLine,
+      },
+    }, nfl: null }).cfb!;
+    const display = publishedFootballMatchup("cfb", newWeek);
+    expect(display.headerAssetPath).toBeUndefined();
+    expect(display.compact?.setup).toEqual([{ text: paragraph }]);
+    expect(display.compact?.things).toHaveLength(3);
+    expect(display.compact?.bottomLine).toEqual([{ text: bottomLine }]);
+    expect(display.pathsToWin).toBeUndefined();
   });
 
   it("rejects incomplete or unexpected live Spotlight and editorial contracts", () => {

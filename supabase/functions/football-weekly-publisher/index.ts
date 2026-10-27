@@ -119,22 +119,17 @@ Deno.serve(async (request) => {
     const featured = asRecord(pkg[sport + "_spotlight"]);
     const matchup = asRecord(pkg[sport + "_game_of_week"]);
     const spotlight = assetPath(week, sport, "spotlight");
-    const header = assetPath(week, sport, "game-header");
-    if (!featured || !matchup || featured.photo_asset_path !== spotlight || matchup.header_asset_path !== header) {
+    if (!featured || !matchup || featured.photo_asset_path !== spotlight) {
       deferred.push(sport);
       continue;
     }
     try {
-      await Promise.all([
-        verifyWebp(spotlight, 720, 900),
-        verifyWebp(header, 1600, 900),
-      ]);
+      await verifyWebp(spotlight, 720, 900);
       const result = await admin.rpc("arm_football_weekly_editorial", {
         p_week_of: week,
         p_sport: sport,
         p_verified_assets: {
           spotlight_url: baseUrl + spotlight,
-          header_url: baseUrl + header,
           deployed_sha: sha,
         },
       });
@@ -144,7 +139,7 @@ Deno.serve(async (request) => {
       }
       armed.push(sport);
     } catch {
-      // Keep the prior published image/Spotlight and try the next five-minute check.
+      // Only missing editorial content or the verified player photo may defer publication.
       deferred.push(sport);
     }
   }

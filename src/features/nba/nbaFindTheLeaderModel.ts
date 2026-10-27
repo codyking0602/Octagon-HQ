@@ -6,6 +6,7 @@ import {
 import { selectFindLeaderCompetition } from "../play/findLeaderCompetition";
 import { nbaHitSubjects, type NbaHitSubject } from "./nbaHitTheNumberStats";
 import { NBA_FIND_HISTORICAL_SEASONS } from "./nbaFindTheLeaderHistoricalSeasons";
+import { nbaPortraitSource } from "./nbaHigherLowerPortraits";
 
 export const NBA_FIND_LEADER_GAME_ID = "nba-find-leader";
 export const NBA_FIND_LEADER_VERSION = "nba-find-leader-v1";
@@ -244,16 +245,27 @@ export function createNbaFindLeaderChallenge(seed: string, definitionId: string,
     type: "curated", challengeId: NBA_FIND_LEADER_GAME_ID + ":challenge:" + challengeId,
     replayBehavior: "same-curated-challenge" } };
 }
-// Use an NBA-hosted, player-identified editorial photo when the NBA historical
-// headshot CDN displays a generic silhouette. Do not substitute a lookalike.
-const VERIFIED_NBA_PORTRAIT_OVERRIDES: Readonly<Record<string, string>> = {
-  "gailgoodrich": "https://cdn.nba.com/manage/2021/08/GettyImages-1148261504.jpg",
-};
-export function nbaFindLeaderHeadshot(candidate: Pick<NbaLeaderCandidate,"name"|"nbaId">) {
-  const override = VERIFIED_NBA_PORTRAIT_OVERRIDES[normalizedName(candidate.name)];
-  if (override) return override;
-  const id = candidate.nbaId ?? currentByName.get(normalizedName(candidate.name))?.nbaId ?? null;
-  return id == null ? null : "https://cdn.nba.com/headshots/nba/latest/1040x760/" + id + ".png";
+// Daily snapshots intentionally omit portrait IDs from public setup, but the
+// canonical historical season roster already has those player-verified NBA IDs.
+// Resolve them here without changing any published Daily payload or reveal.
+const historicalPortraitIds = new Map<string, number>();
+const ambiguousPortraitNames = new Set<string>();
+for (const subject of [...historical, ...recent]) {
+  if (subject.nbaId == null) continue;
+  const key = normalizedName(subject.name);
+  const previous = historicalPortraitIds.get(key);
+  if (previous != null && previous !== subject.nbaId) ambiguousPortraitNames.add(key);
+  else historicalPortraitIds.set(key, subject.nbaId);
+}
+export function nbaFindLeaderHeadshot(
+  candidate: Pick<NbaLeaderCandidate, "name" | "nbaId"> & { season?: number },
+) {
+  const key = normalizedName(candidate.name);
+  const seasonId = candidate.season == null ? null
+    : nbaFindLeaderSubjects.find(s => s.season === candidate.season && normalizedName(s.name) === key)?.nbaId ?? null;
+  const historicalId = ambiguousPortraitNames.has(key) ? null : historicalPortraitIds.get(key) ?? null;
+  const id = candidate.nbaId ?? seasonId ?? currentByName.get(key)?.nbaId ?? historicalId;
+  return nbaPortraitSource({ name: candidate.name, nbaId: id });
 }
 export function formatNbaFindLeaderValue(value: number) { return value.toFixed(1); }
 export function nbaFindLeaderAudit(sampleSize = 300) {

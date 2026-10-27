@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit every possible NBA Higher or Lower player's actual remote image pixels.
+"""Audit actual pixels for every NBA game's eligible player portrait inventory.
 
 HTTP 200 / valid NBA IDs are not proof of a real portrait: the official
 headshot endpoint sometimes serves an identical gray silhouette to multiple
@@ -8,23 +8,38 @@ identities. Download and inspect each eligible player's actual bytes instead.
 import concurrent.futures
 import hashlib
 import io
+from pathlib import Path
 import json
 import sys
 import time
 import urllib.request
+import urllib.error
+import threading
 from collections import defaultdict
 from PIL import Image
 
 MANIFEST = "nba-photo-audit-manifest.json"
 REPORT = "nba-photo-audit-report.json"
+PHONE_CACHE = Path("scripts/nba-portrait-phone/audited")
+PHONE_CACHE_MANIFEST = "nba-photo-audit-browser-manifest.json"
+WIKI_RATE_LOCK = threading.Lock()
+WIKI_LAST_REQUEST = [0.0]
 
 def fetch_image(entry):
     url = entry["url"]
     if not url:
         return dict(entry, status="no-photo", reason="missing portrait URL")
     error = None
-    for retry in range(2):
+    for retry in range(4):
         try:
+            # Commons throttles bursts of parallel image downloads. Respect its
+            # rate limit rather than treating HTTP 429 as a missing portrait.
+            if "wikimedia.org" in url:
+                with WIKI_RATE_LOCK:
+                    wait = max(0, 1.1 - (time.monotonic() - WIKI_LAST_REQUEST[0]))
+                    if wait:
+                        time.sleep(wait)
+                    WIKI_LAST_REQUEST[0] = time.monotonic()
             request = urllib.request.Request(url, headers={
                 "User-Agent": "Mozilla/5.0 (compatible; OctagonHQ-photo-integrity-audit/1.0)",
                 "Accept": "image/webp,image/png,image/jpeg,image/*",
@@ -37,26 +52,50 @@ def fetch_image(entry):
                 size = img.size
                 thumb = img.convert("RGBA").resize((80, 60))
                 px = list(thumb.getdata())
+                visual_hash = hashlib.sha256(thumb.tobytes()).hexdigest()
+                distinct_colors = len(set(px))
             visible = [p for p in px if p[3] >= 110]
             gray = sum(1 for r,g,b,_ in visible
                 if 112 <= r <= 195 and max(r,g,b)-min(r,g,b) <= 12)
             flat_fraction = gray / max(1, len(visible))
-            if len(visible) < 40:
+            if len(visible) < 40 or min(size) < 64:
                 category = "no-photo"
-                reason = "image has insufficient visible pixels"
+                reason = "image is too small or has insufficient visible pixels"
+            elif distinct_colors < 12:
+                category = "blank"
+                reason = "image has too few distinct pixel colors"
             elif flat_fraction >= .68:
                 category = "silhouette"
                 reason = f"flat gray body/image ({flat_fraction:.0%} of visible pixels)"
             else:
                 category = "image"
                 reason = ""
+            if category == "image" and __import__("os").environ.get("NBA_PHONE_FIXTURE") == "1":
+                # Preserve actual audited pixels locally for deterministic
+                # headless Chrome rendering. This is a test-only cache, never
+                # a production photo URL or a checked-in redistribution.
+                PHONE_CACHE.mkdir(parents=True, exist_ok=True)
+                with Image.open(io.BytesIO(content)) as original:
+                    filename = hashlib.sha256(url.encode("utf-8")).hexdigest() + ".png"
+                    original.convert("RGBA").save(PHONE_CACHE / filename, "PNG")
             return dict(entry, status=category, reason=reason,
                 http=status, imageSize=list(size), bytes=len(content),
                 flatGrayFraction=round(flat_fraction, 4),
-                sha256=hashlib.sha256(content).hexdigest())
+                sha256=hashlib.sha256(content).hexdigest(),
+                visualHash=visual_hash, distinctColors=distinct_colors)
+        except urllib.error.HTTPError as exc:
+            error = str(exc)
+            if exc.code == 429 and retry < 3:
+                try:
+                    retry_after = float(exc.headers.get("Retry-After", "0"))
+                except ValueError:
+                    retry_after = 0
+                time.sleep(min(20, max(2.5 * (retry + 1), retry_after)))
+            else:
+                time.sleep(.4 * (retry + 1))
         except Exception as exc:
             error = str(exc)
-            time.sleep(.25 * (retry+1))
+            time.sleep(.4 * (retry+1))
     return dict(entry, status="unavailable", reason=error or "unknown retrieval error")
 
 def main():
@@ -68,8 +107,8 @@ def main():
         results = list(executor.map(fetch_image, entries))
     fingerprints = defaultdict(list)
     for item in results:
-        if item.get("sha256"):
-            fingerprints[item["sha256"]].append(item)
+        if item.get("visualHash"):
+            fingerprints[item["visualHash"]].append(item)
     for duplicates in fingerprints.values():
         if len(duplicates) > 1:
             for item in duplicates:
@@ -80,13 +119,19 @@ def main():
                   needsAttention=bad, entries=results)
     with open(REPORT, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
-    print(f"NBA photo audit: {report['verified']}/{report['total']} eligible players have distinct accessible non-gray images")
+    print(f"NBA photo audit: {report['verified']}/{report['total']} eligible players have distinct decodable non-placeholder images")
     for item in bad:
         print(f"PHOTO ISSUE: {item['name']} NBA_ID={item['nbaId']} [{item['status']}] {item['reason']}")
+    if not bad and __import__("os").environ.get("NBA_PHONE_FIXTURE") == "1":
+        cached = {row["url"]: str(PHONE_CACHE / (
+            hashlib.sha256(row["url"].encode("utf-8")).hexdigest() + ".png"))
+            for row in results}
+        with open(PHONE_CACHE_MANIFEST, "w", encoding="utf-8") as f:
+            json.dump(cached, f, indent=2)
     if bad:
         print(f"FAIL: {len(bad)} portraits must be remedied or excluded before calling photo coverage verified.")
         sys.exit(1)
-    print("PASS: all eligible player photo URLs fetched, decoded and screened for gray placeholders and duplicates")
+    print("PASS: every eligible player image decoded and screened for blanks, gray placeholders and visual duplicates; human identity still requires editorial/source evidence")
 
 if __name__ == "__main__":
     main()

@@ -453,7 +453,8 @@ describe("Football HQ Home summary", () => {
     expect(screen.getByText("2026 PICKS RECORD")).toBeInTheDocument();
     expect(screen.queryByText("#T-1 OF 2")).not.toBeInTheDocument();
 
-    const photo = screen.getByRole("button", { name: "Manage player spotlight photo" });
+    const photo = screen.getByRole("link", { name: /Open Drew Mestemaker 2026 college player stats/ });
+    expect(photo).toHaveAttribute("href", "https://www.sports-reference.com/cfb/players/drew-mestemaker-1.html");
     fireEvent.pointerDown(photo);
     vi.advanceTimersByTime(649);
     expect(onManagePlayerPhoto).not.toHaveBeenCalled();

@@ -6,6 +6,7 @@ import FootballPushControl from "../picks-control/FootballPushControl";
 import { createPickControlRepository } from "../picks-control/pickControlRepository";
 import type { FootballMatchupBreakdown, FootballMatchupRichTextPart } from "./footballMatchupBreakdowns";
 import { footballDateTimeLabel } from "./footballTime";
+import { footballNflMatchupTeamLogoUrl } from "./footballNflMatchupTeamLogo";
 import { usePicks } from "./PicksProvider";
 
 function MatchupRichText({ parts }: { parts: FootballMatchupRichTextPart[] }) {
@@ -71,7 +72,9 @@ function CompactMatchupHeader({
     identity: ReturnType<typeof footballWeeklySuperteamIdentity>;
     side: "away" | "home";
   }) {
-    const logoSrc = team.logoUrl ?? identity.logoSrc;
+    const logoSrc = team.logoUrl ?? (leagueLabel === "NFL"
+      ? footballNflMatchupTeamLogoUrl(team.name)
+      : identity.logoSrc);
     const rankLabel = rankingSource && team.rank != null ? `${rankingSource} #${team.rank}` : null;
 
     const contents = (
@@ -133,6 +136,7 @@ export function FootballMatchupBreakdowns({
     canControl ? createPickControlRepository() : null
   ), [canControl]);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [ownerToolsOpen, setOwnerToolsOpen] = useState(false);
   const handledRequestedId = useRef<string | null>(null);
   const deepLinkedBreakdownId = requestedBreakdownId
     ?? (typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("matchup"));
@@ -168,6 +172,16 @@ export function FootballMatchupBreakdowns({
       document.documentElement.style.overflow = documentOverflow;
     };
   }, [active]);
+
+  // A body-level sheet avoids stacking/clipping behind sibling Picks cards on iOS.
+  useEffect(() => {
+    if (!ownerToolsOpen) return undefined;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOwnerToolsOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [ownerToolsOpen]);
 
   if (!breakdowns.length && !canControl) return null;
 
@@ -335,15 +349,29 @@ export function FootballMatchupBreakdowns({
         </button>
       ) : null}
       {canControl && footballEvent ? (
-        <details className="football-picks-owner-menu">
-          <summary>OWNER TOOLS ⚙</summary>
-          <div>
-            <FootballPushControl eventId={footballEvent.eventId} repository={controlRepository} />
-            <Link className="picks-control-entry" to={`/picks/control?sport=football&event=${encodeURIComponent(footballEvent.eventId)}#header`}>
-              MANAGE HEADERS →
-            </Link>
-          </div>
-        </details>
+        <>
+          <button type="button" className="football-picks-owner-menu__trigger"
+            aria-haspopup="dialog" aria-expanded={ownerToolsOpen}
+            onClick={() => setOwnerToolsOpen(true)}>OWNER TOOLS ⚙</button>
+          {ownerToolsOpen ? createPortal(
+            <div className="football-picks-owner-backdrop" role="presentation"
+              onMouseDown={() => setOwnerToolsOpen(false)}>
+              <section className="football-picks-owner-sheet" role="dialog" aria-modal="true"
+                aria-label="Football owner tools" onMouseDown={(event) => event.stopPropagation()}>
+                <header>
+                  <strong>OWNER TOOLS</strong>
+                  <button type="button" aria-label="Close owner tools" onClick={() => setOwnerToolsOpen(false)}>×</button>
+                </header>
+                <div className="football-picks-owner-sheet__actions">
+                  <FootballPushControl eventId={footballEvent.eventId} repository={controlRepository} />
+                  <Link className="picks-control-entry"
+                    to={`/picks/control?sport=football&event=${encodeURIComponent(footballEvent.eventId)}#header`}
+                    onClick={() => setOwnerToolsOpen(false)}>MANAGE HEADERS →</Link>
+                </div>
+              </section>
+            </div>, document.body,
+          ) : null}
+        </>
       ) : null}
       {modal}
     </>

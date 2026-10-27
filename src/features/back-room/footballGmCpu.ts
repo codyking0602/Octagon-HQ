@@ -1,5 +1,5 @@
 import {
-  FOOTBALL_GM_PLAYER_POOL,
+  FOOTBALL_GM_CURRENT_PLAYER_POOL,
   FOOTBALL_GM_ROSTER_SLOTS,
   footballGmCandidatesForTeam,
   footballGmEligibleTeams,
@@ -121,7 +121,7 @@ export function footballGmCpuOffseason(input: {
     const options = roster.flatMap((outgoing) => {
       const outgoingPlayer = footballGmPlayerById(outgoing.playerId);
       if (!outgoingPlayer) return [];
-      return FOOTBALL_GM_PLAYER_POOL
+      return FOOTBALL_GM_CURRENT_PLAYER_POOL
         .filter((candidate) => candidate.eligibleSlots.includes(outgoing.slot))
         .filter((candidate) => !held.has(candidate.id) && !excluded.has(candidate.id))
         .flatMap((candidate) => {

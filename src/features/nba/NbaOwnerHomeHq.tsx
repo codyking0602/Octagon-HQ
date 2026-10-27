@@ -6,6 +6,8 @@ import { NBA_FUTURES_SELECTIONS, emptyNbaFutures, nbaFuturesProgress } from "./n
 import { loadNbaFutures } from "./nbaFuturesRepository";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { nbaSpotlightWeekLabel, readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
+import { nbaTeamColor } from "./nbaTeamBranding";
+import type { CSSProperties } from "react";
 import "../../styles/nba-owner-home.css";
 
 export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hideChampionship = false }: { profileId: string; allowOwnerDailyPreview?: boolean; hideChampionship?: boolean }) {
@@ -108,7 +110,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
           )}
         </section>
 
-        <section className="nba-hq-owner__team" aria-label="NBA Team of the Week">
+        <section className="nba-hq-owner__team" aria-label="NBA Team of the Week" style={weekly ? { "--nba-week-team": nbaTeamColor(weekly.team.teamId) } as CSSProperties : undefined}>
           <header><h3>TEAM OF THE WEEK</h3>{weekly ? <small>{nbaSpotlightWeekLabel(weekly.weekStart, weekly.weekEnd)}</small> : null}</header>
           {weekly ? (
             <a href={weekly.team.profileUrl} target="_blank" rel="noreferrer" className="nba-hq-owner__team-link" aria-label={`View ${weekly.team.name} 2026–27 season on Basketball Reference`}>
@@ -117,8 +119,9 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
                 <strong>{weekly.team.name}</strong><small>{weekly.team.record} THIS WEEK</small>
                 <div className="nba-hq-owner__team-stats">
                   <span><b>{weekly.team.ppg}</b><small>PPG</small></span>
-                  <span><b>{weekly.team.oppPpg}</b><small>OPP PPG</small></span>
                   <span><b>{weekly.team.netMargin}</b><small>AVG MARGIN</small></span>
+                  <span><b>{weekly.team.fgPct ?? "—"}</b><small>FG%</small></span>
+                  <span><b>{weekly.team.threePct ?? "—"}</b><small>3P%</small></span>
                 </div>
               </div>
             </a>

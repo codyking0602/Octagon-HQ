@@ -257,10 +257,12 @@ a.football-matchup-breakdown-feature-team:active {
   .football-matchup-breakdown-grid, .football-matchup-breakdown-edges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Private administration stays accessible without crowding the player-facing toolbar. */
-.football-picks-owner-menu { margin-left: auto; min-width: 0; }
-.football-picks-owner-menu > summary { cursor: pointer; list-style: none; color: #a3abb4; font-size: .58rem; font-weight: 900; letter-spacing: .08em; }
-.football-picks-owner-menu > summary::-webkit-details-marker { display: none; }
-.football-picks-owner-menu[open] { position: relative; }
-.football-picks-owner-menu > div { position: absolute; z-index: 8; right: 0; top: 100%; display: grid; gap: 10px; padding: 12px; border: 1px solid #4c535b; border-radius: 12px; min-width: 210px; background: #161a1e; }
-.football-picks-owner-menu .picks-control-entry { margin: 0; }
+/* Private owner actions use a body-level sheet, never an under-card dropdown. */
+.football-picks-owner-menu__trigger { margin-left: auto; padding: 6px 2px; border: 0; background: transparent; color: #a3abb4; cursor: pointer; font-size: .58rem; font-weight: 900; letter-spacing: .08em; }
+.football-picks-owner-backdrop { position: fixed; inset: 0; z-index: 1500; display: flex; justify-content: center; align-items: flex-end; padding: 12px 12px 0; background: rgba(0, 0, 0, .72); }
+.football-picks-owner-sheet { width: min(100%, 480px); max-height: 80dvh; overflow-y: auto; border: 1px solid #454c52; border-bottom: 0; border-radius: 18px 18px 0 0; background: #161a1e; box-shadow: 0 -14px 50px #000a; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+.football-picks-owner-sheet > header { display: flex; align-items: center; justify-content: space-between; min-height: 54px; padding: 10px 16px; border-bottom: 1px solid #30363b; }
+.football-picks-owner-sheet > header strong { font-size: .75rem; letter-spacing: .11em; }
+.football-picks-owner-sheet > header button { width: 34px; height: 34px; border: 1px solid #424a51; border-radius: 9px; background: #23282c; color: #f5f5f5; cursor: pointer; font-size: 1.4rem; }
+.football-picks-owner-sheet__actions { display: grid; gap: 12px; padding: 16px; }
+.football-picks-owner-sheet__actions .picks-control-entry { display: flex; align-items: center; justify-content: center; margin: 0; min-height: 44px; }

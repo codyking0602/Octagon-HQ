@@ -1,4 +1,6 @@
 import historicalMigrationSeedJson from "./generated/canonical-ranking-inputs-842ba06e.json";
+import { nataliaSilvaRankingInput } from "./nataliaSilvaRanking";
+import { cirylGaneV2 } from "./cirylGaneV2";
 
 export interface V2RankingRosterOverlay {
   additions: readonly unknown[];
@@ -386,6 +388,16 @@ const rdaFightSeeds: readonly RdaFightSeed[] = [
     method: "ko-tko",
     tier: "top-ten",
     division: "Welterweight",
+  },
+  {
+    // UFC 332 (2026-10-03): verified UFC official scorecard, TKO R2 3:12.
+    // Well after the locked 2014-2019 championship/contender prime.
+    date: "2026-10-03",
+    opponent: "Alexander Hernandez",
+    result: "loss",
+    method: "ko-tko",
+    tier: "solid",
+    division: "Lightweight",
   },
 ];
 
@@ -1132,7 +1144,7 @@ const reviewedFight = ({
   qualityTier: string;
   championshipType?: string;
   championshipManualCredit?: number | null;
-  rounds: readonly [number, number];
+  rounds?: readonly [number, number];
   upward?: boolean;
 }) => ({
   id,
@@ -1147,7 +1159,9 @@ const reviewedFight = ({
   championshipEligible: true,
   championshipOpponentStrength: null,
   championshipManualCredit,
-  rounds: { status: "audited", won: rounds[0], lost: rounds[1], drawn: 0 },
+  rounds: rounds
+    ? { status: "audited", won: rounds[0], lost: rounds[1], drawn: 0 }
+    : { status: "unavailable", won: 0, lost: 0, drawn: 0 },
   lossClassification: {
     competitive: true,
     divisionContext: upward ? "upward" : "home",
@@ -1349,6 +1363,193 @@ const mackenzieDern = rankingDataRefresh(dernBaseline, {
       ],
     },
   },
+});
+
+/**
+ * UFC 332 / UFC 333 five-fighter October refresh (2026-10-03 / 2026-10-24).
+ * Results, bout classification and dates: official UFC 332/333 scorecards.
+ * Legacy migration file remains sealed; no Gane/Silva or divisional rankings.
+ *
+ * Scored prime choices remain deliberate: Figgy closes at 2024 Yan; RDA at
+ * 2019 Edwards. Merab and Volk remain active elite contenders/champions.
+ */
+const petrYanBaseline = baselineFighter("Petr Yan");
+const petrYanOctoberDefense = reviewedFight({
+  id: "2026-10-24-merab-dvalishvili",
+  date: "2026-10-24",
+  opponent: "Merab Dvalishvili",
+  division: "Bantamweight",
+  result: "win",
+  qualityTier: "champion-level",
+  championshipType: "normal",
+  championshipManualCredit: 0.9,
+  rounds: [3, 2],
+});
+const petrYanOctoberRefresh = rankingDataRefresh(petrYanBaseline, {
+  facts: {
+    ...petrYanBaseline.facts,
+    fights: [...petrYanBaseline.facts.fights, petrYanOctoberDefense],
+  },
+  judgments: {
+    ...petrYanBaseline.judgments,
+    championship: {
+      ...petrYanBaseline.judgments.championship,
+      inputs: [
+        ...petrYanBaseline.judgments.championship.inputs,
+        {
+          fightId: petrYanOctoberDefense.id,
+          opponent: "Merab Dvalishvili",
+          date: "2026-10-24",
+          event: "UFC 333",
+          titleType: "normal",
+          officialTitleFight: true,
+          finalAdjustedCredit: 0.9,
+          notes: "Successful first defense of Yan's second undisputed reign; 48-47 on all three cards. Modest credit discount for a repeat rival.",
+        },
+      ],
+    },
+    opponentQuality: {
+      ...petrYanBaseline.judgments.opponentQuality,
+      inputs: [
+        ...petrYanBaseline.judgments.opponentQuality.inputs,
+        {
+          fighter: "Petr Yan",
+          fightId: petrYanOctoberDefense.id,
+          opponent: "Merab Dvalishvili",
+          date: "2026-10-24",
+          event: "UFC 333",
+          division: "Bantamweight",
+          finalCredit: 1.1,
+          reviewStatus: "locked",
+          judgmentSource: "octagon-hq-2026-10-27-five-fighter-refresh",
+          judgmentStatus: "audited",
+          provenance: "UFC 333 official result and UFC championship history",
+          note: "Elite former champion in a successful title defense, with a repeat-opponent discount against the December 2025 win.",
+        },
+      ],
+    },
+    apex: {
+      ...petrYanBaseline.judgments.apex,
+      performances: [
+        {
+          fightId: "2025-12-06-merab-dvalishvili",
+          opponent: "Merab Dvalishvili",
+          date: "2025-12-06",
+          rating: 9.4,
+        },
+        petrYanBaseline.judgments.apex.performances.find(
+          (performance) => performance.fightId === "2021-10-30-cory-sandhagen",
+        )!,
+      ],
+      components: {
+        ...petrYanBaseline.judgments.apex.components,
+        twoPerformanceStrength: 1.86,
+        proof: 1.25,
+        bestFighterClaim: 0.8,
+        aura: 0.55,
+      },
+      notes:
+        "Reclaiming the undisputed title from Merab in December 2025 outranks the earlier vacant-title win for apex evidence; the October 2026 title defense independently confirms durability but is not counted as a second apex performance over the same opponent.",
+    },
+  },
+});
+
+const merabDvalishviliBaseline = baselineFighter("Merab Dvalishvili");
+const merabOctoberYanLoss = reviewedFight({
+  id: "2026-10-24-petr-yan",
+  date: "2026-10-24",
+  opponent: "Petr Yan",
+  division: "Bantamweight",
+  result: "loss",
+  qualityTier: "champion-level",
+  championshipType: "normal",
+  rounds: [2, 3],
+});
+const merabOctoberRefresh = rankingDataRefresh(merabDvalishviliBaseline, {
+  facts: {
+    ...merabDvalishviliBaseline.facts,
+    fights: [...merabDvalishviliBaseline.facts.fights, merabOctoberYanLoss],
+  },
+  // Preserve 2024 title win, all three 2025 defenses and existing apex.
+  // A competitive rematch loss must not delete earlier scored achievements.
+});
+
+const volkanovskiBaseline = baselineFighter("Alexander Volkanovski");
+const volkanovskiEvloevDefense = reviewedFight({
+  id: "2026-10-24-movsar-evloev",
+  date: "2026-10-24",
+  opponent: "Movsar Evloev",
+  division: "Featherweight",
+  result: "win",
+  method: "ko-tko",
+  qualityTier: "top-five",
+  championshipType: "normal",
+  championshipManualCredit: 1,
+  // TKO in round two: no three-judge round accounting is asserted.
+});
+const volkanovskiOctoberRefresh = rankingDataRefresh(volkanovskiBaseline, {
+  facts: {
+    ...volkanovskiBaseline.facts,
+    fights: [...volkanovskiBaseline.facts.fights, volkanovskiEvloevDefense],
+  },
+  judgments: {
+    ...volkanovskiBaseline.judgments,
+    championship: {
+      ...volkanovskiBaseline.judgments.championship,
+      inputs: [
+        ...volkanovskiBaseline.judgments.championship.inputs,
+        {
+          fightId: volkanovskiEvloevDefense.id,
+          opponent: "Movsar Evloev",
+          date: "2026-10-24",
+          event: "UFC 333",
+          titleType: "normal",
+          officialTitleFight: true,
+          finalAdjustedCredit: 1,
+          notes: "Defended the featherweight title by round-two TKO against the unbeaten number-one challenger.",
+        },
+      ],
+    },
+    opponentQuality: {
+      ...volkanovskiBaseline.judgments.opponentQuality,
+      inputs: [
+        ...volkanovskiBaseline.judgments.opponentQuality.inputs,
+        {
+          fighter: "Alexander Volkanovski",
+          fightId: volkanovskiEvloevDefense.id,
+          opponent: "Movsar Evloev",
+          date: "2026-10-24",
+          event: "UFC 333",
+          division: "Featherweight",
+          finalCredit: 1.15,
+          reviewStatus: "locked",
+          judgmentSource: "octagon-hq-2026-10-27-five-fighter-refresh",
+          judgmentStatus: "audited",
+          provenance: "UFC 333 official result, unbeaten contender's 20-0 entry record",
+          note: "Unbeaten top challenger stopped in the second round; elite contender victory without champion-level title-transfer credit.",
+        },
+      ],
+    },
+  },
+});
+
+const figueiredoBaseline = baselineFighter("Deiveson Figueiredo");
+const figueiredoTalbottLoss = reviewedFight({
+  id: "2026-10-03-payton-talbott",
+  date: "2026-10-03",
+  opponent: "Payton Talbott",
+  division: "Bantamweight",
+  result: "loss",
+  method: "ko-tko",
+  qualityTier: "ranked",
+});
+const figueiredoOctoberRefresh = rankingDataRefresh(figueiredoBaseline, {
+  facts: {
+    ...figueiredoBaseline.facts,
+    fights: [...figueiredoBaseline.facts.fights, figueiredoTalbottLoss],
+  },
+  // Post-prime bantamweight defeat; do not rewrite two flyweight title reigns,
+  // reopen the prime, invent a new title outcome, or adjust historical apex.
 });
 
 const conorBaseline = baselineFighter("Conor McGregor");
@@ -1673,10 +1874,12 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
         whyRankedHere:
           "Dos Anjos dominated Anthony Pettis to win the lightweight title, defended against Donald Cerrone, and also beat Benson Henderson, Nate Diaz, Robbie Lawler, Kevin Lee, and Neil Magny. His ability to collect elite wins across lightweight and welterweight for more than a decade gives the UFC resume exceptional depth.",
         whyNotHigher:
-          "The lightweight reign ended after one defense when Eddie Alvarez stopped him, and Tony Ferguson beat him next. His welterweight run produced strong contender wins but no second championship, while later losses accumulated as the career aged. The longevity is outstanding; the sustained championship peak was brief.",
+          "Eddie Alvarez stopped the lightweight reign after one defense, and Tony Ferguson beat him next. His welterweight run brought elite contender wins but no second title. The October 2026 Hernandez loss came long after his championship peak; it cannot erase the Pettis and Cerrone wins or his longevity.",
       },
     ),
     joshuaVan,
+    cirylGaneV2,
+    nataliaSilvaRankingInput,
   ],
   replacements: {
     "Jon Jones": intentionalEditorialReview(
@@ -1735,14 +1938,14 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Alexander Volkanovski": intentionalEditorialReview(
-      baselineFighter("Alexander Volkanovski"),
+      volkanovskiOctoberRefresh,
       {
         oneLiner:
           "Volkanovski was the featherweight problem nobody could solve for years: compact, fast, tactically flexible, and brilliant at changing rhythm. His footwork, feints, combinations, defensive wrestling, and mid-fight adjustments made him one of the era's most complete champions.",
         whyRankedHere:
-          "Volkanovski dethroned Max Holloway and beat him three times, then defended the featherweight title against Brian Ortega, Chan Sung Jung, and Yair Rodriguez. Wins over Jose Aldo and Chad Mendes deepen the resume, while his long unbeaten UFC start and sustained control of an elite division establish a major championship body of work.",
+          "Volkanovski defeated Max Holloway three times, defended against Brian Ortega, Chan Sung Jung, and Yair Rodriguez, then regained featherweight gold over Diego Lopes. Defenses against Lopes and previously unbeaten Movsar Evloev in 2026 extend a second championship reign and add elite opponent quality to one of the UFC's deepest featherweight resumes.",
         whyNotHigher:
-          "Ilia Topuria ended the featherweight reign by knockout, creating a decisive finish to Volkanovski's championship peak. He also went 0-2 against Islam Makhachev at lightweight, including a short-notice knockout loss. Those upward-division defeats deserve lighter weight, but the Topuria result and shorter title volume than the very top names set the ceiling.",
+          "Ilia Topuria emphatically ended Volkanovski's first featherweight reign, and Volkanovski twice lost upward-division title challenges to Islam Makhachev, one on short notice. His rebuilt title run and Evloev finish strengthen the historical case without erasing the Topuria defeat or treating the lightweight losses as equivalent to featherweight setbacks.",
       },
     ),
     "Khabib Nurmagomedov": intentionalEditorialReview(
@@ -1889,14 +2092,14 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Merab Dvalishvili": intentionalEditorialReview(
-      baselineFighter("Merab Dvalishvili"),
+      merabOctoberRefresh,
       {
         oneLiner:
           "Merab turns cardio into a weapon. Constant takedown attempts, mat returns, clinch pressure, and frantic pace force elite bantamweights to defend for minutes at a time until they are fighting his rhythm instead of theirs.",
         whyRankedHere:
-          "Merab built his title case through one of bantamweight's toughest stretches, beating Jose Aldo, Petr Yan, Henry Cejudo, and Sean O'Malley while piling up relentless control. Championship success added to that contender run, and his volume against elite opposition gives the resume substance beyond a single belt-winning night.",
+          "Merab beat Jose Aldo, Petr Yan, and Henry Cejudo en route to taking the UFC bantamweight title from Sean O'Malley, then defended against Umar Nurmagomedov, O'Malley again, and Cory Sandhagen in 2025. That three-defense run, 14-fight winning streak, and repeated elite wins remain major divisional achievements despite later rivalry defeats.",
         whyNotHigher:
-          "His championship chapter is still shorter than the established long-reign bantamweights, and the Petr Yan rivalry prevents complete separation at the top of his era. Merab's pace and elite-win depth are already outstanding, but the total title-fight volume has not yet matched the longest historical cases.",
+          "Merab lost the bantamweight title to Petr Yan in December 2025 and fell behind 1-2 in their series after an October 2026 rematch defeat. Those losses prevent complete separation from his era's elite, but they do not erase a three-defense reign or his outstanding streak and opponent quality.",
       },
     ),
     "Frankie Edgar": intentionalEditorialReview(
@@ -2131,14 +2334,14 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Petr Yan": intentionalEditorialReview(
-      baselineFighter("Petr Yan"),
+      petrYanOctoberRefresh,
       {
         oneLiner:
           "Yan's best work is built on patient reads, tight boxing, body attacks, defensive wrestling, and a habit of getting stronger as rounds unfold. At his peak, few bantamweights looked more technically complete.",
         whyRankedHere:
-          "Yan knocked out Jose Aldo for the vacant bantamweight title and built elite wins over Urijah Faber, Cory Sandhagen, and other top contenders around a championship-level run. Even in close defeats, his round-winning ability and technical consistency kept him among the division's best for years.",
+          "Yan beat Jose Aldo for the vacant bantamweight title, won interim gold over Cory Sandhagen, then reclaimed the undisputed belt from Merab Dvalishvili in December 2025. His October 2026 defense completed a 2-1 trilogy comeback and strengthened an elite second championship reign.",
         whyNotHigher:
-          "Yan lost the belt by disqualification against Aljamain Sterling, then lost their rematch and several close decisions against elite bantamweights. The unusual context makes the official record harsher than the performances, but the limited number of title-fight victories still prevents a stronger championship case.",
+          "The Sterling disqualification, rematch defeat, and close contender losses interrupted Yan's first reign. His second undisputed reign and successful defense repair much of that championship gap, although his cumulative title control remains shorter than the longest all-time reigns.",
       },
     ),
     "Frank Shamrock": intentionalEditorialReview(
@@ -2175,14 +2378,14 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Deiveson Figueiredo": intentionalEditorialReview(
-      baselineFighter("Deiveson Figueiredo"),
+      figueiredoOctoberRefresh,
       {
         oneLiner:
           "Figueiredo brought menace to flyweight: explosive power, dangerous guillotines, physical clinch work, and the confidence to hunt finishes in a division usually defined by speed and volume.",
         whyRankedHere:
-          "Figueiredo won the UFC flyweight title twice and built three title-fight victories around wins over Joseph Benavidez, Brandon Moreno, and other top contenders. His rivalry with Moreno defined an era, while later bantamweight victories extended his relevance beyond the division where he became champion.",
+          "Figueiredo won UFC flyweight gold twice with championship wins over Joseph Benavidez, Alex Perez, and Brandon Moreno. The Moreno rivalry defined an era, and wins over Rob Font, Cody Garbrandt, Marlon Vera, and Montel Jackson showed meaningful bantamweight relevance after his flyweight prime.",
         whyNotHigher:
-          "The first title reign was brief, and the Moreno rivalry included a draw and two losses that prevented clear long-term control of flyweight. Figueiredo never built a long defense streak before moving divisions. The finishing peak was elite, but championship consistency was below deeper reigns.",
+          "The two Moreno losses and draw prevented a long uninterrupted flyweight reign. A later October 2026 TKO loss to Payton Talbott at bantamweight adds to the post-prime record, but should not be used to devalue his flyweight title peak or retroactively extend his prime.",
       },
     ),
     "Conor McGregor": intentionalEditorialReview(
@@ -2571,10 +2774,18 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       primary: "new-blood",
       secondary: null,
     },
+    "Natalia Silva": {
+      primary: "new-blood",
+      secondary: null,
+    },
+    "Ciryl Gane": {
+      primary: "new-blood",
+      secondary: null,
+    },
   },
-  modelAsOfDate: "2026-09-19",
-  factsVersion: "octagon-hq-v2-noche-repair-facts-20260929",
-  judgmentVersion: "octagon-hq-v2-noche-repair-judgments-20260929",
-  eraDepthVersion: "octagon-hq-v2-van-era-depth-20260919",
-  eraDepthResolutionVersion: "octagon-hq-v2-van-era-depth-20260919",
+  modelAsOfDate: "2026-10-27",
+  factsVersion: "octagon-hq-v2-natalia-silva-facts-20261027",
+  judgmentVersion: "octagon-hq-v2-natalia-silva-judgments-20261027",
+  eraDepthVersion: "octagon-hq-v2-natalia-silva-era-depth-20261027",
+  eraDepthResolutionVersion: "octagon-hq-v2-natalia-silva-era-depth-20261027",
 };

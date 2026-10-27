@@ -118,10 +118,14 @@ describe("Wheel of Football current NFL + CFB model", () => {
     for (const [code, team] of Object.entries(wheelPriorityJson.teams)) {
       expect(team.QB.length, `${code} QB`).toBeGreaterThanOrEqual(1);
       expect(team.QB.length, `${code} QB`).toBeLessThanOrEqual(2);
-      expect(team.RB.length, `${code} RB`).toBeGreaterThanOrEqual(2);
+      // NYG has one curated active RB after the verified Harris release.
+      // Do not manufacture a second identity or alter completed games.
+      expect(team.RB.length, `${code} RB`).toBeGreaterThanOrEqual(code === "NYG" ? 1 : 2);
       expect(team.RB.length, `${code} RB`).toBeLessThanOrEqual(3);
-      expect(team.WR.length, `${code} WR`).toBeGreaterThanOrEqual(3);
-      expect(team.WR.length, `${code} WR`).toBeLessThanOrEqual(4);
+      // Arizona has two remaining curated WRs after the verified Oct 12 Harrison trade.\n      // Do not invent a third WR or move another club’s player just to meet a cap.\n      expect(team.WR.length, `${code} WR`).toBeGreaterThanOrEqual(code === "ARI" ? 2 : 3);
+      // HOU retains its pre-trade fifth WR in GM authority; Wheel always caps
+      // playable WR selection at four, with Harrison first after the trade.
+      expect(team.WR.length, `${code} WR`).toBeLessThanOrEqual(code === "HOU" ? 5 : 4);
       expect(team["Front Seven"].length, `${code} front seven`).toBeGreaterThanOrEqual(5);
       expect(team["Front Seven"].length, `${code} front seven`).toBeLessThanOrEqual(6);
       expect(team.Secondary.length, `${code} secondary`).toBeGreaterThanOrEqual(5);
@@ -278,7 +282,7 @@ describe("Wheel of Football current NFL + CFB model", () => {
       "Henry To'oTo'o",
     ]);
     expect(wheelPriorityJson.teams.IND.WR).toEqual([
-      "Keenan Allen", "Josh Downs", "Alec Pierce", "Darius Slayton",
+      "Keenan Allen", "Josh Downs", "Alec Pierce",
     ]);
     expect(wheelPriorityJson.teams.JAX.WR).toEqual([
       "Brian Thomas Jr.", "Travis Hunter", "Jakobi Meyers", "Parker Washington",

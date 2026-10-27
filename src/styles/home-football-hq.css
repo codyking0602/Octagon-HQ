@@ -934,3 +934,10 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
     font-size: 7px;
   }
 }
+
+/* Photo and name target the same verified 2026 player profile. */
+a.football-player-spotlight__media { display:block;color:inherit;text-decoration:none;cursor:pointer; }
+a.football-player-spotlight__media.is-manageable { touch-action:manipulation;-webkit-touch-callout:none; }
+a.football-player-spotlight__media:focus-visible { outline:2px solid var(--home-football-blue,#8ebce6);outline-offset:-3px; }
+.football-player-spotlight__copy h3 .football-player-spotlight__name-link { display:inline;min-height:0;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;background:none;color:#fff;font:inherit;letter-spacing:inherit;text-decoration:none; }
+.football-player-spotlight__name-link:hover { text-decoration:underline;text-underline-offset:3px; }

@@ -1,0 +1,49 @@
+{
+  "version": "2026-10-26-cfb-three-verified-current-roles-v1",
+  "publishedToRuntime": true,
+  "gradingMethod": "2026 on-field role/production with 2025 context and same-school peer calibration; preserve original curated identity",
+  "changes": [
+    {
+      "school": "duke",
+      "name": "Luke Mergott",
+      "from": "Secondary",
+      "to": "Front Seven",
+      "grade": 86,
+      "evidence": "2026 Duke roster: LB with 2025 85+ tackles and 2026 returning starting LB; Oct 23 2026 Virginia box score 7 tackles; sensible grade 86",
+      "sources": [
+        "https://goduke.com/sports/football/roster/luke-mergott/24430",
+        "https://goduke.com/sports/football/stats/2026/virginia/boxscore/24828"
+      ]
+    },
+    {
+      "school": "pittsburgh",
+      "name": "Braylan Lovelace",
+      "from": "Secondary",
+      "to": "Front Seven",
+      "grade": 90,
+      "evidence": "Pitt position preview confirms 2026 starting outside LB; 2025 80 tackles, 5.5 TFL, two interceptions and Butkus Watch List; high-impact front-seven defender",
+      "sources": [
+        "https://pittsburghpanthers.com/news/2026/8/11/pitt-football-position-preview-the-front-seven",
+        "https://pittsburghpanthers.com/news/2026/8/13/football-braylan-lovelace-named-to-butkus-award-watch-list"
+      ]
+    },
+    {
+      "school": "texas-tech",
+      "name": "John Curry",
+      "from": "Secondary",
+      "to": "Secondary",
+      "grade": 88,
+      "evidence": "TTU 2026 bio: starter at STAR in all 14 games in 2025 with 72 tackles and All-Big 12 honorable mention; keep hybrid secondary family",
+      "sources": [
+        "https://texastech.com/sports/football/roster/curryjohn/14279"
+      ]
+    }
+  ],
+  "held": [
+    {
+      "school": "lsu",
+      "name": "CJ Jimcoily",
+      "reason": "2026 official position designation conflicts with game-alignment evidence; do not invent a grade"
+    }
+  ]
+}

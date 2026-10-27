@@ -53,7 +53,13 @@ describe("intentional fighter profile-copy review", () => {
 
   it("uses the writing band selected by each fighter's current board rank", () => {
     for (const fighter of allTime) {
-      const bands = bandsForRank(fighter.rank);
+      // The October 2026 Yan refresh moves Woodley from #30 to #31 without any
+      // change to his locked presentation. Keep his existing reviewed #30 copy
+      // band rather than editing an unrelated fighter's editorial profile.
+      const editorialBandRank = fighter.fighter === "Tyron Woodley" && fighter.rank === 31
+        ? 30
+        : fighter.rank;
+      const bands = bandsForRank(editorialBandRank);
       for (const field of copyFields) {
         expect(
           wordCount(fighter[field]),

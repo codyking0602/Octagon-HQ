@@ -251,19 +251,31 @@ export default function NbaFuturesPage() {
         <div className="nba-futures-track"><span style={{width:(100*progress/NBA_FUTURES_SELECTIONS)+"%"}} /></div>
         <p>{locked?"Your saved picks are final.": "Scheduled lock: "+formattedLock(snapshot.lock_at)+". Picks stay editable until HQ officially closes entries."}</p>
       </div>
-      <NbaFuturesForm picks={draft} locked={locked} onChange={next=>{setDraft(next);setSaved(false);}}/>
+      <details className="nba-futures-my-card">
+        <summary>
+          <strong>MY FUTURES</strong><span>{progress}/{NBA_FUTURES_SELECTIONS} PICKS · {locked?"LOCKED":"OPEN"}</span>
+          <b>{locked?"VIEW PICKS":"EDIT PICKS"} <span aria-hidden="true">⌄</span></b>
+        </summary>
+        <div className="nba-futures-my-body">
+          {locked ? <RevealedNbaFuturesPicks picks={draft} />
+            : <NbaFuturesForm picks={draft} locked={locked} onChange={next=>{setDraft(next);setSaved(false);}}/>}
+        </div>
+      </details>
       {errors.length?<p role="alert" className="nba-hq-error">{errors[0]}</p>:null}
       {locked?<section className="nba-futures-reveal" aria-label="Other players NBA Futures">
-        <header><strong>GROUP FUTURES</strong><span>{snapshot.entries.length} REVEALED</span></header>
-        <p>Entries are locked. Open a player's name to see their saved predictions.</p>
-        {snapshot.entries.map(entry=><NbaFuturesGroupEntry key={entry.profile_id} entry={entry}/>)}
-        {!snapshot.entries.length?<p>No other submitted NBA Futures cards are available.</p>:null}
+        <details className="nba-futures-group-drawer">
+          <summary><strong>GROUP FUTURES</strong><span>{snapshot.entries.length} MEMBERS</span><b aria-hidden="true">⌄</b></summary>
+          <div className="nba-futures-group-drawer__body">
+            {snapshot.entries.map(entry=><NbaFuturesGroupEntry key={entry.profile_id} entry={entry}/>)}
+            {!snapshot.entries.length?<p>No other submitted NBA Futures cards are available.</p>:null}
+          </div>
+        </details>
       </section>:null}
-      <div className="nba-futures-save">
+      {!locked ? <div className="nba-futures-save">
         <button className="primary-action" type="button" disabled={locked||saving||errors.length>0}
           onClick={()=>persist(draft)}>{locked?"PICKS LOCKED":"SAVE MY FUTURES PICKS"}</button>
         <small>{isNbaFuturesComplete(draft)?"All 55 selections complete.":"Partial drafts are saved and can be finished later."}</small>
-      </div>
+      </div> : null}
     </main>:null}
   </div>;
 }

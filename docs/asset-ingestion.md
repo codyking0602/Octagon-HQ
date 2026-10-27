@@ -40,65 +40,23 @@ Destinations are restricted to `public/assets/fighters/` and must end in `-thumb
 
 This is a transport/processing primitive, not a provenance bypass. Sport-specific source rules still apply.
 
-## Football weekly asset support (Phase 3)
+## Football weekly asset support — player Spotlight only (October 27 onward)
 
-The SAME Asset Ingest workflow also routes Football weekly manifest kinds football-spotlight and football-game-header to scripts/football_editorial_assets.py. UFC thumb/spotlight processing remains unchanged. Football **player Spotlight** photos use verified real ESPN/CDN imagery and the player's ESPN profile reference, with action → portrait → approved manual fallback. No synthetic likenesses. Canonical paths: `public/assets/football/weekly/<Tuesday YYYY-MM-DD>/<cfb|nfl>/{spotlight.webp,game-header.webp}`. Spotlights are 720×900 WebP.
+Use the existing Asset Ingest workflow and `scripts/football_editorial_assets.py` for player Spotlight photographs, with genuine verified ESPN/CDN imagery and athlete profile identity, action photo preferred over portrait, then approved manual photo. Each player Spotlight output is a reviewed **720×900 WebP** at `public/assets/football/weekly/YYYY-MM-DD/<cfb|nfl>/spotlight.webp`. Run the existing generated-asset PR, exact-head CI, merge, production deployment and verified live-photo readback before arming. Do not fabricate athlete likenesses.
 
-Football **Game of the Week headers** now use only original owner-approved SeatGeek matchup art (no ESPN two-player montages). Example manifest after verifying the real selected game and the publisher-hosted image:
+**Never automatically create Game of the Week headers.** The historical `football-game-header` SeatGeek processor and `game-header.webp` assets only explain previously published content. For October 27 and later, do not queue header manifests, search SeatGeek, generate a synthetic image, or substitute any publisher graphic. Cody alone supplies the 16:9 GOTW headers. Their absence must **never hold** owner-approved content, player-photo publication, a factual three-section breakdown, Tuesday 8 AM release, or verified same-week catch-up.
 
-```json
-{
-  "kind": "football-game-header",
-  "sport": "cfb",
-  "week_of": "2026-10-20",
-  "destination": "public/assets/football/weekly/2026-10-20/cfb/game-header.webp",
-  "away_team": "Verified Away Team",
-  "home_team": "Verified Home Team",
-  "source_publisher": "SeatGeek",
-  "header_source_url": "https://seatgeekimages.com/matchup/verified/600x450.jpg"
-}
-```
+## Owner-provided weekly matchup art (only source for new weeks)
 
-The source must be a real publicly served `https://seatgeekimages.com/matchup/...` image representing those two teams. The processor preserves the full artwork and adds only neutral side padding as necessary for a 1600×900 WebP; it never crops team logos, invents player images, or composites unrelated ESPN portraits. The manifest's publisher source URL must be stored as the **single** `header_photo_sources` entry in the canonical prepared GOTW package. The generated WebP must be reviewed, pass exact-head green, be deployed and verified on production **before** the owner-selected editorial can be armed. If artwork is unavailable or cannot be used, fail closed and retain the previous approved material.
+When the owner provides a finished 16:9 header, confirm correct selected teams and week. The approved owner-uploaded Picks gallery (`pick-event-headers` Supabase Storage, via current owner control UI) is the primary existing upload workflow. Alternatively, preserve an approved owner graphic as a non-stretched reviewed WebP at `public/assets/football/weekly/YYYY-MM-DD/<sport>/owner-header-<revision>.webp`, and register the exact week, sport, away/home identities, and path in `src/features/home/footballWeeklyHeaderOverrides.json`. A replacement receives a new revisioned filename. Use the normal exact-head-green PR and deployment safeguards; the image can arrive after its editorial content is live without changing the published package.
 
-Production art is shown only in Football Picks' roughly eight-second carousel. The Tuesday midnight Central release remains a database time gate, independent for NFL and CFB. Image-asset deployment alone never publishes the weekly package.
-
-## Owner-provided weekly matchup art (preferred over SeatGeek)
-
-For an explicitly owner-approved **NFL or CFB Game of the Week**, keep the existing
-SeatGeek `game-header.webp` as a verified fallback; owner artwork is an optional
-independent enhancement, never a precondition for Tuesday 8 AM Central publication.
-
-When Cody supplies an image in chat, verify it belongs to the actual selected
-matchup. Convert the supplied bytes to a reviewed, non-stretched 16:9 WebP with
-the owner's preferred crop/padding. Commit it through a focused green PR to
-`public/assets/football/weekly/YYYY-MM-DD/<sport>/owner-header-<revision>.webp`.
-Use a new revisioned filename for each replacement so browsers never cache the
-previous graphic. Binary user-supplied photos are committed via GitHub's binary
-blob/tree API, **not** through the text-file API and not as a fake publisher URL.
-
-Add just one exact `week_of` / `sport` / `away_team` / `home_team` record to
-`src/features/home/footballWeeklyHeaderOverrides.json` with `asset_path`
-pointing to that checked-in immutable WebP. No record means the existing verified
-SeatGeek `header_asset_path` displays automatically; a browser failure to load
-the owner file also falls back to SeatGeek, then the established CSS identity
-header. The override never changes published database rows, owner selection,
-Spotlight media or videos, full analysis, rankings, Picks, or the Tuesday schedule.
-It can be deployed **after** the package publishes via the normal green-head
-GitHub PR and Cloudflare release; no backend republish or new cron is needed.
-
-The resolver refuses mismatched game/week/sport or paths outside that exact
-weekly public assets folder. The 16:9 eight-second hero keeps accessible team
-links and rank/record pills. Football HQ's compact featured-game layout remains
-untouched. When an owner image has not been provided, do not delay publication
-or generate fake athlete imagery; keep SeatGeek.
+For new weeks, when owner art is absent or its URL fails, use the existing neutral CSS treatment: **no generated game image, no SeatGeek fallback, no empty image causing delayed publication**. Legacy weeks keep their previously verified original SeatGeek graphic unchanged. These user-owned headers do not alter the locked compact GOTW analysis, Player Spotlight, stats, schedule, or selections.
 
 ## Football Picks owner-uploaded gallery priority (October 20 fix)
 
 The owner control center can already upload 1–4 images to the public
 `pick-event-headers` Supabase Storage bucket, recorded on the existing PickEvent
-as `header_storage_path` and natural dimensions. **These uploaded Picks images
-always win** over the weekly publisher's SeatGeek art, and appear as image-only
+as `header_storage_path` and natural dimensions. **These uploaded Picks images always win**, and appear as image-only
 slides in their stored gallery order. This path works after publication without
 new asset PRs or owner-header JSON changes: it is the canonical existing owner
 upload UI. Never suppress `pickEventPosters(event)` because matching weekly
@@ -106,7 +64,6 @@ breakdowns exist. Do not display extra overlay pills, names, marks, ranks,
 records, time, or duplicate `THE HQ` lettering on the Picks image; Cody's
 finished artwork already contains all of it. Keep the existing 16:9, eight-second
 carousel. If a gallery image fails, skip it; if none loads, render the verified
-weekly SeatGeek images without any text overlays, retaining a CSS-only empty
-background as last resort. This affects Picks' image header only—rank/record,
+historical verified images on historical weeks and the neutral CSS background for future weeks, without overlays. This affects Picks' image header only—rank/record,
 Sports Reference team links and editorial data remain in Football HQ and the
 Game Breakdown, not superimposed on custom Picks artwork.

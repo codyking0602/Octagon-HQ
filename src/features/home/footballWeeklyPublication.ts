@@ -10,6 +10,7 @@ import {
 } from "./footballWeeklyContentRepository";
 import type { FootballPlayerSpotlight, FootballSpotlightKind } from "./footballPlayerSpotlightSchedule";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
+import { footballNflMatchupTeamLogoUrl } from "../picks/footballNflMatchupTeamLogo";
 import type { PickEvent } from "../picks/picksModel";
 
 const publishedSport = z.object({
@@ -62,6 +63,7 @@ export function publishedFootballMatchup(
   const away = item.game.away_team;
   const home = item.game.home_team;
   const proof = item.breakdown;
+  const compactProof = "bottom_line" in proof;
   const season = Number(item.week_of.slice(0, 4));
   const game = item.game;
   const verifiedOct20 = sport === "cfb"
@@ -86,10 +88,12 @@ export function publishedFootballMatchup(
     teams: [
       {
         name: away, aliases: [away], rank: awayRank, record: awayRecord,
+        ...(sport === "nfl" ? { logoUrl: footballNflMatchupTeamLogoUrl(away) ?? undefined } : {}),
         sportsReferenceUrl: footballTeamSportsReferenceUrl(away, sport === "cfb" ? "CFB" : "NFL", season) ?? undefined,
       },
       {
         name: home, aliases: [home], rank: homeRank, record: homeRecord,
+        ...(sport === "nfl" ? { logoUrl: footballNflMatchupTeamLogoUrl(home) ?? undefined } : {}),
         sportsReferenceUrl: footballTeamSportsReferenceUrl(home, sport === "cfb" ? "CFB" : "NFL", season) ?? undefined,
       },
     ],
@@ -104,13 +108,14 @@ export function publishedFootballMatchup(
         { title: proof.things[1]!.title, body: [{ text: proof.things[1]!.body }] },
         { title: proof.things[2]!.title, body: [{ text: proof.things[2]!.body }] },
       ],
-      bottomLine: [{ text: proof.paths_to_win.map((path) => path.team + ": " + path.body).join("  ·  ") }],
+      bottomLine: [{ text: compactProof ? proof.bottom_line
+        : proof.paths_to_win.map((path) => path.team + ": " + path.body).join("  ·  ") }],
     },
     setup: proof.setup,
-    keyMatchups: proof.things,
-    pathsToWin: [proof.paths_to_win[0]!, proof.paths_to_win[1]!],
-    playersToWatch: [proof.players_to_watch[0]!, proof.players_to_watch[1]!],
-    unitEdges: [proof.unit_edges[0]!, proof.unit_edges[1]!],
+    keyMatchups: compactProof ? undefined : proof.things,
+    pathsToWin: compactProof ? undefined : [proof.paths_to_win[0]!, proof.paths_to_win[1]!],
+    playersToWatch: compactProof ? undefined : [proof.players_to_watch[0]!, proof.players_to_watch[1]!],
+    unitEdges: compactProof ? undefined : [proof.unit_edges[0]!, proof.unit_edges[1]!],
   };
 }
 

@@ -144,7 +144,12 @@ describe("Blind Rank lineup archetype release proof", () => {
     const goodCount = heavyweightPool.filter(
       (fighter) => blindRankTier(blindRankRating(fighter, "heavyweight")) === "good",
     ).length;
-    expect(goodCount).toBe(10);
+    // Gane graduated from the historical Play-only Good-grade pool into the
+    // actual GOAT board; its model OVR now correctly replaces that old grade.
+    expect(goodCount).toBe(9);
+    const gane = heavyweightPool.find((fighter) => fighter.id === "ciryl-gane");
+    expect(gane?.model).not.toBeNull();
+    expect(gane?.ratings.career).toBe(gane?.model?.ovr);
     expect(new Set(heavyweightPool.map((fighter) => fighter.id)).size).toBe(heavyweightPool.length);
     expect(new Set(heavyweightPool.map((fighter) => fighter.name.toLowerCase())).size).toBe(heavyweightPool.length);
   });

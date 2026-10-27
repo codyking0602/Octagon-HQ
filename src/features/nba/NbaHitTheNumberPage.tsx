@@ -16,6 +16,8 @@ import {
   type NbaHitPlan, type NbaHitResult, type NbaHitRun,
 } from "./nbaHitTheNumberModel";
 import { nbaHitHeadshot, nbaHitSubjectById, nbaHitValue } from "./nbaHitTheNumberStats";
+import { nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { NbaPortraitCredits } from "./NbaPortraitCredits";
 
 const nbaTheme = {
   "--football-accent": "#f2a341",
@@ -46,6 +48,7 @@ function NbaPlayerMark({subjectId,className}:{subjectId:string;className:string}
     background:"rgba(242,163,65,.15)",fontSize:".65rem",fontWeight:900}}>NBA</span>;
   return <img alt="" className={className} src={src} loading="lazy" referrerPolicy="no-referrer"
     onError={()=>setFailedId(subjectId)}
+    onLoad={event=>{ if(src.includes("/headshots/nba/latest/") && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailedId(subjectId); }}
     style={{objectFit:"contain",objectPosition:"center top",background:"rgba(255,255,255,.08)"}} />;
 }
 export default function NbaHitTheNumberPage() {
@@ -158,5 +161,6 @@ export default function NbaHitTheNumberPage() {
       onLock={valid?finish:null} resultActions={resultActions}
       renderSubjectMark={(id,className)=><NbaPlayerMark subjectId={id} className={className}/>}
     />
+    <NbaPortraitCredits names={plan.subjectIds.map(id => nbaHitSubjectById.get(id)?.name ?? "")} />
   </div>;
 }

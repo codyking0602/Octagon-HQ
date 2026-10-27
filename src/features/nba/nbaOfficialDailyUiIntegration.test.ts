@@ -40,6 +40,8 @@ describe("NBA official Daily client release safety and all nine presentations", 
     expect(officialAverageFanSource).toContain('value === "nba"');
     expect(officialFeudSource).toContain('domain === "nba" ? "NBA HQ"');
     expect(officialPageSource).toContain("nbaFindLeaderHeadshot");
+    expect(officialPageSource).toContain("season={candidate.season}");
+    expect(officialPageSource).toContain("nbaFindLeaderHeadshot({ name, season, nbaId: null })");
     expect(officialPageSource).toContain("nbaWavelengthCategoryLabel");
     expect(officialPageSource).toContain("nbaHitHeadshot");
     expect(officialPageSource).toContain('sport="nba"');

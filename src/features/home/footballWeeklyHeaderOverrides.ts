@@ -22,10 +22,12 @@ export function resolveFootballWeeklyHeaderArtwork(
   game: { id: string; teams: readonly { name: string }[]; headerAssetPath?: string },
   entries: readonly FootballOwnerHeader[] = ownerEntries,
 ): FootballHeaderArtwork {
-  const seatGeek = game.headerAssetPath ?? null;
+  const priorHeader = game.headerAssetPath ?? null;
   const match = /^weekly-(\d{4}-\d{2}-\d{2})-(cfb|nfl)$/.exec(game.id);
-  if (!match || game.teams.length !== 2) return { primary: seatGeek, fallback: null, ownerProvided: false };
+  if (!match || game.teams.length !== 2) return { primary: priorHeader, fallback: null, ownerProvided: false };
   const [, week, sport] = match;
+  // For new weeks only user-provided 16:9 header images are allowed.
+  const legacyFallback = week < "2026-10-27" ? priorHeader : null;
   const owner = entries.find((item) =>
     item.week_of === week && item.sport === sport
     && normalize(item.away_team) === normalize(game.teams[0]!.name)
@@ -33,8 +35,8 @@ export function resolveFootballWeeklyHeaderArtwork(
     && item.asset_path.startsWith(`/assets/football/weekly/${week}/${sport}/`)
     && /^owner-header-[a-z0-9-]+\.webp$/.test(item.asset_path.split("/").at(-1) ?? "")
   );
-  if (!owner) return { primary: seatGeek, fallback: null, ownerProvided: false };
-  return { primary: owner.asset_path, fallback: seatGeek, ownerProvided: true };
+  if (!owner) return { primary: legacyFallback, fallback: null, ownerProvided: false };
+  return { primary: owner.asset_path, fallback: legacyFallback, ownerProvided: true };
 }
 
 /** Broken/missing custom art must never prevent a published weekly header from

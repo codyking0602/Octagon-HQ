@@ -18,12 +18,13 @@ import type { TodayChallengeProjection } from "../play/todayChallengeRepository"
 import { useTodayChallengeRuntime, type TodayChallengeAdvanceOptions } from "../play/useTodayChallengeRuntime";
 import TodayChallengeHub from "../play/TodayChallengeHub";
 import { NbaHigherLowerLeaderboardResult } from "./NbaHigherLowerLeaderboardResult";
-import { nbaHigherLowerPortraitSource, nbaHigherLowerPortraitCredit, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
+import { nbaHigherLowerPortraitSource, nbaHigherLowerIsGenericSilhouette } from "./nbaHigherLowerPortraits";
 import { DailyTwoGameLeaderboardResult } from "../play/DailyTwoGameLeaderboardResult";
 import { nbaFindLeaderHeadshot, formatNbaFindLeaderValue } from "./nbaFindTheLeaderModel";
 import { nbaWavelengthCategoryLabel } from "./nbaWavelengthCatalog";
 import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
 import { nbaHitHeadshot, nbaHitSubjectById } from "./nbaHitTheNumberStats";
+import { NbaPortraitCredits } from "./NbaPortraitCredits";
 import { formatNbaHitNumber } from "./nbaHitTheNumberModel";
 import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaOwnerPreviewDaily, nbaRegularSeasonDaily, nbaCentralDay, type NbaDailyGame } from "./nbaDailySchedule";
 import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
@@ -70,12 +71,15 @@ export function nbaOfficialActiveRound(projection: TodayChallengeProjection) {
   return { index, setup, state, reveal, score };
 }
 
-function NBAHeadshot({ name, compact = false }: { name: string; compact?: boolean }) {
+function NBAHeadshot({ name, season, compact = false }: { name: string; season?: number; compact?: boolean }) {
   const [failed, setFailed] = useState(false);
-  const src = nbaFindLeaderHeadshot({ name, nbaId: null });
+  const src = nbaFindLeaderHeadshot({ name, season, nbaId: null });
+  const editorial = Boolean(src && !src.includes("/headshots/nba/latest/"));
+  useEffect(() => setFailed(false), [src]);
   const initials = name.split(/\s+/).map(x => x[0]).slice(0, 2).join("");
-  return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "")} aria-label={name + " portrait"}>
-    {src && !failed ? <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" onError={() => setFailed(true)} />
+  return <span className={"football-find-card__visual nba-find-card__photo" + (compact ? " is-compact" : "") + (editorial ? " is-editorial" : "")} aria-label={name + " portrait"}>
+    {src && !failed ? <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" onError={() => setFailed(true)}
+      onLoad={event => { if (!editorial && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true); }} />
       : <b aria-hidden="true">{initials || "NBA"}</b>}
   </span>;
 }
@@ -106,9 +110,10 @@ export function NbaOfficialFindLeader({ projection, advance, busy }: { projectio
       result={attempt ? { score: score ?? attempt.normalizedScore, perfect, fatalId: perfect ? null : chosen.at(-1) ?? null } : null}
       eyebrow="TODAY'S NBA CHALLENGE" intro="Eliminate nine decoys. Leave the leader standing."
       onEliminate={attempt || busy ? null : id => advance({ eliminated_id: id })}
-      renderVisual={(candidate, compact) => <NBAHeadshot name={candidate.name} compact={compact} />}
+      renderVisual={(candidate, compact) => <NBAHeadshot name={candidate.name} season={candidate.season} compact={compact} />}
       formatValue={formatNbaFindLeaderValue}
     />
+    {attempt && <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />}
   </div>;
 }
 
@@ -150,7 +155,9 @@ function NBAPlayerMark({ id, className }: { id: string; className: string }) {
   const src = subject ? nbaHitHeadshot(subject) : null;
   const [failed, setFailed] = useState(false);
   return <span className={className} aria-label={subject?.name ?? "NBA player"}>
-    {src && !failed ? <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} /> :
+    {src && !failed ? <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer"
+      onError={() => setFailed(true)}
+      onLoad={event => { if (src.includes("/headshots/nba/latest/") && nbaHigherLowerIsGenericSilhouette(event.currentTarget)) setFailed(true); }} /> :
       <b aria-hidden="true">{subject?.name.split(" ").map(x => x[0]).slice(0, 2).join("") ?? "NBA"}</b>}
   </span>;
 }
@@ -191,6 +198,7 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
       renderSubjectMark={(id, className) => <NBAPlayerMark id={id} className={className} />}
       busy={busy}
     />
+    {result && <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />}
   </div>;
 }
 
@@ -241,15 +249,6 @@ export function NbaOfficialHigherLower({ projection, advance, busy }: { projecti
         <b>?</b><small>{String(hidden.context ?? "")}</small>
       </article>
     </div>
-    {([known, hidden].map(row => nbaHigherLowerPortraitCredit({ name: String(row.name ?? "") }))
-      .filter((row): row is NonNullable<typeof row> => row != null).length > 0) ? (
-      <details className="nba-official-higher-lower__credits">
-        <summary>Historical portrait credits</summary>
-        {[known, hidden].map(row => nbaHigherLowerPortraitCredit({ name: String(row.name ?? "") }))
-          .filter((row): row is NonNullable<typeof row> => row != null)
-          .map(credit => <p key={credit.name}>{credit.name}: {credit.author} · {credit.license} · <a href={credit.source} target="_blank" rel="noopener noreferrer">Source</a></p>)}
-      </details>
-    ) : null}
     <p>Was {String(hidden.name ?? "the other player")} higher or lower?</p>
     <div className="nba-official-higher-lower__actions">
       <button type="button" disabled={busy} onClick={() => advance({ choice: "higher" })}>↑ HIGHER</button>

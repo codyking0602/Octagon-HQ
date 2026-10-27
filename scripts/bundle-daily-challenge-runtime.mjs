@@ -21,6 +21,12 @@ const bundles = [
     requiredExports: ["advanceFootballHitNumberDailyRuntime"],
   },
   {
+    label: "Football Wavelength Daily answer-only runtime",
+    entry: resolve(repoRoot, "src/features/play/footballWavelengthDailyAdvance.ts"),
+    fileName: "football-wavelength-advance.generated.mjs",
+    requiredExports: ["advanceFootballWavelengthDailyRuntime"],
+  },
+  {
     label: "Millionaire Daily answer-only runtime",
     entry: resolve(repoRoot, "src/features/play/millionaireDailyAdvance.ts"),
     fileName: "millionaire-advance.generated.mjs",
@@ -48,6 +54,17 @@ const bundles = [
       { day: "2026-09-29", gameType: "bar_trivia" },
       { day: "2026-10-01", gameType: "average_fan" },
       { day: "2026-09-17", gameType: "keep_4_cut_4" },
+    ],
+  },
+  {
+    // The October 27 Wavelength board requires two canonical rounds; importing
+    // unrelated Football question banks can exceed the Edge CPU allocation.
+    label: "Football Wavelength Daily lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWavelength.ts"),
+    fileName: "football-wavelength-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smokes: [
+      { day: "2026-10-27", gameType: "wavelength", scheduleVersion: "football-daily-v22-higher-lower-oct27" },
     ],
   },
   {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { footballPersonIdentityKnowledgeRecords } from "./footballPersonIdentityKnowledge";
 import { ufcFactualExpansion, ufcFactualLedgerSubjects } from "./ufcFactualLedger";
+import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import {
   getUfcPersonIdentityFactSources,
   getUfcPersonIdentityKnowledge,
@@ -118,26 +119,39 @@ function normalize(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+const promotedSubjectIds = new Set(
+  ufcFactualExpansion.subjects
+    .filter((subject) => canonicalRankingInputs.fighters.some(
+      (fighter) => `ufc:${fighter.presentation.slug}` === subject.id,
+    ))
+    .map((subject) => subject.id),
+);
+const expectedTotal = ufcFactualExpansion.targetTotalSubjects
+  + canonicalRankingInputs.counts.fighters
+  - ufcFactualExpansion.rankedSubjectCountAtGeneration
+  - promotedSubjectIds.size;
+
 describe("Who Am I PR10 UFC person identity knowledge", () => {
-  it("keeps the original PR10 research population while the canonical universe expands to 133", () => {
+  it("keeps the original PR10 research population while the canonical ranked universe expands", () => {
     const ledgerIds = ufcFactualLedgerSubjects.map((subject) => subject.id);
     const universeIds = getCanonicalUfcWhoAmIUniverse().candidates.map((candidate) => candidate.id);
     const originalIds = new Set<string>(EXPECTED_UFC_PR10_SUBJECT_IDS);
 
-    expect(ledgerIds).toHaveLength(133);
-    expect(universeIds).toHaveLength(133);
-    expect(new Set(ledgerIds).size).toBe(133);
-    expect(new Set(universeIds).size).toBe(133);
+    expect(ledgerIds).toHaveLength(expectedTotal);
+    expect(universeIds).toHaveLength(expectedTotal);
+    expect(new Set(ledgerIds).size).toBe(expectedTotal);
+    expect(new Set(universeIds).size).toBe(expectedTotal);
     for (const subjectId of EXPECTED_UFC_PR10_SUBJECT_IDS) {
       expect(ledgerIds).toContain(subjectId);
       expect(universeIds).toContain(subjectId);
     }
-    expect(ledgerIds.filter((subjectId) => !originalIds.has(subjectId))).toHaveLength(33);
+    expect(ledgerIds.filter((subjectId) => !originalIds.has(subjectId))).toHaveLength(expectedTotal - EXPECTED_UFC_PR10_SUBJECT_IDS.length);
     expect(ufcFactualLedgerSubjects.filter((subject) => subject.scope === "ranked-core"))
-      .toHaveLength(ufcFactualExpansion.rankedSubjectCountAtGeneration);
+      .toHaveLength(canonicalRankingInputs.counts.fighters);
 
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
-    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount);
+    expect(promotedSubjectIds).toEqual(new Set(["ufc:ciryl-gane"]));
+    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount - promotedSubjectIds.size);
     expect(expansion.every((subject) => subject.recognizabilityTier === "A")).toBe(true);
   });
 
@@ -206,6 +220,6 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
     expect(getUfcPersonIdentityKnowledge("ufc:not-a-real-launch-id")).toBeNull();
 
     expect(footballPersonIdentityKnowledgeRecords.length).toBeGreaterThan(0);
-    expect(getCanonicalUfcWhoAmIUniverse().candidates).toHaveLength(133);
+    expect(getCanonicalUfcWhoAmIUniverse().candidates).toHaveLength(expectedTotal);
   });
 });
