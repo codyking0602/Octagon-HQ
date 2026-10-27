@@ -1,2 +1,14 @@
-// Read-only, single-game action boundary. This module never publishes boards.
-export { advanceFootballHigherLowerDailyRuntime as advanceOfficialDailyGameRuntime } from "../footballHigherLowerDailyRuntime";
+import { advanceFootballHigherLowerDailyRuntime } from "../footballHigherLowerDailyRuntime";
+import { advanceTwoGameDailyRuntime, isTwoGameDailyContext } from "../dailyTwoGameRuntime";
+import type { OfficialDailyRuntimeContext, OfficialDailyAdvanceResult } from "../todaysChallengeRuntime";
+function record(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Football Higher or Lower action must be an object.");
+  return value as Record<string, unknown>;
+}
+export function advanceOfficialDailyGameRuntime(context: OfficialDailyRuntimeContext, action: unknown): OfficialDailyAdvanceResult {
+  const advance = (child: OfficialDailyRuntimeContext, next: unknown) =>
+    advanceFootballHigherLowerDailyRuntime(child, record(next));
+  return isTwoGameDailyContext(context)
+    ? advanceTwoGameDailyRuntime(context, action, advance, (_child, result) => Number(result.publicState.correct_count) * 10)
+    : advance(context, action);
+}
