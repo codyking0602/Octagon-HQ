@@ -11,6 +11,8 @@ import {
   footballFindLeaderCompetitionAudit,
   footballFindLeaderCanonicalMetricByMetric,
   footballFindLeaderEnabledMetricDefinitions,
+  footballFindLeaderFeaturedMetricDefinitions,
+  footballFindLeaderFeaturedQuestions,
   footballFindLeaderMetricQuality,
   footballFindLeaderMetricRows,
   footballFindLeaderPools,
@@ -27,6 +29,7 @@ import {
 } from "./footballFactualStats";
 import {
   FOOTBALL_FIND_LEADER_METRIC_COUNT,
+  FOOTBALL_FIND_LEADER_FEATURED_METRIC_IDS,
   footballFindLeaderMetricDefinitions,
   footballFindLeaderMetricEditoriallyEligible,
 } from "./footballFindLeaderStats";
@@ -55,6 +58,36 @@ describe("Football Find the Leader maturity", () => {
     expect(new Set(footballFindLeaderQuestions.map((question) => question.id)).size).toBe(footballFindLeaderQuestions.length);
     expect(new Set(footballFindLeaderQuestions.map((question) => question.metricId)).size).toBe(footballFindLeaderEnabledMetricDefinitions.length);
     expect(new Set(footballFindLeaderQuestions.map((question) => question.family))).toEqual(new Set(FOOTBALL_FIND_LEADER_FAMILY_CYCLE));
+  });
+
+  it("surfaces only 21 genuinely interesting metrics while preserving the older catalog", () => {
+    const active = new Set(footballFindLeaderFeaturedMetricDefinitions.map((row) => row.id));
+    expect(FOOTBALL_FIND_LEADER_FEATURED_METRIC_IDS).toHaveLength(21);
+    expect(active).toEqual(new Set(FOOTBALL_FIND_LEADER_FEATURED_METRIC_IDS));
+    expect(footballFindLeaderFeaturedQuestions).toHaveLength(42);
+    expect(footballFindLeaderQuestions.length).toBeGreaterThan(42);
+    expect([...active].filter((id) => id.startsWith("cfb-"))).toHaveLength(8);
+    for (const muted of [
+      "qb-games", "qb-attempts", "qb-td-int-ratio", "rb-games",
+      "rb-receiving-touchdowns", "nfl-team-wins",
+      "cfb-srs", "cfb-sos", "cfb-team-season-wins",
+    ]) {
+      expect(active.has(muted), muted).toBe(false);
+    }
+    for (const question of footballFindLeaderFeaturedQuestions) {
+      expect(buildFootballFindLeaderBoard(question, `featured|${question.id}`, "featured"), question.id).not.toBeNull();
+    }
+  });
+
+  it("compares different NFL quarterbacks' best seasons on featured lineups", () => {
+    for (const metricId of ["qb-season-passing-yards", "qb-season-passing-touchdowns"]) {
+      const definition = footballFindLeaderFeaturedQuestions.find((row) => row.metricId === metricId)!;
+      const board = buildFootballFindLeaderBoard(definition, `peak-season|${metricId}`, "featured")!;
+      expect(board.candidates).toHaveLength(10);
+      expect(new Set(board.candidates.map((row) => row.displayName ?? row.name)).size).toBe(10);
+      expect(board.candidates.every((row) => typeof row.season === "number")).toBe(true);
+      expect(buildFootballFindLeaderBoard(definition, `peak-season|${metricId}`)).not.toBeNull();
+    }
   });
 
   it("reuses immutable metric rows instead of rebuilding deep projected pools", () => {
@@ -333,8 +366,8 @@ describe("Football Find the Leader maturity", () => {
     console.info("Find the Leader 1,000-board balanced-domain audit", JSON.stringify(audit));
     expect(audit.cfbShare).toBe(0.5);
     expect(audit.uniqueUnorderedBoardShare).toBeGreaterThan(0.6);
-    expect(audit.metricsSeen).toBeGreaterThanOrEqual(44);
-    expect(audit.definitionsSeen).toBeGreaterThanOrEqual(79);
+    expect(audit.metricsSeen).toBeGreaterThanOrEqual(18);
+    expect(audit.definitionsSeen).toBeGreaterThanOrEqual(35);
     expect(audit.subjectsSeen).toBeGreaterThan(100);
     expect(audit.cfbSubjectsSeen).toBeGreaterThan(35);
 
@@ -344,10 +377,8 @@ describe("Football Find the Leader maturity", () => {
       "nfl-defense-career",
       "nfl-rb-career",
       "nfl-qb-season",
-      "nfl-team-season",
     ] as const) {
-      expect(audit.domainShare[domainId], domainId).toBeGreaterThanOrEqual(0.083);
-      expect(audit.domainShare[domainId], domainId).toBeLessThanOrEqual(0.084);
+      expect(audit.domainShare[domainId], domainId).toBe(0.1);
     }
 
     for (const domainId of [
@@ -355,9 +386,8 @@ describe("Football Find the Leader maturity", () => {
       "cfb-player-receiving",
       "cfb-coach-career",
       "cfb-champion-season",
-      "cfb-team-season",
     ] as const) {
-      expect(audit.domainShare[domainId], domainId).toBe(0.1);
+      expect(audit.domainShare[domainId], domainId).toBe(0.125);
     }
   });
 });

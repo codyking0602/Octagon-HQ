@@ -13,14 +13,14 @@ const emptyHistory: PlayLineupHistory = {
 };
 
 describe("Football Find the Leader expanded-domain regressions", () => {
-  it("surfaces the broader CFB team-season pool on its deterministic rotation slot", () => {
+  it("excludes low-interest team-win questions from new replay rotations", () => {
     const board = createFootballFindLeaderBoard(
       "football-find-leader-aaaaaaaa-aaaa-4aaa-8aaa-abcd00000009",
       emptyHistory,
     );
 
-    expect(board.domainId).toBe("cfb-team-season");
-    expect(board.metricId).toBe("cfb-team-season-wins");
+    expect(board.domainId).not.toBe("cfb-team-season");
+    expect(board.metricId).not.toBe("cfb-team-season-wins");
     expect(board.candidates).toHaveLength(10);
   });
 
