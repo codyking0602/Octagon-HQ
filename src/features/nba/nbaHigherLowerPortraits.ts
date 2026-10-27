@@ -71,6 +71,12 @@ export function nbaPortraitSource(subject: Pick<NbaHigherLowerSubject, "name" | 
   return subject.nbaId == null ? null
     : "https://cdn.nba.com/headshots/nba/latest/1040x760/" + subject.nbaId + ".png";
 }
+/** Alternate NBA-ID keyed CDN for browser-level NBA CDN failures.
+ * The player ID is preserved; never substitute an arbitrary player's picture. */
+export function nbaPortraitBackupSource(primary: string | null): string | null {
+  const match = /^https:\/\/cdn\.nba\.com\/headshots\/nba\/latest\/1040x760\/(\d+)\.png$/.exec(primary ?? "");
+  return match ? "https://datadunkstorage.blob.core.windows.net/headshots/" + match[1] + ".png" : null;
+}
 /** Backwards-compatible game-specific name; no second portrait registry. */
 export const nbaHigherLowerPortraitSource = nbaPortraitSource;
 /**
