@@ -386,3 +386,9 @@ Ten NFL legacy positions previously outside the intervention ledger received act
 ### October 27 — Five retained Heisman candidates source-reviewed
 
 Five CFB retained legacy-preview positions have now received explicit Heisman Trophy Trust citations, independently reconciled original answer alternatives, and substantive future-preview-only explanations: Burrow (2019), Bryce Young award chronology (2021), Winston (2013), Smith (2020), and Jason White (2003). The legacy published seeds are unchanged. Individual entry counts: **275 provisional KEEP, 0 HOLD out of 275 tracked coordinates**; 85 retained coordinates not individually cleared. Full active selector cross-game review, 45 complete ladders, and exact-head CI remain unresolved. No merge/deploy.
+
+### October 27 — Five further CFB Heisman source and explanation checks
+
+Five additional retained original questions now have source-backed preview-only explanation records for the 2008 (Sam Bradford), 2014 (Marcus Mariota), 2015 (Derrick Henry), 2022 (Caleb Williams) and 2023 (Jayden Daniels) Heisman Trophy winners, retaining source prompts and four choices while replacing generic answer reveals. The Heisman Trust winner archive supports award years and schools, and existing preview regressions protect all five. No historical source-bank seed or published result changed.
+
+The existing individual-review/intervention ledger has **280 distinct provisional KEEP entries, 0 HOLD** across the 360 effective candidates. **80 retained legacy positions are still outside the reviewed ledger**, and exhaustive source/distractor checks of those retained positions, whole-run game-quality approval for 45 eight-question runs, semantic collision clearance against active Fan/Feud/Trivia, and exact-head CI remain outstanding. Preview-only, Draft, no merge/deploy.
