@@ -26,4 +26,17 @@ describe("October 27 Football Daily rollover CPU-limit regression", () => {
     expect(bundler).toContain('day: "2026-10-27", gameType: "wavelength"');
     expect(deploy).toContain("test -f supabase/functions/daily-challenge-runtime/" + lean);
   });
+  it("uses a separately bundled canonical Wavelength scorer for answers", () => {
+    const edge = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
+    const bundler = readFileSync("scripts/bundle-daily-challenge-runtime.mjs", "utf8");
+    const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
+    const lean = "football-wavelength-advance.generated.mjs";
+    expect(edge).toContain('import("./' + lean + '")');
+    expect(edge).toContain('context.gameType === "wavelength" && !isDailyCombo(context)');
+    expect(edge).toContain('advanceFootballWavelengthDailyRuntime');
+    expect(bundler).toContain('entry: resolve(repoRoot, "src/features/play/footballWavelengthDailyAdvance.ts")');
+    expect(bundler).toContain('fileName: "' + lean + '"');
+    expect(deploy).toContain("test -f supabase/functions/daily-challenge-runtime/" + lean);
+  });
+
 });
