@@ -44,7 +44,14 @@ export function loadFromAuthority(){
   const fileNames=[...new Set([...authority.matchAll(/wheel-nfl-(?:qb|rb|wr|te|front-seven|secondary)-grades-\d{4}-\d\d-\d\d\.json/g)]
     .map(m=>m[0]))];
   if(fileNames.length!==6)throw new Error("Expected exactly six current NFL grade authority files");
-  const grades=fileNames.flatMap(file=>read("data/generated/football/"+file).grades);
+  const familyForFile=file=>{
+    if(file.includes("-front-seven-"))return "Front Seven";
+    if(file.includes("-secondary-"))return "Secondary";
+    const tag=file.match(/wheel-nfl-(qb|rb|wr|te)-grades-/)?.[1];
+    return {qb:"QB",rb:"RB",wr:"WR",te:"TE"}[tag]??null;
+  };
+  const grades=fileNames.flatMap(file=>read("data/generated/football/"+file).grades
+    .map(row=>({...row,family:familyForFile(file)})));
   const contractsPath=authority.match(/contractFile:\s*"([^"]+)"/)?.[1];
   if(!contractsPath)throw new Error("Missing canonical NFL contract file binding");
   const contracts=read("data/generated/football/"+contractsPath).players;
