@@ -552,12 +552,13 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:5:3": {
-    id: "millionaire-ufc-future-rewrite-r6-q4",
-    type: "welterweight-title-knockouts", prompt: "Who knocked out Jorge Masvidal in the second round of their UFC 261 title rematch?",
-    choices: ["Kamaru Usman","Colby Covington","Gilbert Burns","Leon Edwards"], answer: "Kamaru Usman",
-    statSheet: "The championship rematch finished at 1:02 of Round 2 in Jacksonville.", explanation: "Kamaru Usman knocked out Jorge Masvidal at 1:02 of Round 2 in the UFC 261 main event in April 2021, defending his welterweight title.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/ufc-261-usman-vs-masvidal-2-zhang-namajunas-results-highlights-interviews-winners", supportingDetail: "Kamaru Usman knocked out Jorge Masvidal at 1:02 of Round 2 in the UFC 261 main event in April 2021, defending his welterweight title." }],
-  },
+    id: "millionaire-ufc-future-rewrite-jack-della-maddalena-burns-299-q4",
+    type: "welterweight-contender-finishes", prompt: "Who stopped Gilbert Burns with a knee and follow-up elbows in Round 3 at UFC 299?",
+    choices: ["Jack Della Maddalena", "Sean Brady", "Khamzat Chimaev", "Belal Muhammad"], answer: "Jack Della Maddalena",
+    statSheet: "The March 2024 Miami bout ended at 3:43 of the final round of the scheduled three.",
+    explanation: "Jack Della Maddalena knocked out Gilbert Burns at 3:43 of Round 3 at UFC 299 on March 9, 2024, landing a knee during a takedown attempt and following with elbows for the stoppage.",
+    evidence: [{ authority: "UFC 299 official main-card results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2", supportingDetail: "The official UFC recap confirms a Jack Della Maddalena knockout over Gilbert Burns with a knee and elbows at 3:43 of Round 3." }],
+  }
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:5:4": {
     id: "millionaire-ufc-future-rewrite-r6-q5",
@@ -873,12 +874,13 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{authority: "UFC 216 official event recap", url: "https://www.ufc.com/news/ferguson-claims-interim-lightweight-belt-calls-out-mcgregor", supportingDetail: "Tony Ferguson submitted Kevin Lee by triangle choke in the third round at UFC 216 on October 7, 2017, to claim the interim lightweight championship. It marked Ferguson's tenth consecutive win in the promotion."}],
   },
   "ufc:3:1": {
-    id: "millionaire-ufc-future-retained-joanna-loss-namajunas-217-q2", type: "strawweight-title-upsets",
-    prompt: "Which previously unbeaten champion did Rose Namajunas knock out to capture the strawweight belt at UFC 217?",
-    choices: ["Joanna Jedrzejczyk", "Jessica Andrade", "Zhang Weili", "Carla Esparza"], answer: "Joanna Jedrzejczyk",
-    statSheet: "The Madison Square Garden upset came at 3:03 of Round 1 in November 2017.", explanation: "Rose Namajunas knocked out then-unbeaten strawweight champion Joanna Jędrzejczyk at 3:03 of the first round at UFC 217 on November 4, 2017, breaking one of the division's longest reigning champions' streaks.",
-    evidence: [{ authority: "UFC 217 results", url: "https://www.ufc.com/news/ufc-217-bisping-vs-st-pierre-final-results", supportingDetail: "Rose Namajunas knocked out then-unbeaten strawweight champion Joanna Jędrzejczyk at 3:03 of the first round at UFC 217 on November 4, 2017, breaking one of the division's longest reigning champions' streaks." }],
-  },
+    id: "millionaire-ufc-future-retained-jones-gustafsson-232-q2", type: "light-heavyweight-title-rematches",
+    prompt: "Who stopped Alexander Gustafsson in Round 3 of their UFC 232 rematch to reclaim the light heavyweight title?",
+    choices: ["Jon Jones", "Daniel Cormier", "Anthony Smith", "Glover Teixeira"], answer: "Jon Jones",
+    statSheet: "The December 2018 bout in Inglewood followed their acclaimed five-round meeting in 2013.",
+    explanation: "Jon Jones stopped Alexander Gustafsson at 2:02 of Round 3 in their December 29, 2018 UFC 232 rematch, regaining the vacant light heavyweight championship five years after their first title-fight meeting.",
+    evidence: [{ authority: "UFC 232 official main-event report", url: "https://www.ufc.com/news/ufc-232-main-event-report", supportingDetail: "UFC confirms Jones stopped Gustafsson at 2:02 of the third round to reclaim the vacant 205-pound title at UFC 232." }],
+  }
   "ufc:3:2": {
     id: "millionaire-ufc-future-retained-couture-first-two-divisions-q3", type: "two-weight-champions",
     prompt: "Who became the first UFC athlete to win championships in both heavyweight and light heavyweight?",
