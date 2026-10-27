@@ -39,3 +39,23 @@ test("missing source files remain explicit blockers, not unchanged",()=>{
     assert.equal(r.counts.uniqueReviewCandidates,0);
   }finally{rmSync(root,{recursive:true,force:true});}
 });
+
+test("contract age metadata is counted but never treated as an editorial candidate",()=>{
+  const root=mkdtempSync(join(tmpdir(),"nfl-biweekly-metadata-"));
+  try{
+    const input=join(root,"input"),output=join(root,"report.json");
+    const put=(name,value)=>{const path=join(input,name);mkdirSync(dirname(path),{recursive:true});writeFileSync(path,JSON.stringify(value));};
+    put("contracts/comparison.json",{status:"contract-fact-review-required",sourceIdentityCompletenessCertified:true,
+      changes:[
+        {team:"DET",player:"Jared Goff",reviewKind:"metadata-only",differences:["age"]},
+        {team:"DAL",player:"Dak Prescott",reviewKind:"contract-fact",differences:["salaryApy"]}
+      ],transfers:[],summary:{changed:2,materialChanged:1,metadataOnly:1,missing:0,extra:0}});
+    execFileSync(process.execPath,[script,input,output],{stdio:"pipe"});
+    const report=JSON.parse(readFileSync(output,"utf8"));
+    assert.equal(report.counts.contractMaterialChanges,1);
+    assert.equal(report.counts.contractMetadataOnly,1);
+    assert.equal(report.counts.contractChanges,1);
+    assert.equal(report.counts.uniqueReviewCandidates,1);
+    assert.equal(report.reviewCandidates[0].name,"Dak Prescott");
+  }finally{rmSync(root,{recursive:true,force:true});}
+});
