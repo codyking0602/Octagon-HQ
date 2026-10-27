@@ -253,8 +253,8 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(newer.prompt).not.toContain("drafted");
   });
 
-  it("checks five historical CFB Heisman candidates against the official winners list", () => {
-    for (const [key, winner] of [["cfb:0:0","Joe Burrow"],["cfb:0:3","Bryce Young"],["cfb:1:1","Jameis Winston"],["cfb:2:1","DeVonta Smith"],["cfb:3:1","Jason White"]] as const) {
+  it("checks four retained historical CFB Heisman candidates against official winners", () => {
+    for (const [key, winner] of [["cfb:0:0","Joe Burrow"],["cfb:1:1","Jameis Winston"],["cfb:2:1","DeVonta Smith"],["cfb:3:1","Jason White"]] as const) {
       const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
       expect(q.answer).toBe(winner);
       expect(q.choices).toHaveLength(4);
@@ -264,6 +264,26 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       expect(q.explanation).toContain(winner);
       expect(q.evidence[0]?.url).toBe("https://www.heisman.com/heisman-winners/");
     }
+  });
+
+  it("keeps the CFB opening ladder original and source-backed after removing extra Heisman facts", () => {
+    const iron = MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:0:3"]!;
+    const passing = MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:0:5"]!;
+    expect(iron.answer).toBe("Auburn");
+    expect(iron.prompt).toContain("2019 Iron Bowl");
+    expect(iron.choices).toEqual(["Auburn", "LSU", "Tennessee", "Ole Miss"]);
+    expect(iron.evidence[0]?.url).toBe("https://auburntigers.com/news/2019/12/01/auburn-wins-wild-iron-bowl-48-45");
+    expect(passing.answer).toBe("Bailey Zappe");
+    expect(passing.prompt).toContain("5,967");
+    expect(passing.choices).toEqual(["Bailey Zappe", "B.J. Symons", "Case Keenum", "Graham Harrell"]);
+    expect(passing.evidence[0]?.url).toBe("https://conferenceusa.com/news/2021/12/18/football-zappes-record-setting-day-leads-wku-to-boca-raton-bowl-win-59-38.aspx");
+    for (const q of [iron, passing]) {
+      expect(q.choices.filter(v => v === q.answer)).toHaveLength(1);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(q.answer));
+      expect(q.explanation.length).toBeGreaterThan(170);
+    }
+    expect(millionaireDailyRun("cfb", 0)[3]!.id).not.toBe(iron.id);
+    expect(millionaireDailyRun("cfb", 0)[5]!.id).not.toBe(passing.id);
   });
 
   it("verifies five sourced college Heisman previews", () => {
