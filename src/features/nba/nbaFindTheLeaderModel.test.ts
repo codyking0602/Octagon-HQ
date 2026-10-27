@@ -92,7 +92,7 @@ describe("NBA Find the Leader factual and gameplay quality", () => {
       // Historical snapshots may supply name/season but no nbaId.
       const portrait = nbaFindLeaderHeadshot({ name, season, nbaId: null });
       expect(portrait).toBe(nbaFindLeaderHeadshot({ name, nbaId: null }));
-      if (["Michael Finley", "Tim Hardaway", "Glen Rice", "Jerry Stackhouse"].includes(name)) {
+      if (["Clyde Drexler", "Michael Finley", "Tim Hardaway", "Glen Rice", "Jerry Stackhouse"].includes(name)) {
         expect(portrait).not.toContain("/headshots/nba/latest/");
       } else {
         expect(portrait).toBe(`https://cdn.nba.com/headshots/nba/latest/1040x760/${id}.png`);
