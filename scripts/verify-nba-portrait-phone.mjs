@@ -167,6 +167,11 @@ const browser = spawn(chrome, [
   "--no-sandbox",
   "--disable-dev-shm-usage",
   "--disable-gpu",
+  // GitHub Ubuntu Chrome intermittently rejects NBA CDN h2 streams with
+  // ERR_HTTP2_PROTOCOL_ERROR although independent remote-image audit passes.
+  // Force HTTP/1.1 in the render fixture; image URLs, pixels and actual React
+  // game components remain unchanged and must all decode successfully.
+  "--disable-http2",
   "--remote-allow-origins=*",
   `--remote-debugging-port=${debugPort}`,
   `--user-data-dir=${profileDir}`,
