@@ -158,20 +158,20 @@ async function main(){
     "data/curated/football/gm-nfl-development-profiles-2026-10-07.json","utf8")).profiles;
   if(profiles.length!==594)throw new Error("GM development profile census incomplete");
   const authority=readFileSync("src/features/back-room/wheelFootballNflCurrentAuthority.ts","utf8");
-  const files=[...new Set([...authority.matchAll(/wheel-nfl-(?:qb|rb|wr|te|front-seven|secondary)-grades-\\d{4}-\\d\\d-\\d\\d\\.json/g)].map(x=>x[0]))];
+  const files=[...new Set([...authority.matchAll(/wheel-nfl-(?:qb|rb|wr|te|front-seven|secondary)-grades-\d{4}-\d\d-\d\d\.json/g)].map(x=>x[0]))];
   if(files.length!==6)throw new Error("Current GM grade authority bindings are incomplete");
   const currentGrades=files.flatMap(name=>JSON.parse(readFileSync("data/generated/football/"+name,"utf8")).grades);
-  const contractsFile=authority.match(/contractFile:\\s*"([^"]+)"/)?.[1];
+  const contractsFile=authority.match(/contractFile:\s*"([^"]+)"/)?.[1];
   if(!contractsFile)throw new Error("GM contracts binding is missing");
   const contracts=JSON.parse(readFileSync("data/generated/football/"+contractsFile,"utf8")).players;
   report.developmentReview=flagDevelopmentProfiles(profiles,report.flags,currentGrades,contracts,report.rosterHints);
   mkdirSync(dirname(baselinePath),{recursive:true});
   mkdirSync(dirname(output),{recursive:true});
-  if(!hadBaseline)writeFileSync(baselinePath,JSON.stringify(baseline,null,2)+"\\n");
+  if(!hadBaseline)writeFileSync(baselinePath,JSON.stringify(baseline,null,2)+"\n");
   if(args.next) {
     const nextPath=resolve(args.next);
     mkdirSync(dirname(nextPath),{recursive:true});
-    writeFileSync(nextPath,JSON.stringify(current,null,2)+"\\n");
+    writeFileSync(nextPath,JSON.stringify(current,null,2)+"\n");
   }
   writeFileSync(output,JSON.stringify(report,null,2)+"\n");
   console.log(JSON.stringify({baselineCreated:!hadBaseline,compared:report.currentCount,
