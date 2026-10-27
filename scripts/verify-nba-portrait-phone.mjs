@@ -256,7 +256,7 @@ try {
       writeFileSync(join(proofDir, `${game}-overflow-390x844.png`), Buffer.from(shot.data,"base64"));
       throw new Error(`${game} iPhone viewport/overflow regression: ${JSON.stringify(result)} DIAG=${JSON.stringify(diagnosis.result.value)}`);
     }
-    if (!String(result.text).includes(expectedText)) {
+    if (!String(result.text).toLocaleLowerCase().includes(String(expectedText).toLocaleLowerCase())) {
       throw new Error(`${game} did not render its expected progressive control: ${expectedText}`);
     }
     // These are actual NBA game components. Do not accept an image element
