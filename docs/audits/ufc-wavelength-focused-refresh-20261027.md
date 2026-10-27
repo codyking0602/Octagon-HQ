@@ -66,3 +66,13 @@ Per owner direction, **no previously approved clue rating was lowered just to re
 Retired on qualitative grounds rather than score: `wl-personality-and-promotion-166`, `wl-crossover-and-celebrity-399`, `wl-crossover-and-celebrity-378`, `wl-events-and-fights-104`, `wl-ufc-culture-408`, `wl-venue-and-atmosphere-128`, `wl-venue-and-atmosphere-142`. Reasons: Jon Anik broadcast overlap; two redundant White House/presidential promotion questions; generic 'strong co-main' and 'great nicknames' abstractions; two overlapping Apex-atmosphere questions. All retired records keep their original ratings and texts for historical official games. New calibrated prompts have distinct IDs `wl-ufc-balance-521` through `wl-ufc-balance-632`. Catalog version advances to v4 while v3 and prior versions remain historical. No generator, targets, scoring or published results change.
 
 This distribution describes editorial subject selection, not an arbitrary desired quota or an instruction to downgrade excellent achievements. Ratings remain subjective UFC-context judgments.
+
+
+## Owner feedback — recognizable low-end examples
+
+On October 27, the owner rejected the two newly added weak-card rewatch prompts as requiring niche fight/card knowledge, while approving the other eight showcased calibration examples. Accordingly, `wl-ufc-balance-553` (Namajunas–Esparza II's rewatch appeal, 6) and `wl-ufc-balance-555` (UFC 149 main-card entertainment, 14) are **retired without rewriting their IDs or ratings**. They remain readable for already-published sessions. New approved replacements, both easily recognizable and self-explanatory even to fans who do not remember specific undercards, are:
+
+- `wl-ufc-balance-633` — The UFC 229 Khabib–McGregor post-fight brawl as sportsmanship — **5**. [UFC official event recap](https://www.ufc.com/news/khabib-smothers-mcgregor-defends-title-ufc-229-main-event?language_content_entity=en).
+- `wl-ufc-balance-634` — The McGregor–Poirier III leg-injury stoppage as a satisfying trilogy ending — **12**. [UFC official results](https://www.ufc.com/news/ufc-264-poirier-vs-mcgregor-3-results-wonderboy-burns-highlights-interviews-winners).
+
+**Active 605 clues remain unchanged in number and overall rating bands.** Total stored IDs 635: 605 approved, 29 retired, 1 quarantined. No changes to the other eight showcased clues, any approved legacy rating, gameplay, calendar, scoring, or previous submissions. Catalog v5 preserves v4 in the historical version list. The selection principle is *recognizable UFC situations before obscure card/trivia recall*.
