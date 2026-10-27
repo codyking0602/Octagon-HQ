@@ -5,6 +5,7 @@ on:
       - verify/ufc-oct31-live-portraits-20261027
     paths:
       - scripts/verify_oct31_ufc_live_portraits.py
+      - .github/workflows/verify-ufc-oct31-live-portraits.yml
 permissions:
   contents: read
 jobs:
