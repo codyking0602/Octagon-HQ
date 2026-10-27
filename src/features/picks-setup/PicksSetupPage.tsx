@@ -18,6 +18,7 @@ import {
 import { PicksSpotlightSetup } from "./PicksSpotlightSetup";
 import {
   compareUfcPrepToSource,
+  effectiveUfcPrepStatus,
   prepAssetSummary,
   preparedMainEventSpotlight,
   type UfcPickPrep,
@@ -248,6 +249,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
   );
   const prepChanges = useMemo(() => compareUfcPrepToSource(prep, sourcePreview), [prep, sourcePreview]);
   const prepSummary = useMemo(() => prepAssetSummary(prep), [prep]);
+  const prepStatus = useMemo(() => effectiveUfcPrepStatus(prep), [prep]);
 
   async function runAction<T>(key: string, action: () => Promise<T>, reload = true) {
     setBusyAction(key);
@@ -467,13 +469,13 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
       ) : null}
 
       {identity.profile && !loading ? (
-        <section className={`surface-card picks-setup-prep is-${prep?.status ?? "missing"}`} aria-label="UFC prep status">
+        <section className={`surface-card picks-setup-prep is-${prepStatus ?? "missing"}`} aria-label="UFC prep status">
           <div className="picks-setup-prep__heading">
             <div>
               <p className="eyebrow">UFC PREP</p>
               <h2>{prep ? prep.eventName : "No prep package yet"}</h2>
             </div>
-            <strong>{prep ? prep.status.replace("-", " ").toUpperCase() : "NOT PREPARED"}</strong>
+            <strong>{prepStatus ? prepStatus.replace("-", " ").toUpperCase() : "NOT PREPARED"}</strong>
           </div>
           {prep ? (
             <>
