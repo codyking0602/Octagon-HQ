@@ -8,7 +8,7 @@ declare
 begin
   with expected(team_code,position_group,name_key,display_name,old_grade,prior_date) as (
     values
-    ('ATL','QB','michaelpenix','Michael Penix Jr.',78,date '2026-10-03'),
+    ('ATL','QB','michaelpenixjr','Michael Penix Jr.',78,date '2026-10-03'),
     ('CAR','QB','bryceyoung','Bryce Young',83,date '2026-10-08'),
     ('DAL','QB','dakprescott','Dak Prescott',92,date '2026-10-03'),
     ('SEA','QB','samdarnold','Sam Darnold',88,date '2026-10-03'),
@@ -38,7 +38,7 @@ begin
   if exists (
     with expected(team_code,position_group,name_key) as (
       values
-      ('ATL','QB','michaelpenix'),
+      ('ATL','QB','michaelpenixjr'),
       ('CAR','QB','bryceyoung'),
       ('DAL','QB','dakprescott'),
       ('SEA','QB','samdarnold'),
@@ -58,7 +58,7 @@ end $preflight$;
 insert into private.wheel_football_grade_authority
 (team_code,position_group,name_key,display_name,hidden_grade,effective_date,grade_version,source_artifact)
 values
-  ('ATL','QB','michaelpenix','Michael Penix Jr.',84,date '2026-10-27','nfl-wheel-current-ability-oct27-eight-player-batch-v1','data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json'),
+  ('ATL','QB','michaelpenixjr','Michael Penix Jr.',84,date '2026-10-27','nfl-wheel-current-ability-oct27-eight-player-batch-v1','data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json'),
   ('CAR','QB','bryceyoung','Bryce Young',86,date '2026-10-27','nfl-wheel-current-ability-oct27-eight-player-batch-v1','data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json'),
   ('DAL','QB','dakprescott','Dak Prescott',88,date '2026-10-27','nfl-wheel-current-ability-oct27-eight-player-batch-v1','data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json'),
   ('SEA','QB','samdarnold','Sam Darnold',83,date '2026-10-27','nfl-wheel-current-ability-oct27-eight-player-batch-v1','data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json'),
@@ -73,7 +73,7 @@ declare
 begin
   with expected(team_code,position_group,name_key,display_name,new_grade,grade_date) as (
     values
-    ('ATL','QB','michaelpenix','Michael Penix Jr.',84,date '2026-10-27'),
+    ('ATL','QB','michaelpenixjr','Michael Penix Jr.',84,date '2026-10-27'),
     ('CAR','QB','bryceyoung','Bryce Young',86,date '2026-10-27'),
     ('DAL','QB','dakprescott','Dak Prescott',88,date '2026-10-27'),
     ('SEA','QB','samdarnold','Sam Darnold',83,date '2026-10-27'),
