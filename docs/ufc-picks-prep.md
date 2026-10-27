@@ -38,12 +38,14 @@ Any checked-in thumb and every checked-in Spotlight asset must be a true transpa
 
 ## Editorial contract
 
-Prepare a full Fight Spotlight package for every main-card fight:
+Prepare a full Fight Spotlight editorial package for **every main-card fight**, even when only the main event is attached automatically:
 
 - concise researched Fight Preview
 - Tale of the Tape: record, age, height, reach, stance
 - up to three meaningful matchup edges for each fighter
 - optional Watch Spotlight URLs
+
+All selected main-card bouts must have their own researched preview/tale-of-the-tape/edges in the prep record; an accurate main-event-only preview is **1 of 6**, not a complete six-fight editorial package. Only the main-event **pair of 626×800 fighter images** is required by default. All other main-card fighter Spotlight photos are optional unless a second title bout or explicitly approved featured fight requires them. Never report all 12 Spotlight photos as mandatory for an ordinary Fight Night.
 
 The main-event package is automatically attached when the verified card is staged. Other prepared main-card packages remain one-tap choices inside Event Setup.
 
@@ -73,8 +75,8 @@ Top-level row fields own event identity, scope, start time, status, and timestam
 
 Status meanings:
 
-- `ready`: card sources agree enough to prepare safely and all required main-event assets/editorial are ready.
-- `review-needed`: prep is usable but at least one card/odds/asset signal deserves owner review.
+- `ready`: card sources agree enough to prepare safely, every selected main-card fight has a verified researched preview, and all required main-event photos and assets are visually approved and deployed.
+- `review-needed`: prep is usable but at least one card/odds/asset signal deserves owner review or required media/editorial remains pending.
 - `blocked`: event identity or card scope cannot be established safely.
 
 ## Staging behavior
@@ -89,3 +91,11 @@ When a prep package exists, Event Setup does not stage on the first click.
 6. Never auto-publish.
 
 After staging, the existing Picks monitoring system remains the live change owner.
+
+## Asset batch recovery and visual review
+
+- A daily prep refresh must distinguish **existing production-ready media**, **newly generated but unmerged media**, **visually rejected media**, and **no approved official source found**. A generated GitHub file, a passing technical test, or an open PR does not make production `thumb_ready` or `spotlight_ready` true.
+- Use the existing official UFC/ESPN asset-ingest pipeline; never reuse an obsolete image from a rejected PR without confirming the fighter, cutout, crop, and source. Reprocess a bad fighter independently, not the entire batch. Failed source/processing manifests must produce a per-fighter error while valid batchmates continue to the review PR.
+- For each generated PR, inspect **every** actual WebP in addition to dimensions, alpha, silhouette, upper-body framing, and absence of leftover rectangular backgrounds. The automated gate catches obvious defects but cannot certify identity or visually perfect cutouts. Do **not** waive the human/photo visual gate solely to raise the prep count.
+- After review, verify exact PR head green; merge/deploy only on explicit authorization, then verify actual public media URLs and update the living preproduction package. When told not to touch main, **leave the PR and the prep database unchanged** unless separately authorized.
+- The setup display shows **thumbs ready**, **required main-event photos out of 2**, and **editorial previews out of main-card bouts**, with optional main-card Spotlight photos shown separately. Missing bookmaker-attributed odds and poster availability remain separate warning signals.

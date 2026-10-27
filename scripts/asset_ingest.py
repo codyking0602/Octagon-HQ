@@ -204,6 +204,139 @@ def crop_box(im, crop):
 
 
 
+def visible_subject_box(im):
+    """Ignore faint cutout haze when locating the actual fighter."""
+    alpha = im.getchannel("A")
+    solid = alpha.point(lambda value: 255 if value >= 48 else 0)
+    return solid.getbbox()
+
+
+def source_looks_clipped(im, kind):
+    """A subject touching the source boundary cannot be restored by padding it."""
+    alpha = im.getchannel("A")
+    width, height = im.size
+    top = alpha.crop((0, 0, width, 1))
+    if sum(value >= 48 for value in top.getdata()) > max(3, width * 0.08):
+        return "top of fighter is clipped by the source photo"
+    if kind == "spotlight":
+        bottom = alpha.crop((0, height - 1, width, height))
+        if sum(value >= 48 for value in bottom.getdata()) > max(3, width * 0.32):
+            return "bottom of fighter is clipped by the source photo"
+    return ""
+
+
+def render_thumb(im, size):
+    """Fit the upper body into a transparent bust tile; never square-crop away the head."""
+    box = visible_subject_box(im)
+    if not box:
+        fail("thumbnail has no visible fighter pixels")
+    subject = im.crop(box)
+    # Tall UFC fighter renders must not shrink the entire body into a tiny head.
+    # The human image review still owns final face framing and identity.
+    if subject.height > subject.width * 1.45:
+        subject = subject.crop((0, 0, subject.width, min(subject.height, round(subject.width * 1.45))))
+    horizontal_pad = round(size[0] * 0.025)
+    top_pad = round(size[1] * 0.035)
+    bottom_pad = round(size[1] * 0.025)
+    scale = min(
+        (size[0] - 2 * horizontal_pad) / subject.width,
+        (size[1] - top_pad - bottom_pad) / subject.height,
+    )
+    fitted = subject.resize(
+        (max(1, round(subject.width * scale)), max(1, round(subject.height * scale))),
+        Image.Resampling.LANCZOS,
+    )
+    canvas = Image.new("RGBA", size, (0, 0, 0, 0))
+    canvas.alpha_composite(fitted, ((size[0] - fitted.width) // 2, top_pad))
+    return canvas
+
+
+def validate_asset_quality(im, kind):
+    """Fail obvious background/framing defects, not merely absent alpha metadata."""
+    width, height = im.size
+    box = visible_subject_box(im)
+    if not box:
+        fail("finished image has no visible fighter")
+    alpha = im.getchannel("A")
+    pixels = list(alpha.getdata())
+    coverage = sum(value >= 48 for value in pixels) / len(pixels)
+    corners = [alpha.getpixel(pos) for pos in (
+        (0, 0), (width - 1, 0), (0, height - 1), (width - 1, height - 1)
+    )]
+    if sum(value < 48 for value in corners) < 3:
+        fail("fighter asset retains an opaque rectangular background")
+    if coverage > 0.82:
+        fail("fighter asset covers too much of the frame; likely background artifact")
+    if upper_side_background_band(im):
+        fail("fighter asset retains a rectangular upper-side background artifact")
+    if box[1] < max(2, round(height * 0.015)):
+        fail("fighter head has no top safety margin")
+    if (box[2] - box[0]) < width * 0.28 or (box[3] - box[1]) < height * 0.42:
+        fail("fighter portrait is too small or narrow for this tile")
+    return {
+        "alpha_coverage": round(coverage, 3),
+        "visible_bbox": list(box),
+    }
+
+
+
+def upper_side_background_band(im):
+    """Detect hard, broad upper-corner background strips common in UFC CDN art."""
+    alpha = im.getchannel("A")
+    width, height = im.size
+    sample_height = max(1, round(height * 0.60))
+    # Sample inside output padding as well as at the actual source side.
+    for x in (round(width * 0.045), round(width * 0.955)):
+        filled = sum(alpha.getpixel((x, y)) >= 128 for y in range(sample_height))
+        if filled / sample_height > 0.24:
+            return True
+    return False
+
+
+
+
+def remove_flat_side_backgrounds(im):
+    """Clear broad, nearly flat publisher rectangles without erasing photo detail.
+
+    These UFC/ESPN overlays survive ordinary ML cutout removal as solid gray/red
+    blocks adjoining a fighter's right or left silhouette. Only straight color
+    runs near an outer side are eligible; textured real-person pixels remain.
+    """
+    result = im.copy()
+    px = result.load()
+    width, height = result.size
+    min_run = max(24, round(width * 0.095))
+    search_depth = max(18, round(width * 0.05))
+    for y in range(height):
+        for side in ("left", "right"):
+            # Publisher blocks may be framed by a few antialiased fringe pixels.
+            for outer in range(search_depth):
+                x = outer if side == "left" else width - 1 - outer
+                r, g, b, a = px[x, y]
+                if a < 205:
+                    continue
+                direction = 1 if side == "left" else -1
+                run = []
+                pos = x
+                while 0 <= pos < width:
+                    cr, cg, cb, ca = px[pos, y]
+                    if ca < 160 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 6:
+                        break
+                    run.append(pos)
+                    pos += direction
+                if len(run) < min_run:
+                    continue
+                # Include narrow fringe between the block and transparent border.
+                end = max(run) if side == "left" else min(run)
+                positions = range(0, end + 2) if side == "left" else range(max(0, end - 1), width)
+                for ix in positions:
+                    rr, gg, bb, _ = px[ix, y]
+                    px[ix, y] = (rr, gg, bb, 0)
+                break
+    return result
+
+
+
 # Exact owner-approved Ciryl Gane profile photo (the same CBS frame supplied by
 # the owner). This single-source exception does NOT expand the general ESPN/UFC
 # source-host allowlist or affect transparent fighter thumbs/Spotlights.
@@ -296,7 +429,7 @@ def main():
     except Exception as exc:
         fail(f"cannot decode source image: {exc}")
 
-    if im.getchannel("A").getextrema() == (255, 255):
+    if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
         try:
             im = remove(im).convert("RGBA")
         except Exception as exc:
@@ -311,11 +444,16 @@ def main():
         except Exception as exc:
             fail(f"second background removal failed: {exc}")
 
+    im = remove_flat_side_backgrounds(im)
+
     if image_looks_like_silhouette(im):
         fail("source image looks like a placeholder/silhouette rather than a fighter photo")
 
     box = crop_box(im, spec.get("crop"))
     im = im.crop(box)
+    clipping = source_looks_clipped(im, kind)
+    if clipping:
+        fail(clipping)
 
     if kind == "spotlight":
         alpha = im.getchannel("A")
@@ -338,18 +476,11 @@ def main():
         canvas.alpha_composite(fitted, (left, top))
         im = canvas
     else:
-        target_ratio = size[0] / size[1]
-        ratio = im.width / im.height
-        if ratio > target_ratio:
-            new_width = round(im.height * target_ratio)
-            left = (im.width - new_width) // 2
-            im = im.crop((left, 0, left + new_width, im.height))
-        elif ratio < target_ratio:
-            new_height = round(im.width / target_ratio)
-            top = (im.height - new_height) // 2
-            im = im.crop((0, top, im.width, top + new_height))
+        im = render_thumb(im, size)
 
-        im = im.resize(size, Image.Resampling.LANCZOS)
+    # Publisher rectangles can sit inside the cutout's alpha silhouette rather
+    # than at its original image boundary. Re-check after subject placement too.
+    im = remove_flat_side_backgrounds(im)
 
     im = im.filter(
         ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2)
@@ -359,11 +490,9 @@ def main():
     im.save(dest, "WEBP", lossless=True, quality=100, method=6)
 
     check = Image.open(dest).convert("RGBA")
-    if (
-        check.size != size
-        or check.getchannel("A").getextrema() == (255, 255)
-    ):
+    if check.size != size or check.getchannel("A").getextrema() == (255, 255):
         fail("finished asset failed dimension/alpha gate")
+    quality = validate_asset_quality(check, kind)
 
     print(
         json.dumps(
@@ -372,6 +501,7 @@ def main():
                 "size": list(check.size),
                 "alpha_extrema": list(check.getchannel("A").getextrema()),
                 "source_host": urlparse(source_url).hostname,
+                "quality": quality,
             }
         )
     )
