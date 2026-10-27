@@ -85,10 +85,10 @@ describe("public Football/UFC Play 2.0 release", () => {
     });
     preview("football");
     const hub = screen.getByTestId("play-v2-hub");
-    // October 13 and October 20 each feature a two-franchise GM week.
-    // The previous Auction remains accessible separately under its archive route.
+    // October 13, October 20 and October 27 each feature a GM championship.
+    // Match the published October 27 weekly-card boundary exactly.
     const inGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z")
-      && Date.now() < Date.parse("2026-10-27T05:00:00Z");
+      && Date.now() < Date.parse("2026-11-03T06:00:00Z");
     expect(within(hub).getByRole("region", { name: "Weekly Featured Championship" }))
       .toHaveTextContent(inGmWeek ? "NFL GM Championship" : "Auction Center");
     expect(within(hub).getByRole("link", { name: /open current weekly/i }))
