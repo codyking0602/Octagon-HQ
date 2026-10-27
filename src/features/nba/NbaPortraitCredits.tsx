@@ -1,3 +1,4 @@
+import "./NbaPortraitCredits.css";
 import { nbaHigherLowerPortraitCredit } from "./nbaHigherLowerPortraits";
 
 /** Attribution stays with the displayed player whenever a CC-licensed
