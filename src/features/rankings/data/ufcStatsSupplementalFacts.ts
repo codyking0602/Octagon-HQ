@@ -20,7 +20,7 @@ const unreconciledFightSchema = z
         checkedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
       })
       .strict(),
-    reason: z.literal("no-unique-source-match"),
+    reason: z.union([z.literal("no-unique-source-match"), z.literal("source-export-predates-fight")]),
   })
   .strict();
 
