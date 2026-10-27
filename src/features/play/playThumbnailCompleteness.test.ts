@@ -124,7 +124,8 @@ describe("Play fighter thumbnail completeness", () => {
     expect(repaired).toHaveLength(46);
     for (const fighter of repaired) {
       const file = readFileSync(resolve(publicRoot, fighter.thumbUrl.replace(/^\//, "")));
-      const expectedSize = fighter.id === "dominick-reyes" ? 320 : 160;
+      // Picks shares the canonical 320px Mickey Gall portrait with Play; keep both sizes verified.
+      const expectedSize = ["dominick-reyes", "mickey-gall"].includes(fighter.id) ? 320 : 160;
       expect(readWebPDimensions(file), fighter.id).toEqual({ width: expectedSize, height: expectedSize });
       expect(file.byteLength, `${fighter.id} encoded quality`).toBeGreaterThanOrEqual(7_000);
       hashes.add(createHash("sha256").update(file).digest("hex"));

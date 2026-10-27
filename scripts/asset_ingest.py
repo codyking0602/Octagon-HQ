@@ -294,6 +294,49 @@ def upper_side_background_band(im):
 
 
 
+
+def remove_flat_side_backgrounds(im):
+    """Clear broad, nearly flat publisher rectangles without erasing photo detail.
+
+    These UFC/ESPN overlays survive ordinary ML cutout removal as solid gray/red
+    blocks adjoining a fighter's right or left silhouette. Only straight color
+    runs near an outer side are eligible; textured real-person pixels remain.
+    """
+    result = im.copy()
+    px = result.load()
+    width, height = result.size
+    min_run = max(24, round(width * 0.095))
+    search_depth = max(18, round(width * 0.05))
+    for y in range(height):
+        for side in ("left", "right"):
+            # Publisher blocks may be framed by a few antialiased fringe pixels.
+            for outer in range(search_depth):
+                x = outer if side == "left" else width - 1 - outer
+                r, g, b, a = px[x, y]
+                if a < 205:
+                    continue
+                direction = 1 if side == "left" else -1
+                run = []
+                pos = x
+                while 0 <= pos < width:
+                    cr, cg, cb, ca = px[pos, y]
+                    if ca < 160 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 6:
+                        break
+                    run.append(pos)
+                    pos += direction
+                if len(run) < min_run:
+                    continue
+                # Include narrow fringe between the block and transparent border.
+                end = max(run) if side == "left" else min(run)
+                positions = range(0, end + 2) if side == "left" else range(max(0, end - 1), width)
+                for ix in positions:
+                    rr, gg, bb, _ = px[ix, y]
+                    px[ix, y] = (rr, gg, bb, 0)
+                break
+    return result
+
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("manifest")
@@ -339,6 +382,8 @@ def main():
             im = remove(im).convert("RGBA")
         except Exception as exc:
             fail(f"second background removal failed: {exc}")
+
+    im = remove_flat_side_backgrounds(im)
 
     if image_looks_like_silhouette(im):
         fail("source image looks like a placeholder/silhouette rather than a fighter photo")
