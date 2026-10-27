@@ -20,7 +20,9 @@ concurrency:
 
 jobs:
   production-evidence:
-    if: github.event_name != 'schedule'
+    # Live nflverse census is a manual source-quality check, not a flaky PR gate.
+    # Madden weekly job below has its own deterministic PR unit-test gate.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 14
     steps:
