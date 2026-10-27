@@ -19,6 +19,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  packages: read
 
 concurrency:
   group: octagon-hq-supabase-v2
@@ -265,6 +266,7 @@ jobs:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
           SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+          GHCR_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
@@ -281,7 +283,26 @@ jobs:
             test -f supabase/functions/daily-challenge-runtime/football-wavelength-advance.generated.mjs
              test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs
+            # Authenticate before pulling the edge runtime image to avoid public GHCR throttling.
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          image="ghcr.io/supabase/edge-runtime:v1.74.2"
+          image_ready=false
+          for attempt in 1 2 3 4; do
+            if docker pull "$image"; then
+              image_ready=true
+              break
+            fi
+            if [ "$attempt" -lt 4 ]; then
+              echo "::warning title=GHCR image pull throttled::Retrying authenticated image pull (attempt $attempt of 4)."
+              sleep $((attempt * 10))
+            fi
+          done
+          if [ "$image_ready" = true ]; then
             supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-docker
+          else
+            echo "::warning title=GHCR image pull unavailable::Attempting Supabase API bundling without Docker."
+            supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+          fi
           else
             echo "daily-challenge-runtime is not present in this exact deployment source; skipping."
           fi
