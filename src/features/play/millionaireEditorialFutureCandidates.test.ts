@@ -15,6 +15,26 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+
+  it("keeps two official-source-backed career and coaching clues spoiler-safe", () => {
+    const brees = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:9:0"]!;
+    const leach = MILLIONAIRE_FUTURE_TARGETED_REWRITES["cfb:2:3"]!;
+    expect(brees.answer).toBe("Chargers");
+    expect(brees.prompt).toContain("Drew Brees");
+    expect(brees.statSheet).toContain("Comeback Player of the Year");
+    expect(brees.statSheet).not.toContain("California");
+    expect(leach.answer).toBe("Washington State");
+    expect(leach.statSheet).toContain("Air Raid");
+    expect(leach.statSheet).not.toContain("Washington");
+    for (const q of [brees, leach]) {
+      expect(q.evidence).toHaveLength(1);
+      expect(q.evidence[0]!.url.startsWith("https://")).toBe(true);
+      expect(q.explanation).toContain(q.answer);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet!)).not.toContain(normalized(q.answer));
+    }
+  });
+
   it("prevents late 2026 historical and roster errors in NFL CFB and UFC candidate repairs", () => {
     const broncos = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:3:4"]!;
     expect(broncos.answer).toBe("Malik Jackson");
