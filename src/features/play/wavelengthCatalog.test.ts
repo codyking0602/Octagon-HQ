@@ -35,7 +35,7 @@ function seeded(values: number[]) {
 
 describe("canonical Wavelength catalog", () => {
   it("meets approved size, uniqueness, rating, copy, and category-quality gates", () => {
-    expect(approvedWavelengthCatalog).toHaveLength(579);
+    expect(approvedWavelengthCatalog).toHaveLength(578);
     expect(new Set(approvedWavelengthCatalog.map((item) => item.id)).size).toBe(approvedWavelengthCatalog.length);
     expect(new Set(approvedWavelengthCatalog.map((item) => item.text.toLowerCase())).size).toBe(approvedWavelengthCatalog.length);
 
@@ -87,7 +87,7 @@ describe("canonical Wavelength catalog", () => {
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 40 && item.rating <= 60)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 75 && item.rating <= 89)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 90)).toBe(true);
-    expect(wavelengthCatalog.filter((item) => item.status === "retired")).toHaveLength(96);
+    expect(wavelengthCatalog.filter((item) => item.status === "retired")).toHaveLength(113);
     for (const id of ["wl-ufc-balance-553", "wl-ufc-balance-555"]) {
       expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
       expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
@@ -100,8 +100,18 @@ describe("canonical Wavelength catalog", () => {
       expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
       expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
     }
-    expect(approvedWavelengthCatalog.filter((item) => item.id.startsWith("wl-ufc-accessible-"))).toHaveLength(41);
-    expect(approvedWavelengthCatalog.every((item) => !/^UFC (40|129|149|189|217)'s /.test(item.text))).toBe(true);
+    expect(approvedWavelengthCatalog.filter((item) => item.id.startsWith("wl-ufc-accessible-"))).toHaveLength(57);
+    expect(approvedWavelengthCatalog.every((item) => !/^UFC (40|100|129|149|189|205|217|229|300)'s /.test(item.text))).toBe(true);
+    for (const id of [
+      "wl-events-and-fights-105", "wl-events-and-fights-106",
+      "wl-events-and-fights-107", "wl-events-and-fights-108",
+      "wl-coaches-and-camps-351", "wl-coaches-and-camps-355",
+      "wl-ufc-culture-099",
+    ]) {
+      expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
+      expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
+    }
+    expect(approvedWavelengthCatalog.every((item) => !/The Ultimate Fighter Season (?:5|6|7|8|12|14|16|20|24|25|26|27|29|30|32|33|34)'s /.test(item.text))).toBe(true);
     for (const id of ["wl-ufc-balance-633", "wl-ufc-balance-634"]) {
       expect(wavelengthClues.find((item) => item.id === id)).toMatchObject({ category: "EVENTS & FIGHTS" });
     }
