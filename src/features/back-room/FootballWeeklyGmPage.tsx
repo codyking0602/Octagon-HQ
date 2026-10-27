@@ -293,7 +293,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
               <details className="football-weekly-gm__scout-key">
                 <summary>WHAT DO THE SCOUTING BADGES MEAN?</summary>
                 <p><strong>ELITE / IMPACT</strong> describe current talent. Exact overall ratings stay hidden, just as in regular GM.</p>
-                <p><strong>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</strong> summarize player-specific development probabilities, not guaranteed improvement or decline. McCaffrey is the one permitted Decline Risk pick.</p>
+                <p><strong>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</strong> summarize player-specific development probabilities, not guaranteed improvement or decline.</p>
                 <p><strong>1YR</strong> means the salary reprices in the offseason; LOW / MED / HIGH REPRICE estimates the increase. <strong>3YR · SALARY LOCKED</strong> means the existing salary stays fixed over the three-season run.</p>
               </details>
               <div className="football-weekly-gm__picker-list" role="group" aria-label="Approved franchise starters">
