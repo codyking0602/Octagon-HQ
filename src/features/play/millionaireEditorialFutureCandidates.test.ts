@@ -470,6 +470,23 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("cfb", 0)[1]!.prompt).toContain("first College Football Playoff");
   });
 
+  it("uses modern facts instead of four older repetitive future questions", () => {
+    const expected = [
+      ["nfl", 13, 5, "DeVonta Smith"],
+      ["cfb", 14, 5, "Cam Skattebo"],
+      ["ufc", 13, 3, "Dricus du Plessis"],
+      ["ufc", 14, 6, "Ilia Topuria"],
+    ] as const;
+    for (const [league, index, level, winner] of expected) {
+      const question = millionaireFutureEditorialDailyRun(league, index)[level]!;
+      expect(answer(question)).toBe(winner);
+      expect(question.choices).toHaveLength(4);
+      expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
+      expect(question.explanation).toContain(winner);
+      expect(normalized(question.statSheet ?? "")).not.toContain(normalized(winner));
+    }
+  });
+
   it("protects source-checked draft revisions against accidental reversion", () => {
     const sourceChecked = [
       ["cfb", 10, 0, "Miami"],
