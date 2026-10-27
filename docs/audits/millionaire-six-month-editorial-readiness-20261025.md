@@ -228,3 +228,19 @@ Reordered two **future-only** candidates within NFL run 15: Myles Garrett's acce
 - **CFB future run 15 Q4 is HOLD:** Millionaire's question identifying 2025 Heisman winner Fernando Mendoza directly reuses an achievement already disclosed by a still-selectable Average Fan Mendoza transfer question. The 2025 Heisman ballot is source-confirmed; this is an originality/playability conflict, not a historical fact error.
 - **CFB future run 15 Q7 is HOLD:** Bar Trivia `cfb-easy2-crimson-tide` already tests the identical Kalen DeBoer Alabama coaching transition. A distinct source-confirmed alternative is Michigan running back Donovan Edwards' 41- and 46-yard rushing touchdowns against Washington in the January 2024 CFP final (Michigan's official title-game scoring and postgame notes). Do not approve an unimplemented replacement as a completed correction.
 - The draft PR is still isolated, and these marked conflicts require changes to actual future candidate questions, their ledger rows, and regression verification. Neither factual source URLs nor green unit tests establish full run-by-run certification.
+
+### October 26 — seven confirmed active cross-game overlaps repaired in playable preview content
+
+Seven real future-only candidate questions were corrected in this isolated PR. The original historical Daily questions, published proofs, all other games, main, Supabase and production were not changed.
+
+- CFB original run 10 Q8: replaced Kelee Ringo's 2022 title-sealing interception (an exact active Bar Trivia duplicate) with Javon Bullard's **two interceptions and one fumble recovery** vs TCU in the January 2023 championship. CFP/Georgia records confirm this; importantly, Bullard recovered rather than necessarily caused the fumble.
+- UFC original run 3 Q8: replaced the active UFC Bar Trivia V3 Procházka–Teixeira UFC 275 finish with Poirier's second-round KO of Benoit Saint Denis at UFC 299.
+- UFC original run 6 Q8: replaced the identical UFC Bar Trivia V3 Aspinall–Pavlovich UFC 295 finish with Nate Diaz's Round 4 guillotine of Tony Ferguson after the UFC 279 opponent shuffle.
+- UFC original run 1 Q8: replaced the active Gordeau–Tuli UFC 1 first-bout pairing with Ngannou's 20-second knockout of Rozenstruik at UFC 249.
+- UFC original run 5 Q8: replaced the active Henderson–Shogun UFC 139 named-fight duplication with Machida's second-round title-winning knockout of Evans at UFC 98.
+- CFB new run 15 Q4: replaced Mendoza's 2025 Heisman win, disclosed verbatim by active Average Fan, with Vanderbilt quarterback Diego Pavia's verified **2025 runner-up finish**.
+- CFB new run 15 Q7: replaced DeBoer's Alabama hiring, already tested in active Bar Trivia, with Michigan's Donovan Edwards scoring **41-yard and 46-yard rushing touchdowns** against Washington in the January 2024 title game.
+
+Sources were checked against official UFC event results, College Football Playoff, Michigan Athletics and Heisman Trust records. Five Q8 replacements retain four exclusive choices, disabled lifelines and substantive explanations. Existing regression tests now assert the corrected Q8 winners/choices and the CFB run 15 rewrites; these changes are specifically protected from regression in the candidate preview.
+
+All seven positions remain **HOLD** in the existing disposition ledger, because verifying those specific corrections does **not** certify the other effective candidate positions, every semantic collision, and complete 8-question pacing/player experience. No merge, rollout, preview default activation or production deployment is authorized by this record. Check exact-head CI separately; a skipped Validate V2 is not a pass.
