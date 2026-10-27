@@ -7,7 +7,7 @@ import wrBaseline from "../../../data/generated/football/wheel-nfl-wr-grades-202
 import { FOOTBALL_GM_PLAYER_POOL, FOOTBALL_GM_CURRENT_PLAYER_POOL } from "./footballGmEngine";
 
 const migration = readFileSync("supabase/migrations/202612310604_nfl_eight_current_ability_grade_batch.sql", "utf8");
-const grades = { QB: qbBaseline.grades, RB: rbBaseline.grades, WR: wrBaseline.grades };
+const grades: Record<string, Array<{ team: string; player: string; grade: number }>> = { QB: qbBaseline.grades, RB: rbBaseline.grades, WR: wrBaseline.grades };
 
 describe("NFL October 27 independently sourced eight-player ability batch", () => {
   it("contains eight evidence-backed meaningful updates within existing NFL identity/position authorities", () => {
@@ -16,7 +16,7 @@ describe("NFL October 27 independently sourced eight-player ability batch", () =
     expect(new Set(revisions.changes.map(c => [c.team,c.family,c.player].join("|"))).size).toBe(8);
     expect(new Set(revisions.changes.map(c=>c.team)).size).toBeGreaterThanOrEqual(6);
     for (const c of revisions.changes) {
-      const source = grades[c.family].find(p => p.team===c.team && p.player===c.player);
+      const source = grades[c.family]?.find(p => p.team===c.team && p.player===c.player);
       expect(source?.grade, c.player).toBe(c.oldGrade);
       expect(Math.abs(c.newGrade-c.oldGrade),c.player).toBeGreaterThanOrEqual(3);
       expect(c.newGrade,c.player).toBeGreaterThanOrEqual(70);
@@ -39,7 +39,7 @@ describe("NFL October 27 independently sourced eight-player ability batch", () =
     expect(migration).toContain("order by a.effective_date desc limit 1");
     expect(migration).toContain("NFL October 27 current-grade source baseline changed");
     expect(migration).toContain("newer authority supersedes it");
-    expect(migration).not.toMatch(/\\b(?:update|delete\\s+from)\\s+private\\.wheel_football_(?:picks|grade_authority)\\b/i);
-    expect(migration).not.toMatch(/\\b(?:update|delete\\s+from)\\s+(?:public|private)\\.football_gm_/i);
+    expect(migration).not.toMatch(/\b(?:update|delete\s+from)\s+private\.wheel_football_(?:picks|grade_authority)\b/i);
+    expect(migration).not.toMatch(/\b(?:update|delete\s+from)\s+(?:public|private)\.football_gm_/i);
   });
 });
