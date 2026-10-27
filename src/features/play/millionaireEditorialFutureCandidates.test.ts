@@ -58,7 +58,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
           expect(row!.choices, key).toBe(question.choices.map(choice => choice.text).join(" | "));
           expect(row!.answer, key).toBe(answer(question));
           expect(row!.stat_sheet, key).toBe(question.statSheet ?? "");
-          expect(row!.evidence_url, key).toMatch(/^https:\\/\\//);
+          expect(row!.evidence_url.startsWith("https://"), key).toBe(true);
           expect(new Set(question.choices.map(choice => normalized(choice.text))).size, key).toBe(4);
         });
       }
