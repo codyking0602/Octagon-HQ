@@ -67,11 +67,29 @@ describe("UFC Picks prep", () => {
     expect(prepAssetSummary(prep)).toEqual({
       thumbReady: 4,
       thumbTotal: 4,
-      spotlightReady: 2,
-      spotlightTotal: 4,
+      requiredSpotlightReady: 2,
+      requiredSpotlightTotal: 2,
+      optionalSpotlightReady: 0,
+      optionalSpotlightTotal: 2,
+      previewReady: 1,
+      previewTotal: 2,
     });
   });
 
+
+  it("does not count previews for a nonmatching bout identity, and keeps missing photos pending", () => {
+    const value = {
+      ...prepPayload,
+      spotlights: [{ ...prepPayload.spotlights[0], red: { ...prepPayload.spotlights[0].red, fighter_slug: "wrong-fighter" } }],
+      assets: prepPayload.assets.map((asset) => ({ ...asset, spotlight_ready: false })),
+    };
+    expect(prepAssetSummary(mapUfcPickPrep(value))).toMatchObject({
+      requiredSpotlightReady: 0,
+      requiredSpotlightTotal: 2,
+      previewReady: 0,
+      previewTotal: 2,
+    });
+  });
 
   it("accepts null asset paths for legitimately missing prep assets", () => {
     const value = {
