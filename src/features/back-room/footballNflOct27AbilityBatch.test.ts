@@ -36,6 +36,8 @@ describe("NFL October 27 independently sourced eight-player ability batch", () =
       expect(saved,c.player).toBeDefined();
       expect(saved!.currentGrade,c.player).toBe(c.oldGrade);
     }
+    // Database name_key retains the Jr. suffix (unlike historical GM player IDs).
+    expect(migration).toContain("('ATL','QB','michaelpenixjr','Michael Penix Jr.',84,date '2026-10-27'");
     expect(migration).toContain("order by a.effective_date desc limit 1");
     expect(migration).toContain("NFL October 27 current-grade source baseline changed");
     expect(migration).toContain("newer authority supersedes it");
