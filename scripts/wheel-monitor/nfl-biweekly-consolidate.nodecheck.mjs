@@ -39,3 +39,29 @@ test("missing source files remain explicit blockers, not unchanged",()=>{
     assert.equal(r.counts.uniqueReviewCandidates,0);
   }finally{rmSync(root,{recursive:true,force:true});}
 });
+
+test("age-only OTC metadata never becomes a contract review candidate",()=>{
+  const root=mkdtempSync(join(tmpdir(),"nfl-biweekly-contract-metadata-"));
+  try{
+    const input=join(root,"inputs"),out=join(root,"report.json");
+    const put=(name,value)=>{const path=join(input,name);mkdirSync(dirname(path),{recursive:true});writeFileSync(path,JSON.stringify(value));};
+    put("madden/review.json",{currentCount:1941,flags:[],developmentReview:{candidates:[],firstTwoSeasonsScreened:109,unmatchedMaddenFlags:[]}});
+    put("contracts/comparison.json",{status:"identity-review-blocked",sourceIdentityCompletenessCertified:false,
+      changes:[
+        {team:"DET",player:"Jared Goff",reviewKind:"metadata-only",differences:["age"]},
+        {team:"KC",player:"Kenneth Walker",reviewKind:"contract-fact",differences:["salaryApy"]}
+      ],transfers:[],missing:["CHI|secondary|missing"],extra:[],
+      summary:{changed:2,materialChanged:1,metadataOnly:1}});
+    put("coaches/biweekly-coach-review.json",{reviewCount:32,reviews:[]});
+    put("roster/roster-integrity.json",{status:"read-only-roster-screen",playerPopulation:594,exceptions:[]});
+    execFileSync(process.execPath,[script,input,out],{stdio:"pipe"});
+    const r=JSON.parse(readFileSync(out,"utf8"));
+    assert.equal(r.counts.contractChanges,1);
+    assert.equal(r.counts.contractAgeOnlySuppressed,1);
+    assert.equal(r.counts.contractMetadataOnly,1);
+    assert.equal(r.counts.contractMissingIdentities,1);
+    assert.equal(r.counts.uniqueReviewCandidates,1);
+    assert.equal(r.reviewCandidates[0].name,"Kenneth Walker");
+    assert.ok(r.sourceBlockers.some(x=>x.includes("identity-mismatch")));
+  }finally{rmSync(root,{recursive:true,force:true});}
+});
