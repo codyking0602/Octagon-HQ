@@ -211,14 +211,14 @@ def visible_subject_box(im):
     return solid.getbbox()
 
 
-def source_looks_clipped(im, kind):
+def source_looks_clipped(im, kind, *, allow_bottom=False):
     """A subject touching the source boundary cannot be restored by padding it."""
     alpha = im.getchannel("A")
     width, height = im.size
     top = alpha.crop((0, 0, width, 1))
     if sum(value >= 48 for value in top.getdata()) > max(3, width * 0.08):
         return "top of fighter is clipped by the source photo"
-    if kind == "spotlight":
+    if kind == "spotlight" and not allow_bottom:
         bottom = alpha.crop((0, height - 1, width, height))
         if sum(value >= 48 for value in bottom.getdata()) > max(3, width * 0.32):
             return "bottom of fighter is clipped by the source photo"
@@ -396,6 +396,49 @@ def ingest_owner_gane_profile(spec):
     }))
 
 
+
+def clean_known_publisher_panel(im):
+    """Remove solid-color plate bands at the outside of a manually vetted UFC portrait.
+
+    Opt-in only: no automated cleanup of general fighter images. Real fighter pixels
+    are textured and normally do not form long flat-color horizontal spans.
+    """
+    result = im.copy()
+    pixels = result.load()
+    width, height = result.size
+    for y in range(height):
+        # A colored publisher panel is the rightmost *painted* region on the row,
+        # often preceded by a 10-40px transparent border.
+        edge = None
+        for x in range(width - 1, width // 2 - 1, -1):
+            if pixels[x, y][3] >= 18:
+                edge = x
+                break
+        if edge is None:
+            continue
+        r, g, b, alpha = pixels[edge, y]
+        monochrome = max(r, g, b) - min(r, g, b) <= 20 and 38 <= max(r, g, b) <= 250
+        saturated_red = r >= 155 and r - g >= 54 and r - b >= 54
+        teal_plate = g - r >= 23 and b - r >= 23 and abs(g - b) <= 30
+        if not (monochrome or saturated_red or teal_plate):
+            continue
+        threshold = 12 if (saturated_red or teal_plate) else 23
+        left = edge
+        while left >= 0:
+            rr, gg, bb, aa = pixels[left, y]
+            if aa < 10 or max(abs(rr-r), abs(gg-g), abs(bb-b)) > 18:
+                break
+            left -= 1
+        if edge - left < threshold:
+            continue
+        # Preserve any differently-colored foreground figure immediately left.
+        for x in range(left + 1, edge + 1):
+            rr, gg, bb, _ = pixels[x, y]
+            pixels[x, y] = (rr, gg, bb, 0)
+    return result
+
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("manifest")
@@ -451,7 +494,7 @@ def main():
 
     box = crop_box(im, spec.get("crop"))
     im = im.crop(box)
-    clipping = source_looks_clipped(im, kind)
+    clipping = source_looks_clipped(im, kind, allow_bottom=(kind == "spotlight" and spec.get("allow_source_bottom_crop") is True))
     if clipping:
         fail(clipping)
 
@@ -481,6 +524,8 @@ def main():
     # Publisher rectangles can sit inside the cutout's alpha silhouette rather
     # than at its original image boundary. Re-check after subject placement too.
     im = remove_flat_side_backgrounds(im)
+    if spec.get("clean_publisher_panels") is True:
+        im = clean_known_publisher_panel(im)
 
     im = im.filter(
         ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2)

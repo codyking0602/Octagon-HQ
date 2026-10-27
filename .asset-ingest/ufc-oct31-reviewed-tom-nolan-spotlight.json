@@ -1,0 +1,9 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/tom-nolan",
+  "fighter_name": "Tom Nolan",
+  "force_background_removal": true,
+  "allow_source_bottom_crop": true,
+  "kind": "spotlight",
+  "clean_publisher_panels": true,
+  "destination": "public/assets/fighters/tom-nolan-spotlight.webp"
+}

@@ -11,6 +11,7 @@ from PIL import Image, ImageDraw
 sys.modules.setdefault("rembg", SimpleNamespace(remove=lambda image: image))
 from scripts.asset_ingest import (
     render_thumb,
+    clean_known_publisher_panel,
     remove_flat_side_backgrounds,
     source_looks_clipped,
     upper_side_background_band,
@@ -86,6 +87,23 @@ class AssetIngestQualityTests(unittest.TestCase):
     def test_spotlight_source_bottom_cutoff_is_detected(self):
         cropped = fake_fighter().crop((0, 0, 160, 180))
         self.assertIn("bottom", source_looks_clipped(cropped, "spotlight"))
+
+    def test_clean_known_publisher_gray_and_red_without_erasing_skin(self):
+        image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(image)
+        draw.ellipse((75, 35, 215, 280), fill=(160, 108, 80, 255))
+        draw.rectangle((234, 46, 285, 160), fill=(155, 155, 155, 110))
+        draw.rectangle((217, 12, 316, 18), fill=(255, 10, 10, 255))
+        cleaned = clean_known_publisher_panel(image)
+        self.assertEqual(cleaned.getpixel((260, 90))[3], 0)
+        self.assertEqual(cleaned.getpixel((260, 15))[3], 0)
+        self.assertEqual(cleaned.getpixel((148, 94))[3], 255)
+
+    def test_intentional_spotlight_waist_crop_is_explicit_and_top_remains_strict(self):
+        image = fake_fighter().crop((0, 0, 160, 180))
+        self.assertIn("bottom", source_looks_clipped(image, "spotlight"))
+        self.assertEqual(source_looks_clipped(image, "spotlight", allow_bottom=True), "")
+        self.assertIn("top", source_looks_clipped(image.crop((0, 55, 160, 180)), "spotlight", allow_bottom=True))
 
     def test_too_small_subject_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
