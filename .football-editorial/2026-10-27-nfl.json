@@ -80,5 +80,71 @@
   "selection": {
     "player_id": "cam-skattebo",
     "game_id": "browns-at-steelers"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Cam Skattebo",
+      "team": "New York Giants",
+      "position": "RB",
+      "stats": [
+        {
+          "value": "124",
+          "label": "RUSH YDS"
+        },
+        {
+          "value": "17",
+          "label": "CARRIES"
+        },
+        {
+          "value": "1",
+          "label": "RUSH TD"
+        },
+        {
+          "value": "42",
+          "label": "LONG RUN"
+        }
+      ],
+      "result": "W 27–21 (OT) at Houston",
+      "measurements": "5 ft 11 in · 215 lbs",
+      "team_color": "#0B2265",
+      "highlight_url": "https://www.youtube.com/watch?v=GI8Bhfiz3ZM",
+      "photo_source": "https://a.espncdn.com/i/headshots/nfl/players/full/4696981.png",
+      "photo_asset_path": "/assets/football/weekly/2026-10-27/nfl/spotlight.webp",
+      "photo_kind": "portrait"
+    },
+    "game": {
+      "away_team": "Cleveland Browns",
+      "home_team": "Pittsburgh Steelers",
+      "kickoff_at": "2026-11-01T12:00:00-06:00"
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.clevelandbrowns.com/news/browns-continue-to-stack-fourth-quarter-game-winning-drives-news-notes",
+        "https://www.clevelandbrowns.com/news/browns-27-titans-24-final-score-stats-game-recap",
+        "https://www.si.com/nfl/scoreboard/browns-vs-steelers-11-1-2026-494",
+        "https://www.giants.com/team/players-roster/cam-skattebo/logs/",
+        "https://www.giants.com/news/game-balls-key-performances-week-7-john-harbaugh-jj-mccarthy-cam-skattebo-devin-singletary-deonte-banks-micah-mcfadden-houston-texans"
+      ],
+      "breakdown": {
+        "setup": [
+          "Cleveland and Pittsburgh enter their AFC North rematch at 5–2 after the Browns won the first meeting 27–24. Cleveland has repeatedly delivered late go-ahead drives, most recently in a 27–24 win at Tennessee, while Pittsburgh has steadied itself with a three-game winning streak. The division lead and a season-series sweep are both in play."
+        ],
+        "things": [
+          {
+            "title": "Cleveland’s late-game execution",
+            "body": "The Browns have produced a fourth-quarter go-ahead scoring drive in each of their five wins. Deshaun Watson threw for 308 yards against Tennessee and moved Cleveland into position for Andre Szmyt’s walk-off field goal, so Pittsburgh must prevent another final-possession escape."
+          },
+          {
+            "title": "Rodgers and the Steelers’ offensive balance",
+            "body": "Pittsburgh enters with Aaron Rodgers directing the passing attack and Jaylen Warren leading the ground game. Warren’s 561 rushing yards give the Steelers a way to control tempo, while Cleveland must force the home team into predictable passing situations."
+          },
+          {
+            "title": "Pass protection against Pittsburgh pressure",
+            "body": "T.J. Watt has 5.5 sacks through seven games and anchors a Steelers defense that can disrupt a drive without a turnover. Cleveland’s offensive line has to keep Watson upright and avoid long-yardage situations that would undermine the Browns’ recent fourth-quarter efficiency."
+          }
+        ],
+        "bottom_line": "The first meeting was decided by three points, and both clubs now have matching records. The rematch turns on whether Pittsburgh can pressure Watson without surrendering late drives, and whether Cleveland can keep the Steelers from controlling possessions through their run game."
+      }
+    }
   }
 }
