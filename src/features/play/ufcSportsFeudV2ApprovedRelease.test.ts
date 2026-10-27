@@ -33,7 +33,8 @@ describe("UFC V2 official release topic and Daily selection coverage",()=>{
    )).toBe(true);
    const fullCycle=Array.from({length:24},(_,i)=>planUfcFeudV2Appearance(main,fast,i))
      .flatMap(pack=>[...pack.main,...pack.fast]);
-   expect(fullCycle.filter(q=>q.id.startsWith("ufc-v2-retained-"))).toHaveLength(20);
+   // Only seven of the twenty legacy-review candidates earned final approval.
+   expect(fullCycle.filter(q=>q.id.startsWith("ufc-v2-retained-"))).toHaveLength(7);
    expect(new Set(fullCycle.map(ufcFeudSemanticFamily)).size).toBe(168);
  });
  it("publishes two Main and five Fast on exactly 24 official future calendar days",()=>{
