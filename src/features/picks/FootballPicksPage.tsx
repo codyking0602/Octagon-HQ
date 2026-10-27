@@ -128,7 +128,9 @@ export default function FootballPicksPage() {
       id: game.id,
       artwork: resolveFootballWeeklyHeaderArtwork(game),
     }))
-    .filter((game) => Boolean(game.artwork.primary)), [matchupBreakdowns]);
+    .filter((game) => Boolean(game.artwork.primary))
+    // Approved weekly owner artwork runs NFL first, then CFB.
+    .sort((a, b) => Number(!a.id.endsWith("-nfl")) - Number(!b.id.endsWith("-nfl"))), [matchupBreakdowns]);
   const posters = useMemo(() => pickEventPosters(event), [event]);
   const [failedPosterSources, setFailedPosterSources] = useState<string[]>([]);
   const [failedWeeklyHeaderSources, setFailedWeeklyHeaderSources] = useState<string[]>([]);
