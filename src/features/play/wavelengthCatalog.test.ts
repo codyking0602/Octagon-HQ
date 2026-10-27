@@ -64,10 +64,10 @@ describe("canonical Wavelength catalog", () => {
       "Donald Trump",
       "White House",
       "Kimbo Slice",
-      "The Ultimate Fighter Season 33",
-      "The Ultimate Fighter Season 34",
+      "The Ultimate Fighter",
       "Big John McCarthy",
-      "Keith Peterson",
+      "Bruce Buffer",
+      "Israel Adesanya",
     ]) {
       expect(copy).toContain(subject);
     }
