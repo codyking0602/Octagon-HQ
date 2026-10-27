@@ -153,8 +153,8 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc", 12, 7, "Paddy Pimblett"],
       ["nfl", 12, 3, "Christian McCaffrey"],
       ["nfl", 12, 7, "Aaron Donald"],
-      ["nfl", 13, 3, "Riley Patterson"],
-      ["nfl", 13, 6, "Brandon Aiyuk"],
+      ["nfl", 13, 6, "Riley Patterson"],
+      ["nfl", 13, 5, "Brandon Aiyuk"],
       ["cfb", 10, 3, "Kirby Smart"],
       ["cfb", 12, 6, "Luke Fickell"],
       ["cfb", 13, 2, "J.J. McCarthy"],
@@ -176,9 +176,11 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
         expect(question.statSheet).not.toContain(expected);
       }
     }
-    expect(answer(millionaireFutureEditorialDailyRun("nfl", 13)[3]!)).toBe("Riley Patterson");
-    expect(millionaireFutureEditorialDailyRun("nfl", 13)[3]!.prompt).toContain("36-yard field goal");
-    expect(millionaireFutureEditorialDailyRun("nfl", 13)[3]!.choices.map(choice => choice.text)).toEqual(["Riley Patterson", "Cameron Dicker", "Brandon McManus", "Evan McPherson"]);
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 13)[3]!)).toBe("DeVonta Smith");
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 13)[5]!)).toBe("Brandon Aiyuk");
+    expect(answer(millionaireFutureEditorialDailyRun("nfl", 13)[6]!)).toBe("Riley Patterson");
+    expect(millionaireFutureEditorialDailyRun("nfl", 13)[6]!.prompt).toContain("36-yard field goal");
+    expect(millionaireFutureEditorialDailyRun("nfl", 13)[6]!.choices.map(choice => choice.text)).toEqual(["Riley Patterson", "Cameron Dicker", "Brandon McManus", "Evan McPherson"]);
     expect(millionaireFutureEditorialDailyRun("nfl", 14)[2]!.statSheet).not.toContain("LSU");
     expect(millionaireFutureEditorialDailyRun("cfb", 14)[3]!.statSheet).not.toContain("Vanderbilt");
     expect(millionaireFutureEditorialDailyRun("ufc", 14)[4]!.statSheet).not.toContain("Kazakh");
@@ -207,6 +209,22 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       "Georges St-Pierre", "Chuck Liddell", "Khamzat Chimaev", "Francis Ngannou",
     ]);
     ufcRun14.forEach((question, index) => {
+      expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
+      expect(question.explanation.length).toBeGreaterThan(100);
+      if (index === 7) {
+        expect(question.statSheet).toBeNull();
+        expect(question.lifelineCompatibility).toMatchObject({ fiftyFifty: false, statSheet: false, doubleDip: false });
+      } else {
+        expect(question.statSheet).toBeTruthy();
+        expect(normalized(question.statSheet!)).not.toContain(normalized(answer(question)));
+      }
+    });
+    const nflRun14 = millionaireFutureEditorialDailyRun("nfl", 13);
+    expect(nflRun14.map(answer)).toEqual([
+      "Titans", "Seahawks", "Bears", "DeVonta Smith",
+      "Marcus Mariota", "Brandon Aiyuk", "Riley Patterson", "Nick Collins",
+    ]);
+    nflRun14.forEach((question, index) => {
       expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
       expect(question.explanation.length).toBeGreaterThan(100);
       if (index === 7) {
