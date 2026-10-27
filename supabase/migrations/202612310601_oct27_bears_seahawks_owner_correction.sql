@@ -89,10 +89,7 @@ begin
   perform set_config('octagon.approved_oct27_swap','bears-at-seahawks',true);
   update public.football_weekly_content_packages p
     set proposals=jsonb_set(p.proposals,'{nfl,games}',v_games,false),
-        choices=jsonb_set(jsonb_set(p.choices,'{nfl,game}',v_new,false),
-            '{nfl,correction}',jsonb_build_object('prior_game_id','browns-at-steelers',
-            'approved_game_id','bears-at-seahawks','corrected_at',now(),
-            'reason','Owner explicitly replaced Oct 27 NFL GOTW'),true),
+        choices=jsonb_set(p.choices,'{nfl,game}',v_new,false),
         nfl_game_of_week=v_game,
         production=jsonb_set(jsonb_set(jsonb_set(p.production,'{nfl,game_id}',
             to_jsonb('bears-at-seahawks'::text),false),'{nfl,breakdown}',v_breakdown,false),
