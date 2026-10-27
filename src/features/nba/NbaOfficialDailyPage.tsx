@@ -198,7 +198,7 @@ export function NbaOfficialHitTheNumber({ projection, advance, busy }: { project
       renderSubjectMark={(id, className) => <NBAPlayerMark id={id} className={className} />}
       busy={busy}
     />
-    {attempt && <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />}
+    {result && <NbaPortraitCredits names={candidates.map(candidate => candidate.name)} />}
   </div>;
 }
 
@@ -249,15 +249,6 @@ export function NbaOfficialHigherLower({ projection, advance, busy }: { projecti
         <b>?</b><small>{String(hidden.context ?? "")}</small>
       </article>
     </div>
-    {([known, hidden].map(row => nbaHigherLowerPortraitCredit({ name: String(row.name ?? "") }))
-      .filter((row): row is NonNullable<typeof row> => row != null).length > 0) ? (
-      <details className="nba-official-higher-lower__credits">
-        <summary>Historical portrait credits</summary>
-        {[known, hidden].map(row => nbaHigherLowerPortraitCredit({ name: String(row.name ?? "") }))
-          .filter((row): row is NonNullable<typeof row> => row != null)
-          .map(credit => <p key={credit.name}>{credit.name}: {credit.author} · {credit.license} · <a href={credit.source} target="_blank" rel="noopener noreferrer">Source</a></p>)}
-      </details>
-    ) : null}
     <p>Was {String(hidden.name ?? "the other player")} higher or lower?</p>
     <div className="nba-official-higher-lower__actions">
       <button type="button" disabled={busy} onClick={() => advance({ choice: "higher" })}>↑ HIGHER</button>
