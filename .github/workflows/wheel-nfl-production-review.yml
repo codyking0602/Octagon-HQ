@@ -14,6 +14,7 @@ on:
     paths:
       - '.github/workflows/wheel-nfl-production-review.yml'
       - 'scripts/wheel-monitor/nfl-madden-review*.mjs'
+      - 'scripts/wheel-monitor/nfl-madden-current-gap-audit*.mjs'
   pull_request:
     paths:
       - 'scripts/wheel-monitor/nfl-production-monitor.py'
@@ -79,6 +80,21 @@ jobs:
           node scripts/wheel-monitor/nfl-madden-review.mjs \
             --baseline=tmp/wheel-monitor/madden/pr-temporary-baseline.json \
             --out=tmp/wheel-monitor/madden/pr-source-check.json
+      - name: Audit all 594 current HQ grades against live EA ratings without changing them
+        if: github.event_name == 'pull_request'
+        run: |
+          node --test scripts/wheel-monitor/nfl-madden-current-gap-audit.nodecheck.mjs
+          node scripts/wheel-monitor/nfl-madden-current-gap-audit.mjs \
+            --snapshot=tmp/wheel-monitor/madden/pr-temporary-baseline.json \
+            --out=tmp/wheel-monitor/madden/pr-hq-current-gap-review.json
+      - name: Archive current Madden/HQ discrepancy evidence (7+ and 10+)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-current-hq-gap-review
+          path: tmp/wheel-monitor/madden/pr-hq-current-gap-review.json
+          retention-days: 30
+          if-no-files-found: error
       - name: Prove EA archived Week 3 historical source is retrievable on PR
         if: github.event_name == 'pull_request'
         run: |
