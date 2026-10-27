@@ -12,6 +12,7 @@ sys.modules.setdefault("rembg", SimpleNamespace(remove=lambda image: image))
 from scripts.asset_ingest import (
     render_thumb,
     source_looks_clipped,
+    upper_side_background_band,
     validate_asset_quality,
 )
 
@@ -46,6 +47,14 @@ class AssetIngestQualityTests(unittest.TestCase):
         image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
         ImageDraw.Draw(image).rectangle((10, 10, 309, 309), fill=(220, 220, 220, 255))
         self.assert_rejected(image, "thumb", "background artifact")
+
+    def test_upper_right_rectangular_overlay_is_not_a_clean_cutout(self):
+        image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(image)
+        draw.ellipse((80, 30, 235, 230), fill=(140, 95, 72, 255))
+        draw.rectangle((265, 30, 315, 165), fill=(240, 240, 240, 255))
+        self.assertTrue(upper_side_background_band(image))
+        self.assert_rejected(image, "thumb", "rectangular upper-side background")
 
     def test_full_bleed_opaque_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (200, 200, 200, 255))
