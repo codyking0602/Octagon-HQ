@@ -1,0 +1,14 @@
+{
+  "week_of": "2026-10-27",
+  "sport": "nfl",
+  "kind": "football-spotlight",
+  "destination": "public/assets/football/weekly/2026-10-27/nfl/spotlight.webp",
+  "player_name": "Cam Skattebo",
+  "photos": [
+    {
+      "url": "https://a.espncdn.com/i/headshots/nfl/players/full/4696981.png",
+      "kind": "portrait",
+      "identity_reference_url": "https://www.espn.com/nfl/player/_/id/4696981/cam-skattebo"
+    }
+  ]
+}
