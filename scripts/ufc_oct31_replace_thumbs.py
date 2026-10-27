@@ -76,7 +76,7 @@ def remove_connected_white(im):
     # graphic plate. Only erase whites connected to the outer photo border.
     def white(x,y):
         r,g,b,a=px[x,y]
-        return min(r,g,b)>=223 and max(r,g,b)-min(r,g,b)<=21
+        return min(r,g,b)>=143 and max(r,g,b)-min(r,g,b)<=36
     visited=bytearray(w*h)
     q=deque()
     for x in range(w):
@@ -113,8 +113,8 @@ def render(im):
     if not box: raise ValueError("No visible real fighter after mask")
     subject=im.crop(box)
     # Bust composition: keep complete hair, shoulders and upper torso.
-    if subject.height > subject.width*1.30:
-        subject=subject.crop((0,0,subject.width,round(subject.width*1.30)))
+    if subject.height > subject.width*1.10:
+        subject=subject.crop((0,0,subject.width,round(subject.width*1.10)))
     top_pad=12
     side_pad=11
     scale=min((320-2*side_pad)/subject.width,(320-top_pad-6)/subject.height)
