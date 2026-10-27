@@ -86,3 +86,4 @@ V1 repository access: blocked by `CONNECT tunnel failed, response 403`, so displ
 | holly-holm | Holly “The Preacher’s Daughter” Holm | Established common/UFC nickname override |
 | rafael-dos-anjos | Rafael dos Anjos | No verified nickname; canonical V2 name used |
 | joshua-van | Joshua “The Fearless” Van | Established common/UFC nickname override |
+| ciryl-gane | Ciryl “Bon Gamin” Gane | UFC athlete profile https://www.ufc.com/athlete/ciryl-gane |
