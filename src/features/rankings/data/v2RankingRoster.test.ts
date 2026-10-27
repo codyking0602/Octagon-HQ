@@ -94,7 +94,7 @@ describe("V2 ranking roster overlay", () => {
 
   it("advances source versions and owns both V2 additions", () => {
     expect(v2RankingRoster).toMatchObject({
-      modelAsOfDate: "2026-10-27",
+      modelAsOfDate: "2026-09-19",
       factsVersion: "octagon-hq-v2-gane-facts-20261027",
       judgmentVersion: "octagon-hq-v2-gane-judgments-20261027",
       eraDepthVersion: "octagon-hq-v2-van-era-depth-20260919",
