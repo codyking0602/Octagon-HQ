@@ -278,7 +278,6 @@ export default function NbaHigherLowerPage() {
       </article>
     </section>
     <HigherLowerChoices revealed={revealed} answer={question.answer} onChoose={answer} />
-    <NbaPhotoCredits subjects={[question.known, question.hidden]} />
     <HigherLowerFeedback correct={revealed === null ? null : correct}
       detail={revealed ? question.hidden.formattedValue + " is " + question.answer + " than " + question.known.formattedValue + "." : undefined} />
   </main>;
