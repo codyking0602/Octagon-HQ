@@ -2,8 +2,7 @@ name: Wheel NFL Production Evidence Review (staged)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '15 12 * * 4' # Weekly Madden comparison, Thursday UTC
+  workflow_call:
   push:
     branches: [main]
     paths:
@@ -55,7 +54,7 @@ jobs:
           retention-days: 30
 
   madden-ratings:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' || github.event_name == 'push'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' || github.event_name == 'push' || github.event_name == 'workflow_call'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -89,11 +88,29 @@ jobs:
             if (( ever > 0 )); then echo "::error::Madden baseline expired; manual recovery required."; exit 1; fi
             echo "::notice::Initial Madden baseline will be captured from EA this run."
           fi
-      - name: Compare official EA Madden ratings against frozen baseline (review only)
+      - name: Restore prior biweekly Madden checkpoint (locked historical baseline stays intact)
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=wheel-nfl-madden-biweekly-checkpoint&per_page=100" > tmp/wheel-monitor/madden/checkpoints.json
+          id=$(jq -r '[.artifacts[] | select(.name == "wheel-nfl-madden-biweekly-checkpoint" and .expired == false and .workflow_run.head_branch == "main")] | sort_by(.created_at) | reverse | .[0].workflow_run.id // empty' tmp/wheel-monitor/madden/checkpoints.json)
+          if [[ -n "$id" ]]; then
+            gh run download "$id" --name wheel-nfl-madden-biweekly-checkpoint --dir tmp/wheel-monitor/madden
+          else
+            ever=$(jq '[.artifacts[] | select(.name == "wheel-nfl-madden-biweekly-checkpoint")] | length' tmp/wheel-monitor/madden/checkpoints.json)
+            if (( ever > 0 )); then echo "::error::Biweekly checkpoint expired; restore manually rather than silently reset."; exit 1; fi
+            cp tmp/wheel-monitor/madden/baseline.json tmp/wheel-monitor/madden/rolling-baseline.json
+            echo "::notice::First biweekly comparison uses the preserved initial Madden capture."
+          fi
+      - name: Compare official EA Madden overall against prior 14-day checkpoint (review only)
         if: github.event_name != 'pull_request'
         run: |
           node scripts/wheel-monitor/nfl-madden-review.mjs \
-            --baseline=tmp/wheel-monitor/madden/baseline.json \
+            --baseline=tmp/wheel-monitor/madden/rolling-baseline.json \
+            --next=tmp/wheel-monitor/madden/next-baseline.json \
             --out=tmp/wheel-monitor/madden/review.json
       - name: Preserve frozen baseline and weekly flags
         if: github.event_name != 'pull_request' && success()
@@ -101,6 +118,17 @@ jobs:
         with:
           name: wheel-nfl-madden-locked-baseline
           path: tmp/wheel-monitor/madden/baseline.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Preserve rolling biweekly checkpoint only after successful comparison
+        if: github.event_name != 'pull_request' && success()
+        run: cp tmp/wheel-monitor/madden/next-baseline.json tmp/wheel-monitor/madden/rolling-baseline.json
+      - name: Archive 14-day checkpoint
+        if: github.event_name != 'pull_request' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-madden-biweekly-checkpoint
+          path: tmp/wheel-monitor/madden/rolling-baseline.json
           if-no-files-found: error
           retention-days: 90
       - name: Publish read-only candidate flags

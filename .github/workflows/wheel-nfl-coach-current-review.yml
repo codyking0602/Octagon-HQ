@@ -2,8 +2,6 @@ name: Wheel NFL Official Current Coach Evidence (staged)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '25 11 * * 2' # Biweekly editorial cycle gate below
   push:
     branches: [main]
     paths:
