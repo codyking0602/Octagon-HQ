@@ -55,7 +55,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["TCU", "Baylor", "Oklahoma State", "Texas Tech"],
     answer: "TCU",
     statSheet: "The unranked preseason Big 12 team upset Michigan 51–45 in its semifinal.",
-    explanation: "Sonny Dykes led TCU to a 13–2 record and the January 2023 CFP championship game in his first season, beating Michigan in the Fiesta Bowl semifinal before losing to Georgia.",
+    explanation: "Sonny Dykes guided previously unranked TCU to a 13–2 campaign in his first season as head coach in 2022. The Horned Frogs beat Michigan 51–45 in the Fiesta Bowl semifinal and became the first Big 12 program to play in the College Football Playoff national-title game.",
     evidence: [{ authority: "TCU Athletics", url: "https://gofrogs.com/news/2023/1/11/football-dykes-named-afca-national-coach-of-the-year", supportingDetail: "TCU confirms Dykes took the Horned Frogs to their first CFP title game in his first season." }],
   },
 
@@ -97,7 +97,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Vanderbilt", "Tennessee", "Auburn", "Mississippi State"],
     answer: "Vanderbilt",
     statSheet: "Quarterback Diego Pavia led the upset in Nashville.",
-    explanation: "Vanderbilt defeated top-ranked Alabama 40–35 on October 5, 2024, earning its first win in program history over an AP No. 1 opponent behind quarterback Diego Pavia.",
+    explanation: "Vanderbilt defeated No. 1 Alabama 40–35 in Nashville on October 5, 2024. It was the school's first victory over an AP top-ranked opponent after ten earlier losses to No. 1 teams. Quarterback Diego Pavia accounted for 308 total yards in the upset for coach Clark Lea.",
     evidence: [{ authority: "Official school athletics", url: "https://vucommodores.com/news/2024/10/05/this-magic-moment", supportingDetail: "Vanderbilt's official recap records the 40–35 score and the school's first No. 1-ranked victory." }],
   },
 
@@ -134,7 +134,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Erin Blanchfield","Manon Fiorot","Alexa Grasso","Maycee Barber"],
     answer: "Erin Blanchfield",
     statSheet: "The bout ended by rear-naked choke at the UFC APEX in Las Vegas.",
-    explanation: "Erin Blanchfield submitted Jéssica Andrade by rear-naked choke at 1:37 of Round 2 in the February 18, 2023 UFC Fight Night main event in Las Vegas, elevating Blanchfield into the women's flyweight title picture.",
+    explanation: "Erin Blanchfield submitted former UFC strawweight champion Jéssica Andrade with a rear-naked choke at 1:37 of Round 2 in their February 18, 2023 UFC APEX main event in Las Vegas. The win improved Blanchfield's UFC record to 5–0 and established her as a flyweight title contender.",
     evidence: [{"authority":"UFC Andrade vs Blanchfield official result","url":"https://www.ufc.com/news/ufc-fight-night-andrade-vs-blanchfield-results-highlights-winner-interviews","supportingDetail":"UFC official event results confirm Blanchfield defeated former strawweight champion Andrade by rear-naked choke at 1:37 of round two on February 18, 2023."}],
   },
 
@@ -158,7 +158,7 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     choices: ["Notre Dame 2020", "Georgia 2021", "TCU 2022", "Wisconsin 2017"],
     answer: "Notre Dame 2020",
     statSheet: "The team fell to Clemson in the December 2020 ACC title game, but still made the four-team playoff as the No. 4 seed.",
-    explanation: "Notre Dame lost the December 2020 ACC championship to Clemson, 34–10, yet became the first team selected for the four-team CFP after a conference title-game defeat.",
+    explanation: "Notre Dame lost the December 2020 ACC title game to Clemson 34–10 but still earned the No. 4 seed in the four-team College Football Playoff. It was the first playoff berth after a conference-title-game loss; Georgia 2021 and TCU 2022 also qualified following losses, but in later seasons.",
     evidence: [
       { authority: "College Football Playoff", url: "https://collegefootballplayoff.com/news/2020/12/20/cfp-rankings-122020", supportingDetail: "The selection committee ranked Notre Dame fourth after the 2020 conference championship weekend." },
       { authority: "Atlantic Coast Conference", url: "https://theacc.com/news/2020/12/19/football-clemson-rolls-notre-dame-34-10-for-6th-straight-acc-championship.aspx", supportingDetail: "Notre Dame lost 34–10 to Clemson in the 2020 ACC championship." },

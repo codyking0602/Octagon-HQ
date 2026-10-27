@@ -66,7 +66,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-nfl-future-2001-tuck-rule-woodson-q8", "playoff-controversy",
     "Which Raiders defender knocked the ball from Tom Brady on the controversial Tuck Rule play in the 2001 season's AFC divisional playoff?",
     ["Charles Woodson", "Greg Biekert", "Eric Allen", "Tory James"], "Charles Woodson",
-    "Charles Woodson dislodged the ball and Greg Biekert recovered, but the replay ruling overturned the fumble. New England tied the game and won 16-13 in overtime.",
+    "Charles Woodson struck Tom Brady's throwing arm and dislodged the football late in New England's January 19, 2002 divisional playoff game against Oakland. Raiders linebacker Greg Biekert recovered, but replay applied the then-current Tuck Rule to overturn the fumble. New England tied the snowy game and won 16–13 in overtime.",
     { authority: "New England Patriots", url: "https://www.patriots.com/news/patriots-earn-spot-in-afc-championship-game-120896", supportingDetail: "Patriots' Jan. 2002 game report identifies Woodson forcing the would-be fumble, reversal under the Tuck Rule, and overtime win." },
   ),
   "nfl:7:7": q8(
@@ -115,14 +115,14 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-cfb-future-matthew-golden-peach-2025-q8", "playoff-overtime",
     "Which Texas receiver caught Quinn Ewers' fourth-and-13 touchdown pass in overtime against Arizona State in January 2025?",
     ["Matthew Golden", "Gunnar Helm", "Isaiah Bond", "DeAndre Moore Jr."], "Matthew Golden",
-    "Matthew Golden caught a 28-yard fourth-and-13 touchdown from Quinn Ewers in the first overtime of the January 2025 Peach Bowl. Texas won 39–31 in double overtime.",
+    "Matthew Golden caught Quinn Ewers' 28-yard touchdown pass on fourth-and-13 in the first overtime of the January 1, 2025 Peach Bowl quarterfinal against Arizona State. Golden's touchdown forced another overtime; Texas won 39–31 after Andrew Mukuba intercepted a pass to end the game.",
     { authority: "Texas Athletics", url: "https://texaslonghorns.com/news/2025/1/22/no-4-3-3-footballs-ewers-named-to-davey-o-brien-postseason-great-8", supportingDetail: "Texas confirms Golden's 28-yard first-OT conversion and double-overtime win." },
   ),
   "cfb:5:7": q8(
     "millionaire-cfb-future-rod-moore-2023-game-q8", "rivalry-clinchers",
     "Which Michigan defender intercepted Kyle McCord with 25 seconds left to seal the 2023 win over Ohio State?",
     ["Rod Moore", "Will Johnson", "Mike Sainristil", "Junior Colson"], "Rod Moore",
-    "Michigan safety Rod Moore picked off Ohio State quarterback Kyle McCord with 25 seconds remaining on November 25, 2023, sealing a 30–24 win. Will Johnson also intercepted McCord earlier in the game.",
+    "Michigan safety Rod Moore intercepted Ohio State quarterback Kyle McCord with 25 seconds left on November 25, 2023, making a diving pick at Michigan's 21-yard line. The turnover clinched a 30–24 Wolverines win and the Big Ten East title. Teammate Will Johnson made an earlier interception but not this decisive one.",
     { authority: "Michigan Athletics", url: "https://mgoblue.com/news/2023/11/25/football-corum-late-game-heroics-lift-michigan-to-another-victory-over-no-2-ohio-state", supportingDetail: "Michigan's official recap names Rod Moore's interception at 25 seconds remaining; the 30–24 win secured Big Ten East title." },
   ),
   "cfb:8:7": q8(
@@ -136,7 +136,7 @@ export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRew
     "millionaire-cfb-future-bullard-2023-tcu-q8", "championship-defense",
     "Which Georgia defender intercepted two passes AND recovered a fumble against TCU in the January 2023 national championship?",
     ["Javon Bullard", "Kelee Ringo", "Malaki Starks", "Christopher Smith"], "Javon Bullard",
-    "Javon Bullard accounted for all three TCU turnovers with two interceptions and a fumble recovery, earning defensive player of the game honors in Georgia's 65–7 title-game win.",
+    "Georgia defensive back Javon Bullard intercepted two TCU passes and recovered a Horned Frogs fumble, all during the first half of the January 2023 national championship. Bullard was named Defensive Player of the Game in Georgia's 65–7 win. He is credited with recovering, not necessarily forcing, the fumble.",
     { authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2023/1/26/ncg-recap-2023", supportingDetail: "CFP identifies Bullard as Defensive Player of the Game with two interceptions and a fumble recovery against TCU." },
   ),
   "ufc:0:7": q8(

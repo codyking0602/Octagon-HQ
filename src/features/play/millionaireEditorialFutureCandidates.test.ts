@@ -15,6 +15,37 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("protects eight remaining October 27 sourced intervention candidate fixes", () => {
+    const finals = [
+      ["nfl:6:7","Charles Woodson","Greg Biekert"],
+      ["cfb:4:7","Matthew Golden","Andrew Mukuba"],
+      ["cfb:5:7","Rod Moore","Will Johnson"],
+      ["cfb:9:7","Javon Bullard","Defensive Player"],
+    ] as const;
+    for(const[key,winner,detail]of finals){
+      const q=MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
+      expect(q.answer).toBe(winner);
+      expect(q.explanation).toContain(detail);
+      expect(q.statSheet).toBeNull();
+      expect(q.choices.filter(c=>c===winner)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+    }
+    const other = [
+      ["cfb:9:3","Vanderbilt","308 total yards"],
+      ["cfb:5:2","TCU","13–2"],
+      ["cfb:7:5","Notre Dame 2020","34–10"],
+      ["ufc:5:5","Erin Blanchfield","1:37"],
+    ] as const;
+    for(const[key,winner,detail]of other){
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(winner);
+      expect(q.explanation).toContain(detail);
+      expect(q.choices.filter(c=>c===winner)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(winner));
+    }
+  });
+
 
   it("replaces the active UFC 237 slam duplicate and surname-leaking legacy clue only in future candidates", () => {
     const original = millionaireDailyRun("ufc", 5)[5]!;
