@@ -205,7 +205,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["nfl:0:2", "Josh Jacobs", "https://www.nfl.com/stats/player-stats/category/rushing/2022/REG/all/rushingyards/desc"],
       ["nfl:1:0", "Colts", "https://www.profootballhof.com/players/peyton-manning"],
       ["nfl:1:1", "Von Miller", "https://www.nfl.com/news/broncos-lb-von-miller-named-super-bowl-50-mvp-0ap3000000634374"],
-      ["nfl:1:2", "Randy Moss", "https://www.nfl.com/stats/player-stats/category/receiving/2007/reg/all/receivingtouchdowns/desc"],
+      ["nfl:1:2", "Vikings", "https://www.vikings.com/history/all-time-draft-classes"],
       ["nfl:2:0", "Texans", "https://www.profootballhof.com/players/andre-johnson"],
       ["nfl:4:0", "49ers", "https://www.profootballhof.com/football-history/nfl-draft-history/1940/1985"],
       ["nfl:4:4", "Calvin Johnson", "https://www.nfl.com/stats/player-stats/category/receiving/2012/reg/all/receivingyards/desc"],
