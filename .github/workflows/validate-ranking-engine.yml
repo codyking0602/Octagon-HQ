@@ -66,7 +66,7 @@ jobs:
 
       - name: Rank engine, fighter presentation, and app smoke tests (UFC V2 editorial branches)
         if: startsWith(github.ref, 'refs/heads/editorial/ufc-v2-')
-        run: npx vitest run src/features/rankings src/app/App.test.tsx src/app/rankingWhatsNewSync.contract.test.ts
+        run: npx vitest run src/features/rankings src/app/App.test.tsx src/app/rankingWhatsNewSync.contract.test.ts --maxWorkers=2
 
       - name: Full suite (original agent branch behavior)
         if: ${{ !startsWith(github.ref, 'refs/heads/editorial/ufc-v2-') }}
