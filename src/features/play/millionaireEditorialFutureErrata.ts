@@ -424,14 +424,26 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   },
   // Active Bar Trivia fact collision retired from future-preview run 3 Q1.
   "ufc:2:0": {
-    id: "millionaire-ufc-future-rewrite-r3-q1",
-    type: "ufc-300-main-event",
-    prompt: "Who knocked out Jamahal Hill in the first round to retain the light heavyweight belt at UFC 300?",
-    choices: ["Alex Pereira","Jiří Procházka","Magomed Ankalaev","Jan Błachowicz"], answer: "Alex Pereira",
-    statSheet: "The milestone Las Vegas event ended with a Round 1 knockout.",
-    explanation: "Alex Pereira knocked out Jamahal Hill at 3:14 of Round 1 in the UFC 300 main event in April 2024, retaining his light heavyweight championship.",
-    evidence: [{ authority: "UFC official event results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-300-pereira-vs-hill?language_content_entity=en", supportingDetail: "Alex Pereira knocked out Jamahal Hill at 3:14 of Round 1 in the UFC 300 main event in April 2024, retaining his light heavyweight championship." }],
-  },
+  "id": "millionaire-ufc-future-adesanya-silva-ufc234-q1",
+  "type": "middleweight-generations",
+  "prompt": "Who defeated former middleweight champion Anderson Silva by unanimous decision in the UFC 234 main event?",
+  "choices": [
+    "Israel Adesanya",
+    "Robert Whittaker",
+    "Kelvin Gastelum",
+    "Michael Bisping"
+  ],
+  "answer": "Israel Adesanya",
+  "statSheet": "The three-round bout took place in Melbourne, Australia, in February 2019.",
+  "explanation": "Israel Adesanya defeated Anderson Silva by unanimous decision in their UFC 234 middleweight main event on February 9, 2019, in Melbourne, Australia. The three judges scored the fight 30–27, 30–27 and 29–28.",
+  "evidence": [
+    {
+      "authority": "UFC",
+      "url": "https://www.ufc.com/news/ufc-234-final-results",
+      "supportingDetail": "UFC 234 official main event results confirm Adesanya unanimous decision over Silva with scores 30–27, 30–27 and 29–28."
+    }
+  ]
+},
   // Active Bar Trivia fact collision retired from future-preview run 3 Q4.
   "ufc:2:3": {
     id: "millionaire-ufc-future-rewrite-r3-q4",
@@ -807,13 +819,26 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "Buffalo Bills", url: "https://www.buffalobills.com/news/bills-connections-to-super-bowl-xlviii-12555328", supportingDetail: "Bills team history states Lynch was its 12th overall selection in 2007, played for Buffalo through 2010 and later starred for Seattle." }],
   },
   "ufc:0:0": {
-    id: "millionaire-ufc-future-oliveira-chandler-262-q1", type: "lightweight-champions",
-    prompt: "Who stopped Michael Chandler just 19 seconds into Round 2 at UFC 262 to win the vacant lightweight title?",
-    choices: ["Charles Oliveira", "Justin Gaethje", "Dustin Poirier", "Tony Ferguson"], answer: "Charles Oliveira",
-    statSheet: "The May 2021 Houston title fight crowned a successor after Khabib Nurmagomedov retired.",
-    explanation: "Charles Oliveira stopped Michael Chandler by TKO only 19 seconds into Round 2 of the UFC 262 main event in Houston on May 15, 2021. It made Oliveira the undisputed lightweight champion after Khabib Nurmagomedov vacated the belt.",
-    evidence: [{ authority: "UFC official results", url: "https://www.ufc.com/news/ufc-262-oliveira-vs-chandler-results-highlights-interviews-winners-houston", supportingDetail: "UFC 262 results name Oliveira the winner by TKO at 0:19 of Round 2 over Chandler for the vacant lightweight belt." }],
-  },
+  "id": "millionaire-ufc-future-lawler-niko-price-retirement-ufc290-q1",
+  "type": "farewell-finishes",
+  "prompt": "Which former UFC welterweight champion knocked out Niko Price in 38 seconds in his 2023 retirement fight?",
+  "choices": [
+    "Robbie Lawler",
+    "Carlos Condit",
+    "Matt Brown",
+    "Tyron Woodley"
+  ],
+  "answer": "Robbie Lawler",
+  "statSheet": "The farewell bout was part of UFC 290 in Las Vegas.",
+  "explanation": "Robbie Lawler knocked out Niko Price at 0:38 of Round 1 at UFC 290 on July 8, 2023. The former welterweight champion ended his MMA career with the knockout victory in his retirement fight.",
+  "evidence": [
+    {
+      "authority": "UFC",
+      "url": "https://www.ufc.com/news/robbie-lawler-named-ufc-hall-fame-class-2025",
+      "supportingDetail": "UFC Hall of Fame biography confirms Lawler retired after knocking out Niko Price in 38 seconds at UFC 290."
+    }
+  ]
+},
   "ufc:2:6": {
     id: "millionaire-ufc-future-jdm-burns-ufc299-q7", type: "welterweight-breakthroughs",
     prompt: "Who knocked out Gilbert Burns with a knee and follow-up elbows late in Round 3 at UFC 299?",
@@ -1098,11 +1123,51 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   "nfl:5:0":{id:"millionaire-nfl-future-reviewed-5-0",type:"draft",prompt:"Who was selected No. 1 overall in the 2011 NFL Draft?",choices:["Cam Newton","Von Miller","A.J. Green","Julio Jones"],answer:"Cam Newton",statSheet:"Carolina owned the first pick.",explanation:"Carolina selected Auburn quarterback Cam Newton with the No. 1 overall pick in the 2011 NFL Draft. Von Miller went second to Denver, A.J. Green fourth to Cincinnati, and Julio Jones sixth to Atlanta.",evidence:[{authority:"NFL / Pro Football Hall of Fame historical records",url:"https://www.nfl.com/news/nfl-draft-no-1-selections-09000d5d8289a4c0",supportingDetail:"Carolina selected Auburn quarterback Cam Newton with the No. 1 overall pick in the 2011 NFL Draft. Von Miller went second to Denver, A.J. Green fourth to Cincinnati, and Julio Jones sixth to Atlanta."}]},
   "nfl:5:2":{id:"millionaire-nfl-future-reviewed-5-2",type:"career-history",prompt:"Which team did Brett Favre first play for in the NFL?",choices:["Falcons","Packers","Jets","Vikings"],answer:"Falcons",statSheet:"He was traded after his rookie season.",explanation:"The Atlanta Falcons selected Brett Favre from Southern Mississippi with the 33rd pick of the 1991 NFL Draft, and he spent his rookie season as a reserve. They traded him to Green Bay before the 1992 season, where his three-MVP career took off.",evidence:[{authority:"NFL / Pro Football Hall of Fame historical records",url:"https://www.profootballhof.com/news/moments-in-nfl-history-no-4-leaps-to-green-bay",supportingDetail:"The Atlanta Falcons selected Brett Favre from Southern Mississippi with the 33rd pick of the 1991 NFL Draft, and he spent his rookie season as a reserve. They traded him to Green Bay before the 1992 season, where his three-MVP career took off."}]},
   "nfl:5:6":{id:"millionaire-nfl-future-reviewed-5-6",type:"rushing-comparison",prompt:"Which 2,000-yard rusher had the fewest rushing touchdowns in his 2,000-yard season?",choices:["Barry Sanders 1997","O.J. Simpson 1973","Eric Dickerson 1984","Derrick Henry 2020"],answer:"Barry Sanders 1997",statSheet:"The answer shared AP NFL MVP honors that season.",explanation:"Barry Sanders rushed for 2,053 yards and 11 touchdowns during his 1997 Lions season. Among the four listed 2,000-yard backs, his 11 rushing scores were fewest, compared with 12 for O.J. Simpson in 1973, 14 for Eric Dickerson in 1984 and 17 for Derrick Henry in 2020.",evidence:[{authority:"NFL / Pro Football Hall of Fame historical records",url:"https://www.nfl.com/players/barry-sanders/stats/career",supportingDetail:"Barry Sanders rushed for 2,053 yards and 11 touchdowns during his 1997 Lions season. Among the four listed 2,000-yard backs, his 11 rushing scores were fewest, compared with 12 for O.J. Simpson in 1973, 14 for Eric Dickerson in 1984 and 17 for Derrick Henry in 2020."}]},
-  "nfl:6:2":{id:"millionaire-nfl-future-mike-jones-one-yard-short-q3",type:"super-bowl-finishes",prompt:"Which Rams linebacker stopped Kevin Dyson just short of the goal line on the last play of Super Bowl XXXIV?",choices:["Mike Jones","London Fletcher","D'Marco Farr","Kevin Carter"],answer:"Mike Jones",statSheet:"The January 2000 tackle preserved St. Louis' 23–16 victory over Tennessee.",explanation:"Rams linebacker Mike Jones tackled Tennessee receiver Kevin Dyson at the one-yard line on the final play of Super Bowl XXXIV. The tackle as time expired preserved St. Louis' 23–16 victory on January 30, 2000.",evidence:[{authority:"Official NFL/team event record",url:"https://www.nfl.com/news/plays-not-accomplishments-define-super-bowl-memories-09000d5d80e4eef9",supportingDetail:"Rams linebacker Mike Jones tackled Tennessee receiver Kevin Dyson at the one-yard line on the final play of Super Bowl XXXIV. The tackle as time expired preserved St. Louis' 23–16 victory on January 30, 2000."}]},
+  "nfl:6:2": {
+  "id": "millionaire-nfl-future-gabriel-davis-four-tds-2022-q3",
+  "type": "postseason-receiving-records",
+  "prompt": "Which Bills receiver caught a playoff-record four touchdown passes against Kansas City in the January 2022 AFC divisional round?",
+  "choices": [
+    "Gabriel Davis",
+    "Stefon Diggs",
+    "Cole Beasley",
+    "Isaiah McKenzie"
+  ],
+  "answer": "Gabriel Davis",
+  "statSheet": "Buffalo lost a 42–36 overtime thriller despite the receiver's eight catches for 201 yards.",
+  "explanation": "Gabriel Davis caught four touchdown passes from Josh Allen against the Kansas City Chiefs on January 23, 2022, an NFL playoff record. The Bills lost 42–36 in overtime despite Davis' eight receptions for 201 yards.",
+  "evidence": [
+    {
+      "authority": "NFL",
+      "url": "https://www.nfl.com/_amp/bills-wr-gabriel-davis-playoff-record-four-tds-divisional-round-loss-chiefs",
+      "supportingDetail": "NFL reports Davis' four receiving touchdowns, eight receptions, 201 yards and Bills' 42–36 overtime loss in January 2022."
+    }
+  ]
+},
   "nfl:6:3":{id:"millionaire-nfl-future-reviewed-6-3",type:"super-bowl",prompt:"Who was MVP of Super Bowl XLVII?",choices:["Joe Flacco","Ray Lewis","Anquan Boldin","Colin Kaepernick"],answer:"Joe Flacco",statSheet:"Baltimore defeated San Francisco.",explanation:"Baltimore quarterback Joe Flacco was named Super Bowl XLVII MVP after throwing three touchdown passes without an interception in the Ravens' 34–31 victory over San Francisco on February 3, 2013.",evidence:[{authority:"NFL / Pro Football Hall of Fame historical records",url:"https://www.nfl.com/news/joe-flacco-wins-super-bowl-mvp-ready-to-hit-jackpot-0ap1000000135355",supportingDetail:"Baltimore quarterback Joe Flacco was named Super Bowl XLVII MVP after throwing three touchdown passes without an interception in the Ravens' 34–31 victory over San Francisco on February 3, 2013."}]},
   "nfl:6:4":{id:"millionaire-nfl-future-mcpherson-titans-52-yard-q5",type:"postseason-kicking",prompt:"Which Bengals rookie kicker hit a 52-yard walk-off field goal to beat Tennessee in the January 2022 AFC Divisional playoffs?",choices:["Evan McPherson","Randy Bullock","Justin Tucker","Harrison Butker"],answer:"Evan McPherson",statSheet:"Cincinnati won 19–16 and advanced to the AFC Championship against Kansas City.",explanation:"Rookie Bengals kicker Evan McPherson made a 52-yard field goal as time expired to beat Tennessee 19–16 on January 22, 2022, reaching Cincinnati's first AFC Championship Game since the 1988 season.",evidence:[{authority:"Official NFL/team event record",url:"https://www.bengals.com/history/years/2021",supportingDetail:"Rookie Bengals kicker Evan McPherson made a 52-yard field goal as time expired to beat Tennessee 19–16 on January 22, 2022, reaching Cincinnati's first AFC Championship Game since the 1988 season."}]},
 
-  "nfl:6:5":{id:"millionaire-nfl-reviewed-legacy-6-5",type:"defensive-awards",prompt:"Which defender won AP Defensive Player of the Year three times?",choices:["Aaron Donald","Ray Lewis","Reggie White","Deion Sanders"],answer:"Aaron Donald",statSheet:"The three awards came within a four-season span.",explanation:"Aaron Donald earned the Associated Press NFL Defensive Player of the Year award in 2017, 2018 and 2020, all with the Los Angeles Rams. His third award followed a 13.5-sack season and was his third in a four-season span.",evidence:[{authority:"NFL / Pro Football Hall of Fame",url:"https://www.nfl.com/news/rams-dt-aaron-donald-wins-ap-defensive-player-of-the-year",supportingDetail:"Aaron Donald earned the Associated Press NFL Defensive Player of the Year award in 2017, 2018 and 2020, all with the Los Angeles Rams. His third award followed a 13.5-sack season and was his third in a four-season span."}]},
+  "nfl:6:5": {
+  "id": "millionaire-nfl-future-mike-tomlin-youngest-sb-xliii-q6",
+  "type": "super-bowl-coaching-history",
+  "prompt": "Which Steelers coach became the youngest Super Bowl-winning head coach at the time by winning Super Bowl XLIII at age 36?",
+  "choices": [
+    "Mike Tomlin",
+    "Bill Cowher",
+    "Ken Whisenhunt",
+    "John Harbaugh"
+  ],
+  "answer": "Mike Tomlin",
+  "statSheet": "The 27–23 win over Arizona came in his second season as Pittsburgh's head coach.",
+  "explanation": "Mike Tomlin, in his second season as Pittsburgh's head coach, led the Steelers past Arizona 27–23 in Super Bowl XLIII following the 2008 season. At age 36, he was then the youngest head coach to win a Super Bowl, a mark later surpassed by Sean McVay.",
+  "evidence": [
+    {
+      "authority": "Pittsburgh Steelers",
+      "url": "https://www.steelers.com/news/tomlin-signed-to-three-year-extension",
+      "supportingDetail": "Official Steelers history confirms Tomlin won Super Bowl XLIII at age 36 in his second season and held the youngest winning coach record until McVay."
+    }
+  ]
+},
   "nfl:7:1":{id:"millionaire-nfl-reviewed-legacy-7-1",type:"career-history",prompt:"Which quarterback retired after winning Super Bowl 50?",choices:["Peyton Manning","Tom Brady","Drew Brees","Ben Roethlisberger"],answer:"Peyton Manning",statSheet:"The championship was his second with a different franchise.",explanation:"Peyton Manning retired in March 2016 after helping Denver beat Carolina 24–10 in Super Bowl 50. The victory gave Manning a second Super Bowl ring, following his Super Bowl XLI triumph with Indianapolis.",evidence:[{authority:"NFL / Pro Football Hall of Fame",url:"https://www.profootballhof.com/players/peyton-manning",supportingDetail:"Peyton Manning retired in March 2016 after helping Denver beat Carolina 24–10 in Super Bowl 50. The victory gave Manning a second Super Bowl ring, following his Super Bowl XLI triumph with Indianapolis."}]},
   "nfl:7:2": {
     id: "millionaire-nfl-desean-miracle-meadowlands-2010-q3", type: "punt-return-walkoffs", prompt: "Who scored on a walk-off punt return in Philadelphia's 2010 'Miracle at the New Meadowlands' win over the Giants?",

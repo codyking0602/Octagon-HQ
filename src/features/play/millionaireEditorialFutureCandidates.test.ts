@@ -118,7 +118,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("replaces three direct active Bar Trivia shared-fact duplicates in future preview only", () => {
     const edits = [
       ["nfl:7:0", "Bills", "https://www.buffalobills.com/news/bills-connections-to-super-bowl-xlviii-12555328"],
-      ["ufc:0:0", "Charles Oliveira", "https://www.ufc.com/news/ufc-262-oliveira-vs-chandler-results-highlights-interviews-winners-houston"],
+      ["ufc:0:0", "Robbie Lawler", "https://www.ufc.com/news/robbie-lawler-named-ufc-hall-fame-class-2025"],
       ["ufc:2:6", "Jack Della Maddalena", "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2"],
     ] as const;
     for (const [key, correct, evidence] of edits) {
@@ -1189,7 +1189,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:1:3", "Who stopped Jamahal Hill "],
       ["ufc:1:4", "Who submitted Justin Gaet"],
       ["ufc:1:5", "Who knocked out Beneil Dariush"],
-      ["ufc:2:0", "Who knocked out Jamahal H"],
+      ["ufc:2:0", "Who defeated Anderson Silva"],
       ["ufc:2:3", "Who submitted Valentina S"],
       ["ufc:2:4", "Who stopped Jessica Andrade"],
       ["ufc:3:0", "Who knocked out Robert Whittaker"],
@@ -1468,7 +1468,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("keeps sourced NFL future-only replacements distinct from active Average Fan overlaps", () => {
     for (const [key, expected, marker] of [
-      ["nfl:6:2", "Mike Jones", "Super Bowl XXXIV"],
+      ["nfl:6:2", "Gabriel Davis", "January 2022"],
       ["nfl:6:4", "Evan McPherson", "January 2022"],
       ["nfl:7:4", "Devin White", "Super Bowl LV"],
     ] as const) {
@@ -1561,4 +1561,50 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(normalized(ufc8.statSheet ?? "")).not.toContain("tai tuivasa");
     expect(millionaireDailyRun("ufc", 7)[0]!.prompt).not.toBe(ufc8.prompt);
   });
+  it("prevents five reintroduced selectable cross-game facts in repaired future-preview slots", () => {
+    const replacements = [
+      [
+            "nfl",
+            6,
+            2,
+            "Gabriel Davis"
+      ],
+      [
+            "nfl",
+            6,
+            5,
+            "Mike Tomlin"
+      ],
+      [
+            "cfb",
+            11,
+            4,
+            "Mike Norvell"
+      ],
+      [
+            "ufc",
+            0,
+            0,
+            "Robbie Lawler"
+      ],
+      [
+            "ufc",
+            2,
+            0,
+            "Israel Adesanya"
+      ]
+] as const;
+    for (const [league, runIndex, levelIndex, correct] of replacements) {
+      const q = millionaireFutureEditorialDailyRun(league, runIndex)[levelIndex]!;
+      expect(answer(q)).toBe(correct);
+      expect(new Set(q.choices.map(choice => normalized(choice.text))).size).toBe(4);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(correct));
+    }
+    expect(millionaireFutureEditorialDailyRun("nfl", 6)[2]!.prompt).not.toContain("Mike Jones");
+    expect(millionaireFutureEditorialDailyRun("nfl", 6)[5]!.prompt).not.toContain("Aaron Donald");
+    expect(millionaireFutureEditorialDailyRun("cfb", 11)[4]!.prompt).not.toContain("Bobby Bowden");
+    expect(millionaireFutureEditorialDailyRun("ufc", 0)[0]!.prompt).not.toContain("Michael Chandler");
+    expect(millionaireFutureEditorialDailyRun("ufc", 2)[0]!.prompt).not.toContain("Jamahal Hill");
+  });
+
 });
