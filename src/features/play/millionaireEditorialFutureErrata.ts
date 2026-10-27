@@ -765,12 +765,11 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     explanation: "Blake Bortles started all 16 games for the 2017 Jacksonville Jaguars and guided them to a 10–6 record and AFC South championship. He threw for 293 yards in the January 2018 AFC Championship Game, which Jacksonville lost to New England after a playoff upset of Pittsburgh.",
     evidence: [{ authority: "Jacksonville Jaguars", url: "https://www.jaguars.com/news/the-offseason-quarterbacks-20347940", supportingDetail: "Jaguars' official 2017 quarterback retrospective documents Bortles starting all 16, 10–6 AFC South title, divisional upset of Pittsburgh and 293 passing yards in AFC title game." }],
   },  "nfl:6:6": {
-    id: "millionaire-nfl-future-ed-reed-2004-dpoy-q7", type: "defensive-awards",
-    prompt: "Which defensive back won AP NFL Defensive Player of the Year for the 2004 season?",
-    choices: ["Ed Reed", "Troy Polamalu", "Bob Sanders", "Charles Woodson"], answer: "Ed Reed",
-    statSheet: "The Ravens ballhawk led the NFL with nine interceptions that season.",
-    explanation: "Baltimore Ravens safety Ed Reed received Associated Press NFL Defensive Player of the Year honors in 2004 after leading the league with nine interceptions. Troy Polamalu, Bob Sanders, and Charles Woodson won the same award in other seasons.",
-    evidence: [{ authority: "Pro Football Hall of Fame", url: "https://www.profootballhof.com/news/class-of-2019-finalists", supportingDetail: "Hall of Fame record names Reed as 2004 DPOY and documents nine interceptions; each alternative was DPOY in a different year." }],
+    id: "millionaire-nfl-tracy-porter-favre-nfc-2009-q7", type: "postseason-interceptions",
+    prompt: "Which Saints cornerback intercepted Brett Favre late in the January 2010 NFC Championship Game against Minnesota?",
+    choices: ["Tracy Porter","Jabari Greer","Malcolm Jenkins","Darren Sharper"], answer: "Tracy Porter",
+    statSheet: "The fourth-quarter takeaway stopped a potential go-ahead Vikings field-goal drive.", explanation: "Tracy Porter intercepted Brett Favre late in the fourth quarter of the January 24, 2010 NFC Championship Game, ending Minnesota's last regulation possession. New Orleans won 31–28 in overtime to reach its first Super Bowl.",
+    evidence: [{authority: "New Orleans Saints", url: "https://www.neworleanssaints.com/video/10-years-stronger-porter-intercepts-favre-15815000", supportingDetail: "Tracy Porter intercepted Brett Favre late in the fourth quarter of the January 24, 2010 NFC Championship Game, ending Minnesota's last regulation possession. New Orleans won 31–28 in overtime to reach its first Super Bowl."}],
   },
   "cfb:0:4": {
     id: "millionaire-cfb-future-harrison-2023-biletnikoff-q5", type: "receiver-awards",

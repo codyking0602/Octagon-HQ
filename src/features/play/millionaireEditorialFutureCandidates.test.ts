@@ -74,7 +74,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("locks four sourced retained-legacy replacements to preview-only errata without changing historical questions", () => {
     for (const [key, correct, evidence] of [
       ["nfl:3:2", "Blake Bortles", "https://www.jaguars.com/news/the-offseason-quarterbacks-20347940"],
-      ["nfl:6:6", "Ed Reed", "https://www.profootballhof.com/news/class-of-2019-finalists"],
+      ["nfl:6:6", "Tracy Porter", "https://www.neworleanssaints.com/video/10-years-stronger-porter-intercepts-favre-15815000"],
       ["cfb:0:4", "Marvin Harrison Jr.", "https://ohiostatebuckeyes.com/news/2023/12/8/football-marvin-harrison-jr-is-the-2023-biletnikoff-award-winner"],
       ["cfb:9:0", "Indiana", "https://collegefootballplayoff.com/sports/2026/1/27/NCG-recap"],
     ] as const) {
@@ -1275,7 +1275,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("preserves four source-checked, future-only featured finals without restoring obscure predecessors", () => {
     const revisedFinals = [
-      ["nfl", 11, "Mecole Hardman", "Super Bowl LVIII"],
+      ["nfl", 11, "Jermaine Kearse", "January 2015 NFC Championship"],
       ["cfb", 13, "Jack Sawyer", "January 2025 Cotton Bowl"],
       ["cfb", 14, "Adonai Mitchell", "December 2022 Peach Bowl"],
       ["ufc", 10, "Brian Ortega", "UFC 266"],
