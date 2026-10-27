@@ -21,6 +21,12 @@ const bundles = [
     requiredExports: ["advanceFootballHitNumberDailyRuntime"],
   },
   {
+    label: "Football Wavelength Daily answer-only runtime",
+    entry: resolve(repoRoot, "src/features/play/footballWavelengthDailyAdvance.ts"),
+    fileName: "football-wavelength-advance.generated.mjs",
+    requiredExports: ["advanceFootballWavelengthDailyRuntime"],
+  },
+  {
     label: "Millionaire Daily answer-only runtime",
     entry: resolve(repoRoot, "src/features/play/millionaireDailyAdvance.ts"),
     fileName: "millionaire-advance.generated.mjs",
