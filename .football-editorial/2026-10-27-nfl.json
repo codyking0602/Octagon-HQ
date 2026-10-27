@@ -80,5 +80,142 @@
   "selection": {
     "player_id": "cam-skattebo",
     "game_id": "browns-at-steelers"
+  },
+  "preparation": {
+    "spotlight": {
+      "name": "Cam Skattebo",
+      "team": "New York Giants",
+      "position": "RB",
+      "stats": [
+        {
+          "label": "RUSH YDS",
+          "value": "124"
+        },
+        {
+          "label": "CARRIES",
+          "value": "17"
+        },
+        {
+          "label": "RUSH TD",
+          "value": "1"
+        },
+        {
+          "label": "LONG RUN",
+          "value": "42"
+        }
+      ],
+      "result": "AT HOUSTON · W 27–21 (OT)",
+      "measurements": "5 ft 11 in · 215 lbs",
+      "team_color": "#0B2265",
+      "highlight_url": "https://www.youtube.com/watch?v=8U82bH0XZnA",
+      "photo_source": "https://a.espncdn.com/i/headshots/nfl/players/full/4696981.png",
+      "photo_kind": "portrait",
+      "photo_asset_path": "/assets/football/weekly/2026-10-27/nfl/spotlight.webp"
+    },
+    "game": {
+      "away_team": "Cleveland Browns",
+      "home_team": "Pittsburgh Steelers",
+      "kickoff_at": "2026-11-01T12:00:00-06:00",
+      "header_asset_path": "/assets/football/weekly/2026-10-27/nfl/game-header.webp",
+      "header_photo_sources": [
+        "https://seatgeekimages.com/matchup/v3_3362f95b/2073/2056/600x600.jpg"
+      ]
+    },
+    "editorial": {
+      "source_urls": [
+        "https://www.steelers.com/news/steelers-2026-opponent-preview-cleveland-browns",
+        "https://www.clevelandbrowns.com/news/deshaun-watson-records-first-300-yard-passing-game-with-browns-by-the-numbers",
+        "https://www.steelers.com/news/metcalf-is-the-player-of-the-week",
+        "https://www.steelers.com/team/stats/",
+        "https://www.steelers.com/team/depth-chart/"
+      ],
+      "breakdown": {
+        "setup": [
+          "Cleveland and Pittsburgh renew their AFC North rivalry with matching 5–2 records, and the rematch comes a month after the Browns' 27–24 win on October 1. This time the Steelers have the home field and a chance to answer the earlier result.",
+          "The Browns bring Deshaun Watson's improving passing production and a hard-running Quinshon Judkins, while Pittsburgh leans on Aaron Rodgers, Jaylen Warren and DK Metcalf. Field position and protection could decide another close divisional contest."
+        ],
+        "things": [
+          {
+            "title": "Rodgers against Cleveland's rush",
+            "body": "Cleveland's front can make even quick-release quarterback Aaron Rodgers uncomfortable. Pittsburgh must avoid long third downs and create safe outlets for its backs and tight ends before pressure arrives.",
+            "edge": "Even"
+          },
+          {
+            "title": "Judkins on early downs",
+            "body": "Quinshon Judkins has shown he can finish drives and create tough yards. Cleveland will look to build favorable second downs rather than forcing Watson into constant obvious passing situations.",
+            "edge": "Cleveland Browns"
+          },
+          {
+            "title": "Metcalf's big-play threat",
+            "body": "DK Metcalf produced 115 receiving yards in their October meeting, including key second-half gains. Cleveland must limit his explosive receptions while accounting for Pittsburgh's intermediate targets.",
+            "edge": "Pittsburgh Steelers"
+          }
+        ],
+        "paths_to_win": [
+          {
+            "team": "Cleveland Browns",
+            "body": "Win the line of scrimmage with Judkins, keep Watson clean and pressure Rodgers without allowing a long catch-and-run. Recreating the defensive stops that helped win the first matchup would give Cleveland the edge late."
+          },
+          {
+            "team": "Pittsburgh Steelers",
+            "body": "Balance Warren's touches with quick throws, get Metcalf involved early, and keep turnovers down. If the defense gets Cleveland behind schedule, Pittsburgh can control field position and make its home-field advantage matter."
+          }
+        ],
+        "players_to_watch": [
+          {
+            "team": "Cleveland Browns",
+            "players": [
+              {
+                "name": "Deshaun Watson",
+                "position": "QB",
+                "body": "His decisions against the Steelers' pressure determine Cleveland's passing efficiency."
+              },
+              {
+                "name": "Quinshon Judkins",
+                "position": "RB",
+                "body": "The Browns' featured runner helps set the pace and convert short-yardage situations."
+              },
+              {
+                "name": "Myles Garrett",
+                "position": "EDGE",
+                "body": "Cleveland's pass-rush centerpiece can disrupt Rodgers' preferred timing."
+              }
+            ]
+          },
+          {
+            "team": "Pittsburgh Steelers",
+            "players": [
+              {
+                "name": "Aaron Rodgers",
+                "position": "QB",
+                "body": "The veteran must diagnose blitzes and protect the ball against Cleveland."
+              },
+              {
+                "name": "Jaylen Warren",
+                "position": "RB",
+                "body": "His burst as a runner and receiving outlet gives Pittsburgh balance."
+              },
+              {
+                "name": "DK Metcalf",
+                "position": "WR",
+                "body": "The downfield target already hurt Cleveland in the teams' October game."
+              }
+            ]
+          }
+        ],
+        "unit_edges": [
+          {
+            "title": "Cleveland front vs Pittsburgh blockers",
+            "body": "Cleveland can dictate down-and-distance if its defensive line creates early penetration. Pittsburgh has to protect Rodgers and get Warren into space before the Browns' edge pressure closes in.",
+            "edge": "Even"
+          },
+          {
+            "title": "Pittsburgh front vs Cleveland rushing game",
+            "body": "Pittsburgh's run fits and linebacker tackling are tested by Judkins. If the Steelers force Watson into longer dropbacks, the defense can attack the passer instead of chasing the run.",
+            "edge": "Even"
+          }
+        ]
+      }
+    }
   }
 }
