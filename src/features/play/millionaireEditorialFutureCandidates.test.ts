@@ -1425,14 +1425,23 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       [0, 4, "Carla Esparza", "2014 TUF 20"],
       [3, 0, "Joaquin Buckley", "2020"],
     ] as const) {
-      const question = millionaireFutureEditorialDailyRun("ufc", run)[questionIndex]!;
-      expect(answer(question)).toBe(correct);
-      expect(question.prompt).toContain(marker);
-      expect(question.choices).toHaveLength(4);
-      expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
-      expect(normalized(question.statSheet ?? "")).not.toContain(normalized(correct));
-      expect(question.explanation).toContain(correct);
-      expect(question.explanation.length).toBeGreaterThan(100);
+      // New-run and replaced legacy questions are in the authored run; targeted
+      // fixes to original legacy runs live in the future-only errata overlay.
+      // The bare authored run never applies that runtime overlay.
+      const overlay = MILLIONAIRE_FUTURE_TARGETED_REWRITES[`ufc:${run}:${questionIndex}`];
+      const authored = overlay ? null : millionaireFutureEditorialDailyRun("ufc", run)[questionIndex]!;
+      const choices = overlay?.choices ?? authored!.choices.map(choice => choice.text);
+      const designatedAnswer = overlay?.answer ?? answer(authored!);
+      const prompt = overlay?.prompt ?? authored!.prompt;
+      const statSheet = overlay?.statSheet ?? authored?.statSheet ?? "";
+      const explanation = overlay?.explanation ?? authored!.explanation;
+      expect(designatedAnswer).toBe(correct);
+      expect(prompt).toContain(marker);
+      expect(choices).toHaveLength(4);
+      expect(new Set(choices.map(normalized)).size).toBe(4);
+      expect(normalized(statSheet)).not.toContain(normalized(correct));
+      expect(explanation).toContain(correct);
+      expect(explanation.length).toBeGreaterThan(100);
     }
   });
 
