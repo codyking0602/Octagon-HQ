@@ -1,5 +1,5 @@
 import {
-  footballWavelengthClues,
+  footballWavelengthAvailableClues,
   nextFootballWavelengthClue,
   type FootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
@@ -41,7 +41,7 @@ function cluePresentation(clue: FootballWavelengthClue) {
 }
 
 function clueFor(id: string) {
-  const clue = footballWavelengthClues.find((row) => row.id === id);
+  const clue = footballWavelengthAvailableClues.find((row) => row.id === id);
   if (!clue) throw new Error(`Football Wavelength clue ${id} is unavailable.`);
   return clue;
 }

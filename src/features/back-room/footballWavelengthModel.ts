@@ -9,6 +9,7 @@ import {
   type PlayLineupIdentity,
 } from "../play/lineupModel";
 import { footballWavelengthExpansionCategories } from "./footballWavelengthExpansionCatalog";
+import { FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS, usesFootballWavelengthEditorialPool } from "./footballWavelengthEditorial2026";
 import { footballWavelengthCanonicalSubjectForClue } from "./footballWavelengthSubjectAuthority";
 
 export const FOOTBALL_WAVELENGTH_GAME_ID = "football-wavelength";
@@ -516,6 +517,26 @@ export const footballWavelengthClues: readonly FootballWavelengthClue[] = [
   ...expansionFootballWavelengthClues,
 ];
 
+/** All retired clues remain available to historical reveals, shared challenges and replay. */
+const footballWavelengthEditorialClues: readonly FootballWavelengthClue[] = FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.map(
+  ({ legacyId, category, text, rating }) => ({
+    id: `${legacyId}-editorial-2026`,
+    category: category as FootballWavelengthCategory,
+    text,
+    rating,
+  }),
+);
+const retiredClueIds = new Set(FOOTBALL_WAVELENGTH_EDITORIAL_REVISIONS.map(({ legacyId }) => legacyId));
+export const footballWavelengthAvailableClues: readonly FootballWavelengthClue[] = [
+  ...footballWavelengthClues,
+  ...footballWavelengthEditorialClues,
+];
+/** Exactly one playable successor per retired clue; the 540-item footprint stays stable. */
+export const footballWavelengthPlayableClues: readonly FootballWavelengthClue[] = [
+  ...footballWavelengthClues.filter((clue) => !retiredClueIds.has(clue.id)),
+  ...footballWavelengthEditorialClues,
+];
+
 function chooseFootballWavelengthClue(
   desiredRating: number,
   options: {
@@ -523,6 +544,7 @@ function chooseFootballWavelengthClue(
     direction?: number;
     usedClues?: readonly FootballWavelengthClue[];
     random: () => number;
+    editorialPool: boolean;
   },
 ) {
   const usedClues = options.usedClues ?? [];
@@ -536,7 +558,8 @@ function chooseFootballWavelengthClue(
   const usedThemeFamilies = new Set(
     usedClues.map((clue) => footballWavelengthThemeFamilyForCategory(clue.category)),
   );
-  const base = footballWavelengthClues.filter((clue) => {
+  const pool = options.editorialPool ? footballWavelengthPlayableClues : footballWavelengthClues;
+  const base = pool.filter((clue) => {
     if (usedIds.has(clue.id)) return false;
     const canonicalSubjectId = footballWavelengthCanonicalSubjectForClue(clue)?.id;
     return !canonicalSubjectId || !usedCanonicalSubjectIds.has(canonicalSubjectId);
@@ -572,6 +595,7 @@ export function createFootballWavelengthRound(seed: string): FootballWavelengthR
   const opening = chooseFootballWavelengthClue(target + (random() > 0.5 ? 3 : -3), {
     target,
     random,
+    editorialPool: usesFootballWavelengthEditorialPool(seed),
   });
   return { target, clues: [opening] };
 }
@@ -598,6 +622,7 @@ export function nextFootballWavelengthClue(
     direction,
     usedClues: round.clues,
     random,
+    editorialPool: usesFootballWavelengthEditorialPool(seed),
   });
 }
 
