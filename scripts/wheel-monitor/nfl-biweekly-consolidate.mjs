@@ -13,9 +13,20 @@ for(const [type,file] of Object.entries(files)){
   try{data[type]=JSON.parse(readFileSync(path,"utf8"));}
   catch(error){data[type]=null;blockers.push(type+":invalid-report:"+String(error));}
 }
-const candidates=new Map(),key=(team,name)=>String(team??"")+"|"+String(name??"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const TEAM_ABBREVS={ARI:"Arizona Cardinals",ATL:"Atlanta Falcons",BAL:"Baltimore Ravens",BUF:"Buffalo Bills",
+  CAR:"Carolina Panthers",CHI:"Chicago Bears",CIN:"Cincinnati Bengals",CLE:"Cleveland Browns",
+  DAL:"Dallas Cowboys",DEN:"Denver Broncos",DET:"Detroit Lions",GB:"Green Bay Packers",
+  HOU:"Houston Texans",IND:"Indianapolis Colts",JAX:"Jacksonville Jaguars",KC:"Kansas City Chiefs",
+  LAC:"Los Angeles Chargers",LAR:"Los Angeles Rams",LV:"Las Vegas Raiders",MIA:"Miami Dolphins",
+  MIN:"Minnesota Vikings",NE:"New England Patriots",NO:"New Orleans Saints",NYG:"New York Giants",
+  NYJ:"New York Jets",PHI:"Philadelphia Eagles",PIT:"Pittsburgh Steelers",SEA:"Seattle Seahawks",
+  SF:"San Francisco 49ers",TB:"Tampa Bay Buccaneers",TEN:"Tennessee Titans",WSH:"Washington Commanders"};
+const teamCodes=new Map(Object.entries(TEAM_ABBREVS).map(([code,name])=>[name,code]));
+const standardTeam=team=>teamCodes.get(team)??team;
+const candidates=new Map(),key=(team,name)=>standardTeam(team)+"|"+String(name??"").toLowerCase().replace(/[^a-z0-9]/g,"");
 function add(team,name,monitor,reason,priority="medium",details={}){
   const id=key(team,name);if(!team||!name)return;
+  team=standardTeam(team);
   const existing=candidates.get(id)??{team,name,priority,flags:[],details:{}};
   if(priority==="high")existing.priority="high";
   if(!existing.flags.some(x=>x.monitor===monitor&&x.reason===reason))existing.flags.push({monitor,reason});
