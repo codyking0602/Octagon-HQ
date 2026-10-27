@@ -24,6 +24,8 @@ test("biweekly NFL report deduplicates full EA team names and HQ codes",()=>{
     assert.equal(report.reviewCandidates[0].team,"BUF");
     assert.equal(report.reviewCandidates[0].flags.length,2);
     assert.equal(report.automaticChangesApplied,0);
+    assert.equal(report.maddenRule,"overall +/-2 only; attributes disabled");
+    assert.equal(report.counts.earlyCareerScreened,109);
   }finally{rmSync(root,{recursive:true,force:true});}
 });
 test("missing source files remain explicit blockers, not unchanged",()=>{
