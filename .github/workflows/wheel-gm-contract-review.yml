@@ -2,6 +2,13 @@ name: Wheel GM Contract Source Review (staged)
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '20 12 * * 1-5' # Weekday NFL contract/roster identity checks
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wheel-gm-contract-review.yml'
+      - 'scripts/wheel-monitor/gm-contract-compare.mjs'
   workflow_call:
   pull_request:
     paths:

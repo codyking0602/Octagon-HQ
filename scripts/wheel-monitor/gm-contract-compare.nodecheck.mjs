@@ -50,3 +50,16 @@ test("age-only change is cheap roster metadata, never an expensive contract adju
  assert.equal(report.summary.fieldCounts.age,1);
  assert.equal(report.contractChangesApplied,0);
 });
+
+test("unambiguous provider ID moves are surfaced as roster transaction candidates, not silently applied",()=>{
+ const next={...fresh,players:[row("Example",{team:"SEA"})]};
+ const report=compareGmContractSnapshots(baseline,next,date);
+ assert.equal(report.status,"identity-review-blocked");
+ assert.equal(report.summary.teamTransfers,1);
+ assert.deepEqual(report.transfers[0],{
+   player:"Example",family:"WR",fromTeam:"ARI",toTeam:"SEA",providerId:23,
+   sourceUrl:"https://overthecap.com/player/example/23/",
+   action:"verify-official-transaction-before-updating-HQ"
+ });
+ assert.equal(report.contractChangesApplied,0);
+});
