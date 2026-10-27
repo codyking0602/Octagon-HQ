@@ -566,13 +566,26 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   },
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:5:3": {
-    id: "millionaire-ufc-future-rewrite-jack-della-maddalena-burns-299-q4",
-    type: "welterweight-contender-finishes", prompt: "Who stopped Gilbert Burns with a knee and follow-up elbows in Round 3 at UFC 299?",
-    choices: ["Jack Della Maddalena", "Sean Brady", "Khamzat Chimaev", "Belal Muhammad"], answer: "Jack Della Maddalena",
-    statSheet: "The March 2024 Miami bout ended at 3:43 of the final round of the scheduled three.",
-    explanation: "Jack Della Maddalena knocked out Gilbert Burns at 3:43 of Round 3 at UFC 299 on March 9, 2024, landing a knee during a takedown attempt and following with elbows for the stoppage.",
-    evidence: [{ authority: "UFC 299 official main-card results", url: "https://www.ufc.com/news/main-card-results-highlights-winner-interviews-ufc-299-omalley-vs-vera-2", supportingDetail: "The official UFC recap confirms a Jack Della Maddalena knockout over Gilbert Burns with a knee and elbows at 3:43 of Round 3." }],
-  },
+  "id": "millionaire-ufc-future-rewrite-strickland-costa-302-q4",
+  "type": "middleweight-contender-decisions",
+  "prompt": "Which former middleweight champion defeated Paulo Costa by split decision in the UFC 302 co-main event?",
+  "choices": [
+    "Sean Strickland",
+    "Robert Whittaker",
+    "Israel Adesanya",
+    "Marvin Vettori"
+  ],
+  "answer": "Sean Strickland",
+  "statSheet": "Two judges favored the winner by wide margins in the June 2024 five-round matchup.",
+  "explanation": "Sean Strickland defeated Paulo Costa by split decision at UFC 302 in Newark on June 1, 2024. Although one judge favored Costa 49–46, the other two awarded Strickland the win by scores of 49–46 and 50–45.",
+  "evidence": [
+    {
+      "authority": "UFC official judges' scorecards",
+      "url": "https://www.ufc.com/news/official-judges-scorecards-ufc-302-makhachev-vs-poirier",
+      "supportingDetail": "Official UFC 302 scorecards name Strickland as split-decision winner, with 49–46 and 50–45 awarded to him versus 49–46 for Costa."
+    }
+  ]
+},
   // Future-only replacement of a selected Bar Trivia answer/fact repeat.
   "ufc:5:4": {
     id: "millionaire-ufc-future-rewrite-r6-q5",
@@ -1064,7 +1077,27 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   "cfb:1:6": {id:"millionaire-cfb-future-legacy-reviewed-1-6",type:"bcs-history",prompt:"Which BCS national champion won the title despite two regular-season losses?",choices:["2007 LSU","2008 Florida","2010 Auburn","2011 Alabama"],answer:"2007 LSU",statSheet:"The answer won the SEC Championship before beating Ohio State for the title.",explanation:"LSU finished the 2007 regular season with two triple-overtime losses, but beat Tennessee for the SEC title and defeated Ohio State 38–24 in the January 2008 BCS championship. The Tigers finished 12–2 under Les Miles.",evidence:[{authority:"Official team, CFP, or Heisman Trust history",url:"https://lsusports.net/news/2017/10/11/211672612",supportingDetail:"LSU finished the 2007 regular season with two triple-overtime losses, but beat Tennessee for the SEC title and defeated Ohio State 38–24 in the January 2008 BCS championship. The Tigers finished 12–2 under Les Miles."}]},
   "cfb:2:2": {id:"millionaire-cfb-future-legacy-reviewed-2-2",type:"championship",prompt:"Who did Florida State defeat for the 2013 national championship?",choices:["Auburn","Alabama","Oregon","Stanford"],answer:"Auburn",statSheet:"Jameis Winston threw the winning touchdown with 13 seconds left.",explanation:"Florida State beat Auburn 34–31 in the January 6, 2014 BCS title game for the 2013 season. Jameis Winston threw a two-yard winner to Kelvin Benjamin with 13 seconds left, completing a 14–0 championship campaign.",evidence:[{authority:"Official team, CFP, or Heisman Trust history",url:"https://seminoles.com/sports/football/roster/jameis-winston/3109",supportingDetail:"Florida State beat Auburn 34–31 in the January 6, 2014 BCS title game for the 2013 season. Jameis Winston threw a two-yard winner to Kelvin Benjamin with 13 seconds left, completing a 14–0 championship campaign."}]},
   "cfb:3:2": {id:"millionaire-cfb-future-legacy-reviewed-3-2",type:"bowl-history",prompt:"Which team upset Oklahoma in the 2007 Fiesta Bowl?",choices:["Boise State","Utah","TCU","West Virginia"],answer:"Boise State",statSheet:"The winning two-point conversion came on a Statue of Liberty play.",explanation:"Boise State upset Oklahoma 43–42 in overtime in the January 1, 2007 Fiesta Bowl, sealing an unbeaten 13–0 season with Ian Johnson's two-point Statue of Liberty conversion after a touchdown.",evidence:[{authority:"Official team, CFP, or Heisman Trust history",url:"https://broncosports.com/news/2007/1/2/tostitos_fiesta_bowl_champs_",supportingDetail:"Boise State upset Oklahoma 43–42 in overtime in the January 1, 2007 Fiesta Bowl, sealing an unbeaten 13–0 season with Ian Johnson's two-point Statue of Liberty conversion after a touchdown."}]},
-  "cfb:5:3": {id:"millionaire-cfb-future-legacy-reviewed-5-3",type:"streak-history",prompt:"Which team ended USC's 34-game winning streak in the 2006 Rose Bowl?",choices:["Texas","UCLA","Notre Dame","Oregon"],answer:"Texas",statSheet:"The winning quarterback scored the decisive touchdown on fourth down.",explanation:"Texas stopped Southern California's 34-game winning streak with a 41–38 win at the January 4, 2006 Rose Bowl. Vince Young scored the decisive eight-yard touchdown on fourth-and-five with 19 seconds remaining.",evidence:[{authority:"Official team, CFP, or Heisman Trust history",url:"https://texaslonghorns.com/news/2006/1/4/010406aaa_835",supportingDetail:"Texas stopped Southern California's 34-game winning streak with a 41–38 win at the January 4, 2006 Rose Bowl. Vince Young scored the decisive eight-yard touchdown on fourth-and-five with 19 seconds remaining."}]},
+  "cfb:5:3": {
+  "id": "millionaire-cfb-future-iowa-state-osu-2011-upset-q4",
+  "type": "college-football-upsets",
+  "prompt": "Which unranked team upset No. 2 Oklahoma State 37–31 in double overtime in November 2011?",
+  "choices": [
+    "Iowa State",
+    "Kansas State",
+    "Texas Tech",
+    "Baylor"
+  ],
+  "answer": "Iowa State",
+  "statSheet": "The Cowboys entered the game unbeaten, but lost a 17-point second-half lead on the road.",
+  "explanation": "Iowa State defeated undefeated, No. 2 Oklahoma State 37–31 in double overtime on November 18, 2011, in Ames. The Cyclones erased a 17-point second-half deficit, and Jeff Woody scored the game-winning touchdown on a 4-yard rush.",
+  "evidence": [
+    {
+      "authority": "Iowa State Athletics game recap",
+      "url": "https://cyclones.com/news/2011/11/19/205335983",
+      "supportingDetail": "Official Iowa State Athletics recap verifies Cyclones 37-31 win over No. 2 Oklahoma State in 2 OT after overcoming a 17-point deficit."
+    }
+  ]
+},
 
   "cfb:6:2":{id:"millionaire-cfb-future-source-6-2",type:"playoff-history",prompt:"Who coached Ohio State to the first College Football Playoff title?",choices:["Urban Meyer","Ryan Day","Jim Tressel","Luke Fickell"],answer:"Urban Meyer",statSheet:"The title came in his third season in Columbus.",explanation:"Urban Meyer coached the 2014 Ohio State Buckeyes to the first College Football Playoff national championship, beating Oregon 42–20 on January 12, 2015, in Arlington, Texas.",evidence:[{authority:"Official CFP, NCAA or university athletics",url:"https://collegefootballplayoff.com/sports/2019/5/22/history",supportingDetail:"Urban Meyer coached the 2014 Ohio State Buckeyes to the first College Football Playoff national championship, beating Oregon 42–20 on January 12, 2015, in Arlington, Texas."}]},
   "cfb:6:3":{id:"millionaire-cfb-future-source-6-3",type:"playoff-matchup",prompt:"Who did Georgia defeat in the semifinal before winning the 2021 national championship?",choices:["Michigan","Cincinnati","Notre Dame","Oklahoma"],answer:"Michigan",statSheet:"The semifinal was played at the Orange Bowl.",explanation:"Georgia beat Michigan 34–11 in the December 31, 2021 Orange Bowl semifinal with Stetson Bennett named offensive player of the game. Georgia then defeated Alabama to win the 2021 season's CFP championship.",evidence:[{authority:"Official CFP, NCAA or university athletics",url:"https://collegefootballplayoff.com/sports/2025/8/4/21-SF-Orange-recap",supportingDetail:"Georgia beat Michigan 34–11 in the December 31, 2021 Orange Bowl semifinal with Stetson Bennett named offensive player of the game. Georgia then defeated Alabama to win the 2021 season's CFP championship."}]},
@@ -1098,12 +1131,52 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   "cfb:5:5":{id:"millionaire-cfb-reviewed-history-5-5",type:"championship-path",prompt:"Which CFP champion lost its conference championship game before still winning the national title?",choices:["2021 Georgia","2018 Clemson","2019 LSU","2020 Alabama"],answer:"2021 Georgia",statSheet:"The answer was quarterbacked by former walk-on Stetson Bennett.",explanation:"Georgia lost the 2021 SEC championship game 41–24 to Alabama, then beat Michigan 34–11 in the Orange Bowl semifinal and avenged the Alabama loss 33–18 in the January 2022 CFP championship.",evidence:[{authority:"Heisman / CFP / official football history",url:"https://collegefootballplayoff.com/sports/2022/1/20/ncg-recap-2022",supportingDetail:"Georgia lost the 2021 SEC championship game 41–24 to Alabama, then beat Michigan 34–11 in the Orange Bowl semifinal and avenged the Alabama loss 33–18 in the January 2022 CFP championship."}]},
   "cfb:5:6":{id:"millionaire-cfb-reviewed-history-5-6",type:"preseason-ranking",prompt:"Which national champion began its title season ranked No. 22 in the preseason AP poll?",choices:["2010 Auburn","2013 Florida State","2014 Ohio State","2019 LSU"],answer:"2010 Auburn",statSheet:"The team climbed behind a breakout junior-college-transfer quarterback.",explanation:"Auburn entered 2010 ranked No. 22 in the preseason AP poll, then went 14–0 behind Heisman-winning quarterback Cam Newton. The Tigers beat Oregon 22–19 to claim that season's BCS national championship.",evidence:[{authority:"Heisman / CFP / official football history",url:"https://www.collegepollarchive.com/football/ap/appearances-preseason-team.cfm?teamid=21",supportingDetail:"Auburn entered 2010 ranked No. 22 in the preseason AP poll, then went 14–0 behind Heisman-winning quarterback Cam Newton. The Tigers beat Oregon 22–19 to claim that season's BCS national championship."}]},
 
-  "cfb:6:4":{id:"millionaire-cfb-reviewed-finals-6-4",type:"awards-history",prompt:"Which school produced Heisman-winning quarterbacks Danny Wuerffel and Tim Tebow?",choices:["Florida","Florida State","Miami","Georgia"],answer:"Florida",statSheet:"Both quarterbacks also won national championships as starters.",explanation:"Florida produced Heisman-winning quarterbacks Danny Wuerffel in 1996 and Tim Tebow in 2007. Wuerffel led the Gators to the 1996 season national title, while Tebow started for their 2008 national champion team.",evidence:[{authority:"Heisman Trust / CFP / school athletics",url:"https://www.heisman.com/heisman-winners/",supportingDetail:"Florida produced Heisman-winning quarterbacks Danny Wuerffel in 1996 and Tim Tebow in 2007. Wuerffel led the Gators to the 1996 season national title, while Tebow started for their 2008 national champion team."}]},
+  "cfb:6:4": {
+  "id": "millionaire-cfb-future-tee-martin-1998-title-q5",
+  "type": "quarterback-championship-history",
+  "prompt": "Who quarterbacked Tennessee to an undefeated 1998 season and a victory in the first BCS national championship game?",
+  "choices": [
+    "Tee Martin",
+    "Peyton Manning",
+    "Casey Clausen",
+    "Erik Ainge"
+  ],
+  "answer": "Tee Martin",
+  "statSheet": "The Volunteers beat Florida State in January 1999 to finish 13–0.",
+  "explanation": "Tee Martin started all 13 Tennessee games in the 1998 season and quarterbacked the undefeated Volunteers to the first BCS national championship, defeating Florida State on January 4, 1999. He threw for 2,164 yards and 19 touchdowns in that championship season.",
+  "evidence": [
+    {
+      "authority": "Tennessee Athletics official Tee Martin biography",
+      "url": "https://utsports.com/sports/football/roster/tee-martin/15704",
+      "supportingDetail": "Official UT Martin biography documents all 13 starts, 1998 national title over Florida State, 2,164 yards and 19 TD."
+    }
+  ]
+},
   "cfb:6:5":{id:"millionaire-cfb-reviewed-finals-6-5",type:"playoff-history",prompt:"Which program became the first to make four consecutive College Football Playoff appearances?",choices:["Alabama","Clemson","Oklahoma","Ohio State"],answer:"Alabama",statSheet:"Nick Saban's team reached each of the first four CFP fields.",explanation:"Alabama was selected for all four original College Football Playoff fields in 2014, 2015, 2016 and 2017 under Nick Saban. Clemson joined the streak later; the Crimson Tide went on to win the 2015 and 2017 season national championships.",evidence:[{authority:"Heisman Trust / CFP / school athletics",url:"https://collegefootballplayoff.com/sports/2019/5/22/history",supportingDetail:"Alabama was selected for all four original College Football Playoff fields in 2014, 2015, 2016 and 2017 under Nick Saban. Clemson joined the streak later; the Crimson Tide went on to win the 2015 and 2017 season national championships."}]},
   "cfb:7:3":{id:"millionaire-cfb-reviewed-finals-7-3",type:"transfer-history",prompt:"Which school did Baker Mayfield play for before transferring to Oklahoma?",choices:["Texas Tech","TCU","Baylor","Oklahoma State"],answer:"Texas Tech",statSheet:"He began his FBS career as a walk-on.",explanation:"Baker Mayfield began his FBS career as a walk-on quarterback at Texas Tech in 2013 before transferring to Oklahoma. After sitting out 2014, he won the 2017 Heisman and was drafted first overall by Cleveland in 2018.",evidence:[{authority:"Heisman Trust / CFP / school athletics",url:"https://soonersports.com/news/2018/4/26/211713543",supportingDetail:"Baker Mayfield began his FBS career as a walk-on quarterback at Texas Tech in 2013 before transferring to Oklahoma. After sitting out 2014, he won the 2017 Heisman and was drafted first overall by Cleveland in 2018."}]},
   "cfb:7:7":{id:"millionaire-cfb-reviewed-finals-7-7",type:"depth-chart-history",prompt:"Which championship-game starting quarterback began the season as his team's third-string quarterback?",choices:["Cardale Jones","Tua Tagovailoa","Stetson Bennett","Jake Coker"],answer:"Cardale Jones",statSheet:null,explanation:"Ohio State's Cardale Jones entered the 2014 season as the Buckeyes' third-string quarterback behind Braxton Miller and J.T. Barrett. Injuries elevated Jones into the starting role for postseason wins over Wisconsin, Alabama and Oregon, the last by 42–20 in the January 2015 championship.",evidence:[{authority:"Heisman Trust / CFP / school athletics",url:"https://ohiostatebuckeyes.com/news/2015/1/2/sweet-as-sugar-buckeyes-defeat-alabama-42-35",supportingDetail:"Ohio State's Cardale Jones entered the 2014 season as the Buckeyes' third-string quarterback behind Braxton Miller and J.T. Barrett. Injuries elevated Jones into the starting role for postseason wins over Wisconsin, Alabama and Oregon, the last by 42–20 in the January 2015 championship."}]},
   "cfb:8:0":{id:"millionaire-cfb-reviewed-finals-8-0",type:"awards",prompt:"Which school did Reggie Bush play for?",choices:["USC","Texas","Miami","Oklahoma"],answer:"USC",statSheet:"He was part of one of the defining offenses of the mid-2000s.",explanation:"Reggie Bush starred at the University of Southern California from 2003 to 2005 and won the Heisman Trophy in 2005. With quarterback Matt Leinart, he led USC to consecutive AP championship seasons before the dramatic 2006 Rose Bowl loss to Texas.",evidence:[{authority:"Heisman Trust / CFP / school athletics",url:"https://www.heisman.com/heisman-winners/reggie-bush/",supportingDetail:"Reggie Bush starred at the University of Southern California from 2003 to 2005 and won the Heisman Trophy in 2005. With quarterback Matt Leinart, he led USC to consecutive AP championship seasons before the dramatic 2006 Rose Bowl loss to Texas."}]},
-  "cfb:8:4":{id:"millionaire-cfb-reviewed-finals-8-4",type:"awards-postseason",prompt:"Which Heisman-winning quarterback also won the national championship in his Heisman season?",choices:["Joe Burrow","Lamar Jackson","Baker Mayfield","Caleb Williams"],answer:"Joe Burrow",statSheet:"His team finished 15-0.",explanation:"Joe Burrow won the 2019 Heisman Trophy with LSU and quarterbacked the Tigers to a 15–0 record. LSU beat Oklahoma in the CFP semifinal and Clemson 42–25 in the January 2020 national title game.",evidence:[{authority:"Heisman Trust / CFP / school athletics",url:"https://www.heisman.com/heisman-winners/joe-burrow/",supportingDetail:"Joe Burrow won the 2019 Heisman Trophy with LSU and quarterbacked the Tigers to a 15–0 record. LSU beat Oklahoma in the CFP semifinal and Clemson 42–25 in the January 2020 national title game."}]},
+  "cfb:8:4": {
+  "id": "millionaire-cfb-future-samaje-perine-427-kansas-2014-q5",
+  "type": "single-game-rushing-records",
+  "prompt": "Which Oklahoma running back rushed for 427 yards against Kansas in November 2014 to set the FBS single-game record?",
+  "choices": [
+    "Samaje Perine",
+    "Melvin Gordon",
+    "Adrian Peterson",
+    "Joe Mixon"
+  ],
+  "answer": "Samaje Perine",
+  "statSheet": "The Sooners' freshman broke a mark of 408 yards set just one week earlier.",
+  "explanation": "Oklahoma freshman running back Samaje Perine rushed for 427 yards and five touchdowns against Kansas on November 22, 2014. His yardage broke Melvin Gordon's 408-yard FBS single-game mark set the previous week against Nebraska.",
+  "evidence": [
+    {
+      "authority": "University of Oklahoma official postgame notes",
+      "url": "https://soonersports.com/news/2014/11/22/209778917",
+      "supportingDetail": "OU documents 427 rushing yards by Perine against Kansas, five touchdowns, and eclipsing Melvin Gordon's 408-yard mark set a week earlier."
+    }
+  ]
+},
   "cfb:9:4":{id:"millionaire-cfb-reviewed-finals-9-4",type:"awards-history",prompt:"Which quarterback won the Heisman one year after his Oklahoma teammate Baker Mayfield?",choices:["Kyler Murray","Jalen Hurts","Sam Bradford","Landry Jones"],answer:"Kyler Murray",statSheet:"He also became the No. 1 overall NFL draft pick.",explanation:"Oklahoma's Kyler Murray won the 2018 Heisman Trophy immediately after former teammate Baker Mayfield won it in 2017. Mayfield went first overall to Cleveland in 2018 and Murray went first overall to Arizona in 2019.",evidence:[{authority:"Heisman Trust / CFP / school athletics",url:"https://www.heisman.com/heisman-winners/",supportingDetail:"Oklahoma's Kyler Murray won the 2018 Heisman Trophy immediately after former teammate Baker Mayfield won it in 2017. Mayfield went first overall to Cleveland in 2018 and Murray went first overall to Arizona in 2019."}]},
   "cfb:9:6":{id:"millionaire-cfb-reviewed-finals-9-6",type:"heisman-history",prompt:"Which Heisman-winning quarterback was 28 years old when he won the award?",choices:["Chris Weinke","Joe Burrow","Baker Mayfield","Carson Palmer"],answer:"Chris Weinke",statSheet:"The answer had previously spent years in professional baseball.",explanation:"Florida State quarterback Chris Weinke won the Heisman Trophy in December 2000 at 28 years old. Before returning to college football, he had spent six years playing minor-league baseball.",evidence:[{authority:"Heisman Trust / CFP / school athletics",url:"https://seminoles.com/news/2000/12/9/chris-weinke-wins-the-65th-annual-heisman-trophy",supportingDetail:"Florida State quarterback Chris Weinke won the Heisman Trophy in December 2000 at 28 years old. Before returning to college football, he had spent six years playing minor-league baseball."}]},
 

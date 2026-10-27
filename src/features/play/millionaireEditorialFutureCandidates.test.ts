@@ -1222,7 +1222,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:4:4", "Zhang Weili"],
       ["ufc:5:0", "Justin Gaethje"],
       ["ufc:5:2", "Deiveson Figueiredo"],
-      ["ufc:5:3", "Jack Della Maddalena"],
+      ["ufc:5:3", "Sean Strickland"],
       ["ufc:5:4", "Diego Lopes"],
       ["ufc:9:0", "Rose Namajunas"],
       ["ufc:9:1", "Khamzat Chimaev"],
@@ -1520,7 +1520,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("keeps two active Average Fan same-fact UFC overlaps off future-only boards", () => {
     const repairs = [
       ["ufc:3:1", 3, 1, "Jon Jones", "UFC 232", "UFC 217"],
-      ["ufc:5:3", 5, 3, "Jack Della Maddalena", "UFC 299", "UFC 261"],
+      ["ufc:5:3", 5, 3, "Sean Strickland", "UFC 302", "UFC 261"],
     ] as const;
     for (const [key, runIndex, index, correct, newEvent, oldEvent] of repairs) {
       const revision = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
@@ -1608,6 +1608,53 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       expect(preview.prompt).not.toBe(historic.prompt);
     }
     expect(answer(millionaireFutureEditorialDailyRun("cfb", 11)[4]!)).toBe("Mike Norvell");
+  });
+
+  it("keeps five distinct intra-Millionaire game facts after October 27 full-inventory review", () => {
+    const cases = [
+      [
+            "ufc",
+            5,
+            3,
+            "Sean Strickland"
+      ],
+      [
+            "ufc",
+            14,
+            5,
+            "Ketlen Vieira"
+      ],
+      [
+            "cfb",
+            5,
+            3,
+            "Iowa State"
+      ],
+      [
+            "cfb",
+            8,
+            4,
+            "Samaje Perine"
+      ],
+      [
+            "cfb",
+            6,
+            4,
+            "Tee Martin"
+      ]
+] as const;
+    for (const [league, game, level, expected] of cases) {
+      const question = millionaireFutureEditorialDailyRun(league, game)[level]!;
+      expect(answer(question)).toBe(expected);
+      expect(question.choices).toHaveLength(4);
+      expect(new Set(question.choices.map(choice => normalized(choice.text))).size).toBe(4);
+      expect(normalized(question.statSheet ?? "")).not.toContain(normalized(expected));
+    }
+    expect(millionaireFutureEditorialDailyRun("ufc", 5)[3]!.prompt).not.toContain("Gilbert Burns");
+    expect(millionaireFutureEditorialDailyRun("ufc", 14)[5]!.prompt).not.toContain("Marlon Vera");
+    expect(millionaireFutureEditorialDailyRun("cfb", 5)[3]!.prompt).not.toContain("2006 Rose Bowl");
+    expect(millionaireFutureEditorialDailyRun("cfb", 8)[4]!.prompt).not.toContain("Heisman");
+    expect(millionaireFutureEditorialDailyRun("cfb", 6)[4]!.prompt).not.toContain("Tim Tebow");
   });
 
 });

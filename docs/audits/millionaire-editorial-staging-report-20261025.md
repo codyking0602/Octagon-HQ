@@ -273,3 +273,16 @@ Current working scope: **existing Draft PR #2139 only**. The 360-row provisional
 These new preview questions are authoritative only in the opt-in `buildMillionaireDailySetup(..., { editorialCandidatePreview: true })` path. Existing published boards, past attempts and default Official Daily behavior remain unchanged.
 
 The 45-row question-structure/uncertainty register is `docs/audits/millionaire-45-game-qa-status-20261027.csv`. Every row remains **NOT CERTIFIED** pending full primary-source/distractor verification of the complete effective preview, semantic scanning of ALL active Bar Trivia / Average Fan / Sports Feud selections after these fixes, complete end-to-end game and difficulty QA, and green CI at the exact current feature-branch head. **Do not ready, merge, or deploy.**
+
+
+### October 27 second coordinated intra-Millionaire de-duplication batch
+
+Five more effective future-preview facts were **replaced** after a 360-question, cross-game semantic scan identified repeated event/answer concepts among different Millionaire boards. UFC run 6 Q4 duplicate Jack Della Maddalena/Gilbert Burns at UFC 299 (already UFC run 3 Q7); UFC run 15 Q6 duplicate Sean O'Malley/Marlon Vera UFC 299 (already run 4 Q7); CFB run 6 Q4 duplicate Texas/USC 2006 Rose Bowl (already run 2 Q1); CFB run 9 Q5 repeat Joe Burrow 2019 Heisman (run 1 Q1); CFB run 7 Q5 repeat Tebow/Florida school (run 4 Q1).
+
+- UFC run 6 Q4: **Sean Strickland** — Which former middleweight champion defeated Paulo Costa by split decision in the UFC 302 co-main event? Primary authority https://www.ufc.com/news/official-judges-scorecards-ufc-302-makhachev-vs-poirier.
+- UFC run 15 Q6: **Ketlen Vieira** — Which Brazilian bantamweight contender defeated Holly Holm by split decision in a May 2022 UFC Fight Night main event? Primary authority https://www.ufc.com/news/ufc-fight-night-holm-vs-vieira-fight-results-highlights-winner-interviews-ufc-vegas-55.
+- CFB run 6 Q4: **Iowa State** — Which unranked team upset No. 2 Oklahoma State 37–31 in double overtime in November 2011? Primary authority https://cyclones.com/news/2011/11/19/205335983.
+- CFB run 9 Q5: **Samaje Perine** — Which Oklahoma running back rushed for 427 yards against Kansas in November 2014 to set the FBS single-game record? Primary authority https://soonersports.com/news/2014/11/22/209778917.
+- CFB run 7 Q5: **Tee Martin** — Who quarterbacked Tennessee to an undefeated 1998 season and a victory in the first BCS national championship game? Primary authority https://utsports.com/sports/football/roster/tee-martin/15704.
+
+A proposed replacement of UFC run 6 Q4 with the Fabricio Werdum/Cain Velasquez UFC 188 finish was discarded before commit because active UFC Bar Trivia already asks the exact same fact. No historical Daily rows were edited. All 360 entries remain provisional; the certification report correctly records **0 independently certified 45-run boards**. Exact final SHA CI remains not run; PR #2139 remains Draft.
