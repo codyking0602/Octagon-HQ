@@ -448,9 +448,9 @@ export const nataliaSilvaRankingInput = {
     ],
     "photoUrl": "assets/fighters/natalia-silva-spotlight.webp",
     "thumbUrl": "assets/fighters/natalia-silva-thumb.webp",
-    "watchUrl": null,
-    "watchLabel": null,
-    "signatureFightUrl": "https://www.youtube.com/watch?v=RJKsVW9VhTo",
-    "signatureFightLabel": "Signature Fight: Wang Cong (UFC 332 highlights)"
+    "watchUrl": "https://youtube.com/shorts/TifIqSRo9_o?is=qzR-PQaz55qb05YI",
+    "watchLabel": "Watch Moment",
+    "signatureFightUrl": "https://youtu.be/E-UiQ6go8gg?is=akiwYYjzjt2EIfTo",
+    "signatureFightLabel": "Signature Fight: Natalia Silva"
   }
 } satisfies RankingInputFighter;
