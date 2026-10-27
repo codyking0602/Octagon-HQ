@@ -18,6 +18,22 @@ function q8(
   return { id, type, prompt, choices, answer, explanation, statSheet: null, evidence: evidence ? [evidence] : [] };
 }
 export const MILLIONAIRE_FUTURE_Q8_REWRITES: Record<string, MillionaireFutureRewriteSeed> = {
+  // Replace arcane Craig Morton multi-franchise trivia with an unforgettable 2011-season playoff moment.
+  "nfl:3:7": q8(
+    "millionaire-nfl-future-demaryius-tebow-2012-ot-q8", "playoff-walkoffs",
+    "Which Broncos receiver caught Tim Tebow's 80-yard walk-off touchdown on the FIRST play of overtime against Pittsburgh in January 2012?",
+    ["Demaryius Thomas", "Eric Decker", "Eddie Royal", "Brandon Lloyd"], "Demaryius Thomas",
+    "Demaryius Thomas caught an 80-yard pass from Tim Tebow on the first overtime play in the January 8, 2012 AFC wild-card game, giving Denver a 29–23 victory over Pittsburgh.",
+    { authority: "Denver Broncos", url: "https://www.denverbroncos.com/news/broncos-advance-with-postseason-thriller-6775656", supportingDetail: "Official Broncos recap confirms Tebow-to-Thomas, an 80-yard touchdown on the first play of overtime, and a 29–23 win." },
+  ),
+  // Replace sixth-QB-of-the-1983-draft trivia with a famous Super Bowl LI finish.
+  "nfl:4:7": q8(
+    "millionaire-nfl-future-james-white-super-bowl-li-ot-q8", "super-bowl-walkoffs",
+    "Which Patriots running back scored the overtime touchdown that completed the 28–3 comeback against Atlanta in Super Bowl LI?",
+    ["James White", "LeGarrette Blount", "Dion Lewis", "Rex Burkhead"], "James White",
+    "James White scored on a two-yard touchdown run on New England's first overtime drive to beat Atlanta 34–28 in Super Bowl LI on February 5, 2017.",
+    { authority: "New England Patriots", url: "https://www.patriots.com/press-room/super-bowl-li", supportingDetail: "Official Patriots Super Bowl LI recap identifies White's two-yard overtime winner in the 34–28 comeback." },
+  ),
   "nfl:0:7": q8(
     "millionaire-nfl-future-dejean-super-bowl-lix-q8", "super-bowl-pick-six",
     "Which Eagles rookie cornerback intercepted Patrick Mahomes for a touchdown in Super Bowl LIX?",

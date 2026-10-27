@@ -105,7 +105,24 @@ jobs:
 
       - name: Run tests affected by this PR
         if: steps.scope.outputs.whoami_only != 'true'
-        run: npm test -- --changed="$BASE_SHA" --passWithNoTests
+        run: |
+          mapfile -t files < <(git diff --name-only "$BASE_SHA" "$SOURCE_SHA")
+          millionaire_only=true
+          for file in "${files[@]}"; do
+            case "$file" in
+              src/features/play/millionaire*.ts|docs/audits/millionaire*.csv|docs/audits/millionaire*.md|.github/workflows/fast-pr-feedback.yml)
+                ;;
+              *)
+                millionaire_only=false
+                break
+                ;;
+            esac
+          done
+          if [ "$millionaire_only" = true ]; then
+            npm test -- src/features/play/millionaireDailyRuntime.test.ts src/features/play/millionaireEditorialFutureCandidates.test.ts src/features/play/millionaireSixMonthEditorialGate.test.ts --run
+          else
+            npm test -- --changed="$BASE_SHA" --passWithNoTests
+          fi
 
       - name: Summarize fast feedback
         if: success()

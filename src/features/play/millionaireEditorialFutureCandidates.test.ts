@@ -15,6 +15,24 @@ function normalized(text: string) {
 }
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
+  it("uses two source-backed iconic future-only NFL finals instead of obscure stat trivia", () => {
+    for (const [key, expected, fragment] of [
+      ["nfl:3:7", "Demaryius Thomas", "FIRST play of overtime"],
+      ["nfl:4:7", "James White", "28–3 comeback"],
+    ] as const) {
+      const q = MILLIONAIRE_FUTURE_Q8_REWRITES[key]!;
+      expect(q.answer).toBe(expected);
+      expect(q.prompt).toContain(fragment);
+      expect(q.choices).toHaveLength(4);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(q.choices.filter(choice => choice === expected)).toHaveLength(1);
+      expect(q.statSheet).toBeNull();
+      expect(q.evidence).toHaveLength(1);
+    }
+    expect(millionaireDailyRun("nfl", 3)[7]!.prompt).toContain("two different franchises");
+    expect(millionaireDailyRun("nfl", 4)[7]!.prompt).toContain("SIXTH quarterback");
+  });
+
   it("keeps three ambiguous CFB championship years repaired only in future preview", () => {
     const changes = [
       ["cfb:0:2", "Alabama", "January 2017", "2016 SEASON"],
