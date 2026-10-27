@@ -16,6 +16,29 @@ function normalized(text: string) {
 
 describe("Millionaire future editorial CANDIDATE quality gate (not fact certification)", () => {
 
+  it("locks four sourced retained-legacy replacements to preview-only errata without changing historical questions", () => {
+    for (const [key, correct, evidence] of [
+      ["nfl:3:2", "Matt Ryan", "https://www.nfl.com/news/matt-ryan-named-nfl-s-most-valuable-player-for-2016-0ap3000000782775"],
+      ["nfl:6:6", "Ed Reed", "https://www.profootballhof.com/news/class-of-2019-finalists"],
+      ["cfb:0:4", "Marvin Harrison Jr.", "https://ohiostatebuckeyes.com/news/2023/12/8/football-marvin-harrison-jr-is-the-2023-biletnikoff-award-winner"],
+      ["cfb:9:0", "Indiana", "https://collegefootballplayoff.com/sports/2026/1/27/NCG-recap"],
+    ] as const) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q).toBeDefined();
+      expect(q.answer).toBe(correct);
+      expect(q.choices.filter(c => c === correct)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(correct));
+      expect(q.explanation).toContain(correct);
+      expect(q.explanation.length).toBeGreaterThan(90);
+      expect(q.evidence[0]?.url).toBe(evidence);
+      const [league, runIndex, qIndex] = key.split(":");
+      const historic = millionaireDailyRun(league as "nfl" | "cfb" | "ufc", Number(runIndex))[Number(qIndex)]!;
+      expect(historic.id).not.toBe(q.id);
+      expect(historic.prompt).not.toBe(q.prompt);
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],

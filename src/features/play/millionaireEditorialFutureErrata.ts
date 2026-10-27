@@ -756,4 +756,38 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
       supportingDetail: "Ohio State play-by-play confirms Elliott ran 85 yards for a fourth-quarter touchdown and compiled 230 rushing yards.",
     }],
   },
+  // Four supported retained-legacy future-preview questions; original bank/history remains immutable.
+  "nfl:3:2": {
+    id: "millionaire-nfl-future-matt-ryan-2016-ap-mvp-q3", type: "season-awards",
+    prompt: "Which quarterback won the AP NFL Most Valuable Player award for the 2016 season?",
+    choices: ["Matt Ryan", "Cam Newton", "Aaron Rodgers", "Tom Brady"], answer: "Matt Ryan",
+    statSheet: "The winner led Atlanta to Super Bowl LI after throwing 38 touchdown passes in the regular season.",
+    explanation: "Matt Ryan won the 2016 Associated Press NFL Most Valuable Player award after leading the Atlanta Falcons to Super Bowl LI. Ryan threw 38 touchdowns during that regular season and the award was announced on February 4, 2017.",
+    evidence: [{ authority: "NFL", url: "https://www.nfl.com/news/matt-ryan-named-nfl-s-most-valuable-player-for-2016-0ap3000000782775", supportingDetail: "NFL AP MVP reporting confirms Matt Ryan won the 2016 award over Tom Brady and other contenders." }],
+  },
+  "nfl:6:6": {
+    id: "millionaire-nfl-future-ed-reed-2004-dpoy-q7", type: "defensive-awards",
+    prompt: "Which defensive back won AP NFL Defensive Player of the Year for the 2004 season?",
+    choices: ["Ed Reed", "Troy Polamalu", "Bob Sanders", "Charles Woodson"], answer: "Ed Reed",
+    statSheet: "The Ravens ballhawk led the NFL with nine interceptions that season.",
+    explanation: "Baltimore Ravens safety Ed Reed received Associated Press NFL Defensive Player of the Year honors in 2004 after leading the league with nine interceptions. Troy Polamalu, Bob Sanders, and Charles Woodson won the same award in other seasons.",
+    evidence: [{ authority: "Pro Football Hall of Fame", url: "https://www.profootballhof.com/news/class-of-2019-finalists", supportingDetail: "Hall of Fame record names Reed as 2004 DPOY and documents nine interceptions; each alternative was DPOY in a different year." }],
+  },
+  "cfb:0:4": {
+    id: "millionaire-cfb-future-harrison-2023-biletnikoff-q5", type: "receiver-awards",
+    prompt: "Which college receiver won the 2023 Biletnikoff Award?",
+    choices: ["Marvin Harrison Jr.", "Malik Nabers", "Rome Odunze", "Troy Franklin"], answer: "Marvin Harrison Jr.",
+    statSheet: "The winner was his program's second recipient of the award, following a 1995 honoree.",
+    explanation: "Ohio State receiver Marvin Harrison Jr. won the 2023 Biletnikoff Award as the nation's outstanding college receiver. Harrison joined fellow Buckeye Terry Glenn, who received the award in 1995, and he earned unanimous All-America recognition in both 2022 and 2023.",
+    evidence: [{ authority: "Ohio State Athletics", url: "https://ohiostatebuckeyes.com/news/2023/12/8/football-marvin-harrison-jr-is-the-2023-biletnikoff-award-winner", supportingDetail: "University athletics confirms Harrison won the 2023 Biletnikoff and Ohio State's previous winner was Terry Glenn." }],
+  },
+  "cfb:9:0": {
+    id: "millionaire-cfb-future-indiana-2025-season-title-q1", type: "championship-season",
+    prompt: "Which college won the national championship for the 2025 FOOTBALL SEASON, decided in January 2026?",
+    choices: ["Indiana", "Miami", "Ohio State", "Oregon"], answer: "Indiana",
+    statSheet: "The champions finished 16–0 and won the title game 27–21 on January 19.",
+    explanation: "Indiana went 16–0 during the 2025 college football season, defeating Miami 27–21 in the January 19, 2026 CFP national title game. Fernando Mendoza earned offensive player-of-the-game honors. Ohio State instead won the championship game held in January 2025 for the 2024 season.",
+    evidence: [{ authority: "College Football Playoff", url: "https://collegefootballplayoff.com/sports/2026/1/27/NCG-recap", supportingDetail: "CFP's January 2026 official recap establishes Indiana 27, Miami 21, Indiana 16–0 for the 2025 season." }],
+  },
+
 };
