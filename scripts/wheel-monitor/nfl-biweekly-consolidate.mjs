@@ -42,6 +42,13 @@ if(m){
   const relevant=(m.flags??[]).filter(row=>gmKeys.has(key(row.team,row.name)));
   for(const row of relevant)add(row.team,row.name,"madden","overall-"+row.overallDelta+"-review",Math.abs(row.overallDelta)>=4?"high":"medium",row);
   for(const row of m.developmentReview?.candidates??[])add(row.team,row.name,"development",row.reasons.join(", "),row.priority,row);
+  const start=Date.parse(m.baselineObservedAt??"");
+  const end=Date.parse(m.currentObservedAt??"");
+  if(Number.isFinite(start)&&Number.isFinite(end)){
+    const days=(end-start)/86400000;
+    counts.maddenComparisonDays=Math.round(days*100)/100;
+    if(days<7)blockers.push("madden:short-comparison-window-not-a-representative-biweekly-cycle");
+  }
   counts.maddenFullPopulation=m.currentCount??0;
   counts.maddenFlags=m.flags?.length??0;
   counts.maddenGmFlags=relevant.length;
@@ -54,9 +61,15 @@ const c=data.contracts;
 if(c){
   if(!["unchanged","contract-fact-review-required","metadata-review-required","identity-review-blocked"].includes(c.status))
     blockers.push("contracts:"+String(c.status));
-  for(const row of c.changes??[])add(row.team,row.player,"contracts",row.differences.join(", "),row.reviewKind==="contract-fact"?"high":"medium",row);
+  // Birthdays, age changes and other metadata-only observations are not contract actions.
+  for(const row of c.changes??[])if(row.reviewKind==="contract-fact")
+    add(row.team,row.player,"contracts",row.differences.join(", "),"high",row);
   for(const row of c.transfers??[])add(row.fromTeam,row.player,"transfers","unconfirmed-OTC-transfer","high",row);
-  counts.contractChanges=c.summary?.changed??null;counts.contractTransfers=c.transfers?.length??0;
+  counts.contractChanges=c.summary?.materialChanged??null;
+  counts.contractMetadataOnly=c.summary?.metadataOnly??null;
+  counts.contractTransfers=c.transfers?.length??0;
+  counts.contractMissingIdentities=c.missing?.length??0;
+  if(c.status==="identity-review-blocked")blockers.push("contracts:unresolved-provider-identity-coverage");
   if(c.sourceIdentityCompletenessCertified===false)blockers.push("contracts:source-identity-completeness-not-certified");
 }
 const coach=data.coaches;
