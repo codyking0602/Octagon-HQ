@@ -43,6 +43,11 @@ declare
   v_shane_row jsonb;
   v_tony_row jsonb;
   v_shane_expected_current integer;
+  v_shane_expected_best integer;
+  v_cody_expected_current integer;
+  v_cody_expected_best integer;
+  v_shane_expected_day date;
+  v_sport_aware boolean;
 begin
   insert into auth.users (
     id,
@@ -147,14 +152,41 @@ begin
   v_shane_row := v_standings->'entries'->1;
   v_tony_row := v_standings->'entries'->2;
 
-  -- Replay of the historical September standings migration intentionally
-  -- restores its calendar-day no-argument RPC. The current wrapper delegates
-  -- to the UFC 48-hour policy. Test each policy's exact expected outcome.
-  select case
-    when pg_get_functiondef('public.get_daily_challenge_standings()'::regprocedure)
-      like '%get_daily_challenge_standings(''ufc'')%' then 4
-    else 0
-  end into v_shane_expected_current;
+  -- The five-day legacy fixture crosses the October 25 UFC 48-hour cutover.
+  -- Compute its expected streak groups from the fixed synthetic board dates,
+  -- not from a now-obsolete five-consecutive-calendar-days assumption.
+  v_sport_aware := pg_get_functiondef('public.get_daily_challenge_standings()'::regprocedure)
+    like '%get_daily_challenge_standings(''ufc'')%';
+  v_shane_expected_day := case
+    when v_sport_aware and v_today >= date '2026-10-25'
+      then case when v_today = date '2026-10-25' then v_today - 1 else v_today - 2 end
+    else v_today - 1
+  end;
+
+  with days as (
+    select idx,
+      v_today - (5 - idx) as central_day,
+      case
+        when v_sport_aware and v_today - (5 - idx) >= date '2026-10-25'
+          then (date '2026-10-25' - date '2000-01-01')
+            + ((v_today - (5 - idx) - date '2026-10-25') / 2)
+        else v_today - (5 - idx) - date '2000-01-01'
+      end as slot
+    from generate_series(1, 5) idx
+  ), cody_runs as (
+    select max(central_day) as end_day, count(*)::integer as run_length
+    from days group by slot - idx
+  ), shane_runs as (
+    select max(central_day) as end_day, count(*)::integer as run_length
+    from days where idx <= 4 group by slot - idx
+  )
+  select
+    coalesce((select max(run_length) from cody_runs where end_day = v_today), 0),
+    coalesce((select max(run_length) from cody_runs), 0),
+    coalesce((select max(run_length) from shane_runs where end_day = v_shane_expected_day), 0),
+    coalesce((select max(run_length) from shane_runs), 0)
+  into v_cody_expected_current, v_cody_expected_best,
+       v_shane_expected_current, v_shane_expected_best;
 
   if (v_standings->>'player_count')::integer <> 3
     or (v_standings->>'current_user_rank')::integer <> 1
@@ -167,8 +199,8 @@ begin
     or (v_cody_row->>'wins')::integer <> 4
     or (v_cody_row->>'played')::integer <> 5
     or (v_cody_row->>'average_score')::numeric <> 88.0
-    or (v_cody_row->>'current_streak')::integer <> 5
-    or (v_cody_row->>'best_streak')::integer <> 5
+    or (v_cody_row->>'current_streak')::integer <> v_cody_expected_current
+    or (v_cody_row->>'best_streak')::integer <> v_cody_expected_best
     or (v_cody_row->'game_averages'->>'find_leader')::numeric <> 80.0
     or (v_cody_row->'game_averages'->>'wavelength')::numeric <> 90.0
     or (v_cody_row->'game_averages'->>'blind_resume')::numeric <> 100.0
@@ -182,10 +214,8 @@ begin
     or (v_shane_row->>'wins')::integer <> 2
     or (v_shane_row->>'played')::integer <> 4
     or (v_shane_row->>'average_score')::numeric <> 82.5
-    -- Shane skipped the new Oct 25 UFC 48-hour board, so the active
-    -- streak is zero while the completed prior four-game streak remains best.
     or (v_shane_row->>'current_streak')::integer <> v_shane_expected_current
-    or (v_shane_row->>'best_streak')::integer <> 4 then
+    or (v_shane_row->>'best_streak')::integer <> v_shane_expected_best then
     raise exception 'tied daily wins or yesterday-current streak were calculated incorrectly: %', v_shane_row;
   end if;
 
