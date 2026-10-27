@@ -311,6 +311,17 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     }
   });
 
+  it("protects nine further NFL award, draft and Super Bowl answers in future preview", () => {
+    for (const key of ["nfl:6:5","nfl:7:1","nfl:7:2","nfl:7:4","nfl:7:6","nfl:8:0","nfl:8:2","nfl:8:3","nfl:8:4"] as const) {
+      const q=MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.choices.filter(c=>c===q.answer)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(q.answer));
+      expect(q.explanation.length).toBeGreaterThan(105);
+      expect(q.evidence[0]?.url).toMatch(/^https:\/\//);
+    }
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
