@@ -711,4 +711,27 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
       supportingDetail: "Official UFC recap names Rozenstruik, Overeem, and Round 5 at 4:56; states Overeem led all three judges' cards four rounds to zero at the stoppage.",
     }],
   },
+
+  // The retained NFL run 1 Q2 repeats the Malcolm Butler Super Bowl XLIX
+  // interception already authored in the NFL Average Fan bank. A new,
+  // approachable, independently sourced roster-history fact replaces it in
+  // the future preview while preserving the archival question.
+  "nfl:0:1": {
+    id: "millionaire-nfl-future-aj-brown-2022-titans-trade-q2",
+    type: "receiver-team-history",
+    prompt: "Which NFL team did wide receiver A.J. Brown play for before Philadelphia acquired him in the 2022 Draft?",
+    choices: ["Titans", "Jets", "Vikings", "Chargers"],
+    answer: "Titans",
+    statSheet: "The receiver began his NFL career in 2019 and was traded for a first- and third-round draft pick.",
+    explanation: "A.J. Brown played for the Tennessee Titans from 2019 to 2021 before Philadelphia acquired him in a trade on April 28, 2022. The Eagles sent Tennessee the No. 18 and No. 101 picks in that draft.",
+    evidence: [{
+      authority: "Philadelphia Eagles official 2022 transactions",
+      url: "https://www.philadelphiaeagles.com/team/transactions/2022",
+      supportingDetail: "April 28 records the Eagles trading first-round No. 18 and third-round No. 101 picks to the Tennessee Titans for A.J. Brown.",
+    }, {
+      authority: "NFL 2022 draft trade coverage",
+      url: "https://www.nfl.com/news/eagles-receive-a-j-brown-in-trade-with-titans-wr-to-sign-four-year-100-million-c",
+      supportingDetail: "NFL reports Brown spent his first three seasons with Tennessee and was traded to Philadelphia during the 2022 Draft.",
+    }],
+  },
 };
