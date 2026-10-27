@@ -71,7 +71,9 @@ jobs:
     uses: ./.github/workflows/wheel-ufc-unranked-profile-review.yml
     secrets: inherit
   monitor:
-    if: always() && (needs.verify.result == 'success' || (github.event_name == 'schedule' && needs.verify.result == 'skipped')) && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    # Live production authority does not reflect unmerged PR edits; only unit-check those edits.
+    # Preserve full scheduled, manual and main-push production census unchanged.
+    if: github.event_name != 'pull_request' && always() && (needs.verify.result == 'success' || (github.event_name == 'schedule' && needs.verify.result == 'skipped'))
     needs: [verify, cadence, source_coach, source_performance, source_gm, source_ufc]
     runs-on: ubuntu-latest
     timeout-minutes: 19
