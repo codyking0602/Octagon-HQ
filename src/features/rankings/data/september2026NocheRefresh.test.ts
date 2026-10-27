@@ -95,8 +95,8 @@ describe("September 12, 2026 Noche ranking repair", () => {
   it("keeps the model cutoff at September 19 while advancing repair versions", () => {
     expect(canonicalRankingInputs.source).toMatchObject({
       modelAsOfDate: "2026-09-19",
-      factsVersion: "octagon-hq-v2-noche-repair-facts-20260929",
-      judgmentVersion: "octagon-hq-v2-noche-repair-judgments-20260929",
+      factsVersion: "octagon-hq-v2-gane-facts-20261027",
+      judgmentVersion: "octagon-hq-v2-gane-judgments-20261027",
     });
   });
 });
