@@ -30,8 +30,9 @@ function fighter(name: FighterName) {
 }
 
 /**
- * Reconstruct ONLY the five September 19 inputs before this change, with the
- * original global model date. This runs the SAME V2 category calculators and
+ * Reconstruct ONLY the five pre-refresh inputs while retaining the October 27
+ * model cutoff already live on main (including Gane and Natalia Silva).
+ * This runs the SAME V2 category calculators and
  * ranking projection on both sides; no manually chosen ranks or scores.
  */
 function beforeOctoberProjection() {
@@ -70,7 +71,7 @@ function beforeOctoberProjection() {
       fighter: input.fighter,
       fights: input.facts.fights,
       window: eraWindow,
-      modelAsOfDate: "2026-09-19",
+      modelAsOfDate: canonicalRankingInputs.source.modelAsOfDate,
       statusMultiplier: input.era.statusMultiplier,
       divisionMultiplier: input.era.divisionMultiplier,
     });
