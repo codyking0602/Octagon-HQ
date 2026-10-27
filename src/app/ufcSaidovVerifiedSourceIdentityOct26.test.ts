@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { ufcAthletePageUrl } from "../features/picks-monitoring/ufcFighterMedia";
 
 describe("Muhammad Saidov source profile and active UFC Wheel country",()=>{
-  const sql=readFileSync("supabase/migrations/202612310493_ufc_saidov_identity_country.sql","utf8");
+  const sql=readFileSync("supabase/migrations/202612310603_ufc_saidov_identity_country.sql","utf8");
   it("binds official Muhammad Said source slug to canonical Saidov identity",()=>{
     expect(ufcAthletePageUrl("muhammad-saidov")).toBe("https://www.ufc.com/athlete/muhammad-said");
     expect(sql).toContain("fighter_id='muhammad-saidov'");
