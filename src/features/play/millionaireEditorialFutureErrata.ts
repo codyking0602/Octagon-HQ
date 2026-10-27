@@ -734,4 +734,26 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
       supportingDetail: "NFL reports Brown spent his first three seasons with Tennessee and was traded to Philadelphia during the 2022 Draft.",
     }],
   },
+
+  // The legacy 2003 LSU vs. USC split-title identity has already been tested
+  // in still-selectable CFB Bar Trivia. For future-preview CFB run 4 Q7 use
+  // a different, famous 2014-season CFP semifinal turning point.
+  "cfb:3:6": {
+    id: "millionaire-cfb-future-elliott-85-yard-sugar-bowl-q7",
+    type: "cfp-semifinal-breakaways",
+    prompt: "Which Ohio State running back broke an 85-yard touchdown run against Alabama late in the January 2015 Sugar Bowl semifinal?",
+    choices: ["Ezekiel Elliott", "Carlos Hyde", "J.K. Dobbins", "Mike Weber"],
+    answer: "Ezekiel Elliott",
+    statSheet: "The Buckeyes upset the top-ranked Crimson Tide 42–35 and advanced to play Oregon for the national championship.",
+    explanation: "Ezekiel Elliott rushed for 230 yards and two touchdowns as No. 4 Ohio State beat No. 1 Alabama 42–35 on January 1, 2015. His 85-yard fourth-quarter touchdown with 3:24 remaining put Ohio State ahead 42–28 before Alabama scored again.",
+    evidence: [{
+      authority: "College Football Playoff official Sugar Bowl scoring recap",
+      url: "https://collegefootballplayoff.com/sports/2025/8/4/15-SF-Sugar-recap",
+      supportingDetail: "Official 2014-season January 1, 2015 semifinal log names Ohio State running back Ezekiel Elliott's 85-yard score with 3:24 remaining and confirms the 42–35 final.",
+    }, {
+      authority: "Ohio State Athletics official 2015 Sugar Bowl box score",
+      url: "https://ohiostatebuckeyes.com/sports/football/stats/2014-15/alabama/boxscore/17813",
+      supportingDetail: "Ohio State play-by-play confirms Elliott ran 85 yards for a fourth-quarter touchdown and compiled 230 rushing yards.",
+    }],
+  },
 };
