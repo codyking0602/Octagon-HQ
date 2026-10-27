@@ -1,4 +1,4 @@
-export const WAVELENGTH_CATALOG_VERSION = "wavelength-catalog-v4" as const;
+export const WAVELENGTH_CATALOG_VERSION = "wavelength-catalog-v5" as const;
 export const WAVELENGTH_CALIBRATION_VERSION = "wavelength-calibration-v1" as const;
 export const WAVELENGTH_GENERATOR_VERSION = "wavelength-generator-v4" as const;
 export const WAVELENGTH_REVEAL_CONTRACT_VERSION = "wavelength-reveal-privacy-v1" as const;
@@ -7,6 +7,7 @@ export const WAVELENGTH_HISTORICAL_VERSION_IDS = [
   "wavelength-catalog-v1",
   "wavelength-catalog-v2",
   "wavelength-catalog-v3",
+  "wavelength-catalog-v4",
   WAVELENGTH_CATALOG_VERSION,
   WAVELENGTH_CALIBRATION_VERSION,
   "wavelength-generator-v2",
@@ -662,9 +663,9 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-ufc-balance-550", category: "UFC CULTURE", text: "Fans applauding a losing fighter's post-fight interview", rating: 72, status: "approved" },
   { id: "wl-ufc-balance-551", category: "UFC CULTURE", text: "Memes built around a single unusual UFC scorecard graphic", rating: 56, status: "approved" },
   { id: "wl-ufc-balance-552", category: "EVENTS & FIGHTS", text: "Adesanya vs Cannonier's pay-per-view entertainment value", rating: 29, status: "approved" },
-  { id: "wl-ufc-balance-553", category: "EVENTS & FIGHTS", text: "Namajunas vs Esparza II's rewatch appeal", rating: 6, status: "approved" },
+  { id: "wl-ufc-balance-553", category: "EVENTS & FIGHTS", text: "Namajunas vs Esparza II's rewatch appeal", rating: 6, status: "retired" },
   { id: "wl-ufc-balance-554", category: "EVENTS & FIGHTS", text: "Poirier vs Hooker's five-round action quality", rating: 86, status: "approved" },
-  { id: "wl-ufc-balance-555", category: "EVENTS & FIGHTS", text: "UFC 149's main-card entertainment value", rating: 14, status: "approved" },
+  { id: "wl-ufc-balance-555", category: "EVENTS & FIGHTS", text: "UFC 149's main-card entertainment value", rating: 14, status: "retired" },
   { id: "wl-ufc-balance-556", category: "EVENTS & FIGHTS", text: "UFC 279's last-minute main-card reshuffle as drama", rating: 74, status: "approved" },
   { id: "wl-ufc-balance-557", category: "EVENTS & FIGHTS", text: "Cannonier vs Strickland's action-fight rewatch appeal", rating: 43, status: "approved" },
   { id: "wl-ufc-balance-558", category: "EVENTS & FIGHTS", text: "Pereira vs Błachowicz at UFC 291 as a technical rewatch", rating: 59, status: "approved" },
@@ -742,6 +743,9 @@ export const wavelengthCatalog: readonly WavelengthCatalogItem[] = [
   { id: "wl-ufc-balance-630", category: "CROSSOVER & CELEBRITY", text: "A major soccer star watching a UFC pay-per-view cage-side", rating: 63, status: "approved" },
   { id: "wl-ufc-balance-631", category: "CROSSOVER & CELEBRITY", text: "A UFC fighter appearing in a mainstream sports documentary", rating: 67, status: "approved" },
   { id: "wl-ufc-balance-632", category: "CROSSOVER & CELEBRITY", text: "Celebrity crowd shots interrupting live UFC fight analysis", rating: 23, status: "approved" },
+
+  { id: "wl-ufc-balance-633", category: "EVENTS & FIGHTS", text: "The UFC 229 Khabib–McGregor post-fight brawl as sportsmanship", rating: 5, status: "approved" },
+  { id: "wl-ufc-balance-634", category: "EVENTS & FIGHTS", text: "The McGregor–Poirier III leg-injury stoppage as a satisfying trilogy ending", rating: 12, status: "approved" },
 
   { id: "wl-quarantine-temporary-rank", category: "OFFICIATING & SYSTEMS", text: "This week's pound-for-pound ranking accuracy", rating: 50, status: "quarantined" },
 ] as const;
