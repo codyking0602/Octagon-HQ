@@ -782,7 +782,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:0:5", "Who defended the UFC bant"],
       ["ufc:1:3", "Who stopped Jamahal Hill "],
       ["ufc:1:4", "Who submitted Justin Gaet"],
-      ["ufc:1:5", "Who knocked out Tony Ferg"],
+      ["ufc:1:5", "Who knocked out Beneil Dariush"],
       ["ufc:2:0", "Who knocked out Jamahal H"],
       ["ufc:2:3", "Who submitted Valentina S"],
       ["ufc:2:4", "Who knocked out Joanna Ję"],
@@ -1001,6 +1001,22 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(answer(volkov)).toBe("Josh Emmett");
     expect(volkov.prompt).toContain("UFC 296");
     expect(volkov.prompt).not.toContain("Alexander Volkov");
+  });
+
+
+  it("uses a separate sourced late UFC comeback instead of replaying Grasso's UFC 285 fact", () => {
+    const replacement = MILLIONAIRE_FUTURE_TARGETED_REWRITES["ufc:9:6"]!;
+    expect(replacement.id).toContain("rozenstruik-overeem");
+    expect(replacement.answer).toBe("Jairzinho Rozenstruik");
+    expect(replacement.prompt).toContain("four seconds");
+    expect(replacement.prompt).not.toContain("Shevchenko");
+    expect(replacement.choices).toHaveLength(4);
+    expect(new Set(replacement.choices.map(normalized)).size).toBe(4);
+    expect(replacement.choices.filter(choice => choice === replacement.answer)).toHaveLength(1);
+    expect(replacement.statSheet?.toLowerCase()).not.toContain("rozenstruik");
+    expect(replacement.explanation).toContain("four rounds");
+    expect(replacement.explanation).toContain(replacement.answer);
+    expect(replacement.evidence[0]?.url).toMatch(/^https:\/\/www\.ufc\.com\//);
   });
 
 });
