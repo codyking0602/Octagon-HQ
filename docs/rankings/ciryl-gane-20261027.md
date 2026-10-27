@@ -38,11 +38,11 @@ Decision-scorecard confirmations: [UFC Rozenstruik 50-45 sweep](https://www.ufc.
 - **Apex:** Lewis interim-title stoppage and Pereira interim-title stoppage. Reviewed component total 4.48 / 6 (1.88 + 1.20 + 0.75 + 0.65). Neither is an undisputed defense.
 - **Longevity:** Open elite window from February 2021 through 2026, using the engine's shared 18-month inactivity cap, status multiplier 1.05, heavyweight division multiplier 1.05. Promotion does not create activity.
 - **Era:** New-blood era, heavyweight depth index 0.90, calculated depth correction, no manual rank or preassigned OVR.
-- **Presentation:** Existing local `ciryl-gane-thumb.webp` is reused in both slots pending a separately curated high-resolution profile. No invented video link or unreliable remote fighter asset is introduced.
+- **Presentation:** Existing local `ciryl-gane-thumb.webp` is reused in both slots pending a separately curated high-resolution profile. An [official UFC-channel Pereira/Gane video](https://www.youtube.com/watch?v=5kk1024Kwb4) supplies the verified watch moment; no unreliable remote image asset is introduced.
 
 ## Calculation and population verification
 
-The canonical roster uses `src/features/rankings/data/v2RankingRoster.ts` with this fighter supplied by `cirylGaneV2.ts`; the sealed 80-fighter migration JSON is untouched, as are every existing fighter's fights and judgments. Population: **83 total V2 fighters** (the historical 80 + RDA + Joshua Van + Ciryl Gane).
+The canonical roster uses `src/features/rankings/data/v2RankingRoster.ts` with this fighter supplied by `cirylGaneV2.ts`; the sealed 80-fighter migration JSON is untouched, as are every existing fighter's fights and judgments. Population: **83 total V2 fighters** (the historical 80 + RDA + Joshua Van + Ciryl Gane). The shared model-as-of anchor remains **2026-09-19** so already-ranked active fighters' longevity totals cannot shift just because this isolated candidate is added; the fight audit includes all completed Gane appearances through **October 27, 2026**.
 
 The engine owns rank, score, category contributions and division-relative placement. `cirylGaneV2.test.ts` emits the exact actual calculated score and immediate overall/heavyweight neighbors to CI under `[GANE_V2_CALCULATED]` for auditable reconciliation. Do **not** state a rank or score without reading this actual calculation from exact-head CI.
 
