@@ -188,3 +188,7 @@ The UFC 229 Derrick Lewis knockout of Alexander Volkov in future Millionaire UFC
 ### Oct 26 — additional direct UFC Bar Trivia V3 fact collision fixed (replacement run 8 Q2)
 
 UFC Bar Trivia V3 Hard Final explicitly asks **who submitted Cain Velasquez at UFC 188**, the exact inverse of the previous Millionaire UFC future replacement run 8 Q2 (Fabricio Werdum). Replaced only that future Q2 with **Cody Garbrandt's Round 2, 4:59 right-hand knockout of Raphael Assunção at UFC 250**, an officially recorded dramatic finish following three losses. Authored four exclusive options, a non-spoiling hint, a substantial answer reveal and matching HOLD ledger/test expectation. UFC source: https://www.ufc.com/news/ufc-250-results-nunes-spencer-apex-garbrandt-assuncao . This is an active cross-game fact repair, not an arbitrary shared-fighter exclusion. No historical Daily or other game modification.
+
+### Oct 26 — UFC run 8 difficulty-ladder Q2/Q4 balancing
+
+Kept both independently sourced future-only questions but **swapped the question positions** in the replacement run: the recognizable Kamaru Usman–Tyron Woodley UFC 235 title victory now sits at Q2, and Cody Garbrandt's more specialist last-second knockout of Raphael Assunção at UFC 250 moves to Q4. The unchanged original historic run and live games remain untouched. Reconciled slot-specific IDs in the candidate ledger, maintained both HOLD, and updated exact run assertions. This improves early accessibility without discarding a sports-first middle question.
