@@ -1214,7 +1214,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
   it("preserves fifteen further sourced future-only UFC Bar Trivia collision repairs", () => {
     const expected: readonly [string, string][] = [
       ["ufc:3:4", "Jiří Procházka"],
-      ["ufc:3:5", "Dricus du Plessis"],
+      ["ufc:3:5", "Yair Rodriguez"],
       ["ufc:3:6", "Sean O’Malley"],
       ["ufc:4:0", "Merab Dvalishvili"],
       ["ufc:4:2", "Arman Tsarukyan"],
@@ -1225,7 +1225,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:5:3", "Jack Della Maddalena"],
       ["ufc:5:4", "Diego Lopes"],
       ["ufc:9:0", "Rose Namajunas"],
-      ["ufc:9:1", "Amanda Nunes"],
+      ["ufc:9:1", "Khamzat Chimaev"],
       ["ufc:9:2", "Brandon Moreno"],
       ["ufc:9:5", "Valentina Shevchenko"],
     ];
@@ -1489,7 +1489,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
 
   it("preserves six new sourced UFC preview-only answers that replace active Bar Trivia same-fact duplicates", () => {
     for (const [run, questionIndex, correct, marker] of [
-      [7, 0, "Miesha Tate", "UFC 200"],
+      [7, 0, "Tai Tuivasa", "UFC 271"],
       [8, 0, "Amanda Nunes", "bantamweight and featherweight"],
       [10, 0, "Francis Ngannou", "UFC 270"],
       [0, 3, "Tom Aspinall", "UFC 304"],
@@ -1535,5 +1535,30 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       const original = millionaireDailyRun("ufc", runIndex)[index]!;
       expect(original.prompt).not.toBe(revision.prompt);
     }
+  });
+
+  it("excludes three further active Bar Trivia shared-fight facts from all future previews", () => {
+    const targeted = [
+      ["ufc:3:5", "Yair Rodriguez", "UFC 284", "UFC 297"],
+      ["ufc:9:1", "Khamzat Chimaev", "UFC 294", "UFC 277"],
+    ] as const;
+    for (const [key, expected, event, oldEvent] of targeted) {
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(expected);
+      expect(q.prompt).toContain(event);
+      expect(q.prompt).not.toContain(oldEvent);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(q.choices.filter(choice => choice === expected)).toHaveLength(1);
+      expect(normalized(q.statSheet ?? "")).not.toContain(normalized(expected));
+      expect(q.explanation).toContain(expected);
+      expect(q.evidence[0]?.url).toContain("ufc.com");
+    }
+    const ufc8 = millionaireFutureEditorialDailyRun("ufc", 7)[0]!;
+    expect(ufc8.prompt).toContain("UFC 271");
+    expect(ufc8.prompt).not.toContain("UFC 200");
+    expect(answer(ufc8)).toBe("Tai Tuivasa");
+    expect(ufc8.explanation).toContain("Tai Tuivasa");
+    expect(normalized(ufc8.statSheet ?? "")).not.toContain("tai tuivasa");
+    expect(millionaireDailyRun("ufc", 7)[0]!.prompt).not.toBe(ufc8.prompt);
   });
 });
