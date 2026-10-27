@@ -20,6 +20,15 @@ describe("Oct 27 Weekly GM choose-your-WR/RB pools", () => {
     expect(page).toContain("no guaranteed result");
   });
 
+  it("keeps October 27 franchise cards concise without leaking individual scouting selections", () => {
+    expect(page).toContain('quarterback: "WR Run", development: ""');
+    expect(page).toContain('quarterback: "RB Run", development: ""');
+    expect(page).toContain("scenario.development ? <p>{scenario.development}</p> : null");
+    expect(page).not.toContain("including McCaffrey as a Decline Risk wildcard");
+    expect(page).not.toContain("McCaffrey is the one permitted Decline Risk pick");
+    expect(page).toContain("oct27WeeklyGmCandidates(choosing)");
+  });
+
   it("uses the exact owner-approved 12 receiver and five running-back choices", () => {
     expect(OCT27_WEEKLY_GM_PLAYER_IDS.elite).toHaveLength(12);
     expect(OCT27_WEEKLY_GM_PLAYER_IDS.young).toHaveLength(5);
