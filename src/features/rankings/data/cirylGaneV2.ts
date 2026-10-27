@@ -1,6 +1,7 @@
 /** October 27, 2026 UFC V2 review: Ciryl Gane. Source links and editorial rationale:
- * docs/rankings/ciryl-gane-20261027.md. Existing curated thumbnail reused
- * for both surfaces; the watch clip is the UFC channel's confirmed June 2026 highlight; no new fighter image is invented.
+ * docs/rankings/ciryl-gane-20261027.md. Owner-approved Gane championship
+ * portrait uses a locally ingested WebP, with the original ranking thumbnail intact.
+ * Exact full-fight and highlight URLs were supplied by the owner.
  */
 export const cirylGaneV2 = {
   "fighter": "Ciryl Gane",
