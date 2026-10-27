@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { MatchupsCompact } from "../play/PlayV2Page";
 import { DailyAnswerDetail } from "../play/TodayChallengeHub";
+import { dailyOfficialDisplayScore } from "../play/DailyTwoGameStatus";
 import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { createTodayChallengeRepository } from "../play/todayChallengeRepository";
@@ -77,6 +78,7 @@ export default function NbaPlayPage() {
   const dailySaved = !dailyCompleted && Boolean(dailyProjection?.progressRevision);
   const dailyRoute = ownerTest ? "/nba/today?mode=owner-test" : "/nba/today";
   const ownStanding = overview.leaderboard?.entries.find(entry => entry.isCurrentUser);
+  const dailyScore = dailyOfficialDisplayScore(dailyProjection, ownStanding?.normalizedScore);
   const selectedStanding = overview.leaderboard?.entries.find(entry => entry.profileId === selectedProfileId) ?? null;
   const repository = useMemo(() => createTodayChallengeRepository(undefined, ownerTest ? "nba_preview" : "nba"), [ownerTest]);
   const history = useQuery({
@@ -120,7 +122,7 @@ export default function NbaPlayPage() {
               : slot?.isPublicationDay ? "New every other day · 48-hour window" : "Day 2 of 2 · challenge still open"}</span>
           </div>
           {dailyCompleted
-            ? <div className="play-v2__daily-score"><strong>{dailyProjection?.officialAttempt?.normalizedScore}</strong><span>/100</span></div>
+            ? <div className="play-v2__daily-score"><strong>{dailyScore}</strong><span>/100</span></div>
             : <span className="play-v2__daily-arrow" aria-hidden="true">↗</span>}
         </div>
         <div className="play-v2__daily-actions">

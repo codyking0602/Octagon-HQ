@@ -5,6 +5,7 @@ import { NBA_GAMES_LAUNCH_DAY, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaCentralDay,
 import { NBA_FUTURES_SELECTIONS, emptyNbaFutures, nbaFuturesProgress } from "./nbaFutures";
 import { loadNbaFutures } from "./nbaFuturesRepository";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
+import { dailyOfficialDisplayScore } from "../play/DailyTwoGameStatus";
 import { nbaSpotlightWeekLabel, readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
 import { nbaTeamColor } from "./nbaTeamBranding";
 import type { CSSProperties } from "react";
@@ -46,7 +47,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
 
   const count = futures?.count;
   const hasCompleted = Boolean(daily.projection?.officialAttempt);
-  const score = daily.projection?.officialAttempt?.normalizedScore;
+  const score = dailyOfficialDisplayScore(daily.projection);
   const hasSaved = !hasCompleted && Boolean(daily.projection?.progressRevision);
   const dailyLink = publishedDaily ? "/nba/today" : ownerSlot ? "/nba/today?mode=owner-test" : "/nba/play";
   const dailyLabel = dailyType ? NBA_DAILY_GAME_LABELS[dailyType] : "Basketball Daily";
