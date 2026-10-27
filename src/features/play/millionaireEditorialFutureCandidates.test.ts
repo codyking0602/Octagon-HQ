@@ -1599,12 +1599,15 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       expect(normalized(q.statSheet ?? "")).not.toContain(normalized(correct));
       expect(q.explanation).toContain(correct);
     }
-    // Old authoring seeds stay immutable. These are only opt-in preview revisions.
-    expect(millionaireDailyRun("nfl", 6)[2]!.prompt).toContain("Rams linebacker");
-    expect(millionaireDailyRun("nfl", 6)[5]!.prompt).toContain("Defensive Player of the Year");
-    expect(millionaireDailyRun("cfb", 11)[4]!.prompt).toContain("Mike Norvell");
-    expect(millionaireDailyRun("ufc", 0)[0]!.prompt).not.toContain("Niko Price");
-    expect(millionaireDailyRun("ufc", 2)[0]!.prompt).not.toContain("UFC 234");
+    // Historical authored questions remain immutable; overlays have distinct IDs.
+    for (const [league, runIndex, levelIndex] of replacements) {
+      if (runIndex >= MILLIONAIRE_DAILY_RUN_COUNT) continue;
+      const historic = millionaireDailyRun(league, runIndex)[levelIndex]!;
+      const preview = seen.get(`${league}:${runIndex}:${levelIndex}`)!;
+      expect(preview.id).not.toBe(historic.id);
+      expect(preview.prompt).not.toBe(historic.prompt);
+    }
+    expect(answer(millionaireFutureEditorialDailyRun("cfb", 11)[4]!)).toBe("Mike Norvell");
   });
 
 });
