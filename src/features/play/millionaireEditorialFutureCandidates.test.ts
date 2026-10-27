@@ -206,11 +206,11 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["nfl:1:0", "Colts", "https://www.profootballhof.com/players/peyton-manning"],
       ["nfl:1:1", "Von Miller", "https://www.nfl.com/news/broncos-lb-von-miller-named-super-bowl-50-mvp-0ap3000000634374"],
       ["nfl:1:2", "Randy Moss", "https://www.nfl.com/stats/player-stats/category/receiving/2007/reg/all/receivingtouchdowns/desc"],
-      ["nfl:2:0", "Emmitt Smith", "https://www.profootballhof.com/players/emmitt-smith"],
+      ["nfl:2:0", "Texans", "https://www.profootballhof.com/players/andre-johnson"],
       ["nfl:4:0", "49ers", "https://www.profootballhof.com/football-history/nfl-draft-history/1940/1985"],
       ["nfl:4:4", "Calvin Johnson", "https://www.nfl.com/stats/player-stats/category/receiving/2012/reg/all/receivingyards/desc"],
       ["nfl:5:4", "Eric Dickerson", "https://www.nfl.com/players/eric-dickerson/stats/career"],
-      ["nfl:6:0", "Chiefs", "https://www.chiefs.com/news/upon-further-review-11-quick-facts-regarding-the-chiefs-2017-nfl-draft-18811494"],
+      ["nfl:6:0", "49ers", "https://www.49ers.com/news/49ers-announce-trade-for-running-back-christian-mccaffrey-panthers-nfl"],
     ] as const;
     expect(checked).toHaveLength(10);
     for(const [key, correct, source] of checked){
@@ -249,7 +249,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     const entries = [
       ["cfb:4:1","Marcus Mariota"], ["cfb:5:1","Caleb Williams"],
       ["cfb:6:0","Sam Bradford"], ["cfb:7:1","Derrick Henry"],
-      ["cfb:9:1","Jayden Daniels"]
+      ["cfb:9:1","Oklahoma"]
     ] as const;
     for (const [key,winner] of entries) {
       const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
