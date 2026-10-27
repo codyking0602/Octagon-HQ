@@ -29,6 +29,11 @@ jobs:
         run: |
           node --check scripts/wheel-monitor/nfl-development-post-ratings.mjs
           node --test scripts/wheel-monitor/nfl-development-post-ratings.nodecheck.mjs
+      - name: Prove current 594-player/dual-position source bindings on PR
+        if: github.event_name == 'pull_request'
+        run: |
+          node scripts/wheel-monitor/nfl-development-post-ratings.mjs \
+            --out=tmp/wheel-monitor/nfl/pr-post-rating-readonly-check.json
       - name: Reevaluate development only after HQ ratings are approved and published
         if: github.event_name != 'pull_request'
         run: |
