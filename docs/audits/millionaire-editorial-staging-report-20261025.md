@@ -286,3 +286,14 @@ Five more effective future-preview facts were **replaced** after a 360-question,
 - CFB run 7 Q5: **Tee Martin** — Who quarterbacked Tennessee to an undefeated 1998 season and a victory in the first BCS national championship game? Primary authority https://utsports.com/sports/football/roster/tee-martin/15704.
 
 A proposed replacement of UFC run 6 Q4 with the Fabricio Werdum/Cain Velasquez UFC 188 finish was discarded before commit because active UFC Bar Trivia already asks the exact same fact. No historical Daily rows were edited. All 360 entries remain provisional; the certification report correctly records **0 independently certified 45-run boards**. Exact final SHA CI remains not run; PR #2139 remains Draft.
+
+
+### October 27 — Full 45-sequence read completed, zero game certifications
+
+All **45 authored eight-question progressions** (NFL 1–15, CFB 1–15, UFC 1–15) were reviewed sequentially for the accessible-to-hard ladder, sport/era variety, late-question payoff and repetitive answers. The existing 45-row QA register (`millionaire-45-game-qa-status-20261027.csv`) now contains **one concrete, question-specific note per entire game**, not just a generic shape-test pass. **18 candidate games have potential Q7/Q8 or late-ladder difficulty/variety inversions marked for player evaluation**; an editorial sequence read is NOT an instrumented or independent player simulation.
+
+Static source/ledger checks verify **360 ledger entries, 120 per sport, four distinct choices each, no direct literal answer leakage in Stat Sheets, 45 Q8 slots without hints, and no reused correct answer within an eight-question game**. These limited checks do not prove that all incorrect options are actually wrong, that every explanation is sourced, or that cross-game semantic duplicates are absent. Official active Bar Trivia and Average Fan question text was compared for direct and reversed same-fact candidates; documented active collisions were repaired in previous coordinated commits, but a complete currently-selectable Sports Feud and other Daily sweep remains unfinished.
+
+The candidate regression now additionally verifies ten documented fix positions via `buildMillionaireDailySetup(..., { editorialCandidatePreview: true })` on real Daily dates, rather than incorrectly asserting overlay changes against immutable legacy seeds. No assertion of full-game grading, timer/resume, Double Dip or 50/50 playthrough was made based on static review.
+
+**Final gate:** 360/360 independent four-option primary-source reviews NOT independently established; 45/45 complete game simulations NOT established; all cross-game selectable-bank originality NOT established; **0 required GitHub Actions checks at exact current feature SHA** after connector-authored commits. Old backend/fast checks from other SHAs are inapplicable. No releases, no merges, no undrafting, no Supabase or production activity. Keep staged content isolated and unapproved.
