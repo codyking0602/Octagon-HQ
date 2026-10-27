@@ -44,7 +44,7 @@ jobs:
             case "$kind" in
               football-spotlight|football-game-header)
                 python scripts/football_editorial_assets.py "$manifest" ;;
-              thumb|spotlight)
+              thumb|spotlight|profile)
                 ufc_media=true
                 python scripts/asset_ingest.py "$manifest" ;;
               *) echo "Unsupported asset kind: $kind" >&2; exit 1 ;;
