@@ -1,4 +1,5 @@
 import historicalMigrationSeedJson from "./generated/canonical-ranking-inputs-842ba06e.json";
+import { cirylGaneV2 } from "./cirylGaneV2";
 
 export interface V2RankingRosterOverlay {
   additions: readonly unknown[];
@@ -1677,6 +1678,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     joshuaVan,
+    cirylGaneV2,
   ],
   replacements: {
     "Jon Jones": intentionalEditorialReview(
@@ -2571,10 +2573,14 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       primary: "new-blood",
       secondary: null,
     },
+    "Ciryl Gane": {
+      primary: "new-blood",
+      secondary: null,
+    },
   },
-  modelAsOfDate: "2026-09-19",
-  factsVersion: "octagon-hq-v2-noche-repair-facts-20260929",
-  judgmentVersion: "octagon-hq-v2-noche-repair-judgments-20260929",
+  modelAsOfDate: "2026-10-27",
+  factsVersion: "octagon-hq-v2-gane-facts-20261027",
+  judgmentVersion: "octagon-hq-v2-gane-judgments-20261027",
   eraDepthVersion: "octagon-hq-v2-van-era-depth-20260919",
   eraDepthResolutionVersion: "octagon-hq-v2-van-era-depth-20260919",
 };
