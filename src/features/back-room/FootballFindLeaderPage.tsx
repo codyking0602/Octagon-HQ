@@ -228,7 +228,7 @@ export default function FootballFindLeaderPage() {
         eliminatedIds={eliminated}
         result={null}
         eyebrow={shared ? "CHALLENGE BOARD" : "REPLAYABLE GAME"}
-        intro="Eliminate nine decoys. Only the highest or lowest stat among these ten wins."
+        intro="Eliminate nine decoys until only the leader remains. Compare only these ten."
         onNewLineup={shared ? null : startNew}
         onEliminate={eliminate}
         formatValue={(value) => formatFootballFindLeaderValue(board, value)}
