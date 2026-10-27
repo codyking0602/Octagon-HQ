@@ -200,3 +200,10 @@ Kept both independently sourced future-only questions but **swapped the question
 **Accuracy repair in this signoff batch:** Changed Miocic–Overeem UFC 203 from a generic 'knockout' to UFC's listed first-round **TKO at 4:27**; changed Masvidal–Till narrative from inaccurate 'return to welterweight division' to **return after more than a year away from the Octagon**. All 24 direct primary evidence URLs and individual review rationale are in the existing ledger. No changes to public Daily, legacy board identity, source UFC Bar Trivia/Feud/Fan banks, or production.
 
 **Overall status remains NOT CERTIFIED**: 88 HOLD interventions and remaining effective positions still need exhaustive independent checks. The Draft PR must not be made ready/merged solely on this 24-position signoff.
+
+### October 26 — independent NFL/CFB/UFC primary-source review batch
+
+- Confirmed the correct-answer fact, alternatives and answer-safe Stat Sheet for 14 unsourced future-run slots and recorded authoritative team/league/university links in the existing ledger: NFL run 14 Q2–Q3 and run 15 Q2,Q4,Q5; CFB run 14 Q2,Q5,Q6 and run 15 Q2–Q5; UFC run 14 Q3,Q5. These remain HOLD until comprehensive active-game originality and difficulty signoff; these are not new certified runs.
+- Improved the actual NFL run 15 Q4 post-answer explanation with the contemporary 2001 Michael Strahan sack-record context (Giants season finale against Brett Favre, later tied by T.J. Watt). This is a future-only authored improvement with historical seeds unchanged.
+- Most recent independently observed ledger before this batch: 232 interventions, 144 KEEP and 88 HOLD, after adjacent UFC source-backed fixes. Do not infer 360/360 certification from these counts. Full active Bar Trivia, Average Fan, Sports Feud, remaining original legacy questions and four-choice/difficulty signoff remain outstanding.
+- Current PR remains draft, isolated from `main`, production, NBA and Oct 26 Cowboys–Eagles. Verify required CI on the final exact SHA before treating this as review-ready; draft's skipped Validate V2 is not a pass.
