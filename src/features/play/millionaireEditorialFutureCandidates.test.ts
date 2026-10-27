@@ -60,6 +60,27 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
           expect(row!.choices.split(" | ").map(normalized).sort(), key)
             .toEqual(question.choices.map(choice => normalized(choice.text)).sort());
           expect(row!.answer, key).toBe(answer(question));
+          // Verify effective, choice-balanced private authority rather than an authored
+          // seed: the winning choice must survive 50/50 and no removed choice may grade
+          // correct, including every future-only legacy override and Q8 replacement.
+          const optionIds = question.choices.map(choice => choice.id);
+          expect(optionIds.sort(), key).toEqual(["A", "B", "C", "D"]);
+          expect(question.explanation.trim().length, key).toBeGreaterThan(0);
+          const survivors = question.fiftyFifty.survivorChoiceIds;
+          const removed = question.fiftyFifty.removalChoiceIds;
+          expect(survivors, key).toHaveLength(2);
+          expect(removed, key).toHaveLength(2);
+          expect(new Set([...survivors, ...removed]).size, key).toBe(4);
+          expect(survivors, key).toContain(question.correctChoiceId);
+          expect(removed, key).not.toContain(question.correctChoiceId);
+          if (i === 7) {
+            expect(question.statSheet, key).toBeNull();
+            expect(question.lifelineCompatibility.fiftyFifty, key).toBe(false);
+            expect(question.lifelineCompatibility.statSheet, key).toBe(false);
+          } else {
+            expect(question.lifelineCompatibility.fiftyFifty, key).toBe(true);
+            expect(question.lifelineCompatibility.statSheet, key).toBe(true);
+          }
           expect(row!.stat_sheet, key).toBe(question.statSheet ?? "");
           expect(row!.evidence_url.startsWith("https://"), key).toBe(true);
           expect(new Set(question.choices.map(choice => normalized(choice.text))).size, key).toBe(4);
