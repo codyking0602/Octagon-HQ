@@ -846,11 +846,11 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
 
   // All nine previously untracked retained UFC legacy slots; opt-in preview only.
   "ufc:0:1": {
-    id: "millionaire-ufc-strickland-adesanya-ufc293-q2", type: "middleweight-title-upsets",
-    prompt: "Who upset Israel Adesanya by unanimous decision to win the UFC middleweight title at UFC 293 in Sydney?",
-    choices: ["Sean Strickland","Robert Whittaker","Dricus du Plessis","Jared Cannonier"], answer: "Sean Strickland",
-    statSheet: "All three judges scored the September 2023 championship fight 49–46.", explanation: "Sean Strickland defeated defending middleweight champion Israel Adesanya by unanimous decision at UFC 293 on September 9, 2023, in Sydney. All three judges scored the five-round title fight 49–46 for Strickland.",
-    evidence: [{authority: "UFC 293 official event results", url: "https://www.ufc.com/news/ufc-293-adesanya-vs-strickland-results-highlights-winner-interviews-sydney", supportingDetail: "Sean Strickland defeated defending middleweight champion Israel Adesanya by unanimous decision at UFC 293 on September 9, 2023, in Sydney. All three judges scored the five-round title fight 49–46 for Strickland."}],
+    id: "millionaire-ufc-future-pereira-adesanya-ufc281-q2", type: "middleweight-title-comebacks",
+    prompt: "Who stopped Israel Adesanya in Round 5 of their UFC 281 title fight to become UFC middleweight champion?",
+    choices: ["Alex Pereira","Robert Whittaker","Sean Strickland","Marvin Vettori"], answer: "Alex Pereira",
+    statSheet: "The November 2022 championship fight took place at Madison Square Garden, with the challenger trailing on the scorecards entering Round 5.", explanation: "Alex Pereira stopped Israel Adesanya by TKO with punches 2:01 into Round 5 of the UFC 281 main event on November 12, 2022. Pereira captured the middleweight championship in only his fourth UFC appearance after rallying late.",
+    evidence: [{authority: "UFC 281 official results", url: "https://www.ufc.com/news/ufc-281-adesanya-vs-pereira-esparza-vs-zhang-results-winner-interviews", supportingDetail: "Alex Pereira stopped Israel Adesanya by TKO with punches 2:01 into Round 5 of the UFC 281 main event on November 12, 2022. Pereira captured the middleweight championship in only his fourth UFC appearance after rallying late."}],
   },
   "ufc:1:1": {
     id: "millionaire-ufc-pena-nunes-ufc269-q2", type: "bantamweight-title-upsets",
