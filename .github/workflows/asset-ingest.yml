@@ -55,7 +55,7 @@ jobs:
               thumb|spotlight)
                 ufc_media=true
                 processor=scripts/asset_ingest.py ;;
-              *) echo "::error::Unsupported kind $kind in $manifest"; failed=$((failed+1)); continue ;;
+              *) echo "::error::Unsupported kind $kind in $manifest"; failed=$((failed+1)); rm "$manifest"; continue ;;
             esac
             # Never let a bad source prevent unrelated fighters from being processed.
             if python "$processor" "$manifest"; then
@@ -63,6 +63,10 @@ jobs:
               echo "- ✅ \`$destination\` processed (visual review still required for UFC)" >> "$GITHUB_STEP_SUMMARY"
               rm "$manifest"
             else
+              if [[ "$kind" == football-* ]]; then
+                echo "::error title=Football asset failed::$destination was not generated; preserving existing football failure behavior"
+                exit 1
+              fi
               failed=$((failed+1))
               echo "::error title=Asset rejected::$destination failed provenance, crop, or quality validation"
               echo "- ❌ \`$destination\` rejected; see Process queued assets log for exact reason" >> "$GITHUB_STEP_SUMMARY"
