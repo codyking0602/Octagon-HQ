@@ -92,7 +92,8 @@ describe("canonical Wavelength catalog", () => {
   });
 
   it("documents explicit calibration and historical version identifiers", () => {
-    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v2");
+    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v3");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v2");
     expect(WAVELENGTH_CALIBRATION_VERSION).toBe("wavelength-calibration-v1");
     expect(WAVELENGTH_GENERATOR_VERSION).toBe("wavelength-generator-v4");
     expect(WAVELENGTH_REVEAL_CONTRACT_VERSION).toBe("wavelength-reveal-privacy-v1");
