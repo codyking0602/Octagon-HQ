@@ -12,6 +12,7 @@ import unicodedata
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from nfl_canonical_population import canonical_priorities_from_contracts
 
 TEAM_ALIAS = {"LA":"LAR","WAS":"WSH","JAC":"JAX","OAK":"LV"}
 FAMILIES = ("QB","RB","WR","TE","Front Seven","Secondary")
@@ -157,7 +158,9 @@ def review_production_evidence(rows,season,priorities,at):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--season",type=int,required=True)
-    parser.add_argument("--priority",default="data/generated/football/wheel-football-priorities.json")
+    parser.add_argument("--priority",default=None,
+                        help="Explicit fixture override only; normal execution uses the 594 GM contracts")
+    parser.add_argument("--contracts",default="data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json")
     parser.add_argument("--fixture",default=None)
     parser.add_argument("--out",required=True)
     args=parser.parse_args()
@@ -166,7 +169,8 @@ def main():
     else:
         from nflreadpy import load_player_stats
         rows=load_player_stats(seasons=args.season,summary_level="week").to_dicts()
-    priorities=json.loads(Path(args.priority).read_text())
+    priorities=(json.loads(Path(args.priority).read_text()) if args.priority else
+                canonical_priorities_from_contracts(args.contracts))
     report=review_production_evidence(rows,args.season,priorities,datetime.now(timezone.utc).isoformat())
     Path(args.out).parent.mkdir(parents=True,exist_ok=True)
     Path(args.out).write_text(json.dumps(report,indent=2)+"\n")

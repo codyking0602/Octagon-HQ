@@ -17,6 +17,19 @@ def game(week,yards=280,attempts=40,player_id="gsis-one",name="Filler 0-0",team=
             "passing_yards":yards,"attempts":attempts}
 
 class ProductionTests(unittest.TestCase):
+    def test_real_contract_authority_includes_all_594_players(self):
+        root=Path(__file__).resolve().parents[2]
+        priorities=mod.canonical_priorities_from_contracts(
+            root/"data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json")
+        players=[(team,family,name) for team,buckets in priorities["teams"].items()
+                 for family,names in buckets.items() for name in names]
+        self.assertEqual(len(players),594)
+        self.assertEqual(len(priorities["teams"]),32)
+        self.assertIn(("CHI","Secondary","Xavier Woods"),players)
+        self.assertIn(("IND","WR","Darius Slayton"),players)
+        self.assertIn(("NYG","RB","Najee Harris"),players)
+
+
     def test_real_sustained_change_queues_review_without_regrading(self):
         rows=[game(w,yards=280 if w<=3 else 480) for w in range(1,7)]
         report=mod.review_production_evidence(rows,2026,population(),"now")

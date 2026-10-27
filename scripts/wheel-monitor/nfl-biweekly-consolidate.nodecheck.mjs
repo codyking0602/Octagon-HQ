@@ -22,10 +22,13 @@ test("biweekly NFL report deduplicates full EA team names and HQ codes",()=>{
     const report=JSON.parse(readFileSync(output,"utf8"));
     assert.equal(report.counts.uniqueReviewCandidates,1);
     assert.equal(report.reviewCandidates[0].team,"DET");
-    assert.equal(report.reviewCandidates[0].flags.length,2);
+    assert.equal(report.reviewCandidates[0].flags.length,1);
+    assert.equal(report.reviewCandidates[0].flags[0].monitor,"madden");
+    assert.equal(report.counts.developmentFlagged,0);
+    assert.equal(report.postRatingDevelopment.status,"awaiting-hq-rating-decisions");
     assert.equal(report.automaticChangesApplied,0);
     assert.equal(report.maddenRule,"overall +/-2 only; attributes disabled");
-    assert.equal(report.counts.earlyCareerScreened,109);
+    assert.equal(report.counts.earlyCareerScreened,null);
     assert.equal(report.counts.maddenGmFlags,1);
   }finally{rmSync(root,{recursive:true,force:true});}
 });
@@ -75,5 +78,25 @@ test("short Madden window is explicitly held instead of misreported as zero mean
     execFileSync(process.execPath,[script,input,output],{stdio:"pipe"});
     const report=JSON.parse(readFileSync(output,"utf8"));
     assert.ok(report.sourceBlockers.some(x=>x.startsWith("madden:short-comparison-window")));
+  }finally{rmSync(root,{recursive:true,force:true});}
+});
+
+test("all 32 coaches remain mandatory editorial review, not just single flagged coach",()=>{
+  const root=mkdtempSync(join(tmpdir(),"nfl-coach-32-"));
+  try{
+    const input=join(root,"inputs"),output=join(root,"report.json");
+    const path=join(input,"coaches/biweekly-coach-review.json");
+    mkdirSync(dirname(path),{recursive:true});
+    const reviews=Array.from({length:32},(_,i)=>({team:"T"+String(i).padStart(2,"0"),
+      coach:"Coach "+i,currentOfficialCoach:"Coach "+i,officialStatus:"matched",
+      hqGrade:80,reviewRequired:true,reviewedThisCycle:false,
+      reviewDecision:"pending-editorial-judgment"}));
+    writeFileSync(path,JSON.stringify({reviewCount:32,reviews}));
+    execFileSync(process.execPath,[script,input,output],{stdio:"pipe"});
+    const result=JSON.parse(readFileSync(output,"utf8"));
+    assert.equal(result.coachGradeReviewQueue.length,32);
+    assert.equal(result.counts.coachesMandatoryGradeReviews,32);
+    assert.equal(result.counts.coachesPendingEditorialDecisions,32);
+    assert.ok(result.sourceBlockers.some(x=>x.includes("mandatory-editorial-grade-decisions-pending")));
   }finally{rmSync(root,{recursive:true,force:true});}
 });

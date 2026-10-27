@@ -1,0 +1,49 @@
+name: Wheel NFL Post-Rating Development Review (read-only)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'data/generated/football/wheel-nfl-*-grades-*.json'
+      - 'src/features/back-room/wheelFootballNflCurrentAuthority.ts'
+  pull_request:
+    paths:
+      - '.github/workflows/wheel-nfl-development-post-ratings.yml'
+      - 'scripts/wheel-monitor/nfl-development-post-ratings*.mjs'
+      - 'scripts/wheel-monitor/nfl-madden-review.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  post-rating-development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test post-rating stage and full NFL identity coverage
+        run: |
+          node --check scripts/wheel-monitor/nfl-development-post-ratings.mjs
+          node --test scripts/wheel-monitor/nfl-development-post-ratings.nodecheck.mjs
+      - name: Prove current 594-player/dual-position source bindings on PR
+        if: github.event_name == 'pull_request'
+        run: |
+          node scripts/wheel-monitor/nfl-development-post-ratings.mjs \
+            --out=tmp/wheel-monitor/nfl/pr-post-rating-readonly-check.json
+      - name: Reevaluate development only after HQ ratings are approved and published
+        if: github.event_name != 'pull_request'
+        run: |
+          node scripts/wheel-monitor/nfl-development-post-ratings.mjs \
+            --out=tmp/wheel-monitor/nfl/post-rating-development.json
+      - name: Preserve read-only recommendations; never auto-edit probabilities
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-post-rating-development-review
+          path: tmp/wheel-monitor/nfl/post-rating-development.json
+          retention-days: 90
+          if-no-files-found: error

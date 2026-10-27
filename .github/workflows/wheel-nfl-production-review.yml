@@ -30,9 +30,8 @@ concurrency:
 
 jobs:
   production-evidence:
-    # Live nflverse census is a manual source-quality check, not a flaky PR gate.
-    # Madden weekly job below has its own deterministic PR unit-test gate.
-    if: github.event_name == 'workflow_dispatch'
+    # PR runs deterministic census tests; live nflverse source collection remains manual.
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 14
     steps:
@@ -43,15 +42,17 @@ jobs:
       - name: Verify stable windows, injury/usage uncertainty and no auto-grades
         run: python -m unittest discover -s scripts/wheel-monitor -p 'test_nfl_production_monitor.py' -v
       - name: Install pinned read-only nflverse loader
+        if: github.event_name == 'workflow_dispatch'
         run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
       - name: Collect current-season weekly production evidence
+        if: github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p tmp/wheel-monitor/nfl
           python scripts/wheel-monitor/nfl-production-monitor.py \
             --season="$(date -u +%Y)" \
             --out=tmp/wheel-monitor/nfl/production-evidence.json
       - name: Preserve review-only production evidence
-        if: always()
+        if: github.event_name == 'workflow_dispatch' && always()
         uses: actions/upload-artifact@v4
         with:
           name: wheel-nfl-production-evidence

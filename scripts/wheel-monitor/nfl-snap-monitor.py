@@ -12,6 +12,7 @@ import unicodedata
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from nfl_canonical_population import canonical_priorities_from_contracts
 
 TEAM_ALIAS = {"LA": "LAR", "WAS": "WSH", "JAC": "JAX", "OAK": "LV"}
 FAMILIES = ("QB", "RB", "WR", "TE", "Front Seven", "Secondary")
@@ -152,7 +153,8 @@ def review_snap_evidence(rows, season, priorities, observed_at):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--season",type=int,required=True)
-    ap.add_argument("--priority",default="data/generated/football/wheel-football-priorities.json")
+    ap.add_argument("--priority",default=None,help="Fixture override; normal runs use canonical GM contracts")
+    ap.add_argument("--contracts",default="data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json")
     ap.add_argument("--fixture-snap-json",default=None)
     ap.add_argument("--out",required=True)
     args=ap.parse_args()
@@ -161,7 +163,8 @@ def main():
     else:
         from nflreadpy import load_snap_counts
         rows=load_snap_counts(seasons=args.season).to_dicts()
-    priorities=json.loads(Path(args.priority).read_text())
+    priorities=(json.loads(Path(args.priority).read_text()) if args.priority else
+                canonical_priorities_from_contracts(args.contracts))
     report=review_snap_evidence(rows,args.season,priorities,
                                 datetime.now(timezone.utc).isoformat())
     Path(args.out).parent.mkdir(parents=True,exist_ok=True)

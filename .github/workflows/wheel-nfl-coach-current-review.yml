@@ -58,12 +58,20 @@ jobs:
             team:row.team,coach:row.coach,hqGrade:row.grade,
             currentOfficialCoach:observed.get(row.team)?.observed??null,
             officialStatus:observed.get(row.team)?.sourceStatus??'missing',
-            priority:row.coach==='Sean McVay'?'owner-requested-grade-review':'routine-biweekly-review',
+            priority:'mandatory-all-32-biweekly-grade-review',
+            reviewCriteria:['scheme-and-play-calling','in-game-management',
+              'adaptability','staff-and-player-development',
+              'culture-and-talent-maximization','sustained-performance'],
+            reviewRequired:true,
+            reviewedThisCycle:false,
             reviewDecision:'pending-editorial-judgment'
           }));
           writeFileSync('tmp/wheel-monitor/nfl/biweekly-coach-review.json',
             JSON.stringify({sport:'NFL',observedAt:new Date().toISOString(),reviewCount:32,
-              gradesChanged:0,reviews},null,2)+'\n');
+              gradesChanged:0,editorialGradesReviewed:0,
+              all32EditorialReviewRequired:true,
+              reviewProtocol:'Each coach needs an actual current-ability editorial grade judgment; live name matching alone is insufficient.',
+              reviews},null,2)+'\n');
           NODE
       - name: Archive 32-coach editorial review queue
         if: steps.editorial-cycle.outputs.due == 'true'

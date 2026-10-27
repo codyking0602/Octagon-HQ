@@ -25,6 +25,19 @@ def sample(name="Filler 0-0",team="T00",share=0.7,week=1,player_id="xyz"):
 
 
 class NflSnapReviewTests(unittest.TestCase):
+    def test_real_gm_census_is_594_in_snap_monitor(self):
+        root=Path(__file__).resolve().parents[2]
+        data=mod.canonical_priorities_from_contracts(
+            root/"data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json")
+        identities=[(team,family,name) for team,b in data["teams"].items()
+                    for family,names in b.items() for name in names]
+        self.assertEqual(len(identities),594)
+        self.assertEqual(len(data["teams"]),32)
+        self.assertIn(("CHI","Secondary","Xavier Woods"),identities)
+        self.assertIn(("IND","WR","Darius Slayton"),identities)
+        self.assertIn(("NYG","RB","Najee Harris"),identities)
+
+
     def test_sustained_usage_change_requires_two_games_in_each_window(self):
         rows=[sample(share=v,week=i+1) for i,v in
               enumerate([.2,.2,.2,.75,.8,.7])]

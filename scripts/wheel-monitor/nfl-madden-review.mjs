@@ -60,10 +60,10 @@ const normName=value=>String(value??"").normalize("NFKD")
 export function flagDevelopmentProfiles(profiles,maddenFlags,gradeRows=[],contracts=[],rosterHints=[]){
   if(!Array.isArray(profiles)||!Array.isArray(maddenFlags)||!Array.isArray(gradeRows)||
     !Array.isArray(contracts)||!Array.isArray(rosterHints)) throw new Error("Invalid NFL editorial inputs");
-  const key=(team,name)=>team+"|"+normName(name);
-  const byIdentity=new Map(profiles.map(row=>[key(row.team,row.name),row]));
-  const current=new Map(gradeRows.map(row=>[key(row.team,row.player),row]));
-  const contract=new Map(contracts.map(row=>[key(row.team,row.player),row]));
+  const key=(team,name,family="")=>team+"|"+family+"|"+normName(name);
+  const byIdentity=new Map(profiles.map(row=>[key(row.team,row.name,row.family),row]));
+  const current=new Map(gradeRows.map(row=>[key(row.team,row.player,row.family),row]));
+  const contract=new Map(contracts.map(row=>[key(row.team,row.player,row.family),row]));
   const teamNames={ARI:"Arizona Cardinals",ATL:"Atlanta Falcons",BAL:"Baltimore Ravens",BUF:"Buffalo Bills",
     CAR:"Carolina Panthers",CHI:"Chicago Bears",CIN:"Cincinnati Bengals",CLE:"Cleveland Browns",
     DAL:"Dallas Cowboys",DEN:"Denver Broncos",DET:"Detroit Lions",GB:"Green Bay Packers",
@@ -75,18 +75,23 @@ export function flagDevelopmentProfiles(profiles,maddenFlags,gradeRows=[],contra
   const teamCode=new Map(Object.entries(teamNames).map(([code,name])=>[name,code]));
   const flagged=new Set(),teamChanges=new Set(),unmatched=[];
   for(const flag of maddenFlags){
-    const row=byIdentity.get(key(teamCode.get(flag.team),flag.name));
-    if(row)flagged.add(row.id);else unmatched.push(flag.name+" ("+flag.team+")");
+    const matched=profiles.filter(row=>row.team===teamCode.get(flag.team) &&
+      normName(row.name)===normName(flag.name));
+    if(matched.length)matched.forEach(row=>flagged.add(row.id));
+    else unmatched.push(flag.name+" ("+flag.team+")");
   }
   for(const flag of rosterHints){
-    const row=byIdentity.get(key(teamCode.get(flag.fromTeam),flag.name));
-    if(row)teamChanges.add(row.id);
+    const matched=profiles.filter(row=>row.team===teamCode.get(flag.fromTeam) &&
+      normName(row.name)===normName(flag.name));
+    matched.forEach(row=>teamChanges.add(row.id));
   }
   const results=[],screened=[];
   for(const row of profiles){
     const reasons=[],age=Number(row.ageAtCalibration),decline=Number(row.declinePct);
-    const live=current.get(key(row.team,row.name));
-    const deal=contract.get(key(row.team,row.name));
+    const live=current.get(key(row.team,row.name,row.family)) ??
+      current.get(key(row.team,row.name,""));
+    const deal=contract.get(key(row.team,row.name,row.family)) ??
+      contract.get(key(row.team,row.name,""));
     const draftYear=Number(deal?.draftYear);
     if(draftYear===2025 || draftYear===2026){
       screened.push(row.id);
@@ -97,7 +102,7 @@ export function flagDevelopmentProfiles(profiles,maddenFlags,gradeRows=[],contra
       row.family==="WR"||row.family==="TE"?30:31;
     if(age>=riskAge && decline<30)
       reasons.push("aging-player-low-decline-probability");
-    if(live && Math.abs(Number(live.grade)-Number(row.gradeAtCalibration))>=2)
+    if(live && Number(live.grade)!==Number(row.gradeAtCalibration))
       reasons.push("hq-grade-changed-since-development-calibration");
     if(flagged.has(row.id)){
       reasons.push("madden-overall-change-2plus");
@@ -164,7 +169,22 @@ async function main(){
   const contractsFile=authority.match(/contractFile:\s*"([^"]+)"/)?.[1];
   if(!contractsFile)throw new Error("GM contracts binding is missing");
   const contracts=JSON.parse(readFileSync("data/generated/football/"+contractsFile,"utf8")).players;
-  report.developmentReview=flagDevelopmentProfiles(profiles,report.flags,currentGrades,contracts,report.rosterHints);
+  // Development recalibration is deliberately a SECOND stage, after HQ ratings
+  // decisions are made and their approved grades are merged. Madden is not a
+  // substitute for the owner's football judgment or development calibration.
+  report.developmentReview={
+    status:"deferred-until-hq-rating-review-complete",
+    population:profiles.length,firstTwoSeasonsScreened:0,candidates:[],
+    unmatchedMaddenFlags:[],
+    note:"Run the independent post-rating development workflow after approved HQ grades are published."
+  };
+  report.baselineProvenance=baseline.provenance??{
+    kind:"captured-EA-snapshot",
+    observedAt:baseline.observedAt
+  };
+  report.exactOctober3SourceCertified=false;
+  report.reviewSequence=["madden-overall-flags","owner-ratings-decisions",
+    "approved-hq-grade-publication","post-rating-development-review"];
   mkdirSync(dirname(baselinePath),{recursive:true});
   mkdirSync(dirname(output),{recursive:true});
   if(!hadBaseline)writeFileSync(baselinePath,JSON.stringify(baseline,null,2)+"\n");
