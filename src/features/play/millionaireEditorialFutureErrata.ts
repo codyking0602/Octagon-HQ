@@ -455,12 +455,12 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
   // Active Bar Trivia fact collision retired from future-preview run 4 Q1.
   "ufc:3:0": {
     id: "millionaire-ufc-future-rewrite-r4-q1",
-    type: "viral-knockouts",
-    prompt: "Who landed the jumping spinning-back-kick knockout of Impa Kasanganay in October 2020?",
-    choices: ["Joaquin Buckley","Kevin Holland","Michel Pereira","Stephen Thompson"], answer: "Joaquin Buckley",
-    statSheet: "The viral finish occurred after the opponent caught a kick in Round 2.",
-    explanation: "Joaquin Buckley knocked out Impa Kasanganay with a jumping spinning back kick in Round 2 of their October 2020 UFC Fight Night bout, after Kasanganay caught his initial kick. The finish won widespread knockout-of-the-year recognition.",
-    evidence: [{ authority: "UFC official event/results", url: "https://www.ufc.com/news/10-best-knockouts-2020", supportingDetail: "Joaquin Buckley knocked out Impa Kasanganay with a jumping spinning back kick in Round 2 of their October 2020 UFC Fight Night bout, after Kasanganay caught his initial kick. The finish won widespread knockout-of-the-year recognition." }],
+    type: "middleweight-title-unifications",
+    prompt: "Who knocked out Robert Whittaker in Round 2 at UFC 243 to unify the middleweight championship?",
+    choices: ["Israel Adesanya","Yoel Romero","Alex Pereira","Dricus du Plessis"], answer: "Israel Adesanya",
+    statSheet: "The October 2019 main event took place at Marvel Stadium in Melbourne.",
+    explanation: "Israel Adesanya unified the UFC middleweight championship by knocking out Robert Whittaker at 3:33 of Round 2 of UFC 243 in Melbourne in October 2019. The stoppage ended Whittaker's nine-fight winning streak.",
+    evidence: [{ authority: "UFC official event recap", url: "https://www.ufc.com/news/ufc-243-results-Whittaker-Adesanya", supportingDetail: "Israel Adesanya unified the UFC middleweight championship by knocking out Robert Whittaker at 3:33 of Round 2 of UFC 243 in Melbourne in October 2019. The stoppage ended Whittaker's nine-fight winning streak." }],
   },
   // Active Bar Trivia fact collision retired from future-preview run 4 Q4.
   "ufc:3:3": {

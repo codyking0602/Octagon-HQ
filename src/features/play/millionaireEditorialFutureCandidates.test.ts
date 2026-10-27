@@ -1151,7 +1151,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       ["ufc:2:0", "Who knocked out Jamahal H"],
       ["ufc:2:3", "Who submitted Valentina S"],
       ["ufc:2:4", "Who stopped Jessica Andrade"],
-      ["ufc:3:0", "Who landed the jumping spi"],
+      ["ufc:3:0", "Who knocked out Robert Whittaker"],
       ["ufc:3:3", "Who submitted Holly Holm "]
     ];
     expect(updated).toHaveLength(12);
@@ -1423,7 +1423,7 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
       [10, 0, "Francis Ngannou", "UFC 270"],
       [0, 3, "Tom Aspinall", "UFC 304"],
       [0, 4, "Stipe Miocic", "UFC 220"],
-      [3, 0, "Joaquin Buckley", "2020"],
+      [3, 0, "Israel Adesanya", "UFC 243"],
     ] as const) {
       // New-run and replaced legacy questions are in the authored run; targeted
       // fixes to original legacy runs live in the future-only errata overlay.
