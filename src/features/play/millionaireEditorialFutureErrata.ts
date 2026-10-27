@@ -916,4 +916,76 @@ export const MILLIONAIRE_FUTURE_TARGETED_REWRITES: Record<string, MillionaireFut
     evidence: [{ authority: "New York Giants", url: "https://www.giants.com/news/phil-ing-the-void", supportingDetail: "Giants original 1990 season retrospective confirms Simms broke his foot December 15, Hostetler replaced him, and New York won Super Bowl XXV over Buffalo." }],
   },
 
+  // Source-reviewed original NFL preview positions; run 1 Q3 diversifies early draft-heavy pacing.
+  "nfl:0:0": {
+    id: "millionaire-2020-burrow-first-overall-future-q1", type: "draft",
+    prompt: "Which quarterback did Cincinnati select first overall in the 2020 NFL Draft?",
+    choices: ["Joe Burrow", "Tua Tagovailoa", "Justin Herbert", "Chase Young"], answer: "Joe Burrow",
+    statSheet: "The quarterback won the 2019 Heisman while leading LSU to a national championship.", explanation: "The Cincinnati Bengals selected Joe Burrow out of LSU with the No. 1 overall pick in the April 2020 NFL Draft. Burrow had won the Heisman and the national championship at LSU after throwing 60 touchdown passes in the 2019 college season.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.nfl.com/news/cincinnati-bengals-pick-joe-burrow-no-1-in-2020-draft-0ap3000001110800", supportingDetail: "The Cincinnati Bengals selected Joe Burrow out of LSU with the No. 1 overall pick in the April 2020 NFL Draft. Burrow had won the Heisman and the national championship at LSU after throwing 60 touchdown passes in the 2019 college season." }],
+  },
+  "nfl:0:2": {
+    id: "millionaire-josh-jacobs-2022-rushing-future-q3", type: "rushing-titles",
+    prompt: "Who led the NFL in rushing yards in the 2022 regular season?",
+    choices: ["Josh Jacobs", "Derrick Henry", "Nick Chubb", "Saquon Barkley"], answer: "Josh Jacobs",
+    statSheet: "The Raiders running back logged 1,653 rushing yards and 12 rushing touchdowns.", explanation: "Josh Jacobs rushed for an NFL-leading 1,653 yards on 340 carries for Las Vegas during the 2022 regular season, finishing ahead of Derrick Henry (1,538), Nick Chubb (1,525), and Saquon Barkley (1,312).",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.nfl.com/stats/player-stats/category/rushing/2022/REG/all/rushingyards/desc", supportingDetail: "Josh Jacobs rushed for an NFL-leading 1,653 yards on 340 carries for Las Vegas during the 2022 regular season, finishing ahead of Derrick Henry (1,538), Nick Chubb (1,525), and Saquon Barkley (1,312)." }],
+  },
+  "nfl:1:0": {
+    id: "millionaire-peyton-manning-1998-colts-future-q1", type: "draft",
+    prompt: "Which franchise drafted Peyton Manning first overall in 1998?",
+    choices: ["Colts", "Chargers", "Broncos", "Titans"], answer: "Colts",
+    statSheet: "The quarterback spent 14 seasons with Indianapolis before finishing his career in Denver.", explanation: "Indianapolis drafted Peyton Manning with the first overall selection in 1998. Manning played 14 seasons for the Colts, winning Super Bowl XLI, before joining the Denver Broncos in 2012 for the final four seasons of his career.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.profootballhof.com/players/peyton-manning", supportingDetail: "Indianapolis drafted Peyton Manning with the first overall selection in 1998. Manning played 14 seasons for the Colts, winning Super Bowl XLI, before joining the Denver Broncos in 2012 for the final four seasons of his career." }],
+  },
+  "nfl:1:1": {
+    id: "millionaire-von-miller-super-bowl-50-mvp-future-q2", type: "super-bowl-awards",
+    prompt: "Which Broncos defender earned Super Bowl 50 MVP after Denver defeated Carolina?",
+    choices: ["Von Miller", "DeMarcus Ware", "Malik Jackson", "Danny Trevathan"], answer: "Von Miller",
+    statSheet: "The winning edge rusher delivered 2.5 sacks and forced two fumbles in a 24–10 victory.", explanation: "Denver linebacker Von Miller was named Super Bowl 50 MVP on February 7, 2016, after his 2.5 sacks and two forced fumbles helped the Broncos beat Carolina 24–10. One of his strip-sacks led to the Broncos' first touchdown.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.nfl.com/news/broncos-lb-von-miller-named-super-bowl-50-mvp-0ap3000000634374", supportingDetail: "Denver linebacker Von Miller was named Super Bowl 50 MVP on February 7, 2016, after his 2.5 sacks and two forced fumbles helped the Broncos beat Carolina 24–10. One of his strip-sacks led to the Broncos' first touchdown." }],
+  },
+  "nfl:1:2": {
+    id: "millionaire-randy-moss-2007-23-tds-future-q3", type: "receiving-records",
+    prompt: "Who set the NFL single-season receiving touchdown record with 23 in 2007?",
+    choices: ["Randy Moss", "Terrell Owens", "Braylon Edwards", "Wes Welker"], answer: "Randy Moss",
+    statSheet: "The receiver caught passes from Tom Brady during New England's 16–0 regular season.", explanation: "Randy Moss caught 23 regular-season touchdown passes for the 2007 New England Patriots, an NFL single-season record. Moss recorded 98 catches and 1,493 receiving yards as the Patriots finished the regular season undefeated.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.nfl.com/stats/player-stats/category/receiving/2007/reg/all/receivingtouchdowns/desc", supportingDetail: "Randy Moss caught 23 regular-season touchdown passes for the 2007 New England Patriots, an NFL single-season record. Moss recorded 98 catches and 1,493 receiving yards as the Patriots finished the regular season undefeated." }],
+  },
+  "nfl:2:0": {
+    id: "millionaire-emmitt-smith-career-rushing-future-q1", type: "career-records",
+    prompt: "Who holds the NFL career rushing record with 18,355 yards?",
+    choices: ["Emmitt Smith", "Walter Payton", "Barry Sanders", "Frank Gore"], answer: "Emmitt Smith",
+    statSheet: "The three-time Super Bowl champion played most of his career with Dallas.", explanation: "Emmitt Smith recorded an NFL-record 18,355 career rushing yards over 15 seasons with Dallas and Arizona. He led the league in rushing four times during the Cowboys' early-1990s Super Bowl dynasty.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.profootballhof.com/players/emmitt-smith", supportingDetail: "Emmitt Smith recorded an NFL-record 18,355 career rushing yards over 15 seasons with Dallas and Arizona. He led the league in rushing four times during the Cowboys' early-1990s Super Bowl dynasty." }],
+  },
+  "nfl:4:0": {
+    id: "millionaire-jerry-rice-1985-draft-future-q1", type: "draft",
+    prompt: "Which franchise selected Jerry Rice 16th overall in the 1985 NFL Draft?",
+    choices: ["49ers", "Cowboys", "Raiders", "Seahawks"], answer: "49ers",
+    statSheet: "San Francisco traded up to select the Mississippi Valley State receiver in Round 1.", explanation: "The San Francisco 49ers took Jerry Rice out of Mississippi Valley State at No. 16 in the 1985 NFL Draft. Rice became the centerpiece of three San Francisco Super Bowl winners and retired as the NFL's career receiving-yards leader.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.profootballhof.com/football-history/nfl-draft-history/1940/1985", supportingDetail: "The San Francisco 49ers took Jerry Rice out of Mississippi Valley State at No. 16 in the 1985 NFL Draft. Rice became the centerpiece of three San Francisco Super Bowl winners and retired as the NFL's career receiving-yards leader." }],
+  },
+  "nfl:4:4": {
+    id: "millionaire-calvin-johnson-2012-yards-future-q5", type: "receiving-records",
+    prompt: "Which receiver set the NFL single-season receiving-yards record with 1,964 in 2012?",
+    choices: ["Calvin Johnson", "Andre Johnson", "Brandon Marshall", "Demaryius Thomas"], answer: "Calvin Johnson",
+    statSheet: "The Detroit wideout caught 122 passes that year but recorded only five receiving touchdowns.", explanation: "Calvin Johnson caught 122 passes for 1,964 yards with the Detroit Lions in 2012, setting the NFL's single-season receiving-yards record. Andre Johnson finished second that season with 1,598 yards, while Brandon Marshall had 1,508 and Demaryius Thomas 1,434.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.nfl.com/stats/player-stats/category/receiving/2012/reg/all/receivingyards/desc", supportingDetail: "Calvin Johnson caught 122 passes for 1,964 yards with the Detroit Lions in 2012, setting the NFL's single-season receiving-yards record. Andre Johnson finished second that season with 1,598 yards, while Brandon Marshall had 1,508 and Demaryius Thomas 1,434." }],
+  },
+  "nfl:5:4": {
+    id: "millionaire-eric-dickerson-1984-rushing-future-q5", type: "rushing-records",
+    prompt: "Who set the NFL single-season rushing record with 2,105 yards in 1984?",
+    choices: ["Eric Dickerson", "Adrian Peterson", "Barry Sanders", "Jamal Lewis"], answer: "Eric Dickerson",
+    statSheet: "The Hall of Fame runner achieved the milestone with the Los Angeles Rams.", explanation: "Eric Dickerson carried the ball 379 times for a record 2,105 rushing yards with the Los Angeles Rams in 1984, averaging 5.6 yards per rush with 14 rushing touchdowns. The mark has remained the NFL single-season rushing standard.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.nfl.com/players/eric-dickerson/stats/career", supportingDetail: "Eric Dickerson carried the ball 379 times for a record 2,105 rushing yards with the Los Angeles Rams in 1984, averaging 5.6 yards per rush with 14 rushing touchdowns. The mark has remained the NFL single-season rushing standard." }],
+  },
+  "nfl:6:0": {
+    id: "millionaire-patrick-mahomes-chiefs-2017-future-q1", type: "draft",
+    prompt: "Which NFL franchise drafted Patrick Mahomes 10th overall in 2017?",
+    choices: ["Chiefs", "Bills", "Texans", "Bears"], answer: "Chiefs",
+    statSheet: "Kansas City traded its No. 27 pick, another 2017 selection and a 2018 first-rounder to move up.", explanation: "The Kansas City Chiefs traded up from No. 27 to No. 10 in the 2017 NFL Draft to select Texas Tech quarterback Patrick Mahomes. Buffalo received a 2017 third-rounder and Kansas City's 2018 first-rounder as part of the deal.",
+    evidence: [{ authority: "NFL / NFL statistics / Pro Football Hall of Fame / official club history", url: "https://www.chiefs.com/news/upon-further-review-11-quick-facts-regarding-the-chiefs-2017-nfl-draft-18811494", supportingDetail: "The Kansas City Chiefs traded up from No. 27 to No. 10 in the 2017 NFL Draft to select Texas Tech quarterback Patrick Mahomes. Buffalo received a 2017 third-rounder and Kansas City's 2018 first-rounder as part of the deal." }],
+  },
+
 };

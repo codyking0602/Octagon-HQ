@@ -144,6 +144,39 @@ describe("Millionaire future editorial CANDIDATE quality gate (not fact certific
     expect(millionaireDailyRun("nfl",3)[2]!.prompt).toContain("AP NFL MVP");
   });
 
+  it("source-checks ten previously untracked NFL legacy positions and fixes early draft-heavy pacing", () => {
+    const checked = [
+      ["nfl:0:0", "Joe Burrow", "https://www.nfl.com/news/cincinnati-bengals-pick-joe-burrow-no-1-in-2020-draft-0ap3000001110800"],
+      ["nfl:0:2", "Josh Jacobs", "https://www.nfl.com/stats/player-stats/category/rushing/2022/REG/all/rushingyards/desc"],
+      ["nfl:1:0", "Colts", "https://www.profootballhof.com/players/peyton-manning"],
+      ["nfl:1:1", "Von Miller", "https://www.nfl.com/news/broncos-lb-von-miller-named-super-bowl-50-mvp-0ap3000000634374"],
+      ["nfl:1:2", "Randy Moss", "https://www.nfl.com/stats/player-stats/category/receiving/2007/reg/all/receivingtouchdowns/desc"],
+      ["nfl:2:0", "Emmitt Smith", "https://www.profootballhof.com/players/emmitt-smith"],
+      ["nfl:4:0", "49ers", "https://www.profootballhof.com/football-history/nfl-draft-history/1940/1985"],
+      ["nfl:4:4", "Calvin Johnson", "https://www.nfl.com/stats/player-stats/category/receiving/2012/reg/all/receivingyards/desc"],
+      ["nfl:5:4", "Eric Dickerson", "https://www.nfl.com/players/eric-dickerson/stats/career"],
+      ["nfl:6:0", "Chiefs", "https://www.chiefs.com/news/upon-further-review-11-quick-facts-regarding-the-chiefs-2017-nfl-draft-18811494"],
+    ] as const;
+    expect(checked).toHaveLength(10);
+    for(const [key, correct, source] of checked){
+      const q = MILLIONAIRE_FUTURE_TARGETED_REWRITES[key]!;
+      expect(q.answer).toBe(correct);
+      expect(q.choices.filter(choice=>choice===correct)).toHaveLength(1);
+      expect(new Set(q.choices.map(normalized)).size).toBe(4);
+      expect(normalized(q.statSheet??"")).not.toContain(normalized(correct));
+      expect(q.explanation).toContain(correct);
+      expect(q.explanation.length).toBeGreaterThan(100);
+      expect(q.evidence[0]?.url).toBe(source);
+      const [sport, index, qIndex] = key.split(":");
+      const historic = millionaireDailyRun(sport as "nfl",Number(index))[Number(qIndex)]!;
+      expect(historic.id).not.toBe(q.id);
+    }
+    expect(millionaireDailyRun("nfl",0)[2]!.prompt).toContain("Aaron Rodgers");
+    const newer = MILLIONAIRE_FUTURE_TARGETED_REWRITES["nfl:0:2"]!;
+    expect(newer.prompt).toContain("rushing yards");
+    expect(newer.prompt).not.toContain("drafted");
+  });
+
   it("keeps four active UFC Bar Trivia duplicate facts out of future-only overlay candidates", () => {
     const cases = [
       ["ufc:1:2", "Rashad Evans", "UFC 88", "Demetrious Johnson"],
