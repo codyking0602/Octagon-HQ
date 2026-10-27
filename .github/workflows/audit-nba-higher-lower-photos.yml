@@ -49,6 +49,8 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check pillow
           python scripts/audit_nba_higher_lower_photos.py
+      - name: Generate shared presentation media required by Vite fixtures
+        run: npm run generate:football-career-media-context
       - name: Render and exercise actual NBA games on an iPhone viewport
         run: node scripts/verify-nba-portrait-phone.mjs
       - if: always()
