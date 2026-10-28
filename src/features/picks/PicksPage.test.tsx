@@ -247,7 +247,7 @@ describe("PicksPage", () => {
     const skcs = screen.getByRole("link", { name: /Open Quillan Salkilld SKCS scouting profile/i });
     expect(getFighter("jon-jones")).toBeDefined();
     expect(hq).toHaveTextContent(`HQ #${getFighter("jon-jones")!.rank}`);
-    expect(hq).toHaveAttribute("href", "/rankings?fighter=jon-jones");
+    expect(hq).toHaveAttribute("href", "/fighters/jon-jones");
     expect(skcs).toHaveTextContent("SKCS #1");
     expect(skcs).toHaveAttribute("href", "/fighters-to-watch#quillan-salkilld");
     expect(hq.closest("button")).toBeNull();
