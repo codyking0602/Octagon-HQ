@@ -14,6 +14,19 @@ const thumbnailBySlug = new Map(
   }),
 );
 
+// October 31's verified UFC/ESPN cutouts are transparent but framed like Spotlights.
+// Keep the original real photos and render only these seven as face-dominant busts.
+// Retire this list when the underlying assets are replaced by approved close crops.
+export const faceFocusUfcThumbSlugs = new Set([
+  "tom-nolan",
+  "jacobe-smith",
+  "ode-osbourne",
+  "cody-durden",
+  "yana-santos",
+  "luana-santos",
+  "farman-hasanov",
+]);
+
 const thumbnailSlugAliases = new Map([
   ["jan-b-achowicz", "jan-blachowicz"],
   ["jan-błachowicz", "jan-blachowicz"],
@@ -109,6 +122,9 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
     : runtimeSource && !failedSources.has(runtimeSource)
       ? runtimeSource
       : null;
+  const useFaceFocus = Boolean(source)
+    && faceFocusUfcThumbSlugs.has(canonicalSlug)
+    && source === thumbnailBySlug.get(canonicalSlug);
 
   useEffect(() => {
     if (source) return;
@@ -136,6 +152,17 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
           fillOpacity="0.4"
         />
       </svg>
+    </i>
+  ) : useFaceFocus ? (
+    <i className="pick-fighter-thumbnail pick-fighter-thumbnail--face-focus">
+      <img
+        className="pick-fighter-thumbnail__face-image"
+        src={source}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailedSources((current) => new Set(current).add(source))}
+      />
     </i>
   ) : (
     <img
