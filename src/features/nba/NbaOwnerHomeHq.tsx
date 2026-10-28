@@ -16,13 +16,13 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
   const [futures, setFutures] = useState<{ count: number; locked: boolean } | null>(null);
   const [weekly, setWeekly] = useState<NbaWeeklySpotlight | null>(null);
   const playerTeamId = weekly?.player.teamId ?? NBA_TEAMS.find(team=>team.name===weekly?.player.team)?.id;
+  // Same two-color identity contract as Football Spotlight. Use a second
+  // Lakers color without turning the entire card into a purple backdrop.
   const playerBrandStyle = weekly ? {
     "--nba-player-primary": nbaTeamColor(playerTeamId ?? ""),
-    "--nba-player-base": playerTeamId === "LAL" ? "#552583" : nbaTeamColor(playerTeamId ?? ""),
+    "--nba-player-secondary": playerTeamId === "LAL" ? "#552583" : nbaTeamColor(playerTeamId ?? ""),
+    "--nba-player-button": playerTeamId === "LAL" ? "#b4932b" : nbaTeamColor(playerTeamId ?? ""),
   } as CSSProperties : undefined;
-  const standingsDate = weekly?.team.standingsAsOf
-    ? new Date(weekly.team.standingsAsOf).toLocaleDateString("en-US", { month:"short",day:"numeric",timeZone:"America/Chicago" }).toUpperCase()
-    : null;
   const day = nbaCentralDay();
   const publishedDaily = NBA_OFFICIAL_GAMES_RELEASE_READY && day >= NBA_GAMES_LAUNCH_DAY;
   const ownerSlot = allowOwnerDailyPreview && !publishedDaily && day < NBA_GAMES_LAUNCH_DAY ? nbaOwnerPreviewDaily(day) : null;
@@ -126,14 +126,16 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
             <a href={weekly.team.profileUrl} target="_blank" rel="noreferrer" className="nba-hq-owner__team-link" aria-label={`View ${weekly.team.name} 2026–27 season on Basketball Reference`}>
               <img src={weekly.team.logoUrl} alt="" loading="lazy"/>
               <div className="nba-hq-owner__team-copy">
-                <strong>{weekly.team.name}</strong><small>{weekly.team.record} THIS WEEK</small>
-                {weekly.team.seasonRecord && weekly.team.conferenceSeed && weekly.team.conference ? (
-                  <span className="nba-hq-owner__team-season">
-                    <b>{weekly.team.seasonRecord} SEASON</b>
-                    <b>#{weekly.team.conferenceSeed} {weekly.team.conference === "WEST" ? "WEST" : "EAST"}</b>
-                    {standingsDate ? <small>AS OF {standingsDate}</small> : null}
-                  </span>
-                ) : null}
+                <div className="nba-hq-owner__team-identity">
+                  <strong>{weekly.team.name}</strong>
+                  {weekly.team.seasonRecord && weekly.team.conferenceSeed && weekly.team.conference ? (
+                    <span className="nba-hq-owner__team-standing" aria-label={`Season ${weekly.team.seasonRecord}, #${weekly.team.conferenceSeed} ${weekly.team.conference === "WEST" ? "West" : "East"}`}>
+                      <b>{weekly.team.seasonRecord}</b>
+                      <b>#{weekly.team.conferenceSeed} {weekly.team.conference === "WEST" ? "WEST" : "EAST"}</b>
+                    </span>
+                  ) : null}
+                </div>
+                <small>{weekly.team.record} THIS WEEK</small>
                 <div className="nba-hq-owner__team-stats">
                   <span><b>{weekly.team.ppg}</b><small>PPG</small></span>
                   <span><b>{weekly.team.netMargin}</b><small>AVG MARGIN</small></span>
