@@ -12,7 +12,7 @@ export function nbaWeeklyGate(now = new Date(), event = "schedule") {
   const day = field("weekday");
   const hour = Number(field("hour"));
   const publish = event === "workflow_dispatch" || event === "push"
-    || (["Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].includes(day) && hour >= 5);
+    || (["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].includes(day) && hour >= 8);
   return { run: true, publish };
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
