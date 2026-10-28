@@ -4,7 +4,7 @@ import type { PickSpotlight } from "./spotlightModel";
 export function conciseFightPreview(value:string,maxWords=75):string {
   const text=value.trim().replace(/\s+/g," ");
   if(!text)return "";
-  const sentences=text.match(/[^.!?]+[.!?]+(?:[’'”"])?|[^.!?]+$/g)?.map(s=>s.trim()).filter(Boolean)??[text];
+  const sentences=text.split(/(?<=[.!?])\s+(?=[A-Z"“])/).map(part=>part.trim()).filter(Boolean);
   const kept:string[]=[];let words=0;
   for(const sentence of sentences) {
     const count=sentence.split(/\s+/).length;
