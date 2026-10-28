@@ -14,14 +14,12 @@ import {
   type PickBoutResultStatus,
 } from "./picksModel";
 import { usePicks } from "./PicksProvider";
-import { FighterThumbnail } from "./FighterThumbnail";
-import { approvedUfcPicksHeadshot } from "./officialUfcPicksHeadshots";
-import { GroupPickProgress } from "./GroupPickProgress";
+import { FighterPickChoice } from "./FighterPickChoice";
+import { UfcPicksScorecard } from "./UfcPicksScorecard";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { pickEventPoster } from "./picksEventAssets";
 import { reviewedMmaManiaPoster, reviewedOfficialUfcEventBanner } from "./ufcMmaManiaPoster";
-import { shaneContenderForSlug } from "./ShaneContenderSpotlight";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
@@ -81,16 +79,10 @@ function officialResult(bout: BoutResultView) {
 }
 
 function choiceLabel(selected: boolean, locked: boolean, cancelled: boolean, removed: boolean) {
-  if (selected) return "YOUR PICK";
+  if (selected) return null;
   if (removed) return "REMOVED FROM PICKS";
   if (cancelled) return "FIGHT CANCELLED";
   return locked ? "NOT PICKED" : null;
-}
-
-function choiceClassName(selected: boolean, readOnly: boolean) {
-  return ["pick-choice", selected ? "is-selected" : "", readOnly ? "is-read-only" : ""]
-    .filter(Boolean)
-    .join(" ");
 }
 
 function fighterNameStyle(name: string, isMainEvent: boolean): CSSProperties | undefined {
@@ -111,8 +103,6 @@ export default function PicksPage() {
   const activeLifecycle = activeEvent ? lifecycle : null;
   const progress = pickProgress(activeEvent, picks.selections);
   const locked = activeLifecycle ? activeLifecycle.state !== "upcoming" : false;
-  const percent = progress.total ? Math.round((progress.completed / progress.total) * 100) : 0;
-  const completeProgress = progress.total > 0 && progress.completed === progress.total;
   const orderedBouts = useMemo(
     () => activeEvent?.bouts
       .filter((bout) => bout.includedInPicks !== false)
@@ -160,8 +150,6 @@ export default function PicksPage() {
     >
       <section className="page-heading picks-page-heading">
         <p className="eyebrow">EVENT PICKS</p>
-        <h1>Call the fights</h1>
-        <p>Pick every matchup before the card locks.</p>
       </section>
 
       {picks.loading && !activeEvent ? (
@@ -218,17 +206,6 @@ export default function PicksPage() {
                 <span>{progress.total} FIGHTS</span>
               </div>
 
-              <div className="picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
-                <div><span>YOUR PICKS</span><b>{progress.completed} OF {progress.total}</b></div>
-                <div className={completeProgress ? "picks-progress__track is-complete" : "picks-progress__track"} aria-hidden="true">
-                  <span style={{ width: `${percent}%` }} />
-                </div>
-                <p>
-                  UNDERDOG LOCK · {underdogLockName}
-                  {underdogLockBonusLabel ? ` · ${underdogLockBonusLabel} IF CORRECT` : ""}
-                </p>
-              </div>
-
               {!identity.profile ? (
                 <button className="primary-action" type="button" onClick={identity.openDialog}>
                   SIGN IN TO MAKE PICKS
@@ -254,7 +231,9 @@ export default function PicksPage() {
           </section>
 
           {identity.profile ? (
-            <GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} />
+            <UfcPicksScorecard event={activeEvent} members={picks.groupProgress ?? []}
+              mySelections={picks.selections} completed={progress.completed} total={progress.total}
+              underdogLock={picks.underdogLock ?? null} lockName={underdogLockName} />
           ) : null}
 
           <details className="surface-card picks-scoring-guide">
@@ -333,33 +312,29 @@ export default function PicksPage() {
                         ) : null}
                       </header>
                       <div className="pick-bout-card__choices">
-                        <button
-                          type="button"
-                          className={choiceClassName(selection === bout.redFighterSlug, readOnly)}
-                          aria-pressed={selection === bout.redFighterSlug}
+                        <FighterPickChoice
+                          eventId={activeEvent.eventId} corner="red"
+                          name={bout.redFighterName} slug={bout.redFighterSlug}
+                          nameStyle={fighterNameStyle(bout.redFighterName,isMainEvent)}
+                          odds={removed ? "NOT ACTIVE" : redOdds ?? "ODDS TBD"}
+                          favorite={favorite === "red"}
+                          selected={selection === bout.redFighterSlug}
                           disabled={readOnly || Boolean(picks.savingBoutId)}
-                          onClick={() => void picks.setPick(bout.boutId, bout.redFighterSlug)}
-                        >
-                          <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.redFighterSlug)} />
-                          <span style={fighterNameStyle(bout.redFighterName, isMainEvent)}>{bout.redFighterName}</span>
-                          {shaneContenderForSlug(bout.redFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
-                          <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
-                          {redChoiceLabel ? <em>{redChoiceLabel}</em> : null}
-                        </button>
+                          statusLabel={redChoiceLabel}
+                          onPick={() => void picks.setPick(bout.boutId,bout.redFighterSlug)}
+                        />
                         <span className="pick-bout-card__versus">VS</span>
-                        <button
-                          type="button"
-                          className={choiceClassName(selection === bout.blueFighterSlug, readOnly)}
-                          aria-pressed={selection === bout.blueFighterSlug}
+                        <FighterPickChoice
+                          eventId={activeEvent.eventId} corner="blue"
+                          name={bout.blueFighterName} slug={bout.blueFighterSlug}
+                          nameStyle={fighterNameStyle(bout.blueFighterName,isMainEvent)}
+                          odds={removed ? "NOT ACTIVE" : blueOdds ?? "ODDS TBD"}
+                          favorite={favorite === "blue"}
+                          selected={selection === bout.blueFighterSlug}
                           disabled={readOnly || Boolean(picks.savingBoutId)}
-                          onClick={() => void picks.setPick(bout.boutId, bout.blueFighterSlug)}
-                        >
-                          <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.blueFighterSlug)} />
-                          <span style={fighterNameStyle(bout.blueFighterName, isMainEvent)}>{bout.blueFighterName}</span>
-                          {shaneContenderForSlug(bout.blueFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
-                          <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
-                          {blueChoiceLabel ? <em>{blueChoiceLabel}</em> : null}
-                        </button>
+                          statusLabel={blueChoiceLabel}
+                          onPick={() => void picks.setPick(bout.boutId,bout.blueFighterSlug)}
+                        />
                       </div>
                       {removed ? (
                         <div className="pick-bout-card__official">
