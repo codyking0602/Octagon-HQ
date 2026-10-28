@@ -6,6 +6,8 @@
  */
 import fs from "node:fs/promises";
 import path from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 
 const ESPN = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba";
 // @NBA is the sole permitted publisher for player spotlight videos.
@@ -416,6 +418,88 @@ async function youtubeApiVideos(channel, key) {
   return videos;
 }
 
+/** Public @NBA channel archive fallback. No YouTube API key or video downloads.
+ * Flat channel candidates are NEVER trusted for publication: metadata for every
+ * selected video must independently confirm the NBA's exact channel ID and
+ * the precise week, clip title and duration. */
+const execFileAsync = promisify(execFile);
+const NBA_ARCHIVE_URL = "https://www.youtube.com/@NBA/videos";
+const ARCHIVE_LIMIT = 650;
+const VIDEO_LOOKUP_LIMIT = 90;
+
+export function archiveCandidates(entries, playerNames, limit = VIDEO_LOOKUP_LIMIT) {
+  const pairs=playerNames.slice(0,55).map(name=>{
+    const words=normal(name).split(" ").filter(Boolean);
+    while (["jr","sr","ii","iii","iv"].includes(words.at(-1))) words.pop();
+    return {first:words[0],last:words.at(-1)};
+  }).filter(x=>x.first&&x.last&&x.first!==x.last);
+  const seen=new Set(), selected=[];
+  for (const entry of entries??[]) {
+    const id=entry?.id;
+    if (!/^[\w-]{11}$/.test(id??"") || seen.has(id)) continue;
+    const title=String(entry.title??""), words=normal(title).split(" ");
+    if (/full game|extended|interview|press conference|postgame/i.test(title)
+      || !/highlights?|best plays|top plays|best moments|\b\d{1,3} (?:points?|pts)\b|performance/i.test(title)
+      || !pairs.some(p=>words.includes(p.first)&&words.includes(p.last))) continue;
+    seen.add(id); selected.push("https://www.youtube.com/watch?v="+id);
+    if (selected.length>=limit) break;
+  }
+  return selected;
+}
+
+export function verifiedArchiveVideo(raw, weekStart, weekEnd) {
+  if (raw?.channel_id!==NBA_CHANNEL_ID || !/^[\w-]{11}$/.test(raw?.id??"")
+    || typeof raw.title!=="string" || !raw.title.trim()) return null;
+  const duration=Number(raw.duration);
+  if (!Number.isFinite(duration) || duration<25 || duration>480) return null;
+  let time=Number(raw.timestamp);
+  if (!Number.isFinite(time)||time<=0) {
+    const value=String(raw.upload_date??"");
+    if (!/^\d{8}$/.test(value)) return null;
+    // Upload date only has day precision; do not guess whether a Monday
+    // upload was before the cutoff for Sunday's games.
+    const day=value.slice(0,4)+"-"+value.slice(4,6)+"-"+value.slice(6);
+    if (day>weekEnd) return null;
+    time=Date.parse(day+"T12:00:00Z")/1000;
+  }
+  const date=new Date(time*1000);
+  if (!Number.isFinite(date.getTime())) return null;
+  const from=Date.parse(weekStart+"T00:00:00Z");
+  const through=Date.parse(weekEnd+"T00:00:00Z")+MS_DAY+16*3_600_000;
+  if (date.getTime()<from || date.getTime()>through) return null;
+  return {id:raw.id,title:raw.title,published:date.toISOString(),
+    channel:NBA_CHANNEL_ID,durationSeconds:duration};
+}
+
+export async function recoverOfficialArchiveVideos(playerNames, weekStart, weekEnd) {
+  const {stdout:listing}=await execFileAsync("yt-dlp",
+    ["--flat-playlist","--dump-single-json","--playlist-end",String(ARCHIVE_LIMIT),
+      "--no-warnings","--force-ipv4",NBA_ARCHIVE_URL],
+    {timeout:180_000,maxBuffer:30*1024*1024});
+  const playlist=JSON.parse(listing);
+  // Explicitly scoped to the known @NBA video tab; validate metadata at
+  // the individual video level regardless of any playlist label.
+  if (!Array.isArray(playlist.entries) || !playlist.entries.length)
+    throw Error("Official NBA channel archive returned no video entries");
+  const candidates=archiveCandidates(playlist.entries,playerNames);
+  if (!candidates.length) throw Error("NBA archive has no matching player highlights");
+  const {stdout:lines}=await execFileAsync("yt-dlp",
+    ["--skip-download","--no-playlist","--dump-json","--ignore-errors",
+      "--no-warnings","--force-ipv4",...candidates],
+    {timeout:360_000,maxBuffer:30*1024*1024});
+  const verified=[];
+  for (const line of lines.split("\n").filter(Boolean)) {
+    try {
+      const video=verifiedArchiveVideo(JSON.parse(line),weekStart,weekEnd);
+      if (video) verified.push(video);
+    } catch { /* An invalid or unavailable video must never enter the catalog. */ }
+  }
+  if (!verified.length)
+    throw Error("No archived YouTube highlights independently verified as official NBA in this week");
+  console.log("Verified "+verified.length+" @NBA archive highlights from "+candidates.length+" candidates");
+  return verified;
+}
+
 export async function collectOfficialVideos() {
   const previous=JSON.parse(await fs.readFile(VIDEO_CACHE_FILE,"utf8").catch(() => "[]"));
   const newlyFound=[];
@@ -456,7 +540,24 @@ async function main(){
     boxscores.set(String(event.id),await retrieveJson(`${ESPN}/summary?event=${encodeURIComponent(event.id)}`));
     await new Promise(resolve=>setTimeout(resolve,200));
   }
-  const data=selectWeek({events:finals,boxscores,videos,weekStart,weekEnd,publishedAt:new Date().toISOString(),previous:existing});
+  let data;
+  try {
+    data=selectWeek({events:finals,boxscores,videos,weekStart,weekEnd,publishedAt:new Date().toISOString(),previous:existing});
+  } catch(error) {
+    if (!/No eligible weekly player has a verified matching NBA YouTube highlight/.test(String(error.message))) throw error;
+    // Source data is complete but 15-entry RSS has rolled over. Recover only
+    // player-specific candidates, and trust only per-video exact NBA metadata.
+    const players=new Map();
+    for(const game of finals) readPlayerBoxscore(boxscores.get(String(game.id)),players,String(game.id));
+    const teamMap=collectTeamGames(events).teams;
+    const names=[...players.values()].filter(p=>p.games.size>=2&&p.points/p.games.size>=16&&p.attempts/p.games.size>=9)
+      .sort((a,b)=>playerEditorialScore(b,teamMap)-playerEditorialScore(a,teamMap))
+      .map(p=>p.name);
+    const recovered=await recoverOfficialArchiveVideos(names,weekStart,weekEnd);
+    const enriched=mergeOfficialVideos(videos,recovered);
+    await fs.writeFile(VIDEO_CACHE_FILE,JSON.stringify(enriched,null,2)+"\n");
+    data=selectWeek({events:finals,boxscores,videos:enriched,weekStart,weekEnd,publishedAt:new Date().toISOString(),previous:existing});
+  }
   await fs.mkdir(path.dirname(destination),{recursive:true});
   await fs.writeFile(destination,JSON.stringify(data,null,2)+"\n");
   const archive=path.resolve(`data/generated/nba/weekly-${weekEnd}.json`);
