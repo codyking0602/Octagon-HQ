@@ -86,3 +86,5 @@ def ingest():
     Path("data/curated/ufc/2026-10-31-official-headshots.json").write_text(json.dumps(outcome,indent=2)+"\n")
     print("TOTAL",sum(x["status"]=="ready" for x in outcome),"OF",len(outcome),flush=True)
 if __name__=="__main__":ingest()
+
+# Official headshot replay only; do not use promotional source imagery.
