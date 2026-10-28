@@ -523,6 +523,22 @@ export async function collectOfficialVideos() {
 }
 
 async function main(){
+  if (process.argv.includes("--archive-diagnostics")) {
+    const {stdout}=await execFileAsync("yt-dlp",
+      ["--flat-playlist","--dump-single-json","--playlist-end","350",
+       "--extractor-args","youtubetab:approximate_date","--no-warnings",NBA_ARCHIVE_URL],
+      {timeout:180_000,maxBuffer:30*1024*1024});
+    const listing=JSON.parse(stdout);
+    console.log("NBA channel archive",JSON.stringify({
+      id:listing.channel_id, uploader:listing.uploader_id, title:listing.title,
+      sample:(listing.entries??[]).filter(x=>/highlights|points/i.test(x.title??"")).slice(0,12).map(x=>({
+        id:x.id,title:x.title,channel_id:x.channel_id,
+        timestamp:x.timestamp,upload_date:x.upload_date,
+        duration:x.duration,release_timestamp:x.release_timestamp,
+      }))
+    }));
+    return;
+  }
   const {start,end,weekStart,weekEnd}=finishedWeek();
   const videos=await collectOfficialVideos();
   if (process.argv.includes("--collect-only")) return;
