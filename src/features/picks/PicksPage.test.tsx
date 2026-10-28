@@ -212,6 +212,62 @@ describe("PicksPage", () => {
     expect(screen.getByRole("button", { name: "☆ LOCK FOR +2" })).toBeInTheDocument();
   });
 
+  it("uses the temporary sixth Jon Jones–Quillan Salkilld fight to QA both profile badges without casting picks", async () => {
+    const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
+      eventId, boutId, fighterSlug,
+      pickedAt: "2026-07-24T12:00:00.000Z",
+      updatedAt: "2026-07-24T12:00:00.000Z",
+    }));
+    const qaEvent: PickEvent = {
+      ...event,
+      bouts: [
+        ...event.bouts,
+        ...Array.from({ length: 4 }, (_, index) => ({
+          ...event.bouts[0],
+          boutId: "support-fight-" + (index + 2),
+          position: index + 2,
+        })),
+        {
+          ...event.bouts[0],
+          boutId: "jon-jones-quillan-salkilld-qa",
+          position: 6,
+          redFighterSlug: "jon-jones",
+          redFighterName: "Jon Jones",
+          blueFighterSlug: "quillan-salkilld",
+          blueFighterName: "Quillan Salkilld",
+          redAmericanOdds: null,
+          blueAmericanOdds: null,
+        },
+      ],
+    };
+    render(
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(savePick, qaEvent)}><PicksPage /></PicksProvider>
+      </IdentityProvider></MemoryRouter>,
+    );
+    const jones = await screen.findByRole("button", { name: /Jon Jones/i });
+    const salkilld = screen.getByRole("button", { name: /Quillan Salkilld/i });
+    const hq = screen.getByRole("link", { name: /Open Jon Jones HQ Rankings profile/i });
+    const skcs = screen.getByRole("link", { name: /Open Quillan Salkilld SKCS scouting profile/i });
+    expect(hq).toHaveAttribute("href", "/fighters/jon-jones");
+    expect(hq).toHaveTextContent(/HQ #/);
+    expect(skcs).toHaveAttribute("href", "/fighters-to-watch#quillan-salkilld");
+    expect(skcs).toHaveTextContent("SKCS #1");
+    expect(hq.closest("button")).toBeNull();
+    expect(skcs.closest("button")).toBeNull();
+    fireEvent.click(hq);
+    fireEvent.click(skcs);
+    expect(savePick).not.toHaveBeenCalled();
+    expect(jones).toHaveAttribute("aria-pressed", "false");
+    expect(salkilld).toHaveAttribute("aria-pressed", "false");
+
+    // Deliberately picking a fighter still works; navigating via its badge never does that.
+    fireEvent.click(salkilld);
+    await waitFor(() => expect(savePick).toHaveBeenCalledWith(
+      qaEvent.eventId, "jon-jones-quillan-salkilld-qa", "quillan-salkilld",
+    ));
+  });
+
   it("shows the frozen bonus in the event summary and selected lock action", async () => {
     const selectedPick: ProfileEventPick = {
       eventId: event.eventId,
