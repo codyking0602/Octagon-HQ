@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { PickSetupBout, PickSetupSourcePreview, PickSetupSpotlight } from "./pickSetupModel";
+import { ufcEditorialIssues } from "../picks/ufcSpotlightEditorial";
 
 export type UfcPrepStatus = "ready" | "review-needed" | "blocked";
 export type UfcPrepEventKind = "fight-night" | "numbered";
@@ -263,8 +264,12 @@ export function effectiveUfcPrepStatus(prep: UfcPickPrep | null): UfcPrepStatus 
   if (!prep) return null;
   if (prep.status !== "ready") return prep.status;
   const summary = prepAssetSummary(prep);
+  const editorialReady = prep.spotlights.every(spotlight =>
+    !ufcEditorialIssues(spotlight.preview, spotlight.red.edges).length
+    && !ufcEditorialIssues(spotlight.preview, spotlight.blue.edges).length);
   return summary.requiredSpotlightReady === summary.requiredSpotlightTotal
     && summary.previewReady === summary.previewTotal
+    && editorialReady
     ? "ready"
     : "review-needed";
 }
