@@ -24,7 +24,8 @@ export function auditGaps(snapshot,grades){
  if(grades.length!==594)throw new Error("Exact 594-player HQ grade authority required");
  const m=new Map(),duplicates=[];
  for(const p of snapshot.players){
-   const team=Object.entries(NAMES).find(([,v])=>v===p.team)?.[0]??p.team;
+   const team=({"NY Jets":"NYJ","NY Giants":"NYG"}[p.team] ??
+     Object.entries(NAMES).find(([,v])=>v===p.team)?.[0]??p.team);
    const family=FAMILIES[p.position];
    if(!family)continue;
    const k=team+"|"+family+"|"+norm(p.name);
