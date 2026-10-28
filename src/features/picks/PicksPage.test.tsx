@@ -212,6 +212,61 @@ describe("PicksPage", () => {
     expect(screen.getByRole("button", { name: "☆ LOCK FOR +2" })).toBeInTheDocument();
   });
 
+  it("exercises the temporary sixth Jon Jones–Quillan Salkilld fight as separate HQ and SKCS navigation targets", async () => {
+    const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
+      eventId, boutId, fighterSlug, pickedAt: "2026-10-27T12:00:00.000Z",
+      updatedAt: "2026-10-27T12:00:00.000Z",
+    }));
+    const testCard: PickEvent = {
+      ...event,
+      bouts: [
+        ...event.bouts,
+        {
+          boutId: "temporary-sixth-jon-jones-quillan-salkilld",
+          position: 6,
+          weightClass: "Lightweight",
+          redFighterSlug: "jon-jones",
+          redFighterName: "Jon Jones",
+          blueFighterSlug: "quillan-salkilld",
+          blueFighterName: "Quillan Salkilld",
+          redAmericanOdds: null,
+          blueAmericanOdds: null,
+          winnerFighterSlug: null,
+        },
+      ],
+    };
+    render(
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(savePick, testCard)}><PicksPage /></PicksProvider>
+      </IdentityProvider></MemoryRouter>,
+    );
+
+    const hq = await screen.findByRole("link", { name: /Open Jon Jones HQ Rankings profile/i });
+    const skcs = screen.getByRole("link", { name: /Open Quillan Salkilld SKCS scouting profile/i });
+    expect(hq).toHaveAttribute("href", "/fighters/jon-jones");
+    expect(skcs).toHaveAttribute("href", "/fighters-to-watch#quillan-salkilld");
+    expect(hq).toHaveTextContent(/HQ #\d+/);
+    expect(skcs).toHaveTextContent("SKCS #1");
+
+    // Both are independent sibling links, not nested pick buttons.
+    fireEvent.click(hq);
+    fireEvent.click(skcs);
+    expect(savePick).not.toHaveBeenCalled();
+
+    const selectJones = screen.getByRole("button", { name: /Jon Jones/i });
+    fireEvent.click(selectJones);
+    await waitFor(() => expect(savePick).toHaveBeenCalledWith(
+      testCard.eventId, "temporary-sixth-jon-jones-quillan-salkilld", "jon-jones",
+    ));
+    await waitFor(() => expect(selectJones).toHaveAttribute("aria-pressed", "true"));
+    expect(screen.getByLabelText("Your pick")).toHaveTextContent("✓");
+    expect(screen.queryByText("YOUR PICK")).not.toBeInTheDocument();
+
+    // Following a badge after selection must not change the saved choice.
+    fireEvent.click(skcs);
+    expect(savePick).toHaveBeenCalledTimes(1);
+  });
+
   it("shows the frozen bonus in the event summary and selected lock action", async () => {
     const selectedPick: ProfileEventPick = {
       eventId: event.eventId,
