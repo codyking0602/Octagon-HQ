@@ -14,19 +14,6 @@ const thumbnailBySlug = new Map(
   }),
 );
 
-// October 31's verified UFC/ESPN cutouts are transparent but framed like Spotlights.
-// Keep the original real photos and render only these seven as face-dominant busts.
-// Retire this list when the underlying assets are replaced by approved close crops.
-export const faceFocusUfcThumbSlugs = new Set([
-  "tom-nolan",
-  "jacobe-smith",
-  "ode-osbourne",
-  "cody-durden",
-  "yana-santos",
-  "luana-santos",
-  "farman-hasanov",
-]);
-
 const thumbnailSlugAliases = new Map([
   ["jan-b-achowicz", "jan-blachowicz"],
   ["jan-błachowicz", "jan-blachowicz"],
@@ -111,23 +98,30 @@ export function fighterThumbnailPath(slug: string) {
   return fighterRemotePhotoPath(canonicalSlug) ?? thumbnailBySlug.get(canonicalSlug) ?? null;
 }
 
-export function FighterThumbnail({ name, slug }: { name: string; slug: string }) {
+export function FighterThumbnail({ name, slug, officialHeadshot }: {
+  name: string;
+  slug: string;
+  /** undefined = normal resolver; null = deliberate empty for an unverified fighter. */
+  officialHeadshot?: string | null;
+}) {
   const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
   const staticSource = fighterThumbnailPath(canonicalSlug);
   const [runtimeSource, setRuntimeSource] = useState(() => runtimePhotoBySlug.get(canonicalSlug) ?? null);
   const [failedSources, setFailedSources] = useState<Set<string>>(() => new Set());
   const shaneContender = shaneContenderForSlug(slug);
-  const source = staticSource && !failedSources.has(staticSource)
-    ? staticSource
-    : runtimeSource && !failedSources.has(runtimeSource)
-      ? runtimeSource
-      : null;
-  const useFaceFocus = Boolean(source)
-    && faceFocusUfcThumbSlugs.has(canonicalSlug)
-    && source === thumbnailBySlug.get(canonicalSlug);
+  // A curated official-only event must never silently fall back to old local
+  // cutouts or unreviewed runtime URLs, even after a network image error.
+  const officialOnly = officialHeadshot !== undefined;
+  const source = officialOnly
+    ? officialHeadshot && !failedSources.has(officialHeadshot) ? officialHeadshot : null
+    : staticSource && !failedSources.has(staticSource)
+      ? staticSource
+      : runtimeSource && !failedSources.has(runtimeSource)
+        ? runtimeSource
+        : null;
 
   useEffect(() => {
-    if (source) return;
+    if (source || officialOnly) return;
     let active = true;
     void loadRuntimeFighterMedia().then(() => {
       if (!active) return;
@@ -136,7 +130,7 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
     return () => {
       active = false;
     };
-  }, [canonicalSlug, source]);
+  }, [canonicalSlug, officialOnly, source]);
 
   const photo = !source ? (
     <i
@@ -152,17 +146,6 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
           fillOpacity="0.4"
         />
       </svg>
-    </i>
-  ) : useFaceFocus ? (
-    <i className="pick-fighter-thumbnail pick-fighter-thumbnail--face-focus">
-      <img
-        className="pick-fighter-thumbnail__face-image"
-        src={source}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        onError={() => setFailedSources((current) => new Set(current).add(source))}
-      />
     </i>
   ) : (
     <img

@@ -15,6 +15,7 @@ import {
 } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 import { FighterThumbnail } from "./FighterThumbnail";
+import { approvedUfcPicksHeadshot } from "./officialUfcPicksHeadshots";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
@@ -339,7 +340,7 @@ export default function PicksPage() {
                           disabled={readOnly || Boolean(picks.savingBoutId)}
                           onClick={() => void picks.setPick(bout.boutId, bout.redFighterSlug)}
                         >
-                          <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} />
+                          <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.redFighterSlug)} />
                           <span style={fighterNameStyle(bout.redFighterName, isMainEvent)}>{bout.redFighterName}</span>
                           {shaneContenderForSlug(bout.redFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
                           <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
@@ -353,7 +354,7 @@ export default function PicksPage() {
                           disabled={readOnly || Boolean(picks.savingBoutId)}
                           onClick={() => void picks.setPick(bout.boutId, bout.blueFighterSlug)}
                         >
-                          <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} />
+                          <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.blueFighterSlug)} />
                           <span style={fighterNameStyle(bout.blueFighterName, isMainEvent)}>{bout.blueFighterName}</span>
                           {shaneContenderForSlug(bout.blueFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
                           <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>

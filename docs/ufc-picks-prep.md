@@ -18,17 +18,17 @@ Canonical fighter thumbnails may come **only from UFC or ESPN imagery**. If neit
 
 Every prep/refresh run must resolve thumb readiness in this order:
 
-1. Check production `main` first for `public/assets/fighters/<fighter-slug>-thumb.webp` for every selected fighter.
-2. Mechanically and visually validate any existing canonical thumb. A valid existing canonical thumb is reused and marked `thumb_ready`; do not reset it to pending merely because the prep package lacks provenance metadata.
-3. Only when no valid canonical repo thumb exists, actively search UFC and ESPN official imagery.
-4. If an official UFC/ESPN source image is found, process it through the hard gate instead of leaving it pending solely because it was not already in the repo.
-5. Only fighters that still lack an acceptable source after those checks remain `thumb_pending`, and they are rechecked on every unstaged-package refresh.
+1. Search **only** official ESPN MMA square headshots and official UFC square headshots for the correct athlete. A UFC athlete *page* with a full-body photo does **not** count.
+2. For existing repo thumbs, verify the exact underlying official **square headshot URL and face-focused image**, not just dimensions, transparency, or a clean cutout. Without proven square-headshot provenance, that file is **not approved**.
+3. Ingest only individually verified official square headshot URLs. Do **not** try to fix full-body promotional images by trimming, zooming, clipping, or background removal.
+4. When no qualifying UFC/ESPN square portrait is available, display the existing missing-image placeholder and mark `thumb_pending`. Recheck during fight week; never substitute a third-party or Spotlight image.
+5. The October 31, 2026 Picks card is explicitly fail-closed in `officialUfcPicksHeadshots.ts`: only documented official ESPN headshot URLs render. Any missing or unverified fighter stays blank even when an old local image exists.
 
 When an acceptable UFC/ESPN thumbnail is available:
 
 - `public/assets/fighters/<fighter-slug>-thumb.webp`
 
-The official source image itself does **not** need transparency. Approved opaque ESPN/UFC photography may go through the canonical asset-ingest background-removal step; the finished checked-in thumb must still pass the exact 320×320 real-alpha transparency gate.
+The original source must already be a **square official fighter headshot**, not a torso shot artificially made square. The source may have an opaque background; background removal is allowed only *after* the actual headshot has passed provenance, identity and framing review. The finished WebP must pass 320×320 alpha checks.
 
 For every fighter on the main card:
 
