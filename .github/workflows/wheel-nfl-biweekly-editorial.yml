@@ -25,11 +25,13 @@ on:
       - '.github/workflows/wheel-nfl-biweekly-editorial.yml'
       - 'scripts/wheel-monitor/nfl-roster-integrity-pilot.mjs'
       - 'scripts/wheel-monitor/nfl-biweekly-consolidate.mjs'
+      - 'scripts/wheel-monitor/nfl-biweekly-fast-triage*.mjs'
       - 'scripts/wheel-monitor/nfl-madden-oct3-baseline*.mjs'
 
 permissions:
   contents: read
   actions: read
+  issues: write
 
 concurrency:
   group: wheel-nfl-biweekly-editorial-${{ github.ref }}
@@ -148,6 +150,41 @@ jobs:
           node --check scripts/wheel-monitor/nfl-biweekly-consolidate.mjs
           node scripts/wheel-monitor/nfl-biweekly-consolidate.mjs \
             tmp/wheel-monitor/biweekly tmp/wheel-monitor/nfl-biweekly-report.json
+      - name: Build short Madden triage and all-32 coach approval preparation
+        run: |
+          node --check scripts/wheel-monitor/nfl-biweekly-fast-triage.mjs
+          node --test scripts/wheel-monitor/nfl-biweekly-fast-triage.nodecheck.mjs
+          node scripts/wheel-monitor/nfl-biweekly-fast-triage.mjs \
+            --input=tmp/wheel-monitor/nfl-biweekly-report.json \
+            --json=tmp/wheel-monitor/nfl-biweekly-approval-prep.json \
+            --md=tmp/wheel-monitor/nfl-biweekly-approval-prep.md
+      - name: Archive compact approval packet
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-biweekly-approval-prep
+          path: |
+            tmp/wheel-monitor/nfl-biweekly-approval-prep.json
+            tmp/wheel-monitor/nfl-biweekly-approval-prep.md
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Create one owner-review issue per biweekly cycle (never publish grades)
+        if: github.event_name == 'schedule' && success()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          title="NFL GM editorial review — $(TZ=America/Chicago date +%F)"
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state all --limit 100 --json number,title \
+            --jq ".[] | select(.title == \"$title\") | .number" | head -1)
+          if [[ -n "$existing" ]]; then
+            gh issue edit "$existing" --repo "$GITHUB_REPOSITORY" --body-file tmp/wheel-monitor/nfl-biweekly-approval-prep.md
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" \
+              --body-file tmp/wheel-monitor/nfl-biweekly-approval-prep.md
+          fi
       - name: Preserve single read-only report
         if: always()
         uses: actions/upload-artifact@v4
