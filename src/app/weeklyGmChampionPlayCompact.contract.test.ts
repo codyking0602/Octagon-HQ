@@ -25,6 +25,11 @@ describe("weekly GM champions, archive and compact Play", () => {
     expect(gm).toContain("archive?.standings");
     expect(gm).toContain("repository.archivedResult");
     expect(gm).toContain("FootballGmFranchiseReport");
+    // A small live field (e.g. Cody and Troy only) must not hide opponent drill-down.
+    expect(gm).toContain("expandedProfileId === entry.profile_id");
+    expect(gm).toContain("setExpandedProfileId");
+    expect(gm).toContain("canViewWeeklyGmStandingResult");
+    expect(gm).toContain("aria-expanded={showScores}");
     expect(gm).not.toContain("VIEW PRIOR AUCTION RESULTS");
   });
   it("announces the previous champion once per member and completed week", () => {
