@@ -1,0 +1,117 @@
+[
+  {
+    "fighter": "Renato Moicano",
+    "slug": "renato-moicano",
+    "status": "ready",
+    "espn_id": "3028863",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/3028863.png",
+    "source_sha256": "59ebe184a895eddebf2e467d027e64360797ccb00558adeb7e12aa0f50b2d102",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  },
+  {
+    "fighter": "Tom Nolan",
+    "slug": "tom-nolan",
+    "status": "ready",
+    "espn_id": "5144007",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/5144007.png",
+    "source_sha256": "01ed842b8a4dc171513a2dc30f1491f37a26f2b6a4efe577873ef6db4ecae267",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  },
+  {
+    "fighter": "Randy Brown",
+    "slug": "randy-brown",
+    "status": "ready",
+    "espn_id": "3960071",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/3960071.png",
+    "source_sha256": "20abf176821eb11847ac08f25a319a1f187d31dbfbc3e562f4c05ac80fc11c38",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  },
+  {
+    "fighter": "Jacobe Smith",
+    "slug": "jacobe-smith",
+    "status": "ready",
+    "espn_id": "5149961",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/5149961.png",
+    "source_sha256": "9f94c2787a45887d1cc34611eb8b507849be8c157d5915353fe56e172de105b1",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  },
+  {
+    "fighter": "Ode' Osbourne",
+    "slug": "ode-osbourne",
+    "status": "ready",
+    "espn_id": "4424224",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/4424224.png",
+    "source_sha256": "16a623d6ce00f3a46efce0663e6fa6f6dd13822eaad75e93b364802e8643ce26",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  },
+  {
+    "fighter": "Cody Durden",
+    "slug": "cody-durden",
+    "status": "ready",
+    "espn_id": "4686725",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/4686725.png",
+    "source_sha256": "c0edbfa50b27968a67567b5cc0b16da0d24e01f7c8c9282aa4850d016fc535a6",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  },
+  {
+    "fighter": "Yana Santos",
+    "slug": "yana-santos",
+    "status": "ready",
+    "espn_id": "3154898",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/3154898.png",
+    "source_sha256": "b9e9872fab78d1362a203d90c273eac27f24a32ac1d67c3dc6014b0015c17640",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  },
+  {
+    "fighter": "Luana Santos",
+    "slug": "luana-santos",
+    "status": "pending",
+    "reason": "no unambiguous ESPN MMA athlete identity",
+    "espn_id": null
+  },
+  {
+    "fighter": "Jean-Paul Lebosnoyani",
+    "slug": "jean-paul-lebosnoyani",
+    "status": "ready",
+    "espn_id": "4629138",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/4629138.png",
+    "source_sha256": "de2836c4e10234e36af05cff3884e43efef51ae67b1fddc45a2262739f7eba89",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  },
+  {
+    "fighter": "Farman Hasanov",
+    "slug": "farman-hasanov",
+    "status": "ready",
+    "espn_id": "5350562",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/5350562.png",
+    "source_sha256": "410a347e6f0699abafe99437aedc42f96e083e9c6e687a4edc3de9dfdf30f23d",
+    "original_dimensions": [
+      600,
+      436
+    ]
+  }
+]
