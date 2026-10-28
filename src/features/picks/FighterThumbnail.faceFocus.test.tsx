@@ -20,7 +20,7 @@ describe("October 31 UFC Picks actual official square headshots", () => {
     ];
     for (const slug of slugs) {
       const url = approvedUfcPicksHeadshot(OCT31_2026_UFC_EVENT_ID, slug);
-      expect(url).toMatch(/^https:\\/\\/ufc\\.com\\/images\\/styles\\/event_results_athlete_headshot\\/s3\\/20\\d{2}-\\d{2}\\/[A-Z0-9_-]+\\.png\\?itok=/);
+      expect(url).toMatch(/^https:\/\/ufc\.com\/images\/styles\/event_results_athlete_headshot\/s3\/20\d{2}-\d{2}\/[A-Z0-9_-]+\.png\?itok=/);
       const { container, unmount } = render(<FighterThumbnail slug={slug} name={slug} officialHeadshot={url} />);
       const img = container.querySelector("img.pick-fighter-thumbnail--ufc-headshot");
       expect(img?.getAttribute("src")).toBe(url);
