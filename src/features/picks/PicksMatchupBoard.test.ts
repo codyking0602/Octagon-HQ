@@ -5,8 +5,8 @@ const picksPolish = readFileSync("src/styles/picks-polish.css", "utf8");
 
 describe("Picks matchup game board styling", () => {
   it("keeps distinct red and blue corner selection treatments with a central VS board", () => {
-    expect(picksPolish).toContain(".pick-bout-card__choices > .pick-choice:first-child.is-selected");
-    expect(picksPolish).toContain(".pick-bout-card__choices > .pick-choice:last-child.is-selected");
+    expect(picksPolish).toContain(".pick-bout-card__choices > .pick-choice-wrap:first-child > .pick-choice.is-selected");
+    expect(picksPolish).toContain(".pick-bout-card__choices > .pick-choice-wrap:last-child > .pick-choice.is-selected");
     expect(picksPolish).toContain(".pick-bout-card__versus");
     expect(picksPolish).toContain("--picks-main-thumb-size: 82px");
   });

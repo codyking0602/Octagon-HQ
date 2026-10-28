@@ -11,7 +11,8 @@ const lockMigration = readFileSync("supabase/migrations/202608230001_group_pick_
 
 describe("Group Picks production wiring", () => {
   it("renders the collapsed progress surface through the canonical Picks owner", () => {
-    expect(page).toContain("<GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} />");
+    expect(page).toContain("<UfcPicksScorecard event={activeEvent}");
+    expect(readFileSync("src/features/picks/UfcPicksScorecard.tsx","utf8")).toContain("<GroupPickProgress event={event} locked={locked} mySelections={mySelections} embedded />");
     expect(component).toContain("const picks = usePicks()");
     expect(component).not.toContain("getSupabaseClient");
     expect(component).not.toContain("supabase.rpc");

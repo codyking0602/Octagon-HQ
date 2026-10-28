@@ -298,7 +298,8 @@ describe("locked fight cards and scoring guide", () => {
     expect(unselected).toHaveAttribute("aria-pressed", "false");
     expect(selected).toBeDisabled();
     expect(unselected).toBeDisabled();
-    expect(container.querySelector(".picks-progress__track")).toHaveClass("is-complete");
+    expect(container.querySelector(".ufc-picks-scorecard")).toBeInTheDocument();
+    expect(screen.getByText("1/1")).toBeInTheDocument();
     expect(container.querySelectorAll(".pick-fighter-thumbnail")).toHaveLength(2);
   });
 
