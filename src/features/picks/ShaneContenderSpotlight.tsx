@@ -22,7 +22,7 @@ export function ShaneContenderBadge({ fighters }: { fighters: ShaneWatchFighter[
     <span className="shane-contender-badges" aria-label="Shane King’s Contender Series fighters">
       {fighters.map((fighter) => (
         <em className="shane-contender-badge" key={fighter.id}>
-          SHANE’S CONTENDER SERIES · #{fighter.rank}
+          SKCS #{fighter.rank}
         </em>
       ))}
     </span>
