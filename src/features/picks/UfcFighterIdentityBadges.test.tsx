@@ -10,7 +10,7 @@ describe("UFC Picks independent fighter identity links",()=>{
     expect(fighter).toBeDefined();
     render(<MemoryRouter><UfcFighterIdentityBadges slug="jon-jones" /></MemoryRouter>);
     expect(screen.getByRole("link",{name:/Jon Jones HQ Rankings profile/i}))
-      .toHaveAttribute("href","/rankings?fighter=jon-jones");
+      .toHaveAttribute("href","/fighters/jon-jones");
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
   it("links the temporary SKCS test fighter to the existing scouting overlay",()=>{
