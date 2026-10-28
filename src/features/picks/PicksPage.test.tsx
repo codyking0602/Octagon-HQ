@@ -212,6 +212,54 @@ describe("PicksPage", () => {
     expect(screen.getByRole("button", { name: "☆ LOCK FOR +2" })).toBeInTheDocument();
   });
 
+  it("uses the live Oct 31 temporary Jon Jones–Quillan Salkilld sixth fight to prove both profile badges never save picks", async () => {
+    // This matchup is an owner-staged temporary QA bout, not a real scheduled fight.
+    // Exact bout ID, position and fighter slugs checked against the current event table.
+    const fixture: PickEvent = {
+      ...event,
+      eventId: "ufc-fight-night-renato-moicano-vs-tom-nolan-2026-10-31",
+      bouts: [{
+        ...event.bouts[0],
+        boutId: "jon-jones-vs-quillan-salkilld",
+        position: 6,
+        redFighterName: "Jon Jones",
+        redFighterSlug: "jon-jones",
+        blueFighterName: "Quillan Salkilld",
+        blueFighterSlug: "quillan-salkilld",
+        redAmericanOdds: null,
+        blueAmericanOdds: null,
+      }],
+    };
+    const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
+      eventId, boutId, fighterSlug,
+      pickedAt: "2026-10-27T12:00:00Z",
+      updatedAt: "2026-10-27T12:00:00Z",
+    }));
+    const { container } = render(
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(savePick, fixture)}><PicksPage /></PicksProvider>
+      </IdentityProvider></MemoryRouter>,
+    );
+    expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
+    const hq = screen.getByRole("link", { name: /Open Jon Jones HQ Rankings profile/i });
+    const skcs = screen.getByRole("link", { name: /Open Quillan Salkilld SKCS scouting profile/i });
+    expect(hq).toHaveAttribute("href", "/rankings?fighter=jon-jones");
+    expect(skcs).toHaveAttribute("href", "/fighters-to-watch#quillan-salkilld");
+    const choices = container.querySelectorAll(".pick-choice-shell");
+    expect(choices).toHaveLength(2);
+    expect(choices[0].querySelector(".pick-choice")).not.toContainElement(hq);
+    expect(choices[1].querySelector(".pick-choice")).not.toContainElement(skcs);
+    fireEvent.click(hq);
+    fireEvent.click(skcs);
+    expect(savePick).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: /Jon Jones/i }));
+    await waitFor(() => expect(savePick).toHaveBeenCalledWith(
+      fixture.eventId, "jon-jones-vs-quillan-salkilld", "jon-jones",
+    ));
+    expect(screen.queryByText("YOUR PICK")).not.toBeInTheDocument();
+    expect(await screen.findByLabelText("Your pick")).toBeInTheDocument();
+  });
+
   it("shows the frozen bonus in the event summary and selected lock action", async () => {
     const selectedPick: ProfileEventPick = {
       eventId: event.eventId,
