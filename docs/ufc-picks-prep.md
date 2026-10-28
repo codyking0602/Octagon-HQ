@@ -51,6 +51,17 @@ The main-event package is automatically attached when the verified card is stage
 
 The stored Spotlight `source` **must always equal `"UFCStats"`**, a reserved machine-readable field (not free-text research attribution). Write official UFC.com, ESPN and other supporting editorial citations to `verification_notes`, labeled by bout. After every automated upsert, read the saved payload back and assert that **every** `spotlights[*].source` is `"UFCStats"`, that expected bouts and previews remain intact, and that validation succeeds; do not report prep success when verification fails. Preview and edge copy must still be researched and editorially reviewed, never invented from bare statistic differences.
 
+
+### Locked concise Fight Spotlight standard (October 2026)
+
+Keep the established three sections: **Fight Preview, Tale of the Tape, Matchup Edges**. Do not replace these with a Football-style summary. The recurring UFC Picks Prep automation and all manual staging must respect these limits for **every prepared main-card fight**, not only the main event:
+
+- **Fight Preview:** two or three polished, sourced sentences, ideally 45–65 words, **70 words maximum**. Describe the fight styles and most important tactical battle; no unsupported percentages or unnecessary stat laundry list.
+- **Tale of the Tape:** keep all five canonical values—record, age, height, reach, stance. Do not reduce these to save space.
+- **Matchup Edges:** at most three distinct, recognizable advantages per fighter; each is a **short phrase, eight words maximum** (70 characters maximum), not a full sentence. Examples: `Submission grappling`, `Southpaw striking`, `Height and reach`. Never invent a strength to satisfy an edge count.
+- Do not create a Fight Spotlight merely to expose a fighter who is on **HQ Rankings** or **SKCS**. Fighter badges link directly to existing fighter profiles and scouting reports; fight analysis remains a separate optional experience.
+- Automated prep **must validate** every package against these editorial limits and keep an overlong package **review-needed**, never certify it ready or automatically publish it. Shorten and re-verify the researched copy. The app also caps overly long legacy copy at render time, but render-time compacting is not a substitute for editorial validation.
+
 ## Prep package storage
 
 While the event remains unstaged, the recurring prep task keeps one living row current in `public.ufc_pick_prep_packages`, keyed by `source_event_key`.
