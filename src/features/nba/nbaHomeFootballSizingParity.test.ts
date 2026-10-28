@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { nbaSpotlightWeekLabel } from "./nbaWeeklySpotlight";
+import { nbaSpotlightWeekLabel, readVerifiedNbaWeekly } from "./nbaWeeklySpotlight";
 
 const css = readFileSync("src/styles/nba-owner-home.css", "utf8");
 const football = readFileSync("src/styles/home-football-hq.css", "utf8");
@@ -33,13 +33,15 @@ describe("Basketball HQ locked Football mobile sizing", () => {
     expect(component).not.toContain("weekly.player.summary");
     expect(component).not.toContain("weekly.team.summary");
     expect(current.player.summary).toBeUndefined();
-    expect(current.player.gamesPlayed).toBe(2);
+    expect(current.player.gamesPlayed).toBeGreaterThanOrEqual(2);
+    expect(current.player.gamesPlayed).toBeLessThanOrEqual(7);
     expect(component).toContain("weekly.player.gamesPlayed");
     expect(css).toContain(".nba-hq-owner__week-context");
     expect(current.team.summary).toBeUndefined();
     expect(component).not.toContain('<b aria-hidden="true">›</b>');
-    expect(current.player.profileUrl).toBe("https://www.basketball-reference.com/players/m/maxeyty01.html");
-    expect(current.team.profileUrl).toBe("https://www.basketball-reference.com/teams/ATL/2027.html");
+    expect(readVerifiedNbaWeekly(current)).not.toBeNull();
+    expect(current.player.profileUrl).toContain("https://www.basketball-reference.com/");
+    expect(current.team.profileUrl).toMatch(/^https:\/\/www\.basketball-reference\.com\/teams\/[A-Z]{3}\/2027\.html$/);
   });
   it("shows orange sport borders, readable stat labels and preserves compact dimensions", () => {
     expect(css).toContain("rgba(242, 163, 65, .52)");
@@ -65,6 +67,6 @@ describe("Basketball HQ locked Football mobile sizing", () => {
     expect(component).toContain("SCORING PENDING");
     expect(component).not.toContain("weekly.team.highlightUrl");
     expect(current.team.highlightUrl).toBeUndefined();
-    expect(current.player.highlightUrl).toBe("https://www.youtube.com/watch?v=e8g1Fa8iYYM");
+    expect(current.player.highlightUrl).toMatch(/^https:\/\/www\.youtube\.com\/watch\?v=[\w-]{11}$/);
   });
 });

@@ -1,0 +1,46 @@
+{
+  "weekStart": "2026-10-19",
+  "weekEnd": "2026-10-25",
+  "publishedAt": "2026-10-28T11:35:59.873Z",
+  "player": {
+    "name": "Luka Doncic",
+    "team": "Los Angeles Lakers",
+    "position": "G",
+    "gamesPlayed": 3,
+    "headshotUrl": "https://a.espncdn.com/i/headshots/nba/players/full/3945274.png",
+    "profileUrl": "https://www.basketball-reference.com/search/search.fcgi?search=Luka%20Doncic",
+    "highlightUrl": "https://www.youtube.com/watch?v=p-YrUdvrG5E",
+    "highlightSourceChannelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+    "channelUrl": "https://www.youtube.com/@NBA",
+    "stats": [
+      {
+        "label": "PPG",
+        "value": "34.3"
+      },
+      {
+        "label": "APG",
+        "value": "8.0"
+      },
+      {
+        "label": "RPG",
+        "value": "7.3"
+      },
+      {
+        "label": "FG%",
+        "value": "46.4"
+      }
+    ]
+  },
+  "team": {
+    "name": "Minnesota Timberwolves",
+    "teamId": "MIN",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/min.png",
+    "profileUrl": "https://www.basketball-reference.com/teams/MIN/2027.html",
+    "record": "3-0",
+    "ppg": "121.0",
+    "oppPpg": "97.7",
+    "netMargin": "+23.3",
+    "fgPct": "48.0",
+    "threePct": "42.4"
+  }
+}
