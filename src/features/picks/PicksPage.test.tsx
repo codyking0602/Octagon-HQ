@@ -29,6 +29,16 @@ const cody = {
 
 afterEach(cleanup);
 
+it("places UFC scoring rules after the results archive", async () => {
+  render(<MemoryRouter><IdentityProvider gateway={gateway()}><PicksProvider repository={repository()}><PicksPage /></PicksProvider></IdentityProvider></MemoryRouter>);
+  await screen.findByText("Picks Results Archive");
+  const archive = document.querySelector(".picks-season-section");
+  const scoring = document.querySelector(".picks-scoring-guide");
+  expect(archive).not.toBeNull();
+  expect(scoring).not.toBeNull();
+  expect(scoring?.previousElementSibling).toBe(archive);
+});
+
 const event: PickEvent = {
   eventId: "ufc-test-event",
   name: "UFC Fight Night",

@@ -103,9 +103,9 @@ After staging, the existing Picks monitoring system remains the live change owne
 ## Locked concise editorial automation standard (October 27, 2026)
 
 The existing preparation/publication flow must not publish verbose previews. Each researched fight Spotlight retains the approved sections:
-- Fight preview: 2–3 complete sentences, 30–75 words. Explain styles, one decisive tactical conflict and a realistic key to victory. Avoid reciting both biographies.
+- Fight preview: 2–3 complete sentences, 45–65 words. Explain styles, one decisive tactical conflict and a realistic key to victory. Avoid reciting both biographies.
 - Tale of the Tape: preserve five sourced rows (record, age, height, reach, stance), without filler prose.
 - Matchup Edges: exactly three per fighter, each at most nine words and 65 characters. Think "Pressure wrestling", "Southpaw striking angles", "Five-round experience", not full sentences.
 - Avoid generic filler or fabricated stats. Every numerical edge must be source-verified. SKCS/HQ rankings fighter profiles do not require a fight breakdown.
-- The ufcEditorialIssues/effectiveUfcPrepStatus guard blocks verbose future prepared packages from ready status. Existing published rich breakdowns are compacted non-destructively at display time.
+- The ufcEditorialIssues/effectiveUfcPrepStatus guard blocks verbose future prepared packages from ready status. The October 31 published main-event Spotlight and all six retained prep Spotlights are explicitly rewritten in the owner-approved editorial migration. Other older published rich breakdowns are compacted at display time.
 - Temporary QA fighters/bouts are not automatically published or retained after owner removal.
