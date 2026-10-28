@@ -18,6 +18,16 @@ test("7+ discrepancies trigger review, 10+ red flag, no HQ changes",()=>{
 test("incomplete data fails closed",()=>{
  assert.throws(()=>auditGaps({edition:"Madden NFL 27",players:rows.slice(0,594)},grades),/complete/);
 });
+test("official EA NY Jets/Giants shortened labels resolve without weakening identity checks",()=>{
+ const g=grades.map(x=>({...x}));
+ g[0]={team:"NYJ",family:"WR",player:"Fixture Player 0",grade:80};
+ g[1]={team:"NYG",family:"WR",player:"Fixture Player 1",grade:80};
+ const p=rows.map(x=>({...x}));
+ p[0].team="NY Jets";p[1].team="NY Giants";
+ const result=auditGaps({edition:"Madden NFL 27",players:p},g);
+ assert.equal(result.unmatched,0);
+ assert.equal(result.matched,594);
+});
 test("missing identities are visible and not treated as same",()=>{
  const mismatched=grades.map(x=>({...x}));mismatched[0].player="Someone else";
  const r=auditGaps({edition:"Madden NFL 27",players:rows},mismatched);
