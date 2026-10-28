@@ -4,9 +4,9 @@ import { readFileSync } from "node:fs";
 import { finishedWeek, fetchWeeklyScoreboard, collectTeamGames, selectWeek, extractYoutubeVideos,
   findMatchingHighlight, mergeOfficialVideos, archiveCandidates, verifiedArchiveVideo, playerEditorialScore, teamEditorialScore,
   basketballReferenceTeamSeasonUrl, basketballReferencePlayerUrl } from "./generate-nba-weekly-spotlight.mjs";
-test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
+test("A Monday 8 AM run selects the previous seven completed Monday-Sunday dates", () => {
   assert.deepEqual(
-    (({weekStart,weekEnd})=>({weekStart,weekEnd}))(finishedWeek(new Date("2026-10-27T12:00:00Z"))),
+    (({weekStart,weekEnd})=>({weekStart,weekEnd}))(finishedWeek(new Date("2026-10-26T13:00:00Z"))),
     {weekStart:"2026-10-19",weekEnd:"2026-10-25"});
 });
 test("seven independent ESPN daily scoreboards replace rejected date ranges without double counting",async()=>{
