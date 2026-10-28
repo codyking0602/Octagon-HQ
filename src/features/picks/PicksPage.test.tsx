@@ -5,6 +5,7 @@ import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
+import { getFighter } from "../rankings/rankingModel";
 import { pickEventPresentation, pickEventStartsAt, type PickEvent, type PickHistory, type ProfileEventPick, type UnderdogLock } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
 
@@ -210,6 +211,57 @@ describe("PicksPage", () => {
     await waitFor(() => expect(screen.getByRole("button", { name: /Bogdan Guskov/i })).toHaveAttribute("aria-pressed", "true"));
     expect(screen.getByText("1 PICK SAVED")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "☆ LOCK FOR +2" })).toBeInTheDocument();
+  });
+
+  it("uses the temporary sixth Jon Jones vs. Quillan Salkilld bout to verify HQ/SKCS navigation without picking either fighter", async () => {
+    const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
+      eventId, boutId, fighterSlug,
+      pickedAt: "2026-10-27T21:00:00.000Z",
+      updatedAt: "2026-10-27T21:00:00.000Z",
+    }));
+    const testBout = {
+      ...event.bouts[0],
+      boutId: "jon-jones-vs-quillan-salkilld",
+      position: 6,
+      weightClass: "Lightweight",
+      redFighterSlug: "jon-jones",
+      redFighterName: "Jon Jones",
+      blueFighterSlug: "quillan-salkilld",
+      blueFighterName: "Quillan Salkilld",
+      redAmericanOdds: null,
+      blueAmericanOdds: null,
+      oddsSource: null,
+      oddsUpdatedAt: null,
+    };
+    const qaEvent: PickEvent = { ...event, eventId: "ufc-fight-night-renato-moicano-vs-tom-nolan-2026-10-31",
+      bouts: [event.bouts[0], testBout] };
+    render(
+      <MemoryRouter><IdentityProvider gateway={gateway()}>
+        <PicksProvider repository={repository(savePick, qaEvent)}><PicksPage /></PicksProvider>
+      </IdentityProvider></MemoryRouter>,
+    );
+
+    const jonButton = await screen.findByRole("button", { name: /^Jon Jones/i });
+    const quillanButton = screen.getByRole("button", { name: /^Quillan Salkilld/i });
+    const hq = screen.getByRole("link", { name: /Open Jon Jones HQ Rankings profile/i });
+    const skcs = screen.getByRole("link", { name: /Open Quillan Salkilld SKCS scouting profile/i });
+    expect(getFighter("jon-jones")).toBeDefined();
+    expect(hq).toHaveTextContent(`HQ #${getFighter("jon-jones")!.rank}`);
+    expect(hq).toHaveAttribute("href", "/rankings?fighter=jon-jones");
+    expect(skcs).toHaveTextContent("SKCS #1");
+    expect(skcs).toHaveAttribute("href", "/fighters-to-watch#quillan-salkilld");
+    expect(hq.closest("button")).toBeNull();
+    expect(skcs.closest("button")).toBeNull();
+
+    fireEvent.click(hq);
+    fireEvent.click(skcs);
+    expect(savePick).not.toHaveBeenCalled();
+    expect(jonButton).toHaveAttribute("aria-pressed", "false");
+    expect(quillanButton).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(quillanButton);
+    await waitFor(() => expect(savePick).toHaveBeenCalledTimes(1));
+    expect(savePick).toHaveBeenCalledWith(qaEvent.eventId, testBout.boutId, "quillan-salkilld");
   });
 
   it("shows the frozen bonus in the event summary and selected lock action", async () => {
