@@ -32,7 +32,7 @@ test("only NEW changes since previous published authority trigger mandatory reev
 test("same named athlete in a second position is a distinct reviewed slot",()=>{
   const p=population();
   p.grades[1].grade=82;
-  const out=buildPostRatingReview(p.profiles,p.grades,p.contracts,"2026-10-27T00:00:00Z");
+  const out=buildPostRatingReview(p.profiles,p.grades,p.contracts,"2026-10-27T00:00:00Z",checkpoint(p));
   assert.equal(out.mandatoryDevelopmentReevaluations.length,2);
   assert.deepEqual(out.mandatoryDevelopmentReevaluations.map(x=>x.family),["WR","Secondary"]);
 });
