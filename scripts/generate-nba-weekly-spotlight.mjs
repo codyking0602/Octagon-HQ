@@ -19,13 +19,13 @@ const dateText = d => d.toISOString().slice(0, 10);
 const ymd = d => dateText(d).replaceAll("-", "");
 
 export function finishedWeek(now = new Date()) {
-  // Use local Central calendar dates; Sunday is the final day of a media week.
+  // The Monday 8 AM CT release includes the seven completed Monday–Sunday dates.
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit", weekday: "short",
   }).formatToParts(now);
   const get = k => parts.find(x => x.type === k)?.value;
   const local = new Date(Date.UTC(+get("year"), +get("month") - 1, +get("day"), 12));
-  const weekday = local.getUTCDay(); // Tuesday=2; prior Monday is 8 days earlier
+  const weekday = local.getUTCDay(); // Monday=1; previous Sunday was yesterday
   const daysToPriorSunday = weekday === 0 ? 7 : weekday;
   const end = new Date(local.getTime() - daysToPriorSunday * MS_DAY);
   const start = new Date(end.getTime() - 6 * MS_DAY);
@@ -316,7 +316,7 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
   const winner={
     weekStart,weekEnd,publishedAt,
     player:{
-      name:p.name,team:p.team,position:p.position||"NBA",gamesPlayed:g,
+      name:p.name,team:p.team,teamId:p.teamId,position:p.position||"NBA",gamesPlayed:g,
       headshotUrl:p.headshotUrl,profileUrl:basketballReferencePlayerUrl(p.id,p.name),
       highlightUrl:`https://www.youtube.com/watch?v=${selected.video.id}`,
       highlightSourceChannelId: selected.video.channel,
@@ -334,6 +334,51 @@ export function selectWeek({events, boxscores, videos, weekStart, weekEnd, publi
     },
   };
   return winner;
+}
+
+
+/** ESPN's conference standings are the authority for official season W–L and seed.
+ * Never infer a seed from win percentage: NBA tiebreakers make that incorrect. */
+export function verifiedConferenceStanding(payload, teamAbbreviation) {
+  const target=String(teamAbbreviation??"").toUpperCase();
+  const conferences=Array.isArray(payload?.children) ? payload.children : [];
+  for(const group of conferences) {
+    const name=String(group?.name??group?.abbreviation??"").toLowerCase();
+    const conference=/east/.test(name)?"EAST":/west/.test(name)?"WEST":null;
+    if(!conference) continue;
+    for(const entry of group?.standings?.entries??[]) {
+      if(String(entry?.team?.abbreviation??"").toUpperCase()!==target) continue;
+      const stats=entry.stats??[];
+      const value=(key)=>{
+        const item=stats.find(x=>String(x?.name??"").toLowerCase()===key.toLowerCase());
+        return item?.value??item?.displayValue;
+      };
+      const wins=Number(value("wins")),losses=Number(value("losses"));
+      const seed=Number(value("playoffSeed")??value("conferenceRank"));
+      if(!Number.isInteger(wins)||wins<0||!Number.isInteger(losses)||losses<0
+        ||!Number.isInteger(seed)||seed<1||seed>15) {
+        throw Error("Incomplete official NBA conference standing for "+target);
+      }
+      return {seasonRecord:`${wins}-${losses}`,conference,conferenceSeed:seed};
+    }
+  }
+  throw Error("No verified ESPN conference standing for "+target);
+}
+export function addVerifiedStandings(snapshot, standings, timestamp=new Date().toISOString()) {
+  const team=verifiedConferenceStanding(standings,snapshot.team.teamId);
+  const playerId=snapshot.player.teamId || (standings?.children??[])
+    .flatMap(group=>group?.standings?.entries??[])
+    .find(entry=>entry.team?.displayName===snapshot.player.team)?.team?.abbreviation;
+  if(!playerId || !/^[A-Z]{2,3}$/.test(playerId)
+    || !(standings?.children??[]).some(group=>(group?.standings?.entries??[])
+      .some(entry=>entry.team?.abbreviation===playerId))) {
+    throw Error("NBA Player Spotlight team identity could not be verified");
+  }
+  if(!Number.isFinite(Date.parse(timestamp))) throw Error("Invalid standings timestamp");
+  return {
+    ...snapshot, player:{...snapshot.player,teamId:playerId},
+    team:{...snapshot.team,...team,standingsAsOf:timestamp},
+  };
 }
 
 const VIDEO_CACHE_FILE = path.resolve(".nba-weekly-video-cache.json");
@@ -522,8 +567,22 @@ async function main(){
   if (process.argv.includes("--collect-only")) return;
   const destination=path.resolve("public/nba-weekly/active.json");
   const existing=JSON.parse(await fs.readFile(destination,"utf8").catch(()=>"{}"));
-  if (existing.weekEnd===weekEnd&&existing.player&&existing.team) {
+  if (existing.weekEnd===weekEnd&&existing.player?.teamId
+    && existing.team?.seasonRecord&&existing.team?.conferenceSeed&&existing.team?.standingsAsOf) {
     console.log("Already verified:",weekEnd);return;
+  }
+  const seasonEnd=Number(weekEnd.slice(0,4))+(Number(weekEnd.slice(5,7))>=8?1:0);
+  const standings=await retrieveJson(`https://site.api.espn.com/apis/v2/sports/basketball/nba/standings?region=us&lang=en&season=${seasonEnd}&type=0&limit=100`);
+  // Enrich an already published winner without changing the selected players,
+  // video or historical weekly stats. This is a one-time metadata migration.
+  if(existing.weekEnd===weekEnd&&existing.player&&existing.team) {
+    const refreshed=addVerifiedStandings(existing,standings);
+    await fs.writeFile(destination,JSON.stringify(refreshed,null,2)+"\\n");
+    const archive=path.resolve(`data/generated/nba/weekly-${weekEnd}.json`);
+    await fs.mkdir(path.dirname(archive),{recursive:true});
+    await fs.writeFile(archive,JSON.stringify(refreshed,null,2)+"\\n");
+    console.log("Added verified standings to existing NBA spotlight:",weekEnd);
+    return;
   }
   const events = await fetchWeeklyScoreboard(start, end);
   const {finals}=collectTeamGames(events);
@@ -552,6 +611,7 @@ async function main(){
     await fs.writeFile(VIDEO_CACHE_FILE,JSON.stringify(enriched,null,2)+"\n");
     data=selectWeek({events:finals,boxscores,videos:enriched,weekStart,weekEnd,publishedAt:new Date().toISOString(),previous:existing});
   }
+  data=addVerifiedStandings(data,standings);
   await fs.mkdir(path.dirname(destination),{recursive:true});
   await fs.writeFile(destination,JSON.stringify(data,null,2)+"\n");
   const archive=path.resolve(`data/generated/nba/weekly-${weekEnd}.json`);
