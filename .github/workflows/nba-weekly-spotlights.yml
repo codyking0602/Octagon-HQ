@@ -2,9 +2,9 @@ name: NBA Weekly Spotlight Auto-Publisher
 
 on:
   schedule:
-    # Collect official video feeds daily near 5 AM Central; Tuesday publication and daily recovery.
+    # Collect official video feeds daily; Monday 8 AM Central publication and daily recovery.
     # GitHub can delay scheduled jobs; eligibility uses actual Central date, not exact 5 AM.
-    - cron: '0 10,11 * * *'
+    - cron: '0 13,14 * * *'
   workflow_dispatch:
   pull_request:
     paths:

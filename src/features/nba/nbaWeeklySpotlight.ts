@@ -6,6 +6,8 @@ export type NbaWeeklySpotlight = {
   player: {
     name: string;
     team: string;
+    /** Verified abbreviation for the player's current NBA team. */
+    teamId?: string;
     position: string;
     /** Number of verified final box scores contributing to the weekly averages. */
     gamesPlayed: number;
@@ -23,6 +25,11 @@ export type NbaWeeklySpotlight = {
     logoUrl: string;
     profileUrl: string;
     record: string;
+    /** ESPN season standings captured when this week's package was published. */
+    seasonRecord?: string;
+    conference?: "EAST" | "WEST";
+    conferenceSeed?: number;
+    standingsAsOf?: string;
     ppg: string;
     oppPpg: string;
     netMargin: string;
@@ -49,6 +56,12 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
   const string = (v: unknown) => typeof v === "string" && v.trim().length > 0;
   if (![player.name,player.team,player.position,team.name,team.teamId,
     team.record,team.ppg,team.oppPpg,team.netMargin].every(string)) return null;
+  if (player.teamId !== undefined && !/^[A-Z]{2,3}$/.test(player.teamId)) return null;
+  if ([team.seasonRecord,team.conference,team.conferenceSeed,team.standingsAsOf].some(v=>v!==undefined)
+    && (!/^\d{1,2}-\d{1,2}$/.test(team.seasonRecord ?? "")
+      || !["EAST","WEST"].includes(team.conference ?? "")
+      || !Number.isInteger(team.conferenceSeed) || (team.conferenceSeed ?? 0)<1 || (team.conferenceSeed ?? 0)>15
+      || !team.standingsAsOf || !Number.isFinite(Date.parse(team.standingsAsOf)))) return null;
   if (team.fgPct !== undefined && !/^\d{1,3}\.\d$/.test(team.fgPct)) return null;
   if (team.threePct !== undefined && !/^\d{1,3}\.\d$/.test(team.threePct)) return null;
   if (!Number.isInteger(player.gamesPlayed) || player.gamesPlayed < 1 || player.gamesPlayed > 7

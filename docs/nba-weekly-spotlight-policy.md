@@ -3,8 +3,8 @@
 ## Publication
 
 The NBA HQ Player Spotlight and Team of the Week are autonomous weekly features.
-Use verified **completed Monday–Sunday Central Time** results; publish each Tuesday
-at 5 AM CT, retrying Wednesday–Friday if source verification or exact-head CI
+Use verified **completed Monday–Sunday Central Time** results; publish each Monday
+at 8 AM CT, retrying Wednesday–Friday if source verification or exact-head CI
 cannot complete. Keep the last verified package active; do not fabricate a winner
 or claim a run succeeded without green checks and verified deployment.
 
@@ -12,7 +12,7 @@ The first owner-approved, *interim* opening-week pair is Tyrese Maxey
 (Philadelphia 76ers) and the Atlanta Hawks, based on the games completed through
 October 23, 2026. The spotlight video specifically approved by the owner is
 `https://www.youtube.com/watch?v=e8g1Fa8iYYM`. Replace the interim package
-on the first verified weekly publication on Tuesday, October 27, 2026.
+on the first verified weekly publication on Monday, November 2, 2026. The first verified October 19–25 package was published under the earlier Tuesday schedule; retain it until the next completed week.
 
 ## Player Spotlight criteria
 
@@ -41,7 +41,7 @@ the general channel a specific verified highlight.
 Require at least two completed games. Score principally by winning record,
 then average scoring margin, points allowed, and opponent strength. The
 current automated team model weights these **45% / 25% / 15% / 15%**.
-The Team card uses a logo, weekly record and weekly statistics only. No summary,
+The Team card uses a logo, weekly record, weekly statistics, verified season record and official conference seed as of the source check (clearly distinguished from the seven-day award window). No summary,
 no highlight video and no chevron. The entire card links to that team's current
 season on **Basketball Reference** (Sports Reference): the URL's year is the
 NBA season **ending** year (2026–27 => `/teams/ATL/2027.html`).

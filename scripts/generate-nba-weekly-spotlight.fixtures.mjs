@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { finishedWeek, fetchWeeklyScoreboard, collectTeamGames, selectWeek, extractYoutubeVideos,
   findMatchingHighlight, mergeOfficialVideos, archiveCandidates, verifiedArchiveVideo, playerEditorialScore, teamEditorialScore,
-  basketballReferenceTeamSeasonUrl, basketballReferencePlayerUrl } from "./generate-nba-weekly-spotlight.mjs";
-test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
+  basketballReferenceTeamSeasonUrl, basketballReferencePlayerUrl, verifiedConferenceStanding, addVerifiedStandings } from "./generate-nba-weekly-spotlight.mjs";
+test("A Monday 8 AM run selects the previous seven completed Monday-Sunday dates", () => {
   assert.deepEqual(
-    (({weekStart,weekEnd})=>({weekStart,weekEnd}))(finishedWeek(new Date("2026-10-27T12:00:00Z"))),
+    (({weekStart,weekEnd})=>({weekStart,weekEnd}))(finishedWeek(new Date("2026-10-26T13:00:00Z"))),
     {weekStart:"2026-10-19",weekEnd:"2026-10-25"});
 });
 test("seven independent ESPN daily scoreboards replace rejected date ranges without double counting",async()=>{
@@ -193,4 +193,33 @@ test("Sports Reference season and player IDs remain correct across 2026-27",()=>
   assert.equal(basketballReferencePlayerUrl("4431678","Tyrese Maxey"),"https://www.basketball-reference.com/players/m/maxeyty01.html");
   assert.equal(basketballReferencePlayerUrl("123","Sample Star"),"https://www.basketball-reference.com/search/search.fcgi?search=Sample%20Star");
   assert.throws(()=>basketballReferenceTeamSeasonUrl("INVALID","2026-10-23"),/Unsupported NBA team/);
+});
+
+test("NBA spotlight season record and conference seed come from official ESPN conference standings",()=>{
+  const snapshot=JSON.parse(readFileSync("public/nba-weekly/active.json","utf8"));
+  const fake={
+    children:[{
+      name:"Western Conference",
+      standings:{entries:[
+        {team:{abbreviation:"MIN",displayName:"Minnesota Timberwolves"},
+          stats:[{name:"wins",value:3},{name:"losses",value:1},{name:"playoffSeed",value:7}]},
+        {team:{abbreviation:"LAL",displayName:"Los Angeles Lakers"},
+          stats:[{name:"wins",value:4},{name:"losses",value:0},{name:"playoffSeed",value:2}]},
+      ]},
+    }],
+  };
+  assert.deepEqual(verifiedConferenceStanding(fake,"MIN"),
+    {seasonRecord:"3-1",conference:"WEST",conferenceSeed:7});
+  const newData=addVerifiedStandings(snapshot,fake,"2026-10-28T13:00:00Z");
+  assert.equal(newData.team.record,snapshot.team.record); // published week is immutable
+  assert.equal(newData.team.seasonRecord,"3-1");
+  assert.equal(newData.team.conferenceSeed,7);
+  assert.equal(newData.team.conference,"WEST");
+  assert.equal(newData.player.teamId,"LAL");
+  assert.equal(newData.team.standingsAsOf,"2026-10-28T13:00:00Z");
+  assert.throws(()=>verifiedConferenceStanding({
+    children:[{name:"Western Conference",standings:{entries:[
+      {team:{abbreviation:"MIN"},stats:[{name:"wins",value:3},{name:"losses",value:1}]},
+    ]}}],
+  },"MIN"),/Incomplete official/);
 });
