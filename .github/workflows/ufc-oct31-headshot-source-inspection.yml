@@ -1,20 +1,30 @@
 name: One-time ESPN UFC headshot source inspection
 on:
   push:
-    branches:
-      - fix/ufc-oct31-strict-official-headshots-20261027
+    branches: [fix/ufc-oct31-strict-official-headshots-20261027]
     paths:
-      - .github/workflows/ufc-oct31-headshot-source-inspection.yml
       - scripts/ufc-oct31-espn-headshot-inspect.py
 permissions:
-  contents: read
+  contents: write
 jobs:
   espn-headshot-source:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Discover officially supplied fighter photo identities
+          python-version: "3.12"
+      - name: Install image codec
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Ingest official ESPN fighter-only headshots (missing stays blank)
         run: python scripts/ufc-oct31-espn-headshot-inspect.py
+      - name: Commit only verified original headshots (branch only)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/assets/fighters data/curated/ufc/2026-10-31-official-headshots.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Use only source-verified ESPN MMA headshots for UFC Oct 31"
+          git push origin HEAD:fix/ufc-oct31-strict-official-headshots-20261027
