@@ -2,7 +2,6 @@ import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
 import {
-  ShaneContenderBadge,
   ShaneContenderSpotlightSection,
   shaneContendersForBout,
 } from "./ShaneContenderSpotlight";
@@ -360,7 +359,6 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
         <span>
           <b>{bout.position === 1 ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b>
           <strong>View matchup breakdown</strong>
-          <ShaneContenderBadge fighters={shaneContenders} />
         </span>
         <i aria-hidden="true">›</i>
       </button>

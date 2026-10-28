@@ -98,11 +98,12 @@ export function fighterThumbnailPath(slug: string) {
   return fighterRemotePhotoPath(canonicalSlug) ?? thumbnailBySlug.get(canonicalSlug) ?? null;
 }
 
-export function FighterThumbnail({ name, slug, officialHeadshot }: {
+export function FighterThumbnail({ name, slug, officialHeadshot, suppressContenderBadge = false }: {
   name: string;
   slug: string;
   /** undefined = normal resolver; null = deliberate empty for an unverified fighter. */
   officialHeadshot?: string | null;
+  suppressContenderBadge?: boolean;
 }) {
   const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
   const staticSource = fighterThumbnailPath(canonicalSlug);
@@ -160,7 +161,7 @@ export function FighterThumbnail({ name, slug, officialHeadshot }: {
     />
   );
 
-  if (!shaneContender) return photo;
+  if (!shaneContender || suppressContenderBadge) return photo;
 
   return (
     <span className="pick-fighter-thumbnail-wrap is-shane-contender">

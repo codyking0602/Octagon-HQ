@@ -21,7 +21,7 @@ import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { pickEventPoster } from "./picksEventAssets";
 import { reviewedMmaManiaPoster, reviewedOfficialUfcEventBanner } from "./ufcMmaManiaPoster";
-import { shaneContenderForSlug } from "./ShaneContenderSpotlight";
+import { UfcFighterIdentityBadges } from "./UfcFighterIdentityBadges";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
@@ -81,7 +81,7 @@ function officialResult(bout: BoutResultView) {
 }
 
 function choiceLabel(selected: boolean, locked: boolean, cancelled: boolean, removed: boolean) {
-  if (selected) return "YOUR PICK";
+  if (selected) return null;
   if (removed) return "REMOVED FROM PICKS";
   if (cancelled) return "FIGHT CANCELLED";
   return locked ? "NOT PICKED" : null;
@@ -161,7 +161,6 @@ export default function PicksPage() {
       <section className="page-heading picks-page-heading">
         <p className="eyebrow">EVENT PICKS</p>
         <h1>Call the fights</h1>
-        <p>Pick every matchup before the card locks.</p>
       </section>
 
       {picks.loading && !activeEvent ? (
@@ -333,6 +332,7 @@ export default function PicksPage() {
                         ) : null}
                       </header>
                       <div className="pick-bout-card__choices">
+                        <div className={`pick-choice-shell pick-choice-shell--red`}>
                         <button
                           type="button"
                           className={choiceClassName(selection === bout.redFighterSlug, readOnly)}
@@ -340,13 +340,16 @@ export default function PicksPage() {
                           disabled={readOnly || Boolean(picks.savingBoutId)}
                           onClick={() => void picks.setPick(bout.boutId, bout.redFighterSlug)}
                         >
-                          <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.redFighterSlug)} />
+                          <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.redFighterSlug)} suppressContenderBadge />
                           <span style={fighterNameStyle(bout.redFighterName, isMainEvent)}>{bout.redFighterName}</span>
-                          {shaneContenderForSlug(bout.redFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
                           <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
+                          {selection === bout.redFighterSlug ? <i className="pick-choice__check" aria-label="Your pick">✓</i> : null}
                           {redChoiceLabel ? <em>{redChoiceLabel}</em> : null}
                         </button>
+                        <UfcFighterIdentityBadges slug={bout.redFighterSlug} />
+                        </div>
                         <span className="pick-bout-card__versus">VS</span>
+                        <div className={`pick-choice-shell pick-choice-shell--blue`}>
                         <button
                           type="button"
                           className={choiceClassName(selection === bout.blueFighterSlug, readOnly)}
@@ -354,12 +357,14 @@ export default function PicksPage() {
                           disabled={readOnly || Boolean(picks.savingBoutId)}
                           onClick={() => void picks.setPick(bout.boutId, bout.blueFighterSlug)}
                         >
-                          <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.blueFighterSlug)} />
+                          <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.blueFighterSlug)} suppressContenderBadge />
                           <span style={fighterNameStyle(bout.blueFighterName, isMainEvent)}>{bout.blueFighterName}</span>
-                          {shaneContenderForSlug(bout.blueFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
                           <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
+                          {selection === bout.blueFighterSlug ? <i className="pick-choice__check" aria-label="Your pick">✓</i> : null}
                           {blueChoiceLabel ? <em>{blueChoiceLabel}</em> : null}
                         </button>
+                        <UfcFighterIdentityBadges slug={bout.blueFighterSlug} />
+                        </div>
                       </div>
                       {removed ? (
                         <div className="pick-bout-card__official">
