@@ -51,7 +51,12 @@ jobs:
           node --input-type=module <<'NODE'
           import {readFileSync, writeFileSync} from 'node:fs';
           const source=JSON.parse(readFileSync('tmp/wheel-monitor/nfl/current-coaches.json','utf8'));
-          const grading=JSON.parse(readFileSync('data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json','utf8'));
+          const fs=await import('node:fs');
+          const available=fs.readdirSync('data/generated/football')
+            .filter(name=>/^wheel-nfl-head-coach-grades-\d{4}-\d{2}-\d{2}\.json$/.test(name)).sort();
+          const current=available.at(-1);
+          if(!current) throw new Error('Missing current NFL coach grading version');
+          const grading=JSON.parse(readFileSync('data/generated/football/'+current,'utf8'));
           if(grading.grades.length!==32 || source.rows?.length!==32) throw new Error('Missing all-32 coaching coverage');
           const observed=new Map(source.rows.map(row=>[row.team,row]));
           const reviews=grading.grades.map(row=>({
@@ -68,7 +73,7 @@ jobs:
           }));
           writeFileSync('tmp/wheel-monitor/nfl/biweekly-coach-review.json',
             JSON.stringify({sport:'NFL',observedAt:new Date().toISOString(),reviewCount:32,
-              gradesChanged:0,editorialGradesReviewed:0,
+              gradeAuthorityFile:current,gradesChanged:0,editorialGradesReviewed:0,
               all32EditorialReviewRequired:true,
               reviewProtocol:'Each coach needs an actual current-ability editorial grade judgment; live name matching alone is insufficient.',
               reviews},null,2)+'\n');

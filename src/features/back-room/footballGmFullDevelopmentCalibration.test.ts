@@ -1,12 +1,17 @@
 import stroudRevision from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-26.json";
 import fiveQbRevisions from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json";
 import sevenRevisions from "../../../data/curated/football/nfl/wheel-nfl-skill-and-qb-ability-revisions-2026-10-27.json";
+import oct28 from "../../../data/curated/football/nfl/wheel-nfl-madden-editorial-revisions-2026-10-28.json";
 
 // Research/odds remain tied to the original October calibration rather than
-// retroactively adopting the October 26–27 changes in present-day ability.
+// retroactively adopting the October 26–28 changes in present-day ability.
 const approvedCurrentGradeRevisions = new Map(
-  [...stroudRevision.changes, ...fiveQbRevisions.changes, ...sevenRevisions.changes]
-    .map(change => [`${change.team}|${change.family}|${change.player}`, change] as const)
+  [
+    ...[...stroudRevision.changes, ...fiveQbRevisions.changes, ...sevenRevisions.changes]
+      .map(change => ({key: `${change.team}|${change.family}|${change.player}`, oldGrade:change.oldGrade})),
+    ...oct28.changes.filter(c=>c.family!=="Head Coach")
+      .map(c=>({key: `${c.team}|${c.family}|${c.subject}`, oldGrade:c.previousGrade})),
+  ].map(change=>[change.key,change] as const)
 );
 function originalResearchGrade(player: { team: string; family: string; name: string; currentGrade: number }) {
   return approvedCurrentGradeRevisions.get(`${player.team}|${player.family}|${player.name}`)?.oldGrade

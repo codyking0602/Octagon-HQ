@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-madden-editorial-first-cycle-2026-10-28-v1",
+  "effectiveDate": "2026-10-28",
+  "sport": "NFL",
+  "method": "Madden OVR movement >= 2 is sole recurring player rating review trigger. One-time first-cycle current EA/HQ gap QA is additional historical triage, not recurring player-review trigger. Coach reviews are mandatory 32/32 biweekly.",
+  "historicalBaselineCaveat": "EA archived Week 3 to October 27 produced 300 HQ candidates, not a certified October 3 snapshot. Original 120/575 October 2-3 observation unrecovered.",
+  "unresolvedIdentities": 10,
+  "maddenHistoricalFlags": 300,
+  "independentPerformanceOrSnapSignals": 29,
+  "changes": [
+    {
+      "team": "BUF",
+      "family": "TE",
+      "subject": "Dalton Kincaid",
+      "previousGrade": 91,
+      "approvedGrade": 88,
+      "delta": -3,
+      "reason": "2026 through Week 7: PFF 72.8 overall, 12th/30 qualifying TEs; 23/29 for 315 yards, one touchdown and zero drops. Clearly a high-end receiving option, but 91 is an elite complete-TE tier not yet sustained relative to LaPorta, Kraft and veteran peers.",
+      "sourceUrls": [
+        "https://www.pff.com/nfl/players/dalton-kincaid/91791"
+      ]
+    },
+    {
+      "team": "PHI",
+      "family": "TE",
+      "subject": "Dallas Goedert",
+      "previousGrade": 82,
+      "approvedGrade": 84,
+      "delta": 2,
+      "reason": "2026 PFF 76.2 overall (6th/30 TEs), 79.2 receiving (5th/30) with no drops; still reliable route and catch-point utility. Restricted 180 receiving yards and age 31 cap a modest +2 rather than a major reversion to peak.",
+      "sourceUrls": [
+        "https://www.pff.com/nfl/players/Dallas%20Goedert/47272"
+      ]
+    },
+    {
+      "team": "ATL",
+      "family": "Secondary",
+      "subject": "Jessie Bates III",
+      "previousGrade": 86,
+      "approvedGrade": 89,
+      "delta": 3,
+      "reason": "2026 PFF 81.4 overall (6th/93 safeties), 82.5 coverage (4th/93), 472 snaps through Week 7 plus sustained high-level track record. Meaningful upgrade while limited run-grade and target results prevent a 94-style superstar copy of Madden.",
+      "sourceUrls": [
+        "https://www.pff.com/nfl/players/jessie-bates/49162"
+      ]
+    },
+    {
+      "team": "HOU",
+      "family": "Secondary",
+      "subject": "Jalen Pitre",
+      "previousGrade": 94,
+      "approvedGrade": 91,
+      "delta": -3,
+      "reason": "PFF 76.5 overall (13th/93 safeties) and 77.0 coverage (8th/93), 2026 through Week 7; elite slot/safety versatility remains, but current 94 implies sustained near-ceiling all-phase defense unsupported by present play. Remains very good at 91.",
+      "sourceUrls": [
+        "https://www.pff.com/nfl/players/jalen-pitre/57737"
+      ]
+    },
+    {
+      "team": "CLE",
+      "family": "Head Coach",
+      "subject": "Todd Monken",
+      "previousGrade": 80,
+      "approvedGrade": 81,
+      "delta": 1,
+      "reason": "5-2 first-year Cleveland start, identifiable offensive installation and improving run-game design (183 rushing yards and 3 TD vs Tennessee in Week 7) despite five new offensive linemen. One-point gain only due to short HC sample.",
+      "sourceUrls": [
+        "https://www.brownszone.com/2026/10/28/run-game-comes-to-life-vs-titans-provides-hope-for-rest-of-season/"
+      ]
+    },
+    {
+      "team": "LV",
+      "family": "Head Coach",
+      "subject": "Klint Kubiak",
+      "previousGrade": 84,
+      "approvedGrade": 83,
+      "delta": -1,
+      "reason": "After an initial 3-0 start, four straight losses with persistent third-down/red-zone issues and uneven personnel/scheme adjustments. Own acknowledged game-management miscues; small downgrade without discarding his offensive pedigree.",
+      "sourceUrls": [
+        "https://www.reuters.com/sports/raiders-streaking-wrong-way-will-stick-with-kirk-cousins-qb--flm-2026-10-26/",
+        "https://www.reviewjournal.com/sports/raiders/what-we-learned-a-closer-look-at-the-raiders-first-loss-of-the-season-to-the-chiefs-3896407/"
+      ]
+    },
+    {
+      "team": "NYG",
+      "family": "Head Coach",
+      "subject": "John Harbaugh",
+      "previousGrade": 88,
+      "approvedGrade": 89,
+      "delta": 1,
+      "reason": "4-2-1 Giants reset shows tangible staff construction, leadership and tailored offense across multiple QB changes; NFL's October 27 account documents staff adaptations and player accountability. One point above Ryans, still below Jim Harbaugh's 90 tier.",
+      "sourceUrls": [
+        "https://www.nfl.com/news/how-john-harbaugh-put-on-a-coaching-masterclass-in-lead-up-to-giants-week-7-win"
+      ]
+    }
+  ],
+  "held": "Remaining flagged players retain existing grades pending individual evidence, rather than being declared reviewed and cleared.",
+  "development": "On publication, each player whose HQ grade changed must be reevaluated through existing post-ratings workflow; no automatic probability edits.",
+  "coachReview": "All 32 received a preliminary desk assessment in PR #2254; this cycle changes 3 with confirmed additional reasons. Remaining coaches stay under full biweekly review."
+}

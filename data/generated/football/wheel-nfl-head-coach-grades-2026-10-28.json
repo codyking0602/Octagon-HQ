@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "version": "wheel-nfl-head-coach-grades-2026-10-28-v1",
+  "status": "current-ability-versioned-snapshot",
+  "effectiveDate": "2026-10-28",
+  "sport": "NFL",
+  "family": "Head Coach",
+  "sourceBaseArtifact": "data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json",
+  "revisionLedger": "data/curated/football/nfl/wheel-nfl-madden-editorial-revisions-2026-10-28.json",
+  "constitution": "PR #1641 — Wheel of Football grading constitution",
+  "gradingSemantic": "CURRENT NFL HEAD-COACHING ABILITY RIGHT NOW. Uses a longer evidence window than player grading because coaching signal is noisier over a few games. Scheme/play-calling where applicable, game management, adaptability, staff construction, player development, culture, talent maximization and sustained results all matter. Team record alone, career fame and historical greatness do not determine the grade.",
+  "grades": [
+    {
+      "team": "ARI",
+      "coach": "Mike LaFleur",
+      "grade": 76,
+      "confidence": "medium"
+    },
+    {
+      "team": "ATL",
+      "coach": "Kevin Stefanski",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "BAL",
+      "coach": "Jesse Minter",
+      "grade": 83,
+      "confidence": "medium"
+    },
+    {
+      "team": "BUF",
+      "coach": "Joe Brady",
+      "grade": 84,
+      "confidence": "medium"
+    },
+    {
+      "team": "CAR",
+      "coach": "Dave Canales",
+      "grade": 79,
+      "confidence": "high"
+    },
+    {
+      "team": "CHI",
+      "coach": "Ben Johnson",
+      "grade": 92,
+      "confidence": "high"
+    },
+    {
+      "team": "CIN",
+      "coach": "Zac Taylor",
+      "grade": 79,
+      "confidence": "high"
+    },
+    {
+      "team": "CLE",
+      "coach": "Todd Monken",
+      "grade": 81,
+      "confidence": "high",
+      "reason": "5-2 first-year Cleveland start, identifiable offensive installation and improving run-game design (183 rushing yards and 3 TD vs Tennessee in Week 7) despite five new offensive linemen. One-point gain only due to short HC sample."
+    },
+    {
+      "team": "DAL",
+      "coach": "Brian Schottenheimer",
+      "grade": 81,
+      "confidence": "high"
+    },
+    {
+      "team": "DEN",
+      "coach": "Sean Payton",
+      "grade": 94,
+      "confidence": "high"
+    },
+    {
+      "team": "DET",
+      "coach": "Dan Campbell",
+      "grade": 91,
+      "confidence": "high"
+    },
+    {
+      "team": "GB",
+      "coach": "Matt LaFleur",
+      "grade": 87,
+      "confidence": "high"
+    },
+    {
+      "team": "HOU",
+      "coach": "DeMeco Ryans",
+      "grade": 88,
+      "confidence": "high"
+    },
+    {
+      "team": "IND",
+      "coach": "Shane Steichen",
+      "grade": 81,
+      "confidence": "high"
+    },
+    {
+      "team": "JAX",
+      "coach": "Liam Coen",
+      "grade": 85,
+      "confidence": "high"
+    },
+    {
+      "team": "KC",
+      "coach": "Andy Reid",
+      "grade": 96,
+      "confidence": "high"
+    },
+    {
+      "team": "LAC",
+      "coach": "Jim Harbaugh",
+      "grade": 90,
+      "confidence": "high"
+    },
+    {
+      "team": "LAR",
+      "coach": "Sean McVay",
+      "grade": 99,
+      "confidence": "high"
+    },
+    {
+      "team": "LV",
+      "coach": "Klint Kubiak",
+      "grade": 83,
+      "confidence": "high",
+      "reason": "After an initial 3-0 start, four straight losses with persistent third-down/red-zone issues and uneven personnel/scheme adjustments. Own acknowledged game-management miscues; small downgrade without discarding his offensive pedigree."
+    },
+    {
+      "team": "MIA",
+      "coach": "Jeff Hafley",
+      "grade": 77,
+      "confidence": "medium"
+    },
+    {
+      "team": "MIN",
+      "coach": "Kevin O'Connell",
+      "grade": 89,
+      "confidence": "high"
+    },
+    {
+      "team": "NE",
+      "coach": "Mike Vrabel",
+      "grade": 93,
+      "confidence": "high"
+    },
+    {
+      "team": "NO",
+      "coach": "Kellen Moore",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "NYG",
+      "coach": "John Harbaugh",
+      "grade": 89,
+      "confidence": "high",
+      "reason": "4-2-1 Giants reset shows tangible staff construction, leadership and tailored offense across multiple QB changes; NFL's October 27 account documents staff adaptations and player accountability. One point above Ryans, still below Jim Harbaugh's 90 tier."
+    },
+    {
+      "team": "NYJ",
+      "coach": "Aaron Glenn",
+      "grade": 74,
+      "confidence": "high"
+    },
+    {
+      "team": "PHI",
+      "coach": "Nick Sirianni",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "PIT",
+      "coach": "Mike McCarthy",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "SEA",
+      "coach": "Mike Macdonald",
+      "grade": 98,
+      "confidence": "high"
+    },
+    {
+      "team": "SF",
+      "coach": "Kyle Shanahan",
+      "grade": 97,
+      "confidence": "high"
+    },
+    {
+      "team": "TB",
+      "coach": "Todd Bowles",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "TEN",
+      "coach": "Robert Saleh",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "WSH",
+      "coach": "Dan Quinn",
+      "grade": 82,
+      "confidence": "high"
+    }
+  ],
+  "historicalRule": "Preserve October 3 grade seeds and completed Wheel results; existing GM 594-player stable identities, contracts and development probabilities unchanged."
+}

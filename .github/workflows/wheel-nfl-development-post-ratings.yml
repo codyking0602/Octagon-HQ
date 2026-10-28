@@ -9,6 +9,8 @@ on:
       - 'src/features/back-room/wheelFootballNflCurrentAuthority.ts'
   pull_request:
     paths:
+      - 'data/generated/football/wheel-nfl-*-grades-*.json'
+      - 'src/features/back-room/wheelFootballNflCurrentAuthority.ts'
       - '.github/workflows/wheel-nfl-development-post-ratings.yml'
       - 'scripts/wheel-monitor/nfl-development-post-ratings*.mjs'
       - 'scripts/wheel-monitor/nfl-madden-review.mjs'
