@@ -74,4 +74,5 @@ test("partial prior snapshot is blocked rather than silently treated as clean",(
   const p=population(),prior=checkpoint(p);
   prior.snapshot.pop();
   assert.throws(()=>buildPostRatingReview(p.profiles,p.grades,p.contracts,"now",prior),/594 unique/);
+  assert.throws(()=>buildPostRatingReview(p.profiles,p.grades,p.contracts,"now",{}),/missing its complete snapshot/);
 });
