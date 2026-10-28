@@ -1,34 +1,88 @@
 #!/usr/bin/env python3
-"""One-off source discovery: only ESPN's own fightcenter athlete identities/headshots."""
-import json, urllib.request
-from urllib.parse import quote
+"""Replace current UFC Picks thumbs ONLY with real ESPN square fighter headshots.
 
-NAMES = ["Renato Moicano", "Tom Nolan", "Randy Brown", "Jacobe Smith", "Ode' Osbourne", "Cody Durden", "Yana Santos", "Luana Santos", "Jean-Paul Lebosnoyani", "Farman Hasanov"]
-def normalized(x):
-    import unicodedata
-    return "".join(c for c in unicodedata.normalize("NFD", x.lower()) if unicodedata.category(c) != "Mn" and c.isalnum())
-def fetch(url):
-    req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
-    with urllib.request.urlopen(req,timeout=25) as r:
-        return json.load(r)
-url="https://site.web.api.espn.com/apis/site/v2/sports/mma/ufc/scoreboard?dates=20261031"
-try:
-    data=fetch(url)
-    print("ESPN SCOREBOARD EVENTS",len(data.get("events", [])),flush=True)
-    for event in data.get("events",[]):
-        print("EVENT",event.get("id"),event.get("name"),flush=True)
-        for comp in event.get("competitions",[]):
-            for competitor in comp.get("competitors",[]):
-                a=competitor.get("athlete") or {}
-                n=a.get("fullName") or a.get("displayName") or ""
-                matches=[target for target in NAMES if normalized(target)==normalized(n)]
-                if not matches: continue
-                print("MATCH",repr(matches[0]),"ESPN_ID",a.get("id"),"EMBEDDED_HEADSHOT",(a.get("headshot") or {}).get("href"),flush=True)
-except Exception as exc:
-    print("ESPN scoreboard unavailable:",repr(exc),flush=True)
-for name in NAMES:
-    try:
-        q="https://site.web.api.espn.com/apis/search/v2?query="+quote(name)+"&limit=20"
-        d=fetch(q)
-        print("SEARCH",repr(name),"top-level",list(d)[:8],"matches",json.dumps(d,ensure_ascii=False)[:600],flush=True)
-    except Exception as exc: print("SEARCH ERROR",repr(name),str(exc)[:120],flush=True)
+One-off event ingestion using ESPN's own athlete search identities.
+Never synthesize a face or use profile promos/posters; unavailable headshots
+are intentionally removed so the existing UI can show an empty slot.
+"""
+import io
+import json
+import re
+import hashlib
+import unicodedata
+import urllib.request
+from pathlib import Path
+from urllib.parse import quote
+from PIL import Image, ImageStat
+
+FIGHTERS = [
+    ("renato-moicano", "Renato Moicano"),
+    ("tom-nolan", "Tom Nolan"),
+    ("randy-brown", "Randy Brown"),
+    ("jacobe-smith", "Jacobe Smith"),
+    ("ode-osbourne", "Ode' Osbourne"),
+    ("cody-durden", "Cody Durden"),
+    ("yana-santos", "Yana Santos"),
+    ("luana-santos", "Luana Santos"),
+    ("jean-paul-lebosnoyani", "Jean-Paul Lebosnoyani"),
+    ("farman-hasanov", "Farman Hasanov"),
+]
+ROOT=Path("public/assets/fighters")
+def norm(value):
+    return "".join(c for c in unicodedata.normalize("NFD",value.casefold()) if unicodedata.category(c)!="Mn" and c.isalnum())
+def get(url):
+    req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 OctagonHQOfficialHeadshots/1.0"})
+    with urllib.request.urlopen(req,timeout=20) as resp:
+        body=resp.read(8_000_000)
+        return body,resp.headers.get_content_type()
+def lookup(name):
+    body,_=get("https://site.web.api.espn.com/apis/search/v2?query="+quote(name)+"&limit=20")
+    root=json.loads(body)
+    candidates=[]
+    for result in root.get("results",[]):
+        if result.get("type")!="player":continue
+        for player in result.get("contents",[]):
+            uid=str(player.get("uid",""))
+            if player.get("description")!="MMA" or norm(str(player.get("displayName","")))!=norm(name):continue
+            match=re.fullmatch(r"s:3301~a:(\d+)",uid)
+            if match:candidates.append(match.group(1))
+    unique=set(candidates)
+    return next(iter(unique)) if len(unique)==1 else None
+def ingest():
+    outcome=[]
+    for slug,name in FIGHTERS:
+        path=ROOT/f"{slug}-thumb.webp"
+        athlete_id=None
+        try:
+            athlete_id=lookup(name)
+            if not athlete_id:raise ValueError("no unambiguous ESPN MMA athlete identity")
+            source=f"https://a.espncdn.com/i/headshots/mma/players/full/{athlete_id}.png"
+            content,mimetype=get(source)
+            if mimetype!="image/png" or len(content)<4000:raise ValueError(f"missing PNG headshot (mime={mimetype},bytes={len(content)})")
+            original=Image.open(io.BytesIO(content))
+            if original.format!="PNG" or original.width<180 or original.height<180:raise ValueError(f"invalid headshot source {original.size}")
+            im=original.convert("RGBA")
+            channels=ImageStat.Stat(im.convert("RGB")).stddev
+            if max(channels)<18:raise ValueError("flat-color ESPN placeholder (not a fighter photo)")
+            # ESPN's /i/headshots/mma/players/full/ is the publisher's genuine
+            # headshot product. No crop, Photoshop, background recreation,
+            # fighter renders, Spotlight or other editorial photographs.
+            im.thumbnail((308,308),Image.Resampling.LANCZOS)
+            canvas=Image.new("RGBA",(320,320),(0,0,0,0))
+            canvas.alpha_composite(im,((320-im.width)//2,(320-im.height)//2))
+            # ESPN can return an opaque white background: don't fake alpha.
+            # Reject it and leave blank pending a transparent official headshot.
+            if canvas.getchannel("A").getextrema()==(255,255):raise ValueError("opaque image is not approved transparent headshot")
+            path.parent.mkdir(parents=True,exist_ok=True)
+            canvas.save(path,format="WEBP",lossless=True,method=6)
+            report={"fighter":name,"slug":slug,"status":"ready","espn_id":athlete_id,"source":source,"source_sha256":hashlib.sha256(content).hexdigest(),"original_dimensions":[original.width,original.height]}
+            print("APPROVED",json.dumps(report),flush=True)
+        except Exception as e:
+            if path.exists():path.unlink()
+            report={"fighter":name,"slug":slug,"status":"pending","reason":str(e)[:200],"espn_id":athlete_id}
+            print("PENDING",json.dumps(report),flush=True)
+        outcome.append(report)
+    Path("data/curated/ufc").mkdir(parents=True,exist_ok=True)
+    Path("data/curated/ufc/2026-10-31-official-headshots.json").write_text(json.dumps(outcome,indent=2)+"\n")
+    print("TOTAL",sum(x["status"]=="ready" for x in outcome),"OF",len(outcome),flush=True)
+if __name__=="__main__":ingest()
