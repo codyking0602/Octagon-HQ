@@ -10,7 +10,6 @@ import {
   pickProgress,
   underdogBonusForOdds,
   underdogBonusTiers,
-  type PickBout,
   type PickBoutResultStatus,
 } from "./picksModel";
 import { usePicks } from "./PicksProvider";
