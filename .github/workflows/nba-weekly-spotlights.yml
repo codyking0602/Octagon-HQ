@@ -6,6 +6,11 @@ on:
     # GitHub can delay scheduled jobs; eligibility uses actual Central date, not exact 5 AM.
     - cron: '0 10,11 * * *'
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/nba-weekly-spotlights.yml'
+      - 'scripts/generate-nba-weekly-spotlight.mjs'
+      - 'scripts/generate-nba-weekly-spotlight.fixtures.mjs'
   push:
     branches: [main]
     paths:
@@ -26,6 +31,7 @@ concurrency:
 
 jobs:
   research-validate-publish:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -61,6 +67,9 @@ jobs:
       - name: Verify weekly selection using offline ESPN and YouTube fixtures
         if: steps.clock.outputs.publish == 'true'
         run: node --test scripts/nba-weekly-clock.fixtures.mjs scripts/generate-nba-weekly-spotlight.fixtures.mjs
+      - name: Install official YouTube archive metadata reader for keyless catch-up
+        if: steps.clock.outputs.publish == 'true'
+        run: python -m pip install --disable-pip-version-check --quiet yt-dlp
       - name: Gather last complete week's NBA results and verified YouTube highlights
         if: steps.clock.outputs.publish == 'true'
         env:
@@ -203,3 +212,34 @@ jobs:
           done
           echo "::error::Exact Cloudflare delivery timed out"; exit 1
 
+  verified-source-probe:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install keyless official NBA YouTube metadata reader
+        run: python -m pip install --disable-pip-version-check --quiet yt-dlp
+      - name: Verify NBA official archive source and ESPN end to end without publishing
+        run: |
+          node --test scripts/nba-weekly-clock.fixtures.mjs scripts/generate-nba-weekly-spotlight.fixtures.mjs
+          node scripts/generate-nba-weekly-spotlight.mjs
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import { finishedWeek } from "./scripts/generate-nba-weekly-spotlight.mjs";
+          const data=JSON.parse(fs.readFileSync("public/nba-weekly/active.json","utf8"));
+          if(data.weekEnd!==finishedWeek().weekEnd || data.player.highlightSourceChannelId!=="UCWJ2lWNubArHWmf3FIHbfcQ")
+            throw Error("Keyless official NBA weekly source probe did not produce a fully verified current package");
+          console.log("Verified current NBA spotlight:",data.weekEnd,data.player.name,data.team.name,data.player.highlightUrl);
+          NODE

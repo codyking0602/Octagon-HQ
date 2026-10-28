@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { finishedWeek, fetchWeeklyScoreboard, collectTeamGames, selectWeek, extractYoutubeVideos,
-  findMatchingHighlight, mergeOfficialVideos, playerEditorialScore, teamEditorialScore,
+  findMatchingHighlight, mergeOfficialVideos, archiveCandidates, verifiedArchiveVideo, playerEditorialScore, teamEditorialScore,
   basketballReferenceTeamSeasonUrl, basketballReferencePlayerUrl } from "./generate-nba-weekly-spotlight.mjs";
 test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
   assert.deepEqual(
@@ -22,6 +22,30 @@ test("seven independent ESPN daily scoreboards replace rejected date ranges with
   assert.deepEqual(events.map(x=>x.id),["1","one-duplicate","2","3","4","5","6","7"]);
   await assert.rejects(fetchWeeklyScoreboard(start,end,async()=>({})),/missing events/);
   await assert.rejects(fetchWeeklyScoreboard(start,start,async()=>({events:[]})),/exactly seven/);
+});
+test("official channel dated game highlights are verified without individual watch pages",()=>{
+  const channel="UCWJ2lWNubArHWmf3FIHbfcQ";
+  const entries=[
+    {id:"ABCdefghi12",title:"Sample Star 30 Points Highlights | October 24, 2026",duration:190},
+    {id:"ABCdefghi13",title:"OTHER basketball news",duration:190},
+    {id:"ABCdefghi14",title:"Sample Star FULL GAME HIGHLIGHTS | October 24, 2026",duration:1200},
+    {id:"ABCdefghi12",title:"Sample Star 30 Points Highlights | October 24, 2026",duration:190},
+  ];
+  assert.deepEqual(archiveCandidates(entries,["Sample Star"]),
+    ["https://www.youtube.com/watch?v=ABCdefghi12"]);
+  const good={...entries[0],timestamp:Date.parse("2026-10-25T00:00:00Z")/1000};
+  const verify=(v,owner=channel)=>verifiedArchiveVideo(v,owner,"2026-10-19","2026-10-25");
+  const within=verify(good);
+  assert.equal(within?.channel,channel);
+  assert.equal(within?.verifiedGameDate,"2026-10-24");
+  assert.equal(within?.durationSeconds,190);
+  assert.equal(findMatchingHighlight("Sample Star",[within],"2026-10-25")?.id,good.id);
+  assert.equal(verify(good,"unofficial"),null);
+  assert.equal(verify({...good,channel_id:"unofficial"}),null);
+  assert.equal(verify({...good,duration:600}),null);
+  assert.equal(verify({...good,title:"Sample Star 30 Points Highlights | October 26, 2026"}),null);
+  assert.equal(verify({...good,title:"Sample Star 30 Points Highlights"}),null);
+  assert.equal(verify({...good,title:"Sample Star 30 Points Highlights | February 31, 2026"}),null);
 });
 const player={id:"123",displayName:"Sample Star",position:{abbreviation:"PG"}};
 const teams=[
