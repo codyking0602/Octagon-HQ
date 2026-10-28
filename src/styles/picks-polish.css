@@ -545,6 +545,14 @@
   box-shadow: 0 7px 16px rgba(0, 0, 0, .24);
 }
 
+/* UFC publishes transparent real headshots in 256x160 image files. The
+   source is already a headshot, not a full-body promotional image. Cropping
+   excess transparent side space to a square tile never distorts the athlete. */
+img.pick-fighter-thumbnail--ufc-headshot {
+  object-fit: cover;
+  object-position: center top;
+}
+
 .pick-bout-card__choices > .pick-choice:first-child .pick-fighter-thumbnail {
   border-color: rgba(220, 48, 56, .32);
 }

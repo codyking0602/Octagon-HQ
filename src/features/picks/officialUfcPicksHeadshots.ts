@@ -1,6 +1,9 @@
 /**
- * October 31 UFC Picks: only actual square headshots supplied by ESPN or UFC.
- * Direct ESPN image IDs are documented in official athlete portraits. No
+ * October 31 UFC Picks: only publisher-identified UFC/ESPN headshots.
+ * ESPN's MMA headshot product and UFC's official transparent
+ * event_results_athlete_headshot product are eligible; a UFC profile's
+ * athlete_bio_full_body promotional image is not. UFC originals are 256x160
+ * and fit the square Picks tile without stretching fighter faces. No
  * full-torso UFC promotional renders, cropped Spotlights or third-party images.
  * Missing = null, not a fallback to the legacy thumbnail file.
  *
@@ -17,6 +20,10 @@ export const october31OfficialHeadshots: Readonly<Record<string, string>> = {
   "jacobe-smith": "https://a.espncdn.com/i/headshots/mma/players/full/5149961.png",
   "ode-osbourne": "https://a.espncdn.com/i/headshots/mma/players/full/4424224.png",
   "luana-santos": "https://a.espncdn.com/i/headshots/mma/players/full/5110469.png",
+  "cody-durden": "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2026-07/DURDEN_CODY_07-11.png?itok=F8sg0X6W",
+  "yana-santos": "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2025-10/SANTOS_YANA_10-04.png?itok=KtQbaZeq",
+  "jean-paul-lebosnoyani": "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2026-02/LEBOSNOYANI_JEAN-PAUL_02-21.png?itok=SXcx7GgN",
+  "farman-hasanov": "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2026-06/HASANOV_FARMAN_06-27.png?itok=QHlSQYHc",
 };
 
 export const october31FighterSlugs = [
