@@ -61,6 +61,14 @@ const prepPayload = {
 };
 
 describe("UFC Picks prep", () => {
+  it("rejects free-form research citations in the reserved machine source field", () => {
+    expect(() => mapUfcPickPrep({
+      ...prepPayload,
+      spotlights: [{ ...prepPayload.spotlights[0], source: "UFC.com profiles; MMA preview" }],
+    })).toThrow();
+    expect(mapUfcPickPrep(prepPayload)?.spotlights[0]?.source).toBe("UFCStats");
+  });
+
   it("maps the owner-only prep payload and summarizes assets", () => {
     const prep = mapUfcPickPrep(prepPayload);
     expect(prep?.eventKind).toBe("numbered");

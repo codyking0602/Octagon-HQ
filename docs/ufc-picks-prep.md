@@ -49,7 +49,7 @@ All selected main-card bouts must have their own researched preview/tale-of-the-
 
 The main-event package is automatically attached when the verified card is staged. Other prepared main-card packages remain one-tap choices inside Event Setup.
 
-The stored Spotlight `source` remains `UFCStats` because UFCStats is the canonical structured Tale-of-the-Tape/stat source. Preview and edge copy must still be researched/editorially reviewed and must not be generated from raw stat deltas alone.
+The stored Spotlight `source` **must always equal `"UFCStats"`**, a reserved machine-readable field (not free-text research attribution). Write official UFC.com, ESPN and other supporting editorial citations to `verification_notes`, labeled by bout. After every automated upsert, read the saved payload back and assert that **every** `spotlights[*].source` is `"UFCStats"`, that expected bouts and previews remain intact, and that validation succeeds; do not report prep success when verification fails. Preview and edge copy must still be researched and editorially reviewed, never invented from bare statistic differences.
 
 ## Prep package storage
 
