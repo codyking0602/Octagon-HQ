@@ -146,7 +146,7 @@ describe("approved cancelled fight presentation", () => {
     renderPage(repo);
 
     expect(await screen.findByText("CANCELLED · EXCLUDED FROM SCORING")).toBeInTheDocument();
-    expect(screen.getByText("0 OF 1")).toBeInTheDocument();
+    expect(screen.getByText("0/1")).toBeInTheDocument();
 
     const redChoice = screen.getByRole("button", { name: /Cancel Red/i });
     const blueChoice = screen.getByRole("button", { name: /Cancel Blue/i });
