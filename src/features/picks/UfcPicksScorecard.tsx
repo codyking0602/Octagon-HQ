@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { PickEvent } from "./picksModel";
+import { underdogBonusForOdds, type PickEvent } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { ufcLiveBaseStandingsForMembers } from "./ufcLiveBaseStandings";
@@ -15,12 +15,17 @@ interface Props {
 
 /** Football's compact three-metric disclosure, with UFC-specific pre/post-fight states. */
 export function UfcPicksScorecard({event,locked,completed,total,underdogLockName,mySelections}:Props) {
-  const {groupProgress} = usePicks();
+  const {groupProgress,underdogLock} = usePicks();
   const entered = useMemo(() => (groupProgress??[]).filter(member=>member.completed>0),[groupProgress]);
   const standings = useMemo(() => ufcLiveBaseStandingsForMembers(entered,event.bouts),[entered,event.bouts]);
   const me=entered.find(member=>member.isCurrentUser);
   const live=me ? standings.get(me.profileId) : null;
   const hasResults=event.bouts.some(bout=>bout.resultStatus==="red_win"||bout.resultStatus==="blue_win");
+  const lockBout=event.bouts.find(bout=>bout.boutId===underdogLock?.boutId);
+  const lockOdds=underdogLock?.frozenAmericanOdds
+    ?? (lockBout && underdogLock?.fighterSlug===lockBout.redFighterSlug ? lockBout.redAmericanOdds
+      : lockBout && underdogLock?.fighterSlug===lockBout.blueFighterSlug ? lockBout.blueAmericanOdds : null);
+  const lockBonus=underdogBonusForOdds(lockOdds??null);
   const liveRank=live&&live.settled>0 ? `${live.tied?"T-":""}${live.rank}` : "—";
   const winnerText=hasResults ? `${live?.wins??0}-${live?.losses??0}` : `${completed}/${total}`;
   const memberLabel=hasResults ? "CORRECT-WRONG" : "PICKS MADE";
@@ -44,7 +49,7 @@ export function UfcPicksScorecard({event,locked,completed,total,underdogLockName
       <div className="ufc-picks-scorecard__body">
         {hasResults ? <p className="ufc-picks-scorecard__disclaimer">* Provisional rankings exclude underdog lock bonuses. Official points and placements appear in the Results Archive once settled.</p> : null}
         {underdogLockName !== "NONE SELECTED" && !hasResults ?
-          <p className="ufc-picks-scorecard__lock">★ UNDERDOG LOCK · {underdogLockName}</p> : null}
+          <p className="ufc-picks-scorecard__lock">UNDERDOG LOCK · {underdogLockName}{lockBonus>0 ? ` · +${lockBonus} IF CORRECT` : ""}</p> : null}
         <GroupPickProgress event={event} locked={locked} mySelections={mySelections} embedded />
       </div>
     </details>

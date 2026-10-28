@@ -20,7 +20,7 @@ describe("Football Picks UI architecture", () => {
 
   it("leaves the UFC Picks product on its existing page", () => {
     expect(router).toContain('{ path: "picks", element: <PicksPage /> }');
-    expect(picksPage).toContain("Call the fights");
+    expect(picksPage).toContain("Make your picks");
     expect(picksPage).toContain("UNDERDOG LOCK");
   });
 });

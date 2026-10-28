@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getSupabaseClient } from "../../lib/supabase";
-import { ShaneContenderBadge, shaneContenderForSlug } from "./ShaneContenderSpotlight";
 
 const thumbnailModules = import.meta.glob<{ default: string }>(
   "/public/assets/fighters/*-thumb.{webp,png,jpg,jpeg}",
@@ -108,7 +107,6 @@ export function FighterThumbnail({ name, slug, officialHeadshot }: {
   const staticSource = fighterThumbnailPath(canonicalSlug);
   const [runtimeSource, setRuntimeSource] = useState(() => runtimePhotoBySlug.get(canonicalSlug) ?? null);
   const [failedSources, setFailedSources] = useState<Set<string>>(() => new Set());
-  const shaneContender = shaneContenderForSlug(slug);
   // A curated official-only event must never silently fall back to old local
   // cutouts or unreviewed runtime URLs, even after a network image error.
   const officialOnly = officialHeadshot !== undefined;
@@ -160,12 +158,7 @@ export function FighterThumbnail({ name, slug, officialHeadshot }: {
     />
   );
 
-  if (!shaneContender) return photo;
-
-  return (
-    <span className="pick-fighter-thumbnail-wrap is-shane-contender">
-      {photo}
-      <ShaneContenderBadge fighters={[shaneContender]} />
-    </span>
-  );
+  // A photo is a pick target; only sibling, independently clickable badges
+  // navigate to HQ Rankings or SKCS scouting. Never nest links in this tile.
+  return photo;
 }

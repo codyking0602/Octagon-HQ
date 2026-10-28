@@ -158,34 +158,13 @@ describe("fighterThumbnailPath", () => {
   });
 });
 
-describe("Shane contender fighter-tile treatment", () => {
-  it("marks Bilal Hasan's thumbnail with the canonical #4 Shane badge", () => {
-    render(<FighterThumbnail name="Bilal Hasan" slug="bilal-hasan" />);
-
-    const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
-    expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
-  });
-
-  it("uses the same canonical fighter-tile treatment for other Shane contenders", () => {
-    render(<FighterThumbnail name="Quillan Salkilld" slug="quillan-salkilld" />);
-
-    const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #1")).toBeInTheDocument();
-    expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
-  });
-
-  it("marks Raul Rosas Jr. with Shane’s #3 badge on the Picks fighter tile", () => {
-    render(<FighterThumbnail name="Raul Rosas Jr." slug="raul-rosas-jr" />);
-
-    const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
-    expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
-  });
-
-  it("does not decorate a fighter who is not on Shane's canonical board", () => {
-    render(<FighterThumbnail name="Alex Perez" slug="alex-perez" />);
-
-    expect(screen.queryByLabelText("Shane King’s Contender Series fighters")).not.toBeInTheDocument();
+describe("Fighter headshots remain pick-only surfaces", () => {
+  it("does not embed a Shane scouting link or redundant pill inside the thumbnail", () => {
+    for (const [name,slug] of [["Bilal Hasan","bilal-hasan"],["Quillan Salkilld","quillan-salkilld"],["Raul Rosas Jr.","raul-rosas-jr"]]) {
+      const {container,unmount}=render(<FighterThumbnail name={name} slug={slug}/>);
+      expect(container.querySelector(".pick-fighter-thumbnail-wrap")).toBeNull();
+      expect(container.querySelector(".shane-contender-badges")).toBeNull();
+      unmount();
+    }
   });
 });
