@@ -13,6 +13,7 @@ import {
   type WavelengthCategory,
 } from "./wavelengthCatalog";
 import {
+  chooseWavelengthClue,
   createWavelengthRound,
   nextWavelengthClue,
   wavelengthClues,
@@ -35,7 +36,7 @@ function seeded(values: number[]) {
 
 describe("canonical Wavelength catalog", () => {
   it("meets approved size, uniqueness, rating, copy, and category-quality gates", () => {
-    expect(approvedWavelengthCatalog).toHaveLength(500);
+    expect(approvedWavelengthCatalog).toHaveLength(578);
     expect(new Set(approvedWavelengthCatalog.map((item) => item.id)).size).toBe(approvedWavelengthCatalog.length);
     expect(new Set(approvedWavelengthCatalog.map((item) => item.text.toLowerCase())).size).toBe(approvedWavelengthCatalog.length);
 
@@ -51,7 +52,7 @@ describe("canonical Wavelength catalog", () => {
 
     expect(categories.size).toBe(WAVELENGTH_CATEGORY_ANCHORS.length);
     expect(categories.size).toBe(16);
-    expect(Math.max(...categories.values())).toBeLessThanOrEqual(45);
+    expect(Math.max(...categories.values())).toBeLessThanOrEqual(65);
     expect(Math.min(...categories.values())).toBeGreaterThanOrEqual(25);
   });
 
@@ -64,35 +65,67 @@ describe("canonical Wavelength catalog", () => {
       "Donald Trump",
       "White House",
       "Kimbo Slice",
-      "The Ultimate Fighter Season 33",
-      "The Ultimate Fighter Season 34",
+      "The Ultimate Fighter",
       "Big John McCarthy",
-      "Keith Peterson",
+      "Bruce Buffer",
+      "Israel Adesanya",
     ]) {
       expect(copy).toContain(subject);
     }
 
     for (const category of ["MMA MEDIA", "TUF & REALITY", "COACHES & CAMPS", "CROSSOVER & CELEBRITY"] as const) {
-      expect(approvedWavelengthCatalog.filter((item) => item.category === category)).toHaveLength(25);
+      expect(approvedWavelengthCatalog.filter((item) => item.category === category).length).toBeGreaterThanOrEqual(25);
     }
   });
 
-  it("reduces the top-heavy score clustering while preserving the full scale", () => {
+  it("balances the playable catalog through new mid-range content rather than forced rating cuts", () => {
     const eightyPlus = approvedWavelengthCatalog.filter((item) => item.rating >= 80).length;
     const belowSeventy = approvedWavelengthCatalog.filter((item) => item.rating < 70).length;
 
-    expect(eightyPlus / approvedWavelengthCatalog.length).toBeLessThan(0.5);
+    expect(eightyPlus / approvedWavelengthCatalog.length).toBeLessThan(0.47);
     expect(belowSeventy / approvedWavelengthCatalog.length).toBeGreaterThan(0.35);
     expect(approvedWavelengthCatalog.some((item) => item.rating <= 10)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 40 && item.rating <= 60)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 75 && item.rating <= 89)).toBe(true);
     expect(approvedWavelengthCatalog.some((item) => item.rating >= 90)).toBe(true);
+    expect(wavelengthCatalog.filter((item) => item.status === "retired")).toHaveLength(113);
+    for (const id of ["wl-ufc-balance-553", "wl-ufc-balance-555"]) {
+      expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
+      expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
+    }
+    for (const id of [
+      "wl-events-and-fights-476", "wl-ufc-balance-552", "wl-ufc-balance-560",
+      "wl-tuf-and-reality-327", "wl-officiating-and-systems-444",
+      "wl-coaches-and-camps-357", "wl-ufc-balance-628",
+    ]) {
+      expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
+      expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
+    }
+    expect(approvedWavelengthCatalog.filter((item) => item.id.startsWith("wl-ufc-accessible-"))).toHaveLength(57);
+    expect(approvedWavelengthCatalog.every((item) => !/^UFC (40|100|129|149|189|205|217|229|300)'s /.test(item.text))).toBe(true);
+    for (const id of [
+      "wl-events-and-fights-105", "wl-events-and-fights-106",
+      "wl-events-and-fights-107", "wl-events-and-fights-108",
+      "wl-coaches-and-camps-351", "wl-coaches-and-camps-355",
+      "wl-ufc-culture-099",
+    ]) {
+      expect(wavelengthCatalog.find((item) => item.id === id)?.status).toBe("retired");
+      expect(wavelengthClues.some((item) => item.id === id)).toBe(false);
+    }
+    expect(approvedWavelengthCatalog.every((item) => !/The Ultimate Fighter Season (?:5|6|7|8|12|14|16|20|24|25|26|27|29|30|32|33|34)'s /.test(item.text))).toBe(true);
+    for (const id of ["wl-ufc-balance-633", "wl-ufc-balance-634"]) {
+      expect(wavelengthClues.find((item) => item.id === id)).toMatchObject({ category: "EVENTS & FIGHTS" });
+    }
     expect(wavelengthCatalog.some((item) => item.status === "quarantined")).toBe(true);
     expect(wavelengthClues.some((item) => item.id.includes("quarantine"))).toBe(false);
   });
 
   it("documents explicit calibration and historical version identifiers", () => {
-    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v2");
+    expect(WAVELENGTH_CATALOG_VERSION).toBe("wavelength-catalog-v6");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v2");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v3");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v4");
+    expect(WAVELENGTH_HISTORICAL_VERSION_IDS).toContain("wavelength-catalog-v5");
     expect(WAVELENGTH_CALIBRATION_VERSION).toBe("wavelength-calibration-v1");
     expect(WAVELENGTH_GENERATOR_VERSION).toBe("wavelength-generator-v4");
     expect(WAVELENGTH_REVEAL_CONTRACT_VERSION).toBe("wavelength-reveal-privacy-v1");
@@ -111,6 +144,18 @@ describe("canonical Wavelength catalog", () => {
 });
 
 describe("Wavelength generator protections", () => {
+  it("relaxes the impossible low-side filter before repeating an already-used category", () => {
+    const clue = chooseWavelengthClue(1, {
+      target: 4,
+      direction: -1,
+      usedCategories: ["UFC RESUME", "EVENTS & FIGHTS"],
+      random: () => 0,
+    });
+    expect(clue).toBeDefined();
+    expect(clue?.category).not.toBe("UFC RESUME");
+    expect(clue?.category).not.toBe("EVENTS & FIGHTS");
+  });
+
   it("is deterministic for seeded random inputs and varies across different seeds", () => {
     const first = createWavelengthRound({ random: seeded([0.12, 0.9, 0.1]) });
     const second = createWavelengthRound({ random: seeded([0.12, 0.9, 0.1]) });

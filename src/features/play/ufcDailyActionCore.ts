@@ -2,6 +2,7 @@
 import type { OfficialDailyRuntimeContext, OfficialDailyAdvanceResult } from "./todaysChallengeRuntime";
 import { seededLineupRandom } from "./lineupModel";
 import { WAVELENGTH_CONTRACT_VERSIONS, nextWavelengthClue, wavelengthClues, wavelengthScore, type WavelengthRecentHistory, type WavelengthRound } from "./wavelengthEngine";
+import { wavelengthCatalog } from "./wavelengthCatalog";
 import { advanceTwoGameDailyRuntime, isTwoGameDailyContext } from "./dailyTwoGameRuntime";
 type JsonRecord = Record<string, unknown>;
 // The production publication seed is immutable for existing UFC boards.
@@ -48,7 +49,8 @@ export function advanceUfcFindLeader(context: OfficialDailyRuntimeContext, actio
 }
 
 function wavelengthClueFor(id: string) {
-  const clue = wavelengthClues.find((row) => row.id === id);
+  // Archived Daily setup and submission IDs must still resolve after editorial retirement.
+  const clue = wavelengthClues.find((row) => row.id === id) ?? wavelengthCatalog.find((row) => row.id === id);
   if (!clue) throw new Error(`Official Wavelength clue ${id} is unavailable.`);
   return clue;
 }

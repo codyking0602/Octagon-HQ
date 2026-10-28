@@ -149,12 +149,15 @@ export function chooseWavelengthClue(
     candidates,
   );
   candidates = relax(candidates.filter((clue) => !recentIds.has(clue.id)), candidates);
+  // Preserve an unused-category fallback before the directional filter narrows
+  // the pool near 1 or 100. Direction relaxes before category uniqueness.
+  const unusedCategoryCandidates = candidates.filter((clue) => !usedCategories.has(clue.category));
   if ((options.direction ?? 0) > 0) {
     candidates = relax(candidates.filter((clue) => clue.rating > options.target), candidates);
   } else if ((options.direction ?? 0) < 0) {
     candidates = relax(candidates.filter((clue) => clue.rating < options.target), candidates);
   }
-  candidates = relax(candidates.filter((clue) => !usedCategories.has(clue.category)), candidates);
+  candidates = relax(candidates.filter((clue) => !usedCategories.has(clue.category)), unusedCategoryCandidates);
   return [...candidates]
     .map((clue) => ({
       clue,

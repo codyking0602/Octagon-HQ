@@ -13,6 +13,7 @@ import {
   WAVELENGTH_CATEGORY_ANCHORS,
   WAVELENGTH_RATING_BANDS,
   approvedWavelengthCatalog,
+  wavelengthCatalog,
   type WavelengthCategory,
 } from "./wavelengthCatalog";
 import {
@@ -50,6 +51,10 @@ function sourceFiles(root: string): string[] {
 describe("Wavelength calibration evidence", () => {
   it("reconciles inherited ratings through auditable non-averaged review decisions", () => {
     expect(validateWavelengthCalibrationAudit()).toBe(true);
+    expect(wavelengthCatalog.find((item) => item.id === "wl-events-and-fights-108")).toMatchObject({
+      rating: 90,
+      status: "retired",
+    });
     expect(WAVELENGTH_CALIBRATION_AUDIT.disagreementThreshold).toBe(
       WAVELENGTH_CALIBRATION_DISAGREEMENT_THRESHOLD,
     );

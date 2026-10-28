@@ -8,6 +8,7 @@ import {
   createChallengeWavelengthRound,
   nextChallengeWavelengthClue,
 } from "./wavelengthChallenge";
+import { approvedWavelengthCatalog } from "./wavelengthCatalog";
 import {
   WAVELENGTH_OPINION_DISCLOSURE,
   WAVELENGTH_TARGET_MAX,
@@ -55,8 +56,9 @@ describe("Wavelength engine", () => {
   });
 
   it("keeps the expanded approved clue catalog dense around every target", () => {
-    expect(wavelengthClues).toHaveLength(500);
-    expect(new Set(wavelengthClues.map((clue) => clue.id)).size).toBe(500);
+    expect(wavelengthClues).toHaveLength(approvedWavelengthCatalog.length);
+    expect(wavelengthClues.length).toBeGreaterThanOrEqual(500);
+    expect(new Set(wavelengthClues.map((clue) => clue.id)).size).toBe(wavelengthClues.length);
     expect(Math.min(...wavelengthClues.map((clue) => clue.rating))).toBe(2);
     expect(Math.max(...wavelengthClues.map((clue) => clue.rating))).toBe(99);
     for (const target of wavelengthTargets) {
