@@ -9,7 +9,7 @@ import type { PersistedRun } from "./FootballGmModePage";
 import { footballGmMoney, footballGmPlayerById } from "./footballGmEngine";
 import { OCT27_WEEKLY_GM_START, oct27WeeklyGmCandidates, oct27WeeklyGmAllows, oct27WeeklyGmScouting } from "./footballWeeklyGmOct27";
 import { footballGmRepriceLabel } from "./footballGmScouting";
-import { canViewWeeklyGmScenario, canViewWeeklyGmTotal } from "./footballWeeklyGmVisibility";
+import { canViewWeeklyGmScenario, canViewWeeklyGmStandingResult, canViewWeeklyGmTotal } from "./footballWeeklyGmVisibility";
 import "../../styles/football-gm-mode.css";
 import "../../styles/football-weekly-gm.css";
 
@@ -56,6 +56,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   const [history, setHistory] = useState<WeeklyGmArchivedWeek[]>([]);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const [expandedProfileId, setExpandedProfileId] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -336,27 +337,42 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
         <h2>{archive ? "CHAMPIONSHIP RESULTS" : "WEEKLY GM LEADERBOARD"}</h2>
         {standingRows.length ? (
           <div className="football-weekly-gm__leader-list">
-            {leaderList.map((entry) => (
-              <div key={entry.profile_id} className="football-weekly-gm__entry">
-                <div className="football-weekly-gm__entry-main">
-                  <strong>#{entry.rank} · {entry.display_name}{entry.profile_id === identity.profile?.id ? " · YOU" : ""}</strong>
-                  <b>{archive || canViewTotal ? entry.total_score.toFixed(1) + " / 200" : "LOCKED"}</b>
+            {leaderList.map((entry) => {
+              const showScores = Boolean(archive || showAll || expandedProfileId === entry.profile_id);
+              const canExpand = !archive && !showAll
+                && standingScenarios.some(({ id }) =>
+                  canViewWeeklyGmStandingResult(entry, state.attempts, id, false, preview));
+              const heading = <>
+                <strong>#{entry.rank} · {entry.display_name}{entry.profile_id === identity.profile?.id ? " · YOU" : ""}</strong>
+                <b>{archive || canViewTotal ? entry.total_score.toFixed(1) + " / 200" : "LOCKED"}</b>
+              </>;
+              return (
+                <div key={entry.profile_id} className="football-weekly-gm__entry">
+                  {canExpand ? (
+                    <button type="button" className="football-weekly-gm__entry-main football-weekly-gm__entry-toggle"
+                      aria-expanded={showScores}
+                      onClick={() => setExpandedProfileId((current) =>
+                        current === entry.profile_id ? null : entry.profile_id)}>
+                      {heading}
+                      <span aria-hidden="true">{showScores ? "⌃" : "⌄"}</span>
+                    </button>
+                  ) : <div className="football-weekly-gm__entry-main">{heading}</div>}
+                  {showScores ? (
+                    <div className="football-weekly-gm__entry-scores">
+                      {standingScenarios.map(({ id, quarterback }) => {
+                        const score = id === "elite" ? entry.elite_score : entry.young_score;
+                        if (score == null) return null;
+                        return canViewWeeklyGmStandingResult(entry, state.attempts, id, Boolean(archive), preview) ? (
+                          <button type="button" key={id} onClick={() => void inspect(entry.profile_id, id)}>
+                            {quarterback}: {score.toFixed(1)} ↗
+                          </button>
+                        ) : <span key={id}>{quarterback}: LOCKED</span>;
+                      })}
+                    </div>
+                  ) : null}
                 </div>
-                {archive || showAll ? (
-                  <div className="football-weekly-gm__entry-scores">
-                    {standingScenarios.map(({ id, quarterback }) => {
-                      const score = id === "elite" ? entry.elite_score : entry.young_score;
-                      if (score == null) return null;
-                      return archive || canViewWeeklyGmScenario(state.attempts, id, preview) ? (
-                        <button type="button" key={id} onClick={() => void inspect(entry.profile_id, id)}>
-                          {quarterback}: {score.toFixed(1)} ↗
-                        </button>
-                      ) : <span key={id}>{quarterback}: LOCKED</span>;
-                    })}
-                  </div>
-                ) : null}
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : <p>No official results yet.</p>}
         {!archive && standingRows.length > 3 ? <button className="football-weekly-gm__history-link"
