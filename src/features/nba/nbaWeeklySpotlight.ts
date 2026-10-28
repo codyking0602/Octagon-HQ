@@ -58,7 +58,7 @@ export function readVerifiedNbaWeekly(raw: unknown): NbaWeeklySpotlight | null {
     team.record,team.ppg,team.oppPpg,team.netMargin].every(string)) return null;
   if (player.teamId !== undefined && !/^[A-Z]{2,3}$/.test(player.teamId)) return null;
   if ([team.seasonRecord,team.conference,team.conferenceSeed,team.standingsAsOf].some(v=>v!==undefined)
-    && (!/^\\d{1,2}-\\d{1,2}$/.test(team.seasonRecord ?? "")
+    && (!/^\d{1,2}-\d{1,2}$/.test(team.seasonRecord ?? "")
       || !["EAST","WEST"].includes(team.conference ?? "")
       || !Number.isInteger(team.conferenceSeed) || (team.conferenceSeed ?? 0)<1 || (team.conferenceSeed ?? 0)>15
       || !team.standingsAsOf || !Number.isFinite(Date.parse(team.standingsAsOf)))) return null;
