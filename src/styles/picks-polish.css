@@ -1092,7 +1092,7 @@ img.pick-fighter-thumbnail--ufc-headshot {
 .pick-fighter-identity a:focus-visible {outline:2px solid #fff;outline-offset:2px;}
 .pick-choice .pick-choice__check {position:absolute;bottom:8px;right:8px;display:grid;place-items:center;width:19px;height:19px;border:1px solid currentColor;border-radius:50%;color:#fff;font-style:normal;font-size:12px;font-weight:950;background:#183858;}
 .pick-choice-shell--red .pick-choice__check {background:#68262a;}
-.pick-choice-shell--blue .pick-choice__check {background:#1c447c;}
+.pick-choice-shell--blue .pick-choice__check {background:#1c447c;right:auto;left:8px;}
 /* Preserve the selected red/blue glow, but remove room reserved for the old pill. */
 .pick-bout-card:not(.is-main-event) .pick-choice {min-height:97px;gap:3px;}
 .pick-bout-card:not(.is-main-event) {gap:6px;padding:8px;}
