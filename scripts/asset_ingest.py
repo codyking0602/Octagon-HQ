@@ -227,12 +227,21 @@ def source_looks_clipped(im, kind):
 
 
 def approved_square_thumb_source(spec, source_url, size):
-    """Only a verified original UFC/ESPN square headshot, never an athlete-page render."""
+    """Only a verified official UFC/ESPN *headshot product*, never body renders."""
     if spec.get("source_page_url") or spec.get("crop"):
         return False
     host = (urlparse(source_url).hostname or "").lower()
     width, height = size
-    if not width or not height or abs(width - height) > max(width, height) * 0.06:
+    if not width or not height:
+        return False
+    if host in {"ufc.com", "www.ufc.com"} and re.fullmatch(
+        r"/images/styles/event_results_athlete_headshot/s3/20[0-9]{2}-[0-9]{2}/[A-Za-z0-9_.-]+[.]png",
+        urlparse(source_url).path,
+    ):
+        # UFC's own 256x160 transparent event-results headshot is approved.
+        # It is a real headshot product, not its athlete_bio_full_body pose.
+        return (width, height) == (256, 160)
+    if abs(width - height) > max(width, height) * 0.06:
         return False
     if host == "a.espncdn.com":
         return bool(re.fullmatch(

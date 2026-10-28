@@ -48,6 +48,11 @@ class AssetIngestQualityTests(unittest.TestCase):
             {"official_square_headshot_reviewed": True},
             "https://www.ufc.com/images/verified-tom-square.png", (600, 600)
         ))
+        official_ufc = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2026-07/DURDEN_CODY_07-11.png?itok=F8sg0X6W"
+        self.assertTrue(approved_square_thumb_source({"source_url": official_ufc}, official_ufc, (256, 160)))
+        self.assertFalse(approved_square_thumb_source({"source_url": official_ufc}, official_ufc, (600, 436)))
+        promotional = "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/DURDEN_CODY_L_03-07.png"
+        self.assertFalse(approved_square_thumb_source({"source_url": promotional}, promotional, (256, 160)))
 
     def test_fit_does_not_reframe_original_square_headshot(self):
         source = Image.new("RGBA", (320, 320), (0, 0, 0, 0))

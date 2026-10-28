@@ -151,7 +151,7 @@ export function FighterThumbnail({ name, slug, officialHeadshot }: {
     </i>
   ) : (
     <img
-      className="pick-fighter-thumbnail"
+      className={`pick-fighter-thumbnail${officialHeadshot?.includes("/images/styles/event_results_athlete_headshot/") ? " pick-fighter-thumbnail--ufc-headshot" : ""}`}
       src={source}
       alt=""
       loading="lazy"
