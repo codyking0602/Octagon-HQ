@@ -17,6 +17,8 @@ import { usePicks } from "./PicksProvider";
 import { FighterThumbnail } from "./FighterThumbnail";
 import { approvedUfcPicksHeadshot } from "./officialUfcPicksHeadshots";
 import { GroupPickProgress } from "./GroupPickProgress";
+import type { PickEventMemberProgress } from "./groupProgressModel";
+import type { PickEvent } from "./picksModel";
 import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { pickEventPoster } from "./picksEventAssets";
@@ -102,6 +104,40 @@ function savedPickLabel(completed: number) {
   return `${completed} ${completed === 1 ? "PICK" : "PICKS"} SAVED`;
 }
 
+/** Live group placement, based only on resolved picks. Underdog bonuses
+ * remain explicit estimates until the server settles each member's frozen lock. */
+function ufcLiveBoard(
+  event: PickEvent,
+  members: readonly PickEventMemberProgress[],
+  selections: Readonly<Record<string,string>>,
+  lock: {boutId:string;fighterSlug:string;frozenAmericanOdds:number|null}|null,
+) {
+  const resolved = event.bouts.filter(b => b.includedInPicks !== false && (b.resultStatus === "red_win" || b.resultStatus === "blue_win"));
+  const eligible = members.filter(m => m.completed > 0);
+  const rows = eligible.map(member => {
+    let correct = 0, lockBonus = 0;
+    for (const bout of resolved) {
+      const selection = member.isCurrentUser
+        ? selections[bout.boutId] ?? null
+        : bout.groupPicks?.find(p => p.displayName === member.displayName)?.pickedFighterSlug ?? null;
+      if (!selection || selection !== bout.winnerFighterSlug) continue;
+      correct++;
+      if (member.underdogLockBoutId === bout.boutId && member.underdogLockFighterSlug === selection) {
+        const currentOdds = selection === bout.redFighterSlug ? bout.redAmericanOdds : bout.blueAmericanOdds;
+        const odds = member.isCurrentUser && lock?.boutId === bout.boutId
+          ? lock.frozenAmericanOdds ?? currentOdds : currentOdds;
+        lockBonus += underdogBonusForOdds(odds);
+      }
+    }
+    return {member, correct, estimatedPoints:correct * 4 + lockBonus};
+  });
+  rows.sort((a,b) => b.estimatedPoints-a.estimatedPoints || b.correct-a.correct);
+  const current=rows.find(row => row.member.isCurrentUser);
+  const rank=current ? rows.findIndex(row => row.estimatedPoints===current.estimatedPoints && row.correct===current.correct)+1 : 0;
+  const tied = rank > 0 && rows.filter(row => row.estimatedPoints===current?.estimatedPoints && row.correct===current?.correct).length > 1;
+  return {resolved:resolved.length,current,rank,tied,active:eligible.length};
+}
+
 export default function PicksPage() {
   const identity = useIdentity();
   const picks = usePicks();
@@ -110,9 +146,10 @@ export default function PicksPage() {
   const activeEvent = lifecycle?.state === "complete" ? null : event;
   const activeLifecycle = activeEvent ? lifecycle : null;
   const progress = pickProgress(activeEvent, picks.selections);
+  const liveBoard = activeEvent ? ufcLiveBoard(activeEvent, picks.groupProgress ?? [], picks.selections, picks.underdogLock) : null;
+  const lockName = picks.underdogLock ? "SET" : "NONE";
+  const livePlacement = liveBoard?.rank ? `${liveBoard.tied ? "T-" : ""}${liveBoard.rank}` : "—";
   const locked = activeLifecycle ? activeLifecycle.state !== "upcoming" : false;
-  const percent = progress.total ? Math.round((progress.completed / progress.total) * 100) : 0;
-  const completeProgress = progress.total > 0 && progress.completed === progress.total;
   const orderedBouts = useMemo(
     () => activeEvent?.bouts
       .filter((bout) => bout.includedInPicks !== false)
@@ -124,19 +161,6 @@ export default function PicksPage() {
     () => new Map((activeEvent?.spotlights ?? []).map((spotlight) => [spotlight.boutId, spotlight])),
     [activeEvent?.spotlights],
   );
-  const underdogLockName = picks.underdogLock
-    ? orderedBouts.flatMap((bout) => [
-        [bout.redFighterSlug, bout.redFighterName],
-        [bout.blueFighterSlug, bout.blueFighterName],
-      ]).find(([slug]) => slug === picks.underdogLock?.fighterSlug)?.[1] ?? picks.underdogLock.fighterSlug
-    : "NONE SELECTED";
-  const underdogLockBout = picks.underdogLock
-    ? orderedBouts.find((bout) => bout.boutId === picks.underdogLock?.boutId) ?? null
-    : null;
-  const underdogLockOdds = picks.underdogLock?.frozenAmericanOdds
-    ?? fighterOdds(underdogLockBout, picks.underdogLock?.fighterSlug ?? null);
-  const underdogLockBonus = underdogBonusForOdds(underdogLockOdds);
-  const underdogLockBonusLabel = underdogLockBonus > 0 ? `+${underdogLockBonus}` : null;
   const cardOddsMeta = orderedBouts
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
@@ -160,7 +184,6 @@ export default function PicksPage() {
     >
       <section className="page-heading picks-page-heading">
         <p className="eyebrow">EVENT PICKS</p>
-        <h1>Call the fights</h1>
       </section>
 
       {picks.loading && !activeEvent ? (
@@ -217,17 +240,6 @@ export default function PicksPage() {
                 <span>{progress.total} FIGHTS</span>
               </div>
 
-              <div className="picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
-                <div><span>YOUR PICKS</span><b>{progress.completed} OF {progress.total}</b></div>
-                <div className={completeProgress ? "picks-progress__track is-complete" : "picks-progress__track"} aria-hidden="true">
-                  <span style={{ width: `${percent}%` }} />
-                </div>
-                <p>
-                  UNDERDOG LOCK · {underdogLockName}
-                  {underdogLockBonusLabel ? ` · ${underdogLockBonusLabel} IF CORRECT` : ""}
-                </p>
-              </div>
-
               {!identity.profile ? (
                 <button className="primary-action" type="button" onClick={identity.openDialog}>
                   SIGN IN TO MAKE PICKS
@@ -253,7 +265,34 @@ export default function PicksPage() {
           </section>
 
           {identity.profile ? (
-            <GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} />
+            <details className="surface-card ufc-group-hub" aria-label="UFC Picks and Standings">
+              <summary className="ufc-group-hub__summary">
+                <div className="ufc-group-hub__heading">
+                  <strong>PICKS &amp; STANDINGS</strong>
+                  <small>{progress.total} FIGHTS</small>
+                </div>
+                {liveBoard && liveBoard.resolved > 0 ? (
+                  <div className="ufc-group-hub__scorecard">
+                    <div><strong>{liveBoard.current?.correct ?? 0}/{liveBoard.resolved}</strong><small>CORRECT PICKS</small></div>
+                    <div><strong>{liveBoard.current?.estimatedPoints ?? 0}</strong><small>LIVE EST. PTS</small></div>
+                    <div><strong>{livePlacement}</strong><small>LIVE EST. RANK</small></div>
+                  </div>
+                ) : (
+                  <div className="ufc-group-hub__scorecard">
+                    <div><strong>{progress.completed}/{progress.total}</strong><small>PICKS MADE</small></div>
+                    <div><strong>{lockName}</strong><small>UNDERDOG LOCK</small></div>
+                    <div><strong>{liveBoard?.active ?? 0}</strong><small>GROUP ENTERED</small></div>
+                  </div>
+                )}
+                <div className="ufc-group-hub__foot">
+                  <small>{liveBoard?.resolved ? "LIVE · ESTIMATES UNTIL RESULTS SETTLE" : progress.total-progress.completed+" PICKS REMAINING"}</small>
+                  <span>VIEW STANDINGS</span>
+                </div>
+              </summary>
+              <div className="ufc-group-hub__body">
+                <GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} embedded />
+              </div>
+            </details>
           ) : null}
 
           <details className="surface-card picks-scoring-guide">
