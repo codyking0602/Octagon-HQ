@@ -68,6 +68,11 @@
 .football-weekly-gm__entry { padding: 9px 0; gap: 5px; }
 .football-weekly-gm__entry-main strong { min-width: 0; overflow-wrap: anywhere; font-size: 12px; }
 .football-weekly-gm__entry-main b { white-space: nowrap; font-size: 12px; }
+/* The compact two-person leaderboard must still let members open each GM's runs. */
+.football-weekly-gm__entry-toggle { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 9px; border: 0; background: transparent; color: inherit; text-align: left; padding: 5px 0; cursor: pointer; }
+.football-weekly-gm__entry-toggle > span { color: #9acaf1; font-size: 17px; line-height: 1; }
+.football-weekly-gm__entry-toggle:focus-visible { outline: 2px solid #9acaf1; outline-offset: 3px; border-radius: 4px; }
+.football-weekly-gm__entry-toggle:active { opacity: .8; }
 .football-weekly-gm__entry-scores { gap: 5px; }
 .football-weekly-gm__entry-scores > button { color: #91c4ed; font-size: 10px; min-height: 26px; }
 .football-weekly-gm__detail { display: grid; gap: 12px; margin-top: 14px; scroll-margin-top: 100px; }
