@@ -29,6 +29,12 @@ describe("automatic UFC fighter media", () => {
     expect(assetIngest).toContain("source image looks like a placeholder/silhouette rather than a fighter photo");
   });
 
+  it("keeps new thumb crops face-dominant rather than mini Spotlights", () => {
+    expect(assetIngest).toContain("focus_width = max(1, round(subject.width * 0.76))");
+    expect(assetIngest).toContain("focus_height = max(1, min(subject.height, round(focus_width * 1.06)))");
+    expect(assetIngest).toContain("subject.crop((focus_left, 0, focus_left + focus_width, focus_height))");
+  });
+
   it("reuses the existing scheduler/card-check owner instead of adding another scheduler", () => {
     expect(runner).toContain("shouldRunScheduledCardSourceCheck");
     expect(runner).toContain("syncScheduledFighterMedia");
