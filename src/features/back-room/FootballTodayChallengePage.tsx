@@ -1,0 +1,1099 @@
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
+import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
+import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
+import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyView";
+import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView";
+import { OfficialBarTriviaDailyView } from "../play/OfficialBarTriviaDailyView";
+import { OfficialAverageFanDailyView } from "../play/OfficialAverageFanDailyView";
+import {
+  FootballSpecialDailyChrome,
+  footballSpecialDailyStyle,
+  footballSpecialDailyThemeForDay,
+} from "../play/footballSpecialDailyTheme";
+import {
+  DailyTwoGamePresentationIntermission,
+  DailyTwoGameStatus,
+  dailyTwoGameActiveScore,
+  dailyTwoGamePresentationIntermissionState,
+  dailyTwoGameSeriesState,
+} from "../play/DailyTwoGameStatus";
+import {
+  createTodayChallengeRepository,
+  type TodayChallengeProjection,
+} from "../play/todayChallengeRepository";
+import {
+  useTodayChallengeRuntime,
+  type TodayChallengeAdvanceOptions,
+} from "../play/useTodayChallengeRuntime";
+import {
+  createFootballWeeklyAuctionRepository,
+  type FootballWeeklyAuctionBidInput,
+  type FootballWeeklyAuctionState,
+} from "../play/footballWeeklyAuctionRepository";
+import {
+  FootballFindLeaderPresentation,
+  FootballFindLeaderVisual,
+} from "./FootballFindLeaderPresentation";
+import { FootballSubjectVisual } from "./FootballSubjectVisual";
+import { FootballWeeklyAuctionGate } from "./FootballWeeklyAuctionGate";
+import {
+  createHqImpostorRepository,
+  type HqImpostorState,
+} from "../impostor/hqImpostorRepository";
+import {
+  hqImpostorDailyGateRequired,
+  hqImpostorV1Window,
+} from "../impostor/hqImpostorSchedule";
+import {
+  FootballHitTheNumberPresentation,
+  footballHitNumberTheme,
+} from "./FootballHitTheNumberPresentation";
+import { formatFootballFact, type FootballFactMetricId } from "./footballFactualStats";
+import { FootballWavelengthPresentation } from "./FootballWavelengthPresentation";
+import {
+  footballBlindResumeFactText,
+  footballBlindResumeRevealAsset,
+} from "./footballBlindResumePresentation";
+import type { FootballRankFiveItem, FootballRankFivePackId } from "./footballRankFiveModel";
+import "../../styles/today-challenge-hub.css";
+import "../../styles/football-today-challenge.css";
+import "../../styles/football-special-daily.css";
+
+const GAME_LABELS = {
+  find_leader: "FIND THE LEADER",
+  blind_resume: "BLIND RESUME",
+  wavelength: "WAVELENGTH",
+  blind_rank_5: "BLIND RANK 5",
+  keep_4_cut_4: "KEEP 4 / CUT 4",
+  hit_the_number: "HIT THE NUMBER",
+  who_am_i: "WHO AM I?",
+  millionaire: "MILLIONAIRE",
+  sports_feud: "SPORTS FEUD",
+  bar_trivia: "BAR TRIVIA",
+  average_fan: "AVERAGE FAN",
+  higher_lower: "HIGHER OR LOWER",
+} as const;
+
+type JsonRecord = Record<string, unknown>;
+type PublicItem = Pick<FootballRankFiveItem, "id" | "name" | "subtitle" | "league">;
+
+function record(value: unknown): JsonRecord {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as JsonRecord : {};
+}
+
+function records(value: unknown): JsonRecord[] {
+  return Array.isArray(value) ? value.filter((row): row is JsonRecord => Boolean(row) && typeof row === "object" && !Array.isArray(row)) : [];
+}
+
+function strings(value: unknown) {
+  return Array.isArray(value) ? value.filter((row): row is string => typeof row === "string") : [];
+}
+
+function footballHitNumberOptimisticProjection(
+  projection: TodayChallengeProjection,
+  selectedIds: string[],
+): TodayChallengeProjection {
+  const setup = projection.publicSetup;
+  const slots = records(setup.slots);
+  const pickCount = Number(setup.pick_count ?? 0);
+  const candidates = records(setup.candidates).map((candidate) => String(candidate.id ?? ""));
+  if (selectedIds.length > pickCount || new Set(selectedIds).size !== selectedIds.length) return projection;
+  if (selectedIds.some((id) => !candidates.includes(id))) return projection;
+
+  let nextPublicState: JsonRecord = {
+    ...projection.publicState,
+    complete: false,
+    selected_ids: selectedIds,
+  };
+  if (slots.length > 0) {
+    // All slot eligibility is already safe public information: never expose
+    // grading values. This is provided by the runtime for persisted boards too.
+    const rawEligibility = setup.slot_eligible_ids;
+    if (
+      !Array.isArray(rawEligibility)
+      || rawEligibility.length !== slots.length
+      || rawEligibility.some((row) => !Array.isArray(row) || row.some((id) => typeof id !== "string"))
+    ) return projection;
+    const eligibility = rawEligibility as string[][];
+    if (selectedIds.some((id, index) => !eligibility[index]?.includes(id))) return projection;
+    const index = selectedIds.length < slots.length ? selectedIds.length : null;
+    nextPublicState = {
+      ...nextPublicState,
+      active_slot: index === null ? null : { ...slots[index], index },
+      available_subject_ids: index === null
+        ? candidates
+        : eligibility[index]!.filter((id) => !selectedIds.includes(id)),
+    };
+  }
+  return { ...projection, publicState: nextPublicState };
+}
+
+export function optimisticFootballHitNumberToggle(
+  projection: TodayChallengeProjection,
+  fighterId: string,
+): TodayChallengeProjection {
+  const selected = strings(projection.publicState.selected_ids);
+  const slots = records(projection.publicSetup.slots);
+  const alreadySelected = selected.includes(fighterId);
+  if (alreadySelected && slots.length > 0 && selected.at(-1) !== fighterId) return projection;
+  const next = alreadySelected
+    ? slots.length > 0 ? selected.slice(0, -1) : selected.filter((id) => id !== fighterId)
+    : [...selected, fighterId];
+  return footballHitNumberOptimisticProjection(projection, next);
+}
+
+export function optimisticFootballHitNumberRewind(
+  projection: TodayChallengeProjection,
+  slotIndex: number,
+): TodayChallengeProjection {
+  const selected = strings(projection.publicState.selected_ids);
+  if (!records(projection.publicSetup.slots).length
+    || !Number.isInteger(slotIndex) || slotIndex < 0 || slotIndex >= selected.length) return projection;
+  return footballHitNumberOptimisticProjection(projection, selected.slice(0, slotIndex));
+}
+
+function item(value: unknown): PublicItem | null {
+  const row = record(value);
+  return typeof row.id === "string" && typeof row.name === "string"
+    ? {
+        id: row.id,
+        name: row.name,
+        subtitle: typeof row.subtitle === "string" ? row.subtitle : "",
+        league: row.league === "CFB" ? "CFB" : "NFL",
+      }
+    : null;
+}
+
+function packId(setup: JsonRecord): FootballRankFivePackId | null {
+  const value = record(setup.pack).id;
+  return typeof value === "string" ? value as FootballRankFivePackId : null;
+}
+
+function Subject({ value, setup }: { value: unknown; setup: JsonRecord }) {
+  const subject = item(value);
+  const id = packId(setup);
+  if (!subject) return null;
+  return (
+    <div className="football-today-subject">
+      {id ? <FootballSubjectVisual item={subject} packId={id} /> : null}
+      <div><small>{subject.league}</small><strong>{subject.name}</strong><span>{subject.subtitle}</span></div>
+    </div>
+  );
+}
+
+function ScoreCard({ projection }: { projection: TodayChallengeProjection }) {
+  const attempt = projection.officialAttempt;
+  if (!attempt) return null;
+  const result = attempt.publicResult;
+  const series = dailyTwoGameSeriesState(projection);
+  const displayScore = series?.complete && series.averageScore !== null
+    ? series.averageScore
+    : attempt.normalizedScore;
+  return (
+    <section className="football-today-score">
+      <p className="eyebrow">FINAL SCORE</p>
+      <strong>{displayScore}<small>/100</small></strong>
+      {typeof result.blind_rank_score === "number" && typeof result.keep_cut_score === "number" ? (
+        <span>BLIND RANK {result.blind_rank_score} · KEEP/CUT {result.keep_cut_score}</span>
+      ) : null}
+    </section>
+  );
+}
+
+function FindLeader({ projection, advance }: GameProps) {
+  const setup = projection.publicSetup;
+  const state = projection.publicState;
+  const eliminatedIds = strings(state.eliminated_ids);
+  const reveal = record(projection.revealSetup);
+  const progressive = records(state.revealed_candidates);
+  const revealed = projection.officialAttempt ? records(reveal.candidates) : progressive;
+  const revealedById = new Map(revealed.map((candidate) => [String(candidate.id ?? ""), candidate]));
+  const candidates = records(setup.candidates).map((candidate) => {
+    const id = String(candidate.id ?? "");
+    const revealedCandidate = revealedById.get(id);
+    return {
+      id,
+      name: String(candidate.name ?? ""),
+      subtitle: String(candidate.subtitle ?? ""),
+      ...(typeof revealedCandidate?.value === "number" ? { value: revealedCandidate.value } : {}),
+    };
+  });
+  const attempt = projection.officialAttempt;
+  const perfect = attempt?.nativeScore === 10;
+  const fatalId = attempt && !perfect ? eliminatedIds.at(-1) ?? null : null;
+  const league = String(setup.league ?? "FOOTBALL");
+  const statLabel = String(setup.stat_label ?? "OFFICIAL STAT");
+
+  return (
+    <FootballFindLeaderPresentation
+      question={String(setup.question ?? "Find the hidden leader.")}
+      context={String(setup.context ?? "Eliminate the decoys. Leave the leader standing.")}
+      categoryLabel={`${league} · ${statLabel}`}
+      statLabel={statLabel}
+      shortLabel={statLabel}
+      candidates={candidates}
+      leaderId={attempt ? String(reveal.leader_id ?? "") : null}
+      eliminatedIds={eliminatedIds}
+      result={attempt ? {
+        score: dailyTwoGameActiveScore(projection) ?? attempt.normalizedScore,
+        perfect,
+        fatalId,
+      } : null}
+      eyebrow="TODAY’S CHALLENGE"
+      intro="Eliminate nine decoys until only the leader remains."
+      onEliminate={attempt ? null : (id) => advance({ eliminated_id: id })}
+      renderVisual={(candidate, compact) => (
+        <FootballFindLeaderVisual
+          candidateId={candidate.id}
+          candidateName={candidate.name}
+          league={league}
+          compact={compact}
+        />
+      )}
+    />
+  );
+}
+
+function pointCopy(value: unknown) {
+  const points = Number(value ?? 0);
+  return points > 0 ? `+${points}` : String(points);
+}
+
+function BlindResumeRevealLogo({ subject }: { subject: JsonRecord }) {
+  const asset = footballBlindResumeRevealAsset(subject.id);
+  const name = String(subject.name ?? "Football player");
+  return (
+    <span className="football-blind-resume-logo" aria-label={`${name} team logo`}>
+      {asset ? <img alt="" loading="lazy" referrerPolicy="no-referrer" src={asset.src} title={asset.label} /> : <b aria-hidden="true">FB</b>}
+    </span>
+  );
+}
+
+function BlindResume({ projection, advance }: GameProps) {
+  const setup = projection.publicSetup;
+  const state = projection.publicState;
+  const round = record(state.current_round);
+  const stats = records(round.stats);
+  const results = records(state.results);
+  const ladder = records(setup.scoring_ladder);
+  const previousCount = useRef(results.length);
+  const [pendingResult, setPendingResult] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (results.length > previousCount.current) setPendingResult(results.length - 1);
+    previousCount.current = results.length;
+  }, [results.length]);
+
+  if (pendingResult !== null) {
+    const result = results[pendingResult];
+    const left = record(result?.left);
+    const right = record(result?.right);
+    const winnerId = String(result?.winner_id ?? "");
+    const pickedId = String(result?.picked_id ?? "");
+    const correct = result?.correct === true;
+    const finalRound = Boolean(projection.officialAttempt) && results.length === 3;
+    return (
+      <div className="football-blind-resume-result" data-result={correct ? "correct" : "miss"}>
+        <section className={`football-blind-resume-verdict ${correct ? "is-correct" : "is-miss"}`}>
+          <p className="eyebrow">{correct ? "YOU PICKED THE BETTER RÉSUMÉ" : "THE MODEL DISAGREES"}</p>
+          <h2>{String((winnerId === left.id ? left : right).name ?? "Winner")} ranks higher</h2>
+          <strong>{pointCopy(result?.points_awarded)} POINTS</strong>
+        </section>
+        <section className="football-blind-resume-reveal-grid">
+          {[left, right].map((subject, index) => (
+            <article className={`${subject.id === winnerId ? "is-winner" : ""}${subject.id === pickedId ? " is-picked" : ""}`} key={`${String(subject.id)}-${index}`}>
+              <BlindResumeRevealLogo subject={subject} />
+              <span>PLAYER {index === 0 ? "A" : "B"}</span>
+              <strong>{String(subject.name ?? "")}</strong>
+              <small>{String(subject.subtitle ?? "")}</small>
+              {subject.id === pickedId ? <em>YOUR PICK</em> : null}
+            </article>
+          ))}
+        </section>
+        <button className="football-today-primary football-blind-resume-next" type="button" onClick={() => setPendingResult(null)}>
+          {finalRound ? "SEE FINAL SCORE" : "NEXT ROUND"}
+        </button>
+      </div>
+    );
+  }
+
+  const attempt = projection.officialAttempt;
+  const correctCount = results.filter((row) => row.correct === true).length;
+  const rawPoints = Number(state.raw_points ?? attempt?.publicResult.raw_points ?? 0);
+
+  if (attempt) {
+    return (
+      <div className="football-blind-resume-final">
+        <section className="football-today-score">
+          <p className="eyebrow">THREE-ROUND RESULTS</p>
+          <strong>{attempt.normalizedScore}<small>/100</small></strong>
+          <span>{correctCount}-{3 - correctCount} RECORD · {rawPoints} RAW PTS</span>
+        </section>
+        <section className="football-blind-resume-recap" aria-label="Three-round Football Blind Resume recap">
+          {results.map((result, index) => {
+            const left = record(result.left);
+            const right = record(result.right);
+            const winnerId = String(result.winner_id ?? "");
+            const pickedId = String(result.picked_id ?? "");
+            return (
+              <article key={`${index}-${String(left.id)}-${String(right.id)}`}>
+                <header><span>R{index + 1}</span><b className={result.correct === true ? "is-correct" : "is-miss"}>{result.correct === true ? "CORRECT" : "MISS"} · {pointCopy(result.points_awarded)}</b></header>
+                <div>
+                  {[left, right].map((subject) => (
+                    <section className={subject.id === winnerId ? "is-winner" : ""} key={String(subject.id)}>
+                      <span><strong>{String(subject.name ?? "")}</strong><small>{String(subject.subtitle ?? "")}</small></span>
+                      <em>{subject.id === winnerId ? "WINNER" : subject.id === pickedId ? "PICK" : ""}</em>
+                    </section>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      </div>
+    );
+  }
+
+  const currentStage = Math.max(0, Math.min(2, Number(round.reveal_stage ?? 1) - 1));
+  const revealed = Number(round.revealed_count ?? stats.length);
+  const maxRevealed = Number(round.max_revealed_count ?? stats.length);
+  const revealCounts = Array.isArray(round.reveal_counts) ? round.reveal_counts.map(Number).filter(Number.isFinite) : [];
+  const nextRevealCount = revealCounts[currentStage + 1];
+  const moreFacts = typeof nextRevealCount === "number" ? Math.max(1, nextRevealCount - revealed) : 0;
+  const nextStage = ladder[currentStage + 1];
+  const contextLabel = String(round.context_label ?? round.league ?? "FOOTBALL");
+
+  return (
+    <div className="football-blind-resume-game" data-game="blind_resume" data-version="v4">
+      <section className="football-blind-resume-scoreboard">
+        <div><p className="eyebrow">DAILY CHALLENGE</p><h2>Which football career ranks higher?</h2></div>
+        <aside><span>ROUND {Number(state.round_index ?? 0) + 1} OF 3</span><b>DAILY SCORE {rawPoints} RAW PTS · {correctCount}-{results.length - correctCount}</b></aside>
+      </section>
+      <section className="football-today-resume football-blind-resume-card">
+        <header className="football-blind-resume-card-head">
+          <div><span>PLAYER A</span><strong>?</strong></div>
+          <b>RESUME</b>
+          <div><span>PLAYER B</span><strong>?</strong></div>
+        </header>
+        <p className="football-blind-resume-context">{contextLabel}</p>
+        <div className="football-today-resume-stats football-blind-resume-stats">
+          {stats.map((stat, index) => (
+            <div key={`${String(stat.label)}-${index}`}>
+              <strong>{footballBlindResumeFactText(stat.value_a)}</strong>
+              <span>{String(stat.label)}</span>
+              <strong>{footballBlindResumeFactText(stat.value_b)}</strong>
+            </div>
+          ))}
+        </div>
+        <section className="football-blind-resume-scoring" aria-label="Blind Resume scoring">
+          <strong className="football-blind-resume-fact-count">{revealed} OF {maxRevealed} FACTS SHOWN</strong>
+          <div>
+            {ladder.map((row, index) => {
+              const expired = index < currentStage;
+              const active = index === currentStage;
+              const label = expired ? "USED" : active ? "GUESS NOW" : index === 2 ? "FINAL REVEAL" : "NEXT";
+              return (
+                <article className={`${expired ? "is-expired" : ""}${active ? " is-current" : ""}`} key={String(row.stage ?? index)}>
+                  <span>{label}</span>
+                  <strong>{pointCopy(row.correct)} / {pointCopy(row.wrong)}</strong>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+        <div className="football-blind-resume-picks">
+          <button type="button" onClick={() => advance({ choice: "A" })}>PICK A</button>
+          <button type="button" onClick={() => advance({ choice: "B" })}>PICK B</button>
+        </div>
+        {nextStage ? (
+          <button className="football-blind-resume-reveal" type="button" onClick={() => advance({ reveal: true })}>
+            SHOW {moreFacts} MORE {moreFacts === 1 ? "FACT" : "FACTS"}
+          </button>
+        ) : null}
+      </section>
+    </div>
+  );
+}
+
+function Wavelength({ projection, advance, busy }: GameProps & { busy: boolean }) {
+  const [guess, setGuess] = useState(50);
+  const series = dailyTwoGameSeriesState(projection);
+  useEffect(() => setGuess(50), [series?.gameIndex]);
+  const state = projection.publicState;
+  const guesses = Array.isArray(state.guesses) ? state.guesses.map(Number) : [];
+  const reveal = record(state.reveal);
+  const rawClues = projection.officialAttempt ? records(reveal.clues) : records(state.clues);
+  const clues = rawClues.map((clue, index) => ({
+    id: String(clue.id ?? index),
+    category: String(clue.category ?? "football"),
+    text: String(clue.text ?? ""),
+    ...(typeof clue.rating === "number" ? { rating: clue.rating } : {}),
+  }));
+  const target = Number(reveal.target ?? projection.officialAttempt?.publicResult.target ?? 0);
+
+  return (
+    <div className="football-debate-page football-wavelength-page wavelength-page wavelength-page--playing wavelength-page--football">
+      <FootballWavelengthPresentation
+        clues={clues}
+        guesses={guesses}
+        guess={guess}
+        onGuessChange={setGuess}
+        onLock={() => advance({ guess })}
+        busy={busy}
+        result={projection.officialAttempt ? {
+          score: dailyTwoGameActiveScore(projection) ?? projection.officialAttempt.normalizedScore,
+          target,
+        } : null}
+      />
+    </div>
+  );
+}
+
+function BlindRank({ projection, advance }: GameProps) {
+  const setup = projection.publicSetup;
+  const state = projection.publicState;
+  const current = item(state.current_subject);
+  const slots = Array.isArray(state.slots) ? state.slots : [null, null, null, null, null];
+  const pack = record(setup.pack);
+  return (
+    <section className="football-today-rank">
+      <header><small>{String(pack.league ?? "FOOTBALL")} · DAILY DOUBLE PART 1</small><h2>{String(pack.prompt ?? "Blind Rank 5")}</h2></header>
+      <div className="football-today-rank-slots">
+        {slots.map((value, index) => {
+          const placed = item(value);
+          return (
+            <button type="button" key={index} disabled={Boolean(placed) || !current} onClick={() => advance({ slot: index + 1 })}>
+              <b>#{index + 1}</b><span>{placed?.name ?? "PLACE HERE"}</span>
+            </button>
+          );
+        })}
+      </div>
+      {current ? <Subject value={current} setup={setup} /> : null}
+    </section>
+  );
+}
+
+function KeepCut({ projection, advance }: GameProps) {
+  const setup = projection.publicSetup;
+  const state = projection.publicState;
+  const current = item(state.current_subject);
+  const kept = records(state.kept).map(item).filter(Boolean) as PublicItem[];
+  const cut = records(state.cut).map(item).filter(Boolean) as PublicItem[];
+  const forced = typeof state.forced_choice === "string" ? state.forced_choice : null;
+  const pack = record(setup.pack);
+  return (
+    <section className="football-today-keep-cut">
+      <header><small>{String(pack.league ?? "FOOTBALL")} · DAILY DOUBLE PART 2</small><h2>{String(pack.prompt ?? "Keep four. Cut four.")}</h2></header>
+      <div className="football-today-trays">
+        <div><b>KEEP {kept.length}/4</b>{kept.map((row) => <span key={row.id}>{row.name}</span>)}</div>
+        <div><b>CUT {cut.length}/4</b>{cut.map((row) => <span key={row.id}>{row.name}</span>)}</div>
+      </div>
+      {current ? <Subject value={current} setup={setup} /> : null}
+      {current ? (
+        <div className="football-today-split-actions">
+          <button type="button" disabled={forced === "cut"} onClick={() => advance({ choice: "keep" })}>KEEP</button>
+          <button type="button" disabled={forced === "keep"} onClick={() => advance({ choice: "cut" })}>CUT</button>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+function HitTheNumber({ projection, advance }: GameProps) {
+  const setup = projection.publicSetup;
+  const state = projection.publicState;
+  const selectedIds = strings(state.selected_ids);
+  const candidates = records(setup.candidates).map((candidate) => ({
+    id: String(candidate.id ?? ""),
+    name: String(candidate.name ?? ""),
+    subtitle: String(candidate.subtitle ?? ""),
+  }));
+  const slots = records(setup.slots).map((slot) => ({
+    id: String(slot.id ?? ""),
+    label: String(slot.label ?? ""),
+  }));
+  const activeSlot = record(state.active_slot);
+  const activeSlotIndex = Number.isInteger(activeSlot.index) ? Number(activeSlot.index) : null;
+  const availableIds = strings(state.available_subject_ids);
+  const reveal = record(projection.revealSetup);
+  const rawValues = record(reveal.values);
+  const values = Object.fromEntries(
+    Object.entries(rawValues)
+      .filter((entry): entry is [string, number] => typeof entry[1] === "number"),
+  );
+  const target = Number(setup.target ?? 0);
+  const total = selectedIds.reduce((sum, id) => sum + (values[id] ?? 0), 0);
+  const distance = Math.abs(target - total);
+  const status = distance < 1e-9 ? "perfect" : total > target ? "bust" : "under";
+  const metricId = String(setup.metric_id ?? "") as FootballFactMetricId;
+  const formatValue = (value: number) => {
+    try {
+      return formatFootballFact(metricId, value);
+    } catch {
+      return Number.isInteger(value) ? value.toLocaleString("en-US") : value.toFixed(1);
+    }
+  };
+
+  return (
+    <div className="hit-number-page football-hit-number-page" style={footballHitNumberTheme}>
+      <FootballHitTheNumberPresentation
+        target={target}
+        metricLabel={String(setup.metric_label ?? "OFFICIAL STAT")}
+        league={String(setup.league ?? "FOOTBALL")}
+        configurationLabel={typeof setup.configuration_label === "string" ? setup.configuration_label : null}
+        pickCount={Number(setup.pick_count ?? 4)}
+        candidates={candidates}
+        selectedIds={selectedIds}
+        slots={slots}
+        activeSlotIndex={activeSlotIndex}
+        availableIds={slots.length > 0 ? availableIds : availableIds.length ? availableIds : candidates.map((candidate) => candidate.id)}
+        values={projection.officialAttempt ? values : undefined}
+        result={projection.officialAttempt ? {
+          status,
+          target,
+          total,
+          distance,
+          score: dailyTwoGameActiveScore(projection) ?? projection.officialAttempt.normalizedScore,
+        } : null}
+        formatValue={formatValue}
+        onToggle={projection.officialAttempt ? null : (id) => advance(
+          { fighter_id: id },
+          { optimisticUpdate: (current) => optimisticFootballHitNumberToggle(current, id) },
+        )}
+        onRewind={projection.officialAttempt ? null : (index) => advance(
+          { rewind_to: index },
+          { optimisticUpdate: (current) => optimisticFootballHitNumberRewind(current, index) },
+        )}
+        onLock={projection.officialAttempt ? null : () => advance(
+          { lock: true },
+          { dedupeKey: `football-hit-number:lock:${projection.id}` },
+        )}
+      />
+    </div>
+  );
+}
+
+type GameProps = {
+  projection: TodayChallengeProjection;
+  advance: (action: JsonRecord, options?: TodayChallengeAdvanceOptions) => void;
+};
+
+export function FootballTodayChallengeResult({
+  projection,
+  onExit,
+}: {
+  projection: TodayChallengeProjection;
+  onExit?: () => void;
+}) {
+  const advance = (_action: JsonRecord) => {};
+  let result: ReactNode = null;
+
+  switch (projection.gameType) {
+    case "find_leader":
+      result = <FindLeader projection={projection} advance={advance} />;
+      break;
+    case "blind_resume":
+      result = <BlindResume projection={projection} advance={advance} />;
+      break;
+    case "wavelength":
+      result = <Wavelength projection={projection} advance={advance} busy={false} />;
+      break;
+    case "blind_rank_5":
+      result = <BlindRank projection={projection} advance={advance} />;
+      break;
+    case "keep_4_cut_4":
+      result = <KeepCut projection={projection} advance={advance} />;
+      break;
+    case "hit_the_number":
+      result = <HitTheNumber projection={projection} advance={advance} />;
+      break;
+    case "who_am_i":
+      result = <OfficialWhoAmIDailyView projection={projection} busy={false} onAdvance={advance} />;
+      break;
+    case "millionaire":
+      result = <OfficialMillionaireDailyView projection={projection} busy={false} onAdvance={advance} />;
+      break;
+    case "sports_feud":
+      result = <OfficialSportsFeudDailyView projection={projection} busy={false} onAdvance={advance} onExit={onExit} />;
+      break;
+    case "average_fan":
+      result = <OfficialAverageFanDailyView projection={projection} busy={false} onAdvance={advance} onExit={onExit ?? (() => {})} />;
+      break;
+  }
+
+  return (
+    <>
+      <DailyTwoGameStatus projection={projection} />
+      {result}
+    </>
+  );
+}
+
+export default function FootballTodayChallengePage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editWeeklyAuction = searchParams.get("weekly") === "edit";
+  const identity = useIdentity();
+  const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
+  const repository = useMemo(() => createTodayChallengeRepository(undefined, "football"), []);
+  const weeklyRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
+  const impostorRepository = useMemo(() => createHqImpostorRepository(), []);
+  const impostorWindow = hqImpostorV1Window();
+  const weeklyGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z")
+    && Date.now() < Date.parse("2026-10-20T05:00:00Z");
+  const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
+  const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
+  const [weeklyBusy, setWeeklyBusy] = useState(false);
+  const [weeklyError, setWeeklyError] = useState<string | null>(null);
+  const [impostorState, setImpostorState] = useState<HqImpostorState | null>(null);
+  const [impostorLoading, setImpostorLoading] = useState(false);
+  const [impostorError, setImpostorError] = useState<string | null>(null);
+  const [shareStatus, setShareStatus] = useState("");
+  // Weekly Auction is a separate featured event, not a requirement for Daily.
+  const impostorGateActive = !weeklyGmWeek && impostorWindow.active
+    && !impostorLoading
+    && hqImpostorDailyGateRequired(impostorState);
+  const featuredGateLoaded = !impostorWindow.active || !impostorLoading;
+  const dailyRuntime = useTodayChallengeRuntime({
+    profileId: identity.profile?.id ?? "signed-out",
+    enabled: signedIn && featuredGateLoaded && !impostorGateActive,
+    repository,
+    sport: "football",
+  });
+  const projection = dailyRuntime.projection;
+  const busy = dailyRuntime.busy;
+  const error = dailyRuntime.error instanceof Error
+    ? dailyRuntime.error.message
+    : dailyRuntime.error
+      ? "Could not sync today’s football board."
+      : null;
+
+  function loadDaily() {
+    setShowWeeklyAuction(false);
+  }
+
+  useEffect(() => {
+    let active = true;
+    if (weeklyGmWeek || impostorWindow.active || !editWeeklyAuction) {
+      setWeeklyState(null);
+      setShowWeeklyAuction(false);
+      setWeeklyBusy(false);
+      setWeeklyError(null);
+      return () => { active = false; };
+    }
+    if (!signedIn) {
+      setWeeklyState(null);
+      setShowWeeklyAuction(false);
+      setWeeklyBusy(false);
+      setWeeklyError(null);
+      return () => { active = false; };
+    }
+    if (!weeklyRepository) {
+      setWeeklyError("Football Weekly Auction is unavailable on this build.");
+      return () => { active = false; };
+    }
+
+    setWeeklyBusy(true);
+    setWeeklyError(null);
+    weeklyRepository.load()
+      .then((nextWeekly) => {
+        if (!active) return;
+        setWeeklyState(nextWeekly);
+        if (
+          nextWeekly.available
+          && (nextWeekly.previous_final || !nextWeekly.submitted_today || editWeeklyAuction)
+        ) {
+          setShowWeeklyAuction(true);
+        }
+      })
+      .catch((reason) => {
+        if (active) setWeeklyError(reason instanceof Error ? reason.message : "Could not load Weekly Auction.");
+      })
+      .finally(() => { if (active) setWeeklyBusy(false); });
+
+    return () => { active = false; };
+  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active, weeklyGmWeek]);
+
+  useEffect(() => {
+    let active = true;
+    if (!signedIn || !impostorWindow.active) {
+      setImpostorState(null);
+      setImpostorLoading(false);
+      setImpostorError(null);
+      return () => { active = false; };
+    }
+    if (!impostorRepository) {
+      setImpostorLoading(false);
+      setImpostorError("HQ Impostor is unavailable on this build.");
+      return () => { active = false; };
+    }
+
+    setImpostorLoading(true);
+    setImpostorError(null);
+    impostorRepository.load()
+      .then((next) => {
+        if (active) setImpostorState(next);
+      })
+      .catch((reason) => {
+        if (active) setImpostorError(reason instanceof Error ? reason.message : "Could not load HQ Impostor.");
+      })
+      .finally(() => {
+        if (active) setImpostorLoading(false);
+      });
+
+    return () => { active = false; };
+  }, [signedIn, impostorRepository, impostorWindow.active]);
+
+  async function submitWeeklyBids(bids: Record<number, FootballWeeklyAuctionBidInput>) {
+    if (!weeklyRepository || weeklyBusy) return;
+    setWeeklyBusy(true);
+    setWeeklyError(null);
+    try {
+      const next = await weeklyRepository.submit(bids);
+      setWeeklyState(next);
+      setShowWeeklyAuction(next.available);
+    } catch (reason) {
+      setWeeklyError(reason instanceof Error ? reason.message : "Those Weekly Auction bids could not be saved.");
+    } finally {
+      setWeeklyBusy(false);
+    }
+  }
+
+  async function submitWeeklyWildcard(entries: number, rankings: string[], cutItemReference: string | null) {
+    if (!weeklyRepository || weeklyBusy) return;
+    setWeeklyBusy(true);
+    setWeeklyError(null);
+    try {
+      const next = await weeklyRepository.submitNflTeamSeasonWildcard(entries, rankings, cutItemReference);
+      setWeeklyState(next);
+      setShowWeeklyAuction(next.available);
+    } catch (reason) {
+      setWeeklyError(reason instanceof Error ? reason.message : "That Wildcard choice could not be saved.");
+    } finally {
+      setWeeklyBusy(false);
+    }
+  }
+
+  async function acknowledgeWeeklyFinal(weekStart: string) {
+    if (!weeklyRepository || weeklyBusy) return;
+    setWeeklyBusy(true);
+    setWeeklyError(null);
+    try {
+      const next = await weeklyRepository.acknowledgeFinal(weekStart);
+      setWeeklyState(next);
+      setShowWeeklyAuction(next.available);
+    } catch (reason) {
+      setWeeklyError(reason instanceof Error ? reason.message : "Weekly Auction results could not be closed.");
+    } finally {
+      setWeeklyBusy(false);
+    }
+  }
+
+  function advance(action: JsonRecord, options?: TodayChallengeAdvanceOptions) {
+    void dailyRuntime.advance(action, options);
+  }
+
+  async function shareResult() {
+    if (!projection?.officialAttempt) return;
+    const series = dailyTwoGameSeriesState(projection);
+    const score = series?.complete && series.averageScore !== null
+      ? series.averageScore
+      : projection.officialAttempt.normalizedScore;
+    const outcome = await shareDailyChallengeResult({ sport: "football", score, centralDay: projection.centralDay });
+    setShareStatus(outcome === "shared" ? "RESULT SHARED" : outcome === "copied" ? "RESULT LINK COPIED" : outcome === "cancelled" ? "" : "SHARE UNAVAILABLE");
+  }
+
+  if (!signedIn) {
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell today-hub-gate">
+          <div><p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p><h1>One official board. One first attempt.</h1><p>Sign in to save Football Daily progress across devices and join the Football-only standings.</p></div>
+          <button type="button" onClick={identity.openDialog}>SIGN IN TO PLAY</button>
+        </section>
+      </div>
+    );
+  }
+
+  if (impostorWindow.active && (impostorLoading || impostorGateActive || impostorError)) {
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell today-hub-gate">
+          <div>
+            <p className="eyebrow">FEATURED CHALLENGE · OCT 13–19</p>
+            <h1>HQ Impostor comes first.</h1>
+            <p>
+              {impostorError
+                ? impostorError
+                : impostorLoading
+                  ? "Checking your current Impostor round…"
+                  : "Submit your current HQ Impostor blind clue, then Football Daily unlocks."}
+            </p>
+          </div>
+          <button type="button" onClick={() => navigate("/impostor?from=daily")}>
+            {impostorLoading ? "CHECKING…" : "OPEN HQ IMPOSTOR →"}
+          </button>
+        </section>
+      </div>
+    );
+  }
+
+  if (editWeeklyAuction && weeklyState?.available && showWeeklyAuction) {
+    return (
+      <div className="page football-today-page">
+        <FootballWeeklyAuctionGate
+          state={weeklyState}
+          busy={weeklyBusy}
+          error={weeklyError}
+          forceBoard={showWeeklyAuction && weeklyState.submitted_today}
+          onSubmit={submitWeeklyBids}
+          onSubmitWildcard={submitWeeklyWildcard}
+          onAcknowledgeFinal={acknowledgeWeeklyFinal}
+          onContinue={() => {
+            if (projection) {
+              setShowWeeklyAuction(false);
+            } else {
+              loadDaily();
+            }
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (!projection) {
+    const loading = busy || dailyRuntime.loading;
+    const message = error;
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell">
+          <p className="eyebrow">FOOTBALL HQ</p>
+          <h1>{loading ? "Building today’s board…" : "Today’s Challenge"}</h1>
+          {message ? (
+            <>
+              <p>{message}</p>
+              <button type="button" onClick={() => void dailyRuntime.refresh()}>TRY AGAIN →</button>
+            </>
+          ) : null}
+        </section>
+      </div>
+    );
+  }
+
+  const weeklyEditControl = weeklyState?.available && weeklyState.submitted_today ? (
+    <button className="football-weekly-auction-edit" type="button" onClick={() => setShowWeeklyAuction(true)}>
+      WEEKLY AUCTION · {weeklyState.subject_key === "nfl-best-team-seasons-since-2000" && weeklyState.day_index === 7 ? "EDIT WILDCARD" : "EDIT BIDS"}
+    </button>
+  ) : null;
+
+  const blindResume = projection.gameType === "blind_resume";
+  const specialTheme = footballSpecialDailyThemeForDay(projection.centralDay);
+  const specialStyle = specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined;
+  const specialChrome = specialTheme ? (
+    <FootballSpecialDailyChrome
+      theme={specialTheme}
+      score={projection.officialAttempt?.normalizedScore ?? null}
+      showIntro={!projection.officialAttempt && projection.progressRevision === 0}
+    />
+  ) : null;
+  const twoGameSeries = dailyTwoGameSeriesState(projection);
+  const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
+
+  if (presentationHandoff) {
+    return (
+      <div className="page football-debate-page football-wavelength-page wavelength-page--football">
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <DailyTwoGamePresentationIntermission
+          projection={projection}
+          busy={busy}
+          onContinue={() => {
+            advance(
+              { type: "next_game" },
+              { dedupeKey: `football-wavelength-handoff:${projection.id}` },
+            );
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (twoGameSeries?.awaitingNext) {
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell">
+          {weeklyEditControl}
+          {error ? <div className="football-today-error">{error}</div> : null}
+          <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
+        </section>
+      </div>
+    );
+  }
+
+  if (projection.gameType === "wavelength") {
+    const wavelengthClassName = projection.officialAttempt
+      ? "page football-debate-page football-wavelength-page"
+      : "page football-debate-page football-wavelength-page wavelength-page wavelength-page--playing wavelength-page--football";
+
+    return (
+      <div className={wavelengthClassName}>
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
+        <Wavelength projection={projection} advance={advance} busy={busy} />
+        {projection.officialAttempt ? (
+          <div className="game-result-actions-wrap">
+            <div className="game-result-actions">
+              <button className="primary-action" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+            </div>
+            <p className="game-action-status" role="status">{shareStatus}</p>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (projection.gameType === "who_am_i") {
+    return (
+      <div className="official-daily-page">
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        {busy ? <div className="football-today-busy">LOCKING…</div> : null}
+        <OfficialWhoAmIDailyView projection={projection} busy={busy} onAdvance={advance} />
+        {projection.officialAttempt ? (
+          <div className="game-result-actions-wrap">
+            <div className="game-result-actions">
+              <button className="primary-action" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+            </div>
+            <p className="game-action-status" role="status">{shareStatus}</p>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (projection.gameType === "sports_feud") {
+    return (
+      <div
+        className={specialTheme ? "official-daily-page football-special-daily-page" : "official-daily-page"}
+        style={specialStyle}
+      >
+        {specialChrome}
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <OfficialSportsFeudDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={advance}
+          onExit={() => navigate("/football")}
+          resultStatus={error ?? undefined}
+          onRetryResult={() => { void dailyRuntime.retryPending(); }}
+          onRefreshSaved={() => { void dailyRuntime.recheckSaved(); }}
+        />
+      </div>
+    );
+  }
+
+  if (projection.gameType === "average_fan") {
+    return (
+      <div className="official-daily-page">
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <OfficialAverageFanDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={advance}
+          onExit={() => navigate("/football")}
+        />
+      </div>
+    );
+  }
+
+  if (projection.gameType === "bar_trivia") {
+    return (
+      <div
+        className={specialTheme ? "official-daily-page football-special-daily-page" : "official-daily-page"}
+        style={specialStyle}
+      >
+        {specialChrome}
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <OfficialBarTriviaDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={advance}
+          onExit={() => navigate("/football")}
+        />
+      </div>
+    );
+  }
+
+  if (projection.gameType === "millionaire") {
+    return (
+      <div
+        className={specialTheme ? "official-daily-page football-special-daily-page" : "official-daily-page"}
+        style={specialStyle}
+        data-red-river={specialTheme?.rivalryAccent ? "true" : undefined}
+      >
+        {specialChrome}
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        {busy ? <div className="football-today-busy">LOCKING…</div> : null}
+        <OfficialMillionaireDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={advance}
+          onExit={() => navigate("/football")}
+        />
+        {projection.officialAttempt ? (
+          <div className="game-result-actions-wrap">
+            <div className="game-result-actions">
+              <button className="primary-action" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+            </div>
+            <p className="game-action-status" role="status">{shareStatus}</p>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  return (
+    <div className="page football-today-page">
+      <section className="football-today-shell">
+        {weeklyEditControl}
+        {blindResume ? (
+          <header className="football-today-header football-today-header--blind-resume">
+            <button className="football-today-back" type="button" aria-label="Back to Football Play Hub" onClick={() => navigate("/football")}>←</button>
+            <div><p className="eyebrow">PLAY HUB</p><h1>Blind Resume</h1></div>
+          </header>
+        ) : (
+          <header className="football-today-header">
+            <div><p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p><h1>{GAME_LABELS[projection.gameType]}</h1><span>{projection.centralDay} · SAME BOARD FOR EVERYONE</span></div>
+            <button type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+          </header>
+        )}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        {busy ? <div className="football-today-busy">LOCKING…</div> : null}
+        <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
+        {!blindResume ? <ScoreCard projection={projection} /> : null}
+        {projection.officialAttempt ? (
+          <div className="football-today-result-actions">
+            <button className="football-today-primary" type="button" onClick={() => void shareResult()}>SHARE RESULT</button>
+            <button type="button" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+            {shareStatus ? <span role="status">{shareStatus}</span> : null}
+          </div>
+        ) : null}
+        {projection.gameType === "find_leader" ? <FindLeader projection={projection} advance={advance} /> : null}
+        {blindResume ? <BlindResume projection={projection} advance={advance} /> : null}
+        {projection.gameType === "blind_rank_5" ? <BlindRank projection={projection} advance={advance} /> : null}
+        {projection.gameType === "keep_4_cut_4" ? <KeepCut projection={projection} advance={advance} /> : null}
+        {projection.gameType === "hit_the_number" ? <HitTheNumber projection={projection} advance={advance} /> : null}
+      </section>
+    </div>
+  );
+}

@@ -1,0 +1,980 @@
+# Who Am I Rebuild PR8 — CFB A-tier Person Identity Audit
+
+This review artifact documents the CFB A-tier person-identity research integrated through the existing canonical football person-identity owner. It is not a runtime source and does not alter recognizability, launch membership, clue generation, ordering, scoring, or gameplay.
+
+## Coverage
+
+- Exact CFB A-tier launch identities: **71**
+- Retained distinctive-identity concepts: **355**
+- Concepts per identity: **5**
+- Research sources retained: **259**
+- Research batches: **24 + 24 + 23** identities
+- Canonical runtime owner: `src/features/back-room/footballPersonIdentityKnowledge.ts`
+- Data-only research module: `src/features/back-room/footballPersonIdentityCfbAResearch.ts`
+- Focused validation: `src/features/back-room/footballPersonIdentityKnowledge.test.ts`
+
+## Canonical reconciliation
+
+The current exact launch owner remains authoritative. Nine research IDs were reconciled to already-existing runtime canonical IDs; no recognizability or launch membership change was made:
+
+- `cfb-ndamukong-suh` → `cfb-nndamukong-suh`
+- `cfb-travis-hunter-db` → `cfb-travis-hunter`
+- `bobby-bowden` → `bobby-bowden-cfb`
+- `dabo-swinney` → `dabo-swinney-cfb`
+- `kirby-smart` → `kirby-smart-cfb`
+- `nick-saban` → `nick-saban-cfb`
+- `pete-carroll` → `pete-carroll-cfb`
+- `steve-spurrier` → `steve-spurrier-cfb`
+- `urban-meyer` → `urban-meyer-cfb`
+
+## Research wording constraints retained
+
+- Charles Woodson two-way-role initiation remains source-qualified because contemporaneous and later accounts frame who initiated the offensive role differently.
+- Bear Bryant integration chronology does not use the popular claim that the 1970 USC loss itself caused Alabama football integration.
+- Lamar Jackson wording avoids the disputed grandmother/great-grandmother relation in retellings around his father's death.
+- Ernie Davis recruiting wording preserves Jim Brown as an important influence without claiming Brown alone caused the Syracuse choice.
+- Tyrann Mathieu nickname wording retains the viral honey-badger comparison and adoption without claiming an uncertain single originator.
+- Doak Walker retains the childhood Harry Shuford relationship and does not claim a disputed origin for No. 37.
+- Rejected or softened research was not promoted into runtime facts.
+
+## Integration boundaries
+
+- CFB A-tier person identity knowledge only.
+- CFB B-tier person identity knowledge remains untouched.
+- NFL A/B person identity knowledge remains untouched.
+- UFC behavior remains untouched.
+- No alternate provider, second query path, competing route owner, runtime roster, web lookup, LLM judgment, or duplicate initialization was added.
+
+## Retained research ledger
+
+### `cfb-aaron-donald`
+
+- **`cfb-aaron-donald--basement-workout-origin`** — As a teenager in Pittsburgh, Donald began doing demanding early-morning workouts in the family basement with his father, Archie Sr., and older brother, Archie Jr.; the routine became the foundation of his unusual training discipline.
+  - Source: ESPN — ESPN — “The incredible origin stories of young Aaron Donald” — https://www.espn.com/nfl/story/_/id/34488139/aaron-donald-los-angeles-rams
+- **`cfb-aaron-donald--overlooked-recruiting`** — Donald was lightly recruited out of Penn Hills; ESPN reported Pitt was his only real Power Five offer and Toledo was the only other school seriously pursuing him.
+  - Source: ESPN — ESPN — “The incredible origin stories of young Aaron Donald” — https://www.espn.com/nfl/story/_/id/34488139/aaron-donald-los-angeles-rams
+- **`cfb-aaron-donald--gattuso-scrimmage-offer`** — Pitt assistant Greg Gattuso became convinced after seeing Donald wreck a high-school scrimmage and pushed the Panthers to offer the local prospect.
+  - Source: ESPN — ESPN — “The incredible origin stories of young Aaron Donald” — https://www.espn.com/nfl/story/_/id/34488139/aaron-donald-los-angeles-rams
+- **`cfb-aaron-donald--two-way-high-school-line`** — At Penn Hills, Donald was not only a defensive lineman; he also started on the offensive line at guard.
+  - Source: Pitt Athletics — Pitt Athletics — Aaron Donald biography — https://pittsburghpanthers.com/sports/football/roster/aaron-donald/1442
+- **`cfb-aaron-donald--pitt-return-and-gift`** — Donald kept an unusually strong tie to his hometown program after college, including offseason work at Pitt and a seven-figure gift supporting the Panthers’ football performance center.
+  - Source: Pitt Athletics — Pitt Athletics — Aaron Donald retired-jersey profile — https://pittsburghpanthers.com/sports/general/roster/aaron-donald/15151
+
+### `cfb-barry-sanders`
+
+- **`cfb-barry-sanders--roofing-with-father`** — Growing up in Wichita, Sanders spent hot summers doing roofing work with his father, William, before his college career.
+  - Source: National Football Foundation — National Football Foundation — Barry Sanders Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/barry-sanders/2129
+- **`cfb-barry-sanders--not-original-osu-target`** — Oklahoma State coaches were not initially visiting Wichita North specifically to recruit Sanders; his recruitment developed after they encountered his ability while evaluating the area.
+  - Source: Oklahoma State Athletics — Oklahoma State Athletics — “Barry Sanders Story” — https://okstate.com/news/2008/8/26/Barry_Sanders_Story
+- **`cfb-barry-sanders--behind-thurman-thomas`** — Sanders spent his first two Oklahoma State seasons behind Thurman Thomas and made himself valuable in other ways, including becoming an elite kickoff returner before taking over the backfield.
+  - Source: National Football Foundation — National Football Foundation — Barry Sanders Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/barry-sanders/2129
+- **`cfb-barry-sanders--declined-high-school-record-chase`** — In high school, Sanders passed up a chance to chase an individual rushing record when his team already had a game safely in hand.
+  - Source: National Football Foundation — National Football Foundation — Barry Sanders Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/barry-sanders/2129
+- **`cfb-barry-sanders--no-celebration-style`** — Sanders became known for scoring without showmanship: he typically handed the ball to an official rather than dancing, taunting, or staging a celebration.
+  - Source: National Football Foundation — National Football Foundation — Barry Sanders Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/barry-sanders/2129
+
+### `cfb-billy-cannon`
+
+- **`cfb-billy-cannon--power-speed-two-way`** — Cannon combined unusual size with elite sprint speed and played on both offense and defense for LSU rather than functioning only as a featured runner.
+  - Source: LSU Athletics — LSU Athletics — Billy Cannon statue biography — https://lsusports.net/news/2017/08/03/211659241
+- **`cfb-billy-cannon--halloween-run`** — On Halloween night in 1959, Cannon produced the play most permanently associated with his LSU identity: an 89-yard punt return against Ole Miss in Tiger Stadium.
+  - Source: National Football Foundation — National Football Foundation — Billy Cannon feature — https://footballfoundation.org/news/2008/10/26/_51860.aspx
+- **`cfb-billy-cannon--sugar-bowl-do-everything`** — In LSU’s 7-0 Sugar Bowl win after the 1958 season, Cannon threw the game’s touchdown pass and kicked the extra point, illustrating how many jobs he handled.
+  - Source: LSU Athletics — LSU Athletics — Billy Cannon statue biography — https://lsusports.net/news/2017/08/03/211659241
+- **`cfb-billy-cannon--dentistry-during-pro-career`** — Cannon continued academic work during summers while playing professionally, earned a dental degree, and built a second career in dentistry and orthodontics.
+  - Source: LSU Athletics — LSU Athletics — Billy Cannon Hall of Fame feature — https://lsusports.net/news/2008/11/18/1627946
+- **`cfb-billy-cannon--counterfeiting-conviction`** — After football, Cannon pleaded guilty in a federal counterfeiting case and served prison time before rebuilding his life and professional reputation.
+  - Source: LSU Press / LSU Athletics — LSU Press / LSU Athletics — “Billy Cannon: A Long, Long Run” background — https://lsusports.net/news/2015/09/01/210307713
+
+### `bobby-bowden-cfb`
+
+- **`bobby-bowden--rheumatic-fever-radio`** — At 13, Bowden developed rheumatic fever, spent months hospitalized and more than a year largely confined to bed, and passed time listening to World War II reports and Alabama football on the radio.
+  - Source: Florida State Athletics — Florida State Athletics — “Bobby Bowden: 500 and Counting” — https://seminoles.com/news/2008/10/1/bobby-bowden-500-and-counting
+- **`bobby-bowden--marriage-forced-alabama-transfer`** — Bowden eloped with his high-school sweetheart, Ann Estock, while at Alabama; because Alabama then did not permit married football players, he transferred to Howard College, now Samford.
+  - Source: National Football Foundation — National Football Foundation — Bobby Bowden Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/bobby-bowden/2189
+- **`bobby-bowden--football-and-track-coaching-start`** — At the start of his coaching career, Bowden did more than assist in football: he also served as a head track coach, and at South Georgia Junior College he held both head-football and athletic-administration responsibilities.
+  - Source: Florida State Athletics — Florida State Athletics — Bobby Bowden obituary/legacy profile — https://seminoles.com/news/2021/8/8/florida-states-legendary-football-coach-bobby-bowden-passes-away
+- **`bobby-bowden--bear-bryant-idol`** — Bowden openly idolized Bear Bryant and for years imagined eventually following Bryant at Alabama.
+  - Source: Florida State Athletics — Florida State Athletics — Alabama/FSU history — https://seminoles.com/news/2017/8/31/noles-and-tide-share-lengthy-legendary-history
+- **`bobby-bowden--hall-rule-changed-for-him`** — The National Football Foundation modified its coaching eligibility rule so an active coach at least 75 years old could be inducted, allowing Bowden to enter the College Football Hall of Fame while still coaching.
+  - Source: National Football Foundation — National Football Foundation — Bobby Bowden Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/bobby-bowden/2189
+
+### `cfb-calvin-johnson`
+
+- **`cfb-calvin-johnson--butterfingers-to-blistered-hands`** — Johnson started organized football relatively late and was initially teased with the nickname “Butterfingers”; he responded by drilling catches until his hands blistered.
+  - Source: Georgia Tech Athletics — Georgia Tech Athletics — College Football Hall of Fame profile — https://ramblinwreck.com/news/2016/08/24/hall-of-fame-profile-calvin-johnson
+- **`cfb-calvin-johnson--five-inch-growth-spurt`** — Johnson grew roughly five inches between his freshman and sophomore years of high school, rapidly changing the physical profile coaches saw.
+  - Source: Georgia Tech Athletics — Georgia Tech Athletics — College Football Hall of Fame profile — https://ramblinwreck.com/news/2016/08/24/hall-of-fame-profile-calvin-johnson
+- **`cfb-calvin-johnson--academic-family`** — Johnson grew up in an academically intense family: his mother was an educator who earned two doctorates, while his siblings also pursued demanding professional paths.
+  - Source: Georgia Tech Athletics — Georgia Tech Athletics — College Football Hall of Fame profile — https://ramblinwreck.com/news/2016/08/24/hall-of-fame-profile-calvin-johnson
+- **`cfb-calvin-johnson--first-day-vertical-record`** — On his first official day at Georgia Tech, Johnson reportedly broke the program’s vertical-jump record with a 42-inch leap, immediately signaling to veteran teammates that he was different.
+  - Source: Georgia Tech Athletics — Georgia Tech Athletics — College Football Hall of Fame profile — https://ramblinwreck.com/news/2016/08/24/hall-of-fame-profile-calvin-johnson
+- **`cfb-calvin-johnson--all-hands-recruiting-visit`** — When recruiting opened, Georgia Tech sent all seven of its road coaches to Johnson’s home; he ultimately chose Tech for the mix of academics, football, and proximity to home.
+  - Source: National Football Foundation — National Football Foundation — Calvin Johnson Hall of Fame profile — https://footballfoundation.org/news/2018/11/9/2018-college-football-hall-of-fame-profile-calvin-johnson.aspx
+
+### `cfb-chase-young`
+
+- **`cfb-chase-young--six-year-old-quarterback`** — At about six years old, Young played quarterback against older children and was expected to learn a playbook of roughly 21 plays, an unusually early introduction to understanding an offense.
+  - Source: The Washington Post — The Washington Post — Chase Young inner-circle profile — https://www.washingtonpost.com/sports/2020/09/10/chase-young-washington-nfl-inner-circle/
+- **`cfb-chase-young--father-accountability`** — Young’s father, Greg, emphasized chores, discipline, and self-sufficiency and made clear that he would act as a father rather than simply as a fan when evaluating Chase’s play.
+  - Source: The Washington Post — The Washington Post — Chase Young leadership profile — https://www.washingtonpost.com/sports/2021/01/01/chase-young-leader-washington-football-team/
+- **`cfb-chase-young--ian-thomas-mentor`** — Young met trainer and mentor Ian Thomas while still in middle school, creating a long-term developmental relationship before he became an elite recruit.
+  - Source: The Washington Post — The Washington Post — Chase Young inner-circle profile — https://www.washingtonpost.com/sports/2020/09/10/chase-young-washington-nfl-inner-circle/
+- **`cfb-chase-young--track-for-football-speed`** — After his senior football season at DeMatha, Young joined track and ran the 100 and 200 meters because his coach believed sprint training could improve his explosion and first step for football.
+  - Source: The Washington Post — The Washington Post — Chase Young draft profile — https://www.washingtonpost.com/sports/2020/04/22/chase-young-nfl-draft-sure-thing-markelle-fultz-advice/
+- **`cfb-chase-young--rose-bowl-travel-loan-suspension`** — Ohio State held Young out for two games in 2019 over an NCAA eligibility issue involving a personal loan that ESPN reported was used to help his girlfriend attend the Rose Bowl; the loan was repaid.
+  - Source: ESPN — ESPN — Chase Young suspension/return report — https://www.espn.com/college-football/story/_/id/28072754/buckeyes-chase-young-suspended-vs-rutgers-return
+
+### `cfb-davey-obrien`
+
+- **`cfb-davey-obrien--gaston-avenue-bulldogs`** — As a boy in Dallas, O’Brien quarterbacked a neighborhood sandlot team called the Gaston Avenue Bulldogs.
+  - Source: Davey O’Brien Foundation — Davey O’Brien Foundation — About Davey O’Brien — https://www.daveyobrienaward.com/about-davey-obrien
+- **`cfb-davey-obrien--tiny-high-school-quarterback`** — O’Brien was only about 5-foot-7 and 118 pounds when he became an all-state high-school quarterback, succeeding despite dimensions that would normally push a player away from the position.
+  - Source: Davey O’Brien Foundation — Davey O’Brien Foundation — About Davey O’Brien — https://www.daveyobrienaward.com/about-davey-obrien
+- **`cfb-davey-obrien--behind-sammy-baugh`** — At TCU, O’Brien first waited behind Sammy Baugh before succeeding him at quarterback.
+  - Source: National Football Foundation — National Football Foundation — Davey O’Brien Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/davey-o-brien/2282
+- **`cfb-davey-obrien--heisman-stagecoach-arrival`** — When O’Brien went to New York to receive the Heisman, Fort Worth supporters arranged for a stagecoach to carry him to the Downtown Athletic Club.
+  - Source: Texas State Historical Association — Texas State Historical Association — Davey O’Brien entry — https://www.tshaonline.org/handbook/entries/obrien-robert-david-davey
+- **`cfb-davey-obrien--left-nfl-for-fbi`** — O’Brien left professional football after only two seasons to join the FBI, eventually serving as a firearms instructor at Quantico before later working in business.
+  - Source: Davey O’Brien Foundation — Davey O’Brien Foundation — About Davey O’Brien — https://www.daveyobrienaward.com/about-davey-obrien
+
+### `cfb-derrick-thomas`
+
+- **`cfb-derrick-thomas--father-lost-in-vietnam`** — Thomas was five when his father, Air Force Capt. Robert Thomas, disappeared on a B-52 mission over North Vietnam; Derrick later researched the mission and spoke publicly in connection with the Vietnam Veterans Memorial.
+  - Source: Los Angeles Times — Los Angeles Times — Derrick Thomas Memorial Day profile — https://www.latimes.com/archives/la-xpm-1993-06-01-sp-42034-story.html
+- **`cfb-derrick-thomas--dade-marine-turning-point`** — After serious trouble as a teenager, Thomas went through the Dade Marine Institute juvenile program, a turning point commonly credited with helping redirect his energy toward school and football.
+  - Source: Encyclopedia.com — Encyclopedia.com — Derrick Thomas biography — https://www.encyclopedia.com/people/sports-and-games/sports-biographies/derrick-thomas
+- **`cfb-derrick-thomas--high-school-skill-positions`** — Before becoming identified almost exclusively as a linebacker/pass rusher, Thomas played tight end and running back at South Miami High.
+  - Source: Legacy.com obituary drawing on contemporary biographical record — Legacy.com obituary drawing on contemporary biographical record — https://www.legacy.com/us/obituaries/name/derrick-thomas-obituary?pid=4206
+- **`cfb-derrick-thomas--kentucky-leadership-moment`** — During Alabama’s 1988 game with Kentucky, Thomas vocally challenged teammates not to accept losing and then produced impact plays on defense and special teams as the Tide rallied.
+  - Source: Alabama Athletics — Alabama Athletics — “Remembering Derrick Thomas” — https://rolltide.com/news/2014/9/12/Remembering_Derrick_Thomas
+- **`cfb-derrick-thomas--third-and-long-literacy`** — Thomas created the Third and Long Foundation, using his football platform to support children’s literacy and related community work in Kansas City.
+  - Source: Kansas City Chiefs — Kansas City Chiefs — “Remembering Derrick Thomas: 1967–2000” — https://www.chiefs.com/news/remembering-derrick-thomas-1967-2000-9557631
+
+### `cfb-doak-walker`
+
+- **`cfb-doak-walker--grew-up-in-smu-shadow`** — Walker’s father was a teacher and coach, threw passes to him from the time he was very young, and the family lived close enough to SMU that Doak attended games and even sold popcorn and peanuts there.
+  - Source: Texas State Historical Association — Texas State Historical Association — Doak Walker entry — https://www.tshaonline.org/handbook/entries/walker-ewell-doak-jr
+- **`cfb-doak-walker--five-sport-with-bobby-layne`** — Walker lettered in five sports at Highland Park and shared the football backfield with future Hall of Fame quarterback Bobby Layne; the two later reunited professionally.
+  - Source: Heisman — Heisman — Doak Walker biography — https://www.heisman.com/heisman-winners/doak-walker/
+- **`cfb-doak-walker--merchant-marine-and-army`** — Immediately after high school Walker joined the Merchant Marine as a radio operator, then after beginning at SMU his college career was interrupted again when he was drafted into the Army in 1946.
+  - Source: Texas State Historical Association — Texas State Historical Association — Doak Walker entry — https://www.tshaonline.org/handbook/entries/walker-ewell-doak-jr
+- **`cfb-doak-walker--last-minute-smu-choice`** — Walker nearly followed Bobby Layne to Texas, but after attending an SMU game in New Orleans his former high-school coach Rusty Russell, then an SMU assistant, persuaded him to ride back with the Mustangs; Walker enrolled at SMU the next Monday.
+  - Source: Heisman — Heisman — Doak Walker biography — https://www.heisman.com/heisman-winners/doak-walker/
+- **`cfb-doak-walker--asked-colliers-to-honor-someone-else`** — After an injury-plagued senior season, Walker asked Collier’s not to repeat him as an All-American and to recognize a more deserving player; the magazine instead honored his sportsmanship.
+  - Source: Texas State Historical Association — Texas State Historical Association — Doak Walker entry — https://www.tshaonline.org/handbook/entries/walker-ewell-doak-jr
+
+### `cfb-ed-reed`
+
+- **`cfb-ed-reed--destrehan-utilityman`** — At Destrehan High, Reed played an extraordinary range of football roles — including quarterback, running back, returner, cornerback, safety, kicker, and punter — before becoming known as a safety.
+  - Source: ESPN — ESPN — “Ed Reed, hiding in plain sight” — https://www.espn.com/nfl/playoffs/2012/story/_/id/8892504/super-bowl-xlvii-ed-reed-hiding-plain-sight
+- **`cfb-ed-reed--second-family-academic-turn`** — As a teenager Reed asked academic adviser Jeanne Hall if he could stay with her family because he believed the structure would help him attend class and do his schoolwork; his parents supported the arrangement.
+  - Source: ESPN — ESPN — “Ed Reed, hiding in plain sight” — https://www.espn.com/nfl/playoffs/2012/story/_/id/8892504/super-bowl-xlvii-ed-reed-hiding-plain-sight
+- **`cfb-ed-reed--multi-sport-track-javelin`** — Reed was a genuine multi-sport athlete, competing in basketball, baseball, and track events ranging from sprints and jumps to the javelin; he later competed in track at Miami as well.
+  - Source: Miami Athletics — Miami Athletics — Edward Reed player biography — https://miamihurricanes.com/sports/football/roster/player/edward-reed
+- **`cfb-ed-reed--underrecruited-miami-find`** — Reed later described himself as a two-star recruit; Miami discovered him while scholarship sanctions forced the staff to search creatively, and he chose the Hurricanes over a field that included several smaller Louisiana programs.
+  - Source: Miami Herald — Miami Herald — Ed Reed recruitment oral history — https://www.miamiherald.com/sports/college/acc/university-of-miami/article233176931.html
+- **`cfb-ed-reed--hurt-dawg-halftime-leadership`** — In the 2001 Florida State game, an injured Reed delivered the now-famous halftime challenge to Miami teammates demanding that they play to their standard; teammates later described that intensity as typical of his leadership.
+  - Source: Miami Athletics — Miami Athletics — Jaquan Johnson / Ed Reed leadership retrospective — https://miamihurricanes.com/news/2018/10/12/football-johnsons-words-and-actions-lead-canes-to-uva
+
+### `cfb-herschel-walker`
+
+- **`cfb-herschel-walker--bullied-to-self-trained`** — Walker has described being bullied in rural Georgia for being overweight and having a severe stutter; without weight equipment, he responded with an extreme self-directed regimen of push-ups, sit-ups, sprinting, and resistance work.
+  - Source: ESPN Press Room — ESPN Press Room — “Herschel” documentary background — https://espnpressroom.com/press-release/new-sec-storied-documentary-series-slated-for-espnu-herschel-set-for-september-7/
+- **`cfb-herschel-walker--track-first-love`** — Even after becoming a football star, Walker called track his first love, competed for Georgia in sprint events, and publicly said an Olympic gold medal appealed to him more than a Heisman.
+  - Source: UPI Archives — UPI Archives — Herschel Walker track/Olympic profile — https://www.upi.com/Archives/1981/12/12/Georgias-All-America-running-back-Herschel-Walker-has-two-goals/7243376981200/
+- **`cfb-herschel-walker--epic-delayed-recruitment`** — Walker’s 1980 recruitment stretched well beyond signing day; Georgia assistants effectively camped in Wrightsville to remain visible, and the pursuit was so intense that Vince Dooley had accelerated a women’s track scholarship opportunity for Walker’s sister Veronica.
+  - Source: ESPN — ESPN — oral history of Walker’s 1980 Tennessee debut — https://www.espn.com/espn/feature/story/_/id/13829698/when-georgia-herschel-walker-ran-tennessee-bill-bates-oral-history
+- **`cfb-herschel-walker--schoolwork-before-signing`** — Walker was an excellent student who took academics seriously enough that he would not sign his Georgia letter of intent until he had finished a term paper.
+  - Source: The Washington Post — The Washington Post — “Walker Full of Surprises” — https://www.washingtonpost.com/archive/sports/1980/10/14/walker-full-of-surprises/23ee51ea-c341-45e7-b867-bb6202a5a54c/
+- **`cfb-herschel-walker--bill-bates-debut-run`** — In his first college game at Tennessee in 1980, Walker announced himself nationally by running through safety Bill Bates on a touchdown, a play that became permanently linked to his Georgia identity.
+  - Source: Georgia Athletics — Georgia Athletics — “40-for-80: The Sweetest Season — Tennessee Game” — https://georgiadogs.com/news/2020/9/8/40-for-80-the-sweetest-season-tennessee-game
+
+### `cfb-joe-burrow`
+
+- **`cfb-joe-burrow--football-coaching-family`** — Burrow grew up inside a football family: his father Jimmy coached throughout Joe’s childhood, and older brothers Jamie and Dan played at Nebraska; Joe was born in Ames, Iowa, during one of his father’s coaching stops.
+  - Source: LSU Athletics — LSU Athletics — Joe Burrow biography — https://lsusports.net/sports/fb/roster/player/joe-burrow
+- **`cfb-joe-burrow--basketball-point-guard`** — Burrow was an all-state high-school point guard and good enough to draw college basketball interest before committing fully to football.
+  - Source: LSU Athletics — LSU Athletics — Joe Burrow biography — https://lsusports.net/sports/fb/roster/player/joe-burrow
+- **`cfb-joe-burrow--nebraska-did-not-offer`** — Despite his family’s Nebraska connection, the Cornhuskers did not make Burrow a priority recruit; Ohio State’s Tom Herman identified him and helped turn that overlooked profile into a Buckeye offer.
+  - Source: ESPN — ESPN — Joe Burrow and Ohio football profile — https://www.espn.com/nfl/story/_/id/29030485/can-nfl-draft-lead-joe-burrow-bengals-another-ohio-revival
+- **`cfb-joe-burrow--lost-osu-job-then-lsu-transfer`** — After losing Ohio State’s 2018 quarterback competition to Dwayne Haskins, Burrow graduated and transferred to LSU, where teammates initially encountered him as an intense, businesslike outsider rather than an established locker-room star.
+  - Source: ESPN — ESPN — Joe Burrow LSU transfer retrospective — https://www.espn.com/nfl/story/_/id/41346139/joe-burrow-nfl-cincinnati-bengals
+- **`cfb-joe-burrow--destroyed-second-place-trophy`** — Burrow’s family has recalled his childhood competitiveness through an incident in which he took apart a second-place baseball trophy rather than celebrate finishing second.
+  - Source: LSU Athletics — LSU Athletics — “That’s Joe” — https://lsusports.net/news/2019/11/13/thats-joe-burrow-lsu-quarterback-heisman-contender
+
+### `cfb-justin-blackmon`
+
+- **`cfb-justin-blackmon--two-way-and-return-football`** — At Plainview High, Blackmon played both receiver and defensive back and also made impact plays in the return game rather than specializing only as a pass catcher.
+  - Source: Oklahoma State Athletics — Oklahoma State Athletics — Justin Blackmon bio — https://okstate.com/news/2009/3/24/Justin_Blackmon_Bio
+- **`cfb-justin-blackmon--basketball-and-long-jump`** — Blackmon was a serious multi-sport athlete: he was a conference MVP in basketball and a state champion in the long jump.
+  - Source: Oklahoma State Athletics — Oklahoma State Athletics — “From Redshirt to the NFL: Justin Blackmon’s Journey to OSU’s Hall of Honor” — https://okstate.com/news/2023/9/14/cowboy-football-from-redshirt-to-the-nfl-justin-blackmons-journey-to-osus-hall-of-honor
+- **`cfb-justin-blackmon--class-president`** — Blackmon served as his high-school class president.
+  - Source: Oklahoma State Athletics — Oklahoma State Athletics — Justin Blackmon bio — https://okstate.com/news/2009/3/24/Justin_Blackmon_Bio
+- **`cfb-justin-blackmon--drummer`** — Blackmon played drums in high school in addition to his sports commitments.
+  - Source: Oklahoma State Athletics — Oklahoma State Athletics — Justin Blackmon bio — https://okstate.com/news/2009/3/24/Justin_Blackmon_Bio
+- **`cfb-justin-blackmon--quiet-arrival-before-breakout`** — Blackmon arrived at Oklahoma State without the national recruiting attention of many future stars, redshirted, and saw only a limited offensive role before his sudden emergence.
+  - Source: Oklahoma State Athletics — Oklahoma State Athletics — “From Redshirt to the NFL: Justin Blackmon’s Journey to OSU’s Hall of Honor” — https://okstate.com/news/2023/9/14/cowboy-football-from-redshirt-to-the-nfl-justin-blackmons-journey-to-osus-hall-of-honor
+
+### `cfb-larry-fitzgerald`
+
+- **`cfb-larry-fitzgerald--vikings-ball-boy`** — As a teenager in Minnesota, Fitzgerald worked as a Vikings ball boy while his father covered the team as a sports journalist.
+  - Source: Minnesota Vikings — Minnesota Vikings — Larry Fitzgerald ball-boy retrospective — https://www.vikings.com/news/larry-fitzgerald-ball-boy-pro-football-hall-of-fame-randy-moss
+- **`cfb-larry-fitzgerald--carter-moss-mentorship`** — That ball-boy access became mentorship: Fitzgerald learned from Cris Carter and Randy Moss and later traveled to work with them during summers.
+  - Source: ESPN/AP — ESPN/AP — Larry Fitzgerald on Cris Carter and Randy Moss — https://www.espn.com/nfl/news/story?id=5359007
+- **`cfb-larry-fitzgerald--valley-forge-military-academy`** — Academic struggles prevented Fitzgerald from going straight into Division I football, so he spent a year at Valley Forge Military Academy, where he adapted to strict military routines and discipline.
+  - Source: ESPN The Magazine archive — ESPN The Magazine archive — Larry Fitzgerald profile — https://africa.espn.com/espn/magazine/archives/news/story?page=magazine-20040426-article17
+- **`cfb-larry-fitzgerald--promise-to-mother`** — Fitzgerald’s mother, Carol, battled breast cancer and died while he was at Pitt; he promised her he would finish college, a commitment he later fulfilled after his playing career had begun.
+  - Source: ESPN — ESPN — Fitzgerald family education profile — https://www.espn.com/blog/arizona-cardinals/post/_/id/20582/education-was-a-priority-for-larry-fitzgeralds-family-long-before-he-received-degree
+- **`cfb-larry-fitzgerald--barry-sanders-celebration-model`** — Fitzgerald has explained that as a Vikings ball boy he watched Barry Sanders simply hand the ball to officials after scores and adopted the same no-showboating approach.
+  - Source: ESPN — ESPN — Fitzgerald/Vikings stadium retrospective — https://www.espn.com/blog/arizona-cardinals/post/_/id/23305/new-vikings-stadium-may-be-good-luck-for-larry-fitzgerald
+
+### `cfb-manti-teo`
+
+- **`cfb-manti-teo--eagle-scout-service`** — Te’o earned Eagle Scout recognition and was active in service work that included Special Olympics and Head Start activities before and during his Notre Dame profile.
+  - Source: Notre Dame Athletics — Notre Dame Athletics — Manti Te’o player biography — https://fightingirish.com/roster/manti-teo/
+- **`cfb-manti-teo--bush-push-first-notre-dame-memory`** — Te’o said he knew little about Notre Dame early in recruiting and that the first Irish game he remembered watching was the 2005 “Bush Push” game, when he was actually rooting for USC; he later chose Notre Dame.
+  - Source: Notre Dame Athletics — Notre Dame Athletics — Manti Te’o press conference transcript — https://fightingirish.com/manti-teo-press-conference-transcript/
+- **`cfb-manti-teo--hawaiian-elder-respect-leadership`** — As a young Notre Dame player, Te’o initially hesitated to accept a leadership role because the Hawaiian culture in which he was raised taught him to defer to elders and upperclassmen.
+  - Source: Notre Dame Athletics — Notre Dame Athletics — “Strong of Heart: Manti Te’o” — https://fightingirish.com/strong-of-heart-manti-teo-3/
+- **`cfb-manti-teo--declan-sullivan-response`** — After student videographer Declan Sullivan was fatally injured during a Notre Dame practice, Te’o rushed toward the scene, prayed nearby, and later took part in supporting Sullivan’s family.
+  - Source: Notre Dame Athletics — Notre Dame Athletics — “Strong of Heart: Manti Te’o” — https://fightingirish.com/strong-of-heart-manti-teo-3/
+- **`cfb-manti-teo--catfishing-hoax`** — During Te’o’s senior season, the woman he had publicly described as a deceased girlfriend was revealed not to have existed; Notre Dame said its investigation found Te’o had been the victim of an online hoax, while Te’o later acknowledged that he had sometimes spoken as if the two had met in person when they had not.
+  - Source: ESPN — ESPN — Manti Te’o hoax reporting and follow-up interview — https://www.espn.com/college-football/story/_/id/8851033/story-manti-teo-girlfriend-death-apparently-hoax
+
+### `cfb-michael-crabtree`
+
+- **`cfb-michael-crabtree--high-school-quarterback`** — Crabtree was a quarterback at Dallas Carter High before becoming a college wide receiver.
+  - Source: Texas Tech Athletics — Texas Tech Athletics — “The Real King Crab” — https://texastech.com/news/2014/11/26/The_Real_King_Crab
+- **`cfb-michael-crabtree--refused-defensive-back-path`** — Several major programs evaluated Crabtree as a defensive back, but he was adamant that he wanted to catch touchdowns; Texas Tech gave him the chance to develop as a receiver.
+  - Source: Texas Tech Athletics — Texas Tech Athletics — “The Real King Crab” — https://texastech.com/news/2014/11/26/The_Real_King_Crab
+- **`cfb-michael-crabtree--academic-eligibility-fight`** — Crabtree has discussed how academic problems nearly kept him from making it to college and how he had to improve his grades to preserve the opportunity.
+  - Source: Texas Tech Athletics — Texas Tech Athletics — “The Real King Crab” — https://texastech.com/news/2014/11/26/The_Real_King_Crab
+- **`cfb-michael-crabtree--texas-last-second-catch`** — Crabtree’s last-second touchdown against No. 1 Texas in 2008 became the single college play most permanently attached to his identity.
+  - Source: Texas Tech Athletics — Texas Tech Athletics — “The Real King Crab” — https://texastech.com/news/2014/11/26/The_Real_King_Crab
+- **`cfb-michael-crabtree--dallas-and-tech-giveback`** — After becoming established, Crabtree created youth football/community efforts in Dallas and funded a Texas Tech scholarship tied to his former position group.
+  - Source: Texas Tech Athletics — Texas Tech Athletics — “The Real King Crab” — https://texastech.com/news/2014/11/26/The_Real_King_Crab
+
+### `cfb-nndamukong-suh`
+
+- **`cfb-ndamukong-suh--house-of-spears-name`** — Suh’s family background spans Cameroon and Jamaica; his father is from Cameroon’s Ngema tribe, and his first name has been explained as meaning “House of Spears.”
+  - Source: Nebraska Athletics — Nebraska Athletics — Ndamukong Suh player biography — https://huskers.com/sports/football/roster/player/ndamukong-suh
+- **`cfb-ndamukong-suh--two-way-and-shot-put`** — In high school Suh played both offensive and defensive line, also played basketball, and became an Oregon state champion in the shot put.
+  - Source: Nebraska Athletics — Nebraska Athletics — Ndamukong Suh player biography — https://huskers.com/sports/football/roster/player/ndamukong-suh
+- **`cfb-ndamukong-suh--freshman-knee-redshirt`** — Suh’s first Nebraska season was derailed by a knee injury that required surgery and led to a medical redshirt.
+  - Source: Nebraska Athletics — Nebraska Athletics — “Always a Husker” first-person retrospective — https://huskers.com/news/2024/10/4/always-a-husker
+- **`cfb-ndamukong-suh--mother-pushed-degree-return`** — Suh has said he was prepared to leave for the NFL after 2008, but his mother strongly emphasized finishing his degree, helping drive his decision to return to Nebraska for 2009.
+  - Source: Nebraska Athletics — Nebraska Athletics — “Always a Husker” first-person retrospective — https://huskers.com/news/2024/10/4/always-a-husker
+- **`cfb-ndamukong-suh--four-foot-cage-drill`** — Nebraska used a roughly four-foot-high practice “cage” with Suh to force him to stay low and improve pad level despite his height.
+  - Source: Nebraska Athletics — Nebraska Athletics — “Suh Doing It All for Blackshirts” — https://huskers.com/news/2008/11/14/suh-doing-it-all-for-blackshirts
+
+### `cfb-orlando-pace`
+
+- **`cfb-orlando-pace--sandusky-basketball-athlete`** — Pace grew up in Sandusky, Ohio, playing multiple sports and was a legitimate high-school basketball standout despite his enormous football-line size.
+  - Source: Ohio High School Athletic Association — Ohio High School Athletic Association — Orlando Pace Circle of Champions profile — https://www.ohsaa.org/Sports/News/2026-ohsaa-circle-of-champions-orlando-pace
+- **`cfb-orlando-pace--freshman-day-one-starter`** — Pace seized an Ohio State starting tackle job from his first preseason camp as a true freshman.
+  - Source: Ohio State Athletics — Ohio State Athletics — Orlando Pace Pro Football Hall of Fame induction profile — https://ohiostatebuckeyes.com/news/2016/8/6/orlando-pace-11th-buckeye-enshrined-into-pro-football-hall-of-fame
+- **`cfb-orlando-pace--pancake-promotion`** — Ohio State publicist Steve Snapp turned Pace’s habit of flattening defenders into a “pancake” promotional campaign, including refrigerator magnets sent to Heisman voters and a lighthearted pancake-themed video.
+  - Source: ESPN — ESPN — “The legend of Orlando Pace” — https://www.espn.com/college-football/story/_/id/32008731/the-legend-orlando-pace-most-dominant-lineman-college-football-history
+- **`cfb-orlando-pace--big-man-conditioning`** — Ohio State teammates remembered Pace as an outlier even in conditioning: at roughly 330 pounds he could handle distance runs with players far smaller and then show legitimate basketball skill during downtime.
+  - Source: ESPN — ESPN — “The legend of Orlando Pace” — https://www.espn.com/college-football/story/_/id/32008731/the-legend-orlando-pace-most-dominant-lineman-college-football-history
+- **`cfb-orlando-pace--goal-line-defense-cameos`** — Ohio State occasionally put Pace on the defensive line in goal-line situations during his junior season, briefly reversing his normal role.
+  - Source: ESPN — ESPN — “The legend of Orlando Pace” — https://www.espn.com/college-football/story/_/id/32008731/the-legend-orlando-pace-most-dominant-lineman-college-football-history
+
+### `pete-carroll-cfb`
+
+- **`pete-carroll--three-sport-juco-path`** — Carroll was a three-sport high-school athlete, played multiple football positions, then continued through junior college before becoming a free safety at Pacific.
+  - Source: USC Athletics — USC Athletics — Pete Carroll coach biography — https://usctrojans.com/sports/football/roster/coaches/pete-carroll/343
+- **`pete-carroll--bob-troppmann-mentor`** — Carroll has credited high-school coach Bob Troppmann as a foundational mentor; he worked Troppmann’s camp for years and later called him from the USC sideline before games.
+  - Source: Los Angeles Times — Los Angeles Times — Pete Carroll high-school years — https://www.latimes.com/archives/blogs/sports-now/story/2009-04-08/pete-carroll-the-high-school-years
+- **`pete-carroll--firings-triggered-philosophy-reset`** — After being fired as head coach of both the Jets and Patriots, Carroll used time away from coaching to reorganize his beliefs and decide what kind of program he would run if given another chance.
+  - Source: Los Angeles Times — Los Angeles Times — “The Right Fall Guy” / Carroll profile — https://www.latimes.com/archives/la-xpm-2005-jan-04-sp-carroll4-story.html
+- **`pete-carroll--maslow-inner-game-influences`** — Carroll’s coaching philosophy drew from sources outside football, including Abraham Maslow’s psychology and Timothy Gallwey’s “The Inner Game of Tennis,” eventually feeding his competition-centered “Win Forever” framework.
+  - Source: Los Angeles Times — Los Angeles Times — Carroll philosophy profile — https://www.latimes.com/archives/la-xpm-2005-jan-04-sp-carroll4-story.html
+- **`pete-carroll--a-better-la`** — While at USC, Carroll helped launch A Better LA, an organization aimed at reducing gang violence and improving conditions in Los Angeles neighborhoods.
+  - Source: USC Athletics — USC Athletics — Pete Carroll Hall of Fame profile — https://usctrojans.com/honors/usc-athletics-hall-of-fame/pete-carroll/225
+
+### `cfb-roger-staubach`
+
+- **`cfb-roger-staubach--high-school-position-switch`** — Staubach spent much of high school as a receiver and defensive back until coach Jim McCarthy pushed a reluctant Staubach to try quarterback; Staubach later said that change altered his life.
+  - Source: Horatio Alger Association — Horatio Alger Association — Roger Staubach biography — https://horatioalger.org/members/detail/roger-t-staubach/
+- **`cfb-roger-staubach--nmmi-before-navy`** — Staubach did not go straight to Annapolis: after falling short of the Naval Academy’s academic entrance standard, he spent a year at New Mexico Military Institute, where he lived as a cadet and competed in football, basketball, and baseball before entering Navy.
+  - Source: New Mexico Military Institute / PR Newswire — New Mexico Military Institute / PR Newswire — Staubach NJCAA Hall of Fame induction — https://www.prnewswire.com/news-releases/roger-staubach-inducted-into-njcaa-hall-of-fame-300318703.html
+- **`cfb-roger-staubach--cornell-breakthrough`** — Staubach began his Navy varsity career down the quarterback depth chart, but when the offense sputtered in 1962 he came off the bench against Cornell and directed six touchdown drives, effectively forcing his way into the starting role.
+  - Source: Naval Academy Athletics — Naval Academy Athletics — Navy-Marine Corps Memorial Stadium history — https://navysports.com/news/2009/9/16/come_be_a_part_of_history_on_saturday_sept_26.aspx
+- **`cfb-roger-staubach--the-dodger-nickname`** — At Navy, Staubach’s scrambling and elusiveness produced the nickname “The Dodger,” explicitly linked in Hall of Fame material to Dickens’ Artful Dodger.
+  - Source: National Football Foundation — National Football Foundation — Roger Staubach Hall of Fame profile — https://footballfoundation.org/hof_search.aspx?hof=1856
+- **`cfb-roger-staubach--volunteered-for-vietnam`** — After graduating from Navy, Staubach could have sought a stateside assignment but volunteered for a one-year Vietnam tour, serving as a Supply Corps officer at Chu Lai while continuing to train when duties allowed.
+  - Source: United States Navy — United States Navy — Staubach/Goshawks service retrospective — https://www.navy.mil/Press-Office/News-Stories/Article/2254588/hall-of-fame-quarterback-remembers-goshawks-playing-time/
+
+### `steve-spurrier-cfb`
+
+- **`steve-spurrier--minister-family-moves`** — Spurrier’s father was a Presbyterian minister, and the family moved from Florida to Charlotte and then to Johnson City, Tennessee, where Spurrier’s high-school athletic identity took shape.
+  - Source: Florida Athletics — Florida Athletics — “HBD to the HBC” — https://floridagators.com/news/2020/4/20/general-hbd-to-the-hbc
+- **`steve-spurrier--elite-three-sport-prep`** — Spurrier was exceptional in football, basketball, and baseball in high school; Florida’s historical material notes that he hit over .400 and never lost as a high-school pitcher.
+  - Source: Florida Athletics — Florida Athletics — Florida football greats profile — https://floridagators.com/news/2006/8/11/10741
+- **`steve-spurrier--tennessee-offense-pushed-him-to-florida`** — Tennessee recruited Spurrier but was still using a single-wing system that did not offer the passing role he wanted, helping drive him to Florida instead.
+  - Source: Florida Athletics — Florida Athletics — Spurrier legacy profile — https://floridagators.com/news/2017/12/1/chris-harry-spurrier-legacy-just-keeps-growing
+- **`steve-spurrier--quarterback-and-punter`** — At Florida, Spurrier handled punting duties in addition to playing quarterback.
+  - Source: National Football Foundation — National Football Foundation — Steve Spurrier player Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/steve-spurrier/1884
+- **`steve-spurrier--head-ball-coach-origin`** — Spurrier has explained that he used “ball coach” as a term of respect for good coaches; a friend turned that habit back on him by calling him the “Head Ball Coach,” and the nickname stuck.
+  - Source: Charlotte Observer — Charlotte Observer — Steve Spurrier interview — https://www.charlotteobserver.com/sports/sports-legends/article278261693.html
+
+### `cfb-tony-dorsett`
+
+- **`cfb-tony-dorsett--too-small-early-football`** — Dorsett was repeatedly doubted for his size as a young player: he recalled being cut from a youth team, and Hopewell initially used the roughly 147-pound sophomore at cornerback rather than making him its feature runner.
+  - Source: Sports Illustrated Vault — Sports Illustrated Vault — “You Need a T.D. in South Bend” — https://vault.si.com/vault/1976/09/20/you-need-a-td-in-south-bend
+- **`cfb-tony-dorsett--steel-mill-motivation`** — Dorsett said he decided he wanted to become a great football player after seeing his father come out of an Aliquippa steel mill covered in grime.
+  - Source: Sports Illustrated Vault — Sports Illustrated Vault — “You Need a T.D. in South Bend” — https://vault.si.com/vault/1976/09/20/you-need-a-td-in-south-bend
+- **`cfb-tony-dorsett--hawk-nickname-origin`** — Dorsett said his father called him “Hawkeye,” later shortened by teammates to “Hawk,” because of his wide-set eyes.
+  - Source: Sports Illustrated Vault — Sports Illustrated Vault — “You Need a T.D. in South Bend” — https://vault.si.com/vault/1976/09/20/you-need-a-td-in-south-bend
+- **`cfb-tony-dorsett--penn-state-db-vs-pitt-rb`** — Dorsett later recalled that he initially leaned toward Penn State, but Joe Paterno’s plan began with him at defensive back; Pitt’s Johnny Majors and Jackie Sherrill persisted in recruiting him for the backfield.
+  - Source: Altoona Mirror — Altoona Mirror — Tony Dorsett recruiting retrospective — https://www.altoonamirror.com/sports/local-sports/2015/07/dorsett-visit-stirs-memory/
+- **`cfb-tony-dorsett--media-friendly-sportscaster-ambition`** — As a Pitt star Dorsett was unusually accessible to reporters and said he wanted to become a sportscaster; before one Notre Dame game he did so many interviews that Johnny Majors temporarily shut down player media access.
+  - Source: Sports Illustrated Vault — Sports Illustrated Vault — “You Need a T.D. in South Bend” — https://vault.si.com/vault/1976/09/20/you-need-a-td-in-south-bend
+
+### `urban-meyer-cfb`
+
+- **`urban-meyer--minor-league-baseball-before-football-coaching`** — Meyer was drafted by the Atlanta Braves as a shortstop out of high school, spent two seasons in the minor leagues, then walked on as a defensive back at Cincinnati after his baseball path ended.
+  - Source: University of Cincinnati Magazine — University of Cincinnati Magazine — Urban Meyer alumni profile — https://magazine.uc.edu/issues/0607/meyer.html
+- **`urban-meyer--st-xavier-internship`** — While finishing at Cincinnati, Meyer took an internship assisting at St. Xavier High School, his first formal step into coaching before joining a college staff.
+  - Source: University of Cincinnati Magazine — University of Cincinnati Magazine — Urban Meyer alumni profile — https://magazine.uc.edu/issues/0607/meyer.html
+- **`urban-meyer--earle-bruce-father-figure`** — Earle Bruce gave Meyer his first college coaching job as an Ohio State graduate assistant and later rehired him at Colorado State; Meyer called Bruce the most influential man in his life other than his father.
+  - Source: Ohio State Athletics — Ohio State Athletics — “Ohio State Family Loses Coach Earle Bruce” — https://ohiostatebuckeyes.com/news/2018/4/20/ohio-state-family-loses-coach-earle-bruce
+- **`urban-meyer--notre-dame-launching-pad`** — Meyer has called his years as a Notre Dame assistant a “game changer” for his development; he worked under Lou Holtz and Bob Davie, mentored young assistant Dan Mullen, and learned how a major program was operated before becoming a head coach.
+  - Source: ESPN — ESPN — “For Ohio State’s Urban Meyer, Notre Dame was a launching pad” — https://www.espn.com/blog/ncfnation/post/_/id/123775/for-urban-meyer-notre-dame-was-a-launching-pad
+- **`urban-meyer--spread-built-by-study-trips`** — When building his offense, Meyer deliberately studied other staffs and systems — including ideas associated with Scott Linehan, Joe Tiller, Kevin Wilson/Randy Walker, and Rich Rodriguez — then blended them into his own run-oriented spread.
+  - Source: Jacksonville Jaguars — Jacksonville Jaguars — “Five Things: Urban Meyer” — https://www.jaguars.com/news/five-things-urban-meyer
+
+### `cfb-will-anderson-jr`
+
+- **`cfb-will-anderson-jr--youngest-with-five-sisters`** — Anderson grew up as the youngest of six children with five older sisters in a crowded household, and he has credited that family dynamic with toughening and shaping him.
+  - Source: Sports Illustrated — Sports Illustrated — Will Anderson family profile — https://www.si.com/college/2021/12/29/will-anderson-alabama-linebacker-family
+- **`cfb-will-anderson-jr--father-provoked-competitive-edge`** — Anderson’s father sometimes intentionally criticized his play from the sideline because he knew irritation would bring out a more aggressive competitive response.
+  - Source: Sports Illustrated — Sports Illustrated — Will Anderson family profile — https://www.si.com/college/2021/12/29/will-anderson-alabama-linebacker-family
+- **`cfb-will-anderson-jr--terminator-nickname-origin`** — At Alabama, quarterback Mac Jones dubbed Anderson “The Terminator” because of how relentlessly he pursued ballcarriers; Anderson had not seen the films and had to look up the reference before embracing it.
+  - Source: ESPN — ESPN — Will Anderson breakout profile — https://www.espn.com/college-football/story/_/id/32993231/will-anderson-alabama-pass-rusher-blazed-path-breakout
+- **`cfb-will-anderson-jr--kept-nil-hype-away`** — During his breakout 2021 season, Anderson intentionally avoided rushing into public NIL deals because he wanted to keep outside attention from interfering with football.
+  - Source: ESPN — ESPN — Will Anderson breakout profile — https://www.espn.com/college-football/story/_/id/32993231/will-anderson-alabama-pass-rusher-blazed-path-breakout
+- **`cfb-will-anderson-jr--late-recruiting-rise`** — Anderson’s recruiting profile rose dramatically late in high school, from a strong but not singular national prospect to one of the most coveted defenders in the class over a relatively short period.
+  - Source: Sports Illustrated — Sports Illustrated — Will Anderson family profile — https://www.si.com/college/2021/12/29/will-anderson-alabama-linebacker-family
+
+### `cfb-adrian-peterson`
+
+- **`all-day-nickname`** — Peterson’s father, Nelson, nicknamed him “A.D.” for “All Day” when he was young because of his seemingly endless energy.
+  - Source: ESPN — ESPN — https://www.espn.com/espnmag/story?id=3776345
+- **`brother-brian-tragedy`** — As a child, Peterson witnessed his older brother Brian being struck and killed by a drunk driver while Brian was riding a bicycle. Peterson has discussed the event as a major formative loss.
+  - Source: ESPN — ESPN — https://www.espn.com/espnmag/story?id=3647280
+- **`father-iowa-state-game`** — During Nelson Peterson’s incarceration, the 2006 Oklahoma–Iowa State game became the only high-school-or-college game he saw Adrian play in person. Peterson broke his collarbone while diving into the end zone at the end of a long touchdown run.
+  - Source: ESPN — ESPN — https://www.espn.com/nfl/draft07/columns/story?columnist=pasquarelli_len&id=2839618
+- **`elite-athletic-parents`** — Peterson came from an unusually athletic family: his mother, Bonita, was a decorated Texas high-school sprinter, while his father played college basketball.
+  - Source: ESPN — ESPN — https://www.espn.com/espnmag/story?id=3776345
+- **`palestine-summer-giveback`** — After leaving Palestine, Texas, Peterson repeatedly returned during summers for community events involving children, school supplies, health activities and youth sports.
+  - Source: ESPN — ESPN — https://www.espn.com/nfl/story/_/id/13432433/adrian-peterson-suspended-reality
+
+### `barry-switzer`
+
+- **`crossett-family-adversity`** — Switzer grew up in Crossett, Arkansas amid severe family instability: his father was imprisoned for illegal liquor activity and his mother later died by suicide.
+  - Source: ESPN — ESPN; The Washington Post — https://www.espn.com/college-football/story/_/id/41679128/barry-switzer-87-king-norman
+- **`naval-academy-army-path`** — Switzer received an appointment to the U.S. Naval Academy but instead accepted a football opportunity at Arkansas; after college he also served in the U.S. Army.
+  - Source: The Washington Post — The Washington Post; National Football Foundation — https://footballfoundation.org/honors/hall-of-fame/barry-switzer/2012
+- **`mildren-dinner-recruitment`** — While recruiting quarterback Jack Mildren, Switzer exploited differences in conference recruiting rules by repeatedly visiting the Mildren home, eating family dinners and even helping with dishes while Texas A&M was limited in its visits.
+  - Source: Sports Illustrated — Sports Illustrated — https://www.si.com/more-sports/2008/06/23/recruiting-main
+- **`wishbone-conversion`** — As Oklahoma’s offensive coordinator in 1970, Switzer pushed head coach Chuck Fairbanks to abandon the existing offense for the wishbone and learned details of the scheme from Texas assistant Emory Bellard despite Texas being a major rival.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/24175747/texas-iconic-wishbone-offense-50-influential-college-football
+- **`integration-recruiting-philosophy`** — Switzer aggressively recruited Black players from Texas and elsewhere at positions throughout Oklahoma’s roster, including quarterback, during an era when that remained far from routine in the region.
+  - Source: University of Oklahoma Athletics — University of Oklahoma Athletics — https://soonersports.com/news/2022/2/16/athletics-black-history-month-thomas-lott
+
+### `cfb-billy-sims`
+
+- **`st-louis-to-hooks-baseball`** — Sims was born in St. Louis and moved to tiny Hooks, Texas, to live with his grandmother around eighth grade. He initially cared more about baseball and the St. Louis Cardinals than football.
+  - Source: Heisman — Heisman — https://www.heisman.com/heisman-winners/billy-sims/
+- **`rural-work-ethic`** — As a teenager in Hooks, Sims performed jobs that included farm labor, hauling cotton, working at a gas station and cleaning the football stadium after games.
+  - Source: Heisman — Heisman — https://www.heisman.com/articles/charity-spotlight-the-billy-sims-foundation/
+- **`switzer-halftime-payphone`** — While Sims was leaning toward Baylor, Barry Switzer called him from a pay phone during halftime of an Oklahoma game at Colorado and continued recruiting him from there.
+  - Source: Sports Illustrated — Sports Illustrated — https://www.si.com/college/oklahoma/football/heisman-memories-how-did-billy-sims-ever-win-the-heisman-how-did-he-not-win-two
+- **`quit-ou-gas-station-return`** — After injury problems and frustration at Oklahoma, Sims left the program and went back to working at a gas station in Hooks before Switzer persuaded him to return.
+  - Source: Sports Illustrated — Sports Illustrated — https://www.si.com/college/oklahoma/football/heisman-memories-how-did-billy-sims-ever-win-the-heisman-how-did-he-not-win-two
+- **`boomer-heisman-ceremony`** — When Oklahoma quarterback Sam Bradford won the 2008 Heisman Trophy, Sims repeatedly shouted “Boomer” during the ceremony, with Bradford responding “Sooner.”
+  - Source: Big 12 Conference — Big 12 Conference — https://big12sports.com/news/2008/12/13/3632828.aspx?path=wbvball
+
+### `cfb-brock-bowers`
+
+- **`nine-am-sec-carpet-routes`** — Growing up in Napa, California, Bowers watched SEC football in the 9 a.m. Pacific window and repeatedly practiced sideline catches inside his house, leaving a visible path in the carpet.
+  - Source: Georgia Athletics — Georgia Athletics — https://georgiadogs.com/news/2023/10/3/football-brock-bowers-could-pass-for-a-georgian
+- **`covid-hill-training`** — California’s pandemic restrictions wiped out Bowers’s normal senior football season, so he continued training in Napa, including running routes and hills at Alston Park and sending workout material to Georgia’s staff.
+  - Source: ESPN — ESPN; Sports Illustrated — https://www.espn.com/college-football/story/_/id/32958232/college-football-playoff-2021-georgia-brock-bowers-knows-only-one-speed-fast
+- **`high-school-everywhere-role`** — Bowers’s high-school usage stretched well beyond tight end: he appeared as a receiver, running back, linebacker and returner, while also playing basketball.
+  - Source: Georgia Athletics — Georgia Athletics — https://georgiadogs.com/sports/football/roster/brock-bowers/7345
+- **`utah-state-athletic-family`** — His mother, DeAnna, was an All-America softball player at Utah State, his father Warren played offensive line there, and his sister Brianna also played college softball.
+  - Source: Georgia Athletics — Georgia Athletics — https://georgiadogs.com/news/2023/10/3/football-brock-bowers-could-pass-for-a-georgian
+- **`hunting-fishing-with-father`** — Hunting and fishing with his father were long-running parts of Bowers’s life away from football, including deer and duck hunting.
+  - Source: Georgia Athletics — Georgia Athletics — https://georgiadogs.com/news/2022/8/30/football-quick-chat-brock-bowers
+
+### `cfb-cam-newton`
+
+- **`first-auburn-night-memory`** — Newton first visited Auburn as a high-school recruit years before eventually enrolling and later recalled the nighttime atmosphere, including the eagle flight and crowd, as making a lasting impression.
+  - Source: Auburn Athletics — Auburn Athletics — https://auburntigers.com/news/2025/10/10/cam-newton-recalls-magical-2010-auburn-season
+- **`florida-blinn-auburn-path`** — Newton’s college route ran from Florida to Blinn College in junior college and then to Auburn; at Blinn he rebuilt his career before returning to the major-college level.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/news/story?id=5909569
+- **`laptop-case-turning-point`** — Newton was arrested at Florida in 2008 in a stolen-laptop case; police alleged he threw the laptop from a window. The charges were later dropped following completion of a pretrial intervention program, and Newton later publicly treated the episode as a turning point.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/news/story?id=5790626
+- **`auburn-visit-scheme-questions`** — On his Auburn recruitment, Newton focused heavily on how Gus Malzahn’s offense would actually use him and discussed unusually ambitious goals that included becoming an elite quarterback and competing for the sport’s top honors.
+  - Source: Auburn Athletics — Auburn Athletics — https://auburntigers.com/news/2025/10/10/cam-newton-recalls-magical-2010-auburn-season
+- **`cecil-final-college-decision`** — Newton said his father, Cecil, played the decisive role in the final Auburn-versus-Mississippi State decision, with Auburn’s proximity to the family among the considerations.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/news/story?id=5909569
+
+### `dabo-swinney-cfb`
+
+- **`family-foreclosure-adversity`** — Swinney has described a childhood and adolescence destabilized by his father’s alcoholism, family debt and eventually the loss of the family home to foreclosure.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/14465616/the-making-dabo-swinney-clemson-tigers-family
+- **`mother-college-roommate`** — While Swinney was attending Alabama, his mother Carol moved into his small off-campus living arrangement because of the family’s financial circumstances.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/14519758/dabo-swinney-overcame-pain-poverty-reach-new-heights-clemson
+- **`crawl-on-alabama`** — Swinney entered Alabama as a regular student and earned a place on the football team through a demanding walk-on tryout path that he later jokingly characterized as being a “crawl-on.”
+  - Source: Clemson Athletics — Clemson Athletics — https://clemsontigers.com/news/2008/08/28/clemson-vs-alabama-football-game-program-feature-dabo-swinney
+- **`commercial-real-estate-detour`** — After Alabama’s staff was dismissed in 2000, Swinney left coaching and worked in commercial real estate before Tommy Bowden brought him back into college football at Clemson in 2003.
+  - Source: ESPN — ESPN — https://www.espn.com/espn/feature/story/_/id/27342304/how-dabo-built-clemson-monster
+- **`spiller-business-card-contract`** — During the recruitment of C.J. Spiller, Swinney created an informal written commitment or “contract” on the back of a business card; he later kept it framed in his office.
+  - Source: ESPN — ESPN — https://www.espn.com/espn/feature/story/_/id/27342304/how-dabo-built-clemson-monster
+
+### `cfb-deion-sanders`
+
+- **`prime-time-basketball-origin`** — Sanders has traced the “Prime Time” nickname to a friend reacting to one of his big high-school basketball performances. Contemporary retellings disagree on whether he scored 30 or 37 points, so the exact total should not be encoded.
+  - Source: Sporting News — Sporting News; ESPN — https://www.sportingnews.com/us/ncaa-football/news/deion-sanders-coach-prime-time-nickname/55bc73eb62a71643826b95e4
+- **`florida-state-three-sport`** — At Florida State, Sanders played football and baseball and also competed in track.
+  - Source: MLB — MLB — https://www.mlb.com/news/deion-sanders-played-baseball-ran-track-same-day
+- **`two-championships-one-day`** — On May 16, 1987, Sanders played in Florida State baseball tournament games and also ran a leg of the 4×100 relay as FSU won conference championships in baseball and track on the same day.
+  - Source: MLB — MLB — https://www.mlb.com/news/deion-sanders-played-baseball-ran-track-same-day
+- **`royals-draft-chose-fsu`** — The Kansas City Royals drafted Sanders out of high school, but he chose to attend Florida State rather than immediately begin a professional baseball career.
+  - Source: MLB — MLB — https://www.mlb.com/news/deion-sanders-played-baseball-ran-track-same-day
+- **`sugar-bowl-end-zone-interception`** — In the 1989 Sugar Bowl, Auburn was threatening for a late go-ahead touchdown when Sanders intercepted a pass in the end zone to preserve Florida State’s 13–7 victory.
+  - Source: Auburn Athletics — Auburn Athletics — https://auburntigers.com/news/2016/12/31/theres-something-different-auburn-1989-sugar-bowl
+
+### `cfb-desmond-howard`
+
+- **`high-school-two-way-multisport`** — Howard was a two-way high-school football player in Cleveland, contributing at running back and defensive back, and also participated extensively in track and basketball.
+  - Source: Heisman — Heisman — https://www.heisman.com/heisman-winners/desmond-howard/
+- **`running-back-to-receiver`** — Howard arrived at Michigan as a running back but was moved to wide receiver only days into his first camp; the transition was difficult enough that he redshirted.
+  - Source: Heisman — Heisman — https://www.heisman.com/heisman-winners/desmond-howard/
+- **`cleveland-kid-chose-michigan`** — Growing up in Cleveland put Ohio State naturally in Howard’s recruiting orbit, but coaching circumstances and his connection with Bo Schembechler helped steer him to rival Michigan.
+  - Source: Michigan Athletics — Michigan Athletics — https://mgoblue.com/news/2003/11/18/100th_Big_Game_Voices_Michigan_s_Desmond_Howard
+- **`notre-dame-the-catch`** — Against Notre Dame in 1991, Howard made a diving touchdown reception on fourth down, a play remembered at Michigan as “The Catch.”
+  - Source: Heisman — Heisman — https://www.heisman.com/articles/this-week-in-heisman-history-desmond-howard-makes-the-catch/
+- **`spontaneous-heisman-pose`** — After returning a punt for a touchdown against Ohio State in 1991, Howard struck the Heisman pose in the end zone; he has said the celebration was spontaneous rather than preplanned.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/32690818/inside-desmond-howard-iconic-heisman-pose-30-years-later
+
+### `cfb-doug-flutie`
+
+- **`final-boston-college-scholarship`** — Flutie’s size left him with little major-college recruiting interest, and he was headed toward New Hampshire before Boston College offered him what was reportedly its final available scholarship.
+  - Source: College Football Hall of Fame — College Football Hall of Fame — https://www.cfbhall.com/inductees/doug-flutie-2007/
+- **`fifth-string-to-starter`** — Flutie began his freshman season buried around fifth on Boston College’s quarterback depth chart, with some evaluators believing his athletic future might be elsewhere, but became the starting quarterback within weeks.
+  - Source: College Football Hall of Fame — College Football Hall of Fame — https://www.cfbhall.com/inductees/doug-flutie-2007/
+- **`natick-three-sport-athlete`** — Flutie was a three-sport letterman at Natick High School in Massachusetts before focusing his college career on football.
+  - Source: College Football Hall of Fame — College Football Hall of Fame — https://www.cfbhall.com/inductees/doug-flutie-2007/
+- **`hail-mary-heisman-myth`** — Flutie’s famous last-second touchdown pass to Gerard Phelan against Miami occurred after Heisman ballots had already been mailed, meaning the play did not cause him to win the trophy despite the common popular narrative.
+  - Source: Heisman — Heisman — https://www.heisman.com/heisman-winners/doug-flutie/
+- **`rhodes-scholar-candidate`** — Flutie was also an accomplished student and Boston College’s Rhodes Scholarship candidate during his senior year.
+  - Source: Boston College — Boston College — https://www.bc.edu/bc-web/bcnews/news-archive-2011-to-2015/chronicle/2013/features/flutie042513.html
+
+### `cfb-eric-berry`
+
+- **`tennessee-family-lineage`** — Berry’s father James played football at Tennessee and served as a team captain, while Eric’s younger twin brothers Evan and Elliott later also became Volunteers.
+  - Source: Tennessee Athletics — Tennessee Athletics — https://utsports.com/news/2007/8/6/seven_questions_with_the_07_newcomers_eric_berry
+- **`delayed-commitment-for-teammates`** — Berry knew relatively early that he wanted Tennessee but delayed publicly committing in part so recruiters would continue visiting his high school and evaluating his teammates.
+  - Source: ESPN — ESPN — https://www.espn.com/nfl/story/_/id/25770102/the-ripple-effect-eric-berry
+- **`dentistry-career-plan`** — Berry developed a serious interest in dentistry and completed hands-on exposure to the field while at Tennessee, motivated partly by seeing the toll manual labor took on his father.
+  - Source: Tennessee Athletics — Tennessee Athletics — https://utsports.com/news/2007/8/6/seven_questions_with_the_07_newcomers_eric_berry
+- **`soccer-team-training`** — Berry trained with Tennessee’s soccer players and said soccer work helped his footwork, endurance and defensive movement.
+  - Source: Tennessee Athletics — Tennessee Athletics — https://utsports.com/news/2008/12/9/Chat_Live_on_Thursday_With_Tennessee_All_America_Safety_Eric_Berry
+- **`hodgkin-lymphoma-comeback`** — Berry was diagnosed with Hodgkin lymphoma in 2014, underwent treatment and returned to NFL football in 2015.
+  - Source: Tennessee Athletics — Tennessee Athletics — https://utsports.com/news/2023/1/9/vfl-eric-berry-selected-to-2023-college-football-hall-of-fame-class
+
+### `cfb-jadeveon-clowney`
+
+- **`mother-frito-lay-motivation`** — Clowney was raised primarily by his mother, Josenna, during years when his father was incarcerated. Josenna worked for years at a Frito-Lay plant, and Clowney repeatedly described providing for her as a major motivation.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/9539832/south-carolina-de-jadeveon-clowney-avoids-spotlight-focuses-field-espn-magazine
+- **`doo-doo-nickname-origin`** — In his Rock Hill hometown Clowney is known as “Doo Doo,” a childhood nickname his mother gave him because he danced to the song “Doo Doo Brown.”
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/10898868/jadeveon-clowney-carries-rock-hill-football-tradition
+- **`gassers-with-defensive-backs`** — At South Pointe, Clowney chose to run 150-yard conditioning repetitions with wide receivers and defensive backs rather than simply staying with the defensive linemen, and coaches recalled him constantly chasing the weight-room standard.
+  - Source: ESPN — ESPN — https://www.espn.com/nfl/story/_/page/hotread140423/nfl-hot-read-questions-jadeveon-clowney-seem-elude-heading-draft
+- **`thirty-two-jv-touchdowns`** — Before being elevated to varsity late in his freshman year, Clowney scored 32 touchdowns on offense for South Pointe’s junior-varsity team.
+  - Source: ESPN — ESPN — https://www.espn.com/nfl/story/_/page/hotread140423/nfl-hot-read-questions-jadeveon-clowney-seem-elude-heading-draft
+- **`outback-bowl-the-hit`** — In the 2013 Outback Bowl against Michigan, Clowney exploded through the line to hit Vincent Smith, force a fumble and recover it himself on the play universally associated with “The Hit.”
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/21918760/jadeveon-clowney-michigan-wolverines-hit-fifth-anniversary
+
+### `cfb-john-hannah`
+
+- **`hannah-alabama-family`** — Hannah belonged to a major Alabama football family: his father Herb and brothers also played for Alabama, including younger brother Charley, who later reached the NFL.
+  - Source: Alabama Athletics — Alabama Athletics — https://rolltide.com/news/2009/5/27/Charley_Hannah_to_be_Inducted_into_Alabama_Sports_Hall_of_Fame
+- **`football-wrestling-track`** — Hannah competed for Alabama in football, wrestling and track, including winning an SEC wrestling championship and competing in throwing events.
+  - Source: Alabama Athletics — Alabama Athletics — https://rolltide.com/news/2010/7/28/John_Hannah_to_Receive_George_Connor_Lifetime_Achievement_Award
+- **`big-oak-signing-bonus-pledge`** — When former teammate John Croyle was trying to acquire land for what became Big Oak Boys Ranch, Hannah pledged his future professional signing bonus despite not yet knowing its amount; the bonus ultimately covered the roughly $30,000 still needed.
+  - Source: Alabama Athletics — Alabama Athletics — https://rolltide.com/news/2006/8/22/For_More_Than_30_Years_Former_Football_All_American_John_Croyle_and_The_Big_Oak_Ranches_Have_Changed_Lives?path=football
+- **`pregame-visualization-routine`** — Hannah developed an intense pregame routine in which teammates gave him space while he mentally visualized what he expected to happen in the game.
+  - Source: The Washington Post — The Washington Post — https://www.washingtonpost.com/archive/sports/1986/01/24/world-in-hannahs-eyes-has-no-shades-of-gray/06d334a0-ea96-4580-9b25-e5d668265a10/
+- **`play-through-pain-code`** — Hannah described a personal standard that injuries should not remove him from competition unless continuing would risk lasting damage, a philosophy behind his reputation for playing through pain.
+  - Source: The Washington Post — The Washington Post — https://www.washingtonpost.com/archive/sports/1986/01/24/world-in-hannahs-eyes-has-no-shades-of-gray/06d334a0-ea96-4580-9b25-e5d668265a10/
+
+### `kirby-smart-cfb`
+
+- **`coached-by-father-sonny`** — Smart played high-school football at Bainbridge under his father, Sonny Smart, who was his head coach.
+  - Source: Georgia Athletics — Georgia Athletics — https://georgiadogs.com/news/2015/12/6/Kirby_Smart_Named_New_UGA_Head_Coach
+- **`three-sport-bainbridge`** — Smart lettered in football, basketball and baseball at Bainbridge High School.
+  - Source: Georgia Athletics — Georgia Athletics — https://georgiadogs.com/news/2015/12/6/Kirby_Smart_Named_New_UGA_Head_Coach
+- **`mary-beth-interview-travel`** — Smart’s future wife, Mary Beth Lycett, was a former Georgia basketball player working in the athletics business office when she helped arrange travel connected with Smart’s 2005 interview to join Georgia’s staff; that professional contact helped begin their relationship.
+  - Source: Georgia Athletics — Georgia Athletics — https://georgiadogs.com/staff-directory/kirby-smart/399
+- **`defensive-back-coached-running-backs`** — Despite his background as a defensive back and defensive coach, Smart returned to Georgia in 2005 to coach running backs before moving back to defense with the Miami Dolphins.
+  - Source: Georgia Athletics — Georgia Athletics — https://georgiadogs.com/staff-directory/kirby-smart/399
+- **`saban-three-stop-apprenticeship`** — Smart worked under Nick Saban at LSU, with the Miami Dolphins and at Alabama, spending much of his formative coaching career inside Saban’s programs before taking the Georgia job.
+  - Source: Alabama Athletics — Alabama Athletics; Georgia Athletics — https://rolltide.com/news/2007/2/8/Kirby_Smart
+
+### `cfb-lee-roy-selmon`
+
+- **`youngest-of-nine-farm`** — Selmon was the youngest of nine children and grew up in a farming family near Eufaula, Oklahoma.
+  - Source: National Football Foundation — National Football Foundation — https://footballfoundation.org/news/2011/9/5/_51179.aspx
+- **`three-selmon-brothers-oklahoma-line`** — Brothers Lucious, Dewey and Lee Roy Selmon all played defensive line at Oklahoma, and in 1973 all three were starters on the same Sooners team.
+  - Source: National Football Foundation — National Football Foundation — https://footballfoundation.org/news/2011/9/5/_51179.aspx
+- **`college-community-service`** — Selmon devoted significant weekly time to volunteer and community-service work while he was still an Oklahoma student-athlete.
+  - Source: National Football Foundation — National Football Foundation — https://footballfoundation.org/news/2011/9/5/_51179.aspx
+- **`buccaneers-first-draft-pick`** — The expansion Tampa Bay Buccaneers made Selmon the first draft selection in franchise history by taking him first overall in 1976.
+  - Source: Tampa Bay Buccaneers — Tampa Bay Buccaneers — https://www.buccaneers.com/news/this-day-in-history-bucs-draft-selmon-15116766
+- **`built-usf-football-program`** — In 1993, South Florida hired Selmon to help lead fundraising and development for its proposed football program; he later became athletic director and a central figure in building USF athletics.
+  - Source: University of South Florida — University of South Florida — https://gousfbulls.com/news/2025/8/10/usf-football-begins-new-tradition-honoring-lee-roy-selmons-legendary-no-63.aspx
+
+### `cfb-marcus-allen`
+
+- **`eight-intentional-fumbles`** — As a high-school quarterback, Allen once rebelled against being kept at the position by intentionally fumbling eight consecutive snaps. He was removed from the team, his father refused to rescue him from the consequences, and Allen eventually apologized and returned.
+  - Source: Los Angeles Times — Los Angeles Times — https://www.latimes.com/sports/la-xpm-2012-mar-06-la-sp-sn-marcus-allen-to-be-honored-in-san-diego-20120306-story.html
+- **`five-touchdown-title-game`** — In Lincoln High School’s 1977 section championship game, Allen scored all five of his team’s touchdowns, including one while playing defense.
+  - Source: Heisman — Heisman — https://www.heisman.com/heisman-winners/marcus-allen/
+- **`usc-safety-to-tailback`** — Allen entered USC projected as a safety before being moved to tailback during his freshman season.
+  - Source: Heisman — Heisman — https://www.heisman.com/heisman-winners/marcus-allen/
+- **`charles-white-lead-blocker`** — USC shifted Allen to fullback in 1979 so he could lead-block for Charles White; accounts from the period describe the physical punishment to Allen’s hands from the blocking role.
+  - Source: Los Angeles Times — Los Angeles Times — https://www.latimes.com/archives/la-xpm-2005-oct-07-sp-uscbacks7-story.html
+- **`damon-allen-quarterback-brother`** — Marcus’s younger brother Damon Allen became a historically accomplished professional quarterback in the Canadian Football League, creating an unusual sibling pairing across positions and leagues.
+  - Source: Canadian Football League — Canadian Football League — https://www.cfl.ca/2008/06/10/damon-allen-through-other-people-s-eyes_35667/
+
+### `cfb-minkah-fitzpatrick`
+
+- **`hurricane-irene-home-loss`** — Hurricane Irene flooded and effectively destroyed Fitzpatrick’s family home in New Jersey in 2011. Without flood insurance, the family spent an extended period living in relatives’ basement space while rebuilding, and Fitzpatrick helped with the work.
+  - Source: ESPN — ESPN — https://www.espn.com/nfl/story/_/id/46416260/miami-dolphins-nfl-minkah-fitzpatrick-sequel-mnf-new-york-jets-pittsburgh-steelers-2025
+- **`st-peters-two-way-playoff-star`** — Fitzpatrick played both defensive back and wide receiver at St. Peter’s Prep and produced major receiving contributions during the school’s championship playoff run.
+  - Source: New York Jets — New York Jets — https://www.newyorkjets.com/news/5-things-to-know-about-new-jets-safety-minkah-fitzpatrick-03-11-2026
+- **`hudson-county-sprinter`** — Fitzpatrick was also a high-level sprinter, winning Hudson County championships in the 100 and 200 meters before later appearing with Alabama’s track program.
+  - Source: Alabama Athletics — Alabama Athletics — https://rolltide.com/sports/xctrack/roster/minkah-fitzpatrick/2172
+- **`alabama-hybrid-star-role`** — Alabama cross-trained Fitzpatrick across cornerback, safety and its “star” nickel position, making extensive film study and positional versatility central to his development.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/19506088/alabama-crimson-tide-minkah-fitzpatrick-florida-state-seminoles-derwin-james-lead-new-wave-hybrid-defenders
+- **`calvin-ridley-practice-battles`** — Fitzpatrick has identified Alabama teammate Calvin Ridley as one of the toughest receivers he faced, describing their frequent practice matchups as sharpening both players.
+  - Source: Minnesota Vikings — Minnesota Vikings — https://www.vikings.com/news/prospect-profile-alabama-db-minkah-fitzpatrick-20519315
+
+### `nick-saban-cfb`
+
+- **`big-nick-black-diamonds`** — Saban’s father, Nick Sr. or “Big Nick,” operated a service station in West Virginia and helped run a youth football program called the Black Diamonds, even transporting children from surrounding coal communities. Young Nick worked at the station.
+  - Source: Alabama Athletics — Alabama Athletics — https://rolltide.com/news/2007/1/4/Press_Conference_Transcript_Nick_Saban_Introduction?path=football
+- **`coal-mine-school-lesson`** — After Saban performed poorly in school, his father ended his basketball season and took him into a coal mine to show him the type of difficult work his education could help him avoid.
+  - Source: ESPN — ESPN — https://www.espn.com/college-sports/story/_/id/24273997/alabama-nick-saban-more-scowl
+- **`don-james-accidental-coach`** — Saban initially expected to pursue business rather than coaching, but Kent State coach Don James offered him a graduate-assistant position while Saban was finishing school and his wife Terry still had academic time remaining.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/18361912/alabama-crimson-tide-coach-nick-saban-owes-lot-washington-huskies-legend-don-james
+- **`kent-state-shootings-aftermath`** — Saban was a Kent State student when four students were killed on May 4, 1970. He has said he considered attending the protest but ate lunch first and reached the area after the shootings, where he saw the aftermath.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/14517889/10-things-not-know-alabama-crimson-tide-coach-nick-saban
+- **`father-death-young-assistant`** — Saban’s father died suddenly of a heart attack early in Nick’s 1973 season as a young Kent State assistant; the loss occurred when his father was only 46.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/30422731/coaching-tv-nick-saban-iron-bowl-home
+
+### `cfb-patrick-peterson`
+
+- **`johnson-to-peterson-surname`** — He was known as Patrick Johnson during his recruitment but changed his surname to Peterson shortly before beginning his LSU career after his parents married.
+  - Source: LSU Athletics — LSU Athletics — https://lsusports.net/news/2010/11/05/205025529
+- **`father-coach-from-childhood`** — Peterson’s father introduced him to football when he was very young and coached him through much of his youth and high-school development.
+  - Source: Carolina Panthers — Carolina Panthers — https://www.panthers.com/news/peterson-is-primary-prospect-in-secondary-3584970
+- **`moss-mcfadden-football-family`** — Peterson’s extended football family includes cousins Santana Moss, Sinorice Moss and Bryant McFadden.
+  - Source: LSU Athletics — LSU Athletics — https://lsusports.net/sports/fb/roster/season/2009/player/patrick-peterson
+- **`alabama-non-interception-controversy`** — Late in LSU’s 2009 game against Alabama, Peterson appeared to secure a sideline interception, but replay review left the ruling as an incomplete pass; LSU’s own recap noted the ensuing controversy.
+  - Source: LSU Athletics — LSU Athletics — https://lsusports.net/news/2009/11/07/204829320
+- **`west-virginia-heisman-pose`** — Peterson returned a punt for a touchdown against West Virginia in 2010 and followed it by striking a spontaneous Heisman pose, drawing a celebration penalty.
+  - Source: LSU Athletics — LSU Athletics — https://lsusports.net/news/2010/11/05/205025529
+
+### `cfb-reggie-bush`
+
+- **`alex-smith-helix-teammate`** — Bush and future quarterback Alex Smith were teammates at Helix High School, and in 2004 they became the first high-school teammates to appear together as Heisman finalists.
+  - Source: National Football Foundation — National Football Foundation — https://footballfoundation.org/news/2024/9/20/alex-smith-2024-college-football-hall-of-fame-spotlight.aspx?path=football
+- **`california-sprint-star`** — Bush was also a standout California sprinter, with USC recording personal bests around 10.42 seconds in the 100 meters and 21.06 in the 200.
+  - Source: USC Athletics — USC Athletics — https://usctrojans.com/sports/football/roster/reggie-bush/1799
+- **`super-bowl-student-reporter`** — While still in high school, Bush served as a special NFLHS.com correspondent around Super Bowl XXXVII media activities.
+  - Source: NFL — NFL — https://www.nfl.com/news/seven-years-later-correspondent-bush-back-at-the-super-bowl-09000d5d81619a10
+- **`bush-push`** — On the decisive late play of USC’s 2005 game at Notre Dame, Bush physically pushed quarterback Matt Leinart from behind as Leinart fought across the goal line, creating the moment permanently known as the “Bush Push.”
+  - Source: ESPN — ESPN — https://www.espn.com.au/college-football/story/_/id/46608212/notre-dame-usc-bush-push-2005-rivalry
+- **`heisman-reinstated-2024`** — The Heisman Trust formally reinstated Bush’s 2005 Heisman Trophy on April 24, 2024, citing major changes in the college-athletics environment surrounding athlete compensation.
+  - Source: Heisman — Heisman — https://www.heisman.com/articles/heisman-trophy-trust-reinstates-reggie-bushs-2005-heisman/
+
+### `cfb-roquan-smith`
+
+- **`montezuma-rural-roots`** — Smith grew up in Montezuma, a very small rural Georgia community whose limited resources and close-knit environment he has continued to discuss throughout his professional career.
+  - Source: Chicago Bears — Chicago Bears — https://www.chicagobears.com/news/roquan-smith-hosts-camp-has-hs-number-retired
+- **`region-title-running-back-switch`** — Although known primarily as a linebacker, Smith was moved into a featured running-back role for Macon County’s 2014 region championship game and produced heavily on offense while still playing defense.
+  - Source: Atlanta Journal-Constitution — Atlanta Journal-Constitution — https://www.ajc.com/blog/high-school-sports/poy-watch-smith-steps-for-macon-county-offense/GLEDAX04872fC8BD1zowFI/
+- **`ucla-signing-day-reversal`** — Smith publicly announced UCLA on signing day in 2015 but deliberately did not immediately sign a National Letter of Intent after learning defensive coordinator Jeff Ulbrich was expected to leave; he reopened the decision and ultimately chose Georgia.
+  - Source: ESPN — ESPN — https://www.espn.com/college-sports/recruiting/football/story/_/id/12320035/roquan-smith-chooses-georgia-bulldogs-ucla-bruins
+- **`montezuma-youth-camp`** — Smith has returned to his home area to run a large youth football camp, and Macon County High School later retired his No. 1 jersey.
+  - Source: Chicago Bears — Chicago Bears — https://www.chicagobears.com/news/roquan-smith-hosts-camp-has-hs-number-retired
+- **`michael-phelps-swim-training`** — In 2025 Smith worked with Michael Phelps and the Michael Phelps Foundation on formal swimming fundamentals, explaining that growing up in rural Montezuma had given him little access to that type of instruction.
+  - Source: Baltimore Ravens — Baltimore Ravens — https://www.baltimoreravens.com/news/roquan-smith-learns-to-swim-michael-phelps-foundation-safety-2025
+
+### `cfb-tim-tebow`
+
+- **`philippines-missionary-roots`** — Tebow was born in the Philippines while his parents were serving there as missionaries, and he later returned to the country on recurring mission trips.
+  - Source: Florida Athletics — Florida Athletics; Sports Illustrated — https://d2b5htfb6s9xp9.cloudfront.net/sports/football/roster/tim-tebow/1522
+- **`homeschooled-football-path`** — Tebow was homeschooled while participating in high-school athletics through Florida’s provisions allowing home-educated students to play for local schools.
+  - Source: Florida Athletics — Florida Athletics — https://d2b5htfb6s9xp9.cloudfront.net/sports/football/roster/tim-tebow/1522
+- **`tight-end-linebacker-to-quarterback`** — Tebow’s early high-school football experience included tight end and linebacker before his family found a program where he could develop as a quarterback, eventually leading him to Nease High School.
+  - Source: Heisman — Heisman — https://www.heisman.com/articles/10th-anniversary-heisman-winner-tim-tebow/
+- **`florida-family-history`** — Tebow’s parents had strong ties to the University of Florida before his recruitment; both attended Florida, and the school and Florida–Georgia rivalry were embedded in family history.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/24895893/florida-gators-make-tim-tebow-sixth-player-swamp-ring-honor
+- **`ole-miss-promise`** — After Florida’s upset loss to Ole Miss on September 27, 2008, Tebow delivered an emotional postgame pledge about the team’s future effort; Florida later placed the speech on a plaque at its football facility.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/news/story?id=4016429
+
+### `cfb-travis-hunter`
+
+- **`suwanee-housing-and-coach-support`** — After Hunter’s mother moved the family to Suwanee, Georgia seeking better opportunities, they experienced housing instability; Hunter later spent an extended period living with assistant coach Frontia Fountain, whose support helped provide consistency around school and football.
+  - Source: ESPN — ESPN — https://www.espn.com/nfl/story/_/id/45114361/jacksonville-jaguars-travis-hunter-receiver-cornerback-next-nfl-star
+- **`insisted-on-two-way-football`** — By the time Hunter was an elite recruit, playing significant snaps on both offense and defense was already a central part of how he viewed himself and what he wanted from college football.
+  - Source: ESPN — ESPN — https://www.espn.com/nfl/story/_/id/45114361/jacksonville-jaguars-travis-hunter-receiver-cornerback-next-nfl-star
+- **`deion-recruiting-fascination`** — During his recruitment, coaches and staffers noticed Hunter’s unusually strong interest in Deion Sanders; one account of a recruiting visit recalled Hunter repeatedly discussing Sanders and demonstrating deep knowledge of him.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/42922307/travis-hunter-college-football-colorado-heisman-trophy-favorite
+- **`florida-state-to-jackson-state-flip`** — On signing day in December 2021, Hunter flipped from a long-standing Florida State commitment to Jackson State, becoming the first five-star prospect to sign with an FCS program since ESPN began its recruiting rankings in 2006.
+  - Source: ESPN — ESPN — https://www.espn.com/college-sports/recruiting/football/story/_/id/32875645/deion-sanders-flips-no-2-overall-college-football-recruit-travis-hunter-florida-state-jackson-state-national-signing-day
+- **`followed-deion-to-colorado`** — After one season at Jackson State, Hunter followed Sanders to Colorado, explaining that his original commitment had been substantially to Coach Prime himself and that he intended to continue that relationship.
+  - Source: ESPN — ESPN — https://www.espn.com/college-football/story/_/id/35302238/former-top-recruit-travis-hunter-follows-deion-sanders-colorado
+
+### `cfb-vince-young`
+
+- **`childhood-bicycle-accident`** — At age six, Young was struck by a vehicle while riding his bicycle in Houston and suffered serious internal injuries that required an extended recovery; the accident also led to local television coverage about bicycle safety.
+  - Source: Tennessee Titans — Tennessee Titans — https://static.clubs.nfl.com/image/upload/titans/lp8cuwj8rj6ismvyfgyk.pdf
+- **`raked-leaves-turning-point`** — After Young got into serious trouble during middle school, his mother disciplined him by making him repeatedly rake leaves that she then scattered again. Young later identified the experience as a turning point in his behavior.
+  - Source: ESPN — ESPN — https://www.espn.com/espnmag/story?id=3793577
+- **`steve-mcnair-pops-mentor`** — Young connected with Steve McNair while still young through football-camp and family connections, and McNair developed into an important mentor whom Young affectionately called “Pops.”
+  - Source: Tennessee Titans — Tennessee Titans; ESPN — https://static.clubs.nfl.com/image/upload/titans/lp8cuwj8rj6ismvyfgyk.pdf
+- **`greg-davis-menu-relationship`** — Young and Texas offensive coordinator Greg Davis developed their relationship through extensive film work and communication, and on the decisive final drive of the national-title game Davis gave Young significant ownership of the fourth-down call from their shared menu of concepts.
+  - Source: Texas Athletics — Texas Athletics — https://texaslonghorns.com/news/2006/1/6/010606aaf_304
+- **`rose-bowl-fourth-and-five`** — Facing fourth-and-five at USC’s 8-yard line with 19 seconds left in the 2006 Rose Bowl national championship game, Young scrambled for the go-ahead touchdown.
+  - Source: Texas Athletics — Texas Athletics — https://texaslonghorns.com/sports/2013/7/22/FB_0722133255
+
+### `woody-hayes`
+
+- **`navy-warship-command`** — Hayes joined the U.S. Navy in 1941 and rose to lieutenant commander during World War II, including command responsibilities aboard naval vessels in both Pacific and Atlantic service.
+  - Source: Ohio State University Libraries — Ohio State University Libraries — https://library.osu.edu/woody-hayes/education-military-service
+- **`history-scholar-teacher`** — Hayes studied history and English, earned a master’s degree at Ohio State and maintained a serious lifelong interest in military and political history, including teaching and guest lecturing while coaching.
+  - Source: Ohio State University Libraries — Ohio State University Libraries; Ohio State Athletics — https://library.osu.edu/woody-hayes/education-military-service
+- **`pay-forward-emerson-philosophy`** — Hayes frequently drew on Ralph Waldo Emerson’s essay “Compensation” in articulating his philosophy that people should “pay forward” the help they receive rather than simply repay it backward.
+  - Source: Ohio State Athletics — Ohio State Athletics — https://ohiostatebuckeyes.com/news/2005/11/12/making-dreams-a-reality
+- **`schembechler-ten-year-war`** — Former Hayes assistant Bo Schembechler became Michigan’s head coach and opposed Hayes from 1969 through 1978 in the rivalry period remembered as the “Ten-Year War,” with conference-title stakes repeatedly attached to their meetings.
+  - Source: Ohio State Athletics — Ohio State Athletics — https://ohiostatebuckeyes.com/news/2013/11/28/throwback-thursday-november-28-2013
+- **`gator-bowl-bauman-punch`** — Late in the 1978 Gator Bowl, after Clemson’s Charlie Bauman intercepted an Ohio State pass and went out of bounds near the Buckeyes sideline, Hayes struck Bauman. Ohio State dismissed Hayes the following morning, ending his coaching career.
+  - Source: ESPN — ESPN — https://www.espn.com/classic/s/add_hayes_woody.html
+
+### `cfb-archie-griffin`
+
+- **`archie-griffin-family-athletic-scholarships`** — Griffin grew up as one of eight children in a family in which all seven boys ultimately attended college on football scholarships, while their sister attended on a track scholarship; all eight earned college degrees.
+  - Source: Ohio State Alumni Magazine — Ohio State Alumni Magazine — “Everybody loves Archie” — https://alumnimagazine.osu.edu/story/everybody-loves-archie
+- **`archie-griffin-parents-work-ethic`** — His father, James, worked three jobs—sanitation work, steel work and janitorial work—while his mother, Margaret, raised the large family and also operated a small market from their home.
+  - Source: Ohio State Alumni Magazine — Ohio State Alumni Magazine — “Everybody loves Archie” — https://alumnimagazine.osu.edu/story/everybody-loves-archie
+- **`archie-griffin-grew-up-around-ohio-state`** — As a Columbus youngster, Griffin regularly made his way to the Ohio State campus and stadium area, including walking from the Linden neighborhood to play pickup basketball with residents of the Stadium Scholarship Dorm and trying to get glimpses of Buckeye games.
+  - Source: Ohio State Alumni Magazine — Ohio State Alumni Magazine — “Archie Griffin: Early influences” — https://alumnimagazine.osu.edu/story/archie-griffin-early-influences
+- **`archie-griffin-woody-hayes-childrens-hospital`** — At Ohio State, Woody Hayes regularly took players to visit children at Columbus Children's Hospital after Thursday practices, an experience Griffin later connected to Hayes's emphasis on paying forward the opportunities players had received.
+  - Source: Ohio State Alumni Magazine — Ohio State Alumni Magazine — “Everybody loves Archie” — https://alumnimagazine.osu.edu/story/everybody-loves-archie
+- **`archie-griffin-tank-youth-football`** — When Griffin began organized football at about age nine, he was large enough to be placed with older children; youth coach Bob Rand nicknamed him “Tank” and pushed him through extra running when he lagged behind in conditioning.
+  - Source: Ohio State College of Education and Human Ecology — Ohio State College of Education and Human Ecology — “Archie Griffin: Coaches, scholarship...” — https://inspire.ehe.osu.edu/2018/06/20/archie-griffin-coaches-scholarship/
+
+### `bear-bryant`
+
+- **`bear-bryant-bear-wrestling-nickname`** — As a teenager in Fordyce, Arkansas, Bryant accepted a theater promotion to wrestle a captive bear; the promised payment never materialized, but the episode produced the nickname “Bear.”
+  - Source: Encyclopedia of Arkansas — Encyclopedia of Arkansas — “Paul William ‘Bear’ Bryant (1913–1983)” — https://encyclopediaofarkansas.net/entries/bear-bryant-1604/
+- **`bear-bryant-unexpected-alabama-recruitment`** — Alabama assistant Hank Crisp came to Fordyce primarily to scout other players but ended up recruiting Bryant; Bryant then had to complete additional high-school coursework before he could qualify to enroll.
+  - Source: Paul W. Bryant Museum — Paul W. Bryant Museum — Coach Paul ‘Bear’ Bryant — https://bryantmuseum.com/traditions_alabama/coach_paul_bear_bryant/
+- **`bear-bryant-played-on-broken-leg`** — As an Alabama player in 1935, Bryant played against Tennessee despite having a broken bone in his leg.
+  - Source: Paul W. Bryant Museum — Paul W. Bryant Museum — Coach Paul ‘Bear’ Bryant — https://bryantmuseum.com/traditions_alabama/coach_paul_bear_bryant/
+- **`bear-bryant-junction-camp`** — During his first season at Texas A&M in 1954, Bryant took the team to a remote preseason camp in Junction, Texas, where brutal heat and demanding practices caused a large portion of the squad to leave; the remaining players became known as the “Junction Boys.”
+  - Source: Texas A&M Athletics — Texas A&M Athletics — “Childress, Stallings Named to Collegiate Football Hall of Fame” — https://12thman.com/news/2010/5/27/childress-stallings-named-to-collegiate-football-hall-of-fame
+- **`bear-bryant-alabama-integration-recruiting`** — Bryant recruited Wilbur Jackson, who entered Alabama in 1970 as the program's first Black football player on scholarship; John Mitchell became Alabama's first Black varsity football player the following season.
+  - Source: Encyclopedia of Alabama — Encyclopedia of Alabama — “Integration of College Athletics” — https://encyclopediaofalabama.org/article/integration-of-college-athletics/
+
+### `cfb-bo-jackson`
+
+- **`bo-jackson-boar-hog-nickname`** — Jackson's family described the hyperactive youngster as being like a “boar hog”; the phrase was shortened into the name “Bo.”
+  - Source: Society for American Baseball Research — Society for American Baseball Research — Bo Jackson biography — https://sabr.org/bioproj/person/bo-jackson/
+- **`bo-jackson-high-school-multisport-yankees`** — At McAdory High School, Jackson was an elite football, baseball and track athlete, including decathlon success; the New York Yankees selected him in the second round of the 1982 MLB draft, but he chose Auburn.
+  - Source: The Sporting News archive — The Sporting News archive — “How good is Bo Jackson?” — https://www.sportingnews.com/us/ncaa-football/news/sn-archive-1985-how-good-bo-jackson-auburn-tall-tales/8f8dae7c8907a301f20ef79b
+- **`bo-jackson-alabama-recruiting-defiance`** — Jackson later recalled that an Alabama assistant told him Auburn would not beat Alabama if he went there; the remark helped push him toward Auburn.
+  - Source: The Sporting News archive — The Sporting News archive — “How good is Bo Jackson?” — https://www.sportingnews.com/us/ncaa-football/news/sn-archive-1985-how-good-bo-jackson-auburn-tall-tales/8f8dae7c8907a301f20ef79b
+- **`bo-jackson-bo-over-the-top`** — As a freshman in the 1982 Iron Bowl, Jackson scored the decisive touchdown by going over the top on fourth-and-goal, helping Auburn end Alabama's nine-game winning streak in Bear Bryant's final Iron Bowl.
+  - Source: Auburn Athletics — Auburn Athletics — Iron Bowl Memories — https://auburntigers.com/football-iron-bowl-memories
+- **`bo-jackson-tampa-trip-baseball-eligibility`** — A 1986 visit to the Tampa Bay Buccaneers on a private plane resulted in Jackson being ruled ineligible for the remainder of Auburn's baseball season; Jackson believed the club had misled him about the trip's NCAA implications, and he later refused to sign after Tampa Bay drafted him first overall.
+  - Source: The Sporting News — The Sporting News — Bo Jackson oral history — https://www.sportingnews.com/us/ncaa-football/news/bo-jackson-oral-history-auburn-bo-knows/n3252abzyfp1rcon0etddl30
+
+### `cfb-bruce-smith`
+
+- **`bruce-smith-reluctant-football-father-no-quit`** — Smith has said basketball was his first love. After a punishing early football practice he quit, but his coach called his father, who made clear that quitting was not acceptable; Smith returned and later called it a defining lesson.
+  - Source: Pro Football Hall of Fame — Pro Football Hall of Fame — Bruce Smith enshrinement speech transcript — https://www.profootballhof.com/news/bruce-smith-enshrinement-speech-transcript
+- **`bruce-smith-state-champion-basketball`** — Smith remained a major basketball player in high school and was part of a state-championship team, receiving college interest in both basketball and football.
+  - Source: National Football Foundation — National Football Foundation — Bruce Smith Hall of Fame profile — https://footballfoundation.org/hof.aspx?hof=2186
+- **`bruce-smith-chose-prepower-virginia-tech`** — Smith chose Virginia Tech at a time when the Hokies were not yet a national football power, and his rise became part of the program's emergence from relative obscurity.
+  - Source: National Football Foundation — National Football Foundation — Bruce Smith Hall of Fame profile — https://footballfoundation.org/hof.aspx?hof=2186
+- **`bruce-smith-freshman-injury-slow-start`** — Smith was limited by injury for much of his freshman season at Virginia Tech and did not become a full-time starter until his sophomore year.
+  - Source: National Football Foundation — National Football Foundation — Bruce Smith Hall of Fame profile — https://footballfoundation.org/hof.aspx?hof=2186
+- **`bruce-smith-sack-man-virginia-tech-identity`** — Smith's pass-rushing presence became so central to Virginia Tech lore that the program has continued to frame him as the benchmark for its modern “sack” tradition and brings him back around current edge rushers.
+  - Source: Virginia Tech Athletics — Virginia Tech Athletics — “Sack Masters: Antwaun Powell-Ryland Shines in Front of Hokies Legend Bruce Smith” — https://hokiesports.com/news/2024/09/19/sack-masters-antwaun-powell-ryland-shines-in-front-of-hokies-legend-bruce-smith
+
+### `cfb-charles-woodson`
+
+- **`charles-woodson-michigan-fan-in-ohio`** — Woodson grew up in Fremont, Ohio, but said he rooted for Michigan in part because doing so was different in Ohio State country.
+  - Source: The Washington Post — The Washington Post — “Michigan's Mr. Do-It-All” — https://www.washingtonpost.com/archive/sports/1997/09/10/michigans-mr-do-it-all/5a84c4ba-ffd8-44dd-9600-2c503daaf33a/
+- **`charles-woodson-recruited-tailback-chose-corner`** — Many schools recruited Woodson primarily as a tailback, but he wanted the chance to play cornerback; Michigan accepted that defensive plan.
+  - Source: The Washington Post — The Washington Post — “Michigan's Mr. Do-It-All” — https://www.washingtonpost.com/archive/sports/1997/09/10/michigans-mr-do-it-all/5a84c4ba-ffd8-44dd-9600-2c503daaf33a/
+- **`charles-woodson-immediate-starting-corner`** — Woodson won a starting cornerback job almost immediately as a Michigan freshman, entering the lineup within the opening weeks of his first college season.
+  - Source: Heisman Trophy — Heisman Trophy — Charles Woodson biography — https://www.heisman.com/heisman-winners/charles-woodson/
+- **`charles-woodson-proposed-receiver-role`** — A contemporaneous 1997 Washington Post profile reported that after his freshman season Woodson asked Lloyd Carr about also playing receiver, helping begin his celebrated two-way role.
+  - Source: The Washington Post — The Washington Post — “Michigan's Mr. Do-It-All” — https://www.washingtonpost.com/archive/sports/1997/09/10/michigans-mr-do-it-all/5a84c4ba-ffd8-44dd-9600-2c503daaf33a/
+- **`charles-woodson-1997-ohio-state-three-phase-game`** — Against Ohio State in 1997, Woodson made a long reception that set up Michigan's only offensive touchdown, intercepted a pass in the end zone and returned a punt for a touchdown.
+  - Source: College Football Hall of Fame — College Football Hall of Fame — Charles Woodson profile — https://www.cfbhall.com/inductees/charles-woodson-2018/
+
+### `cfb-darren-mcfadden`
+
+- **`darren-mcfadden-tenth-of-twelve`** — McFadden grew up in Little Rock as the tenth of twelve children in a close family that dealt with significant economic hardship.
+  - Source: Encyclopedia of Arkansas — Encyclopedia of Arkansas — Darren McFadden — https://encyclopediaofarkansas.net/entries/darren-mcfadden-13636/
+- **`darren-mcfadden-leecie-henson-mentor`** — A seventh-grade teacher, Leecie Henson, confronted McFadden about behavior and study habits that could derail his college ambitions and then became a long-term mentor he described as another mother.
+  - Source: Arkansas Athletics — Arkansas Athletics — “Darren McFadden Navigates Personal Detours” — https://arkansasrazorbacks.com/darren_mcfadden_navigates_personal_detours_1210061/
+- **`darren-mcfadden-arkansas-dream-early-visit`** — McFadden described Arkansas as the in-state school he wanted from an early age; he first visited the program as a tenth-grader and did not seriously pursue a long list of alternatives afterward.
+  - Source: National Football Foundation — National Football Foundation — 2019 College Football Hall of Fame Profile: Darren McFadden — https://footballfoundation.org/news/2019/10/18/2019-college-football-hall-of-fame-profile-darren-mcfadden.aspx
+- **`darren-mcfadden-high-school-versatility`** — At Oak Grove, McFadden was primarily a running back but also took quarterback snaps and threw passes, returned punts and competed in baseball and track.
+  - Source: Arkansas Athletics — Arkansas Athletics — Darren McFadden bio — https://arkansasrazorbacks.com/darren_mcfadden_1152805/
+- **`darren-mcfadden-wildhog-quarterback-role`** — Arkansas repeatedly aligned McFadden at quarterback in its “WildHog” package, allowing him to function as both a runner and passer from a direct-snap role.
+  - Source: Arkansas Athletics — Arkansas Athletics — “Tough to Stop Versatile McFadden” — https://arkansasrazorbacks.com/tough_to_stop_versatile_mcfadden_1246592/
+
+### `cfb-derrick-henry`
+
+- **`derrick-henry-grandmother-shocka-origin`** — Henry was raised principally by his grandmother Gladys. Because his birth came as a surprise to the family, she called him “Shocka” or “Shocker,” a childhood name that remained part of the family's identity for him.
+  - Source: ESPN — ESPN — “Inside Derrick Henry's path to dominance” — https://www.espn.com/nfl/story/_/id/42739677/derrick-henry-baltimore-ravens-dominance-nfl
+- **`derrick-henry-too-big-for-running-back`** — Even when Henry was young, adults regularly suggested that his unusual size meant he should play defense or another position, but he wanted to remain a running back.
+  - Source: ESPN — ESPN — “Inside Derrick Henry's path to dominance” — https://www.espn.com/nfl/story/_/id/42739677/derrick-henry-baltimore-ravens-dominance-nfl
+- **`derrick-henry-ken-hall-record`** — At Yulee High School, Henry broke the national high-school career rushing record that Ken Hall had held for 59 years.
+  - Source: Heisman Trophy — Heisman Trophy — Derrick Henry biography — https://www.heisman.com/heisman-winners/derrick-henry/
+- **`derrick-henry-saban-small-town-connection`** — In Henry's early meetings with Nick Saban, the coach emphasized parallels between their small-town backgrounds; Saban later described recognizing Henry's quiet, perfectionist drive.
+  - Source: ESPN — ESPN — College Football Playoff feature on Alabama's path — https://www.espn.com/espn/feature/story/_/id/14395655/an-look-paths-michigan-state-spartans-alabama-crimson-tide-took-college-football-playoff
+- **`derrick-henry-alabama-learning-complete-running-back`** — Henry has described Alabama as the first level where football was not simply easy for him; he had to learn the full responsibilities of the running-back position after a high-school system that could rely heavily on simply getting him the ball.
+  - Source: ESPN — ESPN — Derrick Henry Heisman profile — https://www.espn.com/college-football/story/_/id/14346202/derrick-henry-alabama-crimson-tide-wins-heisman-trophy
+
+### `cfb-devonta-smith`
+
+- **`devonta-smith-butler-town-park-childhood`** — Smith grew up with Butler Town Park immediately behind his family's home in Amite, Louisiana, and repeatedly joined games there even when older players told the undersized child he was too small.
+  - Source: Sports Illustrated — Sports Illustrated — DeVonta Smith hometown profile — https://www.si.com/college/2018/08/21/devonta-smith-alabama-touchdown-national-championship-hometown
+- **`devonta-smith-120-pound-two-way-freshman`** — As a roughly 120-pound high-school freshman, Smith played receiver and cornerback, returned kicks and stayed on the field for most of the game.
+  - Source: Sports Illustrated — Sports Illustrated — DeVonta Smith hometown profile — https://www.si.com/college/2018/08/21/devonta-smith-alabama-touchdown-national-championship-hometown
+- **`devonta-smith-mother-social-worker-influence`** — Smith's mother, Christine, worked as a social worker and entered difficult or potentially dangerous family situations; Smith has said worrying about her safety and seeing the cases she handled influenced him to stay focused and be a better son.
+  - Source: The Philadelphia Inquirer — The Philadelphia Inquirer — DeVonta Smith and his Louisiana roots — https://www.inquirer.com/eagles/eagles-devonta-smith-alabama-louisiana-20210518.html
+- **`devonta-smith-chose-alabama-for-structure`** — Although Amite sits in heavily LSU-oriented territory, Smith chose Alabama in part because he wanted the program's structure and discipline, accepting criticism from some people around him for leaving the state.
+  - Source: The Philadelphia Inquirer — The Philadelphia Inquirer — DeVonta Smith and his Louisiana roots — https://www.inquirer.com/eagles/eagles-devonta-smith-alabama-louisiana-20210518.html
+- **`devonta-smith-no-ac-gym-recruiting-image`** — One recruiter remembered first seeing the skinny Smith lifting weights relentlessly in Amite's small, un-air-conditioned gym on a sweltering day.
+  - Source: The Philadelphia Inquirer — The Philadelphia Inquirer — DeVonta Smith work-ethic profile — https://www.inquirer.com/eagles/eagles-devonta-smith-alabama-rookie-heisman-20211112.html
+
+### `cfb-earl-campbell`
+
+- **`earl-campbell-mother-rose-fields`** — Campbell's father died when Earl was young, leaving his mother Ann to support a family of eleven children; among her jobs was work connected to Tyler's rose fields and selling roses.
+  - Source: Texas Athletics — Texas Athletics — “Momma's roses” — https://texaslonghorns.com/news/2009/8/3/080309aab_900
+- **`earl-campbell-arrived-texas-with-little`** — When Campbell left Tyler for the University of Texas, he had traveled little outside his hometown and recalled arriving with very few clothes, a suit sewn by his high-school sweetheart and future wife Reuna, and about forty dollars.
+  - Source: Earl Campbell official site — Earl Campbell official site — “College Years” — https://earlcampbell.org/college-years/
+- **`earl-campbell-ann-campbell-controlled-recruiting`** — Campbell's mother Ann was a central gatekeeper in his recruitment and came to trust Texas recruiter Ken Dabbs because she believed he dealt honestly with the family.
+  - Source: Texas Athletics — Texas Athletics — “Longhorn legend Ken Dabbs passes away” — https://texaslonghorns.com/news/2019/10/17/football-longhorn-legend-ken-dabbs-passes-away
+- **`earl-campbell-refused-recruiting-inducements`** — Campbell recalled rejecting improper recruiting inducements and making clear that he did not want to be bought.
+  - Source: Texas Athletics — Texas Athletics — Earl Campbell memories — https://texaslonghorns.com/news/2003/1/18/011803aaa_79
+- **`earl-campbell-buy-mother-house-motivation`** — Campbell has described an early football motivation as wanting eventually to buy his mother a sound home so she would no longer live in a house with serious roof problems.
+  - Source: Earl Campbell official site — Earl Campbell official site — “College Years” — https://earlcampbell.org/college-years/
+
+### `cfb-ernie-davis`
+
+- **`ernie-davis-elmira-multisport-52-straight`** — After moving to Elmira, New York, at age twelve, Davis starred in football, basketball and baseball; his high-school basketball teams won 52 consecutive games, although football became his first love.
+  - Source: Heisman Trophy — Heisman Trophy — Ernie Davis biography — https://www.heisman.com/heisman-winners/ernie-davis/
+- **`ernie-davis-jim-brown-number-44-influence`** — Syracuse great Jim Brown personally encouraged Davis toward Syracuse, and Davis continued the program's emerging No. 44 tradition after Brown.
+  - Source: Syracuse Athletics — Syracuse Athletics — “Legend of 44” — https://cuse.com/news/2004/9/15/legend44video
+- **`ernie-davis-floyd-little-number-44-legacy`** — Before his death, Davis helped encourage Floyd Little to attend Syracuse and continue wearing No. 44; Little later described following through on that connection.
+  - Source: Syracuse Athletics — Syracuse Athletics — “Legend of 44” — https://cuse.com/news/2004/9/15/legend44video
+- **`ernie-davis-jfk-meeting`** — Davis's breakthrough as the first Black Heisman Trophy winner led to an unusual national association with President John F. Kennedy, who requested an opportunity to meet him.
+  - Source: Syracuse University Archives — Syracuse University Archives — Ernie Davis Collection guide — https://library.syracuse.edu/digital/guides_sua/html/sua_davis_e.htm
+- **`ernie-davis-leukemia-never-nfl-game`** — Davis was diagnosed with leukemia after college and died at age 23 before ever playing an NFL game, even though he had been drafted first overall and spent time around the Cleveland Browns.
+  - Source: Heisman Trophy — Heisman Trophy — “Ernie Davis: The first Black Heisman Trophy winner made an impact beyond his years” — https://www.heisman.com/articles/ernie-davis-the-first-black-heisman-trophy-winner-made-an-impact-beyond-his-years/
+
+### `cfb-jim-plunkett`
+
+- **`jim-plunkett-blind-parents-stayed-close`** — Both of Plunkett's parents were blind, and staying near his San Jose-area family was one factor in his decision to attend Stanford.
+  - Source: Heisman Trophy — Heisman Trophy — Jim Plunkett biography — https://www.heisman.com/heisman-winners/jim-plunkett/
+- **`jim-plunkett-five-sport-athlete`** — At James Lick High School, Plunkett competed in five sports, including football at both quarterback and defensive end as well as basketball, baseball, wrestling and track involvement across his high-school years.
+  - Source: Heisman Trophy — Heisman Trophy — Jim Plunkett biography — https://www.heisman.com/heisman-winners/jim-plunkett/
+- **`jim-plunkett-neck-tumor-scare`** — Shortly before beginning at Stanford, a lump in Plunkett's neck was initially feared to be malignant and surgery was expected to threaten his football future; the growth proved benign.
+  - Source: Heisman Trophy — Heisman Trophy — Jim Plunkett biography — https://www.heisman.com/heisman-winners/jim-plunkett/
+- **`jim-plunkett-resisted-defensive-line-move`** — After a redshirt season at Stanford, coaches considered moving Plunkett from quarterback to the defensive line, but he resisted the change and remained at quarterback.
+  - Source: Heisman Trophy — Heisman Trophy — Jim Plunkett biography — https://www.heisman.com/heisman-winners/jim-plunkett/
+- **`jim-plunkett-first-latino-heisman`** — Plunkett, the son of Mexican-American parents, became the first Latino/Hispanic winner of the Heisman Trophy.
+  - Source: Heisman Trophy — Heisman Trophy — Hispanic Heritage Month spotlight on Jim Plunkett — https://www.heisman.com/articles/spotlighting-jim-plunkett-in-honor-of-national-hispanic-heritage-month/
+
+### `cfb-johnny-manziel`
+
+- **`johnny-manziel-overlooked-three-star-height`** — Despite enormous high-school production, Manziel was commonly evaluated as a three-star prospect, with his size contributing to skepticism; relatively few Texas FBS programs offered him early.
+  - Source: ESPN Recruiting — ESPN Recruiting — Johnny Manziel recruiting profile — https://www.espn.com/blog/ncfrecruiting/on-the-trail/insider/post/_/id/23213
+- **`johnny-manziel-oregon-commit-flipped-texas-am`** — Manziel initially committed to Oregon in 2010 before reversing course and choosing Texas A&M after the Aggies continued recruiting him and the home-state relationships became more compelling.
+  - Source: ESPN Recruiting — ESPN Recruiting — Johnny Manziel recruiting profile — https://www.espn.com/blog/ncfrecruiting/on-the-trail/insider/post/_/id/23213
+- **`johnny-manziel-third-string-whitfield-training`** — In the spring before his breakthrough 2012 season, Manziel was still competing from deep in Texas A&M's quarterback room and traveled to San Diego to work with quarterback trainer George Whitfield as he tried to win the open job.
+  - Source: ESPN — ESPN — George Whitfield / Johnny Manziel feature — https://www.espn.com/nfl/story/_/id/9225042/nfl-hot-read-johnny-manziel-succeed-nfl
+- **`johnny-manziel-johnny-football-precollege-snap`** — The “Johnny Football” name was already circulating among Texas A&M fans before Manziel had taken a college snap, with later reporting tracing the phrase to Aggie message-board culture.
+  - Source: ESPN — ESPN — Wright Thompson profile of Johnny Manziel — https://www.espn.com/college-football/story/_/id/16511290/wright-thompson-2013-profile-johnny-manziel-warned-danger-ahead
+- **`johnny-manziel-alabama-bobble-improvisation`** — In the 2012 win at Alabama, Manziel collided with his own lineman, lost control of the ball, recovered it on the move and then threw across his body for a touchdown to Ryan Swope.
+  - Source: ESPN — ESPN — “When Johnny Manziel mania took over college football” — https://www.espn.com/college-football/story/_/id/20905496/when-johnny-manziel-texas-aggies-mania-took-world
+
+### `cfb-lamar-jackson`
+
+- **`lamar-jackson-father-loss-mother-anchor`** — Jackson's father died when Lamar was eight, leaving his mother Felicia Jones as the central parent, advocate and football influence in his upbringing.
+  - Source: Sports Illustrated — Sports Illustrated — Lamar Jackson and Felicia Jones profile — https://www.si.com/nfl/2018/04/03/lamar-jackson-mother-felicia-jones-draft-agent-manager-louisville
+- **`lamar-jackson-mother-first-trainer`** — Felicia Jones studied quarterback-training drills and recreated them for Lamar as a child; accounts describe her even putting on equipment to provide contact while training Lamar and his brother.
+  - Source: ESPN — ESPN — “Lamar Jackson's first trainer was his mother” — https://www.espn.com/college-football/story/_/id/17949555/louisville-cardinals-quarterback-lamar-jackson-first-trainer-was-mother
+- **`lamar-jackson-quarterback-only-recruiting-demand`** — Some recruiters projected Jackson as an athlete rather than a college quarterback, but Jackson and his mother insisted that the school he chose had to give him a genuine quarterback opportunity; Louisville satisfied that requirement.
+  - Source: Sports Illustrated — Sports Illustrated — Lamar Jackson and Felicia Jones profile — https://www.si.com/nfl/2018/04/03/lamar-jackson-mother-felicia-jones-draft-agent-manager-louisville
+- **`lamar-jackson-hudl-throws-before-runs`** — Louisville assistant Lamar Thomas had Jackson's high-school coach Rick Swain reorganize his highlight film so Bobby Petrino would see passing plays before the spectacular runs.
+  - Source: Sports Illustrated — Sports Illustrated — Lamar Jackson and Felicia Jones profile — https://www.si.com/nfl/2018/04/03/lamar-jackson-mother-felicia-jones-draft-agent-manager-louisville
+- **`lamar-jackson-punt-return-experiment-ended`** — Louisville briefly experimented with Jackson as a punt returner during his freshman period; after Jones reminded the staff of the quarterback commitment, the experiment ended.
+  - Source: Sports Illustrated — Sports Illustrated — Lamar Jackson and Felicia Jones profile — https://www.si.com/nfl/2018/04/03/lamar-jackson-mother-felicia-jones-draft-agent-manager-louisville
+
+### `cfb-luke-kuechly`
+
+- **`luke-kuechly-jesuit-boston-college-fit`** — Kuechly came from Cincinnati's St. Xavier, a Jesuit school, and cited Boston College's Jesuit and academic environment as part of the fit; St. Xavier alumni already at BC also gave him trusted insight during recruiting.
+  - Source: Boston College Athletics — Boston College Athletics — “The Honor of Tradition and All Those Who Contributed to It” — https://bceagles.com/news/2016/10/22/eagles-unlimited-the-honor-of-tradition-and-all-those-who-contributed-to-it
+- **`luke-kuechly-freshman-depth-chart-injuries`** — Kuechly arrived expecting to be buried on the linebacker depth chart, but a series of injuries to players ahead of him pushed him into a major role almost immediately as a true freshman.
+  - Source: Boston College Athletics — Boston College Athletics — Luke Kuechly and Doug Flutie news-conference transcript — https://bceagles.com/news/2016/10/21/football-luke-kuechly-and-doug-flutie-news-conference-transcript
+- **`luke-kuechly-herzlich-morrissey-davis-mentors`** — Kuechly credited veteran Boston College defenders including Mark Herzlich, Mike Morrissey and Wes Davis with teaching him film study, preparation and how to handle ordinary college life; Davis's locker was next to his and they regularly watched film together.
+  - Source: Boston College Athletics — Boston College Athletics — Luke Kuechly and Doug Flutie news-conference transcript — https://bceagles.com/news/2016/10/21/football-luke-kuechly-and-doug-flutie-news-conference-transcript
+- **`luke-kuechly-linebacker-safety-lacrosse-background`** — At St. Xavier, Kuechly had experience at linebacker and safety and also played lacrosse before becoming exclusively identified with linebacker at Boston College.
+  - Source: Boston College Athletics — Boston College Athletics — Luke Kuechly player bio — https://bceagles.com/sports/football/roster/l-kuechly/1693
+- **`luke-kuechly-returned-to-bc-for-degree`** — After leaving Boston College early for the NFL, Kuechly returned to campus during subsequent offseasons to take classes and complete his degree.
+  - Source: Boston College Athletics — Boston College Athletics — Q&A with Luke Kuechly — https://bceagles.com/news/2013/1/15/Q_amp_A_with_Luke_Kuechly
+
+### `cfb-matt-leinart`
+
+- **`matt-leinart-childhood-strabismus`** — Leinart was born with strabismus, underwent eye surgery at about age three and wore glasses as a child.
+  - Source: USC Athletics — USC Athletics — Matt Leinart bio — https://usctrojans.com/sports/general/roster/matt-leinart/1807
+- **`matt-leinart-high-school-rotator-cuff`** — A rotator-cuff injury in his throwing shoulder caused Leinart to miss his entire sophomore football season at Mater Dei.
+  - Source: USC Athletics — USC Athletics — Matt Leinart bio — https://usctrojans.com/sports/general/roster/matt-leinart/1807
+- **`matt-leinart-michigan-consideration-chose-usc`** — Leinart strongly considered Michigan during recruiting but ultimately chose nearby USC, emphasizing his comfort with the school and the importance of remaining close to family.
+  - Source: Los Angeles Times — Los Angeles Times — Matt Leinart commitment coverage — https://www.latimes.com/archives/la-xpm-2000-aug-22-sp-8312-story.html
+- **`matt-leinart-early-usc-confidence-growth`** — Leinart later described his early seasons behind Carson Palmer as a period in which he had to mature, rebuild confidence and adjust his attitude before taking over the offense.
+  - Source: USC Athletics — USC Athletics — Matt Leinart bio — https://usctrojans.com/sports/general/roster/matt-leinart/1807
+- **`matt-leinart-returned-after-heisman`** — After winning the Heisman and a national championship, Leinart declined the chance to enter the NFL immediately and returned to USC for his senior season, citing school, teammates, family and the college experience.
+  - Source: USC Athletics — USC Athletics — “He's Back: Matt Leinart Will Return To USC For Senior Season” — https://usctrojans.com/news/2005/1/14/He_s_Back_Matt_Leinart_Will_Return_To_USC_For_Senior_Season
+
+### `cfb-myles-garrett`
+
+- **`myles-garrett-paleontology-dinosaur-interest`** — Garrett developed a childhood obsession with dinosaurs and paleontology, digging in his yard for imagined fossils and later maintaining a serious interest in geology and paleontological field work while at Texas A&M.
+  - Source: ESPN — ESPN — Myles Garrett interview on books, poetry and dinosaurs — https://www.espn.com/college-football/story/_/id/17907011/texas-myles-garrett-talks-colin-kaepernick-maya-angelou-dinosaurs
+- **`myles-garrett-poetry-maya-angelou`** — Garrett is an avid reader and poetry writer who has specifically cited Maya Angelou as an influence and has used writing as a way to process thoughts and emotions.
+  - Source: ESPN — ESPN — Myles Garrett interview on books, poetry and dinosaurs — https://www.espn.com/college-football/story/_/id/17907011/texas-myles-garrett-talks-colin-kaepernick-maya-angelou-dinosaurs
+- **`myles-garrett-athletic-family-brea-aandm-link`** — Garrett came from an elite athletic family: his mother Audrey had been an All-America hurdler, and his sister Brea became an NCAA throwing champion at Texas A&M and helped make the university familiar during his recruitment.
+  - Source: Sports Illustrated — Sports Illustrated — Myles Garrett family profile — https://www.si.com/college/2015/07/27/myles-garrett-texas-am-aggies-football
+- **`myles-garrett-recruiting-saban-miles-sumlin-same-day`** — At Martin High School, Garrett's recruitment became a spectacle that included Nick Saban, Les Miles and Kevin Sumlin appearing on the same day; Sumlin also once arrived at a game by helicopter while Garrett was playing.
+  - Source: Sports Illustrated — Sports Illustrated — Myles Garrett family profile — https://www.si.com/college/2015/07/27/myles-garrett-texas-am-aggies-football
+- **`myles-garrett-coach-wager-potential-meeting`** — Martin coach Bob Wager held a family meeting with Garrett during high school to confront inconsistent effort and emphasize that 'potential' meant little without sustained work; Garrett's approach changed afterward.
+  - Source: Sports Illustrated — Sports Illustrated — Myles Garrett draft-day profile — https://www.si.com/nfl/2017/05/04/nfl-draft-myles-garrett-party-cleveland-browns-nfl-pa-texas-am-martin-high-school
+
+### `cfb-o-j-simpson`
+
+- **`oj-simpson-rickets-leg-braces`** — Simpson suffered from rickets as a young child and wore leg braces for several years.
+  - Source: The Washington Post — The Washington Post — “From Superstar to Suspect” — https://www.washingtonpost.com/archive/politics/1995/10/04/from-superstar-to-suspect/54c1681c-626c-4a9b-80fd-3e9325727ce1/
+- **`oj-simpson-willie-mays-youth-intervention`** — After trouble as a teenager, a San Francisco youth worker helped arrange a meeting with Willie Mays; Simpson later recalled the encounter as important because it made extraordinary athletic success feel attainable.
+  - Source: The Washington Post — The Washington Post — “From Superstar to Suspect” — https://www.washingtonpost.com/archive/politics/1995/10/04/from-superstar-to-suspect/54c1681c-626c-4a9b-80fd-3e9325727ce1/
+- **`oj-simpson-junior-college-route`** — Academic and recruiting circumstances led Simpson first to City College of San Francisco rather than directly to a major program before he transferred to USC.
+  - Source: Heisman Trophy — Heisman Trophy — O.J. Simpson biography — https://www.heisman.com/heisman-winners/oj-simpson/
+- **`oj-simpson-usc-world-record-relay`** — At USC, Simpson also competed in track and ran on a 440-yard relay team that set a world record.
+  - Source: Heisman Trophy — Heisman Trophy — O.J. Simpson biography — https://www.heisman.com/heisman-winners/oj-simpson/
+- **`oj-simpson-1967-ucla-weaving-touchdown`** — In the 1967 USC-UCLA rivalry game, Simpson broke a long, weaving fourth-quarter touchdown run that provided the decisive points in USC's 21–20 win.
+  - Source: USC Athletics — USC Athletics — Football National Championships history — https://usctrojans.com/sports/2020/6/24/football-national-championships
+
+### `cfb-paul-hornung`
+
+- **`paul-hornung-flaget-three-sport-athlete`** — At Flaget High School in Louisville, Hornung earned varsity recognition across football, basketball and baseball rather than specializing early in one sport.
+  - Source: Heisman Trophy — Heisman Trophy — Paul Hornung biography — https://www.heisman.com/heisman-winners/paul-hornung/
+- **`paul-hornung-mother-friend-pushed-notre-dame`** — Bear Bryant recruited Hornung to Kentucky, but Hornung's mother and close friend Sherrill Sipes encouraged Notre Dame; Hornung and Sipes later became a rare pair of high-school teammates starting together in the Notre Dame backfield.
+  - Source: Heisman Trophy — Heisman Trophy — Paul Hornung obituary/profile — https://www.heisman.com/articles/college-and-pro-football-hall-of-famer-paul-vernon-hornung-passes-away-at-age-84/
+- **`paul-hornung-notre-dame-basketball-monogram`** — Before becoming Notre Dame's football centerpiece, Hornung also played varsity basketball for the Irish and earned a basketball monogram.
+  - Source: Heisman Trophy — Heisman Trophy — Paul Hornung biography — https://www.heisman.com/heisman-winners/paul-hornung/
+- **`paul-hornung-one-platoon-do-everything-role`** — In Notre Dame's one-platoon era, Hornung handled an unusual range of jobs that included quarterback and running-back duties, defensive back play, punting and placekicking.
+  - Source: Heisman Trophy — Heisman Trophy — Paul Hornung biography — https://www.heisman.com/heisman-winners/paul-hornung/
+- **`paul-hornung-heisman-losing-team`** — Hornung remains the only Heisman Trophy winner whose team finished the season with a losing record; Notre Dame went 2–8 in 1956.
+  - Source: Heisman Trophy — Heisman Trophy — “This Week in Heisman History: Paul Hornung...” — https://www.heisman.com/articles/this-week-in-heisman-history-paul-hornung-leads-the-irish-to-victory-in-his-final-home-game/
+
+### `cfb-ricky-williams`
+
+- **`ricky-williams-high-school-four-sport-athlete`** — Williams was a four-sport athlete in high school, with significant participation in football, baseball, wrestling and track.
+  - Source: Texas Athletics — Texas Athletics — Ricky Williams bio — https://texaslonghorns.com/sports/general/roster/ricky-williams/5056
+- **`ricky-williams-phillies-minor-leagues-during-college`** — The Philadelphia Phillies drafted Williams out of high school, and he played professional minor-league baseball during the summers while he was also a Texas college football player.
+  - Source: Texas Athletics — Texas Athletics — Ricky Williams bio — https://texaslonghorns.com/sports/general/roster/ricky-williams/5056
+- **`ricky-williams-started-texas-as-fullback`** — Williams began his Texas career as a fullback before developing into the tailback role for which he became famous.
+  - Source: Texas Athletics — Texas Athletics — Longhorn Hall of Honor profile — https://texaslonghorns.com/news/2010/9/11/091110aaa_917
+- **`ricky-williams-number-34-earl-campbell-homage`** — For his senior season, Williams wore No. 34 in homage to Texas legend Earl Campbell, creating a deliberate visual link between two generations of Longhorn running backs.
+  - Source: The Washington Post — The Washington Post — “Williams Gets the Heisman” — https://www.washingtonpost.com/archive/sports/1998/12/13/williams-gets-the-heisman/dde48304-a06f-4ca2-a6a5-7dd05bf8ab36/
+- **`ricky-williams-returned-to-texas-finished-degree`** — Years after leaving Texas, Williams returned to the university, studied educational psychology and completed his degree in 2017; he described rediscovering an enjoyment of academics during the return.
+  - Source: Texas Athletics — Texas Athletics — Ricky Williams Heisman 25th Anniversary salute — https://texaslonghorns.com/news/2023/11/3/football-ricky-williams-set-for-heisman-25th-anniversary-salute
+
+### `cfb-sean-taylor`
+
+- **`sean-taylor-gulliver-three-position-football`** — At Gulliver Prep, Taylor played running back, defensive back and linebacker rather than being confined to the safety role associated with his later career.
+  - Source: Miami Athletics — Miami Athletics — Sean Taylor player bio — https://miamihurricanes.com/sports/football/roster/player/sean-taylor
+- **`sean-taylor-basketball-track-state-100`** — Taylor also played basketball and competed in track, winning a Florida Class 2A state title in the 100-meter dash as a high-school senior.
+  - Source: University of Miami Sports Hall of Fame — University of Miami Sports Hall of Fame — Sean Taylor — https://www.umsportshalloffame.com/sean-taylor.html
+- **`sean-taylor-gulliver-only-loss-missed`** — Gulliver Prep's state-championship team went 14–1, and Miami's Hall of Fame profile notes that the lone loss came in a game Taylor did not play.
+  - Source: University of Miami Sports Hall of Fame — University of Miami Sports Hall of Fame — Sean Taylor — https://www.umsportshalloffame.com/sean-taylor.html
+- **`sean-taylor-local-miami-true-freshman`** — Taylor chose nearby Miami over other major programs and was one of only four true freshmen to play for the 2001 national-championship Hurricanes, initially contributing in sub packages and on special teams.
+  - Source: Miami Athletics — Miami Athletics — Sean Taylor player bio — https://miamihurricanes.com/sports/football/roster/player/sean-taylor
+- **`sean-taylor-replaced-ed-reed`** — When Taylor became a full-time Miami starter, he stepped into the safety role vacated by Ed Reed.
+  - Source: University of Miami Sports Hall of Fame — University of Miami Sports Hall of Fame — Sean Taylor — https://www.umsportshalloffame.com/sean-taylor.html
+
+### `tom-osborne`
+
+- **`tom-osborne-chose-hastings-to-play-three-sports`** — Osborne had scholarship opportunities at Nebraska in football and basketball but wanted to keep playing both; he chose hometown Hastings College, where a combined arrangement allowed him to compete in football, basketball and track.
+  - Source: Nebraska Athletics — Nebraska Athletics — Tom Osborne Hall of Fame exhibit feature — https://huskers.com/news/2016/04/28/lincoln-hall-of-fame-exhibit-will-honor-tom-osborne
+- **`tom-osborne-quarterback-to-nfl-flanker`** — Osborne played quarterback at Hastings College but later spent his professional football career as a receiver/flanker.
+  - Source: National Football Foundation — National Football Foundation — Tom Osborne Hall of Fame profile — https://footballfoundation.org/honors/hall-of-fame/tom-osborne/2044
+- **`tom-osborne-devaney-volunteer-coaching-start`** — After his playing career, Bob Devaney brought Osborne into Nebraska's program as an unpaid volunteer/graduate assistant in 1962; Osborne later said Devaney was central to getting him to consider coaching at all.
+  - Source: Nebraska Athletics — Nebraska Athletics — Tom Osborne staff profile — https://huskers.com/staff/tom-osborne
+- **`tom-osborne-educational-psychology-phd`** — While building his coaching career, Osborne earned graduate degrees in educational psychology, including a doctorate, and served Nebraska in academic and teaching roles as well as football.
+  - Source: Nebraska Athletics — Nebraska Athletics — Tom Osborne staff profile — https://huskers.com/staff/tom-osborne
+- **`tom-osborne-built-program-systems-beyond-offense`** — Under Devaney, Osborne helped develop not only Nebraska's offense but also program infrastructure he considered foundational, including academic support, strength and conditioning, and a formalized walk-on system.
+  - Source: Nebraska Athletics — Nebraska Athletics — Tom Osborne staff profile — https://huskers.com/staff/tom-osborne
+
+### `cfb-tyrann-mathieu`
+
+- **`tyrann-mathieu-grandparents-aunt-uncle-upbringing`** — Mathieu was raised first by his maternal grandparents; after his grandfather Lorenzo died when Tyrann was five, his aunt Sheila and uncle Tyrone became his primary home and support system.
+  - Source: ESPN The Magazine — ESPN The Magazine — Tyrann Mathieu profile — https://www.espn.com/college-football/story/_/id/8240140/lsu-db-tyrann-mathieu-well-known-phenom-limits-media-espn-magazine
+- **`tyrann-mathieu-katrina-displacement`** — Hurricane Katrina flooded Mathieu's New Orleans home and his school, St. Augustine; he spent time evacuated in Humble, Texas, before the family and school rebuilt.
+  - Source: ESPN The Magazine — ESPN The Magazine — Tyrann Mathieu profile — https://www.espn.com/college-football/story/_/id/8240140/lsu-db-tyrann-mathieu-well-known-phenom-limits-media-espn-magazine
+- **`tyrann-mathieu-honey-badger-viral-comparison`** — The “Honey Badger” identity emerged at LSU from the viral honey-badger video and comparisons to the animal's relentless, fearless style; teammates and fans embraced it, even though Mathieu initially was not enthusiastic about the nickname.
+  - Source: LSU Athletics — LSU Athletics — Tyrann Mathieu Q&A / Honey Badger discussion — https://lsusports.net/news/2012/01/05/205356393
+- **`tyrann-mathieu-patrick-peterson-morris-claiborne-lineage`** — As a young LSU defensive back, Mathieu learned in a room that included Patrick Peterson and Morris Claiborne and later pointed to those veteran relationships as part of his development.
+  - Source: ESPN — ESPN — Tyrann Mathieu turning-point profile — https://www.espn.com/nfl/story/_/id/9956212/arizona-cardinals-safety-tyrann-mathieu-turning-point
+- **`tyrann-mathieu-dismissal-recovery-reenrollment`** — After LSU dismissed Mathieu from the football program in 2012, he entered a treatment and mentoring program in Houston associated with John Lucas and chose to re-enroll at LSU rather than immediately transferring elsewhere.
+  - Source: ESPN — ESPN — Tyrann Mathieu turning-point profile — https://www.espn.com/nfl/story/_/id/9956212/arizona-cardinals-safety-tyrann-mathieu-turning-point
+
+### `cfb-von-miller`
+
+- **`von-miller-de-to-linebacker-to-jack-joker`** — At Texas A&M, Miller's role evolved from an undersized defensive end as a freshman, through a difficult transition to linebacker, into the hybrid “Jack” pass-rush role and then a “Joker” role that could rush or drop into coverage.
+  - Source: Texas A&M Athletics — Texas A&M Athletics — All-America accolades for Von Miller — https://12thman.com/news/2009/12/14/all-america-accolades-continue-to-roll-in-for-ams-miller
+- **`von-miller-returned-senior-degree-family`** — Miller chose to return to Texas A&M for his senior season despite having a realistic path to the NFL, citing the importance of earning his degree and remaining with his Aggie football family.
+  - Source: Texas A&M Athletics — Texas A&M Athletics — “All-American Von Miller Will Return to Texas A&M for Senior Season” — https://12thman.com/news/2010/1/13/all-american-von-miller-will-return-to-texas-am-for-senior-season
+- **`von-miller-poultry-science-chicken-farming`** — Miller earned a Texas A&M degree in poultry science and developed a serious interest in raising chickens and poultry farming.
+  - Source: Texas A&M Athletics — Texas A&M Athletics — Von Miller Walter Camp Alumni Award profile — https://12thman.com/news/2019/12/31/texas-am-legend-von-miller-receives-walter-camp-alumni-award
+- **`von-miller-desoto-to-texas-am-pipeline`** — Former teammate Cyrus Gray credited Miller and Garrick Williams, fellow DeSoto products, with reaching out to younger DeSoto players and helping create a family-like pipeline from the high school to Texas A&M.
+  - Source: Texas A&M Athletics — Texas A&M Athletics — Cotton Bowl press conference — https://12thman.com/news/2010/12/15/aggie-football-cotton-bowl-press-conference
+- **`von-miller-childhood-glasses-vons-vision`** — Miller has worn glasses since second grade and has described childhood experiences with eyewear as part of the motivation behind his later Von's Vision program providing eye exams and glasses to children.
+  - Source: Denver Broncos — Denver Broncos — “Miller hosts event to benefit Von's Vision” — https://www.denverbroncos.com/news/miller-hosts-event-to-benefit-von-s-vision-13176195
+
+## Final verification contract
+
+- Exact final PR head must pass typecheck.
+- Exact final PR head must pass the focused person-identity test.
+- Exact final PR head must pass all full-suite shards.
+- Exact final PR head must pass the production build.
+- Required backend/repository verification must be genuinely green.
+- The merged main SHA must deploy through the canonical GitHub Actions Cloudflare workflow and the live deployment marker must match that exact main SHA.

@@ -1,0 +1,24 @@
+.football-editorial{padding:16px;display:grid;gap:14px;min-width:0}
+.football-editorial__header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.football-editorial__header h2{margin:3px 0;font-size:clamp(18px,5vw,23px);letter-spacing:-.03em}
+.football-editorial__header p{margin:0;color:var(--muted,#aab2be);font-size:12px}
+.football-editorial__status{flex-shrink:0;border:1px solid #4e5a69;border-radius:99px;padding:5px 8px;font-size:9px;letter-spacing:.08em}
+.football-editorial__explain,.football-editorial__footnote{margin:0;font-size:12px;line-height:1.5;color:var(--muted,#aab2be)}
+.football-editorial__sport{padding:12px 0;border-top:1px solid rgba(190,205,225,.16);display:grid;gap:10px}
+.football-editorial__sport-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.football-editorial__sport-heading h3{margin:0;font-size:16px}
+.football-editorial__sport-heading span{font-size:9px;letter-spacing:.07em;color:#a9bdd4;font-weight:700}
+.football-editorial__group{border:0;padding:0;margin:0;min-width:0}
+.football-editorial__group legend{font-size:11px;font-weight:800;letter-spacing:.04em;margin-bottom:6px}
+.football-editorial__options{display:grid;gap:6px}
+.football-editorial__option{display:flex;align-items:center;gap:9px;border:1px solid rgba(190,205,225,.2);border-radius:11px;padding:9px 10px;cursor:pointer;min-width:0}
+.football-editorial__option.is-selected{border-color:#75a8dd;background:rgba(58,112,163,.18)}
+.football-editorial__option input{accent-color:#8ebce6;flex:none}
+.football-editorial__option span{display:grid;gap:2px;min-width:0}
+.football-editorial__option strong{font-size:12px}
+.football-editorial__option small{font-size:11px;color:var(--muted,#aab2be);line-height:1.4}
+.football-editorial__save{width:100%;min-height:38px;justify-content:center}
+.football-editorial__saved{margin:0;font-size:11px;color:#a9d0ba}
+.football-editorial__waiting{font-size:12px;color:var(--muted,#aab2be);margin:0}
+.football-editorial [role="alert"]{color:#f0b2b2;font-size:12px}
+.football-editorial [role="status"]{font-size:12px}

@@ -1,0 +1,158 @@
+name: Wheel NFL Biweekly Editorial Review
+
+on:
+  workflow_dispatch:
+    inputs:
+      reference:
+        description: "Comparison baseline (rolling or October 3 historical)"
+        type: choice
+        required: true
+        default: rolling
+        options:
+          - rolling
+          - oct3
+  # The merge itself can start the first pilot if scheduled-indexing/CI misses 16:45.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wheel-nfl-biweekly-editorial.yml'
+  # Both UTC hours cover 16:45 America/Chicago across DST changes.
+  schedule:
+    - cron: '45 21 * * 2'
+    - cron: '45 22 * * 2'
+  pull_request:
+    paths:
+      - '.github/workflows/wheel-nfl-biweekly-editorial.yml'
+      - 'scripts/wheel-monitor/nfl-roster-integrity-pilot.mjs'
+      - 'scripts/wheel-monitor/nfl-biweekly-consolidate.mjs'
+      - 'scripts/wheel-monitor/nfl-madden-oct3-baseline*.mjs'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: wheel-nfl-biweekly-editorial-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cycle:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+    steps:
+      - id: gate
+        shell: bash
+        env:
+          SCHEDULE_CRON: ${{ github.event.schedule }}
+        run: |
+          central_offset=$(TZ=America/Chicago date +%z)
+          local_day=$(TZ=America/Chicago date +%F)
+          epoch=$(date -u -d "$local_day" +%s)
+          anchor=$(date -u -d '2026-10-27' +%s)
+          days=$(( (epoch - anchor) / 86400 ))
+          weeks=$(( days / 7 ))
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            # First deployment pilot: never start ahead of the owner's 16:45 local target.
+            target=$(TZ=America/Chicago date -d "$(TZ=America/Chicago date +%F) 16:45" +%s)
+            now=$(date +%s)
+            if (( target > now && target - now < 3600 )); then sleep $((target-now)); fi
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$GITHUB_EVENT_NAME" == "schedule" && $((weeks % 2)) -eq 0 ]] &&
+            { [[ "$SCHEDULE_CRON" == "45 21 * * 2" && "$central_offset" == "-0500" ]] ||
+              [[ "$SCHEDULE_CRON" == "45 22 * * 2" && "$central_offset" == "-0600" ]]; }; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Outside 16:45 Central biweekly NFL review window."
+          fi
+
+  madden-development:
+    needs: cycle
+    if: needs.cycle.outputs.run == 'true'
+    uses: ./.github/workflows/wheel-nfl-production-review.yml
+    with:
+      historical_oct03: ${{ inputs.reference == 'oct3' }}
+
+  contracts-transfers:
+    needs: cycle
+    if: needs.cycle.outputs.run == 'true'
+    uses: ./.github/workflows/wheel-gm-contract-review.yml
+
+  head-coaches:
+    needs: cycle
+    if: needs.cycle.outputs.run == 'true'
+    uses: ./.github/workflows/wheel-nfl-coach-current-review.yml
+
+  roster-integrity:
+    needs: cycle
+    if: needs.cycle.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify NFL-only read-only roster collector
+        run: node --check scripts/wheel-monitor/nfl-roster-integrity-pilot.mjs
+      - name: Compare 594 GM identities against all 32 ESPN NFL rosters
+        run: node scripts/wheel-monitor/nfl-roster-integrity-pilot.mjs --out=tmp/wheel-monitor/nfl/roster-integrity.json
+      - name: Archive roster exceptions without changing production
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-roster-integrity
+          path: tmp/wheel-monitor/nfl/roster-integrity.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  report:
+    needs: [cycle, madden-development, contracts-transfers, head-coaches, roster-integrity]
+    if: always() && needs.cycle.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Restore Madden overall and development review
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: wheel-nfl-madden-review-flags
+          path: tmp/wheel-monitor/biweekly/madden
+      - name: Restore contract and transfer review
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: wheel-gm-contract-source-review
+          path: tmp/wheel-monitor/biweekly/contracts
+      - name: Restore 32-coach review
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: wheel-nfl-biweekly-coach-review
+          path: tmp/wheel-monitor/biweekly/coaches
+      - name: Restore roster exceptions
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: wheel-nfl-roster-integrity
+          path: tmp/wheel-monitor/biweekly/roster
+      - name: Deduplicate five NFL editorial streams with explicit source blockers
+        run: |
+          node --check scripts/wheel-monitor/nfl-biweekly-consolidate.mjs
+          node scripts/wheel-monitor/nfl-biweekly-consolidate.mjs \
+            tmp/wheel-monitor/biweekly tmp/wheel-monitor/nfl-biweekly-report.json
+      - name: Preserve single read-only report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-biweekly-editorial-report
+          path: tmp/wheel-monitor/nfl-biweekly-report.json
+          retention-days: 90
+          if-no-files-found: warn

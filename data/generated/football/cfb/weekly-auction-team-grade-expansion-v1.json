@@ -1,0 +1,954 @@
+{
+  "version": "weekly-auction-cfb-team-grades-2026-09-v1",
+  "status": "grading-audit-only-not-runtime",
+  "scale": {
+    "min": 86,
+    "max": 100,
+    "increment": 0.5
+  },
+  "methodology": [
+    "Grade the actual season, not program reputation.",
+    "Use record and championship result, era-relative dominance, schedule strength, quality wins, postseason performance, and quality/context of losses.",
+    "Compare within era and across eras; longer modern schedules do not automatically increase grade.",
+    "Preserve approved existing anchors and fit added seasons to that established ladder.",
+    "Run a second pairwise calibration pass to catch ordering inconsistencies.",
+    "Board generation never determines or modifies grades."
+  ],
+  "locked_anchor_count": 132,
+  "expansion_count": 101,
+  "total_calibrated_pool": 233,
+  "aggregate_checks": {
+    "conference_bucket_counts": {
+      "SEC": 63,
+      "Big Ten": 59,
+      "Big 12": 44,
+      "ACC": 43,
+      "Notre Dame": 11,
+      "Wildcard": 13
+    },
+    "era_counts": {
+      "2000-2006": 45,
+      "2007-2012": 56,
+      "2013-2018": 60,
+      "2019-2025": 72
+    },
+    "grade_band_counts": {
+      "94-96.5": 36,
+      "97-100": 13,
+      "91-93.5": 80,
+      "88-90.5": 85,
+      "86-87.5": 19
+    }
+  },
+  "additions": [
+    {
+      "season_reference": "weekly-cfb-florida-2001",
+      "season_year": 2001,
+      "school": "Florida",
+      "conference_bucket": "SEC",
+      "display_label": "Florida · 2001",
+      "hidden_grade": 93.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-tennessee-2001",
+      "season_year": 2001,
+      "school": "Tennessee",
+      "conference_bucket": "SEC",
+      "display_label": "Tennessee · 2001",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-texas-2001",
+      "season_year": 2001,
+      "school": "Texas",
+      "conference_bucket": "SEC",
+      "display_label": "Texas · 2001",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oklahoma-2002",
+      "season_year": 2002,
+      "school": "Oklahoma",
+      "conference_bucket": "SEC",
+      "display_label": "Oklahoma · 2002",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-georgia-2002",
+      "season_year": 2002,
+      "school": "Georgia",
+      "conference_bucket": "SEC",
+      "display_label": "Georgia · 2002",
+      "hidden_grade": 93.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oklahoma-2003",
+      "season_year": 2003,
+      "school": "Oklahoma",
+      "conference_bucket": "SEC",
+      "display_label": "Oklahoma · 2003",
+      "hidden_grade": 93.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-georgia-2003",
+      "season_year": 2003,
+      "school": "Georgia",
+      "conference_bucket": "SEC",
+      "display_label": "Georgia · 2003",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oklahoma-2004",
+      "season_year": 2004,
+      "school": "Oklahoma",
+      "conference_bucket": "SEC",
+      "display_label": "Oklahoma · 2004",
+      "hidden_grade": 94,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-lsu-2006",
+      "season_year": 2006,
+      "school": "LSU",
+      "conference_bucket": "SEC",
+      "display_label": "LSU · 2006",
+      "hidden_grade": 93,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-florida-2007",
+      "season_year": 2007,
+      "school": "Florida",
+      "conference_bucket": "SEC",
+      "display_label": "Florida · 2007",
+      "hidden_grade": 88.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-texas-2008",
+      "season_year": 2008,
+      "school": "Texas",
+      "conference_bucket": "SEC",
+      "display_label": "Texas · 2008",
+      "hidden_grade": 95,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-florida-2009",
+      "season_year": 2009,
+      "school": "Florida",
+      "conference_bucket": "SEC",
+      "display_label": "Florida · 2009",
+      "hidden_grade": 95,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-texas-2009",
+      "season_year": 2009,
+      "school": "Texas",
+      "conference_bucket": "SEC",
+      "display_label": "Texas · 2009",
+      "hidden_grade": 94.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-alabama-2010",
+      "season_year": 2010,
+      "school": "Alabama",
+      "conference_bucket": "SEC",
+      "display_label": "Alabama · 2010",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oklahoma-2011",
+      "season_year": 2011,
+      "school": "Oklahoma",
+      "conference_bucket": "SEC",
+      "display_label": "Oklahoma · 2011",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-georgia-2012",
+      "season_year": 2012,
+      "school": "Georgia",
+      "conference_bucket": "SEC",
+      "display_label": "Georgia · 2012",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-florida-2012",
+      "season_year": 2012,
+      "school": "Florida",
+      "conference_bucket": "SEC",
+      "display_label": "Florida · 2012",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-alabama-2013",
+      "season_year": 2013,
+      "school": "Alabama",
+      "conference_bucket": "SEC",
+      "display_label": "Alabama · 2013",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-alabama-2014",
+      "season_year": 2014,
+      "school": "Alabama",
+      "conference_bucket": "SEC",
+      "display_label": "Alabama · 2014",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-georgia-2014",
+      "season_year": 2014,
+      "school": "Georgia",
+      "conference_bucket": "SEC",
+      "display_label": "Georgia · 2014",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oklahoma-2015",
+      "season_year": 2015,
+      "school": "Oklahoma",
+      "conference_bucket": "SEC",
+      "display_label": "Oklahoma · 2015",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-alabama-2017",
+      "season_year": 2017,
+      "school": "Alabama",
+      "conference_bucket": "SEC",
+      "display_label": "Alabama · 2017",
+      "hidden_grade": 95.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-alabama-2018",
+      "season_year": 2018,
+      "school": "Alabama",
+      "conference_bucket": "SEC",
+      "display_label": "Alabama · 2018",
+      "hidden_grade": 96,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-georgia-2018",
+      "season_year": 2018,
+      "school": "Georgia",
+      "conference_bucket": "SEC",
+      "display_label": "Georgia · 2018",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oklahoma-2018",
+      "season_year": 2018,
+      "school": "Oklahoma",
+      "conference_bucket": "SEC",
+      "display_label": "Oklahoma · 2018",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-alabama-2019",
+      "season_year": 2019,
+      "school": "Alabama",
+      "conference_bucket": "SEC",
+      "display_label": "Alabama · 2019",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-georgia-2019",
+      "season_year": 2019,
+      "school": "Georgia",
+      "conference_bucket": "SEC",
+      "display_label": "Georgia · 2019",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-georgia-2020",
+      "season_year": 2020,
+      "school": "Georgia",
+      "conference_bucket": "SEC",
+      "display_label": "Georgia · 2020",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-alabama-2021",
+      "season_year": 2021,
+      "school": "Alabama",
+      "conference_bucket": "SEC",
+      "display_label": "Alabama · 2021",
+      "hidden_grade": 94,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-texas-2024",
+      "season_year": 2024,
+      "school": "Texas",
+      "conference_bucket": "SEC",
+      "display_label": "Texas · 2024",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ole-miss-2024",
+      "season_year": 2024,
+      "school": "Ole Miss",
+      "conference_bucket": "SEC",
+      "display_label": "Ole Miss · 2024",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-nebraska-2000",
+      "season_year": 2000,
+      "school": "Nebraska",
+      "conference_bucket": "Big Ten",
+      "display_label": "Nebraska · 2000",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oregon-2001",
+      "season_year": 2001,
+      "school": "Oregon",
+      "conference_bucket": "Big Ten",
+      "display_label": "Oregon · 2001",
+      "hidden_grade": 93,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-usc-2002",
+      "season_year": 2002,
+      "school": "USC",
+      "conference_bucket": "Big Ten",
+      "display_label": "USC · 2002",
+      "hidden_grade": 93.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2005",
+      "season_year": 2005,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2005",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-usc-2006",
+      "season_year": 2006,
+      "school": "USC",
+      "conference_bucket": "Big Ten",
+      "display_label": "USC · 2006",
+      "hidden_grade": 93,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-usc-2007",
+      "season_year": 2007,
+      "school": "USC",
+      "conference_bucket": "Big Ten",
+      "display_label": "USC · 2007",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oregon-2007",
+      "season_year": 2007,
+      "school": "Oregon",
+      "conference_bucket": "Big Ten",
+      "display_label": "Oregon · 2007",
+      "hidden_grade": 87.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-penn-state-2008",
+      "season_year": 2008,
+      "school": "Penn State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Penn State · 2008",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2008",
+      "season_year": 2008,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2008",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-penn-state-2009",
+      "season_year": 2009,
+      "school": "Penn State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Penn State · 2009",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oregon-2011",
+      "season_year": 2011,
+      "school": "Oregon",
+      "conference_bucket": "Big Ten",
+      "display_label": "Oregon · 2011",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oregon-2013",
+      "season_year": 2013,
+      "school": "Oregon",
+      "conference_bucket": "Big Ten",
+      "display_label": "Oregon · 2013",
+      "hidden_grade": 91,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2015",
+      "season_year": 2015,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2015",
+      "hidden_grade": 93,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2016",
+      "season_year": 2016,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2016",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-michigan-2016",
+      "season_year": 2016,
+      "school": "Michigan",
+      "conference_bucket": "Big Ten",
+      "display_label": "Michigan · 2016",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2017",
+      "season_year": 2017,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2017",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-penn-state-2017",
+      "season_year": 2017,
+      "school": "Penn State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Penn State · 2017",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2018",
+      "season_year": 2018,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2018",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-michigan-2018",
+      "season_year": 2018,
+      "school": "Michigan",
+      "conference_bucket": "Big Ten",
+      "display_label": "Michigan · 2018",
+      "hidden_grade": 89,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-wisconsin-2019",
+      "season_year": 2019,
+      "school": "Wisconsin",
+      "conference_bucket": "Big Ten",
+      "display_label": "Wisconsin · 2019",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2021",
+      "season_year": 2021,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2021",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2022",
+      "season_year": 2022,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2022",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-penn-state-2022",
+      "season_year": 2022,
+      "school": "Penn State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Penn State · 2022",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2023",
+      "season_year": 2023,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2023",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oregon-2023",
+      "season_year": 2023,
+      "school": "Oregon",
+      "conference_bucket": "Big Ten",
+      "display_label": "Oregon · 2023",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oregon-2025",
+      "season_year": 2025,
+      "school": "Oregon",
+      "conference_bucket": "Big Ten",
+      "display_label": "Oregon · 2025",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ohio-state-2025",
+      "season_year": 2025,
+      "school": "Ohio State",
+      "conference_bucket": "Big Ten",
+      "display_label": "Ohio State · 2025",
+      "hidden_grade": 92.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-tcu-2009",
+      "season_year": 2009,
+      "school": "TCU",
+      "conference_bucket": "Big 12",
+      "display_label": "TCU · 2009",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-byu-2009",
+      "season_year": 2009,
+      "school": "BYU",
+      "conference_bucket": "Big 12",
+      "display_label": "BYU · 2009",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-oklahoma-state-2010",
+      "season_year": 2010,
+      "school": "Oklahoma State",
+      "conference_bucket": "Big 12",
+      "display_label": "Oklahoma State · 2010",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-baylor-2015",
+      "season_year": 2015,
+      "school": "Baylor",
+      "conference_bucket": "Big 12",
+      "display_label": "Baylor · 2015",
+      "hidden_grade": 89,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-tcu-2015",
+      "season_year": 2015,
+      "school": "TCU",
+      "conference_bucket": "Big 12",
+      "display_label": "TCU · 2015",
+      "hidden_grade": 91,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-west-virginia-2016",
+      "season_year": 2016,
+      "school": "West Virginia",
+      "conference_bucket": "Big 12",
+      "display_label": "West Virginia · 2016",
+      "hidden_grade": 88.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-tcu-2017",
+      "season_year": 2017,
+      "school": "TCU",
+      "conference_bucket": "Big 12",
+      "display_label": "TCU · 2017",
+      "hidden_grade": 90,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-ucf-2018",
+      "season_year": 2018,
+      "school": "UCF",
+      "conference_bucket": "Big 12",
+      "display_label": "UCF · 2018",
+      "hidden_grade": 90,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-cincinnati-2020",
+      "season_year": 2020,
+      "school": "Cincinnati",
+      "conference_bucket": "Big 12",
+      "display_label": "Cincinnati · 2020",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-byu-2021",
+      "season_year": 2021,
+      "school": "BYU",
+      "conference_bucket": "Big 12",
+      "display_label": "BYU · 2021",
+      "hidden_grade": 88,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-kansas-2023",
+      "season_year": 2023,
+      "school": "Kansas",
+      "conference_bucket": "Big 12",
+      "display_label": "Kansas · 2023",
+      "hidden_grade": 87.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-colorado-2024",
+      "season_year": 2024,
+      "school": "Colorado",
+      "conference_bucket": "Big 12",
+      "display_label": "Colorado · 2024",
+      "hidden_grade": 87,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-virginia-tech-2000",
+      "season_year": 2000,
+      "school": "Virginia Tech",
+      "conference_bucket": "ACC",
+      "display_label": "Virginia Tech · 2000",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-florida-state-2003",
+      "season_year": 2003,
+      "school": "Florida State",
+      "conference_bucket": "ACC",
+      "display_label": "Florida State · 2003",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-virginia-tech-2006",
+      "season_year": 2006,
+      "school": "Virginia Tech",
+      "conference_bucket": "ACC",
+      "display_label": "Virginia Tech · 2006",
+      "hidden_grade": 88.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-virginia-tech-2009",
+      "season_year": 2009,
+      "school": "Virginia Tech",
+      "conference_bucket": "ACC",
+      "display_label": "Virginia Tech · 2009",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-stanford-2013",
+      "season_year": 2013,
+      "school": "Stanford",
+      "conference_bucket": "ACC",
+      "display_label": "Stanford · 2013",
+      "hidden_grade": 90,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-clemson-2017",
+      "season_year": 2017,
+      "school": "Clemson",
+      "conference_bucket": "ACC",
+      "display_label": "Clemson · 2017",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-clemson-2020",
+      "season_year": 2020,
+      "school": "Clemson",
+      "conference_bucket": "ACC",
+      "display_label": "Clemson · 2020",
+      "hidden_grade": 92,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-north-carolina-2020",
+      "season_year": 2020,
+      "school": "North Carolina",
+      "conference_bucket": "ACC",
+      "display_label": "North Carolina · 2020",
+      "hidden_grade": 87.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-clemson-2022",
+      "season_year": 2022,
+      "school": "Clemson",
+      "conference_bucket": "ACC",
+      "display_label": "Clemson · 2022",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-louisville-2023",
+      "season_year": 2023,
+      "school": "Louisville",
+      "conference_bucket": "ACC",
+      "display_label": "Louisville · 2023",
+      "hidden_grade": 88,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-miami-2024",
+      "season_year": 2024,
+      "school": "Miami",
+      "conference_bucket": "ACC",
+      "display_label": "Miami · 2024",
+      "hidden_grade": 88.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-notre-dame-2005",
+      "season_year": 2005,
+      "school": "Notre Dame",
+      "conference_bucket": "Notre Dame",
+      "display_label": "Notre Dame · 2005",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-notre-dame-2006",
+      "season_year": 2006,
+      "school": "Notre Dame",
+      "conference_bucket": "Notre Dame",
+      "display_label": "Notre Dame · 2006",
+      "hidden_grade": 88,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-notre-dame-2015",
+      "season_year": 2015,
+      "school": "Notre Dame",
+      "conference_bucket": "Notre Dame",
+      "display_label": "Notre Dame · 2015",
+      "hidden_grade": 90,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-notre-dame-2021",
+      "season_year": 2021,
+      "school": "Notre Dame",
+      "conference_bucket": "Notre Dame",
+      "display_label": "Notre Dame · 2021",
+      "hidden_grade": 91,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-notre-dame-2022",
+      "season_year": 2022,
+      "school": "Notre Dame",
+      "conference_bucket": "Notre Dame",
+      "display_label": "Notre Dame · 2022",
+      "hidden_grade": 87.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-notre-dame-2023",
+      "season_year": 2023,
+      "school": "Notre Dame",
+      "conference_bucket": "Notre Dame",
+      "display_label": "Notre Dame · 2023",
+      "hidden_grade": 89,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-notre-dame-2025",
+      "season_year": 2025,
+      "school": "Notre Dame",
+      "conference_bucket": "Notre Dame",
+      "display_label": "Notre Dame · 2025",
+      "hidden_grade": 91.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-boise-state-2006",
+      "season_year": 2006,
+      "school": "Boise State",
+      "conference_bucket": "Wildcard",
+      "display_label": "Boise State · 2006",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-hawaii-2007",
+      "season_year": 2007,
+      "school": "Hawaii",
+      "conference_bucket": "Wildcard",
+      "display_label": "Hawaii · 2007",
+      "hidden_grade": 87,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-boise-state-2009",
+      "season_year": 2009,
+      "school": "Boise State",
+      "conference_bucket": "Wildcard",
+      "display_label": "Boise State · 2009",
+      "hidden_grade": 91,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-boise-state-2010",
+      "season_year": 2010,
+      "school": "Boise State",
+      "conference_bucket": "Wildcard",
+      "display_label": "Boise State · 2010",
+      "hidden_grade": 91,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-boise-state-2011",
+      "season_year": 2011,
+      "school": "Boise State",
+      "conference_bucket": "Wildcard",
+      "display_label": "Boise State · 2011",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-northern-illinois-2012",
+      "season_year": 2012,
+      "school": "Northern Illinois",
+      "conference_bucket": "Wildcard",
+      "display_label": "Northern Illinois · 2012",
+      "hidden_grade": 86,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-fresno-state-2013",
+      "season_year": 2013,
+      "school": "Fresno State",
+      "conference_bucket": "Wildcard",
+      "display_label": "Fresno State · 2013",
+      "hidden_grade": 87.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-western-michigan-2016",
+      "season_year": 2016,
+      "school": "Western Michigan",
+      "conference_bucket": "Wildcard",
+      "display_label": "Western Michigan · 2016",
+      "hidden_grade": 88.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-coastal-carolina-2020",
+      "season_year": 2020,
+      "school": "Coastal Carolina",
+      "conference_bucket": "Wildcard",
+      "display_label": "Coastal Carolina · 2020",
+      "hidden_grade": 88.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-liberty-2020",
+      "season_year": 2020,
+      "school": "Liberty",
+      "conference_bucket": "Wildcard",
+      "display_label": "Liberty · 2020",
+      "hidden_grade": 86,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-tulane-2022",
+      "season_year": 2022,
+      "school": "Tulane",
+      "conference_bucket": "Wildcard",
+      "display_label": "Tulane · 2022",
+      "hidden_grade": 90.5,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-liberty-2023",
+      "season_year": 2023,
+      "school": "Liberty",
+      "conference_bucket": "Wildcard",
+      "display_label": "Liberty · 2023",
+      "hidden_grade": 86,
+      "origin": "audited_expansion"
+    },
+    {
+      "season_reference": "weekly-cfb-boise-state-2024",
+      "season_year": 2024,
+      "school": "Boise State",
+      "conference_bucket": "Wildcard",
+      "display_label": "Boise State · 2024",
+      "hidden_grade": 89.5,
+      "origin": "audited_expansion"
+    }
+  ]
+}

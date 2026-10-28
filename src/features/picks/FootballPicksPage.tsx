@@ -1,0 +1,398 @@
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { Link } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
+import { FootballFuturesCard } from "./FootballFuturesCard";
+import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
+import { footballLockAllowance, gradeFootballAts, type AtsOutcome } from "./footballPicksScoring";
+import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
+import { mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "../home/footballWeeklyPublication";
+import { footballDateTimeLabel } from "./footballTime";
+import { GroupPickProgress } from "./GroupPickProgress";
+import { footballLiveStandingsForMembers, footballStandingRankLabel } from "./footballGroupLiveStandings";
+import { GroupPickReveal } from "./GroupPickReveal";
+import { pickBoutLocked, pickProgress, type PickBout } from "./picksModel";
+import { PicksSeasonHub } from "./PicksSeasonHub";
+import { usePicks } from "./PicksProvider";
+import { pickEventPosters } from "./picksEventAssets";
+import { resolveFootballWeeklyHeaderArtwork, usableFootballWeeklyHeaderArtwork } from "../home/footballWeeklyHeaderOverrides";
+
+function gameLineLabel(bout: PickBout) {
+  const spread = bout.frozenSpreadHome;
+  if (spread == null) return "LINE TBD";
+  if (spread === 0) return "PICK’EM";
+  const favorite = spread < 0 ? bout.redFighterName : bout.blueFighterName;
+  return `${favorite} -${Math.abs(spread)}`;
+}
+
+function spreadSourceLabel(value: string) {
+  if (value.toLowerCase() === "the-odds-api") return "THE ODDS API";
+  return value.replace(/[-_]+/g, " ").toUpperCase();
+}
+
+function leagueLabel(weightClass: string) {
+  const value = weightClass.replace(/\s*ATS$/i, "").toUpperCase();
+  return value.includes("COLLEGE") || value === "CFB" ? "CFB" : "NFL";
+}
+
+function gameStatus(bout: PickBout, locked: boolean) {
+  if (bout.resultStatus === "cancelled") return "CANCELLED";
+  if (bout.resultStatus && bout.resultStatus !== "pending") return "FINAL";
+  return locked ? "LOCKED" : "OPEN";
+}
+
+function atsOutcomeLabel(outcome: AtsOutcome) {
+  if (outcome === "win") return "✓ COVERED";
+  if (outcome === "loss") return "✕ MISSED";
+  if (outcome === "push") return "PUSH";
+  return null;
+}
+
+function TeamLogo({ logoUrl }: { logoUrl?: string | null }) {
+  return (
+    <span className={`football-pick-team-mark${logoUrl ? "" : " is-empty"}`} aria-hidden="true">
+      {logoUrl ? <img src={logoUrl} alt="" loading="lazy" onError={(event) => event.currentTarget.remove()} /> : null}
+    </span>
+  );
+}
+
+export default function FootballPicksPage() {
+  const identity = useIdentity();
+  const published = usePublishedFootballWeek();
+  const picks = usePicks();
+  const event = picks.event?.sport === "football" ? picks.event : null;
+  const games = useMemo(() => event?.bouts
+    .filter((game) => game.includedInPicks !== false)
+    .slice()
+    .sort((a, b) => Date.parse(a.locksAt ?? event.startsAt) - Date.parse(b.locksAt ?? event.startsAt)) ?? [], [event]);
+  const currentGames = useMemo(
+    () => games.filter((game) => (game.resultStatus ?? "pending") === "pending"),
+    [games],
+  );
+  const completedGames = useMemo(
+    () => games.filter((game) => (game.resultStatus ?? "pending") !== "pending"),
+    [games],
+  );
+  const progress = pickProgress(event, picks.selections);
+  const lockGameCount = games.filter((game) => game.resultStatus !== "cancelled").length;
+  const lockAllowance = footballLockAllowance(lockGameCount);
+  const usedLocks = games.filter((game) => game.resultStatus !== "cancelled" && picks.footballLocks[game.boutId] === true).length;
+  const liveAts = useMemo(() => {
+    const outcomes: Record<string, AtsOutcome> = {};
+    let wins = 0;
+    let losses = 0;
+    let pushes = 0;
+
+    for (const game of games) {
+      const selected = picks.selections[game.boutId] ?? null;
+      const pickedTeam = selected === game.redFighterSlug ? "home" : selected === game.blueFighterSlug ? "away" : null;
+      if (!pickedTeam || game.frozenSpreadHome == null) continue;
+      const grade = gradeFootballAts({
+        pickedTeam,
+        homeScore: game.homeFinalScore ?? null,
+        awayScore: game.awayFinalScore ?? null,
+        frozenSpreadHome: game.frozenSpreadHome,
+        isFinal: game.resultStatus !== "pending" && game.resultStatus !== "cancelled",
+        isCancelled: game.resultStatus === "cancelled",
+        isLock: picks.footballLocks[game.boutId] === true,
+      });
+      outcomes[game.boutId] = grade.outcome;
+      if (grade.outcome === "win") wins += 1;
+      if (grade.outcome === "loss") losses += 1;
+      if (grade.outcome === "push") pushes += 1;
+    }
+
+    return { outcomes, wins, losses, pushes, settled: wins + losses + pushes };
+  }, [games, picks.selections, picks.footballLocks]);
+  const weeklyStandings = useMemo(
+    () => footballLiveStandingsForMembers(
+      (picks.groupProgress ?? []).filter((member) => member.completed > 0),
+      games.filter((game) => game.resultStatus !== "cancelled").slice().sort((a, b) => a.position - b.position),
+    ),
+    [picks.groupProgress, games],
+  );
+  const currentProfile = (picks.groupProgress ?? []).find((member) => member.isCurrentUser);
+  const currentStanding = currentProfile ? weeklyStandings.get(currentProfile.profileId) : null;
+  const weeklyRank = currentStanding && currentStanding.settled > 0
+    ? footballStandingRankLabel(currentStanding.rank, currentStanding.tied) : "—";
+  const matchupBreakdowns = useMemo(() => {
+    return mergeFootballWeeklyMatchupBreakdowns(
+      publishedFootballMatchupsForEvent(event, published ?? null),
+      footballMatchupBreakdownsForEvent(event),
+    );
+  }, [event, published]);
+  // Owner-uploaded Picks gallery images already live in pick-event-headers.
+  // They always take priority over the published weekly SeatGeek fallback,
+  // even when both the NFL and CFB weekly breakdowns are present.
+  const weeklyHeroes = useMemo(() => matchupBreakdowns
+    .map((game) => ({
+      id: game.id,
+      artwork: resolveFootballWeeklyHeaderArtwork(game),
+    }))
+    .filter((game) => Boolean(game.artwork.primary))
+    // Approved weekly owner artwork runs NFL first, then CFB.
+    .sort((a, b) => Number(!a.id.endsWith("-nfl")) - Number(!b.id.endsWith("-nfl"))), [matchupBreakdowns]);
+  const posters = useMemo(() => pickEventPosters(event), [event]);
+  const [failedPosterSources, setFailedPosterSources] = useState<string[]>([]);
+  const [failedWeeklyHeaderSources, setFailedWeeklyHeaderSources] = useState<string[]>([]);
+  const usablePosters = posters.filter((image) => !failedPosterSources.includes(image.src));
+  const poster = usablePosters[0] ?? null;
+  const showOwnerGallery = usablePosters.length > 0;
+  // Use the quiet existing background until owner-supplied custom artwork arrives.
+  const visibleWeeklyHeroes = showOwnerGallery ? [] : weeklyHeroes;
+  const slideCount = showOwnerGallery ? usablePosters.length : visibleWeeklyHeroes.length;
+  const hasHero = slideCount > 0;
+  const [activePosterIndex, setActivePosterIndex] = useState(0);
+  const spreadSources = Array.from(new Set(games
+    .map((game) => game.spreadSource?.trim())
+    .filter((source): source is string => Boolean(source))));
+  const spreadProvider = spreadSources.length === 1
+    ? spreadSourceLabel(spreadSources[0])
+    : spreadSources.length > 1 ? "MULTIPLE SOURCES" : "SOURCE TBD";
+  const spreadFrozenAt = games.reduce<string | null>((latest, game) => {
+    const value = game.spreadFrozenAt;
+    if (!value || !Number.isFinite(Date.parse(value))) return latest;
+    return !latest || Date.parse(value) > Date.parse(latest) ? value : latest;
+  }, null);
+
+  useEffect(() => {
+    setActivePosterIndex(0);
+    setFailedPosterSources([]);
+    setFailedWeeklyHeaderSources([]);
+  }, [event?.eventId, event?.headerStoragePath, weeklyHeroes.map((game) => game.id).join("|")]);
+
+  useEffect(() => {
+    if (slideCount < 2) return undefined;
+    const intervalId = window.setInterval(() => {
+      setActivePosterIndex((index) => (index + 1) % slideCount);
+    }, 8000);
+    return () => window.clearInterval(intervalId);
+  }, [slideCount]);
+
+  const visualStyle = poster ? ({
+    "--picks-event-poster": `url("${poster.src}")`,
+    "--picks-event-poster-aspect": poster.aspectRatio,
+  } as CSSProperties) : undefined;
+  const seasonHub = picks.history.events.length ? (
+    <PicksSeasonHub history={picks.history} loading={picks.loading} sport="football" />
+  ) : null;
+
+  const renderGameCard = (game: PickBout) => {
+    if (!event) return null;
+    const selected = picks.selections[game.boutId] ?? null;
+    const isLock = picks.footballLocks[game.boutId] === true;
+    const locked = pickBoutLocked(event, game);
+    const cancelled = game.resultStatus === "cancelled";
+    const readOnly = locked || cancelled;
+    const lockLimitReached = usedLocks >= lockAllowance && !isLock;
+    const kickoff = game.locksAt ?? event.startsAt;
+    const away = { slug: game.blueFighterSlug, name: game.blueFighterName, side: "AWAY", logoUrl: game.awayTeamLogoUrl };
+    const home = { slug: game.redFighterSlug, name: game.redFighterName, side: "HOME", logoUrl: game.homeTeamLogoUrl };
+    const selectedName = selected === away.slug ? away.name : selected === home.slug ? home.name : null;
+    const outcome = liveAts.outcomes[game.boutId] ?? "unresolved";
+    const resultLabel = atsOutcomeLabel(outcome);
+    const statusLabel = resultLabel ?? gameStatus(game, locked);
+    const statusClass = resultLabel ? `is-${outcome}` : `is-${gameStatus(game, locked).toLowerCase()}`;
+    const hasFinalScore = game.homeFinalScore != null && game.awayFinalScore != null && game.resultStatus !== "pending";
+
+    return (
+      <article className={`football-pick-game${locked ? " is-locked" : ""}${isLock ? " is-lock" : ""}`}>
+        <header>
+          <strong>{leagueLabel(game.weightClass)}</strong>
+          <b className={`football-pick-game__status ${statusClass}`}>{statusLabel}</b>
+        </header>
+        <div className="football-pick-game__matchup">
+          {[away, home].map((team) => {
+            const isSelected = selected === team.slug;
+            return (
+              <button
+                type="button"
+                key={team.slug}
+                aria-pressed={isSelected}
+                aria-label={`${team.name} ${team.side}`}
+                className={`football-pick-team is-${team.side.toLowerCase()}${isSelected ? " is-selected" : ""}`}
+                disabled={readOnly || Boolean(picks.savingBoutId)}
+                onClick={() => void picks.setPick(game.boutId, team.slug)}
+              >
+                <TeamLogo logoUrl={team.logoUrl} />
+                <span className="football-pick-team-copy"><strong>{team.name}</strong><small>{isSelected ? "✓ YOUR PICK" : team.side}</small></span>
+              </button>
+            );
+          })}
+          <div className="football-pick-game__line" aria-label={`Frozen ATS line ${gameLineLabel(game)}`}>
+            <small>FROZEN LINE</small><strong>{gameLineLabel(game)}</strong>
+          </div>
+        </div>
+        <footer>
+          <span>{hasFinalScore ? `FINAL · ${away.name} ${game.awayFinalScore}, ${home.name} ${game.homeFinalScore}` : locked ? "KICKED OFF · PICK LOCKED" : footballDateTimeLabel(kickoff)}</span>
+          {lockAllowance > 0 && !cancelled && (game.resultStatus ?? "pending") === "pending" ? (
+            <button
+              type="button"
+              className="football-pick-game__lock"
+              aria-pressed={isLock}
+              aria-label={selectedName ? `${isLock ? "Remove Lock from" : "Make Lock"} ${selectedName}` : "Pick a team before making a Lock"}
+              disabled={readOnly || Boolean(picks.savingBoutId) || !selected || lockLimitReached}
+              onClick={() => void picks.setFootballLock(game.boutId, !isLock)}
+            >{isLock ? "★ LOCK" : "☆ LOCK"}</button>
+          ) : null}
+          {picks.savingBoutId === game.boutId ? <strong role="status">SAVING…</strong> : null}
+        </footer>
+        {locked && (game.groupPicks?.length ?? 0) > 0 ? (
+          (game.resultStatus ?? "pending") !== "pending" ? (
+            <details className="football-pick-game__group-reveal">
+              <summary><span>HOW EVERYONE PICKED</span><small>{game.groupPicks?.length ?? 0} ENTERED</small></summary>
+              <GroupPickReveal redFighterSlug={game.redFighterSlug} redFighterName={game.redFighterName} blueFighterSlug={game.blueFighterSlug} blueFighterName={game.blueFighterName} picks={game.groupPicks ?? []} />
+            </details>
+          ) : <GroupPickReveal redFighterSlug={game.redFighterSlug} redFighterName={game.redFighterName} blueFighterSlug={game.blueFighterSlug} blueFighterName={game.blueFighterName} picks={game.groupPicks ?? []} />
+        ) : null}
+      </article>
+    );
+  };
+
+  return (
+    <div className={`page football-picks-page${poster ? " has-event-atmosphere" : ""}`} style={visualStyle}>
+      {picks.loading && !event ? <section className="surface-card football-picks-state">Loading this week’s slate…</section> : null}
+      {!picks.loading && !event ? (
+        <section className="surface-card football-picks-state">
+          <p className="eyebrow">FOOTBALL PICKS</p>
+          <h1>This week’s slate is being set.</h1>
+          <p>{picks.error || "Check back when the frozen ATS lines are published."}</p>
+          {identity.profile?.canControlPicks === true ? (
+            <Link className="picks-control-entry" to="/picks/control?sport=football#setup">
+              <span aria-hidden="true">⚙</span> MANAGE EVENT / SETUP
+            </Link>
+          ) : null}
+        </section>
+      ) : null}
+      {!event ? seasonHub : null}
+      {!event && identity.profile ? <FootballFuturesCard /> : null}
+
+      {event ? (
+        <>
+          <section className={`football-picks-hero${hasHero ? " has-poster" : ""}${visibleWeeklyHeroes.length ? " has-weekly-art" : ""}`}
+            aria-label={`${event.name} featured game artwork`}>
+            {showOwnerGallery && usablePosters.map((image, index) => (
+              <img key={image.src}
+                className={`football-picks-hero__image${index === (activePosterIndex % usablePosters.length) ? " is-active" : ""}`}
+                src={image.src} alt={`Football Game of the Week artwork ${index + 1}`}
+                loading={index === 0 ? "eager" : "lazy"}
+                onError={() => setFailedPosterSources((current) => current.includes(image.src) ? current : [...current, image.src])} />
+            ))}
+            {visibleWeeklyHeroes.map((featured, index) => {
+              const artSrc = usableFootballWeeklyHeaderArtwork(featured.artwork, failedWeeklyHeaderSources);
+              return (
+                <div key={featured.id}
+                  className={`football-picks-weekly-slide${index === (activePosterIndex % visibleWeeklyHeroes.length) ? " is-active" : ""}${artSrc ? " has-image" : ""}`}
+                  aria-hidden={index !== (activePosterIndex % visibleWeeklyHeroes.length)}>
+                  {artSrc ? <img className="football-picks-weekly-slide__art" src={artSrc}
+                    alt="" loading={index === 0 ? "eager" : "lazy"}
+                    onError={() => setFailedWeeklyHeaderSources((current) => current.includes(artSrc) ? current : [...current, artSrc])} /> : null}
+                </div>
+              );
+            })}
+            {!hasHero ? <div className="football-picks-hero__empty"><strong>THIS WEEK’S FOOTBALL</strong><span>Featured matchup artwork is being prepared.</span></div> : null}
+          </section>
+
+          {matchupBreakdowns.length || event.canControl ? (
+            <div className="football-picks-owner-tools">
+              <FootballMatchupBreakdowns breakdowns={matchupBreakdowns} />
+            </div>
+          ) : null}
+          {identity.profile ? (
+            <details className="surface-card football-group-hub" data-football-section="group">
+              <summary className="football-group-hub__summary">
+                <div className="football-group-hub__heading">
+                  <span>PICKS &amp; STANDINGS</span><small>{completedGames.length} FINAL · {currentGames.length} REMAINING</small>
+                </div>
+                <div className="football-group-hub__scorecard">
+                  <div><strong>{liveAts.wins}-{liveAts.losses}-{liveAts.pushes}</strong><small>ATS RECORD</small></div>
+                  <div><strong>{weeklyRank}</strong><small>GROUP RANK</small></div>
+                  <div><strong>{progress.completed}/{progress.total}</strong><small>PICKS MADE</small></div>
+                </div>
+                <div className="football-group-hub__foot">
+                  <small>{usedLocks} / {lockAllowance} LOCKS PLACED</small><span>VIEW STANDINGS</span>
+                </div>
+              </summary>
+              <div className="football-group-hub__body">
+                <section className="football-group-hub__week" aria-label="Weekly group picks">
+                  <GroupPickProgress event={event} locked={event.status !== "upcoming"} mySelections={picks.selections} embedded />
+                </section>
+                {seasonHub ? (
+                  <section className="football-group-hub__season" aria-label="Football season standings">
+                    {seasonHub}
+                  </section>
+                ) : null}
+              </div>
+            </details>
+          ) : null}
+
+          <section className="football-picks-slate football-picks-slate--current" data-football-section="current" aria-label="This week’s football games">
+            <header className="football-picks-section-header">
+              <p className="eyebrow">THIS WEEK’S GAMES</p>
+              <strong>{currentGames.length} OPEN</strong>
+            </header>
+
+            {!identity.profile ? (
+              <section className="surface-card football-picks-progress" aria-label="Sign in to make weekly football picks">
+                <p>Sign in to make your weekly picks.</p>
+                <button type="button" className="primary-action" onClick={identity.openDialog}>SIGN IN TO PICK</button>
+              </section>
+            ) : null}
+
+            <p className="football-picks-provenance">
+              ATS ODDS · {spreadProvider}{spreadFrozenAt ? ` · FROZEN ${footballDateTimeLabel(spreadFrozenAt, false)}` : ""}
+            </p>
+
+            {identity.profile ? currentGames.map((game) => (
+              <div key={game.boutId}>{renderGameCard(game)}</div>
+            )) : null}
+            {identity.profile && !currentGames.length ? (
+              <div className="surface-card football-picks-empty">ALL GAMES ARE FINAL</div>
+            ) : null}
+
+            {identity.profile && completedGames.length ? (
+              <details className="football-picks-completed-drawer" data-football-subsection="completed">
+                <summary>
+                  <span>COMPLETED GAMES</span>
+                  <strong>{completedGames.length} FINAL</strong>
+                </summary>
+                <div className="football-picks-completed-drawer__body">
+                  {completedGames.map((game) => (
+                    <div key={game.boutId}>{renderGameCard(game)}</div>
+                  ))}
+                </div>
+              </details>
+            ) : null}
+          </section>
+
+          {identity.profile ? (
+            <div data-football-section="futures">
+              <FootballFuturesCard />
+            </div>
+          ) : null}
+
+          <details className="surface-card football-picks-grading" data-football-section="grading">
+            <summary><span>SCORING &amp; GRADING</span><strong>HOW IT WORKS</strong></summary>
+            <div className="football-picks-grading__body">
+              <div className="football-picks-grading__scores" aria-label="Weekly football scoring">
+                <span><b>WIN</b><strong>+1</strong></span>
+                <span><b>LOCK WIN</b><strong>+2 BONUS</strong></span>
+                <span><b>PUSH</b><strong>+0.5</strong></span>
+                <span><b>LOSS</b><strong>0</strong></span>
+              </div>
+              <section className="football-picks-grading__rule">
+                <b>FROZEN LINES</b>
+                <p>Your pick is graded against the line shown when the week was published.</p>
+              </section>
+              <section className="football-picks-grading__rule">
+                <b>SEASON TOTAL</b>
+                <p>Your lowest-scoring week is dropped.</p>
+              </section>
+            </div>
+          </details>
+
+          {picks.error ? <p className="picks-error" role="status">{picks.error}</p> : null}
+        </>
+      ) : null}
+    </div>
+  );
+}

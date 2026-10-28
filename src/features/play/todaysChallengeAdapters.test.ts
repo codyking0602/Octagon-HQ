@@ -1,0 +1,88 @@
+import { describe, expect, it } from "vitest";
+import {
+  TODAY_CHALLENGE_ADAPTERS,
+  todayChallengeAdapter,
+  todayChallengeGameDefinition,
+} from "./todaysChallengeAdapters";
+
+describe("Today’s Challenge adapters", () => {
+  it("maps the eleven canonical backend game identities to existing Play games", () => {
+    expect(Object.keys(TODAY_CHALLENGE_ADAPTERS)).toEqual([
+      "find_leader",
+      "blind_resume",
+      "wavelength",
+      "blind_rank_5",
+      "keep_4_cut_4",
+      "hit_the_number",
+      "millionaire",
+      "sports_feud",
+      "bar_trivia",
+      "average_fan",
+      "who_am_i",
+    ]);
+
+    for (const adapter of Object.values(TODAY_CHALLENGE_ADAPTERS)) {
+      expect(todayChallengeAdapter(adapter.gameType)).toBe(adapter);
+      expect(todayChallengeGameDefinition(adapter.gameType)?.id).toBe(adapter.gameId);
+      expect(adapter.dailyRoute).toMatch(/^\/play\//);
+      expect(adapter.casualRoute).toMatch(/^\/play\//);
+    }
+  });
+
+  it("preserves the eleven core adapters and routes Higher or Lower by sport", () => {
+    const football = todayChallengeAdapter("higher_lower", "football");
+    const nba = todayChallengeAdapter("higher_lower", "nba");
+    expect(football?.dailyRoute).toBe("/football/today");
+    expect(football?.casualRoute).toBe("/football/higher-lower");
+    expect(nba?.dailyRoute).toBe("/nba/today");
+    expect(nba?.casualRoute).toBe("/nba/higher-lower");
+    expect(football).not.toBe(nba);
+    expect(todayChallengeGameDefinition("higher_lower")).toBeNull();
+    expect(Object.keys(TODAY_CHALLENGE_ADAPTERS)).toHaveLength(11);
+  });
+
+  it("keeps official and casual routes distinct without launching rotation", () => {
+    expect(TODAY_CHALLENGE_ADAPTERS.find_leader.dailyRoute).toBe("/play/find-leader");
+    expect(TODAY_CHALLENGE_ADAPTERS.find_leader.casualRoute).toContain("mode=replayable");
+    expect(TODAY_CHALLENGE_ADAPTERS.wavelength.dailyRoute).toContain("mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.blind_resume.dailyRoute).toContain("mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.blind_rank_5.dailyRoute).toContain("mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.keep_4_cut_4.dailyRoute).toContain("mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.hit_the_number.dailyRoute).toBe("/play/hit-the-number?mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.hit_the_number.casualRoute).toBe("/play/hit-the-number");
+    expect(TODAY_CHALLENGE_ADAPTERS.who_am_i.dailyRoute).toContain("mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.who_am_i.casualRoute).not.toContain("mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.millionaire.dailyRoute).toBe("/play/millionaire?mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.millionaire.casualRoute).toBe("/play/millionaire");
+    expect(TODAY_CHALLENGE_ADAPTERS.sports_feud.dailyRoute).toBe("/play/sports-feud?mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.sports_feud.casualRoute).toBe("/play/sports-feud");
+    expect(TODAY_CHALLENGE_ADAPTERS.bar_trivia.dailyRoute).toBe("/play/bar-trivia?mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.bar_trivia.casualRoute).toBe("/play/bar-trivia");
+    expect(TODAY_CHALLENGE_ADAPTERS.average_fan.dailyRoute).toBe("/play/average-fan?mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.average_fan.casualRoute).toBe("/play/average-fan?mode=casual");
+  });
+
+  it("requires Football-safe instructions for every official Daily game", () => {
+    for (const adapter of Object.values(TODAY_CHALLENGE_ADAPTERS)) {
+      expect(adapter.footballInstructions).toBeTruthy();
+      expect(adapter.footballInstructions).not.toMatch(/\bUFC\b|\bfighters?\b/i);
+    }
+
+    expect(TODAY_CHALLENGE_ADAPTERS.find_leader.footballInstructions)
+      .toBe("Eliminate nine players without removing today’s verified stat leader.");
+    expect(TODAY_CHALLENGE_ADAPTERS.blind_resume.footballInstructions)
+      .toBe("Choose the stronger football résumé three times without seeing either name.");
+  });
+
+  it("states the corrected blind Keep 4, Cut 4 contract", () => {
+    const copy = TODAY_CHALLENGE_ADAPTERS.keep_4_cut_4.instructions;
+    expect(copy).toMatch(/one fighter at a time/i);
+    expect(copy).toMatch(/locks/i);
+    expect(copy).toMatch(/future fighters stay hidden/i);
+    expect(copy).toMatch(/full tray forces/i);
+    expect(TODAY_CHALLENGE_ADAPTERS.keep_4_cut_4.nativeDisplay({
+      nativeScore: 16,
+      publicResult: {},
+    })).toBe("16 of 16 comparisons");
+  });
+});

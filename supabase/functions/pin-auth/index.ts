@@ -1,0 +1,191 @@
+import { createClient } from "npm:@supabase/supabase-js@2.110.7";
+
+// PIN authentication and owner-only Event Setup browser proof share one production CORS owner.
+// The renamed The HQ host is canonical; the prior Octagon HQ host remains a compatibility alias.
+const legacyProductionOrigin = "https://octagon.hq-app.workers.dev";
+
+function corsHeadersFor(request: Request) {
+  const canonicalOrigin = Deno.env.get("OCTAGON_APP_ORIGIN") ?? legacyProductionOrigin;
+  const requestOrigin = request.headers.get("Origin");
+  const allowedOrigin = requestOrigin === canonicalOrigin || requestOrigin === legacyProductionOrigin
+    ? requestOrigin
+    : canonicalOrigin;
+
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+}
+
+function response(
+  body: Record<string, unknown>,
+  corsHeaders: Record<string, string>,
+  status = 200,
+) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+function cleanDisplayName(value: unknown) {
+  if (typeof value !== "string") return "";
+  return value.trim().replace(/\s+/g, " ").toUpperCase();
+}
+
+function validPin(value: unknown): value is string {
+  return typeof value === "string" && /^\d{4}$/.test(value);
+}
+
+function initials(displayName: string) {
+  const words = displayName.split(" ").filter(Boolean);
+  return words.length === 1
+    ? words[0]!.slice(0, 1)
+    : words.slice(0, 2).map((word) => word[0]).join("");
+}
+
+function randomPassword() {
+  const bytes = crypto.getRandomValues(new Uint8Array(24));
+  return `${Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join("")}!Aa1`;
+}
+
+Deno.serve(async (request) => {
+  const corsHeaders = corsHeadersFor(request);
+  const respond = (body: Record<string, unknown>, status = 200) => response(body, corsHeaders, status);
+
+  if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (request.method !== "POST") return respond({ message: "Method not allowed." }, 405);
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const secretKey = Deno.env.get("SUPABASE_SECRET_KEY")
+    ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !secretKey) {
+    return respond({ message: "Profile service is not configured." }, 503);
+  }
+
+  const admin = createClient(supabaseUrl, secretKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  let body: { action?: unknown; displayName?: unknown; pin?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return respond({ message: "Invalid request." }, 400);
+  }
+
+  const action = body.action;
+  const displayName = cleanDisplayName(body.displayName);
+  const pin = body.pin;
+  if ((action !== "login" && action !== "create")
+    || displayName.length < 2
+    || displayName.length > 24
+    || !validPin(pin)) {
+    return respond({ message: "Enter a name and a 4-digit PIN." }, 400);
+  }
+
+  async function issueSessionToken(internalEmail: string) {
+    const { data, error } = await admin.auth.admin.generateLink({
+      type: "magiclink",
+      email: internalEmail,
+    });
+    if (error) throw error;
+    const tokenHash = data.properties?.hashed_token;
+    if (!tokenHash) throw new Error("No login token was generated.");
+    return tokenHash;
+  }
+
+  if (action === "login") {
+    const { data, error } = await admin.rpc("verify_profile_pin", {
+      p_display_name: displayName,
+      p_pin: pin,
+    });
+    if (error) return respond({ message: "Profile login is unavailable." }, 503);
+
+    const match = Array.isArray(data) ? data[0] : null;
+    if (match?.auth_result === "locked") {
+      return respond({ message: "Too many attempts. Try again in a few minutes." }, 423);
+    }
+
+    let internalEmail = typeof match?.internal_email === "string"
+      ? match.internal_email
+      : "";
+
+    if (!internalEmail && match?.auth_result === "ok" && typeof match?.profile_id === "string") {
+      const { data: authUserData, error: authUserError } = await admin.auth.admin.getUserById(match.profile_id);
+      if (authUserError) return respond({ message: "Profile login is unavailable." }, 503);
+      internalEmail = authUserData.user?.email ?? "";
+    }
+
+    if (!internalEmail) {
+      return respond({ message: "That name and PIN did not match." }, 401);
+    }
+
+    try {
+      return respond({ tokenHash: await issueSessionToken(internalEmail) });
+    } catch {
+      return respond({ message: "Profile login is unavailable." }, 503);
+    }
+  }
+
+  const claimed = await admin.rpc("claim_unclaimed_pin_profile", {
+    p_display_name: displayName,
+    p_pin: pin,
+  });
+  if (claimed.error) {
+    return respond({ message: "The profile could not be claimed." }, 503);
+  }
+
+  const claimedMatch = Array.isArray(claimed.data) ? claimed.data[0] : null;
+  const claimedEmail = typeof claimedMatch?.internal_email === "string"
+    ? claimedMatch.internal_email
+    : "";
+  if (claimedMatch?.claim_result === "claimed" && claimedEmail) {
+    try {
+      return respond({ tokenHash: await issueSessionToken(claimedEmail) }, 201);
+    } catch {
+      return respond({ message: "The profile was claimed. Sign in with the PIN you chose." }, 503);
+    }
+  }
+
+  if (Deno.env.get("OCTAGON_PROFILE_CREATION_OPEN") === "false") {
+    return respond({ message: "New profiles are currently invite-only." }, 403);
+  }
+
+  const internalEmail = `profile-${crypto.randomUUID()}@login.octagon-hq.app`;
+  const created = await admin.auth.admin.createUser({
+    email: internalEmail,
+    password: randomPassword(),
+    email_confirm: true,
+    user_metadata: { display_name: displayName },
+  });
+
+  if (created.error || !created.data.user) {
+    return respond({ message: "The profile could not be created." }, 503);
+  }
+
+  const userId = created.data.user.id;
+  const registered = await admin.rpc("register_pin_profile", {
+    p_profile_id: userId,
+    p_display_name: displayName,
+    p_initials: initials(displayName),
+    p_internal_email: internalEmail,
+    p_pin: pin,
+  });
+
+  if (registered.error) {
+    await admin.auth.admin.deleteUser(userId);
+    if (registered.error.code === "23505") {
+      return respond({ message: "That name is already taken. Add your last initial." }, 409);
+    }
+    return respond({ message: "The profile could not be created." }, 503);
+  }
+
+  try {
+    return respond({ tokenHash: await issueSessionToken(internalEmail) }, 201);
+  } catch {
+    await admin.auth.admin.deleteUser(userId);
+    return respond({ message: "The profile could not be opened." }, 503);
+  }
+});

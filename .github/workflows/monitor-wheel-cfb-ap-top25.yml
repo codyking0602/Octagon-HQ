@@ -1,0 +1,41 @@
+name: Monitor Wheel CFB AP Top 25
+
+on:
+  workflow_dispatch:
+  # Lightweight factual AP poll check, fully independent of NFL/UFC/GM
+  # rating-source certification. Does not grade CFB athletes or publish polls.
+  schedule:
+    - cron: "20 11 * * 2"
+  pull_request:
+    paths:
+      - 'scripts/check-wheel-cfb-ap-top25.mjs'
+      - '.github/workflows/monitor-wheel-cfb-ap-top25.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cfb-ap-factual-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-ap-top-25:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Compare poll and enforce extra-team audit coverage
+        env:
+          WHEEL_AP_REPORT_PATH: ${{ runner.temp }}/wheel-ap-top25-report.json
+        run: node scripts/check-wheel-cfb-ap-top25.mjs
+      - name: Upload AP change receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-ap-top25-change-receipt
+          path: ${{ runner.temp }}/wheel-ap-top25-report.json
+          if-no-files-found: warn
+          retention-days: 30

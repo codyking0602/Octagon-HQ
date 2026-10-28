@@ -19,7 +19,9 @@ describe("automatic UFC fighter media", () => {
     expect(runner).toContain("adaptEspnUfcFighterMedia");
     expect(runner).toContain('Range: "bytes=0-0"');
     expect(runner).toContain('^image\\/');
-    expect(runner).toContain("ufcAthletePageUrl");
+    expect(runner).not.toContain("ufcAthletePageUrl");
+    expect(runner).not.toContain("parseUfcAthletePhoto");
+    expect(runner).toContain('candidate.source === "espn"');
   });
 
   it("rejects placeholder and silhouette fighter art before it can become a thumb", () => {

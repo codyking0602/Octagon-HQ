@@ -1,0 +1,12 @@
+import { parseFootballRebuildRows } from "./footballSportsFeudRebuildParser";
+
+/** Future-only reviewed Main candidates; no published question is rewritten. */
+export const CFB_FEUD_REBUILD_MAIN = parseFootballRebuildRows("cfb", "main", [
+  "first-12team-playoff|school|cfp-2024-field|Name a school that played in the first 12-team College Football Playoff field for the 2024 season.|Oregon~Ducks,Georgia~UGA~Georgia Bulldogs,Ohio State~Buckeyes~OSU,Texas~Longhorns,Notre Dame~Fighting Irish,Penn State~Nittany Lions~PSU,Tennessee~Vols,Clemson~Clemson Tigers|Indiana~Hoosiers,Boise State~Broncos,Arizona State~Sun Devils,SMU~Mustangs",
+  "college-to-nfl-coaches|person|college-nfl-head-coaches|Name a head coach who has led both a college football team and an NFL team.|Nick Saban,Urban Meyer,Pete Carroll,Jim Harbaugh,Chip Kelly,Steve Spurrier,Kliff Kingsbury,Matt Rhule|Bill O'Brien,Bobby Petrino,Lane Kiffin,Barry Switzer,Jimmy Johnson,Jim Mora",
+  "college-2000-rushers|person|college-2000-rushers|Name a college running back who rushed for at least 2,000 yards in a single FBS season.|Barry Sanders,Melvin Gordon,Derrick Henry,Jonathan Taylor,Ashton Jeanty,Bryce Love,Rashaad Penny,Chuba Hubbard|Tevin Coleman,Ron Dayne,Troy Davis,Kevin Smith,Donnel Pumphrey~Don Pumphrey",
+  "recent-first-round-qbs|person|first-round-qb-drafts|Name a quarterback selected in Round 1 of an NFL Draft from 2020 through 2025.|Joe Burrow,Caleb Williams,C.J. Stroud,Trevor Lawrence,Jayden Daniels,Justin Herbert,Bo Nix,Michael Penix Jr.|Bryce Young,Drake Maye,J.J. McCarthy,Anthony Richardson,Jordan Love,Mac Jones,Trey Lance,Zach Wilson,Kenny Pickett,Jaxson Dart,Cam Ward",
+  "heisman-schools|school|schools-heisman-qbs|Name a school whose quarterback has won the Heisman Trophy.|Oklahoma,USC,Florida,LSU,Auburn,Ohio State,Texas A&M,Florida State|Alabama,Louisville,Notre Dame,BYU,Baylor,Nebraska,Miami,Oregon,Indiana,Boston College,Houston,TCU,Stanford,Navy,UCLA",
+  "college-undefeated-titles|school|undefeated-champions-2000s|Name a college program that won an undefeated AP national championship for a season from 2000 through 2025.|Alabama,Georgia,Clemson,LSU,Miami,USC,Texas,Michigan|Ohio State,Florida State,Auburn,Indiana",
+  "college-broadcasters|person|cfb-tv-personalities|Name a recognizable television analyst or announcer associated with college football.|Kirk Herbstreit,Chris Fowler,Lee Corso,Rece Davis,Pat McAfee,Gus Johnson,Joel Klatt,Brad Nessler|Gary Danielson,Desmond Howard,David Pollack,Robert Griffin III,Paul Finebaum,Tim Brando,Todd Blackledge"
+]);

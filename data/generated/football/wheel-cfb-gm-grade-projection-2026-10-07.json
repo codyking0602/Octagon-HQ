@@ -1,0 +1,7744 @@
+{
+  "schemaVersion": 1,
+  "version": "cfb-gm-grade-projection-2026-10-07",
+  "sourceAuthority": [
+    "data/generated/football/wheel-cfb-qb-grades-2026-10-03.json",
+    "data/generated/football/wheel-cfb-rb-grades-2026-10-03.json",
+    "data/generated/football/wheel-cfb-wr-grades-2026-10-03.json",
+    "data/generated/football/wheel-cfb-te-grades-2026-10-03.json",
+    "data/generated/football/wheel-cfb-front-seven-grades-2026-10-03.json",
+    "data/generated/football/wheel-cfb-secondary-grades-2026-10-03.json"
+  ],
+  "boiseAuthority": "data/curated/football/cfb/wheel-football-boise-state-grading-audit-2026-10-03.json",
+  "description": "Compact lossless grade-only projection of approved 2026 CFB Wheel authority. No salary or player-price input.",
+  "grades": [
+    {
+      "school": "Alabama",
+      "family": "Front Seven",
+      "player": "Caleb Woodson",
+      "grade": 82
+    },
+    {
+      "school": "Alabama",
+      "family": "Front Seven",
+      "player": "Devan Thompkins",
+      "grade": 87
+    },
+    {
+      "school": "Alabama",
+      "family": "Front Seven",
+      "player": "Fatutoa Henry",
+      "grade": 71
+    },
+    {
+      "school": "Alabama",
+      "family": "Front Seven",
+      "player": "London Simmons",
+      "grade": 80
+    },
+    {
+      "school": "Alabama",
+      "family": "Front Seven",
+      "player": "Luke Metz",
+      "grade": 87
+    },
+    {
+      "school": "Alabama",
+      "family": "Front Seven",
+      "player": "Terrance Green",
+      "grade": 81
+    },
+    {
+      "school": "Alabama",
+      "family": "Front Seven",
+      "player": "Yhonzae Pierre",
+      "grade": 91
+    },
+    {
+      "school": "Alabama",
+      "family": "QB",
+      "player": "Keelon Russell",
+      "grade": 93
+    },
+    {
+      "school": "Alabama",
+      "family": "RB",
+      "player": "Daniel Hill",
+      "grade": 83
+    },
+    {
+      "school": "Alabama",
+      "family": "RB",
+      "player": "EJ Crowell",
+      "grade": 84
+    },
+    {
+      "school": "Alabama",
+      "family": "RB",
+      "player": "Trae'shawn Brown",
+      "grade": 80
+    },
+    {
+      "school": "Alabama",
+      "family": "Secondary",
+      "player": "Bray Hubbard",
+      "grade": 84
+    },
+    {
+      "school": "Alabama",
+      "family": "Secondary",
+      "player": "Dijon Lee Jr.",
+      "grade": 91
+    },
+    {
+      "school": "Alabama",
+      "family": "Secondary",
+      "player": "Keon Sabb",
+      "grade": 89
+    },
+    {
+      "school": "Alabama",
+      "family": "Secondary",
+      "player": "Red Morgan",
+      "grade": 74
+    },
+    {
+      "school": "Alabama",
+      "family": "Secondary",
+      "player": "Zabien Brown",
+      "grade": 90
+    },
+    {
+      "school": "Alabama",
+      "family": "Secondary",
+      "player": "Zyan Gibson",
+      "grade": 86
+    },
+    {
+      "school": "Alabama",
+      "family": "TE",
+      "player": "Kaleb Edwards",
+      "grade": 84
+    },
+    {
+      "school": "Alabama",
+      "family": "WR",
+      "player": "Lotzeir Brooks",
+      "grade": 86
+    },
+    {
+      "school": "Alabama",
+      "family": "WR",
+      "player": "Rico Scott",
+      "grade": 84
+    },
+    {
+      "school": "Alabama",
+      "family": "WR",
+      "player": "Ryan Coleman-Williams",
+      "grade": 91
+    },
+    {
+      "school": "Arizona",
+      "family": "Front Seven",
+      "player": "Chase Kennedy",
+      "grade": 84
+    },
+    {
+      "school": "Arizona",
+      "family": "Front Seven",
+      "player": "Cooper Blomstrom",
+      "grade": 82
+    },
+    {
+      "school": "Arizona",
+      "family": "Front Seven",
+      "player": "Leroy Palu",
+      "grade": 77
+    },
+    {
+      "school": "Arizona",
+      "family": "Front Seven",
+      "player": "Mays Pese",
+      "grade": 79
+    },
+    {
+      "school": "Arizona",
+      "family": "Front Seven",
+      "player": "Taye Brown",
+      "grade": 81
+    },
+    {
+      "school": "Arizona",
+      "family": "Front Seven",
+      "player": "Tre Smith",
+      "grade": 80
+    },
+    {
+      "school": "Arizona",
+      "family": "QB",
+      "player": "Noah Fifita",
+      "grade": 87
+    },
+    {
+      "school": "Arizona",
+      "family": "RB",
+      "player": "Ismail Mahdi",
+      "grade": 84
+    },
+    {
+      "school": "Arizona",
+      "family": "RB",
+      "player": "Kedrick Reescano",
+      "grade": 82
+    },
+    {
+      "school": "Arizona",
+      "family": "Secondary",
+      "player": "Dwight Bootle II",
+      "grade": 84
+    },
+    {
+      "school": "Arizona",
+      "family": "Secondary",
+      "player": "Gavin Hunter",
+      "grade": 82
+    },
+    {
+      "school": "Arizona",
+      "family": "Secondary",
+      "player": "Jay'Vion Cole",
+      "grade": 86
+    },
+    {
+      "school": "Arizona",
+      "family": "Secondary",
+      "player": "Malcolm Hartzog Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Arizona",
+      "family": "Secondary",
+      "player": "Quinn Olson",
+      "grade": 76
+    },
+    {
+      "school": "Arizona",
+      "family": "TE",
+      "player": "Cole Rusk",
+      "grade": 79
+    },
+    {
+      "school": "Arizona",
+      "family": "WR",
+      "player": "Chris Hunter III",
+      "grade": 82
+    },
+    {
+      "school": "Arizona",
+      "family": "WR",
+      "player": "Giovanni Richardson",
+      "grade": 79
+    },
+    {
+      "school": "Arizona",
+      "family": "WR",
+      "player": "Isaiah Mizell",
+      "grade": 77
+    },
+    {
+      "school": "Arizona",
+      "family": "WR",
+      "player": "Tre Spivey",
+      "grade": 88
+    },
+    {
+      "school": "Arizona State",
+      "family": "Front Seven",
+      "player": "C.J. Fite",
+      "grade": 85
+    },
+    {
+      "school": "Arizona State",
+      "family": "Front Seven",
+      "player": "Emarrion Winston",
+      "grade": 76
+    },
+    {
+      "school": "Arizona State",
+      "family": "Front Seven",
+      "player": "Jalen Thompson",
+      "grade": 82
+    },
+    {
+      "school": "Arizona State",
+      "family": "Front Seven",
+      "player": "Martell Hughes",
+      "grade": 80
+    },
+    {
+      "school": "Arizona State",
+      "family": "Front Seven",
+      "player": "Owen Long",
+      "grade": 94
+    },
+    {
+      "school": "Arizona State",
+      "family": "Front Seven",
+      "player": "Roman Pitre",
+      "grade": 83
+    },
+    {
+      "school": "Arizona State",
+      "family": "QB",
+      "player": "Cutter Boley",
+      "grade": 80
+    },
+    {
+      "school": "Arizona State",
+      "family": "RB",
+      "player": "Grayson Rigdon",
+      "grade": 76
+    },
+    {
+      "school": "Arizona State",
+      "family": "RB",
+      "player": "Kyson Brown",
+      "grade": 83
+    },
+    {
+      "school": "Arizona State",
+      "family": "RB",
+      "player": "Marquis Gillis",
+      "grade": 76
+    },
+    {
+      "school": "Arizona State",
+      "family": "Secondary",
+      "player": "Adrian Wilson",
+      "grade": 82
+    },
+    {
+      "school": "Arizona State",
+      "family": "Secondary",
+      "player": "Ashton Stamps",
+      "grade": 84
+    },
+    {
+      "school": "Arizona State",
+      "family": "Secondary",
+      "player": "Lyrik Rawls",
+      "grade": 82
+    },
+    {
+      "school": "Arizona State",
+      "family": "Secondary",
+      "player": "Montana Warren",
+      "grade": 76
+    },
+    {
+      "school": "Arizona State",
+      "family": "Secondary",
+      "player": "Rodney Bimage Jr.",
+      "grade": 84
+    },
+    {
+      "school": "Arizona State",
+      "family": "TE",
+      "player": "Khamari Anderson",
+      "grade": 77
+    },
+    {
+      "school": "Arizona State",
+      "family": "WR",
+      "player": "Jalen Moss",
+      "grade": 80
+    },
+    {
+      "school": "Arizona State",
+      "family": "WR",
+      "player": "Omarion Miller",
+      "grade": 85
+    },
+    {
+      "school": "Arizona State",
+      "family": "WR",
+      "player": "Reed Harris",
+      "grade": 92
+    },
+    {
+      "school": "Arkansas",
+      "family": "Front Seven",
+      "player": "Ben Bogle",
+      "grade": 75
+    },
+    {
+      "school": "Arkansas",
+      "family": "Front Seven",
+      "player": "David Oke",
+      "grade": 79
+    },
+    {
+      "school": "Arkansas",
+      "family": "Front Seven",
+      "player": "Hunter Osborne",
+      "grade": 76
+    },
+    {
+      "school": "Arkansas",
+      "family": "Front Seven",
+      "player": "Ja'Quavion Smith",
+      "grade": 72
+    },
+    {
+      "school": "Arkansas",
+      "family": "Front Seven",
+      "player": "Quincy Rhodes Jr.",
+      "grade": 90
+    },
+    {
+      "school": "Arkansas",
+      "family": "Front Seven",
+      "player": "Steven Soles Jr.",
+      "grade": 76
+    },
+    {
+      "school": "Arkansas",
+      "family": "QB",
+      "player": "KJ Jackson",
+      "grade": 78
+    },
+    {
+      "school": "Arkansas",
+      "family": "RB",
+      "player": "Cam Settles",
+      "grade": 74
+    },
+    {
+      "school": "Arkansas",
+      "family": "RB",
+      "player": "Sutton Smith",
+      "grade": 80
+    },
+    {
+      "school": "Arkansas",
+      "family": "Secondary",
+      "player": "Christian Harrison",
+      "grade": 82
+    },
+    {
+      "school": "Arkansas",
+      "family": "Secondary",
+      "player": "Joker Johnson",
+      "grade": 86
+    },
+    {
+      "school": "Arkansas",
+      "family": "Secondary",
+      "player": "Khmori House",
+      "grade": 84
+    },
+    {
+      "school": "Arkansas",
+      "family": "Secondary",
+      "player": "Miguel Mitchell",
+      "grade": 76
+    },
+    {
+      "school": "Arkansas",
+      "family": "Secondary",
+      "player": "Shelton Lewis",
+      "grade": 78
+    },
+    {
+      "school": "Arkansas",
+      "family": "TE",
+      "player": "Ty Lockwood",
+      "grade": 81
+    },
+    {
+      "school": "Arkansas",
+      "family": "WR",
+      "player": "Chris Marshall",
+      "grade": 92
+    },
+    {
+      "school": "Arkansas",
+      "family": "WR",
+      "player": "CJ Brown",
+      "grade": 82
+    },
+    {
+      "school": "Arkansas",
+      "family": "WR",
+      "player": "Ismael Cisse",
+      "grade": 78
+    },
+    {
+      "school": "Auburn",
+      "family": "Front Seven",
+      "player": "Chris Murray",
+      "grade": 80
+    },
+    {
+      "school": "Auburn",
+      "family": "Front Seven",
+      "player": "Cody Sigler",
+      "grade": 81
+    },
+    {
+      "school": "Auburn",
+      "family": "Front Seven",
+      "player": "Dallas Walker IV",
+      "grade": 82
+    },
+    {
+      "school": "Auburn",
+      "family": "Front Seven",
+      "player": "Dashawn Womack",
+      "grade": 78
+    },
+    {
+      "school": "Auburn",
+      "family": "Front Seven",
+      "player": "Elijah Melendez",
+      "grade": 87
+    },
+    {
+      "school": "Auburn",
+      "family": "Front Seven",
+      "player": "Xavier Atkins",
+      "grade": 92
+    },
+    {
+      "school": "Auburn",
+      "family": "QB",
+      "player": "Byrum Brown",
+      "grade": 84
+    },
+    {
+      "school": "Auburn",
+      "family": "RB",
+      "player": "Jeremiah Cobb",
+      "grade": 88
+    },
+    {
+      "school": "Auburn",
+      "family": "RB",
+      "player": "Omar Mabson II",
+      "grade": 80
+    },
+    {
+      "school": "Auburn",
+      "family": "Secondary",
+      "player": "Andre Jordan Jr.",
+      "grade": 85
+    },
+    {
+      "school": "Auburn",
+      "family": "Secondary",
+      "player": "Champ Anthony",
+      "grade": 84
+    },
+    {
+      "school": "Auburn",
+      "family": "Secondary",
+      "player": "Eric Winters",
+      "grade": 78
+    },
+    {
+      "school": "Auburn",
+      "family": "Secondary",
+      "player": "Kaleb Harris",
+      "grade": 80
+    },
+    {
+      "school": "Auburn",
+      "family": "Secondary",
+      "player": "Rayshawn Pleasant",
+      "grade": 82
+    },
+    {
+      "school": "Auburn",
+      "family": "Secondary",
+      "player": "Sylvester Smith-Reed",
+      "grade": 74
+    },
+    {
+      "school": "Auburn",
+      "family": "TE",
+      "player": "Jake Johnson",
+      "grade": 84
+    },
+    {
+      "school": "Auburn",
+      "family": "WR",
+      "player": "Chas Nimrod",
+      "grade": 84
+    },
+    {
+      "school": "Auburn",
+      "family": "WR",
+      "player": "Jeremiah Koger",
+      "grade": 80
+    },
+    {
+      "school": "Auburn",
+      "family": "WR",
+      "player": "Keshaun Singleton",
+      "grade": 88
+    },
+    {
+      "school": "Baylor",
+      "family": "Front Seven",
+      "player": "Devonte Tezino",
+      "grade": 81
+    },
+    {
+      "school": "Baylor",
+      "family": "Front Seven",
+      "player": "Hosea Wheeler",
+      "grade": 83
+    },
+    {
+      "school": "Baylor",
+      "family": "Front Seven",
+      "player": "Kyland Reed",
+      "grade": 77
+    },
+    {
+      "school": "Baylor",
+      "family": "Front Seven",
+      "player": "Kyler Jordan",
+      "grade": 85
+    },
+    {
+      "school": "Baylor",
+      "family": "Front Seven",
+      "player": "Ryan Davis",
+      "grade": 79
+    },
+    {
+      "school": "Baylor",
+      "family": "Front Seven",
+      "player": "Travion Barnes",
+      "grade": 87
+    },
+    {
+      "school": "Baylor",
+      "family": "QB",
+      "player": "DJ Lagway",
+      "grade": 77
+    },
+    {
+      "school": "Baylor",
+      "family": "RB",
+      "player": "Caden Knighten",
+      "grade": 77
+    },
+    {
+      "school": "Baylor",
+      "family": "RB",
+      "player": "Dawson Pendergrass",
+      "grade": 82
+    },
+    {
+      "school": "Baylor",
+      "family": "Secondary",
+      "player": "Bo Onu",
+      "grade": 84
+    },
+    {
+      "school": "Baylor",
+      "family": "Secondary",
+      "player": "Colby McCalister",
+      "grade": 74
+    },
+    {
+      "school": "Baylor",
+      "family": "Secondary",
+      "player": "Cole Redding",
+      "grade": 76
+    },
+    {
+      "school": "Baylor",
+      "family": "Secondary",
+      "player": "Daniel Cobbs",
+      "grade": 82
+    },
+    {
+      "school": "Baylor",
+      "family": "Secondary",
+      "player": "Devon Jordan",
+      "grade": 80
+    },
+    {
+      "school": "Baylor",
+      "family": "Secondary",
+      "player": "LeVar Thornton Jr.",
+      "grade": 78
+    },
+    {
+      "school": "Baylor",
+      "family": "TE",
+      "player": "Matthew Klopfenstein",
+      "grade": 80
+    },
+    {
+      "school": "Baylor",
+      "family": "WR",
+      "player": "Gavin Freeman",
+      "grade": 85
+    },
+    {
+      "school": "Baylor",
+      "family": "WR",
+      "player": "Jadon Porter",
+      "grade": 82
+    },
+    {
+      "school": "Baylor",
+      "family": "WR",
+      "player": "Jayden McGowan",
+      "grade": 84
+    },
+    {
+      "school": "Baylor",
+      "family": "WR",
+      "player": "Louis Brown IV",
+      "grade": 86
+    },
+    {
+      "school": "Boise State",
+      "family": "Front Seven",
+      "player": "Boen Phelps",
+      "grade": 88
+    },
+    {
+      "school": "Boise State",
+      "family": "Front Seven",
+      "player": "Jayden Virgin-Morgan",
+      "grade": 93
+    },
+    {
+      "school": "Boise State",
+      "family": "Front Seven",
+      "player": "Logan Brantley",
+      "grade": 80
+    },
+    {
+      "school": "Boise State",
+      "family": "Front Seven",
+      "player": "Max Stege",
+      "grade": 85
+    },
+    {
+      "school": "Boise State",
+      "family": "Front Seven",
+      "player": "Mikaio Edward",
+      "grade": 83
+    },
+    {
+      "school": "Boise State",
+      "family": "QB",
+      "player": "Maddux Madsen",
+      "grade": 88
+    },
+    {
+      "school": "Boise State",
+      "family": "RB",
+      "player": "Dylan Riley",
+      "grade": 95
+    },
+    {
+      "school": "Boise State",
+      "family": "RB",
+      "player": "Sire Gaines",
+      "grade": 88
+    },
+    {
+      "school": "Boise State",
+      "family": "Secondary",
+      "player": "Jaden Mickey",
+      "grade": 88
+    },
+    {
+      "school": "Boise State",
+      "family": "Secondary",
+      "player": "JeRico Washington Jr.",
+      "grade": 86
+    },
+    {
+      "school": "Boise State",
+      "family": "Secondary",
+      "player": "Roman Tillmon",
+      "grade": 84
+    },
+    {
+      "school": "Boise State",
+      "family": "Secondary",
+      "player": "Sherrod Smith",
+      "grade": 84
+    },
+    {
+      "school": "Boise State",
+      "family": "Secondary",
+      "player": "Travis Anderson",
+      "grade": 86
+    },
+    {
+      "school": "Boise State",
+      "family": "TE",
+      "player": "Matt Wagner",
+      "grade": 84
+    },
+    {
+      "school": "Boise State",
+      "family": "WR",
+      "player": "Akeem Wright",
+      "grade": 84
+    },
+    {
+      "school": "Boise State",
+      "family": "WR",
+      "player": "Ben Ford",
+      "grade": 83
+    },
+    {
+      "school": "Boise State",
+      "family": "WR",
+      "player": "Cam Bates",
+      "grade": 82
+    },
+    {
+      "school": "Boise State",
+      "family": "WR",
+      "player": "Rasean Jones",
+      "grade": 87
+    },
+    {
+      "school": "Boston College",
+      "family": "Front Seven",
+      "player": "Anthony Palano",
+      "grade": 87
+    },
+    {
+      "school": "Boston College",
+      "family": "Front Seven",
+      "player": "Chris Marable Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Boston College",
+      "family": "Front Seven",
+      "player": "E'Lla Boykin",
+      "grade": 89
+    },
+    {
+      "school": "Boston College",
+      "family": "Front Seven",
+      "player": "Kj Sampson",
+      "grade": 78
+    },
+    {
+      "school": "Boston College",
+      "family": "Front Seven",
+      "player": "Kris Jones",
+      "grade": 76
+    },
+    {
+      "school": "Boston College",
+      "family": "Front Seven",
+      "player": "Onye Nwosisi",
+      "grade": 82
+    },
+    {
+      "school": "Boston College",
+      "family": "QB",
+      "player": "Mason McKenzie",
+      "grade": 74
+    },
+    {
+      "school": "Boston College",
+      "family": "RB",
+      "player": "Bo MacCormack III",
+      "grade": 75
+    },
+    {
+      "school": "Boston College",
+      "family": "RB",
+      "player": "Evan Dickens",
+      "grade": 82
+    },
+    {
+      "school": "Boston College",
+      "family": "Secondary",
+      "player": "Cameron Martinez",
+      "grade": 76
+    },
+    {
+      "school": "Boston College",
+      "family": "Secondary",
+      "player": "Carter Davis",
+      "grade": 82
+    },
+    {
+      "school": "Boston College",
+      "family": "Secondary",
+      "player": "KP Price",
+      "grade": 87
+    },
+    {
+      "school": "Boston College",
+      "family": "Secondary",
+      "player": "Max Tucker",
+      "grade": 80
+    },
+    {
+      "school": "Boston College",
+      "family": "Secondary",
+      "player": "Syair Torrence",
+      "grade": 78
+    },
+    {
+      "school": "Boston College",
+      "family": "TE",
+      "player": "Zeke Moore",
+      "grade": 78
+    },
+    {
+      "school": "Boston College",
+      "family": "WR",
+      "player": "Jaedn Skeete",
+      "grade": 81
+    },
+    {
+      "school": "Boston College",
+      "family": "WR",
+      "player": "Javarius Green",
+      "grade": 79
+    },
+    {
+      "school": "Boston College",
+      "family": "WR",
+      "player": "Johnathan Montague Jr.",
+      "grade": 76
+    },
+    {
+      "school": "Boston College",
+      "family": "WR",
+      "player": "Reed Swanson",
+      "grade": 83
+    },
+    {
+      "school": "BYU",
+      "family": "Front Seven",
+      "player": "Bodie Schoonover",
+      "grade": 81
+    },
+    {
+      "school": "BYU",
+      "family": "Front Seven",
+      "player": "Cade Uluave",
+      "grade": 88
+    },
+    {
+      "school": "BYU",
+      "family": "Front Seven",
+      "player": "Hunter Clegg",
+      "grade": 78
+    },
+    {
+      "school": "BYU",
+      "family": "Front Seven",
+      "player": "Keanu Tanuvasa",
+      "grade": 89
+    },
+    {
+      "school": "BYU",
+      "family": "Front Seven",
+      "player": "Nusi Taumoepeau",
+      "grade": 80
+    },
+    {
+      "school": "BYU",
+      "family": "Front Seven",
+      "player": "Tausili Akana",
+      "grade": 84
+    },
+    {
+      "school": "BYU",
+      "family": "QB",
+      "player": "Bear Bachmeier",
+      "grade": 86
+    },
+    {
+      "school": "BYU",
+      "family": "RB",
+      "player": "LJ Martin",
+      "grade": 93
+    },
+    {
+      "school": "BYU",
+      "family": "RB",
+      "player": "Preston Rex",
+      "grade": 76
+    },
+    {
+      "school": "BYU",
+      "family": "Secondary",
+      "player": "Cannon DeVries",
+      "grade": 76
+    },
+    {
+      "school": "BYU",
+      "family": "Secondary",
+      "player": "Evan Johnson",
+      "grade": 89
+    },
+    {
+      "school": "BYU",
+      "family": "Secondary",
+      "player": "Faletau Satuala",
+      "grade": 88
+    },
+    {
+      "school": "BYU",
+      "family": "Secondary",
+      "player": "Therrian Alexander III",
+      "grade": 78
+    },
+    {
+      "school": "BYU",
+      "family": "Secondary",
+      "player": "Tommy Prassas",
+      "grade": 80
+    },
+    {
+      "school": "BYU",
+      "family": "TE",
+      "player": "Walker Lyons",
+      "grade": 84
+    },
+    {
+      "school": "BYU",
+      "family": "WR",
+      "player": "Jojo Phillips",
+      "grade": 79
+    },
+    {
+      "school": "BYU",
+      "family": "WR",
+      "player": "Kyler Kasper",
+      "grade": 82
+    },
+    {
+      "school": "BYU",
+      "family": "WR",
+      "player": "Legend Glasker",
+      "grade": 88
+    },
+    {
+      "school": "California",
+      "family": "Front Seven",
+      "player": "Derek Wilkins",
+      "grade": 81
+    },
+    {
+      "school": "California",
+      "family": "Front Seven",
+      "player": "Jayden Wayne",
+      "grade": 79
+    },
+    {
+      "school": "California",
+      "family": "Front Seven",
+      "player": "JD McKinley",
+      "grade": 77
+    },
+    {
+      "school": "California",
+      "family": "Front Seven",
+      "player": "Jericho Johnson",
+      "grade": 83
+    },
+    {
+      "school": "California",
+      "family": "Front Seven",
+      "player": "Kamar Mothudi",
+      "grade": 76
+    },
+    {
+      "school": "California",
+      "family": "Front Seven",
+      "player": "Solomon Williams",
+      "grade": 79
+    },
+    {
+      "school": "California",
+      "family": "QB",
+      "player": "Jaron-Keawe Sagapolutele",
+      "grade": 79
+    },
+    {
+      "school": "California",
+      "family": "RB",
+      "player": "Adam Mohammed",
+      "grade": 85
+    },
+    {
+      "school": "California",
+      "family": "RB",
+      "player": "Ashten Emory",
+      "grade": 76
+    },
+    {
+      "school": "California",
+      "family": "Secondary",
+      "player": "Cam Sidney",
+      "grade": 76
+    },
+    {
+      "school": "California",
+      "family": "Secondary",
+      "player": "Daniel Harris",
+      "grade": 84
+    },
+    {
+      "school": "California",
+      "family": "Secondary",
+      "player": "Kingston Lopa",
+      "grade": 92
+    },
+    {
+      "school": "California",
+      "family": "Secondary",
+      "player": "Michael Hurst Jr.",
+      "grade": 80
+    },
+    {
+      "school": "California",
+      "family": "Secondary",
+      "player": "Ricky Fletcher",
+      "grade": 78
+    },
+    {
+      "school": "California",
+      "family": "TE",
+      "player": "Mason Mini",
+      "grade": 82
+    },
+    {
+      "school": "California",
+      "family": "WR",
+      "player": "Chase Hendricks",
+      "grade": 88
+    },
+    {
+      "school": "California",
+      "family": "WR",
+      "player": "Cooper Perry",
+      "grade": 80
+    },
+    {
+      "school": "California",
+      "family": "WR",
+      "player": "Ian Strong",
+      "grade": 87
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Front Seven",
+      "player": "Damaine Wilson",
+      "grade": 81
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Front Seven",
+      "player": "Drew Logan",
+      "grade": 77
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Front Seven",
+      "player": "Jonathan Thompson",
+      "grade": 85
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Front Seven",
+      "player": "Josh Hough",
+      "grade": 83
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Front Seven",
+      "player": "Marquaze Parker",
+      "grade": 79
+    },
+    {
+      "school": "Cincinnati",
+      "family": "QB",
+      "player": "JC French IV",
+      "grade": 84
+    },
+    {
+      "school": "Cincinnati",
+      "family": "RB",
+      "player": "Cole Tabb",
+      "grade": 88
+    },
+    {
+      "school": "Cincinnati",
+      "family": "RB",
+      "player": "Gi'Bran Payne",
+      "grade": 89
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Secondary",
+      "player": "Jacob Finley",
+      "grade": 82
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Secondary",
+      "player": "Jasper Beeler",
+      "grade": 82
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Secondary",
+      "player": "Kenny Worthy",
+      "grade": 84
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Secondary",
+      "player": "KK Meier",
+      "grade": 76
+    },
+    {
+      "school": "Cincinnati",
+      "family": "Secondary",
+      "player": "MJ Cannon",
+      "grade": 80
+    },
+    {
+      "school": "Cincinnati",
+      "family": "TE",
+      "player": "Gavin Grover",
+      "grade": 76
+    },
+    {
+      "school": "Cincinnati",
+      "family": "WR",
+      "player": "Isaiah Johnson",
+      "grade": 78
+    },
+    {
+      "school": "Cincinnati",
+      "family": "WR",
+      "player": "JV Gibson",
+      "grade": 88
+    },
+    {
+      "school": "Cincinnati",
+      "family": "WR",
+      "player": "Malachi Henry",
+      "grade": 82
+    },
+    {
+      "school": "Clemson",
+      "family": "Front Seven",
+      "player": "Jahiem Lawson",
+      "grade": 89
+    },
+    {
+      "school": "Clemson",
+      "family": "Front Seven",
+      "player": "Jeremiah Alexander",
+      "grade": 85
+    },
+    {
+      "school": "Clemson",
+      "family": "Front Seven",
+      "player": "London Merritt",
+      "grade": 83
+    },
+    {
+      "school": "Clemson",
+      "family": "Front Seven",
+      "player": "Sammy Brown",
+      "grade": 94
+    },
+    {
+      "school": "Clemson",
+      "family": "Front Seven",
+      "player": "Will Heldt",
+      "grade": 93
+    },
+    {
+      "school": "Clemson",
+      "family": "QB",
+      "player": "Tait Reynolds",
+      "grade": 73
+    },
+    {
+      "school": "Clemson",
+      "family": "RB",
+      "player": "Chris Johnson Jr.",
+      "grade": 82
+    },
+    {
+      "school": "Clemson",
+      "family": "RB",
+      "player": "Gideon Davidson",
+      "grade": 88
+    },
+    {
+      "school": "Clemson",
+      "family": "Secondary",
+      "player": "Ashton Hampton",
+      "grade": 94
+    },
+    {
+      "school": "Clemson",
+      "family": "Secondary",
+      "player": "Corey Myrick",
+      "grade": 82
+    },
+    {
+      "school": "Clemson",
+      "family": "Secondary",
+      "player": "Elliot Washington II",
+      "grade": 86
+    },
+    {
+      "school": "Clemson",
+      "family": "Secondary",
+      "player": "Jerome Carter III",
+      "grade": 82
+    },
+    {
+      "school": "Clemson",
+      "family": "Secondary",
+      "player": "Ronan Hanafin",
+      "grade": 76
+    },
+    {
+      "school": "Clemson",
+      "family": "TE",
+      "player": "Olsen Patt-Henry",
+      "grade": 80
+    },
+    {
+      "school": "Clemson",
+      "family": "WR",
+      "player": "Bryant Wesco Jr.",
+      "grade": 85
+    },
+    {
+      "school": "Clemson",
+      "family": "WR",
+      "player": "T.J. Moore",
+      "grade": 87
+    },
+    {
+      "school": "Clemson",
+      "family": "WR",
+      "player": "Tyler Brown",
+      "grade": 81
+    },
+    {
+      "school": "Colorado",
+      "family": "Front Seven",
+      "player": "Dylan Manuel",
+      "grade": 81
+    },
+    {
+      "school": "Colorado",
+      "family": "Front Seven",
+      "player": "Gideon Lampron",
+      "grade": 88
+    },
+    {
+      "school": "Colorado",
+      "family": "Front Seven",
+      "player": "Lamont Lester Jr.",
+      "grade": 89
+    },
+    {
+      "school": "Colorado",
+      "family": "Front Seven",
+      "player": "Liona Lefau",
+      "grade": 80
+    },
+    {
+      "school": "Colorado",
+      "family": "Front Seven",
+      "player": "Santana Hopper",
+      "grade": 80
+    },
+    {
+      "school": "Colorado",
+      "family": "Front Seven",
+      "player": "Toby Anene",
+      "grade": 84
+    },
+    {
+      "school": "Colorado",
+      "family": "QB",
+      "player": "Isaac Wilson",
+      "grade": 70
+    },
+    {
+      "school": "Colorado",
+      "family": "RB",
+      "player": "DeKalon Taylor",
+      "grade": 74
+    },
+    {
+      "school": "Colorado",
+      "family": "RB",
+      "player": "Micah Welch",
+      "grade": 81
+    },
+    {
+      "school": "Colorado",
+      "family": "Secondary",
+      "player": "Boo Carter",
+      "grade": 82
+    },
+    {
+      "school": "Colorado",
+      "family": "Secondary",
+      "player": "Cree Thomas",
+      "grade": 84
+    },
+    {
+      "school": "Colorado",
+      "family": "Secondary",
+      "player": "Makari Vickers",
+      "grade": 76
+    },
+    {
+      "school": "Colorado",
+      "family": "Secondary",
+      "player": "Naeten Mitchell",
+      "grade": 80
+    },
+    {
+      "school": "Colorado",
+      "family": "Secondary",
+      "player": "Randon Fontenette",
+      "grade": 84
+    },
+    {
+      "school": "Colorado",
+      "family": "TE",
+      "player": "Fisher Clements",
+      "grade": 72
+    },
+    {
+      "school": "Colorado",
+      "family": "WR",
+      "player": "Danny Scudero",
+      "grade": 85
+    },
+    {
+      "school": "Colorado",
+      "family": "WR",
+      "player": "DeAndre Moore Jr.",
+      "grade": 84
+    },
+    {
+      "school": "Colorado",
+      "family": "WR",
+      "player": "Joseph Williams",
+      "grade": 84
+    },
+    {
+      "school": "Duke",
+      "family": "Front Seven",
+      "player": "Bradley Gompers",
+      "grade": 76
+    },
+    {
+      "school": "Duke",
+      "family": "Front Seven",
+      "player": "David Anderson",
+      "grade": 83
+    },
+    {
+      "school": "Duke",
+      "family": "Front Seven",
+      "player": "Kendall Johnson",
+      "grade": 79
+    },
+    {
+      "school": "Duke",
+      "family": "Front Seven",
+      "player": "Nick Morris Jr.",
+      "grade": 77
+    },
+    {
+      "school": "Duke",
+      "family": "Front Seven",
+      "player": "Preston Watson",
+      "grade": 81
+    },
+    {
+      "school": "Duke",
+      "family": "Front Seven",
+      "player": "Tyshon Reed",
+      "grade": 85
+    },
+    {
+      "school": "Duke",
+      "family": "QB",
+      "player": "Walker Eget",
+      "grade": 81
+    },
+    {
+      "school": "Duke",
+      "family": "RB",
+      "player": "CJ Campbell Jr.",
+      "grade": 82
+    },
+    {
+      "school": "Duke",
+      "family": "RB",
+      "player": "Nate Sheppard",
+      "grade": 97
+    },
+    {
+      "school": "Duke",
+      "family": "Secondary",
+      "player": "Andrew Pellicciotta",
+      "grade": 84
+    },
+    {
+      "school": "Duke",
+      "family": "Secondary",
+      "player": "DaShawn Stone",
+      "grade": 80
+    },
+    {
+      "school": "Duke",
+      "family": "Secondary",
+      "player": "Dylan Flowers",
+      "grade": 76
+    },
+    {
+      "school": "Duke",
+      "family": "Secondary",
+      "player": "Kyon Loud",
+      "grade": 82
+    },
+    {
+      "school": "Duke",
+      "family": "Secondary",
+      "player": "Landan Callahan",
+      "grade": 78
+    },
+    {
+      "school": "Duke",
+      "family": "TE",
+      "player": "Jeremiah Hasley",
+      "grade": 86
+    },
+    {
+      "school": "Duke",
+      "family": "WR",
+      "player": "Jared Richardson",
+      "grade": 84
+    },
+    {
+      "school": "Duke",
+      "family": "WR",
+      "player": "Jayden Moore",
+      "grade": 81
+    },
+    {
+      "school": "Duke",
+      "family": "WR",
+      "player": "Jonah Burton",
+      "grade": 78
+    },
+    {
+      "school": "Florida",
+      "family": "Front Seven",
+      "player": "Brendan Bett",
+      "grade": 80
+    },
+    {
+      "school": "Florida",
+      "family": "Front Seven",
+      "player": "Jaden Robinson",
+      "grade": 77
+    },
+    {
+      "school": "Florida",
+      "family": "Front Seven",
+      "player": "Jayden Woods",
+      "grade": 89
+    },
+    {
+      "school": "Florida",
+      "family": "Front Seven",
+      "player": "Jeramiah McCloud",
+      "grade": 77
+    },
+    {
+      "school": "Florida",
+      "family": "Front Seven",
+      "player": "Kamran James",
+      "grade": 82
+    },
+    {
+      "school": "Florida",
+      "family": "Front Seven",
+      "player": "Myles Graham",
+      "grade": 84
+    },
+    {
+      "school": "Florida",
+      "family": "QB",
+      "player": "Aaron Philo",
+      "grade": 87
+    },
+    {
+      "school": "Florida",
+      "family": "RB",
+      "player": "Duke Clark",
+      "grade": 88
+    },
+    {
+      "school": "Florida",
+      "family": "RB",
+      "player": "Evan Pryor",
+      "grade": 81
+    },
+    {
+      "school": "Florida",
+      "family": "RB",
+      "player": "Jadan Baugh",
+      "grade": 98
+    },
+    {
+      "school": "Florida",
+      "family": "Secondary",
+      "player": "Ben Hanks III",
+      "grade": 78
+    },
+    {
+      "school": "Florida",
+      "family": "Secondary",
+      "player": "Bryce Thornton",
+      "grade": 87
+    },
+    {
+      "school": "Florida",
+      "family": "Secondary",
+      "player": "Cormani McClain",
+      "grade": 84
+    },
+    {
+      "school": "Florida",
+      "family": "Secondary",
+      "player": "DJ Coleman",
+      "grade": 88
+    },
+    {
+      "school": "Florida",
+      "family": "Secondary",
+      "player": "Kanye Clark",
+      "grade": 76
+    },
+    {
+      "school": "Florida",
+      "family": "TE",
+      "player": "Amir Jackson",
+      "grade": 80
+    },
+    {
+      "school": "Florida",
+      "family": "WR",
+      "player": "Dallas Wilson",
+      "grade": 86
+    },
+    {
+      "school": "Florida",
+      "family": "WR",
+      "player": "Eric Singleton Jr.",
+      "grade": 87
+    },
+    {
+      "school": "Florida",
+      "family": "WR",
+      "player": "Vernell Brown III",
+      "grade": 88
+    },
+    {
+      "school": "Florida State",
+      "family": "Front Seven",
+      "player": "Chris Jones",
+      "grade": 77
+    },
+    {
+      "school": "Florida State",
+      "family": "Front Seven",
+      "player": "Daniel Lyons",
+      "grade": 83
+    },
+    {
+      "school": "Florida State",
+      "family": "Front Seven",
+      "player": "Darryll Desir",
+      "grade": 85
+    },
+    {
+      "school": "Florida State",
+      "family": "Front Seven",
+      "player": "Mandrell Desir",
+      "grade": 82
+    },
+    {
+      "school": "Florida State",
+      "family": "Front Seven",
+      "player": "Omar Graham Jr.",
+      "grade": 78
+    },
+    {
+      "school": "Florida State",
+      "family": "Front Seven",
+      "player": "Rylan Kennedy",
+      "grade": 80
+    },
+    {
+      "school": "Florida State",
+      "family": "QB",
+      "player": "Ashton Daniels",
+      "grade": 77
+    },
+    {
+      "school": "Florida State",
+      "family": "RB",
+      "player": "Ousmane Kromah",
+      "grade": 89
+    },
+    {
+      "school": "Florida State",
+      "family": "RB",
+      "player": "Samuel Singleton Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Florida State",
+      "family": "Secondary",
+      "player": "Ashlynd Barker",
+      "grade": 82
+    },
+    {
+      "school": "Florida State",
+      "family": "Secondary",
+      "player": "CJ Richard Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Florida State",
+      "family": "Secondary",
+      "player": "Ja'Bril Rawls",
+      "grade": 84
+    },
+    {
+      "school": "Florida State",
+      "family": "Secondary",
+      "player": "Ma'Khi Jones",
+      "grade": 76
+    },
+    {
+      "school": "Florida State",
+      "family": "Secondary",
+      "player": "Quindarrius Jones",
+      "grade": 78
+    },
+    {
+      "school": "Florida State",
+      "family": "TE",
+      "player": "Desirrio Riles",
+      "grade": 81
+    },
+    {
+      "school": "Florida State",
+      "family": "WR",
+      "player": "Duce Robinson",
+      "grade": 91
+    },
+    {
+      "school": "Florida State",
+      "family": "WR",
+      "player": "Jayvan Boggs",
+      "grade": 80
+    },
+    {
+      "school": "Florida State",
+      "family": "WR",
+      "player": "Micahi Danzy",
+      "grade": 82
+    },
+    {
+      "school": "Georgia",
+      "family": "Front Seven",
+      "player": "Chris Cole",
+      "grade": 84
+    },
+    {
+      "school": "Georgia",
+      "family": "Front Seven",
+      "player": "Elijah Griffin",
+      "grade": 88
+    },
+    {
+      "school": "Georgia",
+      "family": "Front Seven",
+      "player": "Gabe Harris Jr.",
+      "grade": 82
+    },
+    {
+      "school": "Georgia",
+      "family": "Front Seven",
+      "player": "Jordan Hall",
+      "grade": 81
+    },
+    {
+      "school": "Georgia",
+      "family": "Front Seven",
+      "player": "Quintavius Johnson",
+      "grade": 80
+    },
+    {
+      "school": "Georgia",
+      "family": "Front Seven",
+      "player": "Raylen Wilson",
+      "grade": 89
+    },
+    {
+      "school": "Georgia",
+      "family": "QB",
+      "player": "Gunner Stockton",
+      "grade": 93
+    },
+    {
+      "school": "Georgia",
+      "family": "RB",
+      "player": "Chauncey Bowens",
+      "grade": 85
+    },
+    {
+      "school": "Georgia",
+      "family": "RB",
+      "player": "Nate Frazier",
+      "grade": 92
+    },
+    {
+      "school": "Georgia",
+      "family": "Secondary",
+      "player": "Demello Jones",
+      "grade": 78
+    },
+    {
+      "school": "Georgia",
+      "family": "Secondary",
+      "player": "Ellis Robinson IV",
+      "grade": 92
+    },
+    {
+      "school": "Georgia",
+      "family": "Secondary",
+      "player": "Khalil Barnes",
+      "grade": 84
+    },
+    {
+      "school": "Georgia",
+      "family": "Secondary",
+      "player": "KJ Bolden",
+      "grade": 99
+    },
+    {
+      "school": "Georgia",
+      "family": "Secondary",
+      "player": "Kyron Jones",
+      "grade": 76
+    },
+    {
+      "school": "Georgia",
+      "family": "TE",
+      "player": "Lawson Luckie",
+      "grade": 87
+    },
+    {
+      "school": "Georgia",
+      "family": "WR",
+      "player": "Craig Dandridge",
+      "grade": 76
+    },
+    {
+      "school": "Georgia",
+      "family": "WR",
+      "player": "Isiah Canion",
+      "grade": 84
+    },
+    {
+      "school": "Georgia",
+      "family": "WR",
+      "player": "Sacovie White Helton",
+      "grade": 79
+    },
+    {
+      "school": "Georgia",
+      "family": "WR",
+      "player": "Talyn Taylor",
+      "grade": 83
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Front Seven",
+      "player": "Cayman Spaulding",
+      "grade": 79
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Front Seven",
+      "player": "E.J. Lightsey",
+      "grade": 81
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Front Seven",
+      "player": "Jordan Walker",
+      "grade": 85
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Front Seven",
+      "player": "Kyle Efford",
+      "grade": 88
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Front Seven",
+      "player": "Noah Carter",
+      "grade": 83
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Front Seven",
+      "player": "Tawfiq Thomas",
+      "grade": 88
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "QB",
+      "player": "Alberto Mendoza",
+      "grade": 81
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "RB",
+      "player": "Justice Haynes",
+      "grade": 91
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "RB",
+      "player": "Malachi Hosley",
+      "grade": 82
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "RB",
+      "player": "Trelain Maddox",
+      "grade": 77
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Secondary",
+      "player": "Daiquan White",
+      "grade": 78
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Secondary",
+      "player": "Jaylen Mbakwe",
+      "grade": 84
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Secondary",
+      "player": "Kelvin Hill",
+      "grade": 76
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Secondary",
+      "player": "Savion Riley",
+      "grade": 82
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "Secondary",
+      "player": "Tae Harris",
+      "grade": 80
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "TE",
+      "player": "Gavin Harris",
+      "grade": 78
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "TE",
+      "player": "Kevin Roche Jr.",
+      "grade": 86
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "WR",
+      "player": "Dalen Penson",
+      "grade": 80
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "WR",
+      "player": "Isaiah Fuhrmann",
+      "grade": 84
+    },
+    {
+      "school": "Georgia Tech",
+      "family": "WR",
+      "player": "Jordan Allen",
+      "grade": 78
+    },
+    {
+      "school": "Houston",
+      "family": "Front Seven",
+      "player": "Ashton Porter",
+      "grade": 85
+    },
+    {
+      "school": "Houston",
+      "family": "Front Seven",
+      "player": "Brandon Mack II",
+      "grade": 82
+    },
+    {
+      "school": "Houston",
+      "family": "Front Seven",
+      "player": "De'Marion Thomas",
+      "grade": 82
+    },
+    {
+      "school": "Houston",
+      "family": "Front Seven",
+      "player": "Jaden Yates",
+      "grade": 77
+    },
+    {
+      "school": "Houston",
+      "family": "Front Seven",
+      "player": "Khalil Laufau",
+      "grade": 80
+    },
+    {
+      "school": "Houston",
+      "family": "Front Seven",
+      "player": "Sione Fotu",
+      "grade": 76
+    },
+    {
+      "school": "Houston",
+      "family": "QB",
+      "player": "Conner Weigman",
+      "grade": 88
+    },
+    {
+      "school": "Houston",
+      "family": "RB",
+      "player": "Makhi Hughes",
+      "grade": 88
+    },
+    {
+      "school": "Houston",
+      "family": "RB",
+      "player": "Re'Shaun Sanford II",
+      "grade": 85
+    },
+    {
+      "school": "Houston",
+      "family": "Secondary",
+      "player": "Jalen Mayo",
+      "grade": 86
+    },
+    {
+      "school": "Houston",
+      "family": "Secondary",
+      "player": "Javion White",
+      "grade": 76
+    },
+    {
+      "school": "Houston",
+      "family": "Secondary",
+      "player": "Jordan Allen",
+      "grade": 88
+    },
+    {
+      "school": "Houston",
+      "family": "Secondary",
+      "player": "Kentrell Webb",
+      "grade": 80
+    },
+    {
+      "school": "Houston",
+      "family": "Secondary",
+      "player": "Will James",
+      "grade": 88
+    },
+    {
+      "school": "Houston",
+      "family": "TE",
+      "player": "Patrick Overmyer",
+      "grade": 89
+    },
+    {
+      "school": "Houston",
+      "family": "WR",
+      "player": "Amare Thomas",
+      "grade": 91
+    },
+    {
+      "school": "Houston",
+      "family": "WR",
+      "player": "Koby Young",
+      "grade": 84
+    },
+    {
+      "school": "Houston",
+      "family": "WR",
+      "player": "Trent Walker",
+      "grade": 84
+    },
+    {
+      "school": "Illinois",
+      "family": "Front Seven",
+      "player": "Darrell Prater",
+      "grade": 81
+    },
+    {
+      "school": "Illinois",
+      "family": "Front Seven",
+      "player": "Ismael Kante",
+      "grade": 77
+    },
+    {
+      "school": "Illinois",
+      "family": "Front Seven",
+      "player": "James Kreutz",
+      "grade": 76
+    },
+    {
+      "school": "Illinois",
+      "family": "Front Seven",
+      "player": "Joe Barna",
+      "grade": 80
+    },
+    {
+      "school": "Illinois",
+      "family": "Front Seven",
+      "player": "Mason Muragin",
+      "grade": 78
+    },
+    {
+      "school": "Illinois",
+      "family": "Front Seven",
+      "player": "Pat Farrell",
+      "grade": 76
+    },
+    {
+      "school": "Illinois",
+      "family": "QB",
+      "player": "Katin Houser",
+      "grade": 86
+    },
+    {
+      "school": "Illinois",
+      "family": "RB",
+      "player": "Aidan Laughery",
+      "grade": 84
+    },
+    {
+      "school": "Illinois",
+      "family": "RB",
+      "player": "Calil Valentine",
+      "grade": 84
+    },
+    {
+      "school": "Illinois",
+      "family": "Secondary",
+      "player": "Jakwon Morris",
+      "grade": 76
+    },
+    {
+      "school": "Illinois",
+      "family": "Secondary",
+      "player": "Juice Clarke",
+      "grade": 82
+    },
+    {
+      "school": "Illinois",
+      "family": "Secondary",
+      "player": "Mac Resetich",
+      "grade": 80
+    },
+    {
+      "school": "Illinois",
+      "family": "Secondary",
+      "player": "Matthew Bailey",
+      "grade": 87
+    },
+    {
+      "school": "Illinois",
+      "family": "Secondary",
+      "player": "Xavier Scott",
+      "grade": 86
+    },
+    {
+      "school": "Illinois",
+      "family": "TE",
+      "player": "Christian Abney",
+      "grade": 79
+    },
+    {
+      "school": "Illinois",
+      "family": "WR",
+      "player": "Brayden Trimble",
+      "grade": 74
+    },
+    {
+      "school": "Illinois",
+      "family": "WR",
+      "player": "Collin Dixon",
+      "grade": 94
+    },
+    {
+      "school": "Illinois",
+      "family": "WR",
+      "player": "Hudson Clement",
+      "grade": 83
+    },
+    {
+      "school": "Illinois",
+      "family": "WR",
+      "player": "Ty Robinson",
+      "grade": 79
+    },
+    {
+      "school": "Indiana",
+      "family": "Front Seven",
+      "player": "Isaiah Jones",
+      "grade": 90
+    },
+    {
+      "school": "Indiana",
+      "family": "Front Seven",
+      "player": "Josh Burnham",
+      "grade": 85
+    },
+    {
+      "school": "Indiana",
+      "family": "Front Seven",
+      "player": "Mario Landino",
+      "grade": 82
+    },
+    {
+      "school": "Indiana",
+      "family": "Front Seven",
+      "player": "Rolijah Hardy",
+      "grade": 91
+    },
+    {
+      "school": "Indiana",
+      "family": "Front Seven",
+      "player": "Tobi Osunsanmi",
+      "grade": 89
+    },
+    {
+      "school": "Indiana",
+      "family": "Front Seven",
+      "player": "Tyrique Tucker",
+      "grade": 89
+    },
+    {
+      "school": "Indiana",
+      "family": "QB",
+      "player": "Josh Hoover",
+      "grade": 90
+    },
+    {
+      "school": "Indiana",
+      "family": "RB",
+      "player": "Lee Beebe Jr.",
+      "grade": 90
+    },
+    {
+      "school": "Indiana",
+      "family": "RB",
+      "player": "Turbo Richard",
+      "grade": 93
+    },
+    {
+      "school": "Indiana",
+      "family": "Secondary",
+      "player": "Amare Ferrell",
+      "grade": 89
+    },
+    {
+      "school": "Indiana",
+      "family": "Secondary",
+      "player": "Byron Baldwin Jr.",
+      "grade": 76
+    },
+    {
+      "school": "Indiana",
+      "family": "Secondary",
+      "player": "Jamari Sharpe",
+      "grade": 88
+    },
+    {
+      "school": "Indiana",
+      "family": "Secondary",
+      "player": "Preston Zachman",
+      "grade": 82
+    },
+    {
+      "school": "Indiana",
+      "family": "Secondary",
+      "player": "Ryland Gandy",
+      "grade": 78
+    },
+    {
+      "school": "Indiana",
+      "family": "TE",
+      "player": "Andrew Barker",
+      "grade": 82
+    },
+    {
+      "school": "Indiana",
+      "family": "WR",
+      "player": "Charlie Becker",
+      "grade": 94
+    },
+    {
+      "school": "Indiana",
+      "family": "WR",
+      "player": "Davion Chandler",
+      "grade": 79
+    },
+    {
+      "school": "Indiana",
+      "family": "WR",
+      "player": "Nick Marsh",
+      "grade": 88
+    },
+    {
+      "school": "Indiana",
+      "family": "WR",
+      "player": "Tyler Morris",
+      "grade": 84
+    },
+    {
+      "school": "Iowa",
+      "family": "Front Seven",
+      "player": "Cam Buffington",
+      "grade": 85
+    },
+    {
+      "school": "Iowa",
+      "family": "Front Seven",
+      "player": "Iose Epenesa",
+      "grade": 89
+    },
+    {
+      "school": "Iowa",
+      "family": "Front Seven",
+      "player": "Jayden Montgomery",
+      "grade": 82
+    },
+    {
+      "school": "Iowa",
+      "family": "Front Seven",
+      "player": "Kahmari Brown",
+      "grade": 78
+    },
+    {
+      "school": "Iowa",
+      "family": "Front Seven",
+      "player": "Kenneth Merrieweather",
+      "grade": 84
+    },
+    {
+      "school": "Iowa",
+      "family": "QB",
+      "player": "Hank Brown",
+      "grade": 82
+    },
+    {
+      "school": "Iowa",
+      "family": "RB",
+      "player": "Braeden Jackson",
+      "grade": 83
+    },
+    {
+      "school": "Iowa",
+      "family": "RB",
+      "player": "Kamari Moulton",
+      "grade": 89
+    },
+    {
+      "school": "Iowa",
+      "family": "RB",
+      "player": "L.J. Phillips Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Iowa",
+      "family": "Secondary",
+      "player": "Anthony Hawkins",
+      "grade": 82
+    },
+    {
+      "school": "Iowa",
+      "family": "Secondary",
+      "player": "Deshaun Lee",
+      "grade": 86
+    },
+    {
+      "school": "Iowa",
+      "family": "Secondary",
+      "player": "Jaylen Watson",
+      "grade": 84
+    },
+    {
+      "school": "Iowa",
+      "family": "Secondary",
+      "player": "Rashad Godfrey Jr.",
+      "grade": 76
+    },
+    {
+      "school": "Iowa",
+      "family": "Secondary",
+      "player": "Zach Lutmer",
+      "grade": 88
+    },
+    {
+      "school": "Iowa",
+      "family": "TE",
+      "player": "Dj Vonnahme",
+      "grade": 88
+    },
+    {
+      "school": "Iowa",
+      "family": "WR",
+      "player": "Evan James",
+      "grade": 76
+    },
+    {
+      "school": "Iowa",
+      "family": "WR",
+      "player": "Reece Vander Zee",
+      "grade": 84
+    },
+    {
+      "school": "Iowa",
+      "family": "WR",
+      "player": "Tony Diaz",
+      "grade": 79
+    },
+    {
+      "school": "Iowa State",
+      "family": "Front Seven",
+      "player": "Bryson Lamb",
+      "grade": 81
+    },
+    {
+      "school": "Iowa State",
+      "family": "Front Seven",
+      "player": "Caden Crawford",
+      "grade": 79
+    },
+    {
+      "school": "Iowa State",
+      "family": "Front Seven",
+      "player": "Carson Willich",
+      "grade": 77
+    },
+    {
+      "school": "Iowa State",
+      "family": "Front Seven",
+      "player": "Isaac Terrell",
+      "grade": 85
+    },
+    {
+      "school": "Iowa State",
+      "family": "Front Seven",
+      "player": "Sullivan Schlimgen",
+      "grade": 76
+    },
+    {
+      "school": "Iowa State",
+      "family": "Front Seven",
+      "player": "Zaimir Hawk",
+      "grade": 83
+    },
+    {
+      "school": "Iowa State",
+      "family": "QB",
+      "player": "Jaylen Raynor",
+      "grade": 78
+    },
+    {
+      "school": "Iowa State",
+      "family": "RB",
+      "player": "Aiden Flora",
+      "grade": 87
+    },
+    {
+      "school": "Iowa State",
+      "family": "RB",
+      "player": "Cameron Pettaway",
+      "grade": 77
+    },
+    {
+      "school": "Iowa State",
+      "family": "Secondary",
+      "player": "Beni Ngoyi",
+      "grade": 76
+    },
+    {
+      "school": "Iowa State",
+      "family": "Secondary",
+      "player": "Brody Miller",
+      "grade": 80
+    },
+    {
+      "school": "Iowa State",
+      "family": "Secondary",
+      "player": "David Coffey",
+      "grade": 84
+    },
+    {
+      "school": "Iowa State",
+      "family": "Secondary",
+      "player": "Drew Surges",
+      "grade": 82
+    },
+    {
+      "school": "Iowa State",
+      "family": "Secondary",
+      "player": "Seth Johnson",
+      "grade": 78
+    },
+    {
+      "school": "Iowa State",
+      "family": "TE",
+      "player": "Tyler Fortenberry",
+      "grade": 77
+    },
+    {
+      "school": "Iowa State",
+      "family": "TE",
+      "player": "Vince Benetti",
+      "grade": 76
+    },
+    {
+      "school": "Iowa State",
+      "family": "WR",
+      "player": "Cody Jackson",
+      "grade": 76
+    },
+    {
+      "school": "Iowa State",
+      "family": "WR",
+      "player": "Dominic Overby",
+      "grade": 80
+    },
+    {
+      "school": "Iowa State",
+      "family": "WR",
+      "player": "Evan Boyd",
+      "grade": 78
+    },
+    {
+      "school": "Iowa State",
+      "family": "WR",
+      "player": "Omari Hayes",
+      "grade": 84
+    },
+    {
+      "school": "Kansas",
+      "family": "Front Seven",
+      "player": "Dakyus Brinkley",
+      "grade": 77
+    },
+    {
+      "school": "Kansas",
+      "family": "Front Seven",
+      "player": "David Santiago",
+      "grade": 82
+    },
+    {
+      "school": "Kansas",
+      "family": "Front Seven",
+      "player": "Leroy Harris III",
+      "grade": 89
+    },
+    {
+      "school": "Kansas",
+      "family": "Front Seven",
+      "player": "Quincy Davis",
+      "grade": 80
+    },
+    {
+      "school": "Kansas",
+      "family": "Front Seven",
+      "player": "Trey Lathan",
+      "grade": 79
+    },
+    {
+      "school": "Kansas",
+      "family": "QB",
+      "player": "Isaiah Marshall",
+      "grade": 76
+    },
+    {
+      "school": "Kansas",
+      "family": "RB",
+      "player": "Dylan Edwards",
+      "grade": 85
+    },
+    {
+      "school": "Kansas",
+      "family": "RB",
+      "player": "Yasin Willis",
+      "grade": 81
+    },
+    {
+      "school": "Kansas",
+      "family": "Secondary",
+      "player": "Austin Alexander",
+      "grade": 78
+    },
+    {
+      "school": "Kansas",
+      "family": "Secondary",
+      "player": "Corey Gordon",
+      "grade": 82
+    },
+    {
+      "school": "Kansas",
+      "family": "Secondary",
+      "player": "Elijah Cannon",
+      "grade": 76
+    },
+    {
+      "school": "Kansas",
+      "family": "Secondary",
+      "player": "Jalen Todd",
+      "grade": 84
+    },
+    {
+      "school": "Kansas",
+      "family": "Secondary",
+      "player": "Taylor Davis",
+      "grade": 80
+    },
+    {
+      "school": "Kansas",
+      "family": "TE",
+      "player": "Carson Bruhn",
+      "grade": 76
+    },
+    {
+      "school": "Kansas",
+      "family": "WR",
+      "player": "Keaton Kubecka",
+      "grade": 78
+    },
+    {
+      "school": "Kansas",
+      "family": "WR",
+      "player": "Nahzae Cox",
+      "grade": 80
+    },
+    {
+      "school": "Kansas",
+      "family": "WR",
+      "player": "Nik McMillan",
+      "grade": 86
+    },
+    {
+      "school": "Kansas",
+      "family": "WR",
+      "player": "Tate Nagy",
+      "grade": 75
+    },
+    {
+      "school": "Kansas State",
+      "family": "Front Seven",
+      "player": "Gabe Powers",
+      "grade": 78
+    },
+    {
+      "school": "Kansas State",
+      "family": "Front Seven",
+      "player": "Jordan Allen",
+      "grade": 80
+    },
+    {
+      "school": "Kansas State",
+      "family": "Front Seven",
+      "player": "Kamari Burns",
+      "grade": 83
+    },
+    {
+      "school": "Kansas State",
+      "family": "Front Seven",
+      "player": "Mekhi Mason",
+      "grade": 82
+    },
+    {
+      "school": "Kansas State",
+      "family": "Front Seven",
+      "player": "Travis Bates",
+      "grade": 81
+    },
+    {
+      "school": "Kansas State",
+      "family": "Front Seven",
+      "player": "Wendell Gregory",
+      "grade": 89
+    },
+    {
+      "school": "Kansas State",
+      "family": "QB",
+      "player": "Avery Johnson",
+      "grade": 86
+    },
+    {
+      "school": "Kansas State",
+      "family": "RB",
+      "player": "Jay Harris",
+      "grade": 80
+    },
+    {
+      "school": "Kansas State",
+      "family": "RB",
+      "player": "Joe Jackson",
+      "grade": 84
+    },
+    {
+      "school": "Kansas State",
+      "family": "RB",
+      "player": "Rodney Fields Jr.",
+      "grade": 87
+    },
+    {
+      "school": "Kansas State",
+      "family": "Secondary",
+      "player": "JoJo Scott",
+      "grade": 76
+    },
+    {
+      "school": "Kansas State",
+      "family": "Secondary",
+      "player": "Kaleb Patterson",
+      "grade": 78
+    },
+    {
+      "school": "Kansas State",
+      "family": "Secondary",
+      "player": "Koy Beasley",
+      "grade": 80
+    },
+    {
+      "school": "Kansas State",
+      "family": "Secondary",
+      "player": "Logan Bartley",
+      "grade": 82
+    },
+    {
+      "school": "Kansas State",
+      "family": "Secondary",
+      "player": "Zashon Rich",
+      "grade": 84
+    },
+    {
+      "school": "Kansas State",
+      "family": "TE",
+      "player": "Garrett Oakley",
+      "grade": 87
+    },
+    {
+      "school": "Kansas State",
+      "family": "WR",
+      "player": "Brandon White",
+      "grade": 79
+    },
+    {
+      "school": "Kansas State",
+      "family": "WR",
+      "player": "Derrick Salley Jr.",
+      "grade": 76
+    },
+    {
+      "school": "Kansas State",
+      "family": "WR",
+      "player": "Jaron Tibbs",
+      "grade": 83
+    },
+    {
+      "school": "Kansas State",
+      "family": "WR",
+      "player": "Josh Manning",
+      "grade": 84
+    },
+    {
+      "school": "Kentucky",
+      "family": "Front Seven",
+      "player": "Elijah Barnes",
+      "grade": 78
+    },
+    {
+      "school": "Kentucky",
+      "family": "Front Seven",
+      "player": "Grant Godfrey",
+      "grade": 76
+    },
+    {
+      "school": "Kentucky",
+      "family": "Front Seven",
+      "player": "Jaden Williams",
+      "grade": 76
+    },
+    {
+      "school": "Kentucky",
+      "family": "Front Seven",
+      "player": "Mi'Quise Humphrey-Grace",
+      "grade": 81
+    },
+    {
+      "school": "Kentucky",
+      "family": "Front Seven",
+      "player": "Tavion Gadson",
+      "grade": 84
+    },
+    {
+      "school": "Kentucky",
+      "family": "QB",
+      "player": "Kenny Minchey",
+      "grade": 83
+    },
+    {
+      "school": "Kentucky",
+      "family": "RB",
+      "player": "CJ Baxter",
+      "grade": 89
+    },
+    {
+      "school": "Kentucky",
+      "family": "RB",
+      "player": "Jason Patterson",
+      "grade": 88
+    },
+    {
+      "school": "Kentucky",
+      "family": "Secondary",
+      "player": "Aaron Gates",
+      "grade": 78
+    },
+    {
+      "school": "Kentucky",
+      "family": "Secondary",
+      "player": "Hasaan Sykes",
+      "grade": 80
+    },
+    {
+      "school": "Kentucky",
+      "family": "Secondary",
+      "player": "Jordan Castell",
+      "grade": 88
+    },
+    {
+      "school": "Kentucky",
+      "family": "Secondary",
+      "player": "Terhyon Nichols",
+      "grade": 76
+    },
+    {
+      "school": "Kentucky",
+      "family": "Secondary",
+      "player": "Ty Bryant",
+      "grade": 86
+    },
+    {
+      "school": "Kentucky",
+      "family": "TE",
+      "player": "Henry Boyer",
+      "grade": 77
+    },
+    {
+      "school": "Kentucky",
+      "family": "TE",
+      "player": "Willie Rodriguez",
+      "grade": 82
+    },
+    {
+      "school": "Kentucky",
+      "family": "WR",
+      "player": "DJ Miller",
+      "grade": 82
+    },
+    {
+      "school": "Kentucky",
+      "family": "WR",
+      "player": "Kenny Darby",
+      "grade": 88
+    },
+    {
+      "school": "Kentucky",
+      "family": "WR",
+      "player": "Nic Anderson",
+      "grade": 80
+    },
+    {
+      "school": "Kentucky",
+      "family": "WR",
+      "player": "Shane Carr",
+      "grade": 77
+    },
+    {
+      "school": "Louisville",
+      "family": "Front Seven",
+      "player": "AJ Green",
+      "grade": 82
+    },
+    {
+      "school": "Louisville",
+      "family": "Front Seven",
+      "player": "Clev Lubin",
+      "grade": 90
+    },
+    {
+      "school": "Louisville",
+      "family": "Front Seven",
+      "player": "Daylen Russell",
+      "grade": 78
+    },
+    {
+      "school": "Louisville",
+      "family": "Front Seven",
+      "player": "Joshua Donald",
+      "grade": 80
+    },
+    {
+      "school": "Louisville",
+      "family": "Front Seven",
+      "player": "Stanquan Clark",
+      "grade": 88
+    },
+    {
+      "school": "Louisville",
+      "family": "Front Seven",
+      "player": "T.J. Capers",
+      "grade": 85
+    },
+    {
+      "school": "Louisville",
+      "family": "QB",
+      "player": "Lincoln Kienholz",
+      "grade": 88
+    },
+    {
+      "school": "Louisville",
+      "family": "RB",
+      "player": "Isaac Brown",
+      "grade": 86
+    },
+    {
+      "school": "Louisville",
+      "family": "RB",
+      "player": "Keyjuan Brown",
+      "grade": 89
+    },
+    {
+      "school": "Louisville",
+      "family": "Secondary",
+      "player": "Antonio Watts",
+      "grade": 87
+    },
+    {
+      "school": "Louisville",
+      "family": "Secondary",
+      "player": "DJ Waller Jr.",
+      "grade": 76
+    },
+    {
+      "school": "Louisville",
+      "family": "Secondary",
+      "player": "Jabari Mack",
+      "grade": 82
+    },
+    {
+      "school": "Louisville",
+      "family": "Secondary",
+      "player": "Kaleb Beasley",
+      "grade": 85
+    },
+    {
+      "school": "Louisville",
+      "family": "Secondary",
+      "player": "Koen Entringer",
+      "grade": 79
+    },
+    {
+      "school": "Louisville",
+      "family": "TE",
+      "player": "Jaleel Skinner",
+      "grade": 91
+    },
+    {
+      "school": "Louisville",
+      "family": "WR",
+      "player": "Lawayne McCoy",
+      "grade": 84
+    },
+    {
+      "school": "Louisville",
+      "family": "WR",
+      "player": "Tre Richardson",
+      "grade": 90
+    },
+    {
+      "school": "Louisville",
+      "family": "WR",
+      "player": "TreyShun Hurry",
+      "grade": 82
+    },
+    {
+      "school": "LSU",
+      "family": "Front Seven",
+      "player": "Deuce Geralds",
+      "grade": 88
+    },
+    {
+      "school": "LSU",
+      "family": "Front Seven",
+      "player": "Dylan Carpenter",
+      "grade": 78
+    },
+    {
+      "school": "LSU",
+      "family": "Front Seven",
+      "player": "Jordan Ross",
+      "grade": 82
+    },
+    {
+      "school": "LSU",
+      "family": "Front Seven",
+      "player": "Princewill Umanmielen",
+      "grade": 98
+    },
+    {
+      "school": "LSU",
+      "family": "Front Seven",
+      "player": "TJ Dottery",
+      "grade": 84
+    },
+    {
+      "school": "LSU",
+      "family": "Front Seven",
+      "player": "Whit Weeks",
+      "grade": 89
+    },
+    {
+      "school": "LSU",
+      "family": "QB",
+      "player": "Sam Leavitt",
+      "grade": 84
+    },
+    {
+      "school": "LSU",
+      "family": "RB",
+      "player": "Dilin Jones",
+      "grade": 87
+    },
+    {
+      "school": "LSU",
+      "family": "RB",
+      "player": "Stacy Gage",
+      "grade": 77
+    },
+    {
+      "school": "LSU",
+      "family": "Secondary",
+      "player": "Dashawn Spears",
+      "grade": 79
+    },
+    {
+      "school": "LSU",
+      "family": "Secondary",
+      "player": "DJ Pickett",
+      "grade": 89
+    },
+    {
+      "school": "LSU",
+      "family": "Secondary",
+      "player": "Pj Woodland",
+      "grade": 78
+    },
+    {
+      "school": "LSU",
+      "family": "Secondary",
+      "player": "Tamarcus Cooley",
+      "grade": 80
+    },
+    {
+      "school": "LSU",
+      "family": "Secondary",
+      "player": "Ty Benefield",
+      "grade": 90
+    },
+    {
+      "school": "LSU",
+      "family": "TE",
+      "player": "Trey'Dez Green",
+      "grade": 97
+    },
+    {
+      "school": "LSU",
+      "family": "WR",
+      "player": "Eugene Wilson III",
+      "grade": 82
+    },
+    {
+      "school": "LSU",
+      "family": "WR",
+      "player": "Jackson Harris",
+      "grade": 85
+    },
+    {
+      "school": "LSU",
+      "family": "WR",
+      "player": "Winston Watkins Jr.",
+      "grade": 89
+    },
+    {
+      "school": "Maryland",
+      "family": "Front Seven",
+      "player": "Carlton Smith",
+      "grade": 78
+    },
+    {
+      "school": "Maryland",
+      "family": "Front Seven",
+      "player": "Daniel Wingate",
+      "grade": 88
+    },
+    {
+      "school": "Maryland",
+      "family": "Front Seven",
+      "player": "Derrick LeBlanc",
+      "grade": 80
+    },
+    {
+      "school": "Maryland",
+      "family": "Front Seven",
+      "player": "Eyan Thomas",
+      "grade": 81
+    },
+    {
+      "school": "Maryland",
+      "family": "Front Seven",
+      "player": "Lavon Johnson",
+      "grade": 83
+    },
+    {
+      "school": "Maryland",
+      "family": "QB",
+      "player": "Malik Washington",
+      "grade": 84
+    },
+    {
+      "school": "Maryland",
+      "family": "RB",
+      "player": "Harry Dalton III",
+      "grade": 74
+    },
+    {
+      "school": "Maryland",
+      "family": "RB",
+      "player": "Iverson Howard",
+      "grade": 80
+    },
+    {
+      "school": "Maryland",
+      "family": "RB",
+      "player": "Liam Willson",
+      "grade": 77
+    },
+    {
+      "school": "Maryland",
+      "family": "Secondary",
+      "player": "Amari Jackson",
+      "grade": 79
+    },
+    {
+      "school": "Maryland",
+      "family": "Secondary",
+      "player": "Jamare Glasker",
+      "grade": 84
+    },
+    {
+      "school": "Maryland",
+      "family": "Secondary",
+      "player": "Jordan Scruggs",
+      "grade": 76
+    },
+    {
+      "school": "Maryland",
+      "family": "Secondary",
+      "player": "Lavain Scruggs",
+      "grade": 82
+    },
+    {
+      "school": "Maryland",
+      "family": "Secondary",
+      "player": "Messiah Delhomme",
+      "grade": 85
+    },
+    {
+      "school": "Maryland",
+      "family": "TE",
+      "player": "Dorian Fleming",
+      "grade": 86
+    },
+    {
+      "school": "Maryland",
+      "family": "WR",
+      "player": "Chris Durr Jr.",
+      "grade": 88
+    },
+    {
+      "school": "Maryland",
+      "family": "WR",
+      "player": "Kaleb Webb",
+      "grade": 79
+    },
+    {
+      "school": "Maryland",
+      "family": "WR",
+      "player": "Na'eem Abdul-Rahim Gladding",
+      "grade": 83
+    },
+    {
+      "school": "Miami",
+      "family": "Front Seven",
+      "player": "Ahmad Moten",
+      "grade": 89
+    },
+    {
+      "school": "Miami",
+      "family": "Front Seven",
+      "player": "Armondo Blount",
+      "grade": 82
+    },
+    {
+      "school": "Miami",
+      "family": "Front Seven",
+      "player": "Chase Smith",
+      "grade": 85
+    },
+    {
+      "school": "Miami",
+      "family": "Front Seven",
+      "player": "Damon Wilson II",
+      "grade": 89
+    },
+    {
+      "school": "Miami",
+      "family": "Front Seven",
+      "player": "Marquise Lightfoot",
+      "grade": 90
+    },
+    {
+      "school": "Miami",
+      "family": "Front Seven",
+      "player": "Mohamed Toure",
+      "grade": 84
+    },
+    {
+      "school": "Miami",
+      "family": "QB",
+      "player": "Darian Mensah",
+      "grade": 97
+    },
+    {
+      "school": "Miami",
+      "family": "RB",
+      "player": "CharMar Brown",
+      "grade": 84
+    },
+    {
+      "school": "Miami",
+      "family": "RB",
+      "player": "Javian Mallory",
+      "grade": 84
+    },
+    {
+      "school": "Miami",
+      "family": "RB",
+      "player": "Mark Fletcher Jr.",
+      "grade": 92
+    },
+    {
+      "school": "Miami",
+      "family": "Secondary",
+      "player": "Bryce Fitzgerald",
+      "grade": 89
+    },
+    {
+      "school": "Miami",
+      "family": "Secondary",
+      "player": "Damari Brown",
+      "grade": 82
+    },
+    {
+      "school": "Miami",
+      "family": "Secondary",
+      "player": "Omar Thornton",
+      "grade": 79
+    },
+    {
+      "school": "Miami",
+      "family": "Secondary",
+      "player": "Xavier Lucas",
+      "grade": 86
+    },
+    {
+      "school": "Miami",
+      "family": "Secondary",
+      "player": "Zechariah Poyser",
+      "grade": 82
+    },
+    {
+      "school": "Miami",
+      "family": "TE",
+      "player": "Elija Lofton",
+      "grade": 84
+    },
+    {
+      "school": "Miami",
+      "family": "WR",
+      "player": "Cooper Barkate",
+      "grade": 86
+    },
+    {
+      "school": "Miami",
+      "family": "WR",
+      "player": "Joshua Moore",
+      "grade": 80
+    },
+    {
+      "school": "Miami",
+      "family": "WR",
+      "player": "Malachi Toney",
+      "grade": 98
+    },
+    {
+      "school": "Michigan",
+      "family": "Front Seven",
+      "player": "Chase Taylor",
+      "grade": 78
+    },
+    {
+      "school": "Michigan",
+      "family": "Front Seven",
+      "player": "Dom Nichols",
+      "grade": 84
+    },
+    {
+      "school": "Michigan",
+      "family": "Front Seven",
+      "player": "John Henry Daley",
+      "grade": 93
+    },
+    {
+      "school": "Michigan",
+      "family": "Front Seven",
+      "player": "Nathaniel Staehling",
+      "grade": 81
+    },
+    {
+      "school": "Michigan",
+      "family": "Front Seven",
+      "player": "Troy Bowles",
+      "grade": 80
+    },
+    {
+      "school": "Michigan",
+      "family": "QB",
+      "player": "Bryce Underwood",
+      "grade": 82
+    },
+    {
+      "school": "Michigan",
+      "family": "RB",
+      "player": "Jordan Marshall",
+      "grade": 86
+    },
+    {
+      "school": "Michigan",
+      "family": "RB",
+      "player": "Savion Hiter",
+      "grade": 78
+    },
+    {
+      "school": "Michigan",
+      "family": "Secondary",
+      "player": "Chris Bracy",
+      "grade": 80
+    },
+    {
+      "school": "Michigan",
+      "family": "Secondary",
+      "player": "Jyaire Hill",
+      "grade": 90
+    },
+    {
+      "school": "Michigan",
+      "family": "Secondary",
+      "player": "Rod Moore Jr.",
+      "grade": 86
+    },
+    {
+      "school": "Michigan",
+      "family": "Secondary",
+      "player": "Smith Snowden",
+      "grade": 88
+    },
+    {
+      "school": "Michigan",
+      "family": "Secondary",
+      "player": "Zeke Berry",
+      "grade": 76
+    },
+    {
+      "school": "Michigan",
+      "family": "TE",
+      "player": "Jalen Hoffman",
+      "grade": 74
+    },
+    {
+      "school": "Michigan",
+      "family": "WR",
+      "player": "Andrew Marsh",
+      "grade": 86
+    },
+    {
+      "school": "Michigan",
+      "family": "WR",
+      "player": "JJ Buchanan",
+      "grade": 92
+    },
+    {
+      "school": "Michigan",
+      "family": "WR",
+      "player": "Salesi Moa",
+      "grade": 78
+    },
+    {
+      "school": "Michigan State",
+      "family": "Front Seven",
+      "player": "Ben Roberts",
+      "grade": 76
+    },
+    {
+      "school": "Michigan State",
+      "family": "Front Seven",
+      "player": "Brady Pretzlaff",
+      "grade": 78
+    },
+    {
+      "school": "Michigan State",
+      "family": "Front Seven",
+      "player": "Dion Crawford",
+      "grade": 79
+    },
+    {
+      "school": "Michigan State",
+      "family": "Front Seven",
+      "player": "Eli Coenen",
+      "grade": 84
+    },
+    {
+      "school": "Michigan State",
+      "family": "Front Seven",
+      "player": "Isaac Smith",
+      "grade": 80
+    },
+    {
+      "school": "Michigan State",
+      "family": "Front Seven",
+      "player": "Kenny Soares Jr.",
+      "grade": 82
+    },
+    {
+      "school": "Michigan State",
+      "family": "QB",
+      "player": "Alessio Milivojevic",
+      "grade": 76
+    },
+    {
+      "school": "Michigan State",
+      "family": "RB",
+      "player": "Cam Edwards",
+      "grade": 88
+    },
+    {
+      "school": "Michigan State",
+      "family": "RB",
+      "player": "Jaziun Patterson",
+      "grade": 78
+    },
+    {
+      "school": "Michigan State",
+      "family": "Secondary",
+      "player": "Charles Brantley",
+      "grade": 79
+    },
+    {
+      "school": "Michigan State",
+      "family": "Secondary",
+      "player": "Devin Vaught",
+      "grade": 80
+    },
+    {
+      "school": "Michigan State",
+      "family": "Secondary",
+      "player": "Michael Richard",
+      "grade": 76
+    },
+    {
+      "school": "Michigan State",
+      "family": "Secondary",
+      "player": "Nikai Martinez",
+      "grade": 82
+    },
+    {
+      "school": "Michigan State",
+      "family": "Secondary",
+      "player": "Tre Bell",
+      "grade": 84
+    },
+    {
+      "school": "Michigan State",
+      "family": "TE",
+      "player": "Brennan Parachek",
+      "grade": 80
+    },
+    {
+      "school": "Michigan State",
+      "family": "TE",
+      "player": "Jayden Savoury",
+      "grade": 76
+    },
+    {
+      "school": "Michigan State",
+      "family": "WR",
+      "player": "Chrishon McCray",
+      "grade": 82
+    },
+    {
+      "school": "Michigan State",
+      "family": "WR",
+      "player": "Fredrick Moore",
+      "grade": 81
+    },
+    {
+      "school": "Michigan State",
+      "family": "WR",
+      "player": "Rodney Bullard Jr.",
+      "grade": 84
+    },
+    {
+      "school": "Minnesota",
+      "family": "Front Seven",
+      "player": "Anthony Smith",
+      "grade": 89
+    },
+    {
+      "school": "Minnesota",
+      "family": "Front Seven",
+      "player": "Matt Kingsbury",
+      "grade": 78
+    },
+    {
+      "school": "Minnesota",
+      "family": "Front Seven",
+      "player": "Maverick Baranowski",
+      "grade": 88
+    },
+    {
+      "school": "Minnesota",
+      "family": "Front Seven",
+      "player": "Naquan Crowder",
+      "grade": 82
+    },
+    {
+      "school": "Minnesota",
+      "family": "Front Seven",
+      "player": "Theorin Randle",
+      "grade": 80
+    },
+    {
+      "school": "Minnesota",
+      "family": "Front Seven",
+      "player": "TJ Bush Jr.",
+      "grade": 87
+    },
+    {
+      "school": "Minnesota",
+      "family": "QB",
+      "player": "Drake Lindsey",
+      "grade": 82
+    },
+    {
+      "school": "Minnesota",
+      "family": "RB",
+      "player": "Darius Taylor",
+      "grade": 80
+    },
+    {
+      "school": "Minnesota",
+      "family": "RB",
+      "player": "TJ Thomas",
+      "grade": 83
+    },
+    {
+      "school": "Minnesota",
+      "family": "Secondary",
+      "player": "Aidan Gousby",
+      "grade": 79
+    },
+    {
+      "school": "Minnesota",
+      "family": "Secondary",
+      "player": "Aydan West",
+      "grade": 84
+    },
+    {
+      "school": "Minnesota",
+      "family": "Secondary",
+      "player": "John Nestor",
+      "grade": 97
+    },
+    {
+      "school": "Minnesota",
+      "family": "Secondary",
+      "player": "Kerry Brown",
+      "grade": 82
+    },
+    {
+      "school": "Minnesota",
+      "family": "Secondary",
+      "player": "Zack Harden",
+      "grade": 82
+    },
+    {
+      "school": "Minnesota",
+      "family": "TE",
+      "player": "Pierce Walsh",
+      "grade": 81
+    },
+    {
+      "school": "Minnesota",
+      "family": "WR",
+      "player": "Jalen Smith",
+      "grade": 82
+    },
+    {
+      "school": "Minnesota",
+      "family": "WR",
+      "player": "Javon Tracy",
+      "grade": 84
+    },
+    {
+      "school": "Minnesota",
+      "family": "WR",
+      "player": "Noah Jennings",
+      "grade": 86
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Front Seven",
+      "player": "Amaree Williams",
+      "grade": 79
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Front Seven",
+      "player": "DJ Reed",
+      "grade": 80
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Front Seven",
+      "player": "Jalen Smith",
+      "grade": 76
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Front Seven",
+      "player": "Jaray Bledsoe",
+      "grade": 81
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Front Seven",
+      "player": "Will Whitson",
+      "grade": 83
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Front Seven",
+      "player": "Zakari Tillman",
+      "grade": 78
+    },
+    {
+      "school": "Mississippi State",
+      "family": "QB",
+      "player": "Kamario Taylor",
+      "grade": 96
+    },
+    {
+      "school": "Mississippi State",
+      "family": "RB",
+      "player": "Fluff Bothwell",
+      "grade": 91
+    },
+    {
+      "school": "Mississippi State",
+      "family": "RB",
+      "player": "J.J. Hill",
+      "grade": 75
+    },
+    {
+      "school": "Mississippi State",
+      "family": "RB",
+      "player": "Kolin Wilson",
+      "grade": 80
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Secondary",
+      "player": "Isaac Smith",
+      "grade": 86
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Secondary",
+      "player": "Jardin Gilbert",
+      "grade": 82
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Secondary",
+      "player": "Jett Jefferson",
+      "grade": 89
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Secondary",
+      "player": "Kelley Jones",
+      "grade": 93
+    },
+    {
+      "school": "Mississippi State",
+      "family": "Secondary",
+      "player": "Marcus Williams",
+      "grade": 80
+    },
+    {
+      "school": "Mississippi State",
+      "family": "TE",
+      "player": "Sam West",
+      "grade": 80
+    },
+    {
+      "school": "Mississippi State",
+      "family": "WR",
+      "player": "Anthony Evans III",
+      "grade": 93
+    },
+    {
+      "school": "Mississippi State",
+      "family": "WR",
+      "player": "Marquis Johnson",
+      "grade": 84
+    },
+    {
+      "school": "Mississippi State",
+      "family": "WR",
+      "player": "Sanfrisco Magee",
+      "grade": 82
+    },
+    {
+      "school": "Mississippi State",
+      "family": "WR",
+      "player": "Zion Ragins",
+      "grade": 80
+    },
+    {
+      "school": "Missouri",
+      "family": "Front Seven",
+      "player": "Daeden Hopkins",
+      "grade": 92
+    },
+    {
+      "school": "Missouri",
+      "family": "Front Seven",
+      "player": "Jalen Marshall",
+      "grade": 78
+    },
+    {
+      "school": "Missouri",
+      "family": "Front Seven",
+      "player": "Langden Kitchen",
+      "grade": 80
+    },
+    {
+      "school": "Missouri",
+      "family": "Front Seven",
+      "player": "Marquis Gracial",
+      "grade": 82
+    },
+    {
+      "school": "Missouri",
+      "family": "Front Seven",
+      "player": "Nicholas Rodriguez",
+      "grade": 90
+    },
+    {
+      "school": "Missouri",
+      "family": "Front Seven",
+      "player": "Robert Woodyard Jr.",
+      "grade": 87
+    },
+    {
+      "school": "Missouri",
+      "family": "QB",
+      "player": "Austin Simmons",
+      "grade": 91
+    },
+    {
+      "school": "Missouri",
+      "family": "RB",
+      "player": "Ahmad Hardy",
+      "grade": 92
+    },
+    {
+      "school": "Missouri",
+      "family": "RB",
+      "player": "Jamal Roberts",
+      "grade": 89
+    },
+    {
+      "school": "Missouri",
+      "family": "RB",
+      "player": "Xai'Shaun Edwards",
+      "grade": 75
+    },
+    {
+      "school": "Missouri",
+      "family": "Secondary",
+      "player": "Chris Graves Jr.",
+      "grade": 85
+    },
+    {
+      "school": "Missouri",
+      "family": "Secondary",
+      "player": "Kensley Louidor-Faustin",
+      "grade": 76
+    },
+    {
+      "school": "Missouri",
+      "family": "Secondary",
+      "player": "Santana Banner",
+      "grade": 82
+    },
+    {
+      "school": "Missouri",
+      "family": "Secondary",
+      "player": "Sione Laulea",
+      "grade": 89
+    },
+    {
+      "school": "Missouri",
+      "family": "Secondary",
+      "player": "Trajen Greco",
+      "grade": 80
+    },
+    {
+      "school": "Missouri",
+      "family": "TE",
+      "player": "Brett Norfleet",
+      "grade": 86
+    },
+    {
+      "school": "Missouri",
+      "family": "WR",
+      "player": "Cayden Lee",
+      "grade": 93
+    },
+    {
+      "school": "Missouri",
+      "family": "WR",
+      "player": "Donovan Olugbode",
+      "grade": 91
+    },
+    {
+      "school": "Missouri",
+      "family": "WR",
+      "player": "Naeshaun Montgomery",
+      "grade": 80
+    },
+    {
+      "school": "NC State",
+      "family": "Front Seven",
+      "player": "AJ Richardson",
+      "grade": 77
+    },
+    {
+      "school": "NC State",
+      "family": "Front Seven",
+      "player": "Harvey Dyson III",
+      "grade": 79
+    },
+    {
+      "school": "NC State",
+      "family": "Front Seven",
+      "player": "Isaiah Shirley",
+      "grade": 81
+    },
+    {
+      "school": "NC State",
+      "family": "Front Seven",
+      "player": "Joseph Adedire",
+      "grade": 85
+    },
+    {
+      "school": "NC State",
+      "family": "Front Seven",
+      "player": "Josiah Victor",
+      "grade": 83
+    },
+    {
+      "school": "NC State",
+      "family": "Front Seven",
+      "player": "Popo Aguirre",
+      "grade": 76
+    },
+    {
+      "school": "NC State",
+      "family": "QB",
+      "player": "CJ Bailey",
+      "grade": 81
+    },
+    {
+      "school": "NC State",
+      "family": "RB",
+      "player": "Davion Gause",
+      "grade": 80
+    },
+    {
+      "school": "NC State",
+      "family": "RB",
+      "player": "Jayden Scott",
+      "grade": 88
+    },
+    {
+      "school": "NC State",
+      "family": "Secondary",
+      "player": "Brian Nelson II",
+      "grade": 84
+    },
+    {
+      "school": "NC State",
+      "family": "Secondary",
+      "player": "Jackson Vick",
+      "grade": 76
+    },
+    {
+      "school": "NC State",
+      "family": "Secondary",
+      "player": "Jaren Sensabaugh",
+      "grade": 84
+    },
+    {
+      "school": "NC State",
+      "family": "Secondary",
+      "player": "Ronnie Royal III",
+      "grade": 80
+    },
+    {
+      "school": "NC State",
+      "family": "Secondary",
+      "player": "Tristan Teasdell",
+      "grade": 82
+    },
+    {
+      "school": "NC State",
+      "family": "TE",
+      "player": "Preston Douglas",
+      "grade": 84
+    },
+    {
+      "school": "NC State",
+      "family": "WR",
+      "player": "Joshisa Trader",
+      "grade": 82
+    },
+    {
+      "school": "NC State",
+      "family": "WR",
+      "player": "Keenan Jackson",
+      "grade": 87
+    },
+    {
+      "school": "NC State",
+      "family": "WR",
+      "player": "Victor Snow",
+      "grade": 84
+    },
+    {
+      "school": "Nebraska",
+      "family": "Front Seven",
+      "player": "Anthony Jones Jr.",
+      "grade": 79
+    },
+    {
+      "school": "Nebraska",
+      "family": "Front Seven",
+      "player": "Cameron Lenhardt",
+      "grade": 84
+    },
+    {
+      "school": "Nebraska",
+      "family": "Front Seven",
+      "player": "Jahsear Whittington",
+      "grade": 80
+    },
+    {
+      "school": "Nebraska",
+      "family": "Front Seven",
+      "player": "Owen Chambliss",
+      "grade": 89
+    },
+    {
+      "school": "Nebraska",
+      "family": "Front Seven",
+      "player": "Owen Stoudmire",
+      "grade": 82
+    },
+    {
+      "school": "Nebraska",
+      "family": "Front Seven",
+      "player": "Vincent Shavers Jr.",
+      "grade": 76
+    },
+    {
+      "school": "Nebraska",
+      "family": "QB",
+      "player": "Anthony Colandrea",
+      "grade": 87
+    },
+    {
+      "school": "Nebraska",
+      "family": "RB",
+      "player": "Isaiah Mozee",
+      "grade": 78
+    },
+    {
+      "school": "Nebraska",
+      "family": "RB",
+      "player": "Jamal Rule",
+      "grade": 87
+    },
+    {
+      "school": "Nebraska",
+      "family": "RB",
+      "player": "Mekhi Nelson",
+      "grade": 82
+    },
+    {
+      "school": "Nebraska",
+      "family": "Secondary",
+      "player": "Andrew Marshall",
+      "grade": 82
+    },
+    {
+      "school": "Nebraska",
+      "family": "Secondary",
+      "player": "Donovan Jones",
+      "grade": 86
+    },
+    {
+      "school": "Nebraska",
+      "family": "Secondary",
+      "player": "Dwayne McDougle III",
+      "grade": 79
+    },
+    {
+      "school": "Nebraska",
+      "family": "Secondary",
+      "player": "Jamir Conn",
+      "grade": 82
+    },
+    {
+      "school": "Nebraska",
+      "family": "Secondary",
+      "player": "Victor Evans III",
+      "grade": 76
+    },
+    {
+      "school": "Nebraska",
+      "family": "TE",
+      "player": "Luke Lindenmeyer",
+      "grade": 83
+    },
+    {
+      "school": "Nebraska",
+      "family": "WR",
+      "player": "Jacory Barney Jr.",
+      "grade": 86
+    },
+    {
+      "school": "Nebraska",
+      "family": "WR",
+      "player": "Kwazi Gilmer",
+      "grade": 85
+    },
+    {
+      "school": "Nebraska",
+      "family": "WR",
+      "player": "Nyziah Hunter",
+      "grade": 83
+    },
+    {
+      "school": "North Carolina",
+      "family": "Front Seven",
+      "player": "Derek McDonald",
+      "grade": 84
+    },
+    {
+      "school": "North Carolina",
+      "family": "Front Seven",
+      "player": "Isaiah Johnson",
+      "grade": 78
+    },
+    {
+      "school": "North Carolina",
+      "family": "Front Seven",
+      "player": "Jaylen Harvey",
+      "grade": 88
+    },
+    {
+      "school": "North Carolina",
+      "family": "Front Seven",
+      "player": "Leroy Jackson",
+      "grade": 82
+    },
+    {
+      "school": "North Carolina",
+      "family": "Front Seven",
+      "player": "Peyton Seelmann",
+      "grade": 80
+    },
+    {
+      "school": "North Carolina",
+      "family": "Front Seven",
+      "player": "Xavier Lewis",
+      "grade": 90
+    },
+    {
+      "school": "North Carolina",
+      "family": "QB",
+      "player": "Billy Edwards Jr.",
+      "grade": 79
+    },
+    {
+      "school": "North Carolina",
+      "family": "RB",
+      "player": "Benjamin Hall",
+      "grade": 85
+    },
+    {
+      "school": "North Carolina",
+      "family": "RB",
+      "player": "Demon June",
+      "grade": 82
+    },
+    {
+      "school": "North Carolina",
+      "family": "RB",
+      "player": "Jaylen McGill",
+      "grade": 80
+    },
+    {
+      "school": "North Carolina",
+      "family": "Secondary",
+      "player": "Greg Smith III",
+      "grade": 87
+    },
+    {
+      "school": "North Carolina",
+      "family": "Secondary",
+      "player": "Jaiden Patterson",
+      "grade": 86
+    },
+    {
+      "school": "North Carolina",
+      "family": "Secondary",
+      "player": "Kaleb Cost",
+      "grade": 82
+    },
+    {
+      "school": "North Carolina",
+      "family": "Secondary",
+      "player": "Peyton Waters",
+      "grade": 78
+    },
+    {
+      "school": "North Carolina",
+      "family": "Secondary",
+      "player": "Tre Miller",
+      "grade": 76
+    },
+    {
+      "school": "North Carolina",
+      "family": "TE",
+      "player": "Jelani Thurman",
+      "grade": 88
+    },
+    {
+      "school": "North Carolina",
+      "family": "WR",
+      "player": "Jordan Shipp",
+      "grade": 82
+    },
+    {
+      "school": "North Carolina",
+      "family": "WR",
+      "player": "Mason Humphrey",
+      "grade": 83
+    },
+    {
+      "school": "North Carolina",
+      "family": "WR",
+      "player": "Trech Kekahuna",
+      "grade": 80
+    },
+    {
+      "school": "Northwestern",
+      "family": "Front Seven",
+      "player": "Braydon Brus",
+      "grade": 84
+    },
+    {
+      "school": "Northwestern",
+      "family": "Front Seven",
+      "player": "Caden O'Rourke",
+      "grade": 76
+    },
+    {
+      "school": "Northwestern",
+      "family": "Front Seven",
+      "player": "Jamaal Johnson",
+      "grade": 80
+    },
+    {
+      "school": "Northwestern",
+      "family": "Front Seven",
+      "player": "Kobie McKinzie",
+      "grade": 82
+    },
+    {
+      "school": "Northwestern",
+      "family": "Front Seven",
+      "player": "Michael Kilbane",
+      "grade": 78
+    },
+    {
+      "school": "Northwestern",
+      "family": "QB",
+      "player": "Aidan Chiles",
+      "grade": 87
+    },
+    {
+      "school": "Northwestern",
+      "family": "RB",
+      "player": "Caleb Komolafe",
+      "grade": 86
+    },
+    {
+      "school": "Northwestern",
+      "family": "RB",
+      "player": "Gavin Sawchuk",
+      "grade": 79
+    },
+    {
+      "school": "Northwestern",
+      "family": "RB",
+      "player": "Joseph Himon II",
+      "grade": 84
+    },
+    {
+      "school": "Northwestern",
+      "family": "Secondary",
+      "player": "Jon Jon Stevens Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Northwestern",
+      "family": "Secondary",
+      "player": "Montae Pate",
+      "grade": 78
+    },
+    {
+      "school": "Northwestern",
+      "family": "Secondary",
+      "player": "Ore Adeyi",
+      "grade": 84
+    },
+    {
+      "school": "Northwestern",
+      "family": "Secondary",
+      "player": "Robert Fitzgerald",
+      "grade": 82
+    },
+    {
+      "school": "Northwestern",
+      "family": "Secondary",
+      "player": "Sean Martin",
+      "grade": 76
+    },
+    {
+      "school": "Northwestern",
+      "family": "TE",
+      "player": "Alex Honig",
+      "grade": 79
+    },
+    {
+      "school": "Northwestern",
+      "family": "TE",
+      "player": "Luke Dehnicke",
+      "grade": 76
+    },
+    {
+      "school": "Northwestern",
+      "family": "WR",
+      "player": "Drew Wagner",
+      "grade": 76
+    },
+    {
+      "school": "Northwestern",
+      "family": "WR",
+      "player": "Griffin Wilde",
+      "grade": 84
+    },
+    {
+      "school": "Northwestern",
+      "family": "WR",
+      "player": "Hayden Eligon II",
+      "grade": 82
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Front Seven",
+      "player": "Boubacar Traore",
+      "grade": 90
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Front Seven",
+      "player": "Bryce Young",
+      "grade": 88
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Front Seven",
+      "player": "Drayk Bowen",
+      "grade": 88
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Front Seven",
+      "player": "Jaiden Ausberry",
+      "grade": 86
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Front Seven",
+      "player": "Keon Keeley",
+      "grade": 84
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Front Seven",
+      "player": "Kyngstonn Viliamu-Asa",
+      "grade": 91
+    },
+    {
+      "school": "Notre Dame",
+      "family": "QB",
+      "player": "CJ Carr",
+      "grade": 95
+    },
+    {
+      "school": "Notre Dame",
+      "family": "RB",
+      "player": "Aneyas Williams",
+      "grade": 86
+    },
+    {
+      "school": "Notre Dame",
+      "family": "RB",
+      "player": "Nolan James Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Secondary",
+      "player": "Adon Shuler",
+      "grade": 89
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Secondary",
+      "player": "Brauntae Johnson",
+      "grade": 88
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Secondary",
+      "player": "Christian Gray",
+      "grade": 77
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Secondary",
+      "player": "DJ McKinney",
+      "grade": 86
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Secondary",
+      "player": "Leonard Moore",
+      "grade": 98
+    },
+    {
+      "school": "Notre Dame",
+      "family": "Secondary",
+      "player": "Luke Talich",
+      "grade": 86
+    },
+    {
+      "school": "Notre Dame",
+      "family": "TE",
+      "player": "Cooper Flanagan",
+      "grade": 78
+    },
+    {
+      "school": "Notre Dame",
+      "family": "WR",
+      "player": "Jordan Faison",
+      "grade": 88
+    },
+    {
+      "school": "Notre Dame",
+      "family": "WR",
+      "player": "Micah Gilbert",
+      "grade": 82
+    },
+    {
+      "school": "Notre Dame",
+      "family": "WR",
+      "player": "Mylan Graham",
+      "grade": 80
+    },
+    {
+      "school": "Ohio State",
+      "family": "Front Seven",
+      "player": "Christian Alliegro",
+      "grade": 82
+    },
+    {
+      "school": "Ohio State",
+      "family": "Front Seven",
+      "player": "Eddrick Houston",
+      "grade": 83
+    },
+    {
+      "school": "Ohio State",
+      "family": "Front Seven",
+      "player": "John Walker",
+      "grade": 84
+    },
+    {
+      "school": "Ohio State",
+      "family": "Front Seven",
+      "player": "Kenyatta Jackson Jr.",
+      "grade": 89
+    },
+    {
+      "school": "Ohio State",
+      "family": "Front Seven",
+      "player": "Payton Pierce",
+      "grade": 84
+    },
+    {
+      "school": "Ohio State",
+      "family": "Front Seven",
+      "player": "Riley Pettijohn",
+      "grade": 88
+    },
+    {
+      "school": "Ohio State",
+      "family": "QB",
+      "player": "Julian Sayin",
+      "grade": 93
+    },
+    {
+      "school": "Ohio State",
+      "family": "RB",
+      "player": "Bo Jackson",
+      "grade": 91
+    },
+    {
+      "school": "Ohio State",
+      "family": "RB",
+      "player": "Ja'Kobi Jackson",
+      "grade": 86
+    },
+    {
+      "school": "Ohio State",
+      "family": "Secondary",
+      "player": "Devin Sanchez",
+      "grade": 86
+    },
+    {
+      "school": "Ohio State",
+      "family": "Secondary",
+      "player": "Earl Little Jr.",
+      "grade": 85
+    },
+    {
+      "school": "Ohio State",
+      "family": "Secondary",
+      "player": "Jay Timmons",
+      "grade": 86
+    },
+    {
+      "school": "Ohio State",
+      "family": "Secondary",
+      "player": "Jaylen McClain",
+      "grade": 87
+    },
+    {
+      "school": "Ohio State",
+      "family": "Secondary",
+      "player": "Jermaine Mathews Jr.",
+      "grade": 93
+    },
+    {
+      "school": "Ohio State",
+      "family": "TE",
+      "player": "Nate Roberts",
+      "grade": 82
+    },
+    {
+      "school": "Ohio State",
+      "family": "WR",
+      "player": "Brandon Inniss",
+      "grade": 86
+    },
+    {
+      "school": "Ohio State",
+      "family": "WR",
+      "player": "Chris Henry Jr.",
+      "grade": 79
+    },
+    {
+      "school": "Ohio State",
+      "family": "WR",
+      "player": "Devin McCuin",
+      "grade": 85
+    },
+    {
+      "school": "Ohio State",
+      "family": "WR",
+      "player": "Jeremiah Smith",
+      "grade": 99
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Front Seven",
+      "player": "Adepoju Adebawore",
+      "grade": 82
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Front Seven",
+      "player": "David Stone",
+      "grade": 91
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Front Seven",
+      "player": "James Nesta",
+      "grade": 78
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Front Seven",
+      "player": "Jayden Jackson",
+      "grade": 84
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Front Seven",
+      "player": "Kip Lewis",
+      "grade": 89
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Front Seven",
+      "player": "Taylor Wein",
+      "grade": 85
+    },
+    {
+      "school": "Oklahoma",
+      "family": "QB",
+      "player": "John Mateer",
+      "grade": 84
+    },
+    {
+      "school": "Oklahoma",
+      "family": "RB",
+      "player": "Lloyd Avant",
+      "grade": 81
+    },
+    {
+      "school": "Oklahoma",
+      "family": "RB",
+      "player": "Xavier Robinson",
+      "grade": 81
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Secondary",
+      "player": "Courtland Guillory",
+      "grade": 86
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Secondary",
+      "player": "Eli Bowen",
+      "grade": 88
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Secondary",
+      "player": "Omarion Robinson",
+      "grade": 80
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Secondary",
+      "player": "Peyton Bowen",
+      "grade": 88
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Secondary",
+      "player": "Reggie Powers III",
+      "grade": 74
+    },
+    {
+      "school": "Oklahoma",
+      "family": "Secondary",
+      "player": "Trystan Haynes",
+      "grade": 76
+    },
+    {
+      "school": "Oklahoma",
+      "family": "TE",
+      "player": "Rocky Beers",
+      "grade": 95
+    },
+    {
+      "school": "Oklahoma",
+      "family": "WR",
+      "player": "Elijah Thomas",
+      "grade": 81
+    },
+    {
+      "school": "Oklahoma",
+      "family": "WR",
+      "player": "Isaiah Sategna III",
+      "grade": 88
+    },
+    {
+      "school": "Oklahoma",
+      "family": "WR",
+      "player": "Parker Livingstone",
+      "grade": 79
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Front Seven",
+      "player": "Iman Oates",
+      "grade": 80
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Front Seven",
+      "player": "Isaiah Chisom",
+      "grade": 77
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Front Seven",
+      "player": "Jaleel Johnson",
+      "grade": 84
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Front Seven",
+      "player": "James Williams",
+      "grade": 78
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Front Seven",
+      "player": "Saadiq Clements",
+      "grade": 82
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Front Seven",
+      "player": "Tate Romney",
+      "grade": 76
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "QB",
+      "player": "Drew Mestemaker",
+      "grade": 92
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "RB",
+      "player": "Caleb Hawkins",
+      "grade": 94
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "RB",
+      "player": "Tre Page III",
+      "grade": 75
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Secondary",
+      "player": "Christian Bodnar",
+      "grade": 76
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Secondary",
+      "player": "Evan Jackson",
+      "grade": 82
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Secondary",
+      "player": "LaDainian Fields",
+      "grade": 84
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Secondary",
+      "player": "Mo Horn",
+      "grade": 84
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "Secondary",
+      "player": "Quinton Hammonds",
+      "grade": 80
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "TE",
+      "player": "Carson Kolb",
+      "grade": 75
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "WR",
+      "player": "Chris Barnes",
+      "grade": 81
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "WR",
+      "player": "Justin Bowick",
+      "grade": 88
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "WR",
+      "player": "Terrence Lewis",
+      "grade": 77
+    },
+    {
+      "school": "Oklahoma State",
+      "family": "WR",
+      "player": "Wyatt Young",
+      "grade": 94
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Front Seven",
+      "player": "Jamarious Brown",
+      "grade": 89
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Front Seven",
+      "player": "Kam Franklin",
+      "grade": 84
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Front Seven",
+      "player": "Keaton Thomas",
+      "grade": 88
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Front Seven",
+      "player": "Luke Ferrelli",
+      "grade": 82
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Front Seven",
+      "player": "Suntarine Perkins",
+      "grade": 90
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Front Seven",
+      "player": "Will Echoles",
+      "grade": 92
+    },
+    {
+      "school": "Ole Miss",
+      "family": "QB",
+      "player": "Trinidad Chambliss",
+      "grade": 98
+    },
+    {
+      "school": "Ole Miss",
+      "family": "RB",
+      "player": "Kewan Lacy",
+      "grade": 91
+    },
+    {
+      "school": "Ole Miss",
+      "family": "RB",
+      "player": "Makhi Frazier",
+      "grade": 81
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Secondary",
+      "player": "Antonio Kite",
+      "grade": 84
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Secondary",
+      "player": "Edwin Joseph",
+      "grade": 76
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Secondary",
+      "player": "Jaylon Braxton",
+      "grade": 84
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Secondary",
+      "player": "Joenel Aguero",
+      "grade": 80
+    },
+    {
+      "school": "Ole Miss",
+      "family": "Secondary",
+      "player": "Sharif Denson",
+      "grade": 82
+    },
+    {
+      "school": "Ole Miss",
+      "family": "TE",
+      "player": "Caleb Odom",
+      "grade": 83
+    },
+    {
+      "school": "Ole Miss",
+      "family": "TE",
+      "player": "Luke Hasz",
+      "grade": 86
+    },
+    {
+      "school": "Ole Miss",
+      "family": "WR",
+      "player": "Deuce Alexander",
+      "grade": 93
+    },
+    {
+      "school": "Ole Miss",
+      "family": "WR",
+      "player": "Horatio Fields",
+      "grade": 84
+    },
+    {
+      "school": "Ole Miss",
+      "family": "WR",
+      "player": "Johntay Cook II",
+      "grade": 82
+    },
+    {
+      "school": "Ole Miss",
+      "family": "WR",
+      "player": "Traylon Ray",
+      "grade": 80
+    },
+    {
+      "school": "Oregon",
+      "family": "Front Seven",
+      "player": "Amauri Washington",
+      "grade": 90
+    },
+    {
+      "school": "Oregon",
+      "family": "Front Seven",
+      "player": "Bear Alexander",
+      "grade": 85
+    },
+    {
+      "school": "Oregon",
+      "family": "Front Seven",
+      "player": "Elijah Rushing",
+      "grade": 82
+    },
+    {
+      "school": "Oregon",
+      "family": "Front Seven",
+      "player": "Matayo Uiagalelei",
+      "grade": 95
+    },
+    {
+      "school": "Oregon",
+      "family": "Front Seven",
+      "player": "Teitum Tuioti",
+      "grade": 91
+    },
+    {
+      "school": "Oregon",
+      "family": "QB",
+      "player": "Dante Moore",
+      "grade": 94
+    },
+    {
+      "school": "Oregon",
+      "family": "RB",
+      "player": "Dierre Hill Jr.",
+      "grade": 85
+    },
+    {
+      "school": "Oregon",
+      "family": "RB",
+      "player": "Jordon Davison",
+      "grade": 88
+    },
+    {
+      "school": "Oregon",
+      "family": "Secondary",
+      "player": "Aaron Flowers",
+      "grade": 84
+    },
+    {
+      "school": "Oregon",
+      "family": "Secondary",
+      "player": "Brandon Finney Jr.",
+      "grade": 90
+    },
+    {
+      "school": "Oregon",
+      "family": "Secondary",
+      "player": "Carl Williams IV",
+      "grade": 76
+    },
+    {
+      "school": "Oregon",
+      "family": "Secondary",
+      "player": "Ify Obidegwu",
+      "grade": 89
+    },
+    {
+      "school": "Oregon",
+      "family": "Secondary",
+      "player": "Koi Perich",
+      "grade": 81
+    },
+    {
+      "school": "Oregon",
+      "family": "TE",
+      "player": "Jamari Johnson",
+      "grade": 94
+    },
+    {
+      "school": "Oregon",
+      "family": "WR",
+      "player": "Dakorien Moore",
+      "grade": 88
+    },
+    {
+      "school": "Oregon",
+      "family": "WR",
+      "player": "Evan Stewart",
+      "grade": 86
+    },
+    {
+      "school": "Oregon",
+      "family": "WR",
+      "player": "Jeremiah McClellan",
+      "grade": 82
+    },
+    {
+      "school": "Oregon",
+      "family": "WR",
+      "player": "Messiah Hampton",
+      "grade": 81
+    },
+    {
+      "school": "Penn State",
+      "family": "Front Seven",
+      "player": "Alexander McPherson",
+      "grade": 78
+    },
+    {
+      "school": "Penn State",
+      "family": "Front Seven",
+      "player": "Ikenna Ezeogu",
+      "grade": 80
+    },
+    {
+      "school": "Penn State",
+      "family": "Front Seven",
+      "player": "Kooper Ebel",
+      "grade": 84
+    },
+    {
+      "school": "Penn State",
+      "family": "Front Seven",
+      "player": "Tony Rojas",
+      "grade": 89
+    },
+    {
+      "school": "Penn State",
+      "family": "Front Seven",
+      "player": "Yvan Kemajou",
+      "grade": 81
+    },
+    {
+      "school": "Penn State",
+      "family": "QB",
+      "player": "Rocco Becht",
+      "grade": 85
+    },
+    {
+      "school": "Penn State",
+      "family": "RB",
+      "player": "Carson Hansen",
+      "grade": 84
+    },
+    {
+      "school": "Penn State",
+      "family": "RB",
+      "player": "James Peoples",
+      "grade": 83
+    },
+    {
+      "school": "Penn State",
+      "family": "RB",
+      "player": "Quinton Martin Jr.",
+      "grade": 78
+    },
+    {
+      "school": "Penn State",
+      "family": "Secondary",
+      "player": "Audavion Collins",
+      "grade": 88
+    },
+    {
+      "school": "Penn State",
+      "family": "Secondary",
+      "player": "Daryus Dixson",
+      "grade": 84
+    },
+    {
+      "school": "Penn State",
+      "family": "Secondary",
+      "player": "Jeremiah Cooper",
+      "grade": 89
+    },
+    {
+      "school": "Penn State",
+      "family": "Secondary",
+      "player": "Marcus Neal Jr.",
+      "grade": 84
+    },
+    {
+      "school": "Penn State",
+      "family": "Secondary",
+      "player": "Zion Tracy",
+      "grade": 76
+    },
+    {
+      "school": "Penn State",
+      "family": "TE",
+      "player": "Andrew Rappleyea",
+      "grade": 82
+    },
+    {
+      "school": "Penn State",
+      "family": "TE",
+      "player": "Benjamin Brahmer",
+      "grade": 90
+    },
+    {
+      "school": "Penn State",
+      "family": "WR",
+      "player": "Brett Eskildsen",
+      "grade": 79
+    },
+    {
+      "school": "Penn State",
+      "family": "WR",
+      "player": "Chase Sowell",
+      "grade": 83
+    },
+    {
+      "school": "Penn State",
+      "family": "WR",
+      "player": "Koby Howard",
+      "grade": 80
+    },
+    {
+      "school": "Penn State",
+      "family": "WR",
+      "player": "Zay Robinson",
+      "grade": 77
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Front Seven",
+      "player": "Alex Sanford Jr.",
+      "grade": 77
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Front Seven",
+      "player": "Isaiah Neal",
+      "grade": 85
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Front Seven",
+      "player": "Jaeden Moore",
+      "grade": 81
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Front Seven",
+      "player": "Jeremiah Marcelin",
+      "grade": 89
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Front Seven",
+      "player": "Jimmy Scott",
+      "grade": 83
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Front Seven",
+      "player": "Zach Crothers",
+      "grade": 79
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "QB",
+      "player": "Holden Geriner",
+      "grade": 79
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "QB",
+      "player": "Mason Heintschel",
+      "grade": 84
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "RB",
+      "player": "Damon Ferguson Jr.",
+      "grade": 83
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "RB",
+      "player": "Jakyrian Turner",
+      "grade": 84
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Secondary",
+      "player": "Cruce Brookins",
+      "grade": 85
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Secondary",
+      "player": "Josh Guerrier",
+      "grade": 71
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Secondary",
+      "player": "Raion Strader",
+      "grade": 84
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Secondary",
+      "player": "Rashan Murray",
+      "grade": 76
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "Secondary",
+      "player": "Shawn Lee Jr.",
+      "grade": 88
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "TE",
+      "player": "Carson Kent",
+      "grade": 83
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "WR",
+      "player": "Cataurus Hicks",
+      "grade": 86
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "WR",
+      "player": "Censere Lee",
+      "grade": 82
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "WR",
+      "player": "Demetrice McCray",
+      "grade": 84
+    },
+    {
+      "school": "Pittsburgh",
+      "family": "WR",
+      "player": "Tony Kinsler",
+      "grade": 78
+    },
+    {
+      "school": "Purdue",
+      "family": "Front Seven",
+      "player": "Charles Correa",
+      "grade": 84
+    },
+    {
+      "school": "Purdue",
+      "family": "Front Seven",
+      "player": "Curt Neal",
+      "grade": 78
+    },
+    {
+      "school": "Purdue",
+      "family": "Front Seven",
+      "player": "Ian Jeffries",
+      "grade": 80
+    },
+    {
+      "school": "Purdue",
+      "family": "Front Seven",
+      "player": "Jojo Hayden",
+      "grade": 82
+    },
+    {
+      "school": "Purdue",
+      "family": "Front Seven",
+      "player": "Keyshawn Burgos",
+      "grade": 78
+    },
+    {
+      "school": "Purdue",
+      "family": "Front Seven",
+      "player": "Trey Smith",
+      "grade": 77
+    },
+    {
+      "school": "Purdue",
+      "family": "QB",
+      "player": "Ryan Browne",
+      "grade": 76
+    },
+    {
+      "school": "Purdue",
+      "family": "RB",
+      "player": "Fame Ijeboi",
+      "grade": 85
+    },
+    {
+      "school": "Purdue",
+      "family": "RB",
+      "player": "Jerrick Gibson",
+      "grade": 80
+    },
+    {
+      "school": "Purdue",
+      "family": "Secondary",
+      "player": "Don Saunders",
+      "grade": 84
+    },
+    {
+      "school": "Purdue",
+      "family": "Secondary",
+      "player": "Hudauri Hines",
+      "grade": 78
+    },
+    {
+      "school": "Purdue",
+      "family": "Secondary",
+      "player": "Jaden Mangham",
+      "grade": 82
+    },
+    {
+      "school": "Purdue",
+      "family": "Secondary",
+      "player": "John Slaughter",
+      "grade": 82
+    },
+    {
+      "school": "Purdue",
+      "family": "Secondary",
+      "player": "Mister Clark",
+      "grade": 76
+    },
+    {
+      "school": "Purdue",
+      "family": "TE",
+      "player": "George Burhenn",
+      "grade": 82
+    },
+    {
+      "school": "Purdue",
+      "family": "WR",
+      "player": "Asaad Waseem",
+      "grade": 84
+    },
+    {
+      "school": "Purdue",
+      "family": "WR",
+      "player": "Chauncey Magwood",
+      "grade": 79
+    },
+    {
+      "school": "Purdue",
+      "family": "WR",
+      "player": "De'Nylon Morrissette",
+      "grade": 82
+    },
+    {
+      "school": "Rutgers",
+      "family": "Front Seven",
+      "player": "Farell Gnago",
+      "grade": 76
+    },
+    {
+      "school": "Rutgers",
+      "family": "Front Seven",
+      "player": "Malachi Davis",
+      "grade": 82
+    },
+    {
+      "school": "Rutgers",
+      "family": "Front Seven",
+      "player": "Sean Allison",
+      "grade": 80
+    },
+    {
+      "school": "Rutgers",
+      "family": "Front Seven",
+      "player": "Sekou Kromah",
+      "grade": 84
+    },
+    {
+      "school": "Rutgers",
+      "family": "Front Seven",
+      "player": "Ty Morris",
+      "grade": 78
+    },
+    {
+      "school": "Rutgers",
+      "family": "QB",
+      "player": "Aj Surace",
+      "grade": 72
+    },
+    {
+      "school": "Rutgers",
+      "family": "RB",
+      "player": "Antwan Raymond",
+      "grade": 93
+    },
+    {
+      "school": "Rutgers",
+      "family": "RB",
+      "player": "Clay Thevenin",
+      "grade": 79
+    },
+    {
+      "school": "Rutgers",
+      "family": "Secondary",
+      "player": "Bradlee Jones",
+      "grade": 84
+    },
+    {
+      "school": "Rutgers",
+      "family": "Secondary",
+      "player": "Chris Joines",
+      "grade": 80
+    },
+    {
+      "school": "Rutgers",
+      "family": "Secondary",
+      "player": "Jesse Ofurie",
+      "grade": 76
+    },
+    {
+      "school": "Rutgers",
+      "family": "Secondary",
+      "player": "Kevyn Humes",
+      "grade": 78
+    },
+    {
+      "school": "Rutgers",
+      "family": "Secondary",
+      "player": "Latrell Noel",
+      "grade": 82
+    },
+    {
+      "school": "Rutgers",
+      "family": "TE",
+      "player": "Logan Blake",
+      "grade": 78
+    },
+    {
+      "school": "Rutgers",
+      "family": "WR",
+      "player": "Ben Black III",
+      "grade": 82
+    },
+    {
+      "school": "Rutgers",
+      "family": "WR",
+      "player": "Jourdin Houston",
+      "grade": 79
+    },
+    {
+      "school": "Rutgers",
+      "family": "WR",
+      "player": "KJ Duff",
+      "grade": 97
+    },
+    {
+      "school": "SMU",
+      "family": "Front Seven",
+      "player": "Aakil Washington",
+      "grade": 84
+    },
+    {
+      "school": "SMU",
+      "family": "Front Seven",
+      "player": "Alexander Kilgore",
+      "grade": 82
+    },
+    {
+      "school": "SMU",
+      "family": "Front Seven",
+      "player": "Brandon Booker",
+      "grade": 80
+    },
+    {
+      "school": "SMU",
+      "family": "Front Seven",
+      "player": "Ira Singleton IV",
+      "grade": 84
+    },
+    {
+      "school": "SMU",
+      "family": "Front Seven",
+      "player": "Jahkai Lang",
+      "grade": 78
+    },
+    {
+      "school": "SMU",
+      "family": "QB",
+      "player": "Kevin Jennings",
+      "grade": 87
+    },
+    {
+      "school": "SMU",
+      "family": "RB",
+      "player": "Dramekco Green",
+      "grade": 79
+    },
+    {
+      "school": "SMU",
+      "family": "RB",
+      "player": "Kendrick Raphael",
+      "grade": 90
+    },
+    {
+      "school": "SMU",
+      "family": "Secondary",
+      "player": "Jarvis Lee",
+      "grade": 86
+    },
+    {
+      "school": "SMU",
+      "family": "Secondary",
+      "player": "Jayvon Thomas",
+      "grade": 84
+    },
+    {
+      "school": "SMU",
+      "family": "Secondary",
+      "player": "Jimmy Wyrick",
+      "grade": 82
+    },
+    {
+      "school": "SMU",
+      "family": "Secondary",
+      "player": "Marcellus Barnes Jr.",
+      "grade": 78
+    },
+    {
+      "school": "SMU",
+      "family": "Secondary",
+      "player": "Tyren Polley Jr.",
+      "grade": 82
+    },
+    {
+      "school": "SMU",
+      "family": "TE",
+      "player": "Randy Pittman Jr.",
+      "grade": 82
+    },
+    {
+      "school": "SMU",
+      "family": "TE",
+      "player": "Theo Melin Ohrstrom",
+      "grade": 85
+    },
+    {
+      "school": "SMU",
+      "family": "WR",
+      "player": "Jalen Cooper",
+      "grade": 85
+    },
+    {
+      "school": "SMU",
+      "family": "WR",
+      "player": "Yamir Knight",
+      "grade": 86
+    },
+    {
+      "school": "SMU",
+      "family": "WR",
+      "player": "Yannick Smith",
+      "grade": 87
+    },
+    {
+      "school": "South Carolina",
+      "family": "Front Seven",
+      "player": "Anthony Addison",
+      "grade": 81
+    },
+    {
+      "school": "South Carolina",
+      "family": "Front Seven",
+      "player": "Caleb Herring",
+      "grade": 82
+    },
+    {
+      "school": "South Carolina",
+      "family": "Front Seven",
+      "player": "Dylan Stewart",
+      "grade": 88
+    },
+    {
+      "school": "South Carolina",
+      "family": "Front Seven",
+      "player": "Fred Johnson",
+      "grade": 78
+    },
+    {
+      "school": "South Carolina",
+      "family": "Front Seven",
+      "player": "Julian Walker",
+      "grade": 76
+    },
+    {
+      "school": "South Carolina",
+      "family": "Front Seven",
+      "player": "Justin Okoronkwo",
+      "grade": 80
+    },
+    {
+      "school": "South Carolina",
+      "family": "QB",
+      "player": "LaNorris Sellers",
+      "grade": 82
+    },
+    {
+      "school": "South Carolina",
+      "family": "RB",
+      "player": "Christian Clark",
+      "grade": 79
+    },
+    {
+      "school": "South Carolina",
+      "family": "RB",
+      "player": "Jabree Coleman",
+      "grade": 75
+    },
+    {
+      "school": "South Carolina",
+      "family": "RB",
+      "player": "Matt Fuller",
+      "grade": 89
+    },
+    {
+      "school": "South Carolina",
+      "family": "Secondary",
+      "player": "David Bucey",
+      "grade": 80
+    },
+    {
+      "school": "South Carolina",
+      "family": "Secondary",
+      "player": "Judge Collier",
+      "grade": 82
+    },
+    {
+      "school": "South Carolina",
+      "family": "Secondary",
+      "player": "Peyton Williams",
+      "grade": 85
+    },
+    {
+      "school": "South Carolina",
+      "family": "Secondary",
+      "player": "Quay'sheed Scott",
+      "grade": 86
+    },
+    {
+      "school": "South Carolina",
+      "family": "Secondary",
+      "player": "Vicari Swain",
+      "grade": 84
+    },
+    {
+      "school": "South Carolina",
+      "family": "TE",
+      "player": "Brady Hunt",
+      "grade": 80
+    },
+    {
+      "school": "South Carolina",
+      "family": "WR",
+      "player": "Donovan Murph",
+      "grade": 79
+    },
+    {
+      "school": "South Carolina",
+      "family": "WR",
+      "player": "Mazeo Bennett Jr.",
+      "grade": 83
+    },
+    {
+      "school": "South Carolina",
+      "family": "WR",
+      "player": "Nitro Tuggle",
+      "grade": 82
+    },
+    {
+      "school": "South Carolina",
+      "family": "WR",
+      "player": "Nyck Harbor",
+      "grade": 85
+    },
+    {
+      "school": "Stanford",
+      "family": "Front Seven",
+      "player": "Braden Marceau-Olayinka",
+      "grade": 82
+    },
+    {
+      "school": "Stanford",
+      "family": "Front Seven",
+      "player": "Jahsiah Galvan",
+      "grade": 83
+    },
+    {
+      "school": "Stanford",
+      "family": "Front Seven",
+      "player": "Matt Rose",
+      "grade": 91
+    },
+    {
+      "school": "Stanford",
+      "family": "Front Seven",
+      "player": "Omar Staples",
+      "grade": 84
+    },
+    {
+      "school": "Stanford",
+      "family": "Front Seven",
+      "player": "Zach Rowell",
+      "grade": 80
+    },
+    {
+      "school": "Stanford",
+      "family": "QB",
+      "player": "Davis Warren",
+      "grade": 76
+    },
+    {
+      "school": "Stanford",
+      "family": "RB",
+      "player": "Micah Ford",
+      "grade": 81
+    },
+    {
+      "school": "Stanford",
+      "family": "RB",
+      "player": "Sedrick Irvin",
+      "grade": 76
+    },
+    {
+      "school": "Stanford",
+      "family": "Secondary",
+      "player": "Brandon Nicholson",
+      "grade": 86
+    },
+    {
+      "school": "Stanford",
+      "family": "Secondary",
+      "player": "Cam Richardson",
+      "grade": 82
+    },
+    {
+      "school": "Stanford",
+      "family": "Secondary",
+      "player": "Darrius Davis",
+      "grade": 80
+    },
+    {
+      "school": "Stanford",
+      "family": "Secondary",
+      "player": "Jay Green",
+      "grade": 84
+    },
+    {
+      "school": "Stanford",
+      "family": "Secondary",
+      "player": "Leroy Bryant",
+      "grade": 76
+    },
+    {
+      "school": "Stanford",
+      "family": "TE",
+      "player": "Benji Blackburn",
+      "grade": 75
+    },
+    {
+      "school": "Stanford",
+      "family": "WR",
+      "player": "Caden High",
+      "grade": 85
+    },
+    {
+      "school": "Stanford",
+      "family": "WR",
+      "player": "JonAnthony Hall",
+      "grade": 81
+    },
+    {
+      "school": "Stanford",
+      "family": "WR",
+      "player": "Jordan Onovughe",
+      "grade": 79
+    },
+    {
+      "school": "Stanford",
+      "family": "WR",
+      "player": "Liam Thorpe",
+      "grade": 76
+    },
+    {
+      "school": "Syracuse",
+      "family": "Front Seven",
+      "player": "Antoine Deslauriers",
+      "grade": 76
+    },
+    {
+      "school": "Syracuse",
+      "family": "Front Seven",
+      "player": "Chris D'Appolonia",
+      "grade": 77
+    },
+    {
+      "school": "Syracuse",
+      "family": "Front Seven",
+      "player": "Keyshawn Johnson",
+      "grade": 79
+    },
+    {
+      "school": "Syracuse",
+      "family": "Front Seven",
+      "player": "Nissi Ogbebor",
+      "grade": 81
+    },
+    {
+      "school": "Syracuse",
+      "family": "Front Seven",
+      "player": "Rashard Perry",
+      "grade": 83
+    },
+    {
+      "school": "Syracuse",
+      "family": "Front Seven",
+      "player": "Tunmise Adeleye",
+      "grade": 85
+    },
+    {
+      "school": "Syracuse",
+      "family": "QB",
+      "player": "Steve Angeli",
+      "grade": 77
+    },
+    {
+      "school": "Syracuse",
+      "family": "RB",
+      "player": "Ju'Juan Johnson",
+      "grade": 78
+    },
+    {
+      "school": "Syracuse",
+      "family": "RB",
+      "player": "Shavane Anderson Jr.",
+      "grade": 75
+    },
+    {
+      "school": "Syracuse",
+      "family": "RB",
+      "player": "Tylik Hill",
+      "grade": 82
+    },
+    {
+      "school": "Syracuse",
+      "family": "Secondary",
+      "player": "Braheem Long Jr.",
+      "grade": 78
+    },
+    {
+      "school": "Syracuse",
+      "family": "Secondary",
+      "player": "Chris Peal",
+      "grade": 83
+    },
+    {
+      "school": "Syracuse",
+      "family": "Secondary",
+      "player": "Cornell Perry",
+      "grade": 80
+    },
+    {
+      "school": "Syracuse",
+      "family": "Secondary",
+      "player": "Davien Kerr",
+      "grade": 76
+    },
+    {
+      "school": "Syracuse",
+      "family": "Secondary",
+      "player": "Demetres Samuel Jr.",
+      "grade": 86
+    },
+    {
+      "school": "Syracuse",
+      "family": "TE",
+      "player": "Daunte Bacheyie",
+      "grade": 75
+    },
+    {
+      "school": "Syracuse",
+      "family": "TE",
+      "player": "David Clement",
+      "grade": 78
+    },
+    {
+      "school": "Syracuse",
+      "family": "WR",
+      "player": "Cole Weaver",
+      "grade": 79
+    },
+    {
+      "school": "Syracuse",
+      "family": "WR",
+      "player": "Darius Johnson",
+      "grade": 77
+    },
+    {
+      "school": "Syracuse",
+      "family": "WR",
+      "player": "Umari Hatcher",
+      "grade": 84
+    },
+    {
+      "school": "TCU",
+      "family": "Front Seven",
+      "player": "Ansel Din-Mbuh",
+      "grade": 81
+    },
+    {
+      "school": "TCU",
+      "family": "Front Seven",
+      "player": "John Schobel",
+      "grade": 79
+    },
+    {
+      "school": "TCU",
+      "family": "Front Seven",
+      "player": "Markis Deal",
+      "grade": 83
+    },
+    {
+      "school": "TCU",
+      "family": "Front Seven",
+      "player": "Max Carroll",
+      "grade": 77
+    },
+    {
+      "school": "TCU",
+      "family": "Front Seven",
+      "player": "Michael Short",
+      "grade": 76
+    },
+    {
+      "school": "TCU",
+      "family": "Front Seven",
+      "player": "Paul Oyewale",
+      "grade": 85
+    },
+    {
+      "school": "TCU",
+      "family": "QB",
+      "player": "Jaden Craig",
+      "grade": 79
+    },
+    {
+      "school": "TCU",
+      "family": "RB",
+      "player": "Jeremy Payne",
+      "grade": 87
+    },
+    {
+      "school": "TCU",
+      "family": "RB",
+      "player": "Jon Denman",
+      "grade": 77
+    },
+    {
+      "school": "TCU",
+      "family": "Secondary",
+      "player": "Gil Jackson Jr.",
+      "grade": 78
+    },
+    {
+      "school": "TCU",
+      "family": "Secondary",
+      "player": "Jamel Johnson",
+      "grade": 87
+    },
+    {
+      "school": "TCU",
+      "family": "Secondary",
+      "player": "Jordan Lester",
+      "grade": 80
+    },
+    {
+      "school": "TCU",
+      "family": "Secondary",
+      "player": "Julius Simms",
+      "grade": 76
+    },
+    {
+      "school": "TCU",
+      "family": "Secondary",
+      "player": "Vernon Glover Jr.",
+      "grade": 82
+    },
+    {
+      "school": "TCU",
+      "family": "TE",
+      "player": "Ka'Morreun Pimpton",
+      "grade": 78
+    },
+    {
+      "school": "TCU",
+      "family": "TE",
+      "player": "Kari Ashley",
+      "grade": 93
+    },
+    {
+      "school": "TCU",
+      "family": "WR",
+      "player": "Ed Small",
+      "grade": 88
+    },
+    {
+      "school": "TCU",
+      "family": "WR",
+      "player": "Jacobe Hayes",
+      "grade": 80
+    },
+    {
+      "school": "TCU",
+      "family": "WR",
+      "player": "Jeremy Scott",
+      "grade": 85
+    },
+    {
+      "school": "Tennessee",
+      "family": "Front Seven",
+      "player": "Amare Campbell",
+      "grade": 84
+    },
+    {
+      "school": "Tennessee",
+      "family": "Front Seven",
+      "player": "Arion Carter",
+      "grade": 89
+    },
+    {
+      "school": "Tennessee",
+      "family": "Front Seven",
+      "player": "Daevin Hobbs",
+      "grade": 80
+    },
+    {
+      "school": "Tennessee",
+      "family": "Front Seven",
+      "player": "Mariyon Dye",
+      "grade": 88
+    },
+    {
+      "school": "Tennessee",
+      "family": "Front Seven",
+      "player": "Tyree Weathersby",
+      "grade": 80
+    },
+    {
+      "school": "Tennessee",
+      "family": "Front Seven",
+      "player": "Xavier Gilliam",
+      "grade": 89
+    },
+    {
+      "school": "Tennessee",
+      "family": "QB",
+      "player": "Faizon Brandon",
+      "grade": 77
+    },
+    {
+      "school": "Tennessee",
+      "family": "QB",
+      "player": "George MacIntyre",
+      "grade": 79
+    },
+    {
+      "school": "Tennessee",
+      "family": "RB",
+      "player": "Daune Morris",
+      "grade": 78
+    },
+    {
+      "school": "Tennessee",
+      "family": "RB",
+      "player": "DeSean Bishop",
+      "grade": 92
+    },
+    {
+      "school": "Tennessee",
+      "family": "RB",
+      "player": "Javin Gordon",
+      "grade": 82
+    },
+    {
+      "school": "Tennessee",
+      "family": "Secondary",
+      "player": "Dejuan Lane",
+      "grade": 84
+    },
+    {
+      "school": "Tennessee",
+      "family": "Secondary",
+      "player": "Kayin Lee",
+      "grade": 84
+    },
+    {
+      "school": "Tennessee",
+      "family": "Secondary",
+      "player": "Qua Moss",
+      "grade": 76
+    },
+    {
+      "school": "Tennessee",
+      "family": "Secondary",
+      "player": "TJ Metcalf",
+      "grade": 82
+    },
+    {
+      "school": "Tennessee",
+      "family": "Secondary",
+      "player": "Ty Redmond",
+      "grade": 87
+    },
+    {
+      "school": "Tennessee",
+      "family": "TE",
+      "player": "DaSaahn Brame",
+      "grade": 78
+    },
+    {
+      "school": "Tennessee",
+      "family": "TE",
+      "player": "Ethan Davis",
+      "grade": 84
+    },
+    {
+      "school": "Tennessee",
+      "family": "WR",
+      "player": "Braylon Staley",
+      "grade": 84
+    },
+    {
+      "school": "Tennessee",
+      "family": "WR",
+      "player": "Mike Matthews",
+      "grade": 86
+    },
+    {
+      "school": "Tennessee",
+      "family": "WR",
+      "player": "Radarious Jackson",
+      "grade": 81
+    },
+    {
+      "school": "Texas",
+      "family": "Front Seven",
+      "player": "Colin Simmons",
+      "grade": 99
+    },
+    {
+      "school": "Texas",
+      "family": "Front Seven",
+      "player": "Hero Kanu",
+      "grade": 86
+    },
+    {
+      "school": "Texas",
+      "family": "Front Seven",
+      "player": "Justin Cryer",
+      "grade": 85
+    },
+    {
+      "school": "Texas",
+      "family": "Front Seven",
+      "player": "Maraad Watson",
+      "grade": 80
+    },
+    {
+      "school": "Texas",
+      "family": "Front Seven",
+      "player": "Rasheem Biles",
+      "grade": 96
+    },
+    {
+      "school": "Texas",
+      "family": "Front Seven",
+      "player": "Zina Umeozulu",
+      "grade": 80
+    },
+    {
+      "school": "Texas",
+      "family": "QB",
+      "player": "Arch Manning",
+      "grade": 88
+    },
+    {
+      "school": "Texas",
+      "family": "RB",
+      "player": "Hollywood Smothers",
+      "grade": 88
+    },
+    {
+      "school": "Texas",
+      "family": "RB",
+      "player": "Raleek Brown",
+      "grade": 85
+    },
+    {
+      "school": "Texas",
+      "family": "Secondary",
+      "player": "Bo Mascoe",
+      "grade": 86
+    },
+    {
+      "school": "Texas",
+      "family": "Secondary",
+      "player": "Graceson Littleton",
+      "grade": 89
+    },
+    {
+      "school": "Texas",
+      "family": "Secondary",
+      "player": "Jelani McDonald",
+      "grade": 90
+    },
+    {
+      "school": "Texas",
+      "family": "Secondary",
+      "player": "Kade Phillips",
+      "grade": 89
+    },
+    {
+      "school": "Texas",
+      "family": "Secondary",
+      "player": "Kobe Black",
+      "grade": 78
+    },
+    {
+      "school": "Texas",
+      "family": "TE",
+      "player": "Spencer Shannon",
+      "grade": 77
+    },
+    {
+      "school": "Texas",
+      "family": "WR",
+      "player": "Cam Coleman",
+      "grade": 89
+    },
+    {
+      "school": "Texas",
+      "family": "WR",
+      "player": "Emmett Mosley V",
+      "grade": 82
+    },
+    {
+      "school": "Texas",
+      "family": "WR",
+      "player": "Ryan Wingo",
+      "grade": 86
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Front Seven",
+      "player": "CJ Mims",
+      "grade": 81
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Front Seven",
+      "player": "DJ Hicks",
+      "grade": 84
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Front Seven",
+      "player": "Marco Jones",
+      "grade": 79
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Front Seven",
+      "player": "Noah Mikhail",
+      "grade": 78
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Front Seven",
+      "player": "Ray Coney",
+      "grade": 88
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Front Seven",
+      "player": "T.J. Searcy",
+      "grade": 85
+    },
+    {
+      "school": "Texas A&M",
+      "family": "QB",
+      "player": "Marcel Reed",
+      "grade": 83
+    },
+    {
+      "school": "Texas A&M",
+      "family": "RB",
+      "player": "Jamarion Morrow",
+      "grade": 80
+    },
+    {
+      "school": "Texas A&M",
+      "family": "RB",
+      "player": "Rueben Owens II",
+      "grade": 85
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Secondary",
+      "player": "Dalton Brooks",
+      "grade": 84
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Secondary",
+      "player": "Dezz Ricks",
+      "grade": 84
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Secondary",
+      "player": "Jordan Shaw",
+      "grade": 76
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Secondary",
+      "player": "Julio Humphrey",
+      "grade": 82
+    },
+    {
+      "school": "Texas A&M",
+      "family": "Secondary",
+      "player": "Marcus Ratcliffe",
+      "grade": 89
+    },
+    {
+      "school": "Texas A&M",
+      "family": "TE",
+      "player": "Micah Riley",
+      "grade": 80
+    },
+    {
+      "school": "Texas A&M",
+      "family": "WR",
+      "player": "Ashton Bethel-Roman",
+      "grade": 78
+    },
+    {
+      "school": "Texas A&M",
+      "family": "WR",
+      "player": "Isaiah Horton",
+      "grade": 85
+    },
+    {
+      "school": "Texas A&M",
+      "family": "WR",
+      "player": "Mario Craver",
+      "grade": 88
+    },
+    {
+      "school": "Texas A&M",
+      "family": "WR",
+      "player": "Terry Bussey",
+      "grade": 84
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Front Seven",
+      "player": "A.J. Holmes Jr.",
+      "grade": 91
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Front Seven",
+      "player": "Adam Trick",
+      "grade": 88
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Front Seven",
+      "player": "Austin Romaine",
+      "grade": 90
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Front Seven",
+      "player": "Ben Roberts",
+      "grade": 89
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Front Seven",
+      "player": "Mateen Ibirogba",
+      "grade": 86
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Front Seven",
+      "player": "Trey White",
+      "grade": 90
+    },
+    {
+      "school": "Texas Tech",
+      "family": "QB",
+      "player": "Will Hammond",
+      "grade": 78
+    },
+    {
+      "school": "Texas Tech",
+      "family": "RB",
+      "player": "Cameron Dickey",
+      "grade": 84
+    },
+    {
+      "school": "Texas Tech",
+      "family": "RB",
+      "player": "Jkoby Williams",
+      "grade": 88
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Secondary",
+      "player": "Brenden Jordan",
+      "grade": 82
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Secondary",
+      "player": "Brice Pollock",
+      "grade": 91
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Secondary",
+      "player": "Davin Martin",
+      "grade": 78
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Secondary",
+      "player": "Malik Esquerra",
+      "grade": 83
+    },
+    {
+      "school": "Texas Tech",
+      "family": "Secondary",
+      "player": "Peyton Morgan",
+      "grade": 82
+    },
+    {
+      "school": "Texas Tech",
+      "family": "TE",
+      "player": "Terrance Carter Jr.",
+      "grade": 92
+    },
+    {
+      "school": "Texas Tech",
+      "family": "WR",
+      "player": "Coy Eakin",
+      "grade": 84
+    },
+    {
+      "school": "Texas Tech",
+      "family": "WR",
+      "player": "Kenny Johnson",
+      "grade": 87
+    },
+    {
+      "school": "Texas Tech",
+      "family": "WR",
+      "player": "Malcolm Simmons",
+      "grade": 81
+    },
+    {
+      "school": "Texas Tech",
+      "family": "WR",
+      "player": "Micah Hudson",
+      "grade": 78
+    },
+    {
+      "school": "UCF",
+      "family": "Front Seven",
+      "player": "Aymeric Koumba",
+      "grade": 77
+    },
+    {
+      "school": "UCF",
+      "family": "Front Seven",
+      "player": "Isaiah Nixon",
+      "grade": 85
+    },
+    {
+      "school": "UCF",
+      "family": "Front Seven",
+      "player": "Jayden Jennings",
+      "grade": 79
+    },
+    {
+      "school": "UCF",
+      "family": "Front Seven",
+      "player": "Ken Talley",
+      "grade": 83
+    },
+    {
+      "school": "UCF",
+      "family": "Front Seven",
+      "player": "Lewis Carter",
+      "grade": 81
+    },
+    {
+      "school": "UCF",
+      "family": "Front Seven",
+      "player": "Tackett Curtis",
+      "grade": 88
+    },
+    {
+      "school": "UCF",
+      "family": "QB",
+      "player": "Alonza Barnett III",
+      "grade": 82
+    },
+    {
+      "school": "UCF",
+      "family": "RB",
+      "player": "Duke Watson",
+      "grade": 89
+    },
+    {
+      "school": "UCF",
+      "family": "RB",
+      "player": "Landen Chambers",
+      "grade": 82
+    },
+    {
+      "school": "UCF",
+      "family": "RB",
+      "player": "Taevion Swint",
+      "grade": 78
+    },
+    {
+      "school": "UCF",
+      "family": "Secondary",
+      "player": "Antione Jackson",
+      "grade": 84
+    },
+    {
+      "school": "UCF",
+      "family": "Secondary",
+      "player": "Braeden Marshall",
+      "grade": 76
+    },
+    {
+      "school": "UCF",
+      "family": "Secondary",
+      "player": "Demari Henderson",
+      "grade": 82
+    },
+    {
+      "school": "UCF",
+      "family": "Secondary",
+      "player": "Jayden Bellamy",
+      "grade": 86
+    },
+    {
+      "school": "UCF",
+      "family": "Secondary",
+      "player": "Jayden Williams",
+      "grade": 80
+    },
+    {
+      "school": "UCF",
+      "family": "TE",
+      "player": "Dylan Wade",
+      "grade": 86
+    },
+    {
+      "school": "UCF",
+      "family": "WR",
+      "player": "Josh Derry",
+      "grade": 84
+    },
+    {
+      "school": "UCF",
+      "family": "WR",
+      "player": "Ric'Darious Farmer",
+      "grade": 78
+    },
+    {
+      "school": "UCF",
+      "family": "WR",
+      "player": "Waden Charles",
+      "grade": 81
+    },
+    {
+      "school": "UCLA",
+      "family": "Front Seven",
+      "player": "Amier Washington",
+      "grade": 82
+    },
+    {
+      "school": "UCLA",
+      "family": "Front Seven",
+      "player": "Jalen Woods",
+      "grade": 77
+    },
+    {
+      "school": "UCLA",
+      "family": "Front Seven",
+      "player": "Sahir West",
+      "grade": 84
+    },
+    {
+      "school": "UCLA",
+      "family": "Front Seven",
+      "player": "Sammy Omosigho",
+      "grade": 89
+    },
+    {
+      "school": "UCLA",
+      "family": "Front Seven",
+      "player": "Scott Taylor",
+      "grade": 78
+    },
+    {
+      "school": "UCLA",
+      "family": "Front Seven",
+      "player": "Tyson Ford",
+      "grade": 80
+    },
+    {
+      "school": "UCLA",
+      "family": "QB",
+      "player": "Nico Iamaleava",
+      "grade": 83
+    },
+    {
+      "school": "UCLA",
+      "family": "RB",
+      "player": "Anthony Woods",
+      "grade": 84
+    },
+    {
+      "school": "UCLA",
+      "family": "RB",
+      "player": "Wayne Knight",
+      "grade": 95
+    },
+    {
+      "school": "UCLA",
+      "family": "Secondary",
+      "player": "Derrick Barksdale",
+      "grade": 82
+    },
+    {
+      "school": "UCLA",
+      "family": "Secondary",
+      "player": "Malik Hartford",
+      "grade": 82
+    },
+    {
+      "school": "UCLA",
+      "family": "Secondary",
+      "player": "Rodrick Pleasant",
+      "grade": 82
+    },
+    {
+      "school": "UCLA",
+      "family": "Secondary",
+      "player": "Scooter Jackson",
+      "grade": 76
+    },
+    {
+      "school": "UCLA",
+      "family": "Secondary",
+      "player": "Ta'Shawn James",
+      "grade": 88
+    },
+    {
+      "school": "UCLA",
+      "family": "TE",
+      "player": "Josh Phifer",
+      "grade": 79
+    },
+    {
+      "school": "UCLA",
+      "family": "WR",
+      "player": "Brian Rowe Jr.",
+      "grade": 82
+    },
+    {
+      "school": "UCLA",
+      "family": "WR",
+      "player": "Landon Ellis",
+      "grade": 78
+    },
+    {
+      "school": "UCLA",
+      "family": "WR",
+      "player": "Semaj Morgan",
+      "grade": 83
+    },
+    {
+      "school": "USC",
+      "family": "Front Seven",
+      "player": "Braylan Shelby",
+      "grade": 80
+    },
+    {
+      "school": "USC",
+      "family": "Front Seven",
+      "player": "Desman Stephens II",
+      "grade": 78
+    },
+    {
+      "school": "USC",
+      "family": "Front Seven",
+      "player": "Deven Bryant",
+      "grade": 80
+    },
+    {
+      "school": "USC",
+      "family": "Front Seven",
+      "player": "Kameryn Crawford",
+      "grade": 82
+    },
+    {
+      "school": "USC",
+      "family": "Front Seven",
+      "player": "Luke Wafle",
+      "grade": 85
+    },
+    {
+      "school": "USC",
+      "family": "QB",
+      "player": "Jayden Maiava",
+      "grade": 92
+    },
+    {
+      "school": "USC",
+      "family": "RB",
+      "player": "King Miller",
+      "grade": 91
+    },
+    {
+      "school": "USC",
+      "family": "RB",
+      "player": "Waymond Jordan",
+      "grade": 83
+    },
+    {
+      "school": "USC",
+      "family": "Secondary",
+      "player": "Alex Graham",
+      "grade": 80
+    },
+    {
+      "school": "USC",
+      "family": "Secondary",
+      "player": "Chasen Johnson",
+      "grade": 76
+    },
+    {
+      "school": "USC",
+      "family": "Secondary",
+      "player": "Christian Pierce",
+      "grade": 86
+    },
+    {
+      "school": "USC",
+      "family": "Secondary",
+      "player": "Jontez Williams",
+      "grade": 89
+    },
+    {
+      "school": "USC",
+      "family": "Secondary",
+      "player": "Prophet Brown",
+      "grade": 82
+    },
+    {
+      "school": "USC",
+      "family": "TE",
+      "player": "Mark Bowman",
+      "grade": 87
+    },
+    {
+      "school": "USC",
+      "family": "WR",
+      "player": "Kayden Dixon-Wyatt",
+      "grade": 87
+    },
+    {
+      "school": "USC",
+      "family": "WR",
+      "player": "Tanook Hines",
+      "grade": 80
+    },
+    {
+      "school": "USC",
+      "family": "WR",
+      "player": "Trent Mosley",
+      "grade": 86
+    },
+    {
+      "school": "USC",
+      "family": "WR",
+      "player": "Zacharyus Williams",
+      "grade": 78
+    },
+    {
+      "school": "Utah",
+      "family": "Front Seven",
+      "player": "Alex Cloward",
+      "grade": 77
+    },
+    {
+      "school": "Utah",
+      "family": "Front Seven",
+      "player": "Elijah Elliss",
+      "grade": 85
+    },
+    {
+      "school": "Utah",
+      "family": "Front Seven",
+      "player": "Ethan Day",
+      "grade": 80
+    },
+    {
+      "school": "Utah",
+      "family": "Front Seven",
+      "player": "Lance Holtzclaw",
+      "grade": 82
+    },
+    {
+      "school": "Utah",
+      "family": "Front Seven",
+      "player": "Paul Fitzgerald",
+      "grade": 79
+    },
+    {
+      "school": "Utah",
+      "family": "Front Seven",
+      "player": "Trey Reynolds",
+      "grade": 88
+    },
+    {
+      "school": "Utah",
+      "family": "QB",
+      "player": "Devon Dampier",
+      "grade": 90
+    },
+    {
+      "school": "Utah",
+      "family": "RB",
+      "player": "Daniel Bray",
+      "grade": 77
+    },
+    {
+      "school": "Utah",
+      "family": "RB",
+      "player": "Wayshawn Parker",
+      "grade": 95
+    },
+    {
+      "school": "Utah",
+      "family": "Secondary",
+      "player": "Elijah Davis",
+      "grade": 84
+    },
+    {
+      "school": "Utah",
+      "family": "Secondary",
+      "player": "Elijah Reed",
+      "grade": 78
+    },
+    {
+      "school": "Utah",
+      "family": "Secondary",
+      "player": "Jackson Bennee",
+      "grade": 86
+    },
+    {
+      "school": "Utah",
+      "family": "Secondary",
+      "player": "Nate Ritchie",
+      "grade": 84
+    },
+    {
+      "school": "Utah",
+      "family": "Secondary",
+      "player": "Rabbit Evans",
+      "grade": 85
+    },
+    {
+      "school": "Utah",
+      "family": "TE",
+      "player": "Noah Bennee",
+      "grade": 85
+    },
+    {
+      "school": "Utah",
+      "family": "WR",
+      "player": "Braden Pegan",
+      "grade": 88
+    },
+    {
+      "school": "Utah",
+      "family": "WR",
+      "player": "Creed Whittemore",
+      "grade": 82
+    },
+    {
+      "school": "Utah",
+      "family": "WR",
+      "player": "Ricky Johnson",
+      "grade": 78
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Front Seven",
+      "player": "Brian Allen Jr.",
+      "grade": 77
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Front Seven",
+      "player": "Bryan Longwell",
+      "grade": 84
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Front Seven",
+      "player": "Glenn Seabrooks III",
+      "grade": 79
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Front Seven",
+      "player": "Issa Ouattara",
+      "grade": 81
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Front Seven",
+      "player": "Miles Capers",
+      "grade": 82
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Front Seven",
+      "player": "Nick Rinaldi",
+      "grade": 85
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "QB",
+      "player": "Jared Curtis",
+      "grade": 79
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "RB",
+      "player": "Makhilyn Young",
+      "grade": 81
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "RB",
+      "player": "Sedrick Alexander",
+      "grade": 84
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Secondary",
+      "player": "CJ Heard",
+      "grade": 87
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Secondary",
+      "player": "Jordan Matthews",
+      "grade": 86
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Secondary",
+      "player": "Martel Hight",
+      "grade": 82
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Secondary",
+      "player": "Mason Lewis",
+      "grade": 78
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "Secondary",
+      "player": "Ricardo Jones",
+      "grade": 82
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "TE",
+      "player": "Jayvontay Conner",
+      "grade": 78
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "WR",
+      "player": "Brycen Coleman",
+      "grade": 82
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "WR",
+      "player": "Junior Sherrill",
+      "grade": 90
+    },
+    {
+      "school": "Vanderbilt",
+      "family": "WR",
+      "player": "Tristen Brown",
+      "grade": 78
+    },
+    {
+      "school": "Virginia",
+      "family": "Front Seven",
+      "player": "Anthony Britton",
+      "grade": 82
+    },
+    {
+      "school": "Virginia",
+      "family": "Front Seven",
+      "player": "Fisher Camac",
+      "grade": 84
+    },
+    {
+      "school": "Virginia",
+      "family": "Front Seven",
+      "player": "Jason Hammond",
+      "grade": 80
+    },
+    {
+      "school": "Virginia",
+      "family": "Front Seven",
+      "player": "Kam Robinson",
+      "grade": 89
+    },
+    {
+      "school": "Virginia",
+      "family": "Front Seven",
+      "player": "Maddox Marcellus",
+      "grade": 78
+    },
+    {
+      "school": "Virginia",
+      "family": "QB",
+      "player": "Beau Pribula",
+      "grade": 85
+    },
+    {
+      "school": "Virginia",
+      "family": "RB",
+      "player": "Jekail Middlebrook",
+      "grade": 83
+    },
+    {
+      "school": "Virginia",
+      "family": "RB",
+      "player": "Xavier Brown",
+      "grade": 84
+    },
+    {
+      "school": "Virginia",
+      "family": "RB",
+      "player": "Xay Davis",
+      "grade": 82
+    },
+    {
+      "school": "Virginia",
+      "family": "Secondary",
+      "player": "Brandyn Hillman",
+      "grade": 92
+    },
+    {
+      "school": "Virginia",
+      "family": "Secondary",
+      "player": "Ethan Minter",
+      "grade": 82
+    },
+    {
+      "school": "Virginia",
+      "family": "Secondary",
+      "player": "Jacobie Henderson",
+      "grade": 78
+    },
+    {
+      "school": "Virginia",
+      "family": "Secondary",
+      "player": "Jam Jackson",
+      "grade": 76
+    },
+    {
+      "school": "Virginia",
+      "family": "Secondary",
+      "player": "Omillio Agard",
+      "grade": 84
+    },
+    {
+      "school": "Virginia",
+      "family": "TE",
+      "player": "Dakota Twitty",
+      "grade": 79
+    },
+    {
+      "school": "Virginia",
+      "family": "WR",
+      "player": "Da'Shawn Martin",
+      "grade": 82
+    },
+    {
+      "school": "Virginia",
+      "family": "WR",
+      "player": "Jacquon Gibson",
+      "grade": 79
+    },
+    {
+      "school": "Virginia",
+      "family": "WR",
+      "player": "Kameron Courtney",
+      "grade": 85
+    },
+    {
+      "school": "Virginia",
+      "family": "WR",
+      "player": "Ty'Lyric Coleman",
+      "grade": 76
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Front Seven",
+      "player": "Aycen Stevens",
+      "grade": 88
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Front Seven",
+      "player": "Cortez Harris",
+      "grade": 88
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Front Seven",
+      "player": "Kaleb Spencer",
+      "grade": 82
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Front Seven",
+      "player": "Keon Wylie",
+      "grade": 83
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Front Seven",
+      "player": "Noah Chambers",
+      "grade": 81
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "QB",
+      "player": "Ethan Grunkemeyer",
+      "grade": 87
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "RB",
+      "player": "Jeffrey Overton Jr.",
+      "grade": 90
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "RB",
+      "player": "Marcellous Hawkins Jr.",
+      "grade": 84
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Secondary",
+      "player": "Isaiah Brown-Murray",
+      "grade": 76
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Secondary",
+      "player": "Jaquez White",
+      "grade": 86
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Secondary",
+      "player": "Joshua Clarke",
+      "grade": 78
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Secondary",
+      "player": "Quentin Reddish",
+      "grade": 80
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "Secondary",
+      "player": "Tyson Flowers",
+      "grade": 82
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "TE",
+      "player": "Luke Reynolds",
+      "grade": 96
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "WR",
+      "player": "Ayden Greene",
+      "grade": 83
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "WR",
+      "player": "Davion Brown",
+      "grade": 80
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "WR",
+      "player": "Marlion Jackson",
+      "grade": 77
+    },
+    {
+      "school": "Virginia Tech",
+      "family": "WR",
+      "player": "Que'Sean Brown",
+      "grade": 89
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Front Seven",
+      "player": "Aiden Hall",
+      "grade": 86
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Front Seven",
+      "player": "Dallas Afalava",
+      "grade": 81
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Front Seven",
+      "player": "Frank Cusano",
+      "grade": 79
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Front Seven",
+      "player": "Gabe Kirschke",
+      "grade": 85
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Front Seven",
+      "player": "Langston Hardy",
+      "grade": 90
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Front Seven",
+      "player": "Zach Lohavichan",
+      "grade": 83
+    },
+    {
+      "school": "Wake Forest",
+      "family": "QB",
+      "player": "Gio Lopez",
+      "grade": 87
+    },
+    {
+      "school": "Wake Forest",
+      "family": "RB",
+      "player": "Deuce Lawrence",
+      "grade": 77
+    },
+    {
+      "school": "Wake Forest",
+      "family": "RB",
+      "player": "Ty Clark III",
+      "grade": 83
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Secondary",
+      "player": "Ashaad Williams",
+      "grade": 78
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Secondary",
+      "player": "Braylon Johnson",
+      "grade": 76
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Secondary",
+      "player": "Davaughn Patterson",
+      "grade": 82
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Secondary",
+      "player": "Deuce Blades II",
+      "grade": 84
+    },
+    {
+      "school": "Wake Forest",
+      "family": "Secondary",
+      "player": "Rushaun Tongue",
+      "grade": 80
+    },
+    {
+      "school": "Wake Forest",
+      "family": "TE",
+      "player": "Will Loerzel",
+      "grade": 78
+    },
+    {
+      "school": "Wake Forest",
+      "family": "WR",
+      "player": "Antonio Meeks",
+      "grade": 82
+    },
+    {
+      "school": "Wake Forest",
+      "family": "WR",
+      "player": "Carlos Hernandez",
+      "grade": 95
+    },
+    {
+      "school": "Wake Forest",
+      "family": "WR",
+      "player": "Kam Shanks",
+      "grade": 79
+    },
+    {
+      "school": "Washington",
+      "family": "Front Seven",
+      "player": "Derek Colman-Brusa",
+      "grade": 81
+    },
+    {
+      "school": "Washington",
+      "family": "Front Seven",
+      "player": "Elinneus Davis",
+      "grade": 82
+    },
+    {
+      "school": "Washington",
+      "family": "Front Seven",
+      "player": "Jacob Lane",
+      "grade": 84
+    },
+    {
+      "school": "Washington",
+      "family": "Front Seven",
+      "player": "Jacob Manu",
+      "grade": 82
+    },
+    {
+      "school": "Washington",
+      "family": "Front Seven",
+      "player": "Ramzak Fruean",
+      "grade": 79
+    },
+    {
+      "school": "Washington",
+      "family": "Front Seven",
+      "player": "Zaydrius Rainey-Sale",
+      "grade": 78
+    },
+    {
+      "school": "Washington",
+      "family": "QB",
+      "player": "Demond Williams Jr.",
+      "grade": 88
+    },
+    {
+      "school": "Washington",
+      "family": "RB",
+      "player": "Brian Bonner Jr.",
+      "grade": 82
+    },
+    {
+      "school": "Washington",
+      "family": "RB",
+      "player": "Trey Cooley",
+      "grade": 75
+    },
+    {
+      "school": "Washington",
+      "family": "Secondary",
+      "player": "Alex McLaughlin",
+      "grade": 92
+    },
+    {
+      "school": "Washington",
+      "family": "Secondary",
+      "player": "Dylan Robinson",
+      "grade": 82
+    },
+    {
+      "school": "Washington",
+      "family": "Secondary",
+      "player": "Emmanuel Karnley",
+      "grade": 76
+    },
+    {
+      "school": "Washington",
+      "family": "Secondary",
+      "player": "Rahshawn Clark",
+      "grade": 78
+    },
+    {
+      "school": "Washington",
+      "family": "Secondary",
+      "player": "Rylon Dillard-Allen",
+      "grade": 80
+    },
+    {
+      "school": "Washington",
+      "family": "TE",
+      "player": "Baron Naone",
+      "grade": 77
+    },
+    {
+      "school": "Washington",
+      "family": "TE",
+      "player": "Decker DeGraaf",
+      "grade": 85
+    },
+    {
+      "school": "Washington",
+      "family": "WR",
+      "player": "Chris Lawson",
+      "grade": 84
+    },
+    {
+      "school": "Washington",
+      "family": "WR",
+      "player": "Dezmen Roebuck",
+      "grade": 89
+    },
+    {
+      "school": "Washington",
+      "family": "WR",
+      "player": "Rashid Williams",
+      "grade": 80
+    },
+    {
+      "school": "West Virginia",
+      "family": "Front Seven",
+      "player": "Ben Cutter",
+      "grade": 76
+    },
+    {
+      "school": "West Virginia",
+      "family": "Front Seven",
+      "player": "Cam Torbor",
+      "grade": 78
+    },
+    {
+      "school": "West Virginia",
+      "family": "Front Seven",
+      "player": "Corey McIntyre Jr.",
+      "grade": 80
+    },
+    {
+      "school": "West Virginia",
+      "family": "Front Seven",
+      "player": "Nate Gabriel",
+      "grade": 82
+    },
+    {
+      "school": "West Virginia",
+      "family": "Front Seven",
+      "player": "Zeke Durham-Campbell",
+      "grade": 85
+    },
+    {
+      "school": "West Virginia",
+      "family": "QB",
+      "player": "Michael Hawkins Jr.",
+      "grade": 85
+    },
+    {
+      "school": "West Virginia",
+      "family": "RB",
+      "player": "Amari Latimer",
+      "grade": 79
+    },
+    {
+      "school": "West Virginia",
+      "family": "RB",
+      "player": "Cam Cook",
+      "grade": 93
+    },
+    {
+      "school": "West Virginia",
+      "family": "Secondary",
+      "player": "Andrew Powdrell",
+      "grade": 80
+    },
+    {
+      "school": "West Virginia",
+      "family": "Secondary",
+      "player": "Chams Diagne",
+      "grade": 84
+    },
+    {
+      "school": "West Virginia",
+      "family": "Secondary",
+      "player": "Geimere Latimer II",
+      "grade": 76
+    },
+    {
+      "school": "West Virginia",
+      "family": "Secondary",
+      "player": "Kamari Wilson",
+      "grade": 82
+    },
+    {
+      "school": "West Virginia",
+      "family": "Secondary",
+      "player": "Nick Taylor",
+      "grade": 78
+    },
+    {
+      "school": "West Virginia",
+      "family": "TE",
+      "player": "Josh Sapp",
+      "grade": 76
+    },
+    {
+      "school": "West Virginia",
+      "family": "WR",
+      "player": "DJ Epps",
+      "grade": 85
+    },
+    {
+      "school": "West Virginia",
+      "family": "WR",
+      "player": "Jaden Bray",
+      "grade": 82
+    },
+    {
+      "school": "West Virginia",
+      "family": "WR",
+      "player": "John Neider",
+      "grade": 77
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Front Seven",
+      "player": "Charles Perkins",
+      "grade": 82
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Front Seven",
+      "player": "Cooper Catalano",
+      "grade": 87
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Front Seven",
+      "player": "Hammond Russell IV",
+      "grade": 84
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Front Seven",
+      "player": "Junior Poyser",
+      "grade": 78
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Front Seven",
+      "player": "Mason Posa",
+      "grade": 81
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Front Seven",
+      "player": "Sebastian Cheeks",
+      "grade": 80
+    },
+    {
+      "school": "Wisconsin",
+      "family": "QB",
+      "player": "Colton Joseph",
+      "grade": 82
+    },
+    {
+      "school": "Wisconsin",
+      "family": "RB",
+      "player": "Abu Sama III",
+      "grade": 84
+    },
+    {
+      "school": "Wisconsin",
+      "family": "RB",
+      "player": "Darrion Dupree",
+      "grade": 80
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Secondary",
+      "player": "Bryce West",
+      "grade": 76
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Secondary",
+      "player": "Jai'mier Scott",
+      "grade": 78
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Secondary",
+      "player": "Javan Robinson",
+      "grade": 86
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Secondary",
+      "player": "Marvin Burks Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Wisconsin",
+      "family": "Secondary",
+      "player": "Matthew Jung",
+      "grade": 82
+    },
+    {
+      "school": "Wisconsin",
+      "family": "TE",
+      "player": "Jacob Harris",
+      "grade": 76
+    },
+    {
+      "school": "Wisconsin",
+      "family": "WR",
+      "player": "Chris Brooks Jr.",
+      "grade": 80
+    },
+    {
+      "school": "Wisconsin",
+      "family": "WR",
+      "player": "Eugene Hilton Jr.",
+      "grade": 78
+    },
+    {
+      "school": "Wisconsin",
+      "family": "WR",
+      "player": "Tyrell Henry",
+      "grade": 87
+    }
+  ]
+}

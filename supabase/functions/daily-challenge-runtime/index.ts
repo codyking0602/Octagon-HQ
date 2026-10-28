@@ -1,0 +1,1889 @@
+import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.110.7";
+import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
+import { advancePersistedBlindResumeV3 } from "./blindResumeAdvance.ts";
+import { advanceWavelengthHandoff } from "./twoGameWavelengthHandoff.ts";
+
+type OfficialDailyGameType =
+  | "find_leader"
+  | "blind_resume"
+  | "wavelength"
+  | "blind_rank_5"
+  | "keep_4_cut_4"
+  | "hit_the_number"
+  | "who_am_i"
+  | "millionaire"
+  | "sports_feud"
+  | "bar_trivia"
+  | "average_fan"
+  | "higher_lower";
+
+interface OfficialDailyRuntimeContext {
+  gameType: OfficialDailyGameType;
+  setupKey: string;
+  publicSetup: Record<string, unknown>;
+  revealSetup: Record<string, unknown>;
+  privateSetupEvidence: Record<string, unknown>;
+  privateGradingEvidence: Record<string, unknown>;
+  submissionState: Record<string, unknown>;
+  publicState: Record<string, unknown>;
+}
+
+const DAILY_COMBO_CONTENT_VERSION = "daily-rank-keep-combo-v1";
+const DAILY_COMBO_SCORING_VERSION = "play-official-score-v4";
+const DAILY_TWO_GAME_FORMAT_VERSION = "daily-two-game-average-v1";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-octagon-scheduler-token",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
+};
+
+const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
+  status,
+  headers: {
+    ...corsHeaders,
+    "Content-Type": "application/json",
+    "Cache-Control": "no-store",
+    "X-Octagon-Backend-Sha": DEPLOYED_SOURCE_SHA,
+  },
+});
+
+const safeError = (
+  status: number,
+  code: string,
+  message: string,
+  details: Record<string, unknown> = {},
+) => json({
+  code,
+  message,
+  ...details,
+  deployment_sha: DEPLOYED_SOURCE_SHA,
+}, status);
+
+type JsonRecord = Record<string, unknown>;
+
+type DailyAdvanceRuntime = (
+  context: OfficialDailyRuntimeContext,
+  action: unknown,
+) => {
+  submissionState: JsonRecord;
+  publicState: JsonRecord;
+  complete: boolean;
+  finalSubmission: unknown;
+};
+
+type UfcRuntimeModule = {
+  buildOfficialDailySetup: (
+    gameType: OfficialDailyGameType,
+    day: string,
+    scheduleVersion: string,
+    publicationHistory?: unknown,
+  ) => JsonRecord;
+  advanceOfficialDailyRuntime: DailyAdvanceRuntime;
+};
+
+type FootballPublicationRuntimeModule = {
+  buildFootballDailyPersistenceSetup: (
+    day: string,
+    scheduleVersion: string,
+    gameType: OfficialDailyGameType,
+    publicationHistory?: unknown,
+  ) => unknown;
+};
+
+type FootballAdvanceRuntimeModule = {
+  advanceFootballOfficialDailyRuntime: DailyAdvanceRuntime;
+};
+type NbaPublicationRuntimeModule = {
+  buildNbaServerDailyPublication: (
+    day: string, scheduleVersion: string, gameType: string, history?: unknown
+  ) => JsonRecord;
+};
+type NbaWhoAmIPublicationRuntimeModule = {
+  buildNbaWhoAmIDailyLeanPublication: (
+    day: string, scheduleVersion: string, gameType: string
+  ) => JsonRecord;
+};
+
+type NbaAdvanceRuntimeModule = {
+  advanceNbaOfficialDailyRuntime: DailyAdvanceRuntime;
+};
+type WhoAmIAdvanceRuntimeModule = {
+  advanceCanonicalWhoAmIDailyRuntime: DailyAdvanceRuntime;
+};
+
+type NbaFeudAdvanceRuntimeModule = {
+  advanceFamilyFeudDailyCore: DailyAdvanceRuntime;
+};
+type MillionaireAdvanceRuntimeModule = {
+  advanceMillionaireDailyRuntime: DailyAdvanceRuntime;
+};
+type FootballHitNumberAdvanceRuntimeModule = {
+  advanceFootballHitNumberDailyRuntime: DailyAdvanceRuntime;
+};
+// Never open NBA Daily merely because November 1 arrives. The frontend and
+// leaderboard adapter must pass the exact-head release verification first.
+const NBA_DAILY_EDGE_RELEASE_READY = false;
+
+type AverageFanRuntimeModule = {
+  buildAverageFanDailySetup: (
+    scope: "ufc" | "football",
+    day: string,
+    scheduleVersion: string,
+    publicationHistory?: unknown,
+  ) => JsonRecord;
+  advanceAverageFanDailyRuntime: DailyAdvanceRuntime;
+};
+
+let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
+let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
+// Wavelength publishes its own small two-game board without importing every Football game bank.
+let footballWavelengthPublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
+// Millionaire publishing must not parse all Football game families in one
+// Edge invocation. The full Football publisher is retained for other modes.
+let footballMillionairePublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
+let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
+let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
+let nbaPublicationRuntimePromise: Promise<NbaPublicationRuntimeModule> | null = null;
+let nbaWhoAmIPublicationPromise: Promise<NbaWhoAmIPublicationRuntimeModule> | null = null;
+let nbaAdvanceRuntimePromise: Promise<NbaAdvanceRuntimeModule> | null = null;
+let whoAmIAdvanceRuntimePromise: Promise<WhoAmIAdvanceRuntimeModule> | null = null;
+let nbaFeudAdvanceRuntimePromise: Promise<NbaFeudAdvanceRuntimeModule> | null = null;
+let millionaireAdvanceRuntimePromise: Promise<MillionaireAdvanceRuntimeModule> | null = null;
+let footballHitNumberAdvanceRuntimePromise: Promise<FootballHitNumberAdvanceRuntimeModule> | null = null;
+let footballWavelengthAdvanceRuntimePromise: Promise<{ advanceFootballWavelengthDailyRuntime: DailyAdvanceRuntime }> | null = null;
+
+function loadUfcRuntime() {
+  if (!ufcRuntimePromise) {
+    ufcRuntimePromise = import("./runtime.generated.mjs") as Promise<UfcRuntimeModule>;
+  }
+  return ufcRuntimePromise;
+}
+
+function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
+  if (gameType === "wavelength") {
+    if (!footballWavelengthPublicationPromise) {
+      footballWavelengthPublicationPromise = import("./football-wavelength-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+    }
+    return footballWavelengthPublicationPromise;
+  }
+  if (gameType === "millionaire") {
+    if (!footballMillionairePublicationPromise) {
+      footballMillionairePublicationPromise = import("./football-millionaire-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+    }
+    return footballMillionairePublicationPromise;
+  }
+  if (!footballPublicationRuntimePromise) {
+    footballPublicationRuntimePromise = import("./football-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+  }
+  return footballPublicationRuntimePromise;
+}
+
+function loadFootballAdvanceRuntime() {
+  if (!footballAdvanceRuntimePromise) {
+    footballAdvanceRuntimePromise = import("./football-advance.generated.mjs") as Promise<FootballAdvanceRuntimeModule>;
+  }
+  return footballAdvanceRuntimePromise;
+}
+
+function loadNbaPublicationRuntime(gameType?: string) {
+  if (gameType === "average_fan") return import("./nba-average-fan-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "sports_feud") return import("./nba-sports-feud-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "millionaire") return import("./nba-millionaire-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "hit_the_number") return import("./nba-hit-the-number-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "find_leader") return import("./nba-find-leader-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "wavelength") return import("./nba-wavelength-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "higher_lower") return import("./nba-higher-lower-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (gameType === "bar_trivia") return import("./nba-bar-trivia-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  if (!nbaPublicationRuntimePromise) {
+    nbaPublicationRuntimePromise = import("./nba-publication.generated.mjs") as Promise<NbaPublicationRuntimeModule>;
+  }
+  return nbaPublicationRuntimePromise;
+}
+function loadNbaWhoAmIPublicationRuntime() {
+  if (!nbaWhoAmIPublicationPromise) {
+    nbaWhoAmIPublicationPromise = import("./nba-who-am-i-publication.generated.mjs") as Promise<NbaWhoAmIPublicationRuntimeModule>;
+  }
+  return nbaWhoAmIPublicationPromise;
+}
+
+function loadNbaAdvanceRuntime(gameType?: string) {
+  if (gameType === "bar_trivia") return import("./nba-bar-trivia-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "find_leader") return import("./nba-find-leader-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "wavelength") return import("./nba-wavelength-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "hit_the_number") return import("./nba-hit-the-number-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (gameType === "higher_lower") return import("./nba-higher-lower-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  if (!nbaAdvanceRuntimePromise) {
+    nbaAdvanceRuntimePromise = import("./nba-advance.generated.mjs") as Promise<NbaAdvanceRuntimeModule>;
+  }
+  return nbaAdvanceRuntimePromise;
+}
+
+// Keep already-published boards and legacy grading intact; only isolate the
+// per-tap evaluator. Each module is a Vite tree-shaken action-only bundle.
+async function loadIsolatedDailyAction(sport: "football" | "ufc", gameType: string): Promise<DailyAdvanceRuntime | null> {
+  if (sport === "football" && ["blind_resume", "blind_rank_5", "keep_4_cut_4"].includes(gameType)) return (await import("./football-comparison-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (gameType === "who_am_i") return (await loadWhoAmIAdvanceRuntime()).advanceCanonicalWhoAmIDailyRuntime;
+  if (sport === "football" && gameType === "find_leader") return (await import("./football-find-leader-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "higher_lower") return (await import("./football-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "bar_trivia") return (await import("./bar-trivia-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "football" && gameType === "sports_feud") return (await import("./legacy-feud-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && ["blind_rank_5", "keep_4_cut_4"].includes(gameType)) return (await import("./ufc-comparison-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "find_leader") return (await import("./ufc-find-leader-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "wavelength") return (await import("./ufc-wavelength-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "higher_lower") return (await import("./ufc-higher-lower-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "hit_the_number") return (await import("./ufc-hit-number-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "bar_trivia") return (await import("./bar-trivia-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  if (sport === "ufc" && gameType === "sports_feud") return (await import("./legacy-feud-advance.generated.mjs")).advanceOfficialDailyGameRuntime as DailyAdvanceRuntime;
+  return null;
+}
+
+function loadWhoAmIAdvanceRuntime() {
+  if (!whoAmIAdvanceRuntimePromise) {
+    whoAmIAdvanceRuntimePromise = import("./who-am-i-advance.generated.mjs") as Promise<WhoAmIAdvanceRuntimeModule>;
+  }
+  return whoAmIAdvanceRuntimePromise;
+}
+
+function loadNbaFeudAdvanceRuntime() {
+  if (!nbaFeudAdvanceRuntimePromise) {
+    nbaFeudAdvanceRuntimePromise = import("./nba-feud-advance.generated.mjs") as Promise<NbaFeudAdvanceRuntimeModule>;
+  }
+  return nbaFeudAdvanceRuntimePromise;
+}
+
+function loadFootballHitNumberAdvanceRuntime() {
+  if (!footballHitNumberAdvanceRuntimePromise) {
+    footballHitNumberAdvanceRuntimePromise = import("./football-hit-number-advance.generated.mjs") as Promise<FootballHitNumberAdvanceRuntimeModule>;
+  }
+  return footballHitNumberAdvanceRuntimePromise;
+}
+
+function loadFootballWavelengthAdvanceRuntime() {
+  if (!footballWavelengthAdvanceRuntimePromise) footballWavelengthAdvanceRuntimePromise = import("./football-wavelength-advance.generated.mjs") as Promise<{ advanceFootballWavelengthDailyRuntime: DailyAdvanceRuntime }>;
+  return footballWavelengthAdvanceRuntimePromise;
+}
+
+function loadMillionaireAdvanceRuntime() {
+  if (!millionaireAdvanceRuntimePromise) {
+    millionaireAdvanceRuntimePromise = import("./millionaire-advance.generated.mjs") as Promise<MillionaireAdvanceRuntimeModule>;
+  }
+  return millionaireAdvanceRuntimePromise;
+}
+
+function loadAverageFanRuntime() {
+  if (!averageFanRuntimePromise) {
+    averageFanRuntimePromise = import("./average-fan.generated.mjs") as Promise<AverageFanRuntimeModule>;
+  }
+  return averageFanRuntimePromise;
+}
+
+function asRecord(value: unknown): JsonRecord | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as JsonRecord
+    : null;
+}
+
+function requiredRecord(value: unknown, label: string) {
+  const row = asRecord(value);
+  if (!row) throw new Error(`${label} is unavailable.`);
+  return row;
+}
+
+function requiredString(value: unknown, label: string) {
+  if (typeof value !== "string" || !value.trim()) throw new Error(`${label} is unavailable.`);
+  return value;
+}
+
+function footballActionHistory(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const value = context.submissionState.action_history;
+  if (value == null) return [] as JsonRecord[];
+  if (!Array.isArray(value) || value.some((row) => !asRecord(row))) {
+    throw new Error("Football Today’s Challenge saved action history is invalid.");
+  }
+  return value as JsonRecord[];
+}
+
+function dailyClientActionIds(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const value = context.submissionState._client_action_ids;
+  if (value == null) return [] as string[];
+  if (!Array.isArray(value) || value.some((id) => typeof id !== "string")) {
+    throw new Error("Today’s Challenge saved client action ids are invalid.");
+  }
+  return value as string[];
+}
+
+function requestedClientActionId(body: JsonRecord) {
+  if (body.client_action_id == null) return null;
+  if (typeof body.client_action_id !== "string") {
+    throw new Error("Today’s Challenge client action id is invalid.");
+  }
+  const id = body.client_action_id.trim();
+  if (!/^[A-Za-z0-9._:-]{8,128}$/.test(id)) {
+    throw new Error("Today’s Challenge client action id is invalid.");
+  }
+  return id;
+}
+
+function submissionStateWithClientActionId(
+  submissionState: JsonRecord,
+  existingIds: readonly string[],
+  clientActionId: string | null,
+) {
+  if (!clientActionId) return submissionState;
+  const ids = [...existingIds, clientActionId].slice(-64);
+  return { ...submissionState, _client_action_ids: ids };
+}
+
+function runtimeContext(value: unknown): OfficialDailyRuntimeContext & JsonRecord {
+  const row = requiredRecord(value, "Daily runtime context");
+  return {
+    ...row,
+    gameType: requiredString(row.game_type, "Daily game type") as OfficialDailyGameType,
+    setupKey: requiredString(row.setup_key, "Daily setup key"),
+    publicSetup: requiredRecord(row.public_setup, "Daily public setup"),
+    revealSetup: requiredRecord(row.reveal_setup, "Daily reveal setup"),
+    privateSetupEvidence: requiredRecord(row.private_setup_evidence, "Daily private setup evidence"),
+    privateGradingEvidence: requiredRecord(row.private_grading_evidence, "Daily private grading evidence"),
+    submissionState: requiredRecord(row.submission_state, "Daily submission state"),
+    publicState: requiredRecord(row.public_state, "Daily public state"),
+  };
+}
+
+function childPublication(publication: JsonRecord) {
+  return {
+    setup_key: requiredString(publication.setupKey, "Daily child setup key"),
+    public_setup: requiredRecord(publication.publicSetup, "Daily child public setup"),
+    reveal_setup: requiredRecord(publication.revealSetup, "Daily child reveal setup"),
+    private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Daily child setup evidence"),
+    private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Daily child grading evidence"),
+  };
+}
+
+function buildDailyComboSetup(day: string, scheduleVersion: string, ufcRuntime: UfcRuntimeModule) {
+  const blindRank = ufcRuntime.buildOfficialDailySetup("blind_rank_5", day, scheduleVersion);
+  const keepCut = ufcRuntime.buildOfficialDailySetup("keep_4_cut_4", day, scheduleVersion);
+  const blindRankChild = childPublication(blindRank);
+  const keepCutChild = childPublication(keepCut);
+  const blindRankInitial = requiredRecord(blindRankChild.public_setup.initial_state, "Blind Rank initial state");
+
+  return {
+    setupKey: `${DAILY_COMBO_CONTENT_VERSION}:${scheduleVersion}:${day}`,
+    contentVersion: DAILY_COMBO_CONTENT_VERSION,
+    scoringVersion: DAILY_COMBO_SCORING_VERSION,
+    publicSetup: {
+      runtime_version: "official-daily-runtime-v1",
+      combo_version: DAILY_COMBO_CONTENT_VERSION,
+      stage_count: 2,
+      initial_state: {
+        complete: false,
+        combo_stage: "blind_rank_5",
+        blind_rank_5: blindRankInitial,
+      },
+    },
+    revealSetup: {
+      combo_version: DAILY_COMBO_CONTENT_VERSION,
+      blind_rank_5: blindRankChild.reveal_setup,
+      keep_4_cut_4: keepCutChild.reveal_setup,
+    },
+    privateSetupEvidence: {
+      combo_version: DAILY_COMBO_CONTENT_VERSION,
+      blind_rank_5: blindRankChild,
+      keep_4_cut_4: keepCutChild,
+    },
+    privateGradingEvidence: {
+      combo_version: DAILY_COMBO_CONTENT_VERSION,
+      blind_rank: blindRankChild.private_grading_evidence,
+      keep_cut: keepCutChild.private_grading_evidence,
+    },
+  };
+}
+
+function isDailyCombo(context: OfficialDailyRuntimeContext & JsonRecord) {
+  return context.content_version === DAILY_COMBO_CONTENT_VERSION
+    || context.privateSetupEvidence.combo_version === DAILY_COMBO_CONTENT_VERSION;
+}
+
+function isTwoGameDaily(context: OfficialDailyRuntimeContext & JsonRecord) {
+  return context.privateSetupEvidence.format_version === DAILY_TWO_GAME_FORMAT_VERSION
+    || context.publicSetup.format_version === DAILY_TWO_GAME_FORMAT_VERSION;
+}
+
+function twoGameChild(context: OfficialDailyRuntimeContext & JsonRecord, index: number) {
+  const rounds = context.privateSetupEvidence.rounds;
+  if (!Array.isArray(rounds) || rounds.length !== 2 || rounds.some((round) => !asRecord(round))) {
+    throw new Error("Two-game Daily child evidence is invalid.");
+  }
+  return requiredRecord(rounds[index], `Two-game Daily game ${index + 1} evidence`);
+}
+
+function twoGameSeriesState(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const index = Number(context.publicState.round_index ?? 0);
+  if (!Number.isInteger(index) || index < 0 || index > 1) {
+    throw new Error("Two-game Daily active game is invalid.");
+  }
+  const attempt = asRecord(context.official_attempt);
+  const finalSeries = asRecord(asRecord(attempt?.public_result)?.daily_series);
+  const storedScores = Array.isArray(context.publicState.round_scores)
+    ? context.publicState.round_scores.map(Number)
+    : [];
+  const finalScores = Array.isArray(finalSeries?.round_scores)
+    ? finalSeries.round_scores.map(Number)
+    : [];
+  const scores = finalScores.length ? finalScores : storedScores;
+  const finalAverage = Number(finalSeries?.average_score);
+  return {
+    format_version: DAILY_TWO_GAME_FORMAT_VERSION,
+    game_index: index,
+    game_number: index + 1,
+    game_count: 2,
+    awaiting_next: context.publicState.awaiting_next === true,
+    handoff_pending: context.publicState.handoff_pending === true,
+    complete: context.publicState.complete === true || Boolean(attempt),
+    round_scores: scores,
+    average_score: Number.isFinite(finalAverage)
+      ? finalAverage
+      : context.publicState.complete === true
+        ? Number(context.publicState.score ?? 0)
+        : null,
+    rounds: Array.isArray(finalSeries?.rounds)
+      ? finalSeries.rounds
+      : context.publicState.completed_rounds ?? [],
+  };
+}
+
+function comboStage(context: OfficialDailyRuntimeContext & JsonRecord): "blind_rank_5" | "keep_4_cut_4" {
+  const stage = context.publicState.combo_stage ?? context.submissionState.combo_stage;
+  return stage === "keep_4_cut_4" ? "keep_4_cut_4" : "blind_rank_5";
+}
+
+function comboChild(context: OfficialDailyRuntimeContext & JsonRecord, gameType: "blind_rank_5" | "keep_4_cut_4") {
+  return requiredRecord(context.privateSetupEvidence[gameType], `Daily combo ${gameType} evidence`);
+}
+
+function comboChildContext(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  gameType: "blind_rank_5" | "keep_4_cut_4",
+): OfficialDailyRuntimeContext {
+  const child = comboChild(context, gameType);
+  const childSubmission = asRecord(context.submissionState[gameType]) ?? {};
+  const childPublic = asRecord(context.publicState[gameType])
+    ?? requiredRecord(requiredRecord(child.public_setup, "Daily combo public setup").initial_state, "Daily combo initial state");
+  return {
+    gameType,
+    setupKey: requiredString(child.setup_key, "Daily combo child setup key"),
+    publicSetup: requiredRecord(child.public_setup, "Daily combo child public setup"),
+    revealSetup: requiredRecord(child.reveal_setup, "Daily combo child reveal setup"),
+    privateSetupEvidence: requiredRecord(child.private_setup_evidence, "Daily combo child setup evidence"),
+    privateGradingEvidence: requiredRecord(child.private_grading_evidence, "Daily combo child grading evidence"),
+    submissionState: childSubmission,
+    publicState: childPublic,
+  };
+}
+
+function advanceDailyCombo(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  action: unknown,
+  advanceRuntime: DailyAdvanceRuntime,
+) {
+  const stage = comboStage(context);
+  const advanced = advanceRuntime(comboChildContext(context, stage), action);
+
+  if (stage === "blind_rank_5") {
+    if (!advanced.complete) {
+      return {
+        submissionState: {
+          ...context.submissionState,
+          combo_stage: stage,
+          blind_rank_5: advanced.submissionState,
+          final_submission: null,
+        },
+        publicState: {
+          ...context.publicState,
+          complete: false,
+          combo_stage: stage,
+          blind_rank_5: advanced.publicState,
+        },
+        complete: false,
+        finalSubmission: null,
+      };
+    }
+
+    const keepCut = comboChild(context, "keep_4_cut_4");
+    const keepCutInitial = requiredRecord(
+      requiredRecord(keepCut.public_setup, "Daily combo Keep Cut setup").initial_state,
+      "Daily combo Keep Cut initial state",
+    );
+    return {
+      submissionState: {
+        combo_stage: "keep_4_cut_4",
+        blind_rank_5: advanced.submissionState,
+        keep_4_cut_4: {},
+        final_submission: null,
+      },
+      publicState: {
+        complete: false,
+        combo_stage: "keep_4_cut_4",
+        blind_rank_5: advanced.publicState,
+        keep_4_cut_4: keepCutInitial,
+      },
+      complete: false,
+      finalSubmission: null,
+    };
+  }
+
+  if (!advanced.complete) {
+    return {
+      submissionState: {
+        ...context.submissionState,
+        combo_stage: stage,
+        keep_4_cut_4: advanced.submissionState,
+        final_submission: null,
+      },
+      publicState: {
+        ...context.publicState,
+        complete: false,
+        combo_stage: stage,
+        keep_4_cut_4: advanced.publicState,
+      },
+      complete: false,
+      finalSubmission: null,
+    };
+  }
+
+  const blindRankSubmission = requiredRecord(context.submissionState.blind_rank_5, "Completed Blind Rank combo state");
+  const blindRankFinal = requiredRecord(blindRankSubmission.final_submission, "Completed Blind Rank combo submission");
+  const keepCutFinal = requiredRecord(advanced.finalSubmission, "Completed Keep Cut combo submission");
+  const finalSubmission = {
+    blind_rank: blindRankFinal,
+    keep_cut: keepCutFinal,
+  };
+
+  return {
+    submissionState: {
+      ...context.submissionState,
+      combo_stage: stage,
+      keep_4_cut_4: advanced.submissionState,
+      final_submission: finalSubmission,
+    },
+    publicState: {
+      ...context.publicState,
+      complete: true,
+      combo_stage: stage,
+      keep_4_cut_4: advanced.publicState,
+    },
+    complete: true,
+    finalSubmission,
+  };
+}
+
+
+async function whoAmIPublicationHistory(
+  admin: SupabaseClient,
+  sport: "ufc" | "football",
+  day: string,
+) {
+  const response = await admin.rpc("get_who_am_i_publication_history", {
+    p_sport: sport,
+    p_before_day: day,
+  });
+  if (response.error || !Array.isArray(response.data)) {
+    throw new Error("Who Am I publication history is unavailable.");
+  }
+  return response.data;
+}
+
+/** Trusted server-only comparison history; never expose frozen answer evidence. */
+async function footballHigherLowerPublicationHistory(admin: SupabaseClient, day: string) {
+  const response = await admin.rpc("get_football_higher_lower_publication_history", {
+    p_before_day: day,
+  });
+  if (response.error || !Array.isArray(response.data)) {
+    throw new Error("Football Higher or Lower publication history is unavailable.");
+  }
+  return response.data;
+}
+
+async function averageFanPublicationHistory(
+  admin: SupabaseClient,
+  sport: "ufc" | "football",
+  day: string,
+) {
+  const response = await admin.rpc("get_average_fan_publication_history", {
+    p_sport: sport,
+    p_before_day: day,
+  });
+  if (response.error || !Array.isArray(response.data)) {
+    throw new Error("Average Fan publication history is unavailable.");
+  }
+  return response.data;
+}
+
+// Published normal Daily reads and answers should only check the authoritative
+// Central-day descriptor, never rerun historical publication and reset SQL.
+// Unpublished boards and legacy two-game cutovers still use the full recovery
+// path; scheduled invocations retain the publisher and midnight prepublication.
+async function resolveInteractiveDaily(
+  admin: SupabaseClient,
+  sport: "ufc" | "football",
+  mode: unknown,
+) {
+  const materialize = () => sport === "football"
+    ? materializeFootballToday(admin)
+    : materializeToday(admin);
+  if (mode !== "advance" && mode !== "get-today" && mode !== undefined) return materialize();
+
+  const response = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: sport,
+  });
+  if (response.error) throw new Error("The current Daily publication identity is unavailable.");
+  const request = requiredRecord(response.data, "Current Daily publication identity");
+  // The retired single-board comparison games must still run the two-game
+  // migration guard before being served, even when a legacy board exists.
+  const migrationCandidate = ["find_leader", "wavelength", "hit_the_number"]
+    .includes(request.published_game as string);
+  if (request.required !== false || (mode !== "advance" && migrationCandidate)) {
+    return materialize();
+  }
+
+  return {
+    dailyChallengeId: requiredString(request.daily_challenge_id, "Published Daily id"),
+    centralDay: requiredString(request.central_day, "Published Central day"),
+    scheduleVersion: requiredString(request.schedule_version, "Published schedule version"),
+    gameType: requiredString(request.published_game, "Published game type"),
+    created: false,
+  };
+}
+
+async function materializeToday(admin: SupabaseClient, at?: string) {
+  const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "ufc" });
+  if (prepared.error) {
+    throw new Error("The UFC two-game Daily cutover could not be prepared safely.");
+  }
+
+  const relaunchReset = await admin.rpc("reset_sep24_ufc_sports_feud_for_relaunch", {});
+  if (relaunchReset.error) {
+    throw new Error("The September 24 UFC Sports Feud relaunch reset failed.");
+  }
+
+  // Always resolve UFC through the sport-aware 48-hour active-day schedule.
+  // The legacy one-argument overload incorrectly materializes off-cycle days
+  // (such as October 26) and can CPU-exhaust scheduled prepublication.
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: "ufc",
+    ...(at ? { p_at: at } : {}),
+  });
+  if (requested.error) throw new Error("The official daily materialization request failed.");
+  const request = requiredRecord(requested.data, "Daily materialization request");
+  const day = requiredString(request.central_day, "Central day");
+  const scheduleVersion = requiredString(request.schedule_version, "Schedule version");
+  const expectedGame = requiredString(request.expected_game, "Expected daily game") as OfficialDailyGameType;
+
+  if (request.required !== true) {
+    const dailyChallengeId = requiredString(request.daily_challenge_id, "Daily challenge id");
+    const restored = await admin.rpc("restore_daily_two_game_cutover_progress", {
+      p_daily_challenge_id: dailyChallengeId,
+    });
+    if (restored.error) throw new Error("The UFC two-game Daily carryover could not be restored.");
+    return {
+      dailyChallengeId,
+      centralDay: day,
+      scheduleVersion,
+      gameType: requiredString(request.published_game, "Published game"),
+      fallbackReason: typeof request.fallback_reason === "string" ? request.fallback_reason : null,
+      created: false,
+    };
+  }
+
+  let gameType = expectedGame;
+  let fallbackReason: string | null = null;
+  let publication;
+  let ufcRuntime: UfcRuntimeModule | null = null;
+  try {
+    const publicationHistory = gameType === "who_am_i"
+      ? await whoAmIPublicationHistory(admin, "ufc", day)
+      : gameType === "average_fan"
+        ? await averageFanPublicationHistory(admin, "ufc", day)
+        : undefined;
+    if (gameType === "average_fan") {
+      const averageFanRuntime = await loadAverageFanRuntime();
+      publication = averageFanRuntime.buildAverageFanDailySetup("ufc", day, scheduleVersion, publicationHistory);
+    } else {
+      ufcRuntime = await loadUfcRuntime();
+      publication = gameType === "keep_4_cut_4"
+        ? buildDailyComboSetup(day, scheduleVersion, ufcRuntime)
+        : ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion, publicationHistory);
+    }
+  } catch {
+    if (gameType === "find_leader") throw new Error("The official Find the Leader fallback could not be materialized.");
+    fallbackReason = `materialization_failed:${gameType}`;
+    gameType = "find_leader";
+    ufcRuntime ??= await loadUfcRuntime();
+    publication = ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion);
+  }
+
+  const published = await admin.rpc("publish_daily_challenge_setup", {
+    p_central_day: day,
+    p_schedule_version: scheduleVersion,
+    p_game_type: gameType,
+    p_setup_key: publication.setupKey,
+    p_content_version: publication.contentVersion,
+    p_scoring_version: publication.scoringVersion,
+    p_public_setup: publication.publicSetup,
+    p_reveal_setup: publication.revealSetup,
+    p_private_setup_evidence: publication.privateSetupEvidence,
+    p_private_grading_evidence: publication.privateGradingEvidence,
+    p_fallback_reason: fallbackReason,
+  });
+  if (published.error) throw new Error("The official daily setup could not be published safely.");
+  const result = requiredRecord(published.data, "Published daily setup");
+  const dailyChallengeId = requiredString(result.id, "Published daily challenge id");
+  const restored = await admin.rpc("restore_daily_two_game_cutover_progress", {
+    p_daily_challenge_id: dailyChallengeId,
+  });
+  if (restored.error) throw new Error("The UFC two-game Daily carryover could not be restored.");
+
+  return {
+    dailyChallengeId,
+    centralDay: day,
+    scheduleVersion,
+    gameType,
+    fallbackReason,
+    created: true,
+  };
+}
+
+async function materializeFootballToday(admin: SupabaseClient, at?: string) {
+  const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "football" });
+  if (prepared.error) {
+    throw new Error("The Football two-game Daily cutover could not be prepared safely.");
+  }
+
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: "football",
+    ...(at ? { p_at: at } : {}),
+  });
+  if (requested.error) throw new Error("The official Football daily materialization request failed.");
+  const request = requiredRecord(requested.data, "Football daily materialization request");
+  const day = requiredString(request.central_day, "Football Central day");
+  const scheduleVersion = requiredString(request.schedule_version, "Football schedule version");
+  const expectedGame = requiredString(request.expected_game, "Football expected game");
+
+  if (request.required !== true) {
+    const dailyChallengeId = requiredString(request.daily_challenge_id, "Football daily challenge id");
+    const restored = await admin.rpc("restore_daily_two_game_cutover_progress", {
+      p_daily_challenge_id: dailyChallengeId,
+    });
+    if (restored.error) throw new Error("The Football two-game Daily carryover could not be restored.");
+    return {
+      dailyChallengeId,
+      centralDay: day,
+      scheduleVersion,
+      gameType: requiredString(request.published_game, "Published Football game"),
+      created: false,
+    };
+  }
+
+  const publicationHistory = expectedGame === "who_am_i"
+    ? await whoAmIPublicationHistory(admin, "football", day)
+    : expectedGame === "average_fan"
+      ? await averageFanPublicationHistory(admin, "football", day)
+      : expectedGame === "higher_lower" && day >= "2026-10-26"
+        ? await footballHigherLowerPublicationHistory(admin, day)
+        : undefined;
+  const publication = expectedGame === "average_fan"
+    ? {
+        gameType: expectedGame,
+        scheduleVersion,
+        ...(await loadAverageFanRuntime()).buildAverageFanDailySetup(
+          "football",
+          day,
+          scheduleVersion,
+          publicationHistory,
+        ),
+      }
+    : await (async () => {
+        const footballRuntime = await loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType);
+        return footballRuntime.buildFootballDailyPersistenceSetup(
+          day,
+          scheduleVersion,
+          expectedGame as OfficialDailyGameType,
+          publicationHistory,
+        ) as JsonRecord;
+      })();
+  const publicationSchedule = requiredString(publication.scheduleVersion, "Football daily schedule version");
+  const publicationGame = requiredString(publication.gameType, "Football daily game type");
+  if (publicationSchedule !== scheduleVersion || publicationGame !== expectedGame) {
+    throw new Error("The Football Daily runtime does not match the canonical schedule request.");
+  }
+
+  const published = await admin.rpc("publish_daily_challenge_setup", {
+    p_central_day: day,
+    p_schedule_version: scheduleVersion,
+    p_game_type: publicationGame,
+    p_setup_key: requiredString(publication.setupKey, "Football daily setup key"),
+    p_content_version: requiredString(publication.contentVersion, "Football daily content version"),
+    p_scoring_version: requiredString(publication.scoringVersion, "Football daily scoring version"),
+    p_public_setup: requiredRecord(publication.publicSetup, "Football daily public setup"),
+    p_reveal_setup: requiredRecord(publication.revealSetup, "Football daily reveal setup"),
+    p_private_setup_evidence: requiredRecord(publication.privateSetupEvidence, "Football daily private setup evidence"),
+    p_private_grading_evidence: requiredRecord(publication.privateGradingEvidence, "Football daily private grading evidence"),
+    p_fallback_reason: null,
+  });
+  if (published.error) throw new Error("The official Football daily setup could not be published safely.");
+  const result = requiredRecord(published.data, "Published Football daily setup");
+  const dailyChallengeId = requiredString(result.id, "Published Football daily challenge id");
+  const restored = await admin.rpc("restore_daily_two_game_cutover_progress", {
+    p_daily_challenge_id: dailyChallengeId,
+  });
+  if (restored.error) throw new Error("The Football two-game Daily carryover could not be restored.");
+  return {
+    dailyChallengeId,
+    centralDay: day,
+    scheduleVersion,
+    gameType: publicationGame,
+    created: true,
+  };
+}
+
+async function materializeNbaToday(admin: SupabaseClient, at?: string, preview = false) {
+  const response = preview
+    ? await admin.rpc("get_nba_owner_prelaunch_materialization_request")
+    : await admin.rpc("get_daily_challenge_materialization_request", {
+        p_sport: "nba",
+        ...(at ? { p_at: at } : {}),
+      });
+  if (response.error) throw new Error("NBA scheduled Daily identity is unavailable.");
+  const request = requiredRecord(response.data, "NBA daily materialization request");
+  const day = requiredString(request.central_day, "NBA Central publication day");
+  const scheduleVersion = requiredString(request.schedule_version, "NBA Daily schedule version");
+  const gameType = requiredString(request.expected_game, "NBA Daily scheduled game");
+  if (request.required !== true) {
+    return {
+      dailyChallengeId: requiredString(request.daily_challenge_id, "NBA published daily id"),
+      centralDay: day,
+      scheduleVersion,
+      gameType: requiredString(request.published_game, "NBA published Daily game"),
+      created: false,
+    };
+  }
+  // Daily publication is rare but must not exceed Edge CPU on a cold start.
+  // Who Am I loads only its canonical round authorship, not all nine NBA banks.
+  const publishedSetup = gameType === "who_am_i"
+    ? (await loadNbaWhoAmIPublicationRuntime()).buildNbaWhoAmIDailyLeanPublication(day, scheduleVersion, gameType)
+    : (await loadNbaPublicationRuntime(gameType)).buildNbaServerDailyPublication(day, scheduleVersion, gameType);
+  if (publishedSetup.scheduleVersion !== scheduleVersion || publishedSetup.gameType !== gameType) {
+    throw new Error("NBA Daily publication differs from the locked 28-slot calendar.");
+  }
+  const responsePublished = await admin.rpc("publish_daily_challenge_setup", {
+    p_central_day: day,
+    p_schedule_version: scheduleVersion,
+    p_game_type: gameType,
+    p_setup_key: requiredString(publishedSetup.setupKey, "NBA daily setup key"),
+    p_content_version: requiredString(publishedSetup.contentVersion, "NBA daily content version"),
+    p_scoring_version: requiredString(publishedSetup.scoringVersion, "NBA daily scoring version"),
+    p_public_setup: requiredRecord(publishedSetup.publicSetup, "NBA daily public setup"),
+    p_reveal_setup: requiredRecord(publishedSetup.revealSetup, "NBA daily answer reveal"),
+    p_private_setup_evidence: requiredRecord(publishedSetup.privateSetupEvidence, "NBA private setup evidence"),
+    p_private_grading_evidence: requiredRecord(publishedSetup.privateGradingEvidence, "NBA private scoring evidence"),
+    p_fallback_reason: null,
+  });
+  if (responsePublished.error) throw new Error("NBA canonical daily publication was rejected.");
+  const saved = requiredRecord(responsePublished.data, "NBA published daily setup");
+  return {
+    dailyChallengeId: requiredString(saved.id, "NBA published daily id"),
+    centralDay: day, scheduleVersion, gameType, created: true,
+  };
+}
+
+async function handleNbaDaily(
+  admin: SupabaseClient, userClient: SupabaseClient,
+  profileId: string, body: JsonRecord,
+) {
+  const preview = body.preview === true;
+  // The client flag grants nothing. Recheck the authenticated profile on every
+  // read and advance, and keep the public release locked independently.
+  if (preview) {
+    const [owner, identity] = await Promise.all([
+      admin.rpc("is_pick_control_owner", { p_profile_id: profileId }),
+      admin.from("profiles").select("normalized_name").eq("id", profileId).maybeSingle(),
+    ]);
+    if (owner.error || owner.data !== true || identity.error || identity.data?.normalized_name !== "CODY") {
+      return safeError(403, "NBA_OWNER_TEST_FORBIDDEN", "NBA prelaunch scoring is available only to the HQ owner.");
+    }
+  } else if (!NBA_DAILY_EDGE_RELEASE_READY) {
+    return safeError(503, "NBA_DAILY_NOT_LAUNCHED", "NBA official Daily is not available yet.");
+  }
+  const materialized = await materializeNbaToday(admin, undefined, preview);
+  let context = await getContext(admin, materialized.dailyChallengeId, profileId);
+  context = await finalizePending(userClient, admin, context, profileId);
+  context = await continueTwoGameWithoutIntermission(admin, context, profileId);
+  const payload = () => json({ ...publicPayload(context), sport: "nba" });
+  if (body.mode === "get-today" || body.mode === undefined) return payload();
+  if (body.mode !== "advance") return safeError(400, "INVALID_MODE", "NBA Daily action mode is invalid.");
+  const clientActionId = requestedClientActionId(body);
+  if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) return payload();
+  if (asRecord(context.official_attempt)) return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "NBA official Daily is complete.");
+  const requestedId = typeof body.daily_challenge_id === "string" ? body.daily_challenge_id : materialized.dailyChallengeId;
+  if (requestedId !== materialized.dailyChallengeId) {
+    return safeError(409, "DAILY_IDENTITY_CHANGED", "The NBA Daily board has changed.");
+  }
+  if (!Number.isInteger(body.revision) || Number(body.revision) !== Number(context.progress_revision)) {
+    return safeError(409, "STALE_PROGRESS", "NBA Daily progress changed on another device. Refresh and continue.");
+  }
+  const action = requiredRecord(body.action, "NBA Daily action");
+  // Average Fan already has a standalone canonical Edge bundle. Do not cold-load
+  // all nine NBA game runtimes to resolve its small per-tile actions: the old
+  // path exceeded CPU limits during live owner testing. Auth, revision checks,
+  // idempotency, grading and persisted results still use the same trusted path.
+  const advanced = context.gameType === "who_am_i"
+    ? (await loadWhoAmIAdvanceRuntime()).advanceCanonicalWhoAmIDailyRuntime(context, action)
+    : context.gameType === "average_fan"
+    ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)
+    : context.gameType === "sports_feud"
+      // Current NBA packs already carry their own authoritative candidates and
+      // aliases. Avoid booting NBA's all-games module + legacy UFC/NFL/CFB
+      // question catalogs for every individual Feud answer.
+      ? (await loadNbaFeudAdvanceRuntime()).advanceFamilyFeudDailyCore(context, action)
+      : context.gameType === "millionaire" && !isTwoGameDaily(context)
+        // NBA's single-game Millionaire answers use the same lean evaluator as
+        // UFC and Football. Loading the all-games NBA bundle on every tap
+        // made the answer reveal wait on unnecessary cold-start CPU work.
+        // Keep two-game publications on their canonical wrapper.
+        ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime(context, action)
+        : (await loadNbaAdvanceRuntime(context.gameType)).advanceNbaOfficialDailyRuntime(context, action);
+  const history = footballActionHistory(context);
+  const nextSubmissionState = submissionStateWithClientActionId({
+    ...advanced.submissionState, action_history: [...history, action],
+  }, dailyClientActionIds(context), clientActionId);
+  const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+    p_daily_challenge_id: materialized.dailyChallengeId,
+    p_profile_id: profileId,
+    p_expected_revision: Number(context.progress_revision),
+    p_submission_state: nextSubmissionState,
+    p_public_state: advanced.publicState,
+  });
+  if (saved.error) {
+    if (saved.error.code === "40001") {
+      return safeError(409, "STALE_PROGRESS", "NBA Daily progress changed on another device. Refresh and continue.");
+    }
+    throw new Error("NBA official Daily progress could not be persisted.");
+  }
+  context = advanced.complete
+    ? await finalizePending(
+        userClient,
+        admin,
+        await getContext(admin, materialized.dailyChallengeId, profileId),
+        profileId,
+      )
+    : savedIntermediateContext(context, saved.data, nextSubmissionState);
+  return payload();
+}
+
+async function getContext(admin: SupabaseClient, dailyChallengeId: string, profileId: string) {
+  const response = await admin.rpc("get_daily_challenge_runtime_context", {
+    p_daily_challenge_id: dailyChallengeId,
+    p_profile_id: profileId,
+  });
+  if (response.error) throw new Error("The official daily runtime state is unavailable.");
+  return runtimeContext(response.data);
+}
+
+function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const attempt = asRecord(context.official_attempt);
+
+  if (isTwoGameDaily(context)) {
+    const series = twoGameSeriesState(context);
+    const child = twoGameChild(context, series.game_index);
+    const activePublicState = requiredRecord(context.publicState.active_round, "Two-game Daily active public state");
+    const publicState = {
+      ...activePublicState,
+      daily_series: series,
+    };
+    const revealAllowed = Boolean(attempt) || series.awaiting_next || series.complete;
+    return {
+      available: true,
+      id: context.daily_challenge_id,
+      central_day: context.central_day,
+      schedule_version: context.schedule_version,
+      game_type: context.game_type,
+      setup_key: requiredString(child.setup_key, "Two-game Daily child setup key"),
+      content_version: requiredString(child.content_version, "Two-game Daily child content version"),
+      scoring_version: context.scoring_version,
+      fallback_reason: context.fallback_reason ?? null,
+      public_setup: requiredRecord(child.public_setup, "Two-game Daily child public setup"),
+      progress_revision: context.progress_revision,
+      public_state: publicState,
+      reveal_setup: revealAllowed
+        ? requiredRecord(child.reveal_setup, "Two-game Daily child reveal setup")
+        : null,
+      official_attempt: (() => {
+        if (!attempt) return null;
+        const finalSeries = asRecord(asRecord(attempt.public_result)?.daily_series);
+        const rounds = Array.isArray(finalSeries?.rounds)
+          ? finalSeries.rounds.map((row) => asRecord(row))
+          : [];
+        const round = asRecord(rounds[series.game_index]);
+        if (!round) return attempt;
+        return {
+          ...attempt,
+          native_score: Number(round.native_score ?? attempt.native_score ?? 0),
+          normalized_score: Number(round.normalized_score ?? attempt.normalized_score ?? 0),
+          public_result: {
+            ...round,
+            daily_series: series,
+          },
+        };
+      })(),
+      deployment_sha: DEPLOYED_SOURCE_SHA,
+    };
+  }
+
+  if (isDailyCombo(context)) {
+    const stage = comboStage(context);
+    const child = comboChild(context, stage);
+    const activePublicState = requiredRecord(context.publicState[stage], `Daily combo ${stage} public state`);
+    const publicState = attempt && stage === "keep_4_cut_4"
+      ? {
+          ...activePublicState,
+          combo_blind_rank_result: requiredRecord(
+            context.publicState.blind_rank_5,
+            "Completed Blind Rank combo result",
+          ),
+        }
+      : activePublicState;
+    return {
+      available: true,
+      id: context.daily_challenge_id,
+      central_day: context.central_day,
+      schedule_version: context.schedule_version,
+      game_type: stage,
+      setup_key: child.setup_key,
+      content_version: context.content_version,
+      scoring_version: context.scoring_version,
+      fallback_reason: context.fallback_reason ?? null,
+      public_setup: child.public_setup,
+      progress_revision: context.progress_revision,
+      public_state: publicState,
+      reveal_setup: attempt ? child.reveal_setup : null,
+      official_attempt: attempt,
+      deployment_sha: DEPLOYED_SOURCE_SHA,
+    };
+  }
+
+  return {
+    available: true,
+    id: context.daily_challenge_id,
+    central_day: context.central_day,
+    schedule_version: context.schedule_version,
+    game_type: context.game_type,
+    setup_key: context.setup_key,
+    content_version: context.content_version,
+    scoring_version: context.scoring_version,
+    fallback_reason: context.fallback_reason ?? null,
+    public_setup: context.public_setup,
+    progress_revision: context.progress_revision,
+    public_state: context.public_state,
+    reveal_setup: attempt ? context.reveal_setup : null,
+    official_attempt: attempt,
+    deployment_sha: DEPLOYED_SOURCE_SHA,
+  };
+}
+
+// The save RPC already returns the authoritative revision and public state.
+ // Intermediate actions need no second context read: private grading and
+ // immutable setup are unchanged, and final actions still run canonical
+ // grading/finalization on a fresh context.
+function savedIntermediateContext(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  savedData: unknown,
+  submissionState: JsonRecord,
+) {
+  const saved = requiredRecord(savedData, "Saved Daily progress");
+  const publicState = requiredRecord(saved.public_state, "Saved Daily public state");
+  const revision = Number(saved.revision);
+  if (!Number.isInteger(revision) || revision <= Number(context.progress_revision)) {
+    throw new Error("Saved Daily progress revision is invalid.");
+  }
+  return {
+    ...context,
+    progress_revision: revision,
+    submission_state: submissionState,
+    submissionState,
+    public_state: publicState,
+    publicState,
+  };
+}
+
+function footballPublicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const payload = publicPayload(context);
+  if (context.gameType !== "hit_the_number") {
+    return { ...payload, sport: "football", action_history: footballActionHistory(context) };
+  }
+
+  // Publish only the per-slot *eligibility*, never grading/stat values. It is
+  // immutable for a board and lets the client advance its pick UI instantly
+  // while each authoritative selection remains queued for server persistence.
+  // Read it from the saved private setup so previously published boards also
+  // gain the same responsive experience without rewriting their identities.
+  const evidence = isTwoGameDaily(context)
+    ? requiredRecord(
+        twoGameChild(context, twoGameSeriesState(context).game_index).private_setup_evidence,
+        "Football Hit the Number child eligibility",
+      )
+    : context.privateSetupEvidence;
+  const setup = requiredRecord(payload.public_setup, "Football Hit the Number public setup");
+  const slots = setup.slots;
+  const candidates = setup.candidates;
+  const eligibleRows = evidence.progression_slot_subject_ids;
+  const candidateIds = Array.isArray(candidates)
+    ? new Set(candidates.map((candidate) => asRecord(candidate)?.id).filter((id): id is string => typeof id === "string"))
+    : new Set<string>();
+  const safeEligibility = Array.isArray(slots) && slots.length > 0
+    && slots.length === Number(setup.pick_count)
+    && Array.isArray(eligibleRows) && eligibleRows.length === slots.length
+    && eligibleRows.every((row) => Array.isArray(row)
+      && row.every((id) => typeof id === "string" && candidateIds.has(id)));
+
+  return {
+    ...payload,
+    sport: "football",
+    public_setup: safeEligibility
+      ? { ...setup, slot_eligible_ids: eligibleRows }
+      : setup,
+    action_history: footballActionHistory(context),
+  };
+}
+
+function normalizeLegacyFootballProgress(
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  advanceFootballRuntime: DailyAdvanceRuntime,
+) {
+  const history = footballActionHistory(context);
+  if (!history.length || isDailyCombo(context)) return context;
+
+  const stateKeys = Object.keys(context.submissionState)
+    .filter((key) => key !== "action_history" && key !== "final_submission" && key !== "_client_action_ids");
+  if (stateKeys.length) return context;
+
+  let replayContext: OfficialDailyRuntimeContext = {
+    gameType: context.gameType,
+    setupKey: context.setupKey,
+    publicSetup: context.publicSetup,
+    revealSetup: context.revealSetup,
+    privateSetupEvidence: context.privateSetupEvidence,
+    privateGradingEvidence: context.privateGradingEvidence,
+    submissionState: {},
+    publicState: requiredRecord(context.publicSetup.initial_state, "Football daily initial state"),
+  };
+
+  for (const action of history) {
+    const advanced = advanceFootballRuntime(replayContext, action);
+    replayContext = {
+      ...replayContext,
+      submissionState: advanced.submissionState,
+      publicState: advanced.publicState,
+    };
+  }
+
+  return {
+    ...context,
+    submissionState: {
+      ...replayContext.submissionState,
+      action_history: history,
+      ...(dailyClientActionIds(context).length
+        ? { _client_action_ids: dailyClientActionIds(context) }
+        : {}),
+    },
+    publicState: replayContext.publicState,
+  };
+}
+
+async function finalizePending(
+  userClient: SupabaseClient,
+  admin: SupabaseClient,
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  profileId: string,
+) {
+  if (asRecord(context.official_attempt)) return context;
+  const finalSubmission = asRecord(context.submissionState.final_submission);
+  if (!finalSubmission) return context;
+
+  const submitted = await userClient.rpc("submit_my_daily_challenge_attempt", {
+    p_daily_challenge_id: context.daily_challenge_id,
+    p_submission: finalSubmission,
+  });
+  if (submitted.error) throw new Error("The completed official daily result could not be recorded.");
+  return getContext(admin, String(context.daily_challenge_id), profileId);
+}
+
+async function advanceExistingAverageFan(
+  admin: SupabaseClient,
+  userClient: SupabaseClient,
+  profileId: string,
+  body: JsonRecord,
+  sport: "ufc" | "football",
+): Promise<Response | null> {
+  if (body.mode !== "advance" || body.game_type !== "average_fan") return null;
+  const requestedDailyId = typeof body.daily_challenge_id === "string"
+    ? body.daily_challenge_id
+    : "";
+  if (!requestedDailyId) return null;
+
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: sport,
+  });
+  if (requested.error) {
+    throw new Error("The Average Fan Daily identity could not be checked.");
+  }
+  const preview = requiredRecord(requested.data, "Average Fan Daily identity");
+  if (
+    preview.required === true
+    || preview.published_game !== "average_fan"
+    || preview.daily_challenge_id !== requestedDailyId
+  ) {
+    return null;
+  }
+
+  let context = await getContext(admin, requestedDailyId, profileId);
+  context = await finalizePending(userClient, admin, context, profileId);
+  if (context.gameType !== "average_fan") return null;
+
+  // The Weekly Auction is a separate featured game, not a Daily prerequisite.
+
+  const clientActionId = requestedClientActionId(body);
+  if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) {
+    return json(sport === "football" ? footballPublicPayload(context) : publicPayload(context));
+  }
+  if (asRecord(context.official_attempt)) {
+    return safeError(
+      409,
+      "OFFICIAL_ATTEMPT_COMPLETE",
+      sport === "football"
+        ? "The official Football first attempt is already complete."
+        : "The official first attempt is already complete.",
+    );
+  }
+  if (!Number.isInteger(body.revision) || Number(body.revision) !== Number(context.progress_revision)) {
+    return safeError(
+      409,
+      "STALE_PROGRESS",
+      sport === "football"
+        ? "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state."
+        : "Official daily progress changed on another device. Refresh and continue from the latest state.",
+    );
+  }
+
+  const action = requiredRecord(body.action, "Average Fan daily action");
+  const history = sport === "football" ? footballActionHistory(context) : [];
+  const advanced = (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action);
+  const persistedSubmissionState = submissionStateWithClientActionId(
+    sport === "football"
+      ? {
+          ...advanced.submissionState,
+          action_history: [...history, action],
+        }
+      : advanced.submissionState,
+    dailyClientActionIds(context),
+    clientActionId,
+  );
+  const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+    p_daily_challenge_id: requestedDailyId,
+    p_profile_id: profileId,
+    p_expected_revision: Number(context.progress_revision),
+    p_submission_state: persistedSubmissionState,
+    p_public_state: advanced.publicState,
+  });
+  if (saved.error) {
+    if (saved.error.code === "40001") {
+      return safeError(
+        409,
+        "STALE_PROGRESS",
+        sport === "football"
+          ? "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state."
+          : "Official daily progress changed on another device. Refresh and continue from the latest state.",
+      );
+    }
+    throw new Error("The Average Fan Daily progress could not be saved.");
+  }
+
+  if (advanced.complete) {
+    context = await getContext(admin, requestedDailyId, profileId);
+    context = await finalizePending(userClient, admin, context, profileId);
+  } else {
+    const savedProgress = requiredRecord(saved.data, "Saved Average Fan Daily progress");
+    const publicState = requiredRecord(savedProgress.public_state, "Saved Average Fan Daily public state");
+    context = {
+      ...context,
+      progress_revision: Number(savedProgress.revision),
+      submission_state: persistedSubmissionState,
+      submissionState: persistedSubmissionState,
+      public_state: publicState,
+      publicState,
+    };
+  }
+
+  return json(sport === "football" ? footballPublicPayload(context) : publicPayload(context));
+}
+
+async function continueTwoGameWithoutIntermission(
+  admin: SupabaseClient,
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  profileId: string,
+) {
+  if (!isTwoGameDaily(context) || context.publicState.awaiting_next !== true) return context;
+
+  const roundIndex = Number(context.publicState.round_index ?? 0);
+  const completedRounds = Array.isArray(context.publicState.completed_rounds)
+    ? context.publicState.completed_rounds
+    : [];
+  const roundScores = Array.isArray(context.publicState.round_scores)
+    ? context.publicState.round_scores
+    : [];
+  const children = Array.isArray(context.privateSetupEvidence.rounds)
+    ? context.privateSetupEvidence.rounds
+    : [];
+
+  if (roundIndex !== 0 || completedRounds.length < 1 || roundScores.length < 1 || children.length !== 2) {
+    throw new Error("Two-game Daily saved intermission state is invalid.");
+  }
+
+  const secondChild = requiredRecord(children[1], "Two-game Daily second child");
+  const secondPublicSetup = requiredRecord(secondChild.public_setup, "Two-game Daily second public setup");
+  const secondInitial = requiredRecord(secondPublicSetup.initial_state, "Two-game Daily second initial state");
+
+  const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+    p_daily_challenge_id: String(context.daily_challenge_id),
+    p_profile_id: profileId,
+    p_expected_revision: Number(context.progress_revision),
+    p_submission_state: context.submissionState,
+    p_public_state: {
+      ...context.publicState,
+      complete: false,
+      round_index: 1,
+      round_count: 2,
+      awaiting_next: false,
+      handoff_pending: context.gameType === "wavelength",
+      active_round: secondInitial,
+      active_reveal: null,
+      score: null,
+    },
+  });
+
+  if (saved.error) {
+    if (saved.error.code === "40001") {
+      return getContext(admin, String(context.daily_challenge_id), profileId);
+    }
+    throw new Error("The two-game Daily could not continue into Game 2.");
+  }
+
+  return getContext(admin, String(context.daily_challenge_id), profileId);
+}
+
+
+const OWNER_AVERAGE_FAN_PREVIEW_IDS = {
+  ufc: "00000000-0000-4000-8000-0000000000a1",
+  football: "00000000-0000-4000-8000-0000000000a2",
+} as const;
+
+function ownerAverageFanPreviewPayload(
+  publication: JsonRecord,
+  sport: "ufc" | "football",
+  day: string,
+  scheduleVersion: string,
+  publicState: JsonRecord,
+  revision: number,
+  officialAttempt: JsonRecord | null = null,
+) {
+  return {
+    available: true,
+    sport,
+    id: OWNER_AVERAGE_FAN_PREVIEW_IDS[sport],
+    central_day: day,
+    schedule_version: scheduleVersion,
+    game_type: "average_fan",
+    setup_key: requiredString(publication.setupKey, "Average Fan preview setup key"),
+    content_version: requiredString(publication.contentVersion, "Average Fan preview content version"),
+    scoring_version: requiredString(publication.scoringVersion, "Average Fan preview scoring version"),
+    fallback_reason: null,
+    public_setup: requiredRecord(publication.publicSetup, "Average Fan preview public setup"),
+    progress_revision: revision,
+    public_state: publicState,
+    reveal_setup: null,
+    official_attempt: officialAttempt,
+    deployment_sha: DEPLOYED_SOURCE_SHA,
+  };
+}
+
+async function gradeOwnerAverageFanPreview(
+  admin: SupabaseClient,
+  profileId: string,
+  publication: JsonRecord,
+  gradingEvidence: JsonRecord,
+  submission: JsonRecord,
+  runtimeScore: number,
+) {
+  const gradingResponse = await admin.rpc("grade_owner_average_fan_daily_preview", {
+    p_profile_id: profileId,
+    p_scoring_version: requiredString(publication.scoringVersion, "Average Fan preview scoring version"),
+    p_submission: submission,
+    p_grading_evidence: gradingEvidence,
+  });
+  if (gradingResponse.error || !Array.isArray(gradingResponse.data) || !gradingResponse.data[0]) {
+    throw new Error("Average Fan owner preview canonical grading failed.");
+  }
+  const grade = requiredRecord(gradingResponse.data[0], "Average Fan owner preview grade");
+  const normalizedScore = Number(grade.normalized_score);
+  if (!Number.isInteger(normalizedScore) || normalizedScore !== runtimeScore) {
+    throw new Error("Average Fan owner preview runtime and canonical grader disagree.");
+  }
+  return {
+    attempt_kind: "owner_preview",
+    native_score: Number(grade.native_score),
+    normalized_score: normalizedScore,
+    completed_at: new Date().toISOString(),
+    content_version: requiredString(publication.contentVersion, "Average Fan preview content version"),
+    scoring_version: requiredString(publication.scoringVersion, "Average Fan preview scoring version"),
+    public_result: requiredRecord(grade.public_result, "Average Fan preview public result"),
+  };
+}
+
+async function ownerAverageFanPreview(
+  admin: SupabaseClient,
+  profileId: string,
+  body: JsonRecord,
+) {
+  if (body.mode !== "owner-preview-get" && body.mode !== "owner-preview-advance") {
+    return null;
+  }
+
+  const sport = body.sport === "football" ? "football" : body.sport === "ufc" ? "ufc" : null;
+  if (!sport) {
+    return safeError(400, "INVALID_SPORT", "Average Fan owner preview sport must be UFC or Football.");
+  }
+  const day = typeof body.day === "string" ? body.day.trim() : "";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) {
+    return safeError(400, "INVALID_PREVIEW_DAY", "Average Fan owner preview day must use YYYY-MM-DD.");
+  }
+
+  const descriptorResponse = await admin.rpc("get_owner_average_fan_daily_preview_descriptor", {
+    p_profile_id: profileId,
+    p_day: day,
+    p_sport: sport,
+  });
+  if (descriptorResponse.error) {
+    return safeError(403, "OWNER_PREVIEW_FORBIDDEN", "This Daily preview is available only to the Octagon HQ owner.");
+  }
+  const descriptor = requiredRecord(descriptorResponse.data, "Average Fan owner preview descriptor");
+  const scheduleVersion = requiredString(descriptor.schedule_version, "Average Fan preview schedule version");
+  const expectedGame = requiredString(descriptor.expected_game, "Average Fan preview expected game");
+  if (expectedGame !== "average_fan") {
+    return safeError(
+      409,
+      "PREVIEW_DAY_NOT_AVERAGE_FAN",
+      "The requested Daily date is not scheduled for Average Fan.",
+      { central_day: day, sport, schedule_version: scheduleVersion, expected_game: expectedGame },
+    );
+  }
+
+  const publicationHistory = await averageFanPublicationHistory(admin, sport, day);
+  const runtime = await loadAverageFanRuntime();
+  const publication = runtime.buildAverageFanDailySetup(
+    sport,
+    day,
+    scheduleVersion,
+    publicationHistory,
+  );
+  const publicSetup = requiredRecord(publication.publicSetup, "Average Fan preview public setup");
+  const initialState = requiredRecord(publicSetup.initial_state, "Average Fan preview initial state");
+  const gradingEvidence = requiredRecord(publication.privateGradingEvidence, "Average Fan preview grading evidence");
+
+  const progressResponse = await admin.rpc("get_owner_average_fan_daily_preview_progress", {
+    p_profile_id: profileId,
+    p_day: day,
+    p_sport: sport,
+    p_initial_state: initialState,
+  });
+  if (progressResponse.error) {
+    throw new Error("Average Fan owner preview progress could not be loaded.");
+  }
+  const progress = requiredRecord(progressResponse.data, "Average Fan owner preview progress");
+  const revision = Number(progress.revision ?? 0);
+  const submissionState = requiredRecord(progress.submission_state, "Average Fan owner preview submission state");
+  const publicState = requiredRecord(progress.public_state, "Average Fan owner preview public state");
+
+  const completedAttempt = async () => {
+    if (publicState.complete !== true) return null;
+    const submission = requiredRecord(
+      submissionState.final_submission,
+      "Average Fan preview completed submission",
+    );
+    return gradeOwnerAverageFanPreview(
+      admin,
+      profileId,
+      publication,
+      gradingEvidence,
+      submission,
+      Number(publicState.final_score),
+    );
+  };
+
+  if (body.mode === "owner-preview-get") {
+    return json(ownerAverageFanPreviewPayload(
+      publication,
+      sport,
+      day,
+      scheduleVersion,
+      publicState,
+      revision,
+      await completedAttempt(),
+    ));
+  }
+
+  if (!Number.isInteger(body.revision) || Number(body.revision) !== revision) {
+    return safeError(409, "STALE_PROGRESS", "Average Fan owner preview progress changed. Reload and continue.");
+  }
+  if (publicState.complete === true) {
+    return json(ownerAverageFanPreviewPayload(
+      publication,
+      sport,
+      day,
+      scheduleVersion,
+      publicState,
+      revision,
+      await completedAttempt(),
+    ));
+  }
+
+  const action = requiredRecord(body.action, "Average Fan preview action");
+  const context: OfficialDailyRuntimeContext = {
+    gameType: "average_fan",
+    setupKey: requiredString(publication.setupKey, "Average Fan preview setup key"),
+    publicSetup,
+    revealSetup: requiredRecord(publication.revealSetup, "Average Fan preview reveal setup"),
+    privateSetupEvidence: requiredRecord(publication.privateSetupEvidence, "Average Fan preview setup evidence"),
+    privateGradingEvidence: gradingEvidence,
+    submissionState,
+    publicState,
+  };
+  const advanced = runtime.advanceAverageFanDailyRuntime(context, action);
+  const savedResponse = await admin.rpc("save_owner_average_fan_daily_preview_progress", {
+    p_profile_id: profileId,
+    p_day: day,
+    p_sport: sport,
+    p_expected_revision: revision,
+    p_submission_state: advanced.submissionState,
+    p_public_state: advanced.publicState,
+  });
+  if (savedResponse.error) {
+    if (savedResponse.error.code === "40001") {
+      return safeError(409, "STALE_PROGRESS", "Average Fan owner preview progress changed. Reload and continue.");
+    }
+    throw new Error("Average Fan owner preview progress could not be saved.");
+  }
+
+  const saved = requiredRecord(savedResponse.data, "Saved Average Fan owner preview progress");
+  const savedRevision = Number(saved.revision);
+  const savedSubmission = requiredRecord(saved.submission_state, "Saved Average Fan preview submission state");
+  const savedPublicState = requiredRecord(saved.public_state, "Saved Average Fan preview public state");
+
+  let officialAttempt: JsonRecord | null = null;
+  if (advanced.complete) {
+    const submission = requiredRecord(savedSubmission.final_submission, "Average Fan preview final submission");
+    officialAttempt = await gradeOwnerAverageFanPreview(
+      admin,
+      profileId,
+      publication,
+      gradingEvidence,
+      submission,
+      Number(savedPublicState.final_score),
+    );
+  }
+
+  return json(ownerAverageFanPreviewPayload(
+    publication,
+    sport,
+    day,
+    scheduleVersion,
+    savedPublicState,
+    savedRevision,
+    officialAttempt,
+  ));
+}
+
+Deno.serve(async (request) => {
+  if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (request.method !== "POST") return safeError(405, "METHOD_NOT_ALLOWED", "Method not allowed.");
+
+  let body: JsonRecord = {};
+  try { body = asRecord(await request.json()) ?? {}; } catch { /* empty input */ }
+  if (body.mode === "deployment-info") return json({ deployment_sha: DEPLOYED_SOURCE_SHA });
+
+  const url = Deno.env.get("SUPABASE_URL");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SECRET_KEY");
+  if (!url || !anonKey || !serviceKey) {
+    return safeError(503, "DAILY_RUNTIME_NOT_CONFIGURED", "The official daily runtime is not configured.");
+  }
+
+  const admin = createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  try {
+    if (body.mode === "scheduled") {
+      const schedulerToken = request.headers.get("x-octagon-scheduler-token") ?? "";
+      const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
+      if (authorized.error || authorized.data !== true) {
+        return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled daily materialization authorization required.");
+      }
+
+      const scheduledSport = body.sport == null ? "ufc" : body.sport;
+      if (scheduledSport === "nba") {
+        if (!NBA_DAILY_EDGE_RELEASE_READY) {
+          return safeError(503, "NBA_DAILY_NOT_LAUNCHED", "NBA scheduled Daily is gated until release verification.");
+        }
+        const materialized = await materializeNbaToday(admin);
+        return json({ status: materialized.created ? "materialized" : "already_materialized",
+          sport: "nba", ...materialized, deployment_sha: DEPLOYED_SOURCE_SHA });
+      }
+      if (scheduledSport !== "ufc" && scheduledSport !== "football") {
+        return safeError(400, "INVALID_SPORT", "Scheduled daily materialization sport must be UFC or Football.");
+      }
+      if (scheduledSport === "football") {
+        const maintained = await admin.rpc("run_football_weekly_auction_maintenance", {});
+        if (maintained.error) {
+          throw new Error("Football Weekly Auction scheduled maintenance failed.");
+        }
+      }
+      // An already published normal board needs only an authoritative ID
+      // lookup. Re-running old cutover SQL every five minutes compounds CPU
+      // pressure across UFC and Football; unpublished boards still publish.
+      const materialized = await resolveInteractiveDaily(admin, scheduledSport, "get-today");
+
+      // Prepublish tomorrow's immutable board before the Central midnight rollover.
+      // The +30 minute window accommodates DST without assuming a UTC offset.
+      const now = new Date();
+      const soon = new Date(now.getTime() + 30 * 60 * 1000);
+      const centralDay = (date: Date) => {
+        const parts = new Intl.DateTimeFormat("en-US", {
+          timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
+        }).formatToParts(date);
+        const value = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+        return `${value("year")}-${value("month")}-${value("day")}`;
+      };
+      let nextDay: { central_day: string; created: boolean } | null = null;
+      if (centralDay(now) !== centralDay(soon)) {
+        const next = scheduledSport === "football"
+          ? await materializeFootballToday(admin, soon.toISOString())
+          : await materializeToday(admin, soon.toISOString());
+        nextDay = { central_day: next.centralDay, created: next.created };
+      }
+      return json({
+        status: materialized.created ? "materialized" : "already_materialized",
+        sport: scheduledSport,
+        ...materialized,
+        next_day: nextDay,
+        deployment_sha: DEPLOYED_SOURCE_SHA,
+      });
+    }
+
+    const authorization = request.headers.get("authorization") ?? "";
+    const token = authorization.replace(/^Bearer\s+/i, "");
+    const authenticated = await admin.auth.getUser(token);
+    if (authenticated.error || !authenticated.data.user) {
+      return safeError(401, "SIGN_IN_REQUIRED", "Sign in required.");
+    }
+    const profileId = authenticated.data.user.id;
+    const userClient = createClient(url, anonKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+
+    if (body.sport === "nba") {
+      return handleNbaDaily(admin, userClient, profileId, body);
+    }
+
+    const ownerPreviewResponse = await ownerAverageFanPreview(admin, profileId, body);
+    if (ownerPreviewResponse) return ownerPreviewResponse;
+
+    const averageFanFastResponse = await advanceExistingAverageFan(
+      admin,
+      userClient,
+      profileId,
+      body,
+      body.sport === "football" ? "football" : "ufc",
+    );
+    if (averageFanFastResponse) return averageFanFastResponse;
+
+    if (body.sport === "football") {
+      // Daily can load immediately, irrespective of Weekly Auction participation.
+      const materialized = await resolveInteractiveDaily(admin, "football", body.mode);
+      let context = await getContext(admin, materialized.dailyChallengeId, profileId);
+      context = await finalizePending(userClient, admin, context, profileId);
+      context = await continueTwoGameWithoutIntermission(admin, context, profileId);
+
+      // Preserve independently earned Weekly Auction results; no gate here.
+
+      if (body.mode === "get-today" || body.mode === undefined) {
+        return json(footballPublicPayload(context));
+      }
+      if (body.mode !== "advance") {
+        return safeError(400, "INVALID_MODE", "Unsupported Football Today’s Challenge runtime mode.");
+      }
+      const clientActionId = requestedClientActionId(body);
+      if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) {
+        return json(footballPublicPayload(context));
+      }
+      if (asRecord(context.official_attempt)) {
+        return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "The official Football first attempt is already complete.");
+      }
+
+      const requestedDailyId = typeof body.daily_challenge_id === "string" ? body.daily_challenge_id : materialized.dailyChallengeId;
+      if (requestedDailyId !== materialized.dailyChallengeId) {
+        return safeError(409, "DAILY_IDENTITY_CHANGED", "Today’s Football challenge identity has changed.");
+      }
+      if (!Number.isInteger(body.revision) || Number(body.revision) !== Number(context.progress_revision)) {
+        return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state.");
+      }
+
+      const action = requiredRecord(body.action, "Football daily action");
+      // Game 2 is already saved; avoid loading the full rules engine just to
+      // acknowledge its persisted handoff (a source of Edge CPU-limit errors).
+      let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, action);
+      if (!advanced) {
+        const isolatedFootballRuntime = isDailyCombo(context) ? null : await loadIsolatedDailyAction("football", context.gameType);
+        const advanceFootballRuntime = isolatedFootballRuntime ?? (context.gameType === "average_fan"
+          ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
+          : context.gameType === "hit_the_number" && !isDailyCombo(context)
+            ? (await loadFootballHitNumberAdvanceRuntime()).advanceFootballHitNumberDailyRuntime
+            : context.gameType === "wavelength" && !isDailyCombo(context)
+              ? (await loadFootballWavelengthAdvanceRuntime()).advanceFootballWavelengthDailyRuntime
+            : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
+              ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
+              : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime);
+        context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
+        advanced = isDailyCombo(context)
+          ? advanceDailyCombo(context, action, advanceFootballRuntime)
+          : advanceFootballRuntime(context, action);
+      }
+      const history = footballActionHistory(context);
+      const nextSubmissionState = submissionStateWithClientActionId({
+        ...advanced.submissionState,
+        action_history: [...history, action],
+      }, dailyClientActionIds(context), clientActionId);
+      const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+        p_daily_challenge_id: materialized.dailyChallengeId,
+        p_profile_id: profileId,
+        p_expected_revision: Number(context.progress_revision),
+        p_submission_state: nextSubmissionState,
+        p_public_state: advanced.publicState,
+      });
+      if (saved.error) {
+        if (saved.error.code === "40001") {
+          return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state.");
+        }
+        throw new Error("The official Football daily progress could not be saved.");
+      }
+
+      context = advanced.complete
+        ? await finalizePending(
+            userClient,
+            admin,
+            await getContext(admin, materialized.dailyChallengeId, profileId),
+            profileId,
+          )
+        : savedIntermediateContext(context, saved.data, nextSubmissionState);
+      return json(footballPublicPayload(context));
+    }
+
+    const materialized = await resolveInteractiveDaily(admin, "ufc", body.mode);
+    let context = await getContext(admin, materialized.dailyChallengeId, profileId);
+    context = await finalizePending(userClient, admin, context, profileId);
+    context = await continueTwoGameWithoutIntermission(admin, context, profileId);
+
+    if (body.mode === "get-today" || body.mode === undefined) {
+      return json(publicPayload(context));
+    }
+    if (body.mode !== "advance") {
+      return safeError(400, "INVALID_MODE", "Unsupported official daily runtime mode.");
+    }
+    const clientActionId = requestedClientActionId(body);
+    if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) {
+      return json(publicPayload(context));
+    }
+    if (asRecord(context.official_attempt)) {
+      return safeError(409, "OFFICIAL_ATTEMPT_COMPLETE", "The official first attempt is already complete.");
+    }
+
+    const requestedDailyId = typeof body.daily_challenge_id === "string" ? body.daily_challenge_id : materialized.dailyChallengeId;
+    if (requestedDailyId !== materialized.dailyChallengeId) {
+      return safeError(409, "DAILY_IDENTITY_CHANGED", "Today’s official challenge identity has changed.");
+    }
+    if (!Number.isInteger(body.revision) || Number(body.revision) !== Number(context.progress_revision)) {
+      return safeError(409, "STALE_PROGRESS", "Official daily progress changed on another device. Refresh and continue from the latest state.");
+    }
+
+    let advanced: ReturnType<DailyAdvanceRuntime> | null = advanceWavelengthHandoff(context, body.action);
+    if (!advanced) {
+      const isolatedUfcRuntime = isDailyCombo(context) ? null : await loadIsolatedDailyAction("ufc", context.gameType);
+      const advanceUfcRuntime = isolatedUfcRuntime ?? (context.gameType === "average_fan"
+        ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
+        : context.gameType === "blind_resume" && context.setupKey.startsWith("blind-resume-v3:")
+          ? advancePersistedBlindResumeV3
+          : context.gameType === "millionaire" && !isTwoGameDaily(context) && !isDailyCombo(context)
+            ? (await loadMillionaireAdvanceRuntime()).advanceMillionaireDailyRuntime
+            : (await loadUfcRuntime()).advanceOfficialDailyRuntime);
+      advanced = isDailyCombo(context)
+        ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
+        : advanceUfcRuntime(context, body.action);
+    }
+
+    // Keep the full choice sequence for new UFC Millionaire replays. Older
+    // in-progress runs cannot acquire a truthful history retroactively.
+    const priorMillionaireActions = context.gameType === "millionaire"
+      ? footballActionHistory(context)
+      : [];
+    const canRecordMillionaireHistory = context.gameType === "millionaire"
+      && (priorMillionaireActions.length > 0 || Number(context.progress_revision) === 0);
+    const persistedUfcSubmission = canRecordMillionaireHistory
+      ? {
+          ...advanced.submissionState,
+          action_history: [...priorMillionaireActions, requiredRecord(body.action, "UFC Millionaire action")],
+        }
+      : advanced.submissionState;
+    const nextSubmissionState = submissionStateWithClientActionId(
+      persistedUfcSubmission,
+      dailyClientActionIds(context),
+      clientActionId,
+    );
+    const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+      p_daily_challenge_id: materialized.dailyChallengeId,
+      p_profile_id: profileId,
+      p_expected_revision: Number(context.progress_revision),
+      p_submission_state: nextSubmissionState,
+      p_public_state: advanced.publicState,
+    });
+    if (saved.error) {
+      if (saved.error.code === "40001") {
+        return safeError(409, "STALE_PROGRESS", "Official daily progress changed on another device. Refresh and continue from the latest state.");
+      }
+      throw new Error("The official daily progress could not be saved.");
+    }
+
+    context = advanced.complete
+      ? await finalizePending(
+          userClient,
+          admin,
+          await getContext(admin, materialized.dailyChallengeId, profileId),
+          profileId,
+        )
+      : savedIntermediateContext(context, saved.data, nextSubmissionState);
+    return json(publicPayload(context));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "The official daily runtime failed safely.";
+    const status = /must|already|not on|unavailable|full|complete|unsupported|invalid|integer|array|object/i.test(message) ? 400 : 503;
+    return safeError(status, status === 400 ? "INVALID_DAILY_ACTION" : "DAILY_RUNTIME_FAILED", message);
+  }
+});

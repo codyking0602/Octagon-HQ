@@ -1,0 +1,178 @@
+name: Sync Canonical What's New Models
+
+on:
+  workflow_run:
+    workflows:
+      - Deploy Cloudflare Frontend
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: octagon-hq-whats-new-models
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OCTAGON_PRODUCTION_ORIGIN: https://the.hq-app.workers.dev
+
+    steps:
+      - name: Resolve exact live production source
+        id: guard
+        uses: actions/github-script@v7
+        env:
+          OCTAGON_PRODUCTION_ORIGIN: ${{ env.OCTAGON_PRODUCTION_ORIGIN }}
+        with:
+          script: |
+            const workflowRun = context.payload.workflow_run ?? null;
+            if (workflowRun && (workflowRun.head_branch !== "main" || workflowRun.event !== "push")) {
+              core.setOutput("should_sync", "false");
+              core.info(`Skipping non-main or non-push frontend run ${workflowRun.id}.`);
+              return;
+            }
+
+            const markerResponse = await fetch(
+              `${process.env.OCTAGON_PRODUCTION_ORIGIN}/deployment.json?reconcile=${Date.now()}`,
+              { headers: { "Cache-Control": "no-cache" } },
+            );
+            if (!markerResponse.ok) {
+              core.setFailed(`Live deployment marker returned HTTP ${markerResponse.status}.`);
+              return;
+            }
+
+            const marker = await markerResponse.json();
+            const liveSha = typeof marker.sha === "string" ? marker.sha.toLowerCase() : "";
+            if (!/^[0-9a-f]{40}$/.test(liveSha)) {
+              core.setFailed(`Live deployment marker did not contain an exact source SHA.`);
+              return;
+            }
+
+            const { data: main } = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: "main",
+            });
+            const mainSha = main.commit.sha.toLowerCase();
+            const { data: comparison } = await github.rest.repos.compareCommitsWithBasehead({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              basehead: `${liveSha}...${mainSha}`,
+            });
+            const liveBelongsToMain = comparison.status === "ahead" || comparison.status === "identical";
+            if (!liveBelongsToMain || comparison.merge_base_commit.sha.toLowerCase() !== liveSha) {
+              core.setFailed(`Live deployment ${liveSha} is not current main or an ancestor of current main ${mainSha}.`);
+              return;
+            }
+
+            if (workflowRun?.head_sha && workflowRun.head_sha.toLowerCase() !== liveSha) {
+              core.info(`Frontend callback ${workflowRun.head_sha} is no longer live; reconciling actual live source ${liveSha}.`);
+            }
+
+            core.setOutput("should_sync", "true");
+            core.setOutput("source_sha", liveSha);
+            core.exportVariable("SOURCE_SHA", liveSha);
+            core.info(`Synchronizing canonical models from exact live source ${liveSha}.`);
+
+      - name: Check out exact live source
+        if: steps.guard.outputs.should_sync == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.guard.outputs.source_sha }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checkout and live deployment marker
+        if: steps.guard.outputs.should_sync == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+
+          marker_file="$RUNNER_TEMP/octagon-live-deployment.json"
+          curl --fail --silent --show-error \
+            --header "Cache-Control: no-cache" \
+            "${OCTAGON_PRODUCTION_ORIGIN}/deployment.json?expected=${SOURCE_SHA}" \
+            --output "$marker_file"
+          node --input-type=module - "$marker_file" "$SOURCE_SHA" <<'NODE'
+          import fs from "node:fs";
+          const marker = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          const expectedSha = process.argv[3];
+          if (marker.sha !== expectedSha) {
+            throw new Error(`Expected live deployment ${expectedSha}, received ${marker.sha ?? "no SHA"}.`);
+          }
+          NODE
+
+      - name: Set up Node
+        if: steps.guard.outputs.should_sync == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install synchronization dependencies
+        if: steps.guard.outputs.should_sync == 'true'
+        run: npm install --silent
+
+      - name: Synchronize canonical production models
+        if: steps.guard.outputs.should_sync == 'true'
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          RANKING_SYNC_MAX_ATTEMPTS: 20
+          RANKING_SYNC_RETRY_DELAY_MS: 15000
+          ENGAGEMENT_SYNC_MAX_ATTEMPTS: 20
+          ENGAGEMENT_SYNC_RETRY_DELAY_MS: 15000
+        run: |
+          set -euo pipefail
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing synchronization secret::$name is missing or empty."
+              exit 1
+            fi
+          done
+
+          api_keys_file="$RUNNER_TEMP/supabase-api-keys.json"
+          trap 'rm -f "$api_keys_file"' EXIT
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
+            --output "$api_keys_file"
+
+          service_role_key=$(node - "$api_keys_file" <<'NODE'
+          const fs = require("fs");
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          const serviceKey = keys.find((key) => key.type === "secret" && key.api_key && key.disabled !== true)
+            ?? keys.find((key) => key.type === "legacy" && /service[_-]?role/i.test(key.name ?? "") && key.api_key);
+          if (!serviceKey?.api_key) throw new Error("No production service-role-capable Supabase key was returned.");
+          process.stdout.write(serviceKey.api_key);
+          NODE
+          )
+          echo "::add-mask::$service_role_key"
+
+          SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co" \
+          SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
+          SOURCE_SHA="$SOURCE_SHA" \
+            node scripts/sync-ranking-whats-new.mjs
+
+          SUPABASE_URL="https://${SUPABASE_PROJECT_ID}.supabase.co" \
+          SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
+          SOURCE_SHA="$SOURCE_SHA" \
+            node scripts/sync-engagement-whats-new.mjs
+
+          unset service_role_key

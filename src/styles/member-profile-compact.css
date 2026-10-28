@@ -1,0 +1,308 @@
+.member-directory-page,
+.member-profile-page {
+  gap: 10px;
+}
+
+.member-profile-hero {
+  gap: 10px;
+  padding: 12px;
+}
+
+.member-profile-hero__identity {
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.member-profile-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+}
+
+.member-profile-hero h1 {
+  margin: 3px 0 5px;
+  font-size: clamp(28px, 8vw, 38px);
+}
+
+.member-profile-role {
+  font-size: 7px;
+  line-height: 1.35;
+}
+
+.member-profile-favorite-card {
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 9px;
+  padding: 8px;
+  border-radius: 13px;
+}
+
+.member-profile-favorite-photo {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+}
+
+.member-profile-favorite-card .member-profile-favorite strong {
+  font-size: 14px;
+}
+
+.member-profile-favorite-control {
+  gap: 5px;
+}
+
+.member-profile-favorite-control select {
+  min-height: 42px;
+  border-radius: 11px;
+  padding: 0 10px;
+}
+
+/* Keep avatar editing available without repeating the same large photo card. */
+.member-profile-page .member-avatar-editor {
+  display: block;
+  padding: 0 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.member-profile-page .member-avatar-editor__preview,
+.member-profile-page .member-avatar-editor__copy > .eyebrow,
+.member-profile-page .member-avatar-editor__copy > h2,
+.member-profile-page .member-avatar-editor__copy > p {
+  display: none;
+}
+
+.member-profile-page .member-avatar-editor__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  margin: 0;
+}
+
+.member-profile-page .member-avatar-editor__actions button {
+  min-height: 40px;
+  border-radius: 11px;
+}
+
+.member-profile-page .member-avatar-editor__copy > small {
+  margin: 5px 2px 0;
+}
+
+.member-profile-stat-grid {
+  gap: 7px;
+}
+
+.member-profile-stat-grid article {
+  min-height: 82px;
+  gap: 3px;
+  padding: 10px;
+}
+
+.member-profile-stat-grid strong {
+  font-size: 25px;
+}
+
+.member-profile-stat-grid span {
+  font-size: 8px;
+}
+
+.member-profile-data-section,
+.member-profile-challenges {
+  gap: 9px;
+  padding: 11px;
+}
+
+.member-profile-data-section .section-heading h2,
+.member-profile-challenges h2 {
+  font-size: 19px;
+}
+
+.member-profile-metric-grid {
+  gap: 7px;
+}
+
+.member-profile-metric-grid > div {
+  min-height: 62px;
+  gap: 3px;
+  padding: 8px;
+  border-radius: 11px;
+}
+
+.member-profile-metric-grid strong {
+  font-size: 21px;
+}
+
+.member-profile-metric-grid span {
+  font-size: 7px;
+}
+
+.member-profile-badge-grid {
+  gap: 7px;
+}
+
+.member-profile-badge-grid article {
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 8px;
+  min-height: 58px;
+  padding: 8px;
+  border-radius: 11px;
+}
+
+.member-profile-badge-grid i {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.member-profile-badge-grid strong {
+  font-size: 10px;
+}
+
+.member-profile-badge-grid span {
+  margin-top: 2px;
+  font-size: 7.5px;
+  line-height: 1.25;
+}
+
+.member-profile-badge-grid article.is-locked {
+  opacity: .62;
+}
+
+.member-profile-activity-list {
+  gap: 6px;
+}
+
+.member-profile-activity-list article {
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 11px;
+}
+
+.member-profile-activity-list i {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  font-size: 15px;
+}
+
+.member-profile-activity-list strong {
+  font-size: 11px;
+}
+
+.member-profile-activity-list span {
+  margin-top: 2px;
+  font-size: 8px;
+}
+
+.member-challenge-metrics {
+  gap: 7px;
+}
+
+.member-challenge-metrics > div {
+  min-height: 58px;
+  padding: 8px 5px;
+  border-radius: 11px;
+}
+
+.member-challenge-metrics strong {
+  font-size: 17px;
+}
+
+/* Empty profiles need one honest state, not four large zero cards plus another box. */
+.member-profile-challenges:has(.member-profile-empty) .member-challenge-metrics {
+  display: none;
+}
+
+.member-profile-empty {
+  padding: 10px;
+  border-radius: 11px;
+}
+
+.member-profile-empty strong {
+  font-size: 12px;
+}
+
+.member-profile-empty p {
+  margin-top: 3px;
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.member-recent-challenges {
+  gap: 6px;
+}
+
+.member-recent-challenges article {
+  gap: 7px;
+  padding: 8px;
+  border-radius: 11px;
+}
+
+.member-recent-challenges__identity {
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.member-recent-challenges__identity i {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+}
+
+.member-directory-card {
+  gap: 9px;
+  padding: 11px;
+}
+
+.member-directory-card__identity {
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.member-directory-avatar {
+  width: 52px;
+  height: 52px;
+}
+
+.member-directory-card__identity h2 {
+  font-size: 23px;
+}
+
+.member-favorite-row {
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 8px;
+  padding: 7px;
+  border-radius: 12px;
+}
+
+.member-favorite-row img,
+.member-favorite-row > i {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.member-card-stats {
+  gap: 7px;
+}
+
+.member-card-stats > div {
+  padding: 8px;
+  border-radius: 10px;
+}
+
+@media (max-width: 410px) {
+  .member-profile-badge-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .member-profile-activity-list article {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+  }
+
+  .member-profile-activity-list small {
+    grid-column: auto;
+  }
+}

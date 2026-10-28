@@ -1,0 +1,66 @@
+.champ-board {
+  --champ-accent: var(--football-brand-blue, #8ebce6);
+  --champ-accent-rgb: 142,188,230;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.champ-board[data-sport="ufc"] { --champ-accent: var(--ufc-red-strong, #f01717); --champ-accent-rgb: 210,10,10; }
+.champ-board[data-sport="mlb"] { --champ-accent: var(--mlb-green-strong,#63a884); --champ-accent-rgb: 47,133,95; }
+.champ-board__top, .champ-board__title, .champ-board__weekly header {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.champ-board__top a { color: var(--champ-accent); text-decoration: none; font-size: 12px; font-weight: 850; }
+.champ-board__top span, .champ-board__weekly header { font-size: 10px; letter-spacing: .08em; color: var(--text-muted); font-weight: 850; }
+.champ-board__title { justify-content: flex-start; }
+.champ-board__title > span { font-size: 33px; line-height: 1; }
+.champ-board__title h1 { font-size: clamp(23px, 6vw, 31px); margin: 0; letter-spacing: -.045em; }
+.champ-board__title p { font-size: 12px; color: var(--text-secondary); margin: 3px 0 0; }
+.champ-board__tabs { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+.champ-board__tabs button { padding: 10px 4px; border: 0; border-radius: 9px; color: var(--text-secondary); font-weight: 800; font-size: 12px; background: transparent; }
+.champ-board__tabs button.is-active { color: var(--champ-accent); background: rgba(var(--champ-accent-rgb), .12); box-shadow: inset 0 0 0 1px rgba(var(--champ-accent-rgb), .3); }
+.champ-board__standings, .champ-board__weekly, .champ-board__explain {
+  overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 15px;
+}
+.champ-board__table-heading { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 12px 15px; color: var(--text-muted); font-size: 10px; letter-spacing: .08em; font-weight: 850; border-bottom: 1px solid var(--border); }
+.champ-board__member { border-bottom: 1px solid rgba(255,255,255,.065); min-width: 0; }
+.champ-board__member:last-child { border-bottom: none; }
+.champ-board__member.is-you { background: rgba(var(--champ-accent-rgb), .08); }
+.champ-board__member-row { display: flex; gap: 9px; align-items: center; width: 100%; padding: 13px 12px; color: inherit; background: transparent; border: 0; font: inherit; text-align: left; }
+button.champ-board__member-row { cursor: pointer; }
+button.champ-board__member-row:focus-visible { outline: 2px solid var(--champ-accent); outline-offset: -2px; }
+.champ-board__rank { width: 37px; flex: 0 0 37px; color: var(--champ-accent); font-size: 14px; }
+.champ-board__identity { display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1; }
+.champ-board__identity strong { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; }
+.champ-board__identity small { color: var(--champ-accent); font-size: 9px; font-weight: 900; }
+.champ-board__value { flex: 0 0 auto; font-size: 19px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.champ-board__chevron { font-size: 17px; color: var(--text-muted); width: 12px; }
+.champ-board__breakdown { display: grid; gap: 11px; padding: 0 13px 14px 58px; }
+.champ-board__metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+.champ-board__metrics span { display: grid; gap: 5px; padding: 9px; border-radius: 9px; border: 1px solid var(--border); font-size: 10px; color: var(--text-muted); }
+.champ-board__metrics b { color: var(--text-primary); font-size: 16px; font-variant-numeric: tabular-nums; }
+.champ-board__breakdown p, .champ-board__weekly > p { font-size: 11px; color: var(--text-secondary); margin: 0; }
+.champ-board__events { max-height: 360px; overflow: auto; }
+.champ-board__events h3 { font-size: 12px; margin: 0 0 7px; }
+.champ-board__events > div { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.champ-board__events > div > span { display: grid; gap: 3px; min-width: 0; flex: 1; }
+.champ-board__events > div strong { font-size: 11px; }
+.champ-board__events > div small { font-size: 9px; color: var(--text-muted); }
+.champ-board__events > div b { font-size: 11px; color: var(--champ-accent); }
+.champ-board__explain { padding: 14px; display: grid; gap: 7px; }
+.champ-board__explain strong { font-size: 12px; }
+.champ-board__explain p { color: var(--text-secondary); font-size: 11px; line-height: 1.5; margin: 0; }
+.champ-board__weekly { padding: 14px; display: grid; gap: 11px; border-color: rgba(var(--champ-accent-rgb), .38); background: radial-gradient(circle at 100% 0%,rgba(var(--champ-accent-rgb),.12),transparent 50%),var(--surface); }
+.champ-board__weekly header span:first-child { color: var(--champ-accent); }
+.champ-board__weekly-winner { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.champ-board__weekly-winner > span { font-size: 26px; }
+.champ-board__weekly-winner > strong { flex: 1; font-size: 20px; }
+.champ-board__weekly-winner b { font-size: 11px; color: var(--champ-accent); }
+.champ-board__weekly-toggle { background: transparent; color: var(--champ-accent); border: 0; text-align: left; font-size: 12px; font-weight: 900; padding: 5px 0; }
+.champ-board__archive { display: grid; gap: 4px; }
+.champ-board__archive-weeks { display: flex; gap: 5px; overflow-x: auto; padding: 2px 0 7px; }
+.champ-board__archive-weeks button { flex: none; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-raised); color: var(--text-secondary); font-size: 10px; padding: 8px; }
+.champ-board__archive-weeks button.is-active { border-color: var(--champ-accent); color: var(--champ-accent); }
+.champ-board__week-row { display: flex; justify-content: space-between; padding: 9px 4px; font-size: 12px; border-bottom: 1px solid var(--border); }
+.champ-board__notice { border: 1px solid var(--border); border-radius: 12px; padding: 18px; color: var(--text-secondary); }
+@media(max-width:390px) { .champ-board__breakdown { padding-left: 12px; } .champ-board__weekly-winner { flex-wrap: wrap; } }

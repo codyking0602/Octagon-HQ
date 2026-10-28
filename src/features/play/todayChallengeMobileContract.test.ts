@@ -1,0 +1,65 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+
+const gameCss = readFileSync("src/styles/today-challenge.css", "utf8");
+const hubCss = readFileSync("src/styles/today-challenge-hub.css", "utf8");
+const hubPage = readFileSync("src/features/play/TodayChallengeHubPage.tsx", "utf8");
+const playV2 = readFileSync("src/features/play/PlayV2Page.tsx", "utf8");
+const landingPresentation = readFileSync("src/features/play/PlayLandingPresentation.tsx", "utf8");
+const playRegistry = readFileSync("src/features/play/playRegistry.ts", "utf8");
+
+describe("Today’s Challenge 390×844 presentation contract", () => {
+  it("keeps the official game and hub containers shrinkable without horizontal overflow", () => {
+    expect(gameCss).toContain(".official-daily-page");
+    expect(gameCss).toContain("grid-template-columns: repeat(3, minmax(0, 1fr))");
+    expect(hubCss).toContain("min-width: 0");
+    expect(hubCss).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
+    expect(`${gameCss}\n${hubCss}`).not.toMatch(/^\s*min-width:\s*(?:4\d\d|[5-9]\d\d|\d{4,})px/m);
+  });
+
+  it("keeps the swipe frame content-sized instead of forcing an empty 320px card", () => {
+    expect(hubCss).toContain(".today-hub-card,\n.today-hub-leaderboard {\n  min-height: 0;");
+    expect(hubCss).toContain("min-height: 96px");
+    expect(hubCss).toContain("grid-template-columns: 30px minmax(0, 1fr) auto");
+    expect(hubCss).not.toMatch(/\.today-hub-leaderboard__rows\s*\{[^}]*overflow-y:\s*auto/s);
+    expect(hubCss).not.toMatch(/\.today-hub-leaderboard__rows\s*\{[^}]*max-height:/s);
+    expect(hubCss).not.toMatch(/\.today-hub-card,\s*\n\.today-hub-leaderboard\s*\{[^}]*min-height:\s*(?:3\d{2}|[4-9]\d{2})px/s);
+  });
+
+  it("defines the phone layout used by all five deterministic official fixtures", () => {
+    expect(gameCss).toMatch(/@media\s*\(max-width:\s*390px\)/);
+    expect(hubCss).toMatch(/@media\s*\(max-width:\s*520px\)/);
+    for (const selector of [
+      ".official-daily-find-grid",
+      ".official-resume-actions",
+      ".official-wavelength-control",
+      ".official-rank-board",
+      ".official-keep-board",
+    ]) {
+      expect(gameCss).toContain(selector);
+    }
+    expect(hubCss).toContain(".today-hub-card__body");
+    expect(hubCss).toContain("flex-direction: column");
+  });
+
+  it("keeps the approved UFC Casual shelf compact without removing Daily game owners", () => {
+    expect(hubPage).toContain('<PlayV2Page sport="ufc" />');
+    expect(playV2).toContain('<DailyCompact sport={sport} profileId={profileId} />');
+    expect(playV2).toContain('<MatchupsCompact sport={sport} />');
+    expect(playV2).toContain('<GameRoom sport={sport} />');
+    expect(playV2).toContain('playLandingGameIds(sport)');
+    expect(hubPage).not.toContain('<ChallengeCenter />');
+    expect(landingPresentation).toContain('"wheel-ufc"');
+    expect(landingPresentation).toContain('"auction"');
+    expect(landingPresentation).toContain('"find-leader"');
+    expect(landingPresentation).toContain('"who-am-i"');
+    expect(landingPresentation).not.toContain('"wavelength"');
+    expect(landingPresentation).not.toContain('"blind-resume"');
+    expect(landingPresentation).not.toContain('"hit-the-number"');
+    expect(playRegistry).toContain('route: "/play/find-leader"');
+    expect(playRegistry).toContain('route: "/play/wavelength"');
+    expect(playRegistry).toContain('route: "/play/blind-resume"');
+    expect(playRegistry).toContain('route: "/play/hit-the-number"');
+    expect(playRegistry).toContain('route: "/play/auction"');
+  });
+});

@@ -1,0 +1,464 @@
+.picks-status--locked {
+  border-color: rgba(255, 255, 255, .22);
+  color: var(--text-secondary);
+}
+
+.picks-status--awaiting-results {
+  border-color: rgba(255, 255, 255, .38);
+  color: var(--text-primary);
+}
+
+.picks-progress__track.is-complete span {
+  background: var(--text-primary);
+}
+
+.picks-scoring-tiers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.picks-scoring-tiers > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.picks-scoring-tiers b,
+.picks-scoring-tiers em {
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+
+.picks-scoring-tiers b {
+  color: var(--text-secondary);
+}
+
+.picks-scoring-tiers em {
+  color: var(--text-primary);
+  font-style: normal;
+}
+
+.picks-card-list {
+  gap: 10px;
+}
+
+.pick-bout-card {
+  gap: 10px;
+  padding: 13px 14px;
+}
+
+.pick-bout-card__choices {
+  gap: 6px;
+}
+
+.pick-choice {
+  gap: 5px;
+  min-height: 78px;
+  padding: 9px 10px;
+}
+
+.pick-choice > span {
+  font-size: 13px;
+}
+
+.pick-choice.is-read-only,
+.pick-choice.is-read-only:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.pick-choice.is-read-only:not(.is-selected) {
+  border-color: rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .018);
+}
+
+.pick-choice.is-read-only:not(.is-selected) .pick-fighter-thumbnail {
+  opacity: .7;
+}
+
+.pick-choice.is-read-only:not(.is-selected) > span,
+.pick-choice.is-read-only:not(.is-selected) > small,
+.pick-choice.is-read-only:not(.is-selected) > em {
+  color: var(--text-muted);
+}
+
+.pick-choice.is-read-only.is-selected {
+  box-shadow: inset 3px 0 0 var(--ufc-red);
+}
+
+.pick-lock-readonly {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .035);
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.pick-bout-card__official {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.pick-bout-card__official span,
+.picks-group-pick-reveal__heading span,
+.picks-group-pick-reveal__heading small {
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.pick-bout-card__official span,
+.picks-group-pick-reveal__heading small {
+  color: var(--text-muted);
+}
+
+.pick-bout-card__official strong {
+  color: var(--text-primary);
+  font-size: 12px;
+  text-align: right;
+}
+
+.picks-group-pick-reveal {
+  display: grid;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.picks-group-pick-reveal__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picks-group-pick-reveal__heading span {
+  color: var(--text-primary);
+}
+
+.picks-group-pick-reveal__split {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.picks-group-pick-reveal__split > button {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .02);
+  color: var(--text-primary);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.picks-group-pick-reveal__split > button:hover,
+.picks-group-pick-reveal__split > button:focus-visible {
+  border-color: rgba(255, 255, 255, .24);
+  background: rgba(255, 255, 255, .045);
+}
+
+.picks-group-pick-reveal__split > button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.picks-group-pick-reveal__split > button.is-selected {
+  border-color: rgba(210, 10, 10, .68);
+  background: rgba(210, 10, 10, .09);
+  box-shadow: inset 0 0 0 1px rgba(210, 10, 10, .16);
+}
+
+.picks-group-pick-reveal__split > button:disabled {
+  cursor: default;
+  opacity: .5;
+}
+
+.picks-group-pick-reveal__split span {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picks-group-pick-reveal__split strong {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.picks-group-pick-reveal__detail {
+  display: grid;
+  gap: 6px;
+  padding: 8px 9px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .018);
+}
+
+.picks-group-pick-reveal__detail > span {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.picks-group-pick-reveal__detail > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.picks-group-pick-reveal__detail strong {
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .055);
+  color: var(--text-secondary);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .035em;
+}
+
+.picks-group-pick-reveal__detail strong.is-current-user {
+  background: rgba(210, 10, 10, .13);
+  color: var(--text-primary);
+  box-shadow: inset 2px 0 0 var(--ufc-red);
+}
+
+/* Locked and live fight cards keep every detail while using a denser event-night layout. */
+.pick-bout-card:has(.pick-choice.is-read-only) {
+  gap: 8px;
+  padding: 10px 11px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-bout-card__meta {
+  gap: 1px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-bout-card__choices {
+  grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr);
+  gap: 4px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  align-content: center;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 2px;
+  min-height: 58px;
+  padding: 7px 8px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-fighter-thumbnail,
+.pick-bout-card.is-main-event:has(.pick-choice.is-read-only) .pick-fighter-thumbnail {
+  grid-column: 1;
+  grid-row: 1 / 4;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice > span {
+  display: block;
+  grid-column: 2;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.08;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-line-clamp: unset;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice > small,
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice > em {
+  grid-column: 2;
+  overflow: hidden;
+  font-size: 6px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-choice > em {
+  width: fit-content;
+  margin: 0;
+  padding: 3px 5px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-bout-card__official {
+  min-height: 31px;
+  padding: 6px 8px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-bout-card__official strong {
+  font-size: 10px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .pick-lock-readonly {
+  min-height: 25px;
+  padding: 0 8px;
+  font-size: 6px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .main-event-spotlight-trigger {
+  min-height: 46px;
+  padding: 9px 11px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .main-event-spotlight-trigger strong {
+  font-size: 12px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal {
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split {
+  gap: 4px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split > button {
+  min-height: 36px;
+  padding: 5px 6px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__split strong {
+  font-size: 14px;
+}
+
+.pick-bout-card:has(.pick-choice.is-read-only) .picks-group-pick-reveal__detail {
+  gap: 5px;
+  padding: 7px 8px;
+}
+
+.picks-recap-card__record {
+  min-width: 88px;
+}
+
+.picks-recap-card__record strong {
+  font-size: 18px;
+  letter-spacing: -.025em;
+  white-space: nowrap;
+}
+
+.picks-recap-card__record small {
+  max-width: 112px;
+}
+
+.picks-recap-fights {
+  display: block;
+  grid-column: 1 / -1;
+}
+
+.picks-recap-fights > summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 34px 0 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.picks-recap-fights > summary::-webkit-details-marker {
+  display: none;
+}
+
+.picks-recap-fights > summary::after {
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  content: "+";
+  color: var(--text-muted);
+  font-size: 18px;
+  font-weight: 900;
+  transform: translateY(-50%);
+}
+
+.picks-recap-fights[open] > summary::after {
+  content: "−";
+}
+
+.picks-recap-fights > summary > span {
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.picks-recap-fights > summary > small {
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-align: right;
+}
+
+.picks-recap-fights[open] .picks-recap-fight-list {
+  margin-top: 10px;
+}
+
+.picks-scoring-guide summary:focus-visible,
+.picks-recap-card__summary:focus-visible,
+.picks-recap-fights > summary:focus-visible {
+  border-radius: 8px;
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+@media (min-width: 640px) {
+  .picks-scoring-tiers {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .pick-bout-card {
+    padding: 17px;
+  }
+
+  .pick-choice {
+    min-height: 88px;
+    padding: 12px;
+  }
+}

@@ -1,0 +1,466 @@
+.football-room-game-grid {
+  display: grid;
+  gap: .9rem;
+}
+
+.football-room-game-grid .football-room-preview {
+  width: 100%;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.football-room-game-grid .football-room-preview:hover,
+.football-room-game-grid .football-room-preview:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, .18);
+}
+
+.football-room-game-grid .football-room-preview:nth-child(2) {
+  background: linear-gradient(120deg, rgba(153, 103, 50, .17), transparent 58%), #0c0f15;
+}
+
+.football-room-game-grid .football-room-preview:nth-child(3) {
+  background: linear-gradient(120deg, rgba(72, 103, 151, .18), transparent 58%), #0c0f15;
+}
+
+.football-room-preview em {
+  margin-top: 1rem;
+  color: #f2f4f7;
+  font-size: .68rem;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .09em;
+}
+
+.football-debate-page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+.football-debate-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+  padding: clamp(1.2rem, 4vw, 2rem);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 24px;
+  background: radial-gradient(circle at 100% 0, rgba(95, 131, 76, .2), transparent 40%), #0c0f15;
+  color: #fff;
+}
+
+.football-debate-intro h1 {
+  margin: .35rem 0 .55rem;
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: .94;
+  letter-spacing: -.055em;
+}
+
+.football-debate-intro p:not(.eyebrow) {
+  max-width: 42rem;
+  margin: 0;
+  color: #9da5b2;
+  line-height: 1.5;
+}
+
+.football-debate-category {
+  min-width: 190px;
+  padding: .95rem;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.football-debate-category small,
+.football-debate-category strong {
+  display: block;
+}
+
+.football-debate-category small {
+  color: #8d96a4;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.football-debate-category strong {
+  margin: .25rem 0 .65rem;
+  font-size: 1rem;
+}
+
+.football-debate-category button,
+.football-debate-actions button,
+.football-wavelength-guess-panel button {
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 999px;
+  background: transparent;
+  color: #f4f6f8;
+  font-size: .66rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-debate-category button {
+  width: 100%;
+  padding: .62rem .8rem;
+}
+
+.football-debate-avatar {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .05);
+  color: #f6f7f9;
+  font-size: .78rem;
+  font-weight: 950;
+}
+
+.football-keep-cut-board {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 24px;
+  background: #0c0f15;
+  color: #fff;
+}
+
+.football-keep-cut-board > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .85rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+  color: #9da5b2;
+  font-size: .63rem;
+  letter-spacing: .08em;
+}
+
+.football-keep-cut-board > header strong {
+  color: #fff;
+}
+
+.football-keep-cut-trays {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .8rem;
+  padding: .9rem;
+}
+
+.football-keep-cut-tray {
+  min-width: 0;
+  padding: .8rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.football-keep-cut-tray.is-keep { box-shadow: inset 0 2px 0 rgba(103, 162, 91, .65); }
+.football-keep-cut-tray.is-cut { box-shadow: inset 0 2px 0 rgba(177, 74, 67, .65); }
+
+.football-keep-cut-tray header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: .65rem;
+  color: #afb6c0;
+  font-size: .62rem;
+  letter-spacing: .1em;
+}
+
+.football-keep-cut-tray > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem;
+}
+
+.football-keep-cut-tray article,
+.football-keep-cut-tray i {
+  min-height: 58px;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.football-keep-cut-tray article {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  min-width: 0;
+  padding: .5rem;
+}
+
+.football-keep-cut-tray article > b {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .06);
+  font-size: .55rem;
+}
+
+.football-keep-cut-tray article span,
+.football-keep-cut-tray article strong,
+.football-keep-cut-tray article small {
+  display: block;
+  min-width: 0;
+}
+
+.football-keep-cut-tray article strong {
+  overflow: hidden;
+  font-size: .72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-keep-cut-tray article small {
+  margin-top: .15rem;
+  color: #7f8896;
+  font-size: .52rem;
+  font-weight: 800;
+}
+
+.football-keep-cut-tray i {
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, .16);
+  font-size: .68rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.football-keep-cut-current {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  margin: 0 .9rem .9rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 18px;
+  background: linear-gradient(110deg, rgba(95, 131, 76, .11), transparent 55%), #10141b;
+}
+
+.football-keep-cut-current h2 {
+  margin: .2rem 0;
+  font-size: clamp(1.55rem, 5vw, 2.5rem);
+  letter-spacing: -.045em;
+}
+
+.football-keep-cut-current p:not(.eyebrow) {
+  margin: 0 0 .4rem;
+  color: #9ba3af;
+}
+
+.football-keep-cut-current small {
+  color: #7f8895;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .07em;
+}
+
+.football-keep-cut-current small.is-forced { color: #f1bd67; }
+
+.football-keep-cut-current__actions {
+  display: grid;
+  gap: .5rem;
+  min-width: 110px;
+}
+
+.football-keep-cut-current__actions button {
+  padding: .78rem .9rem;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 13px;
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-keep-cut-current__actions .is-keep { background: rgba(80, 132, 72, .25); }
+.football-keep-cut-current__actions .is-cut { background: rgba(153, 62, 56, .22); }
+.football-keep-cut-current__actions button:disabled { opacity: .3; }
+
+.football-debate-result-hero {
+  padding: clamp(1.4rem, 5vw, 2.4rem);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 24px;
+  background: radial-gradient(circle at 100% 0, rgba(95, 131, 76, .21), transparent 42%), #0c0f15;
+  color: #fff;
+  text-align: center;
+}
+
+.football-debate-result-hero > strong {
+  display: block;
+  margin: .15rem 0 .3rem;
+  font-size: clamp(4rem, 17vw, 8rem);
+  line-height: .9;
+  letter-spacing: -.08em;
+}
+
+.football-debate-result-hero > strong small { font-size: .2em; letter-spacing: 0; }
+.football-debate-result-hero > span { color: #a4acb7; font-size: .7rem; font-weight: 900; letter-spacing: .07em; }
+
+.football-debate-result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+  margin-top: .9rem;
+}
+
+.football-debate-result-list,
+.football-wavelength-reveal,
+.football-wavelength-final-numbers,
+.football-wavelength-guess-panel,
+.football-wavelength-clue,
+.football-wavelength-path {
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 20px;
+  background: #0c0f15;
+  color: #fff;
+}
+
+.football-debate-result-list,
+.football-wavelength-reveal { padding: 1rem; }
+
+.football-debate-result-list > div,
+.football-wavelength-reveal > div { display: grid; gap: .45rem; }
+
+.football-debate-result-list article,
+.football-wavelength-reveal article {
+  display: grid;
+  grid-template-columns: 28px 46px minmax(0, 1fr) auto;
+  gap: .6rem;
+  align-items: center;
+  min-width: 0;
+  padding: .6rem;
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.football-debate-result-list article .football-debate-avatar { width: 40px; height: 40px; flex-basis: 40px; border-radius: 12px; font-size: .62rem; }
+.football-debate-result-list article > b,
+.football-wavelength-reveal article > b { color: #7d8694; font-size: .68rem; }
+.football-debate-result-list article span,
+.football-debate-result-list article strong,
+.football-debate-result-list article small,
+.football-wavelength-reveal article span,
+.football-wavelength-reveal article strong,
+.football-wavelength-reveal article small { display: block; min-width: 0; }
+.football-debate-result-list article strong,
+.football-wavelength-reveal article strong { font-size: .8rem; }
+.football-debate-result-list article small,
+.football-wavelength-reveal article small { margin-top: .12rem; color: #858e9b; font-size: .56rem; line-height: 1.3; }
+.football-debate-result-list article em,
+.football-wavelength-reveal article em { color: #b9c0ca; font-size: .6rem; font-style: normal; font-weight: 900; }
+
+.football-debate-actions {
+  display: flex;
+  justify-content: center;
+  gap: .6rem;
+  margin-top: .9rem;
+}
+
+.football-debate-actions button { padding: .8rem 1rem; }
+.football-debate-actions button.is-primary,
+.football-wavelength-guess-panel button { border-color: #f2f4f7; background: #f2f4f7; color: #080a0e; }
+
+.football-wavelength-progress {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .4rem;
+  margin: .8rem 0;
+}
+
+.football-wavelength-progress i { height: 4px; border-radius: 99px; background: rgba(255, 255, 255, .08); }
+.football-wavelength-progress i.is-current,
+.football-wavelength-progress i.is-complete { background: rgba(160, 190, 142, .82); }
+
+.football-wavelength-clue { padding: clamp(1.2rem, 5vw, 2rem); }
+
+.football-wavelength-axis-head,
+.football-wavelength-axis-copy {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.football-wavelength-axis-head { color: #89929f; font-size: .61rem; font-weight: 900; letter-spacing: .11em; }
+.football-wavelength-axis-copy { margin: 1rem 0 .8rem; color: #cfd4dc; font-size: .65rem; font-weight: 950; letter-spacing: .08em; }
+.football-wavelength-axis-copy i { color: #66707d; font-style: normal; }
+
+.football-wavelength-clue h2 {
+  margin: .2rem 0 .35rem;
+  font-size: clamp(2rem, 8vw, 4.6rem);
+  line-height: .95;
+  letter-spacing: -.055em;
+  text-align: center;
+}
+
+.football-wavelength-clue > p { margin: 0; color: #8f98a5; text-align: center; }
+.football-wavelength-guess-panel { margin-top: .8rem; padding: 1rem; }
+.football-wavelength-guess-value { text-align: center; }
+.football-wavelength-guess-value small,
+.football-wavelength-guess-value strong { display: block; }
+.football-wavelength-guess-value small { color: #808997; font-size: .58rem; font-weight: 900; letter-spacing: .11em; }
+.football-wavelength-guess-value strong { margin-top: .1rem; font-size: 3.2rem; line-height: 1; letter-spacing: -.06em; }
+.football-wavelength-guess-panel input[type="range"] { width: 100%; margin: 1rem 0 .25rem; accent-color: #dce5d6; }
+.football-wavelength-scale { display: flex; justify-content: space-between; color: #707a87; font-size: .58rem; font-weight: 800; }
+.football-wavelength-guess-panel button { display: block; width: min(100%, 280px); margin: .9rem auto 0; padding: .8rem 1rem; }
+
+.football-wavelength-path { margin-top: .8rem; padding: .75rem 1rem; text-align: center; }
+.football-wavelength-path small { display: block; margin-bottom: .2rem; color: #7e8794; font-size: .56rem; font-weight: 900; letter-spacing: .1em; }
+
+.football-wavelength-final-numbers {
+  display: grid;
+  grid-template-columns: .8fr .8fr 1.4fr;
+  gap: .5rem;
+  margin-top: .9rem;
+  padding: .8rem;
+}
+
+.football-wavelength-final-numbers > div { min-width: 0; padding: .8rem; border-radius: 14px; background: rgba(255, 255, 255, .03); }
+.football-wavelength-final-numbers small,
+.football-wavelength-final-numbers strong { display: block; }
+.football-wavelength-final-numbers small { color: #7e8794; font-size: .54rem; font-weight: 900; letter-spacing: .09em; }
+.football-wavelength-final-numbers strong { margin-top: .22rem; overflow: hidden; font-size: clamp(1rem, 4vw, 1.55rem); text-overflow: ellipsis; }
+
+.football-wavelength-reveal { margin-top: .9rem; }
+.football-wavelength-reveal header h2 { margin: .2rem 0 .8rem; font-size: 1.5rem; letter-spacing: -.035em; }
+.football-wavelength-reveal article { grid-template-columns: 28px minmax(0, 1fr) 36px; }
+.football-wavelength-reveal article em { text-align: right; font-size: .8rem; }
+
+@media (min-width: 820px) {
+  .football-room-game-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .football-room-game-grid .football-room-preview { min-height: 310px; }
+  .football-room-game-grid .football-room-preview > span { display: none; }
+  .football-room-game-grid .football-room-preview strong { font-size: clamp(1.8rem, 3vw, 2.7rem); }
+}
+
+@media (max-width: 700px) {
+  .football-debate-intro { grid-template-columns: 1fr; }
+  .football-debate-category { min-width: 0; }
+  .football-keep-cut-trays,
+  .football-debate-result-grid { grid-template-columns: 1fr; }
+  .football-keep-cut-current { grid-template-columns: 54px minmax(0, 1fr); }
+  .football-keep-cut-current .football-debate-avatar { width: 48px; height: 48px; flex-basis: 48px; }
+  .football-keep-cut-current__actions { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .football-wavelength-final-numbers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .football-wavelength-final-numbers > div:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 430px) {
+  .football-keep-cut-tray > div { grid-template-columns: 1fr; }
+  .football-debate-actions { display: grid; }
+  .football-debate-result-list article { grid-template-columns: 24px 40px minmax(0, 1fr); }
+  .football-debate-result-list article em { display: none; }
+}

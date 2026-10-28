@@ -1,0 +1,52 @@
+/* Canonical compact Higher/Lower chrome. Sports retain their own portraits and palettes. */
+.football-higher-lower .higher-lower-standard-intro { padding: 18px 16px; }
+.football-higher-lower .higher-lower-standard-intro h1 {
+  margin: 6px 0 0; font-size: clamp(1.9rem, 8vw, 3.25rem); line-height: 1;
+}
+.football-higher-lower .higher-lower-standard-intro__tagline {
+  max-width: 40ch; margin: 12px 0 0; color: var(--hl-text);
+  font-size: clamp(.83rem, 3.5vw, 1rem); font-weight: 750; line-height: 1.4;
+}
+.football-higher-lower .higher-lower-standard-intro .higher-lower-start {
+  width: 100%; min-height: 48px; margin: 16px 0 0;
+}
+.football-higher-lower .higher-lower-standard-intro .higher-lower-scope-grid { margin-top: 13px; }
+.football-higher-lower .higher-lower-standard-intro .higher-lower-scope-grid button { min-height: 64px; }
+.football-higher-lower .higher-lower-game-header {
+  grid-template-columns: 38px minmax(0, 1fr) auto; gap: 9px;
+  padding: 9px 12px; scroll-margin-top: calc(78px + env(safe-area-inset-top, 0px));
+}
+.football-higher-lower .higher-lower-game-header__mark {
+  display: grid; width: 34px; height: 34px; place-items: center;
+  border: 1px solid var(--hl-line); border-radius: 9px; color: var(--hl-blue); font-size: 1.05rem;
+}
+.football-higher-lower .higher-lower-game-header__score {
+  font-size: .82rem; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.football-higher-lower .higher-lower-progress {
+  height: 6px; margin: 8px 2px 7px; background: rgba(255,255,255,.17);
+}
+.football-higher-lower .higher-lower-stat-label { margin-top: 7px; padding: 11px 12px; }
+.football-higher-lower .higher-lower-stat-label small { letter-spacing: .06em; font-size: .55rem; }
+.football-higher-lower .higher-lower-stat-label h2 {
+  margin: 4px 0 0; font-size: clamp(1.03rem, 4.4vw, 1.3rem); line-height: 1.15;
+}
+.football-higher-lower .higher-lower-stat-label p { font-size: .65rem; line-height: 1.35; }
+.football-higher-lower .higher-lower-matchup { margin-top: 8px; }
+.football-higher-lower .higher-lower-controls { margin-top: 8px; }
+.football-higher-lower .higher-lower-controls button { min-height: 54px; touch-action: manipulation; }
+.football-higher-lower .higher-lower-feedback { min-height: 28px; padding: 7px 10px; }
+.football-higher-lower .higher-lower-feedback.is-visible { opacity: 1; }
+.football-higher-lower .higher-lower-feedback.is-correct strong { color: #95e8b0; }
+.football-higher-lower .higher-lower-feedback.is-wrong strong { color: #ffb1b1; }
+.ufc-higher-lower .higher-lower-progress i { background: linear-gradient(90deg, #bec6cb, #f1f4f6); }
+.ufc-higher-lower .higher-lower-game-header__mark { color: #f1f4f6; }
+.ufc-higher-lower .higher-lower-controls button {
+  border-color: rgba(235,238,240,.27); background: rgba(235,238,240,.07); color: #f3f6f7;
+}
+.ufc-higher-lower .higher-lower-controls button.is-answer {
+  border-color: rgba(91,219,143,.7); background: rgba(42,155,91,.2); color: #b8ffd2;
+}
+.ufc-higher-lower .higher-lower-controls button.is-miss {
+  border-color: rgba(244,102,102,.7); background: rgba(173,48,48,.18); color: #ffc4c4;
+}

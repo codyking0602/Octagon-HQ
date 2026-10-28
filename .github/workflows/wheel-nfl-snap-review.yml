@@ -1,0 +1,44 @@
+name: Wheel NFL Snap Evidence Review (staged)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/wheel-monitor/nfl-snap-monitor.py'
+      - 'scripts/wheel-monitor/test_nfl_snap_monitor.py'
+      - '.github/workflows/wheel-nfl-snap-review.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wheel-nfl-snap-evidence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  snap-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test conservative no-regrade NFL snap classifications
+        run: python -m unittest discover -s scripts/wheel-monitor -p 'test_nfl_snap_monitor.py' -v
+      - name: Install pinned read-only nflverse loader
+        run: python -m pip install --disable-pip-version-check nflreadpy==0.1.5
+      - name: Fetch current-season PFR participation evidence
+        run: |
+          mkdir -p tmp/wheel-monitor/nfl
+          python scripts/wheel-monitor/nfl-snap-monitor.py \
+            --season="$(date -u +%Y)" \
+            --out=tmp/wheel-monitor/nfl/snap-evidence.json
+      - name: Upload review-only NFL performance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-nfl-snap-evidence
+          path: tmp/wheel-monitor/nfl/snap-evidence.json
+          if-no-files-found: warn
+          retention-days: 30

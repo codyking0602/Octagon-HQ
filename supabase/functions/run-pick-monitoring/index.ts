@@ -1,0 +1,872 @@
+import { createClient } from "npm:@supabase/supabase-js@2.110.7";
+import { adaptEspnUfcLiveFightState, ESPN_UFC_SCOREBOARD_URL, shouldPollEspnLiveFightState } from "../../../src/features/picks-monitoring/espnLiveFightState.ts";
+import { adaptTheOddsApiResponse, buildTheOddsApiEventsUrl, buildTheOddsApiRequestUrl, providerEventIdsNearMonitoredStart } from "../../../src/features/picks-monitoring/theOddsApi.ts";
+import { buildManualMonitoringPayload, monitoringSummary, resolveMonitoringEvent, sourceMatchesMonitoredEvent, type CardScope, type MonitoringEvent, type SourcePreview } from "../../../src/features/picks-monitoring/manualMonitoringRunner.ts";
+import { buildCardChangeFindings } from "../../../src/features/picks-monitoring/cardChangeApproval.ts";
+import {
+  adaptEspnUfcFighterMedia,
+  espnUfcMediaScoreboardUrl,
+  type UfcFighterMediaCandidate,
+} from "../../../src/features/picks-monitoring/ufcFighterMedia.ts";
+import {
+  decideScheduledMonitoring,
+  eventIsInAutomaticStagingWindow,
+  shouldAttemptAutomaticEventStaging,
+  shouldRunScheduledCardSourceCheck,
+  type ScheduledMonitoringState,
+} from "../../../src/features/picks-monitoring/scheduledMonitoring.ts";
+import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
+
+// Odds fighter aliases are shared from oddsModel so provider display-name variants remain canonical.
+const schedulerHeader = "x-octagon-scheduler-token";
+const HOUR_MS = 60 * 60 * 1000;
+const corsHeaders = {
+  "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Expose-Headers": "X-Octagon-Backend-Sha",
+};
+const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store", "X-Octagon-Backend-Sha": DEPLOYED_SOURCE_SHA } });
+const safeError = (status: number, code: string, message: string) => json({ code, message, deployment_sha: DEPLOYED_SOURCE_SHA }, status);
+const asRecord = (value: unknown): Record<string, unknown> | null => value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
+const asEvent = (value: unknown) => asRecord(value) as unknown as MonitoringEvent | null;
+const noOp = (
+  reason: string,
+  sourceEventIdentity?: string,
+  nextEligibleAt?: string,
+  notificationDispatch?: unknown,
+  liveStateSync?: unknown,
+) => json({
+  status: "noop",
+  reason,
+  source_event_identity: sourceEventIdentity ?? null,
+  next_eligible_at: nextEligibleAt ?? null,
+  provider_called: false,
+  notification_dispatch: notificationDispatch ?? null,
+  live_state_sync: liveStateSync ?? null,
+  deployment_sha: DEPLOYED_SOURCE_SHA,
+});
+
+Deno.serve(async (request) => {
+  if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (request.method !== "POST") return safeError(405, "METHOD_NOT_ALLOWED", "Method not allowed.");
+
+  let input: Record<string, unknown> = {};
+  try { input = asRecord(await request.json()) ?? {}; } catch { /* empty input */ }
+  if (input.mode === "deployment-info") return json({ deployment_sha: DEPLOYED_SOURCE_SHA });
+
+  const url = Deno.env.get("SUPABASE_URL");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SECRET_KEY");
+  if (!url || !anonKey || !serviceKey) return safeError(503, "MONITORING_NOT_CONFIGURED", "Monitoring credentials are not configured.");
+
+  const admin = createClient(url, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
+  const scheduled = input.mode === "scheduled";
+  const finishScheduledDecision = async (decision: {
+    outcome: "skipped" | "failed";
+    reason: string;
+    response: Response;
+    identity?: string;
+    nextEligibleAt?: string;
+    providerCalled?: boolean;
+  }) => {
+    if (!scheduled) return decision.response;
+    const recorded = await admin.rpc("record_pick_monitoring_scheduler_decision", {
+      p_outcome: decision.outcome,
+      p_reason: decision.reason,
+      p_source_event_identity: decision.identity ?? null,
+      p_next_eligible_at: decision.nextEligibleAt ?? null,
+      p_provider_called: decision.providerCalled ?? false,
+    });
+    if (recorded.error || !recorded.data) {
+      return safeError(
+        503,
+        "MONITORING_DECISION_RECORD_FAILED",
+        "The scheduled monitoring outcome could not be recorded safely.",
+      );
+    }
+    return decision.response;
+  };
+  const authorization = request.headers.get("authorization") ?? "";
+  let setupData: MonitoringEvent | null = null;
+  let currentData: MonitoringEvent | null = null;
+  let notificationDispatch: unknown = null;
+
+  if (scheduled) {
+    const schedulerToken = request.headers.get(schedulerHeader) ?? "";
+    const authorized = await admin.rpc("authorize_pick_monitoring_scheduler", { p_token: schedulerToken });
+    if (authorized.error) {
+      return safeError(
+        503,
+        "SCHEDULER_AUTH_CHECK_FAILED",
+        "Scheduled monitoring authorization could not be verified.",
+      );
+    }
+    if (authorized.data !== true) {
+      return safeError(401, "SCHEDULER_AUTH_REQUIRED", "Scheduled monitoring authorization required.");
+    }
+
+    // Reuse the one trusted hourly wake-up for all due in-app reminders and owner actions.
+    // The database function owns timing and idempotency; this Edge Function adds no scheduler.
+    const dispatched = await admin.rpc("dispatch_due_in_app_notifications", {
+      p_now: new Date().toISOString(),
+    });
+    if (dispatched.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "notification_dispatch_failed",
+        response: safeError(503, "NOTIFICATION_DISPATCH_FAILED", "Due notifications could not be dispatched safely."),
+      });
+    }
+    notificationDispatch = dispatched.data;
+
+    // MLB reuses this same trusted wake-up. The database owns launch, round,
+    // challenge timing, completion checks, recipients, and idempotency, so no
+    // second scheduler or delivery path is introduced.
+    const mlbDispatched = await admin.rpc("dispatch_due_mlb_notifications", {
+      p_now: new Date().toISOString(),
+    });
+    if (mlbDispatched.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "mlb_notification_dispatch_failed",
+        response: safeError(503, "MLB_NOTIFICATION_DISPATCH_FAILED", "Due MLB notifications could not be dispatched safely."),
+      });
+    }
+
+    // NBA shares this same trusted wake-up. Its database release gate stays off
+    // until official NBA Daily is confirmed public; no preview alert can escape.
+    // There is only one NBA Daily alert, on the second evening before closing.
+    const nbaDispatched = await admin.rpc("dispatch_due_nba_notifications", {
+      p_now: new Date().toISOString(),
+    });
+    if (nbaDispatched.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "nba_notification_dispatch_failed",
+        response: safeError(503, "NBA_NOTIFICATION_DISPATCH_FAILED", "Due NBA notifications could not be dispatched safely."),
+      });
+    }
+
+    // Football shares this existing scheduler owner. The football sync owns ESPN
+    // final detection and the canonical record_football_pick_final write path.
+    const footballSettlementResponse = await fetch(`${url}/functions/v1/sync-next-football-event`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: serviceKey,
+        [schedulerHeader]: schedulerToken,
+      },
+      body: JSON.stringify({ mode: "scheduled-finals" }),
+    });
+    if (!footballSettlementResponse.ok) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "football_settlement_failed",
+        providerCalled: false,
+        response: safeError(502, "FOOTBALL_SETTLEMENT_FAILED", "Football finals could not be synchronized safely."),
+      });
+    }
+
+    // UFC reuses the same scheduled wake and canonical event transition as Football.
+    // Also catches cards whose ESPN results were recorded on an earlier wake.
+    const ufcCompletion = await admin.rpc("finalize_ready_ufc_pick_events");
+    if (ufcCompletion.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "ufc_auto_completion_failed",
+        providerCalled: false,
+        response: safeError(503, "UFC_AUTO_COMPLETION_FAILED", "UFC event completion could not be verified."),
+      });
+    }
+
+    const eventState = await admin.rpc("get_pick_monitoring_event_state");
+    if (eventState.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "database_read_failed",
+        response: safeError(503, "DATABASE_READ_FAILED", "Canonical Picks state is unavailable."),
+      });
+    }
+    const state = asRecord(eventState.data);
+    setupData = asEvent(state?.staged);
+    currentData = asEvent(state?.current);
+
+    // When Event Setup is empty, reuse the existing source preview and staging RPC.
+    // Discovery is bounded to Monday/Tuesday checkpoints and the preview must prove
+    // the next event is inside the six-day fight-week horizon. This path stages only;
+    // publishing remains an explicit owner action in Event Setup.
+    const stagingNow = new Date();
+    if (!setupData && !currentData && shouldAttemptAutomaticEventStaging(stagingNow)) {
+      const stagePreviewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: serviceKey },
+        body: JSON.stringify({ mode: "monitoring-preview" }),
+      });
+      const stagePreviewBody = await stagePreviewResponse.json().catch(() => null) as {
+        event_preview?: SourcePreview;
+        effective_scope?: CardScope;
+      } | null;
+      if (!stagePreviewResponse.ok || !stagePreviewBody?.event_preview || !stagePreviewBody.effective_scope) {
+        return finishScheduledDecision({
+          outcome: "failed",
+          reason: "automatic_stage_source_failed",
+          providerCalled: false,
+          response: safeError(502, "AUTOMATIC_STAGE_SOURCE_FAILED", "The next UFC event could not be discovered safely for automatic staging."),
+        });
+      }
+
+      const stageEvent = asRecord(stagePreviewBody.event_preview);
+      const stageStartsAt = typeof stageEvent?.starts_at === "string" ? stageEvent.starts_at : null;
+      if (eventIsInAutomaticStagingWindow(stageStartsAt, stagingNow)) {
+        const staged = await admin.rpc("stage_pick_event_draft", {
+          p_payload: stagePreviewBody.event_preview,
+        });
+        if (staged.error) {
+          return finishScheduledDecision({
+            outcome: "failed",
+            reason: "automatic_stage_write_failed",
+            providerCalled: false,
+            response: safeError(503, "AUTOMATIC_STAGE_WRITE_FAILED", "The next UFC event could not be staged safely."),
+          });
+        }
+        const stagedIdentity = typeof stageEvent?.source_event_key === "string"
+          ? stageEvent.source_event_key
+          : typeof stageEvent?.event_id === "string"
+            ? stageEvent.event_id
+            : undefined;
+
+        // The due-notification dispatcher ran before the draft existed. Re-run that
+        // same idempotent canonical owner once after staging so event_draft_ready is
+        // delivered in this wake rather than waiting for the next hourly scheduler run.
+        const stagedDispatch = await admin.rpc("dispatch_due_in_app_notifications", {
+          p_now: stagingNow.toISOString(),
+        });
+        if (stagedDispatch.error) {
+          return finishScheduledDecision({
+            outcome: "failed",
+            reason: "automatic_stage_notification_failed",
+            identity: stagedIdentity,
+            providerCalled: false,
+            response: safeError(503, "AUTOMATIC_STAGE_NOTIFICATION_FAILED", "The event was staged, but its owner review notification could not be dispatched safely."),
+          });
+        }
+        notificationDispatch = stagedDispatch.data;
+
+        return finishScheduledDecision({
+          outcome: "skipped",
+          reason: "event_staged",
+          identity: stagedIdentity,
+          providerCalled: false,
+          response: noOp("event_staged", stagedIdentity, undefined, notificationDispatch),
+        });
+      }
+    }
+  } else {
+    const token = authorization.replace(/^Bearer\s+/i, "");
+    const auth = await admin.auth.getUser(token);
+    if (auth.error || !auth.data.user) return safeError(401, "OWNER_AUTH_REQUIRED", "Owner sign-in required.");
+    const owner = createClient(url, anonKey, { auth: { autoRefreshToken: false, persistSession: false }, global: { headers: { Authorization: authorization } } });
+    const ownerProbe = await owner.rpc("get_pick_event_setup");
+    if (ownerProbe.error) return safeError(403, "OWNER_ACCESS_REQUIRED", "Fight Night owner access required.");
+
+    // Manual CHECK NOW and the scheduler resolve the same canonical monitoring state.
+    // The owner probe above authorizes the request; it is not a second event query path.
+    const eventState = await admin.rpc("get_pick_monitoring_event_state");
+    if (eventState.error) return safeError(503, "DATABASE_READ_FAILED", "Canonical Picks state is unavailable.");
+    const state = asRecord(eventState.data);
+    setupData = asEvent(state?.staged);
+    currentData = asEvent(state?.current);
+  }
+
+  let resolved;
+  try {
+    resolved = resolveMonitoringEvent(setupData, currentData);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (scheduled && message.includes("No monitorable")) {
+      return finishScheduledDecision({
+        outcome: "skipped",
+        reason: "no_event",
+        response: noOp("no_event", undefined, undefined, notificationDispatch),
+      });
+    }
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "event_resolution_failed",
+      response: safeError(409, "EVENT_RESOLUTION_FAILED", "Monitoring event identity is missing, conflicting, or ambiguous."),
+    });
+  }
+
+  const syncScheduledFighterMedia = async (event: MonitoringEvent) => {
+    const currentMediaResponse = await admin.rpc("get_ufc_fighter_media_map");
+    const currentMedia = currentMediaResponse.error ? null : asRecord(currentMediaResponse.data);
+    if (currentMediaResponse.error) return { status: "read_error" };
+
+    const fighters = new Map<string, string>();
+    for (const bout of event.bouts) {
+      fighters.set(bout.red_fighter_slug, bout.red_fighter_name);
+      fighters.set(bout.blue_fighter_slug, bout.blue_fighter_name);
+    }
+    const missing = [...fighters.entries()]
+      .filter(([slug]) => typeof currentMedia?.[slug] !== "string")
+      .slice(0, 20);
+    if (!missing.length) return { status: "complete", missing: 0, inserted: 0 };
+
+    const candidates = new Map<string, UfcFighterMediaCandidate>();
+    try {
+      const espnResponse = await fetch(espnUfcMediaScoreboardUrl(event), {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (espnResponse.ok) {
+        const discovered = adaptEspnUfcFighterMedia({
+          body: await espnResponse.json().catch(() => null),
+          event,
+        });
+        const verified = await Promise.all(discovered.map(async (candidate) => {
+          try {
+            const response = await fetch(candidate.photo_url, {
+              headers: {
+                Accept: "image/*",
+                Range: "bytes=0-0",
+              },
+              signal: AbortSignal.timeout(8_000),
+            });
+            const contentType = response.headers.get("content-type") ?? "";
+            const acceptable = response.ok && /^image\//i.test(contentType);
+            if (response.body) await response.body.cancel().catch(() => undefined);
+            return acceptable ? candidate : null;
+          } catch {
+            return null;
+          }
+        }));
+        for (const candidate of verified) {
+          if (
+            candidate
+            && fighters.has(candidate.fighter_slug)
+            && candidate.source === "espn"
+            && /^https:\/\/a\.espncdn\.com\/i\/headshots\/mma\/players\/full\/[0-9]+\.png$/.test(candidate.photo_url)
+          ) {
+            candidates.set(candidate.fighter_slug, candidate);
+          }
+        }
+      }
+    } catch {
+      // ESPN headshots are best-effort. Never substitute UFC athlete-page
+      // promotional body renders; a genuinely verified square UFC headshot can
+      // still be ingested through the reviewed manual asset path.
+    }
+    if (!candidates.size) {
+      return { status: "no_media_found", missing: missing.length, inserted: 0 };
+    }
+
+    const persisted = await admin.rpc("sync_ufc_fighter_media", {
+      p_candidates: [...candidates.values()],
+    });
+    return persisted.error
+      ? { status: "write_error", missing: missing.length, candidates: candidates.size }
+      : { status: "synced", missing: missing.length, candidates: candidates.size, persistence: persisted.data };
+  };
+
+  let liveStateSync: Record<string, unknown> | null = null;
+  const liveStateNow = new Date();
+  if (
+    resolved.kind === "current"
+    && resolved.storageEventId
+    && shouldPollEspnLiveFightState(resolved.selected, liveStateNow)
+  ) {
+    const observedAt = liveStateNow.toISOString();
+    try {
+      // ESPN's site.api host rejects production Supabase egress with HTTP 403.
+      // Keep UFC live-state polling on the site.web.api host proven reachable from this runtime.
+      const liveResponse = await fetch(ESPN_UFC_SCOREBOARD_URL, {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (!liveResponse.ok) {
+        liveStateSync = { status: "source_error", http_status: liveResponse.status };
+      } else {
+        const adapted = adaptEspnUfcLiveFightState({
+          body: await liveResponse.json().catch(() => null),
+          event: resolved.selected,
+          observedAt,
+        });
+        liveStateSync = {
+          status: adapted.status,
+          source_event_id: adapted.source_event_id,
+          observations: adapted.observations.length,
+          diagnostics: adapted.diagnostics,
+        };
+        if (adapted.status === "matched" && adapted.observations.length) {
+          const persisted = await admin.rpc("record_pick_bout_live_states", {
+            p_event_id: resolved.storageEventId,
+            p_observations: adapted.observations,
+          });
+          liveStateSync = persisted.error
+            ? { ...liveStateSync, status: "write_error" }
+            : { ...liveStateSync, status: "recorded", persistence: persisted.data };
+
+          if (!persisted.error) {
+            const completion = await admin.rpc("finalize_ready_ufc_pick_events");
+            if (completion.error) {
+              return finishScheduledDecision({
+                outcome: "failed",
+                reason: "ufc_auto_completion_failed",
+                identity: resolved.identity,
+                providerCalled: false,
+                response: safeError(503, "UFC_AUTO_COMPLETION_FAILED", "UFC event completion could not be verified."),
+              });
+            }
+            const completedCount = Number(asRecord(completion.data)?.completed ?? 0);
+            if (completedCount > 0) {
+              return finishScheduledDecision({
+                outcome: "skipped",
+                reason: "ufc_event_finalized",
+                identity: resolved.identity,
+                providerCalled: false,
+                response: noOp("ufc_event_finalized", resolved.identity, undefined, notificationDispatch, {
+                  ...liveStateSync,
+                  completion: completion.data,
+                }),
+              });
+            }
+          }
+        }
+      }
+    } catch {
+      liveStateSync = { status: "source_error" };
+    }
+  }
+
+  let scheduledCardPreview: { event_preview?: SourcePreview; effective_scope?: CardScope } | null = null;
+  let fighterMediaSync: unknown = null;
+  let forceCardRefresh = false;
+  let scheduledCardFindings: ReturnType<typeof buildCardChangeFindings> = [];
+
+  if (
+    scheduled
+    && resolved.kind === "current"
+    && shouldRunScheduledCardSourceCheck(resolved.selected, new Date())
+  ) {
+    const selectedEvent = asRecord(resolved.selected);
+    const sourceUrl = typeof selectedEvent?.source_url === "string"
+      ? selectedEvent.source_url.trim()
+      : "";
+    const sourceEventKey = typeof selectedEvent?.source_event_key === "string"
+      ? selectedEvent.source_event_key.trim()
+      : "";
+    const previewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: serviceKey },
+      body: JSON.stringify({
+        mode: "monitoring-preview",
+        ...(sourceUrl ? { source_url: sourceUrl } : {}),
+        ...(sourceEventKey ? { source_event_key: sourceEventKey } : {}),
+      }),
+    });
+    scheduledCardPreview = await previewResponse.json().catch(() => null) as {
+      event_preview?: SourcePreview;
+      effective_scope?: CardScope;
+    } | null;
+
+    if (!previewResponse.ok || !scheduledCardPreview?.event_preview || !scheduledCardPreview.effective_scope) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "source_preview_failed",
+        identity: resolved.identity,
+        providerCalled: false,
+        response: safeError(502, "SOURCE_PREVIEW_FAILED", "The official UFC card check failed safely."),
+      });
+    }
+    if (!sourceMatchesMonitoredEvent(scheduledCardPreview.event_preview, resolved.selected)) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "event_identity_mismatch",
+        identity: resolved.identity,
+        providerCalled: false,
+        response: safeError(409, "EVENT_IDENTITY_MISMATCH", "The official UFC card check did not match the monitored event."),
+      });
+    }
+
+    fighterMediaSync = await syncScheduledFighterMedia(scheduledCardPreview.event_preview);
+
+    const ignored = new Set(resolved.ignoredBoutIds);
+    const comparisonSource = ignored.size
+      ? {
+          ...scheduledCardPreview.event_preview,
+          bouts: scheduledCardPreview.event_preview.bouts.filter((bout) => !ignored.has(bout.bout_id)),
+        }
+      : scheduledCardPreview.event_preview;
+    const cardFindings = buildCardChangeFindings({
+      identity: resolved.identity,
+      kind: resolved.kind,
+      eventId: resolved.storageEventId,
+      canonical: resolved.selected,
+      source: comparisonSource,
+      scope: scheduledCardPreview.effective_scope,
+      detectedAt: new Date().toISOString(),
+      allBoutIds: resolved.allBoutIds,
+    });
+    forceCardRefresh = cardFindings.length > 0;
+    scheduledCardFindings = cardFindings;
+  }
+
+  let suppressFindingKeys = new Set<string>();
+  let scheduledClaimedAt: string | null = null;
+  let scheduledNextEligibleAt: string | null = null;
+  if (scheduled) {
+    const scheduleStateResponse = await admin.rpc("get_pick_monitoring_schedule_state", { p_source_event_identity: resolved.identity });
+    if (scheduleStateResponse.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "schedule_state_failed",
+        identity: resolved.identity,
+        response: safeError(503, "SCHEDULE_STATE_FAILED", "Monitoring schedule state is unavailable."),
+      });
+    }
+    const scheduleState = asRecord(scheduleStateResponse.data) as ScheduledMonitoringState & { existing_finding_keys?: unknown } | null;
+    const decision = decideScheduledMonitoring({ event: resolved.selected, now: new Date(), state: scheduleState });
+    if (!decision.due) {
+      // Free official-card monitoring must NEVER override the paid odds cadence,
+      // a lease, or an exhausted provider quota. Persist and auto-apply trusted
+      // card changes through the canonical ledger without calling The Odds API.
+      if (forceCardRefresh && scheduledCardPreview?.event_preview) {
+        const preview = scheduledCardPreview.event_preview;
+        const seen = new Set(Array.isArray(scheduleState?.existing_finding_keys)
+          ? scheduleState.existing_finding_keys.filter((key): key is string => typeof key === "string")
+          : []);
+        const unseen = scheduledCardFindings.filter((finding) => !seen.has(finding.finding_key));
+        if (unseen.length) {
+          const nowIso = new Date().toISOString();
+          const cardOnlyPayload = {
+            trigger_kind: "scheduled",
+            status: "completed",
+            source_event_identity: resolved.identity,
+            event_id: resolved.storageEventId,
+            locks_at: resolved.selected.locks_at,
+            started_at: nowIso,
+            completed_at: nowIso,
+            card_source: preview.source,
+            card_source_url: preview.source_url,
+            odds_provider: "the-odds-api",
+            quota: { requests_remaining: null, requests_used: null, last_request_cost: null },
+            coverage: { provider_events: 0, complete_snapshots: 0, missing_snapshots: 0 },
+            diagnostics: [],
+            findings: unseen,
+            odds_snapshots: [],
+          };
+          const recordedCard = await admin.rpc("record_card_source_monitoring_run", {
+            p_payload: cardOnlyPayload,
+          });
+          if (recordedCard.error || !recordedCard.data) {
+            return finishScheduledDecision({
+              outcome: "failed",
+              reason: "card_source_record_failed",
+              identity: resolved.identity,
+              providerCalled: false,
+              response: safeError(503, "CARD_SOURCE_RECORD_FAILED", "Official card findings could not be recorded safely."),
+            });
+          }
+          const trusted = preview.source === "UFC.com event + card"
+            && /^https:\/\/www\.ufc\.com\/event\/[a-z0-9-]+$/i.test(preview.source_url)
+            && !(preview.warnings?.length);
+          if (trusted) {
+            // The existing stale-guarded approval owner can apply free card-only evidence.
+            // A later card-source tick converges any dependent remaining changes.
+            await admin.rpc("auto_apply_trusted_pick_monitoring_changes", {
+              p_run_id: recordedCard.data,
+            });
+          }
+        }
+      }
+      return finishScheduledDecision({
+        outcome: "skipped",
+        reason: decision.reason,
+        identity: resolved.identity,
+        nextEligibleAt: decision.next_eligible_at,
+        response: noOp(decision.reason, resolved.identity, decision.next_eligible_at, notificationDispatch, liveStateSync),
+      });
+    }
+
+    if (decision.due) {
+      scheduledClaimedAt = new Date().toISOString();
+      scheduledNextEligibleAt = decision.next_eligible_at;
+      const claim = await admin.rpc("claim_pick_monitoring_schedule", {
+        p_source_event_identity: resolved.identity,
+        p_now: scheduledClaimedAt,
+      });
+      if (claim.error) {
+        return finishScheduledDecision({
+          outcome: "failed",
+          reason: "schedule_claim_failed",
+          identity: resolved.identity,
+          nextEligibleAt: scheduledNextEligibleAt,
+          response: safeError(503, "SCHEDULE_CLAIM_FAILED", "Monitoring schedule could not be claimed safely."),
+        });
+      }
+      if (claim.data !== true) {
+        return finishScheduledDecision({
+          outcome: "skipped",
+          reason: "already_claimed",
+          identity: resolved.identity,
+          response: noOp("already_claimed", resolved.identity, undefined, notificationDispatch, liveStateSync),
+        });
+      }
+    }
+    suppressFindingKeys = new Set(Array.isArray(scheduleState?.existing_finding_keys)
+      ? scheduleState.existing_finding_keys.filter((value): value is string => typeof value === "string")
+      : []);
+  }
+
+  const releaseSchedule = async (retryAt: string) => {
+    if (!scheduled || !scheduledClaimedAt) return;
+    await admin.rpc("release_pick_monitoring_schedule", {
+      p_source_event_identity: resolved.identity,
+      p_claimed_at: scheduledClaimedAt,
+      p_retry_at: retryAt,
+    });
+  };
+  const retryInOneHour = () => new Date(Date.now() + HOUR_MS).toISOString();
+
+  const providerKey = Deno.env.get("THE_ODDS_API_KEY");
+  if (!providerKey) {
+    const retryAt = retryInOneHour();
+    await releaseSchedule(retryAt);
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "monitoring_not_configured",
+      identity: resolved.identity,
+      nextEligibleAt: retryAt,
+      response: safeError(503, "MONITORING_NOT_CONFIGURED", "Monitoring credentials are not configured."),
+    });
+  }
+
+  const startedAt = new Date().toISOString();
+  const selectedEvent = asRecord(resolved.selected);
+  const sourceUrl = typeof selectedEvent?.source_url === "string"
+    ? selectedEvent.source_url.trim()
+    : "";
+  const sourceEventKey = typeof selectedEvent?.source_event_key === "string"
+    ? selectedEvent.source_event_key.trim()
+    : "";
+  let previewBody = scheduledCardPreview;
+  let previewResponseOk = Boolean(previewBody?.event_preview && previewBody?.effective_scope);
+  if (!previewResponseOk) {
+    const previewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: serviceKey },
+      body: JSON.stringify({
+        mode: "monitoring-preview",
+        ...(sourceUrl ? { source_url: sourceUrl } : {}),
+        ...(sourceEventKey ? { source_event_key: sourceEventKey } : {}),
+      }),
+    });
+    previewResponseOk = previewResponse.ok;
+    previewBody = await previewResponse.json().catch(() => null) as { event_preview?: SourcePreview; effective_scope?: CardScope } | null;
+  }
+  if (!previewResponseOk || !previewBody?.event_preview || !previewBody.effective_scope) {
+    const retryAt = retryInOneHour();
+    await releaseSchedule(retryAt);
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "source_preview_failed",
+      identity: resolved.identity,
+      nextEligibleAt: retryAt,
+      providerCalled: false,
+      response: safeError(502, "SOURCE_PREVIEW_FAILED", "The event/card source preview failed safely."),
+    });
+  }
+
+  const fetchedAt = new Date().toISOString();
+
+  // The provider's events listing is quota-free. Use it to constrain the normal
+  // single-credit odds request to every MMA event near this UFC card so a
+  // provider-list omission cannot silently hide a late-added or renamed fight.
+  let discoveredEventIds: string[] = [];
+  try {
+    const eventsResponse = await fetch(buildTheOddsApiEventsUrl(providerKey));
+    if (eventsResponse.ok) {
+      discoveredEventIds = providerEventIdsNearMonitoredStart(
+        await eventsResponse.json().catch(() => null),
+        resolved.selected.starts_at,
+      );
+    }
+  } catch {
+    // Discovery is an optimization and coverage guard. Fall back to the same
+    // one paid sport-level request if the free endpoint is temporarily unavailable.
+  }
+
+  let oddsResponse: Response;
+  try {
+    oddsResponse = await fetch(buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds));
+  } catch {
+    oddsResponse = new Response(null, { status: 502 });
+  }
+  const odds = adaptTheOddsApiResponse({ status: oddsResponse.status, body: await oddsResponse.json().catch(() => null), headers: oddsResponse.headers }, fetchedAt);
+  let payload;
+  try {
+    payload = buildManualMonitoringPayload({
+      resolved,
+      source: previewBody.event_preview,
+      scope: previewBody.effective_scope,
+      odds,
+      startedAt,
+      completedAt: new Date().toISOString(),
+      triggerKind: scheduled ? "scheduled" : "manual",
+      suppressFindingKeys: scheduled ? suppressFindingKeys : undefined,
+    });
+  } catch {
+    if (scheduledNextEligibleAt) await releaseSchedule(scheduledNextEligibleAt);
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "event_identity_mismatch",
+      identity: resolved.identity,
+      nextEligibleAt: scheduledNextEligibleAt ?? undefined,
+      providerCalled: true,
+      response: safeError(409, "EVENT_IDENTITY_MISMATCH", "Source and monitored event identities did not match."),
+    });
+  }
+
+  const recorded = scheduled && scheduledClaimedAt && scheduledNextEligibleAt
+    ? await admin.rpc("record_scheduled_pick_monitoring_run", {
+        p_payload: payload,
+        p_claimed_at: scheduledClaimedAt,
+        p_next_eligible_at: scheduledNextEligibleAt,
+      })
+    : await admin.rpc("record_pick_monitoring_run_and_apply_odds", { p_payload: payload });
+  if (recorded.error || !recorded.data) {
+    const retryAt = retryInOneHour();
+    if (scheduledNextEligibleAt) await releaseSchedule(retryAt);
+    return finishScheduledDecision({
+      outcome: "failed",
+      reason: "monitoring_record_failed",
+      identity: resolved.identity,
+      nextEligibleAt: retryAt,
+      providerCalled: true,
+      response: safeError(503, "MONITORING_RECORD_FAILED", "Monitoring evidence and eligible odds could not be recorded atomically."),
+    });
+  }
+
+  let trustedAutoApply: unknown = null;
+  let finalRunId = String(recorded.data);
+  let finalPayload = payload;
+  const sourcePreview = asRecord(previewBody.event_preview);
+  const sourceWarnings = Array.isArray(sourcePreview?.warnings)
+    ? sourcePreview.warnings.filter((warning): warning is string => typeof warning === "string" && Boolean(warning.trim()))
+    : [];
+  const trustedOfficialCard = scheduled
+    && sourcePreview?.source === "UFC.com event + card"
+    && typeof sourcePreview?.source_url === "string"
+    && /^https:\/\/www\.ufc\.com\/event\/[a-z0-9-]+$/i.test(sourcePreview.source_url)
+    && sourceWarnings.length === 0;
+
+  if (trustedOfficialCard) {
+    const attempts: unknown[] = [];
+    let convergenceRunId = finalRunId;
+
+    // One official UFC fetch can contain several independent changes. Apply the
+    // exact stale-guarded proposals, reload canonical state, and recompute against
+    // the same trusted source until the card converges or no safe progress remains.
+    // Reusing the one odds response avoids paying for each convergence pass.
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const autoApplied = await admin.rpc("auto_apply_trusted_pick_monitoring_changes", {
+        p_run_id: convergenceRunId,
+      });
+      if (autoApplied.error) {
+        attempts.push({ status: "failed", run_id: convergenceRunId, error: autoApplied.error.message });
+        break;
+      }
+
+      const autoApplyData = asRecord(autoApplied.data);
+      attempts.push(autoApplied.data);
+      const applied = Array.isArray(autoApplyData?.applied) ? autoApplyData.applied : [];
+      if (applied.length === 0) break;
+
+      const refreshedStateResponse = await admin.rpc("get_pick_monitoring_event_state");
+      if (refreshedStateResponse.error) {
+        attempts.push({ status: "failed", reason: "refresh_failed" });
+        break;
+      }
+
+      const refreshedState = asRecord(refreshedStateResponse.data);
+      try {
+        resolved = resolveMonitoringEvent(
+          asEvent(refreshedState?.staged),
+          asEvent(refreshedState?.current),
+        );
+      } catch {
+        attempts.push({ status: "failed", reason: "event_resolution_failed" });
+        break;
+      }
+
+      const ignored = new Set(resolved.ignoredBoutIds);
+      const comparisonSource = ignored.size
+        ? {
+            ...previewBody.event_preview,
+            bouts: previewBody.event_preview.bouts.filter((bout) => !ignored.has(bout.bout_id)),
+          }
+        : previewBody.event_preview;
+      const remainingCardFindings = buildCardChangeFindings({
+        identity: resolved.identity,
+        kind: resolved.kind,
+        eventId: resolved.storageEventId,
+        canonical: resolved.selected,
+        source: comparisonSource,
+        scope: previewBody.effective_scope,
+        detectedAt: new Date().toISOString(),
+        allBoutIds: resolved.allBoutIds,
+      });
+      if (remainingCardFindings.length === 0) break;
+
+      let convergencePayload;
+      try {
+        convergencePayload = buildManualMonitoringPayload({
+          resolved,
+          source: previewBody.event_preview,
+          scope: previewBody.effective_scope,
+          odds,
+          startedAt,
+          completedAt: new Date().toISOString(),
+          triggerKind: "scheduled",
+        });
+      } catch {
+        attempts.push({ status: "failed", reason: "event_identity_mismatch" });
+        break;
+      }
+
+      const convergenceRecorded = await admin.rpc("record_pick_monitoring_run_and_apply_odds", {
+        p_payload: convergencePayload,
+      });
+      if (convergenceRecorded.error || !convergenceRecorded.data) {
+        attempts.push({ status: "failed", reason: "monitoring_record_failed" });
+        break;
+      }
+
+      convergenceRunId = String(convergenceRecorded.data);
+      finalRunId = convergenceRunId;
+      finalPayload = convergencePayload;
+    }
+
+    trustedAutoApply = {
+      status: attempts.some((item) => asRecord(item)?.status === "failed") ? "needs_review" : "applied",
+      attempts,
+    };
+  } else if (scheduled) {
+    trustedAutoApply = {
+      status: "not_eligible",
+      reason: sourceWarnings.length ? "source_warnings" : "untrusted_source",
+      warnings: sourceWarnings,
+    };
+  }
+
+  return json({
+    ...monitoringSummary(finalRunId, finalPayload),
+    trigger_kind: finalPayload.trigger_kind,
+    provider_called: true,
+    notification_dispatch: notificationDispatch,
+    live_state_sync: liveStateSync,
+    trusted_auto_apply: trustedAutoApply,
+    fighter_media_sync: fighterMediaSync,
+  });
+});

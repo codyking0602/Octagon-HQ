@@ -1,0 +1,264 @@
+import fs from "node:fs";
+
+const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
+const projectId = process.env.SUPABASE_PROJECT_ID;
+if (!accessToken || !projectId) {
+  throw new Error("Production monitoring scheduler verification is not configured.");
+}
+
+const configuredExpectation = process.env.EXPECTED_MONITORING_SCHEDULER_ACTIVE?.trim().toLowerCase();
+if (configuredExpectation && !["true", "false"].includes(configuredExpectation)) {
+  throw new Error("EXPECTED_MONITORING_SCHEDULER_ACTIVE must be true or false when provided.");
+}
+const expectedActive = configuredExpectation
+  ? configuredExpectation === "true"
+  : true;
+const maximumWakeAgeMs = 2.5 * 60 * 60 * 1000;
+const wakeDecisionToleranceMs = 5 * 60 * 1000;
+
+async function readBody(response) {
+  const text = await response.text();
+  try { return JSON.parse(text); } catch { return { message: text }; }
+}
+
+const keysResponse = await fetch(
+  `https://api.supabase.com/v1/projects/${projectId}/api-keys?reveal=true`,
+  { headers: { Authorization: `Bearer ${accessToken}` } },
+);
+const keys = await readBody(keysResponse);
+if (!keysResponse.ok || !Array.isArray(keys)) {
+  throw new Error(`Project key lookup failed with HTTP ${keysResponse.status}.`);
+}
+const secretKey = keys.find((item) => item.type === "secret")?.api_key
+  ?? keys.find((item) => item.type === "legacy" && /service.role/i.test(item.name ?? ""))?.api_key;
+if (!secretKey) throw new Error("Project secret key is unavailable for scheduler verification.");
+
+const serviceHeaders = {
+  Authorization: `Bearer ${secretKey}`,
+  apikey: secretKey,
+  "Content-Type": "application/json",
+};
+const healthResponse = await fetch(
+  `https://${projectId}.supabase.co/rest/v1/rpc/get_pick_monitoring_scheduler_health`,
+  {
+    method: "POST",
+    headers: serviceHeaders,
+    body: "{}",
+  },
+);
+const health = await readBody(healthResponse);
+if (!healthResponse.ok) {
+  throw new Error(`Production scheduler health failed with HTTP ${healthResponse.status}.`);
+}
+const safeHealth = {
+  job_name: health?.job_name ?? null,
+  schedule: health?.schedule ?? null,
+  active: health?.active === true,
+  token_configured: health?.token_configured === true,
+  command_configured: health?.command_configured === true,
+  function_name: health?.function_name ?? null,
+  last_run_status: health?.last_run_status ?? null,
+  last_run_started_at: health?.last_run_started_at ?? null,
+  last_run_finished_at: health?.last_run_finished_at ?? null,
+};
+
+if (safeHealth.job_name !== "octagon-hq-pick-monitoring"
+  || safeHealth.schedule !== "*/5 * * * *"
+  || safeHealth.active !== expectedActive
+  || safeHealth.token_configured !== true
+  || safeHealth.command_configured !== true
+  || safeHealth.function_name !== "run-pick-monitoring") {
+  throw new Error(
+    `Production Picks monitoring scheduler health mismatch; expected active=${expectedActive}: ${JSON.stringify(safeHealth)}`,
+  );
+}
+
+let latestDecision = null;
+if (expectedActive) {
+  const lastWakeStartedAt = Date.parse(safeHealth.last_run_started_at ?? "");
+  const lastWakeFinishedAt = Date.parse(safeHealth.last_run_finished_at ?? "");
+  const now = Date.now();
+  if (safeHealth.last_run_status !== "succeeded"
+    || !Number.isFinite(lastWakeStartedAt)
+    || !Number.isFinite(lastWakeFinishedAt)
+    || lastWakeFinishedAt < lastWakeStartedAt
+    || now - lastWakeStartedAt > maximumWakeAgeMs
+    || lastWakeStartedAt - now > wakeDecisionToleranceMs) {
+    throw new Error(`Production Picks monitoring scheduler has no recent successful wake: ${JSON.stringify(safeHealth)}`);
+  }
+
+  const query = new URLSearchParams({
+    select: "run_id,status,decision_reason,provider_called,started_at,completed_at,source_event_identity,provider_event_count,complete_snapshot_count,missing_snapshot_count,diagnostics,provider_requests_remaining",
+    trigger_kind: "eq.scheduled",
+    order: "completed_at.desc.nullslast,created_at.desc",
+    limit: "1",
+  });
+  const decisionResponse = await fetch(
+    `https://${projectId}.supabase.co/rest/v1/pick_monitoring_runs?${query}`,
+    { headers: serviceHeaders },
+  );
+  const decisions = await readBody(decisionResponse);
+  if (!decisionResponse.ok || !Array.isArray(decisions) || decisions.length !== 1) {
+    throw new Error(`Latest production monitoring decision lookup failed with HTTP ${decisionResponse.status}.`);
+  }
+
+  const decision = decisions[0];
+  let findings = [];
+  if (decision?.run_id) {
+    const findingQuery = new URLSearchParams({
+      select: "finding_type,severity,summary,matchup_identity,source_details",
+      run_id: `eq.${decision.run_id}`,
+      order: "detected_at.asc",
+    });
+    const findingResponse = await fetch(
+      `https://${projectId}.supabase.co/rest/v1/pick_monitoring_findings?${findingQuery}`,
+      { headers: serviceHeaders },
+    );
+    const findingBody = await readBody(findingResponse);
+    if (findingResponse.ok && Array.isArray(findingBody)) findings = findingBody;
+  }
+
+  latestDecision = {
+    run_id: decision?.run_id ?? null,
+    status: decision?.status ?? null,
+    decision_reason: decision?.decision_reason ?? null,
+    provider_called: decision?.provider_called,
+    started_at: decision?.started_at ?? null,
+    completed_at: decision?.completed_at ?? null,
+    source_event_identity: decision?.source_event_identity ?? null,
+    provider_event_count: decision?.provider_event_count ?? null,
+    complete_snapshot_count: decision?.complete_snapshot_count ?? null,
+    missing_snapshot_count: decision?.missing_snapshot_count ?? null,
+    diagnostics: Array.isArray(decision?.diagnostics) ? decision.diagnostics : [],
+    provider_requests_remaining: decision?.provider_requests_remaining ?? null,
+    findings,
+  };
+  const completedAt = Date.parse(latestDecision.completed_at ?? "");
+  const nextEligibleAt = Math.max(
+    ...latestDecision.diagnostics
+      .map((item) => Date.parse(item?.next_eligible_at ?? ""))
+      .filter(Number.isFinite),
+    Number.NEGATIVE_INFINITY,
+  );
+  const truthfulNotDueCarryForward = latestDecision.status === "skipped"
+    && latestDecision.decision_reason === "not_due"
+    && latestDecision.provider_called === false
+    && Number.isFinite(nextEligibleAt)
+    && nextEligibleAt >= lastWakeStartedAt
+    && now - completedAt <= maximumWakeAgeMs;
+
+  let truthfulNoEventCarryForward = false;
+  if (
+    latestDecision.status === "skipped"
+    && latestDecision.decision_reason === "no_event"
+    && latestDecision.provider_called === false
+    && latestDecision.source_event_identity === "none"
+    && Number(latestDecision.provider_event_count) === 0
+    && Number(latestDecision.complete_snapshot_count) === 0
+    && Number(latestDecision.missing_snapshot_count) === 0
+    && now - completedAt <= maximumWakeAgeMs
+  ) {
+    const stateResponse = await fetch(
+      `https://${projectId}.supabase.co/rest/v1/rpc/get_pick_monitoring_event_state`,
+      { method: "POST", headers: serviceHeaders, body: "{}" },
+    );
+    const state = await readBody(stateResponse);
+    if (!stateResponse.ok) {
+      throw new Error(`Production monitoring event-state verification failed with HTTP ${stateResponse.status}.`);
+    }
+    truthfulNoEventCarryForward = state?.staged == null && state?.current == null;
+  }
+
+  const allowedStatuses = new Set(["completed", "partial", "failed", "skipped"]);
+  const preProviderFailureReasons = new Set([
+    "notification_dispatch_failed",
+    "database_read_failed",
+    "event_resolution_failed",
+    "schedule_state_failed",
+    "schedule_claim_failed",
+    "monitoring_not_configured",
+    "source_preview_failed",
+  ]);
+  if (!allowedStatuses.has(latestDecision.status)
+    || typeof latestDecision.provider_called !== "boolean"
+    || !Number.isFinite(completedAt)
+    || (!truthfulNotDueCarryForward && !truthfulNoEventCarryForward && completedAt < lastWakeStartedAt - wakeDecisionToleranceMs)
+    || completedAt > now + wakeDecisionToleranceMs
+    || (latestDecision.status === "skipped" && latestDecision.provider_called !== false)
+    || (["completed", "partial"].includes(latestDecision.status) && latestDecision.provider_called !== true)
+    || (preProviderFailureReasons.has(latestDecision.decision_reason) && latestDecision.provider_called !== false)) {
+    throw new Error(`Latest production monitoring decision is missing or untruthful: ${JSON.stringify(latestDecision)}`);
+  }
+
+  const providerDiagnostics = latestDecision.diagnostics.filter((item) => (
+    item && typeof item === "object" && item.severity === "error"
+  ));
+  const providerFindings = latestDecision.findings.filter((item) => (
+    item?.finding_type === "provider_error" || item?.finding_type === "quota_warning"
+  ));
+  const healthyPartialCoverage = latestDecision.status === "partial"
+    && latestDecision.provider_called === true
+    && latestDecision.decision_reason === null
+    && Number(latestDecision.provider_event_count) > 0
+    && Number(latestDecision.complete_snapshot_count) > 0
+    && Number(latestDecision.missing_snapshot_count) > 0
+    && providerDiagnostics.length === 0
+    && providerFindings.length === 0
+    && Number(latestDecision.provider_requests_remaining) > 5;
+  const healthyOutcome = latestDecision.status === "completed"
+    || latestDecision.status === "skipped"
+    || healthyPartialCoverage;
+  if (!healthyOutcome) {
+    if (latestDecision.decision_reason === "source_preview_failed") {
+      const stateResponse = await fetch(
+        `https://${projectId}.supabase.co/rest/v1/rpc/get_pick_monitoring_event_state`,
+        { method: "POST", headers: serviceHeaders, body: "{}" },
+      );
+      const state = await readBody(stateResponse);
+      const selected = state?.staged ?? state?.current ?? null;
+      if (selected && typeof selected === "object") {
+        const previewResponse = await fetch(
+          `https://${projectId}.supabase.co/functions/v1/sync-next-ufc-event`,
+          {
+            method: "POST",
+            headers: serviceHeaders,
+            body: JSON.stringify({
+              mode: "monitoring-preview",
+              ...(typeof selected.source_url === "string" ? { source_url: selected.source_url } : {}),
+              ...(typeof selected.source_event_key === "string" ? { source_event_key: selected.source_event_key } : {}),
+            }),
+          },
+        );
+        const previewBody = await readBody(previewResponse);
+        console.error("SOURCE_PREVIEW_DIAGNOSTIC", JSON.stringify({
+          status: previewResponse.status,
+          code: previewBody?.code ?? null,
+          stage: previewBody?.stage ?? null,
+          message: previewBody?.message ?? null,
+          safeDetails: previewBody?.safeDetails ?? null,
+          deployment_sha: previewBody?.deployment_sha ?? null,
+        }));
+      }
+    }
+    throw new Error(`Production Picks monitoring is unhealthy: ${JSON.stringify(latestDecision)}`);
+  }
+}
+
+if (process.env.RUNNER_TEMP) {
+  fs.writeFileSync(
+    `${process.env.RUNNER_TEMP}/monitoring-scheduler-proof.json`,
+    `${JSON.stringify({ expected_active: expectedActive, health: safeHealth, latest_decision: latestDecision }, null, 2)}\n`,
+  );
+}
+
+if (!expectedActive) {
+  console.log("PASS: production Picks monitoring scheduler is safely paused, canonical, command-configured, and token-configured without invoking the runner or provider.");
+} else if (latestDecision.status === "partial") {
+  console.log(
+    `PASS: production Picks monitoring completed a healthy partial provider check with ${latestDecision.complete_snapshot_count} matched and ${latestDecision.missing_snapshot_count} unavailable supported-bookmaker snapshots; ${latestDecision.provider_requests_remaining} monthly requests remain.`,
+  );
+} else {
+  console.log(
+    `PASS: production Picks monitoring scheduler woke successfully and recorded a healthy ${latestDecision.status} decision (provider_called=${latestDecision.provider_called}).`,
+  );
+}

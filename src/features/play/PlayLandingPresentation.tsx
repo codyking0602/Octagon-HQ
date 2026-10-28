@@ -1,0 +1,116 @@
+import type { ReactNode } from "react";
+import { playGameDefinition, type PlayGameId, type PlaySport } from "./playRegistry";
+
+export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
+  "gm-football",
+  "wheel-football",
+  "draft-room",
+  "find-leader",
+  "who-am-i",
+  "higher-lower",
+] as const satisfies readonly PlayGameId[];
+
+export const PLAY_LANDING_UFC_GAME_ORDER = [
+  "wheel-ufc",
+  "auction",
+  "find-leader",
+  "who-am-i",
+  "higher-lower",
+] as const satisfies readonly PlayGameId[];
+
+export const PLAY_LANDING_UFC_WHEEL_GAME = "wheel-ufc" as const satisfies PlayGameId;
+export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies PlayGameId;
+export const PLAY_LANDING_FOOTBALL_STRATEGIC_GAME = "draft-room" as const satisfies PlayGameId;
+
+export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
+  return sport === "ufc" ? PLAY_LANDING_UFC_GAME_ORDER : PLAY_LANDING_FOOTBALL_GAME_ORDER;
+}
+
+export function playLandingDestination(sport: PlaySport, gameId: PlayGameId) {
+  const game = playGameDefinition(gameId, sport);
+  return sport === "ufc" && gameId === "find-leader"
+    ? `${game.route}?mode=replayable`
+    : game.route;
+}
+
+export function PlayLandingHeader({ sport }: { sport: PlaySport }) {
+  return (
+    <section className="play-landing-heading" data-sport={sport}>
+      <h1>Play</h1>
+      <p>Daily games.</p>
+    </section>
+  );
+}
+
+type PlayLandingGameLibraryProps = {
+  sport: PlaySport;
+  onNavigate: (route: string) => void;
+  footer?: ReactNode;
+  familyFeudVisible?: boolean;
+};
+
+export function PlayLandingGameLibrary({
+  sport,
+  onNavigate,
+  footer,
+  familyFeudVisible = false,
+}: PlayLandingGameLibraryProps) {
+  const games = playLandingGameIds(sport)
+    .map((gameId) => playGameDefinition(gameId, sport));
+  const familyFeudRoute = sport === "ufc" ? "/play/sports-feud" : "/football/sports-feud";
+
+  return (
+    <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
+      <header className="play-landing-library__heading">
+        <div>
+          <p className="eyebrow">ALL GAMES</p>
+          <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
+          <p>Quick games and blind tests, ready whenever the debate starts.</p>
+        </div>
+        <span>{games.length + (familyFeudVisible ? 1 : 0)} LIVE</span>
+      </header>
+
+      <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
+        {familyFeudVisible ? (
+          <button
+            className="play-landing-game-card is-strategic"
+            type="button"
+            onClick={() => onNavigate(familyFeudRoute)}
+          >
+            <span className="play-landing-game-card__icon" aria-hidden="true">F</span>
+            <span className="play-landing-game-card__status">OWNER PREVIEW</span>
+            <strong>Sports Feud</strong>
+            <small>Clear two answer boards, then race through five Fast Money prompts in 30 seconds.</small>
+            <em>PLAY →</em>
+          </button>
+        ) : null}
+
+        {games.map((game) => {
+          const strategic = (sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME)
+            || (sport === "football" && (game.id === PLAY_LANDING_FOOTBALL_STRATEGIC_GAME || game.id === "gm-football"));
+          const challengeGame = game.id === "wheel-football" || game.id === "wheel-ufc"
+            || (game.id === "higher-lower" && sport === "football");
+          const gmGame = game.id === "gm-football";
+          return (
+            <button
+              className={`play-landing-game-card${strategic ? " is-strategic" : ""}`}
+              type="button"
+              key={game.route}
+              onClick={() => onNavigate(playLandingDestination(sport, game.id))}
+            >
+              <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
+              <span className="play-landing-game-card__status">
+                {gmGame ? "SOLO / CHALLENGE" : challengeGame ? "CHALLENGE" : game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
+              </span>
+              <strong>{game.title}</strong>
+              <small>{game.description}</small>
+              <em>{challengeGame ? "CHALLENGE →" : "PLAY →"}</em>
+            </button>
+          );
+        })}
+
+      </div>
+      {footer}
+    </section>
+  );
+}

@@ -1,0 +1,46 @@
+
+/* NBA-only game actions. Shared Football/UFC result components stay untouched. */
+:is(.nba-hit-number-page, .nba-find-leader-page, .who-am-i-page[data-sport="nba"]) .game-result-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+:is(.nba-hit-number-page, .nba-find-leader-page, .who-am-i-page[data-sport="nba"]) .game-result-actions > .find-secondary-action:nth-child(2) {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  border: 1px solid #f0b668 !important;
+  background: linear-gradient(115deg, #d98c31, #f2b65c);
+  color: #1b1712;
+  box-shadow: 0 5px 17px rgba(216, 140, 49, .13);
+  font-size: .78rem;
+  font-weight: 950;
+}
+:is(.nba-hit-number-page, .nba-find-leader-page, .who-am-i-page[data-sport="nba"]) .game-result-actions > .primary-action {
+  grid-column: 1;
+  grid-row: 2;
+  border: 1px solid rgba(226, 163, 83, .30);
+  background: linear-gradient(130deg, #31271e, #201e1b);
+  color: #f2c58e;
+  font-size: .67rem;
+  padding: 0 8px;
+}
+:is(.nba-hit-number-page, .nba-find-leader-page, .who-am-i-page[data-sport="nba"]) .game-result-actions > .find-secondary-action:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+  border-color: rgba(226, 163, 83, .19) !important;
+  background: #242424;
+  color: #e7e5df;
+  font-size: .67rem;
+  padding: 0 8px;
+}
+/* Higher or Lower's two-action result uses the first button for replay. */
+.nba-higher-lower .game-result-actions > .primary-action {
+  border: 1px solid #f0b668;
+  background: linear-gradient(115deg, #d98c31, #f2b65c);
+  color: #1b1712;
+  font-weight: 950;
+}
+.nba-higher-lower .game-result-actions > .find-secondary-action {
+  border-color: rgba(226, 163, 83, .2) !important;
+  background: #252423;
+  color: #e7e5df;
+}

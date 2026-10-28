@@ -1,0 +1,839 @@
+import type { PlayLineupType, PlayReplayBehavior } from "./lineupModel";
+
+export type PlaySport = "ufc" | "football";
+
+export type PlayGameId =
+  | "find-leader"
+  | "wavelength"
+  | "blind-resume"
+  | "blind-rank"
+  | "keep-cut"
+  | "better-than"
+  | "auction"
+  | "hit-the-number"
+  | "bar-trivia"
+  | "average-fan"
+  | "20-questions"
+  | "who-am-i"
+  | "millionaire"
+  | "sports-feud"
+  | "draft-room"
+  | "wheel-football"
+  | "gm-football"
+  | "higher-lower"
+  | "wheel-ufc";
+
+export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
+
+export interface PlayGameIdentity {
+  sport: PlaySport;
+  gameId: PlayGameId;
+  key: PlayGameKey;
+}
+
+export type PlayNewLineupControl =
+  | "none"
+  | "result-replay"
+  | "button-and-result-replay"
+  | "builder-reset";
+
+export type PlayRepetitionPolicy =
+  | "fixed-daily"
+  | "recent-items-deprioritized"
+  | "recent-fighters-deprioritized"
+  | "fixed-curated";
+
+export type PlayCompletionState =
+  | "leader-eliminated-or-nine-safe"
+  | "fourth-guess-locked"
+  | "five-picks-complete"
+  | "five-slots-locked"
+  | "eight-decisions-locked"
+  | "claim-locked"
+  | "auction-complete"
+  | "target-selection-locked"
+  | "identity-guessed-or-question-limit"
+  | "identity-guessed-or-clue-limit"
+  | "millionaire-settled"
+  | "sports-feud-settled"
+  | "bar-trivia-settled"
+  | "average-fan-settled"
+  | "draft-room-complete"
+  | "wheel-football-complete"
+  | "gm-football-complete"
+  | "higher-lower-settled"
+  | "wheel-ufc-complete";
+
+export interface PlayGameLineupDefinition {
+  defaultType: PlayLineupType;
+  supportedTypes: readonly PlayLineupType[];
+  replayBehavior: PlayReplayBehavior;
+  newLineupControl: PlayNewLineupControl;
+  repetitionPolicy: PlayRepetitionPolicy;
+  lineupSize: number | "variable";
+  completionState: PlayCompletionState;
+  challengeEligible: boolean;
+  dailyEligible: boolean;
+  streakEligible: boolean;
+  reminderEligible: boolean;
+  historyRecording:
+    | "official-daily"
+    | "official-daily-and-casual"
+    | "casual-and-challenge"
+    | "challenge-completion"
+    | "casual-only";
+  difficultyModel: string;
+}
+
+export interface PlayGameDefinition {
+  sport: PlaySport;
+  id: PlayGameId;
+  route: string;
+  icon: string;
+  title: string;
+  description: string;
+  availability?: "preview" | "retired";
+  lineup: PlayGameLineupDefinition;
+}
+
+export const playGameCatalog = [
+  {
+    sport: "ufc",
+    id: "average-fan",
+    route: "/play/average-fan",
+    icon: "AF",
+    title: "Are You Smarter Than an Average Fan?",
+    description: "Choose a fan, work a 10-question UFC grade board in any order, then make the Final call.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "average-fan-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "The canonical Daily game: two questions per grade, Peek/Copy/Save, the loss verdict, HQ scoring, and a protected Final.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "millionaire",
+    route: "/play/millionaire",
+    icon: "$1M",
+    title: "Millionaire",
+    description: "Climb an eight-question UFC money ladder with three lifelines and one final walk-away decision.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily", "curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 8,
+      completionState: "millionaire-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "Eight calibrated questions from Q1 through Q8 with checkpoints, lifelines, and a Q8 risk decision.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "sports-feud",
+    route: "/play/sports-feud",
+    icon: "SF",
+    title: "Sports Feud",
+    description: "Clear two UFC answer boards, then race through five Fast Money prompts.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily", "curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 7,
+      completionState: "sports-feud-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Two editorial four-hit boards plus five hidden-score Fast Money prompts from the isolated UFC Sports Feud bank.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "higher-lower",
+    route: "/play/higher-lower",
+    icon: "↕",
+    title: "Higher or Lower",
+    description: "Ten UFC-only career comparisons with real wins, finishes, and title-fight numbers.",
+    lineup: {
+      defaultType: "replayable", supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup", newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized", lineupSize: 10,
+      completionState: "higher-lower-settled",
+      challengeEligible: false, dailyEligible: false, streakEligible: false, reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "Ten verifiable UFC-only comparisons across six factual metrics; 3 approachable, 5 competitive, 2 tough.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "wheel-ufc",
+    route: "/play/wheel",
+    icon: "↻",
+    title: "Wheel of UFC",
+    description: "Challenge someone, spin weighted UFC categories, and build an eight-division current-fighter roster.",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: 16,
+      completionState: "wheel-ufc-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "A server-owned 16-turn head-to-head challenge: spin Champion, Top 5, 6–15, Unranked, Country, Young Gun, or Veteran, then lock one eligible current fighter into an open men's UFC division while HQ grades stay hidden during drafting, then reveal row-by-row before the final eight-fighter average.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "auction",
+    route: "/play/auction",
+    icon: "$",
+    title: "Auction",
+    description: "Choose a UFC auction, bid privately, and build the stronger collection.",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: "variable",
+      completionState: "auction-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "One selected auction mode with fixed public rounds, collection size, and starting bankroll.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "hit-the-number",
+    route: "/play/hit-the-number",
+    icon: "◎",
+    title: "Hit the Number",
+    description: "Pick 4–7 UFC fighters and hit the target without going over. Use the open roster or a random pool.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: "variable",
+      completionState: "target-selection-locked",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "A verified UFC stat target with 4–7 required picks, optional division filtering, and either the full eligible roster or a 12-fighter random pool.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "20-questions",
+    route: "/play/20-questions",
+    icon: "20?",
+    title: "20 Questions",
+    description: "Ask up to 10 factual Yes/No questions and identify the hidden UFC fighter before your score runs down.",
+    availability: "retired",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-question-limit",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "One hidden canonical UFC factual-ledger fighter, up to 10 deterministic Yes/No questions with static whole-universe score impacts, and guess-anytime identity search.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "who-am-i",
+    route: "/play/who-am-i",
+    icon: "?",
+    title: "Who Am I?",
+    description: "Identify the hidden UFC fighter as two clues at a time move from broad to near-giveaway.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-clue-limit",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "One hidden canonical UFC factual-ledger fighter with 10 source-derived clues revealed two at a time across progressively stronger clue bands.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "find-leader",
+    route: "/play/find-leader",
+    icon: "#1",
+    title: "Find the Leader",
+    description: "Generate a fresh stat category and ten-fighter lineup, then leave the leader standing.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      lineupSize: 10,
+      completionState: "leader-eliminated-or-nine-safe",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "A verified metric leader plus nine lower-value UFC fighters on either the fixed daily board or a generated casual board.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "wavelength",
+    route: "/play/wavelength",
+    icon: "≈",
+    title: "Wavelength",
+    description: "Find a hidden 1–100 rating through four adaptive UFC clues. Each clue reacts to your last guess.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 1,
+      completionState: "fourth-guess-locked",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "One hidden target with four adaptive clues and category-repeat pressure.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "blind-resume",
+    route: "/play/blind-resume",
+    icon: "?",
+    title: "Blind Resume",
+    description: "Choose the stronger UFC career five times without seeing either fighter’s name.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      lineupSize: 10,
+      completionState: "five-picks-complete",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "Five gender-valid matchup bands weighted toward close UFC résumé calls.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "blind-rank",
+    route: "/play/blind-rank",
+    icon: "1–5",
+    title: "Blind Rank 5",
+    description: "Rank five mystery UFC fighters from 1–5. Once you place a fighter, that slot is locked.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      lineupSize: 5,
+      completionState: "five-slots-locked",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "Five versioned lineup shapes with tier, cluster, and low-end pressure.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "keep-cut",
+    route: "/play/keep-cut",
+    icon: "4/4",
+    title: "Keep 4, Cut 4",
+    description: "Reveal eight UFC fighters one at a time, lock four keeps and four cuts, and receive a private 0–100 score.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-fighters-deprioritized",
+      lineupSize: 8,
+      completionState: "eight-decisions-locked",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "A cutoff-centered eight-fighter board revealed one fighter at a time with every Keep/Cut decision locked.",
+    },
+  },
+  {
+    sport: "football",
+    id: "gm-football",
+    route: "/football/gm-mode",
+    icon: "GM",
+    title: "The GM",
+    description: "Run a standalone three-year GM build or challenge another GM to an alternating shared-player draft.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: 7,
+      completionState: "gm-football-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "NFL-only GM mode with a standalone Wheel-based solo run plus a 1v1 format using a $150M cap, match-wide player uniqueness, alternating draft picks, worse-Year-1 offseason priority, a shared player market, one full offseason per GM, continuity, weak-link effects, and the locked seeded outcome curve.",
+    },
+  },
+  {
+    sport: "football",
+    id: "average-fan",
+    route: "/play/average-fan",
+    icon: "AF",
+    title: "Are You Smarter Than an Average Fan?",
+    description: "Choose a fan, work a 10-question NFL or CFB grade board in any order, then make the Final call.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "average-fan-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "The canonical Daily game with CFB/NFL rotation, identical presentation, Peek/Copy/Save, the loss verdict, HQ scoring, and a protected Final.",
+    },
+  },
+  {
+    sport: "football",
+    id: "millionaire",
+    route: "/football/millionaire",
+    icon: "$1M",
+    title: "Millionaire",
+    description: "Climb an eight-question NFL or college football money ladder with three lifelines and one final walk-away decision.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily", "curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 8,
+      completionState: "millionaire-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "One canonical NFL or CFB eight-question ladder per Football Daily date with checkpoints, lifelines, and a Q8 risk decision.",
+    },
+  },
+  {
+    sport: "football",
+    id: "sports-feud",
+    route: "/football/sports-feud",
+    icon: "SF",
+    title: "Sports Feud",
+    description: "Clear two NFL or college football answer boards, then race through five Fast Money prompts.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily", "curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 7,
+      completionState: "sports-feud-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Two editorial four-hit boards plus five hidden-score Fast Money prompts from a date-locked NFL or CFB bank.",
+    },
+  },
+  {
+    sport: "football",
+    id: "draft-room",
+    route: "/football/draft-room",
+    icon: "$",
+    title: "Draft Room",
+    description: "Draft NFL and CFB stars and team seasons through sealed bids across multiple formats.",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: "variable",
+      completionState: "draft-room-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "Two-player sealed-bid rooms with mode-owned rounds, bankrolls, roster requirements, and server-owned challenge state.",
+    },
+  },
+  {
+    sport: "football",
+    id: "wheel-football",
+    route: "/football/wheel",
+    icon: "↻",
+    title: "Wheel of Football",
+    description: "Invite 1–3 friends, rotate NFL or CFB team spins, and build seven-slot current-player Superteams.",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: 28,
+      completionState: "wheel-football-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "A server-owned 2–4 player challenge with 14, 21, or 28 picks: each profile spins independently, locks one current NFL or CFB player or coach into an open Superteam slot, then passes the turn.",
+    },
+  },
+  {
+    sport: "football",
+    id: "higher-lower",
+    route: "/football/higher-lower",
+    icon: "↕",
+    title: "Higher or Lower",
+    description: "Challenge someone to the exact same 10 football comparisons. Accuracy wins; time breaks a tie.",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "higher-lower-settled",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "Ten frozen NFL, CFB, or Mixed numeric comparisons with a 3 approachable / 5 competitive / 2 tough mix, five Higher and five Lower answers, accuracy-first scoring, and completion time only as a tiebreaker.",
+    },
+  },
+  {
+    sport: "football",
+    id: "blind-rank",
+    route: "/football/rank-five",
+    icon: "1–5",
+    title: "Blind Rank 5",
+    description: "Rank five mystery NFL or college football subjects from 1–5 before the next reveal.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 5,
+      completionState: "five-slots-locked",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "Versioned NFL and CFB player, season, team, program, and coach packs with blind locked placement.",
+    },
+  },
+  {
+    sport: "football",
+    id: "keep-cut",
+    route: "/football/keep-cut",
+    icon: "4/4",
+    title: "Keep 4, Cut 4",
+    description: "Reveal eight NFL or college football subjects one at a time and lock four keeps and four cuts.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 8,
+      completionState: "eight-decisions-locked",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "NFL and CFB comparison boards revealed one subject at a time with every Keep/Cut decision locked.",
+    },
+  },
+  {
+    sport: "football",
+    id: "wavelength",
+    route: "/football/wavelength",
+    icon: "≈",
+    title: "Wavelength",
+    description: "Find a hidden 1–100 football number through four adaptive NFL and CFB clues.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 1,
+      completionState: "fourth-guess-locked",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "One hidden football target with four adaptive clues spanning NFL and college football categories.",
+    },
+  },
+  {
+    sport: "football",
+    id: "blind-resume",
+    route: "/football/blind-resume",
+    icon: "?",
+    title: "Blind Resume",
+    description: "Choose the stronger football résumé across careers, seasons, teams, programs, and coaches without seeing the names.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "five-picks-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "Five staged NFL and CFB résumé comparisons built across multiple subject types and difficulty bands.",
+    },
+  },
+  {
+    sport: "football",
+    id: "hit-the-number",
+    route: "/football/hit-the-number",
+    icon: "◎",
+    title: "Hit the Number",
+    description: "Pick from a football board and chase a factual NFL or CFB target without going over.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "button-and-result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: "variable",
+      completionState: "target-selection-locked",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "Verified NFL and CFB factual targets across classic, themed, era, and team-build boards.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "bar-trivia",
+    route: "/play/bar-trivia",
+    icon: "BT",
+    title: "Bar Trivia",
+    description: "Three rounds of UFC knowledge, Deep Cuts, and Championship Rounds before a Last Call wager.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "bar-trivia-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Nine four-choice UFC bar-trivia questions across three themed rounds with escalating 10/12/14 base values, one random Double Round, streak heat multipliers, and a 16-point Last Call plus 0–10 wager normalized to 100.",
+    },
+  },
+  {
+    sport: "football",
+    id: "bar-trivia",
+    route: "/football/bar-trivia",
+    icon: "BT",
+    title: "Bar Trivia",
+    description: "Pick NFL or college, play three themed trivia rounds, then put points on the line at Last Call.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "bar-trivia-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Separate NFL and CFB ten-question bar-trivia runs with escalating 10/12/14 base values, one random Double Round, streak heat multipliers, and a 16-point Last Call plus 0–10 wager normalized to 100.",
+    },
+  },
+  {
+    sport: "football",
+    id: "20-questions",
+    route: "/football/20-questions",
+    icon: "20?",
+    title: "20 Questions",
+    description: "Get NFL or CFB up front, then ask up to 10 factual Yes/No questions and identify the hidden player or head coach.",
+    availability: "retired",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-question-limit",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "A disclosed NFL/CFB universe, one hidden canonical player or head coach, up to 10 deterministic Yes/No questions with static whole-universe score impacts, and guess-anytime identity search.",
+    },
+  },
+  {
+    sport: "football",
+    id: "who-am-i",
+    route: "/football/who-am-i",
+    icon: "?",
+    title: "Who Am I?",
+    description: "Get NFL or CFB up front, then identify the hidden player or head coach from progressively stronger clue pairs.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 1,
+      completionState: "identity-guessed-or-clue-limit",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "A disclosed NFL/CFB universe with one canonical player or head coach and 10 source-derived clues revealed two at a time across progressively stronger clue bands.",
+    },
+  },
+  {
+    sport: "football",
+    id: "find-leader",
+    route: "/football/find-leader",
+    icon: "#1",
+    title: "Find the Leader",
+    description: "Eliminate nine NFL or college football decoys without removing the hidden statistical leader.",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable", "curated"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "leader-eliminated-or-nine-safe",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "Verified NFL and CFB leader boards with nine lower-value decoys and balanced league/category depth.",
+    },
+  },
+] as const satisfies readonly PlayGameDefinition[];
+
+export const playGames: readonly PlayGameDefinition[] = playGameCatalog.filter(
+  (game) => game.sport === "ufc" && !("availability" in game),
+);
+
+export function playGamesForSport(sport: PlaySport): readonly PlayGameDefinition[] {
+  return playGameCatalog.filter((game) => game.sport === sport && !("availability" in game));
+}
+
+export function playGameKey(sport: PlaySport, gameId: PlayGameId): PlayGameKey {
+  return `${sport}:${gameId}`;
+}
+
+export function playGameIdentity(sport: PlaySport, gameId: PlayGameId): PlayGameIdentity {
+  return { sport, gameId, key: playGameKey(sport, gameId) };
+}
+
+export function playGameDefinition(gameId: PlayGameId, sport: PlaySport = "ufc"): PlayGameDefinition {
+  const definition = playGameCatalog.find((game) => game.sport === sport && game.id === gameId);
+  if (!definition) throw new Error(`Play game ${playGameKey(sport, gameId)} is not registered.`);
+  return definition;
+}

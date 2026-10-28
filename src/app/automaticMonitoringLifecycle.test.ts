@@ -1,0 +1,131 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+
+const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
+const productionVerifier = readFileSync("scripts/verify-production-monitoring-scheduler.mjs", "utf8");
+const sourceContextMigration = readFileSync(
+  "supabase/migrations/202609120001_repair_pick_monitoring_source_context.sql",
+  "utf8",
+);
+
+function blockAfter(marker: string, length = 900) {
+  const start = runner.indexOf(marker);
+  expect(start).toBeGreaterThanOrEqual(0);
+  return runner.slice(start, start + length);
+}
+
+describe("automatic Picks monitoring lifecycle", () => {
+  it("checks official UFC card truth on the existing scheduler before deciding whether paid odds are due", () => {
+    const cardCheckAt = runner.indexOf("shouldRunScheduledCardSourceCheck(resolved.selected");
+    const scheduleDecisionAt = runner.indexOf("const decision = decideScheduledMonitoring({");
+    const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)");
+    expect(cardCheckAt).toBeGreaterThanOrEqual(0);
+    expect(scheduleDecisionAt).toBeGreaterThan(cardCheckAt);
+    expect(providerAt).toBeGreaterThan(scheduleDecisionAt);
+    expect(runner).toContain("forceCardRefresh");
+    expect(runner).toContain("if (!decision.due) {");
+    expect(runner).not.toContain("!decision.due && !forceCardRefresh");
+    expect(runner).toContain('admin.rpc("record_card_source_monitoring_run"');
+    expect(runner).toContain('admin.rpc("auto_apply_trusted_pick_monitoring_changes"');
+    expect(runner.indexOf('admin.rpc("record_card_source_monitoring_run"')).toBeLessThan(providerAt);
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
+  });
+
+  it("uses quota-free MMA event discovery before the one paid odds request", () => {
+    const discoveryAt = runner.indexOf("buildTheOddsApiEventsUrl(providerKey)");
+    const paidAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)");
+    expect(discoveryAt).toBeGreaterThanOrEqual(0);
+    expect(paidAt).toBeGreaterThan(discoveryAt);
+    expect(runner).toContain("providerEventIdsNearMonitoredStart");
+    expect(runner.match(/buildTheOddsApiEventsUrl\(providerKey\)/g)).toHaveLength(1);
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
+    expect(runner).not.toMatch(/events\/\$\{[^}]+\}\/odds/);
+  });
+
+  it("converges several trusted card mutations without paying for another odds response", () => {
+    expect(runner).toContain("for (let attempt = 0; attempt < 8; attempt += 1)");
+    expect(runner).toContain("remainingCardFindings");
+    expect(runner).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"');
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
+    expect(runner).toContain("Reusing the one odds response");
+  });
+
+  it("claims due scheduled work before the one configured odds-provider request", () => {
+    const claimAt = runner.indexOf('admin.rpc("claim_pick_monitoring_schedule"');
+    const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)");
+    expect(claimAt).toBeGreaterThanOrEqual(0);
+    expect(providerAt).toBeGreaterThan(claimAt);
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
+    expect(runner.match(/claim_pick_monitoring_schedule/g)).toHaveLength(1);
+  });
+
+  it("returns not-due and already-claimed decisions before any provider request", () => {
+    expect(runner.indexOf('reason: decision.reason')).toBeLessThan(
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)"),
+    );
+    expect(runner.indexOf('reason: "already_claimed"')).toBeLessThan(
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)"),
+    );
+  });
+
+  it("uses the exact published source context for both manual and scheduled checks", () => {
+    expect(sourceContextMigration).toContain("draft.state = 'published'");
+    expect(sourceContextMigration).toContain("'{source_url}'");
+    expect(runner).toContain('admin.rpc("get_pick_monitoring_event_state")');
+    expect(runner).not.toContain('owner.rpc("get_current_pick_event")');
+    expect(runner).toContain('mode: "monitoring-preview"');
+    expect(runner).toContain('source_url: sourceUrl');
+  });
+
+  it("stages an empty fight-week Event Setup and immediately surfaces the existing owner review notification", () => {
+    const stageBlock = blockAfter("shouldAttemptAutomaticEventStaging(stagingNow)", 4300);
+    const stagingRpcAt = stageBlock.indexOf('admin.rpc("stage_pick_event_draft"');
+    const ownerDispatchAt = stageBlock.indexOf('admin.rpc("dispatch_due_in_app_notifications"');
+    expect(stageBlock).toContain('mode: "monitoring-preview"');
+    expect(stageBlock).toContain("eventIsInAutomaticStagingWindow(stageStartsAt, stagingNow)");
+    expect(stagingRpcAt).toBeGreaterThanOrEqual(0);
+    expect(ownerDispatchAt).toBeGreaterThan(stagingRpcAt);
+    expect(stageBlock).toContain('reason: "automatic_stage_notification_failed"');
+    expect(stageBlock).toContain('reason: "event_staged"');
+    expect(stageBlock).toContain("providerCalled: false");
+    expect(runner.match(/stage_pick_event_draft/g)).toHaveLength(1);
+    expect(runner.match(/admin\.rpc\("dispatch_due_in_app_notifications"/g)).toHaveLength(2);
+    expect(runner).not.toMatch(/publish_pick_event_draft|record_pick_result|setInterval/);
+    expect(runner.indexOf('admin.rpc("stage_pick_event_draft"')).toBeLessThan(
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)"),
+    );
+  });
+
+  it("does not claim the odds provider was called when source preview fails first", () => {
+    const sourceFailure = blockAfter('reason: "source_preview_failed"');
+    expect(sourceFailure).toContain("providerCalled: false");
+    expect(runner.indexOf('reason: "source_preview_failed"')).toBeLessThan(
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)"),
+    );
+  });
+
+  it("proves a recent production wake while separating provider-limited partial coverage from system failure", () => {
+    expect(productionVerifier).toContain('safeHealth.last_run_status !== "succeeded"');
+    expect(productionVerifier).toContain("pick_monitoring_runs");
+    expect(productionVerifier).toContain('trigger_kind: "eq.scheduled"');
+    expect(productionVerifier).toContain('latestDecision.status === "skipped"');
+    expect(productionVerifier).toContain("preProviderFailureReasons.has(latestDecision.decision_reason)");
+    expect(productionVerifier).toContain('const healthyPartialCoverage = latestDecision.status === "partial"');
+    expect(productionVerifier).toContain('Number(latestDecision.provider_event_count) > 0');
+    expect(productionVerifier).toContain('Number(latestDecision.complete_snapshot_count) > 0');
+    expect(productionVerifier).toContain('Number(latestDecision.missing_snapshot_count) > 0');
+    expect(productionVerifier).toContain('providerDiagnostics.length === 0');
+    expect(productionVerifier).toContain('providerFindings.length === 0');
+    expect(productionVerifier).toContain('Number(latestDecision.provider_requests_remaining) > 5');
+    expect(productionVerifier).toContain("Production Picks monitoring is unhealthy");
+    expect(productionVerifier).not.toContain("run-pick-monitoring`, {");
+  });
+
+  it("keeps outcomes, odds application, card review, and publication on their existing owners", () => {
+    expect(runner).toContain('admin.rpc("record_scheduled_pick_monitoring_run"');
+    expect(runner).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"');
+    expect(runner).toContain("buildManualMonitoringPayload");
+    expect(runner).not.toMatch(/publish_pick_event_draft|record_pick_result|setInterval/);
+    expect(sourceContextMigration.match(/create function public\.get_pick_monitoring_event_state/g)).toHaveLength(1);
+  });
+});

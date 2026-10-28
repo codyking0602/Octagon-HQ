@@ -1,0 +1,780 @@
+.football-blind-resume-intro .football-debate-category span {
+  display: block;
+  color: #8d96a4;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-blind-resume-progress {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .4rem;
+  margin: .8rem 0;
+}
+
+.football-blind-resume-progress i {
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, .08);
+}
+
+.football-blind-resume-progress i.is-current,
+.football-blind-resume-progress i.is-complete {
+  background: var(--football-accent, rgba(160, 190, 142, .82));
+}
+
+.football-blind-resume-card,
+.football-blind-resume-recap {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 24px;
+  background: #0c0f15;
+  color: #fff;
+}
+
+.football-blind-resume-card > header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: .8rem;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+  background: linear-gradient(180deg, rgba(var(--football-accent-rgb, 160, 190, 142), .08), transparent);
+}
+
+.football-blind-resume-card > header > div {
+  min-width: 0;
+  text-align: center;
+}
+
+.football-blind-resume-card > header span,
+.football-blind-resume-card > header strong {
+  display: block;
+}
+
+.football-blind-resume-card > header span {
+  color: #7f8895;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.football-blind-resume-card > header strong {
+  margin-top: .2rem;
+  overflow: hidden;
+  font-size: clamp(.85rem, 3vw, 1.15rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-blind-resume-card > header > b {
+  color: var(--football-accent, rgba(255, 255, 255, .5));
+  font-size: .7rem;
+  letter-spacing: .12em;
+}
+
+.football-blind-resume-difficulty {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  margin-top: .55rem;
+  padding: .25rem .55rem;
+  border: 1px solid rgba(var(--football-accent-rgb, 160, 190, 142), .26);
+  border-radius: 999px;
+  background: rgba(var(--football-accent-rgb, 160, 190, 142), .08);
+  color: var(--football-accent, #a0be8e);
+  font-size: .55rem;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+.football-blind-resume-difficulty.is-villain {
+  border-color: rgba(206, 128, 92, .34);
+  background: rgba(206, 128, 92, .09);
+  color: #dda27f;
+}
+
+.football-blind-resume-stats {
+  display: grid;
+  gap: .5rem;
+  padding: .9rem;
+}
+
+.football-blind-resume-stats article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(110px, .9fr) minmax(0, 1fr);
+  gap: .75rem;
+  align-items: center;
+  min-height: 58px;
+  padding: .62rem .8rem;
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .025);
+  text-align: center;
+  transition: border-color 160ms ease, background 160ms ease, opacity 160ms ease;
+}
+
+.football-blind-resume-stats article.is-revealed {
+  border-color: rgba(var(--football-accent-rgb, 160, 190, 142), .18);
+  background: rgba(var(--football-accent-rgb, 160, 190, 142), .045);
+}
+
+.football-blind-resume-stats article.is-locked {
+  min-height: 42px;
+  opacity: .48;
+}
+
+.football-blind-resume-stats article span {
+  color: #828b98;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.football-blind-resume-stats article.is-locked span {
+  color: #676f7b;
+  letter-spacing: .11em;
+}
+
+.football-blind-resume-stats article strong {
+  min-width: 0;
+  color: #f3f5f7;
+  font-size: clamp(.8rem, 2.6vw, 1rem);
+  line-height: 1.25;
+}
+
+.football-blind-resume-stakes {
+  display: grid;
+  gap: .16rem;
+  margin: 0 .9rem .75rem;
+  padding: .75rem .85rem;
+  border: 1px solid rgba(var(--football-accent-rgb, 160, 190, 142), .16);
+  border-radius: 14px;
+  background: rgba(var(--football-accent-rgb, 160, 190, 142), .045);
+  text-align: center;
+}
+
+.football-blind-resume-stakes span,
+.football-blind-resume-stakes small {
+  color: #808996;
+  font-size: .54rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+}
+
+.football-blind-resume-stakes strong {
+  color: var(--football-accent, #a0be8e);
+  font-size: .82rem;
+  letter-spacing: .06em;
+}
+
+.football-blind-resume-picks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .7rem;
+  padding: 0 .9rem .7rem;
+}
+
+.football-blind-resume-picks button,
+.football-blind-resume-reveal button {
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 14px;
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-blind-resume-picks button {
+  min-height: 52px;
+  background: rgba(255, 255, 255, .045);
+}
+
+.football-blind-resume-picks button:hover,
+.football-blind-resume-picks button:focus-visible {
+  border-color: rgba(var(--football-accent-rgb, 160, 190, 142), .34);
+  background: rgba(var(--football-accent-rgb, 160, 190, 142), .08);
+}
+
+.football-blind-resume-more {
+  display: block;
+  width: calc(100% - 1.8rem);
+  min-height: 44px;
+  margin: 0 .9rem .9rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .025);
+  color: #a1a8b2;
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .09em;
+}
+
+.football-blind-resume-more:hover,
+.football-blind-resume-more:focus-visible {
+  border-color: rgba(var(--football-accent-rgb, 160, 190, 142), .25);
+  color: #fff;
+}
+
+.football-blind-resume-reveal {
+  margin: 0 .9rem .9rem;
+  padding: 1.1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .03);
+  text-align: center;
+}
+
+.football-blind-resume-reveal.is-correct {
+  box-shadow: inset 0 2px 0 rgba(103, 162, 91, .7);
+}
+
+.football-blind-resume-reveal.is-wrong {
+  box-shadow: inset 0 2px 0 rgba(177, 74, 67, .7);
+}
+
+.football-blind-resume-reveal h2 {
+  margin: .2rem 0 .35rem;
+  font-size: clamp(1.8rem, 7vw, 3.6rem);
+  letter-spacing: -.05em;
+}
+
+.football-blind-resume-reveal > p:not(.eyebrow) {
+  max-width: 38rem;
+  margin: 0 auto;
+  color: #969fac;
+  line-height: 1.45;
+}
+
+.football-blind-resume-reveal > strong {
+  display: block;
+  margin-top: .65rem;
+  color: #d7dce3;
+  font-size: .66rem;
+  letter-spacing: .07em;
+}
+
+.football-blind-resume-reveal button {
+  margin-top: .9rem;
+  padding: .75rem 1rem;
+  background: #f2f4f7;
+  color: #080a0e;
+}
+
+.football-blind-resume-final > small {
+  display: block;
+  margin-top: .45rem;
+  color: #838c98;
+  font-size: .62rem;
+  font-weight: 750;
+}
+
+.football-blind-resume-recap {
+  margin-top: .9rem;
+  padding: 1rem;
+}
+
+.football-blind-resume-recap header h2 {
+  margin: .2rem 0 .9rem;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  letter-spacing: -.035em;
+}
+
+.football-blind-resume-recap > div {
+  display: grid;
+  gap: .5rem;
+}
+
+.football-blind-resume-recap article {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  gap: .65rem;
+  align-items: center;
+  min-width: 0;
+  padding: .75rem;
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.football-blind-resume-recap article > b {
+  color: #7d8694;
+  font-size: .68rem;
+}
+
+.football-blind-resume-recap article span,
+.football-blind-resume-recap article small,
+.football-blind-resume-recap article strong {
+  display: block;
+  min-width: 0;
+}
+
+.football-blind-resume-recap article small {
+  margin-bottom: .14rem;
+  color: #7f8895;
+  font-size: .54rem;
+  font-weight: 850;
+}
+
+.football-blind-resume-recap article strong {
+  overflow: hidden;
+  font-size: .8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-blind-resume-recap article em {
+  font-size: .6rem;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.football-blind-resume-recap article em.is-correct { color: #9bc08f; }
+.football-blind-resume-recap article em.is-wrong { color: #d98982; }
+
+@media (min-width: 820px) {
+  .football-room-game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .football-blind-resume-stats {
+    gap: .38rem;
+    padding: .72rem;
+  }
+
+  .football-blind-resume-stats article {
+    grid-template-columns: minmax(0, 1fr) 82px minmax(0, 1fr);
+    gap: .4rem;
+    min-height: 52px;
+    padding-inline: .55rem;
+  }
+
+  .football-blind-resume-stats article.is-locked {
+    min-height: 36px;
+  }
+
+  .football-blind-resume-stats article span {
+    font-size: .5rem;
+  }
+
+  .football-blind-resume-card > header {
+    padding: .8rem .72rem;
+  }
+
+  .football-blind-resume-stakes {
+    margin-inline: .72rem;
+  }
+
+  .football-blind-resume-picks {
+    padding-inline: .72rem;
+  }
+
+  .football-blind-resume-more {
+    width: calc(100% - 1.44rem);
+    margin-inline: .72rem;
+  }
+
+  .football-blind-resume-recap article {
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+
+  .football-blind-resume-recap article em {
+    grid-column: 2;
+    white-space: normal;
+  }
+}
+
+/* Official Football Daily v4 keeps the existing Blind Resume owner and adds only the Daily presentation layer. */
+.football-today-page .football-blind-resume-game,
+.football-today-page .football-blind-resume-result,
+.football-today-page .football-blind-resume-final {
+  --football-accent: #1f4e79;
+  --football-accent-rgb: 31, 78, 121;
+  width: min(100%, 720px);
+  margin-inline: auto;
+}
+
+.football-today-page .football-blind-resume-scoreboard {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: .15rem 0 .85rem;
+  padding: .9rem 1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(31, 78, 121, .24), rgba(255, 255, 255, .025));
+}
+
+.football-today-page .football-blind-resume-scoreboard h2 {
+  margin: .18rem 0 0;
+  font-size: clamp(1.15rem, 5vw, 1.65rem);
+  letter-spacing: -.025em;
+}
+
+.football-today-page .football-blind-resume-scoreboard aside {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.football-today-page .football-blind-resume-scoreboard aside span,
+.football-today-page .football-blind-resume-scoreboard aside b {
+  display: block;
+}
+
+.football-today-page .football-blind-resume-scoreboard aside span {
+  color: #aeb7c2;
+  font-size: .6rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.football-today-page .football-blind-resume-scoreboard aside b {
+  margin-top: .25rem;
+  color: #e5eaf0;
+  font-size: .68rem;
+  letter-spacing: .045em;
+}
+
+.football-today-page .football-blind-resume-card {
+  margin-top: 0;
+  border-color: rgba(80, 126, 169, .24);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .22);
+}
+
+.football-today-page .football-blind-resume-card-head > div > strong {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: .3rem auto 0;
+  border: 1px solid rgba(31, 78, 121, .5);
+  border-radius: 50%;
+  background: rgba(31, 78, 121, .16);
+  font-size: 1.4rem;
+}
+
+.football-today-page .football-blind-resume-context,
+.football-today-page .football-blind-resume-fact-count {
+  margin: 0;
+  text-align: center;
+  color: #8f9bab;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .11em;
+}
+
+.football-today-page .football-blind-resume-context {
+  padding: .72rem .9rem .4rem;
+  color: #a9bdd1;
+}
+
+.football-today-page .football-blind-resume-stats {
+  margin-inline: .9rem;
+  border-color: rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .012);
+}
+
+.football-today-page .football-blind-resume-stats > div {
+  min-height: 48px;
+}
+
+.football-today-page .football-blind-resume-stats > div strong {
+  font-size: clamp(.82rem, 3vw, 1rem);
+}
+
+.football-today-page .football-blind-resume-fact-count {
+  padding: .65rem .9rem .2rem;
+}
+
+.football-today-page .football-blind-resume-scoring {
+  margin: .72rem .9rem;
+  padding: .72rem;
+  border: 1px solid rgba(31, 78, 121, .26);
+  border-radius: 15px;
+  background: rgba(31, 78, 121, .07);
+}
+
+.football-today-page .football-blind-resume-scoring > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .7rem;
+  margin-bottom: .5rem;
+}
+
+.football-today-page .football-blind-resume-scoring > header span,
+.football-today-page .football-blind-resume-scoring > header small {
+  color: #93a1b1;
+  font-size: .54rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.football-today-page .football-blind-resume-scoring > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .45rem;
+}
+
+.football-today-page .football-blind-resume-scoring article {
+  min-width: 0;
+  padding: .55rem .35rem;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .025);
+  text-align: center;
+  transition: opacity 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.football-today-page .football-blind-resume-scoring article span,
+.football-today-page .football-blind-resume-scoring article strong {
+  display: block;
+}
+
+.football-today-page .football-blind-resume-scoring article span {
+  color: #778494;
+  font-size: .5rem;
+  font-weight: 950;
+  letter-spacing: .11em;
+}
+
+.football-today-page .football-blind-resume-scoring article strong {
+  margin-top: .25rem;
+  color: #e7ebef;
+  font-size: .78rem;
+  white-space: nowrap;
+}
+
+.football-today-page .football-blind-resume-scoring article.is-current {
+  border-color: rgba(78, 135, 188, .65);
+  background: rgba(31, 78, 121, .34);
+  box-shadow: inset 0 0 0 1px rgba(78, 135, 188, .14);
+}
+
+.football-today-page .football-blind-resume-scoring article.is-current span {
+  color: #c9d9e8;
+}
+
+.football-today-page .football-blind-resume-scoring article.is-expired {
+  opacity: .36;
+}
+
+.football-today-page .football-blind-resume-picks {
+  padding: 0 .9rem .65rem;
+}
+
+.football-today-page .football-blind-resume-picks button {
+  min-height: 54px;
+  border-color: rgba(115, 145, 176, .26);
+  background: rgba(255, 255, 255, .045);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-today-page button.football-blind-resume-reveal {
+  display: block;
+  width: calc(100% - 1.8rem);
+  min-height: 48px;
+  margin: 0 .9rem .9rem;
+  padding: .8rem 1rem;
+  border: 1px solid rgba(83, 139, 191, .54);
+  border-radius: 14px;
+  background: #1f4e79;
+  color: #fff;
+  font-size: .66rem;
+  font-weight: 950;
+  letter-spacing: .075em;
+  text-align: center;
+}
+
+.football-today-page button.football-blind-resume-reveal:hover,
+.football-today-page button.football-blind-resume-reveal:focus-visible {
+  background: #275f91;
+}
+
+.football-today-page .football-blind-resume-result {
+  display: grid;
+  gap: .8rem;
+}
+
+.football-today-page .football-blind-resume-verdict {
+  padding: 1.15rem;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(31, 78, 121, .26), rgba(255, 255, 255, .025));
+  text-align: center;
+}
+
+.football-today-page .football-blind-resume-verdict h2 {
+  margin: .2rem auto .45rem;
+  max-width: 34rem;
+  font-size: clamp(1.35rem, 5vw, 2rem);
+  line-height: 1.05;
+}
+
+.football-today-page .football-blind-resume-verdict > strong {
+  color: #d7e3ef;
+  font-size: .8rem;
+  letter-spacing: .08em;
+}
+
+.football-today-page .football-blind-resume-reveal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem;
+}
+
+.football-today-page .football-blind-resume-reveal-grid article {
+  min-width: 0;
+  min-height: 128px;
+  padding: .9rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.football-today-page .football-blind-resume-reveal-grid article.is-winner {
+  border-color: rgba(72, 133, 190, .68);
+  background: rgba(31, 78, 121, .24);
+}
+
+.football-today-page .football-blind-resume-reveal-grid span,
+.football-today-page .football-blind-resume-reveal-grid strong,
+.football-today-page .football-blind-resume-reveal-grid small,
+.football-today-page .football-blind-resume-reveal-grid em {
+  display: block;
+}
+
+.football-today-page .football-blind-resume-reveal-grid span,
+.football-today-page .football-blind-resume-reveal-grid small,
+.football-today-page .football-blind-resume-reveal-grid em {
+  color: #8593a2;
+  font-size: .56rem;
+  font-style: normal;
+  font-weight: 850;
+  letter-spacing: .075em;
+}
+
+.football-today-page .football-blind-resume-reveal-grid strong {
+  margin: .42rem 0 .22rem;
+  font-size: clamp(1rem, 4vw, 1.25rem);
+}
+
+.football-today-page .football-blind-resume-reveal-grid em {
+  margin-top: .7rem;
+  color: #b7cee3;
+}
+
+.football-today-page .football-blind-resume-next {
+  width: 100%;
+}
+
+.football-today-page .football-blind-resume-final .football-today-score {
+  margin-bottom: .8rem;
+  border-color: rgba(78, 135, 188, .36);
+  background: linear-gradient(135deg, rgba(31, 78, 121, .7), rgba(7, 24, 45, .86));
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap {
+  display: grid;
+  gap: .55rem;
+  padding: .8rem;
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap > article {
+  display: block;
+  padding: .72rem;
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap > article > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  margin-bottom: .55rem;
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap > article > header span,
+.football-today-page .football-blind-resume-final .football-blind-resume-recap > article > header b {
+  font-size: .58rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap > article > header .is-correct {
+  color: #8fd2a6;
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap > article > header .is-miss {
+  color: #e49a98;
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap > article > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem;
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap section {
+  min-width: 0;
+  padding: .55rem;
+  border: 1px solid rgba(255, 255, 255, .05);
+  border-radius: 10px;
+}
+
+.football-today-page .football-blind-resume-final .football-blind-resume-recap section.is-winner {
+  border-color: rgba(67, 126, 181, .46);
+  background: rgba(31, 78, 121, .16);
+}
+
+@media (max-width: 620px) {
+  .football-today-page .football-blind-resume-scoreboard {
+    align-items: flex-start;
+    padding: .78rem;
+  }
+
+  .football-today-page .football-blind-resume-scoreboard aside {
+    padding-top: .08rem;
+  }
+
+  .football-today-page .football-blind-resume-scoreboard aside b {
+    max-width: 9.5rem;
+    font-size: .6rem;
+  }
+
+  .football-today-page .football-blind-resume-stats {
+    margin-inline: .72rem;
+  }
+
+  .football-today-page .football-blind-resume-scoring {
+    margin-inline: .72rem;
+    padding: .6rem;
+  }
+
+  .football-today-page .football-blind-resume-scoring article strong {
+    font-size: .68rem;
+  }
+
+  .football-today-page button.football-blind-resume-reveal {
+    width: calc(100% - 1.44rem);
+    margin-inline: .72rem;
+  }
+
+  .football-today-page .football-blind-resume-reveal-grid {
+    gap: .5rem;
+  }
+
+  .football-today-page .football-blind-resume-reveal-grid article {
+    min-height: 116px;
+    padding: .75rem;
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "version": "weekly-auction-cfb-generator-calibration-2026-09-v1",
+  "grading_universe": 233,
+  "generator_rules": {
+    "days": 7,
+    "subjects_per_day": 3,
+    "total_subjects": 21,
+    "weekly_theme_counts": {
+      "SEC": 2,
+      "Big Ten": 2,
+      "Big 12": 1,
+      "ACC": 1,
+      "Wildcard": 1
+    },
+    "hidden_shape_weights_pct": {
+      "Wide": 19,
+      "Compressed": 18,
+      "TopHeavy": 17,
+      "MiddleHeavy": 20,
+      "Trap": 14,
+      "Chaotic": 12
+    },
+    "max_same_hidden_shape_run": 2,
+    "school_repeats_allowed_per_week": false,
+    "team_season_repeats_allowed_per_week": false,
+    "elite_grade_threshold": 96,
+    "elite_subject_guardrail_per_week": [
+      1,
+      6
+    ]
+  },
+  "board_simulation": {
+    "simulated_weeks": 30000,
+    "realized_shape_share_pct": {
+      "Wide": 19.8,
+      "Compressed": 17.1,
+      "TopHeavy": 17.7,
+      "MiddleHeavy": 18.8,
+      "Trap": 13.5,
+      "Chaotic": 13
+    },
+    "average_daily_grade_spread": 4.17,
+    "compressed_days_pct": 27.9,
+    "wide_days_pct": 25.5,
+    "school_repeat_weeks": 0,
+    "max_same_hidden_shape_run": 2,
+    "notre_dame_week_presence_pct": 99.9,
+    "grade_band_share_pct": {
+      "86-87.5": 4.7,
+      "88-90.5": 32.5,
+      "91-93.5": 35.3,
+      "94-96.5": 22,
+      "97-100": 5.4
+    },
+    "elite_subjects_per_week_pct": {
+      "1": 31.6,
+      "2": 31,
+      "3": 21.1,
+      "4": 10.7,
+      "5": 4.3,
+      "6": 1.4
+    }
+  },
+  "auction_market_simulation": {
+    "assumptions": {
+      "bankroll": 40,
+      "players_tested": [
+        4,
+        5
+      ],
+      "weeks_per_player_count": 8000,
+      "bids": "whole-dollar sealed bids on any/all three daily subjects",
+      "active_bid_commitment": "sum of same-day active bids cannot exceed remaining bankroll",
+      "losing_bids_cost": 0,
+      "tie_break": [
+        "fewer subjects already won",
+        "less money spent",
+        "random"
+      ]
+    },
+    "four_players": {
+      "players_with_fewer_than_three_pct": 0,
+      "average_remaining_cash": 8.42,
+      "average_teams_won": 5.25,
+      "average_largest_player_share_pct": 30.9,
+      "no_bid_lots_pct": 0.02,
+      "tied_lots_pct": 25.5
+    },
+    "five_players": {
+      "players_with_fewer_than_three_pct": 0.18,
+      "average_remaining_cash": 10.76,
+      "average_teams_won": 4.2,
+      "average_largest_player_share_pct": 25.6,
+      "no_bid_lots_pct": 0,
+      "tied_lots_pct": 23.1
+    }
+  },
+  "status": "calibrated_not_runtime"
+}

@@ -1,0 +1,84 @@
+import {
+  footballSportsFeudAppearanceCountThroughDay,
+  ufcSportsFeudAppearanceCountThroughDay,
+} from "./sportsFeudDailyBanks";
+
+export type SportsFeudHostSport = "ufc" | "nfl" | "cfb" | "mlb";
+export type SportsFeudRotatingHostSport = Exclude<SportsFeudHostSport, "mlb">;
+
+export const SPORTS_FEUD_MAIN_STAGE_ASSET = "/assets/sports-feud-main-stage.png";
+export const SPORTS_FEUD_FAST_MONEY_STAGE_ASSET = "/assets/sports-feud-fast-money-stage.png";
+
+export const SPORTS_FEUD_MLB_HOST = "/assets/MLB.webp";
+
+// Dedicated NBA Sports Feud uploads. Never reuse or change NBA Millionaire hosts.
+export const NBA_SPORTS_FEUD_HOST_ASSETS = [
+  "/assets/sports-feud/nba-host-1.png",
+  "/assets/sports-feud/nba-host-2.webp",
+  "/assets/sports-feud/nba-host-3.webp",
+] as const;
+
+export function nbaSportsFeudHostAsset(index: number) {
+  return NBA_SPORTS_FEUD_HOST_ASSETS[((Math.trunc(index) % 3) + 3) % 3]!;
+}
+
+export const SPORTS_FEUD_HOSTS: Record<SportsFeudRotatingHostSport, readonly [string, string, string]> = {
+  ufc: ["/assets/1ufc.png", "/assets/2ufc.png", "/assets/3ufc.png"],
+  nfl: ["/assets/1nfl.png", "/assets/2nfl.png", "/assets/3nfl.png"],
+  cfb: ["/assets/1cfb.png", "/assets/2cfb.png", "/assets/3cfb.png"],
+};
+
+const SPORTS_FEUD_FIRST_HOST = {
+  ufc: 1,
+  cfb: 3,
+  nfl: 1,
+} as const satisfies Record<SportsFeudRotatingHostSport, 1 | 2 | 3>;
+
+function mod(value: number, divisor: number) {
+  return ((value % divisor) + divisor) % divisor;
+}
+
+export function sportsFeudCentralDateKey(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
+export function sportsFeudHostAppearanceIndex(
+  sport: SportsFeudHostSport,
+  dateKey = sportsFeudCentralDateKey(),
+) {
+  if (sport === "mlb") return 0;
+  if (sport === "ufc") {
+    return Math.max(0, ufcSportsFeudAppearanceCountThroughDay(dateKey) - 1);
+  }
+
+  const footballAppearances = footballSportsFeudAppearanceCountThroughDay(dateKey);
+  const domainAppearances = sport === "cfb"
+    ? Math.ceil(footballAppearances / 2)
+    : Math.floor(footballAppearances / 2);
+  return Math.max(0, domainAppearances - 1);
+}
+
+export function sportsFeudHostNumber(
+  sport: SportsFeudHostSport,
+  dateKey = sportsFeudCentralDateKey(),
+) {
+  if (sport === "mlb") return 1;
+  const appearanceIndex = sportsFeudHostAppearanceIndex(sport, dateKey);
+  return mod(SPORTS_FEUD_FIRST_HOST[sport] - 1 + appearanceIndex, 3) + 1;
+}
+
+export function sportsFeudHostAsset(
+  sport: SportsFeudHostSport,
+  dateKey?: string,
+) {
+  if (sport === "mlb") return SPORTS_FEUD_MLB_HOST;
+  return SPORTS_FEUD_HOSTS[sport][sportsFeudHostNumber(sport, dateKey) - 1];
+}

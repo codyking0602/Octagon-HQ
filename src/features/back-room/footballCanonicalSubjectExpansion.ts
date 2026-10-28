@@ -1,0 +1,184 @@
+import {
+  collegeHeadCoaches,
+  collegeQuarterbackDepth,
+  collegeTeamSeasonDepth,
+  nflDefensiveCareers,
+  nflQuarterbackSeasons,
+  nflTeamSeasons,
+  nflTightEnds,
+} from "./footballComparisonDepthCatalog";
+import { footballCfbPlayerSeasonRecognitionRecords } from "./footballCfbPlayerSeasonRecognition";
+import { footballNflCoachRecognitionProjectionSubjects } from "./footballNflCoachRecognitionProjection";
+import { footballProgramEraSubjects } from "./footballProgramEraSeeds";
+
+export type FootballExpandedSubjectKind = "player-career" | "player-season" | "team-season" | "program" | "program-era" | "coach";
+type FootballExpandedLeague = "NFL" | "CFB";
+type FootballExpandedPosition = "QB" | "RB" | "WR" | "TE" | "OL" | "DL" | "LB" | "DB" | "K" | "P";
+
+export interface FootballExpandedCanonicalSubject {
+  id: string;
+  name: string;
+  kind: FootballExpandedSubjectKind;
+  league: FootballExpandedLeague;
+  leagues?: readonly FootballExpandedLeague[];
+  aliases?: readonly string[];
+  position?: FootballExpandedPosition;
+  season?: number;
+  activeDecades?: readonly number[];
+  school?: string;
+  franchises?: readonly string[];
+  startSeason?: number;
+  endSeason?: number;
+  undrafted?: boolean;
+}
+
+function leadingSeason(id: string) {
+  const match = /^(\d{4})-/.exec(id);
+  return match ? Number(match[1]) : undefined;
+}
+
+function trailingSeason(id: string) {
+  const match = /-(\d{4})$/.exec(id);
+  return match ? Number(match[1]) : undefined;
+}
+
+const defenderPositions: Readonly<Record<string, FootballExpandedPosition>> = {
+  "lawrence-taylor": "LB",
+  "reggie-white": "DL",
+  "aaron-donald": "DL",
+  "ray-lewis": "LB",
+  "jj-watt": "DL",
+  "deion-sanders": "DB",
+  "ed-reed": "DB",
+  "bruce-smith": "DL",
+  "myles-garrett": "DL",
+  "ronnie-lott": "DB",
+  "joe-greene": "DL",
+  "dick-butkus": "LB",
+  "tj-watt": "LB",
+  "rod-woodson": "DB",
+  "derrick-brooks": "LB",
+  "junior-seau": "LB",
+  "champ-bailey": "DB",
+  "brian-dawkins": "DB",
+  "troy-polamalu": "DB",
+  "darrelle-revis": "DB",
+  "michael-strahan": "DL",
+  "terrell-suggs": "LB",
+  "von-miller": "LB",
+  "patrick-willis": "LB",
+  "luke-kuechly": "LB",
+  "richard-sherman": "DB",
+  "ndamukong-suh": "DL",
+  "clay-matthews": "LB",
+  "jadeveon-clowney": "DL",
+  "morris-claiborne": "DB",
+  "dion-jordan": "DL",
+  "vernon-gholston": "DL",
+};
+
+const tightEnds: FootballExpandedCanonicalSubject[] = nflTightEnds.map((item) => ({
+  id: item.id,
+  name: item.name,
+  kind: "player-career",
+  league: "NFL",
+  position: "TE",
+  franchises: [item.asset.label],
+  ...(item.id === "antonio-gates" ? { undrafted: true } : {}),
+}));
+
+const defenders: FootballExpandedCanonicalSubject[] = nflDefensiveCareers.map((item) => ({
+  id: item.id,
+  name: item.id === "joe-greene" ? "Joe Greene" : item.name,
+  ...(item.id === "joe-greene" ? { aliases: ["Mean Joe Greene"] } : {}),
+  kind: "player-career",
+  league: "NFL",
+  position: defenderPositions[item.id] ?? "DL",
+}));
+
+const nflCoaches: readonly FootballExpandedCanonicalSubject[] = footballNflCoachRecognitionProjectionSubjects.map(({ subject }) => subject);
+
+const quarterbackSeasons: FootballExpandedCanonicalSubject[] = nflQuarterbackSeasons.map((item) => {
+  const season = trailingSeason(item.id);
+  return {
+    id: item.id,
+    name: `${item.name}${season == null ? "" : ` ${season}`}`,
+    kind: "player-season",
+    league: "NFL",
+    position: "QB",
+    season,
+    activeDecades: season == null ? undefined : [Math.floor(season / 10) * 10],
+  };
+});
+
+const cfbRecognizablePlayerSeasons: readonly FootballExpandedCanonicalSubject[] =
+  footballCfbPlayerSeasonRecognitionRecords.map((record) => ({
+    id: record.id,
+    name: record.name,
+    kind: "player-season",
+    league: "CFB",
+    position: record.position,
+    school: record.school,
+    season: record.season,
+    startSeason: record.season,
+    endSeason: record.season,
+    activeDecades: [Math.floor(record.season / 10) * 10],
+  }));
+
+const nflSeasons: FootballExpandedCanonicalSubject[] = nflTeamSeasons.map((item) => {
+  const season = leadingSeason(item.id);
+  return {
+    id: item.id,
+    name: item.name,
+    kind: "team-season",
+    league: "NFL",
+    season,
+    activeDecades: season == null ? undefined : [Math.floor(season / 10) * 10],
+  };
+});
+
+const collegeCoaches: FootballExpandedCanonicalSubject[] = collegeHeadCoaches.map((item) => ({
+  id: item.id,
+  name: item.name,
+  kind: "coach",
+  league: "CFB",
+  school: item.asset.label,
+}));
+
+const collegeQuarterbacks: FootballExpandedCanonicalSubject[] = collegeQuarterbackDepth.map((item) => ({
+  id: item.id,
+  name: item.name,
+  kind: "player-career",
+  league: "CFB",
+  position: "QB",
+  school: item.asset.label,
+}));
+
+const collegeSeasons: FootballExpandedCanonicalSubject[] = collegeTeamSeasonDepth.map((item) => {
+  const season = leadingSeason(item.id);
+  return {
+    id: item.id,
+    name: item.name,
+    kind: "team-season",
+    league: "CFB",
+    season,
+    activeDecades: season == null ? undefined : [Math.floor(season / 10) * 10],
+  };
+});
+
+/**
+ * Canonicalized subject families that already existed in Football comparison games plus generated recognition-first CFB seasons
+ * and the reviewed Program Era owner. Comparison ratings remain game-specific and are deliberately not imported into the factual ledger.
+ */
+export const footballComparisonCanonicalSubjects: readonly FootballExpandedCanonicalSubject[] = [
+  ...tightEnds,
+  ...defenders,
+  ...nflCoaches,
+  ...quarterbackSeasons,
+  ...cfbRecognizablePlayerSeasons,
+  ...nflSeasons,
+  ...collegeCoaches,
+  ...footballProgramEraSubjects,
+  ...collegeQuarterbacks,
+  ...collegeSeasons,
+];

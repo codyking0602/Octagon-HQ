@@ -1,0 +1,42 @@
+{
+  "version": "cfb-best-teams-grading-2026-09-v2-locked",
+  "status": "audit-locked-not-runtime",
+  "base_artifact": "data/generated/football/cfb/cfb-best-teams-grading-v2.json",
+  "base_blob_sha": "33197cb112e6831cea07b6ec740c5853a30cba9b",
+  "subject_key": "cfb-best-teams-since-2000",
+  "resolution": "Resolve the base candidate artifact, then apply final_overrides below. These four overrides are the final neighbor-audit changes and supersede any matching value in the base artifact.",
+  "final_overrides": [
+    [2013, "Auburn", 87.5],
+    [2007, "Florida", 80.0],
+    [2003, "Kansas State", 80.5],
+    [2024, "Indiana", 85.0]
+  ],
+  "locked_distribution": {
+    "count": 257,
+    "min": 74,
+    "p25": 82,
+    "median": 85,
+    "p75": 87.5,
+    "max": 100,
+    "mean": 85.12,
+    "bands": {
+      "95-100": 13,
+      "90-94.5": 26,
+      "85-89.5": 92,
+      "80-84.5": 95,
+      "74-79.5": 31
+    }
+  },
+  "final_neighbor_audit": {
+    "result": "locked",
+    "additional_changes_required": false,
+    "notes": [
+      "2013 Auburn moves to 87.5 to reflect SEC championship, national runner-up finish, quality wins, and full-season strength relative to neighboring teams.",
+      "2007 Florida moves to 80.0; four losses cap the grade, but actual team quality was stronger than the lower-70s neighborhood.",
+      "2003 Kansas State moves to 80.5; four losses remain a meaningful drag, but the Big 12 title and 35-7 win over No. 1 Oklahoma justify a higher placement.",
+      "2024 Indiana moves to 85.0; 11-2 and a CFP berth belong above the low-80s cluster when grading the team itself rather than program history.",
+      "Recognition and historical identity remain membership-only factors and do not change grades after admission."
+    ]
+  },
+  "runtime_note": "No production behavior changes are authorized by this artifact. The already-materialized current Weekly Auction remains on its legacy pool, grades, and generator; the 257-team v2 authority should begin with the next Weekly board, and newly generated Casual rooms can adopt v2 once the Casual generator is recalibrated."
+}

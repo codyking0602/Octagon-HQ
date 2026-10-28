@@ -1,0 +1,184 @@
+import { describe, expect, it } from "vitest";
+import {
+  assertFamilyFeudPack,
+  matchFamilyFeudAnswer,
+} from "../games/familyFeudEngine";
+import type { MillionaireRuntimeQuestion } from "../games/millionaireAuthority";
+import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
+import { buildMillionaireDailySetup } from "./millionaireDailyRuntime";
+import {
+  buildSportsFeudPack,
+  footballSportsFeudDomainForDay,
+} from "./sportsFeudDailyBanks";
+import {
+  buildFootballTodayPersistenceSetup,
+  footballTodayGameForDay,
+} from "./footballTodayChallengeSession";
+
+describe("Football team-themed Daily packs", () => {
+  it("preserves seven Texas-Oklahoma Millionaire questions while honoring Ditka at Q3 on Oct. 10", () => {
+    expect(footballTodayGameForDay("2026-10-10")).toBe("millionaire");
+
+    const setup = buildFootballTodayPersistenceSetup("2026-10-10");
+    const run = setup.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+
+    expect(setup.gameType).toBe("millionaire");
+    expect(setup.publicSetup.league).toBe("cfb");
+    expect(run).toHaveLength(8);
+    expect(run.filter((question) => question.id.startsWith("theme-texas-ou-2026-"))).toHaveLength(7);
+    expect(run[2]?.id).toBe("cfb-mike-ditka-memorial-2026-10-10-q3");
+    expect(run[2]?.choices.find((choice) => choice.id === run[2]?.correctChoiceId)?.text).toBe("1985");
+    expect(run.map((question) => question.level)).toEqual([
+      "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8",
+    ]);
+    expect(run.find((question) => question.level === "Q4")?.choices.find((choice) => choice.id === run.find((question) => question.level === "Q4")?.correctChoiceId)?.text).toBe("Sam Bradford");
+    expect(run.find((question) => question.level === "Q8")?.statSheet).toBeNull();
+
+    const normal = buildMillionaireDailySetup("football", "2026-10-03", "football-daily-v20-resume-v18-oct3");
+    const normalRun = normal.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+    expect(normalRun.some((question) => question.id.startsWith("theme-"))).toBe(false);
+  });
+
+  it("uses the Cowboys pack for the Oct. 26 NFL Millionaire without changing the scheduled game", () => {
+    expect(footballTodayGameForDay("2026-10-26")).toBe("millionaire");
+
+    const setup = buildFootballTodayPersistenceSetup("2026-10-26");
+    const run = setup.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+
+    expect(setup.publicSetup.league).toBe("nfl");
+    expect(run).toHaveLength(8);
+    expect(run.every((question) => question.id.startsWith("theme-cowboys-eagles-2026-"))).toBe(true);
+    expect(setup.contentVersion).toBe("millionaire-daily-v5-cowboys-eagles-modern-replay-20261026");
+    expect(setup.setupKey).toContain("millionaire-daily-v5-cowboys-eagles-modern-replay-20261026");
+    expect(run.slice(4).every(question => question.statSheet === null || !question.statSheet.toLowerCase().includes(question.choices.find(choice => choice.id === question.correctChoiceId)!.text.toLowerCase()))).toBe(true);
+    expect(run[7]?.statSheet).toBeNull();
+    expect(run.map((question) => question.choices.find((choice) => choice.id === question.correctChoiceId)?.text))
+      .toEqual([
+        "AT&T Stadium",
+        "Emmitt Smith",
+        "Tony Romo",
+        "Jimmy Johnson",
+        "Trevon Diggs",
+        "Dak Prescott",
+        "Brett Maher",
+        "Amari Cooper",
+      ]);
+  });
+
+  it("publishes a valid Longhorns two-board plus five-question Feud pack on Texas-A&M day", () => {
+    expect(footballTodayGameForDay("2026-11-27")).toBe("sports_feud");
+    expect(footballSportsFeudDomainForDay("2026-11-27")).toBe("cfb");
+
+    const pack = buildSportsFeudPack("cfb", "2026-11-27");
+    expect(() => assertFamilyFeudPack(pack)).not.toThrow();
+    expect(pack.mainBoards).toHaveLength(2);
+    expect(pack.fastMoney).toHaveLength(5);
+    expect(pack.mainBoards.every((question) => question.id.startsWith("theme-texas-am-2026-"))).toBe(true);
+    expect(pack.fastMoney.every((question) => question.id.startsWith("theme-texas-am-2026-"))).toBe(true);
+
+    const quarterbacks = pack.mainBoards.find((question) => question.id.endsWith("main-quarterbacks"))!;
+    expect(matchFamilyFeudAnswer(pack, quarterbacks, "VY").status).toBe("matched");
+
+    const seasons = pack.mainBoards.find((question) => question.id.endsWith("main-seasons"))!;
+    expect(matchFamilyFeudAnswer(pack, seasons, "2005").status).toBe("matched");
+
+    // Main is readable for modern fans; Fast Money is broad and generous,
+    // without requiring pre-2000 player-history recall.
+    expect(matchFamilyFeudAnswer(pack, quarterbacks, "Arch Manning").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, quarterbacks, "David Ash").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, seasons, "2023").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, seasons, "2024").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, seasons, "2016").status).toBe("matched");
+    const offense = pack.fastMoney.find(question => question.id.endsWith("fast-offense"))!;
+    const defense = pack.fastMoney.find(question => question.id.endsWith("fast-defenders"))!;
+    expect(matchFamilyFeudAnswer(pack, offense, "Bijan").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, offense, "Jaydon Blue").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, defense, "Jahdae Barron").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, defense, "Jordan Hicks").status).toBe("matched");
+
+    const showdown = pack.fastMoney.find((question) => question.id.endsWith("fast-lone-star-showdown"))!;
+    expect(matchFamilyFeudAnswer(pack, showdown, "12th Man").status).toBe("matched");
+
+    const rivals = pack.fastMoney.find((question) => question.id.endsWith("fast-rivals"))!;
+    expect(matchFamilyFeudAnswer(pack, rivals, "A&M").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, rivals, "UGA").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, rivals, "Vanderbilt").status).toBe("matched");
+    expect(matchFamilyFeudAnswer(pack, rivals, "OSU").status).toBe("matched");
+
+    const traditions = pack.fastMoney.find((question) => question.id.endsWith("fast-traditions"))!;
+    expect(matchFamilyFeudAnswer(pack, traditions, "Hook em").status).toBe("matched");
+
+    const fastAnswerNames = pack.fastMoney.flatMap((question) =>
+      question.answers.map((ranked) =>
+        pack.entities.find((entity) => entity.id === ranked.entityId)?.displayName ?? "",
+      ),
+    );
+    expect(new Set(fastAnswerNames).size).toBe(fastAnswerNames.length);
+
+    const normal = buildSportsFeudPack("cfb", "2026-11-26");
+    expect([...normal.mainBoards, ...normal.fastMoney].some((question) => question.id.startsWith("theme-"))).toBe(false);
+  });
+
+  it("uses the ten-question Cowboys Bar Trivia card for the Dec. 7 Seattle game", () => {
+    expect(footballTodayGameForDay("2026-12-07")).toBe("bar_trivia");
+
+    const setup = buildFootballTodayPersistenceSetup("2026-12-07");
+    const run = setup.privateSetupEvidence.questions as Array<Record<string, unknown>>;
+
+    expect(setup.publicSetup.league).toBe("nfl");
+    expect(run).toHaveLength(10);
+    expect(run.every((question) => String(question.id).startsWith("theme-cowboys-seahawks-2026-"))).toBe(true);
+    expect(run.map((question) => question.round)).toEqual([
+      "round1", "round1", "round1",
+      "round2", "round2", "round2",
+      "round3", "round3", "round3",
+      "last-call",
+    ]);
+    expect(run.map(question => question.difficulty)).toEqual([
+      "easy", "easy", "easy",
+      "medium", "medium", "medium",
+      "hard", "hard", "hard", "last-call",
+    ]);
+    expect(run[6]).toMatchObject({
+      answer: "DK Metcalf",
+      category: "Cowboys–Seahawks",
+    });
+    expect(run[7]).toMatchObject({
+      answer: "Terrance Williams",
+      category: "Cowboys–Seahawks",
+    });
+    expect(run[8]).toMatchObject({
+      answer: "Michael Gallup",
+      category: "Cowboys Playoff Moments",
+    });
+    expect(run[9]).toMatchObject({
+      answer: "Brandin Cooks",
+      round: "last-call",
+      category: "Cowboys–Seahawks",
+    });
+    expect(new Set(run.map(question => String(question.answer))).size).toBe(10);
+    expect(run.every(question => Array.isArray(question.choices)
+      && question.choices.length === 4
+      && new Set(question.choices as string[]).size === 4
+      && (question.choices as string[]).includes(String(question.answer)))).toBe(true);
+    expect(run.every(question => typeof question.sourceUrl === "string"
+      && (question.sourceUrl as string).startsWith("https://")
+      && question.verifiedAt === "2026-10-26")).toBe(true);
+    expect(run.filter(question => /2014|2016|2019|2020|2023/.test(String(question.prompt))).length)
+      .toBeGreaterThanOrEqual(7);
+
+    const millionaire = buildFootballTodayPersistenceSetup("2026-10-26");
+    const millionaireRun = millionaire.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+    const millionaireAnswers = new Set(
+      millionaireRun.map((question) =>
+        question.choices.find((choice) => choice.id === question.correctChoiceId)?.text,
+      ),
+    );
+    const barTriviaAnswers = new Set(run.map((question) => String(question.answer)));
+    expect([...barTriviaAnswers].filter((answer) => millionaireAnswers.has(answer))).toEqual([]);
+
+    const normal = buildBarTriviaDailySetup("nfl", "2026-09-29", "football-daily-v17-bar-trivia-sep29");
+    const normalRun = normal.privateSetupEvidence.questions as Array<Record<string, unknown>>;
+    expect(normalRun.some((question) => String(question.id).startsWith("theme-"))).toBe(false);
+  });
+});

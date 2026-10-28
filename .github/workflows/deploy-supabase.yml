@@ -1,0 +1,766 @@
+name: Deploy Supabase Backend
+
+on:
+  workflow_call:
+    inputs:
+      source_sha:
+        description: Exact same-repository PR head SHA to deploy.
+        required: true
+        type: string
+      pr_number:
+        description: Open pull request number whose head must still match source_sha.
+        required: true
+        type: string
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+  packages: read
+
+concurrency:
+  group: octagon-hq-supabase-v2
+  cancel-in-progress: false
+
+jobs:
+  release-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      should_deploy: ${{ steps.scope.outputs.should_deploy }}
+      reason: ${{ steps.scope.outputs.reason }}
+    steps:
+      - name: Check out exact release source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha || github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Determine whether Supabase-owned source changed
+        id: scope
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BACKEND_RELEASE_BEFORE_SHA: ${{ github.event.before || '' }}
+          BACKEND_RELEASE_SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+        run: node scripts/backend-release-scope.mjs
+
+  backend-unchanged:
+    needs: release-scope
+    if: ${{ needs.release-scope.outputs.should_deploy != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Record unchanged backend release
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+          SCOPE_REASON: ${{ needs.release-scope.outputs.reason }}
+        run: |
+          {
+            echo "### Octagon HQ V2 backend unchanged"
+            echo "- Exact release SHA: $SOURCE_SHA"
+            echo "- Scope result: $SCOPE_REASON"
+            echo "- No Supabase credentials, CLI, migrations, functions, secrets, or scheduler operations were used"
+            echo "- The last verified backend deployment remains the canonical live backend because no backend-owned source changed"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    needs: release-scope
+    if: ${{ needs.release-scope.outputs.should_deploy == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+      SOURCE_PR_NUMBER: ${{ inputs.pr_number || '0' }}
+      OCTAGON_PRODUCTION_ORIGIN: https://the.hq-app.workers.dev
+
+    steps:
+      - name: Revalidate requested PR head
+        if: env.SOURCE_PR_NUMBER != '0'
+        uses: actions/github-script@v7
+        env:
+          EXPECTED_SHA: ${{ env.SOURCE_SHA }}
+          PR_NUMBER: ${{ env.SOURCE_PR_NUMBER }}
+        with:
+          script: |
+            const prNumber = Number(process.env.PR_NUMBER);
+            const expectedSha = process.env.EXPECTED_SHA;
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            if (pr.state !== "open") {
+              core.setFailed(`PR #${prNumber} is no longer open.`);
+              return;
+            }
+
+            if (pr.base.ref !== "main") {
+              core.setFailed(`PR #${prNumber} targets ${pr.base.ref}, not main.`);
+              return;
+            }
+
+            if (pr.head.repo?.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
+              core.setFailed(`PR #${prNumber} is not a same-repository pull request.`);
+              return;
+            }
+
+            if (pr.head.sha !== expectedSha) {
+              core.setFailed(
+                `PR #${prNumber} moved from ${expectedSha} to ${pr.head.sha}. Reapply the deploy-backend label to deploy the new head.`,
+              );
+            }
+
+      - name: Check out exact deployment source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Verify exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_sha=$(git rev-parse HEAD)
+          if [ "$checked_out_sha" != "$SOURCE_SHA" ]; then
+            echo "::error title=Exact SHA checkout failed::Expected $SOURCE_SHA but checked out $checked_out_sha."
+            exit 1
+          fi
+          echo "Exact deployment source verified: $checked_out_sha"
+
+      - name: Verify deployment credentials
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID SUPABASE_DB_PASSWORD; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing deployment secret::$name is missing or empty."
+              exit 1
+            fi
+          done
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.109.1
+
+      - name: Link V2 project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
+
+      - name: Publish canonical production origin
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: supabase secrets set --project-ref "$SUPABASE_PROJECT_ID" OCTAGON_APP_ORIGIN="$OCTAGON_PRODUCTION_ORIGIN"
+
+      - name: Apply database migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase db push --linked
+
+      - name: Deploy PIN authentication function
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: supabase functions deploy pin-auth --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+
+      - name: Deploy UFC event sync function when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/sync-next-ufc-event/deployment.ts
+            supabase functions deploy sync-next-ufc-event --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+          else
+            echo "sync-next-ufc-event is not present in this exact deployment source; skipping."
+          fi
+
+      - name: Deploy Football event sync function when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/sync-next-football-event/index.ts ]; then
+            secret_names=$(supabase secrets list --project-ref "$SUPABASE_PROJECT_ID" --output json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).map(x=>x.name).join("\n")))')
+            printf '%s\n' "$secret_names" | grep -Fxq THE_ODDS_API_KEY || { echo "::error title=Missing football provider secret::THE_ODDS_API_KEY is not configured."; exit 1; }
+            supabase functions deploy sync-next-football-event --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+          fi
+
+      - name: Deploy Picks Spotlight builder when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/build-pick-spotlight/deployment.ts
+            supabase functions deploy build-pick-spotlight --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+          else
+            echo "build-pick-spotlight is not present in this exact deployment source; skipping."
+          fi
+
+      - name: Deploy manual Picks monitoring function when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
+            secret_names=$(supabase secrets list --project-ref "$SUPABASE_PROJECT_ID" --output json \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).map(x=>x.name).join("\n")))')
+            if ! printf '%s\n' "$secret_names" | grep -Fxq "THE_ODDS_API_KEY"; then
+              echo "::error title=Missing monitoring provider secret::THE_ODDS_API_KEY is not configured in the Supabase project."
+              exit 1
+            fi
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/run-pick-monitoring/deployment.ts
+            supabase functions deploy run-pick-monitoring --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+          else
+            echo "run-pick-monitoring is not present in this exact deployment source; skipping."
+          fi
+
+      - name: Deploy Football weekly publisher when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/football-weekly-publisher/index.ts ]; then
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/football-weekly-publisher/deployment.ts
+            supabase functions deploy football-weekly-publisher --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+          fi
+
+      - name: Deploy private Football editorial OIDC handoff
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          supabase functions deploy football-weekly-editorial-handoff --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+
+      - name: Deploy official daily runtime function when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
+          GHCR_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
+            npm install --silent --ignore-scripts
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/daily-challenge-runtime/deployment.ts
+            node scripts/bundle-daily-challenge-runtime.mjs
+            test -f supabase/functions/daily-challenge-runtime/runtime.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/average-fan.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/who-am-i-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-who-am-i-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/ufc-comparison-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/ufc-find-leader-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/ufc-wavelength-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-comparison-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/legacy-feud-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/bar-trivia-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/ufc-higher-lower-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-higher-lower-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/ufc-hit-number-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-find-leader-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-average-fan-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-sports-feud-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-millionaire-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-hit-the-number-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-find-leader-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-wavelength-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-higher-lower-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-bar-trivia-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-bar-trivia-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-find-leader-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-wavelength-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-hit-the-number-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/nba-higher-lower-advance.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-wavelength-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-wavelength-advance.generated.mjs
+             test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs
+            # Cache the official Docker Hub mirror under the image name the
+          # pinned Supabase CLI expects, avoiding the current GHCR throttle.
+          image="ghcr.io/supabase/edge-runtime:v1.74.2"
+          mirror="docker.io/supabase/edge-runtime:v1.74.2"
+          image_ready=false
+          if docker pull "$mirror"; then
+            docker tag "$mirror" "$image"
+            image_ready=true
+          else
+            echo "::warning title=Docker Hub runtime pull unavailable::Trying authenticated GHCR."
+            printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+            for attempt in 1 2 3; do
+              if docker pull "$image"; then
+                image_ready=true
+                break
+              fi
+              if [ "$attempt" -lt 3 ]; then sleep $((attempt * 10)); fi
+            done
+          fi
+          if [ "$image_ready" != true ]; then
+            echo "::error title=Runtime image unavailable::Both official registries failed; Docker packaging is required because API upload exceeds the function size limit."
+            exit 1
+          fi
+          supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-docker
+          else
+            echo "daily-challenge-runtime is not present in this exact deployment source; skipping."
+          fi
+
+      - name: Deploy notification push delivery function when present
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
+            printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
+              > supabase/functions/deliver-notification-push/deployment.ts
+            supabase functions deploy deliver-notification-push --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
+          else
+            echo "deliver-notification-push is not present in this exact deployment source; skipping."
+          fi
+
+      - name: Keep canonical automatic monitoring scheduler active
+        if: ${{ hashFiles('supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql') != '' }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          PICK_MONITORING_SCHEDULER_ENABLED=true node scripts/configure-monitoring-scheduler.mjs
+          echo "EXPECTED_MONITORING_SCHEDULER_ENABLED=true" >> "$GITHUB_ENV"
+
+      - name: Verify migrations, functions, and production CORS
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          migration_list=$(supabase migration list --linked)
+          printf '%s\n' "$migration_list"
+
+          require_remote_migration() {
+            local version="$1"
+            local remote_version
+            remote_version=$(printf '%s\n' "$migration_list" | sed 's/│/|/g' | awk -F '|' -v version="$version" '
+              {
+                local_version = $1
+                remote_version = $2
+                gsub(/[^0-9]/, "", local_version)
+                gsub(/[^0-9]/, "", remote_version)
+                if (local_version == version) {
+                  matched_remote_version = remote_version
+                }
+              }
+              END {
+                if (matched_remote_version != "") print matched_remote_version
+              }
+            ')
+            test "$remote_version" = "$version"
+          }
+
+          require_remote_migration "202607240001"
+          require_remote_migration "202607250001"
+          require_remote_migration "202607260001"
+          require_remote_migration "202607270001"
+          if [ -f supabase/migrations/202608050001_event_setup_card_review.sql ]; then
+            require_remote_migration "202608050001"
+          fi
+          if [ -f supabase/migrations/202608080001_manual_pick_monitoring_runner.sql ]; then
+            require_remote_migration "202608080001"
+          fi
+          if [ -f supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql ]; then
+            require_remote_migration "202608090001"
+          fi
+          if [ -f supabase/migrations/202608090002_harden_pick_monitoring_schedule_claims.sql ]; then
+            require_remote_migration "202608090002"
+          fi
+          if [ -f supabase/migrations/202608090003_verify_pick_monitoring_scheduler_runtime.sql ]; then
+            require_remote_migration "202608090003"
+          fi
+          if [ -f supabase/migrations/202608100001_pick_monitoring_inbox.sql ]; then
+            require_remote_migration "202608100001"
+          fi
+          if [ -f supabase/migrations/202608110001_live_pick_odds_application.sql ]; then
+            require_remote_migration "202608110001"
+          fi
+          if [ -f supabase/migrations/202608250001_truthful_pick_monitoring_decisions.sql ]; then
+            require_remote_migration "202608250001"
+          fi
+          if [ -f supabase/migrations/202608300001_football_pick_event_ingestion.sql ]; then
+            require_remote_migration "202608300001"
+          fi
+          if [ -f supabase/migrations/202608200025_notification_device_push_delivery.sql ]; then
+            require_remote_migration "202608200025"
+          fi
+          if [ -f supabase/migrations/202608210002_auction_private_lifecycle.sql ]; then
+            require_remote_migration "202608210002"
+          fi
+          if [ -f supabase/migrations/202608210003_auction_private_lifecycle_hardening.sql ]; then
+            require_remote_migration "202608210003"
+          fi
+          if [ -f supabase/migrations/202608220001_auction_playable_server_engine.sql ]; then
+            require_remote_migration "202608220001"
+          fi
+          if [ -f supabase/migrations/202608220002_auction_playable_server_engine_hardening.sql ]; then
+            require_remote_migration "202608220002"
+          fi
+          if [ -f supabase/migrations/202608220003_auction_round_notification_hardening.sql ]; then
+            require_remote_migration "202608220003"
+          fi
+          if [ -f supabase/migrations/202608220004_auction_catalog_version_rotation.sql ]; then
+            require_remote_migration "202608220004"
+          fi
+          if [ -f supabase/migrations/202609020001_auction_real_ufc_catalog_private_grading.sql ]; then
+            require_remote_migration "202609020001"
+            require_remote_migration "202609020002"
+            require_remote_migration "202609020003"
+            require_remote_migration "202609020004"
+            require_remote_migration "202609020005"
+            require_remote_migration "202609020006"
+            require_remote_migration "202609020007"
+            require_remote_migration "202609020008"
+          fi
+          if [ -f supabase/migrations/202609030001_auction_notifications_share_release.sql ]; then
+            require_remote_migration "202609030001"
+          fi
+          if [ -f supabase/migrations/202609030003_auction_launch_notification.sql ]; then
+            require_remote_migration "202609030003"
+          fi
+          if [ -f supabase/migrations/202609060001_daily_challenge_runtime_progress.sql ]; then
+            require_remote_migration "202609060001"
+          fi
+          if [ -f supabase/migrations/202609080001_activate_daily_challenge_rotation.sql ]; then
+            require_remote_migration "202609080001"
+          fi
+          if [ -f supabase/migrations/202609090001_calibrate_wavelength_scoring.sql ]; then
+            require_remote_migration "202609090001"
+          fi
+          if [ -f supabase/migrations/202609140003_allow_wavelength_v2_publication.sql ]; then
+            require_remote_migration "202609140003"
+          fi
+          if [ -f supabase/migrations/202612310010_multi_pick_event_spotlights.sql ]; then
+            require_remote_migration "202612310010"
+          fi
+          if [ -f supabase/migrations/202612310096_home_football_spotlight_media.sql ]; then
+            require_remote_migration "202612310096"
+          fi
+          if [ -f supabase/migrations/202612310097_home_feature_media_storage.sql ]; then
+            require_remote_migration "202612310097"
+          fi
+          if [ -f supabase/migrations/202612310136_home_football_spotlight_dual_media.sql ]; then
+            require_remote_migration "202612310136"
+          fi
+          if [ -f supabase/migrations/202612310159_home_football_spotlight_scheduled_pair_media.sql ]; then
+            require_remote_migration "202612310159"
+          fi
+          if [ -f supabase/migrations/202612310160_daily_challenge_weekly_recap.sql ]; then
+            require_remote_migration "202612310160"
+          fi
+          if [ -f supabase/migrations/202612310164_sports_feud_daily_launch.sql ]; then
+            require_remote_migration "202612310164"
+          fi
+          if [ -f supabase/migrations/202612310207_bar_trivia_daily_rotation.sql ]; then
+            require_remote_migration "202612310207"
+          fi
+          if [ -f supabase/migrations/202612310208_mlb_bar_trivia_and_eleven_game_scoring.sql ]; then
+            require_remote_migration "202612310208"
+          fi
+          if [ -f supabase/migrations/202612310098_reset_football_weekly_titles.sql ]; then
+            require_remote_migration "202612310098"
+          fi
+          if [ -f supabase/migrations/202612310122_football_daily_scheduler_prematerialization.sql ]; then
+            require_remote_migration "202612310122"
+          fi
+          if [ -f supabase/migrations/202612310148_millionaire_daily_launch.sql ]; then
+            require_remote_migration "202612310148"
+          fi
+          if [ -f supabase/migrations/202612310125_stage21_draft_room_public_release.sql ]; then
+            require_remote_migration "202612310125"
+          fi
+          if [ -f supabase/migrations/202612310126_stage22_draft_room_launch_notification.sql ]; then
+            require_remote_migration "202612310126"
+          fi
+          if [ -f supabase/migrations/202612310127_ty_miller_contender_in_app_notification.sql ]; then
+            require_remote_migration "202612310127"
+          fi
+          if [ -f supabase/migrations/202612310128_reopen_2026_football_futures.sql ]; then
+            require_remote_migration "202612310128"
+          fi
+
+          if [ -f supabase/migrations/202612310300_football_weekly_editorial_publication.sql ]; then
+            require_remote_migration "202612310300"
+          fi
+
+          function_list=$(supabase functions list --project-ref "$SUPABASE_PROJECT_ID")
+          printf '%s\n' "$function_list" | grep -F "pin-auth"
+          if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "sync-next-ufc-event"
+          fi
+          if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "build-pick-spotlight"
+          fi
+          if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "run-pick-monitoring"
+          fi
+          if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "daily-challenge-runtime"
+          fi
+          if [ -f supabase/functions/football-weekly-publisher/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "football-weekly-publisher"
+          fi
+          if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
+            printf '%s\n' "$function_list" | grep -F "deliver-notification-push"
+          fi
+
+          live_curl() {
+            curl --silent --show-error \
+              --retry 5 \
+              --retry-all-errors \
+              --retry-delay 2 \
+              "$@"
+          }
+          endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/pin-auth"
+          status=$(live_curl \
+            --dump-header "$RUNNER_TEMP/pin-auth-headers.txt" \
+            --output "$RUNNER_TEMP/pin-auth-response.json" \
+            --write-out "%{http_code}" \
+            --request POST \
+            --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+            --header "Content-Type: application/json" \
+            --data '{}' \
+            "$endpoint")
+
+          if [ "$status" != "400" ]; then
+            echo "::error title=PIN function verification failed::Expected HTTP 400 from the deployed validation path, received $status."
+            cat "$RUNNER_TEMP/pin-auth-response.json"
+            exit 1
+          fi
+
+          grep -Fq "Enter a name and a 4-digit PIN." "$RUNNER_TEMP/pin-auth-response.json"
+          grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/pin-auth-headers.txt"
+
+          if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
+            spotlight_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/build-pick-spotlight"
+            spotlight_status=$(live_curl \
+              --dump-header "$RUNNER_TEMP/spotlight-builder-headers.txt" \
+              --output "$RUNNER_TEMP/spotlight-builder-response.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"deployment-info"}' \
+              "$spotlight_endpoint")
+            test "$spotlight_status" = "200"
+            grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/spotlight-builder-response.json"
+            grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/spotlight-builder-headers.txt"
+
+            spotlight_unauthorized_status=$(live_curl \
+              --output "$RUNNER_TEMP/spotlight-builder-unauthorized.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"draft_id":"00000000-0000-0000-0000-000000000000","bout_id":"test"}' \
+              "$spotlight_endpoint")
+            test "$spotlight_unauthorized_status" = "401"
+            grep -Fq "OWNER_AUTH_REQUIRED" "$RUNNER_TEMP/spotlight-builder-unauthorized.json"
+          fi
+
+          if [ -f supabase/functions/football-weekly-publisher/index.ts ]; then
+            weekly_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/football-weekly-publisher"
+            weekly_status=$(live_curl \
+              --output "$RUNNER_TEMP/football-weekly-deployment.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"deployment-info"}' \
+              "$weekly_endpoint")
+            test "$weekly_status" = "200"
+            grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/football-weekly-deployment.json"
+            weekly_denied=$(live_curl \
+              --output "$RUNNER_TEMP/football-weekly-denied.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"scheduled"}' \
+              "$weekly_endpoint")
+            test "$weekly_denied" = "401"
+          fi
+
+          if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
+            daily_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/daily-challenge-runtime"
+            daily_status=$(live_curl \
+              --dump-header "$RUNNER_TEMP/daily-runtime-headers.txt" \
+              --output "$RUNNER_TEMP/daily-runtime-response.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"deployment-info"}' \
+              "$daily_endpoint")
+            test "$daily_status" = "200"
+            grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/daily-runtime-response.json"
+            grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/daily-runtime-headers.txt"
+
+            daily_unauthorized_status=$(live_curl \
+              --output "$RUNNER_TEMP/daily-runtime-unauthorized.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"get-today"}' \
+              "$daily_endpoint")
+            test "$daily_unauthorized_status" = "401"
+            grep -Fq "SIGN_IN_REQUIRED" "$RUNNER_TEMP/daily-runtime-unauthorized.json"
+          fi
+
+          if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
+            push_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/deliver-notification-push"
+            push_status=$(live_curl \
+              --dump-header "$RUNNER_TEMP/push-config-headers.txt" \
+              --output "$RUNNER_TEMP/push-config-response.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"configuration"}' \
+              "$push_endpoint")
+            test "$push_status" = "200"
+            grep -Fq '"public_key"' "$RUNNER_TEMP/push-config-response.json"
+            grep -Fq "\"deployment_sha\":\"$SOURCE_SHA\"" "$RUNNER_TEMP/push-config-response.json"
+            grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/push-config-headers.txt"
+
+            unauthorized_status=$(live_curl \
+              --output "$RUNNER_TEMP/push-unauthorized-response.json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"mode":"deliver","notification_id":"00000000-0000-0000-0000-000000000000"}' \
+              "$push_endpoint")
+            test "$unauthorized_status" = "401"
+            grep -Fq "DELIVERY_AUTH_REQUIRED" "$RUNNER_TEMP/push-unauthorized-response.json"
+          fi
+
+          if [ -f supabase/functions/sync-next-football-event/index.ts ]; then
+            football_endpoint="https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/sync-next-football-event"
+            football_status=$(live_curl \
+              --dump-header "$RUNNER_TEMP/football-sync-headers.txt" \
+              --output "$RUNNER_TEMP/football-sync-response.json" \
+              --write-out "%{http_code}" --request POST \
+              --header "Origin: $OCTAGON_PRODUCTION_ORIGIN" \
+              --header "Content-Type: application/json" --data '{} ' "$football_endpoint")
+            test "$football_status" = "401"
+            grep -Fq "authentication required" "$RUNNER_TEMP/football-sync-response.json"
+            grep -Fiq "access-control-allow-origin: $OCTAGON_PRODUCTION_ORIGIN" "$RUNNER_TEMP/football-sync-headers.txt"
+          fi
+
+      - name: Verify exact deployed UFC sync source
+        if: ${{ hashFiles('supabase/functions/sync-next-ufc-event/index.ts') != '' }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          EXPECTED_SYNC_SOURCE_SHA: ${{ env.SOURCE_SHA }}
+        run: node scripts/verify-sync-function-deployment.mjs
+
+      - name: Verify exact deployed manual monitoring source and scheduler
+        if: ${{ hashFiles('supabase/functions/run-pick-monitoring/index.ts') != '' }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          EXPECTED_MONITORING_SOURCE_SHA: ${{ env.SOURCE_SHA }}
+          EXPECTED_MONITORING_SCHEDULER_ENABLED: ${{ env.EXPECTED_MONITORING_SCHEDULER_ENABLED }}
+        run: node scripts/verify-monitoring-function-deployment.mjs
+
+      - name: Record deployed backend
+        shell: bash
+        run: |
+          {
+            echo "### Octagon HQ V2 backend deployed"
+            echo "- Exact source SHA: \`$SOURCE_SHA\`"
+            if [ "$SOURCE_PR_NUMBER" != "0" ]; then
+              echo "- Source PR: #$SOURCE_PR_NUMBER"
+            else
+              echo "- Source event: $GITHUB_EVENT_NAME"
+            fi
+            echo "- Exact checkout was verified before deployment credentials were used"
+            echo "- Database migrations applied"
+            echo "- pin-auth Edge Function deployed"
+            if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
+              echo "- sync-next-ufc-event Edge Function deployed and returned the embedded exact source SHA"
+            fi
+            if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
+              echo "- build-pick-spotlight Edge Function deployed, returned the embedded exact source SHA, and rejected unauthenticated generation"
+            fi
+            if [ -f supabase/functions/run-pick-monitoring/index.ts ]; then
+              echo "- run-pick-monitoring Edge Function deployed, rejected unauthenticated and fake-scheduler execution without a provider call, and returned the embedded exact source SHA"
+            fi
+            if [ -f supabase/functions/daily-challenge-runtime/index.ts ]; then
+              echo "- daily-challenge-runtime Edge Function deployed from the generated canonical runtime bundle, returned the embedded exact source SHA, and rejected unauthenticated game access"
+            fi
+            if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
+              echo "- deliver-notification-push Edge Function deployed, created or reused private VAPID keys, returned its public key, and rejected unauthenticated delivery"
+            fi
+            if [ -f supabase/migrations/202608090001_automatic_pick_monitoring_scheduler.sql ]; then
+              echo "- Canonical hourly scheduler verified; active state: ${EXPECTED_MONITORING_SCHEDULER_ENABLED:-not-configured}"
+            fi
+            if [ -f supabase/migrations/202609060001_daily_challenge_runtime_progress.sql ]; then
+              echo "- Official daily runtime progress migration 202609060001 verified in linked production history"
+              echo "- The canonical hourly wake-up includes both daily materialization and Picks monitoring"
+            fi
+            if [ -f supabase/migrations/202608210003_auction_private_lifecycle_hardening.sql ]; then
+              echo "- Auction lifecycle migrations 202608210002 and 202608210003 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202608220004_auction_catalog_version_rotation.sql ]; then
+              echo "- Auction playable server migrations 202608220001 through 202608220004 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202609020008_auction_private_fixed_grader.sql ]; then
+              echo "- Auction real-content and private-grading migrations 202609020001 through 202609020008 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202609030001_auction_notifications_share_release.sql ]; then
+              echo "- Auction notification, push-eligibility, and completed-share migration 202609030001 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202609030003_auction_launch_notification.sql ]; then
+              echo "- One-time Auction launch notification migration 202609030003 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202609140003_allow_wavelength_v2_publication.sql ]; then
+              echo "- Wavelength calibrated publication migration 202609140003 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202612310096_home_football_spotlight_media.sql ]; then
+              echo "- Football Home Spotlight media migration 202612310096 verified in linked production history"
+            fi
+            if [ -f supabase/migrations/202612310097_home_feature_media_storage.sql ]; then
+              echo "- Home feature media storage migration 202612310097 verified in linked production history"
+            fi
+            echo "- Canonical production origin: $OCTAGON_PRODUCTION_ORIGIN"
+            echo "- Remote migrations, exact deployed function revisions, live authentication contracts, scheduler health, push configuration, and production CORS were verified"
+            echo "- Project secrets were never printed or exposed to PR build code"
+          } >> "$GITHUB_STEP_SUMMARY"

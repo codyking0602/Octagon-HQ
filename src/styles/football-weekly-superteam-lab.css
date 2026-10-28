@@ -1,0 +1,185 @@
+.football-weekly-superteam-lab {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 110px;
+}
+
+.football-weekly-superteam-lab__hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px;
+}
+
+.football-weekly-superteam-lab__hero h1 {
+  margin: 3px 0 7px;
+  font-size: clamp(1.45rem, 5vw, 2.1rem);
+  line-height: .96;
+}
+
+.football-weekly-superteam-lab__hero p:last-child {
+  margin: 0;
+  max-width: 720px;
+  opacity: .8;
+  line-height: 1.42;
+}
+
+.football-weekly-superteam-lab__hero-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.football-weekly-superteam-lab__hero-actions button,
+.football-weekly-superteam-lab__day-control button {
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.football-weekly-superteam-lab__hero-actions button:first-child,
+.football-weekly-superteam-lab__day-control button {
+  background: var(--football-blue, #0b5ed7);
+  color: #fff;
+}
+
+.football-weekly-superteam-lab__hero-actions button:last-child {
+  background: color-mix(in srgb, currentColor 9%, transparent);
+  color: inherit;
+}
+
+.football-weekly-superteam-lab__run {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.football-weekly-superteam-lab__run > div {
+  display: grid;
+  gap: 3px;
+  padding: 12px 14px;
+  background: color-mix(in srgb, currentColor 3%, transparent);
+}
+
+.football-weekly-superteam-lab__run small,
+.football-weekly-superteam-lab__seats small,
+.football-weekly-superteam-lab__day-control small {
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  opacity: .55;
+}
+
+.football-weekly-superteam-lab__run strong {
+  font-size: 1.05rem;
+}
+
+.football-weekly-superteam-lab__seats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.football-weekly-superteam-lab__seats button {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, currentColor 4%, transparent);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.football-weekly-superteam-lab__seats button.is-active {
+  border-color: var(--football-blue, #0b5ed7);
+  box-shadow: inset 0 0 0 1px var(--football-blue, #0b5ed7);
+  background: color-mix(in srgb, var(--football-blue, #0b5ed7) 10%, transparent);
+}
+
+.football-weekly-superteam-lab__seats strong,
+.football-weekly-superteam-lab__seats span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-weekly-superteam-lab__seats span {
+  font-size: .74rem;
+  opacity: .72;
+}
+
+.football-weekly-superteam-lab__day-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.football-weekly-superteam-lab__day-control > div {
+  display: grid;
+  gap: 3px;
+}
+
+.football-weekly-superteam-lab__day-control span {
+  font-size: .8rem;
+  opacity: .7;
+}
+
+.football-weekly-superteam-lab__day-control button {
+  flex: 0 0 auto;
+}
+
+.football-weekly-superteam-lab button:disabled {
+  cursor: default;
+  opacity: .45;
+}
+
+.football-weekly-superteam-lab__error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, #c62828 12%, transparent);
+  font-weight: 800;
+}
+
+@media (max-width: 700px) {
+  .football-weekly-superteam-lab__hero {
+    display: grid;
+    padding: 15px;
+  }
+
+  .football-weekly-superteam-lab__hero-actions {
+    width: 100%;
+  }
+
+  .football-weekly-superteam-lab__hero-actions button {
+    flex: 1;
+  }
+
+  .football-weekly-superteam-lab__run {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .football-weekly-superteam-lab__seats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .football-weekly-superteam-lab__day-control {
+    align-items: stretch;
+    display: grid;
+  }
+
+  .football-weekly-superteam-lab__day-control button {
+    width: 100%;
+  }
+}

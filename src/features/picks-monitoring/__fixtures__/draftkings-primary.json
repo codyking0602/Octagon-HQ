@@ -1,0 +1,40 @@
+[
+  {
+    "id": "mma-event-medic-rodriguez",
+    "sport_key": "mma_mixed_martial_arts",
+    "sport_title": "MMA",
+    "commence_time": "2026-08-15T22:00:00Z",
+    "home_team": "Uroš Medić",
+    "away_team": "Daniel Rodriguez",
+    "bookmakers": [
+      {
+        "key": "fanduel",
+        "title": "FanDuel",
+        "last_update": "2026-08-10T12:00:00Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              { "name": "Daniel Rodriguez", "price": -115 },
+              { "name": "Uros Medic", "price": 105 }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "draftkings",
+        "title": "DraftKings",
+        "last_update": "2026-08-10T12:05:00Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              { "name": "Uros Medic", "price": 110 },
+              { "name": "Daniel Rodriguez", "price": -130 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,214 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { shareCanonicalDestination } from "../../app/nativeShare";
+import { allTime, getFighter } from "../rankings/rankingModel";
+import {
+  OCTAGON_VERDICT_URL,
+  copyText,
+  matchupPrompt,
+  starterPrompts,
+  whyPromptFor,
+} from "./intelligence";
+
+interface MatchupBuilderProps {
+  initialFighterSlug?: string;
+  initialOpponentSlug?: string;
+  expanded?: boolean;
+}
+
+function MatchupBuilder({ initialFighterSlug, initialOpponentSlug, expanded = false }: MatchupBuilderProps) {
+  const firstDefault = initialFighterSlug || allTime[0]?.slug || "";
+  const secondDefault = initialOpponentSlug || (initialFighterSlug ? "" : allTime[1]?.slug || "");
+  const [firstSlug, setFirstSlug] = useState(firstDefault);
+  const [secondSlug, setSecondSlug] = useState(secondDefault);
+  const [status, setStatus] = useState("");
+  const secondSelectRef = useRef<HTMLSelectElement | null>(null);
+
+  useEffect(() => {
+    setFirstSlug(firstDefault);
+    setSecondSlug(secondDefault);
+    setStatus("");
+  }, [firstDefault, secondDefault]);
+
+  useEffect(() => {
+    if (expanded && initialFighterSlug && !initialOpponentSlug) secondSelectRef.current?.focus();
+  }, [expanded, initialFighterSlug, initialOpponentSlug]);
+
+  const first = getFighter(firstSlug);
+  const second = getFighter(secondSlug);
+  const prompt = first && second && first.slug !== second.slug
+    ? matchupPrompt(first.displayName, second.displayName)
+    : "";
+
+  async function handleCopy() {
+    const copied = await copyText(prompt);
+    setStatus(copied ? "Matchup copied. Paste it into Octagon Verdict." : "Could not copy automatically. Press and hold the visible matchup text.");
+  }
+
+  function handleCopyAndOpen() {
+    window.open(OCTAGON_VERDICT_URL, "_blank", "noopener,noreferrer");
+    void copyText(prompt).then((copied) => {
+      setStatus(copied ? "Matchup copied. Octagon Verdict opened in a new tab." : "Octagon Verdict opened. Copy the visible matchup text manually.");
+    });
+  }
+
+  async function handleShare() {
+    if (!first || !second || first.slug === second.slug) return;
+    const outcome = await shareCanonicalDestination({
+      destination: {
+        kind: "comparison",
+        leftFighterSlug: first.slug,
+        rightFighterSlug: second.slug,
+      },
+      title: `${first.displayName} vs. ${second.displayName} · Octagon HQ`,
+      text: `Compare ${first.displayName} vs. ${second.displayName} in Octagon HQ.`,
+    });
+    setStatus(
+      outcome === "copied"
+        ? "Comparison link copied."
+        : outcome === "unavailable"
+          ? "Sharing is unavailable on this device."
+          : "",
+    );
+  }
+
+  const content = (
+    <div className="intelligence-matchup-body">
+      <div className="intelligence-select-grid">
+        <label>
+          <span>First fighter</span>
+          <select aria-label="First fighter" value={firstSlug} onChange={(event) => setFirstSlug(event.target.value)}>
+            {allTime.map((fighter) => <option value={fighter.slug} key={fighter.slug}>{fighter.displayName}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Second fighter</span>
+          <select ref={secondSelectRef} aria-label="Second fighter" value={secondSlug} onChange={(event) => setSecondSlug(event.target.value)}>
+            <option value="" disabled>Choose opponent</option>
+            {allTime.map((fighter) => <option value={fighter.slug} key={fighter.slug}>{fighter.displayName}</option>)}
+          </select>
+        </label>
+      </div>
+      <div className="intelligence-visible-prompt" aria-live="polite">
+        {prompt || "Choose two different fighters to prepare the debate."}
+      </div>
+      <div className={expanded ? "intelligence-action-grid intelligence-action-grid--shareable" : "intelligence-action-grid"}>
+        <button className="intelligence-primary" type="button" disabled={!prompt} onClick={handleCopyAndOpen}>Copy &amp; Open Verdict</button>
+        <button className="intelligence-secondary" type="button" disabled={!prompt} onClick={() => void handleCopy()}>Copy Matchup</button>
+        {expanded ? <button className="intelligence-secondary" type="button" disabled={!prompt} onClick={() => void handleShare()}>Share Matchup</button> : null}
+      </div>
+      {status ? <p className="intelligence-status" role="status">{status}</p> : null}
+    </div>
+  );
+
+  if (expanded) {
+    const contextCopy = first && second
+      ? `${first.displayName} vs. ${second.displayName} is ready.`
+      : first
+        ? `${first.displayName} is ready. Choose an opponent.`
+        : "Choose two fighters.";
+    return (
+      <section className="surface-card intelligence-matchup-card intelligence-matchup-card--open" aria-labelledby="matchup-title">
+        <div className="section-heading"><div><p className="eyebrow">FROM UFC GAME</p><h1 id="matchup-title">Compare fighters</h1><p>{contextCopy}</p></div></div>
+        {content}
+      </section>
+    );
+  }
+
+  return (
+    <details className="surface-card intelligence-matchup-card">
+      <summary><span><strong>Quick matchup builder</strong><small>Choose two fighters, copy the debate, then open Octagon Verdict.</small></span><b aria-hidden="true">+</b></summary>
+      {content}
+    </details>
+  );
+}
+
+function WhyContext({ fighterSlug, copiedFromSource }: { fighterSlug: string; copiedFromSource: boolean }) {
+  const fighter = getFighter(fighterSlug);
+  const [status, setStatus] = useState(copiedFromSource ? "Question copied. Paste it into Octagon Verdict." : "Question ready.");
+
+  if (!fighter) return null;
+  const prompt = whyPromptFor(fighter);
+
+  async function handleCopy() {
+    const copied = await copyText(prompt);
+    setStatus(copied ? "Question copied. Paste it into Octagon Verdict." : "Could not copy automatically. Press and hold the visible question.");
+  }
+
+  function handleCopyAndOpen() {
+    window.open(OCTAGON_VERDICT_URL, "_blank", "noopener,noreferrer");
+    void copyText(prompt).then((copied) => setStatus(copied ? "Question copied. Octagon Verdict opened in a new tab." : "Octagon Verdict opened. Copy the visible question manually."));
+  }
+
+  return (
+    <section className="surface-card intelligence-context-card" aria-labelledby="why-context-title">
+      <p className="eyebrow">FROM FIGHTER PROFILE</p>
+      <h1 id="why-context-title">Why {fighter.displayName} ranks here</h1>
+      <div className="intelligence-visible-prompt">{prompt}</div>
+      <div className="intelligence-action-grid">
+        <button className="intelligence-primary" type="button" onClick={handleCopyAndOpen}>Copy &amp; Open Verdict</button>
+        <button className="intelligence-secondary" type="button" onClick={() => void handleCopy()}>Copy Question</button>
+      </div>
+      <p className="intelligence-status" role="status">{status}</p>
+    </section>
+  );
+}
+
+function validReturnPath(value: string | null) {
+  return value && /^\/play(?:\/|$)/.test(value) ? value : "";
+}
+
+export default function IntelligencePage() {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const [showAll, setShowAll] = useState(false);
+  const [promptStatus, setPromptStatus] = useState("");
+  const mode = searchParams.get("mode");
+  const fighterSlug = searchParams.get("fighter") || "";
+  const opponentSlug = searchParams.get("opponent") || "";
+  const returnTo = validReturnPath(searchParams.get("returnTo"));
+  const returnLabel = searchParams.get("returnLabel") || "Back to game";
+  const copiedFromSource = Boolean((location.state as { copied?: boolean } | null)?.copied);
+  const visiblePrompts = useMemo(() => starterPrompts.slice(0, showAll ? starterPrompts.length : 4), [showAll]);
+  const returnLink = returnTo ? <Link className="intelligence-return-link" to={returnTo}>← {returnLabel}</Link> : null;
+
+  if (mode === "why" && fighterSlug) {
+    return <div className="page intelligence-page intelligence-page--context">{returnLink}<WhyContext fighterSlug={fighterSlug} copiedFromSource={copiedFromSource} /></div>;
+  }
+
+  if (mode === "compare" && fighterSlug) {
+    return <div className="page intelligence-page intelligence-page--context">{returnLink}<MatchupBuilder initialFighterSlug={fighterSlug} initialOpponentSlug={opponentSlug} expanded /></div>;
+  }
+
+  async function copyStarter(prompt: string) {
+    const copied = await copyText(prompt);
+    setPromptStatus(copied ? "Question copied. Open Octagon Verdict when you’re ready." : "Could not copy automatically. Press and hold the question to copy it.");
+  }
+
+  return (
+    <div className="page intelligence-page">
+      <section className="intelligence-hero-card">
+        <div className="intelligence-hero-art" aria-hidden="true"><span>Let’s talk.</span></div>
+        <div className="intelligence-hero-copy">
+          <p>Ask anything about rankings, scores, comparisons, future scenarios, or UFC debates.</p>
+          <a className="intelligence-open-card" href={OCTAGON_VERDICT_URL} target="_blank" rel="noreferrer"><strong>Open Octagon Verdict</strong><span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <section className="surface-card intelligence-prompts" aria-labelledby="try-asking-title">
+        <div className="section-heading"><div><p className="eyebrow">TRY ASKING</p><h2 id="try-asking-title">Start a debate</h2></div></div>
+        <div className="intelligence-prompt-list">
+          {visiblePrompts.map((prompt) => (
+            <button type="button" className="intelligence-prompt-row" key={prompt} onClick={() => void copyStarter(prompt)}>
+              <span>{prompt}</span><b>Copy</b>
+            </button>
+          ))}
+        </div>
+        {!showAll ? <button className="intelligence-show-more" type="button" onClick={() => setShowAll(true)}>Show more questions</button> : null}
+        {promptStatus ? <p className="intelligence-status" role="status">{promptStatus}</p> : null}
+      </section>
+
+      <MatchupBuilder />
+    </div>
+  );
+}

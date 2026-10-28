@@ -1,0 +1,202 @@
+.play-daily__leaderboard-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.play-daily__leaderboard-heading > div {
+  display: grid;
+  gap: 6px;
+}
+
+.play-daily__leaderboard-heading h2 {
+  font-size: clamp(27px, 7.4vw, 40px);
+}
+
+.play-daily__leaderboard-heading > span {
+  flex: 0 0 auto;
+  padding: 6px 8px;
+  border: 1px solid rgba(47, 191, 98, .45);
+  border-radius: 999px;
+  background: rgba(47, 191, 98, .12);
+  color: #78dc98;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.play-daily__leaderboard-lock {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 145px;
+  padding: 16px;
+  border: 1px dashed #4a4a50;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, .24);
+  text-align: center;
+}
+
+.play-daily__leaderboard-lock > span {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 999px;
+  background: #242428;
+  font-size: 17px;
+  font-weight: 950;
+}
+
+.play-daily__leaderboard-lock strong {
+  font-size: 15px;
+}
+
+.play-daily__leaderboard-lock p {
+  max-width: 330px;
+  font-size: 11px;
+}
+
+.play-daily__leaderboard-lock button {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid rgba(240, 23, 23, .55);
+  border-radius: 999px;
+  background: rgba(210, 10, 10, .18);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+
+.play-daily__leaderboard-you {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgba(240, 23, 23, .68);
+  border-radius: 14px;
+  background: rgba(210, 10, 10, .13);
+}
+
+.play-daily__leaderboard-you > span:nth-child(2) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  min-width: 0;
+}
+
+.play-daily__leaderboard-you small {
+  grid-column: 1 / -1;
+  color: var(--ufc-red-strong);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.play-daily__leaderboard-you strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.play-daily__leaderboard-you em {
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.play-daily__leaderboard-you > b,
+.play-daily__leaderboard-row > b {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  font-size: 22px;
+}
+
+.play-daily__leaderboard-you > b small,
+.play-daily__leaderboard-row > b small {
+  color: var(--text-muted);
+  font-size: 8px;
+}
+
+.play-daily__leaderboard-avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #242428;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.play-daily__leaderboard-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play-daily__leaderboard-list {
+  display: grid;
+  gap: 5px;
+  max-height: 145px;
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-width: thin;
+}
+
+.play-daily__leaderboard-row {
+  display: grid;
+  grid-template-columns: 32px 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 46px;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: rgba(0, 0, 0, .28);
+}
+
+.play-daily__leaderboard-row.is-current {
+  border-color: rgba(240, 23, 23, .42);
+  background: rgba(210, 10, 10, .08);
+}
+
+.play-daily__leaderboard-row .play-daily__leaderboard-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.play-daily__leaderboard-rank {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.play-daily__leaderboard-row > strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.play-daily__leaderboard-row > b {
+  font-size: 18px;
+}
+
+@media (max-width: 420px) {
+  .play-daily__leaderboard-heading h2 { font-size: 29px; }
+  .play-daily__leaderboard-list { max-height: 132px; }
+  .play-daily__leaderboard-you { grid-template-columns: 38px minmax(0, 1fr) auto; }
+  .play-daily__leaderboard-avatar { width: 34px; height: 34px; }
+}

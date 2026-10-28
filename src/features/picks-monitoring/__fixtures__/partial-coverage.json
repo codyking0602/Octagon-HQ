@@ -1,0 +1,35 @@
+[
+  {
+    "id": "mma-event-tybura-stirling",
+    "sport_key": "mma_mixed_martial_arts",
+    "sport_title": "MMA",
+    "commence_time": "2026-08-16T00:00:00Z",
+    "home_team": "Marcin Tybura",
+    "away_team": "Navajo Stirling",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "title": "DraftKings",
+        "last_update": "2026-08-10T14:00:00Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              { "name": "Marcin Tybura", "price": 140 },
+              { "name": "Navajo Stirling", "price": -160 }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mma-event-janicic-cepo",
+    "sport_key": "mma_mixed_martial_arts",
+    "sport_title": "MMA",
+    "commence_time": "2026-08-16T00:30:00Z",
+    "home_team": "Milos Janicic",
+    "away_team": "Vlasto Cepo",
+    "bookmakers": []
+  }
+]

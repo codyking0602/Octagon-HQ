@@ -68,7 +68,7 @@ export function normalizeRuntimeFighterMediaMap(value: unknown) {
     Object.entries(value as Record<string, unknown>).filter(([slug, url]) => (
       /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
       && typeof url === "string"
-      && /^https:\/\//i.test(url)
+      && /^https:\/\/a\.espncdn\.com\/i\/headshots\/mma\/players\/full\/[0-9]+\.png$/.test(url)
     )),
   ) as Record<string, string>;
 }

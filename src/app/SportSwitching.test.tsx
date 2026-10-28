@@ -1,0 +1,215 @@
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { HOME_SPORT_STORAGE_KEY, PICKS_SPORT_STORAGE_KEY, SELECTED_SPORT_STORAGE_KEY } from "./SportProvider";
+import { AppProviders } from "./providers";
+import { appRoutes } from "./router";
+
+beforeEach(() => {
+  window.localStorage.clear();
+});
+
+afterEach(cleanup);
+
+function renderRoute(path: string) {
+  // Explicit legacy /picks and /play URLs refer to UFC even when Football is the app default.
+  if ((path === "/picks" || path === "/play") && !window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)) {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "ufc");
+  }
+  const router = createMemoryRouter(appRoutes, { initialEntries: [path] });
+  render(
+    <AppProviders>
+      <RouterProvider router={router} />
+    </AppProviders>,
+  );
+  return router;
+}
+
+async function sportContext(label: string) {
+  const row = await screen.findByTestId("sport-context-row");
+  await waitFor(() => expect(row).toHaveTextContent(label));
+  return row;
+}
+
+function switchSport(row: HTMLElement, next: "football" | "ufc" | "mlb" | "nba") {
+  const section = row.textContent?.includes("PICKS") ? "Picks" : "Play";
+  fireEvent.change(within(row).getByRole("combobox", { name: "Sport for " + section }), { target: { value: next } });
+}
+
+async function expectPath(router: ReturnType<typeof renderRoute>, pathname: string) {
+  await waitFor(() => expect(router.state.location.pathname).toBe(pathname));
+}
+
+function expectThemeScope(theme: "neutral" | "ufc" | "football" | "nba") {
+  const shell = document.querySelector(".app-shell");
+  expect(shell).toHaveAttribute("data-hq-theme", theme);
+  expect(screen.getByRole("navigation", { name: "Primary navigation" })).toHaveAttribute(
+    "data-hq-theme",
+    theme,
+  );
+}
+
+describe("The HQ sport switching", () => {
+  it("switches Picks from UFC to Football through the canonical sport state", async () => {
+    const router = renderRoute("/picks");
+    const row = await sportContext("UFC PICKS");
+    expectThemeScope("ufc");
+
+    switchSport(row, "football");
+
+    await expectPath(router, "/football/picks");
+    await sportContext("FOOTBALL PICKS");
+    expectThemeScope("football");
+    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("football");
+  });
+
+  it("switches Picks from Football to UFC through the same canonical sport state", async () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    const router = renderRoute("/football/picks");
+    const row = await sportContext("FOOTBALL PICKS");
+    expectThemeScope("football");
+
+    switchSport(row, "ufc");
+
+    await expectPath(router, "/picks");
+    await sportContext("UFC PICKS");
+    expectThemeScope("ufc");
+    expect(window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY)).toBe("ufc");
+  });
+
+  it("switches Play from UFC to Football through the canonical sport state", async () => {
+    const router = renderRoute("/play");
+    const row = await sportContext("UFC PLAY");
+    expectThemeScope("ufc");
+
+    switchSport(row, "football");
+
+    await expectPath(router, "/football");
+    await sportContext("FOOTBALL PLAY");
+    expectThemeScope("football");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+  });
+
+  it("switches Play from Football to UFC through the same canonical sport state", async () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    const router = renderRoute("/football");
+    const row = await sportContext("FOOTBALL PLAY");
+    expectThemeScope("football");
+
+    switchSport(row, "ufc");
+
+    await expectPath(router, "/play");
+    await sportContext("UFC PLAY");
+    expectThemeScope("ufc");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+  });
+
+  it("uses the latest sport across Picks and Play when Home is All Sports", async () => {
+    window.localStorage.setItem(HOME_SPORT_STORAGE_KEY, "all");
+    const router = renderRoute("/");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
+    fireEvent.click(screen.getByRole("link", { name: "Play" }));
+    await expectPath(router, "/football");
+    switchSport(await sportContext("FOOTBALL PLAY"), "ufc");
+    await expectPath(router, "/play");
+
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/picks");
+    fireEvent.click(screen.getByRole("link", { name: "Picks" }));
+    await expectPath(router, "/picks");
+    switchSport(await sportContext("UFC PICKS"), "nba");
+    await expectPath(router, "/nba/picks");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/nba");
+
+    fireEvent.click(screen.getByRole("link", { name: "Home" }));
+    await expectPath(router, "/");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("all");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/nba");
+  });
+
+  it("keeps a frozen Home sport as the entry for both tabs regardless of deep links", async () => {
+    window.localStorage.setItem(HOME_SPORT_STORAGE_KEY, "football");
+    const router = renderRoute("/picks");
+    await sportContext("UFC PICKS");
+    expect(window.localStorage.getItem(HOME_SPORT_STORAGE_KEY)).toBe("football");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
+    await router.navigate("/nba");
+    await sportContext("NBA PLAY");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
+    await router.navigate("/football/picks");
+    await sportContext("FOOTBALL PICKS");
+    cleanup();
+    renderRoute("/");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
+  });
+
+  it("respects the persisted PR 4 sport when choosing Picks and Play from universal surfaces", async () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    const router = renderRoute("/");
+
+    expectThemeScope("neutral");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
+
+    fireEvent.click(screen.getByRole("link", { name: "Picks" }));
+    await expectPath(router, "/football/picks");
+    await sportContext("FOOTBALL PICKS");
+    expectThemeScope("football");
+  });
+
+  it.each([
+    ["/picks", "UFC PICKS", "Picks sport", "ufc"],
+    ["/football/picks", "FOOTBALL PICKS", "Picks sport", "football"],
+    ["/play", "UFC PLAY", "Play sport", "ufc"],
+    ["/football", "FOOTBALL PLAY", "Play sport", "football"],
+  ] as const)("identifies %s with the switchable sport context row and accent scope", async (path, label, groupName, theme) => {
+    if (path.startsWith("/football")) {
+      window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    }
+    renderRoute(path);
+
+    const row = await sportContext(label);
+    const selector = within(row).getByRole("combobox", { name: "Sport for " + groupName.split(" ")[0] });
+    expect(within(selector).getByRole("option", { name: "UFC" })).toBeInTheDocument();
+    expect(within(selector).getByRole("option", { name: "Football" })).toBeInTheDocument();
+    expectThemeScope(theme);
+  });
+
+  it("identifies Rankings as UFC-only with UFC contextual accent and no Football selector", async () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderRoute("/rankings");
+
+    const row = await sportContext("UFC RANKINGS");
+    expectThemeScope("ufc");
+    expect(within(row).queryByRole("combobox")).not.toBeInTheDocument();
+    expect(within(row).queryByRole("button", { name: "Football" })).not.toBeInTheDocument();
+  });
+
+  it("keeps Home universal and neutral regardless of the persisted sport", () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderRoute("/");
+
+    expectThemeScope("neutral");
+    expect(screen.queryByTestId("sport-context-row")).not.toBeInTheDocument();
+  });
+
+  it("keeps Intelligence clearly UFC-only with UFC contextual accent and no Football option", async () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderRoute("/intelligence");
+
+    const row = await sportContext("UFC INTELLIGENCE");
+    expectThemeScope("ufc");
+    expect(within(row).queryByRole("group")).not.toBeInTheDocument();
+    expect(within(row).queryByRole("button", { name: "Football" })).not.toBeInTheDocument();
+  });
+});
+
+// Basketball joins the public sport context; the previous owner-preview isolation is retired.
+describe("Basketball public launch",()=>{
+  it("offers Basketball in the public Picks selector",async()=>{
+    const router=renderRoute("/picks");
+    const row=await sportContext("UFC PICKS");
+    expect(within(row).getByRole("option",{name:"Basketball"})).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe("/picks");
+  });
+});

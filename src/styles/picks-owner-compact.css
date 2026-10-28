@@ -1,0 +1,163 @@
+/* Keep unlocked player fight cards clean; interactivity already communicates the open state. */
+.pick-bout-card .picks-status--upcoming {
+  display: none;
+}
+
+/* Upcoming owner controls should scan like a card-management list, not five full forms. */
+.picks-control-bouts[aria-label$="pre-lock card controls"] {
+  gap: 10px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  padding: 14px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout__heading,
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-winners {
+  grid-column: 1 / -1;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout__heading {
+  align-items: start;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout__heading > div {
+  gap: 2px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout__state {
+  min-height: 27px;
+  padding: 0 10px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .picks-control-deadline {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 0;
+  padding: 10px 11px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .picks-control-deadline > div {
+  gap: 2px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .picks-control-deadline span {
+  font-size: 7px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .picks-control-deadline strong {
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .picks-control-deadline small {
+  display: none;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .picks-control-deadline .secondary-action {
+  width: auto;
+  min-height: 38px;
+  padding: 0 13px;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-move {
+  grid-column: 1;
+  grid-row: 4;
+  align-self: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-move button {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 7px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-winners {
+  grid-row: 3;
+  min-height: 52px;
+  padding: 8px 0;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-winners > div {
+  gap: 3px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-winners strong {
+  font-size: 15px;
+  line-height: 1.12;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout > p:not(.pick-control-replacement-history) {
+  display: none;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-replacement-history {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 8px;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout > .secondary-action,
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout > .pick-control-clear {
+  grid-column: auto;
+  width: auto;
+  min-height: 36px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .035);
+  color: var(--text-secondary);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout > .secondary-action {
+  grid-column: 2;
+  grid-row: 4;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout > .pick-control-clear {
+  grid-column: 1 / -1;
+  min-height: 30px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+.picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout > .pick-control-clear + .pick-control-clear {
+  margin-top: -8px;
+}
+
+@media (max-width: 420px) {
+  .picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout {
+    gap: 9px;
+    padding: 12px;
+  }
+
+  .picks-control-bouts[aria-label$="pre-lock card controls"] .picks-control-deadline {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .picks-control-bouts[aria-label$="pre-lock card controls"] .picks-control-deadline .secondary-action {
+    padding: 0 10px;
+  }
+
+  .picks-control-bouts[aria-label$="pre-lock card controls"] .pick-control-bout > .secondary-action {
+    padding: 0 10px;
+  }
+}

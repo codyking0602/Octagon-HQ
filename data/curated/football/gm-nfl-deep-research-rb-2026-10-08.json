@@ -1,0 +1,4338 @@
+{
+  "schemaVersion": 1,
+  "researchVersion": "gm-nfl-rb-independent-deep-review-2026-10-08-v1",
+  "researchOnly": true,
+  "asOf": "2026-10-08",
+  "performanceCutoff": "2026 regular-season games completed through Week 4, October 5, 2026",
+  "branchBase": {
+    "branch": "feat/gm-full-nfl-development-calibration-20261007",
+    "sha": "30e34c38142f828dd4c8d324c04dfac4d169b527",
+    "parentPR": 1760
+  },
+  "population": 65,
+  "authorities": {
+    "contracts": "data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+    "hqGrades": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+    "existingProfiles": "data/curated/football/gm-nfl-development-profiles-2026-10-07.json",
+    "existingAudit": "data/curated/football/gm-nfl-development-review-audit-2026-10-08.json"
+  },
+  "limitations": "Independent evidence-based forward gameplay probabilities are subjective calibrated judgments, not statistical predictive-model probabilities or future facts. All 65 HQ grades are unchanged; proposed development values are NOT applied to shared runtime. Year 2 distributions are per offseason; Year 3 engine recalculates odds conditional on Year 2 realized grade and age, so do not independently double-apply Year 2 odds.",
+  "observedEvidenceGaps": [
+    {
+      "id": "ARI|RB|jeremiyahlove",
+      "gap": "Only four NFL games; projecting second-season efficiency requires caution."
+    },
+    {
+      "id": "IND|RB|sethmcgowan",
+      "gap": "Only 12 NFL carries; no 2025 NFL season."
+    },
+    {
+      "id": "LV|RB|mikewashington",
+      "gap": "NFL individual profile slug collides with historical player; use verified Raiders team reporting and four-game snap/production context."
+    },
+    {
+      "id": "KC|RB|emmettjohnson",
+      "gap": "Only 16 NFL carries and no 2025 NFL season; role inferred from Chiefs official logs plus Week 4 snap report."
+    },
+    {
+      "id": "GB|RB|joshjacobs",
+      "gap": "2026 absent due Commissioner's Exempt List, return date unresolved and not an injury."
+    },
+    {
+      "id": "DET|RB|isiahpacheco",
+      "gap": "No 2026 production; back surgery reported, return estimate not guaranteed."
+    },
+    {
+      "id": "CAR|RB|jonathonbrooks",
+      "gap": "Multiple rehabilitation episodes and limited NFL carries prevent precise healthy performance forecast."
+    },
+    {
+      "id": "SF|RB|isaacguerendo",
+      "gap": "No offensive rushes in 2025/through Week4 2026, making performance trend unobservable."
+    },
+    {
+      "id": "SEA|RB|zachcharbonnet",
+      "gap": "2026 ACL rehabilitation in practice window, no regular-season returns recorded."
+    },
+    {
+      "id": "PHI|RB|saquonbarkley",
+      "gap": "Oct4 hamstring severity and expected return not established."
+    },
+    {
+      "id": "JAX|RB|chrisrodriguez",
+      "gap": "Official Jaguars club stats used instead of unresolved NFL.com canonical individual slug."
+    }
+  ],
+  "players": [
+    {
+      "id": "ARI|RB|jamesconner",
+      "name": "James Conner",
+      "team": "ARI",
+      "position": "RB",
+      "ageAtCalibration": 31,
+      "draftOverall": 105,
+      "hqGradeUnchanged": 83,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Established power, vision and receiving competence remain starter-caliber; recent availability and declining explosive margin keep him out of the upper tiers."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Power/vision and useful hands: 2025 right-foot injury ended his year after 32 carries/95 yards and eight catches; no 2026 game snaps through Week 4. Love/Allgeier now threaten the feature role.",
+      "injuryDurabilityAndAvailability": "Right-foot surgery and 2026 injured-reserve absence are verified; treat recovery and potential lost opportunity as separate uncertainties, not proof the downhill skill vanished.",
+      "year2AndYear3DevelopmentRationale": "Y2: if healthy can regain short-yardage and passing responsibilities, but younger teammates may hold workload. Y3: reduced durability and role retention are the main downside, not automatic age-related collapse.",
+      "oddsChangeReason": "Original 2/12/40/46 understated now-consecutive lost seasons and backfield crowding; increased decline and market spread while retaining a healthy-rebound path.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 12,
+        "steadyPct": 40,
+        "declinePct": 46,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 35,
+        "declinePct": 53,
+        "maxAnnualGain": 2.2,
+        "maxAnnualLoss": 6.4,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -2,
+        "steadyPct": -5,
+        "declinePct": 7,
+        "maxAnnualGain": -0.4,
+        "maxAnnualLoss": 0.5,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/james-conner/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/james-conner/5691/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Official team",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.azcardinals.com/news/not-on-field-yet-james-conner-still-makes-his-impact",
+          "date": "2026-10-01",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "ARI|RB|jeremiyahlove",
+      "name": "Jeremiyah Love",
+      "team": "ARI",
+      "position": "RB",
+      "ageAtCalibration": 21,
+      "draftOverall": 3,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Three-game NFL sample shows viable three-down starter traits and receiving use, but 3.9 YPC and limited evidence keep him at the solid-starter line."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "First-round rookie shows receiving versatility: 2026 223 rushing yards on 55 carries (4.1 per carry), 11 catches; no 2025 NFL season. Allgeier supplies dependable power, Conner's injury opens touches.",
+      "injuryDurabilityAndAvailability": "Only four career NFL games; durability has not been established either way, so collegiate pedigree cannot be passed off as NFL efficiency.",
+      "year2AndYear3DevelopmentRationale": "Y2: improved reads/contact timing and more routes could yield feature-back breakthrough; Y3: if 2026 workload persists, performance likely normalizes into stable primary duty, while poor blocking/limited creation leaves a modest decline path.",
+      "oddsChangeReason": "Original 28/31/16/25 put too much mass into immediate breakout or bust after a short positive opening; shift to incremental improvement without claiming a season-long breakout.",
+      "previousProfile": {
+        "breakoutPct": 28,
+        "improvePct": 31,
+        "steadyPct": 16,
+        "declinePct": 25,
+        "maxAnnualGain": 8.6,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 8
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 24,
+        "improvePct": 38,
+        "steadyPct": 20,
+        "declinePct": 18,
+        "maxAnnualGain": 7.6,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -4,
+        "improvePct": 7,
+        "steadyPct": 4,
+        "declinePct": -7,
+        "maxAnnualGain": -1,
+        "maxAnnualLoss": -1.6,
+        "marketVariancePct": 0
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jeremiyah-love/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jeremiyah-love/13147/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "ARI|RB|tylerallgeier",
+      "name": "Tyler Allgeier",
+      "team": "ARI",
+      "position": "RB",
+      "ageAtCalibration": 26,
+      "draftOverall": 151,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Proven efficient rotational runner with power and ball security; limited passing-game value keeps him around the starter baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Physical reliable early-down rotation: 2025 rushed 514 yards on 143 carries (3.6); 2026 112/32 (3.5) and ten catches through four games. Love is developing beside him; Conner's IR may temporarily raise workload.",
+      "injuryDurabilityAndAvailability": "No confirmed new major 2026 injury in reviewed sources; significant work may be role-driven rather than new talent.",
+      "year2AndYear3DevelopmentRationale": "Y2: power/goal-line ability maintains a useful complementary job; Y3: younger competition caps breakout but a move into a starting vacancy has modest upside.",
+      "oddsChangeReason": "Prior 4/20/57/19 assumed generic starter growth despite modest two-year efficiency and crowded backfield; increased steady, trimmed improve.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 3,
+        "improvePct": 16,
+        "steadyPct": 63,
+        "declinePct": 18,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 3.2,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -1,
+        "improvePct": -4,
+        "steadyPct": 6,
+        "declinePct": -1,
+        "maxAnnualGain": 0.5,
+        "maxAnnualLoss": 0.3,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/tyler-allgeier/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/tyler-allgeier/10196/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "ATL|RB|bijanrobinson",
+      "name": "Bijan Robinson",
+      "team": "ATL",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 8,
+      "hqGradeUnchanged": 99,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved current ceiling anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Already NFL upper-ceiling three-down star: 2025 1,478 rushing yards at 5.2 plus 79 catches/820; 2026 494 rushing yards through four games. His explosive space creation and receiving are established, not speculative breakout.",
+      "injuryDurabilityAndAvailability": "Workload is substantial but there is no sourced 2026 major injury; do not manufacture a medical penalty.",
+      "year2AndYear3DevelopmentRationale": "Y2: elite stability and small marginal skill refinement dominate; Y3: continued high usage creates slight incremental wear risk without making him washed at 26.",
+      "oddsChangeReason": "Old 2/20/73/5 still allocated 22% to upward events from a locked 99 grade; reduce the mechanically implausible upward ceiling and market risk.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 20,
+        "steadyPct": 73,
+        "declinePct": 5,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 1,
+        "improvePct": 12,
+        "steadyPct": 81,
+        "declinePct": 6,
+        "maxAnnualGain": 0.8,
+        "maxAnnualLoss": 2.1,
+        "marketVariancePct": 3
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -1,
+        "improvePct": -8,
+        "steadyPct": 8,
+        "declinePct": 1,
+        "maxAnnualGain": -0.7,
+        "maxAnnualLoss": 0.8,
+        "marketVariancePct": -3
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/bijan-robinson/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/bijan-robinson/10832/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "ATL|RB|brianrobinson",
+      "name": "Brian Robinson",
+      "team": "ATL",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 98,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Physical, reliable early-down starter profile with adequate receiving value; lacks the creation/efficiency of the upper bands."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Downhill one-cut runner: 2025 400 yards/92 rushes with SF; 2026 Atlanta 194/44 (4.4) and four rushing TD behind Bijan. Limited targets make a true three-down leap less likely.",
+      "injuryDurabilityAndAvailability": "No verified major current injury; biggest risk is playing-time ceiling behind an elite starter.",
+      "year2AndYear3DevelopmentRationale": "Y2: power complement and short-yardage TD role can hold; Y3: a different team or Bijan absence yields spot starts but limited open-field/receiving evidence constrains sustained breakout.",
+      "oddsChangeReason": "Old 2/17/58/23 overrated routine skill improvement in a specialist trapped behind Bijan; increase stability, lower improve.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 3,
+        "improvePct": 13,
+        "steadyPct": 61,
+        "declinePct": 23,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 1,
+        "improvePct": -4,
+        "steadyPct": 3,
+        "declinePct": 0,
+        "maxAnnualGain": 0.2,
+        "maxAnnualLoss": 0.8,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/brian-robinson/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/brian-robinson-jr/10143/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "BAL|RB|derrickhenry",
+      "name": "Derrick Henry",
+      "team": "BAL",
+      "position": "RB",
+      "ageAtCalibration": 32,
+      "draftOverall": 45,
+      "hqGradeUnchanged": 94,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved elite/high-end anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Extraordinary late-prime power/vision: 2025 1,595/307 at 5.2 and 16 rushing TD; 2026 374/89 at 4.2 with seven TD. Very high lifetime carries and comparatively little receiving.",
+      "injuryDurabilityAndAvailability": "No confirmed major 2026 injury reviewed; age 32 and accumulated contact create medium-term wear exposure, not evidence of present collapse.",
+      "year2AndYear3DevelopmentRationale": "Y2: premium goal-line and volume runner can remain dominant even if speed slips; Y3: large-load decline more likely than a fresh athletic breakout.",
+      "oddsChangeReason": "Original 2/10/43/45 broadly sound; slightly trim improve, raise downside magnitude for possible steep workload/efficiency drop while respecting 2025-26 proof.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 43,
+        "declinePct": 45,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 9,
+        "steadyPct": 43,
+        "declinePct": 46,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": 0,
+        "declinePct": 1,
+        "maxAnnualGain": -0.5,
+        "maxAnnualLoss": 0.5,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/derrick-henry/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/derrick-henry/4758/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "BAL|RB|justicehill",
+      "name": "Justice Hill",
+      "team": "BAL",
+      "position": "RB",
+      "ageAtCalibration": 28,
+      "draftOverall": 113,
+      "hqGradeUnchanged": 78,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved strong-role-player anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Specialized pass-protection/receiving option with speed: 2025 just 18 runs/93 yards but 21 catches/169; 2026 14 runs/60 plus five receptions. Henry controls Baltimore early-down/goal-line work.",
+      "injuryDurabilityAndAvailability": "No verified serious 2026 injury; tiny rushing sample prevents inferring full-time endurance.",
+      "year2AndYear3DevelopmentRationale": "Y2: trusted third-down role likely continues; Y3: younger alternatives or schematic changes could erode snaps, while major lead-back growth is very unlikely.",
+      "oddsChangeReason": "Old 2/17/58/23 gave a 28-year-old receiving specialist a fairly generic starter improve path; reduce improve and put marginal risk into role erosion.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 14,
+        "steadyPct": 59,
+        "declinePct": 25,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -3,
+        "steadyPct": 1,
+        "declinePct": 2,
+        "maxAnnualGain": 0.2,
+        "maxAnnualLoss": 0.2,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/justice-hill/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/justice-hill/7904/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "BUF|RB|jamescook",
+      "name": "James Cook III",
+      "team": "BUF",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 63,
+      "hqGradeUnchanged": 94,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved elite/high-end anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Sustained top-tier breakaway runner: 2025 1,621/309 (5.2) plus 33 catches; 2026 421/70 (6.0) in four games. Strong burst and cutting, but receiving workload remains smaller than Bijan/Gibbs.",
+      "injuryDurabilityAndAvailability": "No verified major injury; 2025 309 carries introduce durability/workload monitoring instead of a categorical age penalty.",
+      "year2AndYear3DevelopmentRationale": "Y2: prime-age stability with some growth in receiving routes; Y3: premium speed likely persists, but repeat 6.0 YPC should not be treated as inevitable.",
+      "oddsChangeReason": "Original 3/17/71/9 was close; trim breakout at already grade 94, shift slight growth toward improve and slightly widen workload market volatility.",
+      "previousProfile": {
+        "breakoutPct": 3,
+        "improvePct": 17,
+        "steadyPct": 71,
+        "declinePct": 9,
+        "maxAnnualGain": 2.2,
+        "maxAnnualLoss": 2.8,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 71,
+        "declinePct": 9,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 3.2,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -1,
+        "improvePct": 1,
+        "steadyPct": 0,
+        "declinePct": 0,
+        "maxAnnualGain": -0.2,
+        "maxAnnualLoss": 0.4,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/james-cook/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/james-cook/10108/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "BUF|RB|tyjohnson",
+      "name": "Ty Johnson",
+      "team": "BUF",
+      "position": "RB",
+      "ageAtCalibration": 29,
+      "draftOverall": 186,
+      "hqGradeUnchanged": 77,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Useful receiving/change-of-pace back with real NFL value but not a quality primary-back profile."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Bills depth/receiving back: 2025 50 carries/200 and 24 catches/263; 2026 one three-yard carry and six catches/59. Touch scarcity matters more than a small rushing-efficiency blip.",
+      "injuryDurabilityAndAvailability": "No confirmed new major injury; role stability depends on Cook and the passing-game personnel.",
+      "year2AndYear3DevelopmentRationale": "Y2: stays third-down/checkdown resource if active; Y3: easier roster replacement and low early-down demand raise chance of role contraction.",
+      "oddsChangeReason": "Original 2/17/52/29 used broad role-player improvement odds despite almost no 2026 rushing work; lower upward outcomes.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 52,
+        "declinePct": 29,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 1,
+        "improvePct": 10,
+        "steadyPct": 56,
+        "declinePct": 33,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -1,
+        "improvePct": -7,
+        "steadyPct": 4,
+        "declinePct": 4,
+        "maxAnnualGain": -0.7,
+        "maxAnnualLoss": 0.7,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/ty-johnson/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/ty-johnson/7977/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "CAR|RB|chubahubbard",
+      "name": "Chuba Hubbard",
+      "team": "CAR",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 126,
+      "hqGradeUnchanged": 84,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "2024 established real starter quality; 2025 dipped, but a strong 2026 opening and receiving value support a good starter grade."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Steady all-around starter: 2025 slump around 511 yards at 3.8 contrasted with 2026 306 yards in 61 carries (5.0); catches and decisive upfield cuts support a meaningful role, but consistency is not elite.",
+      "injuryDurabilityAndAvailability": "No verified new major injury; scrutinize 2024 volume and 2025 down year rather than projecting one good month forever.",
+      "year2AndYear3DevelopmentRationale": "Y2: 2026 bounce can solidify above-average starter role; Y3: normal workload and performance volatility creates moderate regression path.",
+      "oddsChangeReason": "Old 4/20/57/19 leaned too strongly on being stable despite actual season-to-season swing; slight increase upside and magnitude rather than generic age movement.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 5,
+        "improvePct": 23,
+        "steadyPct": 52,
+        "declinePct": 20,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 1,
+        "improvePct": 3,
+        "steadyPct": -5,
+        "declinePct": 1,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 1,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/chuba-hubbard/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/chuba-hubbard/9590/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "CAR|RB|jonathonbrooks",
+      "name": "Jonathon Brooks",
+      "team": "CAR",
+      "position": "RB",
+      "ageAtCalibration": 23,
+      "draftOverall": 46,
+      "hqGradeUnchanged": 76,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Only 18 career NFL carries and 2.9 YPC provide too little demonstrated rushing evidence for a higher grade; receiving flashes keep him above the floor."
+      },
+      "baselineGradeConfidence": "low",
+      "evidenceConfidence": "low",
+      "roleAndPerformance2025ToWeek4_2026": "Second-round talent has scant NFL evidence (2024 only 18 carries, 2.9 YPC); no meaningful 2025/2026 rushing sample. Consecutive ACL recoveries and September 2026 core surgery obstruct talent evaluation.",
+      "injuryDurabilityAndAvailability": "Major: repeated knee rehabilitation followed by reported 2026 core surgery with ~6-8-week timeline. Not the same as a permanent loss of athletic ability, but significant multi-year uncertainty.",
+      "year2AndYear3DevelopmentRationale": "Y2: if healthy, meaningful workload and improvement remain possible; Y3: recurrent rehab, delayed development and role loss are the dominant tail risks.",
+      "oddsChangeReason": "Original 21/22/22/35 insufficiently accounted for renewed September surgery and cumulative lost reps; trim automatic breakout, widen downside and market variance.",
+      "previousProfile": {
+        "breakoutPct": 21,
+        "improvePct": 22,
+        "steadyPct": 22,
+        "declinePct": 35,
+        "maxAnnualGain": 7.2,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 9
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 15,
+        "improvePct": 24,
+        "steadyPct": 19,
+        "declinePct": 42,
+        "maxAnnualGain": 7.5,
+        "maxAnnualLoss": 8.5,
+        "marketVariancePct": 12
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -6,
+        "improvePct": 2,
+        "steadyPct": -3,
+        "declinePct": 7,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": 1,
+        "marketVariancePct": 3
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jonathon-brooks/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jonathon-brooks/11654/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "NFL.com",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://amp.nfl.com/news/panthers-rb-jonathon-brooks-surgery-out-six-weeks",
+          "date": "2026-09-23",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "CHI|RB|dandreswift",
+      "name": "D'Andre Swift",
+      "team": "CHI",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 35,
+      "hqGradeUnchanged": 83,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Versatile established starter with receiving value and adequate efficiency, but limited tackle-breaking/inside consistency caps him."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Versatile but variable runner/receiver: 2025 Chicago 1,087 rushing yards at 4.9; 2026 311/69 at 4.5, with rookie Monangai breaking out and pressure on workload after fumbles.",
+      "injuryDurabilityAndAvailability": "No documented season-ending injury; fumbles and teammate's production are role pressures, not physical incapacity.",
+      "year2AndYear3DevelopmentRationale": "Y2: may share lead duty on efficiency and passing skill; Y3: Monangai development and volatile inside success create higher job-security downside than prior profile.",
+      "oddsChangeReason": "Old 4/20/57/19 overlooked an actual younger challenger and inconsistent security; move steady/improve toward decline while preserving current competence.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 4,
+        "improvePct": 18,
+        "steadyPct": 51,
+        "declinePct": 27,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -2,
+        "steadyPct": -6,
+        "declinePct": 8,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": 1.7,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/dandre-swift/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/dandre-swift/8775/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "CHI|RB|kylemonangai",
+      "name": "Kyle Monangai",
+      "team": "CHI",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 233,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "783 yards at 4.6 as a rookie plus a strong 2026 opening show genuine current ability; still a short NFL sample, so no jump beyond the good-starter tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2025 rookie 783/169 (4.6) followed by 2026 324/60 (5.4); Week 4 146 yards on 30 carries and two touchdowns. Legitimate decisive power/footwork, not just youth, is winning Swift touches.",
+      "injuryDurabilityAndAvailability": "2026 strong production is four games, including one heavy game; no reported significant current injury, but an emerging 30-carry workload needs monitoring.",
+      "year2AndYear3DevelopmentRationale": "Y2: can become lead runner if efficiency holds and protection improves; Y3: a committee with Swift remains plausible, limiting absolute upside.",
+      "oddsChangeReason": "Old 18/36/24/22 overstated boom/bust after proven rookie season and 2026 surge; slightly lower breakout but raise steady, reduce collapse.",
+      "previousProfile": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 15,
+        "improvePct": 33,
+        "steadyPct": 34,
+        "declinePct": 18,
+        "maxAnnualGain": 5.5,
+        "maxAnnualLoss": 4.2,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -3,
+        "steadyPct": 10,
+        "declinePct": -4,
+        "maxAnnualGain": 0.4,
+        "maxAnnualLoss": 0.3,
+        "marketVariancePct": -1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/kyle-monangai/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/kyle-monangai/12593/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Reuters",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.reuters.com/sports/nfl/kyle-monangai-tyson-bagent-stand-out-bears-flatten-jets--flm-2026-10-04/",
+          "date": "2026-10-04",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "CIN|RB|chasebrown",
+      "name": "Chase Brown",
+      "team": "CIN",
+      "position": "RB",
+      "ageAtCalibration": 26,
+      "draftOverall": 163,
+      "hqGradeUnchanged": 85,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved good/solid starter anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Legitimate dual-threat: 2025 1,019/232 with 69 receptions/437; early 2026 207/58 (3.6) but 21 catches, preserving 3-down utility through rushing variance.",
+      "injuryDurabilityAndAvailability": "No independently verified major injury; heavy usage and early inefficient rushing are normal swing indicators.",
+      "year2AndYear3DevelopmentRationale": "Y2: stable starter with receiving growth more likely than physical breakout; Y3: pass utility cushions modest rushing regressions.",
+      "oddsChangeReason": "Old 11/30/36/23 too little steady probability given the receiving floor; move some breakout and decline to stable outcome.",
+      "previousProfile": {
+        "breakoutPct": 11,
+        "improvePct": 30,
+        "steadyPct": 36,
+        "declinePct": 23,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 9,
+        "improvePct": 30,
+        "steadyPct": 42,
+        "declinePct": 19,
+        "maxAnnualGain": 4.6,
+        "maxAnnualLoss": 4.1,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -2,
+        "improvePct": 0,
+        "steadyPct": 6,
+        "declinePct": -4,
+        "maxAnnualGain": -0.5,
+        "maxAnnualLoss": -0.9,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/chase-brown/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/chase-brown/10987/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "CIN|RB|samajeperine",
+      "name": "Samaje Perine",
+      "team": "CIN",
+      "position": "RB",
+      "ageAtCalibration": 31,
+      "draftOverall": 114,
+      "hqGradeUnchanged": 78,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Reliable passing-down and short-yardage role player, but no longer a primary-back level runner."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Veteran blocking/pass-down and short-yardage piece: 2025 382/84 at 4.6 and 17 receptions; 2026 35/10 with five catches. Brown owns the full-time Bengals workload.",
+      "injuryDurabilityAndAvailability": "No major current injury corroborated; age 31 and minimal usage narrow chances to demonstrate fresh feature-back growth.",
+      "year2AndYear3DevelopmentRationale": "Y2: reliable protection and niche use can sustain depth value; Y3: replacement risk and declining contact efficiency dominate upside.",
+      "oddsChangeReason": "Prior 1/13/48/38 already veteran-aware; shift modest improve toward lost snaps, without declaring retirement or certain decline.",
+      "previousProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 1,
+        "improvePct": 10,
+        "steadyPct": 47,
+        "declinePct": 42,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -3,
+        "steadyPct": -1,
+        "declinePct": 4,
+        "maxAnnualGain": 0,
+        "maxAnnualLoss": 0.7,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/samaje-perine/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/samaje-perine/5700/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "CLE|RB|dylansampson",
+      "name": "Dylan Sampson",
+      "team": "CLE",
+      "position": "RB",
+      "ageAtCalibration": 22,
+      "draftOverall": 126,
+      "hqGradeUnchanged": 77,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Useful speed/receiving role with limited proof as a complete NFL runner."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Browns speed/space option: 2025 only 175 rushing yards on 65 carries (2.7) but 33 catches for 271; extremely limited offensive involvement through first 2026 games alongside Judkins.",
+      "injuryDurabilityAndAvailability": "No reliable major 2026 injury mechanism established in checked reporting; limited touches must be treated as opportunity/evidence risk.",
+      "year2AndYear3DevelopmentRationale": "Y2: routes and explosive open-field use are more plausible improvements than becoming between-tackles workhorse; Y3: rotation squeeze is possible if Judkins secures downs.",
+      "oddsChangeReason": "Old 18/36/24/22 overpredicted automatic rushing breakout from young age; reduce broad breakout and improve, raise steady and uncertainty downside.",
+      "previousProfile": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 15,
+        "improvePct": 28,
+        "steadyPct": 33,
+        "declinePct": 24,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -8,
+        "steadyPct": 9,
+        "declinePct": 2,
+        "maxAnnualGain": 0.6,
+        "maxAnnualLoss": 1.1,
+        "marketVariancePct": -1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/dylan-sampson/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/dylan-sampson/12486/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "CLE|RB|quinshonjudkins",
+      "name": "Quinshon Judkins",
+      "team": "CLE",
+      "position": "RB",
+      "ageAtCalibration": 22,
+      "draftOverall": 36,
+      "hqGradeUnchanged": 80,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Volume and receiving competence are real, but 3.6 YPC in 2025 and 3.0 through four 2026 games keep him below the average-starter anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2025 827 rushing on 230 at 3.6 plus 26 catches; first four games 2026 177/59 (3.0) and 15 catches. Real early-down volume but limited successful explosive creation in NFL so far.",
+      "injuryDurabilityAndAvailability": "No current severe injury established; team run blocking and high-volume exposure limit certainty about whether inefficiency is permanent.",
+      "year2AndYear3DevelopmentRationale": "Y2: better reads/blocking could produce material efficiency leap; Y3: if 3.0-3.6 persists, volume can decay even with draft pedigree.",
+      "oddsChangeReason": "Old 25/31/21/23 overvalued unproven elite jump relative to two sustained inefficient segments; rebalance some breakout into steadiness/role decline.",
+      "previousProfile": {
+        "breakoutPct": 25,
+        "improvePct": 31,
+        "steadyPct": 21,
+        "declinePct": 23,
+        "maxAnnualGain": 7.8,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 20,
+        "improvePct": 31,
+        "steadyPct": 25,
+        "declinePct": 24,
+        "maxAnnualGain": 6.8,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 7
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -5,
+        "improvePct": 0,
+        "steadyPct": 4,
+        "declinePct": 1,
+        "maxAnnualGain": -1,
+        "maxAnnualLoss": 0.1,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/quinshon-judkins/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/quinshon-judkins/12396/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "DAL|RB|javontewilliams",
+      "name": "Javonte Williams",
+      "team": "DAL",
+      "position": "RB",
+      "ageAtCalibration": 26,
+      "draftOverall": 35,
+      "hqGradeUnchanged": 83,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Complete skill set and receiving usefulness remain starter-caliber; post-injury rushing efficiency has not returned to his early-career ceiling."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Post-knee-injury career has rebuilt into real starter success: 2025 Cowboys 1,201/252 (4.8), 35 catches; 2026 231/62 (3.7), 15 catches, with less rushing burst early.",
+      "injuryDurabilityAndAvailability": "Historical knee reconstruction matters but 2025 production rules out simplistic permanent-injury collapse; no new season-ending issue verified.",
+      "year2AndYear3DevelopmentRationale": "Y2: 2025 form rebound can stabilize starter; Y3: 2026 poor YPC or touch competition can trim role and upside.",
+      "oddsChangeReason": "Old 4/20/53/23 underestimated two-way variance after bounce then early slowdown; slightly raise improvement and decline probabilities and market range.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 53,
+        "declinePct": 23,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 3.5,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 5,
+        "improvePct": 22,
+        "steadyPct": 48,
+        "declinePct": 25,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 1,
+        "improvePct": 2,
+        "steadyPct": -5,
+        "declinePct": 2,
+        "maxAnnualGain": 0.9,
+        "maxAnnualLoss": 0.9,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/javonte-williams/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/javonte-williams/9499/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "DAL|RB|tylergoodson",
+      "name": "Tyler Goodson",
+      "team": "DAL",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": null,
+      "hqGradeUnchanged": 74,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved weak current Wheel option anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Small-sample reserve: 2025 nine rushes for 24; 2026 with Cowboys six rushes/22 yards. Open-field pace may serve as change of pace, but no established receiving/feature track record.",
+      "injuryDurabilityAndAvailability": "No substantiated major injury, yet inadequate attempts make any confidence in sustainable lead work low.",
+      "year2AndYear3DevelopmentRationale": "Y2: positive path is a larger third-back niche, not sudden top-tier production; Y3: roster-turnover risk stays material.",
+      "oddsChangeReason": "Old 10/28/31/31 overstated young RB growth with under 20 carries across two seasons; move speculative improvement to steady and downside.",
+      "previousProfile": {
+        "breakoutPct": 10,
+        "improvePct": 28,
+        "steadyPct": 31,
+        "declinePct": 31,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 7
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 7,
+        "improvePct": 23,
+        "steadyPct": 36,
+        "declinePct": 34,
+        "maxAnnualGain": 4.2,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -5,
+        "steadyPct": 5,
+        "declinePct": 3,
+        "maxAnnualGain": 0.1,
+        "maxAnnualLoss": 0.5,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/tyler-goodson/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/tyler-goodson/10443/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "DEN|RB|jkdobbins",
+      "name": "J.K. Dobbins",
+      "team": "DEN",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 55,
+      "hqGradeUnchanged": 84,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "5.0 YPC in 2025 plus prior efficient seasons establish good current rushing ability; limited receiving and a slow 2026 start prevent higher."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Top-tier efficiency when available: 2025 Denver 772/153 (5.0) over 10 games; 2026 161/46 (3.5) with only three catches. Repeated major lower-body injuries and Harvey's receiving role threaten consistent workload.",
+      "injuryDurabilityAndAvailability": "Extensive verified knee/Achilles history; 2026 minor hip issue had no Week 3 designation; avoid claiming new serious injury.",
+      "year2AndYear3DevelopmentRationale": "Y2: healthy burst still supports lead-back rushing; Y3: durability and split backfield make steep touches decline plausible even while per-carry talent survives.",
+      "oddsChangeReason": "Prior 4/20/57/19 treated him like a durable established starter; increase downside/market spread for repeated missed seasons and loss of pass-down snaps.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 4,
+        "improvePct": 19,
+        "steadyPct": 46,
+        "declinePct": 31,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 9
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": -11,
+        "declinePct": 12,
+        "maxAnnualGain": 2.3,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 5
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/j-k-dobbins/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/j-k-dobbins/8795/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Official team",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.denverbroncos.com/news/injury-report-rbs-rj-harvey-and-j-k-dobbins-not-assigned-game-statuses-rb-jonah-coleman-ruled-out-for-week-3-game-vs-rams",
+          "date": "2026-09-25",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "DEN|RB|rjharvey",
+      "name": "RJ Harvey",
+      "team": "DEN",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 60,
+      "hqGradeUnchanged": 78,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Very small NFL sample with useful receiving/space flashes; insufficient current evidence for a starter-level grade."
+      },
+      "baselineGradeConfidence": "low",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "2025 540/146 at 3.7 but 47 receptions/356 and five receiving TD; 2026 only 12 carries/49 but 20 catches/132 in limited starts. His immediate receiving value is real; interior rushing proof limited.",
+      "injuryDurabilityAndAvailability": "September hamstring concern caused missed game; no evidence of chronic significant damage.",
+      "year2AndYear3DevelopmentRationale": "Y2: can grow as explosive receiving/space playmaker; Y3: could remain specialized third-down back if Dobbins or another early-down runner persists.",
+      "oddsChangeReason": "Old 20/29/13/38 wrongly made a receiving producer either breakout or collapse; improve stability and cap an unsupported feature-back surge.",
+      "previousProfile": {
+        "breakoutPct": 20,
+        "improvePct": 29,
+        "steadyPct": 13,
+        "declinePct": 38,
+        "maxAnnualGain": 6.1,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 12
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 15,
+        "improvePct": 31,
+        "steadyPct": 27,
+        "declinePct": 27,
+        "maxAnnualGain": 6,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 10
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -5,
+        "improvePct": 2,
+        "steadyPct": 14,
+        "declinePct": -11,
+        "maxAnnualGain": -0.1,
+        "maxAnnualLoss": -1,
+        "marketVariancePct": -2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/rj-harvey/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/r-j-harvey/12420/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Official team",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.denverbroncos.com/news/injury-report-rbs-rj-harvey-and-j-k-dobbins-not-assigned-game-statuses-rb-jonah-coleman-ruled-out-for-week-3-game-vs-rams",
+          "date": "2026-09-25",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "DET|RB|isiahpacheco",
+      "name": "Isiah Pacheco",
+      "team": "DET",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 251,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Physical, decisive NFL starter profile remains intact, but recent production and receiving impact do not support a higher tier."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Hard-running former starter with 2025 KC 462/118 at 3.9 and 19 catches; zero 2026 DET regular-season production because placed on IR before Week 1. Role is potential Gibbs power complement, not established 2026 starter.",
+      "injuryDurabilityAndAvailability": "Major: MCL sprain followed by back surgery to remove a loose body pressing on a nerve; Sept 14 report indicates ~12-week recovery and possible December return; serious availability risk, not confirmed permanent loss.",
+      "year2AndYear3DevelopmentRationale": "Y2: nerve/back recovery may allow return to violent early-down style; Y3: repeat absence or role competition could displace him from Lions rotation even if healthy.",
+      "oddsChangeReason": "Old 4/20/57/19 ignored newly confirmed back surgery; substantially raise downside and annual loss but retain narrow meaningful comeback.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 3,
+        "improvePct": 15,
+        "steadyPct": 32,
+        "declinePct": 50,
+        "maxAnnualGain": 3.5,
+        "maxAnnualLoss": 8,
+        "marketVariancePct": 12
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -1,
+        "improvePct": -5,
+        "steadyPct": -25,
+        "declinePct": 31,
+        "maxAnnualGain": 0.8,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 8
+      },
+      "evidence": [
+        {
+          "publisher": "Detroit Lions",
+          "title": "2025/2026 roster history; 2026 games absent due to IR",
+          "url": "https://www.detroitlions.com/team/players-roster/isiah-pacheco/logs/",
+          "date": "2026-10-08",
+          "dateMeaning": "reviewed roster snapshot"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/isiah-pacheco/10296/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Reuters",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.reuters.com/sports/back-surgery-keep-lions-rb-isiah-pacheco-out-much-longer--flm-2026-09-14/",
+          "date": "2026-09-14",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "DET|RB|jahmyrgibbs",
+      "name": "Jahmyr Gibbs",
+      "team": "DET",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 12,
+      "hqGradeUnchanged": 98,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved ceiling-adjacent elite anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Elite complete explosive back: 2025 Detroit 1,223/243 (5.0) and 77 catches/616; four games 2026 353/80 plus 22 catches/187 and seven offensive TD. Receiving threat persists regardless of Pacheco IR.",
+      "injuryDurabilityAndAvailability": "No major current injury confirmed; increased all-down workload during Pacheco absence is monitoring item, not reason to discard his 98 grade.",
+      "year2AndYear3DevelopmentRationale": "Y2: top-tier stability overwhelmingly likely; Y3: potential slight workload fatigue but pass-catching and acceleration insulate upside.",
+      "oddsChangeReason": "Old 3/22/70/5 allocated too much breakout/improve capacity for grade 98; move toward steady and constrain upward cap.",
+      "previousProfile": {
+        "breakoutPct": 3,
+        "improvePct": 22,
+        "steadyPct": 70,
+        "declinePct": 5,
+        "maxAnnualGain": 1.7,
+        "maxAnnualLoss": 1.8,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 1,
+        "improvePct": 16,
+        "steadyPct": 77,
+        "declinePct": 6,
+        "maxAnnualGain": 1,
+        "maxAnnualLoss": 2.1,
+        "marketVariancePct": 4
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -2,
+        "improvePct": -6,
+        "steadyPct": 7,
+        "declinePct": 1,
+        "maxAnnualGain": -0.7,
+        "maxAnnualLoss": 0.3,
+        "marketVariancePct": -2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jahmyr-gibbs/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jahmyr-gibbs/10836/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "GB|RB|joshjacobs",
+      "name": "Josh Jacobs",
+      "team": "GB",
+      "position": "RB",
+      "ageAtCalibration": 28,
+      "draftOverall": 24,
+      "hqGradeUnchanged": 86,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Still a strong workhorse with power, vision and goal-line value; 2025 efficiency slipped enough to sit below Kyren/Bucky tier."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Proven 2025 power/goal-line back: 929/234 (4.0), 13 rushing TD and 36 receptions. No 2026 Packers game snaps because on league Commissioner's Exempt List; it is NOT a medical issue. Backfield is progressing without him.",
+      "injuryDurabilityAndAvailability": "Official Packers roster and Sept 1 AP/NFL report confirm exempt status, with return timing unknown; do not invent charges outcomes or classify absence as musculoskeletal injury.",
+      "year2AndYear3DevelopmentRationale": "Y2: can restore physical starter value if permitted to return and retains role; Y3: uncertain availability and competition increase market and decline pathways despite intact past talent.",
+      "oddsChangeReason": "Old 3/16/50/31 missed major non-injury 2026 availability uncertainty; enlarge decline/volatility but do not impose automatic physical age penalty.",
+      "previousProfile": {
+        "breakoutPct": 3,
+        "improvePct": 16,
+        "steadyPct": 50,
+        "declinePct": 31,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 3,
+        "improvePct": 15,
+        "steadyPct": 42,
+        "declinePct": 40,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 10
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": -8,
+        "declinePct": 9,
+        "maxAnnualGain": -0.3,
+        "maxAnnualLoss": 0.3,
+        "marketVariancePct": 6
+      },
+      "evidence": [
+        {
+          "publisher": "Green Bay Packers",
+          "title": "2025 career statistics; no 2026 games due exempt status",
+          "url": "https://www.packers.com/team/players-roster/josh-jacobs/career",
+          "date": "2026-10-08",
+          "dateMeaning": "accessed after Week 4"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/josh-jacobs/7815/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "NFL.com",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://fantasy-www.nfl.com/news/packers-express-hope-rb-josh-jacobs-currently-on-exempt-list-can-play-sometime-this-season",
+          "date": "2026-09-01",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "GB|RB|marshawnlloyd",
+      "name": "MarShawn Lloyd",
+      "team": "GB",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 88,
+      "hqGradeUnchanged": 76,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Limited NFL workload and availability leave very little demonstrated current evidence despite athletic flashes."
+      },
+      "baselineGradeConfidence": "low",
+      "evidenceConfidence": "low",
+      "roleAndPerformance2025ToWeek4_2026": "Since 2024 has essentially lacked sustained NFL work; missed 2025 injured, 2026 just 30 carries/81 (2.7) and nine catches. Very limited successful rushing evidence, despite pre-draft tools and practice flashes.",
+      "injuryDurabilityAndAvailability": "Repeat hamstring/availability concerns have erased much evaluation time; no support for claiming a fully healthy multi-month baseline.",
+      "year2AndYear3DevelopmentRationale": "Y2: functional health and schematic trust could unlock rotation improvement; Y3: recurrent soft-tissue absences, vision and poor carry conversion can make roster role unstable.",
+      "oddsChangeReason": "Old 20/29/10/41 remained breakout-heavy for a player with little 2026 rushing return; lower breakout and raise steady modestly, still downside-led.",
+      "previousProfile": {
+        "breakoutPct": 20,
+        "improvePct": 29,
+        "steadyPct": 10,
+        "declinePct": 41,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 12
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 13,
+        "improvePct": 25,
+        "steadyPct": 18,
+        "declinePct": 44,
+        "maxAnnualGain": 6.2,
+        "maxAnnualLoss": 8.2,
+        "marketVariancePct": 12
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -7,
+        "improvePct": -4,
+        "steadyPct": 8,
+        "declinePct": 3,
+        "maxAnnualGain": -0.3,
+        "maxAnnualLoss": 1.2,
+        "marketVariancePct": 0
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/marshawn-lloyd/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/marshawn-lloyd/11696/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "HOU|RB|davidmontgomery",
+      "name": "David Montgomery",
+      "team": "HOU",
+      "position": "RB",
+      "ageAtCalibration": 29,
+      "draftOverall": 73,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Power, contact balance and receiving competence remain starter-quality, but reduced workload and 2.8 YPC start to 2026 cap him at the baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Power/short-yardage back: 2025 Detroit 716/158 at 4.5, 24 catches; now HOU 127/47 at 2.7 in 2026, seven catches, competing with younger Woody Marks. Demonstrated receiving/lead experience but meaningful efficiency downturn.",
+      "injuryDurabilityAndAvailability": "No major current injury verified; career usage and reduced 2026 burst/touches justify gradual wear assessment, not an arbitrary age cutoff.",
+      "year2AndYear3DevelopmentRationale": "Y2: blocking/fit adjustment could restore efficient power runs; Y3: Marks or new competition may confine him to goal-line rotations.",
+      "oddsChangeReason": "Old 2/17/52/29 was too steady relative to decline from 4.5 to 2.7 and role move; shift probability to decline and widen loss slightly.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 52,
+        "declinePct": 29,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 16,
+        "steadyPct": 43,
+        "declinePct": 39,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": -9,
+        "declinePct": 10,
+        "maxAnnualGain": 0.2,
+        "maxAnnualLoss": 2.1,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/david-montgomery/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/david-montgomery/7864/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "HOU|RB|woodymarks",
+      "name": "Woody Marks",
+      "team": "HOU",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 116,
+      "hqGradeUnchanged": 79,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Useful receiving ability and real workload experience, but 3.5 career YPC keeps him below starter baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "2025 rookie Houston 703/196 (3.6) with 24 catches/208; 2026 87/28 (3.1) plus seven receptions. Real pass option and rotational workload, not proven efficient every-down rushing.",
+      "injuryDurabilityAndAvailability": "No major new injury confirmed; room includes veteran Montgomery, limiting workload certainty.",
+      "year2AndYear3DevelopmentRationale": "Y2: receiving routes and gap timing give moderate step-up path; Y3: if rushing stays near 3.1-3.6, likely committee rather than star.",
+      "oddsChangeReason": "Old 15/36/30/19 overweighted breakout/improve from age; reduce speculative surge, increase role-steady and some underperformance risk.",
+      "previousProfile": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 12,
+        "improvePct": 29,
+        "steadyPct": 36,
+        "declinePct": 23,
+        "maxAnnualGain": 4.8,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -7,
+        "steadyPct": 6,
+        "declinePct": 4,
+        "maxAnnualGain": 0.1,
+        "maxAnnualLoss": 1.1,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/woody-marks/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/woody-marks/12476/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "IND|RB|jonathantaylor",
+      "name": "Jonathan Taylor",
+      "team": "IND",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 41,
+      "hqGradeUnchanged": 95,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved elite feature-back anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2025 premier power and breakaway production: 1,585/323 (4.9) and 18 rushing TD, 46 catches; 2026 353/86 (4.1), six touchdowns and 10 catches through Week 4. Heavy 2025 carries raise usage risk.",
+      "injuryDurabilityAndAvailability": "No confirmed significant 2026 injury, but historic ankle issues and high-contact volume warrant moderate longer-horizon caution.",
+      "year2AndYear3DevelopmentRationale": "Y2: prime superstar runner usually stays dominant; Y3: crowded boxes and big career mileage can erode efficiency without an abrupt physical collapse.",
+      "oddsChangeReason": "Old 2/14/66/18 close; lower huge upside already at grade 95, increase modest decline exposure from sustained volume and slightly widen loss.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 14,
+        "steadyPct": 66,
+        "declinePct": 18,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 13,
+        "steadyPct": 64,
+        "declinePct": 21,
+        "maxAnnualGain": 1.7,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": -2,
+        "declinePct": 3,
+        "maxAnnualGain": -0.8,
+        "maxAnnualLoss": 0.2,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jonathan-taylor/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jonathan-taylor/8781/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "IND|RB|sethmcgowan",
+      "name": "Seth McGowan",
+      "team": "IND",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 237,
+      "hqGradeUnchanged": 72,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Only six NFL carries with minimal rushing production; special-teams value does not raise the RB ability grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      },
+      "baselineGradeConfidence": "low",
+      "evidenceConfidence": "low",
+      "roleAndPerformance2025ToWeek4_2026": "Little NFL evidence: 2026 12 carries/45 yards with only two catches; no 2025 NFL work. Third-string depth behind Jonathan Taylor, so six carries in an earlier audit was already a low-evidence anchor.",
+      "injuryDurabilityAndAvailability": "No documented current serious injury; absence of prior production and unclear sustained opportunity should stay explicit.",
+      "year2AndYear3DevelopmentRationale": "Y2: depth promotion might expose useful downhill ability; Y3: roster churn is at least as realistic as a late breakout.",
+      "oddsChangeReason": "Old 20/31/11/38 manufactured large youthful breakout possibilities despite fewer than 15 professional attempts; reduce both upward events and increase honest steady uncertainty.",
+      "previousProfile": {
+        "breakoutPct": 20,
+        "improvePct": 31,
+        "steadyPct": 11,
+        "declinePct": 38,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 12
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 12,
+        "improvePct": 24,
+        "steadyPct": 29,
+        "declinePct": 35,
+        "maxAnnualGain": 6.6,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 11
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -8,
+        "improvePct": -7,
+        "steadyPct": 18,
+        "declinePct": -3,
+        "maxAnnualGain": 0.1,
+        "maxAnnualLoss": 0.3,
+        "marketVariancePct": -1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/seth-mcgowan/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/seth-mcgowan/13381/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "JAX|RB|bhayshultuten",
+      "name": "Bhayshul Tuten",
+      "team": "JAX",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 104,
+      "hqGradeUnchanged": 83,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Three strong 2026 starts at 4.7 YPC show real starter capability, but a 3.7 rookie-season rushing average keeps the sample from supporting more."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Jacksonville 2025 307/83 (3.7); now 2026 277/60 (4.6) with two rushing TD and seven catches, including starts. Increased decisive usage is stronger evidence than pure draft pedigree.",
+      "injuryDurabilityAndAvailability": "No confirmed major 2026 injury; sample is four games against varied opponents and role could still rotate with Chris Rodriguez.",
+      "year2AndYear3DevelopmentRationale": "Y2: genuine starter efficiency gains possible as reads improve; Y3: if early 2026 level persists, outcomes shift toward steady lead duties rather than repeated leaps.",
+      "oddsChangeReason": "Old 18/36/24/22 almost reasonable; shift some improve/decline to steady and cap loss because concrete NFL usage has developed.",
+      "previousProfile": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 18,
+        "improvePct": 32,
+        "steadyPct": 31,
+        "declinePct": 19,
+        "maxAnnualGain": 5.6,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -4,
+        "steadyPct": 7,
+        "declinePct": -3,
+        "maxAnnualGain": 0.5,
+        "maxAnnualLoss": 0.6,
+        "marketVariancePct": -1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/bhayshul-tuten/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/bhayshul-tuten/12464/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "JAX|RB|chrisrodriguez",
+      "name": "Chris Rodriguez Jr.",
+      "team": "JAX",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 193,
+      "hqGradeUnchanged": 77,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Physical reserve runner with some useful early-down ability but limited receiving/creation evidence."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Compact power runner with actual early-down evidence: 2025 Washington 500 yards/112 (4.5), six rushing TD; 2026 JAX 108/26 (4.2), two TD and at least one 20+ run. Receiving usage remains minimal.",
+      "injuryDurabilityAndAvailability": "No serious current injury corroborated; limited route role constrains full three-down outlook despite positive run efficiency.",
+      "year2AndYear3DevelopmentRationale": "Y2: short-yardage/spot starter can grow slightly if Tuten falters; Y3: reliable inside role likely more durable than elite breakout case.",
+      "oddsChangeReason": "Old 2/17/58/23 was generic depth assignment despite two positive efficiency seasons; increase improve, decrease decline, with realistic low breakout ceiling.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 4,
+        "improvePct": 22,
+        "steadyPct": 55,
+        "declinePct": 19,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 2,
+        "improvePct": 5,
+        "steadyPct": -3,
+        "declinePct": -4,
+        "maxAnnualGain": 1.1,
+        "maxAnnualLoss": 0.2,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "Jacksonville Jaguars",
+          "title": "Chris Rodriguez Jr. 2025 and 2026 career statistics",
+          "url": "https://www.jaguars.com/team/players-roster/chris-rodriguez-jr/career",
+          "date": "2026-10-08",
+          "dateMeaning": "accessed after Week 4"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/chris-rodriguez-jr/11017/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "KC|RB|emmettjohnson",
+      "name": "Emmett Johnson",
+      "team": "KC",
+      "position": "RB",
+      "ageAtCalibration": 22,
+      "draftOverall": 161,
+      "hqGradeUnchanged": 75,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Current NFL evidence is still limited; enough all-around ability for a useful rotation grade without projection-based inflation. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      },
+      "baselineGradeConfidence": "low",
+      "evidenceConfidence": "low",
+      "roleAndPerformance2025ToWeek4_2026": "2026 Chiefs rookie 16 carries/56 (3.5) but five catches/74 and 17 offensive snaps in Week4 largely passing situations; no 2025 NFL season. Feature workload belongs to Walker.",
+      "injuryDurabilityAndAvailability": "No known major injury, but four-game sample and late-draft status provide little proof of a three-down role.",
+      "year2AndYear3DevelopmentRationale": "Y2: route utility and pass protection can yield a bigger rotational role; Y3: could remain receiving specialist with little rushing volume, or lose snaps to a better blocker.",
+      "oddsChangeReason": "Old 20/31/11/38 treated a fifth-round rookie as spectacular boom/bust; cut unearned breakout and redistribute to modest improvement and genuine steady rotation.",
+      "previousProfile": {
+        "breakoutPct": 20,
+        "improvePct": 31,
+        "steadyPct": 11,
+        "declinePct": 38,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 12
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 11,
+        "improvePct": 27,
+        "steadyPct": 34,
+        "declinePct": 28,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 6.3,
+        "marketVariancePct": 10
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -9,
+        "improvePct": -4,
+        "steadyPct": 23,
+        "declinePct": -10,
+        "maxAnnualGain": -0.7,
+        "maxAnnualLoss": -0.2,
+        "marketVariancePct": -2
+      },
+      "evidence": [
+        {
+          "publisher": "Kansas City Chiefs",
+          "title": "Emmett Johnson 2026 rookie logs and season totals",
+          "url": "https://www.chiefs.com/team/players-roster/emmett-johnson/",
+          "date": "2026-10-08",
+          "dateMeaning": "accessed after Week 4; no 2025 NFL season"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/emmett-johnson/13305/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Named sports reporting",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.chiefs.com/team/players-roster/emmett-johnson/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed"
+        }
+      ]
+    },
+    {
+      "id": "KC|RB|kennethwalker",
+      "name": "Kenneth Walker",
+      "team": "KC",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 41,
+      "hqGradeUnchanged": 89,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved high-end/very-good anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Moved to Kansas City after 2025 Seattle 1,027 rushing yards; 2026 Chiefs 537/87 (6.2) through Week4, with 12 recorded broken tackles and six 20+ rushes. Clearly valuable explosive workhorse, but not assured 6.2 forever.",
+      "injuryDurabilityAndAvailability": "No major current injury confirmed; high workload in new team may be tempered as coaches manage touches.",
+      "year2AndYear3DevelopmentRationale": "Y2: continued system-fit and power/creation support near-star efficiency; Y3: normal 6.2 regression or backfield diversification are possible without skill collapse.",
+      "oddsChangeReason": "Old 10/28/39/23 overweighted volatility for repeat 1,000-yard runner now demonstrably explosive in KC; more stable, less decline, cap breakout slightly.",
+      "previousProfile": {
+        "breakoutPct": 10,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 23,
+        "maxAnnualGain": 5.3,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 7,
+        "improvePct": 26,
+        "steadyPct": 55,
+        "declinePct": 12,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 4.1,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -2,
+        "steadyPct": 16,
+        "declinePct": -11,
+        "maxAnnualGain": -1.3,
+        "maxAnnualLoss": -0.7,
+        "marketVariancePct": 0
+      },
+      "evidence": [
+        {
+          "publisher": "Pro Football Reference",
+          "title": "Kansas City 2026 advanced rushing and broken tackles",
+          "url": "https://www.pro-football-reference.com/teams/kan/2026_advanced.htm",
+          "date": "2026-10-08",
+          "dateMeaning": "Week 4 updated statistics"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/kenneth-walker-iii/10086/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Named sports reporting",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.pro-football-reference.com/teams/kan/2026_advanced.htm",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed"
+        }
+      ]
+    },
+    {
+      "id": "LAC|RB|keatonmitchell",
+      "name": "Keaton Mitchell",
+      "team": "LAC",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": null,
+      "hqGradeUnchanged": 81,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Elite open-field speed and 6.2 career YPC create real value, but limited workload/inside/receiving completeness keep him below starter baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Rare open-field burst: Baltimore 2025 341/59 (5.8); now LA Chargers 2026 124/27 (4.6) and nine catches, in committee with Omarion Hampton. Career limited inside-volume and 2023 ACL recovery.",
+      "injuryDurabilityAndAvailability": "Older ACL and sporadic workload are verified context; currently playing, so avoid labeling active rehabilitation.",
+      "year2AndYear3DevelopmentRationale": "Y2: pass role/space packages may yield efficiency lift; Y3: snap and durability variability remain substantial with Hampton primary investment.",
+      "oddsChangeReason": "Old 13/29/27/31 slightly understated chance a tiny specialist loses touches and overestimated true full-back breakout; trim breakout and increase loss variance.",
+      "previousProfile": {
+        "breakoutPct": 13,
+        "improvePct": 29,
+        "steadyPct": 27,
+        "declinePct": 31,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 7.3,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 10,
+        "improvePct": 29,
+        "steadyPct": 26,
+        "declinePct": 35,
+        "maxAnnualGain": 6,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 10
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": 0,
+        "steadyPct": -1,
+        "declinePct": 4,
+        "maxAnnualGain": -0.5,
+        "maxAnnualLoss": -0.3,
+        "marketVariancePct": 4
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/keaton-mitchell/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/keaton-mitchell/11264/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "LAC|RB|omarionhampton",
+      "name": "Omarion Hampton",
+      "team": "LAC",
+      "position": "RB",
+      "ageAtCalibration": 23,
+      "draftOverall": 22,
+      "hqGradeUnchanged": 83,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "545 yards at 4.4 in nine games as a rookie plus starter-level 2026 volume support real ability; ball security and modest efficiency cap him."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "First-round 2025 rookie produced 545/124 (4.4) and 32 catches; in 2026 238/59 (4.0), three rush TD, only four catches and two lost fumbles. Genuine size/vision but touches shared with Keaton.",
+      "injuryDurabilityAndAvailability": "No current major injury sourced; two lost 2026 fumbles are meaningful security issue, distinct from physical durability.",
+      "year2AndYear3DevelopmentRationale": "Y2: improved ball security and passing-down trust could unlock better feature utilization; Y3: if passing role remains narrow, high-end upside capped despite talent.",
+      "oddsChangeReason": "Old 24/33/19/24 bet too much on immediate unqualified leap; modestly shift breakout to steady with same regression exposure from fumbles.",
+      "previousProfile": {
+        "breakoutPct": 24,
+        "improvePct": 33,
+        "steadyPct": 19,
+        "declinePct": 24,
+        "maxAnnualGain": 7.8,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 8
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 20,
+        "improvePct": 31,
+        "steadyPct": 25,
+        "declinePct": 24,
+        "maxAnnualGain": 6.8,
+        "maxAnnualLoss": 6.3,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -4,
+        "improvePct": -2,
+        "steadyPct": 6,
+        "declinePct": 0,
+        "maxAnnualGain": -1,
+        "maxAnnualLoss": 0.1,
+        "marketVariancePct": 0
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/omarion-hampton/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/omarion-hampton/12382/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "LAR|RB|blakecorum",
+      "name": "Blake Corum",
+      "team": "LAR",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 83,
+      "hqGradeUnchanged": 81,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Credible power/vision in a complementary role, but not enough established independent production to reach the starter baseline."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "LAR 2025 746 rushing yards/145 (5.1), then 2026 162/33 (4.9), just four catches; strong power/vision in complementary usage to Kyren rather than a receiving feature.",
+      "injuryDurabilityAndAvailability": "No 2026 major medical absence confirmed; limited receiving volume is an offensive role constraint.",
+      "year2AndYear3DevelopmentRationale": "Y2: efficient 1B/short-yardage snaps could grow; Y3: sustained roster partnership with Kyren caps volume without implying skill failure.",
+      "oddsChangeReason": "Old 16/36/26/22 too much speculative upward movement and bust risk despite two efficient stretches; meaningfully increase steady.",
+      "previousProfile": {
+        "breakoutPct": 16,
+        "improvePct": 36,
+        "steadyPct": 26,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 13,
+        "improvePct": 28,
+        "steadyPct": 42,
+        "declinePct": 17,
+        "maxAnnualGain": 4.8,
+        "maxAnnualLoss": 3.6,
+        "marketVariancePct": 7
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -8,
+        "steadyPct": 16,
+        "declinePct": -5,
+        "maxAnnualGain": -0.3,
+        "maxAnnualLoss": -0.3,
+        "marketVariancePct": -2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/blake-corum/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/blake-corum/11691/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "LAR|RB|kyrenwilliams",
+      "name": "Kyren Williams",
+      "team": "LAR",
+      "position": "RB",
+      "ageAtCalibration": 26,
+      "draftOverall": 164,
+      "hqGradeUnchanged": 88,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved very-good starter anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Dependable multidimensional workhorse: 2025 1,252/259 (4.8) and 36 catches/281; 2026 294/54 (5.4) and 21 catches/173, including explosive 20/30-yard runs. Blake Corum offers legitimate relief.",
+      "injuryDurabilityAndAvailability": "No serious confirmed new injury; 2026 one fumble lost, previous 2024 heavy 316 carries relevant but not reason to predict failure.",
+      "year2AndYear3DevelopmentRationale": "Y2: continue strong zone reads and receiving usefulness; Y3: some committee dilution likely but technique creates high floor.",
+      "oddsChangeReason": "Old 7/27/42/24 overstated decline relative to repeated efficient NFL starter production; shift toward steady, narrow loss.",
+      "previousProfile": {
+        "breakoutPct": 7,
+        "improvePct": 27,
+        "steadyPct": 42,
+        "declinePct": 24,
+        "maxAnnualGain": 3.9,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 5,
+        "improvePct": 24,
+        "steadyPct": 51,
+        "declinePct": 20,
+        "maxAnnualGain": 3.5,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -2,
+        "improvePct": -3,
+        "steadyPct": 9,
+        "declinePct": -4,
+        "maxAnnualGain": -0.4,
+        "maxAnnualLoss": -0.3,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/kyren-williams/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/kyren-williams/10209/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "LV|RB|ashtonjeanty",
+      "name": "Ashton Jeanty",
+      "team": "LV",
+      "position": "RB",
+      "ageAtCalibration": 22,
+      "draftOverall": 6,
+      "hqGradeUnchanged": 83,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Receiving impact and contact talent are evident, but 3.6 career YPC through 20 games prevents grading the college/draft reputation instead of NFL play."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Premium pick with real receiving production but weak inside efficiency: 2025 975/266 (3.7), 55 catches; 2026 264/78 (3.4), 19 catches/165 and two receiving TD. Fewer explosive runs than hype, partly run-blocking/environment uncertainty.",
+      "injuryDurabilityAndAvailability": "Reported lingering ankle issue by Week4 from Raiders coverage; no major surgical diagnosis established, so treat as near-term limitation only.",
+      "year2AndYear3DevelopmentRationale": "Y2: improved line and decisiveness might unlock open-field creation; Y3: if inefficiency remains, receiving-led workhorse rather than elite rushing breakout is a real steady path.",
+      "oddsChangeReason": "Old 27/33/18/22 overestimated age/draft-dependent transformation after 21 pro starts at 3.6 career YPC; lower breakout and enhance stable/underperform path.",
+      "previousProfile": {
+        "breakoutPct": 27,
+        "improvePct": 33,
+        "steadyPct": 18,
+        "declinePct": 22,
+        "maxAnnualGain": 7.8,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 19,
+        "improvePct": 29,
+        "steadyPct": 28,
+        "declinePct": 24,
+        "maxAnnualGain": 6.7,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -8,
+        "improvePct": -4,
+        "steadyPct": 10,
+        "declinePct": 2,
+        "maxAnnualGain": -1.1,
+        "maxAnnualLoss": -0.6,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/ashton-jeanty/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/ashton-jeanty/12366/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Named sports reporting",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.silverandblackpride.com/las-vegas-raiders-analysis/141634/las-vegas-raiders-kansas-city-chiefs-week-4-preview-ashton-jeanty-mike-washington",
+          "date": "2026-10-03",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "LV|RB|mikewashington",
+      "name": "Mike Washington Jr.",
+      "team": "LV",
+      "position": "RB",
+      "ageAtCalibration": 23,
+      "draftOverall": 122,
+      "hqGradeUnchanged": 76,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Explosive 6.8 YPC through 15 NFL carries is encouraging, but the sample is far too small for a starter-level grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      },
+      "baselineGradeConfidence": "low",
+      "evidenceConfidence": "low",
+      "roleAndPerformance2025ToWeek4_2026": "2026 rookie early flashes: Week3 54 yards on five carries but Week4 nine attempts/18 yards, plus preseason long-run evidence; no 2025 NFL season. Backup to Jeanty with under 30 career rushes.",
+      "injuryDurabilityAndAvailability": "No serious current injury confirmed; small samples and Raider blocking uncertainty limit reliability of any high YPC segment.",
+      "year2AndYear3DevelopmentRationale": "Y2: could earn 1B rushing snaps if burst/processing translates; Y3: special-teams or pure backup likely if gains stall.",
+      "oddsChangeReason": "Old 20/31/11/38 formed enormous tails from nonexistent 2025 evidence; replace with moderated rookie odds and more plausible rotational steadiness.",
+      "previousProfile": {
+        "breakoutPct": 20,
+        "improvePct": 31,
+        "steadyPct": 11,
+        "declinePct": 38,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 12
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 15,
+        "improvePct": 24,
+        "steadyPct": 29,
+        "declinePct": 32,
+        "maxAnnualGain": 6.8,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 11
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -5,
+        "improvePct": -7,
+        "steadyPct": 18,
+        "declinePct": -6,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": -0.5,
+        "marketVariancePct": -1
+      },
+      "evidence": [
+        {
+          "publisher": "Las Vegas Raiders",
+          "title": "Offensive coordinator on rookie RB Mike Washington Jr.",
+          "url": "https://www.raiders.com/video/andrew-janocko-brock-bowers-offense-nfl-week-4-chiefs-2026-season",
+          "date": "2026-10-01",
+          "dateMeaning": "team media report"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/mike-washington-jr/13266/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Named sports reporting",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.silverandblackpride.com/las-vegas-raiders-draft/142022/raiders-running-game-mike-washington-ashton-jeanty",
+          "date": "2026-10-07",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "MIA|RB|devonachane",
+      "name": "De'Von Achane",
+      "team": "MIA",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 84,
+      "hqGradeUnchanged": 91,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved high-end anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Exceptional dual-use explosive talent: 2025 1,350/238 (5.7), 67 catches/488; first three 2026 127/34 and seven catches before knee injury. Demonstrated NFL speed/receiving, not a projection.",
+      "injuryDurabilityAndAvailability": "Confirmed full ACL tear reported Sept 28 2026, ending season. Rehab creates significant Y2 availability/return-to-explosion risk, not evidence his earlier grade was fake.",
+      "year2AndYear3DevelopmentRationale": "Y2: high-end return if ACL rehab successful, but minutes/contact and strength ramp may be gradual; Y3: healthy bounce-back remains credible, alongside lingering availability risk.",
+      "oddsChangeReason": "Old 8/31/44/17 did not price major ACL rehabilitation. Strongly raise decline/downside and volatility, retain nonzero elite comeback.",
+      "previousProfile": {
+        "breakoutPct": 8,
+        "improvePct": 31,
+        "steadyPct": 44,
+        "declinePct": 17,
+        "maxAnnualGain": 4.2,
+        "maxAnnualLoss": 4.9,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 6,
+        "improvePct": 25,
+        "steadyPct": 27,
+        "declinePct": 42,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 8.8,
+        "marketVariancePct": 13
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -2,
+        "improvePct": -6,
+        "steadyPct": -17,
+        "declinePct": 25,
+        "maxAnnualGain": -0.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 7
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/devon-achane/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/devon-achane/10908/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "NFL.com",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.nfl.com/news/dolphins-rb-devon-achane-miss-2026-season-acl-tear",
+          "date": "2026-09-28",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "MIA|RB|jaylenwright",
+      "name": "Jaylen Wright",
+      "team": "MIA",
+      "position": "RB",
+      "ageAtCalibration": 23,
+      "draftOverall": 120,
+      "hqGradeUnchanged": 79,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Speed and space ability remain useful, but limited established workload and consistency keep him in the rotation tier."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Fast Miami runner: 2025 288 yards/70 (4.1), little established pass role; through Week4 2026 still modest independent work. Achane's ACL creates future opportunity, not automatic evidence of quality.",
+      "injuryDurabilityAndAvailability": "No verified serious recent injury; moving from seldom-used reserve into featured touches tests pass blocking and consistency.",
+      "year2AndYear3DevelopmentRationale": "Y2: Achane absence could let Wright demonstrate genuine efficient volume; Y3: Achane's return may reduce his role regardless of his performance.",
+      "oddsChangeReason": "Old 18/36/24/22 assumed routine young growth; adjust improve down and downside up because new workload can expose shortcomings.",
+      "previousProfile": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 18,
+        "improvePct": 29,
+        "steadyPct": 29,
+        "declinePct": 24,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 9
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -7,
+        "steadyPct": 5,
+        "declinePct": 2,
+        "maxAnnualGain": 0.6,
+        "maxAnnualLoss": 1.2,
+        "marketVariancePct": 0
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jaylen-wright/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jaylen-wright/11728/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "NFL.com",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.nfl.com/news/dolphins-rb-devon-achane-miss-2026-season-acl-tear",
+          "date": "2026-09-28",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "MIN|RB|aaronjones",
+      "name": "Aaron Jones Sr.",
+      "team": "MIN",
+      "position": "RB",
+      "ageAtCalibration": 31,
+      "draftOverall": 182,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Vision, receiving and versatility remain starter-quality; recent rushing efficiency and explosive margin have declined from his peak."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Age-31 vision and receiving endure: 2025 548/132 (4.2) with 28 catches; 2026 297/72 (4.1) and nine catches across four starts, workload increased with Jordan Mason IR.",
+      "injuryDurabilityAndAvailability": "No sourced major active injury; past missed games and 1,636 career carries indicate workload management, while current 4.1 YPC disproves simplistic 'washed' classification.",
+      "year2AndYear3DevelopmentRationale": "Y2: value in zone vision and pass duty persists; Y3: reduction in explosive margin and health risks may trim share when Mason returns.",
+      "oddsChangeReason": "Old 1/13/48/38 applied age-heavy decline despite real 2026 performance; reduce automatic decline, increase steady and bounded gain.",
+      "previousProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 12,
+        "steadyPct": 56,
+        "declinePct": 30,
+        "maxAnnualGain": 2.4,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 1,
+        "improvePct": -1,
+        "steadyPct": 8,
+        "declinePct": -8,
+        "maxAnnualGain": 1,
+        "maxAnnualLoss": 0.7,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/aaron-jones/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/aaron-jones/5768/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "NFL.com",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://amp.nfl.com/news/vikings-rb-jordan-mason-heads-to-ir-with-fractured-thumb",
+          "date": "2026-09-16",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "MIN|RB|jordanmason",
+      "name": "Jordan Mason",
+      "team": "MIN",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": null,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Physical, efficient early-down runner with proven spot-starting ability; passing-game limitations keep him at the baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Proven efficient downhill power: 2025 Vikings 758/159 (4.8), just 14 catches; 2026 opener 59 yards/15 (3.9) and one TD then out. Operates as early-down complement to Aaron Jones.",
+      "injuryDurabilityAndAvailability": "Confirmed September 2026 right-thumb fracture requiring surgery, short-term injured reserve at least four games; coaches expect return, so distinguish hand injury from long-run lower-body regression.",
+      "year2AndYear3DevelopmentRationale": "Y2: healthy return to 1B volume is credible; Y3: limited routes and touch split mean little true feature-back breakout.",
+      "oddsChangeReason": "Old 4/20/57/19 missed surgery and immediate lost games; raise near-term downside/volatility but not to ACL-level exposure.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 4,
+        "improvePct": 17,
+        "steadyPct": 42,
+        "declinePct": 37,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -3,
+        "steadyPct": -15,
+        "declinePct": 18,
+        "maxAnnualGain": 1.1,
+        "maxAnnualLoss": 2.6,
+        "marketVariancePct": 4
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jordan-mason/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jordan-mason/10413/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "NFL.com",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://amp.nfl.com/news/vikings-rb-jordan-mason-heads-to-ir-with-fractured-thumb",
+          "date": "2026-09-16",
+          "dateMeaning": "publication date"
+        },
+        {
+          "publisher": "Reuters",
+          "title": "Mason fracture and surgery",
+          "url": "https://www.reuters.com/sports/vikings-rb-jordan-mason-thumb-surgery-placed-ir--flm-2026-09-16/",
+          "date": "2026-09-16",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "NE|RB|rhamondrestevenson",
+      "name": "Rhamondre Stevenson",
+      "team": "NE",
+      "position": "RB",
+      "ageAtCalibration": 28,
+      "draftOverall": 120,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Power and receiving utility remain starter-level, but recent rushing efficiency and ball-security volatility prevent a higher grade."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Hard-contact veteran with real receiving competence: 2025 603/130 (4.6) plus 32 catches/345 but three lost fumbles; 2026 163/44 (3.7), 12 catches and already one fumble lost. Henderson remains explosive alternative.",
+      "injuryDurabilityAndAvailability": "No verified major medical issue; repeated ball-security lapses and reduced efficiency are more relevant than age 28.",
+      "year2AndYear3DevelopmentRationale": "Y2: can hold early-down/protection roles if security improves; Y3: Henderson may inherit snaps unless Stevenson stabilizes.",
+      "oddsChangeReason": "Old 4/20/57/19 understated actual ball-security/role decline pressure; increase decline and cap upside modestly.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 4,
+        "improvePct": 21,
+        "steadyPct": 47,
+        "declinePct": 28,
+        "maxAnnualGain": 3.3,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": 1,
+        "steadyPct": -10,
+        "declinePct": 9,
+        "maxAnnualGain": 0.6,
+        "maxAnnualLoss": 1.5,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/rhamondre-stevenson/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/rhamondre-stevenson/9584/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "NE|RB|treveyonhenderson",
+      "name": "TreVeyon Henderson",
+      "team": "NE",
+      "position": "RB",
+      "ageAtCalibration": 23,
+      "draftOverall": 38,
+      "hqGradeUnchanged": 86,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "911 yards at 5.1 YPC with 10 total TD as a rookie is meaningful established evidence; limited passing-game impact keeps him below the very-good tier."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2025 rookie explosive breakout 911/180 (5.1), 35 receptions; 2026 141/38 (3.7) and only one catch/6 yards in three games, sharing downs with Stevenson. Existing demonstrated big-play rushing real, but not every-down receiving usage.",
+      "injuryDurabilityAndAvailability": "No confirmed major 2026 injury; his zero Week1 rushes and modest early route totals mean coaching/usage uncertainty.",
+      "year2AndYear3DevelopmentRationale": "Y2: larger early-down share if he improves protection and reads; Y3: could be dynamic committee back rather than automatic top-five bell cow.",
+      "oddsChangeReason": "Old 20/35/27/18 leaned young leap despite already excellent rookie efficiency and reduced 2026 touches; trim breakout, increase steady.",
+      "previousProfile": {
+        "breakoutPct": 20,
+        "improvePct": 35,
+        "steadyPct": 27,
+        "declinePct": 18,
+        "maxAnnualGain": 6.4,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 8
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 17,
+        "improvePct": 32,
+        "steadyPct": 33,
+        "declinePct": 18,
+        "maxAnnualGain": 6.1,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 7
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -3,
+        "steadyPct": 6,
+        "declinePct": 0,
+        "maxAnnualGain": -0.3,
+        "maxAnnualLoss": -0.3,
+        "marketVariancePct": -1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/treveyon-henderson/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/treveyon-henderson/12398/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "NO|RB|alvinkamara",
+      "name": "Alvin Kamara",
+      "team": "NO",
+      "position": "RB",
+      "ageAtCalibration": 31,
+      "draftOverall": 67,
+      "hqGradeUnchanged": 80,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Receiving intelligence still has value, but 3.6 YPC in 2025 and 2.8 through two 2026 games show a real current rushing decline; career reputation does not preserve the old grade."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Historic receiving technician but declining rushing: 2025 471/131 (3.6), 33 catches/186; 2026 74/25 (3.0) through three games, 11 catches/47. Etienne arrival and TD-scoring usage reduce feature work.",
+      "injuryDurabilityAndAvailability": "Oct7 Saints practice report lists knee/back concerns; no verified long-term structural injury diagnosis. Significant career contact and 31-year-old lower efficiency are independent predictors.",
+      "year2AndYear3DevelopmentRationale": "Y2: passing-down value can continue if healthy, even as first-down work decreases; Y3: deeper role loss or retirement are possible but not certain.",
+      "oddsChangeReason": "Old 2/10/43/45 slightly understated downward efficiency and competing younger back, adjust decline/annual loss.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 43,
+        "declinePct": 45,
+        "maxAnnualGain": 2.4,
+        "maxAnnualLoss": 5.6,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 9,
+        "steadyPct": 40,
+        "declinePct": 49,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": -3,
+        "declinePct": 4,
+        "maxAnnualGain": -0.5,
+        "maxAnnualLoss": 1,
+        "marketVariancePct": 4
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/alvin-kamara/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/alvin-kamara/5653/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Reuters",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.reuters.com/sports/saints-qb-tyler-shough-dealing-with-sore-left-hand-expects-play-sunday--flm-2026-10-07/",
+          "date": "2026-10-07",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "NO|RB|travisetienne",
+      "name": "Travis Etienne Jr.",
+      "team": "NO",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 25,
+      "hqGradeUnchanged": 84,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Still a good all-around runner/receiver with proven starter production, but recent efficiency is not strong enough for the upper band."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "JAX 2025 1,107/260 (4.3) and 36 catches/292; moved to New Orleans, 2026 128/30 (4.3), 11 catches/51, then hamstring injured reserve. All-down talent established, but Kamara shares role.",
+      "injuryDurabilityAndAvailability": "Oct1 2026 hamstring IR confirmed for at least four games. Treat soft-tissue recovery as near-term risk, not verified permanent loss.",
+      "year2AndYear3DevelopmentRationale": "Y2: healthy return could consolidate NO rush/pass role as Kamara ages; Y3: persistent hamstring setbacks or shared touches reduce his previous lead-back ceiling.",
+      "oddsChangeReason": "Old 4/20/57/19 much too benign given actual IR and role change; widen near-term decline and market spread while enhancing upside potential if primary duties transfer.",
+      "previousProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 4,
+        "improvePct": 22,
+        "steadyPct": 35,
+        "declinePct": 39,
+        "maxAnnualGain": 4.4,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 10
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": 2,
+        "steadyPct": -22,
+        "declinePct": 20,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.6,
+        "marketVariancePct": 6
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/travis-etienne/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/travis-etienne/9489/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Reuters",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.reuters.com/sports/saints-place-rb-travis-etienne-jr-hamstring-injured-reserve--flm-2026-10-01/",
+          "date": "2026-10-01",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "NYG|RB|camskattebo",
+      "name": "Cam Skattebo",
+      "team": "NYG",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 105,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Useful power and receiving value through a 10-game NFL sample, but 4.0 career YPC and limited explosive production keep him at baseline."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Physical, willing receiver: 2025 rookie 410/101 (4.1), 24 catches/207 in eight games; 2026 235/68 (3.5) with eight catches, four games; 2026 only one rushing TD and few long gains.",
+      "injuryDurabilityAndAvailability": "Suffered major 2025 season-ending injury previously, Oct7 shoulder limited-practice listing; degree of lasting issues not established.",
+      "year2AndYear3DevelopmentRationale": "Y2: contact balance and receiving could give moderate improvement with healthy camp; Y3: high-impact running style and sub-4 YPC create workload/downside risk.",
+      "oddsChangeReason": "Old 17/31/25/27 overstated young explosive growth given injury history and reduced 2026 efficiency; shift odds toward mixed steady/decline.",
+      "previousProfile": {
+        "breakoutPct": 17,
+        "improvePct": 31,
+        "steadyPct": 25,
+        "declinePct": 27,
+        "maxAnnualGain": 6.6,
+        "maxAnnualLoss": 6.4,
+        "marketVariancePct": 8
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 13,
+        "improvePct": 28,
+        "steadyPct": 29,
+        "declinePct": 30,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 9
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -4,
+        "improvePct": -3,
+        "steadyPct": 4,
+        "declinePct": 3,
+        "maxAnnualGain": -0.9,
+        "maxAnnualLoss": 0.2,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/cam-skattebo/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/cam-skattebo/12465/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Official team",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.giants.com/news/giants-vs-commanders-week-5-injury-report-malik-nabers-andrew-thomas-cam-skattebo",
+          "date": "2026-10-07",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "NYG|RB|najeeharris",
+      "name": "Najee Harris",
+      "team": "NYG",
+      "position": "RB",
+      "ageAtCalibration": 28,
+      "draftOverall": 24,
+      "hqGradeUnchanged": 80,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Durable, physical and competent, but limited explosiveness and middling efficiency now fit below-average starter territory."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Four past Pittsburgh 1,000-yard seasons prove reliable volume but modest breakaway rate; only 15 carries/61 in injury-shortened 2025 Chargers season and 22/88 in 2026 NYG backup role, one lost fumble in Week4.",
+      "injuryDurabilityAndAvailability": "2025 serious lower-body interruption is a real durability concern; Oct7 personal DNP is NOT evidence of injury.",
+      "year2AndYear3DevelopmentRationale": "Y2: power reserve can still produce when Skattebo rests; Y3: declining share and replaceability outweigh athletic breakout, even though he's only 28.",
+      "oddsChangeReason": "Old 1/13/54/32 understated post-2025 role contraction and early 2026 short leash; raise decline and volatility.",
+      "previousProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 54,
+        "declinePct": 32,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 13,
+        "steadyPct": 42,
+        "declinePct": 43,
+        "maxAnnualGain": 2.2,
+        "maxAnnualLoss": 5.4,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 1,
+        "improvePct": 0,
+        "steadyPct": -12,
+        "declinePct": 11,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": 1.6,
+        "marketVariancePct": 3
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/najee-harris/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/najee-harris/9488/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "NYJ|RB|braelonallen",
+      "name": "Braelon Allen",
+      "team": "NYJ",
+      "position": "RB",
+      "ageAtCalibration": 22,
+      "draftOverall": 134,
+      "hqGradeUnchanged": 78,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Size/power role remains useful, but 3.7 career YPC and limited receiving/creation evidence keep him as a role player."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Mass/power backup: 2025 just 76/18 in four games due missed time; 2026 120/33 (3.6) and six catches/19, alternating with Hall. Inside success inconsistent; short-yardage utility real.",
+      "injuryDurabilityAndAvailability": "Prior 2025 absence raises availability concern, but no current catastrophic injury established.",
+      "year2AndYear3DevelopmentRationale": "Y2: could take red-zone/lead spot assignments if inside cuts improve; Y3: Hall's full-time ability and modest receiving cap path to star.",
+      "oddsChangeReason": "Old 17/36/28/19 overrewarded youth absent efficiency; reduce upside outcomes and increase honest committee/role downside.",
+      "previousProfile": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 14,
+        "improvePct": 29,
+        "steadyPct": 34,
+        "declinePct": 23,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -7,
+        "steadyPct": 6,
+        "declinePct": 4,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": 1.2,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/braelon-allen/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/braelon-allen/11742/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "NYJ|RB|breecehall",
+      "name": "Breece Hall",
+      "team": "NYJ",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 36,
+      "hqGradeUnchanged": 86,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved good-starter anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2025 1,065/243 (4.4), 36 catches/350 shows every-down ability; 2026 163/51 (3.2) through three games, 10 catches/102, absent Week4 with quad concern. Allen now gets carries.",
+      "injuryDurabilityAndAvailability": "Week4 absence linked to quad injury in Oct2 injury roundup; no long-term diagnosis confirmed.",
+      "year2AndYear3DevelopmentRationale": "Y2: healthy multiphase game could rebound if offensive line improves; Y3: recurrent lower-body concerns or committee dilution may keep performance below star ceiling.",
+      "oddsChangeReason": "Old 13/27/34/26 overweighted explosive breakout from already grade 86 after clear 2026 inefficiency/injury; move to steady and moderate downturn.",
+      "previousProfile": {
+        "breakoutPct": 13,
+        "improvePct": 27,
+        "steadyPct": 34,
+        "declinePct": 26,
+        "maxAnnualGain": 6,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 10,
+        "improvePct": 26,
+        "steadyPct": 37,
+        "declinePct": 27,
+        "maxAnnualGain": 5.2,
+        "maxAnnualLoss": 5.6,
+        "marketVariancePct": 7
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -3,
+        "improvePct": -1,
+        "steadyPct": 3,
+        "declinePct": 1,
+        "maxAnnualGain": -0.8,
+        "maxAnnualLoss": -0.2,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/breece-hall/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/breece-hall/10081/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Named sports reporting",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-4-injury-report-achane-acl-baker-thumb-jefferson-ankle-breece-hall-quad-and-more",
+          "date": "2026-10-04",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "PHI|RB|saquonbarkley",
+      "name": "Saquon Barkley",
+      "team": "PHI",
+      "position": "RB",
+      "ageAtCalibration": 29,
+      "draftOverall": 2,
+      "hqGradeUnchanged": 94,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved elite/high-end anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2024 extraordinary 2,005 rush yards; 2025 regression to 1,140/280 (4.1), then 2026 182/36 (5.1) but Week4 ended after two carries. Top-tier vision/cutback remains, yet 1,862 career carries are material.",
+      "injuryDurabilityAndAvailability": "Oct4 2026 hamstring injury verified; severity/return timeline unknown, so do not project confirmed structural decline.",
+      "year2AndYear3DevelopmentRationale": "Y2: healthy Barkley remains upper-tier explosive runner; Y3: repeated load and soft-tissue recurrence enlarge downward range with little room above grade 94.",
+      "oddsChangeReason": "Old 3/15/54/28 underpriced early-season hamstring and accumulated workload while giving broad stability; increase decline and loss without assuming season ending.",
+      "previousProfile": {
+        "breakoutPct": 3,
+        "improvePct": 15,
+        "steadyPct": 54,
+        "declinePct": 28,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 13,
+        "steadyPct": 45,
+        "declinePct": 40,
+        "maxAnnualGain": 2.1,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 10
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -1,
+        "improvePct": -2,
+        "steadyPct": -9,
+        "declinePct": 12,
+        "maxAnnualGain": -0.6,
+        "maxAnnualLoss": 1.4,
+        "marketVariancePct": 6
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/saquon-barkley/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/saquon-barkley/6887/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Reuters",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.reuters.com/sports/eagles-rb-saquon-barkley-hamstring-injured-vs-rams--flm-2026-10-04/",
+          "date": "2026-10-04",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "PHI|RB|tankbigsby",
+      "name": "Tank Bigsby",
+      "team": "PHI",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 88,
+      "hqGradeUnchanged": 79,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Strong 2024/25 efficiency in spots shows useful rushing ability, but tiny role and poor 2026 opening keep him below starter baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Physical downhill complement: 2025 PHI 344/58 (5.9) after 2024 766/168 (4.6); 2026 91/28 (3.2) with one lost fumble, filling more snaps during Barkley's hamstring issue.",
+      "injuryDurabilityAndAvailability": "No established significant own injury; low pass-game receiving output and ball security restrict 3-down elevation.",
+      "year2AndYear3DevelopmentRationale": "Y2: early-down situational value can remain if Barkley healthy; Y3: if starting opportunities expose 3.2 YPC/fumble risk, role could contract.",
+      "oddsChangeReason": "Old 8/28/39/25 was optimistic due tiny 2025 high-YPC sample; reduce breakout/improve and raise decline based on 2026 workload tests.",
+      "previousProfile": {
+        "breakoutPct": 8,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 25,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 6,
+        "improvePct": 21,
+        "steadyPct": 43,
+        "declinePct": 30,
+        "maxAnnualGain": 3.9,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -2,
+        "improvePct": -7,
+        "steadyPct": 4,
+        "declinePct": 5,
+        "maxAnnualGain": 0.2,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/tank-bigsby/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/tank-bigsby/10912/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "PIT|RB|jaylenwarren",
+      "name": "Jaylen Warren",
+      "team": "PIT",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": null,
+      "hqGradeUnchanged": 88,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "958 rushing plus 333 receiving in 2025 and 5.6 YPC with 143 receiving yards through four 2026 games establish a very-good current all-around back."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2025 958/211 (4.5) and 40 catches/333; 2026 309/55 (5.6) with 13 catches/143, explosive runs and target versatility. True three-down contributor even without elite reputation.",
+      "injuryDurabilityAndAvailability": "No verified current severe injury; single Week1 fumble lost does not erase three-year strong receiving evidence.",
+      "year2AndYear3DevelopmentRationale": "Y2: positive stability and modest receiving refinement, not huge breakout; Y3: rushing efficiency may normalize but NFL role floor remains high.",
+      "oddsChangeReason": "Old 5/24/46/25 placed too much decline on clearly performing complete back; increase steady, limit annual loss.",
+      "previousProfile": {
+        "breakoutPct": 5,
+        "improvePct": 24,
+        "steadyPct": 46,
+        "declinePct": 25,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.9,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 4,
+        "improvePct": 22,
+        "steadyPct": 59,
+        "declinePct": 15,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 5
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -1,
+        "improvePct": -2,
+        "steadyPct": 13,
+        "declinePct": -10,
+        "maxAnnualGain": -0.9,
+        "maxAnnualLoss": -1.6,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jaylen-warren/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jaylen-warren/10552/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "PIT|RB|ricodowdle",
+      "name": "Rico Dowdle",
+      "team": "PIT",
+      "position": "RB",
+      "ageAtCalibration": 28,
+      "draftOverall": null,
+      "hqGradeUnchanged": 80,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Proven volume competence, but current efficiency and limited special traits fit below-average starter territory."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Back-to-back 1,000-yard seasons (2025 CAR 1,076/236 at 4.6 plus 39 catches); moved to PIT in 2026 and is only 37/15 at 2.5 through two active games behind Warren.",
+      "injuryDurabilityAndAvailability": "2026 no Week3-4 carries; evidence does not establish injury cause, so record playing-time gap rather than invented medical diagnosis.",
+      "year2AndYear3DevelopmentRationale": "Y2: volume capacity remains if team finds defined early-down niche; Y3: Warren's superior versatility can make him an expendable reserve.",
+      "oddsChangeReason": "Old 1/13/54/32 overly stabilized a newly displaced veteran, not an age-based penalty; larger role-related decline/market variance.",
+      "previousProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 54,
+        "declinePct": 32,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 14,
+        "steadyPct": 42,
+        "declinePct": 42,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 1,
+        "improvePct": 1,
+        "steadyPct": -12,
+        "declinePct": 10,
+        "maxAnnualGain": 0.6,
+        "maxAnnualLoss": 2,
+        "marketVariancePct": 3
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/rico-dowdle/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/rico-dowdle/9346/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "SEA|RB|jadarianprice",
+      "name": "Jadarian Price",
+      "team": "SEA",
+      "position": "RB",
+      "ageAtCalibration": 22,
+      "draftOverall": 32,
+      "hqGradeUnchanged": 78,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Three-game rookie sample shows useful burst but two fumbles and limited all-around evidence prevent a higher grade."
+      },
+      "baselineGradeConfidence": "low",
+      "evidenceConfidence": "low",
+      "roleAndPerformance2025ToWeek4_2026": "Rookie Seattle 2026 119/28 (4.2) and four catches/21 across three games; two fumbles lost in 28 carries, no 2025 NFL sample. Lead touches initially only because Charbonnet rehab.",
+      "injuryDurabilityAndAvailability": "Chest injury aggravated Week3 led to October short-term IR; lost ball control and uncertain return usage matter, but cannot infer lasting orthopedic decline.",
+      "year2AndYear3DevelopmentRationale": "Y2: healthy acceleration/ball security might yield legitimate 1B; Y3: Charbonnet's return could relegate him even if tools remain good.",
+      "oddsChangeReason": "Old 27/35/2/36 was unjustifiably polarized toward immediate breakout and almost no steadiness; materially reduce speculative upside, increase expected rotational/downside paths.",
+      "previousProfile": {
+        "breakoutPct": 27,
+        "improvePct": 35,
+        "steadyPct": 2,
+        "declinePct": 36,
+        "maxAnnualGain": 8.1,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 12
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 14,
+        "improvePct": 26,
+        "steadyPct": 18,
+        "declinePct": 42,
+        "maxAnnualGain": 6.3,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 12
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -13,
+        "improvePct": -9,
+        "steadyPct": 16,
+        "declinePct": 6,
+        "maxAnnualGain": -1.8,
+        "maxAnnualLoss": 1,
+        "marketVariancePct": 0
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jadarian-price/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jadarian-price/13176/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Official team",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.seahawks.com/news/jadarian-price-out-after-aggravating-chest-injury-other-seahawks-injury-updates",
+          "date": "2026-10-02",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "SEA|RB|zachcharbonnet",
+      "name": "Zach Charbonnet",
+      "team": "SEA",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 52,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Reliable power/receiving complement with 730 yards and 12 rushing TD in 2025; solid starter baseline without upper-tier creation."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "medium",
+      "roleAndPerformance2025ToWeek4_2026": "Power and goal-line specialist with receiving utility: 2025 Seattle 730/184 at 4.0, 12 rushing TD plus 20 catches/144. No 2026 game action through Week4 due ACL rehab; opportunity open after Walker leaves.",
+      "injuryDurabilityAndAvailability": "ACL tear in Jan17 2026 playoff; Seahawks opened 21-day practice window Oct1. Timeline indicates progress, NOT completed return to preinjury acceleration.",
+      "year2AndYear3DevelopmentRationale": "Y2: once conditioning returns, he can recapture early-down/TD duties; Y3: post-ACL burst uncertainty and Price/other backs make role shrink plausible.",
+      "oddsChangeReason": "Old 15/36/30/19 resembled healthy ascending player, ignoring long ACL rehab; cut immediate growth and increase medium-term downside/market risk.",
+      "previousProfile": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 11,
+        "improvePct": 26,
+        "steadyPct": 25,
+        "declinePct": 38,
+        "maxAnnualGain": 5.3,
+        "maxAnnualLoss": 7.6,
+        "marketVariancePct": 11
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -4,
+        "improvePct": -10,
+        "steadyPct": -5,
+        "declinePct": 19,
+        "maxAnnualGain": 0.6,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 4
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/zach-charbonnet/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/zach-charbonnet/10876/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Reuters",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.reuters.com/sports/seahawks-open-21-day-practice-window-rb-zach-charbonnet--flm-2026-10-01/",
+          "date": "2026-10-01",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "SF|RB|christianmccaffrey",
+      "name": "Christian McCaffrey",
+      "team": "SF",
+      "position": "RB",
+      "ageAtCalibration": 30,
+      "draftOverall": 8,
+      "hqGradeUnchanged": 96,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved elite complete-back anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Sustained elite complete play despite 2025 311 carries/1,202 at 3.9: added 102 catches/924, 17 total TD; 2026 218/50 (4.4) with 16 catches/122. Rare pass game prevents comparing him to ordinary late-prime bruisers.",
+      "injuryDurabilityAndAvailability": "Age30, 2024 injury-limited season and 2025 huge 413 touches impose durability exposure; no confirmed new significant 2026 injury.",
+      "year2AndYear3DevelopmentRationale": "Y2: receiving finesse may preserve elite grades; Y3: soft-tissue setbacks or reduced rush workload are realistic without presuming total collapse.",
+      "oddsChangeReason": "Old 2/12/51/35 close but 2025 massive usage plus prior injury season justify wider decline, while maintaining strong stable case.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 12,
+        "steadyPct": 51,
+        "declinePct": 35,
+        "maxAnnualGain": 2.4,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 11,
+        "steadyPct": 47,
+        "declinePct": 40,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 6.7,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": -4,
+        "declinePct": 5,
+        "maxAnnualGain": -0.5,
+        "maxAnnualLoss": 0.9,
+        "marketVariancePct": 4
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/christian-mccaffrey/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/christian-mccaffrey/5592/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "SF|RB|isaacguerendo",
+      "name": "Isaac Guerendo",
+      "team": "SF",
+      "position": "RB",
+      "ageAtCalibration": 26,
+      "draftOverall": 129,
+      "hqGradeUnchanged": 77,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Excellent 2024 efficiency and athletic ability remain evidence, but almost no 2025/26 offensive workload prevents a starter-level grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      },
+      "baselineGradeConfidence": "medium",
+      "evidenceConfidence": "low",
+      "roleAndPerformance2025ToWeek4_2026": "2024 as injury fill-in 420/84 (5.0) with 15 catches/152; in 2025 appeared in 14 games but no offensive rushes and 2026 none recorded through Week4. Speed is real; playbook role absent.",
+      "injuryDurabilityAndAvailability": "No reliable 2026 surgical injury evidence; zero touches must not be called physical decline.",
+      "year2AndYear3DevelopmentRationale": "Y2: a different roster role or injury vacancy can revive explosive carries; Y3: continued marginalization/roster change is equally credible.",
+      "oddsChangeReason": "Old 13/18/35/34 too generous to immediate breakout in absence of two seasons of touches; cut breakout and increase modest improving role potential.",
+      "previousProfile": {
+        "breakoutPct": 13,
+        "improvePct": 18,
+        "steadyPct": 35,
+        "declinePct": 34,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 9
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 9,
+        "improvePct": 21,
+        "steadyPct": 35,
+        "declinePct": 35,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 10
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -4,
+        "improvePct": 3,
+        "steadyPct": 0,
+        "declinePct": 1,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": 0.6,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/isaac-guerendo/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/isaac-guerendo/11737/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "TB|RB|buckyirving",
+      "name": "Bucky Irving",
+      "team": "TB",
+      "position": "RB",
+      "ageAtCalibration": 24,
+      "draftOverall": 125,
+      "hqGradeUnchanged": 87,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Elite 2024 efficiency, strong receiving and a 4.5 YPC 2026 opening support a high-end grade; uneven 2025 keeps him below Kyren/Walker."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2024 1,122/207 (5.4); 2025 declined to 588/173 (3.4) but 30 catches/277; 2026 241/56 (4.3) with 13 catches. Strong lateral cuts and receiving, though workload shared with Gainwell.",
+      "injuryDurabilityAndAvailability": "No severe 2026 injury established; 2025 10-game season suggests durability/playing-time monitoring; 2026 lost fumble Week1.",
+      "year2AndYear3DevelopmentRationale": "Y2: moderate reversion to 2024 efficiency possible if run blocking supports him; Y3: two-season variation prevents assuming sustained elite volume.",
+      "oddsChangeReason": "Old 15/35/32/18 overpaid breakout after prior star stretch and 2025 setback; increase steady and some decline given variability.",
+      "previousProfile": {
+        "breakoutPct": 15,
+        "improvePct": 35,
+        "steadyPct": 32,
+        "declinePct": 18,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 11,
+        "improvePct": 28,
+        "steadyPct": 38,
+        "declinePct": 23,
+        "maxAnnualGain": 4.6,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 7
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -4,
+        "improvePct": -7,
+        "steadyPct": 6,
+        "declinePct": 5,
+        "maxAnnualGain": -1.2,
+        "maxAnnualLoss": 0.2,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/bucky-irving/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/bucky-irving/11733/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "TB|RB|kennygainwell",
+      "name": "Kenny Gainwell",
+      "team": "TB",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 150,
+      "hqGradeUnchanged": 79,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Versatile receiving/change-of-pace back with useful spot-start value but not enough rushing creation for starter baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Receiving-heavy specialist: 2025 Steelers 537/114 (4.7) and 73 catches/486; 2026 Tampa Bay 26/13 (2.0) and eight receptions/44. Routes/pass protection are core value, not feature rushing.",
+      "injuryDurabilityAndAvailability": "No major current injury verified; very poor early rush average based on only 13 tries should not be overinterpreted.",
+      "year2AndYear3DevelopmentRationale": "Y2: third-down role and steady receiving remain viable; Y3: age27-29 niche might narrow with changing backfield but little true explosive-star path.",
+      "oddsChangeReason": "Old 2/17/58/23 missed increased decline from new team's tiny touch share; modestly shift steady to downside.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 53,
+        "declinePct": 28,
+        "maxAnnualGain": 2.9,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 0,
+        "improvePct": 0,
+        "steadyPct": -5,
+        "declinePct": 5,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": 0.6,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/kenneth-gainwell/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/kenneth-gainwell/9614/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "TEN|RB|tonypollard",
+      "name": "Tony Pollard",
+      "team": "TEN",
+      "position": "RB",
+      "ageAtCalibration": 29,
+      "draftOverall": 128,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Approved solid/average starter anchor."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2025 Tennessee 1,082/242 (4.5) with 33 catches/206; 2026 221/54 (4.1) and eight catches, still starts over Spears. No longer top-end explosive but real 17-game workload.",
+      "injuryDurabilityAndAvailability": "No confirmed severe 2026 injury; 1,318 lifetime carries and prior workload should be monitored without an arbitrary 29-year-old cutoff.",
+      "year2AndYear3DevelopmentRationale": "Y2: ordinary starter can maintain 4+ YPC with stable workload; Y3: Spears/younger arrivals may take passing and early-down shares.",
+      "oddsChangeReason": "Old 1/13/48/38 imposed relatively strong veteran downturn despite ongoing starter output; slightly increase improve and steady, lower decline.",
+      "previousProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 49,
+        "declinePct": 34,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 6
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 1,
+        "improvePct": 2,
+        "steadyPct": 1,
+        "declinePct": -4,
+        "maxAnnualGain": 0.6,
+        "maxAnnualLoss": 1,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/tony-pollard/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/tony-pollard/7919/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "TEN|RB|tyjaespears",
+      "name": "Tyjae Spears",
+      "team": "TEN",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 81,
+      "hqGradeUnchanged": 81,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Efficient change-of-pace runner and receiving option with enough completeness to sit just below starter baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Change-of-pace receiving RB: 2025 283/72 (3.9) and 45 catches/264, 2026 65/15 (4.3) plus five catches/40. Pollard controls most early downs; 2026 sample too small for all-purpose star projection.",
+      "injuryDurabilityAndAvailability": "No major current injury reported; past 2024/2025 missed games mean availability matters, but no fresh rehab diagnosis.",
+      "year2AndYear3DevelopmentRationale": "Y2: designed passing touches/space burst offer modest gain; Y3: pass protection and role preference make stability more likely than sudden bell-cow.",
+      "oddsChangeReason": "Old 15/36/30/19 assumed youth/receiving equals feature breakthrough; shift to steadier specialist distribution.",
+      "previousProfile": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 11,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 22,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -4,
+        "improvePct": -8,
+        "steadyPct": 9,
+        "declinePct": 3,
+        "maxAnnualGain": -0.2,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 1
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/tyjae-spears/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/tyjae-spears/10905/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        }
+      ]
+    },
+    {
+      "id": "WSH|RB|jacorycroskeymerritt",
+      "name": "Jacory Croskey-Merritt",
+      "team": "WSH",
+      "position": "RB",
+      "ageAtCalibration": 25,
+      "draftOverall": 245,
+      "hqGradeUnchanged": 81,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "805 yards at 4.6 in 2025 showed real rushing ability; 3.0 YPC through three 2026 games and limited receiving cap him below baseline."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "2025 Washington 805/175 (4.6), just nine catches; four 2026 starts 157/56 (2.8), five catches. Week3-4 runs averaged under 2 YPC, and Rachaad White handles more receiving.",
+      "injuryDurabilityAndAvailability": "No verified major injury, but starter rushing efficiency collapsed and ball security had two fumbles lost in 2025.",
+      "year2AndYear3DevelopmentRationale": "Y2: power and improved blocking could recover former starter efficiency; Y3: lack of receptions and backfield competition jeopardize sustained feature status.",
+      "oddsChangeReason": "Old 8/28/39/25 understated deterioration in a complete four-game 2026 starting sample; raise downside, cut breakout.",
+      "previousProfile": {
+        "breakoutPct": 8,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 25,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 6,
+        "improvePct": 24,
+        "steadyPct": 36,
+        "declinePct": 34,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 8
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": -2,
+        "improvePct": -4,
+        "steadyPct": -3,
+        "declinePct": 9,
+        "maxAnnualGain": 0.1,
+        "maxAnnualLoss": 1.6,
+        "marketVariancePct": 2
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/jacory-croskey-merritt/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/jacory-croskey-merritt/12605/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Named sports reporting",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.hogshaven.com/washington-commanders-analysis/446799/commanders-jacory-croskey-merritt-nfl-rushing-stats-nfl-week-5",
+          "date": "2026-10-07",
+          "dateMeaning": "publication date"
+        }
+      ]
+    },
+    {
+      "id": "WSH|RB|rachaadwhite",
+      "name": "Rachaad White",
+      "team": "WSH",
+      "position": "RB",
+      "ageAtCalibration": 27,
+      "draftOverall": 91,
+      "hqGradeUnchanged": 82,
+      "hqGradeSource": {
+        "url": "https://github.com/codyking0602/Octagon-HQ/blob/feat/gm-full-nfl-development-calibration-20261007/data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "effectiveDate": "2026-10-03",
+        "priorAuditedReason": "Useful receiving and improved recent rushing efficiency support a starter-baseline grade, though he lacks consistent high-end rushing creation."
+      },
+      "baselineGradeConfidence": "high",
+      "evidenceConfidence": "high",
+      "roleAndPerformance2025ToWeek4_2026": "Reliable receiving/inside complement: 2025 TB 572/132 at 4.3 and 40 receptions/218; 2026 Washington 100/22 (4.6), nine catches/51 over three games, playing more passing snaps than Jacory.",
+      "injuryDurabilityAndAvailability": "Week4 shoulder absence noted in Washington reporting; extent/long-term status unconfirmed.",
+      "year2AndYear3DevelopmentRationale": "Y2: third-down reliability offers steady league role and possible more carries if Jacory struggles; Y3: unlikely top-end explosive runner, competition can still trim early-down work.",
+      "oddsChangeReason": "Old 2/17/58/23 slightly overconfident stability despite new team and missed Week4; raise decline and variance mildly.",
+      "previousProfile": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposedResearchProfile": {
+        "breakoutPct": 3,
+        "improvePct": 18,
+        "steadyPct": 52,
+        "declinePct": 27,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 7
+      },
+      "deltaFromPrevious": {
+        "breakoutPct": 1,
+        "improvePct": 1,
+        "steadyPct": -6,
+        "declinePct": 4,
+        "maxAnnualGain": 0.4,
+        "maxAnnualLoss": 1.2,
+        "marketVariancePct": 3
+      },
+      "evidence": [
+        {
+          "publisher": "NFL.com",
+          "title": "Player career and 2025/2026 statistics",
+          "url": "https://www.nfl.com/players/rachaad-white/stats/",
+          "date": "2026-10-08",
+          "dateMeaning": "snapshot accessed after Week 4; season rows labeled 2025/2026"
+        },
+        {
+          "publisher": "OverTheCap through nflverse",
+          "title": "Contract, age and draft context",
+          "url": "https://overthecap.com/player/rachaad-white/10136/",
+          "date": "2026-10-05",
+          "dateMeaning": "repository's contract data snapshot"
+        },
+        {
+          "publisher": "Named sports reporting",
+          "title": "Dated player-specific context or injury/role report",
+          "url": "https://www.cbssports.com/fantasy/football/news/commanders-jacory-croskey-merritt-in-line-for-larger-workload-in-london/",
+          "date": "2026-10-02",
+          "dateMeaning": "publication date"
+        }
+      ]
+    }
+  ]
+}

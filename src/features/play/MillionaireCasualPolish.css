@@ -1,0 +1,417 @@
+/* Focused Millionaire fidelity pass layered after the base game styles. */
+
+.millionaire-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Give the studio an actual crowd instead of a field of decorative dots. */
+.millionaire-crowd {
+  position: absolute;
+  z-index: -2;
+  left: 5.5%;
+  right: 4.5%;
+  top: 13%;
+  height: 53%;
+  overflow: hidden;
+  opacity: 0.96;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(28, 116, 246, 0.20), transparent 45%),
+    radial-gradient(circle at 9% 12%, rgba(112, 184, 255, 0.88) 0 3px, transparent 4px),
+    radial-gradient(circle at 31% 8%, rgba(105, 176, 255, 0.82) 0 3px, transparent 4px),
+    radial-gradient(circle at 68% 10%, rgba(111, 183, 255, 0.85) 0 3px, transparent 4px),
+    radial-gradient(circle at 91% 14%, rgba(120, 190, 255, 0.82) 0 3px, transparent 4px);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  pointer-events: none;
+}
+
+.millionaire-crowd::before,
+.millionaire-crowd::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  background-image:
+    radial-gradient(circle at 50% 29%, rgba(1, 7, 17, 0.97) 0 7px, transparent 7.8px),
+    radial-gradient(ellipse at 50% 76%, rgba(1, 6, 15, 0.98) 0 16px, transparent 17px);
+  background-size: 48px 58px, 48px 58px;
+  filter: drop-shadow(0 -1px 2px rgba(35, 120, 244, 0.36));
+}
+
+.millionaire-crowd::before {
+  top: 16%;
+  height: 72%;
+  background-position: 0 0, 0 0;
+  opacity: 0.92;
+}
+
+.millionaire-crowd::after {
+  top: 31%;
+  height: 60%;
+  background-position: 24px 0, 24px 0;
+  opacity: 0.76;
+  transform: scale(1.08);
+}
+
+/* The approved host file stays untouched. This bay only crops/repositions it and
+   surrounds the photo with set lighting so the image reads as part of the stage. */
+.millionaire-host-stage {
+  position: absolute;
+  z-index: 6;
+  left: 12.4%;
+  bottom: 27.4%;
+  width: 31.8%;
+  height: 61.5%;
+  overflow: hidden;
+  background: #01040b;
+  box-shadow:
+    -28px 0 56px rgba(2, 28, 71, 0.82),
+    28px 0 56px rgba(2, 28, 71, 0.82),
+    0 24px 34px rgba(0, 0, 0, 0.42);
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.millionaire-host-stage::before,
+.millionaire-host-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: 11%;
+  pointer-events: none;
+}
+
+.millionaire-host-stage::before {
+  left: 0;
+  background: linear-gradient(90deg, #01040b, rgba(1, 4, 11, 0));
+}
+
+.millionaire-host-stage::after {
+  right: 0;
+  background: linear-gradient(270deg, #01040b, rgba(1, 4, 11, 0));
+}
+
+.millionaire-host-stage > .millionaire-host {
+  position: absolute;
+  z-index: 1;
+  left: -7%;
+  right: auto;
+  top: auto;
+  bottom: -1.5%;
+  width: 114%;
+  height: 105%;
+  object-fit: cover;
+  object-position: center 38%;
+  pointer-events: none;
+}
+
+.millionaire-host-stage.is-covered {
+  opacity: 0.18;
+}
+
+/* Fullscreen content is portaled to document.body. Keep the complete 2x2 answer
+   grid comfortably inside short landscape viewports as a second line of defense. */
+.millionaire-question {
+  bottom: 24.4%;
+  min-height: 15.2%;
+}
+
+.millionaire-answers {
+  bottom: 2.2%;
+  height: 20.6%;
+  gap: clamp(0.28rem, 0.9vh, 0.55rem) 1.2%;
+}
+
+.millionaire-answers button {
+  min-height: 0;
+}
+
+/* Rules / entry screen used before the run starts. */
+.millionaire-shell--rules .millionaire-crowd,
+.millionaire-shell--chooser .millionaire-crowd {
+  top: 20%;
+  height: 58%;
+  opacity: 0.7;
+}
+
+.millionaire-rules {
+  position: absolute;
+  z-index: 20;
+  left: 12%;
+  right: 12%;
+  top: 4.2%;
+  bottom: 4.2%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: clamp(0.45rem, 1.3vh, 0.9rem);
+  padding: clamp(0.8rem, 2.3vh, 1.35rem) clamp(1rem, 2.5vw, 2.2rem);
+  border: 2px solid #e8b43a;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(34, 119, 237, 0.26), transparent 42%),
+    linear-gradient(180deg, rgba(4, 31, 73, 0.965), rgba(1, 10, 27, 0.988));
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 232, 157, 0.12),
+    inset 0 0 40px rgba(40, 115, 224, 0.16),
+    0 22px 70px rgba(0, 0, 0, 0.72),
+    0 0 26px rgba(231, 177, 42, 0.16);
+  text-shadow: 0 2px 8px #000;
+}
+
+.millionaire-rules > header {
+  text-align: center;
+}
+
+.millionaire-rules > header > span {
+  display: block;
+  color: #f5f8ff;
+  font-size: clamp(0.55rem, 1vw, 0.88rem);
+  font-weight: 850;
+  letter-spacing: 0.2em;
+}
+
+.millionaire-rules h1 {
+  margin: 0.03rem 0 0.12rem;
+  color: #f7cb55;
+  font-size: clamp(1.6rem, 3.6vw, 3.15rem);
+  line-height: 0.98;
+  letter-spacing: 0.02em;
+}
+
+.millionaire-rules > header > p {
+  margin: 0;
+  color: #cdd9ec;
+  font-size: clamp(0.58rem, 0.98vw, 0.86rem);
+}
+
+.millionaire-rules__body {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(245px, 0.78fr) minmax(0, 1.22fr);
+  gap: clamp(0.8rem, 2.2vw, 1.8rem);
+}
+
+.millionaire-rules__ladder {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: repeat(8, 1fr);
+  border: 1px solid rgba(224, 171, 45, 0.72);
+  border-radius: 11px;
+  overflow: hidden;
+  background: rgba(0, 7, 21, 0.72);
+}
+
+.millionaire-rules__ladder > div {
+  position: relative;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 10% 50% 30%;
+  align-items: center;
+  gap: 4%;
+  padding: 0 5%;
+  border-bottom: 1px solid rgba(213, 165, 46, 0.34);
+}
+
+.millionaire-rules__ladder > div:last-child {
+  border-bottom: 0;
+}
+
+.millionaire-rules__ladder b {
+  color: #f3bd3c;
+  font-size: clamp(0.62rem, 1.08vw, 0.95rem);
+}
+
+.millionaire-rules__ladder strong {
+  font-size: clamp(0.62rem, 1.15vw, 1rem);
+}
+
+.millionaire-rules__ladder span {
+  justify-self: end;
+  color: #d9e5f7;
+  font-size: clamp(0.48rem, 0.8vw, 0.72rem);
+  font-weight: 850;
+}
+
+.millionaire-rules__ladder small {
+  position: absolute;
+  left: 57%;
+  bottom: -0.42rem;
+  z-index: 2;
+  transform: translateX(-50%);
+  padding: 0.04rem 0.38rem;
+  border: 1px solid #d9a82e;
+  border-radius: 999px;
+  color: #fff4c8;
+  background: #06275a;
+  font-size: clamp(0.3rem, 0.46vw, 0.42rem);
+  font-weight: 900;
+  letter-spacing: 0.07em;
+}
+
+.millionaire-rules__how {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.millionaire-rules__how h2,
+.millionaire-rules__how h3 {
+  margin: 0;
+  color: #f4c547;
+  letter-spacing: 0.14em;
+}
+
+.millionaire-rules__how h2 {
+  font-size: clamp(0.72rem, 1.25vw, 1.08rem);
+}
+
+.millionaire-rules__how h3 {
+  margin-top: clamp(0.3rem, 0.8vh, 0.5rem);
+  font-size: clamp(0.58rem, 0.95vw, 0.82rem);
+}
+
+.millionaire-rules__quick,
+.millionaire-rules__lifelines {
+  display: grid;
+  gap: clamp(0.25rem, 0.65vh, 0.42rem);
+}
+
+.millionaire-rules__quick {
+  margin-top: clamp(0.3rem, 0.8vh, 0.55rem);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.millionaire-rules__lifelines {
+  margin-top: clamp(0.25rem, 0.65vh, 0.42rem);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.millionaire-rules__quick p,
+.millionaire-rules__lifelines p {
+  min-width: 0;
+  margin: 0;
+  padding: clamp(0.38rem, 0.9vh, 0.6rem) clamp(0.42rem, 0.8vw, 0.7rem);
+  border: 1px solid rgba(109, 154, 216, 0.42);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(8, 52, 111, 0.74), rgba(3, 22, 52, 0.78));
+}
+
+.millionaire-rules__quick strong,
+.millionaire-rules__lifelines b {
+  display: block;
+  color: #ffe078;
+  font-size: clamp(0.62rem, 1.08vw, 0.95rem);
+  line-height: 1.05;
+}
+
+.millionaire-rules__quick span,
+.millionaire-rules__lifelines span {
+  display: block;
+  margin-top: 0.18rem;
+  color: #e3ebf8;
+  font-size: clamp(0.45rem, 0.72vw, 0.66rem);
+  line-height: 1.28;
+}
+
+.millionaire-rules__how > small {
+  display: block;
+  margin-top: auto;
+  padding-top: clamp(0.25rem, 0.7vh, 0.45rem);
+  color: #b9c8dc;
+  font-size: clamp(0.43rem, 0.7vw, 0.63rem);
+  line-height: 1.3;
+}
+
+.millionaire-rules__start {
+  justify-self: center;
+  min-width: min(260px, 42%);
+  min-height: clamp(40px, 6.6vh, 58px);
+  padding: 0.45rem 1.8rem;
+  border: 2px solid #ffe28a;
+  border-radius: 9px;
+  color: #171004;
+  background: linear-gradient(180deg, #ffe277, #d79b18);
+  box-shadow: 0 0 24px rgba(244, 185, 43, 0.48), inset 0 0 0 1px rgba(255, 248, 205, 0.38);
+  font-size: clamp(0.72rem, 1.3vw, 1.12rem);
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-shadow: none;
+}
+
+@media (max-height: 620px) and (orientation: landscape) {
+  .millionaire-question {
+    bottom: 25.5%;
+    min-height: 14%;
+  }
+
+  .millionaire-answers {
+    bottom: 2.2%;
+    height: 21.7%;
+  }
+
+  .millionaire-host-stage {
+    bottom: 29.2%;
+    height: 58.8%;
+  }
+
+  .millionaire-rules {
+    top: 2.4%;
+    bottom: 2.4%;
+    gap: 0.34rem;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
+
+  .millionaire-rules__quick p,
+  .millionaire-rules__lifelines p {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .millionaire-stakes {
+    top: 1.2%;
+    min-height: 10.5%;
+  }
+
+  .millionaire-clock {
+    top: 13.2%;
+    width: clamp(94px, 12vw, 150px);
+  }
+
+  .millionaire-host-stage {
+    bottom: 30.5%;
+    height: 55%;
+  }
+
+  .millionaire-question {
+    bottom: 27%;
+    min-height: 13%;
+  }
+
+  .millionaire-answers {
+    bottom: 1.4%;
+    height: 24%;
+    gap: 0.25rem 1%;
+  }
+
+  .millionaire-rules {
+    left: 9%;
+    right: 9%;
+  }
+
+  .millionaire-rules__body {
+    grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .millionaire-host-stage {
+    transition: none;
+  }
+}

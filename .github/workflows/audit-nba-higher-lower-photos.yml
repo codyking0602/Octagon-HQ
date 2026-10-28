@@ -1,0 +1,65 @@
+name: Audit Complete NBA Player Portraits
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - "src/features/nba/nbaHigherLower*"
+      - "src/features/nba/nbaFindTheLeader*"
+      - "src/features/nba/nbaHitTheNumber*"
+      - "src/features/nba/nbaPortraitInventory.test.ts"
+      - "src/features/nba/NbaPortraitCredits*"
+      - "src/features/nba/nbaHitTheNumberStats.ts"
+      - "src/features/nba/NbaFindTheLeaderPage.tsx"
+      - "src/features/nba/NbaHitTheNumberPage.tsx"
+      - "src/features/nba/NbaOfficialDailyPage.tsx"
+      - "src/features/nba/NbaHigherLower*"
+      - "src/styles/nba-higher-lower.css"
+      - "src/styles/nba-find-the-leader.css"
+      - "src/styles/nba-owner-daily.css"
+      - "scripts/audit_nba_higher_lower_photos.py"
+      - "scripts/verify-nba-portrait-phone.mjs"
+      - "scripts/nba-portrait-phone/**"
+      - ".github/workflows/audit-nba-higher-lower-photos.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-photos:
+    name: Full NBA eligible player portrait coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci --silent --no-audit --no-fund
+      - name: Enumerate every possible eligible NBA player
+        run: NBA_PHOTO_AUDIT=1 npx vitest run src/features/nba/nbaPortraitInventory.test.ts src/features/nba/nbaHigherLowerPhotoManifest.test.ts
+      - name: Download and inspect every eligible photo
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          NBA_PHONE_FIXTURE=1 python scripts/audit_nba_higher_lower_photos.py
+      - name: Generate shared presentation media required by Vite fixtures
+        run: npm run generate:football-career-media-context
+      - name: Render and exercise actual NBA games on an iPhone viewport
+        run: node scripts/verify-nba-portrait-phone.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nba-complete-portrait-audit
+          path: |
+            nba-photo-audit-manifest.json
+            nba-photo-audit-report.json
+            ${{ runner.temp }}/nba-portrait-phone-proof/*.png
+          retention-days: 7

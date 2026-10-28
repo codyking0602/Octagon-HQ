@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "relationshipFamily": "football-era-support",
+  "cfb": {
+    "recordKind": "championship-era",
+    "clusterCount": 6,
+    "programCount": 6,
+    "representedSeasonCount": 27,
+    "championshipSelectionCount": 16,
+    "maxAdjacentTitleGap": 4,
+    "resultSemantics": {
+      "metricBasis": "source-observed-team-season-results",
+      "postseasonCompleteness": "not-guaranteed",
+      "note": "CFB title selections are complete for 2002-2025 through the NCAA relationship owner. Team-season result aggregates preserve only the games present in the existing cfbfastR relationship corpus and must not be presented as guaranteed complete postseason records."
+    }
+  },
+  "nfl": {
+    "recordKind": "coach-stint",
+    "stintCount": 246,
+    "franchiseCount": 32,
+    "sourceCoachNameKeyCount": 173
+  }
+}

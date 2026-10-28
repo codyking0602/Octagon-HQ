@@ -1,0 +1,282 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import {
+  groupRankLabel,
+  pickWinPercentage,
+  type PickHistory,
+  type PickSeasonStanding,
+} from "./picksModel";
+import { picksSeasonStandings } from "./picksSeasonStandings";
+import { FootballWeekRecap } from "./FootballWeekRecap";
+import { LatestEventRecap } from "./LatestEventRecap";
+import { resolvePicksDestination } from "./picksDestination";
+
+function winPercentageLabel(correct: number, incorrect: number) {
+  return `${pickWinPercentage(correct, incorrect).toFixed(1)}%`;
+}
+
+function standingClassName(standing: PickSeasonStanding) {
+  return [
+    "picks-season-standing",
+    standing.rank === 1 ? "is-leader" : "",
+    standing.rank === 2 ? "is-second" : "",
+    standing.rank === 3 ? "is-third" : "",
+    standing.isCurrentUser ? "is-current-user" : "",
+  ].filter(Boolean).join(" ");
+}
+
+function rankContext(rank: number) {
+  if (rank === 1) return "LEADER";
+  if (rank === 2) return "2ND";
+  if (rank === 3) return "3RD";
+  return null;
+}
+
+function standingPoints(standing: PickSeasonStanding) {
+  return standing.totalPoints;
+}
+
+export function PicksSeasonHub({
+  history,
+  loading,
+  sport = "ufc",
+}: {
+  history: PickHistory;
+  loading: boolean;
+  sport?: "ufc" | "football";
+}) {
+  const [searchParams] = useSearchParams();
+  const football = sport === "football";
+  const archiveSingular = football ? "WEEK" : "EVENT";
+  const archivePlural = football ? "WEEKS" : "EVENTS";
+  const RecapComponent = football ? FootballWeekRecap : LatestEventRecap;
+  const archivedEventIds = useMemo(
+    () => history.events.map((event) => event.eventId),
+    [history.events],
+  );
+  const destination = useMemo(
+    () => resolvePicksDestination(searchParams, archivedEventIds),
+    [archivedEventIds, searchParams],
+  );
+  const targetEventId = destination.kind === "archived-event" ? destination.eventId : "";
+  const recapRequested = destination.kind === "archived-event" && destination.recapRequested;
+  const standingsRequested = searchParams.get("view") === "standings";
+  const targetEvent = useMemo(
+    () => history.events.find((event) => event.eventId === targetEventId) ?? null,
+    [history.events, targetEventId],
+  );
+  const [activeTab, setActiveTab] = useState<"standings" | "events">(
+    "events",
+  );
+  const [hubOpen, setHubOpen] = useState(Boolean(targetEventId || standingsRequested));
+  const hubRef = useRef<HTMLElement | null>(null);
+  const standingsRef = useRef<HTMLElement | null>(null);
+  const standings = useMemo(
+    () => picksSeasonStandings(history, football ? "football" : "mma"),
+    [football, history],
+  );
+  const currentStanding = standings.find((standing) => standing.isCurrentUser) ?? null;
+  const leaderPoints = standings.reduce(
+    (highest, standing) => Math.max(highest, standingPoints(standing)),
+    0,
+  );
+  const season = history.season ?? new Date().getFullYear();
+  const finish = currentStanding
+    ? `${groupRankLabel(currentStanding.rank, standings)} OF ${standings.length}`
+    : standings.length ? `— OF ${standings.length}` : "NO RESULTS";
+  const record = currentStanding ?? history.summary;
+  const recordPoints = currentStanding
+    ? standingPoints(currentStanding)
+    : history.summary.totalPoints;
+  const latestEvent = history.events[0];
+  const olderEvents = history.events.slice(1);
+  const targetIsLatest = Boolean(latestEvent && latestEvent.eventId === targetEventId);
+
+  useEffect(() => {
+    if (!targetEventId || standingsRequested) return;
+    setActiveTab("events");
+    setHubOpen(true);
+  }, [standingsRequested, targetEventId]);
+
+  useEffect(() => {
+    if (!standingsRequested) return;
+    setActiveTab("standings");
+    setHubOpen(true);
+  }, [standingsRequested]);
+
+  useEffect(() => {
+    const shouldFocusEvent = Boolean(targetEvent && !standingsRequested && hubOpen && activeTab === "events");
+    const shouldFocusStandings = standingsRequested && hubOpen && activeTab === "standings";
+    if (!shouldFocusEvent && !shouldFocusStandings) return undefined;
+
+    let settleFrame = 0;
+    const layoutFrame = requestAnimationFrame(() => {
+      settleFrame = requestAnimationFrame(() => {
+        const target = shouldFocusStandings ? standingsRef.current : hubRef.current;
+        target?.scrollIntoView({ behavior: "smooth", block: shouldFocusStandings ? "start" : "center" });
+        target?.focus({ preventScroll: true });
+      });
+    });
+    return () => {
+      cancelAnimationFrame(layoutFrame);
+      cancelAnimationFrame(settleFrame);
+    };
+  }, [activeTab, hubOpen, standingsRequested, targetEvent]);
+
+  if (loading && !history.events.length) {
+    return (
+      <section className="surface-card picks-state-card" aria-live="polite">
+        <strong>Loading season standings…</strong>
+      </section>
+    );
+  }
+
+  if (!history.events.length) {
+    return (
+      <section className="surface-card picks-history-empty">
+        <strong>No completed Picks {football ? "weeks" : "events"} yet.</strong>
+        <p>The group table and {football ? "week" : "event"} archive will appear after the first scored {football ? "slate" : "card"}.</p>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      ref={hubRef}
+      id="picks-season-standings"
+      className="picks-history picks-season-section"
+      aria-labelledby="picks-season-title"
+      aria-current={targetEvent ? "true" : undefined}
+      tabIndex={targetEvent ? -1 : undefined}
+    >
+      <details
+        className="surface-card picks-season-hub"
+        open={hubOpen}
+        onToggle={(toggleEvent) => setHubOpen(toggleEvent.currentTarget.open)}
+      >
+        <summary className="picks-season-hub__summary"
+          onClick={(event) => {
+            event.preventDefault();
+            setHubOpen((open) => !open);
+          }}
+        >
+          <div className="picks-season-hub__identity">
+            <span>{football ? `${season} FOOTBALL SEASON` : `${season} SEASON`}</span>
+            <strong id="picks-season-title">Picks Results Archive</strong>
+            <small>
+              {football ? "SEASON TOTAL · " : ""}{record.correct}-{record.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {recordPoints} PTS
+            </small>
+          </div>
+          <div className="picks-season-hub__meta">
+            <span>{standings.length} {standings.length === 1 ? "PLAYER" : "PLAYERS"}</span>
+            <em>{football ? "FINISHED WEEKS" : "FINISHED EVENTS"}</em>
+          </div>
+        </summary>
+
+        {hubOpen ? <div className="picks-season-hub__body">
+          <div className="picks-season-tabs" role="tablist" aria-label="Picks season views">
+            <Link className="picks-season-champ-link" to={"/championship/" + sport + "?tab=picks"} aria-label="Open Picks Championship leaderboard">CHAMPIONSHIP ↗</Link>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === "events"}
+              className={activeTab === "events" ? "is-active" : ""}
+              onClick={() => setActiveTab("events")}
+            >
+              {archivePlural}
+            </button>
+          </div>
+
+          {activeTab === "standings" ? (
+            <section
+              ref={standingsRef}
+              id="picks-season-leaderboard"
+              className="picks-season-standings"
+              role="tabpanel"
+              aria-label="Group season standings"
+              tabIndex={standingsRequested ? -1 : undefined}
+            >
+              <div className="picks-season-panel-heading">
+                <div>
+                  <span>GROUP STANDINGS</span>
+                  <strong>Season leaderboard</strong>
+                </div>
+                <small>{standings.length} PLAYERS · {history.events.length} {history.events.length === 1 ? archiveSingular : archivePlural}</small>
+              </div>
+              <div className="picks-season-standing-list">
+                {standings.map((standing) => {
+                  const points = standingPoints(standing);
+                  const pointGap = Math.max(0, leaderPoints - points);
+                  const progress = leaderPoints > 0
+                    ? Math.round((points / leaderPoints) * 100)
+                    : 0;
+                  const missedEvents = Math.max(0, history.events.length - standing.eventsEntered);
+                  const podiumLabel = rankContext(standing.rank);
+
+                  return (
+                    <article
+                      className={standingClassName(standing)}
+                      key={standing.profileId ?? standing.displayName}
+                    >
+                      <div className="picks-season-standing__progress" aria-hidden="true">
+                        <span style={{ width: `${progress}%` }} />
+                      </div>
+                      <span className="picks-season-standing__rank">
+                        <b>{groupRankLabel(standing.rank, standings)}</b>
+                        {podiumLabel ? <small>{podiumLabel}</small> : null}
+                      </span>
+                      <div className="picks-season-standing__identity">
+                        <div className="picks-season-standing__name">
+                          <strong>{standing.displayName}</strong>
+                          {standing.isCurrentUser ? <em>YOU</em> : null}
+                        </div>
+                        <small>
+                          {standing.correct}-{standing.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(standing.correct, standing.incorrect)} WIN
+                          {standing.missing ? ` · ${standing.missing} MISSED` : ""}
+                        </small>
+                      </div>
+                      <div className="picks-season-standing__score">
+                        <b>{points} PTS</b>
+                        <em>{pointGap === 0 ? "LEADER" : `${pointGap} PTS BACK`}</em>
+                        <small>
+                          +{standing.lockBonus} LOCK · {standing.eventsEntered}/{history.events.length} {archivePlural}
+                          {missedEvents ? ` · ${missedEvents} ${missedEvents === 1 ? archiveSingular : archivePlural} MISSED` : ""}
+                        </small>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          ) : (
+            <section className="picks-season-events" role="tabpanel" aria-label={`Completed ${football ? "week" : "event"} archive`}>
+              <div className="picks-season-panel-heading">
+                <div>
+                  {football ? <span>WEEK ARCHIVE</span> : <span>EVENT ARCHIVE</span>}
+                  <strong>{history.events.length} COMPLETED {history.events.length === 1 ? archiveSingular : archivePlural}</strong>
+                </div>
+                <small>NEWEST FIRST</small>
+              </div>
+              {targetIsLatest && recapRequested ? (
+                <RecapComponent event={latestEvent} requestedOpen />
+              ) : (
+                <RecapComponent event={latestEvent} />
+              )}
+              {olderEvents.length ? (
+                <div className="picks-recap-list">
+                  {olderEvents.map((event) => (
+                    <RecapComponent
+                      event={event}
+                      requestedOpen={recapRequested && event.eventId === targetEventId}
+                      key={event.eventId}
+                    />
+                  ))}
+                </div>
+              ) : null}
+            </section>
+          )}
+        </div> : null}
+      </details>
+    </section>
+  );
+}

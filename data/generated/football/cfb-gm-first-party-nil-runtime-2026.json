@@ -1,0 +1,1879 @@
+{
+  "schemaVersion": 1,
+  "source": "gm-2026-first-party-nil-market.json",
+  "population": 468,
+  "players": [
+    {
+      "id": "alabama|brayhubbard",
+      "year1USD": 1100000
+    },
+    {
+      "id": "alabama|calebwoodson",
+      "year1USD": 775000
+    },
+    {
+      "id": "alabama|danielhill",
+      "year1USD": 575000
+    },
+    {
+      "id": "alabama|devanthompkins",
+      "year1USD": 825000
+    },
+    {
+      "id": "alabama|dijonleejr",
+      "year1USD": 875000
+    },
+    {
+      "id": "alabama|ejcrowell",
+      "year1USD": 575000
+    },
+    {
+      "id": "alabama|kalebedwards",
+      "year1USD": 475000
+    },
+    {
+      "id": "alabama|keelonrussell",
+      "year1USD": 2300000
+    },
+    {
+      "id": "alabama|keonsabb",
+      "year1USD": 725000
+    },
+    {
+      "id": "alabama|londonsimmons",
+      "year1USD": 375000
+    },
+    {
+      "id": "alabama|lotzeirbrooks",
+      "year1USD": 575000
+    },
+    {
+      "id": "alabama|lukemetz",
+      "year1USD": 725000
+    },
+    {
+      "id": "alabama|redmorgan",
+      "year1USD": 650000
+    },
+    {
+      "id": "alabama|ricoscott",
+      "year1USD": 550000
+    },
+    {
+      "id": "alabama|ryancolemanwilliams",
+      "year1USD": 2150000
+    },
+    {
+      "id": "alabama|terrancegreen",
+      "year1USD": 600000
+    },
+    {
+      "id": "alabama|traeshawnbrown",
+      "year1USD": 250000
+    },
+    {
+      "id": "alabama|yhonzaepierre",
+      "year1USD": 925000
+    },
+    {
+      "id": "alabama|zabienbrown",
+      "year1USD": 1000000
+    },
+    {
+      "id": "alabama|zyangibson",
+      "year1USD": 225000
+    },
+    {
+      "id": "boise-state|akeemwright",
+      "year1USD": 625000
+    },
+    {
+      "id": "boise-state|benford",
+      "year1USD": 475000
+    },
+    {
+      "id": "boise-state|boenphelps",
+      "year1USD": 550000
+    },
+    {
+      "id": "boise-state|cambates",
+      "year1USD": 450000
+    },
+    {
+      "id": "boise-state|dylanriley",
+      "year1USD": 925000
+    },
+    {
+      "id": "boise-state|jadenmickey",
+      "year1USD": 525000
+    },
+    {
+      "id": "boise-state|jaydenvirginmorgan",
+      "year1USD": 750000
+    },
+    {
+      "id": "boise-state|jericowashingtonjr",
+      "year1USD": 550000
+    },
+    {
+      "id": "boise-state|loganbrantley",
+      "year1USD": 250000
+    },
+    {
+      "id": "boise-state|madduxmadsen",
+      "year1USD": 1375000
+    },
+    {
+      "id": "boise-state|mattwagner",
+      "year1USD": 425000
+    },
+    {
+      "id": "boise-state|maxstege",
+      "year1USD": 550000
+    },
+    {
+      "id": "boise-state|mikaioedward",
+      "year1USD": 375000
+    },
+    {
+      "id": "boise-state|raseanjones",
+      "year1USD": 225000
+    },
+    {
+      "id": "boise-state|romantillmon",
+      "year1USD": 525000
+    },
+    {
+      "id": "boise-state|sherrodsmith",
+      "year1USD": 425000
+    },
+    {
+      "id": "boise-state|siregaines",
+      "year1USD": 625000
+    },
+    {
+      "id": "boise-state|travisanderson",
+      "year1USD": 250000
+    },
+    {
+      "id": "byu|bearbachmeier",
+      "year1USD": 2250000
+    },
+    {
+      "id": "byu|bodieschoonover",
+      "year1USD": 575000
+    },
+    {
+      "id": "byu|cadeuluave",
+      "year1USD": 925000
+    },
+    {
+      "id": "byu|cannondevries",
+      "year1USD": 250000
+    },
+    {
+      "id": "byu|evanjohnson",
+      "year1USD": 825000
+    },
+    {
+      "id": "byu|faletausatuala",
+      "year1USD": 1025000
+    },
+    {
+      "id": "byu|hunterclegg",
+      "year1USD": 250000
+    },
+    {
+      "id": "byu|jojophillips",
+      "year1USD": 425000
+    },
+    {
+      "id": "byu|keanutanuvasa",
+      "year1USD": 625000
+    },
+    {
+      "id": "byu|kylerkasper",
+      "year1USD": 375000
+    },
+    {
+      "id": "byu|legendglasker",
+      "year1USD": 225000
+    },
+    {
+      "id": "byu|ljmartin",
+      "year1USD": 1825000
+    },
+    {
+      "id": "byu|nusitaumoepeau",
+      "year1USD": 225000
+    },
+    {
+      "id": "byu|prestonrex",
+      "year1USD": 250000
+    },
+    {
+      "id": "byu|tausiliakana",
+      "year1USD": 525000
+    },
+    {
+      "id": "byu|therrianalexanderiii",
+      "year1USD": 325000
+    },
+    {
+      "id": "byu|tommyprassas",
+      "year1USD": 450000
+    },
+    {
+      "id": "byu|walkerlyons",
+      "year1USD": 500000
+    },
+    {
+      "id": "florida|aaronphilo",
+      "year1USD": 1600000
+    },
+    {
+      "id": "florida|amirjackson",
+      "year1USD": 525000
+    },
+    {
+      "id": "florida|benhanksiii",
+      "year1USD": 575000
+    },
+    {
+      "id": "florida|brendanbett",
+      "year1USD": 625000
+    },
+    {
+      "id": "florida|brycethornton",
+      "year1USD": 625000
+    },
+    {
+      "id": "florida|cormanimcclain",
+      "year1USD": 525000
+    },
+    {
+      "id": "florida|dallaswilson",
+      "year1USD": 925000
+    },
+    {
+      "id": "florida|djcoleman",
+      "year1USD": 625000
+    },
+    {
+      "id": "florida|dukeclark",
+      "year1USD": 525000
+    },
+    {
+      "id": "florida|ericsingletonjr",
+      "year1USD": 750000
+    },
+    {
+      "id": "florida|evanpryor",
+      "year1USD": 225000
+    },
+    {
+      "id": "florida|jadanbaugh",
+      "year1USD": 1650000
+    },
+    {
+      "id": "florida|jadenrobinson",
+      "year1USD": 625000
+    },
+    {
+      "id": "florida|jaydenwoods",
+      "year1USD": 1000000
+    },
+    {
+      "id": "florida|jeramiahmccloud",
+      "year1USD": 550000
+    },
+    {
+      "id": "florida|kamranjames",
+      "year1USD": 475000
+    },
+    {
+      "id": "florida|kanyeclark",
+      "year1USD": 550000
+    },
+    {
+      "id": "florida|mylesgraham",
+      "year1USD": 850000
+    },
+    {
+      "id": "florida|vernellbrowniii",
+      "year1USD": 950000
+    },
+    {
+      "id": "georgia|chaunceybowens",
+      "year1USD": 625000
+    },
+    {
+      "id": "georgia|chriscole",
+      "year1USD": 875000
+    },
+    {
+      "id": "georgia|craigdandridge",
+      "year1USD": 450000
+    },
+    {
+      "id": "georgia|demellojones",
+      "year1USD": 525000
+    },
+    {
+      "id": "georgia|elijahgriffin",
+      "year1USD": 1025000
+    },
+    {
+      "id": "georgia|ellisrobinsoniv",
+      "year1USD": 1450000
+    },
+    {
+      "id": "georgia|gabeharrisjr",
+      "year1USD": 600000
+    },
+    {
+      "id": "georgia|gunnerstockton",
+      "year1USD": 3100000
+    },
+    {
+      "id": "georgia|isiahcanion",
+      "year1USD": 525000
+    },
+    {
+      "id": "georgia|jordanhall",
+      "year1USD": 525000
+    },
+    {
+      "id": "georgia|khalilbarnes",
+      "year1USD": 775000
+    },
+    {
+      "id": "georgia|kjbolden",
+      "year1USD": 1425000
+    },
+    {
+      "id": "georgia|kyronjones",
+      "year1USD": 375000
+    },
+    {
+      "id": "georgia|lawsonluckie",
+      "year1USD": 625000
+    },
+    {
+      "id": "georgia|natefrazier",
+      "year1USD": 1200000
+    },
+    {
+      "id": "georgia|quintaviusjohnson",
+      "year1USD": 650000
+    },
+    {
+      "id": "georgia|raylenwilson",
+      "year1USD": 775000
+    },
+    {
+      "id": "georgia|sacoviewhitehelton",
+      "year1USD": 300000
+    },
+    {
+      "id": "georgia|talyntaylor",
+      "year1USD": 725000
+    },
+    {
+      "id": "houston|amarethomas",
+      "year1USD": 1175000
+    },
+    {
+      "id": "houston|ashtonporter",
+      "year1USD": 325000
+    },
+    {
+      "id": "houston|brandonmackii",
+      "year1USD": 650000
+    },
+    {
+      "id": "houston|connerweigman",
+      "year1USD": 1900000
+    },
+    {
+      "id": "houston|demarionthomas",
+      "year1USD": 375000
+    },
+    {
+      "id": "houston|jadenyates",
+      "year1USD": 625000
+    },
+    {
+      "id": "houston|jalenmayo",
+      "year1USD": 475000
+    },
+    {
+      "id": "houston|javionwhite",
+      "year1USD": 625000
+    },
+    {
+      "id": "houston|jordanallen",
+      "year1USD": 550000
+    },
+    {
+      "id": "houston|kentrellwebb",
+      "year1USD": 650000
+    },
+    {
+      "id": "houston|khalillaufau",
+      "year1USD": 650000
+    },
+    {
+      "id": "houston|kobyyoung",
+      "year1USD": 325000
+    },
+    {
+      "id": "houston|makhihughes",
+      "year1USD": 825000
+    },
+    {
+      "id": "houston|patrickovermyer",
+      "year1USD": 700000
+    },
+    {
+      "id": "houston|reshaunsanfordii",
+      "year1USD": 325000
+    },
+    {
+      "id": "houston|sionefotu",
+      "year1USD": 625000
+    },
+    {
+      "id": "houston|trentwalker",
+      "year1USD": 875000
+    },
+    {
+      "id": "houston|willjames",
+      "year1USD": 800000
+    },
+    {
+      "id": "indiana|amareferrell",
+      "year1USD": 750000
+    },
+    {
+      "id": "indiana|andrewbarker",
+      "year1USD": 225000
+    },
+    {
+      "id": "indiana|byronbaldwinjr",
+      "year1USD": 275000
+    },
+    {
+      "id": "indiana|charliebecker",
+      "year1USD": 1050000
+    },
+    {
+      "id": "indiana|davionchandler",
+      "year1USD": 275000
+    },
+    {
+      "id": "indiana|isaiahjones",
+      "year1USD": 675000
+    },
+    {
+      "id": "indiana|jamarisharpe",
+      "year1USD": 725000
+    },
+    {
+      "id": "indiana|joshburnham",
+      "year1USD": 575000
+    },
+    {
+      "id": "indiana|joshhoover",
+      "year1USD": 3200000
+    },
+    {
+      "id": "indiana|leebeebejr",
+      "year1USD": 675000
+    },
+    {
+      "id": "indiana|mariolandino",
+      "year1USD": 675000
+    },
+    {
+      "id": "indiana|nickmarsh",
+      "year1USD": 1750000
+    },
+    {
+      "id": "indiana|prestonzachman",
+      "year1USD": 275000
+    },
+    {
+      "id": "indiana|rolijahhardy",
+      "year1USD": 1050000
+    },
+    {
+      "id": "indiana|rylandgandy",
+      "year1USD": 450000
+    },
+    {
+      "id": "indiana|tobiosunsanmi",
+      "year1USD": 475000
+    },
+    {
+      "id": "indiana|turborichard",
+      "year1USD": 875000
+    },
+    {
+      "id": "indiana|tylermorris",
+      "year1USD": 450000
+    },
+    {
+      "id": "indiana|tyriquetucker",
+      "year1USD": 1225000
+    },
+    {
+      "id": "iowa|anthonyhawkins",
+      "year1USD": 650000
+    },
+    {
+      "id": "iowa|braedenjackson",
+      "year1USD": 525000
+    },
+    {
+      "id": "iowa|cambuffington",
+      "year1USD": 825000
+    },
+    {
+      "id": "iowa|deshaunlee",
+      "year1USD": 675000
+    },
+    {
+      "id": "iowa|djvonnahme",
+      "year1USD": 850000
+    },
+    {
+      "id": "iowa|evanjames",
+      "year1USD": 625000
+    },
+    {
+      "id": "iowa|hankbrown",
+      "year1USD": 1175000
+    },
+    {
+      "id": "iowa|ioseepenesa",
+      "year1USD": 425000
+    },
+    {
+      "id": "iowa|jaydenmontgomery",
+      "year1USD": 575000
+    },
+    {
+      "id": "iowa|jaylenwatson",
+      "year1USD": 575000
+    },
+    {
+      "id": "iowa|kahmaribrown",
+      "year1USD": 775000
+    },
+    {
+      "id": "iowa|kamarimoulton",
+      "year1USD": 825000
+    },
+    {
+      "id": "iowa|kennethmerrieweather",
+      "year1USD": 375000
+    },
+    {
+      "id": "iowa|ljphillipsjr",
+      "year1USD": 725000
+    },
+    {
+      "id": "iowa|rashadgodfreyjr",
+      "year1USD": 275000
+    },
+    {
+      "id": "iowa|reecevanderzee",
+      "year1USD": 600000
+    },
+    {
+      "id": "iowa|tonydiaz",
+      "year1USD": 675000
+    },
+    {
+      "id": "iowa|zachlutmer",
+      "year1USD": 875000
+    },
+    {
+      "id": "lsu|dashawnspears",
+      "year1USD": 475000
+    },
+    {
+      "id": "lsu|deucegeralds",
+      "year1USD": 300000
+    },
+    {
+      "id": "lsu|dilinjones",
+      "year1USD": 350000
+    },
+    {
+      "id": "lsu|djpickett",
+      "year1USD": 1150000
+    },
+    {
+      "id": "lsu|dylancarpenter",
+      "year1USD": 350000
+    },
+    {
+      "id": "lsu|eugenewilsoniii",
+      "year1USD": 850000
+    },
+    {
+      "id": "lsu|jacksonharris",
+      "year1USD": 975000
+    },
+    {
+      "id": "lsu|jordanross",
+      "year1USD": 450000
+    },
+    {
+      "id": "lsu|pjwoodland",
+      "year1USD": 750000
+    },
+    {
+      "id": "lsu|princewillumanmielen",
+      "year1USD": 1150000
+    },
+    {
+      "id": "lsu|samleavitt",
+      "year1USD": 3850000
+    },
+    {
+      "id": "lsu|stacygage",
+      "year1USD": 200000
+    },
+    {
+      "id": "lsu|tamarcuscooley",
+      "year1USD": 800000
+    },
+    {
+      "id": "lsu|tjdottery",
+      "year1USD": 975000
+    },
+    {
+      "id": "lsu|treydezgreen",
+      "year1USD": 925000
+    },
+    {
+      "id": "lsu|tybenefield",
+      "year1USD": 750000
+    },
+    {
+      "id": "lsu|whitweeks",
+      "year1USD": 1100000
+    },
+    {
+      "id": "lsu|winstonwatkinsjr",
+      "year1USD": 575000
+    },
+    {
+      "id": "miami|ahmadmoten",
+      "year1USD": 900000
+    },
+    {
+      "id": "miami|armondoblount",
+      "year1USD": 475000
+    },
+    {
+      "id": "miami|brycefitzgerald",
+      "year1USD": 975000
+    },
+    {
+      "id": "miami|charmarbrown",
+      "year1USD": 750000
+    },
+    {
+      "id": "miami|chasesmith",
+      "year1USD": 375000
+    },
+    {
+      "id": "miami|cooperbarkate",
+      "year1USD": 925000
+    },
+    {
+      "id": "miami|damaribrown",
+      "year1USD": 400000
+    },
+    {
+      "id": "miami|damonwilsonii",
+      "year1USD": 1275000
+    },
+    {
+      "id": "miami|darianmensah",
+      "year1USD": 4350000
+    },
+    {
+      "id": "miami|elijalofton",
+      "year1USD": 525000
+    },
+    {
+      "id": "miami|javianmallory",
+      "year1USD": 225000
+    },
+    {
+      "id": "miami|joshuamoore",
+      "year1USD": 500000
+    },
+    {
+      "id": "miami|malachitoney",
+      "year1USD": 2925000
+    },
+    {
+      "id": "miami|markfletcherjr",
+      "year1USD": 1000000
+    },
+    {
+      "id": "miami|marquiselightfoot",
+      "year1USD": 550000
+    },
+    {
+      "id": "miami|mohamedtoure",
+      "year1USD": 475000
+    },
+    {
+      "id": "miami|omarthornton",
+      "year1USD": 825000
+    },
+    {
+      "id": "miami|xavierlucas",
+      "year1USD": 750000
+    },
+    {
+      "id": "miami|zechariahpoyser",
+      "year1USD": 900000
+    },
+    {
+      "id": "mississippi-state|amareewilliams",
+      "year1USD": 900000
+    },
+    {
+      "id": "mississippi-state|anthonyevansiii",
+      "year1USD": 300000
+    },
+    {
+      "id": "mississippi-state|djreed",
+      "year1USD": 375000
+    },
+    {
+      "id": "mississippi-state|fluffbothwell",
+      "year1USD": 800000
+    },
+    {
+      "id": "mississippi-state|isaacsmith",
+      "year1USD": 775000
+    },
+    {
+      "id": "mississippi-state|jjhill",
+      "year1USD": 300000
+    },
+    {
+      "id": "mississippi-state|jalensmith",
+      "year1USD": 450000
+    },
+    {
+      "id": "mississippi-state|jaraybledsoe",
+      "year1USD": 600000
+    },
+    {
+      "id": "mississippi-state|jardingilbert",
+      "year1USD": 575000
+    },
+    {
+      "id": "mississippi-state|jettjefferson",
+      "year1USD": 575000
+    },
+    {
+      "id": "mississippi-state|kamariotaylor",
+      "year1USD": 1750000
+    },
+    {
+      "id": "mississippi-state|kelleyjones",
+      "year1USD": 975000
+    },
+    {
+      "id": "mississippi-state|kolinwilson",
+      "year1USD": 225000
+    },
+    {
+      "id": "mississippi-state|marcuswilliams",
+      "year1USD": 525000
+    },
+    {
+      "id": "mississippi-state|marquisjohnson",
+      "year1USD": 525000
+    },
+    {
+      "id": "mississippi-state|samwest",
+      "year1USD": 275000
+    },
+    {
+      "id": "mississippi-state|sanfriscomagee",
+      "year1USD": 650000
+    },
+    {
+      "id": "mississippi-state|willwhitson",
+      "year1USD": 400000
+    },
+    {
+      "id": "mississippi-state|zakaritillman",
+      "year1USD": 400000
+    },
+    {
+      "id": "mississippi-state|zionragins",
+      "year1USD": 575000
+    },
+    {
+      "id": "missouri|ahmadhardy",
+      "year1USD": 1725000
+    },
+    {
+      "id": "missouri|austinsimmons",
+      "year1USD": 1150000
+    },
+    {
+      "id": "missouri|brettnorfleet",
+      "year1USD": 650000
+    },
+    {
+      "id": "missouri|caydenlee",
+      "year1USD": 850000
+    },
+    {
+      "id": "missouri|chrisgravesjr",
+      "year1USD": 575000
+    },
+    {
+      "id": "missouri|daedenhopkins",
+      "year1USD": 925000
+    },
+    {
+      "id": "missouri|donovanolugbode",
+      "year1USD": 900000
+    },
+    {
+      "id": "missouri|jalenmarshall",
+      "year1USD": 350000
+    },
+    {
+      "id": "missouri|jamalroberts",
+      "year1USD": 925000
+    },
+    {
+      "id": "missouri|kensleylouidorfaustin",
+      "year1USD": 525000
+    },
+    {
+      "id": "missouri|langdenkitchen",
+      "year1USD": 400000
+    },
+    {
+      "id": "missouri|marquisgracial",
+      "year1USD": 400000
+    },
+    {
+      "id": "missouri|naeshaunmontgomery",
+      "year1USD": 350000
+    },
+    {
+      "id": "missouri|nicholasrodriguez",
+      "year1USD": 725000
+    },
+    {
+      "id": "missouri|robertwoodyardjr",
+      "year1USD": 700000
+    },
+    {
+      "id": "missouri|santanabanner",
+      "year1USD": 500000
+    },
+    {
+      "id": "missouri|sionelaulea",
+      "year1USD": 400000
+    },
+    {
+      "id": "missouri|trajengreco",
+      "year1USD": 450000
+    },
+    {
+      "id": "missouri|xaishaunedwards",
+      "year1USD": 525000
+    },
+    {
+      "id": "notre-dame|adonshuler",
+      "year1USD": 1025000
+    },
+    {
+      "id": "notre-dame|aneyaswilliams",
+      "year1USD": 650000
+    },
+    {
+      "id": "notre-dame|boubacartraore",
+      "year1USD": 875000
+    },
+    {
+      "id": "notre-dame|brauntaejohnson",
+      "year1USD": 875000
+    },
+    {
+      "id": "notre-dame|bryceyoung",
+      "year1USD": 600000
+    },
+    {
+      "id": "notre-dame|christiangray",
+      "year1USD": 700000
+    },
+    {
+      "id": "notre-dame|cjcarr",
+      "year1USD": 3050000
+    },
+    {
+      "id": "notre-dame|cooperflanagan",
+      "year1USD": 450000
+    },
+    {
+      "id": "notre-dame|djmckinney",
+      "year1USD": 625000
+    },
+    {
+      "id": "notre-dame|draykbowen",
+      "year1USD": 1050000
+    },
+    {
+      "id": "notre-dame|jaidenausberry",
+      "year1USD": 650000
+    },
+    {
+      "id": "notre-dame|jordanfaison",
+      "year1USD": 900000
+    },
+    {
+      "id": "notre-dame|keonkeeley",
+      "year1USD": 475000
+    },
+    {
+      "id": "notre-dame|kyngstonnviliamuasa",
+      "year1USD": 800000
+    },
+    {
+      "id": "notre-dame|leonardmoore",
+      "year1USD": 1725000
+    },
+    {
+      "id": "notre-dame|luketalich",
+      "year1USD": 550000
+    },
+    {
+      "id": "notre-dame|micahgilbert",
+      "year1USD": 875000
+    },
+    {
+      "id": "notre-dame|mylangraham",
+      "year1USD": 400000
+    },
+    {
+      "id": "notre-dame|nolanjamesjr",
+      "year1USD": 600000
+    },
+    {
+      "id": "ohio-state|bojackson",
+      "year1USD": 1250000
+    },
+    {
+      "id": "ohio-state|brandoninniss",
+      "year1USD": 850000
+    },
+    {
+      "id": "ohio-state|chrishenryjr",
+      "year1USD": 1100000
+    },
+    {
+      "id": "ohio-state|christianalliegro",
+      "year1USD": 600000
+    },
+    {
+      "id": "ohio-state|devinmccuin",
+      "year1USD": 750000
+    },
+    {
+      "id": "ohio-state|devinsanchez",
+      "year1USD": 975000
+    },
+    {
+      "id": "ohio-state|earllittlejr",
+      "year1USD": 825000
+    },
+    {
+      "id": "ohio-state|eddrickhouston",
+      "year1USD": 650000
+    },
+    {
+      "id": "ohio-state|jakobijackson",
+      "year1USD": 375000
+    },
+    {
+      "id": "ohio-state|jaytimmons",
+      "year1USD": 375000
+    },
+    {
+      "id": "ohio-state|jaylenmcclain",
+      "year1USD": 700000
+    },
+    {
+      "id": "ohio-state|jeremiahsmith",
+      "year1USD": 5000000
+    },
+    {
+      "id": "ohio-state|jermainemathewsjr",
+      "year1USD": 775000
+    },
+    {
+      "id": "ohio-state|johnwalker",
+      "year1USD": 575000
+    },
+    {
+      "id": "ohio-state|juliansayin",
+      "year1USD": 3125000
+    },
+    {
+      "id": "ohio-state|kenyattajacksonjr",
+      "year1USD": 850000
+    },
+    {
+      "id": "ohio-state|nateroberts",
+      "year1USD": 450000
+    },
+    {
+      "id": "ohio-state|paytonpierce",
+      "year1USD": 700000
+    },
+    {
+      "id": "ohio-state|rileypettijohn",
+      "year1USD": 625000
+    },
+    {
+      "id": "oklahoma-state|calebhawkins",
+      "year1USD": 1125000
+    },
+    {
+      "id": "oklahoma-state|carsonkolb",
+      "year1USD": 200000
+    },
+    {
+      "id": "oklahoma-state|chrisbarnes",
+      "year1USD": 750000
+    },
+    {
+      "id": "oklahoma-state|christianbodnar",
+      "year1USD": 550000
+    },
+    {
+      "id": "oklahoma-state|drewmestemaker",
+      "year1USD": 2500000
+    },
+    {
+      "id": "oklahoma-state|evanjackson",
+      "year1USD": 525000
+    },
+    {
+      "id": "oklahoma-state|imanoates",
+      "year1USD": 450000
+    },
+    {
+      "id": "oklahoma-state|isaiahchisom",
+      "year1USD": 775000
+    },
+    {
+      "id": "oklahoma-state|jaleeljohnson",
+      "year1USD": 400000
+    },
+    {
+      "id": "oklahoma-state|jameswilliams",
+      "year1USD": 550000
+    },
+    {
+      "id": "oklahoma-state|justinbowick",
+      "year1USD": 575000
+    },
+    {
+      "id": "oklahoma-state|ladainianfields",
+      "year1USD": 525000
+    },
+    {
+      "id": "oklahoma-state|mohorn",
+      "year1USD": 425000
+    },
+    {
+      "id": "oklahoma-state|quintonhammonds",
+      "year1USD": 550000
+    },
+    {
+      "id": "oklahoma-state|saadiqclements",
+      "year1USD": 525000
+    },
+    {
+      "id": "oklahoma-state|tateromney",
+      "year1USD": 275000
+    },
+    {
+      "id": "oklahoma-state|terrencelewis",
+      "year1USD": 375000
+    },
+    {
+      "id": "oklahoma-state|trepageiii",
+      "year1USD": 525000
+    },
+    {
+      "id": "oklahoma-state|wyattyoung",
+      "year1USD": 1050000
+    },
+    {
+      "id": "ole-miss|antoniokite",
+      "year1USD": 575000
+    },
+    {
+      "id": "ole-miss|calebodom",
+      "year1USD": 425000
+    },
+    {
+      "id": "ole-miss|deucealexander",
+      "year1USD": 825000
+    },
+    {
+      "id": "ole-miss|edwinjoseph",
+      "year1USD": 600000
+    },
+    {
+      "id": "ole-miss|horatiofields",
+      "year1USD": 350000
+    },
+    {
+      "id": "ole-miss|jamariousbrown",
+      "year1USD": 600000
+    },
+    {
+      "id": "ole-miss|jaylonbraxton",
+      "year1USD": 550000
+    },
+    {
+      "id": "ole-miss|joenelaguero",
+      "year1USD": 575000
+    },
+    {
+      "id": "ole-miss|johntaycookii",
+      "year1USD": 675000
+    },
+    {
+      "id": "ole-miss|kamfranklin",
+      "year1USD": 750000
+    },
+    {
+      "id": "ole-miss|keatonthomas",
+      "year1USD": 900000
+    },
+    {
+      "id": "ole-miss|kewanlacy",
+      "year1USD": 1775000
+    },
+    {
+      "id": "ole-miss|lukeferrelli",
+      "year1USD": 850000
+    },
+    {
+      "id": "ole-miss|lukehasz",
+      "year1USD": 375000
+    },
+    {
+      "id": "ole-miss|makhifrazier",
+      "year1USD": 525000
+    },
+    {
+      "id": "ole-miss|sharifdenson",
+      "year1USD": 625000
+    },
+    {
+      "id": "ole-miss|suntarineperkins",
+      "year1USD": 1050000
+    },
+    {
+      "id": "ole-miss|traylonray",
+      "year1USD": 350000
+    },
+    {
+      "id": "ole-miss|trinidadchambliss",
+      "year1USD": 3950000
+    },
+    {
+      "id": "ole-miss|willecholes",
+      "year1USD": 1175000
+    },
+    {
+      "id": "oregon|aaronflowers",
+      "year1USD": 775000
+    },
+    {
+      "id": "oregon|amauriwashington",
+      "year1USD": 875000
+    },
+    {
+      "id": "oregon|bearalexander",
+      "year1USD": 1000000
+    },
+    {
+      "id": "oregon|brandonfinneyjr",
+      "year1USD": 1000000
+    },
+    {
+      "id": "oregon|carlwilliamsiv",
+      "year1USD": 350000
+    },
+    {
+      "id": "oregon|dakorienmoore",
+      "year1USD": 1175000
+    },
+    {
+      "id": "oregon|dantemoore",
+      "year1USD": 4500000
+    },
+    {
+      "id": "oregon|dierrehilljr",
+      "year1USD": 675000
+    },
+    {
+      "id": "oregon|elijahrushing",
+      "year1USD": 300000
+    },
+    {
+      "id": "oregon|evanstewart",
+      "year1USD": 900000
+    },
+    {
+      "id": "oregon|ifyobidegwu",
+      "year1USD": 675000
+    },
+    {
+      "id": "oregon|jamarijohnson",
+      "year1USD": 850000
+    },
+    {
+      "id": "oregon|jeremiahmcclellan",
+      "year1USD": 825000
+    },
+    {
+      "id": "oregon|jordondavison",
+      "year1USD": 850000
+    },
+    {
+      "id": "oregon|koiperich",
+      "year1USD": 1200000
+    },
+    {
+      "id": "oregon|matayouiagalelei",
+      "year1USD": 1325000
+    },
+    {
+      "id": "oregon|messiahhampton",
+      "year1USD": 225000
+    },
+    {
+      "id": "oregon|teitumtuioti",
+      "year1USD": 1250000
+    },
+    {
+      "id": "pittsburgh|alexsanfordjr",
+      "year1USD": 575000
+    },
+    {
+      "id": "pittsburgh|carsonkent",
+      "year1USD": 300000
+    },
+    {
+      "id": "pittsburgh|cataurushicks",
+      "year1USD": 475000
+    },
+    {
+      "id": "pittsburgh|censerelee",
+      "year1USD": 425000
+    },
+    {
+      "id": "pittsburgh|crucebrookins",
+      "year1USD": 600000
+    },
+    {
+      "id": "pittsburgh|damonfergusonjr",
+      "year1USD": 450000
+    },
+    {
+      "id": "pittsburgh|demetricemccray",
+      "year1USD": 225000
+    },
+    {
+      "id": "pittsburgh|holdengeriner",
+      "year1USD": 650000
+    },
+    {
+      "id": "pittsburgh|isaiahneal",
+      "year1USD": 600000
+    },
+    {
+      "id": "pittsburgh|jaedenmoore",
+      "year1USD": 225000
+    },
+    {
+      "id": "pittsburgh|jakyrianturner",
+      "year1USD": 775000
+    },
+    {
+      "id": "pittsburgh|jeremiahmarcelin",
+      "year1USD": 225000
+    },
+    {
+      "id": "pittsburgh|jimmyscott",
+      "year1USD": 775000
+    },
+    {
+      "id": "pittsburgh|joshguerrier",
+      "year1USD": 400000
+    },
+    {
+      "id": "pittsburgh|raionstrader",
+      "year1USD": 625000
+    },
+    {
+      "id": "pittsburgh|rashanmurray",
+      "year1USD": 425000
+    },
+    {
+      "id": "pittsburgh|shawnleejr",
+      "year1USD": 950000
+    },
+    {
+      "id": "pittsburgh|tonykinsler",
+      "year1USD": 225000
+    },
+    {
+      "id": "pittsburgh|zachcrothers",
+      "year1USD": 350000
+    },
+    {
+      "id": "smu|aakilwashington",
+      "year1USD": 350000
+    },
+    {
+      "id": "smu|alexanderkilgore",
+      "year1USD": 675000
+    },
+    {
+      "id": "smu|brandonbooker",
+      "year1USD": 650000
+    },
+    {
+      "id": "smu|dramekcogreen",
+      "year1USD": 300000
+    },
+    {
+      "id": "smu|irasingletoniv",
+      "year1USD": 550000
+    },
+    {
+      "id": "smu|jahkailang",
+      "year1USD": 475000
+    },
+    {
+      "id": "smu|jalencooper",
+      "year1USD": 575000
+    },
+    {
+      "id": "smu|jarvislee",
+      "year1USD": 775000
+    },
+    {
+      "id": "smu|jayvonthomas",
+      "year1USD": 350000
+    },
+    {
+      "id": "smu|jimmywyrick",
+      "year1USD": 550000
+    },
+    {
+      "id": "smu|kendrickraphael",
+      "year1USD": 1000000
+    },
+    {
+      "id": "smu|kevinjennings",
+      "year1USD": 2250000
+    },
+    {
+      "id": "smu|marcellusbarnesjr",
+      "year1USD": 575000
+    },
+    {
+      "id": "smu|randypittmanjr",
+      "year1USD": 700000
+    },
+    {
+      "id": "smu|theomelinohrstrom",
+      "year1USD": 525000
+    },
+    {
+      "id": "smu|tyrenpolleyjr",
+      "year1USD": 525000
+    },
+    {
+      "id": "smu|yamirknight",
+      "year1USD": 825000
+    },
+    {
+      "id": "smu|yannicksmith",
+      "year1USD": 675000
+    },
+    {
+      "id": "tennessee|amarecampbell",
+      "year1USD": 950000
+    },
+    {
+      "id": "tennessee|arioncarter",
+      "year1USD": 800000
+    },
+    {
+      "id": "tennessee|braylonstaley",
+      "year1USD": 975000
+    },
+    {
+      "id": "tennessee|daevinhobbs",
+      "year1USD": 575000
+    },
+    {
+      "id": "tennessee|dasaahnbrame",
+      "year1USD": 375000
+    },
+    {
+      "id": "tennessee|daunemorris",
+      "year1USD": 525000
+    },
+    {
+      "id": "tennessee|dejuanlane",
+      "year1USD": 775000
+    },
+    {
+      "id": "tennessee|deseanbishop",
+      "year1USD": 1500000
+    },
+    {
+      "id": "tennessee|ethandavis",
+      "year1USD": 525000
+    },
+    {
+      "id": "tennessee|georgemacintyre",
+      "year1USD": 900000
+    },
+    {
+      "id": "tennessee|javingordon",
+      "year1USD": 550000
+    },
+    {
+      "id": "tennessee|kayinlee",
+      "year1USD": 725000
+    },
+    {
+      "id": "tennessee|mariyondye",
+      "year1USD": 975000
+    },
+    {
+      "id": "tennessee|mikematthews",
+      "year1USD": 1250000
+    },
+    {
+      "id": "tennessee|quamoss",
+      "year1USD": 700000
+    },
+    {
+      "id": "tennessee|radariousjackson",
+      "year1USD": 425000
+    },
+    {
+      "id": "tennessee|tjmetcalf",
+      "year1USD": 675000
+    },
+    {
+      "id": "tennessee|tyredmond",
+      "year1USD": 950000
+    },
+    {
+      "id": "tennessee|tyreeweathersby",
+      "year1USD": 575000
+    },
+    {
+      "id": "tennessee|xaviergilliam",
+      "year1USD": 475000
+    },
+    {
+      "id": "texas|archmanning",
+      "year1USD": 4200000
+    },
+    {
+      "id": "texas|bomascoe",
+      "year1USD": 700000
+    },
+    {
+      "id": "texas|camcoleman",
+      "year1USD": 1975000
+    },
+    {
+      "id": "texas|colinsimmons",
+      "year1USD": 2350000
+    },
+    {
+      "id": "texas|emmettmosleyv",
+      "year1USD": 800000
+    },
+    {
+      "id": "texas|gracesonlittleton",
+      "year1USD": 700000
+    },
+    {
+      "id": "texas|herokanu",
+      "year1USD": 700000
+    },
+    {
+      "id": "texas|hollywoodsmothers",
+      "year1USD": 825000
+    },
+    {
+      "id": "texas|jelanimcdonald",
+      "year1USD": 775000
+    },
+    {
+      "id": "texas|justincryer",
+      "year1USD": 675000
+    },
+    {
+      "id": "texas|kadephillips",
+      "year1USD": 600000
+    },
+    {
+      "id": "texas|kobeblack",
+      "year1USD": 600000
+    },
+    {
+      "id": "texas|maraadwatson",
+      "year1USD": 625000
+    },
+    {
+      "id": "texas|raleekbrown",
+      "year1USD": 750000
+    },
+    {
+      "id": "texas|rasheembiles",
+      "year1USD": 1000000
+    },
+    {
+      "id": "texas|ryanwingo",
+      "year1USD": 1850000
+    },
+    {
+      "id": "texas|spencershannon",
+      "year1USD": 325000
+    },
+    {
+      "id": "texas|zinaumeozulu",
+      "year1USD": 450000
+    },
+    {
+      "id": "texas-tech|ajholmesjr",
+      "year1USD": 1150000
+    },
+    {
+      "id": "texas-tech|adamtrick",
+      "year1USD": 825000
+    },
+    {
+      "id": "texas-tech|austinromaine",
+      "year1USD": 800000
+    },
+    {
+      "id": "texas-tech|benroberts",
+      "year1USD": 950000
+    },
+    {
+      "id": "texas-tech|brendenjordan",
+      "year1USD": 650000
+    },
+    {
+      "id": "texas-tech|bricepollock",
+      "year1USD": 875000
+    },
+    {
+      "id": "texas-tech|camerondickey",
+      "year1USD": 1150000
+    },
+    {
+      "id": "texas-tech|coyeakin",
+      "year1USD": 775000
+    },
+    {
+      "id": "texas-tech|davinmartin",
+      "year1USD": 525000
+    },
+    {
+      "id": "texas-tech|jkobywilliams",
+      "year1USD": 1075000
+    },
+    {
+      "id": "texas-tech|kennyjohnson",
+      "year1USD": 875000
+    },
+    {
+      "id": "texas-tech|malcolmsimmons",
+      "year1USD": 575000
+    },
+    {
+      "id": "texas-tech|malikesquerra",
+      "year1USD": 250000
+    },
+    {
+      "id": "texas-tech|mateenibirogba",
+      "year1USD": 575000
+    },
+    {
+      "id": "texas-tech|micahhudson",
+      "year1USD": 350000
+    },
+    {
+      "id": "texas-tech|peytonmorgan",
+      "year1USD": 325000
+    },
+    {
+      "id": "texas-tech|terrancecarterjr",
+      "year1USD": 1050000
+    },
+    {
+      "id": "texas-tech|treywhite",
+      "year1USD": 1100000
+    },
+    {
+      "id": "texas-tech|willhammond",
+      "year1USD": 1200000
+    },
+    {
+      "id": "ucla|amierwashington",
+      "year1USD": 325000
+    },
+    {
+      "id": "ucla|anthonywoods",
+      "year1USD": 450000
+    },
+    {
+      "id": "ucla|brianrowejr",
+      "year1USD": 500000
+    },
+    {
+      "id": "ucla|derrickbarksdale",
+      "year1USD": 650000
+    },
+    {
+      "id": "ucla|jalenwoods",
+      "year1USD": 525000
+    },
+    {
+      "id": "ucla|joshphifer",
+      "year1USD": 275000
+    },
+    {
+      "id": "ucla|landonellis",
+      "year1USD": 725000
+    },
+    {
+      "id": "ucla|malikhartford",
+      "year1USD": 325000
+    },
+    {
+      "id": "ucla|nicoiamaleava",
+      "year1USD": 2000000
+    },
+    {
+      "id": "ucla|rodrickpleasant",
+      "year1USD": 600000
+    },
+    {
+      "id": "ucla|sahirwest",
+      "year1USD": 850000
+    },
+    {
+      "id": "ucla|sammyomosigho",
+      "year1USD": 550000
+    },
+    {
+      "id": "ucla|scooterjackson",
+      "year1USD": 575000
+    },
+    {
+      "id": "ucla|scotttaylor",
+      "year1USD": 250000
+    },
+    {
+      "id": "ucla|semajmorgan",
+      "year1USD": 450000
+    },
+    {
+      "id": "ucla|tashawnjames",
+      "year1USD": 450000
+    },
+    {
+      "id": "ucla|tysonford",
+      "year1USD": 225000
+    },
+    {
+      "id": "ucla|wayneknight",
+      "year1USD": 975000
+    },
+    {
+      "id": "usc|alexgraham",
+      "year1USD": 425000
+    },
+    {
+      "id": "usc|braylanshelby",
+      "year1USD": 675000
+    },
+    {
+      "id": "usc|chasenjohnson",
+      "year1USD": 375000
+    },
+    {
+      "id": "usc|christianpierce",
+      "year1USD": 625000
+    },
+    {
+      "id": "usc|desmanstephensii",
+      "year1USD": 950000
+    },
+    {
+      "id": "usc|devenbryant",
+      "year1USD": 675000
+    },
+    {
+      "id": "usc|jaydenmaiava",
+      "year1USD": 2550000
+    },
+    {
+      "id": "usc|jontezwilliams",
+      "year1USD": 675000
+    },
+    {
+      "id": "usc|kameryncrawford",
+      "year1USD": 975000
+    },
+    {
+      "id": "usc|kaydendixonwyatt",
+      "year1USD": 300000
+    },
+    {
+      "id": "usc|kingmiller",
+      "year1USD": 1100000
+    },
+    {
+      "id": "usc|lukewafle",
+      "year1USD": 250000
+    },
+    {
+      "id": "usc|markbowman",
+      "year1USD": 600000
+    },
+    {
+      "id": "usc|prophetbrown",
+      "year1USD": 200000
+    },
+    {
+      "id": "usc|tanookhines",
+      "year1USD": 750000
+    },
+    {
+      "id": "usc|trentmosley",
+      "year1USD": 300000
+    },
+    {
+      "id": "usc|waymondjordan",
+      "year1USD": 800000
+    },
+    {
+      "id": "usc|zacharyuswilliams",
+      "year1USD": 275000
+    },
+    {
+      "id": "utah|alexcloward",
+      "year1USD": 250000
+    },
+    {
+      "id": "utah|bradenpegan",
+      "year1USD": 1000000
+    },
+    {
+      "id": "utah|creedwhittemore",
+      "year1USD": 300000
+    },
+    {
+      "id": "utah|danielbray",
+      "year1USD": 450000
+    },
+    {
+      "id": "utah|devondampier",
+      "year1USD": 2600000
+    },
+    {
+      "id": "utah|elijahdavis",
+      "year1USD": 800000
+    },
+    {
+      "id": "utah|elijahelliss",
+      "year1USD": 650000
+    },
+    {
+      "id": "utah|elijahreed",
+      "year1USD": 625000
+    },
+    {
+      "id": "utah|ethanday",
+      "year1USD": 625000
+    },
+    {
+      "id": "utah|jacksonbennee",
+      "year1USD": 900000
+    },
+    {
+      "id": "utah|lanceholtzclaw",
+      "year1USD": 525000
+    },
+    {
+      "id": "utah|nateritchie",
+      "year1USD": 475000
+    },
+    {
+      "id": "utah|noahbennee",
+      "year1USD": 550000
+    },
+    {
+      "id": "utah|paulfitzgerald",
+      "year1USD": 475000
+    },
+    {
+      "id": "utah|rabbitevans",
+      "year1USD": 475000
+    },
+    {
+      "id": "utah|rickyjohnson",
+      "year1USD": 350000
+    },
+    {
+      "id": "utah|treyreynolds",
+      "year1USD": 750000
+    },
+    {
+      "id": "utah|wayshawnparker",
+      "year1USD": 1000000
+    }
+  ]
+}

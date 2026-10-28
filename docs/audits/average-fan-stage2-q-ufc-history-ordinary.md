@@ -1,0 +1,25 @@
+# Average Fan Stage 2Q — UFC authored ordinary history, focused source review
+
+Date: October 14, 2026. **Ten explicitly enumerated UFC authored history fact families individually reviewed.** These are not the entire UFC history bank or the generated UFC identity population. Of these 10: **5 keep, 4 rewrite presentation (short → four-choice), 1 retire**. No replacement questions added for quota.
+
+| Authored fact ID | Decision | Fact, distractors, and difficulty check |
+| --- | --- | --- |
+| `ufc3-winner` | **Rewrite to four-choice, Grade 4** | [UFC 3 card](https://www.ufc.com/event/ufc-3) confirms Steve Jennum won after a single fight; [historical account](https://en.wikipedia.org/wiki/UFC_3) describes his late alternate entry. Ken Shamrock, Kimo Leopoldo and Keith Hackney were actual UFC 3 participants; none won the tournament. An unaided, obscure 1994 name was too harsh for ordinary Grade 4. |
+| `ufc4-final` | **Keep** | [UFC 4 card](https://www.ufc.com/event/ufc-4) verifies Royce Gracie submitted Dan Severn. Rival grapplers Ken Shamrock, Oleg Taktarov and Kimo Leopoldo did not lose UFC 4's final to Gracie; Grade 3 four-choice is fair. |
+| `ufc6-winner` | **Rewrite to four-choice, Grade 4** | [UFC 6 card](https://www.ufc.com/event/ufc-6) verifies Oleg Taktarov's title-fight submission over Tank Abbott. Dan Severn, Ken Shamrock and Marco Ruas are plausible names from the early UFC era, not winners of UFC 6. Recall of an early-tournament winner without options was unduly narrow. |
+| `first-wheel-kick` | **Keep** | [UFC Barboza retrospective](https://www.ufc.com/news/edson-barbozas-ufc-career-highlights) confirms the inaugural spinning wheel-kick knockout over Terry Etim; Stephen Thompson and Yair Rodriguez did not own that first. The separate Etim-opponent inversion was already retired. |
+| `gonzaga-crocop` | **Keep** | [UFC 70 retrospective](https://www.ufc.com/news/on-this-day-ufc-history-mirko-cro-cop-gets-cro-gabriel-gonzaga) verifies Gabriel Gonzaga's famous head-kick win over Mirko Cro Cop; the proposed other heavyweights did not score that finish. A meaningful recognizable upset at Grade 2. |
+| `fox-first` | **Keep** | [Official FOX debut result](https://www.ufc.com/news/ufc-fox-main-event-dos-santos-dethrones-cain-historic-ko) confirms Junior dos Santos beat Cain Velasquez in the inaugural FOX telecast. Brock Lesnar and Alistair Overeem are plausible contemporary heavyweight alternatives but did not win that bout. The redundant 64-second recall is already retired. |
+| `lewis-volkov` | **Keep** | [UFC Lewis–Volkov recap/interview](https://www.ufc.com/news/unfiltered-derrick-lewis-volkan-oezdemir-and-calvin-kattar-frank-grillo-studio) corroborates the 2018 comeback knockout and memorable postfight remarks; contemporary heavyweights in the distractor bank are distinct opponents, not the UFC 229 knockout victim. Grade 3 and existing four-choice format are appropriate. |
+| `daley-koscheck` | **Rewrite to four-choice, Grade 5** | [UFC 113 official recap](https://www.ufc.com/news/113-ppv-koscheck-shuts-out-daley-ufc-113-co-main-earns-title-shot) confirms Paul Daley's post-bell punch and release. Thiago Alves, Dan Hardy and Carlos Condit are era/weight-class-plausible alternatives, none the offender. Retain hard historical knowledge but stop requiring unaided name recall. |
+| `first-125` | **Rewrite to four-choice, Grade 4** | [UFC original flyweight tournament announcement](https://www.ufc.com/news/flyweights-are-here) confirms Demetrious Johnson vs. Ian McCall. Joseph Benavidez and Yasuhiro Urushitani were other inaugural entrants; John Dodson was a later flyweight opponent. Clear matchup answer but low-value unaided name memorization. |
+| `silva-weidman` | **Retire** | [Official UFC 162 result](https://www.ufc.com/news/ten-count-weidman-ends-silvas-reign-ufc-162-main-event-results) verifies Weidman's win ending Silva's 16-fight streak. **Millionaire already asks 'Who handed Anderson Silva his first UFC loss?' with Chris Weidman correct.** Same defining fight and winning fighter, not independent gameplay. |
+
+## Release and regression
+
+- Newly converted rows receive `:choice` IDs instead of `:short` IDs; previous published Daily evidence and completed player results do not change.
+- Exactly three authored, distinct distractors for each new four-choice prompt; never synthesize fourth-choice filler.
+- The UFC history question builder gains an **explicit preferred-format override**, preserving every other unflagged row's existing deterministic selection.
+- Regression asserts old short IDs absent, four authored choices and uniquely correct answer present, and verifies the Silva duplication against the *actual* Millionaire question/choice schema before suppressing that fact.
+- Strengthen the prior UFC 300 regression to require that Holloway's replacement row exists, rather than silently passing if absent.
+- Remaining ordinary UFC history facts, all NFL/CFB ordinary sources and dynamically generated UFC identity content still need individual review. **Stage 2 is not complete.**

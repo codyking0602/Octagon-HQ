@@ -1,0 +1,48 @@
+import { describe, expect, it } from "vitest";
+import {
+  requiredApplicationMarkers,
+  requiredShareArtwork,
+} from "./verify-production-artifact.mjs";
+
+
+describe("production artifact verification", () => {
+  it("tracks the compiled compact progressive per-fight lock UI instead of retired lock copy", () => {
+    expect(requiredApplicationMarkers).toEqual(expect.arrayContaining([
+      "MASTER LOCK",
+      "+10 MIN",
+      "+20 MIN",
+      "SET TIME",
+      "DEADLINE FINAL",
+      "LOCK ALL PICKS",
+      "adjust_pick_event_lock_time",
+      "adjust_pick_bout_lock_time",
+    ]));
+    expect(requiredApplicationMarkers).not.toEqual(expect.arrayContaining([
+      "EVENT-WIDE MASTER LOCK",
+      "ALL FIGHTS LOCK TOGETHER",
+      "CHANGE LOCK TIME",
+      "CHANGE FIGHT",
+      "CHANGE FIGHT LOCK",
+      "LOCK PICKS & BEGIN RESULTS",
+      "LOCK ALL PICKS & BEGIN RESULTS",
+    ]));
+  });
+
+  it("tracks the canonical rich Picks recap instead of the retired archive renderer", () => {
+    expect(requiredApplicationMarkers).toEqual(expect.arrayContaining([
+      "OPEN FULL RECAP",
+      "Event Standings",
+      "Fight by Fight",
+    ]));
+    expect(requiredApplicationMarkers).not.toContain("VIEW FIGHT-BY-FIGHT RESULTS");
+  });
+
+  it("keeps only non-game share artwork as a static verifier list", () => {
+    expect(requiredShareArtwork).toEqual([
+      "picks-recap.svg",
+      "ranking-update.svg",
+    ]);
+    expect(requiredShareArtwork).not.toContain("better-than.svg");
+    expect(requiredShareArtwork).not.toContain("hit-the-number.svg");
+  });
+});

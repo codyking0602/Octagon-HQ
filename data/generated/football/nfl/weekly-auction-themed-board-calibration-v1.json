@@ -1,0 +1,86 @@
+{
+  "version": "weekly-auction-nfl-team-season-themed-generator-calibration-2026-10-v1",
+  "source_pool": "data/generated/football/nfl/nfl-best-teams-grading-v1.json",
+  "pool_size": 200,
+  "normal_week": {
+    "days": 6,
+    "cards_per_day": 4,
+    "total_cards": 24
+  },
+  "rules": {
+    "grade_shape_forcing": false,
+    "future_theme_reveal": false,
+    "exact_team_season_repeats_allowed": false,
+    "public_theme_repeats_allowed": false,
+    "non_franchise_history_max_cards_per_franchise_per_week": 3,
+    "franchise_history_max_cards_for_featured_franchise": 4,
+    "theme_weekly_caps": {
+      "division": 2,
+      "season": 1,
+      "era": 1,
+      "rivalry": 1,
+      "franchise_history": 1,
+      "fell_short": 1,
+      "conference_clash": 1,
+      "open_field": 2
+    }
+  },
+  "simulation": {
+    "simulated_weeks": 30000,
+    "generation_failures": 0,
+    "invalid_weeks": 0,
+    "distinct_family_sequences": 18869,
+    "distinct_public_theme_labels": 76,
+    "family_day_share_pct": {
+      "division": 18.9,
+      "conference_clash": 11.4,
+      "rivalry": 11.9,
+      "season": 12,
+      "fell_short": 11.4,
+      "franchise_history": 9.6,
+      "era": 11.3,
+      "open_field": 13.5
+    },
+    "average_card_grade": 88.63,
+    "average_daily_grade_spread": 9.55,
+    "grade_band_share_pct": {
+      "<85": 22.5,
+      "85-89.5": 34.8,
+      "90-94.5": 32.8,
+      "95+": 9.9
+    },
+    "max_franchise_cards_per_week_pct": {
+      "1": 9.3,
+      "2": 28.5,
+      "3": 4.5,
+      "4": 57.6
+    }
+  },
+  "sample_weeks": [
+    [
+      "AFC South Spotlight",
+      "AFC vs NFC",
+      "Cowboys vs Eagles",
+      "2009 Season Spotlight",
+      "Great Teams That Fell Short",
+      "Chargers Through the Years"
+    ],
+    [
+      "Panthers Through the Years",
+      "Great Teams That Fell Short",
+      "2020s Spotlight",
+      "AFC vs NFC",
+      "AFC North Spotlight",
+      "2011 Season Spotlight"
+    ],
+    [
+      "Great Teams That Fell Short",
+      "2000s Spotlight",
+      "Browns vs Steelers",
+      "Open Field",
+      "AFC vs NFC",
+      "2014 Season Spotlight"
+    ]
+  ],
+  "note": "Calibration seeds are synthetic and are not a production schedule."
+}

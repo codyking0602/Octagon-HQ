@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "league": "CFB",
+  "athleticYear": "2025-26",
+  "statSeason": 2025,
+  "rowCount": 34982,
+  "uniqueAthleteCount": 34982,
+  "columnCount": 26,
+  "sha256": "542562fa4eb681984ccfc0ae3ddfb9b2f94b80d0759a4fcb62b3579259dc2a7a",
+  "source": {
+    "provider": "Dharit Shah NCAA All Sports Rosters 2025-26",
+    "license": "CC0-1.0",
+    "repository": "Dharit13/NCAA_2025-26-Season-Dataset",
+    "commit": "9789928e911091186bab979cc772e874c47a83f1",
+    "path": "by_sport/football/stats.csv",
+    "url": "https://raw.githubusercontent.com/Dharit13/NCAA_2025-26-Season-Dataset/9789928e911091186bab979cc772e874c47a83f1/by_sport/football/stats.csv"
+  },
+  "publicPath": "/data/football/cfb/player-season-2025.json",
+  "generatedBy": "scripts/import-football-cfb-player-stats.mjs"
+}

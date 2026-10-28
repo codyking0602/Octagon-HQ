@@ -1,0 +1,444 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
+import { memberProfilePath } from "../members/memberProfilesModel";
+import type { PlaySport } from "../play/playRegistry";
+import { createFootballGmMatchRepository } from "../play/footballGmMatchRepository";
+import { createWheelFootballRepository } from "../play/wheelFootballRepository";
+import {
+  challengeCounterpartId,
+  challengeDirection,
+  challengeStatus,
+  type ChallengeProfile,
+  type ChallengeStatus,
+  type PlayChallenge,
+} from "./challengeModel";
+import { usePlayChallenges } from "./ChallengeProvider";
+import { challengePlayRoute, challengeSport } from "./challengeRuntime";
+
+export type ChallengeCenterFilter = "all" | "received" | "sent";
+
+const COLLAPSED_ROW_LIMIT = 3;
+
+function timeAgo(value: string) {
+  const then = new Date(value).getTime();
+  if (!Number.isFinite(then)) return "";
+  const minutes = Math.max(0, Math.round((Date.now() - then) / 60_000));
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return days < 7
+    ? `${days}d ago`
+    : new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(new Date(value));
+}
+
+function isSealedBidChallenge(challenge: PlayChallenge) {
+  return challenge.gameId === "auction" || challenge.gameId === "draft-room";
+}
+
+function isTurnBasedChallenge(challenge: PlayChallenge) {
+  return challenge.gameId === "wheel-football" || challenge.gameId === "wheel-ufc" || challenge.gameId === "gm-football";
+}
+
+function rowCopy(challenge: PlayChallenge, profileId: string) {
+  const direction = challengeDirection(challenge, profileId);
+  const status = challengeStatus(challenge, profileId);
+
+  if (isTurnBasedChallenge(challenge)) {
+    if (challenge.gameId === "gm-football") {
+      const forfeited = [challenge.creatorResult, challenge.responderResult].some((result) => (
+        result !== null
+        && typeof result === "object"
+        && !Array.isArray(result)
+        && result.forfeited === true
+      ));
+      if (status === "completed") return {
+        eyebrow: "THE GM COMPLETE WITH",
+        detail: forfeited ? "Match ended by forfeit" : "Open the final three-year franchise comparison",
+        action: "OPEN",
+      };
+      if (status === "declined") return { eyebrow: "THE GM ENDED", detail: "This front-office matchup has ended", action: "ENDED" };
+      if (direction === "sent") {
+        return {
+          eyebrow: "THE GM WITH",
+          detail: status === "opened" ? "Match in progress · check whose turn" : "Waiting for them to accept",
+          action: "OPEN",
+        };
+      }
+      return {
+        eyebrow: "THE GM FROM",
+        detail: status === "opened" ? "Match in progress · check whose turn" : "Open to accept and start",
+        action: status === "opened" ? "OPEN" : "PLAY",
+      };
+    }
+    if (challenge.gameId === "wheel-ufc") {
+      if (status === "completed") return { eyebrow: "WHEEL COMPLETE WITH", detail: "Open both final fight teams", action: "OPEN" };
+      if (status === "declined") return { eyebrow: "WHEEL DECLINED", detail: "This matchup has ended", action: "DECLINED" };
+      if (direction === "sent") {
+        return {
+          eyebrow: "WHEEL WITH",
+          detail: status === "opened" ? "Match in progress · check whose turn" : "Waiting for them to accept",
+          action: "OPEN",
+        };
+      }
+      return {
+        eyebrow: "WHEEL FROM",
+        detail: status === "opened" ? "Match in progress · check whose turn" : "Open to accept and start",
+        action: status === "opened" ? "OPEN" : "PLAY",
+      };
+    }
+    if (status === "completed") return { eyebrow: "WHEEL COMPLETE", detail: "Open final Superteams and standings", action: "OPEN" };
+    if (status === "declined") return { eyebrow: "WHEEL CANCELED", detail: "This lobby ended before play", action: "CANCELED" };
+    if (direction === "sent") {
+      return {
+        eyebrow: "WHEEL LOBBY",
+        detail: status === "opened" ? "Match in progress · check whose turn" : "Waiting for the lobby to join",
+        action: "OPEN",
+      };
+    }
+    return {
+      eyebrow: "WHEEL INVITE",
+      detail: status === "opened" ? "Match in progress · check whose turn" : "Open to join the lobby",
+      action: status === "opened" ? "OPEN" : "JOIN",
+    };
+  }
+
+  if (isSealedBidChallenge(challenge)) {
+    const label = challenge.gameId === "draft-room" ? "DRAFT ROOM" : "AUCTION";
+    const title = challenge.gameId === "draft-room" ? "Draft Room" : "Auction";
+    if (status === "completed") return { eyebrow: `${label} COMPLETE WITH`, detail: "Open the final server state", action: "OPEN" };
+    if (status === "declined") return { eyebrow: `${label} DECLINED`, detail: `This ${title} has ended`, action: "DECLINED" };
+    if (direction === "sent") return { eyebrow: `${label} WITH`, detail: status === "opened" ? `Open ${title} · check whose bid is required` : "Waiting for their first bid", action: "OPEN" };
+    return { eyebrow: `${label} FROM`, detail: status === "opened" ? `Open ${title} · check whose bid is required` : "Your first sealed bid accepts", action: status === "opened" ? "OPEN" : "BID" };
+  }
+
+  if (direction === "sent") {
+    if (status === "completed") return { eyebrow: "COMPLETED WITH", detail: `Both finished ${timeAgo(challenge.completedAt ?? challenge.createdAt)}`, action: "RESULTS" };
+    if (status === "declined") return { eyebrow: "DECLINED BY", detail: "They passed on this challenge", action: "DECLINED" };
+    if (status === "opened") return { eyebrow: "OPENED BY", detail: "They opened it · waiting on their result", action: "OPENED" };
+    return { eyebrow: "SENT TO", detail: `Waiting for them to open · ${timeAgo(challenge.createdAt)}`, action: "WAITING" };
+  }
+
+  if (status === "completed") return { eyebrow: "COMPLETED WITH", detail: `Both finished ${timeAgo(challenge.completedAt ?? challenge.createdAt)}`, action: "RESULTS" };
+  if (status === "opened") return { eyebrow: "FROM", detail: "Opened · your result is still waiting", action: "PLAY" };
+  return { eyebrow: "NEW FROM", detail: `Sent ${timeAgo(challenge.createdAt)}`, action: "PLAY" };
+}
+
+function statusClass(status: ChallengeStatus) {
+  if (status === "completed") return " is-completed";
+  if (status === "declined") return " is-declined";
+  if (status === "new") return " is-new";
+  return "";
+}
+
+function challengeCounterpart(
+  challenge: PlayChallenge,
+  activeProfileId: string,
+  profiles: readonly ChallengeProfile[],
+) {
+  const counterpartId = challengeCounterpartId(challenge, activeProfileId);
+  return profiles.find((profile) => profile.id === counterpartId) ?? null;
+}
+
+export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const identity = useIdentity();
+  const {
+    configured,
+    enabled,
+    loading,
+    error,
+    profiles,
+    activeProfile,
+    challenges,
+    refresh,
+    markOpened,
+    dismissChallenge,
+    cancelPendingAuction,
+    viewResults,
+  } = usePlayChallenges();
+  const wheelRepository = useMemo(() => createWheelFootballRepository(), []);
+  const gmRepository = useMemo(() => createFootballGmMatchRepository(), []);
+  const [filter, setFilter] = useState<ChallengeCenterFilter>("all");
+  const [expanded, setExpanded] = useState(false);
+  const centerRef = useRef<HTMLElement | null>(null);
+  const handledDestinationRef = useRef("");
+  const requestedCode = searchParams.get("challenge")?.trim().toUpperCase() ?? "";
+  const sportChallenges = useMemo(
+    () => challenges.filter((challenge) => challengeSport(challenge) === sport),
+    [challenges, sport],
+  );
+
+  const counts = useMemo(() => ({
+    all: sportChallenges.length,
+    received: sportChallenges.filter((row) => challengeDirection(row, activeProfile?.id ?? "") === "received").length,
+    sent: sportChallenges.filter((row) => challengeDirection(row, activeProfile?.id ?? "") === "sent").length,
+  }), [activeProfile?.id, sportChallenges]);
+
+  const rows = sportChallenges.filter((row) => {
+    if (!activeProfile || filter === "all") return true;
+    return challengeDirection(row, activeProfile.id) === filter;
+  });
+  const visibleRows = expanded ? rows : rows.slice(0, COLLAPSED_ROW_LIMIT);
+
+  useEffect(() => {
+    if (!requestedCode || !activeProfile || loading) return;
+    const requested = challenges.find((challenge) => challenge.code === requestedCode);
+    if (!requested) return;
+
+    const requestKey = `${activeProfile.id}:${requested.code}`;
+    if (handledDestinationRef.current === requestKey) return;
+    handledDestinationRef.current = requestKey;
+
+    const direction = challengeDirection(requested, activeProfile.id);
+    if (!direction) return;
+    const status = challengeStatus(requested, activeProfile.id);
+
+    if (isTurnBasedChallenge(requested)) {
+      navigate(challengePlayRoute(requested), { replace: true });
+      return;
+    }
+
+    if (isSealedBidChallenge(requested)) {
+      if (direction === "received" && status === "new") void markOpened(requested.code);
+      navigate(challengePlayRoute(requested), { replace: true });
+      return;
+    }
+
+    if (status === "completed") {
+      viewResults(requested.code);
+      return;
+    }
+
+    if (direction === "received" && status !== "declined") {
+      void markOpened(requested.code);
+      navigate(challengePlayRoute(requested), { replace: true });
+      return;
+    }
+
+    setFilter(direction);
+    setExpanded(true);
+    centerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    centerRef.current?.focus({ preventScroll: true });
+  }, [activeProfile, challenges, loading, markOpened, navigate, requestedCode, viewResults]);
+
+  if (!configured) return null;
+
+  if (!enabled || !activeProfile) {
+    return (
+      <section
+        ref={centerRef}
+        id="challenge-center"
+        className="challenge-center surface-card"
+        data-play-challenge-center
+        tabIndex={requestedCode ? -1 : undefined}
+      >
+        <header className="challenge-center__header">
+          <div><p className="eyebrow">CHALLENGE CENTER</p><h2>Play against friends</h2></div>
+        </header>
+        <p className="challenge-center__hint">
+          Sign in to send and receive the same locked {sport === "football" ? "football" : "UFC"} games across devices.
+        </p>
+        <button className="primary-action challenge-center__sign-in" type="button" onClick={identity.openDialog}>SIGN IN TO CHALLENGE</button>
+      </section>
+    );
+  }
+
+  async function endWaitingTurnBasedChallenge(challenge: PlayChallenge) {
+    if (challenge.gameId === "gm-football") {
+      if (!gmRepository) return;
+      try {
+        const ended = await gmRepository.cancel(challenge.code);
+        if (ended) await refresh();
+      } catch {
+        await refresh();
+      }
+      return;
+    }
+    if (challenge.gameId === "wheel-ufc") {
+      await dismissChallenge(challenge.code);
+      return;
+    }
+    if (!wheelRepository) return;
+    try {
+      const ended = await wheelRepository.decline(challenge.code);
+      if (ended) await refresh();
+    } catch {
+      await refresh();
+    }
+  }
+
+  function openChallenge(challenge: PlayChallenge) {
+    if (isTurnBasedChallenge(challenge)) {
+      navigate(challengePlayRoute(challenge));
+      return;
+    }
+    if (isSealedBidChallenge(challenge)) {
+      const direction = challengeDirection(challenge, activeProfile!.id);
+      const status = challengeStatus(challenge, activeProfile!.id);
+      if (direction === "received" && status === "new") void markOpened(challenge.code);
+      navigate(challengePlayRoute(challenge));
+      return;
+    }
+    void markOpened(challenge.code);
+    navigate(challengePlayRoute(challenge));
+  }
+
+  function chooseFilter(value: ChallengeCenterFilter) {
+    setFilter(value);
+    setExpanded(false);
+  }
+
+  return (
+    <section
+      ref={centerRef}
+      id="challenge-center"
+      className="challenge-center surface-card"
+      data-play-challenge-center
+      tabIndex={requestedCode ? -1 : undefined}
+    >
+      <header className="challenge-center__header">
+        <div>
+          <p className="eyebrow">CHALLENGE CENTER</p>
+          <h2>{activeProfile.displayName}'s matchups</h2>
+        </div>
+        <button className="challenge-center__refresh" type="button" disabled={loading} onClick={() => void refresh()}>
+          {loading ? "SYNCING…" : "REFRESH"}
+        </button>
+      </header>
+
+      <p className="challenge-center__hint">Results unlock only after both profiles finish the exact same challenge.</p>
+      {error ? <p className="challenge-center__error" role="status">{error}</p> : null}
+
+      <div className="challenge-center__filters" role="tablist" aria-label="Challenge filters">
+        {(["all", "received", "sent"] as const).map((value) => (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={filter === value}
+            className={filter === value ? "is-active" : ""}
+            key={value}
+            onClick={() => chooseFilter(value)}
+          >
+            {value.toUpperCase()} {counts[value]}
+          </button>
+        ))}
+      </div>
+
+      {rows.length ? (
+        <>
+          <div className="challenge-center__list">
+            {visibleRows.map((challenge) => {
+              const direction = challengeDirection(challenge, activeProfile!.id);
+              const status = challengeStatus(challenge, activeProfile!.id);
+              const counterpart = challengeCounterpart(challenge, activeProfile.id, profiles);
+              const copy = rowCopy(challenge, activeProfile.id);
+              const sealedBid = isSealedBidChallenge(challenge);
+              const turnBased = isTurnBasedChallenge(challenge);
+              const serverState = sealedBid || turnBased;
+              const canPlay = serverState ? status !== "declined" : direction === "received" && status !== "completed" && status !== "declined";
+              const canView = !serverState && status === "completed";
+              const canCancelAuction = sealedBid && direction === "sent" && status === "waiting";
+              const canDeclineAuction = sealedBid && direction === "received" && status === "new";
+              const canRemoveAuction = sealedBid && (status === "completed" || status === "declined");
+              const canCancelTurnBased = turnBased && direction === "sent" && status === "waiting";
+              const canDeclineTurnBased = turnBased && direction === "received" && status === "new";
+              const canRemoveTurnBased = turnBased && (status === "completed" || status === "declined");
+              const turnBasedEndLabel = canCancelTurnBased
+                ? challenge.gameId === "gm-football" ? "REMOVE" : "CANCEL"
+                : canDeclineTurnBased ? "DECLINE" : "REMOVE";
+              const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
+              const memberContent = (
+                <>
+                  <i className="challenge-center__avatar">
+                    {counterpart?.avatarPhotoData
+                      ? <img src={counterpart.avatarPhotoData} alt={`${counterpart.displayName} profile`} />
+                      : counterpart?.initials ?? "HQ"}
+                  </i>
+                  <div className="challenge-center__row-copy">
+                    <span>{copy.eyebrow}</span>
+                    <strong>{counterpart?.displayName ?? "Octagon HQ profile"}</strong>
+                    <small>{challenge.gameTitle} · {copy.detail}</small>
+                  </div>
+                </>
+              );
+
+              return (
+                <article className={`challenge-center__row${statusClass(status)}`} key={challenge.code}>
+                  {counterpart ? (
+                    <Link
+                      className="challenge-center__member-link"
+                      to={memberProfilePath(counterpart.displayName)}
+                      aria-label={`View ${counterpart.displayName} member profile`}
+                    >
+                      {memberContent}
+                    </Link>
+                  ) : (
+                    <div className="challenge-center__member-link">{memberContent}</div>
+                  )}
+                  <div className="challenge-center__row-actions">
+                    {canView ? (
+                      <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
+                    ) : canPlay ? (
+                      <button type="button" onClick={() => openChallenge(challenge)}>{serverState ? copy.action : "PLAY"}</button>
+                    ) : (
+                      <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
+                    )}
+                    {sealedBid ? (
+                      canCancelAuction || canDeclineAuction || canRemoveAuction ? (
+                        <button
+                          type="button"
+                          className="challenge-center__dismiss"
+                          aria-label={`${canCancelAuction ? "CANCEL" : canDeclineAuction ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                          onClick={() => canCancelAuction
+                            ? void cancelPendingAuction(challenge)
+                            : void dismissChallenge(challenge.code)}
+                        >
+                          {canCancelAuction ? "CANCEL" : canDeclineAuction ? "DECLINE" : "REMOVE"}
+                        </button>
+                      ) : null
+                    ) : turnBased ? (
+                      canCancelTurnBased || canDeclineTurnBased || canRemoveTurnBased ? (
+                        <button
+                          type="button"
+                          className="challenge-center__dismiss"
+                          aria-label={`${turnBasedEndLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                          onClick={() => canCancelTurnBased || canDeclineTurnBased
+                            ? void endWaitingTurnBasedChallenge(challenge)
+                            : void dismissChallenge(challenge.code)}
+                        >
+                          {turnBasedEndLabel}
+                        </button>
+                      ) : null
+                    ) : (
+                      <button
+                        type="button"
+                        className="challenge-center__dismiss"
+                        aria-label={`${dismissLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                        onClick={() => void dismissChallenge(challenge.code)}
+                      >
+                        {dismissLabel}
+                      </button>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+          {rows.length > COLLAPSED_ROW_LIMIT ? (
+            <button className="challenge-center__view-all" type="button" onClick={() => setExpanded((value) => !value)}>
+              {expanded ? "SHOW RECENT CHALLENGES" : `VIEW ALL ${rows.length} CHALLENGES`} →
+            </button>
+          ) : null}
+        </>
+      ) : (
+        <div className="challenge-center__empty">
+          {loading ? "Syncing profile challenges…" : "No challenges yet. Finish a game and send the exact setup to another profile."}
+        </div>
+      )}
+    </section>
+  );
+}

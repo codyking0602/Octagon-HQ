@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "league": "CFB",
+  "recordKind": "primary-head-coach-stint-source",
+  "seasonStart": 2002,
+  "seasonEnd": 2025,
+  "source": {
+    "provider": "BoW Sports Analytics",
+    "title": "Football Coach Database",
+    "url": "https://docs.google.com/spreadsheets/d/1UXbBC7T4NtN1JwJs6Gk5Qm_y_pI1JXnOFtVuE3Iu3OQ/edit",
+    "worksheet": "Head Coach by Team, FBS",
+    "description": "Public school-by-year head-coach database. The vendored snapshot is limited to 2002-2025 and compressed to contiguous primary head-coach stints."
+  },
+  "sourceProgramCount": 136,
+  "sourceSeasonAssignmentCount": 3093,
+  "sourceStintCount": 681,
+  "exceptions": [
+    {
+      "programName": "Idaho",
+      "reason": "Former FBS member omitted from the database's current-FBS program table.",
+      "seasonStart": 2002,
+      "seasonEnd": 2017,
+      "seasonAssignmentCount": 16,
+      "stintCount": 5,
+      "source": {
+        "provider": "Sports-Reference.com",
+        "title": "Idaho Vandals Coaches",
+        "url": "https://www.sports-reference.com/cfb/schools/idaho/coaches.html"
+      }
+    }
+  ],
+  "expectedProgramCount": 137,
+  "expectedSeasonAssignmentCount": 3109,
+  "expectedStintCount": 686,
+  "assets": [
+    {
+      "name": "primary-head-coach-stints-a-f.tsv",
+      "path": "public/data/football/cfb-coaches/primary-head-coach-stints-a-f.tsv",
+      "rowCount": 189,
+      "seasonAssignmentCount": 831,
+      "bytes": 6640,
+      "sha256": "c1d2d9672df34467d70e2cf35f391c4836c2b668b04c14117def4e378763e78d"
+    },
+    {
+      "name": "primary-head-coach-stints-g-l.tsv",
+      "path": "public/data/football/cfb-coaches/primary-head-coach-stints-g-l.tsv",
+      "rowCount": 112,
+      "seasonAssignmentCount": 499,
+      "bytes": 3791,
+      "sha256": "4ecc9ad18237dbc0c19e923b9ec20e8298550dd11864ff0dd13158ac0e9fd1ee"
+    },
+    {
+      "name": "primary-head-coach-stints-m-r.tsv",
+      "path": "public/data/football/cfb-coaches/primary-head-coach-stints-m-r.tsv",
+      "rowCount": 171,
+      "seasonAssignmentCount": 858,
+      "bytes": 5829,
+      "sha256": "a038fabdb82d9bcac6c53ef15c16a6195c9fbe28247f6957031580a7100c60bf"
+    },
+    {
+      "name": "primary-head-coach-stints-s-z.tsv",
+      "path": "public/data/football/cfb-coaches/primary-head-coach-stints-s-z.tsv",
+      "rowCount": 214,
+      "seasonAssignmentCount": 921,
+      "bytes": 7076,
+      "sha256": "d3d47a09db725d32c7d1f151be052e04ee0a66594789dd009c116afb9b14305b"
+    }
+  ],
+  "verifiedAt": "2026-08-26"
+}

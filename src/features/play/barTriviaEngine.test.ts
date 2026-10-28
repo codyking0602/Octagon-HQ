@@ -1,0 +1,289 @@
+import { describe, expect, it } from "vitest";
+import {
+  BAR_TRIVIA_BASE_POINTS,
+  BAR_TRIVIA_CURRENT_EVENT_TARGET,
+  BAR_TRIVIA_ROUND_NAMES,
+  BAR_TRIVIA_ROUND_SLOTS,
+  barTriviaPerfectRawScore,
+  barTriviaQuestion,
+  barTriviaScoreBreakdown,
+  barTriviaStreakMultiplier,
+  buildBarTriviaRun,
+  createBarTriviaState,
+  isBarTriviaQuestionActive,
+  normalizeBarTriviaScore,
+  pickBarTriviaDoubleRound,
+  setBarTriviaWager,
+  submitBarTriviaAnswer,
+  type BarTriviaDoubleRound,
+} from "../games/barTriviaEngine";
+import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
+
+describe("Bar Trivia engine", () => {
+  it("builds separate 10-question NFL, CFB, and UFC runs with the locked round shape", () => {
+    for (const league of ["nfl", "cfb", "ufc"] as const) {
+      const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, { random: () => 0 });
+      expect(run).toHaveLength(10);
+      expect(run.every((question) => question.league === league)).toBe(true);
+      expect(run.map((question) => question.round)).toEqual(BAR_TRIVIA_ROUND_SLOTS);
+      expect(new Set(run.map((question) => question.id)).size).toBe(10);
+    }
+  });
+
+  it("keeps Round 1 genuinely easy after the content recalibration", () => {
+    for (const league of ["nfl", "cfb", "ufc"] as const) {
+      const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, {
+        random: () => 0,
+        currentEventTarget: 0,
+      });
+      expect(run.slice(0, 3).every((question) => question.difficulty === "easy")).toBe(true);
+      expect(run[3]!.difficulty).toBe("easy");
+      expect(run.slice(4, 6).every((question) => question.difficulty === "medium")).toBe(true);
+    }
+  });
+
+  it("randomizes answer positions instead of leaving the correct answer in slot A", () => {
+    let seed = 24681357;
+    const random = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 0x100000000;
+    };
+
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", {
+      random,
+      currentEventTarget: 0,
+    });
+    const answerPositions = run.map((question) => question.choices.indexOf(question.answer));
+
+    expect(answerPositions.some((position) => position !== 0)).toBe(true);
+    expect(new Set(answerPositions).size).toBeGreaterThan(1);
+  });
+
+  it("calibrates a solid seven-correct game to roughly an 80", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", {
+      random: () => 0,
+      currentEventTarget: 0,
+    });
+    let state = createBarTriviaState("round2");
+
+    for (let index = 0; index < 7; index += 1) {
+      state = submitBarTriviaAnswer(run, state, run[index]!.answer).state;
+    }
+    for (let index = 7; index < 9; index += 1) {
+      const wrong = run[index]!.choices.find((choice) => choice !== run[index]!.answer)!;
+      state = submitBarTriviaAnswer(run, state, wrong).state;
+    }
+
+    state = setBarTriviaWager(state, 0);
+    const wrongFinal = run[9]!.choices.find((choice) => choice !== run[9]!.answer)!;
+    state = submitBarTriviaAnswer(run, state, wrongFinal).state;
+
+    expect(state.correctCount).toBe(7);
+    expect(state.score).toBeGreaterThanOrEqual(76);
+    expect(state.score).toBeLessThanOrEqual(82);
+  });
+
+  it("locks the calibrated base ladder and streak heat thresholds", () => {
+    expect(BAR_TRIVIA_BASE_POINTS).toEqual({
+      round1: 10,
+      round2: 12,
+      round3: 14,
+      "last-call": 16,
+    });
+    expect(barTriviaStreakMultiplier(2)).toBe(1);
+    expect(barTriviaStreakMultiplier(3)).toBe(1.1);
+    expect(barTriviaStreakMultiplier(5)).toBe(1.15);
+    expect(barTriviaStreakMultiplier(7)).toBe(1.25);
+  });
+
+  it("doubles the announced round and layers streak heat on top", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", { random: () => 0 });
+    let state = createBarTriviaState("round2");
+
+    for (let index = 0; index < 3; index += 1) {
+      state = submitBarTriviaAnswer(run, state, run[index]!.answer).state;
+    }
+
+    const fourth = submitBarTriviaAnswer(run, state, run[3]!.answer);
+    expect(fourth.result.basePoints).toBe(12);
+    expect(fourth.result.roundMultiplier).toBe(2);
+    expect(fourth.result.doubleRoundBonus).toBe(12);
+    expect(fourth.result.streakMultiplier).toBe(1.1);
+    expect(fourth.result.streakBonus).toBe(2.4);
+    expect(fourth.result.rawPoints).toBe(26.4);
+  });
+
+  it("adds Last Call wager on top of the 16-point question instead of replacing it", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "ufc", { random: () => 0 });
+    let state = createBarTriviaState("round2");
+
+    for (let index = 0; index < 9; index += 1) {
+      const wrong = run[index]!.choices.find((choice) => choice !== run[index]!.answer)!;
+      state = submitBarTriviaAnswer(run, state, wrong).state;
+    }
+
+    state = setBarTriviaWager(state, 10);
+    const final = submitBarTriviaAnswer(run, state, run[9]!.answer);
+
+    expect(final.result.basePoints).toBe(16);
+    expect(final.result.wagerDelta).toBe(10);
+    expect(final.result.rawPoints).toBe(26);
+    expect(final.state.rawScore).toBe(26);
+  });
+
+  it("subtracts the wager on a missed Last Call while preserving the accumulated tab", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "cfb", { random: () => 0 });
+    let state = createBarTriviaState("round3");
+
+    for (let index = 0; index < 9; index += 1) {
+      state = submitBarTriviaAnswer(run, state, run[index]!.answer).state;
+    }
+
+    const beforeFinal = state.rawScore;
+    state = setBarTriviaWager(state, 10);
+    const wrongFinal = run[9]!.choices.find((choice) => choice !== run[9]!.answer)!;
+    const final = submitBarTriviaAnswer(run, state, wrongFinal);
+
+    expect(final.result.rawPoints).toBe(-10);
+    expect(final.state.rawScore).toBe(beforeFinal - 10);
+    expect(final.state.score).toBeLessThan(state.score);
+  });
+
+  it("normalizes every perfect scoring path to exactly 100", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", { random: () => 0 });
+
+    for (const doubleRound of ["round1", "round2", "round3"] as const) {
+      let state = createBarTriviaState(doubleRound);
+      for (let index = 0; index < 9; index += 1) {
+        state = submitBarTriviaAnswer(run, state, run[index]!.answer).state;
+      }
+      state = setBarTriviaWager(state, 10);
+      state = submitBarTriviaAnswer(run, state, run[9]!.answer).state;
+
+      expect(state.rawScore).toBe(barTriviaPerfectRawScore(doubleRound));
+      expect(state.score).toBe(100);
+      expect(normalizeBarTriviaScore(state.rawScore, doubleRound)).toBe(100);
+    }
+  });
+
+  it("provides a transparent end-of-game scoring breakdown", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "ufc", { random: () => 0 });
+    let state = createBarTriviaState("round1");
+
+    for (let index = 0; index < 9; index += 1) {
+      state = submitBarTriviaAnswer(run, state, run[index]!.answer).state;
+    }
+    state = setBarTriviaWager(state, 7);
+    state = submitBarTriviaAnswer(run, state, run[9]!.answer).state;
+
+    const breakdown = barTriviaScoreBreakdown(state);
+    expect(breakdown.baseEarned).toBe(124);
+    expect(breakdown.doubleRoundBonus).toBe(30);
+    expect(breakdown.streakBonus).toBeGreaterThan(0);
+    expect(breakdown.wagerDelta).toBe(7);
+    expect(breakdown.rawScore).toBe(state.rawScore);
+    expect(breakdown.normalizedScore).toBe(state.score);
+  });
+
+  it("can select any of the first three rounds as the Double Round", () => {
+    expect(pickBarTriviaDoubleRound(() => 0)).toBe("round1");
+    expect(pickBarTriviaDoubleRound(() => 0.4)).toBe("round2");
+    expect(pickBarTriviaDoubleRound(() => 0.99)).toBe("round3");
+  });
+
+  it("deprioritizes recently seen questions when fresh questions exist", () => {
+    const first = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "cfb", { random: () => 0 });
+    const second = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "cfb", {
+      random: () => 0,
+      recentQuestionIds: first.map((question) => question.id),
+    });
+
+    const repeats = second.filter((question) => first.some((prior) => prior.id === question.id));
+    expect(repeats.length).toBeLessThanOrEqual(3);
+    expect(second.length - repeats.length).toBeGreaterThanOrEqual(7);
+  });
+
+  it("targets two active current-event questions without making them mandatory", () => {
+    const synthetic = [
+      barTriviaQuestion({
+        id: "nfl-current-test-a",
+        league: "nfl",
+        round: "round1",
+        category: "Fresh Story",
+        prompt: "Which test team owns the fresh-story answer for this synthetic current-event question?",
+        choices: ["Alpha", "Bravo", "Charlie", "Delta"],
+        answer: "Alpha",
+        explanation: "Synthetic coverage proves active current-event questions can be scheduled into a normal run.",
+        contentType: "current-event",
+        activeFrom: "2026-09-20T00:00:00Z",
+        expiresAt: "2026-10-05T23:59:59Z",
+        sourceId: "synthetic-a",
+        sourceUrl: "https://example.com/a",
+        verifiedAt: "2026-09-28",
+      }),
+      barTriviaQuestion({
+        id: "nfl-current-test-b",
+        league: "nfl",
+        round: "round3",
+        category: "Fresh Milestone",
+        prompt: "Which test team owns the milestone answer for this second synthetic current-event question?",
+        choices: ["Echo", "Foxtrot", "Golf", "Hotel"],
+        answer: "Echo",
+        explanation: "Synthetic coverage proves the selector can place current events in different difficulty rounds.",
+        contentType: "current-event",
+        activeFrom: "2026-09-20T00:00:00Z",
+        expiresAt: "2026-10-05T23:59:59Z",
+        sourceId: "synthetic-b",
+        sourceUrl: "https://example.com/b",
+        verifiedAt: "2026-09-28",
+      }),
+    ] as const;
+
+    const run = buildBarTriviaRun([...BAR_TRIVIA_QUESTION_BANK, ...synthetic], "nfl", {
+      random: () => 0,
+      now: "2026-09-28T12:00:00Z",
+    });
+
+    expect(BAR_TRIVIA_CURRENT_EVENT_TARGET).toBe(2);
+    expect(run.filter((question) => question.contentType === "current-event")).toHaveLength(2);
+  });
+
+  it("keeps the two-current-event target while avoiding a just-seen current question", () => {
+    const current = BAR_TRIVIA_QUESTION_BANK.find(
+      (question) => question.league === "nfl" && question.contentType === "current-event",
+    );
+    expect(current).toBeTruthy();
+
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", {
+      random: () => 0,
+      now: "2026-09-28T12:00:00Z",
+      recentQuestionIds: [current!.id],
+    });
+
+    expect(run).toHaveLength(10);
+    expect(run.some((question) => question.id === current!.id)).toBe(false);
+    expect(run.filter((question) => question.contentType === "current-event")).toHaveLength(2);
+  });
+
+  it("automatically drops expired current events and fills the run with evergreen questions", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "cfb", {
+      random: () => 0,
+      now: "2030-01-01T12:00:00Z",
+    });
+
+    expect(run).toHaveLength(10);
+    expect(run.every((question) => question.contentType === "evergreen")).toBe(true);
+
+    const current = BAR_TRIVIA_QUESTION_BANK.find((question) => question.contentType === "current-event");
+    expect(current).toBeTruthy();
+    expect(isBarTriviaQuestionActive(current!, "2030-01-01T12:00:00Z")).toBe(false);
+  });
+
+  it("uses sport-specific round names", () => {
+    expect(BAR_TRIVIA_ROUND_NAMES.nfl.round1).toBe("Around the League");
+    expect(BAR_TRIVIA_ROUND_NAMES.cfb.round1).toBe("Around the Country");
+    expect(BAR_TRIVIA_ROUND_NAMES.ufc.round1).toBe("Around the Octagon");
+    expect(BAR_TRIVIA_ROUND_NAMES.ufc.round3).toBe("Championship Rounds");
+    expect(BAR_TRIVIA_ROUND_NAMES.nfl["last-call"]).toBe("Last Call");
+  });
+});

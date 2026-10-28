@@ -1,0 +1,252 @@
+.war-room-heading {
+  align-items: center;
+  padding-bottom: 0;
+}
+
+.war-room-heading h1 {
+  margin: 0;
+}
+
+.war-room-heading__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.war-room-manage-access,
+.war-room-access-sheet__header > button {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.war-room-shell {
+  min-height: 0;
+}
+
+.war-room-feed {
+  min-height: 0;
+  max-height: min(56dvh, 560px);
+}
+
+.war-room-state {
+  min-height: 180px;
+}
+
+.war-room-composer {
+  position: static;
+  padding: 10px;
+}
+
+.war-room-composer__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+}
+
+.war-room-composer textarea {
+  min-height: 48px;
+  max-height: 96px;
+  padding: 12px 12px 19px;
+  overflow-y: auto;
+}
+
+.war-room-send {
+  min-width: 78px;
+  min-height: 48px;
+  padding-inline: 15px;
+  border: 0;
+}
+
+.war-room-new-messages {
+  bottom: 78px;
+}
+
+.war-room-access-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: end center;
+  padding: 18px;
+  background: rgba(0, 0, 0, .72);
+  backdrop-filter: blur(8px);
+}
+
+.war-room-access-sheet {
+  display: grid;
+  gap: 14px;
+  width: min(100%, 560px);
+  max-height: min(78dvh, 720px);
+  overflow: hidden;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: var(--surface-raised);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, .55);
+}
+
+.war-room-access-sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.war-room-access-sheet__header > div {
+  display: grid;
+  gap: 4px;
+}
+
+.war-room-access-sheet__header h2 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -.035em;
+}
+
+.war-room-access-sheet__copy {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.war-room-access-list {
+  display: grid;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.war-room-access-state {
+  padding: 30px 16px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.war-room-access-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  min-height: 66px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+}
+
+.war-room-access-row:first-child {
+  border-top: 0;
+}
+
+.war-room-access-avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.war-room-access-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.war-room-access-row__identity {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.war-room-access-row__identity strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.war-room-access-row__identity span {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.war-room-access-toggle {
+  display: inline-grid;
+  grid-template-columns: 18px auto;
+  align-items: center;
+  gap: 6px;
+  min-width: 66px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 950;
+}
+
+.war-room-access-toggle > span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.war-room-access-toggle.is-on {
+  border-color: rgba(47, 191, 98, .45);
+  background: rgba(47, 191, 98, .1);
+  color: var(--success);
+}
+
+.war-room-access-toggle.is-on > span {
+  background: var(--success);
+}
+
+.war-room-access-toggle:disabled {
+  opacity: .55;
+}
+
+@media (max-width: 640px) {
+  .war-room-heading {
+    align-items: center;
+  }
+
+  .war-room-heading__actions {
+    gap: 7px;
+  }
+
+  .war-room-manage-access {
+    padding-inline: 9px;
+  }
+
+  .war-room-feed {
+    max-height: calc(100dvh - 300px);
+  }
+
+  .war-room-access-backdrop {
+    padding: 0;
+  }
+
+  .war-room-access-sheet {
+    width: 100%;
+    max-height: 82dvh;
+    border-radius: 22px 22px 0 0;
+    padding-bottom: calc(18px + var(--safe-bottom));
+  }
+}

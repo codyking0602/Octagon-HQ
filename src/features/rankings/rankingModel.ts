@@ -1,0 +1,432 @@
+import { fighterAsset } from "../../config/brand";
+import { canonicalRankingInputs, type RankingInputFighter } from "./data/rankingInputs";
+import {
+  calculateApex,
+  calculateChampionship,
+  calculateEraDepth,
+  calculateLongevity,
+  calculateLossContext,
+  calculateOpponentQuality,
+  calculatePrimeDominance,
+} from "./engine/categoryCalculators";
+import { resolveEraWindow } from "./engine/eraWindow";
+import { round2 } from "./engine/math";
+import { rankingContract } from "./engine/rankingContract";
+import {
+  buildRankingProjection,
+  type BaseCategoryScores,
+  type RankingModifiers,
+} from "./engine/rankingEngine";
+import type { CanonicalFight, RankingBoard } from "./engine/schemas";
+import { formatFighterDisplayName } from "./fighterNamePresentation";
+
+const FINISH_METHODS = new Set(["ko-tko", "submission", "doctor-stoppage"]);
+const TOP_FIVE_TIERS = new Set(["champion-level", "top-five"]);
+const RANKED_TIERS = new Set(["champion-level", "top-five", "top-ten", "ranked"]);
+
+const CHAMPIONSHIP_TYPES: Record<
+  string,
+  { baseCredit: number; officialTitleFight: boolean }
+> = {
+  none: { baseCredit: 0, officialTitleFight: false },
+  normal: { baseCredit: 1, officialTitleFight: true },
+  interim: { baseCredit: 0.75, officialTitleFight: true },
+  "vacant-undisputed": { baseCredit: 0.9, officialTitleFight: true },
+  "second-division-undisputed": { baseCredit: 1.25, officialTitleFight: true },
+  "vacant-second-division": { baseCredit: 1.15, officialTitleFight: true },
+  tournament: { baseCredit: 0, officialTitleFight: false },
+  "retention-draw": { baseCredit: 0, officialTitleFight: true },
+};
+
+interface DispositionCounts {
+  wins: number;
+  losses: number;
+  draws: number;
+  noContests: number;
+  technicalExceptions: number;
+}
+
+export interface RankingVisibleStats {
+  ufcRecord: string;
+  titleFightWins: number;
+  adjustedTitleWins: number;
+  topFiveWins: number;
+  rankedWins: number;
+  finishRatePct: number;
+  primeRecord: string;
+  roundsWonPct: number;
+  activeEliteYears: number;
+  timesFinishedPrime: number;
+  throughPrimeUfcFights: number;
+}
+
+interface CalculationMetadata {
+  input: RankingInputFighter;
+  traces: {
+    championship: ReturnType<typeof calculateChampionship>;
+    opponentQuality: ReturnType<typeof calculateOpponentQuality>;
+    primeDominance: ReturnType<typeof calculatePrimeDominance>;
+    longevity: ReturnType<typeof calculateLongevity>;
+    apex: ReturnType<typeof calculateApex>;
+    penalty: ReturnType<typeof calculateLossContext>;
+    eraDepth: ReturnType<typeof calculateEraDepth>;
+  };
+  visibleStats: RankingVisibleStats;
+}
+
+export interface ProfileEvidence {
+  championshipRecord: string;
+  bestUfcWins: string;
+  eliteWindow: string;
+  apexPerformances: { opponent: string; summary: string }[];
+  primeLosses: string;
+  postPrimeLosses: number;
+}
+
+export interface RankingFighter {
+  fighter: string;
+  name: string;
+  displayName: string;
+  slug: string;
+  board: RankingBoard;
+  rank: number;
+  ovr: number;
+  rawScore: number;
+  division: string;
+  primaryDivision: string;
+  secondaryDivision: string;
+  resumeTag: string;
+  oneLiner: string;
+  whyRankedHere: string;
+  whyNotHigher: string;
+  finalTakeaway: string;
+  judgmentCalls: string[];
+  divisionStrength: string;
+  thumbUrl: string;
+  profileUrl: string;
+  championship: number;
+  opponentQuality: number;
+  primeDominance: number;
+  longevity: number;
+  apexPeak: number;
+  penalty: number;
+  eraDepth: number;
+  visibleStats: RankingVisibleStats;
+  longestUfcWinStreak: number;
+  traces: CalculationMetadata["traces"];
+  profileEvidence: ProfileEvidence;
+}
+
+function countDispositions(fights: readonly CanonicalFight[]): DispositionCounts {
+  return fights.reduce<DispositionCounts>(
+    (counts, fight) => {
+      if (fight.officialResult === "no-contest") counts.noContests += 1;
+      if (fight.scoringDisposition === "count-win") counts.wins += 1;
+      else if (fight.scoringDisposition === "count-loss") counts.losses += 1;
+      else if (fight.scoringDisposition === "count-draw") counts.draws += 1;
+      else if (fight.scoringDisposition === "technical-exception") {
+        counts.technicalExceptions += 1;
+      }
+      return counts;
+    },
+    { wins: 0, losses: 0, draws: 0, noContests: 0, technicalExceptions: 0 },
+  );
+}
+
+function formatRecord(counts: DispositionCounts, includeNoContest = true) {
+  const base = `${counts.wins}-${counts.losses}${counts.draws ? `-${counts.draws}` : ""}`;
+  return includeNoContest && counts.noContests
+    ? `${base}, ${counts.noContests} NC`
+    : base;
+}
+
+function canonicalPrimeFights(input: RankingInputFighter) {
+  const fights = input.facts.fights;
+  const start = fights.findIndex((fight) => fight.id === input.facts.primeWindow.startFightId);
+  const end = input.facts.primeWindow.open
+    ? fights.length - 1
+    : fights.findIndex((fight) => fight.id === input.facts.primeWindow.endFightId);
+  if (start < 0 || end < start) {
+    throw new Error(`Canonical prime window is invalid for ${input.fighter}.`);
+  }
+  return { fights: fights.slice(start, end + 1), start, end };
+}
+
+function activeEliteYears(input: RankingInputFighter, primeFights: readonly CanonicalFight[]) {
+  const dates = primeFights.map((fight) => Date.parse(`${fight.date}T00:00:00Z`));
+  if (!dates.length) return 0;
+  const capDays = input.facts.gapCapMonths * 30.4375;
+  let days = 0;
+  for (let index = 1; index < dates.length; index += 1) {
+    days += Math.min((dates[index] - dates[index - 1]) / 86_400_000, capDays);
+  }
+  if (input.facts.primeWindow.open) {
+    const asOf = Date.parse(`${canonicalRankingInputs.source.modelAsOfDate}T00:00:00Z`);
+    const lastDate = dates.at(-1)!;
+    if (asOf > lastDate) days += Math.min((asOf - lastDate) / 86_400_000, capDays);
+  }
+  return round2(days / 365.25);
+}
+
+function longestUfcWinStreak(fights: readonly CanonicalFight[]) {
+  let current = 0;
+  let longest = 0;
+  for (const fight of fights) {
+    if (fight.scoringDisposition === "count-win") {
+      current += 1;
+      longest = Math.max(longest, current);
+    } else if (
+      fight.scoringDisposition === "count-loss" ||
+      fight.scoringDisposition === "count-draw" ||
+      fight.officialResult === "draw" ||
+      fight.officialResult === "no-contest" ||
+      fight.scoringDisposition === "excluded-no-contest" ||
+      fight.scoringDisposition === "technical-exception"
+    ) {
+      current = 0;
+    }
+  }
+  return longest;
+}
+
+function deriveVisibleStats(
+  input: RankingInputFighter,
+  adjustedTitleWins: number,
+): RankingVisibleStats {
+  const fights = input.facts.fights;
+  const official = fights.reduce<DispositionCounts>(
+    (counts, fight) => {
+      if (fight.officialResult === "win") counts.wins += 1;
+      else if (fight.officialResult === "loss") counts.losses += 1;
+      else if (fight.officialResult === "draw") counts.draws += 1;
+      else if (fight.officialResult === "no-contest") counts.noContests += 1;
+      return counts;
+    },
+    { wins: 0, losses: 0, draws: 0, noContests: 0, technicalExceptions: 0 },
+  );
+  const scored = countDispositions(fights);
+  const finishWins = fights.filter(
+    (fight) =>
+      fight.scoringDisposition === "count-win" && FINISH_METHODS.has(fight.methodCategory),
+  ).length;
+  const prime = canonicalPrimeFights(input);
+  const primeCounts = countDispositions(prime.fights);
+  const timesFinishedPrime = prime.fights.filter(
+    (fight) =>
+      fight.scoringDisposition === "count-loss" && FINISH_METHODS.has(fight.methodCategory),
+  ).length;
+  const rounds = prime.fights.reduce(
+    (totals, fight) => {
+      if (fight.rounds.status !== "audited") return totals;
+      totals.won += fight.rounds.won;
+      totals.lost += fight.rounds.lost;
+      totals.drawn += fight.rounds.drawn;
+      return totals;
+    },
+    { won: 0, lost: 0, drawn: 0 },
+  );
+  const roundTotal = rounds.won + rounds.lost + rounds.drawn;
+  const titleFightWins = fights.filter((fight) => {
+    const rule = CHAMPIONSHIP_TYPES[fight.championshipType] ?? CHAMPIONSHIP_TYPES.none;
+    return (
+      rule.officialTitleFight &&
+      fight.championshipEligible !== false &&
+      fight.scoringDisposition === "count-win"
+    );
+  }).length;
+  const qualityWins = fights.filter((fight) => fight.scoringDisposition === "count-win");
+  const throughPrime = countDispositions(fights.slice(0, prime.end + 1));
+
+  return {
+    ufcRecord: formatRecord(official),
+    titleFightWins,
+    adjustedTitleWins: round2(adjustedTitleWins),
+    topFiveWins: qualityWins.filter((fight) => TOP_FIVE_TIERS.has(fight.qualityTier)).length,
+    rankedWins: qualityWins.filter((fight) => RANKED_TIERS.has(fight.qualityTier)).length,
+    finishRatePct: scored.wins ? round2((finishWins / scored.wins) * 100) : 0,
+    primeRecord: formatRecord(primeCounts),
+    roundsWonPct: roundTotal
+      ? round2(((rounds.won + rounds.drawn * 0.5) / roundTotal) * 100)
+      : 0,
+    activeEliteYears: activeEliteYears(input, prime.fights),
+    timesFinishedPrime,
+    throughPrimeUfcFights: throughPrime.wins + throughPrime.losses + throughPrime.draws,
+  };
+}
+
+function formatChampionshipRecord(input: RankingInputFighter) {
+  const counts = input.facts.fights.reduce<DispositionCounts>((totals, fight) => {
+    const rule = CHAMPIONSHIP_TYPES[fight.championshipType] ?? CHAMPIONSHIP_TYPES.none;
+    if (!rule.officialTitleFight || fight.championshipEligible === false) return totals;
+    if (fight.officialResult === "win") totals.wins += 1;
+    else if (fight.officialResult === "loss") totals.losses += 1;
+    else if (fight.officialResult === "draw") totals.draws += 1;
+    else if (fight.officialResult === "no-contest") totals.noContests += 1;
+    return totals;
+  }, { wins: 0, losses: 0, draws: 0, noContests: 0, technicalExceptions: 0 });
+  return formatRecord(counts, false);
+}
+
+function compactOpponentList(opponents: string[]) {
+  if (!opponents.length) return "None";
+  const counts = new Map<string, number>();
+  opponents.forEach((opponent) => counts.set(opponent, (counts.get(opponent) ?? 0) + 1));
+  return [...counts.entries()]
+    .map(([opponent, count]) => count > 1 ? `${opponent} ×${count}` : opponent)
+    .join(", ");
+}
+
+function methodLabel(method: string) {
+  if (method === "ko-tko") return "TKO/KO";
+  if (method === "submission") return "submission";
+  if (method === "decision") return "decision";
+  if (method === "doctor-stoppage") return "doctor stoppage";
+  return method.replace(/-/g, " ");
+}
+
+function buildProfileEvidence(input: RankingInputFighter, penaltyTrace: CalculationMetadata["traces"]["penalty"]): ProfileEvidence {
+  const prime = canonicalPrimeFights(input);
+  const bestUfcWins = input.judgments.opponentQuality.inputs
+    .slice()
+    .sort((left, right) => right.finalCredit - left.finalCredit)
+    .slice(0, 4)
+    .map((fight) => fight.opponent);
+  const firstPrime = prime.fights[0];
+  const lastPrime = prime.fights.at(-1)!;
+  const apexPerformances = input.judgments.apex.performances.map((performance) => {
+    const fight = input.facts.fights.find((candidate) => candidate.id === performance.fightId);
+    if (!fight) return { opponent: "UFC opponent", summary: "Signature UFC performance" };
+    const result = fight.officialResult === "win" ? "Won" : fight.officialResult === "loss" ? "Lost" : "Result";
+    const stakes = fight.championshipType === "none" ? "" : " in a UFC title fight";
+    return { opponent: fight.opponent, summary: `${result} by ${methodLabel(fight.methodCategory)}${stakes}` };
+  });
+  const primeLosses = penaltyTrace.events
+    .filter((event) => event.phase === "prime" && event.penaltyEligible && !event.technicalException)
+    .map((event) => event.upwardDivision ? `${event.opponent} — upward division` : event.opponent);
+  const postPrimeLosses = penaltyTrace.events
+    .filter((event) => event.phase === "post-prime" && event.penaltyEligible && !event.technicalException)
+    .length;
+  return {
+    championshipRecord: formatChampionshipRecord(input),
+    bestUfcWins: compactOpponentList(bestUfcWins),
+    eliteWindow: `${firstPrime.opponent} ${firstPrime.date.slice(0, 4)} → ${lastPrime.opponent} ${lastPrime.date.slice(0, 4)}`,
+    apexPerformances,
+    primeLosses: compactOpponentList(primeLosses),
+    postPrimeLosses,
+  };
+}
+
+function resolveAsset(assetPath: string | null, slug: string, kind: "thumb" | "profile") {
+  if (!assetPath) return fighterAsset(slug, kind);
+  if (/^https?:\/\//i.test(assetPath)) {
+    throw new Error(`External fighter asset URL is not allowed for ${slug}.`);
+  }
+  return `/${assetPath.replace(/^\/+/, "")}`;
+}
+
+function divisionStrengthCopy(input: RankingInputFighter, eraDepth: number) {
+  const multiplier = round2(input.era.divisionMultiplier);
+  const direction = eraDepth > 0 ? "adds" : eraDepth < 0 ? "reduces" : "keeps";
+  return `The shared UFC era ledger applies a ${multiplier.toFixed(2)} division multiplier, while the approved era-depth adjustment ${direction} ${Math.abs(eraDepth).toFixed(2)} points to the final score.`;
+}
+
+const calculationSeeds = canonicalRankingInputs.fighters.map((input) => {
+  const eraWindow = resolveEraWindow(input.facts.fights, input.era.window);
+  const championship = calculateChampionship(input.judgments.championship);
+  const opponentQuality = calculateOpponentQuality(input.judgments.opponentQuality);
+  const primeDominance = calculatePrimeDominance({
+    fighter: input.fighter,
+    fights: input.facts.fights,
+    window: eraWindow,
+  });
+  const longevity = calculateLongevity({
+    fighter: input.fighter,
+    fights: input.facts.fights,
+    window: eraWindow,
+    modelAsOfDate: canonicalRankingInputs.source.modelAsOfDate,
+    statusMultiplier: input.era.statusMultiplier,
+    divisionMultiplier: input.era.divisionMultiplier,
+  });
+  const apex = calculateApex(input.judgments.apex);
+  const penalty = calculateLossContext({
+    fighter: input.fighter,
+    fights: input.facts.fights,
+    window: eraWindow,
+    divisionMultiplier: input.era.divisionMultiplier,
+  });
+  const eraDepth = calculateEraDepth(input.eraDepth);
+  const categories: BaseCategoryScores = {
+    championship: championship.score,
+    opponentQuality: opponentQuality.score,
+    primeDominance: primeDominance.score,
+    longevity: longevity.score,
+  };
+  const modifiers: RankingModifiers = {
+    apex: apex.score,
+    penalty: penalty.penalty,
+    eraDepth: eraDepth.adjustment,
+  };
+  const metadata: CalculationMetadata = {
+    input,
+    traces: { championship, opponentQuality, primeDominance, longevity, apex, penalty, eraDepth },
+    visibleStats: deriveVisibleStats(input, championship.adjustedTitleCredit),
+  };
+  return { fighter: input.fighter, board: input.board, categories, modifiers, metadata };
+});
+
+export const calculatedRankingProjection = buildRankingProjection(calculationSeeds, rankingContract);
+
+function appRow(
+  row: (typeof calculatedRankingProjection.rows)[number],
+): RankingFighter {
+  const metadata = row.metadata!;
+  const presentation = metadata.input.presentation;
+  return {
+    fighter: row.fighter,
+    name: row.fighter,
+    displayName: formatFighterDisplayName(presentation.slug, row.fighter),
+    slug: presentation.slug,
+    board: row.board,
+    rank: row.rank,
+    ovr: row.ovr,
+    rawScore: row.totals.totalScore,
+    division: presentation.divisionLabel,
+    primaryDivision: presentation.primaryDivision ?? metadata.input.facts.identity.primaryDivision,
+    secondaryDivision:
+      presentation.secondaryDivision ?? metadata.input.facts.identity.secondaryDivisions.join(" / "),
+    resumeTag: presentation.resumeTag,
+    oneLiner: presentation.oneLiner,
+    whyRankedHere: presentation.whyRankedHere,
+    whyNotHigher: presentation.whyNotHigher,
+    finalTakeaway: presentation.finalTakeaway,
+    judgmentCalls: presentation.keyJudgmentCalls,
+    divisionStrength: divisionStrengthCopy(metadata.input, row.modifiers.eraDepth),
+    thumbUrl: resolveAsset(presentation.thumbUrl, presentation.slug, "thumb"),
+    profileUrl: resolveAsset(presentation.photoUrl, presentation.slug, "profile"),
+    championship: row.categories.championship,
+    opponentQuality: row.categories.opponentQuality,
+    primeDominance: row.categories.primeDominance,
+    longevity: row.categories.longevity,
+    apexPeak: row.modifiers.apex,
+    penalty: row.modifiers.penalty,
+    eraDepth: row.modifiers.eraDepth,
+    visibleStats: metadata.visibleStats,
+    longestUfcWinStreak: longestUfcWinStreak(metadata.input.facts.fights),
+    traces: metadata.traces,
+    profileEvidence: buildProfileEvidence(metadata.input, metadata.traces.penalty),
+  };
+}
+
+export const allTime = calculatedRankingProjection.rows.map(appRow);
+export const menAllTime = calculatedRankingProjection.men.map(appRow);
+export const womenAllTime = calculatedRankingProjection.women.map(appRow);
+
+const fightersBySlug = new Map(allTime.map((fighter) => [fighter.slug, fighter]));
+
+export function getFighter(slug?: string) {
+  return slug ? fightersBySlug.get(slug) : undefined;
+}
+
+export function categoryRating(value: number, maximum = 30) {
+  return Math.max(0, Math.min(99, Math.round((value / maximum) * 99)));
+}

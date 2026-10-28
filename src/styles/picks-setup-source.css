@@ -1,0 +1,29 @@
+.picks-setup-source {
+  display: grid;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+}
+
+.picks-setup-source input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255,255,255,.025);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.picks-setup-source small {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  line-height: 1.45;
+}
