@@ -45,9 +45,9 @@ const prepPayload = {
   ],
   spotlights: [{
     bout_id: "main-event-alpha-beta",
-    preview: "Alpha wants a pressure fight while Beta needs range and cleaner counters.",
-    red: { fighter_slug: "alpha", record: "10-1", age: "29", height: "6'0\"", reach: "74\"", stance: "Orthodox", edges: ["Pressure pace"] },
-    blue: { fighter_slug: "beta", record: "12-2", age: "31", height: "5'11\"", reach: "72\"", stance: "Southpaw", edges: ["Counter timing"] },
+    preview: "Alpha wants a pressure wrestling fight and relies on chain takedowns to dictate the exchanges. Beta needs to maintain distance and use clean southpaw counters to keep Alpha from getting close. The tactical battle should center on whether Alpha can force the clinch before Beta establishes the jab.",
+    red: { fighter_slug: "alpha", record: "10-1", age: "29", height: "6'0\"", reach: "74\"", stance: "Orthodox", edges: ["Chain wrestling", "Forward pressure", "Clinch control"] },
+    blue: { fighter_slug: "beta", record: "12-2", age: "31", height: "5'11\"", reach: "72\"", stance: "Southpaw", edges: ["Southpaw counters", "Range management", "Jab timing"] },
     watch_spotlights: [],
     source: "UFCStats",
     generated_at: "2026-09-21T13:00:00Z",
