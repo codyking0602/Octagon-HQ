@@ -10,7 +10,7 @@ export function previewSentences(value:string) {
   return value.trim().split(/(?<=[.!?])\s+(?=[A-Z“])/).filter(Boolean);
 }
 export function isConciseUfcEditorial(spotlight:{preview:string;red:{edges:string[]};blue:{edges:string[]}}) {
-  return wordCount(spotlight.preview)>=20 && wordCount(spotlight.preview)<=UFC_PREVIEW_WORD_LIMIT
+  return wordCount(spotlight.preview)>=8 && wordCount(spotlight.preview)<=UFC_PREVIEW_WORD_LIMIT
     && previewSentences(spotlight.preview).length<=UFC_PREVIEW_SENTENCE_LIMIT
     && [spotlight.red,spotlight.blue].every(f=>f.edges.length>0 && f.edges.length<=3
       && f.edges.every(edge=>wordCount(edge)<=UFC_EDGE_WORD_LIMIT && edge.length<=70));
