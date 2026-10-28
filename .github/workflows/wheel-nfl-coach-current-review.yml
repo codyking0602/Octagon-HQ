@@ -53,7 +53,7 @@ jobs:
           const source=JSON.parse(readFileSync('tmp/wheel-monitor/nfl/current-coaches.json','utf8'));
           const fs=await import('node:fs');
           const available=fs.readdirSync('data/generated/football')
-            .filter(name=>/^wheel-nfl-head-coach-grades-\d{4}-\d{2}-\d{2}\\.json$/.test(name)).sort();
+            .filter(name=>/^wheel-nfl-head-coach-grades-\d{4}-\d{2}-\d{2}\.json$/.test(name)).sort();
           const current=available.at(-1);
           if(!current) throw new Error('Missing current NFL coach grading version');
           const grading=JSON.parse(readFileSync('data/generated/football/'+current,'utf8'));
