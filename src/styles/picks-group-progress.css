@@ -333,3 +333,25 @@
   padding: 3px 5px;
   white-space: nowrap;
 }
+
+/* UFC: same collapsed three-number scorecard hierarchy as Football. */
+.ufc-picks-scorecard {margin-top:12px;padding:0;overflow:hidden;border-radius:16px;}
+.ufc-picks-scorecard__summary {display:grid;gap:7px;list-style:none;cursor:pointer;padding:10px 13px 9px;}
+.ufc-picks-scorecard__summary::-webkit-details-marker {display:none;}
+.ufc-picks-scorecard__heading {display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ufc-picks-scorecard__heading strong {font-size:11px;font-weight:950;letter-spacing:.1em;}
+.ufc-picks-scorecard__heading small {font-size:9px;font-weight:900;color:var(--text-muted);letter-spacing:.07em;}
+.ufc-picks-scorecard__metrics {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;}
+.ufc-picks-scorecard__metrics > div {display:grid;gap:3px;min-width:0;}
+.ufc-picks-scorecard__metrics b {font-size:clamp(18px,4.2vw,24px);font-weight:950;color:#fafbfc;white-space:nowrap;line-height:1.1;}
+.ufc-picks-scorecard__metrics small {font-size:8px;font-weight:850;color:#9ea5b0;letter-spacing:.06em;white-space:nowrap;}
+.ufc-picks-scorecard__foot {display:flex;justify-content:space-between;align-items:center;border-top:1px solid #323438;padding-top:7px;gap:6px;}
+.ufc-picks-scorecard__foot small {font-size:9px;color:#a1a6b0;font-weight:800;letter-spacing:.03em;}
+.ufc-picks-scorecard__foot span {font-size:9px;font-weight:900;color:#ff777a;letter-spacing:.05em;white-space:nowrap;}
+.ufc-picks-scorecard__foot span::after {content:"⌄";display:inline-block;margin-left:6px;}
+.ufc-picks-scorecard[open] .ufc-picks-scorecard__foot span::after {transform:rotate(180deg);}
+.ufc-picks-scorecard__body {border-top:1px solid #303239;}
+.ufc-picks-scorecard__body > .picks-group-progress {margin:0;border:0;border-radius:0;}
+.ufc-picks-scorecard__body > .picks-group-progress > summary {min-height:36px;padding-inline:14px;background:#16171a;}
+.ufc-picks-scorecard__disclaimer,.ufc-picks-scorecard__lock {margin:0;padding:9px 13px;color:#c4c6cd;font-size:10px;line-height:1.4;}
+.ufc-picks-scorecard__lock {color:#f7ca76;}
