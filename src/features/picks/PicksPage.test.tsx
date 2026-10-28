@@ -205,6 +205,10 @@ describe("PicksPage", () => {
     expect(screen.getAllByLabelText("Sportsbook odds source")).toHaveLength(1);
     expect(screen.queryByLabelText("Current Picks progress")).not.toBeInTheDocument();
     expect(await screen.findByText("FINISHED EVENTS")).toBeInTheDocument();
+    // Scoring belongs after the results archive, not between standings and the fight board.
+    const archive = screen.getByText("Picks Results Archive");
+    const rules = screen.getByText("SCORING & UNDERDOG LOCK RULES");
+    expect(archive.compareDocumentPosition(rules) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: /Bogdan Guskov/i }));
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(event.eventId, "ankalaev-guskov", "bogdan-guskov"));
