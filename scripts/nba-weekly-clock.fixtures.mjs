@@ -16,7 +16,7 @@ test("8 AM Central works in both daylight saving and standard time", () => {
   assert.equal(nbaWeeklyGate(new Date("2026-11-02T13:00:00Z")).publish, false);
 });
 test("weekday collection and weekend overdue recovery remain enabled", () => {
-  assert.deepEqual(nbaWeeklyGate(new Date("2026-10-26T16:26:05Z")),
+  assert.deepEqual(nbaWeeklyGate(new Date("2026-10-26T11:26:05Z")),
     {run:true,publish:false});
   assert.equal(nbaWeeklyGate(new Date("2026-10-31T16:00:00Z")).publish, true);
   assert.equal(nbaWeeklyGate(new Date("2026-11-01T17:00:00Z")).publish, true);
