@@ -11,6 +11,7 @@ describe("UFC Picks independent fighter identity links",()=>{
     render(<MemoryRouter><UfcFighterIdentityBadges slug="jon-jones" /></MemoryRouter>);
     expect(screen.getByRole("link",{name:/Jon Jones HQ Rankings profile/i}))
       .toHaveAttribute("href","/fighters/jon-jones");
+    expect(screen.getByRole("link")).toHaveTextContent("›");
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
   it("links the temporary SKCS test fighter to the existing scouting overlay",()=>{
@@ -19,6 +20,7 @@ describe("UFC Picks independent fighter identity links",()=>{
     render(<MemoryRouter><UfcFighterIdentityBadges slug="quillan-salkilld" /></MemoryRouter>);
     expect(screen.getByRole("link",{name:/Quillan Salkilld SKCS scouting profile/i}))
       .toHaveAttribute("href","/fighters-to-watch#quillan-salkilld");
+    expect(screen.getByRole("link")).toHaveTextContent("›");
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
   it("adds no badge or invented link for an unlisted fighter",()=>{

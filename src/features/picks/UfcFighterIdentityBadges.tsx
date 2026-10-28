@@ -11,9 +11,9 @@ export function UfcFighterIdentityBadges({ slug }: { slug: string }) {
   return (
     <span className="pick-fighter-identity" aria-label="Fighter profile links">
       {hq ? <Link className="pick-fighter-identity__hq" to={`/fighters/${encodeURIComponent(hq.slug)}`}
-        aria-label={`Open ${hq.displayName} HQ Rankings profile, rank ${hq.rank}`}>HQ #{hq.rank}</Link> : null}
+        aria-label={`Open ${hq.displayName} HQ Rankings profile, rank ${hq.rank}`}>HQ #{hq.rank}<span className="pick-fighter-identity__chevron" aria-hidden="true">›</span></Link> : null}
       {skcs ? <Link className="pick-fighter-identity__skcs" to={`/fighters-to-watch#${skcs.id}`}
-        aria-label={`Open ${skcs.name} SKCS scouting profile, rank ${skcs.rank}`}>SKCS #{skcs.rank}</Link> : null}
+        aria-label={`Open ${skcs.name} SKCS scouting profile, rank ${skcs.rank}`}>SKCS #{skcs.rank}<span className="pick-fighter-identity__chevron" aria-hidden="true">›</span></Link> : null}
     </span>
   );
 }
