@@ -15,6 +15,8 @@ begin
   select payload->'spotlights' into v_prep from public.ufc_pick_prep_packages
     where event_id='ufc-fight-night-moicano-vs-nolan-2026-10-31'
     and status='review-needed' for update;
+  -- A clean migration-test database contains neither optional live event nor prep.
+  if v_live is null and v_prep is null then return; end if;
   if jsonb_typeof(v_live) is distinct from 'array'
     or jsonb_array_length(v_live) <> 1
     or v_live->0->>'bout_id' <> 'main-event-renato-moicano-tom-nolan'
