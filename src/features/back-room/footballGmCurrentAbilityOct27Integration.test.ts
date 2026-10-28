@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import stroud from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-26.json";
 import qbs from "../../../data/curated/football/nfl/wheel-nfl-current-ability-revisions-2026-10-27.json";
 import skills from "../../../data/curated/football/nfl/wheel-nfl-skill-and-qb-ability-revisions-2026-10-27.json";
+import oct28 from "../../../data/curated/football/nfl/wheel-nfl-madden-editorial-revisions-2026-10-28.json";
 import contracts from "../../../data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json";
 import profiles from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
 import { FOOTBALL_GM_PLAYER_POOL, FOOTBALL_GM_CURRENT_PLAYER_POOL,
@@ -56,8 +57,11 @@ describe("current NFL Oct 27 ability reaches new Short and Long GM games",()=>{
      }
    }
  });
- it("leaves the original grades as historical research and every unchanged player's present ability intact",()=>{
-   const changed=new Set(changes.map(c=>c.team+"|"+c.family+"|"+c.player));
+ it("leaves historical research grades intact while respecting October 28 current-ability changes",()=>{
+   const changed=new Set([
+     ...changes.map(c=>c.team+"|"+c.family+"|"+c.player),
+     ...oct28.changes.filter(c=>c.family!=="Head Coach").map(c=>c.team+"|"+c.family+"|"+c.subject),
+   ]);
    for(const player of FOOTBALL_GM_PLAYER_POOL){
      const original=profiles.profiles.find(p=>p.id===player.id)!;
      if(!changed.has(player.team+"|"+player.family+"|"+player.name)){
