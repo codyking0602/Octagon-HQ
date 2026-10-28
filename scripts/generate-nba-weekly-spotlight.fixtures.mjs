@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { finishedWeek, fetchWeeklyScoreboard, collectTeamGames, selectWeek, extractYoutubeVideos,
-  findMatchingHighlight, mergeOfficialVideos, playerEditorialScore, teamEditorialScore,
+  findMatchingHighlight, mergeOfficialVideos, archiveCandidates, verifiedArchiveVideo, playerEditorialScore, teamEditorialScore,
   basketballReferenceTeamSeasonUrl, basketballReferencePlayerUrl } from "./generate-nba-weekly-spotlight.mjs";
 test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
   assert.deepEqual(
@@ -22,6 +22,28 @@ test("seven independent ESPN daily scoreboards replace rejected date ranges with
   assert.deepEqual(events.map(x=>x.id),["1","one-duplicate","2","3","4","5","6","7"]);
   await assert.rejects(fetchWeeklyScoreboard(start,end,async()=>({})),/missing events/);
   await assert.rejects(fetchWeeklyScoreboard(start,start,async()=>({events:[]})),/exactly seven/);
+});
+test("keyless NBA archive rejects wrong publishers, dates, long clips and title mismatches",()=>{
+  const entries=[
+    {id:"ABCdefghi12",title:"Sample Star 30 Points Highlights"},
+    {id:"ABCdefghi13",title:"OTHER basketball news"},
+    {id:"ABCdefghi14",title:"Sample Star FULL GAME HIGHLIGHTS"},
+    {id:"ABCdefghi12",title:"Sample Star 30 Points Highlights"},
+  ];
+  assert.deepEqual(archiveCandidates(entries,["Sample Star"]),
+    ["https://www.youtube.com/watch?v=ABCdefghi12"]);
+  const good={id:"ABCdefghi12",channel_id:"UCWJ2lWNubArHWmf3FIHbfcQ",
+    title:"Sample Star 30 Points Highlights",duration:190,
+    timestamp:Date.parse("2026-10-24T12:00:00Z")/1000};
+  const within=verifiedArchiveVideo(good,"2026-10-19","2026-10-25");
+  assert.equal(within?.channel,"UCWJ2lWNubArHWmf3FIHbfcQ");
+  assert.equal(within?.durationSeconds,190);
+  assert.equal(verifiedArchiveVideo({...good,channel_id:"unofficial"},"2026-10-19","2026-10-25"),null);
+  assert.equal(verifiedArchiveVideo({...good,duration:600},"2026-10-19","2026-10-25"),null);
+  assert.equal(verifiedArchiveVideo({...good,timestamp:Date.parse("2026-10-27T00:00:00Z")/1000},"2026-10-19","2026-10-25"),null);
+  assert.equal(verifiedArchiveVideo({...good,timestamp:null,upload_date:"20261026"},"2026-10-19","2026-10-25"),null);
+  assert.ok(verifiedArchiveVideo({...good,timestamp:null,upload_date:"20261024"},"2026-10-19","2026-10-25"));
+  assert.equal(verifiedArchiveVideo({...good,timestamp:null,upload_date:null},"2026-10-19","2026-10-25"),null);
 });
 const player={id:"123",displayName:"Sample Star",position:{abbreviation:"PG"}};
 const teams=[
