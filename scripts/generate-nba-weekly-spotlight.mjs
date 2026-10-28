@@ -577,10 +577,10 @@ async function main(){
   // video or historical weekly stats. This is a one-time metadata migration.
   if(existing.weekEnd===weekEnd&&existing.player&&existing.team) {
     const refreshed=addVerifiedStandings(existing,standings);
-    await fs.writeFile(destination,JSON.stringify(refreshed,null,2)+"\\n");
+    await fs.writeFile(destination,JSON.stringify(refreshed,null,2)+"\n");
     const archive=path.resolve(`data/generated/nba/weekly-${weekEnd}.json`);
     await fs.mkdir(path.dirname(archive),{recursive:true});
-    await fs.writeFile(archive,JSON.stringify(refreshed,null,2)+"\\n");
+    await fs.writeFile(archive,JSON.stringify(refreshed,null,2)+"\n");
     console.log("Added verified standings to existing NBA spotlight:",weekEnd);
     return;
   }
