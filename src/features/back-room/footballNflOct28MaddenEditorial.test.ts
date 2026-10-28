@@ -54,7 +54,7 @@ describe("NFL first Madden editorial ability cycle — append-only", () => {
     expect(sql).toContain("order by g.effective_date desc limit 1");
     expect(sql).toContain("preflight mismatch");
     expect(sql).toContain("postflight mismatch");
-    expect(sql).not.toMatch(/\\b(?:update|delete\\s+from|truncate)\\s+private\\.wheel_football_(?:grade_authority|picks)\\b/i);
+    expect(sql).not.toMatch(/\b(?:update|delete\s+from|truncate)\s+private\.wheel_football_(?:grade_authority|picks)\b/i);
     expect(postRatingWorkflow).toContain("wheel-nfl-*-grades-*.json");
     expect(postRatingWorkflow).toContain("push:");
     expect(postRatingScript).toContain("mandatoryDevelopmentReevaluations");
