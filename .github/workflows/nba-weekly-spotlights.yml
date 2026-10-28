@@ -11,7 +11,7 @@ on:
     paths:
       - '.github/workflows/nba-weekly-spotlights.yml'
       - 'scripts/nba-weekly-clock.mjs'
-      - 'scripts/nba-weekly-clock.test.mjs'
+      - 'scripts/nba-weekly-clock.fixtures.mjs'
       - 'scripts/generate-nba-weekly-spotlight.fixtures.mjs'
 
 permissions:
@@ -59,7 +59,7 @@ jobs:
           key: nba-weekly-youtube-${{ github.run_id }}
       - name: Verify weekly selection using offline ESPN and YouTube fixtures
         if: steps.clock.outputs.publish == 'true'
-        run: node --test scripts/nba-weekly-clock.test.mjs scripts/generate-nba-weekly-spotlight.fixtures.mjs
+        run: node --test scripts/nba-weekly-clock.fixtures.mjs scripts/generate-nba-weekly-spotlight.fixtures.mjs
       - name: Gather last complete week's NBA results and verified YouTube highlights
         if: steps.clock.outputs.publish == 'true'
         env:
