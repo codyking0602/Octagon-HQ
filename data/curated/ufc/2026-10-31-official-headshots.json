@@ -86,9 +86,14 @@
   {
     "fighter": "Luana Santos",
     "slug": "luana-santos",
-    "status": "pending",
-    "reason": "no unambiguous ESPN MMA athlete identity",
-    "espn_id": null
+    "status": "ready",
+    "espn_id": "5110469",
+    "source": "https://a.espncdn.com/i/headshots/mma/players/full/5110469.png",
+    "source_sha256": "ad41f0ca083c302333e0680e04c16b27aba33103e0cb166539ba6f5a5f7353e3",
+    "original_dimensions": [
+      600,
+      436
+    ]
   },
   {
     "fighter": "Jean-Paul Lebosnoyani",
