@@ -222,7 +222,7 @@ describe("PicksPage", () => {
       bouts: [
         ...event.bouts,
         {
-          boutId: "temporary-sixth-jon-jones-quillan-salkilld",
+          boutId: "jon-jones-vs-quillan-salkilld",
           position: 6,
           weightClass: "Lightweight",
           redFighterSlug: "jon-jones",
@@ -256,7 +256,7 @@ describe("PicksPage", () => {
     const selectJones = screen.getByRole("button", { name: /Jon Jones/i });
     fireEvent.click(selectJones);
     await waitFor(() => expect(savePick).toHaveBeenCalledWith(
-      testCard.eventId, "temporary-sixth-jon-jones-quillan-salkilld", "jon-jones",
+      testCard.eventId, "jon-jones-vs-quillan-salkilld", "jon-jones",
     ));
     await waitFor(() => expect(selectJones).toHaveAttribute("aria-pressed", "true"));
     expect(screen.getByLabelText("Your pick")).toHaveTextContent("✓");
