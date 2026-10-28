@@ -14,6 +14,7 @@ import urllib.request
 from pathlib import Path
 from urllib.parse import quote
 from PIL import Image, ImageStat
+from rembg import remove
 
 FIGHTERS = [
     ("renato-moicano", "Renato Moicano"),
@@ -47,6 +48,10 @@ def lookup(name):
             match=re.fullmatch(r"s:3301~a:(\d+)",uid)
             if match:candidates.append(match.group(1))
     unique=set(candidates)
+    # The UFC Luana Santos is ESPN MMA athlete 5110469. Search also returns
+    # another exact-name MMA athlete; do not select the other identity.
+    if name=="Luana Santos" and "5110469" in unique:
+        return "5110469"
     return next(iter(unique)) if len(unique)==1 else None
 def ingest():
     outcome=[]
@@ -62,6 +67,9 @@ def ingest():
             original=Image.open(io.BytesIO(content))
             if original.format!="PNG" or original.width<180 or original.height<180:raise ValueError(f"invalid headshot source {original.size}")
             im=original.convert("RGBA")
+            # Remove publisher color bars without modifying the source fighter.
+            # If it cannot be cleaned correctly, leave the thumb pending.
+            im=remove(im).convert("RGBA")
             channels=ImageStat.Stat(im.convert("RGB")).stddev
             if max(channels)<18:raise ValueError("flat-color ESPN placeholder (not a fighter photo)")
             # ESPN's /i/headshots/mma/players/full/ is the publisher's genuine

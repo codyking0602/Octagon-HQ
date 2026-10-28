@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install image codec
-        run: python -m pip install --disable-pip-version-check pillow
+        run: python -m pip install --disable-pip-version-check pillow rembg onnxruntime
       - name: Ingest official ESPN fighter-only headshots (missing stays blank)
         run: python scripts/ufc-oct31-espn-headshot-inspect.py
       - name: Commit only verified original headshots (branch only)
