@@ -39,7 +39,6 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
     [members],
   );
   const selected = visibleMembers.find((member) => member.displayName === selectedName) ?? null;
-  const completedMembers = visibleMembers.filter((member) => member.completed === member.total && member.total > 0).length;
   const eligibleBouts = useMemo(() => event.bouts
     .filter((bout) => bout.includedInPicks !== false && (bout.resultStatus ?? "pending") !== "cancelled")
     .slice()
