@@ -458,3 +458,66 @@
 .nba-hq-owner__team-stats { grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:2px 0 0; }
 .nba-hq-owner__team-stats b { font-size:10px; }
 .nba-hq-owner__team-stats small { font-size:6px; }
+
+/* Weekly NBA spotlight: inherit the selected team's identity, without losing
+   the established compact card treatment or gold Lakers / purple Lakers pairing. */
+.nba-hq-owner__player {
+  border-color: color-mix(in srgb, var(--nba-player-primary, #f2a341) 58%, #343a47);
+  background: linear-gradient(112deg,
+    color-mix(in srgb, var(--nba-player-base, #102443) 36%, #0e192b),
+    color-mix(in srgb, var(--nba-player-base, #102443) 62%, #0b1429) 94%);
+}
+.nba-hq-owner__photo {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--nba-player-base, #102443) 37%, #102035),
+    color-mix(in srgb, var(--nba-player-base, #102443) 25%, #081420));
+}
+.nba-hq-owner__photo::after {
+  background: linear-gradient(90deg, transparent 65%,
+    color-mix(in srgb, var(--nba-player-base, #102443) 45%, #0b1429));
+}
+.nba-hq-owner__photo img {
+  /* ESPN headshot crops vary. Fit the entire original image and anchor to the
+     jersey baseline so hair and forehead cannot be cropped by card sizing. */
+  object-fit: contain;
+  object-position: center bottom;
+  transform: none;
+}
+.nba-hq-owner__player-copy > span,
+.nba-hq-owner__player .nba-hq-owner__week-context {
+  color: color-mix(in srgb, var(--nba-player-primary, #f2a341) 82%, white);
+}
+.nba-hq-owner__watch {
+  border-color: color-mix(in srgb, var(--nba-player-primary, #f2a341) 74%, white);
+  background: linear-gradient(110deg,
+    color-mix(in srgb, var(--nba-player-base, #102443) 72%, #0b1429),
+    color-mix(in srgb, var(--nba-player-base, #102443) 62%, var(--nba-player-primary, #f2a341)));
+}
+.nba-hq-owner__team:has(.nba-hq-owner__team-season) {
+  height: auto;
+  min-height: 119px;
+}
+.nba-hq-owner__team-season {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 3px 9px;
+  min-width: 0;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .025em;
+  color: #dee8ef;
+}
+.nba-hq-owner__team-season b:nth-child(2) {
+  color: color-mix(in srgb, var(--nba-week-team, #f2a341) 72%, white);
+}
+.nba-hq-owner__team-season small {
+  font-size: 7px;
+  font-weight: 800;
+  color: #aebcc9;
+  white-space: nowrap;
+}
+@media (max-width: 380px) {
+  .nba-hq-owner__team-season { gap: 2px 6px; font-size: 7px; }
+  .nba-hq-owner__team-season small { font-size: 6px; }
+}
