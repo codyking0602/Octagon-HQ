@@ -3,6 +3,7 @@ import argparse
 import ipaddress
 import json
 import os
+import re
 import sys
 from html.parser import HTMLParser
 from io import BytesIO
@@ -225,20 +226,34 @@ def source_looks_clipped(im, kind):
     return ""
 
 
+def approved_square_thumb_source(spec, source_url, size):
+    """Only a verified original UFC/ESPN square headshot, never an athlete-page render."""
+    if spec.get("source_page_url") or spec.get("crop"):
+        return False
+    host = (urlparse(source_url).hostname or "").lower()
+    width, height = size
+    if not width or not height or abs(width - height) > max(width, height) * 0.06:
+        return False
+    if host == "a.espncdn.com":
+        return bool(re.fullmatch(
+            r"/i/headshots/mma/players/full/[0-9]+[.]png",
+            urlparse(source_url).path
+        ))
+    if host in {"www.ufc.com", "ufc.com"}:
+        # UFC may serve promotional body images from athlete pages. Requiring
+        # individual editorial verification avoids accepting them as thumbs.
+        return spec.get("official_square_headshot_reviewed") is True
+    return False
+
+
 def render_thumb(im, size):
     """Render a face-dominant head-and-shoulders portrait, not a mini Spotlight."""
     box = visible_subject_box(im)
     if not box:
         fail("thumbnail has no visible fighter pixels")
     subject = im.crop(box)
-    # UFC's official fighter render is often a full glove-up torso pose. Fitting
-    # the whole image made heads tiny in Picks, despite passing alpha/size checks.
-    # Keep the upper central bust, with headroom, BEFORE fitting to 320x320.
-    # This is not face recognition: every result still needs visual identity QA.
-    focus_width = max(1, round(subject.width * 0.76))
-    focus_height = max(1, min(subject.height, round(focus_width * 1.06)))
-    focus_left = (subject.width - focus_width) // 2
-    subject = subject.crop((focus_left, 0, focus_left + focus_width, focus_height))
+    # Sources must already be official square headshots. Only fit/resize them,
+    # never manufacture a headshot by cutting a promotional fighter body render.
     horizontal_pad = round(size[0] * 0.025)
     top_pad = round(size[1] * 0.035)
     bottom_pad = round(size[1] * 0.025)
@@ -432,6 +447,9 @@ def main():
         im = Image.open(BytesIO(data)).convert("RGBA")
     except Exception as exc:
         fail(f"cannot decode source image: {exc}")
+
+    if kind == "thumb" and not approved_square_thumb_source(spec, source_url, im.size):
+        fail("thumbnail requires a verified square UFC or ESPN headshot source")
 
     if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
         try:

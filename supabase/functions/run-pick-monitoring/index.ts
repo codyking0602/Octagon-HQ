@@ -6,8 +6,6 @@ import { buildCardChangeFindings } from "../../../src/features/picks-monitoring/
 import {
   adaptEspnUfcFighterMedia,
   espnUfcMediaScoreboardUrl,
-  parseUfcAthletePhoto,
-  ufcAthletePageUrl,
   type UfcFighterMediaCandidate,
 } from "../../../src/features/picks-monitoring/ufcFighterMedia.ts";
 import {
@@ -344,38 +342,20 @@ Deno.serve(async (request) => {
           }
         }));
         for (const candidate of verified) {
-          if (candidate && fighters.has(candidate.fighter_slug)) {
+          if (
+            candidate
+            && fighters.has(candidate.fighter_slug)
+            && candidate.source === "espn"
+            && /^https:\/\/a\.espncdn\.com\/i\/headshots\/mma\/players\/full\/[0-9]+\.png$/.test(candidate.photo_url)
+          ) {
             candidates.set(candidate.fighter_slug, candidate);
           }
         }
       }
     } catch {
-      // ESPN media enrichment is best-effort; official UFC remains the fallback.
-    }
-
-    const ufcTargets = missing.filter(([slug]) => !candidates.has(slug));
-    const ufcResults = await Promise.all(ufcTargets.map(async ([slug, displayName]) => {
-      const sourcePageUrl = ufcAthletePageUrl(slug);
-      if (!sourcePageUrl) return null;
-      try {
-        const response = await fetch(sourcePageUrl, {
-          headers: {
-            Accept: "text/html,application/xhtml+xml",
-            "User-Agent": "Mozilla/5.0 (compatible; OctagonHQ/1.0)",
-          },
-          signal: AbortSignal.timeout(10_000),
-        });
-        if (!response.ok) return null;
-        const html = await response.text();
-        if (!html || new TextEncoder().encode(html).byteLength > 3_000_000) return null;
-        return parseUfcAthletePhoto({ html, fighterSlug: slug, displayName, sourcePageUrl });
-      } catch {
-        return null;
-      }
-    }));
-
-    for (const candidate of ufcResults) {
-      if (candidate) candidates.set(candidate.fighter_slug, candidate);
+      // ESPN headshots are best-effort. Never substitute UFC athlete-page
+      // promotional body renders; a genuinely verified square UFC headshot can
+      // still be ingested through the reviewed manual asset path.
     }
     if (!candidates.size) {
       return { status: "no_media_found", missing: missing.length, inserted: 0 };

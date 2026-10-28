@@ -5,14 +5,16 @@ import { FighterThumbnail, fighterThumbnailPath, normalizeRuntimeFighterMediaMap
 afterEach(cleanup);
 
 describe("runtime fighter media", () => {
-  it("accepts only slug-keyed HTTPS runtime photos", () => {
+  it("only accepts original ESPN MMA square headshot URLs from runtime monitoring", () => {
     expect(normalizeRuntimeFighterMediaMap({
+      "tom-nolan": "https://a.espncdn.com/i/headshots/mma/players/full/5144007.png",
       "melissa-amaya": "https://dmxg5wxfqgb4u.cloudfront.net/styles/card/s3/melissa.png",
-      "bad slug": "https://example.test/bad.png",
+      "jacobe-smith": "https://www.ufc.com/athlete/jacobe-smith",
+      "bad slug": "https://a.espncdn.com/i/headshots/mma/players/full/5144007.png",
       "ilimbek-akylbek": "http://example.test/not-secure.png",
       "mehemmedeli-osmanli": 42,
     })).toEqual({
-      "melissa-amaya": "https://dmxg5wxfqgb4u.cloudfront.net/styles/card/s3/melissa.png",
+      "tom-nolan": "https://a.espncdn.com/i/headshots/mma/players/full/5144007.png",
     });
   });
 });

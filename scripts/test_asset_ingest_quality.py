@@ -11,6 +11,7 @@ from PIL import Image, ImageDraw
 sys.modules.setdefault("rembg", SimpleNamespace(remove=lambda image: image))
 from scripts.asset_ingest import (
     render_thumb,
+    approved_square_thumb_source,
     remove_flat_side_backgrounds,
     source_looks_clipped,
     upper_side_background_band,
@@ -35,14 +36,28 @@ class AssetIngestQualityTests(unittest.TestCase):
                 validate_asset_quality(image, kind)
         self.assertIn(reason, stderr.getvalue())
 
-    def test_tall_fighter_thumb_is_upper_body_not_full_length(self):
-        source = fake_fighter()
+    def test_official_headshot_source_gate_rejects_profile_and_non_square(self):
+        espn = "https://a.espncdn.com/i/headshots/mma/players/full/5144007.png"
+        self.assertTrue(approved_square_thumb_source({"source_url": espn}, espn, (600, 600)))
+        self.assertFalse(approved_square_thumb_source({"source_page_url": "https://www.ufc.com/athlete/tom-nolan"}, espn, (600, 600)))
+        self.assertFalse(approved_square_thumb_source({"source_url": espn}, espn, (600, 900)))
+        self.assertFalse(approved_square_thumb_source({}, "https://a.espncdn.com/i/athletes/bodyshot/5144007.png", (600, 600)))
+        self.assertFalse(approved_square_thumb_source({}, "https://third-party.example/photo.png", (600, 600)))
+        self.assertFalse(approved_square_thumb_source({}, "https://www.ufc.com/athlete/tom-nolan", (600, 600)))
+        self.assertTrue(approved_square_thumb_source(
+            {"official_square_headshot_reviewed": True},
+            "https://www.ufc.com/images/verified-tom-square.png", (600, 600)
+        ))
+
+    def test_fit_does_not_reframe_original_square_headshot(self):
+        source = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(source)
+        draw.ellipse((70, 14, 245, 210), fill=(170, 120, 85, 255))
+        draw.polygon([(48, 220), (272, 220), (280, 312), (40, 312)], fill=(20, 75, 120, 255))
         thumbnail = render_thumb(source, (320, 320))
         self.assertEqual(thumbnail.size, (320, 320))
-        self.assertLess(thumbnail.getpixel((160, 18))[0], 220)
         self.assertLess(thumbnail.getpixel((0, 0))[3], 48)
-        metrics = validate_asset_quality(thumbnail, "thumb")
-        self.assertGreater(metrics["alpha_coverage"], 0.10)
+        self.assertGreater(validate_asset_quality(thumbnail, "thumb")["alpha_coverage"], 0.10)
 
     def test_framed_rectangular_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))

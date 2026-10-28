@@ -14,19 +14,6 @@ const thumbnailBySlug = new Map(
   }),
 );
 
-// October 31's verified UFC/ESPN cutouts are transparent but framed like Spotlights.
-// Keep the original real photos and render only these seven as face-dominant busts.
-// Retire this list when the underlying assets are replaced by approved close crops.
-export const faceFocusUfcThumbSlugs = new Set([
-  "tom-nolan",
-  "jacobe-smith",
-  "ode-osbourne",
-  "cody-durden",
-  "yana-santos",
-  "luana-santos",
-  "farman-hasanov",
-]);
-
 const thumbnailSlugAliases = new Map([
   ["jan-b-achowicz", "jan-blachowicz"],
   ["jan-błachowicz", "jan-blachowicz"],
@@ -81,7 +68,7 @@ export function normalizeRuntimeFighterMediaMap(value: unknown) {
     Object.entries(value as Record<string, unknown>).filter(([slug, url]) => (
       /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
       && typeof url === "string"
-      && /^https:\/\//i.test(url)
+      && /^https:\/\/a\.espncdn\.com\/i\/headshots\/mma\/players\/full\/[0-9]+\.png$/.test(url)
     )),
   ) as Record<string, string>;
 }
@@ -111,23 +98,30 @@ export function fighterThumbnailPath(slug: string) {
   return fighterRemotePhotoPath(canonicalSlug) ?? thumbnailBySlug.get(canonicalSlug) ?? null;
 }
 
-export function FighterThumbnail({ name, slug }: { name: string; slug: string }) {
+export function FighterThumbnail({ name, slug, officialHeadshot }: {
+  name: string;
+  slug: string;
+  /** undefined = normal resolver; null = deliberate empty for an unverified fighter. */
+  officialHeadshot?: string | null;
+}) {
   const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
   const staticSource = fighterThumbnailPath(canonicalSlug);
   const [runtimeSource, setRuntimeSource] = useState(() => runtimePhotoBySlug.get(canonicalSlug) ?? null);
   const [failedSources, setFailedSources] = useState<Set<string>>(() => new Set());
   const shaneContender = shaneContenderForSlug(slug);
-  const source = staticSource && !failedSources.has(staticSource)
-    ? staticSource
-    : runtimeSource && !failedSources.has(runtimeSource)
-      ? runtimeSource
-      : null;
-  const useFaceFocus = Boolean(source)
-    && faceFocusUfcThumbSlugs.has(canonicalSlug)
-    && source === thumbnailBySlug.get(canonicalSlug);
+  // A curated official-only event must never silently fall back to old local
+  // cutouts or unreviewed runtime URLs, even after a network image error.
+  const officialOnly = officialHeadshot !== undefined;
+  const source = officialOnly
+    ? officialHeadshot && !failedSources.has(officialHeadshot) ? officialHeadshot : null
+    : staticSource && !failedSources.has(staticSource)
+      ? staticSource
+      : runtimeSource && !failedSources.has(runtimeSource)
+        ? runtimeSource
+        : null;
 
   useEffect(() => {
-    if (source) return;
+    if (source || officialOnly) return;
     let active = true;
     void loadRuntimeFighterMedia().then(() => {
       if (!active) return;
@@ -136,7 +130,7 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
     return () => {
       active = false;
     };
-  }, [canonicalSlug, source]);
+  }, [canonicalSlug, officialOnly, source]);
 
   const photo = !source ? (
     <i
@@ -144,25 +138,16 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
       aria-label={`${name} photo unavailable`}
       role="img"
     >
-      <svg viewBox="0 0 64 64" width="68%" height="68%" aria-hidden="true">
-        <circle cx="32" cy="21" r="11" fill="currentColor" fillOpacity="0.56" />
-        <path
-          d="M12 57c1.4-13.2 8.1-20 20-20s18.6 6.8 20 20H12Z"
-          fill="currentColor"
-          fillOpacity="0.4"
-        />
-      </svg>
-    </i>
-  ) : useFaceFocus ? (
-    <i className="pick-fighter-thumbnail pick-fighter-thumbnail--face-focus">
-      <img
-        className="pick-fighter-thumbnail__face-image"
-        src={source}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        onError={() => setFailedSources((current) => new Set(current).add(source))}
-      />
+      {officialOnly ? null : (
+        <svg viewBox="0 0 64 64" width="68%" height="68%" aria-hidden="true">
+          <circle cx="32" cy="21" r="11" fill="currentColor" fillOpacity="0.56" />
+          <path
+            d="M12 57c1.4-13.2 8.1-20 20-20s18.6 6.8 20 20H12Z"
+            fill="currentColor"
+            fillOpacity="0.4"
+          />
+        </svg>
+      )}
     </i>
   ) : (
     <img
