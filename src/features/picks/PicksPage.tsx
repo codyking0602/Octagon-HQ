@@ -63,13 +63,6 @@ function fighterName(bout: BoutResultView, slug: string | null) {
   return "Unknown fighter";
 }
 
-function fighterOdds(bout: PickBout | null, slug: string | null) {
-  if (!bout || !slug) return null;
-  if (slug === bout.redFighterSlug) return bout.redAmericanOdds;
-  if (slug === bout.blueFighterSlug) return bout.blueAmericanOdds;
-  return null;
-}
-
 function officialResult(bout: BoutResultView) {
   if (bout.includedInPicks === false) return "Removed from Picks";
   if (bout.resultStatus === "red_win" || bout.resultStatus === "blue_win") {
@@ -112,8 +105,6 @@ export default function PicksPage() {
   const activeLifecycle = activeEvent ? lifecycle : null;
   const progress = pickProgress(activeEvent, picks.selections);
   const locked = activeLifecycle ? activeLifecycle.state !== "upcoming" : false;
-  const percent = progress.total ? Math.round((progress.completed / progress.total) * 100) : 0;
-  const completeProgress = progress.total > 0 && progress.completed === progress.total;
   const orderedBouts = useMemo(
     () => activeEvent?.bouts
       .filter((bout) => bout.includedInPicks !== false)
@@ -131,13 +122,6 @@ export default function PicksPage() {
         [bout.blueFighterSlug, bout.blueFighterName],
       ]).find(([slug]) => slug === picks.underdogLock?.fighterSlug)?.[1] ?? picks.underdogLock.fighterSlug
     : "NONE SELECTED";
-  const underdogLockBout = picks.underdogLock
-    ? orderedBouts.find((bout) => bout.boutId === picks.underdogLock?.boutId) ?? null
-    : null;
-  const underdogLockOdds = picks.underdogLock?.frozenAmericanOdds
-    ?? fighterOdds(underdogLockBout, picks.underdogLock?.fighterSlug ?? null);
-  const underdogLockBonus = underdogBonusForOdds(underdogLockOdds);
-  const underdogLockBonusLabel = underdogLockBonus > 0 ? `+${underdogLockBonus}` : null;
   const cardOddsMeta = orderedBouts
     .map((bout) => oddsProvenance(bout.oddsSource, bout.oddsUpdatedAt))
     .find(Boolean) ?? null;
