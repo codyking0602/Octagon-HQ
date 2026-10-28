@@ -38,7 +38,8 @@ export function compactUfcPreview(preview: string): string {
   return selected.length ? selected.join(" ") : preview;
 }
 export function compactUfcEdge(edge:string):string {
-  const clean=edge.trim().replace(/[.!]$/,"");
+  const clean=edge.trim().replace(/[.!]$/,"")
+    .replace(/\s*\(about\s+([0-9.]+)\s+landed per minute\)/i," ($1/min)");
   if(words(clean).length<=UFC_EDGE_MAX_WORDS && clean.length<=65)return clean;
   const pieces=clean.split(/[,;]|\s+(?:against|including|with|and|where)\s+/i);
   const shorter=pieces.find(p=>words(p).length>1 && words(p).length<=UFC_EDGE_MAX_WORDS && p.length<=65);

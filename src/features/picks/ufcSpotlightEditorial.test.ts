@@ -14,8 +14,8 @@ describe("UFC fight preview concise editorial contract",()=>{
    const compact=compactUfcPreview(old);
    expect(compact).not.toContain("lengthy fourth");
    expect(compact).toContain("pressure wrestler");
-   expect(compact.split(/\\s+/).length).toBeLessThanOrEqual(75);
+   expect(compact.split(/\s+/).length).toBeLessThanOrEqual(75);
    expect(compactUfcEdge("Four-inch height advantage and southpaw striking angles")).toBe("Four-inch height advantage and southpaw striking angles");
-   expect(compactUfcEdge("Higher UFC significant-strike volume (about 4.84 landed per minute)")).toBe("Higher UFC significant-strike volume (about 4.84 landed per minute)");
+   expect(compactUfcEdge("Higher UFC significant-strike volume (about 4.84 landed per minute)")).toBe("Higher UFC significant-strike volume (4.84/min)");
  });
 });
