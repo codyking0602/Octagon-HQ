@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "version": "wheel-nfl-te-grades-2026-10-28-v1",
+  "status": "current-ability-versioned-snapshot",
+  "effectiveDate": "2026-10-28",
+  "sport": "NFL",
+  "family": "TE",
+  "sourceBaseArtifact": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+  "revisionLedger": "data/curated/football/nfl/wheel-nfl-madden-editorial-revisions-2026-10-28.json",
+  "constitution": "PR #1641 — Wheel of Football grading constitution",
+  "gradingSemantic": "CURRENT NFL ABILITY AT TIGHT END RIGHT NOW; position-normalized; receiving ability, separation/route value, hands, YAC, blocking, inline usefulness, versatility and ability to stay on the field across personnel packages. Receiving is important but does not mechanically override complete tight-end play. Not career greatness, fantasy value, draft status, projection, or short-streak production.",
+  "grades": [
+    {
+      "team": "ARI",
+      "player": "Trey McBride",
+      "grade": 99,
+      "confidence": "high",
+      "reason": "Approved current-ceiling anchor."
+    },
+    {
+      "team": "ATL",
+      "player": "Kyle Pitts Sr.",
+      "grade": 84,
+      "confidence": "high",
+      "reason": "Approved very-good/good-boundary anchor; strong 2025 rebound is real, but the empty 2026 opening keeps him below the high-end tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "BAL",
+      "player": "Mark Andrews",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "2025 was the weakest season of his career at 422 yards; a solid 2026 opening shows he remains a good starter, but current evidence no longer supports star-tier grading. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "BUF",
+      "player": "Dalton Kincaid",
+      "grade": 88,
+      "confidence": "high",
+      "reason": "2026 through Week 7: PFF 72.8 overall, 12th/30 qualifying TEs; 23/29 for 315 yards, one touchdown and zero drops. Clearly a high-end receiving option, but 91 is an elite complete-TE tier not yet sustained relative to LaPorta, Kraft and veteran peers."
+    },
+    {
+      "team": "CAR",
+      "player": "Tommy Tremble",
+      "grade": 76,
+      "confidence": "high",
+      "reason": "Approved strong-role-player anchor; blocking/inline value is useful, but receiving impact remains limited. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "CHI",
+      "player": "Colston Loveland",
+      "grade": 87,
+      "confidence": "high",
+      "reason": "Approved high-end/emerging anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "CIN",
+      "player": "Drew Sample",
+      "grade": 72,
+      "confidence": "high",
+      "reason": "Approved low-end Wheel anchor; legitimate blocking utility, minimal receiving creation. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "CLE",
+      "player": "Harold Fannin Jr.",
+      "grade": 84,
+      "confidence": "high",
+      "reason": "Approved very-good anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "DAL",
+      "player": "Jake Ferguson",
+      "grade": 79,
+      "confidence": "high",
+      "reason": "Receiving volume and scoring role are useful (82 catches, 600 yards and eight touchdowns in 2025), but 7.3 yards per catch, limited explosive/inline impact and repeat sub-60 overall-grade and ball-security concerns make a 79 more defensible than the original 82. The 2026 opening (12 catches, 83 yards through four games) reinforces but does not independently determine the adjustment."
+    },
+    {
+      "team": "DEN",
+      "player": "Evan Engram",
+      "grade": 78,
+      "confidence": "high",
+      "reason": "Receiving movement skills remain useful, but 2025 was a clear decline and his inline/blocking value remains limited; current play fits a low-end starter grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "DET",
+      "player": "Sam LaPorta",
+      "grade": 94,
+      "confidence": "high",
+      "reason": "Approved elite/high-end anchor."
+    },
+    {
+      "team": "GB",
+      "player": "Tucker Kraft",
+      "grade": 87,
+      "confidence": "high",
+      "reason": "Approved high-end anchor; injury remains an availability issue rather than an ability downgrade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "HOU",
+      "player": "Dalton Schultz",
+      "grade": 83,
+      "confidence": "high",
+      "reason": "777 yards in 2025 plus 205 through three 2026 games, dependable hands and steady chain-moving value support a good starter grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "IND",
+      "player": "Tyler Warren",
+      "grade": 86,
+      "confidence": "high",
+      "reason": "Approved very-good/high-end anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "JAX",
+      "player": "Brenton Strange",
+      "grade": 83,
+      "confidence": "high",
+      "reason": "True two-way tight-end contribution merits more credit: 46 receptions and 540 yards in 12 games in 2025 plus strong zone run-blocking in the locked TE evidence; 14 catches and 167 yards in the first four 2026 games. The 83 accounts for valuable inline work alongside receiving, without projecting future stardom or overreacting to a short 2026 sample."
+    },
+    {
+      "team": "KC",
+      "player": "Travis Kelce",
+      "grade": 88,
+      "confidence": "high",
+      "reason": "Approved very-good veteran anchor; current play remains strong enough that career reputation is not needed to support the grade."
+    },
+    {
+      "team": "LAC",
+      "player": "Charlie Kolar",
+      "grade": 73,
+      "confidence": "high",
+      "reason": "Strong blocking specialist with efficient limited receiving work; useful NFL TE but not a meaningful passing-game starter. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "LAC",
+      "player": "David Njoku",
+      "grade": 81,
+      "confidence": "high",
+      "reason": "Athletic receiving ability remains real, but 2025 fell to 293 yards in 12 games; early 2026 improvement is not enough to restore his old high-end grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "LAR",
+      "player": "Colby Parkinson",
+      "grade": 79,
+      "confidence": "high",
+      "reason": "Breakout 2025 included strong receiving efficiency, eight TDs and good run-blocking work; quiet 2026 usage keeps him just below the 85 group. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "LV",
+      "player": "Brock Bowers",
+      "grade": 98,
+      "confidence": "high",
+      "reason": "Approved elite/ceiling-adjacent anchor."
+    },
+    {
+      "team": "MIA",
+      "player": "Greg Dulcich",
+      "grade": 75,
+      "confidence": "medium",
+      "reason": "335 yards in 10 games in 2025 and 90 through three 2026 games show useful receiving ability, but limited all-around/inline evidence keeps him below starter baseline. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "MIN",
+      "player": "T.J. Hockenson",
+      "grade": 80,
+      "confidence": "high",
+      "reason": "2025 was his weakest season since his rookie year at 438 yards, and the 2026 start remains modest; prior peak does not preserve a higher current grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "NE",
+      "player": "Hunter Henry",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Approved good-starter anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "NO",
+      "player": "Juwan Johnson",
+      "grade": 86,
+      "confidence": "high",
+      "reason": "889 yards in 2025 and 173/3 through three 2026 games establish one of the stronger current receiving profiles; lighter inline/blocking value keeps him below the upper star bands."
+    },
+    {
+      "team": "NYG",
+      "player": "Isaiah Likely",
+      "grade": 83,
+      "confidence": "high",
+      "reason": "2024 showed strong YAC/receiving upside, but 2025 regressed sharply; current body supports a useful starter/TE2 grade rather than a projection-based breakout grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "NYJ",
+      "player": "Mason Taylor",
+      "grade": 76,
+      "confidence": "medium",
+      "reason": "44 catches/369 yards as a rookie provide real starter experience, but low explosiveness, eight drops and a near-empty 2026 opening keep him below average-starter level. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "PHI",
+      "player": "Dallas Goedert",
+      "grade": 84,
+      "confidence": "high",
+      "reason": "2026 PFF 76.2 overall (6th/30 TEs), 79.2 receiving (5th/30) with no drops; still reliable route and catch-point utility. Restricted 180 receiving yards and age 31 cap a modest +2 rather than a major reversion to peak."
+    },
+    {
+      "team": "PIT",
+      "player": "Pat Freiermuth",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Steady 2024-26 production, red-zone usefulness and dependable intermediate work support a solid starter grade just above the Goedert baseline. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "SEA",
+      "player": "AJ Barner",
+      "grade": 81,
+      "confidence": "high",
+      "reason": "519 yards/6 TD in 2025, 90 yards through three 2026 games and high-end run-blocking value create a genuinely complete good-starter profile. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "SF",
+      "player": "George Kittle",
+      "grade": 98,
+      "confidence": "high",
+      "reason": "Approved elite complete-TE anchor."
+    },
+    {
+      "team": "TB",
+      "player": "Cade Otton",
+      "grade": 79,
+      "confidence": "high",
+      "reason": "Sure-handed and dependable with 572 yards in 2025, but limited YAC/explosive creation keeps him below the solid-starter anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "TEN",
+      "player": "Gunnar Helm",
+      "grade": 76,
+      "confidence": "medium",
+      "reason": "44 catches/357 yards as a rookie and steady early-2026 usage show functional starter traits, but limited explosiveness keeps him below 80+. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    },
+    {
+      "team": "WSH",
+      "player": "Chig Okonkwo",
+      "grade": 78,
+      "confidence": "high",
+      "reason": "Strong YAC ability and 560 yards in 2025 support starter usefulness; very poor run blocking prevents a higher complete-TE grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+    }
+  ],
+  "historicalRule": "Preserve October 3 grade seeds and completed Wheel results; existing GM 594-player stable identities, contracts and development probabilities unchanged."
+}
