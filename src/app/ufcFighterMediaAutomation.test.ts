@@ -47,7 +47,7 @@ describe("automatic UFC fighter media", () => {
     expect(thumbnail).toContain('client.rpc("get_ufc_fighter_media_map")');
     expect(thumbnail).toContain("staticSource && !failedSources.has(staticSource)");
     expect(thumbnail).toContain("runtimeSource && !failedSources.has(runtimeSource)");
-    expect(thumbnail).toContain("if (source) return");
+    expect(thumbnail).toContain("if (source || officialOnly) return");
   });
 
   it("does not automate or mutate event header artwork", () => {

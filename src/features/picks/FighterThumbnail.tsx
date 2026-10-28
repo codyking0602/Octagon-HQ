@@ -138,14 +138,16 @@ export function FighterThumbnail({ name, slug, officialHeadshot }: {
       aria-label={`${name} photo unavailable`}
       role="img"
     >
-      <svg viewBox="0 0 64 64" width="68%" height="68%" aria-hidden="true">
-        <circle cx="32" cy="21" r="11" fill="currentColor" fillOpacity="0.56" />
-        <path
-          d="M12 57c1.4-13.2 8.1-20 20-20s18.6 6.8 20 20H12Z"
-          fill="currentColor"
-          fillOpacity="0.4"
-        />
-      </svg>
+      {officialOnly ? null : (
+        <svg viewBox="0 0 64 64" width="68%" height="68%" aria-hidden="true">
+          <circle cx="32" cy="21" r="11" fill="currentColor" fillOpacity="0.56" />
+          <path
+            d="M12 57c1.4-13.2 8.1-20 20-20s18.6 6.8 20 20H12Z"
+            fill="currentColor"
+            fillOpacity="0.4"
+          />
+        </svg>
+      )}
     </i>
   ) : (
     <img

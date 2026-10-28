@@ -3,6 +3,7 @@ import argparse
 import ipaddress
 import json
 import os
+import re
 import sys
 from html.parser import HTMLParser
 from io import BytesIO
@@ -234,7 +235,7 @@ def approved_square_thumb_source(spec, source_url, size):
     if not width or not height or abs(width - height) > max(width, height) * 0.06:
         return False
     if host == "a.espncdn.com":
-        return bool(__import__("re").fullmatch(
+        return bool(re.fullmatch(
             r"/i/headshots/mma/players/full/[0-9]+[.]png",
             urlparse(source_url).path
         ))
