@@ -163,7 +163,7 @@ describe("Shane contender fighter-tile treatment", () => {
     render(<FighterThumbnail name="Bilal Hasan" slug="bilal-hasan" />);
 
     const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
+    expect(screen.getByText("SKCS #4")).toBeInTheDocument();
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
@@ -171,7 +171,7 @@ describe("Shane contender fighter-tile treatment", () => {
     render(<FighterThumbnail name="Quillan Salkilld" slug="quillan-salkilld" />);
 
     const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #1")).toBeInTheDocument();
+    expect(screen.getByText("SKCS #1")).toBeInTheDocument();
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
@@ -179,7 +179,7 @@ describe("Shane contender fighter-tile treatment", () => {
     render(<FighterThumbnail name="Raul Rosas Jr." slug="raul-rosas-jr" />);
 
     const badges = screen.getByLabelText("Shane King’s Contender Series fighters");
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
+    expect(screen.getByText("SKCS #3")).toBeInTheDocument();
     expect(badges.closest(".pick-fighter-thumbnail-wrap")).toHaveClass("is-shane-contender");
   });
 
