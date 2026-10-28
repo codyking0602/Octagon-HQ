@@ -243,7 +243,7 @@ describe("PicksPage", () => {
     expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
     const hq = screen.getByRole("link", { name: /Open Jon Jones HQ Rankings profile/i });
     const skcs = screen.getByRole("link", { name: /Open Quillan Salkilld SKCS scouting profile/i });
-    expect(hq).toHaveAttribute("href", "/rankings?fighter=jon-jones");
+    expect(hq).toHaveAttribute("href", "/fighters/jon-jones");
     expect(skcs).toHaveAttribute("href", "/fighters-to-watch#quillan-salkilld");
     const choices = container.querySelectorAll(".pick-choice-shell");
     expect(choices).toHaveLength(2);
