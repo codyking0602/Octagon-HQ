@@ -39,6 +39,29 @@ export async function retrieveJson(url) {
     return await response.json();
   } finally { clearTimeout(timer); }
 }
+/** ESPN stopped accepting scoreboard date ranges in September 2026.
+ * Fetch each Central media-week date independently and deduplicate event IDs.
+ * A failed date must abort the week rather than produce inaccurate winners. */
+export async function fetchWeeklyScoreboard(start, end, getJson = retrieveJson) {
+  const span = (end.getTime() - start.getTime()) / MS_DAY;
+  if (!Number.isInteger(span) || span !== 6
+      || !Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()))
+    throw Error("NBA scoreboard expects exactly seven complete UTC calendar dates");
+  const unique = new Map();
+  for (let offset = 0; offset <= 6; offset++) {
+    const day = new Date(start.getTime() + offset * MS_DAY);
+    const dayText = ymd(day);
+    const scoreboard = await getJson(`${ESPN}/scoreboard?dates=${dayText}&limit=100`);
+    if (!Array.isArray(scoreboard?.events))
+      throw Error(`NBA scoreboard missing events for ${dayText}`);
+    for (const event of scoreboard.events) {
+      if (!event?.id) throw Error(`NBA scoreboard event missing ID for ${dayText}`);
+      unique.set(String(event.id), event);
+    }
+  }
+  return [...unique.values()];
+}
+
 async function retrieveText(url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 14_000);
@@ -424,9 +447,8 @@ async function main(){
   if (existing.weekEnd===weekEnd&&existing.player&&existing.team) {
     console.log("Already verified:",weekEnd);return;
   }
-  const dates=`${ymd(start)}-${ymd(end)}`;
-  const scoreboard=await retrieveJson(`${ESPN}/scoreboard?dates=${dates}&limit=150`);
-  const {finals}=collectTeamGames(scoreboard.events??[]);
+  const events = await fetchWeeklyScoreboard(start, end);
+  const {finals}=collectTeamGames(events);
   if (finals.length<8) throw Error("NBA week not complete or too few results; previous verified content retained");
   const boxscores=new Map();
   // Stay well under ESPN's rate limits. Missing any boxscore aborts the batch.

@@ -1,13 +1,27 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { finishedWeek, collectTeamGames, selectWeek, extractYoutubeVideos,
+import { finishedWeek, fetchWeeklyScoreboard, collectTeamGames, selectWeek, extractYoutubeVideos,
   findMatchingHighlight, mergeOfficialVideos, playerEditorialScore, teamEditorialScore,
   basketballReferenceTeamSeasonUrl, basketballReferencePlayerUrl } from "./generate-nba-weekly-spotlight.mjs";
 test("A Tuesday run selects only the previous completed Central Monday-Sunday", () => {
   assert.deepEqual(
     (({weekStart,weekEnd})=>({weekStart,weekEnd}))(finishedWeek(new Date("2026-10-27T12:00:00Z"))),
     {weekStart:"2026-10-19",weekEnd:"2026-10-25"});
+});
+test("seven independent ESPN daily scoreboards replace rejected date ranges without double counting",async()=>{
+  const start=new Date("2026-10-19T12:00:00Z"),end=new Date("2026-10-25T12:00:00Z");
+  const seen=[];
+  const events=await fetchWeeklyScoreboard(start,end,async url=>{
+    seen.push(url);
+    return { events: [{id:String(seen.length),status:{type:{completed:true}}},
+      {id:"one-duplicate"}] };
+  });
+  assert.equal(seen.length,7);
+  assert.ok(seen.every(x=>/scoreboard\?dates=202610\d{2}&limit=100$/.test(x)));
+  assert.deepEqual(events.map(x=>x.id),["1","one-duplicate","2","3","4","5","6","7"]);
+  await assert.rejects(fetchWeeklyScoreboard(start,end,async()=>({})),/missing events/);
+  await assert.rejects(fetchWeeklyScoreboard(start,start,async()=>({events:[]})),/exactly seven/);
 });
 const player={id:"123",displayName:"Sample Star",position:{abbreviation:"PG"}};
 const teams=[

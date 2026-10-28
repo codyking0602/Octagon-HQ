@@ -13,6 +13,7 @@ on:
       - 'scripts/nba-weekly-clock.mjs'
       - 'scripts/nba-weekly-clock.fixtures.mjs'
       - 'scripts/generate-nba-weekly-spotlight.fixtures.mjs'
+      - 'scripts/generate-nba-weekly-spotlight.mjs'
 
 permissions:
   contents: write
