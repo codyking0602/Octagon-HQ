@@ -1,0 +1,20 @@
+name: One-time ESPN UFC headshot source inspection
+on:
+  push:
+    branches:
+      - fix/ufc-oct31-strict-official-headshots-20261027
+    paths:
+      - .github/workflows/ufc-oct31-headshot-source-inspection.yml
+      - scripts/ufc-oct31-espn-headshot-inspect.py
+permissions:
+  contents: read
+jobs:
+  espn-headshot-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover officially supplied fighter photo identities
+        run: python scripts/ufc-oct31-espn-headshot-inspect.py
