@@ -226,15 +226,19 @@ def source_looks_clipped(im, kind):
 
 
 def render_thumb(im, size):
-    """Fit the upper body into a transparent bust tile; never square-crop away the head."""
+    """Render a face-dominant head-and-shoulders portrait, not a mini Spotlight."""
     box = visible_subject_box(im)
     if not box:
         fail("thumbnail has no visible fighter pixels")
     subject = im.crop(box)
-    # Tall UFC fighter renders must not shrink the entire body into a tiny head.
-    # The human image review still owns final face framing and identity.
-    if subject.height > subject.width * 1.45:
-        subject = subject.crop((0, 0, subject.width, min(subject.height, round(subject.width * 1.45))))
+    # UFC's official fighter render is often a full glove-up torso pose. Fitting
+    # the whole image made heads tiny in Picks, despite passing alpha/size checks.
+    # Keep the upper central bust, with headroom, BEFORE fitting to 320x320.
+    # This is not face recognition: every result still needs visual identity QA.
+    focus_width = max(1, round(subject.width * 0.76))
+    focus_height = max(1, min(subject.height, round(focus_width * 1.06)))
+    focus_left = (subject.width - focus_width) // 2
+    subject = subject.crop((focus_left, 0, focus_left + focus_width, focus_height))
     horizontal_pad = round(size[0] * 0.025)
     top_pad = round(size[1] * 0.035)
     bottom_pad = round(size[1] * 0.025)
