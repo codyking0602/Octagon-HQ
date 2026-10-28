@@ -1124,3 +1124,31 @@ img.pick-fighter-thumbnail--ufc-headshot {
 .ufc-group-hub__body .picks-group-progress__members {padding:2px 0;}
 .ufc-group-hub__body .picks-group-progress__member>button {padding:10px 14px;min-height:43px;}
 @media(max-width:400px){.ufc-group-hub__summary{padding:10px 11px;}.ufc-group-hub__scorecard{gap:5px;}.ufc-group-hub__foot small{font-size:8px;}}
+
+/* UFC Picks: tappable compact rank links, red HQ and gold SKCS. */
+.pick-fighter-identity { top:7px; gap:5px; max-width:87%; }
+.pick-fighter-identity a { display:inline-flex; align-items:center; justify-content:center; gap:4px; min-height:34px; padding:6px 9px; border-radius:999px; font-size:10px; font-weight:900; line-height:1.15; letter-spacing:.02em; box-shadow:0 1px 4px #0007; }
+.pick-fighter-identity__hq { color:#ff9ba1; border:1px solid #be414a; background:#36191e; }
+.pick-fighter-identity__skcs { color:#f0d58b; border:1px solid #ae8735; background:#302514; }
+.pick-fighter-identity__hq:hover { background:#4b1c23; border-color:#e8505d; }
+.pick-fighter-identity__skcs:hover { background:#493416; border-color:#d8ac4f; }
+.pick-fighter-identity__chevron { display:inline-block; font-size:16px; font-weight:900; line-height:.75; transform:translateY(-.5px); }
+@media(max-width:420px) { .pick-fighter-identity a { min-height:34px; padding:6px 7px; font-size:9px; gap:3px; } }
+
+/* Football's compact standings structure with UFC-specific content and red action. */
+.ufc-group-hub { min-height:0; overflow:hidden; padding:0; border-radius:14px; background:#141617; }
+.ufc-group-hub:not([open]) { height:auto; min-height:0; }
+.ufc-group-hub__summary { display:grid; gap:6px; padding:9px 12px 7px; }
+.ufc-group-hub__heading,.ufc-group-hub__foot { flex-wrap:wrap; gap:6px; }
+.ufc-group-hub__heading strong { font-size:.62rem; font-weight:950; letter-spacing:.1em; }
+.ufc-group-hub__heading small { color:#929a9e; font-size:.49rem; font-weight:900; letter-spacing:.07em; }
+.ufc-group-hub__scorecard { gap:5px; }
+.ufc-group-hub__scorecard>div { gap:2px; }
+.ufc-group-hub__scorecard strong { color:#f5f6f7; font-size:clamp(.86rem,3.6vw,1.05rem); font-weight:900; line-height:1.12; }
+.ufc-group-hub__scorecard small { color:#899399; font-size:.46rem; font-weight:900; letter-spacing:.08em; }
+.ufc-group-hub__foot { padding-top:6px; border-top:1px solid #292c2e; }
+.ufc-group-hub__foot small { color:#9ba3a7; font-size:.51rem; font-weight:800; letter-spacing:.04em; }
+.ufc-group-hub__foot span { color:#fa6469; font-size:.49rem; font-weight:950; letter-spacing:.07em; }
+.ufc-group-hub__foot span::after { margin-left:7px; color:#9ca6ae; }
+.ufc-group-hub__body { border-top:1px solid #292c2e; }
+@media(max-width:400px) { .ufc-group-hub__summary { padding:9px 11px 7px; } .ufc-group-hub__scorecard { gap:4px; } }
