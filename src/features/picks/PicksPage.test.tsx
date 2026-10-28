@@ -31,7 +31,7 @@ afterEach(cleanup);
 
 it("places UFC scoring rules after the results archive", async () => {
   render(<MemoryRouter><IdentityProvider gateway={gateway()}><PicksProvider repository={repository()}><PicksPage /></PicksProvider></IdentityProvider></MemoryRouter>);
-  await screen.findByText("PICKS & STANDINGS");
+  await screen.findByText("Picks Results Archive");
   const archive = document.querySelector(".picks-season-section");
   const scoring = document.querySelector(".picks-scoring-guide");
   expect(archive).not.toBeNull();
