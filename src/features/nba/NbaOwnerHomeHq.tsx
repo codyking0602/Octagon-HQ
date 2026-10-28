@@ -8,12 +8,21 @@ import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { dailyOfficialDisplayScore } from "../play/DailyTwoGameStatus";
 import { nbaSpotlightWeekLabel, readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
 import { nbaTeamColor } from "./nbaTeamBranding";
+import { NBA_TEAMS } from "./nbaFutures";
 import type { CSSProperties } from "react";
 import "../../styles/nba-owner-home.css";
 
 export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hideChampionship = false }: { profileId: string; allowOwnerDailyPreview?: boolean; hideChampionship?: boolean }) {
   const [futures, setFutures] = useState<{ count: number; locked: boolean } | null>(null);
   const [weekly, setWeekly] = useState<NbaWeeklySpotlight | null>(null);
+  const playerTeamId = weekly?.player.teamId ?? NBA_TEAMS.find(team=>team.name===weekly?.player.team)?.id;
+  const playerBrandStyle = weekly ? {
+    "--nba-player-primary": nbaTeamColor(playerTeamId ?? ""),
+    "--nba-player-base": playerTeamId === "LAL" ? "#552583" : nbaTeamColor(playerTeamId ?? ""),
+  } as CSSProperties : undefined;
+  const standingsDate = weekly?.team.standingsAsOf
+    ? new Date(weekly.team.standingsAsOf).toLocaleDateString("en-US", { month:"short",day:"numeric",timeZone:"America/Chicago" }).toUpperCase()
+    : null;
   const day = nbaCentralDay();
   const publishedDaily = NBA_OFFICIAL_GAMES_RELEASE_READY && day >= NBA_GAMES_LAUNCH_DAY;
   const ownerSlot = allowOwnerDailyPreview && !publishedDaily && day < NBA_GAMES_LAUNCH_DAY ? nbaOwnerPreviewDaily(day) : null;
@@ -87,7 +96,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
           </div>
         </Link>
 
-        <section className="nba-hq-owner__player" aria-label="NBA Player Spotlight">
+        <section className="nba-hq-owner__player" aria-label="NBA Player Spotlight" style={playerBrandStyle}>
           {weekly ? (
             <>
               <a href={weekly.player.profileUrl} className="nba-hq-owner__photo" target="_blank" rel="noreferrer" aria-label={`Open ${weekly.player.name} player profile`}>
@@ -118,6 +127,13 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
               <img src={weekly.team.logoUrl} alt="" loading="lazy"/>
               <div className="nba-hq-owner__team-copy">
                 <strong>{weekly.team.name}</strong><small>{weekly.team.record} THIS WEEK</small>
+                {weekly.team.seasonRecord && weekly.team.conferenceSeed && weekly.team.conference ? (
+                  <span className="nba-hq-owner__team-season">
+                    <b>{weekly.team.seasonRecord} SEASON</b>
+                    <b>#{weekly.team.conferenceSeed} {weekly.team.conference === "WEST" ? "WEST" : "EAST"}</b>
+                    {standingsDate ? <small>AS OF {standingsDate}</small> : null}
+                  </span>
+                ) : null}
                 <div className="nba-hq-owner__team-stats">
                   <span><b>{weekly.team.ppg}</b><small>PPG</small></span>
                   <span><b>{weekly.team.netMargin}</b><small>AVG MARGIN</small></span>
