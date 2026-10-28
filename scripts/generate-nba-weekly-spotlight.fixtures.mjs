@@ -129,17 +129,17 @@ test("prefers short official NBA player performance clips over longer videos",()
 });
 test("published weekly snapshot keeps verified dynamic contracts across rotations",()=>{
   const data=JSON.parse(readFileSync("public/nba-weekly/active.json","utf8"));
-  assert.match(data.weekStart,/^20\\d{2}-\\d{2}-\\d{2}$/);
-  assert.match(data.weekEnd,/^20\\d{2}-\\d{2}-\\d{2}$/);
+  assert.match(data.weekStart,/^20\d{2}-\d{2}-\d{2}$/);
+  assert.match(data.weekEnd,/^20\d{2}-\d{2}-\d{2}$/);
   assert.ok(data.weekStart<=data.weekEnd);
   assert.ok(Date.parse(data.publishedAt)<=Date.now()+60000);
   assert.ok(data.player.name && Number.isInteger(data.player.gamesPlayed) && data.player.gamesPlayed>=1);
-  assert.match(data.player.headshotUrl,/^https:\\/\\/a\\.espncdn\\.com\\//);
-  assert.match(data.player.highlightUrl,/^https:\\/\\/www\\.youtube\\.com\\/watch\\?v=[\\w-]{11}$/);
+  assert.match(data.player.headshotUrl,/^https:\/\/a\.espncdn\.com\//);
+  assert.match(data.player.highlightUrl,/^https:\/\/www\.youtube\.com\/watch\?v=[\w-]{11}$/);
   assert.equal(data.player.highlightSourceChannelId,"UCWJ2lWNubArHWmf3FIHbfcQ");
   assert.equal(data.player.stats.length,4);
   assert.ok(data.team.name && data.team.teamId);
-  assert.match(data.team.profileUrl,/^https:\\/\\/www\\.basketball-reference\\.com\\/teams\\/[A-Z]{3}\\/20\\d{2}\\.html$/);
+  assert.match(data.team.profileUrl,/^https:\/\/www\.basketball-reference\.com\/teams\/[A-Z]{3}\/20\d{2}\.html$/);
   assert.equal(Object.hasOwn(data.team,"highlightUrl"),false);
   assert.equal(Object.hasOwn(data.player,"summary"),false);
   assert.equal(Object.hasOwn(data.team,"summary"),false);
