@@ -1,8 +1,8 @@
 /** UFC Picks editorial house style: compact analysis, never fabricated facts.
  * The source preparation must pass the guard. Display-time reduction handles
  * previously published verbose spotlights while retaining full source records. */
-export const UFC_PREVIEW_MIN_WORDS = 30;
-export const UFC_PREVIEW_MAX_WORDS = 75;
+export const UFC_PREVIEW_MIN_WORDS = 45;
+export const UFC_PREVIEW_MAX_WORDS = 65;
 export const UFC_EDGE_MAX_WORDS = 9;
 const words = (s: string) => s.trim().split(/\s+/).filter(Boolean);
 export function ufcEditorialIssues(preview: string, edges: readonly string[]) {
@@ -10,7 +10,7 @@ export function ufcEditorialIssues(preview: string, edges: readonly string[]) {
   const count=words(preview).length;
   const sentences=(preview.match(/[.!?](?=\s|$)/g)??[]).length;
   if(count<UFC_PREVIEW_MIN_WORDS||count>UFC_PREVIEW_MAX_WORDS||sentences>3||sentences<2)
-    issues.push("Preview needs 2–3 sentences, 30–75 words");
+    issues.push("Preview needs 2–3 sentences, 45–65 words");
   if(edges.length!==3)issues.push("Each fighter needs exactly three distinct matchup edges");
   for(const edge of edges) {
     if(words(edge).length>UFC_EDGE_MAX_WORDS || edge.length>65)

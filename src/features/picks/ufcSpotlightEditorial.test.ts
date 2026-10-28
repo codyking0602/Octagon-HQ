@@ -7,6 +7,7 @@ describe("UFC fight preview concise editorial contract",()=>{
  });
  it("rejects bloated and thin future automation packages",()=>{
    expect(ufcEditorialIssues("Too short.",["Good","Short"])).not.toEqual([]);
+   expect(ufcEditorialIssues(good.split(" ").slice(0,40).join(" "),["Pressure wrestling","Five-round experience","Clinching threat"])).not.toEqual([]);
    expect(ufcEditorialIssues((good+" Extra analysis that keeps talking without adding anything. ").repeat(4),["A very long matchup edge containing at least eleven words which must be blocked","Another","Third"])).not.toEqual([]);
  });
  it("shortens a legacy published preview without fabricating new claims",()=>{
@@ -14,7 +15,7 @@ describe("UFC fight preview concise editorial contract",()=>{
    const compact=compactUfcPreview(old);
    expect(compact).not.toContain("lengthy fourth");
    expect(compact).toContain("pressure wrestler");
-   expect(compact.split(/\s+/).length).toBeLessThanOrEqual(75);
+   expect(compact.split(/\s+/).length).toBeLessThanOrEqual(65);
    expect(compactUfcEdge("Four-inch height advantage and southpaw striking angles")).toBe("Four-inch height advantage and southpaw striking angles");
    expect(compactUfcEdge("Higher UFC significant-strike volume (about 4.84 landed per minute)")).toBe("Higher UFC significant-strike volume (4.84/min)");
  });

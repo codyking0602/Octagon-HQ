@@ -268,7 +268,7 @@ export default function PicksPage() {
             <details className="surface-card ufc-group-hub" aria-label="UFC Picks and Standings">
               <summary className="ufc-group-hub__summary">
                 <div className="ufc-group-hub__heading">
-                  <strong>PICKS &amp; STANDINGS</strong>
+                  <span>PICKS &amp; STANDINGS</span>
                   <small>{progress.total} FIGHTS</small>
                 </div>
                 {liveBoard && liveBoard.resolved > 0 ? (
@@ -294,17 +294,6 @@ export default function PicksPage() {
               </div>
             </details>
           ) : null}
-
-          <details className="surface-card picks-scoring-guide">
-            <summary>SCORING &amp; UNDERDOG LOCK RULES</summary>
-            <p><strong>Correct pick +4</strong><span>Incorrect and missing picks score 0. Draws, no contests, cancellations, and fights removed from Picks are excluded.</span></p>
-            <p><strong>Underdog Lock bonus by odds</strong><span>Choose one fighter at +100 or longer. A winning lock adds the frozen lock-time bonus below.</span></p>
-            <div className="picks-scoring-tiers" aria-label="Underdog Lock bonus tiers">
-              {underdogBonusTiers.map((tier) => (
-                <span key={tier.odds}><b>{tier.odds}</b><em>{tier.bonus}</em></span>
-              ))}
-            </div>
-          </details>
 
           {identity.profile ? (
             <section className="picks-card-zone">
@@ -465,6 +454,18 @@ export default function PicksPage() {
       ) : null}
 
       {identity.profile ? <PicksSeasonHub history={picks.history} loading={picks.loading} /> : null}
+      {activeEvent ? (
+        <details className="surface-card picks-scoring-guide" aria-label="UFC Picks scoring and Underdog Lock rules">
+          <summary>SCORING &amp; UNDERDOG LOCK RULES</summary>
+          <p><strong>Correct pick +4</strong><span>Incorrect and missing picks score 0. Draws, no contests, cancellations, and fights removed from Picks are excluded.</span></p>
+          <p><strong>Underdog Lock bonus by odds</strong><span>Choose one fighter at +100 or longer. A winning lock adds the frozen lock-time bonus below.</span></p>
+          <div className="picks-scoring-tiers" aria-label="Underdog Lock bonus tiers">
+            {underdogBonusTiers.map((tier) => (
+              <span key={tier.odds}><b>{tier.odds}</b><em>{tier.bonus}</em></span>
+            ))}
+          </div>
+        </details>
+      ) : null}
     </div>
   );
 }
