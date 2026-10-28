@@ -231,10 +231,13 @@ def render_thumb(im, size):
     if not box:
         fail("thumbnail has no visible fighter pixels")
     subject = im.crop(box)
-    # Tall UFC fighter renders must not shrink the entire body into a tiny head.
-    # The human image review still owns final face framing and identity.
-    if subject.height > subject.width * 1.45:
-        subject = subject.crop((0, 0, subject.width, min(subject.height, round(subject.width * 1.45))))
+    # UFC source images are often promotional half/full-body poses. The Picks
+    # tile is a head-and-shoulders portrait, NOT a small Spotlight render.
+    # Cropping to the top of the verified subject preserves the head while
+    # preventing the torso and gloves from shrinking the face to thumbnail size.
+    # Human identity/framing review is still required for each fighter.
+    if subject.height > subject.width * 0.89:
+        subject = subject.crop((0, 0, subject.width, round(subject.width * 0.89)))
     horizontal_pad = round(size[0] * 0.025)
     top_pad = round(size[1] * 0.035)
     bottom_pad = round(size[1] * 0.025)

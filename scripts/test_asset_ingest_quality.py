@@ -44,6 +44,18 @@ class AssetIngestQualityTests(unittest.TestCase):
         metrics = validate_asset_quality(thumbnail, "thumb")
         self.assertGreater(metrics["alpha_coverage"], 0.10)
 
+    def test_bust_thumb_discards_full_torso_and_makes_face_dominant(self):
+        source = fake_fighter(width=160, height=480)
+        thumbnail = render_thumb(source, (320, 320))
+        # The visible facial ellipse must be substantial, not a tiny portion
+        # of a scaled fighter-body/Spotlight pose.
+        skin = sum(
+            1 for r, g, b, a in thumbnail.getdata()
+            if a > 200 and r > 140 and 105 <= g <= 135 and b < 100
+        )
+        self.assertGreater(skin, 14000)
+        validate_asset_quality(thumbnail, "thumb")
+
     def test_framed_rectangular_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
         ImageDraw.Draw(image).rectangle((10, 10, 309, 309), fill=(220, 220, 220, 255))
