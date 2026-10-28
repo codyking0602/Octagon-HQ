@@ -41,7 +41,7 @@ the general channel a specific verified highlight.
 Require at least two completed games. Score principally by winning record,
 then average scoring margin, points allowed, and opponent strength. The
 current automated team model weights these **45% / 25% / 15% / 15%**.
-The Team card uses a logo, weekly record, weekly statistics, verified season record and official conference seed as of the source check (clearly distinguished from the seven-day award window). No summary,
+The Team card uses a logo, weekly record, weekly statistics, verified season record and official conference seed. Display the season record and conference seed **inline with the team name** as `3–1 · #6 West`, with `3–0 THIS WEEK` as the only contextual line beneath the name. Never show an `AS OF` label or append `SEASON` to the displayed record. Retain the verified source timestamp in the package metadata. No summary,
 no highlight video and no chevron. The entire card links to that team's current
 season on **Basketball Reference** (Sports Reference): the URL's year is the
 NBA season **ending** year (2026–27 => `/teams/ATL/2027.html`).
@@ -53,3 +53,7 @@ profile links, or videos. Match video player name and publication window,
 require channel identity, and archive each weekly result. Submit autonomous
 updates as PRs and merge only on green exact-head CI with unchanged main,
 then verify production deployment.
+
+## Locked visual presentation (October 28, 2026)
+
+NBA Player Spotlight uses the **established Football Player Spotlight card** as its permanent visual reference: 176px full-height portrait, `object-fit: cover` at 50% 35%, dark/neutral layered team accent background, right-edge photo fade, two-color strip under the photo, same content proportions and compact raised team-colored Watch Highlight CTA. No small bottom-aligned `contain` portraits or full-card purple saturation. Use the verified player team identity for both accent colors; Lakers use purple secondary, gold primary, and a legible deep-gold CTA. The player's full head must remain visible; verify representative portraits on narrow phones before modifying crop defaults. NBA-specific content keeps the date range, number of games, weekly average label, and four stat averages. Do not add Football's result or measurements. Team of the Week stays compact with its four verified metrics and inline season context.
