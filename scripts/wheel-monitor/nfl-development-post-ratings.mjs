@@ -22,6 +22,8 @@ export function buildPostRatingReview(profiles,grades,contracts,at,previous=null
   // Previous PUBLISHED checkpoint, not the fixed October 7 calibration.
   // Missing checkpoint bootstraps the latest already-approved grades as the baseline:
   // those older revisions were already screened by the earlier workflow.
+  if(previous!==null&&!Array.isArray(previous?.snapshot))
+    throw new Error("Existing NFL grade checkpoint missing its complete snapshot");
   const priorRows=previous?.snapshot??null;
   if(priorRows!==null&&(!Array.isArray(priorRows)||priorRows.length!==594||
     new Set(priorRows.map(r=>r.id)).size!==594))
