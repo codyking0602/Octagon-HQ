@@ -152,7 +152,7 @@ describe("approved cancelled fight presentation", () => {
     const blueChoice = screen.getByRole("button", { name: /Cancel Blue/i });
     expect(redChoice).toBeDisabled();
     expect(blueChoice).toBeDisabled();
-    expect(await within(redChoice).findByText("YOUR PICK")).toBeInTheDocument();
+    expect(within(redChoice).getByLabelText("Your pick")).toBeInTheDocument();
     expect(within(blueChoice).getByText("FIGHT CANCELLED")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /MAKE THIS MY UNDERDOG LOCK/i })).not.toBeInTheDocument();
 

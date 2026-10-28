@@ -280,7 +280,7 @@ describe("Picks lifecycle presentation", () => {
 });
 
 describe("locked fight cards and scoring guide", () => {
-  it("shows YOUR PICK, NOT PICKED, complete progress, and retained fighter thumbnails after lock", async () => {
+  it("shows the selected checkmark, NOT PICKED, compact scorecard, and retained fighter thumbnails after lock", async () => {
     const { container } = renderPage(repository({
       currentEvent: lockedEvent,
       selections: [{
@@ -298,7 +298,9 @@ describe("locked fight cards and scoring guide", () => {
     expect(unselected).toHaveAttribute("aria-pressed", "false");
     expect(selected).toBeDisabled();
     expect(unselected).toBeDisabled();
-    expect(container.querySelector(".picks-progress__track")).toHaveClass("is-complete");
+    expect(within(selected).getByLabelText("Your pick")).toBeInTheDocument();
+    expect(screen.getByText("PICKS MADE")).toBeInTheDocument();
+    expect(screen.getByText("1/1")).toBeInTheDocument();
     expect(container.querySelectorAll(".pick-fighter-thumbnail")).toHaveLength(2);
   });
 
