@@ -1,0 +1,19 @@
+name: Discover original UFC card headshot files (isolated)
+on:
+  push:
+    branches:
+      - fix/ufc-oct31-official-ufc-thumb-discovery-20261027
+    paths:
+      - scripts/ufc-oct31-source-probe.py
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/ufc-oct31-source-probe.py
