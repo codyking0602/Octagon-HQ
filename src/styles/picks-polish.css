@@ -1094,3 +1094,8 @@ img.pick-fighter-thumbnail--ufc-headshot {
 .pick-bout-card:not(.is-main-event) .pick-choice { min-height:100px; }
 .pick-bout-card:not(.is-main-event) .pick-choice > span { -webkit-line-clamp:2; }
 @media(max-width:390px) { .pick-choice__identity-links {max-width:58%;}.pick-choice__identity {font-size:8px;padding:3px 5px;min-height:23px;} }
+
+/* Short sport-specific lead-in, leaving the full premium event poster intact. */
+.picks-page-heading--compact {display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 3px;min-height:24px;}
+.picks-page-heading--compact > span {color:var(--ufc-red-strong);font-size:10px;font-weight:950;letter-spacing:.13em;}
+.picks-page-heading--compact > strong {color:var(--text-secondary);font-size:10px;font-weight:850;letter-spacing:.04em;}
