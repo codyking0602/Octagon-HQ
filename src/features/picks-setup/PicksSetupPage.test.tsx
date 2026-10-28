@@ -168,6 +168,40 @@ afterEach(() => {
 });
 
 describe("Event Setup and card review", () => {
+  it("does not lose a staged card or show raw errors when prep validation fails", async () => {
+    const repo = repository(stagedDraft);
+    repo.loadUfcPrep = vi.fn().mockRejectedValue(new Error('[{"code":"invalid_value","path":["spotlights",1,"source"]}]'));
+    renderPage(repo);
+    expect(await screen.findByRole("heading", { name: "UFC Fight Night" })).toBeInTheDocument();
+    expect(screen.getByText("Prep package needs repair")).toBeInTheDocument();
+    expect(screen.getByText(/UFC prep has invalid saved data/)).toBeInTheDocument();
+    expect(screen.queryByText("No prep package yet")).not.toBeInTheDocument();
+    expect(screen.queryByText("SETUP UNAVAILABLE")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "CHECK FOR CARD UPDATES" })).toBeEnabled();
+    expect(document.body.textContent).not.toContain("invalid_value");
+  });
+
+  it("does not falsely claim a missing prep when an unstaged record fails to parse", async () => {
+    const repo = repository(null);
+    repo.loadUfcPrep = vi.fn().mockRejectedValue(new Error("bad source"));
+    renderPage(repo);
+    expect(await screen.findByText("Prep package needs repair")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "SYNC NEXT UFC EVENT" })).toBeEnabled();
+  });
+
+  it("keeps the prep summary visible when draft loading independently fails", async () => {
+    const repo = repository(null);
+    repo.loadDraft = vi.fn().mockRejectedValue(new Error("Draft backend failed"));
+    repo.loadUfcPrep = vi.fn().mockResolvedValue({
+      eventName: "Prepared October 31", eventKind: "fight-night", status: "review-needed",
+      bouts: [], assets: [], spotlights: [], verificationNotes: [],
+      preparedAt: "2026-10-27T10:00:00.000Z", verifiedAt: "2026-10-27T10:00:00.000Z",
+    });
+    renderPage(repo);
+    expect(await screen.findByText("Prepared October 31")).toBeInTheDocument();
+    expect(screen.getByText("Draft backend failed")).toBeInTheDocument();
+  });
+
   it("syncs the next event with automatic discovery when no source URL is entered", async () => {
     const repo = repository(null);
     renderPage(repo);

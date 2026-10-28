@@ -26,6 +26,7 @@ import {
 
 function readableError(error: unknown) {
   const message = error instanceof Error ? error.message : "Event Setup could not complete that request.";
+  if (error instanceof Error && error.name === "ZodError") return "Saved Event Setup data is invalid. Correct the source before using it.";
   if (message.toLowerCase().includes("pick control owner required")) {
     return "Event Setup is available only to the designated Fight Night owner.";
   }
@@ -181,6 +182,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
   const [loading, setLoading] = useState(true);
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
+  const [prepError, setPrepError] = useState("");
   const [metadata, setMetadata] = useState({
     name: "",
     subtitle: "",
@@ -195,17 +197,17 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
     if (!repository || !identity.profile) return;
     setLoading(true);
     try {
-      const [nextDraft, nextPrep] = await Promise.all([
+      // Prep is advisory: a bad prep payload must not hide a valid staged card.
+      const [draftResult, prepResult] = await Promise.allSettled([
         repository.loadDraft(),
         repository.loadUfcPrep ? repository.loadUfcPrep() : Promise.resolve(null),
       ]);
-      setDraft(nextDraft);
-      setPrep(nextPrep);
-      setError("");
-    } catch (nextError) {
-      setDraft(null);
-      setPrep(null);
-      setError(readableError(nextError));
+      setDraft(draftResult.status === "fulfilled" ? draftResult.value : null);
+      setPrep(prepResult.status === "fulfilled" ? prepResult.value : null);
+      setError(draftResult.status === "rejected" ? readableError(draftResult.reason) : "");
+      setPrepError(prepResult.status === "rejected"
+        ? "UFC prep has invalid saved data. The package still exists and needs repair; card staging is independent."
+        : "");
     } finally {
       setLoading(false);
     }
@@ -473,9 +475,9 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
           <div className="picks-setup-prep__heading">
             <div>
               <p className="eyebrow">UFC PREP</p>
-              <h2>{prep ? prep.eventName : "No prep package yet"}</h2>
+              <h2>{prep ? prep.eventName : prepError ? "Prep package needs repair" : "No prep package yet"}</h2>
             </div>
-            <strong>{prepStatus ? prepStatus.replace("-", " ").toUpperCase() : "NOT PREPARED"}</strong>
+            <strong>{prepError ? "DATA ERROR" : prepStatus ? prepStatus.replace("-", " ").toUpperCase() : "NOT PREPARED"}</strong>
           </div>
           {prep ? (
             <>
@@ -496,7 +498,7 @@ export default function PicksSetupPage({ repository: suppliedRepository }: Picks
               ) : null}
             </>
           ) : (
-            <p>The Monday prep task has not loaded a package for the next UFC event. Staging still works with the normal UFC.com flow.</p>
+            <p role={prepError ? "alert" : undefined}>{prepError || "The Monday prep task has not loaded a package for the next UFC event. Staging still works with the normal UFC.com flow."}</p>
           )}
         </section>
       ) : null}
