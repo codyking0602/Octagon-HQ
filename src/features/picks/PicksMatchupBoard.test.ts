@@ -5,8 +5,8 @@ const picksPolish = readFileSync("src/styles/picks-polish.css", "utf8");
 
 describe("Picks matchup game board styling", () => {
   it("keeps distinct red and blue corner selection treatments with a central VS board", () => {
-    expect(picksPolish).toContain(".pick-bout-card__choices > .pick-choice:first-child.is-selected");
-    expect(picksPolish).toContain(".pick-bout-card__choices > .pick-choice:last-child.is-selected");
+    expect(picksPolish).toContain(".pick-bout-card__choices > .pick-choice-shell:first-child .pick-choice.is-selected");
+    expect(picksPolish).toContain(".pick-bout-card__choices > .pick-choice-shell:last-child .pick-choice.is-selected");
     expect(picksPolish).toContain(".pick-bout-card__versus");
     expect(picksPolish).toContain("--picks-main-thumb-size: 82px");
   });
@@ -14,8 +14,8 @@ describe("Picks matchup game board styling", () => {
   it("keeps lower-card fights compact without shrinking the premium main event", () => {
     expect(picksPolish).toContain(".pick-bout-card:not(.is-main-event) {");
     expect(picksPolish).toContain(".pick-bout-card:not(.is-main-event) .pick-choice {");
-    expect(picksPolish).toContain("min-height: 104px");
-    expect(picksPolish).toContain("-webkit-line-clamp: 1");
+    expect(picksPolish).toContain("min-height:97px");
+    expect(picksPolish).toContain("-webkit-line-clamp:2");
     expect(picksPolish).toContain(".pick-bout-card:not(.is-main-event) .pick-choice > em {");
     expect(picksPolish).toContain("margin-top: 0");
     expect(picksPolish).toContain(".pick-bout-card.is-main-event .pick-choice {");

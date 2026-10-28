@@ -175,10 +175,10 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     );
 
     expect(screen.getByText("FIGHT SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
+    expect(screen.queryByText("SKCS #4")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
 
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #4")).toHaveLength(2);
+    expect(screen.getAllByText("SKCS #4")).toHaveLength(1);
     expect(screen.getAllByText(/45-second Contender Series contract win/)).toHaveLength(2);
     expect(screen.getByText("7 KO/TKO wins in 9 fights")).toBeInTheDocument();
     expect(screen.getByText(bilal!.whyOnBoard)).toBeInTheDocument();
@@ -207,9 +207,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #1")).toBeInTheDocument();
+    expect(screen.queryByText("SKCS #1")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #1")).toHaveLength(2);
+    expect(screen.getAllByText("SKCS #1")).toHaveLength(1);
   });
 
   it("gives Ateba Gautier the full Shane treatment on UFC 332 at #9 after the loss", () => {
@@ -223,9 +223,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     );
 
     expect(screen.getByText("FIGHT SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #9")).toBeInTheDocument();
+    expect(screen.queryByText("SKCS #9")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #9")).toHaveLength(2);
+    expect(screen.getAllByText("SKCS #9")).toHaveLength(1);
     expect(screen.getByText(gautier!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "GAUTIER SPOTLIGHT ↗" })).toHaveAttribute(
       "href",
@@ -247,9 +247,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #3")).toBeInTheDocument();
+    expect(screen.queryByText("SKCS #3")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #3")).toHaveLength(2);
+    expect(screen.getAllByText("SKCS #3")).toHaveLength(1);
     expect(screen.getByText(rosas!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
       "href",
@@ -267,9 +267,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #6")).toBeInTheDocument();
+    expect(screen.queryByText("SKCS #6")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #6")).toHaveLength(2);
+    expect(screen.getAllByText("SKCS #6")).toHaveLength(1);
     expect(screen.getByText(daniil!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
       "href",

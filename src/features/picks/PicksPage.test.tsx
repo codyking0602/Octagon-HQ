@@ -234,7 +234,7 @@ describe("PicksPage", () => {
       </IdentityProvider></MemoryRouter>,
     );
 
-    expect(await screen.findByText("UNDERDOG LOCK · Bogdan Guskov · +4 IF CORRECT")).toBeInTheDocument();
+    expect(await screen.findByText("SET")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "★ UNDERDOG LOCK · +4 · REMOVE" })).toBeInTheDocument();
   });
 

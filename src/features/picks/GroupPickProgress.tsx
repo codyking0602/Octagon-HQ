@@ -35,8 +35,8 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
   const isFootball = event.sport === "football";
   const unit = isFootball ? "game" : "fight";
   const visibleMembers = useMemo(
-    () => isFootball ? members.filter((member) => member.completed > 0) : members,
-    [isFootball, members],
+    () => members.filter((member) => member.completed > 0),
+    [members],
   );
   const selected = visibleMembers.find((member) => member.displayName === selectedName) ?? null;
   const completedMembers = visibleMembers.filter((member) => member.completed === member.total && member.total > 0).length;

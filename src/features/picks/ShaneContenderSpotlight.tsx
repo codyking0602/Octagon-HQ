@@ -22,7 +22,7 @@ export function ShaneContenderBadge({ fighters }: { fighters: ShaneWatchFighter[
     <span className="shane-contender-badges" aria-label="Shane King’s Contender Series fighters">
       {fighters.map((fighter) => (
         <em className="shane-contender-badge" key={fighter.id}>
-          SHANE’S CONTENDER SERIES · #{fighter.rank}
+          SKCS #{fighter.rank}
         </em>
       ))}
     </span>
@@ -36,7 +36,7 @@ export function ShaneContenderSpotlightSection({ fighters }: { fighters: ShaneWa
     <section className="main-event-spotlight__shane" aria-label="Shane King’s Contender Series">
       {fighters.map((fighter) => (
         <article className="main-event-spotlight__shane-fighter" key={fighter.id}>
-          <span>SHANE’S CONTENDER SERIES · #{fighter.rank}</span>
+          <span>SKCS #{fighter.rank}</span>
           <h3>{fighter.name}</h3>
           <p>{fighter.whyOnBoard}</p>
           <a href={`/fighters-to-watch#${fighter.id}`}>VIEW SHANE’S SCOUTING PROFILE →</a>

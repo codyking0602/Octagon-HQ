@@ -2,11 +2,11 @@ import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
 import {
-  ShaneContenderBadge,
   ShaneContenderSpotlightSection,
   shaneContendersForBout,
 } from "./ShaneContenderSpotlight";
 import type { PickBout, PickEventSpotlight } from "./picksModel";
+import { compactUfcPreview, compactUfcEdge } from "./ufcSpotlightEditorial";
 
 const fighterPhotoModules = import.meta.glob<{ default: string }>(
   "/public/assets/fighters/*.{webp,png,jpg,jpeg}",
@@ -312,7 +312,7 @@ function EdgeColumn({ fighter, corner }: { fighter: SpotlightFighter; corner: "r
   return (
     <div className={`main-event-spotlight__edge-column is-${corner}`}>
       <strong>{fighter.name}</strong>
-      <div>{fighter.edges.map((edge) => <span key={edge}>{edge}</span>)}</div>
+      <div>{fighter.edges.map((edge) => <span key={edge}>{compactUfcEdge(edge)}</span>)}</div>
     </div>
   );
 }
@@ -360,7 +360,6 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
         <span>
           <b>{bout.position === 1 ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b>
           <strong>View matchup breakdown</strong>
-          <ShaneContenderBadge fighters={shaneContenders} />
         </span>
         <i aria-hidden="true">›</i>
       </button>
@@ -402,7 +401,7 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
               <section className="main-event-spotlight__preview">
                 <span>FIGHT PREVIEW</span>
                 <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
-                {data.preview ? <p>{data.preview}</p> : null}
+                {data.preview ? <p>{compactUfcPreview(data.preview)}</p> : null}
                 {data.watchSpotlights.length ? (
                   <div
                     className="main-event-spotlight__watch-links"

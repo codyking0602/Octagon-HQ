@@ -99,3 +99,13 @@ After staging, the existing Picks monitoring system remains the live change owne
 - For each generated PR, inspect **every** actual WebP in addition to dimensions, alpha, silhouette, upper-body framing, and absence of leftover rectangular backgrounds. The automated gate catches obvious defects but cannot certify identity or visually perfect cutouts. Do **not** waive the human/photo visual gate solely to raise the prep count.
 - After review, verify exact PR head green; merge/deploy only on explicit authorization, then verify actual public media URLs and update the living preproduction package. When told not to touch main, **leave the PR and the prep database unchanged** unless separately authorized.
 - The setup display shows **thumbs ready**, **required main-event photos out of 2**, and **editorial previews out of main-card bouts**, with optional main-card Spotlight photos shown separately. Missing bookmaker-attributed odds and poster availability remain separate warning signals.
+
+## Locked concise editorial automation standard (October 27, 2026)
+
+The existing preparation/publication flow must not publish verbose previews. Each researched fight Spotlight retains the approved sections:
+- Fight preview: 2–3 complete sentences, 30–75 words. Explain styles, one decisive tactical conflict and a realistic key to victory. Avoid reciting both biographies.
+- Tale of the Tape: preserve five sourced rows (record, age, height, reach, stance), without filler prose.
+- Matchup Edges: exactly three per fighter, each at most nine words and 65 characters. Think "Pressure wrestling", "Southpaw striking angles", "Five-round experience", not full sentences.
+- Avoid generic filler or fabricated stats. Every numerical edge must be source-verified. SKCS/HQ rankings fighter profiles do not require a fight breakdown.
+- The ufcEditorialIssues/effectiveUfcPrepStatus guard blocks verbose future prepared packages from ready status. Existing published rich breakdowns are compacted non-destructively at display time.
+- Temporary QA fighters/bouts are not automatically published or retained after owner removal.
