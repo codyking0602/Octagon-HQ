@@ -234,7 +234,6 @@ jobs:
       - name: Verify NBA official archive source and ESPN end to end without publishing
         run: |
           node --test scripts/nba-weekly-clock.fixtures.mjs scripts/generate-nba-weekly-spotlight.fixtures.mjs
-          node scripts/generate-nba-weekly-spotlight.mjs --archive-diagnostics
           node scripts/generate-nba-weekly-spotlight.mjs
           node --input-type=module <<'NODE'
           import fs from "node:fs";
