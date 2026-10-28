@@ -3,9 +3,10 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 const script = readFileSync("scripts/generate-nba-weekly-spotlight.mjs","utf8");
 const flow = readFileSync(".github/workflows/nba-weekly-spotlights.yml","utf8");
+const clock = readFileSync("scripts/nba-weekly-clock.mjs","utf8");
 describe("NBA unattended editorial safeguards", () => {
   it("passes offline ESPN box-score and verified YouTube fixture tests", () => {
-    expect(() => execFileSync("node", ["--test", "scripts/generate-nba-weekly-spotlight.fixtures.mjs"],
+    expect(() => execFileSync("node", ["--test", "scripts/nba-weekly-clock.fixtures.mjs", "scripts/generate-nba-weekly-spotlight.fixtures.mjs"],
       { encoding: "utf8", timeout: 30_000 })).not.toThrow();
   });
   it("uses finished ESPN boxscores and official YouTube videos, never synthetic weekly winners", () => {
@@ -21,12 +22,16 @@ describe("NBA unattended editorial safeguards", () => {
     expect(flow).toContain("actions/cache/save@v4");
     expect(flow).toContain("--collect-only");
     expect(script).toContain("mergeOfficialVideos");
-    expect(flow).toContain("TZ=America/Chicago");
+    expect(clock).toContain('timeZone: "America/Chicago"');
+    expect(flow).toContain("node scripts/nba-weekly-clock.mjs");
+    expect(flow).toContain("Reject falsely green overdue weekly content");
     expect(flow).toContain("workflow run validate.yml --ref");
     expect(flow).toContain("completed success");
     expect(flow).toContain("--match-head-commit");
     expect(flow).toContain("workflow run deploy-cloudflare.yml --ref main");
     expect(flow).toContain("no unverified claims.");
-    expect(flow).toContain('current" != "$EXPECTED_MAIN');
+    expect(flow).toContain('latest_main" != "$expected_main');
+    expect(flow).toContain("git merge --no-edit origin/main");
+    expect(flow).toContain("fetch-depth: 0");
   });
 });

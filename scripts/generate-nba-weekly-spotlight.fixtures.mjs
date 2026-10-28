@@ -127,14 +127,22 @@ test("prefers short official NBA player performance clips over longer videos",()
   ];
   assert.equal(findMatchingHighlight("Sample Star",items,"2026-10-25")?.id,"ABCdefghi12");
 });
-test("recovers the chosen current video source and keeps Team of the Week without a video CTA",()=>{
+test("published weekly snapshot keeps verified dynamic contracts across rotations",()=>{
   const data=JSON.parse(readFileSync("public/nba-weekly/active.json","utf8"));
-  assert.equal(data.player.name,"Tyrese Maxey");
-  assert.equal(data.player.gamesPlayed,2);
-  assert.equal(data.player.highlightUrl,"https://www.youtube.com/watch?v=e8g1Fa8iYYM");
+  assert.match(data.weekStart,/^20\d{2}-\d{2}-\d{2}$/);
+  assert.match(data.weekEnd,/^20\d{2}-\d{2}-\d{2}$/);
+  assert.ok(data.weekStart<=data.weekEnd);
+  assert.ok(Date.parse(data.publishedAt)<=Date.now()+60000);
+  assert.ok(data.player.name && Number.isInteger(data.player.gamesPlayed) && data.player.gamesPlayed>=1);
+  assert.match(data.player.headshotUrl,/^https:\/\/a\.espncdn\.com\//);
+  assert.match(data.player.highlightUrl,/^https:\/\/www\.youtube\.com\/watch\?v=[\w-]{11}$/);
   assert.equal(data.player.highlightSourceChannelId,"UCWJ2lWNubArHWmf3FIHbfcQ");
-  assert.equal(data.team.name,"Atlanta Hawks");
+  assert.equal(data.player.stats.length,4);
+  assert.ok(data.team.name && data.team.teamId);
+  assert.match(data.team.profileUrl,/^https:\/\/www\.basketball-reference\.com\/teams\/[A-Z]{3}\/20\d{2}\.html$/);
   assert.equal(Object.hasOwn(data.team,"highlightUrl"),false);
+  assert.equal(Object.hasOwn(data.player,"summary"),false);
+  assert.equal(Object.hasOwn(data.team,"summary"),false);
 });
 
 
