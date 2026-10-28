@@ -29,7 +29,8 @@
         "label": "FG%",
         "value": "46.4"
       }
-    ]
+    ],
+    "teamId": "LAL"
   },
   "team": {
     "name": "Minnesota Timberwolves",
@@ -41,6 +42,10 @@
     "oppPpg": "97.7",
     "netMargin": "+23.3",
     "fgPct": "48.0",
-    "threePct": "42.4"
+    "threePct": "42.4",
+    "seasonRecord": "3-1",
+    "conference": "WEST",
+    "conferenceSeed": 6,
+    "standingsAsOf": "2026-10-28T12:27:16.791Z"
   }
 }
