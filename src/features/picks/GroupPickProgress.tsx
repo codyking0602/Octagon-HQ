@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { footballLiveStandingsForMembers } from "./footballGroupLiveStandings";
+import { ufcLiveBaseStandingsForMembers } from "./ufcLiveBaseStandings";
 import type { PickEvent } from "./picksModel";
 import { usePicks } from "./PicksProvider";
 
@@ -35,8 +36,8 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
   const isFootball = event.sport === "football";
   const unit = isFootball ? "game" : "fight";
   const visibleMembers = useMemo(
-    () => isFootball ? members.filter((member) => member.completed > 0) : members,
-    [isFootball, members],
+    () => members.filter((member) => member.completed > 0),
+    [members],
   );
   const selected = visibleMembers.find((member) => member.displayName === selectedName) ?? null;
   const completedMembers = visibleMembers.filter((member) => member.completed === member.total && member.total > 0).length;
@@ -47,6 +48,11 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
 
   const footballLiveStandings = useMemo(
     () => isFootball ? footballLiveStandingsForMembers(visibleMembers, eligibleBouts) : new Map(),
+    [eligibleBouts, isFootball, visibleMembers],
+  );
+
+  const ufcLiveStandings = useMemo(
+    () => !isFootball ? ufcLiveBaseStandingsForMembers(visibleMembers, eligibleBouts) : new Map(),
     [eligibleBouts, isFootball, visibleMembers],
   );
 
@@ -117,6 +123,7 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
             .join(" ");
           const live = isFootball ? footballLiveStandings.get(member.profileId) ?? null : null;
           const lockSettled = live ? live.lockWins + live.lockLosses + live.lockPushes : 0;
+          const ufcLive = !isFootball ? ufcLiveStandings.get(member.profileId) ?? null : null;
           return (
             <div className="picks-group-progress__member" key={member.profileId}>
               <button
@@ -134,6 +141,11 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
                     <b>{liveRecord(live.wins, live.losses, live.pushes)} · {ordinalPlace(live.rank, live.tied)}</b>
                     <small>{live.points} PTS · LOCKS {lockSettled ? liveRecord(live.lockWins, live.lockLosses, live.lockPushes) : "—"}</small>
                   </span>
+                ) : !isFootball && ufcLive && ufcLive.settled > 0 ? (
+                  <span className="football-group-live">
+                    <b>{ufcLive.wins}-{ufcLive.losses} · {ordinalPlace(ufcLive.rank,ufcLive.tied)}*</b>
+                    <small>{ufcLive.points} BASE PTS · {member.completed}/{member.total} PICKS</small>
+                  </span>
                 ) : (
                   <b>{member.completed}/{member.total}</b>
                 )}
@@ -146,7 +158,9 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
                       <strong>
                         {isFootball && live && live.settled > 0
                           ? `${liveRecord(live.wins, live.losses, live.pushes)} · ${ordinalPlace(live.rank, live.tied)} · ${live.points} PTS · LOCKS ${lockSettled ? liveRecord(live.lockWins, live.lockLosses, live.lockPushes) : "—"}`
-                          : `${member.completed}/${member.total} COMPLETE`}
+                          : !isFootball && ufcLive && ufcLive.settled > 0
+                            ? `${ufcLive.wins}-${ufcLive.losses} · ${ufcLive.points} BASE PTS · PROVISIONAL (NO LOCK BONUS)`
+                            : `${member.completed}/${member.total} COMPLETE`}
                       </strong>
                     </div>
                     {!isFootball && !masterLocked && member.hasUnderdogLock ? <b>UNDERDOG LOCK SET</b> : null}

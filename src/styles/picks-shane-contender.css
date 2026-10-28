@@ -117,3 +117,5 @@
 .main-event-spotlight__shane-fighter a:focus-visible {
   text-decoration: underline;
 }
+
+/* Legacy in-tile contender label retired in favor of independent SKCS links. */

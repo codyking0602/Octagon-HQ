@@ -21,7 +21,8 @@ import { GroupPickReveal } from "./GroupPickReveal";
 import { MainEventSpotlight } from "./MainEventSpotlight";
 import { pickEventPoster } from "./picksEventAssets";
 import { reviewedMmaManiaPoster, reviewedOfficialUfcEventBanner } from "./ufcMmaManiaPoster";
-import { shaneContenderForSlug } from "./ShaneContenderSpotlight";
+import { UfcFighterIdentityBadges } from "./UfcFighterIdentityBadges";
+import { UfcPicksScorecard } from "./UfcPicksScorecard";
 import { PicksSeasonHub } from "./PicksSeasonHub";
 
 interface BoutResultView {
@@ -81,7 +82,7 @@ function officialResult(bout: BoutResultView) {
 }
 
 function choiceLabel(selected: boolean, locked: boolean, cancelled: boolean, removed: boolean) {
-  if (selected) return "YOUR PICK";
+  if (selected) return null; // bright corner + accessible checkmark already confirm the pick
   if (removed) return "REMOVED FROM PICKS";
   if (cancelled) return "FIGHT CANCELLED";
   return locked ? "NOT PICKED" : null;
@@ -158,11 +159,7 @@ export default function PicksPage() {
       className={`page picks-page${eventPoster ? " has-event-atmosphere" : ""}`}
       style={eventVisualStyle}
     >
-      <section className="page-heading picks-page-heading">
-        <p className="eyebrow">EVENT PICKS</p>
-        <h1>Call the fights</h1>
-        <p>Pick every matchup before the card locks.</p>
-      </section>
+      <header className="picks-page-heading picks-page-heading--compact"><span>EVENT PICKS</span><strong>Make your picks</strong></header>
 
       {picks.loading && !activeEvent ? (
         <section className="surface-card picks-state-card" aria-live="polite">
@@ -218,17 +215,6 @@ export default function PicksPage() {
                 <span>{progress.total} FIGHTS</span>
               </div>
 
-              <div className="picks-progress" aria-label={`${progress.completed} of ${progress.total} picks completed`}>
-                <div><span>YOUR PICKS</span><b>{progress.completed} OF {progress.total}</b></div>
-                <div className={completeProgress ? "picks-progress__track is-complete" : "picks-progress__track"} aria-hidden="true">
-                  <span style={{ width: `${percent}%` }} />
-                </div>
-                <p>
-                  UNDERDOG LOCK · {underdogLockName}
-                  {underdogLockBonusLabel ? ` · ${underdogLockBonusLabel} IF CORRECT` : ""}
-                </p>
-              </div>
-
               {!identity.profile ? (
                 <button className="primary-action" type="button" onClick={identity.openDialog}>
                   SIGN IN TO MAKE PICKS
@@ -254,7 +240,8 @@ export default function PicksPage() {
           </section>
 
           {identity.profile ? (
-            <GroupPickProgress event={activeEvent} locked={locked} mySelections={picks.selections} />
+            <UfcPicksScorecard event={activeEvent} locked={locked} completed={progress.completed}
+              total={progress.total} underdogLockName={underdogLockName} mySelections={picks.selections}/>
           ) : null}
 
           <details className="surface-card picks-scoring-guide">
@@ -333,6 +320,7 @@ export default function PicksPage() {
                         ) : null}
                       </header>
                       <div className="pick-bout-card__choices">
+                        <div className="pick-choice-wrap is-red">
                         <button
                           type="button"
                           className={choiceClassName(selection === bout.redFighterSlug, readOnly)}
@@ -342,11 +330,15 @@ export default function PicksPage() {
                         >
                           <FighterThumbnail name={bout.redFighterName} slug={bout.redFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.redFighterSlug)} />
                           <span style={fighterNameStyle(bout.redFighterName, isMainEvent)}>{bout.redFighterName}</span>
-                          {shaneContenderForSlug(bout.redFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
+                          
                           <small>{removed ? "NOT ACTIVE" : `${redOdds ?? "ODDS TBD"}${favorite === "red" ? " · FAVORITE" : ""}`}</small>
+                          {selection === bout.redFighterSlug ? <b className="pick-choice__check" aria-label="Your pick">✓</b> : null}
                           {redChoiceLabel ? <em>{redChoiceLabel}</em> : null}
                         </button>
+                          <UfcFighterIdentityBadges slug={bout.redFighterSlug} />
+                        </div>
                         <span className="pick-bout-card__versus">VS</span>
+                        <div className="pick-choice-wrap is-blue">
                         <button
                           type="button"
                           className={choiceClassName(selection === bout.blueFighterSlug, readOnly)}
@@ -356,10 +348,13 @@ export default function PicksPage() {
                         >
                           <FighterThumbnail name={bout.blueFighterName} slug={bout.blueFighterSlug} officialHeadshot={approvedUfcPicksHeadshot(activeEvent.eventId, bout.blueFighterSlug)} />
                           <span style={fighterNameStyle(bout.blueFighterName, isMainEvent)}>{bout.blueFighterName}</span>
-                          {shaneContenderForSlug(bout.blueFighterSlug) ? <small className="pick-choice__shane-badge">SHANE’S CONTENDER SERIES</small> : null}
+                          
                           <small>{removed ? "NOT ACTIVE" : `${blueOdds ?? "ODDS TBD"}${favorite === "blue" ? " · FAVORITE" : ""}`}</small>
+                          {selection === bout.blueFighterSlug ? <b className="pick-choice__check" aria-label="Your pick">✓</b> : null}
                           {blueChoiceLabel ? <em>{blueChoiceLabel}</em> : null}
                         </button>
+                          <UfcFighterIdentityBadges slug={bout.blueFighterSlug} />
+                        </div>
                       </div>
                       {removed ? (
                         <div className="pick-bout-card__official">
