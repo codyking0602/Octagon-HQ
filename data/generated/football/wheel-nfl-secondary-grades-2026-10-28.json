@@ -1,0 +1,1025 @@
+{
+  "schemaVersion": 1,
+  "version": "wheel-nfl-secondary-grades-2026-10-28-v1",
+  "status": "current-ability-versioned-snapshot",
+  "effectiveDate": "2026-10-28",
+  "sport": "NFL",
+  "family": "Secondary",
+  "sourceBaseArtifact": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+  "revisionLedger": "data/curated/football/nfl/wheel-nfl-madden-editorial-revisions-2026-10-28.json",
+  "constitution": "PR #1641 — Wheel of Football grading constitution",
+  "gradingSemantic": "CURRENT NFL ABILITY IN THE PLAYER'S SECONDARY ROLE RIGHT NOW. Outside corner, slot/nickel and safety are role-normalized inside one Secondary grade. Coverage is primary, with assignment difficulty, ball skills, tackling, run support, processing, versatility and down-to-down consistency weighted by role. Injury/availability is separated from ability.",
+  "grades": [
+    {
+      "team": "ARI",
+      "player": "Budda Baker",
+      "grade": 82,
+      "confidence": "medium"
+    },
+    {
+      "team": "ARI",
+      "player": "Will Johnson",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "ARI",
+      "player": "Andrew Wingard",
+      "grade": 77,
+      "confidence": "high"
+    },
+    {
+      "team": "ARI",
+      "player": "Garrett Williams",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "ARI",
+      "player": "Max Melton",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "ARI",
+      "player": "Denzel Burke",
+      "grade": 74,
+      "confidence": "medium"
+    },
+    {
+      "team": "ATL",
+      "player": "Jessie Bates III",
+      "grade": 89,
+      "confidence": "high",
+      "reason": "2026 PFF 81.4 overall (6th/93 safeties), 82.5 coverage (4th/93), 472 snaps through Week 7 plus sustained high-level track record. Meaningful upgrade while limited run-grade and target results prevent a 94-style superstar copy of Madden."
+    },
+    {
+      "team": "ATL",
+      "player": "A.J. Terrell Jr.",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "ATL",
+      "player": "Xavier Watts",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "ATL",
+      "player": "Mike Hughes",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "ATL",
+      "player": "C.J. Henderson",
+      "grade": 73,
+      "confidence": "high"
+    },
+    {
+      "team": "ATL",
+      "player": "Billy Bowman Jr.",
+      "grade": 76,
+      "confidence": "medium"
+    },
+    {
+      "team": "BAL",
+      "player": "Kyle Hamilton",
+      "grade": 99,
+      "confidence": "high"
+    },
+    {
+      "team": "BAL",
+      "player": "Marlon Humphrey",
+      "grade": 87,
+      "confidence": "high"
+    },
+    {
+      "team": "BAL",
+      "player": "Nate Wiggins",
+      "grade": 87,
+      "confidence": "high"
+    },
+    {
+      "team": "BAL",
+      "player": "Malaki Starks",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "BAL",
+      "player": "Jaylinn Hawkins",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "BUF",
+      "player": "Christian Benford",
+      "grade": 82,
+      "confidence": "medium"
+    },
+    {
+      "team": "BUF",
+      "player": "C.J. Gardner-Johnson",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "BUF",
+      "player": "Maxwell Hairston",
+      "grade": 81,
+      "confidence": "medium"
+    },
+    {
+      "team": "BUF",
+      "player": "Cole Bishop",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "BUF",
+      "player": "Dee Alford",
+      "grade": 77,
+      "confidence": "high"
+    },
+    {
+      "team": "CAR",
+      "player": "Jaycee Horn",
+      "grade": 84,
+      "confidence": "medium"
+    },
+    {
+      "team": "CAR",
+      "player": "Tre'von Moehrig",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "CAR",
+      "player": "Lathan Ransom",
+      "grade": 76,
+      "confidence": "high"
+    },
+    {
+      "team": "CAR",
+      "player": "Will Lee III",
+      "grade": 76,
+      "confidence": "high"
+    },
+    {
+      "team": "CAR",
+      "player": "Nick Scott",
+      "grade": 75,
+      "confidence": "high"
+    },
+    {
+      "team": "CAR",
+      "player": "Akayleb Evans",
+      "grade": 74,
+      "confidence": "high"
+    },
+    {
+      "team": "CHI",
+      "player": "Jaylon Johnson",
+      "grade": 85,
+      "confidence": "high"
+    },
+    {
+      "team": "CHI",
+      "player": "Kyler Gordon",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "CHI",
+      "player": "Dillon Thieneman",
+      "grade": 82,
+      "confidence": "medium"
+    },
+    {
+      "team": "CHI",
+      "player": "Tyrique Stevenson Sr.",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "CHI",
+      "player": "Xavier Woods",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "CHI",
+      "player": "Malik Muhammad II",
+      "grade": 76,
+      "confidence": "medium"
+    },
+    {
+      "team": "CIN",
+      "player": "Dax Hill",
+      "grade": 81,
+      "confidence": "high"
+    },
+    {
+      "team": "CIN",
+      "player": "DJ Turner II",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "CIN",
+      "player": "Jordan Battle",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "CIN",
+      "player": "Bryan Cook",
+      "grade": 86,
+      "confidence": "high"
+    },
+    {
+      "team": "CIN",
+      "player": "Tacario Davis",
+      "grade": 76,
+      "confidence": "medium"
+    },
+    {
+      "team": "CLE",
+      "player": "Denzel Ward",
+      "grade": 94,
+      "confidence": "high"
+    },
+    {
+      "team": "CLE",
+      "player": "Tyson Campbell",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "CLE",
+      "player": "Grant Delpit",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "CLE",
+      "player": "Ronnie Hickman",
+      "grade": 79,
+      "confidence": "medium"
+    },
+    {
+      "team": "CLE",
+      "player": "Myles Harden",
+      "grade": 73,
+      "confidence": "high"
+    },
+    {
+      "team": "DAL",
+      "player": "DaRon Bland",
+      "grade": 85,
+      "confidence": "high"
+    },
+    {
+      "team": "DAL",
+      "player": "Joey Porter Jr.",
+      "grade": 87,
+      "confidence": "high"
+    },
+    {
+      "team": "DAL",
+      "player": "Caleb Downs",
+      "grade": 81,
+      "confidence": "medium"
+    },
+    {
+      "team": "DAL",
+      "player": "Malik Hooker",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "DAL",
+      "player": "Markquese Bell",
+      "grade": 75,
+      "confidence": "high"
+    },
+    {
+      "team": "DEN",
+      "player": "Pat Surtain II",
+      "grade": 96,
+      "confidence": "high"
+    },
+    {
+      "team": "DEN",
+      "player": "Talanoa Hufanga",
+      "grade": 86,
+      "confidence": "high"
+    },
+    {
+      "team": "DEN",
+      "player": "Brandon Jones",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "DEN",
+      "player": "Riley Moss",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "DEN",
+      "player": "Ja'Quan McMillian",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "DET",
+      "player": "Brian Branch",
+      "grade": 94,
+      "confidence": "medium"
+    },
+    {
+      "team": "DET",
+      "player": "Kerby Joseph",
+      "grade": 88,
+      "confidence": "high"
+    },
+    {
+      "team": "DET",
+      "player": "D.J. Reed",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "DET",
+      "player": "Roger McCreary",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "DET",
+      "player": "Ennis Rakestraw Jr.",
+      "grade": 76,
+      "confidence": "high"
+    },
+    {
+      "team": "GB",
+      "player": "Xavier McKinney",
+      "grade": 88,
+      "confidence": "high"
+    },
+    {
+      "team": "GB",
+      "player": "Evan Williams",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "GB",
+      "player": "Keisean Nixon",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "GB",
+      "player": "Javon Bullard",
+      "grade": 81,
+      "confidence": "high"
+    },
+    {
+      "team": "GB",
+      "player": "Brandon Cisse",
+      "grade": 76,
+      "confidence": "medium"
+    },
+    {
+      "team": "HOU",
+      "player": "Derek Stingley Jr.",
+      "grade": 95,
+      "confidence": "high"
+    },
+    {
+      "team": "HOU",
+      "player": "Jalen Pitre",
+      "grade": 91,
+      "confidence": "high",
+      "reason": "PFF 76.5 overall (13th/93 safeties) and 77.0 coverage (8th/93), 2026 through Week 7; elite slot/safety versatility remains, but current 94 implies sustained near-ceiling all-phase defense unsupported by present play. Remains very good at 91."
+    },
+    {
+      "team": "HOU",
+      "player": "Calen Bullock",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "HOU",
+      "player": "Kamari Lassiter",
+      "grade": 89,
+      "confidence": "high"
+    },
+    {
+      "team": "HOU",
+      "player": "Reed Blankenship",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "IND",
+      "player": "Sauce Gardner",
+      "grade": 91,
+      "confidence": "high"
+    },
+    {
+      "team": "IND",
+      "player": "Charvarius Ward",
+      "grade": 86,
+      "confidence": "high"
+    },
+    {
+      "team": "IND",
+      "player": "Cam Bynum",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "IND",
+      "player": "AJ Haulcy",
+      "grade": 77,
+      "confidence": "medium"
+    },
+    {
+      "team": "IND",
+      "player": "Justin Walley",
+      "grade": 75,
+      "confidence": "medium"
+    },
+    {
+      "team": "JAX",
+      "player": "Travis Hunter",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "JAX",
+      "player": "Jourdan Lewis",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "JAX",
+      "player": "Eric Murray",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "JAX",
+      "player": "Antonio Johnson",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "JAX",
+      "player": "Montaric Brown",
+      "grade": 76,
+      "confidence": "high"
+    },
+    {
+      "team": "KC",
+      "player": "L'Jarius Sneed",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "KC",
+      "player": "Mansoor Delane",
+      "grade": 82,
+      "confidence": "medium"
+    },
+    {
+      "team": "KC",
+      "player": "Chamarri Conner",
+      "grade": 79,
+      "confidence": "high"
+    },
+    {
+      "team": "KC",
+      "player": "Nohl Williams",
+      "grade": 80,
+      "confidence": "medium"
+    },
+    {
+      "team": "KC",
+      "player": "Alohi Gilman",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "LAC",
+      "player": "Derwin James Jr.",
+      "grade": 89,
+      "confidence": "high"
+    },
+    {
+      "team": "LAC",
+      "player": "Tarheeb Still",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "LAC",
+      "player": "Elijah Molden",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "LAC",
+      "player": "Cam Hart",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "LAC",
+      "player": "Tony Jefferson",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "LAR",
+      "player": "Trent McDuffie",
+      "grade": 98,
+      "confidence": "high"
+    },
+    {
+      "team": "LAR",
+      "player": "Quentin Lake",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "LAR",
+      "player": "Kam Curl",
+      "grade": 87,
+      "confidence": "high"
+    },
+    {
+      "team": "LAR",
+      "player": "Jaylen Watson",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "LAR",
+      "player": "Kamren Kinchens",
+      "grade": 84,
+      "confidence": "medium"
+    },
+    {
+      "team": "LV",
+      "player": "Taron Johnson",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "LV",
+      "player": "Jeremy Chinn",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "LV",
+      "player": "Eric Stokes",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "LV",
+      "player": "Hezekiah Masses",
+      "grade": 74,
+      "confidence": "medium"
+    },
+    {
+      "team": "LV",
+      "player": "Treydan Stukes",
+      "grade": 77,
+      "confidence": "medium"
+    },
+    {
+      "team": "MIA",
+      "player": "Chris Johnson",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "MIA",
+      "player": "JuJu Brents",
+      "grade": 76,
+      "confidence": "high"
+    },
+    {
+      "team": "MIA",
+      "player": "Dante Trader Jr.",
+      "grade": 73,
+      "confidence": "medium"
+    },
+    {
+      "team": "MIA",
+      "player": "Michael Taaffe",
+      "grade": 74,
+      "confidence": "medium"
+    },
+    {
+      "team": "MIA",
+      "player": "Jason Marshall Jr.",
+      "grade": 74,
+      "confidence": "medium"
+    },
+    {
+      "team": "MIN",
+      "player": "Byron Murphy Jr.",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "MIN",
+      "player": "Joshua Metellus",
+      "grade": 81,
+      "confidence": "high"
+    },
+    {
+      "team": "MIN",
+      "player": "Harrison Smith",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "MIN",
+      "player": "Isaiah Rodgers",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "MIN",
+      "player": "Jay Ward",
+      "grade": 75,
+      "confidence": "high"
+    },
+    {
+      "team": "NE",
+      "player": "Christian Gonzalez",
+      "grade": 97,
+      "confidence": "high"
+    },
+    {
+      "team": "NE",
+      "player": "Carlton Davis III",
+      "grade": 87,
+      "confidence": "high"
+    },
+    {
+      "team": "NE",
+      "player": "Kevin Byard III",
+      "grade": 86,
+      "confidence": "high"
+    },
+    {
+      "team": "NE",
+      "player": "Marcus Jones",
+      "grade": 85,
+      "confidence": "high"
+    },
+    {
+      "team": "NE",
+      "player": "Craig Woodson",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "NO",
+      "player": "Justin Reid",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "NO",
+      "player": "Kool-Aid McKinstry",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "NO",
+      "player": "Julian Blackmon",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "NO",
+      "player": "Jonas Sanker",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "NO",
+      "player": "Quincy Riley",
+      "grade": 75,
+      "confidence": "medium"
+    },
+    {
+      "team": "NYG",
+      "player": "Paulson Adebo",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "NYG",
+      "player": "Deonte Banks",
+      "grade": 77,
+      "confidence": "high"
+    },
+    {
+      "team": "NYG",
+      "player": "Tyler Nubin",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "NYG",
+      "player": "Jevón Holland",
+      "grade": 85,
+      "confidence": "high"
+    },
+    {
+      "team": "NYG",
+      "player": "Greg Newsome II",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "NYG",
+      "player": "Dru Phillips",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "NYJ",
+      "player": "Minkah Fitzpatrick",
+      "grade": 90,
+      "confidence": "medium"
+    },
+    {
+      "team": "NYJ",
+      "player": "Azareye'h Thomas",
+      "grade": 79,
+      "confidence": "medium"
+    },
+    {
+      "team": "NYJ",
+      "player": "Brandon Stephens",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "NYJ",
+      "player": "Dane Belton",
+      "grade": 79,
+      "confidence": "high"
+    },
+    {
+      "team": "NYJ",
+      "player": "Jarvis Brownlee Jr.",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "PHI",
+      "player": "Quinyon Mitchell",
+      "grade": 93,
+      "confidence": "high"
+    },
+    {
+      "team": "PHI",
+      "player": "Cooper DeJean",
+      "grade": 92,
+      "confidence": "high"
+    },
+    {
+      "team": "PHI",
+      "player": "Riq Woolen",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "PHI",
+      "player": "Andrew Mukuba",
+      "grade": 80,
+      "confidence": "medium"
+    },
+    {
+      "team": "PHI",
+      "player": "Marcus Epps",
+      "grade": 76,
+      "confidence": "high"
+    },
+    {
+      "team": "PIT",
+      "player": "Jalen Ramsey",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "PIT",
+      "player": "Jamel Dean",
+      "grade": 87,
+      "confidence": "high"
+    },
+    {
+      "team": "PIT",
+      "player": "Asante Samuel Jr.",
+      "grade": 79,
+      "confidence": "medium"
+    },
+    {
+      "team": "PIT",
+      "player": "DeShon Elliott",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "PIT",
+      "player": "Jaquan Brisker",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "SEA",
+      "player": "Devon Witherspoon",
+      "grade": 97,
+      "confidence": "high"
+    },
+    {
+      "team": "SEA",
+      "player": "Julian Love",
+      "grade": 87,
+      "confidence": "high"
+    },
+    {
+      "team": "SEA",
+      "player": "Terrion Arnold",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "SEA",
+      "player": "Nick Emmanwori",
+      "grade": 86,
+      "confidence": "high"
+    },
+    {
+      "team": "SEA",
+      "player": "Josh Jobe",
+      "grade": 79,
+      "confidence": "high"
+    },
+    {
+      "team": "SEA",
+      "player": "Ty Okada",
+      "grade": 77,
+      "confidence": "high"
+    },
+    {
+      "team": "SF",
+      "player": "Deommodore Lenoir",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "SF",
+      "player": "Renardo Green",
+      "grade": 81,
+      "confidence": "high"
+    },
+    {
+      "team": "SF",
+      "player": "Malik Mustapha",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "SF",
+      "player": "Ji'Ayir Brown",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "SF",
+      "player": "Marques Sigle",
+      "grade": 76,
+      "confidence": "high"
+    },
+    {
+      "team": "SF",
+      "player": "Upton Stout",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "TB",
+      "player": "Antoine Winfield Jr.",
+      "grade": 86,
+      "confidence": "high"
+    },
+    {
+      "team": "TB",
+      "player": "Zyon McCollum",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "TB",
+      "player": "Tykee Smith",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "TB",
+      "player": "Jacob Parrish",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "TB",
+      "player": "Keionte Scott",
+      "grade": 79,
+      "confidence": "medium"
+    },
+    {
+      "team": "TEN",
+      "player": "Amani Hooker",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "TEN",
+      "player": "Alontae Taylor",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "TEN",
+      "player": "Kevin Winston Jr.",
+      "grade": 78,
+      "confidence": "high"
+    },
+    {
+      "team": "TEN",
+      "player": "Cor'Dale Flott",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "TEN",
+      "player": "Marcus Harris",
+      "grade": 75,
+      "confidence": "high"
+    },
+    {
+      "team": "WSH",
+      "player": "Mike Sainristil",
+      "grade": 78,
+      "confidence": "medium"
+    },
+    {
+      "team": "WSH",
+      "player": "Trey Amos",
+      "grade": 82,
+      "confidence": "high"
+    },
+    {
+      "team": "WSH",
+      "player": "Amik Robertson",
+      "grade": 84,
+      "confidence": "high"
+    },
+    {
+      "team": "WSH",
+      "player": "Rasul Douglas",
+      "grade": 83,
+      "confidence": "high"
+    },
+    {
+      "team": "WSH",
+      "player": "Quan Martin",
+      "grade": 80,
+      "confidence": "high"
+    },
+    {
+      "team": "WSH",
+      "player": "Nick Cross",
+      "grade": 82,
+      "confidence": "high"
+    }
+  ],
+  "historicalRule": "Preserve October 3 grade seeds and completed Wheel results; existing GM 594-player stable identities, contracts and development probabilities unchanged."
+}
