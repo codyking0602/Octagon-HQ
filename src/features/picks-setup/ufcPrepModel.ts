@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isConciseUfcEditorial } from "../picks/ufcSpotlightEditorialLimits";
 import type { PickSetupBout, PickSetupSourcePreview, PickSetupSpotlight } from "./pickSetupModel";
 
 export type UfcPrepStatus = "ready" | "review-needed" | "blocked";
@@ -245,6 +246,7 @@ export function prepAssetSummary(prep: UfcPickPrep | null) {
     spotlight.boutId === bout.boutId
     && spotlight.red.fighterSlug === bout.redFighterSlug
     && spotlight.blue.fighterSlug === bout.blueFighterSlug
+    && isConciseUfcEditorial(spotlight)
   ))).length;
   return {
     thumbReady: prep.assets.filter((asset) => asset.thumbReady).length,
