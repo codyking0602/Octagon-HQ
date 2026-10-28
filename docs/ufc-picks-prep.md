@@ -99,3 +99,12 @@ After staging, the existing Picks monitoring system remains the live change owne
 - For each generated PR, inspect **every** actual WebP in addition to dimensions, alpha, silhouette, upper-body framing, and absence of leftover rectangular backgrounds. The automated gate catches obvious defects but cannot certify identity or visually perfect cutouts. Do **not** waive the human/photo visual gate solely to raise the prep count.
 - After review, verify exact PR head green; merge/deploy only on explicit authorization, then verify actual public media URLs and update the living preproduction package. When told not to touch main, **leave the PR and the prep database unchanged** unless separately authorized.
 - The setup display shows **thumbs ready**, **required main-event photos out of 2**, and **editorial previews out of main-card bouts**, with optional main-card Spotlight photos shown separately. Missing bookmaker-attributed odds and poster availability remain separate warning signals.
+
+## Locked compact editorial standard
+
+Keep **Fight Preview / Tale of the Tape / Matchup Edges**, with a strict presentation contract:
+- Fight Preview: **up to three complete sentences, 75 words maximum**, targeting 45–65 words. Use sourced tactics only.
+- Tale of the Tape: retain the five verified factual rows unchanged.
+- Matchup Edges: three per side maximum, ideally 2–6 words, hard maximum 9 words / 68 characters per edge. No paragraphs or generic filler.
+- SKCS and HQ badge identity links are independent of Fight Spotlights. Never require a Fight Preview simply to reach a scouting or HQ profile.
+- Canonical Spotlight build and owner save paths standardize copy; the UI also applies complete-sentence and short-edge limits for legacy published packages without altering saved pick history.

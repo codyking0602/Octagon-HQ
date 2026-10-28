@@ -1,4 +1,5 @@
 import type { PickSpotlight, PickSpotlightFighter } from "./spotlightModel";
+import { conciseUfcSpotlight } from "./ufcSpotlightEditorial";
 
 export interface SpotlightStatsFighter {
   fighterSlug: string;
@@ -408,7 +409,7 @@ export function buildPickSpotlightContent(input: {
   generatedAt?: string;
 }): PickSpotlight {
   const editorial = matchupEditorial(input.red, input.blue);
-  return {
+  return conciseUfcSpotlight({
     boutId: input.boutId,
     preview: editorial?.preview ?? editorialPreview(input.red, input.blue),
     red: fighterPackage(
@@ -426,5 +427,5 @@ export function buildPickSpotlightContent(input: {
     watchSpotlights: editorial?.watchSpotlights ?? [],
     source: "UFCStats",
     generatedAt: input.generatedAt ?? new Date().toISOString(),
-  };
+  });
 }

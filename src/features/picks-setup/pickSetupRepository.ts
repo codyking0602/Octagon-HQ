@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { conciseUfcSpotlight } from "../picks/ufcSpotlightEditorial";
 import { getSupabaseClient } from "../../lib/supabase";
 import type { UfcPickPrep } from "./ufcPrepModel";
 import { mapUfcPickPrep } from "./ufcPrepModel";
@@ -184,7 +185,8 @@ function mapDbSpotlight(spotlight: z.infer<typeof spotlightDbSchema>): PickSetup
     source: spotlight.source, generatedAt: spotlight.generated_at,
   };
 }
-function spotlightPayload(spotlight: PickSetupSpotlight) {
+function spotlightPayload(source: PickSetupSpotlight) {
+  const spotlight = conciseUfcSpotlight(source);
   const fighter = (value: PickSetupSpotlight["red"]) => ({ fighter_slug: value.fighterSlug, record: value.record, age: value.age, height: value.height, reach: value.reach, stance: value.stance, edges: value.edges });
   return {
     bout_id: spotlight.boutId, preview: spotlight.preview, red: fighter(spotlight.red), blue: fighter(spotlight.blue),

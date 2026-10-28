@@ -1,11 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { fighterThumbnailPath } from "./FighterThumbnail";
-import {
-  ShaneContenderBadge,
-  ShaneContenderSpotlightSection,
-  shaneContendersForBout,
-} from "./ShaneContenderSpotlight";
+import { conciseFightPreview, conciseMatchupEdge } from "./ufcSpotlightEditorial";
 import type { PickBout, PickEventSpotlight } from "./picksModel";
 
 const fighterPhotoModules = import.meta.glob<{ default: string }>(
@@ -312,14 +308,13 @@ function EdgeColumn({ fighter, corner }: { fighter: SpotlightFighter; corner: "r
   return (
     <div className={`main-event-spotlight__edge-column is-${corner}`}>
       <strong>{fighter.name}</strong>
-      <div>{fighter.edges.map((edge) => <span key={edge}>{edge}</span>)}</div>
+      <div>{fighter.edges.map((edge) => <span key={edge}>{conciseMatchupEdge(edge)}</span>)}</div>
     </div>
   );
 }
 
 export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotlight?: PickEventSpotlight | null }) {
   const data = spotlightForBout(bout, spotlight);
-  const shaneContenders = shaneContendersForBout(bout);
   const [open, setOpen] = useState(false);
   const titleId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -360,7 +355,6 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
         <span>
           <b>{bout.position === 1 ? "MAIN EVENT SPOTLIGHT" : "FIGHT SPOTLIGHT"}</b>
           <strong>View matchup breakdown</strong>
-          <ShaneContenderBadge fighters={shaneContenders} />
         </span>
         <i aria-hidden="true">›</i>
       </button>
@@ -402,7 +396,7 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
               <section className="main-event-spotlight__preview">
                 <span>FIGHT PREVIEW</span>
                 <h2 id={titleId}>{data.red.name} vs. {data.blue.name}</h2>
-                {data.preview ? <p>{data.preview}</p> : null}
+                {data.preview ? <p>{conciseFightPreview(data.preview)}</p> : null}
                 {data.watchSpotlights.length ? (
                   <div
                     className="main-event-spotlight__watch-links"
@@ -421,7 +415,6 @@ export function MainEventSpotlight({ bout, spotlight }: { bout: PickBout; spotli
                 ) : null}
               </section>
 
-              <ShaneContenderSpotlightSection fighters={shaneContenders} />
 
               {hasTale ? (
                 <section className="main-event-spotlight__section">
