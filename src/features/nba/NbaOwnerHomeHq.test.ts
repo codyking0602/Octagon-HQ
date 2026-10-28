@@ -66,3 +66,36 @@ describe("NBA weekly feed safety", () => {
     expect(readVerifiedNbaWeekly({...valid,publishedAt:"2026-10-24T00:00:00Z"})?.team.name).toBe("Example Team");
   });
 });
+
+describe("locked NBA / Football Spotlight presentation parity", () => {
+  const footballCss = readFileSync("src/styles/home-football-hq.css", "utf8");
+  const locked = css.slice(css.indexOf("/* Permanent NBA Spotlight presentation"));
+  it("uses Football's full-height cover portrait, photo gradient and two-color bottom strip", () => {
+    expect(footballCss).toContain("object-fit: cover;");
+    expect(footballCss).toContain("object-position: 50% 35%;");
+    expect(locked).toContain("object-fit: cover;");
+    expect(locked).toContain("object-position: 50% 35%;");
+    expect(locked).toContain("min-height: 176px;");
+    expect(locked).toContain("transparent 58%, rgba(7, 11, 15, .9)");
+    expect(locked).toContain("linear-gradient(90deg, var(--nba-player-secondary");
+    expect(locked).not.toContain("object-fit: contain;");
+  });
+  it("reuses Football's neutral card, gold Lakers raised CTA and mobile-safe framing", () => {
+    expect(locked).toContain("linear-gradient(135deg, #07111a, #090b0f 66%)");
+    expect(locked).toContain("box-shadow: inset 0 -3px 0");
+    expect(locked).toContain("@media (max-width: 430px)");
+    expect(owner).toContain('playerTeamId === "LAL" ? "#552583"');
+    expect(owner).toContain('playerTeamId === "LAL" ? "#b4932b"');
+  });
+  it("keeps NBA weekly averages while moving season context beside the team name", () => {
+    expect(owner).toContain("nbaSpotlightWeekLabel(weekly.weekStart, weekly.weekEnd)");
+    expect(owner).toContain("weekly.player.gamesPlayed");
+    expect(owner).toContain("WEEKLY AVG");
+    expect(owner).toContain("nba-hq-owner__team-identity");
+    expect(owner).toContain("nba-hq-owner__team-standing");
+    expect(owner).toContain("{weekly.team.record} THIS WEEK");
+    expect(owner).not.toContain("AS OF");
+    expect(owner).not.toContain("{weekly.team.seasonRecord} SEASON");
+    expect(locked).toContain("flex-wrap: wrap;");
+  });
+});
