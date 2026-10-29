@@ -141,7 +141,7 @@ begin
 
   raise exception 'unsupported notification kind: %', v_kind;
 end;
-$function$
+$function$;
 
 CREATE OR REPLACE FUNCTION private.notification_priority_for_kind(p_kind text)
  RETURNS text
@@ -179,7 +179,7 @@ begin
 
   return 'in_app';
 end;
-$function$
+$function$;
 
 CREATE OR REPLACE FUNCTION public.dispatch_due_in_app_notifications(p_now timestamp with time zone DEFAULT now())
  RETURNS jsonb
@@ -559,7 +559,7 @@ begin
     'owner_operations', v_owner_operations
   );
 end;
-$function$
+$function$;
 
 do $assertions$
 begin
