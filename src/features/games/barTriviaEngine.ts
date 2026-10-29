@@ -275,13 +275,25 @@ export function buildBarTriviaRun(
   const usedCategories = new Set<string>();
   const run: BarTriviaQuestion[] = [];
   const footballQualityMix = league === "nfl" || league === "cfb";
-  // Do not permit three or more "first ever" questions in one Football game.
-  // This is a light board-level protection, not a fixed ten-question script.
+  // Soft caps address the *whole* football board without scripting a run.
+  // Preference is applied only when a recent-free, unused alternative exists:
+  // these editorial rules may never defeat six-month no-repeat protection.
   const isFirstQuestion = (question: BarTriviaQuestion) => /\bfirst\b/i.test(question.prompt);
+  const isIdentityQuestion = (question: BarTriviaQuestion) =>
+    /^(fan culture|team names?|team identity|mascots?|nicknames?|school identity|cheers|logos|traditions|stadium culture)$/i.test(question.category);
   const eligiblePool = (pool: BarTriviaQuestion[]) => {
-    if (!footballQualityMix || run.filter(isFirstQuestion).length < 2) return pool;
-    const notFirsts = pool.filter((question) => !isFirstQuestion(question));
-    return notFirsts.length ? notFirsts : pool;
+    if (!footballQualityMix) return pool;
+    let available = pool;
+    const prefer = (allow: (q: BarTriviaQuestion) => boolean) => {
+      const better = available.filter((q) =>
+        allow(q) && !used.has(q.id) && !used.has(q.factKey ?? q.id) &&
+        !recentQuestionIds.includes(q.id)
+      );
+      if (better.length) available = better;
+    };
+    if (run.filter(isFirstQuestion).length >= 2) prefer((q) => !isFirstQuestion(q));
+    if (run.filter(isIdentityQuestion).length >= 3) prefer((q) => !isIdentityQuestion(q));
+    return available;
   };
 
   for (const [index, round] of BAR_TRIVIA_ROUND_SLOTS.entries()) {
@@ -335,7 +347,10 @@ export function buildBarTriviaRun(
     const currentQueue = currentByRound.get(round);
     const currentCandidate = currentQueue?.shift();
     const scheduledCurrent = currentCandidate && (
-      !footballQualityMix || !isFirstQuestion(currentCandidate) || run.filter(isFirstQuestion).length < 2
+      !footballQualityMix || (
+        (!isFirstQuestion(currentCandidate) || run.filter(isFirstQuestion).length < 2) &&
+        (!isIdentityQuestion(currentCandidate) || run.filter(isIdentityQuestion).length < 3)
+      )
     ) ? currentCandidate : null;
     const chosen = scheduledCurrent ?? pickQuestion(
       eligiblePool(bank.filter((question) =>
