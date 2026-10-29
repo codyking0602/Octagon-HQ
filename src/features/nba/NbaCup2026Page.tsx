@@ -7,6 +7,8 @@ import {CUP_GROUPS,CUP_POINTS,cupPickCount,type CupGroupPicks} from "./nbaCup202
 import {loadCupPreview,saveCupPreview} from "./nbaCupRepository";
 import "./nbaCup2026.css";
 
+const serializePicks=(value:CupGroupPicks)=>JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b))));
+
 export default function NbaCup2026Page(){
   const {profile}=useIdentity();
   const [conference,setConference]=useState<"East"|"West">("East");
@@ -23,19 +25,19 @@ export default function NbaCup2026Page(){
     if(!profile?.id){setLoading(false);return()=>{active=false};}
     void loadCupPreview().then(snapshot=>{
       if(!active)return;
-      setPicks(snapshot.picks);setSaved(JSON.stringify(snapshot.picks));
+      setPicks(snapshot.picks);setSaved(serializePicks(snapshot.picks));
       setLocked(snapshot.locked);setLoading(false);
     }).catch(err=>{if(active){setError(err instanceof Error?err.message:"Could not load Cup picks.");setLoading(false);}});
     return()=>{active=false};
   },[profile?.id]);
   const count=cupPickCount(picks??{});
-  const dirty=picks!==null&&JSON.stringify(picks)!==saved;
+  const dirty=picks!==null&&serializePicks(picks)!==saved;
   async function save(){
     if(!picks||locked||saving)return;
     setSaving(true);setError("");setNotice("");
     try{
       const response=await saveCupPreview(picks);
-      setSaved(JSON.stringify(response.picks));setLocked(response.locked);
+      setSaved(serializePicks(response.picks));setLocked(response.locked);
       setNotice("Your NBA Cup picks have been saved to your HQ profile.");
     }catch(err){setError(err instanceof Error?err.message:"Unable to save picks.");}
     finally{setSaving(false);}
