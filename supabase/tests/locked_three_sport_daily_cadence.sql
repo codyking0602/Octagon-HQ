@@ -14,7 +14,7 @@ begin
 
   foreach v_sport in array array['football','ufc','nba']::text[] loop
     v_version := case v_sport when 'football' then 'football-daily-v21-locked-oct25'
-      when 'ufc' then 'ufc-daily-v21-48h-oct25' else 'nba-daily-regular-v2-locked' end;
+      when 'ufc' then 'ufc-daily-v21-48h-oct25' else 'nba-daily-regular-v3-oct30-public' end;
     select game_cycle into strict v_cycle from private.daily_challenge_schedule_versions where version=v_version;
     v_len := cardinality(v_cycle);
     if v_len <> (case when v_sport='football' then 26 else 28 end)
@@ -60,19 +60,19 @@ begin
         case when v_day >= date '2026-10-29' then 'ufc-daily-v22-higher-lower-oct29'
           else private.daily_challenge_schedule_for_day(v_day,'ufc') end,v_day);
     end if;
-    if v_day between date '2026-11-01' and date '2027-04-11'
+    if v_day between date '2026-10-30' and date '2027-04-11'
       and private.daily_challenge_active_day(v_day,'nba')=v_day then
       v_counts[3]:=v_counts[3]+1;
       v_nba:=private.daily_challenge_expected_game(
-        'nba-daily-regular-v2-locked',v_day);
+        'nba-daily-regular-v3-oct30-public',v_day);
     end if;
     if v_football = v_ufc or v_football = v_nba or v_ufc = v_nba then
       raise exception 'cross-sport game collision on %: % / % / %',v_day,v_football,v_ufc,v_nba;
     end if;
-    if v_day between date '2026-11-01' and date '2027-04-11'
+    if v_day between date '2026-10-30' and date '2027-04-11'
       and v_nba is not null and v_ufc is not null then raise exception 'UFC/NBA date collision %',v_day;end if;
   end loop;
-  if v_counts<>array[182,91,81] then raise exception 'six-month cadence totals changed: %',v_counts;end if;
+  if v_counts<>array[182,91,82] then raise exception 'six-month cadence totals changed: %',v_counts;end if;
   v_old:=public.get_daily_challenge_materialization_request('ufc','2026-10-25T20:00:00Z'::timestamptz);
   v_new:=public.get_daily_challenge_materialization_request('ufc','2026-10-26T20:00:00Z'::timestamptz);
   -- Fresh CI dynamically seeds older pre-cutover schedule versions, whereas
@@ -90,11 +90,12 @@ begin
     or v_old->>'expected_game'<>'sports_feud' then
     raise exception 'new UFC 48-hour cycle failed to start with Oct 27 Sports Feud: %',v_old;
   end if;
-  v_old:=public.get_daily_challenge_materialization_request('nba','2026-11-01T20:00:00Z'::timestamptz);
-  v_new:=public.get_daily_challenge_materialization_request('nba','2026-11-02T20:00:00Z'::timestamptz);
-  if v_old->>'central_day'<>'2026-11-01' or v_old->>'schedule_version'<>v_new->>'schedule_version'
+  v_old:=public.get_daily_challenge_materialization_request('nba','2026-10-30T20:00:00Z'::timestamptz);
+  v_new:=public.get_daily_challenge_materialization_request('nba','2026-10-31T20:00:00Z'::timestamptz);
+  if v_old->>'central_day'<>'2026-10-30' or v_old->>'schedule_version'<>v_new->>'schedule_version'
     or v_old->>'expected_game'<>v_new->>'expected_game' then raise exception 'NBA retry identity drift';end if;
   if private.daily_challenge_active_day(date '2026-11-01','ufc')<>date '2026-10-31'
+     or private.daily_challenge_active_day(date '2026-10-31','nba')<>date '2026-10-30'
      or private.daily_challenge_active_day(date '2026-11-01','nba')<>date '2026-11-01'
      or private.daily_challenge_active_day(date '2027-04-11','nba')<>date '2027-04-10'
   then raise exception 'UFC/NBA release, DST or regular-season close drifted';end if;
