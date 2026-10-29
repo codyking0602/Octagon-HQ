@@ -96,7 +96,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
   });
 
   it("relaunches October 29 with zero superseded published IDs and full difficulty pacing", () => {
-    const oldIds = new Set(FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER
+    const oldIds = new Set<string>(FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER
       .filter((row) => row.league === "nfl")
       .flatMap((row) => [...row.questionIds]));
     expect(footballPublishedBarTriviaIdsBeforeDay("nfl", "2026-10-29", 184))
