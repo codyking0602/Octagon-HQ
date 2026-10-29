@@ -12,6 +12,7 @@ import {
 } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { expandUfcBarTriviaRecentFactIds } from "./ufcBarTriviaV3Editorial";
+import { ufcPublishedBarTriviaIdsBeforeDay } from "./ufcBarTriviaPublishedHistory20261029";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay, isUfcPublicationDay } from "./dailyChallengeRotation";
 import { footballThemedBarTriviaRunForDay } from "./footballTeamThemeDailyPacks";
 import { footballTriviaConceptKey, footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
@@ -158,7 +159,13 @@ function dailyBarTriviaRun(
     const actualPublishedIds = league === "nfl" || league === "cfb"
       ? footballPublishedBarTriviaIdsBeforeDay(league, candidateDay, BAR_TRIVIA_RECENT_LOOKBACK_DAYS)
       : [];
-    const recentIds = league === "ufc" ? expandUfcBarTriviaRecentFactIds(relevant.flatMap(entry => entry.ids))
+    const actualUfcPublishedIds = league === "ufc"
+      ? ufcPublishedBarTriviaIdsBeforeDay(candidateDay, BAR_TRIVIA_RECENT_LOOKBACK_DAYS)
+      : [];
+    const recentIds = league === "ufc" ? expandUfcBarTriviaRecentFactIds([
+        ...relevant.flatMap(entry => entry.ids),
+        ...actualUfcPublishedIds,
+      ])
       : [
           ...relevant.flatMap(entry => entry.ids.flatMap(footballTriviaFamilyMemberIds)),
           ...actualPublishedIds.flatMap(footballTriviaFamilyMemberIds),
