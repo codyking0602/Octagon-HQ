@@ -34,6 +34,7 @@ import { FootballHq } from "./FootballHq";
 import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
 import { canViewMlbCloseoutBanner, MLB_CLOSEOUT_BANNER_EXPIRES_AT } from "../mlb/mlbOffseason";
 import { NbaOwnerHomeHq } from "../nba/NbaOwnerHomeHq";
+import { canPreviewNbaWhoAmI } from "../nba/NbaWhoAmIOwnerGate";
 import { canPreviewNba } from "../nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
 import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
@@ -184,6 +185,7 @@ export default function HomePage() {
     : 0;
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
   const nbaVisible = canPreviewNba(identity.profile);
+  const showPrelaunchPractice = canPreviewNbaWhoAmI(identity.profile);
   // Approved compact Home HQ designs are public, including signed-out visitors.
   const ownerPreview = true;
   const compactFootballPreview = true;
@@ -489,14 +491,14 @@ export default function HomePage() {
       {ownerSport !== "all" ? (
         ownerSport === "football" ? footballHq
           : ownerSport === "ufc" ? ufcHq
-          : ownerSport === "nba" && nbaVisible ? <NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} />
+          : ownerSport === "nba" && nbaVisible ? <NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} showPrelaunchPractice={showPrelaunchPractice} />
           : null
       ) : (
         <>
           {visibleOrder.map(sport => (
             <Fragment key={sport}>
               {sport === "football" ? footballHq : sport === "ufc" ? ufcHq
-                : sport === "nba" ? <NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} hideChampionship />
+                : sport === "nba" ? <NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} showPrelaunchPractice={showPrelaunchPractice} hideChampionship />
                 : null}
             </Fragment>
           ))}
