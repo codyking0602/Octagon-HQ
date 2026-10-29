@@ -150,6 +150,7 @@ const gateServer = await createServer({
 
 let footballHitTheNumberSubjects;
 let footballHitTheNumberMetricCatalog;
+let footballHitTheNumberPlayableMetricSubjectIds;
 let getFootballFact;
 let queryFootballSubjects;
 try {
@@ -157,6 +158,7 @@ try {
   const factual = await gateServer.ssrLoadModule("/src/features/back-room/footballFactualStats.ts");
   footballHitTheNumberSubjects = model.footballHitTheNumberSubjects;
   footballHitTheNumberMetricCatalog = model.FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG;
+  footballHitTheNumberPlayableMetricSubjectIds = model.footballHitTheNumberPlayableMetricSubjectIds;
   getFootballFact = factual.getFootballFact;
   queryFootballSubjects = (await gateServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts")).queryFootballSubjects;
 } finally {
@@ -168,10 +170,15 @@ const peakMetricIds = footballHitTheNumberMetricCatalog
   .filter((row) => row.group === "cfb-player-peak" && sourceFieldByMetric.has(row.metricId))
   .map((row) => row.metricId);
 
+const activePeakMetricSubjects = new Map(peakMetricIds.map((metricId) =>
+  [metricId, new Set(footballHitTheNumberPlayableMetricSubjectIds(metricId))]));
+
 const contextByFact = new Map();
 const missing = [];
 for (const subject of peakSubjects) {
   for (const metricId of peakMetricIds) {
+    // Reject unverified context only for playable subject/metric combinations.
+    if (!activePeakMetricSubjects.get(metricId)?.has(subject.id)) continue;
     const resolved = getFootballFact(subject.id, metricId);
     if (!resolved) continue;
 

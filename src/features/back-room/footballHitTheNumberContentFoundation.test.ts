@@ -17,7 +17,7 @@ const metricById = new Map(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((metric) =
 const careerSpecialGroups = new Set(["nfl-qb-career","nfl-rb-career","nfl-receiving-career"]);
 
 describe("Football Hit the Number content foundation", () => {
-  it("keeps exact player seasons and team seasons core while removing CFB best-season boards", () => {
+  it("keeps exact player-season context and curated NFL and CFB categories", () => {
     expect(FOOTBALL_HIT_THE_NUMBER_VERSION).toBe("football-hit-the-number-v6");
     expect(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["peak-season"])
       .toBeGreaterThan(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["career-special"]);
@@ -40,9 +40,11 @@ describe("Football Hit the Number content foundation", () => {
       expect(metricById.has(rejected as never), rejected).toBe(false);
     }
 
-    expect([...metricById.keys()].some((metricId) => metricId.startsWith("cfb-best-season-"))).toBe(false);
+    expect(metricById.has("cfb-best-season-passing-touchdowns")).toBe(true);
+    expect(metricById.has("cfb-best-season-rushing-yards")).toBe(true);
+    expect(metricById.has("cfb-best-season-receiving-yards")).toBe(true);
     expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.some((theme) => theme.id === "cfb-player-peaks")).toBe(false);
-    expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.some((theme) => /peak/i.test(theme.label))).toBe(false);
+    expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.some((theme) => theme.id==="cfb-qb-peak-seasons")).toBe(true);
     expect(FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG.some((theme) => theme.id === "cfb-players")).toBe(false);
 
     expect(metricById.has("cfb-team-srs")).toBe(false);
@@ -68,12 +70,12 @@ describe("Football Hit the Number content foundation", () => {
         expect(["A", "B"], subject.id).toContain(subject.recognizabilityTier);
       }
       if (subject.group === "cfb-player-peak") {
-        expect(subject.subtitle.toLowerCase()).not.toContain("peak");
+        expect(subject.subtitle.toLowerCase()).toContain("peak");
       }
     }
   });
 
-  it("generates only the approved source-backed season, team, and QB-career families", () => {
+  it("generates only approved source-backed NFL and CFB stat families", () => {
     const contentCounts = new Map<FootballHitTheNumberContentKind, number>([
       ["peak-season", 0],
       ["team-season", 0],
@@ -86,7 +88,7 @@ describe("Football Hit the Number content foundation", () => {
       const plan = createFootballHitTheNumberPlan(`football-htn-foundation-${index}`, "random-pool");
       const metric = metricById.get(plan.metricId);
       expect(metric, plan.metricId).toBeDefined();
-      expect(plan.metricId.startsWith("cfb-best-season-")).toBe(false);
+      if(plan.metricId.startsWith("cfb-best-season-")) expect(plan.league).toBe("CFB");
       contentCounts.set(metric!.contentKind, contentCounts.get(metric!.contentKind)! + 1);
       expect(footballHitTheNumberPlanQuality(plan).passes).toBe(true);
 

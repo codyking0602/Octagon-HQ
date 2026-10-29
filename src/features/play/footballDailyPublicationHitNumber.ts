@@ -8,6 +8,7 @@ import {
   getFootballHitTheNumberSubject,
   type FootballHitTheNumberPlan,
 } from "../back-room/footballHitTheNumberModel";
+import { footballHitTheNumberPeakSeasons } from "../back-room/footballHitTheNumberPeakSeasonContext";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
 import { footballHitNumberDisplayName } from "./footballHitNumberDisplayName";
@@ -67,7 +68,12 @@ function buildHitTheNumberSetup(day: string, scheduleVersion: string, gameIndex 
   const candidates = plan.subjectIds.map((id) => {
     const subject = getFootballHitTheNumberSubject(id);
     if (!subject) throw new Error(`Football Hit the Number subject ${id} is unavailable.`);
-    return { id: subject.id, name: footballHitNumberDisplayName(subject.id, subject.name), subtitle: subject.subtitle };
+    const peakYears = subject.group === "cfb-player-peak"
+      ? footballHitTheNumberPeakSeasons(subject.id, plan.metricId) : [];
+    const subtitle = peakYears.length
+      ? `${subject.position ?? "Player"} · ${peakYears.join("/")} peak college season${peakYears.length > 1 ? "s" : ""}`
+      : subject.subtitle;
+    return { id: subject.id, name: footballHitNumberDisplayName(subject.id, subject.name), subtitle };
   });
   const valueMap = Object.fromEntries(plan.subjectIds.map((id, index) => [id, values[index]]));
   return {

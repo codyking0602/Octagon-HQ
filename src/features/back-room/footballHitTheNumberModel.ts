@@ -230,6 +230,34 @@ export const FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG: readonly FootballHitTheNumbe
     queries: [{ league: "NFL", kind: "team-season", includeProjectedSourceSubjects: true }],
   },
   {
+    id: "cfb-qb-peak-seasons",
+    label: "College Quarterback Stars",
+    league: "CFB",
+    group: "cfb-player-peak",
+    queries: [{ league: "CFB", kind: "player-career", position: "QB" }],
+  },
+  {
+    id: "cfb-rb-peak-seasons",
+    label: "College Rushing Stars",
+    league: "CFB",
+    group: "cfb-player-peak",
+    queries: [{ league: "CFB", kind: "player-career", position: "RB" }],
+  },
+  {
+    id: "cfb-wr-peak-seasons",
+    label: "College Receiving Stars",
+    league: "CFB",
+    group: "cfb-player-peak",
+    queries: [{ league: "CFB", kind: "player-career", positions: ["WR", "TE"] }],
+  },
+  {
+    id: "cfb-team-seasons",
+    label: "Memorable College Teams",
+    league: "CFB",
+    group: "cfb",
+    queries: [{ league: "CFB", kind: "team-season", includeProjectedSourceSubjects: true }],
+  },
+  {
     id: "cfb-champions",
     label: "National Champions",
     league: "CFB",
@@ -276,7 +304,7 @@ function groupAcceptsSubject(group: FootballHitTheNumberSubjectGroup, subject: F
 }
 
 function subtitleFor(subject: FootballSubjectProfile, group: FootballHitTheNumberSubjectGroup) {
-  if (group === "cfb-player-peak") return `${subject.position ?? "Player"} college career`;
+  if (group === "cfb-player-peak") return `${subject.position ?? "Player"} college peak season`;
   if (subject.kind === "player-season") return `${subject.season ?? "Season"} ${subject.position ?? "player"} season`;
   if (subject.kind === "team-season") {
     return subject.nationalChampion
@@ -339,6 +367,7 @@ const groupOrder: readonly FootballHitTheNumberSubjectGroup[] = [
   "nfl-receiving-career",
   "nfl-qb-season",
   "nfl-team-season",
+  "cfb-player-peak",
   "cfb",
 ];
 
@@ -403,9 +432,10 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("nfl-season-passing-yards", "NFL", "nfl-qb-season", "NFL QB Season Passing Yards", "peak-season"),
       metric("nfl-career-rushing-yards", "NFL", "nfl-rb-career", "NFL RB Career Rushing Yards", "career-special"),
       metric("nfl-career-receiving-yards", "NFL", "nfl-receiving-career", "NFL WR/TE Career Receiving Yards", "career-special"),
-      metric("cfb-team-points-for", "CFB", "cfb", "CFB Team-Season Points Scored", "team-season"),
+      metric("cfb-best-season-rushing-yards", "CFB", "cfb-player-peak", "CFB Player Best-Season Rushing Yards", "peak-season"),
+      metric("cfb-best-season-receiving-yards", "CFB", "cfb-player-peak", "CFB Player Best-Season Receiving Yards", "peak-season"),
       metric("cfb-team-points-against", "CFB", "cfb", "CFB Team-Season Points Allowed", "team-season"),
-      metric("cfb-team-wins", "CFB", "cfb", "CFB Team-Season Wins", "team-season"),
+
     ],
   },
   {
@@ -424,6 +454,7 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("nfl-career-rushing-touchdowns", "NFL", "nfl-rb-career", "NFL RB Career Rushing Touchdowns", "career-special"),
       metric("nfl-career-receiving-touchdowns", "NFL", "nfl-receiving-career", "NFL WR/TE Career Receiving Touchdowns", "career-special"),
       metric("cfb-team-point-differential", "CFB", "cfb", "CFB Team Point Differential", "team-season"),
+      metric("cfb-best-season-passing-touchdowns", "CFB", "cfb-player-peak", "CFB QB Best-Season Passing Touchdowns", "peak-season"),
     ],
   },
 ] as const;
@@ -436,6 +467,26 @@ const playableRecognitionById = new Map(
   }).map((subject) => [subject.id, subject]),
 );
 
+// Historic CFB best-season values without verified year binding are not offered.
+// This is game-specific: never change the source ledger to invent a season.
+const UNVERIFIED_CFB_PEAK_YEAR_FACTS = new Set([
+  "cfb-ricky-williams:cfb-best-season-receiving-yards",
+  "cfb-archie-griffin:cfb-best-season-rushing-yards",
+  "cfb-tony-dorsett:cfb-best-season-rushing-yards",
+  "cfb-billy-sims:cfb-best-season-rushing-yards",
+  "cfb-george-rogers:cfb-best-season-rushing-yards",
+  "cfb-herschel-walker:cfb-best-season-rushing-yards",
+  "cfb-mike-rozier:cfb-best-season-rushing-yards",
+  "cfb-earl-campbell:cfb-best-season-rushing-yards",
+  "cfb-o-j-simpson:cfb-best-season-rushing-yards",
+  "cfb-billy-cannon:cfb-best-season-rushing-yards",
+  "cfb-billy-cannon:cfb-best-season-receiving-yards",
+  "cfb-tim-brown:cfb-best-season-rushing-yards",
+  "cfb-tim-brown:cfb-best-season-receiving-yards",
+  "cfb-ernie-davis:cfb-best-season-rushing-yards",
+  "cfb-ernie-davis:cfb-best-season-receiving-yards",
+]);
+
 const metricSubjectsCache = new Map<string, readonly FootballHitTheNumberSubject[]>();
 
 function metricSubjects(board: FootballHitTheNumberMetricBoard) {
@@ -445,7 +496,8 @@ function metricSubjects(board: FootballHitTheNumberMetricBoard) {
 
   const casualSubjects = subjectsFor(board.group).flatMap((subject) => {
     const recognition = playableRecognitionById.get(subject.id);
-    if (!recognition || recognition.recognizabilityTier === "D" || getFootballFact(subject.id, board.metricId) == null) {
+    if (!recognition || recognition.recognizabilityTier === "D" || getFootballFact(subject.id, board.metricId) == null
+      || UNVERIFIED_CFB_PEAK_YEAR_FACTS.has(`${subject.id}:${board.metricId}`)) {
       return [];
     }
     return [{
@@ -488,6 +540,13 @@ export const FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG = domains.flatMap((domain) =
 
 const domainById = new Map(domains.map((domain) => [domain.id, domain]));
 const metricBoardById = new Map(domains.flatMap((domain) => domain.metrics).map((row) => [row.metricId, row]));
+
+/** Source generation only checks facts in the exact playable metric-specific pool. */
+export function footballHitTheNumberPlayableMetricSubjectIds(metricId: FootballFactMetricId) {
+  const board = metricBoardById.get(metricId);
+  return board ? metricSubjects(board).map((subject) => subject.id) : [];
+}
+
 
 const themeSubjectsCache = new Map<string, readonly FootballHitTheNumberSubject[]>();
 
