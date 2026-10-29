@@ -264,6 +264,22 @@ def approved_square_thumb_source(spec, source_url, size):
     return False
 
 
+def trim_thumb_publisher_edge_halos(im):
+    """Clear narrow publisher strokes outside the headshot crown and edge halos."""
+    result = im.copy()
+    alpha = result.getchannel("A").filter(ImageFilter.MinFilter(3))
+    width, height = result.size
+    left_cutoff = round(width * 0.29)
+    right_cutoff = round(width * 0.70)
+    for y in range(round(height * 0.12)):
+        for x in range(left_cutoff):
+            alpha.putpixel((x, y), 0)
+        for x in range(right_cutoff, width):
+            alpha.putpixel((x, y), 0)
+    result.putalpha(alpha)
+    return result
+
+
 def render_thumb(im, size):
     """Render a face-dominant head-and-shoulders portrait, not a mini Spotlight."""
     box = visible_subject_box(im)
@@ -642,6 +658,8 @@ def main():
     # Publisher rectangles can sit inside the cutout's alpha silhouette rather
     # than at its original image boundary. Re-check after subject placement too.
     im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
+    if kind == "thumb":
+        im = trim_thumb_publisher_edge_halos(im)
 
     im = im.filter(
         ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2)

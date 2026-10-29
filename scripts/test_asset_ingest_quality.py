@@ -16,6 +16,7 @@ from scripts.asset_ingest import (
     inset_side_background_panels,
     horizontal_publisher_strips,
     remove_horizontal_publisher_strips,
+    trim_thumb_publisher_edge_halos,
     source_looks_clipped,
     upper_side_background_band,
     validate_asset_quality,
@@ -144,6 +145,16 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(horizontal_publisher_strips(cleaned))
         self.assertEqual(cleaned.getpixel((250, 14))[3], 0)
         self.assertEqual(cleaned.getpixel((155, 75))[3], 255)
+
+    def test_edge_halo_and_top_side_stroke_are_trimmed(self):
+        im = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.ellipse((100, 14, 225, 220), fill=(152, 103, 84, 255))
+        draw.line((211, 12, 319, 12), fill=(220, 35, 49, 90), width=1)
+        cleaned = trim_thumb_publisher_edge_halos(im)
+        self.assertEqual(cleaned.getpixel((275, 12))[3], 0)
+        self.assertEqual(cleaned.getpixel((159, 70))[3], 255)
+        self.assertLess(cleaned.getpixel((100, 110))[3], im.getpixel((100, 110))[3])
 
     def test_full_bleed_opaque_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (200, 200, 200, 255))
