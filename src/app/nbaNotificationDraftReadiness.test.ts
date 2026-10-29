@@ -25,7 +25,7 @@ describe("NBA notification definitions: dormant before official launch", () => {
   it("uses NBA identity but never releases owner-preview games from a calendar date", () => {
     expect(model).toContain('return "nba"');
     expect(center).toContain("Basketball");
-    expect(nbaSchedule).toContain('NBA_GAMES_LAUNCH_DAY = "2026-10-30"');
+    expect(nbaSchedule).toContain('NBA_GAMES_LAUNCH_DAY = "2026-10-29"');
     expect(nbaSchedule).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY = true");
     expect(sql).not.toContain("publish_notification_to_profile(");
     expect(sql).not.toContain("cron.schedule");
