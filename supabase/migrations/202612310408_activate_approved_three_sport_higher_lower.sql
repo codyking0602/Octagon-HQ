@@ -110,6 +110,34 @@ begin
 end
 $fn$;
 
+-- Always prefer the immutable, locked three-sport calendars after each
+-- cutover. A fresh migration replay can contain older schedule rows whose
+-- deployment-relative starts_on date would otherwise shadow these v22 boards.
+-- This does not mutate any previously published board or its schedule version.
+create or replace function private.daily_challenge_schedule_for_day(p_day date,p_sport text)
+returns text language plpgsql stable set search_path = '' as $fn$
+begin
+  if p_sport is null or p_sport not in ('ufc','football','nba','nba_preview') then
+    raise exception 'unsupported Daily Challenge sport %',coalesce(p_sport,'<null>');
+  end if;
+  if p_sport='football' and p_day >= date '2026-10-27' then
+    return 'football-daily-v22-higher-lower-oct27';
+  end if;
+  if p_sport='ufc' and p_day >= date '2026-10-29' then
+    return 'ufc-daily-v22-higher-lower-oct29';
+  end if;
+  if p_sport='nba' and p_day >= date '2026-11-01' then
+    return 'nba-daily-regular-v2-locked';
+  end if;
+  return (
+    select schedule.version from private.daily_challenge_schedule_versions schedule
+    where schedule.starts_on <= p_day and schedule.sport = p_sport
+    order by schedule.starts_on desc,schedule.created_at desc,schedule.version desc
+    limit 1
+  );
+end
+$fn$;
+
 -- The actual canonical six-month publication dates must never collide, and
 -- weights, 48-hour identities and the approved themed Football days stay fixed.
 do $verify$
