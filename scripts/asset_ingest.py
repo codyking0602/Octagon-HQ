@@ -588,7 +588,11 @@ def main():
         fail("thumbnail requires a verified square UFC or ESPN headshot source")
 
     original_source = im.copy()
-    if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
+    if (
+        im.getchannel("A").getextrema() == (255, 255)
+        or upper_side_background_band(im)
+        or (kind == "thumb" and im.size == (600, 436) and spec.get("official_headshot_reviewed") is True)
+    ):
         try:
             # The default model preserves the ESPN MMA portrait cutout.
             # Strong alpha-matting introduced broad tinted source rectangles.
