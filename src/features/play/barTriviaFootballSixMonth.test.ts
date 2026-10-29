@@ -86,7 +86,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       expect(saved.questionIds, saved.day).toHaveLength(10);
     }
     const londonAppearances = FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER.filter((saved) =>
-      saved.questionIds.includes("nfl-r2-first-game-outside-na"));
+      saved.questionIds.some((id) => id === "nfl-r2-first-game-outside-na"));
     expect(londonAppearances.map((saved) => saved.day)).toEqual(["2026-09-29", "2026-10-29"]);
     expect(footballPublishedBarTriviaIdsBeforeDay("nfl", "2026-10-30", 184))
       .toContain("nfl-r3-first-black-modern-hc");
