@@ -8,21 +8,22 @@ const router = readFileSync("src/app/router.tsx", "utf8");
 const nav = readFileSync("src/components/BottomNavigation.tsx", "utf8");
 describe("NBA HQ released regular-season presentation", () => {
   it("shows the same public NBA Daily state to owners and visitors on Home", () => {
-    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} />');
-    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} hideChampionship />');
+    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} showPrelaunchPractice={showPrelaunchPractice} />');
+    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} showPrelaunchPractice={showPrelaunchPractice} hideChampionship />');
     expect(homepage).not.toContain("nbaHqOwnerPreview");
     expect(owner).not.toContain("allowOwnerDailyPreview");
-    expect(owner).not.toContain("nba_preview");
+    expect(owner).toContain('sport: isPractice ? "nba_preview" : "nba"');
+    expect(owner).toContain('showPrelaunchPractice && !publishedDaily ? nbaOwnerPreviewDaily(day) : null');
     expect(owner).not.toContain("OWNER PREVIEW");
     expect(owner).not.toContain("Practice · Unranked");
-    expect(owner).toContain('const dailyLink = dailyEnabled ? "/nba/today" : "/nba";');
+    expect(owner).toContain('const dailyLink = isPractice ? "/nba/today?mode=owner-test" : dailyEnabled ? "/nba/today" : "/nba";');
     expect(owner).not.toContain('"/nba/play"');
     expect(owner).toContain('to="/nba/picks"');
     expect(owner).toContain('to="/championship/nba"');
     expect(owner).toContain('"STARTS OCT 30"');
   });
   it("routes Home NBA Play and Picks to registered pages, including prelaunch", () => {
-    expect(owner).toContain('const dailyLink = dailyEnabled ? "/nba/today" : "/nba";');
+    expect(owner).toContain('const dailyLink = isPractice ? "/nba/today?mode=owner-test" : dailyEnabled ? "/nba/today" : "/nba";');
     expect(owner).toContain('<Link to={dailyLink} className="nba-hq-owner__daily"');
     expect(owner).toContain('<Link to="/nba/picks">VIEW PICKS');
     expect(owner).toContain('to="/championship/nba"');
@@ -40,18 +41,29 @@ describe("NBA HQ released regular-season presentation", () => {
     expect(owner).toContain('ownLeaderboardEntry?.rank ?? null');
     expect(owner).toContain('dailyOfficialDisplayScore(daily.projection, ownLeaderboardEntry?.normalizedScore)');
     expect(owner).toContain('rank != null ? `#${rank} today` : "Official score locked"');
-    expect(owner).toContain('enabled: signedIn && dailyEnabled, sport: "nba"');
-    expect(owner).toContain('enabled: signedIn && dailyEnabled,');
+    expect(owner).toContain('enabled: signedIn && dailyEnabled, sport: isPractice ? "nba_preview" : "nba"');
+    expect(owner).toContain('enabled: signedIn && publishedDaily && dailyEnabled,');
     expect(owner).toContain('FUTURES PICKS');
   });
   it("opens Cup picks while keeping rehearsal off the public Home and Playoff picks scheduled", () => {
     expect(owner).not.toContain("NBA_OFFICIAL_GAMES_RELEASE_READY");
-    expect(owner).not.toContain("nbaOwnerPreviewDaily");
-    expect(owner).toContain('sport: "nba"');
+    expect(owner).toContain("nbaOwnerPreviewDaily");
+    expect(owner).toContain('projection: publishedDaily ? daily.projection : null, sport: "nba"');
     expect(owner).toContain('to="/nba/picks"');
     expect(owner).toContain('to="/championship/nba"');
     expect(owner).toContain("CUP PICKS OPEN · PLAYOFF PICKS IN APRIL");
     expect(owner).toContain("nbaCanAccessReleasedGames(day)");
+  });
+  it("shows the saved Oct 29 owner practice score but never claims a public #1 rank", () => {
+    expect(homepage).toContain('const showPrelaunchPractice = canPreviewNbaWhoAmI(identity.profile);');
+    expect(owner).toContain('const isPractice = practiceType != null;');
+    expect(owner).toContain('isPractice ? hasCompleted ? "PRACTICE COMPLETE"');
+    expect(owner).toContain('hasCompleted ? "Practice result · not ranked"');
+    expect(owner).toContain('const score = dailyOfficialDisplayScore(daily.projection, ownLeaderboardEntry?.normalizedScore);');
+    expect(owner).toContain('hasCompleted && score != null');
+    expect(owner).toContain('isPractice ? "/nba/today?mode=owner-test"');
+    expect(owner).toContain('publishedDaily && dailyEnabled');
+    expect(owner).not.toContain('Private test score saved');
   });
   it("uses verified weekly data rather than placeholder numbers or fake videos", () => {
     expect(owner).toContain("readVerifiedNbaWeekly(raw)");
