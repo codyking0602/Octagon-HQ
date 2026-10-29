@@ -1,5 +1,5 @@
 /* Shared Basketball Picks / NBA Cup artwork and compact mobile hierarchy. */
-.nba-cup-hero{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:166px;overflow:hidden;border:1px solid #715439;border-radius:16px;padding:15px 16px;color:#f9f8f6;background-color:#080d15;background-image:linear-gradient(90deg,rgba(5,8,13,.91) 0%,rgba(5,8,13,.72) 42%,rgba(4,7,13,.08) 85%),url("/images/nba-cup-2026-hero.webp");background-size:cover;background-position:63% center;text-decoration:none}
+.nba-cup-hero{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:166px;overflow:hidden;border:1px solid #715439;border-radius:16px;padding:15px 16px;color:#f9f8f6;background-color:#080d15;background-image:url("/images/9D9EDB43-8AF0-4851-80BA-AB30D2DDF78A.png");background-size:cover;background-position:center center;text-decoration:none}
 .nba-cup-hero__eyebrow{position:relative;margin:0 0 7px!important;color:#f5bb76!important;font-size:.63rem!important;letter-spacing:.13em;font-weight:900}
 .nba-cup-hero h1{position:relative;max-width:54%;font-size:clamp(1.55rem,5.6vw,2.4rem);letter-spacing:-.025em;line-height:1.1;margin:0 0 7px;color:#fff}
 .nba-cup-hero__description{position:relative;max-width:53%;font-size:.72rem!important;line-height:1.38!important;margin:0 0 10px!important;color:#dae0e6!important}
@@ -81,7 +81,7 @@
 .nba-picks__mine-body{display:grid;gap:10px}
 .nba-cup__save{scroll-margin-bottom:115px}
 .nba-cup__summary p{margin:0 0 8px}
-@media(max-width:460px){.nba-cup-hero{background-position:63% center}.nba-cup-hero__bottom{max-width:72%}.nba-cup__save button{width:100%;min-height:41px}}
+@media(max-width:460px){.nba-cup-hero{background-position:center center}.nba-cup-hero__bottom{max-width:72%}.nba-cup__save button{width:100%;min-height:41px}}
 
 /* Clean, image-only Cup artwork. The contextual heading lives immediately below. */
 .nba-picks-page .nba-cup-hero {
@@ -90,9 +90,9 @@
   min-height:0;
   padding:0;
   border-radius:14px;
-  background-image:url("/images/nba-cup-2026-hero.webp");
+  background-image:url("/images/9D9EDB43-8AF0-4851-80BA-AB30D2DDF78A.png");
   background-size:cover;
-  background-position:50% 42%;
+  background-position:center center;
 }
 .nba-picks-page .nba-cup__summary{padding:13px;display:grid;gap:7px}
 .nba-picks-page .nba-cup__summary h1{
@@ -106,7 +106,7 @@
 .nba-picks-page .nba-cup__progress-line .nba-cup__progress{flex:1;min-width:30px;margin:0;height:4px}
 .nba-picks-page .nba-cup__progress-line>strong{font-size:.63rem;line-height:1.1;white-space:nowrap;color:#eab577;letter-spacing:.015em}
 @media(max-width:460px){
-  .nba-picks-page .nba-cup-hero{height:178px;background-position:50% 42%}
+  .nba-picks-page .nba-cup-hero{height:178px;background-position:center center}
   .nba-picks-page .nba-cup__summary{gap:6px}
   .nba-picks-page .nba-cup__summary-title{font-size:.59rem}
   .nba-picks-page .nba-cup__summary-title span{font-size:.55rem}
