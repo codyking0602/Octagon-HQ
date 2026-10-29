@@ -250,8 +250,8 @@ export default function NbaFuturesPage() {
     {loading?<p role="status" className="nba-hq-notice">Loading NBA Futures…</p>:null}
     {error?<p role="alert" className="nba-hq-error">{error}</p>:null}
     {draft&&snapshot?<main className="nba-futures-form">
-      <details className="nba-picks__futures">
-        <summary><strong>FUTURES</strong><span>{locked?`${Math.max(snapshot.participants,otherEntries.length+1)} MEMBERS`:`${progress}/${NBA_FUTURES_SELECTIONS} PICKS`}</span><b aria-hidden="true">⌄</b></summary>
+      <details className="nba-picks__futures hq-picks-disclosure">
+        <summary><strong className="hq-picks-disclosure__title">FUTURES</strong><span className="hq-picks-disclosure__meta">{locked?`${Math.max(snapshot.participants,otherEntries.length+1)} MEMBERS`:`${progress}/${NBA_FUTURES_SELECTIONS} PICKS`}</span><span className="hq-picks-disclosure__chevron" aria-hidden="true">⌄</span></summary>
         <div className="nba-picks__futures-body">
           <details className="nba-futures-group-entry nba-futures-group-entry--mine">
             <summary>
@@ -278,8 +278,8 @@ export default function NbaFuturesPage() {
           {locked?otherEntries.map(entry=><NbaFuturesGroupEntry key={entry.profile_id} entry={entry}/>):null}
         </div>
       </details>
-      <details className="nba-picks__scoring">
-        <summary><strong>SCORING &amp; GRADING</strong><span>HOW IT WORKS</span><b aria-hidden="true">⌄</b></summary>
+      <details className="nba-picks__scoring hq-picks-disclosure">
+        <summary><strong className="hq-picks-disclosure__title">SCORING &amp; GRADING</strong><span className="hq-picks-disclosure__chevron" aria-hidden="true">⌄</span></summary>
         <div className="nba-picks__scoring-body">
           <p>Basketball Championship weights: Season Futures 15% · NBA Cup 10% · Playoffs 55% · Games 20%.</p>
           <p>The NBA Cup is worth 100 points: six group winners (30), quarterfinals (20), semifinals (20), and champion (30).</p>
