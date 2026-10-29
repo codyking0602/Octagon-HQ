@@ -206,10 +206,10 @@ describe("The HQ sport switching", () => {
 
 // Basketball joins the public sport context; the previous owner-preview isolation is retired.
 describe("Basketball public launch",()=>{
-  it("offers Basketball in the public Picks selector",async()=>{
+  it("labels NBA explicitly in the public Picks selector",async()=>{
     const router=renderRoute("/picks");
     const row=await sportContext("UFC PICKS");
-    expect(within(row).getByRole("option",{name:"Basketball"})).toBeInTheDocument();
+    expect(within(row).getByRole("option",{name:"NBA"})).toBeInTheDocument();
     expect(router.state.location.pathname).toBe("/picks");
   });
 });
