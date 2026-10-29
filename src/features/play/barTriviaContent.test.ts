@@ -81,7 +81,9 @@ describe("Bar Trivia question bank", () => {
           question.round === "round1" &&
           question.difficulty === "easy",
       );
-      expect(easy.length).toBeGreaterThanOrEqual(60);
+      // Football needs 4 per Daily over 10 NFL / 9 CFB appearances; a curated
+      // 55-question floor retains headroom without reviving weak fillers.
+      expect(easy.length).toBeGreaterThanOrEqual(league === "ufc" ? 60 : 55);
     }
   });
 
