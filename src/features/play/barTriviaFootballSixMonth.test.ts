@@ -4,7 +4,7 @@ import { BAR_TRIVIA_EDITORIAL_RETIREMENTS } from "./barTriviaEditorialCuration";
 import { FOOTBALL_BAR_TRIVIA_V2_LAST_CALL, FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS } from "./barTriviaFootballEditorialV2";
 import { FOOTBALL_BAR_TRIVIA_V2_REWRITES } from "./barTriviaFootballRewritesV2";
 import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS, FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES } from "./barTriviaFootballQuality20261029";
-import { FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS } from "./barTriviaFootballNewFacts20261029";
+import { FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS, FOOTBALL_BAR_TRIVIA_LAST_CALL_HEADROOM_20261029 } from "./barTriviaFootballNewFacts20261029";
 import { footballTriviaConceptKey, footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
 import { FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER, footballPublishedBarTriviaIdsBeforeDay } from "./barTriviaFootballPublishedHistory20261029";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
@@ -39,9 +39,9 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       // Weekly dated news is supplemental; only the certified evergreen inventory is fixed.
       expect(bank.filter((question) => question.contentType === "evergreen"))
-        .toHaveLength(league === "nfl" ? 144 : 155);
+        .toHaveLength(league === "nfl" ? 148 : 155);
       const lastCall = bank.filter((question) => question.round === "last-call");
-      // NFL keeps thirteen editorially vetted Last Calls for ten unique outings.
+      // Four more source-verified football moments protect the real v22 selection seed.
       expect(lastCall.length).toBeGreaterThanOrEqual(12);
     }
 
@@ -67,6 +67,16 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       expect(question.choices, question.id).toHaveLength(4);
       expect(new Set(question.choices).size, question.id).toBe(4);
       expect(question.choices, question.id).toContain(question.answer);
+      expect(ids.has(question.id), question.id).toBe(true);
+    }
+    expect(FOOTBALL_BAR_TRIVIA_LAST_CALL_HEADROOM_20261029).toHaveLength(4);
+    for (const question of FOOTBALL_BAR_TRIVIA_LAST_CALL_HEADROOM_20261029) {
+      expect(question.round).toBe("last-call");
+      expect(question.difficulty).toBe("last-call");
+      expect(question.sourceUrl).toMatch(/^https:\/\//);
+      expect(question.verifiedAt).toBe("2026-10-29");
+      expect(new Set(question.choices).size).toBe(4);
+      expect(question.choices).toContain(question.answer);
       expect(ids.has(question.id), question.id).toBe(true);
     }
     const allPrompts = new Set<string>();
@@ -153,6 +163,21 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
     expect(counts).toEqual({ nfl: 10, cfb: 9 });
     expect(seen.nfl.size).toBe(100);
     expect(seen.cfb.size).toBe(90);
+  });
+
+  it("covers all 182 days under the actual Football v22 production schedule version", () => {
+    const actualVersion = "football-daily-v22-higher-lower-oct27";
+    const scheduled = { nfl: 0, cfb: 0 };
+    for (let offset = 0; offset < 182; offset++) {
+      const day = new Date(Date.UTC(2026, 9, 25 + offset)).toISOString().slice(0, 10);
+      if (lockedWeightedGameForDay("football", day) !== "bar_trivia") continue;
+      const league = footballBarTriviaLeagueForDay(day);
+      const questions = buildBarTriviaDailySetup(league, day, actualVersion).privateSetupEvidence.questions as BarTriviaQuestion[];
+      expect(questions, day).toHaveLength(10);
+      expect(new Set(questions.map(q => q.factKey ?? q.id)).size, day).toBe(10);
+      scheduled[league]++;
+    }
+    expect(scheduled).toEqual({ nfl: 10, cfb: 9 });
   });
 
   it("retains a dedicated, non-overlapping December Cowboys-Seahawks board", () => {
