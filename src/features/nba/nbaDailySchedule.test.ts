@@ -49,6 +49,8 @@ describe("NBA official games release plan", () => {
     expect(nbaCanAccessPublicCasual("2026-10-29")).toBe(true);
     expect(nbaCanAccessReleasedGames("2026-10-29")).toBe(false);
     expect(nbaCanAccessReleasedGames("2026-10-30")).toBe(true);
+    expect(nbaCanAccessReleasedGames("2027-04-12")).toBe(false);
+    expect(nbaCanAccessPublicCasual("2027-04-12")).toBe(true);
     expect(() => nbaRegularSeasonDaily("2026-02-30")).toThrow("Invalid NBA Central date.");
   });
   it("derives dates using Chicago time rather than client local timezone", () => {
