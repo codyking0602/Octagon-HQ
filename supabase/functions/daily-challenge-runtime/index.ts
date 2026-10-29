@@ -162,6 +162,26 @@ function loadUfcRuntime() {
 }
 
 function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
+  // Each Football game publishes through its own small artifact. The old
+  // all-game bundle exceeded the Edge CPU budget even before a board existed.
+  if (gameType === "bar_trivia") {
+    return import("./football-bar-trivia-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+  }
+  if (gameType === "sports_feud") {
+    return import("./football-sports-feud-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+  }
+  if (gameType === "who_am_i") {
+    return import("./football-who-am-i-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+  }
+  if (gameType === "find_leader") {
+    return import("./football-find-leader-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+  }
+  if (gameType === "hit_the_number") {
+    return import("./football-hit-the-number-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+  }
+  if (gameType === "higher_lower") {
+    return import("./football-higher-lower-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+  }
   if (gameType === "wavelength") {
     if (!footballWavelengthPublicationPromise) {
       footballWavelengthPublicationPromise = import("./football-wavelength-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
