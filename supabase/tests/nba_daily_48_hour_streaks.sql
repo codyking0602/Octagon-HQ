@@ -7,6 +7,7 @@ declare
   v_player uuid := '78000000-0000-4000-8000-000000000001';
   v_day date;
   v_game text;
+  v_schedule text;
   v_setup uuid;
   v_daily uuid;
   v_streak jsonb;
@@ -24,10 +25,11 @@ begin
   perform public.register_unclaimed_pin_profile(v_player, 'NBA SLOT STREAK', 'NS');
 
   -- One challenge per 48-hour slot, not a separate challenge each calendar day.
-  -- The missed Nov 3 slot intentionally breaks the run; Oct 30 and Nov 1 do not.
+  -- The missed Nov 3 slot intentionally breaks the run; Oct 29 and Nov 1 do not.
   -- Nov 17 is Higher or Lower under the early-public 28-slot mix.
-  foreach v_day in array array[date '2026-10-30', date '2026-11-01', date '2026-11-05', date '2026-11-07', date '2026-11-17'] loop
-    v_game := private.daily_challenge_expected_game('nba-daily-regular-v3-oct30-public', v_day);
+  foreach v_day in array array[date '2026-10-29', date '2026-11-01', date '2026-11-05', date '2026-11-07', date '2026-11-17'] loop
+    v_schedule := private.daily_challenge_schedule_for_day(v_day, 'nba');
+    v_game := private.daily_challenge_expected_game(v_schedule, v_day);
     insert into private.daily_challenge_setups (
       game_type, setup_key, content_version, scoring_version, public_setup,
       reveal_setup, private_setup_evidence, private_grading_evidence
@@ -40,7 +42,7 @@ begin
       central_day, schedule_version, game_type, setup_id,
       content_version, scoring_version, fallback_reason
     ) values (
-      v_day, 'nba-daily-regular-v3-oct30-public', v_game, v_setup,
+      v_day, v_schedule, v_game, v_setup,
       'nba-streak-proof-v1', 'play-official-score-v1', null
     ) returning id into v_daily;
     insert into private.daily_challenge_attempts (
@@ -59,7 +61,7 @@ begin
   perform set_config('request.jwt.claim.sub', v_player::text, true);
   v_streak := public.get_my_daily_challenge_streak('nba');
   if (v_streak->>'best_streak')::integer <> 2 then
-    raise exception 'NBA 48-hour streak should be 2 across Oct 30/Nov 1 and Nov 5/7, not %', v_streak;
+    raise exception 'NBA 48-hour streak should be 2 across Oct 29/Nov 1 and Nov 5/7, not %', v_streak;
   end if;
 
   v_standings := public.get_daily_challenge_standings('nba');
