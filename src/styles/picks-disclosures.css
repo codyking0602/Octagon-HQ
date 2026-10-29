@@ -1,0 +1,124 @@
+/* The HQ Picks: a single quiet disclosure system for UFC, Football and NBA.
+   Only the collapsed headings are shared; every sport retains its own content. */
+.app-shell details.hq-picks-disclosure{
+  border:1px solid #30343a;
+  border-radius:14px;
+  background:#141617;
+  overflow:hidden;
+}
+.app-shell details.hq-picks-disclosure > summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:53px;
+  padding:0 14px;
+  list-style:none;
+  cursor:pointer;
+  color:#8b8f96;
+  font-size:.66rem;
+  font-weight:900;
+  letter-spacing:.1em;
+  line-height:1.22;
+}
+.app-shell details.hq-picks-disclosure > summary::-webkit-details-marker{display:none}
+.app-shell details.hq-picks-disclosure > summary .hq-picks-disclosure__title{
+  flex:1;
+  min-width:0;
+  margin:0;
+  color:#85898f;
+  font-size:.66rem;
+  font-weight:900;
+  letter-spacing:.1em;
+  line-height:1.25;
+}
+.app-shell details.hq-picks-disclosure > summary .hq-picks-disclosure__meta{
+  color:#85898f;
+  font-size:.55rem;
+  font-weight:850;
+  letter-spacing:.05em;
+  white-space:nowrap;
+}
+.app-shell details.hq-picks-disclosure > summary .hq-picks-disclosure__chevron{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:15px;
+  min-width:15px;
+  height:16px;
+  margin:0;
+  padding:0;
+  font-size:1rem;
+  font-weight:600;
+  line-height:1;
+  color:#8b8f96;
+  transition:transform .18s ease;
+}
+.app-shell details.hq-picks-disclosure[open] > summary .hq-picks-disclosure__chevron{
+  transform:rotate(180deg);
+}
+.app-shell details.hq-picks-disclosure.picks-scoring-guide > summary::after{
+  content:none;
+}
+.app-shell details.hq-picks-disclosure > summary:focus-visible{
+  outline:2px solid #b4b8be;
+  outline-offset:-3px;
+}
+.app-shell details.hq-picks-disclosure.hq-picks-disclosure--archive > summary{
+  position:relative;
+  min-height:57px;
+  padding:8px 35px 8px 14px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+}
+.app-shell details.hq-picks-disclosure--archive > summary .picks-season-hub__identity{
+  display:grid;
+  gap:3px;
+}
+.app-shell details.hq-picks-disclosure--archive > summary .picks-season-hub__identity > strong{
+  color:#85898f;
+  font-size:.67rem;
+  font-weight:900;
+  letter-spacing:.09em;
+  line-height:1.16;
+  text-transform:uppercase;
+}
+.app-shell details.hq-picks-disclosure--archive > summary .picks-season-hub__identity > span{
+  display:none;
+}
+.app-shell details.hq-picks-disclosure--archive > summary .picks-season-hub__identity > small{
+  color:#898d93;
+  font-size:.58rem;
+  letter-spacing:.03em;
+}
+.app-shell details.hq-picks-disclosure--archive > summary .picks-season-hub__meta > span,
+.app-shell details.hq-picks-disclosure--archive > summary .picks-season-hub__meta > em{
+  color:#898d93;
+  font-size:.52rem;
+  line-height:1.25;
+}
+.app-shell details.hq-picks-disclosure--archive > summary::after{
+  content:"⌄";
+  position:absolute;
+  right:13px;
+  top:50%;
+  color:#8b8f96;
+  font-size:1rem;
+  font-weight:600;
+  line-height:1;
+  transform:translateY(-50%);
+  transition:transform .18s ease;
+}
+.app-shell details.hq-picks-disclosure--archive[open] > summary::after{
+  transform:translateY(-50%) rotate(180deg);
+}
+@media(max-width:385px){
+  .app-shell details.hq-picks-disclosure > summary{padding:0 11px}
+  .app-shell details.hq-picks-disclosure > summary .hq-picks-disclosure__meta{font-size:.49rem}
+  .app-shell details.hq-picks-disclosure--archive > summary .picks-season-hub__meta > span{font-size:.48rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .app-shell details.hq-picks-disclosure > summary .hq-picks-disclosure__chevron,
+  .app-shell details.hq-picks-disclosure--archive > summary::after{transition:none}
+}
