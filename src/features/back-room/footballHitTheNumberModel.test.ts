@@ -7,7 +7,6 @@ import {
   FOOTBALL_HIT_THE_NUMBER_MIN_THEME_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_MIN_PICKS,
   FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE,
-  FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE,
   FOOTBALL_HIT_THE_NUMBER_PROGRESSION_VISIBLE_SLOT_DEPTH,
   FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG,
   createFootballHitTheNumberPlan,
@@ -32,10 +31,10 @@ const ONE_FROM_EACH_LABELS = [
 ];
 
 const BUILD_TEAM_LABELS = [
-  "Tier 1",
-  "Tier 2",
-  "Tier 3",
-  "Tier 4",
+  "Highest Tier",
+  "High Tier",
+  "Middle Tier",
+  "Lower Tier",
   "Wild Card",
 ];
 
@@ -111,7 +110,7 @@ describe("Football Hit the Number canonical fact integration", () => {
     expect(new Set(signatures).size).toBe(playable.length);
   });
 
-  it("keeps the four formats while enforcing Football-only 4-6 pick generation", () => {
+  it("keeps the four formats and NBA-equivalent 85/15 four/five pick generation", () => {
     expect(FOOTBALL_HIT_THE_NUMBER_FORMAT_PROFILE).toEqual([
       { value: "classic", weight: 40 },
       { value: "themed-lineup", weight: 25 },
@@ -119,14 +118,14 @@ describe("Football Hit the Number canonical fact integration", () => {
       { value: "build-the-team", weight: 15 },
     ]);
     expect(FOOTBALL_HIT_THE_NUMBER_PICK_PROFILE).toEqual([
-      { value: 4, weight: 20 },
-      { value: 5, weight: 40 },
-      { value: 6, weight: 40 },
+      { value: 4, weight: 85 },
+      { value: 5, weight: 15 },
     ]);
     expect(FOOTBALL_HIT_THE_NUMBER_MIN_PICKS).toBe(4);
-    expect(FOOTBALL_HIT_THE_NUMBER_MAX_PICKS).toBe(6);
-    expect([4, 5, 6].map(footballHitTheNumberRandomPoolSize)).toEqual([12, 14, 16]);
-    expect(() => footballHitTheNumberRandomPoolSize(7)).toThrow(/4-6/);
+    expect(FOOTBALL_HIT_THE_NUMBER_MAX_PICKS).toBe(5);
+    expect([4, 5].map(footballHitTheNumberRandomPoolSize)).toEqual([12, 14]);
+    expect(() => footballHitTheNumberRandomPoolSize(6)).toThrow(/4-5/);
+    expect(() => footballHitTheNumberRandomPoolSize(7)).toThrow(/4-5/);
   });
 
   it("builds deterministic, solvable, quality-gated boards with deep era and stat-tier choices", () => {
@@ -147,7 +146,7 @@ describe("Football Hit the Number canonical fact integration", () => {
         expect(new Set(first.subjectIds).size).toBe(first.subjectIds.length);
         expect(first.subjectIds).toHaveLength(footballHitTheNumberRandomPoolSize(first.pickCount));
         if (first.formatId === "one-from-each" || first.formatId === "build-the-team") {
-          expect(first.subjectIds).toHaveLength(FOOTBALL_HIT_THE_NUMBER_PROGRESSION_RANDOM_POOL_SIZE);
+          expect(first.subjectIds).toHaveLength(footballHitTheNumberRandomPoolSize(first.pickCount));
         }
         expect(first.solutionSubjectIds).toHaveLength(first.pickCount);
         expect(new Set(first.solutionSubjectIds).size).toBe(first.pickCount);
@@ -165,9 +164,9 @@ describe("Football Hit the Number canonical fact integration", () => {
         if (first.formatId === "one-from-each") {
           sawOneFromEach = true;
           expect(first.league).toBe("CFB");
-          expect(first.pickCount).toBe(5);
-          expect(first.slots.map((slot) => slot.label)).toEqual(ONE_FROM_EACH_LABELS);
-          expect(first.configurationLabel).toBe("One champion from each era + wild card");
+          expect([4, 5]).toContain(first.pickCount);
+          expect(first.slots.map((slot) => slot.label)).toEqual(ONE_FROM_EACH_LABELS.slice(0,first.pickCount));
+          expect(first.configurationLabel).toBe(first.pickCount===4?"One champion from each era":"One champion from each era + wild card");
           expect(first.subjectIds.every((subjectId) => footballHitTheNumberSubjects.find((subject) => subject.id === subjectId)?.nationalChampion === true)).toBe(true);
           for (let slotIndex = 0; slotIndex < 4; slotIndex += 1) {
             const previousPicks = first.solutionSubjectIds.slice(0, slotIndex);
@@ -179,9 +178,9 @@ describe("Football Hit the Number canonical fact integration", () => {
         }
         if (first.formatId === "build-the-team") {
           sawBuildTeam = true;
-          expect(first.pickCount).toBe(5);
-          expect(first.slots.map((slot) => slot.label)).toEqual(BUILD_TEAM_LABELS);
-          expect(first.configurationLabel).toBe("4 stat tiers + wild card");
+          expect([4, 5]).toContain(first.pickCount);
+          expect(first.slots.map((slot) => slot.label)).toEqual(BUILD_TEAM_LABELS.slice(0,first.pickCount));
+          expect(first.configurationLabel).toBe(first.pickCount===4?"Four performance tiers":"Four performance tiers + wild card");
           for (let slotIndex = 0; slotIndex < 4; slotIndex += 1) {
             const previousPicks = first.solutionSubjectIds.slice(0, slotIndex);
             expect(
@@ -219,6 +218,7 @@ describe("Football Hit the Number canonical fact integration", () => {
       ["build-the-team", 0],
     ]);
     const picks = new Set<number>();
+    let fourCount = 0;
     const seenMetrics = new Set<string>();
     const seenNewMetrics = new Set<string>();
     const newMetrics = new Set([
@@ -233,6 +233,7 @@ describe("Football Hit the Number canonical fact integration", () => {
       const plan = createFootballHitTheNumberPlan(`football-hit-number-mix-${index}`);
       formats.set(plan.formatId, formats.get(plan.formatId)! + 1);
       picks.add(plan.pickCount);
+      if (plan.pickCount === 4) fourCount += 1;
       seenMetrics.add(plan.metricId);
       if (newMetrics.has(plan.metricId)) seenNewMetrics.add(plan.metricId);
       if (plan.league === "CFB") cfb += 1;
@@ -250,7 +251,9 @@ describe("Football Hit the Number canonical fact integration", () => {
 
     expect(seenMetrics.size).toBe(13);
     expect(seenNewMetrics).toEqual(newMetrics);
-    expect(picks).toEqual(new Set([4, 5, 6]));
+    expect(picks).toEqual(new Set([4, 5]));
+    expect(fourCount / runs).toBeGreaterThanOrEqual(0.8);
+    expect(fourCount / runs).toBeLessThanOrEqual(0.9);
     expect(cfb / runs).toBeGreaterThanOrEqual(0.52);
     expect(cfb / runs).toBeLessThanOrEqual(0.68);
     expect([...formats.values()].every((count) => count > 0)).toBe(true);
