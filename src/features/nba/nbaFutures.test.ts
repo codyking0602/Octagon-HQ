@@ -37,8 +37,9 @@ describe("2026 NBA futures immutable contract",()=>{
     expect(page).toContain('className="nba-futures-group-entry"');
     expect(page).toContain('entry.complete?"55/55 COMPLETE":progress+"/55 · INCOMPLETE"');
     expect(page).toContain("RevealedNbaFuturesPicks");
-    expect(page).toContain("{locked?<section");
-    expect(page).toContain("snapshot.entries.map(");
+    expect(page).toContain("{locked?otherEntries.map(");
+    expect(page).toContain("otherEntries=snapshot?.entries.filter(");
+    expect(page).toContain("nba-futures-group-entry--mine");
   });
   it("has the approved season weights and 100 Futures points",()=>{
     expect(NBA_CHAMPIONSHIP_WEIGHTS).toEqual({futures:15,cup:10,playoffs:55,games:20});
