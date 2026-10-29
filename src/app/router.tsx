@@ -5,6 +5,7 @@ import { AppShell } from "./AppShell";
 import { MlbGate } from "../features/mlb/MlbGate";
 import { NbaPreviewGate } from "../features/nba/NbaPreviewGate";
 import { NbaWhoAmIOwnerGate } from "../features/nba/NbaWhoAmIOwnerGate";
+import { NbaCupOwnerGate } from "../features/nba/NbaCupOwnerGate";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
 const ChampionshipLeaderboardPage = lazy(() => import("../features/home/ChampionshipLeaderboardPage"));
@@ -71,6 +72,7 @@ const PicksControlCenterPage = lazy(() => import("../features/picks-control/Pick
 const MlbPlayoffsPage = lazy(() => import("../features/mlb/MlbPlayoffsPage"));
 const MlbPicksPage = lazy(() => import("../features/mlb/MlbPicksPage"));
 const NbaFuturesPage = lazy(() => import("../features/nba/NbaFuturesPage"));
+const NbaCup2026Page = lazy(() => import("../features/nba/NbaCup2026Page"));
 const NbaPlayPage = lazy(() => import("../features/nba/NbaPlayPage"));
 const NbaOfficialDailyPage = lazy(() => import("../features/nba/NbaOfficialDailyPage"));
 const NbaChampionshipPage = lazy(() => import("../features/nba/NbaChampionshipPage"));
@@ -163,6 +165,7 @@ export const appRoutes: RouteObject[] = [
       { path: "nba/bar-trivia", element: <NbaWhoAmIOwnerGate><NbaBarTriviaOwnerPreviewPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/wavelength", element: <NbaWhoAmIOwnerGate><NbaWavelengthPage /></NbaWhoAmIOwnerGate> },
       { path: "nba/picks", element: <NbaPreviewGate><NbaFuturesPage /></NbaPreviewGate> },
+      { path: "nba/cup", element: <NbaCupOwnerGate><NbaCup2026Page /></NbaCupOwnerGate> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
       { path: "mlb/challenge", element: <MlbGate fallback="/play"><MlbFeaturedChallengePage /></MlbGate> },
