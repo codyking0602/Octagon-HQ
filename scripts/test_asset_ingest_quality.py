@@ -161,14 +161,24 @@ class AssetIngestQualityTests(unittest.TestCase):
         draw = ImageDraw.Draw(im)
         draw.ellipse((90, 20, 220, 230), fill=(151, 105, 77, 255))
         draw.rectangle((250, 24, 318, 170), fill=(215, 91, 81, 65))
-        self.assert_rejected(im, "thumb", "translucent side background panel")
+        self.assert_rejected(im, "thumb", "publisher background artifact")
 
     def test_faint_publisher_side_panel_is_still_visible_and_rejected(self):
         im = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
         draw = ImageDraw.Draw(im)
         draw.ellipse((90, 20, 220, 230), fill=(151, 105, 77, 255))
         draw.rectangle((262, 28, 319, 175), fill=(218, 88, 71, 12))
-        self.assert_rejected(im, "thumb", "translucent side background panel")
+        self.assert_rejected(im, "thumb", "publisher background artifact")
+
+    def test_low_alpha_source_rectangle_gets_removed(self):
+        im = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.ellipse((95, 22, 225, 238), fill=(155, 110, 88, 255))
+        draw.rectangle((260, 35, 315, 157), fill=(171, 73, 62, 24))
+        self.assertTrue(upper_side_background_band(im))
+        cleaned = remove_flat_side_backgrounds(im)
+        self.assertEqual(cleaned.getpixel((288, 75))[3], 0)
+        self.assertEqual(cleaned.getpixel((156, 75))[3], 255)
 
     def test_full_bleed_opaque_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (200, 200, 200, 255))

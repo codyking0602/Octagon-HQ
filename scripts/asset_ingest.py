@@ -348,7 +348,7 @@ def upper_side_background_band(im):
     sample_height = max(1, round(height * 0.60))
     # Sample inside output padding as well as at the actual source side.
     for x in (round(width * 0.045), round(width * 0.955)):
-        filled = sum(alpha.getpixel((x, y)) >= 128 for y in range(sample_height))
+        filled = sum(alpha.getpixel((x, y)) >= 8 for y in range(sample_height))
         if filled / sample_height > 0.24:
             return True
     return False
@@ -366,13 +366,13 @@ def horizontal_publisher_strips(im):
             for margin in range(max(1, round(w * 0.14))):
                 x = margin if side == "left" else w - 1 - margin
                 r, g, b, a = px[x, y]
-                if a < 170:
+                if a < 8:
                     continue
                 direction = 1 if side == "left" else -1
                 n = 0
                 while 0 <= x + direction * n < w:
                     cr, cg, cb, ca = px[x + direction * n, y]
-                    if ca < 160 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 18:
+                    if ca < 8 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 28:
                         break
                     n += 1
                 if n >= max(34, round(w * 0.18)):
@@ -412,13 +412,13 @@ def inset_side_background_panels(im):
                 for offset in range(round(width * 0.27)):
                     x = offset if side == "left" else width - 1 - offset
                     r, g, b, a = px[x, y]
-                    if a < 170:
+                    if a < 8:
                         continue
                     direction = 1 if side == "left" else -1
                     length = 0
                     while 0 <= x + direction * length < width:
                         cr, cg, cb, ca = px[x + direction * length, y]
-                        if ca < 150 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 18:
+                        if ca < 8 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 28:
                             break
                         length += 1
                     inner = x + direction * (length - 1)
@@ -461,14 +461,14 @@ def remove_flat_side_backgrounds(im):
             for outer in range(search_depth):
                 x = outer if side == "left" else width - 1 - outer
                 r, g, b, a = px[x, y]
-                if a < 205:
+                if a < 8:
                     continue
                 direction = 1 if side == "left" else -1
                 run = []
                 pos = x
                 while 0 <= pos < width:
                     cr, cg, cb, ca = px[pos, y]
-                    if ca < 160 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 6:
+                    if ca < 8 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 28:
                         break
                     run.append(pos)
                     pos += direction
