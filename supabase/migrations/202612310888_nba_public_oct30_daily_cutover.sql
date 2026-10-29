@@ -50,7 +50,7 @@ VALUES ('nba-daily-regular-v3-oct30-public','America/Chicago',
     'wavelength',
     'find_leader',
     'bar_trivia'
-  
+
 ]::text[],'nba')
 ON CONFLICT (version) DO NOTHING;
 
