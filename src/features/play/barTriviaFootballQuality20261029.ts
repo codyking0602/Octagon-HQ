@@ -1,3 +1,5 @@
+import type { BarTriviaRound } from "../games/barTriviaEngine";
+
 /**
  * October 29, 2026 football-specific editorial cut.
  *
@@ -71,7 +73,67 @@ export const FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS: Readonly<Record<string, Fo
   "cfb-r3-army-navy-1944-ranking": "obscure-detail",
   "cfb-final-first-ap-champ": "uninteresting-first",
   "cfb-final-choke-at-doak-score": "obscure-detail",
+  // Additional pool-by-pool review: keep the recognizable football history,
+  // remove mascot decoding, irrelevant broadcast footnotes and non-football firsts.
+  "nfl-r1-falcons-name-contest": "low-value-identity",
+  "nfl-r1-colts-name-horses": "low-value-identity",
+  "nfl-r1-patriots-boston": "low-value-identity",
+  "nfl-r1-rams-cleveland": "low-value-identity",
+  "nfl-easy2-silver-black": "low-value-identity",
+  "nfl-easy2-fleur-de-lis": "low-value-identity",
+  "nfl-easy2-dawg-pound": "low-value-identity",
+  "nfl-r1-gang-green": "low-value-identity",
+  "nfl-r1-big-blue": "low-value-identity",
+  "nfl-r2-sb1-two-networks": "administrative-trivia",
+  "nfl-r2-left-shark": "administrative-trivia",
+  "nfl-r2-wardrobe-malfunction": "administrative-trivia",
+  "nfl-r3-nfl-films-founder": "administrative-trivia",
+  "nfl-r3-two-point-added": "administrative-trivia",
+  "nfl-r3-first-two-point": "uninteresting-first",
+  "nfl-final-spartans": "obscure-detail",
+  "nfl-final-broncos-first-afl-win": "uninteresting-first",
+  "nfl-final-the-duke-namesake": "obscure-detail",
+  "nfl-final-first-sb-kick-return-td": "uninteresting-first",
+
+  "cfb-easy2-spartans": "low-value-identity",
+  "cfb-easy2-fighting-illini": "low-value-identity",
+  "cfb-easy2-jayhawks": "low-value-identity",
+  "cfb-easy2-yellow-jackets": "low-value-identity",
+  "cfb-easy2-kstate-wildcats": "low-value-identity",
+  "cfb-easy2-hawkeyes": "low-value-identity",
+  "cfb-easy2-badgers": "low-value-identity",
+  "cfb-easy2-cyclones": "low-value-identity",
+  "cfb-easy2-red-raiders": "low-value-identity",
+  "cfb-easy2-horned-frogs": "low-value-identity",
+  "cfb-easy2-gamecocks": "low-value-identity",
+  "cfb-easy2-hokies": "low-value-identity",
+  "cfb-easy2-okstate-cowboys": "low-value-identity",
+  "cfb-r1-pistol-pete": "low-value-identity",
+  "cfb-r1-superfrog": "low-value-identity",
+  "cfb-r1-mountaineer-musket": "low-value-identity",
+  "cfb-r1-bill-goat": "low-value-identity",
+  "cfb-r1-peruna": "low-value-identity",
+  "cfb-r1-fifth-quarter": "low-value-identity",
+  "cfb-r1-boilermaker-special": "low-value-identity",
+  "cfb-r3-cfp-first-semifinal-shutout": "uninteresting-first",
+  "cfb-r3-cfp-semifinal-first-2ot": "uninteresting-first",
+  "cfb-r3-kinnick-death": "obscure-detail",
 };
 
 export const FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS: ReadonlySet<string> =
   new Set(Object.keys(FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS));
+
+/** Rebalance difficulty using ALREADY-AUTHORED notable football plays. */
+export const FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES: Readonly<Record<string, BarTriviaRound>> = {
+  "nfl-r2-music-city-lateral": "round3",
+  "nfl-r2-beebe-lett-chase": "round3",
+  "nfl-r2-tebow-ot-receiver": "round3",
+  "nfl-easy2-montana": "round3",
+  "nfl-r2-wide-right-norwood": "round3",
+  "nfl-r2-we-want-ball": "round3",
+  "nfl-r2-freezer-bowl": "round3",
+  "nfl-r1-lambeau-leap-originator": "round3",
+  "nfl-r3-walter-payton-award": "round2",
+  "cfb-r3-little-brown-jug": "round2",
+  "cfb-r3-war-eagle": "round2",
+};
