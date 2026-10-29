@@ -42,7 +42,8 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
     expect(router).toContain('path: "nba/cup", element: <NbaCupOwnerGate><NbaCup2026Page /></NbaCupOwnerGate>');
     const futures=readFileSync("src/features/nba/NbaFuturesPage.tsx","utf8");
     expect(futures).toContain("canPreviewNbaWhoAmI(identity.profile)");
-    expect(futures).toContain('to="/nba/cup"');
+    expect(futures).toContain('<NbaCupHero linked/>');
+    expect(readFileSync("src/features/nba/NbaCupHero.tsx","utf8")).toContain('to="/nba/cup"');
   });
   it("uses the supplied trophy artwork and puts the Cup before collapsed Futures",()=>{
     const hero=readFileSync("src/features/nba/NbaCupHero.tsx","utf8");
