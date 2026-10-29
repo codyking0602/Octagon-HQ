@@ -12,7 +12,7 @@ describe("NBA launch announcement is post-verification and manual",()=>{
     expect(sql).toContain("2026-10-30");
     expect(sql).toContain("notification_nba_release_gate");
     expect(sql).toContain("publish_notification_to_profile");
-    expect(runbook).toContain("ONLY after verified go-live");
+    expect(runbook).toContain("only after verified go-live");
     expect(runbook).toContain("do not run both");
   });
   it("updates intro to the current Cup Picks and official NBA Daily",()=>{
