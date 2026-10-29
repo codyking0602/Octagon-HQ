@@ -56,30 +56,44 @@ function combinations<T>(items: readonly T[], count: number, visit: (selection: 
   walk(0);
 }
 
-function selectionCanSatisfyPlan(
-  plan: HitTheNumberFormatPlan,
-  fighterIds: readonly string[],
-  statRows: readonly HitTheNumberStatRow[],
-) {
-  if (plan.format.slots.length === 0) {
-    return hitTheNumberFormatSelectionSatisfies(plan.format, fighterIds, statRows);
-  }
-  if (fighterIds.length !== plan.format.slots.length) return false;
+/** Precompute costly eligibility checks once per board, not per legal combination. */
+function boardEligibility(plan: HitTheNumberFormatPlan, statRows: readonly HitTheNumberStatRow[]) {
+  if (plan.format.formatId === "themed-lineup") return {
+    themed: new Set(plan.fighterIds.filter(id => hitTheNumberFormatSelectionSatisfies(plan.format, [id], statRows))),
+    slots: [] as Set<string>[],
+  };
+  return {
+    themed: null as Set<string> | null,
+    slots: plan.format.slots.map(slot => new Set(
+      plan.fighterIds.filter(id => hitTheNumberSlotAcceptsFighter(slot, id, statRows)),
+    )),
+  };
+}
 
+type BoardEligibility = ReturnType<typeof boardEligibility>;
+
+function orderedLegalSelection(
+  plan: HitTheNumberFormatPlan,
+  ids: readonly string[],
+  eligible: BoardEligibility,
+): string[] | null {
+  if (eligible.themed && ids.some(id => !eligible.themed!.has(id))) return null;
+  if (!eligible.slots.length) return [...ids];
+  if (ids.length !== eligible.slots.length) return null;
   const used = new Set<string>();
-  function assignSlot(slotIndex: number): boolean {
-    const slot = plan.format.slots[slotIndex];
-    if (!slot) return true;
-    for (const fighterId of fighterIds) {
-      if (used.has(fighterId) || !hitTheNumberSlotAcceptsFighter(slot, fighterId, statRows)) continue;
-      used.add(fighterId);
-      if (assignSlot(slotIndex + 1)) return true;
-      used.delete(fighterId);
+  const assigned: string[] = [];
+  function fill(index: number): boolean {
+    if (index === eligible.slots.length) return true;
+    for (const id of ids) {
+      if (used.has(id) || !eligible.slots[index]!.has(id)) continue;
+      used.add(id);
+      assigned[index] = id;
+      if (fill(index + 1)) return true;
+      used.delete(id);
     }
     return false;
   }
-
-  return assignSlot(0);
+  return fill(0) ? assigned : null;
 }
 
 export function hitTheNumberRandomPoolQuality(
@@ -98,6 +112,7 @@ export function hitTheNumberRandomPoolQuality(
   }
 
   const rows = valuesByFighter(statRows);
+  const eligibility = boardEligibility(plan, statRows);
   let legalSelectionCount = 0;
   let highestUnderScore: number | null = null;
   let lowestUnderScore: number | null = null;
@@ -105,7 +120,7 @@ export function hitTheNumberRandomPoolQuality(
   let hasMidScore = false;
 
   combinations(plan.fighterIds, plan.pickCount, (fighterIds) => {
-    if (!selectionCanSatisfyPlan(plan, fighterIds, statRows)) return;
+    if (!orderedLegalSelection(plan, fighterIds, eligibility)) return;
 
     const total = fighterIds.reduce((sum, fighterId) => {
       const value = rows.get(fighterId)?.[plan.statId];
@@ -170,24 +185,10 @@ function balancedTargetPlan(
 ): HitTheNumberFormatPlan {
   if (plan.boardType !== "random-pool") return plan;
   const rows = valuesByFighter(statRows);
+  const eligibility = boardEligibility(plan, statRows);
   const outcomes: Array<{ total: number; ids: string[] }> = [];
   combinations(plan.fighterIds, plan.pickCount, fighterIds => {
-    if (!selectionCanSatisfyPlan(plan, fighterIds, statRows)) return;
-    const ordered = plan.format.slots.length === 0 ? [...fighterIds] : (() => {
-      const used = new Set<string>();
-      const assignment: string[] = [];
-      function fill(index: number): boolean {
-        if (index === plan.format.slots.length) return true;
-        for (const id of fighterIds) {
-          if (used.has(id) || !hitTheNumberSlotAcceptsFighter(plan.format.slots[index]!, id, statRows)) continue;
-          used.add(id); assignment[index] = id;
-          if (fill(index + 1)) return true;
-          used.delete(id);
-        }
-        return false;
-      }
-      return fill(0) ? assignment : null;
-    })();
+    const ordered = orderedLegalSelection(plan, fighterIds, eligibility);
     if (!ordered) return;
     const total = ordered.reduce((sum, id) => sum + Number(rows.get(id)?.[plan.statId] ?? 0), 0);
     if (total > 0) outcomes.push({ total, ids: ordered });
