@@ -19,7 +19,8 @@ describe("NBA HQ released regular-season presentation", () => {
     expect(owner).not.toContain('"/nba/play"');
     expect(owner).toContain('to="/nba/picks"');
     expect(owner).toContain('to="/championship/nba"');
-    expect(owner).toContain('"STARTS OCT 30"');
+    expect(owner).toContain('"STARTS OCT 29"');
+    expect(owner).toContain('nbaCanAccessReleasedGames(day)');
   });
   it("routes Home NBA Play and Picks to registered pages, including prelaunch", () => {
     expect(owner).toContain('const dailyLink = dailyEnabled ? "/nba/today" : "/nba";');
