@@ -3,6 +3,7 @@ import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { BAR_TRIVIA_EDITORIAL_RETIREMENTS } from "./barTriviaEditorialCuration";
 import { FOOTBALL_BAR_TRIVIA_V2_LAST_CALL, FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS } from "./barTriviaFootballEditorialV2";
 import { FOOTBALL_BAR_TRIVIA_V2_REWRITES } from "./barTriviaFootballRewritesV2";
+import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS } from "./barTriviaFootballQuality20261029";
 import { footballTriviaConceptKey } from "./barTriviaFootballConcepts";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
@@ -20,6 +21,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
   it("honors every v2 retirement and preserves correct four-choice grading for replacements", () => {
     const ids = new Set(BAR_TRIVIA_QUESTION_BANK.map((question) => question.id));
     for (const id of FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS) expect(ids.has(id), id).toBe(false);
+    for (const id of Object.keys(FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS)) expect(ids.has(id), id).toBe(false);
     for (const id of Object.keys(BAR_TRIVIA_EDITORIAL_RETIREMENTS)) expect(ids.has(id), id).toBe(false);
 
     expect(FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS.size).toBe(72);
@@ -35,7 +37,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       // Weekly dated news is supplemental; only the certified evergreen inventory is fixed.
       expect(bank.filter((question) => question.contentType === "evergreen"))
-        .toHaveLength(league === "nfl" ? 199 : 197);
+        .toHaveLength(league === "nfl" ? 174 : 179);
       const lastCall = bank.filter((question) => question.round === "last-call");
       expect(lastCall.length).toBeGreaterThanOrEqual(league === "nfl" ? 15 : 12);
     }
@@ -65,6 +67,17 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       expect(run, date).toHaveLength(10);
       expect(new Set(run.map((q) => q.id)).size, date).toBe(10);
       expect(new Set(run.map((q) => q.factKey ?? q.id)).size, date).toBe(10);
+      // This is content difficulty, not a change to the point/scoring ladder.
+      const mix = {
+        easy: run.filter((q) => q.difficulty === "easy").length,
+        medium: run.filter((q) => q.difficulty === "medium").length,
+        hard: run.filter((q) => q.difficulty === "hard").length,
+        lastCall: run.filter((q) => q.difficulty === "last-call").length,
+      };
+      if (!run[0]?.id.startsWith("theme-cowboys-seahawks-2026-")) {
+        expect(mix, date).toEqual({ easy: 4, medium: 3, hard: 2, lastCall: 1 });
+        expect(run.filter((q) => /\\bfirst\\b/i.test(q.prompt)).length, date).toBeLessThanOrEqual(2);
+      }
       for (const question of run) {
         const key = question.factKey ?? question.id;
         expect(seen[league].has(key), league + " " + date + " repeated fact " + key).toBe(false);
