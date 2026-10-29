@@ -99,10 +99,13 @@ export function footballPublishedBarTriviaIdsBeforeDay(
   lookbackDays: number,
 ): string[] {
   const candidateAt = new Date(candidateDay + "T12:00:00.000Z").getTime();
-  if (!Number.isFinite(candidateAt) || candidateDay <= "2026-10-29") return [];
+  if (!Number.isFinite(candidateAt) || candidateDay < "2026-10-29") return [];
   const dayMs = 86_400_000;
   return FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER.filter((row) => {
-    if (row.league !== league || row.day >= candidateDay) return false;
+    // Only the owner-approved Oct 29 relaunch also excludes its own
+    // superseded published board. Future days retain strict before-day checks.
+    const supersededSameDay = candidateDay === "2026-10-29" && row.day === candidateDay;
+    if (row.league !== league || (row.day >= candidateDay && !supersededSameDay)) return false;
     const publishedAt = new Date(row.day + "T12:00:00.000Z").getTime();
     return candidateAt - publishedAt <= lookbackDays * dayMs;
   }).flatMap((row) => [...row.questionIds]);
