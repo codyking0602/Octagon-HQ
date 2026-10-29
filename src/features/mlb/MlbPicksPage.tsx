@@ -17,6 +17,7 @@ import { MLB_CHAMPIONSHIP_SCORING, formatChampionshipPoints } from "./mlbChampio
 import { mlbTeamAssetByName, mlbTeamColor, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import { useMlbChampionship } from "./useMlbChampionship";
+import type { MlbRecapSeriesPick } from "./mlbSeasonRecap";
 import "../../styles/mlb-playoffs.css";
 
 function dateTime(value: string | null) {
@@ -116,7 +117,7 @@ function roundDisplayLabel(round: MlbBracketNode["round"]) {
   return "WORLD SERIES";
 }
 
-export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: boolean }) {
+export default function MlbPicksPage({ archiveMode = false, archiveSeriesPicks = [] }: { archiveMode?: boolean; archiveSeriesPicks?: MlbRecapSeriesPick[] }) {
   const identity = useIdentity();
   const signedIn = Boolean(identity.profile);
   const { hub: liveHub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn, archiveMode ? 2026 : undefined);
@@ -127,6 +128,18 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
 
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [viewedProfileId, setViewedProfileId] = useState("");
+  const [seriesProfileId, setSeriesProfileId] = useState("");
+  const [bracketMode, setBracketMode] = useState<"predictions" | "results">("predictions");
+  const [bracketZoomed, setBracketZoomed] = useState(false);
+  useEffect(() => {
+    if (!seriesProfileId && identity.profile?.id) setSeriesProfileId(identity.profile.id);
+  }, [seriesProfileId, identity.profile?.id]);
+  useEffect(() => {
+    if (!bracketZoomed) return;
+    const handleKey = (event: KeyboardEvent) => { if (event.key === "Escape") setBracketZoomed(false); };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [bracketZoomed]);
   const [editingBracket, setEditingBracket] = useState(false);
   const [activeNodeId, setActiveNodeId] = useState("");
   const [reviewExisting, setReviewExisting] = useState(false);
@@ -163,6 +176,7 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
       : [];
     if (own) return [own, ...rest];
 
+    if (archiveMode) return rest;
     const currentUser: MlbBracketEntry = {
       profile_id: identity.profile.id,
       display_name: identity.profile.displayName,
@@ -171,7 +185,7 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
       picks: hub.ownBracket ?? {},
     };
     return [currentUser, ...rest];
-  }, [hub, identity.profile]);
+  }, [hub, identity.profile, archiveMode]);
 
   const winners = useMemo(
     () => new Map(hub?.series.filter((series) => series.winner_team_id).map((series) => [series.series_id, series.winner_team_id!]) ?? []),
@@ -257,11 +271,12 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
     : [];
   const focusedSiblingIndex = focusedNode ? focusedSiblings.findIndex((node) => node.id === focusedNode.id) : -1;
   const focusRow = focusedSiblings.length <= 1 ? "center" : focusedSiblingIndex === 0 ? "top" : "bottom";
-  const displayedPicks = editingBracket
+  const actualBracketPicks = Object.fromEntries(hub.series.filter(series => series.winner_team_id).map(series => [series.series_id, series.winner_team_id!]));
+  const displayedPicks = archiveMode && bracketMode === "results" ? actualBracketPicks : editingBracket
     ? draft
     : viewed?.is_current_user
       ? draft
-      : viewed?.picks ?? draft;
+      : viewed?.picks ?? (archiveMode ? {} : draft);
 
   const stageNodes = (league: "AL" | "NL" | null, round: MlbBracketNode["round"]) => (
     hub.bracketTemplate.nodes.filter((node) => node.league === league && node.round === round)
@@ -313,6 +328,7 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
     const [left, right] = nodeParticipants(node, displayedPicks, hub.bracketTemplate);
     const selected = displayedPicks[node.id];
     const officialWinner = winners.get(node.id) ?? null;
+    const actualView = archiveMode && bracketMode === "results";
     const isActive = editingBracket && node.id === activeNodeId;
     const canActivate = !archiveMode && !hub.bracketLocked && Boolean(viewed?.is_current_user) && Boolean(left && right);
 
@@ -320,7 +336,7 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
       <button
         type="button"
         key={node.id}
-        className={`mlb-bracket-mini-node${isActive ? " is-active" : ""}${officialWinner ? " is-final" : ""}`}
+        className={`mlb-bracket-mini-node${isActive ? " is-active" : ""}${officialWinner ? " is-final" : ""}${actualView ? " is-actual-results" : ""}`}
         disabled={!canActivate}
         onClick={() => activateNode(node)}
         aria-label={`${roundLabel(node)} ${left?.name ?? "TBD"} versus ${right?.name ?? "TBD"}`}
@@ -329,7 +345,7 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
         {[left, right].map((team, index) => team ? (
           <span
             key={team.id}
-            className={`mlb-bracket-mini-team${selected === team.id ? " is-picked" : ""}${officialWinner && officialWinner !== team.id ? " is-out" : ""}${eliminatedTeamIds.has(team.id) ? " is-eliminated" : ""}`}
+            className={`mlb-bracket-mini-team${selected === team.id ? (actualView ? " is-official-winner" : " is-picked") : ""}${!actualView && officialWinner && officialWinner !== team.id ? " is-out" : ""}${!actualView && eliminatedTeamIds.has(team.id) ? " is-eliminated" : ""}`}
           >
             <TeamMark team={team} compact />
             <b>{team.seed ?? "—"}</b>
@@ -363,7 +379,11 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
   };
 
   const renderSeriesCard = (series: MlbPlayoffSeries) => {
-    const selected = ownSeriesPicks.get(series.series_id) ?? "";
+    const selected = archiveMode
+      ? archiveSeriesPicks.find(pick => pick.profile_id === (seriesProfileId || identity.profile?.id) && pick.series_id === series.series_id)?.winner_team_id
+        ?? ((seriesProfileId || identity.profile?.id) === identity.profile?.id ? ownSeriesPicks.get(series.series_id) : "")
+        ?? ""
+      : ownSeriesPicks.get(series.series_id) ?? "";
     const picksLockAt = series.picks_lock_at ?? series.starts_at;
     const locked = archiveMode || (picksLockAt ? Date.now() >= Date.parse(picksLockAt) : true);
     const customPickLock = Boolean(series.picks_lock_at && series.picks_lock_at !== series.starts_at);
@@ -447,7 +467,12 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
           )}
         </div>
         <footer>
-          <span>{archiveMode ? selected && series.winner_team_id ? selected === series.winner_team_id ? "✓ YOUR PICK CORRECT" : "✕ YOUR PICK INCORRECT" : "NO PICK RECORDED" : `${footerLabel} · ${seriesLengthLabel(series.round)}`}</span>
+          <span>{archiveMode
+            ? !selected ? "NO PICK RECORDED"
+              : !series.winner_team_id ? "PICK SAVED · RESULT PENDING"
+                : selected === series.winner_team_id ? `✓ CORRECT PICK · +${MLB_CHAMPIONSHIP_SCORING.seriesRound[series.round]} PTS`
+                  : "✕ INCORRECT PICK · 0 PTS"
+            : `${footerLabel} · ${seriesLengthLabel(series.round)}`}</span>
         </footer>
       </article>
     );
@@ -468,21 +493,22 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
           </section>
         ) : (
           <>
-            <div className="surface-card mlb-bracket-shell">
+            <div className={`surface-card mlb-bracket-shell${archiveMode && bracketZoomed ? " is-zoomed" : ""}`}>
               <div className="mlb-bracket-shell__person">
                 <div>
-                  <span>{editingBracket ? "BUILDING YOUR BRACKET" : viewed?.is_current_user ? "YOUR BRACKET" : "BRACKET"}</span>
-                  {!editingBracket && viewed && !viewed.is_current_user ? <strong>{viewed.display_name}</strong> : null}
+                  <span>{archiveMode && bracketMode === "results" ? "2026 ACTUAL POSTSEASON" : editingBracket ? "BUILDING YOUR BRACKET" : viewed?.is_current_user ? "YOUR ORIGINAL BRACKET" : "ORIGINAL BRACKET"}</span>
+                  {!editingBracket && viewed && !viewed.is_current_user && bracketMode !== "results" ? <strong>{viewed.display_name}</strong> : null}
                   <small className={editingBracket || viewed?.is_current_user ? "is-own-summary" : undefined}>
-                    {editingBracket
-                      ? `${Math.max(0, focusedIndex + 1)} OF ${guideNodes.length} · ${roundLabel(focusedNode ?? guideNodes[0]!)}`
-                      : viewed?.is_current_user
-                        ? `${ownRank ? `#${ownRank} · ` : ""}${hub.ownBracketScore} PTS`
-                        : `${viewed?.score ?? 0} PTS`}
+                    {archiveMode && bracketMode === "results" ? "MILWAUKEE · CHAMPIONS"
+                      : editingBracket
+                        ? `${Math.max(0, focusedIndex + 1)} OF ${guideNodes.length} · ${roundLabel(focusedNode ?? guideNodes[0]!)}`
+                        : viewed?.is_current_user
+                          ? `${ownRank ? `#${ownRank} · ` : ""}${hub.ownBracketScore} PTS`
+                          : `${viewed?.score ?? 0} PTS`}
                   </small>
                 </div>
 
-                {!editingBracket && bracketViewers.length > 1 ? (
+                {!editingBracket && (bracketMode === "predictions" || !archiveMode) && bracketViewers.length > 1 ? (
                   <div className="mlb-bracket-shell__viewer-controls" aria-label="Browse submitted brackets">
                     <button type="button" onClick={() => showViewer(-1)} aria-label="Previous bracket">‹</button>
                     <span>{viewerIndex + 1} / {bracketViewers.length}</span>
@@ -490,6 +516,14 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
                   </div>
                 ) : null}
               </div>
+              {archiveMode ? (
+                <div className="mlb-recap-bracket-controls" aria-label="Bracket display">
+                  <button type="button" className={bracketMode === "predictions" ? "is-selected" : ""} aria-pressed={bracketMode === "predictions"} onClick={() => setBracketMode("predictions")}>ORIGINAL PICKS</button>
+                  <button type="button" className={bracketMode === "results" ? "is-selected" : ""} aria-pressed={bracketMode === "results"} onClick={() => setBracketMode("results")}>ACTUAL RESULTS</button>
+                  <button type="button" onClick={() => setBracketZoomed(!bracketZoomed)} aria-label={bracketZoomed ? "Close enlarged playoff bracket" : "Enlarge playoff bracket"} aria-pressed={bracketZoomed}>{bracketZoomed ? "CLOSE ×" : "EXPAND ⛶"}</button>
+                </div>
+              ) : null}
+              {archiveMode && bracketMode === "predictions" && !viewed ? <p className="mlb-recap-bracket-empty">No submitted bracket for this profile. Select Actual Results to see how the postseason finished.</p> : null}
 
               <div
                 className={`mlb-full-bracket${editingBracket ? " is-guided" : ""}`}
@@ -534,7 +568,7 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
                 </div>
               </div>
 
-              {!editingBracket && bracketViewers.length > 1 ? (
+              {!editingBracket && (bracketMode === "predictions" || !archiveMode) && bracketViewers.length > 1 ? (
                 <div className="mlb-bracket-shell__dots" aria-hidden="true">
                   {bracketViewers.map((entry, index) => (
                     <span key={entry.profile_id} className={index === viewerIndex ? "is-active" : ""} />
@@ -853,11 +887,19 @@ export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: bo
       {archiveMode ? (
         <section className="mlb-archive-series" aria-label="All MLB 2026 series picks and results">
           <header className="mlb-section-heading"><div><p className="eyebrow">ROUND BY ROUND · 2026</p><h2>Series picks &amp; results</h2></div><small>FINAL RESULTS</small></header>
+          <label className="mlb-recap-series-viewer">VIEW SERIES PICKS FOR
+            <select aria-label="Series picks participant" value={seriesProfileId || identity.profile?.id || ""} onChange={e => setSeriesProfileId(e.target.value)}>
+              {championship?.standings.map(player => <option key={player.profile_id} value={player.profile_id}>{player.display_name}{player.is_current_user ? " · YOU" : ""}</option>)}
+            </select>
+          </label>
           {MLB_ROUND_ORDER.map(round => {
             const series = hub.series.filter(item => item.round === round);
             if (!series.length) return null;
-            const correct = series.filter(item => ownSeriesPicks.get(item.series_id) && ownSeriesPicks.get(item.series_id) === item.winner_team_id).length;
-            const picked = series.filter(item => ownSeriesPicks.has(item.series_id)).length;
+            const participant = seriesProfileId || identity.profile?.id;
+            const choices = (id: string) => archiveSeriesPicks.find(p => p.profile_id === participant && p.series_id === id)?.winner_team_id
+              ?? (participant === identity.profile?.id ? ownSeriesPicks.get(id) : undefined);
+            const correct = series.filter(item => choices(item.series_id) && choices(item.series_id) === item.winner_team_id).length;
+            const picked = series.filter(item => choices(item.series_id)).length;
             return <details key={round} className="mlb-archive-series__round" open={round === "world_series"}>
               <summary><strong>{MLB_ROUND_LABELS[round]}</strong><span>{correct} CORRECT OF {picked} PICKS</span><b aria-hidden="true">⌄</b></summary>
               <div className="mlb-archive-series__cards">{series.map(renderSeriesCard)}</div>
