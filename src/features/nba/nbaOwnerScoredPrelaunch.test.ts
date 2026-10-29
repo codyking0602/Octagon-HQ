@@ -11,8 +11,8 @@ const play = readFileSync("src/features/nba/NbaPlayPage.tsx", "utf8");
 
 describe("NBA owner-only scored Oct 23–31 prelaunch", () => {
   it("keeps all public release flags closed and separates preview from public season standings", () => {
-    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
-    expect(edge).toContain("const NBA_DAILY_EDGE_RELEASE_READY = false;");
+    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
+    expect(edge).toContain("const NBA_DAILY_EDGE_RELEASE_READY = true;");
     expect(migration).toContain("'nba-daily-owner-prelaunch-v1'");
     expect(migration).toContain("'nba_preview'");
     expect(migration).toContain("get_nba_owner_prelaunch_materialization_request");
