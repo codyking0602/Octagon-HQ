@@ -1,29 +1,38 @@
 import type { PropsWithChildren } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { IdentityProfile } from "../identity/identityModel";
-import { nbaCanAccessReleasedGames, nbaCentralDay } from "./nbaDailySchedule";
+import {
+  NBA_CASUAL_GAME_TYPES, nbaCanAccessPublicCasual,
+  nbaCanAccessReleasedGames, nbaCentralDay,
+} from "./nbaDailySchedule";
 
 type GateProfile = Pick<IdentityProfile, "displayName" | "canControlPicks"> | null | undefined;
 
-/** All NBA games remain private during owner testing. Futures are a separate public product. */
+/** A separate owner namespace remains exclusively for historical QA. */
 export function canPreviewNbaWhoAmI(profile: GateProfile) {
   return profile?.canControlPicks === true && profile.displayName.trim().toUpperCase() === "CODY";
 }
-
-/**
- * Reuse the same gate for all nine game routes. The November 1 date alone
- * cannot open local-preview gameplay: the official-backend readiness flag
- * remains mandatory before access expands to the public.
- */
 export function canAccessNbaGames(profile: GateProfile, centralDay: string) {
   return canPreviewNbaWhoAmI(profile) || nbaCanAccessReleasedGames(centralDay);
 }
 
+/** Four casual modes open publicly on launch day without prematurely opening official Daily. */
+const casualPaths = new Set<string>([
+  "/nba/who-am-i", "/nba/find-the-leader", "/nba/hit-the-number", "/nba/higher-lower",
+]);
+export function canAccessNbaCasualRoute(pathname: string, search: string, day: string) {
+  if (!nbaCanAccessPublicCasual(day) || !casualPaths.has(pathname)) return false;
+  return new URLSearchParams(search).get("mode") !== "daily";
+}
+
 export function NbaWhoAmIOwnerGate({ children }: PropsWithChildren) {
   const identity = useIdentity();
+  const location = useLocation();
   if (!identity.ready) return null;
-  return canAccessNbaGames(identity.profile, nbaCentralDay())
+  const day = nbaCentralDay();
+  return canAccessNbaGames(identity.profile, day) ||
+    canAccessNbaCasualRoute(location.pathname, location.search, day)
     ? <>{children}</>
     : <Navigate to="/nba" replace />;
 }
