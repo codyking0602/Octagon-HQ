@@ -247,9 +247,12 @@ for (const subject of flSubjects) {
   for (const [metricId, sourceColumn] of findLeaderMetrics) {
     const fact = getFootballFact(subject.id, metricId);
     if (!fact || !(fact.record.scopes ?? [fact.record.scope]).includes("cfb-player-career")) continue;
-    const exact = [...bySeason.values()].filter((r) =>
-      nearlyEqual(Number(r[sourceColumn]) || 0, fact.fact.value) && String(r.team ?? "").trim()
-    ).sort((a, b) => a.season - b.season);
+    const bestValue = Math.max(0, ...[...bySeason.values()].map((r) => Number(r[sourceColumn]) || 0));
+    const exact = nearlyEqual(bestValue, fact.fact.value)
+      ? [...bySeason.values()].filter((r) =>
+          nearlyEqual(Number(r[sourceColumn]) || 0, fact.fact.value) && String(r.team ?? "").trim()
+        ).sort((a, b) => a.season - b.season)
+      : [];
     let year = exact[0]?.season;
     let school = String(exact[0]?.team ?? "").trim();
     if (!exact.length) {
