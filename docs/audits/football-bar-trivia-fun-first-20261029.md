@@ -33,6 +33,14 @@ This is a pragmatic anti-rampancy screen, **not** a promise that unrelated games
 
 The four source-backed replacement facts each have four distinct distractors, an explanation and verification date, and no answer wording leaked in the stem. Surviving legacy generic-source rows have **not** all been independently primary-source recertified; do not claim that they have.
 
+## Verified real-world anti-repeat failure and its cutover correction
+
+A read-only reconciliation of five actual Supabase published NFL/CFB Bar Trivia Daily setups (September 29, October 1, October 14, October 22, October 29) found that **the exact `nfl-r2-first-game-outside-na` 2007 London question appeared on September 29 AND October 29**. That is a concrete 30-day repeat, independent of whether the question was also editorially weak. The previous purported 184-day safety check only replayed the *current* bank, not the saved older boards: it could silently certify a simulation that differed from player experience.
+
+The cutover fix freezes all 50 source-of-truth, past-published question IDs as immutable reference data in `barTriviaFootballPublishedHistory20261029.ts`. Future NFL/CFB publications (after October 29) suppress those exact IDs **and** their known fact-family variants while within 184 days, in addition to normal deterministic history. The 182-day regression now verifies that no simulated future Football game selects a known actually published fact within that window. It explicitly demonstrates the historic 2007 London double appearance. No past publication or score is edited; no DB read added to the per-game hot path.
+
+This is a bounded **cutover reconciliation**, not a magical dynamic history source. Future question-bank cutovers must reconcile any new published games that the deterministic replay can no longer reproduce.
+
 ## Game assembly and scoring
 
 - Maintain **4 easy / 3 medium / 2 hard / 1 Last Call** content difficulty through first six questions, a medium ease-in at Q7 and two hard at Q8/Q9.
