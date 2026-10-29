@@ -1,61 +1,52 @@
-# Football Bar Trivia — focused quality pass (October 29, 2026)
+# Football Bar Trivia — fun-first editorial completion (October 29, 2026)
 
-**Status: DRAFT PR, owner review / exact-head verification pending. No changes to main or production.**
+**Status: DRAFT PR #2304; no main/production/backend edits. Release requires exact-head green verification and owner approval.**
 
-## Why this pass exists
+## Trigger: the published October 29 NFL game
 
-The October 29 NFL Daily published at 06:00 Central from the six-month v3 bank, not an old fallback.
-The board included (1) an international first in France, (3) "Bills Mafia" with the
-answer telegraphed in the question, (5) the obscure 2007 London game and (8) the
-league founding city. The rotation was technically valid but not an enjoyable,
-well-balanced football trivia experience. Passing unique-ID and historic-fact checks
-is **not** editorial approval.
+The October 29 NFL Daily at 06:00 Central was the active v3 six-month bank, **not** an old fallback. Its ten questions were factual but poorly balanced: two international firsts (France 2026 and London 2007), the near-explicit "Bills Mafia" answer, logo filler, an administrative founding-city question, and a niche kickoff-return "first" as Last Call. The valid 182-day rotation had been mistaken for quality certification.
 
-## Focused changes
+## Completed question-pool review and disposition
 
-- Future selection excludes **43 weak NFL/CFB facts**: 25 NFL, 18 CFB.
-  The exclusions group partial-answer giveaways, repetitive/low-interest firsts,
-  administrative minutiae, over-simple nickname decoding, and obscure details.
-  The original authored records, earlier results and persisted published Daily
-  setups are not modified.
-- Give NFL/CFB runs **4 easy / 3 medium / 2 hard / 1 Last Call** content pacing.
-  Question 4 stays the established easy Round 2 ease-in; Question 7 becomes a
-  medium Round 3 ease-in. The **existing round/point/streak/wager calculations
-  remain unchanged**, including the Round 3 point value for Question 7.
-  UFC, NBA and MLB are not changed.
-- Avoid more than **two prompts explicitly containing "first"** in a normal
-  generated NFL/CFB Daily. This is deliberately narrow; it is not a blanket
-  semantic theorem and doesn't assert all similar topics are deduplicated.
-- Retain six-month no-repeat fact keys and the canonical current-event feed.
-  Do **not** invent replacement inventory merely to replenish a number.
+Reviewed the authored NFL/CFB easy, medium, hard, and Last Call source banks, V2 replacements, round overrides, existing editorial retirements, and the present official Daily generator. Prior editorial retirements are preserved. The additional **101** future-only retirements are explicit and reason-coded in `barTriviaFootballQuality20261029.ts`:
 
-## Lightweight cross-game duplicate standard for future replacements
+- **NFL: 57** additional retirements: answer giveaways, uninteresting "first" footnotes, franchise/name/logo filler, media and administration trivia, weak Last Calls, and selected repeated cross-game facts.
+- **CFB: 44** additional retirements: team-nickname decoding, peripheral mascot/venue minutiae, uninteresting firsts, and selected repeated cross-game facts.
+- **Nine** question difficulty regrades favor recognizable football moments over administrative arcana. Seven NFL moment questions move into hard; one NFL and one CFB administrative/easy hard question move into medium.
+- **Four** new individually sourced hard questions: 2018 Miami Miracle (Kenyan Drake), 2020 Hail Murray (DeAndre Hopkins), Tennessee's 2022 Alabama walk-off kick (Chase McGrath), and LSU's 2019-season title performance (Ja'Marr Chase). These are distinct, player-forward facts rather than placeholder replacements.
+- Future-only remaining evergreen inventory calculated from the prior fixed NFL/CFB v3 baselines: **NFL 144** (199 - 57 + 2), **CFB 155** (197 - 44 + 2). The exact playable bank counts must still pass the executable source-of-truth tests at the final head.
 
-When a replacement is genuinely needed, check the distinctive player/event/fact
-against the selectable Football Millionaire, Average Fan and existing Bar Trivia
-question sources (and other obvious game matches if found). Reject clear near-duplicates;
-do not require a multi-day semantic certification of the whole app.
-Check a primary NFL, NCAA, team or conference source for the proposed answer,
-season/school/team context, and four distractors. Rare incidental overlaps are
-acceptable; rampant identical trivia across games is not.
+**Editorial rule:** a hard question should be hard because it tests memorable football knowledge, not because it asks about obscure administrative business. Keep notable history, championships, rivalry moments, awards and recognizable player feats. Do not delete good older football just for being old.
 
-No new authored facts are introduced in this particular pass, so there are no
-replacement-specific duplicate or external fact claims to certify.
+## Lightweight cross-game check — not another certification project
 
-## Verification before release
+Looked at currently authored Football Millionaire candidate runs and Average Fan banks plus the Bar Trivia catalogs. Retired direct/near-direct repeats such as Bills/CFB fan identity facts, Devin Hester, Wide Right, Kick Six, Max McGee and several player nicknames where they recurred. **Rejected** proposed new questions about Mecole Hardman's Super Bowl LVIII winning TD (already in Average Fan), Kadarius Toney's Super Bowl LVII punt return (in Millionaire), and Isaiah Bond's fourth-and-31 Iron Bowl catch (in Millionaire). The four accepted replacements did not show those obvious overlaps in the checked question text.
 
-1. Full exact-PR-head TypeScript/build, Vitest, backend and Daily publication checks green.
-2. `barTriviaFootballSixMonth.test.ts`: 182-day NFL/CFB replay, unique ID/fact keys,
-   4/3/2/1 content difficulty, no more than two explicit "first" prompts.
-3. Count and category-floor tests confirm removing weak questions leaves adequate
-   round-level supply; do not restore weak entries merely to satisfy an old quota.
-4. Compare the ten October 29 published questions to the immutable historical
-   setup; prior attempts, scores and reveals remain unchanged.
-5. Check future generated boards for fresh topic variety. If replay exposes a
-   genuinely insufficient pool, introduce a *small* batch of individually sourced,
-   recognizable replacements and run the lightweight cross-game check.
+This is a pragmatic anti-rampancy screen, **not** a promise that unrelated games never refer to the same play or player. Minor incidental overlap is acceptable.
 
-**Known limitation:** exact phrase-based firsts protection does not recognize every
-possible paraphrase, and algorithmic tests cannot certify entertainment value.
-Do not claim comprehensive fact verification or full editorial certification from
-these tests alone.
+## New-question sources
+
+- Kenyan Drake, Miami Miracle: https://www.nfl.com/news/ryan-tannehill-on-miami-miracle-pretty-amazing-0ap3000000997916
+- DeAndre Hopkins, Hail Murray: https://www.nfl.com/news/cardinals-wr-deandre-hopkins-on-hail-mary-td-they-were-in-position-it-was-just-a
+- Chase McGrath, Tennessee versus Alabama: https://utsports.com/sports/football/roster/chase-mcgrath/14967
+- Ja'Marr Chase, LSU-Clemson national championship: https://lsusports.net/news/2020/01/13/lsu-football-national-championship-game-recap
+
+The four source-backed replacement facts each have four distinct distractors, an explanation and verification date, and no answer wording leaked in the stem. Surviving legacy generic-source rows have **not** all been independently primary-source recertified; do not claim that they have.
+
+## Game assembly and scoring
+
+- Maintain **4 easy / 3 medium / 2 hard / 1 Last Call** content difficulty through first six questions, a medium ease-in at Q7 and two hard at Q8/Q9.
+- Preserve all existing ten-question scoring rounds, perfect-score denominator, double-round multiplier, wager, reveals and results. A Q7 medium *content* question earns its existing Round 3 points; this avoids a global scoring redesign.
+- NFL/CFB remain random from audited pools, **not scripted ten-question runs**.
+- The generator uses **recent-safe soft caps** on recognizable "first" prompts (target <=2) and identity/fan-culture trivia (target <=3) only when an unused, history-fresh alternative exists. This matters because recent-repeat protection takes priority.
+- UFC, NBA and MLB remain untouched. Dedicated December 7 Cowboys-Seahawks board and older published official boards are preserved.
+
+## Exact-head verification gates
+
+1. TypeScript + affected tests must be green at the **latest PR head**, not a prior commit. Full Validate V2/backend is a release gate when draft is made ready.
+2. `barTriviaFootballSixMonth.test.ts`: simulate the 182-day canonical NFL/CFB schedule, ensure unique ID + fact-family keys and 4/3/2/1 content pacing, no repeated first/identity topics above board soft caps when eligible.
+3. `barTriviaContent.test.ts`: ensure the larger easy/medium/hard/Last Call pools remain sufficient for the true 10 NFL + 9 CFB appearances. The 2026-12-07 NFL themed board is isolated.
+4. Compare the immutable October 29 Supabase published game with the new future-only bank; no grading/results rewriting.
+5. No merge or deploy until Cody explicitly says go live. Since other chats are changing main, refresh main and re-verify exact head at that point.
+
+**Known limits:** a topic grouping based on prompt words/category labels cannot prove all semantic uniqueness; deterministic replay is not a byte-for-byte reconstruction of every historically published Supabase board, and scripted static checks cannot prove every player will enjoy every question. These are explicit limits, not hidden certification claims.
