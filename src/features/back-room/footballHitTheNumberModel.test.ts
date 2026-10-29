@@ -39,13 +39,13 @@ const BUILD_TEAM_LABELS = [
 ];
 
 describe("Football Hit the Number canonical fact integration", () => {
-  it("uses exactly the approved 13-metric Football catalog and canonical recognizable subjects", () => {
+  it("uses exactly the curated NFL running/receiving catalog and canonical recognizable subjects", () => {
     expect(footballHitTheNumberSubjects.length).toBeGreaterThan(50);
     expect(new Set(footballHitTheNumberSubjects.map((subject) => subject.id)).size).toBe(footballHitTheNumberSubjects.length);
-    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG).toHaveLength(13);
+    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG).toHaveLength(14);
 
     const groups = new Set(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.group));
-    expect(groups).toEqual(new Set(["nfl-qb-career", "nfl-qb-season", "nfl-team-season", "cfb"]));
+    expect(groups).toEqual(new Set(["nfl-qb-career", "nfl-rb-career", "nfl-receiving-career", "nfl-qb-season", "nfl-team-season", "cfb"]));
 
     const nflMetrics = FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG
       .filter((row) => row.league === "NFL")
@@ -53,17 +53,18 @@ describe("Football Hit the Number canonical fact integration", () => {
     const cfbMetrics = FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG
       .filter((row) => row.league === "CFB")
       .map((row) => row.metricId);
-    expect(nflMetrics).toHaveLength(8);
+    expect(nflMetrics).toHaveLength(9);
     expect(cfbMetrics).toHaveLength(5);
     expect(new Set([...nflMetrics, ...cfbMetrics])).toEqual(new Set([
       "nfl-season-passing-yards",
-      "nfl-team-overall-wins",
-      "nfl-team-points-for",
-      "nfl-season-passer-rating",
       "nfl-team-points-per-game",
       "nfl-season-passing-touchdowns",
       "nfl-season-interceptions",
       "nfl-career-passing-touchdowns",
+      "nfl-career-rushing-yards",
+      "nfl-career-rushing-touchdowns",
+      "nfl-career-receiving-yards",
+      "nfl-career-receiving-touchdowns",
       "cfb-team-points-for",
       "cfb-team-points-against",
       "cfb-team-wins",
@@ -91,6 +92,8 @@ describe("Football Hit the Number canonical fact integration", () => {
       "Modern Era QBs",
       "Old School QBs",
       "First-Round QBs",
+      "Great NFL Running Backs",
+      "NFL Receiving Greats",
       "NFL Team Seasons",
       "National Champions",
       "BCS Era Champions",
@@ -239,6 +242,9 @@ describe("Football Hit the Number canonical fact integration", () => {
       if (plan.league === "CFB") cfb += 1;
       expect(footballHitTheNumberPlanQuality(plan).passes).toBe(true);
       expect(footballHitTheNumberSelectionSatisfies(plan, plan.solutionSubjectIds)).toBe(true);
+      const people = plan.subjectIds.map(id=>footballHitTheNumberSubjects.find(subject=>subject.id===id)!);
+      const playerSeasons = people.filter(subject=>subject.kind==="player-season");
+      expect(new Set(playerSeasons.map(subject=>subject.playerId??subject.name.replace(/\b\d{4}\b/g,""))).size).toBe(playerSeasons.length);
 
       for (const subjectId of plan.subjectIds) {
         const fact = getFootballFact(subjectId, plan.metricId);
@@ -249,7 +255,7 @@ describe("Football Hit the Number canonical fact integration", () => {
       }
     }
 
-    expect(seenMetrics.size).toBe(13);
+    expect(seenMetrics.size).toBe(14);
     expect(seenNewMetrics).toEqual(newMetrics);
     expect(picks).toEqual(new Set([4, 5]));
     expect(fourCount / runs).toBeGreaterThanOrEqual(0.8);
