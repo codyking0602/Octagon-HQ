@@ -59,7 +59,8 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
     expect(page).toContain("nba-futures-group-entry--mine");
     expect(page).toContain("otherEntries.map(entry=><NbaFuturesGroupEntry");
     expect(page).toContain("entry.profile_id!==identity.profile?.id");
-    expect(hero).not.toMatch(/MAKE CUP PICKS|to="\\/nba\\/cup"|linked/);
+    expect(hero).not.toMatch(/MAKE CUP PICKS|linked/);
+    expect(hero).not.toContain('to="/nba/cup"');
     expect(hero).toContain("NBA Cup 2026");
     expect(styles).toContain('/images/nba-cup-2026-hero.webp');
     expect(existsSync("public/images/nba-cup-2026-hero.webp")).toBe(true);
