@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import page from "./NbaPlayPage.tsx?raw";
+import dailyPage from "./NbaOfficialDailyPage.tsx?raw";
 import shared from "../play/PlayV2Page.tsx?raw";
 import nbaCss from "../../styles/nba-games-hub.css?raw";
 import playCss from "../../styles/play-v2.css?raw";
@@ -56,6 +57,21 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(page).toContain("Finish today's game to unlock standings.");
     expect(page).toContain("Practice Game Catalog");
     expect(page).toContain("previewRoute(game)");
+  });
+
+  it("keeps October 29 practice result accessible without public standing or owner-preview copy", () => {
+    expect(page).toContain('const dailySport = ownerTest ? "nba_preview" : "nba"');
+    expect(page).toContain('const dailyScore = dailyOfficialDisplayScore(dailyProjection, ownStanding?.normalizedScore)');
+    expect(page).toContain('dailyCompleted ? "VIEW RESULT"');
+    expect(page).toContain('!ownerTest ? <button type="button" aria-expanded={showDailyStandings}');
+    expect(page).toContain('const repository = useMemo(() => createTodayChallengeRepository(undefined, "nba"), [])');
+    expect(page).not.toContain("PRIVATE OWNER TEST");
+    expect(page).not.toContain("PRIVATE TEST SCORES");
+    expect(dailyPage).toContain('ownerTest ? "PRACTICE · UNRANKED" : "OFFICIAL DAILY"');
+    expect(dailyPage).toContain('ownerTest ? "PRACTICE SCORE" : "OFFICIAL SAVED SCORE"');
+    expect(dailyPage).not.toContain('"OWNER TEST"');
+    expect(dailyPage).not.toContain('"SAVED TEST SCORE"');
+    expect(dailyPage).toContain('ownerTest ? "nba_preview" : "nba"');
   });
 
   it("reuses the existing UFC matchups component with NBA game isolation", () => {
