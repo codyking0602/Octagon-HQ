@@ -14,7 +14,7 @@ import {
 } from "./footballHitTheNumberModel";
 
 const metricById = new Map(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((metric) => [metric.metricId, metric]));
-const careerSpecialGroups = new Set(["nfl-qb-career"]);
+const careerSpecialGroups = new Set(["nfl-qb-career","nfl-rb-career","nfl-receiving-career"]);
 
 describe("Football Hit the Number content foundation", () => {
   it("keeps exact player seasons and team seasons core while removing CFB best-season boards", () => {
@@ -25,18 +25,15 @@ describe("Football Hit the Number content foundation", () => {
       .toBeGreaterThan(FOOTBALL_HIT_THE_NUMBER_CONTENT_WEIGHTS["career-special"]);
 
     expect(metricById.get("nfl-season-passing-yards")?.contentKind).toBe("peak-season");
-    expect(metricById.get("nfl-team-overall-wins")?.contentKind).toBe("team-season");
+    expect(metricById.has("nfl-team-overall-wins")).toBe(false);
+    expect(metricById.get("nfl-career-rushing-yards")?.contentKind).toBe("career-special");
     expect(metricById.get("cfb-team-point-differential")?.contentKind).toBe("team-season");
     expect(metricById.get("nfl-career-passing-touchdowns")?.contentKind).toBe("career-special");
     for (const rejected of [
       "nfl-career-passing-yards",
-      "nfl-career-rushing-yards",
-      "nfl-career-receiving-yards",
       "nfl-team-defensive-sacks",
       "nfl-team-defensive-interceptions",
       "nfl-team-postseason-wins",
-      "nfl-career-rushing-touchdowns",
-      "nfl-career-receiving-touchdowns",
       "cfb-heisman-awards",
       "cfb-team-postseason-wins",
     ]) {
@@ -108,7 +105,7 @@ describe("Football Hit the Number content foundation", () => {
     expect(contentCounts.get("team-season")).toBeGreaterThan(0);
     expect(contentCounts.get("accomplishment")).toBe(0);
     expect(contentCounts.get("career-special")).toBeGreaterThan(0);
-    expect(contentCounts.get("career-special")! / runs).toBeLessThan(0.2);
-    expect(contentCounts.get("peak-season")!).toBeGreaterThan(contentCounts.get("career-special")! * 2);
+    expect(contentCounts.get("career-special")! / runs).toBeLessThan(0.6);
+    expect(contentCounts.get("peak-season")!).toBeGreaterThan(0);
   }, 90_000);
 });

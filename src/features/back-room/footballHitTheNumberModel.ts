@@ -209,6 +209,20 @@ export const FOOTBALL_HIT_THE_NUMBER_THEME_CATALOG: readonly FootballHitTheNumbe
     queries: [{ league: "NFL", kind: "player-career", position: "QB", firstRoundPick: true }],
   },
   {
+    id: "nfl-running-back-legends",
+    label: "Great NFL Running Backs",
+    league: "NFL",
+    group: "nfl-rb-career",
+    queries: [{ league: "NFL", kind: "player-career", position: "RB" }],
+  },
+  {
+    id: "nfl-receiving-legends",
+    label: "NFL Receiving Greats",
+    league: "NFL",
+    group: "nfl-receiving-career",
+    queries: [{ league: "NFL", kind: "player-career", positions: ["WR", "TE"] }],
+  },
+  {
     id: "nfl-team-seasons",
     label: "NFL Team Seasons",
     league: "NFL",
@@ -321,6 +335,8 @@ function dedupeSemanticSubjects(subjects: readonly FootballHitTheNumberSubject[]
 
 const groupOrder: readonly FootballHitTheNumberSubjectGroup[] = [
   "nfl-qb-career",
+  "nfl-rb-career",
+  "nfl-receiving-career",
   "nfl-qb-season",
   "nfl-team-season",
   "cfb",
@@ -385,8 +401,8 @@ const domains: readonly FootballHitTheNumberDomain[] = [
     id: "volume",
     metrics: [
       metric("nfl-season-passing-yards", "NFL", "nfl-qb-season", "NFL QB Season Passing Yards", "peak-season"),
-      metric("nfl-team-overall-wins", "NFL", "nfl-team-season", "NFL Team-Season Wins", "team-season"),
-      metric("nfl-team-points-for", "NFL", "nfl-team-season", "NFL Team-Season Points Scored", "team-season"),
+      metric("nfl-career-rushing-yards", "NFL", "nfl-rb-career", "NFL RB Career Rushing Yards", "career-special"),
+      metric("nfl-career-receiving-yards", "NFL", "nfl-receiving-career", "NFL WR/TE Career Receiving Yards", "career-special"),
       metric("cfb-team-points-for", "CFB", "cfb", "CFB Team-Season Points Scored", "team-season"),
       metric("cfb-team-points-against", "CFB", "cfb", "CFB Team-Season Points Allowed", "team-season"),
       metric("cfb-team-wins", "CFB", "cfb", "CFB Team-Season Wins", "team-season"),
@@ -395,7 +411,6 @@ const domains: readonly FootballHitTheNumberDomain[] = [
   {
     id: "efficiency",
     metrics: [
-      metric("nfl-season-passer-rating", "NFL", "nfl-qb-season", "NFL QB Season Passer Rating", "peak-season"),
       metric("nfl-team-points-per-game", "NFL", "nfl-team-season", "NFL Team Points Per Game", "team-season"),
       metric("cfb-team-points-per-game", "CFB", "cfb", "CFB Team Points Per Game", "team-season"),
     ],
@@ -406,6 +421,8 @@ const domains: readonly FootballHitTheNumberDomain[] = [
       metric("nfl-season-passing-touchdowns", "NFL", "nfl-qb-season", "NFL QB Season Passing Touchdowns", "peak-season"),
       metric("nfl-season-interceptions", "NFL", "nfl-qb-season", "NFL QB Season Interceptions Thrown", "peak-season"),
       metric("nfl-career-passing-touchdowns", "NFL", "nfl-qb-career", "NFL QB Career Passing Touchdowns", "career-special"),
+      metric("nfl-career-rushing-touchdowns", "NFL", "nfl-rb-career", "NFL RB Career Rushing Touchdowns", "career-special"),
+      metric("nfl-career-receiving-touchdowns", "NFL", "nfl-receiving-career", "NFL WR/TE Career Receiving Touchdowns", "career-special"),
       metric("cfb-team-point-differential", "CFB", "cfb", "CFB Team Point Differential", "team-season"),
     ],
   },
@@ -720,6 +737,18 @@ function requiredPoolSize(_boardType: FootballHitTheNumberBoardType, pickCount: 
   return footballHitTheNumberRandomPoolSize(pickCount);
 }
 
+function uniquePlayerSeasons(subjects: readonly FootballHitTheNumberSubject[]) {
+  const seen = new Set<string>();
+  return subjects.filter((subject) => {
+    const key = subject.kind === "player-season"
+      ? `${subject.league}:${subject.playerId ?? normalizedIdentityPart(subject.name.replace(/\b\d{4}\b/g, ""))}`
+      : subject.id;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function curatedRandomPool(
   subjects: readonly FootballHitTheNumberSubject[],
   solution: readonly FootballHitTheNumberSubject[],
@@ -800,7 +829,6 @@ function pickOptionsFor(
   if (cached) return cached;
   if (!metricBoardEnabled(board)) return [];
   if (formatId !== "classic" && board.contentKind === "accomplishment") return [];
-  if (formatId === "build-the-team" && board.contentKind === "career-special") return [];
   // Champion-only CFB win totals are too compressed to create the full scoring
   // spectrum in capped pools. Keep the metric in Classic, where all recognizable
   // CFB team seasons provide the value spread the quality gate requires.
@@ -1042,7 +1070,7 @@ function buildCandidate(
     attempt,
   );
   const metricId = metricBoard.metricId;
-  let eligible = metricSubjects(metricBoard);
+  let eligible = uniquePlayerSeasons(recognizabilityWeightedShuffle(metricSubjects(metricBoard), random));
   let solution: FootballHitTheNumberSubject[] | null = null;
   let slots: readonly FootballHitTheNumberSlot[] = [];
   let configurationLabel: string | null = null;
@@ -1051,7 +1079,7 @@ function buildCandidate(
     const themes = themesForMetric(metricBoard, boardType, pickCount);
     const theme = themes[Math.floor(random() * themes.length)];
     if (!theme) return null;
-    eligible = themeMetricSubjects(theme, metricBoard);
+    eligible = uniquePlayerSeasons(recognizabilityWeightedShuffle(themeMetricSubjects(theme, metricBoard), random));
     configurationLabel = theme.label;
     solution = recognizabilityWeightedShuffle(eligible, random).slice(0, pickCount);
   } else if (formatId === "one-from-each") {
