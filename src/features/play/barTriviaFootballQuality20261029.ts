@@ -129,6 +129,15 @@ export const FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS: Readonly<Record<string, Fo
   "cfb-v2-final-kick-six": "cross-game-repeat",
   "cfb-r3-little-brown-jug": "cross-game-repeat",
   "cfb-r3-2008-utah-sugar": "cross-game-repeat",
+  // Final-round quality: no obscure first-draft trivia or duplicate Max McGee.
+  "nfl-final-cowboys-first-draft": "uninteresting-first",
+  "nfl-final-first-super-bowl-td": "cross-game-repeat",
+  "nfl-final-chiefs-first-super-bowl-win-opponent": "uninteresting-first",
+  // Hard rounds should test players and plays, not radio or film history.
+  "nfl-r3-radio-helmet-coach": "administrative-trivia",
+  "nfl-r3-first-mnf-announcer-cosell": "administrative-trivia",
+  "nfl-r3-nfl-films-voice": "administrative-trivia",
+  "nfl-r3-gatorade-dump-team": "administrative-trivia",
 };
 
 export const FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS: ReadonlySet<string> =
