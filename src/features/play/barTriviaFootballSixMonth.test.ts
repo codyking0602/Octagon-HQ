@@ -37,7 +37,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       // Weekly dated news is supplemental; only the certified evergreen inventory is fixed.
       expect(bank.filter((question) => question.contentType === "evergreen"))
-        .toHaveLength(league === "nfl" ? 155 : 156);
+        .toHaveLength(league === "nfl" ? 149 : 153);
       const lastCall = bank.filter((question) => question.round === "last-call");
       expect(lastCall.length).toBeGreaterThanOrEqual(league === "nfl" ? 15 : 12);
     }
@@ -91,6 +91,8 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       if (!run[0]?.id.startsWith("theme-cowboys-seahawks-2026-")) {
         expect(mix, date).toEqual({ easy: 4, medium: 3, hard: 2, lastCall: 1 });
         expect(run.filter((q) => /\bfirst\b/i.test(q.prompt)).length, date).toBeLessThanOrEqual(2);
+        const isIdentity = (q: BarTriviaQuestion) => /^(fan culture|team names?|team identity|mascots?|nicknames?|school identity|cheers|logos|traditions|stadium culture)$/i.test(q.category);
+        expect(run.filter(isIdentity).length, date).toBeLessThanOrEqual(3);
       }
       for (const question of run) {
         const key = question.factKey ?? question.id;
