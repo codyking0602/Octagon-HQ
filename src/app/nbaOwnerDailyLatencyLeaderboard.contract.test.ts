@@ -30,8 +30,8 @@ describe("NBA owner-test latency and score visibility regressions", () => {
   it("produces identical WHO AM I publish identities and evidence for owner and public dates", () => {
     for (const [day, version] of [
       ["2026-10-26", "nba-daily-owner-prelaunch-v1"],
-      ["2026-11-03", "nba-daily-regular-v3-oct30-public"],
-      ["2026-11-23", "nba-daily-regular-v3-oct30-public"],
+      ["2026-11-05", "nba-daily-regular-v4-nov01-public"],
+      ["2026-11-25", "nba-daily-regular-v4-nov01-public"],
     ] as const) {
       const canonical = buildNbaServerDailyPublication(day, version, "who_am_i");
       const lean = buildNbaWhoAmIDailyLeanPublication(day, version, "who_am_i");
