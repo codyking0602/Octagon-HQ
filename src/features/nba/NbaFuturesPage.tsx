@@ -10,6 +10,7 @@ import { NBA_SEASON,NBA_TEAMS,NBA_FUTURES_MAX,NBA_FUTURES_SELECTIONS,
   type NbaFuturesPicks,type WinPick,type Conference } from "./nbaFutures";
 import { loadNbaFutures,saveNbaFutures,type NbaFuturesSnapshot } from "./nbaFuturesRepository";
 import "../../styles/nba-hq.css";
+import {NbaCupHero} from "./NbaCupHero";
 
 function formattedLock(value:string) {
   return new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",month:"short",day:"numeric",
@@ -234,36 +235,40 @@ export default function NbaFuturesPage() {
   const errors=useMemo(()=>draft?validateNbaFutures(draft):[],[draft]);
   const progress=draft?nbaFuturesProgress(draft):0;
   const locked=snapshot?.locked??false;
-  return <div className="page nba-hq-page" data-sport="nba">
-    <header className="nba-hq-hero">
-      <p className="eyebrow">BASKETBALL HQ · 2026–27</p>
-      <h1>NBA Futures</h1>
-      <p>Pick the entire season. One card, 100 points, and 15% of the Basketball Championship.</p>
-      <div className="nba-hq-weightline"><span>FUTURES 15%</span><span>CUP 10%</span><span>PLAYOFFS 55%</span><span>GAMES 20%</span></div>
-      <Link to="/championship/nba">BASKETBALL CHAMPIONSHIP ↗</Link>
-      {canPreviewNbaWhoAmI(identity.profile) ? <Link to="/nba/cup" className="secondary-action">NBA CUP GROUP PICKS · OWNER TEST →</Link> : null}
-    </header>
-    {!identity.profile?.id?<section className="surface-card nba-hq-notice"><p>Sign in to save your official NBA Futures predictions.</p>
+  const cupAvailable=canPreviewNbaWhoAmI(identity.profile);
+  return <div className="page nba-hq-page nba-picks-page" data-sport="nba">
+    {cupAvailable?<NbaCupHero linked/>:
+      <header className="nba-hq-hero">
+        <p className="eyebrow">BASKETBALL HQ · 2026–27</p>
+        <h1>NBA Futures</h1>
+        <p>Pick the entire season. One card, 100 points, and 15% of the Basketball Championship.</p>
+      </header>}
+    {cupAvailable?<div className="nba-picks__cup-status">
+      <span>GROUP PLAY · OCT 30 – NOV 27</span><strong>CUP 10% OF SEASON</strong>
+    </div>:null}
+    {!identity.profile?.id?<section className="surface-card nba-hq-notice"><p>Sign in to save your NBA Futures predictions.</p>
       <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO PICK</button></section>:null}
     {loading?<p role="status" className="nba-hq-notice">Loading NBA Futures…</p>:null}
     {error?<p role="alert" className="nba-hq-error">{error}</p>:null}
     {draft&&snapshot?<main className="nba-futures-form">
-      <div className="nba-futures-progress">
-        <div><strong>{progress}/{NBA_FUTURES_SELECTIONS} PICKS</strong><span>{locked?"LOCKED":saving?"SAVING…":saved?"SAVED ✓":isNbaFuturesComplete(draft)?"ALL PICKS READY":"AUTOSAVES AS YOU PICK"}</span></div>
-        <div className="nba-futures-track"><span style={{width:(100*progress/NBA_FUTURES_SELECTIONS)+"%"}} /></div>
-        <p>{locked?"Your saved picks are final.": "Scheduled lock: "+formattedLock(snapshot.lock_at)+". Picks stay editable until HQ officially closes entries."}</p>
-      </div>
-      <details className="nba-futures-my-card">
-        <summary>
-          <strong>MY FUTURES</strong><span>{progress}/{NBA_FUTURES_SELECTIONS} PICKS · {locked?"LOCKED":"OPEN"}</span>
-          <b>{locked?"VIEW PICKS":"EDIT PICKS"} <span aria-hidden="true">⌄</span></b>
-        </summary>
-        <div className="nba-futures-my-body">
-          {locked ? <RevealedNbaFuturesPicks picks={draft} />
-            : <NbaFuturesForm picks={draft} locked={locked} onChange={next=>{setDraft(next);setSaved(false);}}/>}
+      <details className="nba-picks__futures">
+        <summary><strong>SEASON FUTURES</strong><span>{progress}/{NBA_FUTURES_SELECTIONS} PICKS · {locked?"LOCKED":"OPEN"}</span><b aria-hidden="true">⌄</b></summary>
+        <div className="nba-picks__futures-body">
+          {!locked?<div className="nba-futures-progress">
+            <div><strong>{progress}/{NBA_FUTURES_SELECTIONS} PICKS</strong><span>{saving?"SAVING…":saved?"SAVED ✓":isNbaFuturesComplete(draft)?"ALL PICKS READY":"AUTOSAVES AS YOU PICK"}</span></div>
+            <div className="nba-futures-track"><span style={{width:(100*progress/NBA_FUTURES_SELECTIONS)+"%"}} /></div>
+            <p>{"Scheduled lock: "+formattedLock(snapshot.lock_at)+". Picks stay editable until HQ officially closes entries."}</p>
+          </div>:null}
+          {locked?<RevealedNbaFuturesPicks picks={draft}/>:
+            <NbaFuturesForm picks={draft} locked={locked} onChange={next=>{setDraft(next);setSaved(false);}}/>}
+          {errors.length?<p role="alert" className="nba-hq-error">{errors[0]}</p>:null}
+          {!locked?<div className="nba-futures-save">
+            <button className="primary-action" type="button" disabled={saving||errors.length>0}
+              onClick={()=>persist(draft)}>SAVE MY FUTURES PICKS</button>
+            <small>{isNbaFuturesComplete(draft)?"All 55 selections complete.":"Partial drafts are saved and can be finished later."}</small>
+          </div>:null}
         </div>
       </details>
-      {errors.length?<p role="alert" className="nba-hq-error">{errors[0]}</p>:null}
       {locked?<section className="nba-futures-reveal" aria-label="Other players NBA Futures">
         <details className="nba-futures-group-drawer">
           <summary><strong>GROUP FUTURES</strong><span>{snapshot.entries.length} MEMBERS</span><b aria-hidden="true">⌄</b></summary>
@@ -273,11 +278,14 @@ export default function NbaFuturesPage() {
           </div>
         </details>
       </section>:null}
-      {!locked ? <div className="nba-futures-save">
-        <button className="primary-action" type="button" disabled={locked||saving||errors.length>0}
-          onClick={()=>persist(draft)}>{locked?"PICKS LOCKED":"SAVE MY FUTURES PICKS"}</button>
-        <small>{isNbaFuturesComplete(draft)?"All 55 selections complete.":"Partial drafts are saved and can be finished later."}</small>
-      </div> : null}
+      <details className="nba-picks__scoring">
+        <summary><strong>SCORING &amp; GRADING</strong><span>HOW IT WORKS</span><b aria-hidden="true">⌄</b></summary>
+        <div className="nba-picks__scoring-body">
+          <p>Basketball Championship weights: Season Futures 15% · NBA Cup 10% · Playoffs 55% · Games 20%.</p>
+          <p>The NBA Cup is worth 100 points: six group winners (30), quarterfinals (20), semifinals (20), and champion (30).</p>
+          <Link to="/championship/nba">VIEW BASKETBALL CHAMPIONSHIP ↗</Link>
+        </div>
+      </details>
     </main>:null}
   </div>;
 }
