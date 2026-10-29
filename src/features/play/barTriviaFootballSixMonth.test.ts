@@ -4,6 +4,7 @@ import { BAR_TRIVIA_EDITORIAL_RETIREMENTS } from "./barTriviaEditorialCuration";
 import { FOOTBALL_BAR_TRIVIA_V2_LAST_CALL, FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS } from "./barTriviaFootballEditorialV2";
 import { FOOTBALL_BAR_TRIVIA_V2_REWRITES } from "./barTriviaFootballRewritesV2";
 import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS, FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES } from "./barTriviaFootballQuality20261029";
+import { FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS } from "./barTriviaFootballNewFacts20261029";
 import { footballTriviaConceptKey } from "./barTriviaFootballConcepts";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
@@ -37,7 +38,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       // Weekly dated news is supplemental; only the certified evergreen inventory is fixed.
       expect(bank.filter((question) => question.contentType === "evergreen"))
-        .toHaveLength(league === "nfl" ? 149 : 153);
+        .toHaveLength(league === "nfl" ? 144 : 155);
       const lastCall = bank.filter((question) => question.round === "last-call");
       expect(lastCall.length).toBeGreaterThanOrEqual(league === "nfl" ? 15 : 12);
     }
@@ -55,6 +56,16 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       const question = BAR_TRIVIA_QUESTION_BANK.find((q) => q.id === id);
       expect(question, id).toBeDefined();
       expect(question?.round, id).toBe(round);
+    }
+    expect(FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS).toHaveLength(4);
+    for (const question of FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS) {
+      expect(question.sourceUrl, question.id).toMatch(/^https:\/\//);
+      expect(question.verifiedAt, question.id).toBe("2026-10-29");
+      expect(question.round, question.id).toBe("round3");
+      expect(question.choices, question.id).toHaveLength(4);
+      expect(new Set(question.choices).size, question.id).toBe(4);
+      expect(question.choices, question.id).toContain(question.answer);
+      expect(ids.has(question.id), question.id).toBe(true);
     }
     const allPrompts = new Set<string>();
     for (const question of BAR_TRIVIA_QUESTION_BANK.filter((q) => q.league === "nfl" || q.league === "cfb")) {
