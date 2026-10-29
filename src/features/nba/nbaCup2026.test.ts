@@ -53,15 +53,17 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
     expect(page).toContain("<NbaCupHero/>");
     expect(page).toContain("<NbaCupGroups/>");
     expect(page.indexOf("<NbaCupHero/>")).toBeLessThan(page.indexOf("<NbaCupGroups/>"));
-    expect(page.indexOf("<NbaCupGroups/>")).toBeLessThan(page.indexOf('<details className="nba-picks__futures">'));
-    expect(page).toContain("<strong>FUTURES</strong>");
+    expect(page.indexOf("<NbaCupGroups/>")).toBeLessThan(page.indexOf('<details className="nba-picks__futures hq-picks-disclosure">'));
+    expect(page).toContain('hq-picks-disclosure__title">FUTURES</strong>');
     expect(page).not.toMatch(/GROUP FUTURES|SEASON FUTURES/);
     expect(page).toContain("nba-futures-group-entry--mine");
     expect(page).toContain("otherEntries.map(entry=><NbaFuturesGroupEntry");
     expect(page).toContain("entry.profile_id!==identity.profile?.id");
     expect(hero).not.toMatch(/MAKE CUP PICKS|linked/);
     expect(hero).not.toContain('to="/nba/cup"');
-    expect(hero).toContain("NBA Cup 2026");
+    expect(hero).toContain('role="img"');
+    expect(hero).not.toContain("<h1>");
+    expect(cup).toContain("<h1>NBA Cup 2026</h1>");
     expect(styles).toContain('/images/nba-cup-2026-hero.webp');
     expect(existsSync("public/images/nba-cup-2026-hero.webp")).toBe(true);
     expect(cup).toContain('export function NbaCupGroups()');
@@ -73,10 +75,14 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
     expect(cup).toContain("nba-cup__floating-save");
     expect(cup).toContain("IntersectionObserver");
     expect(cup).toContain("!saveVisible");
-    expect(cup).toContain("6/6 PICKS SAVED");
+    expect(cup).toContain("PICKS SAVED ✓");
+    expect(cup).toContain("December knockout bracket coming next.");
+    expect(cup).not.toContain('className="nba-cup__next"');
+    expect(cup).not.toContain("CUP_POINTS");
+    expect(cup).not.toContain('<div><strong>{locked?"PICKS LOCKED"');
     expect(cup).toContain('aria-pressed={chosen}');
     expect(cup).toContain("CONTINUE TO WEST GROUPS");
     expect(cup).toContain('disabled={locked||saving}');
-    expect(cup).toContain('className="nba-cup__next"');
+    
   });
 });
