@@ -35,6 +35,7 @@ export function NbaCupGroups(){
     }).catch(err=>{if(active){setError(err instanceof Error?err.message:"Could not load Cup picks.");setLoading(false);}});
     return()=>{active=false};
   },[profile?.id]);
+  const dirtySaveTarget=picks!==null&&serializePicks(picks)!==saved;
   useEffect(()=>{
     const target=saveRef.current;
     if(!target||typeof IntersectionObserver==="undefined")return;
@@ -44,7 +45,6 @@ export function NbaCupGroups(){
     observer.observe(target);
     return()=>observer.disconnect();
   },[loading,dirtySaveTarget]);
-  const dirtySaveTarget=picks!==null&&serializePicks(picks)!==saved;
   const count=cupPickCount(picks??{});
   const dirty=picks!==null&&serializePicks(picks)!==saved;
   const complete=count===6&&!dirty;
