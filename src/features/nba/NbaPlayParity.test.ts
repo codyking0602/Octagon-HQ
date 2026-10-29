@@ -40,7 +40,7 @@ describe("NBA Play mirrors UFC Play layout", () => {
   it("only features nine Daily and four Casual, while protecting preview-only scores", () => {
     expect(NBA_CASUAL_GAME_TYPES).toHaveLength(4);
     expect(new Set(NBA_DAILY_WEIGHTED_CYCLE).size).toBe(9);
-    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
+    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
     expect(page).toContain("Private previews do not count.");
     expect(page).toContain('ownerTest ? "test games" : "official games"');
     expect(page).toContain('dailyCompleted ? "VIEW RESULT"');

@@ -85,9 +85,9 @@ describe("Football Higher or Lower official Daily (staged)", () => {
     expect(sql).toContain("v_answer->>'question_id' is distinct from v_ids->>v_index");
   });
 
-  it("cannot activate an old Football rotation or public NBA release by adding a publisher", () => {
+  it("cannot reactivate the old Football rotation while NBA public release remains independently gated", () => {
     expect(FOOTBALL_LOCKED_WEIGHTED_CYCLE).not.toContain("higher_lower");
     expect(footballTodayGameForDay(day)).not.toBe("higher_lower");
-    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
+    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
   });
 });

@@ -40,7 +40,7 @@ describe("NBA Daily owner previews — no official submissions", () => {
     expect(nbaWhoSource).toContain("TWO-GAME PREVIEW AVERAGE");
     expect(nbaWhoSource).toContain("disableReplay={daily}");
     expect(sharedWhoSource).toContain("disableReplay = false");
-    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
+    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
     expect(nbaHitSource).not.toContain("submitOfficialDaily");
   });
 });

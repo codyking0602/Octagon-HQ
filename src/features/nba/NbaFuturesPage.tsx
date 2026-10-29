@@ -1,6 +1,6 @@
 import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { Link } from "react-router-dom";
-import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
+import { NBA_PUBLIC_ENABLED } from "./nbaPreviewAccess";
 import type { ReactNode } from "react";
 import { NbaTeamMark,nbaTeamColor } from "./nbaTeamBranding";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -236,7 +236,7 @@ export default function NbaFuturesPage() {
   const errors=useMemo(()=>draft?validateNbaFutures(draft):[],[draft]);
   const progress=draft?nbaFuturesProgress(draft):0;
   const locked=snapshot?.locked??false;
-  const cupAvailable=canPreviewNbaWhoAmI(identity.profile);
+  const cupAvailable=NBA_PUBLIC_ENABLED;
   const otherEntries=snapshot?.entries.filter(entry=>entry.profile_id!==identity.profile?.id)??[];
   return <div className="page nba-hq-page nba-picks-page" data-sport="nba">
     {cupAvailable?<><NbaCupHero/><NbaCupGroups/></>:
@@ -245,7 +245,7 @@ export default function NbaFuturesPage() {
         <h1>NBA Futures</h1>
         <p>Pick the entire season. One card, 100 points, and 15% of the Basketball Championship.</p>
       </header>}
-    {!identity.profile?.id?<section className="surface-card nba-hq-notice"><p>Sign in to save your NBA Futures predictions.</p>
+    {!identity.profile?.id?<section className="surface-card nba-hq-notice"><p>Sign in to make NBA Cup picks and review your NBA Futures.</p>
       <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO PICK</button></section>:null}
     {loading?<p role="status" className="nba-hq-notice">Loading NBA Futures…</p>:null}
     {error?<p role="alert" className="nba-hq-error">{error}</p>:null}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createFootballHigherLowerBoard } from "../back-room/footballHigherLowerModel";
 import { buildNbaServerDailyPublication } from "../nba/nbaDailyServerPublication";
-import { NBA_REGULAR_SEASON_LAST_DAY } from "../nba/nbaDailySchedule";
+import { NBA_REGULAR_SEASON_LAST_DAY, nbaRegularSeasonDaily } from "../nba/nbaDailySchedule";
 import { FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION } from "./footballHigherLowerDailyRuntime";
 import { previewApprovedDailyRotation } from "./sixMonthDailyRotationAudit";
 
@@ -12,8 +12,18 @@ function undirectedPair(metric: string, left: string, right: string) {
 
 describe("Higher or Lower six-month reverse-pair audit (no activation)", () => {
   it("probes real Football and NBA Daily board generators and reports unverified repeats", () => {
-    const slots = previewApprovedDailyRotation().slots.filter(slot =>
-      slot.game === "higher_lower" && slot.sport !== "ufc");
+    const provisionalFootball = previewApprovedDailyRotation().slots.filter(slot =>
+      slot.game === "higher_lower" && slot.sport === "football");
+    const nbaSlots = [];
+    for (let ms = Date.parse("2026-10-30T00:00:00Z");
+      ms <= Date.parse(NBA_REGULAR_SEASON_LAST_DAY + "T00:00:00Z"); ms += 86_400_000) {
+      const day = new Date(ms).toISOString().slice(0, 10);
+      const scheduled = nbaRegularSeasonDaily(day);
+      if (scheduled?.isPublicationDay && scheduled.gameType === "higher_lower") {
+        nbaSlots.push({sport: "nba" as const, day, game: "higher_lower" as const});
+      }
+    }
+    const slots = [...provisionalFootball, ...nbaSlots];
     const keys = new Map<string, string>();
     const repeats: string[] = [];
     const output = { football: { dates: 0, questions: 0, uniquePairs: 0 },
@@ -21,7 +31,7 @@ describe("Higher or Lower six-month reverse-pair audit (no activation)", () => {
     for (const slot of slots) {
       if (slot.sport === "nba" && slot.day > NBA_REGULAR_SEASON_LAST_DAY) continue;
       const sport = slot.sport === "football" ? "football" : "nba";
-      const version = sport + "-six-month-candidate-v1-NOT-LIVE";
+      const version = sport === "nba" ? "nba-daily-regular-v3-oct30-public" : sport + "-six-month-candidate-v1-NOT-LIVE";
       const questions = slot.sport === "football"
         ? createFootballHigherLowerBoard(
             [FOOTBALL_HIGHER_LOWER_OFFICIAL_VERSION, version, slot.day].join("|"), "MIXED",

@@ -5,6 +5,7 @@ const sql = readFileSync("supabase/migrations/202612310403_nba_notification_kind
 const model = readFileSync("src/features/notifications/notificationModel.ts", "utf8");
 const nbaSchedule = readFileSync("src/features/nba/nbaDailySchedule.ts", "utf8");
 const center = readFileSync("src/features/notifications/NotificationCenterPage.tsx", "utf8");
+const cutover = readFileSync("supabase/migrations/202612310889_nba_public_oct30_daily_cutover.sql", "utf8");
 
 describe("NBA notification definitions: dormant before official launch", () => {
   it("permits all four NBA kinds in the single canonical notification contract", () => {
@@ -24,10 +25,15 @@ describe("NBA notification definitions: dormant before official launch", () => {
   it("uses NBA identity but never releases owner-preview games from a calendar date", () => {
     expect(model).toContain('return "nba"');
     expect(center).toContain("Basketball");
-    expect(nbaSchedule).toContain('NBA_GAMES_LAUNCH_DAY = "2026-11-01"');
-    expect(nbaSchedule).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY = false");
+    expect(nbaSchedule).toContain('NBA_GAMES_LAUNCH_DAY = "2026-10-30"');
+    expect(nbaSchedule).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY = true");
     expect(sql).not.toContain("publish_notification_to_profile(");
     expect(sql).not.toContain("cron.schedule");
     expect(sql).not.toContain("net.http_post");
+    expect(cutover).toContain("NBA closing reminder contract changed");
+    expect(cutover).toContain("2026-10-31");
+    expect(cutover).toContain("nba-daily-regular-v2-locked");
+    expect(cutover).toContain("nba-daily-regular-v3-oct30-public");
+    expect(cutover).toContain("if false and v_day");
   });
 });
