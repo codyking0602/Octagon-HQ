@@ -274,16 +274,25 @@ export function buildBarTriviaRun(
   const used = new Set<string>();
   const usedCategories = new Set<string>();
   const run: BarTriviaQuestion[] = [];
+  const footballQualityMix = league === "nfl" || league === "cfb";
+  // Do not permit three or more "first ever" questions in one Football game.
+  // This is a light board-level protection, not a fixed ten-question script.
+  const isFirstQuestion = (question: BarTriviaQuestion) => /\bfirst\b/i.test(question.prompt);
+  const eligiblePool = (pool: BarTriviaQuestion[]) => {
+    if (!footballQualityMix || run.filter(isFirstQuestion).length < 2) return pool;
+    const notFirsts = pool.filter((question) => !isFirstQuestion(question));
+    return notFirsts.length ? notFirsts : pool;
+  };
 
   for (const [index, round] of BAR_TRIVIA_ROUND_SLOTS.entries()) {
     if (index === 3 && league !== "nba") {
       const accessible = pickQuestion(
-        bank.filter((question) =>
+        eligiblePool(bank.filter((question) =>
           question.league === league &&
           question.round === "round1" &&
           question.difficulty === "easy" &&
           question.contentType === "evergreen"
-        ),
+        )),
         used,
         usedCategories,
         recentQuestionIds,
@@ -298,14 +307,42 @@ export function buildBarTriviaRun(
       continue;
     }
 
+    // Football has four easy, three medium, two hard, and one Last Call.
+    // Keep the existing 3/3/3/1 scoring rounds and the Q4 ease-in: Q7 is a
+    // medium CONTENT question that earns Round 3 points. Other sports unchanged.
+    if (index === 6 && footballQualityMix) {
+      const accessible = pickQuestion(
+        eligiblePool(bank.filter((question) =>
+          question.league === league &&
+          question.round === "round2" &&
+          question.difficulty === "medium" &&
+          question.contentType === "evergreen"
+        )),
+        used,
+        usedCategories,
+        recentQuestionIds,
+        random,
+        options.strictRecentNoRepeat === true,
+      );
+      const chosen = { ...accessible, round: "round3" as const };
+      run.push(chosen);
+      used.add(chosen.id);
+      used.add(chosen.factKey ?? chosen.id);
+      usedCategories.add(chosen.category);
+      continue;
+    }
+
     const currentQueue = currentByRound.get(round);
-    const scheduledCurrent = currentQueue?.shift();
+    const currentCandidate = currentQueue?.shift();
+    const scheduledCurrent = currentCandidate && (
+      !footballQualityMix || !isFirstQuestion(currentCandidate) || run.filter(isFirstQuestion).length < 2
+    ) ? currentCandidate : null;
     const chosen = scheduledCurrent ?? pickQuestion(
-      bank.filter((question) =>
+      eligiblePool(bank.filter((question) =>
         question.league === league &&
         question.round === round &&
         question.contentType === "evergreen"
-      ),
+      )),
       used,
       usedCategories,
       recentQuestionIds,
