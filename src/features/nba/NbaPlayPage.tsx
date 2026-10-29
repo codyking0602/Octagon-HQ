@@ -103,7 +103,7 @@ export default function NbaPlayPage() {
     <section className="play-v2__daily" aria-label="Today's Challenge" data-sport="nba">
       <div className="play-v2__section-top">
         <span>TODAY'S CHALLENGE</span>
-        <span className="play-v2__daily-status">{ownerTest ? "PRIVATE OWNER TEST" : !published && day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : !published && casualPublic ? "STARTS OCT 30" : dailyCompleted ? "COMPLETE" : dailySaved ? "IN PROGRESS" : published ? "OFFICIAL DAILY" : "STARTS OCT 30"}</span>
+        <span className="play-v2__daily-status">{ownerTest ? "PRIVATE OWNER TEST" : !published && day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : !published && casualPublic ? "STARTS OCT 29" : dailyCompleted ? "COMPLETE" : dailySaved ? "IN PROGRESS" : published ? "OFFICIAL DAILY" : "STARTS OCT 29"}</span>
       </div>
       {dailyEnabled && runtime.loading && !dailyProjection ? (
         <p className="play-v2__muted" role="status">Loading today's NBA game…</p>
@@ -154,9 +154,9 @@ export default function NbaPlayPage() {
       </> : <>
         <div className="play-v2__daily-row">
           <div className="play-v2__daily-title">
-            <h2>{day < NBA_GAMES_LAUNCH_DAY ? "NBA Daily · October 30" : day > NBA_REGULAR_SEASON_LAST_DAY ? "NBA regular-season Daily is complete" : "NBA Daily temporarily unavailable"}</h2>
+            <h2>{day < NBA_GAMES_LAUNCH_DAY ? "NBA Daily · October 29" : day > NBA_REGULAR_SEASON_LAST_DAY ? "NBA regular-season Daily is complete" : "NBA Daily temporarily unavailable"}</h2>
             <span>{day < NBA_GAMES_LAUNCH_DAY
-              ? "Official NBA Daily begins October 30 · every 48 hours"
+              ? "Official NBA Daily begins October 29 · first game through October 31"
                : day > NBA_REGULAR_SEASON_LAST_DAY ? "NBA Casual games remain open year-round" : "Please try again shortly or enjoy NBA Casual while we restore today\u0027s challenge."}</span>
           </div>
         </div>
