@@ -31,6 +31,16 @@ const bundler = readFileSync("scripts/bundle-daily-challenge-runtime.mjs", "utf8
 const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 
 describe("NBA Daily all-nine-mode CPU isolation", () => {
+  it("smoke-tests only the actual first regular-season Average Fan publication", () => {
+    expect(nbaRegularSeasonDaily("2026-10-30")).toMatchObject({
+      day: "2026-10-29", gameType: "bar_trivia", isPublicationDay: false,
+    });
+    expect(nbaRegularSeasonDaily("2026-11-15")).toMatchObject({
+      day: "2026-11-15", gameType: "average_fan", isPublicationDay: true,
+    });
+    expect(bundler.match(/day: "2026-11-15", gameType: "average_fan"/g)).toHaveLength(2);
+    expect(bundler).not.toContain('day: "2026-10-30", gameType: "average_fan"');
+  });
   it("keeps historical owner QA isolated while the Oct 29 board is public", () => {
     expect(NBA_OWNER_PREVIEW_ORDER.slice(0, 6)).toEqual([
       "average_fan", "sports_feud", "millionaire", "who_am_i", "find_leader", "wavelength",
