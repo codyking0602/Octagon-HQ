@@ -4,6 +4,8 @@ import { readVerifiedNbaWeekly } from "./nbaWeeklySpotlight";
 const homepage = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const owner = readFileSync("src/features/nba/NbaOwnerHomeHq.tsx", "utf8");
 const css = readFileSync("src/styles/nba-owner-home.css", "utf8");
+const router = readFileSync("src/app/router.tsx", "utf8");
+const nav = readFileSync("src/components/BottomNavigation.tsx", "utf8");
 describe("NBA HQ released regular-season presentation", () => {
   it("shows the same public NBA Daily state to owners and visitors on Home", () => {
     expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} />');
@@ -18,6 +20,18 @@ describe("NBA HQ released regular-season presentation", () => {
     expect(owner).toContain('to="/nba/picks"');
     expect(owner).toContain('to="/championship/nba"');
     expect(owner).toContain('"STARTS OCT 30"');
+  });
+  it("routes Home NBA Play and Picks to registered pages, including prelaunch", () => {
+    expect(owner).toContain('const dailyLink = dailyEnabled ? "/nba/today" : "/nba";');
+    expect(owner).toContain('<Link to={dailyLink} className="nba-hq-owner__daily"');
+    expect(owner).toContain('<Link to="/nba/picks">VIEW PICKS');
+    expect(owner).toContain('to="/championship/nba"');
+    expect(router).toContain('path: "nba", element: <NbaPreviewGate><NbaPlayPage /></NbaPreviewGate>');
+    expect(router).toContain('path: "nba/today", element: <NbaPreviewGate><NbaOfficialDailyPage /></NbaPreviewGate>');
+    expect(router).toContain('path: "nba/picks", element: <NbaPreviewGate><NbaFuturesPage /></NbaPreviewGate>');
+    expect(nav).toContain('playSport === "football" ? "/football" : playSport === "nba" ? "/nba" : "/play"');
+    expect(nav).toContain('currentPicksSport === "football" ? "/football/picks" : currentPicksSport === "nba" ? "/nba/picks" : "/picks"');
+    expect(owner).not.toContain('"/nba/play"');
   });
   it("shows NBA's unlocked rank and canonical completed score like UFC, never a made-up rank", () => {
     expect(homepage).toContain('const rank = todayRank(leaderboard);');
