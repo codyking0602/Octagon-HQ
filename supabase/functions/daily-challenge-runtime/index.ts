@@ -137,7 +137,6 @@ type AverageFanRuntimeModule = {
 };
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
-let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
 // Wavelength publishes its own small two-game board without importing every Football game bank.
 let footballWavelengthPublicationPromise: Promise<FootballPublicationRuntimeModule> | null = null;
 // Millionaire publishing must not parse all Football game families in one
@@ -194,10 +193,13 @@ function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
     }
     return footballMillionairePublicationPromise;
   }
-  if (!footballPublicationRuntimePromise) {
-    footballPublicationRuntimePromise = import("./football-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+  if (gameType === "average_fan") {
+    return import("./football-average-fan-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
   }
-  return footballPublicationRuntimePromise;
+  // Blind Resume and comparison are historical-only, immutable Daily modes.
+  // No currently active Football cycle publishes them, so do not ship the
+  // 20 MB all-game publisher merely to support new past-date materializations.
+  throw new Error(`Football Daily publisher unavailable for legacy game ${String(gameType)}.`);
 }
 
 function loadFootballAdvanceRuntime() {

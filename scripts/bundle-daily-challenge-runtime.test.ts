@@ -56,21 +56,21 @@ describe("daily challenge runtime bundle prerequisites", () => {
     expect(bundlerSource).toContain("generatedRuntime.buildFootballDailyPersistenceSetup(");
     expect(bundlerSource).toContain('fileName: "average-fan.generated.mjs"');
     expect(bundlerSource).toContain('"advanceAverageFanDailyRuntime", "buildAverageFanDailySetup"');
-    expect(bundlerSource).toContain('fileName: "football-publication.generated.mjs"');
+    expect(bundlerSource).not.toContain('fileName: "football-publication.generated.mjs"');
+    expect(bundlerSource).toContain('fileName: "football-average-fan-publication.generated.mjs"');
     for (const gameType of [
       "who_am_i",
       "wavelength",
       "find_leader",
-      "blind_resume",
       "hit_the_number",
       "millionaire",
       "sports_feud",
       "bar_trivia",
       "average_fan",
-      "keep_4_cut_4",
     ]) {
       expect(bundlerSource).toContain(`gameType: "${gameType}"`);
     }
     expect(bundlerSource).toContain("failed its deterministic smoke proof for ${smoke.gameType}.");
+    expect(bundlerSource).toContain('rm(resolve(outDir, "football-publication.generated.mjs"), { force: true })');
   });
 });

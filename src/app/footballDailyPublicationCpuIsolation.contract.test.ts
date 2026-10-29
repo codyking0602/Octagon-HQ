@@ -12,6 +12,7 @@ const publications = [
   ["find_leader", "find-leader", "2026-11-03"],
   ["hit_the_number", "hit-the-number", "2026-11-08"],
   ["higher_lower", "higher-lower", "2026-11-05"],
+  ["average_fan", "average-fan", "2026-11-02"],
 ] as const;
 
 describe("Football Daily publication CPU isolation", () => {
@@ -24,9 +25,10 @@ describe("Football Daily publication CPU isolation", () => {
       expect(loader).toContain(`if (gameType === "${gameType}")`);
       expect(loader).toContain(`import("./football-${file}-publication.generated.mjs")`);
     }
-    // Historical legacy modes remain supported, without loading their catalog
-    // during any of the six active game families' normal publications.
-    expect(loader).toContain('import("./football-publication.generated.mjs")');
+    // Historic boards are immutable, and their answer grading is retained.
+    // New publication of obsolete modes must not ship the 20 MB publisher.
+    expect(loader).not.toContain('import("./football-publication.generated.mjs")');
+    expect(loader).toContain("Football Daily publisher unavailable for legacy game");
     expect(loader).toContain('if (gameType === "millionaire")');
     expect(loader).toContain('if (gameType === "wavelength")');
   });
@@ -41,6 +43,8 @@ describe("Football Daily publication CPU isolation", () => {
         `test -f supabase/functions/daily-challenge-runtime/football-${file}-publication.generated.mjs`,
       );
     }
+    expect(bundler).not.toContain('fileName: "football-publication.generated.mjs"');
+    expect(deploy).toContain("test ! -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs");
     expect(bundler).toContain("generatedRuntime.buildFootballDailyPersistenceSetup(");
     expect(bundler).toContain("failed its deterministic smoke proof");
   });
