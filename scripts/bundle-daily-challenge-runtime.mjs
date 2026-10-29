@@ -139,6 +139,54 @@ const bundles = [
     ],
   },
   {
+    label: "Football Bar Trivia lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationBarTrivia.ts"),
+    fileName: "football-bar-trivia-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    // Publish the actual locked future schedule, including the incident date.
+    smokes: [{ day: "2026-10-29", gameType: "bar_trivia", scheduleVersion: "football-daily-v22-higher-lower-oct27" }],
+  },
+  {
+    label: "Football Sports Feud lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationSportsFeud.ts"),
+    fileName: "football-sports-feud-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    // Publish the actual locked future schedule, including the incident date.
+    smokes: [{ day: "2026-10-30", gameType: "sports_feud", scheduleVersion: "football-daily-v22-higher-lower-oct27" }],
+  },
+  {
+    label: "Football Who Am I lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWhoAmI.ts"),
+    fileName: "football-who-am-i-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    // Publish the actual locked future schedule, including the incident date.
+    smokes: [{ day: "2026-11-01", gameType: "who_am_i", scheduleVersion: "football-daily-v22-higher-lower-oct27" }],
+  },
+  {
+    label: "Football Find the Leader lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationFindLeader.ts"),
+    fileName: "football-find-leader-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    // Publish the actual locked future schedule, including the incident date.
+    smokes: [{ day: "2026-11-03", gameType: "find_leader", scheduleVersion: "football-daily-v22-higher-lower-oct27" }],
+  },
+  {
+    label: "Football Hit the Number lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationHitNumber.ts"),
+    fileName: "football-hit-the-number-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    // Publish the actual locked future schedule, including the incident date.
+    smokes: [{ day: "2026-11-08", gameType: "hit_the_number", scheduleVersion: "football-daily-v22-higher-lower-oct27" }],
+  },
+  {
+    label: "Football Higher or Lower lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationHigherLower.ts"),
+    fileName: "football-higher-lower-publication.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    // Publish the actual locked future schedule, including the incident date.
+    smokes: [{ day: "2026-11-05", gameType: "higher_lower", scheduleVersion: "football-daily-v22-higher-lower-oct27" }],
+  },
+  {
     label: "Football daily advance runtime",
     entry: resolve(repoRoot, "src/features/play/footballTodayChallengeAdvanceRuntime.ts"),
     fileName: "football-advance.generated.mjs",

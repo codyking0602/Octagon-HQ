@@ -305,6 +305,12 @@ jobs:
             test -f supabase/functions/daily-challenge-runtime/football-wavelength-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-wavelength-advance.generated.mjs
              test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-bar-trivia-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-sports-feud-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-who-am-i-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-find-leader-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-hit-the-number-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-higher-lower-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs
             # Cache the official Docker Hub mirror under the image name the
           # pinned Supabase CLI expects, avoiding the current GHCR throttle.
