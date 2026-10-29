@@ -77,6 +77,11 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
     expect(cup).toContain('aria-pressed={chosen}');
     expect(cup).toContain("CONTINUE TO WEST GROUPS");
     expect(cup).toContain('disabled={locked||saving}');
-    expect(cup).toContain('className="nba-cup__next"');
+    expect(cup).not.toContain('className="nba-cup__next"');
+    expect(cup).toContain("DECEMBER BRACKET COMING");
+    expect(cup).toContain('className="sr-only"');
+    expect(hero).toContain('role="img"');
+    expect(hero).not.toContain("<h1>");
+    expect(hero).not.toContain("nba-cup-hero__bottom");
   });
 });
