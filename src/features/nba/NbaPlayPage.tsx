@@ -203,7 +203,7 @@ export default function NbaPlayPage() {
       {ownerTest ? <p className="play-v2__muted">Your server-saved test results reset from view at launch; they never count toward public NBA standings.</p> : !published ? <p className="play-v2__muted">Your NBA scores will appear here after official Daily results are enabled. Private previews do not count.</p> : null}
     </section>
 
-    {owner ? <section className="nba-games-hub__owner-tools" aria-label="Owner preview catalog">
+    {owner && !published ? <section className="nba-games-hub__owner-tools" aria-label="Historical owner preview catalog">
       <button type="button" className="nba-games-hub__owner-toggle"
         onClick={() => setShowOwnerCatalog(open => !open)} aria-expanded={showOwnerCatalog}>
         Daily Test Catalog <span>{showOwnerCatalog ? "HIDE" : "SHOW ALL NINE"} ↗</span>
