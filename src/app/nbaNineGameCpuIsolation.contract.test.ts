@@ -48,8 +48,8 @@ describe("NBA Daily all-nine-mode CPU isolation", () => {
     expect(lean.wavelength("2026-11-13", "nba-daily-regular-v2-locked", "wavelength")).toEqual(buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v2-locked", "wavelength"));
     expect(lean.higher_lower("2026-11-19", "nba-daily-regular-v2-locked", "higher_lower")).toEqual(buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v2-locked", "higher_lower"));
     expect(lean.bar_trivia("2026-11-21", "nba-daily-regular-v2-locked", "bar_trivia")).toEqual(buildNbaServerDailyPublication("2026-11-21", "nba-daily-regular-v2-locked", "bar_trivia"));
-    expect(readFileSync("src/features/nba/nbaDailySchedule.ts", "utf8")).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY = false");
-    expect(edge).toContain("NBA_DAILY_EDGE_RELEASE_READY = false");
+    expect(readFileSync("src/features/nba/nbaDailySchedule.ts", "utf8")).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY = true");
+    expect(edge).toContain("NBA_DAILY_EDGE_RELEASE_READY = true");
   });
   it("requires dedicated generated publication and action bundles in deploy", () => {
     expect(edge).toContain('gameType === "average_fan"');
