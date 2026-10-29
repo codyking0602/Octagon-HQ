@@ -9,9 +9,18 @@ BEGIN
   SELECT * INTO v_daily FROM private.daily_challenges
   WHERE central_day = date '2026-10-29'
     AND schedule_version = 'nba-daily-owner-prelaunch-v1';
-  IF v_daily.id IS NULL OR v_daily.game_type <> 'bar_trivia'
+  -- Fresh local schema verification has no historical scores to carry forward.
+  -- On a populated/live database, a missing board must always FAIL CLOSED.
+  IF v_daily.id IS NULL THEN
+    IF EXISTS (SELECT 1 FROM private.daily_challenges)
+       OR EXISTS (SELECT 1 FROM public.profiles)
+    THEN RAISE EXCEPTION 'Populated database missing Oct 29 canonical Bar Trivia'; END IF;
+    RAISE NOTICE 'Fresh database without daily history: install calendar only';
+    RETURN;
+  END IF;
+  IF v_daily.game_type <> 'bar_trivia'
     OR v_daily.setup_id IS NULL OR v_daily.content_version <> 'nba-bar-trivia-server-v1'
-  THEN RAISE EXCEPTION 'Oct 29 canonical prelaunch Bar Trivia is missing/changed'; END IF;
+  THEN RAISE EXCEPTION 'Oct 29 canonical prelaunch Bar Trivia changed'; END IF;
 
   SELECT count(*),max(normalized_score) INTO v_count,v_score
   FROM private.daily_challenge_attempts
@@ -186,7 +195,10 @@ BEGIN
     AND schedule_version='nba-daily-owner-prelaunch-v1'
     AND game_type='bar_trivia';
   IF v_source.id IS NULL THEN
-    RAISE EXCEPTION 'Canonical Oct 29 Bar Trivia source vanished';
+    IF EXISTS (SELECT 1 FROM private.daily_challenges)
+       OR EXISTS (SELECT 1 FROM public.profiles)
+    THEN RAISE EXCEPTION 'Canonical Oct 29 Bar Trivia source vanished'; END IF;
+    RETURN;
   END IF;
 
   INSERT INTO private.daily_challenges
@@ -222,7 +234,12 @@ BEGIN
   SELECT id INTO v_daily FROM private.daily_challenges
   WHERE central_day=date '2026-10-29'
   AND schedule_version='nba-daily-launch-oct29-bar-trivia-v1';
-  IF v_daily IS NULL THEN RAISE EXCEPTION 'Public launch board not published'; END IF;
+  IF v_daily IS NULL THEN
+    IF NOT EXISTS (SELECT 1 FROM private.daily_challenges)
+       AND NOT EXISTS (SELECT 1 FROM public.profiles)
+    THEN RETURN; END IF;
+    RAISE EXCEPTION 'Populated database has no public Oct 29 Bar Trivia board';
+  END IF;
   IF NOT EXISTS (
     SELECT 1 FROM private.daily_challenge_history h
     WHERE h.daily_challenge_id=v_daily AND h.normalized_score=81
