@@ -32,7 +32,7 @@ describe("Basketball home hub", () => {
     expect(screen.getByText("2026–27 NBA Season")).toBeInTheDocument();
     expect(await screen.findByText("5 OF 55")).toBeInTheDocument();
     expect(screen.getByText("50 PICKS REMAINING")).toBeInTheDocument();
-    expect(screen.getByText("December · Cup knockout rounds")).toBeInTheDocument();
+    expect(screen.getByText("Pick six group winners · knockout rounds in December")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Open Basketball Championship" })).toHaveAttribute("href", "/championship/nba");
     expect(screen.getByRole("link", { name: /open futures/i })).toHaveAttribute("href", "/nba/picks");
     expect(screen.queryByRole("button", { name: /replay introduction/i })).not.toBeInTheDocument();
@@ -43,8 +43,8 @@ describe("Basketball home hub", () => {
     const hub = screen.getByRole("region", { name: "Basketball HQ" });
     expect(hub).toHaveClass("is-compact");
     expect(await screen.findByText("5 OF 55 PICKS")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Open NBA Futures picks" })).toHaveAttribute("href", "/nba/picks");
-    expect(screen.queryByText("December · Cup knockout rounds")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Open Basketball Picks" })).toHaveAttribute("href", "/nba/picks");
+    expect(screen.queryByText("Pick six group winners · knockout rounds in December")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /replay introduction/i })).not.toBeInTheDocument();
   });
 
