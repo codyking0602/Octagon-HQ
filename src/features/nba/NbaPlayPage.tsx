@@ -103,7 +103,7 @@ export default function NbaPlayPage() {
     <section className="play-v2__daily" aria-label="Today's Challenge" data-sport="nba">
       <div className="play-v2__section-top">
         <span>TODAY'S CHALLENGE</span>
-        <span className="play-v2__daily-status">{ownerTest ? "PRIVATE OWNER TEST" : !published && casualPublic ? "STARTS OCT 30" : dailyCompleted ? "COMPLETE" : dailySaved ? "IN PROGRESS" : published ? "OFFICIAL DAILY" : "NOV 1 LAUNCH"}</span>
+        <span className="play-v2__daily-status">{ownerTest ? "PRIVATE OWNER TEST" : !published && casualPublic ? "STARTS OCT 30" : dailyCompleted ? "COMPLETE" : dailySaved ? "IN PROGRESS" : published ? "OFFICIAL DAILY" : "STARTS OCT 30"}</span>
       </div>
       {dailyEnabled && runtime.loading && !dailyProjection ? (
         <p className="play-v2__muted" role="status">Loading today's NBA game…</p>
@@ -154,10 +154,10 @@ export default function NbaPlayPage() {
       </> : <>
         <div className="play-v2__daily-row">
           <div className="play-v2__daily-title">
-            <h2>{day < NBA_GAMES_LAUNCH_DAY ? "NBA Daily · October 30" : "NBA Daily is being finalized"}</h2>
+            <h2>{day < NBA_GAMES_LAUNCH_DAY ? "NBA Daily · October 30" : "NBA Daily temporarily unavailable"}</h2>
             <span>{day < NBA_GAMES_LAUNCH_DAY
               ? "Official NBA Daily begins October 30 · every 48 hours"
-              : "Official scoring and result verification required before launch"}</span>
+              : "Please try again shortly or enjoy NBA Casual while we restore today\u0027s challenge."}</span>
           </div>
         </div>
         <p className="play-v2__muted">NBA Cup Picks and four Casual games are available now.</p>
