@@ -33,14 +33,14 @@ const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 describe("NBA Daily all-nine-mode CPU isolation", () => {
   it("retains canonical first-attempt publications for all eight other owner preview days", () => {
     for (const [index, game] of NBA_OWNER_PREVIEW_ORDER.entries()) {
-      if (game === "who_am_i" || index >= 7) continue; // Oct 30-31 now belong to public Daily.
+      if (game === "who_am_i" || index >= 6) continue; // Oct 29 board was promoted; public starts on that day.
       const day = new Date(Date.UTC(2026, 9, 23 + index)).toISOString().slice(0, 10);
       expect(lean[game](day, "nba-daily-owner-prelaunch-v1", game)).toEqual(
         buildNbaServerDailyPublication(day, "nba-daily-owner-prelaunch-v1", game));
     }
   });
   it("retains canonical content for each public first appearance", () => {
-    expect(lean.average_fan("2026-10-30", "nba-daily-regular-v3-oct30-public", "average_fan")).toEqual(buildNbaServerDailyPublication("2026-10-30", "nba-daily-regular-v3-oct30-public", "average_fan"));
+    expect(lean.average_fan("2026-11-15", "nba-daily-regular-v3-oct30-public", "average_fan")).toEqual(buildNbaServerDailyPublication("2026-11-15", "nba-daily-regular-v3-oct30-public", "average_fan"));
     expect(lean.sports_feud("2026-11-01", "nba-daily-regular-v3-oct30-public", "sports_feud")).toEqual(buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v3-oct30-public", "sports_feud"));
     expect(lean.millionaire("2026-11-05", "nba-daily-regular-v3-oct30-public", "millionaire")).toEqual(buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v3-oct30-public", "millionaire"));
     expect(lean.hit_the_number("2026-11-07", "nba-daily-regular-v3-oct30-public", "hit_the_number")).toEqual(buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v3-oct30-public", "hit_the_number"));
@@ -156,7 +156,7 @@ describe("NBA Daily lean gameplay equivalence", () => {
   });
 
   it("keeps NBA Bar Trivia initial answer identical", () => {
-    const context = initial("2026-10-29", "nba-daily-owner-prelaunch-v1", "bar_trivia");
+    const context = initial("2026-11-19", "nba-daily-regular-v3-oct30-public", "bar_trivia");
     const question = context.publicState.current_question as Value;
     const action = { choice: (question.choices as string[])[0] };
     expect(advanceBarTriviaDailyRuntime(context, action)).toEqual(advanceNbaOfficialDailyRuntime(context, action));
