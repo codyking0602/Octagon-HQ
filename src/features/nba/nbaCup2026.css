@@ -82,3 +82,29 @@
 .nba-cup__save{scroll-margin-bottom:115px}
 .nba-cup__summary p{margin:0 0 8px}
 @media(max-width:460px){.nba-cup-hero{background-position:63% center}.nba-cup-hero__bottom{max-width:72%}.nba-cup__save button{width:100%;min-height:41px}}
+
+/* The supplied trophy photo is the entire hero; never layer tournament copy on top. */
+.nba-picks-page .nba-cup-hero{
+  display:block;
+  height:clamp(146px,39vw,205px);
+  min-height:0;
+  padding:0;
+  border:1px solid #795630;
+  background-image:url("/images/nba-cup-2026-hero.webp");
+  background-position:center center;
+  background-size:cover;
+}
+.nba-picks-page .nba-cup__main{gap:10px;padding-bottom:0}
+.nba-picks-page .nba-cup__summary{display:grid;gap:6px;padding:12px 13px}
+.nba-picks-page .nba-cup__summary h1{margin:0;color:#f4f4f5;font-size:clamp(1.15rem,4.8vw,1.4rem);line-height:1.1}
+.nba-picks-page .nba-cup__round{margin:0;color:#eab276;font-size:.65rem;font-weight:900;letter-spacing:.075em;line-height:1.35}
+.nba-picks-page .nba-cup__round span{color:#aab1b7}
+.nba-picks-page .nba-cup__summary-foot{margin-top:2px;font-size:.58rem;letter-spacing:.035em;line-height:1.4}
+.nba-picks-page .nba-cup__summary-foot strong{color:#edb776;text-align:right}
+.nba-picks-page .nba-cup__progress{height:4px;margin:4px 0 0}
+.nba-picks-page .nba-cup__save{padding:0;border:0;background:transparent}
+.nba-picks-page .nba-cup__save button{width:100%;min-height:42px}
+@media (max-width:390px){
+ .nba-picks-page .nba-cup__round{font-size:.6rem}
+ .nba-picks-page .nba-cup__summary-foot{font-size:.54rem}
+}
