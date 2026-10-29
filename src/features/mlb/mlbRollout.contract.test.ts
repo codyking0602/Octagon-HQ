@@ -95,9 +95,11 @@ describe("MLB Playoffs rollout gate", () => {
     expect(teamRule).not.toContain("white-space: nowrap");
   });
 
-  it("keeps owner preview data out of the official field", () => {
+  it("keeps owner preview data isolated and archives only official 2026 championship results", () => {
     expect(mlbPicks).toContain("identity.profile?.canControlPicks === true");
-    expect(home).toContain("previewMode={identity.profile?.canControlPicks === true}");
+    expect(home).not.toContain("<MlbHomeHq");
+    expect(home).toContain("<MlbSeasonArchive");
+    expect(home).toContain("canViewMlbCloseoutBanner(identity.profile)");
   });
 
   it("uses MLB team identity colors for selected series picks", () => {

@@ -32,7 +32,8 @@ import { currentDailyChallengeChampionship } from "../play/dailyChallengeChampio
 import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
 import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
-import { MlbHomeHq } from "../mlb/MlbHomeHq";
+import { MlbSeasonArchive } from "../mlb/MlbSeasonArchive";
+import { canViewMlbCloseoutBanner } from "../mlb/mlbOffseason";
 import { NbaOwnerHomeHq } from "../nba/NbaOwnerHomeHq";
 import { canPreviewNba } from "../nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
@@ -177,7 +178,6 @@ export default function HomePage() {
   // Approved compact Home HQ designs are public, including signed-out visitors.
   const ownerPreview = true;
   const compactFootballPreview = true;
-  const compactMlbPreview = true;
   // Owner-only NBA daily game previews stay private; the polished Basketball HQ layout is shared.
   const nbaHqOwnerPreview = Boolean(identity.profile?.canControlPicks === true
     && identity.profile.displayName.trim().toUpperCase() === "CODY");
@@ -187,7 +187,7 @@ export default function HomePage() {
   const visibleOrder = sportsForDisplay(sportOrder, mlbVisible, nbaVisible);
   // Home has its own persisted view, independent of all sport navigation.
   const homeSport = sportPreference?.homeSport ?? "football";
-  const ownerSport: SportFilter = (homeSport === "nba" && !nbaVisible) || (homeSport === "mlb" && !mlbVisible)
+  const ownerSport: SportFilter = (homeSport === "nba" && !nbaVisible) || homeSport === "mlb"
     ? "football" : homeSport;
   const setOwnerSport = (next: SportFilter) => sportPreference?.setHomeSport(next);
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
@@ -467,15 +467,15 @@ export default function HomePage() {
       </section>
       )}
 
-      {ownerPreview && ownerSport === "mlb" && !compactMlbPreview ? (
-        <OwnerChampionshipHome
-          streak={hqDailyStreak.streak.currentStreak}
-          streakLoading={hqDailyStreak.loading}
-          showMlb={mlbVisible} showNba={nbaVisible}
-          sport={ownerSport}
-          onSportChange={setOwnerSport}
-          showSportSelector={false}
-        />
+      {canViewMlbCloseoutBanner(identity.profile) ? (
+        <section className="mlb-closeout-banner" aria-label="2026 MLB postseason complete">
+          <div className="mlb-closeout-banner__copy">
+            <small>MLB · 2026 POSTSEASON</small>
+            <strong>Season complete</strong>
+            <span>Every final championship score is saved below.</span>
+          </div>
+          <a href="#mlb-2026-standings">VIEW FINAL STANDINGS ↓</a>
+        </section>
       ) : null}
 
       {(!ownerPreview || ownerSport === "all") ? <HqImpostorHomeCard /> : null}
@@ -484,43 +484,23 @@ export default function HomePage() {
         ownerSport === "football" ? footballHq
           : ownerSport === "ufc" ? ufcHq
           : ownerSport === "nba" && nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} />
-          : mlbVisible ? (
-            <MlbHomeHq
-              enabled={mlbVisible}
-              signedIn={signedIn}
-              previewMode={identity.profile?.canControlPicks === true}
-              compactPreview={compactMlbPreview}
-            />
-          ) : null
+          : null
       ) : (
         <>
           {visibleOrder.map(sport => (
             <Fragment key={sport}>
               {sport === "football" ? footballHq : sport === "ufc" ? ufcHq
                 : sport === "nba" ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship />
-                : <MlbHomeHq enabled={mlbVisible} signedIn={signedIn}
-                    previewMode={identity.profile?.canControlPicks === true} compactPreview={compactMlbPreview} />}
+                : null}
             </Fragment>
           ))}
         </>
       )}
-      {ownerPreview && ownerSport === "mlb" && compactMlbPreview ? (
+      {ownerPreview && ownerSport !== "nba" ? (
         <OwnerChampionshipHome
           streak={hqDailyStreak.streak.currentStreak}
           streakLoading={hqDailyStreak.loading}
-          showMlb={mlbVisible} showNba={nbaVisible}
-          sport={ownerSport}
-          onSportChange={setOwnerSport}
-          showSportSelector={false}
-          compactMlbPreview
-          sportOrder={visibleOrder}
-        />
-      ) : null}
-      {ownerPreview && ownerSport !== "mlb" && ownerSport !== "nba" ? (
-        <OwnerChampionshipHome
-          streak={hqDailyStreak.streak.currentStreak}
-          streakLoading={hqDailyStreak.loading}
-          showMlb={mlbVisible} showNba={nbaVisible}
+          showMlb={false} showNba={nbaVisible}
           sport={ownerSport}
           onSportChange={setOwnerSport}
           showSportSelector={false}
@@ -528,6 +508,7 @@ export default function HomePage() {
           sportOrder={visibleOrder}
         />
       ) : null}
+      <MlbSeasonArchive profileId={identity.profile?.id ?? null} />
     </div>
   );
 }

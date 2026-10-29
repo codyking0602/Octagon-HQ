@@ -4,9 +4,10 @@ import { describe, expect, it } from "vitest";
 const shell = readFileSync("src/app/AppShell.tsx", "utf8");
 
 describe("MLB welcome takeover route scope", () => {
-  it("shows only on Home or the MLB landing page", () => {
-    expect(shell).toContain('location.pathname === "/mlb" || (location.pathname === "/" && !nbaVisible)');
-    // The NBA owner preview takes precedence on Home, without hiding the MLB landing welcome.
+  it("keeps the MLB welcome off Home after the 2026 offseason closeout", () => {
+    const condition = shell.slice(shell.indexOf("const showMlbWelcome"), shell.indexOf("const mlbWelcomeMode"));
+    expect(condition).toContain('location.pathname === "/mlb"');
+    expect(condition).not.toContain('location.pathname === "/"');
     expect(shell).toContain("<MlbPlayoffsWelcomeTakeover");
   });
 

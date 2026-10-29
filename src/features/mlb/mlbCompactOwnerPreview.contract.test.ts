@@ -8,11 +8,11 @@ const championship = readFileSync("src/features/home/OwnerChampionshipHome.tsx",
 const css = readFileSync("src/styles/mlb-playoffs.css", "utf8");
 
 describe("MLB compact public Home", () => {
-  it("makes the compact MLB design public while keeping preview data privileged", () => {
-    expect(homepage).toContain("const compactMlbPreview = true;");
+  it("retires the active MLB Home card while keeping historical components intact", () => {
     expect(homepage).toContain("const compactFootballPreview = true;");
-    expect(homepage).toContain("previewMode={identity.profile?.canControlPicks === true}");
-    expect(homepage).toContain('compactPreview={compactMlbPreview}');
+    expect(homepage).not.toContain("<MlbHomeHq");
+    expect(homepage).toContain("<MlbSeasonArchive");
+    expect(homepage).toContain("canViewMlbCloseoutBanner(identity.profile)");
     expect(mlb).toContain('compactPreview ? " mlb-hq--compact-preview" : ""');
   });
 
@@ -38,7 +38,7 @@ describe("MLB compact public Home", () => {
     expect(spotlight).toContain("player.highlightUrl");
   });
 
-  it("shows compact and neutral MLB championship to everyone", () => {
+  it("preserves the compact historical MLB championship presentation in source", () => {
     expect(championship).toContain('compactMlbPreview = false');
     expect(championship).toContain('home-champ-preview--compact-mlb');
     expect(championship).toContain('mlb?.own?.series_rank');

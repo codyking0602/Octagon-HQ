@@ -10,11 +10,12 @@ export function prioritizedSports(push: NotificationPushSports | null | undefine
 
 /** Home is frozen. All Sports intentionally follows last activity across Picks/Play. */
 export function entrySport(home: HomeSport, lastUsed: SelectedSport): SelectedSport {
-  return home === "all" ? lastUsed : home;
+  const candidate = home === "all" ? lastUsed : home;
+  return candidate === "mlb" ? "football" : candidate;
 }
 
 export function sportsForDisplay(order: readonly SelectedSport[], showMlb: boolean, showNba: boolean) {
-  return order.filter(s => (showMlb || s !== "mlb") && (showNba || s !== "nba"));
+  return order.filter(s => s !== "mlb" && (showNba || s !== "nba"));
 }
 
 export const sportNames: Record<SelectedSport, string> = {
