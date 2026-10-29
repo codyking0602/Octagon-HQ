@@ -82,7 +82,7 @@ export function NbaCupGroups(){
         </button>)}
       </div>
       {CUP_GROUPS.filter(g=>g.conference===conference).map(group=><section className="nba-cup__group" key={group.id} aria-label={group.name}>
-        <header><h2>{group.name}</h2><small>{picks[group.id]?"✓ PICKED":"5 POINTS"}</small></header>
+        <header><h2>{group.name}</h2>{picks[group.id]?<small>✓ PICKED</small>:null}</header>
         <div className="nba-cup__teams">{group.teams.map(id=>{
           const team=NBA_TEAM_BY_ID.get(id);
           if(!team)return null;
