@@ -30,7 +30,7 @@ describe("October 29 first PUBLIC NBA Bar Trivia cutover", () => {
     ]) expect(nbaRegularSeasonDaily(day)?.gameType).toBe(game);
     expect(nbaDailyGameAppearance("2026-10-29","bar_trivia")).toBe(0);
     expect(nbaDailyGameAppearance("2026-11-21","bar_trivia")).toBe(1);
-    expect(migration).toContain("date '2026-10-29''");
+    expect(migration).toContain("date '2026-10-29'");
     expect(migration).toContain("nba-daily-regular-v4-nov01-public");
     expect(migration).toContain("v_nba_start_day := case when v_day = date ''2026-10-31''");
     expect(migration).toContain("v_start := case when v_day = date ''2026-10-31''");
