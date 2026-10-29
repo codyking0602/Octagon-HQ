@@ -46,6 +46,8 @@ import "../../styles/football-special-daily.css";
 import "../../styles/home-ufc-hq.css";
 import "../../styles/home-sport-chooser.css";
 import "../../styles/home-hq-border-consistency.css";
+// The closeout banner is on Home; its CSS must not depend on visiting the archived recap route.
+import "../../styles/mlb-season-archive.css";
 
 function readableError(error: unknown) {
   return error instanceof Error && error.message ? error.message : "";
