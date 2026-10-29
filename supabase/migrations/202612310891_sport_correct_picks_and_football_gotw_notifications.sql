@@ -580,4 +580,29 @@ begin
 end
 $assertions$;
 
+-- Retire incorrect historical Football slate-start notices without deleting
+-- delivery audit history. Mark as read too: unread counts include dismissed rows.
+update private.notification_groups
+set dismissed_at = now(),
+    read_at = coalesce(read_at, now()),
+    updated_at = now()
+where kind = 'ufc_event_starting'
+  and title like 'Football Picks ·% starts soon'
+  and route = '/picks'
+  and dismissed_at is null;
+
+-- Repair historical unfinished Football notifications already filed as UFC,
+-- without touching their event timestamp (which would requeue a phone push).
+update private.notification_groups
+set route = '/football/picks',
+    summary = replace(
+      summary,
+      'Complete the remaining fights before lock.',
+      'Finish any remaining picks before their games kick off.'
+    ),
+    updated_at = now()
+where kind = 'picks_incomplete_near_lock'
+  and summary like 'Football Picks ·%'
+  and route = '/picks';
+
 notify pgrst, 'reload schema';
