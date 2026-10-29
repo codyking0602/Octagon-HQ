@@ -20,8 +20,10 @@ describe("NBA official Daily client release safety and all nine presentations", 
     expect(hubSource).toContain('aria-controls="nba-play-daily-leaders"');
     expect(hubSource).toContain('createTodayChallengeRepository(undefined, ownerTest ? "nba_preview" : "nba")');
     expect(hubSource).toContain("enabled: (published || ownerTest) && Boolean(profile?.id)");
-    expect(nbaRegularSeasonDaily("2026-10-30")?.gameType).toBe("average_fan");
-    expect(nbaRegularSeasonDaily("2026-10-31")?.day).toBe("2026-10-30");
+    expect(nbaRegularSeasonDaily("2026-10-29")?.gameType).toBe("bar_trivia");
+    expect(nbaRegularSeasonDaily("2026-10-30")?.gameType).toBe("bar_trivia");
+    expect(nbaRegularSeasonDaily("2026-11-01")?.gameType).toBe("sports_feud");
+    expect(nbaRegularSeasonDaily("2026-10-31")?.day).toBe("2026-10-29");
   });
   it("uses server revisioned progression, not browser-generated official scores, for all nine games", () => {
     expect(Object.keys(NBA_DAILY_GAME_LABELS)).toHaveLength(9);
