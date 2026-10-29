@@ -1,0 +1,132 @@
+/* Shared quiet disclosure treatment for UFC, Football, and NBA Picks.
+   Intentional: only top-level section drawers, not individual games/member picks. */
+.app-shell .picks-scoring-guide,
+.app-shell .football-futures,
+.app-shell .football-picks-grading,
+.app-shell .nba-picks__futures,
+.app-shell .nba-picks__scoring{
+  min-height:0;
+  height:auto;
+  overflow:hidden;
+  padding:0;
+  border:1px solid #303438;
+  border-radius:13px;
+  background:#151719;
+}
+.app-shell .picks-scoring-guide > summary,
+.app-shell .football-futures > summary,
+.app-shell .football-picks-grading > summary,
+.app-shell .nba-picks__futures > summary,
+.app-shell .nba-picks__scoring > summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-height:53px;
+  height:auto;
+  padding:0 14px;
+  margin:0;
+  list-style:none;
+  cursor:pointer;
+  color:#83868c;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.105em;
+  line-height:1.3;
+  text-align:left;
+}
+.app-shell .picks-scoring-guide > summary::-webkit-details-marker,
+.app-shell .football-futures > summary::-webkit-details-marker,
+.app-shell .football-picks-grading > summary::-webkit-details-marker,
+.app-shell .nba-picks__futures > summary::-webkit-details-marker,
+.app-shell .nba-picks__scoring > summary::-webkit-details-marker{display:none}
+.app-shell .football-futures:not([open]),
+.app-shell .football-picks-grading:not([open]){min-height:53px;height:53px}
+.app-shell .football-futures__summary-label,
+.app-shell .football-picks-grading > summary span,
+.app-shell .nba-picks__futures > summary strong,
+.app-shell .nba-picks__scoring > summary strong{
+  color:#83868c;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.105em;
+}
+/* Keep details and scoring information inside each disclosure, not on its title bar. */
+.app-shell .football-futures__summary-status,
+.app-shell .football-futures__chevron,
+.app-shell .football-picks-grading > summary strong,
+.app-shell .nba-picks__futures > summary > span,
+.app-shell .nba-picks__futures > summary > b,
+.app-shell .nba-picks__scoring > summary > span,
+.app-shell .nba-picks__scoring > summary > b{display:none}
+.app-shell .picks-scoring-guide > summary::after,
+.app-shell .football-futures > summary::after,
+.app-shell .football-picks-grading > summary::after,
+.app-shell .nba-picks__futures > summary::after,
+.app-shell .nba-picks__scoring > summary::after{
+  content:"";
+  position:static;
+  flex:0 0 8px;
+  width:8px;
+  height:8px;
+  border:0;
+  border-right:2px solid #85898f;
+  border-bottom:2px solid #85898f;
+  font-size:0;
+  transform:rotate(45deg);
+  transition:transform .16s ease;
+}
+.app-shell .picks-scoring-guide[open] > summary::after,
+.app-shell .football-futures[open] > summary::after,
+.app-shell .football-picks-grading[open] > summary::after,
+.app-shell .nba-picks__futures[open] > summary::after,
+.app-shell .nba-picks__scoring[open] > summary::after{transform:rotate(225deg)}
+.app-shell .picks-scoring-guide > summary:focus-visible,
+.app-shell .football-futures > summary:focus-visible,
+.app-shell .football-picks-grading > summary:focus-visible,
+.app-shell .nba-picks__futures > summary:focus-visible,
+.app-shell .nba-picks__scoring > summary:focus-visible,
+.app-shell .picks-season-hub > summary:focus-visible{
+  outline:2px solid #c4a078;
+  outline-offset:-3px;
+}
+/* UFC's results archive shares the same quiet gray heading and chevron.
+   Preserve the useful record and member count below the title. */
+.app-shell .picks-season-hub > .picks-season-hub__summary{
+  min-height:67px;
+  padding:10px 36px 10px 13px;
+}
+.app-shell .picks-season-hub__identity > strong{
+  color:#83868c;
+  font-size:11px;
+  line-height:1.25;
+  font-weight:900;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+.app-shell .picks-season-hub__meta > em{color:#83868c}
+.app-shell .picks-season-hub > .picks-season-hub__summary::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  right:14px;
+  width:8px;
+  height:8px;
+  border:0;
+  border-right:2px solid #85898f;
+  border-bottom:2px solid #85898f;
+  font-size:0;
+  transform:translateY(-65%) rotate(45deg);
+  transition:transform .16s ease;
+}
+.app-shell .picks-season-hub[open] > .picks-season-hub__summary::after{
+  transform:translateY(-20%) rotate(225deg);
+}
+@media(prefers-reduced-motion:reduce){
+ .app-shell .picks-scoring-guide > summary::after,
+ .app-shell .football-futures > summary::after,
+ .app-shell .football-picks-grading > summary::after,
+ .app-shell .nba-picks__futures > summary::after,
+ .app-shell .nba-picks__scoring > summary::after,
+ .app-shell .picks-season-hub > .picks-season-hub__summary::after{transition:none}
+}
