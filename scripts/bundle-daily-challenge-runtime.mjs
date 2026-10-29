@@ -187,7 +187,7 @@ const bundles = [
     fileName: "nba-publication.generated.mjs",
     requiredExports: ["buildNbaServerDailyPublication", "nbaDailyGameAppearance"],
     nbaSmokes: [
-      { day: "2026-10-30", gameType: "average_fan" },
+      { day: "2026-11-15", gameType: "average_fan" },
       { day: "2026-11-01", gameType: "sports_feud" },
       { day: "2026-11-03", gameType: "who_am_i" },
       { day: "2026-11-05", gameType: "millionaire" },
@@ -221,7 +221,7 @@ const bundles = [
     entry: resolve(repoRoot, "src/features/nba/lean/AverageFanPublication.ts"),
     fileName: "nba-average-fan-publication.generated.mjs",
     requiredExports: ["buildNbaServerDailyPublication"],
-    nbaSmokes: [{ day: "2026-10-30", gameType: "average_fan" }],
+    nbaSmokes: [{ day: "2026-11-15", gameType: "average_fan" }],
   },
   {
     label: "NBA SportsFeud lean publication",
