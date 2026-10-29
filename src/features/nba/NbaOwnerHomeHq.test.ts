@@ -17,7 +17,8 @@ describe("NBA HQ owner-only regular-season proposal", () => {
     expect(owner).toContain('sport: publishedDaily ? "nba" : "nba_preview"');
     expect(owner).toContain('to="/nba/picks"');
     expect(owner).toContain('to="/championship/nba"');
-    expect(owner).toContain("CUP AND PLAYOFF PICKS WILL APPEAR WHEN RELEASED");
+    expect(owner).toContain("CUP PICKS OPEN · PLAYOFF PICKS IN APRIL");
+    expect(owner).toContain("nbaCanAccessReleasedGames(day)");
   });
   it("uses verified weekly data rather than placeholder numbers or fake videos", () => {
     expect(owner).toContain("readVerifiedNbaWeekly(raw)");
