@@ -119,8 +119,8 @@ function roundDisplayLabel(round: MlbBracketNode["round"]) {
 export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: boolean }) {
   const identity = useIdentity();
   const signedIn = Boolean(identity.profile);
-  const { hub: liveHub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn);
-  const { championship: liveChampionship, error: championshipError } = useMlbChampionship(signedIn);
+  const { hub: liveHub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn, archiveMode ? 2026 : undefined);
+  const { championship: liveChampionship, error: championshipError } = useMlbChampionship(signedIn, archiveMode ? 2026 : undefined);
   const previewMode = !archiveMode && identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
   const hub = previewMode ? MLB_OWNER_PREVIEW_HUB : liveHub;
   const championship = previewMode ? MLB_OWNER_PREVIEW_CHAMPIONSHIP : liveChampionship;

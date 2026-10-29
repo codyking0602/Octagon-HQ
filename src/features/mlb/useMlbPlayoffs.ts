@@ -7,7 +7,7 @@ import {
   type MlbPlayoffsHub,
 } from "./mlbPlayoffsRepository";
 
-export function useMlbPlayoffs(enabled = true) {
+export function useMlbPlayoffs(enabled = true, season = MLB_PLAYOFFS_SEASON) {
   const [hub, setHub] = useState<MlbPlayoffsHub | null>(null);
   const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState("");
@@ -26,7 +26,7 @@ export function useMlbPlayoffs(enabled = true) {
     setLoading(true);
     setError("");
     try {
-      const nextHub = await loadMlbPlayoffsHub(MLB_PLAYOFFS_SEASON);
+      const nextHub = await loadMlbPlayoffsHub(season);
       if (mountedRef.current) setHub(nextHub);
     } catch (nextError) {
       if (!mountedRef.current) return;
@@ -34,7 +34,7 @@ export function useMlbPlayoffs(enabled = true) {
     } finally {
       if (mountedRef.current) setLoading(false);
     }
-  }, [enabled]);
+  }, [enabled, season]);
 
   useEffect(() => {
     void reload();
@@ -45,7 +45,7 @@ export function useMlbPlayoffs(enabled = true) {
     setSaving("bracket");
     setError("");
     try {
-      const next = await saveMlbPlayoffBracket(MLB_PLAYOFFS_SEASON, picks);
+      const next = await saveMlbPlayoffBracket(season, picks);
       if (mountedRef.current) setHub(next);
       return mountedRef.current;
     } catch (nextError) {
@@ -55,7 +55,7 @@ export function useMlbPlayoffs(enabled = true) {
     } finally {
       if (mountedRef.current) setSaving("");
     }
-  }, []);
+  }, [season]);
 
   const saveSeriesPick = useCallback(async (seriesId: string, teamId: string) => {
     if (!mountedRef.current) return false;

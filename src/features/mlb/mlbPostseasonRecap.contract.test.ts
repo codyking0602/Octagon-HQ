@@ -20,6 +20,7 @@ describe("2026 MLB Championship recap", () => {
     expect(picks).toContain("hub.series.filter(item => item.round === round)");
     expect(picks).toContain("YOUR PICK CORRECT");
     expect(picks).toContain("NO PICK RECORDED");
+    expect(picks).toContain("archiveMode ? 2026 : undefined");
   });
   it("includes official Play score and rank from Championship data", () => {
     expect(recap).toContain("own.play_points");
