@@ -14,6 +14,8 @@ from scripts.asset_ingest import (
     approved_square_thumb_source,
     remove_flat_side_backgrounds,
     inset_side_background_panels,
+    horizontal_publisher_strips,
+    remove_horizontal_publisher_strips,
     source_looks_clipped,
     upper_side_background_band,
     validate_asset_quality,
@@ -130,6 +132,18 @@ class AssetIngestQualityTests(unittest.TestCase):
         im = fake_fighter()
         self.assertEqual(inset_side_background_panels(im), [])
         self.assertEqual(im.tobytes(), remove_flat_side_backgrounds(im).tobytes())
+
+    def test_top_horizontal_publisher_bar_is_cleared(self):
+        im = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.ellipse((90, 20, 220, 250), fill=(151, 100, 80, 255))
+        draw.rectangle((215, 13, 319, 15), fill=(200, 48, 51, 255))
+        self.assertTrue(horizontal_publisher_strips(im))
+        self.assert_rejected(im, "thumb", "publisher background artifact")
+        cleaned = remove_horizontal_publisher_strips(im)
+        self.assertFalse(horizontal_publisher_strips(cleaned))
+        self.assertEqual(cleaned.getpixel((250, 14))[3], 0)
+        self.assertEqual(cleaned.getpixel((155, 75))[3], 255)
 
     def test_full_bleed_opaque_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (200, 200, 200, 255))

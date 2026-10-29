@@ -304,7 +304,7 @@ def validate_asset_quality(im, kind):
         fail("fighter asset retains an opaque rectangular background")
     if coverage > 0.82:
         fail("fighter asset covers too much of the frame; likely background artifact")
-    if upper_side_background_band(im) or inset_side_background_panels(im):
+    if upper_side_background_band(im) or inset_side_background_panels(im) or horizontal_publisher_strips(im):
         fail("fighter asset retains a rectangular publisher background artifact")
     if box[1] < max(2, round(height * 0.015)):
         fail("fighter head has no top safety margin")
@@ -330,6 +330,46 @@ def upper_side_background_band(im):
     return False
 
 
+
+
+def horizontal_publisher_strips(im):
+    """Find thin uniform bars from source art around the top of a portrait."""
+    px = im.load()
+    w, h = im.size
+    strips = []
+    for y in range(round(h * 0.30)):
+        for side in ("left", "right"):
+            for margin in range(max(1, round(w * 0.14))):
+                x = margin if side == "left" else w - 1 - margin
+                r, g, b, a = px[x, y]
+                if a < 170:
+                    continue
+                direction = 1 if side == "left" else -1
+                n = 0
+                while 0 <= x + direction * n < w:
+                    cr, cg, cb, ca = px[x + direction * n, y]
+                    if ca < 160 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 18:
+                        break
+                    n += 1
+                if n >= max(34, round(w * 0.18)):
+                    inner = x + direction * (n - 1)
+                    if (side == "left" and inner < w * 0.49) or (
+                        side == "right" and inner > w * 0.51
+                    ):
+                        strips.append((y, side, inner))
+                break
+    return strips
+
+
+def remove_horizontal_publisher_strips(im):
+    result = im.copy()
+    px = result.load()
+    for y, side, inner in horizontal_publisher_strips(result):
+        positions = range(0, inner + 2) if side == "left" else range(max(0, inner - 1), result.width)
+        for x in positions:
+            r, g, b, _ = px[x, y]
+            px[x, y] = (r, g, b, 0)
+    return result
 
 
 def inset_side_background_panels(im):
@@ -526,7 +566,15 @@ def main():
     original_source = im.copy()
     if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
         try:
-            im = remove(im).convert("RGBA")
+            if kind == "thumb" and im.size == (600, 436) and spec.get("official_headshot_reviewed") is True:
+                im = remove(
+                    im, alpha_matting=True,
+                    alpha_matting_foreground_threshold=240,
+                    alpha_matting_background_threshold=12,
+                    alpha_matting_erode_size=8,
+                ).convert("RGBA")
+            else:
+                im = remove(im).convert("RGBA")
         except Exception as exc:
             fail(f"background removal failed: {exc}")
 
@@ -539,7 +587,7 @@ def main():
         except Exception as exc:
             fail(f"second background removal failed: {exc}")
 
-    im = remove_flat_side_backgrounds(im)
+    im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
 
     # A second alpha-matting pass is attempted only if obvious panels survive.
     # Reprocess from the untouched photograph and fail closed on bad output.
@@ -551,7 +599,7 @@ def main():
                 alpha_matting_background_threshold=12,
                 alpha_matting_erode_size=8,
             ).convert("RGBA")
-            retried = remove_flat_side_backgrounds(retried)
+            retried = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(retried))
             if not inset_side_background_panels(retried) and not upper_side_background_band(retried):
                 im = retried
         except Exception:
@@ -593,7 +641,7 @@ def main():
 
     # Publisher rectangles can sit inside the cutout's alpha silhouette rather
     # than at its original image boundary. Re-check after subject placement too.
-    im = remove_flat_side_backgrounds(im)
+    im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
 
     im = im.filter(
         ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2)
