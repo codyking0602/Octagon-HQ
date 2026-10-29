@@ -23,6 +23,8 @@ describe("NBA launch announcement is post-verification and manual",()=>{
     expect(intro).toContain("03 · AVAILABLE NOW");
     expect(intro).toContain("October 30");
     expect(intro).toContain("EXPLORE NBA PICKS");
+    expect(intro).toContain("01 · FUTURES LOCKED");
+    expect(intro).not.toContain("01 · AVAILABLE NOW");
     expect(intro).not.toContain("AFTER THE WORLD SERIES");
     expect(championship).toContain("NBA Cup Picks and games are here");
     expect(championship).toContain("VIEW NBA PICKS");
