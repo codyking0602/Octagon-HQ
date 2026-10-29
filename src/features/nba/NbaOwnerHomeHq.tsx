@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NBA_GAMES_LAUNCH_DAY, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaCentralDay,
+import { NBA_GAMES_LAUNCH_DAY, NBA_REGULAR_SEASON_LAST_DAY, nbaCanAccessReleasedGames, nbaCentralDay,
   nbaOwnerPreviewDaily, nbaRegularSeasonDaily, NBA_DAILY_GAME_LABELS } from "./nbaDailySchedule";
 import { NBA_FUTURES_SELECTIONS, emptyNbaFutures, nbaFuturesProgress } from "./nbaFutures";
 import { loadNbaFutures } from "./nbaFuturesRepository";
@@ -24,7 +24,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
     "--nba-player-button": playerTeamId === "LAL" ? "#b4932b" : nbaTeamColor(playerTeamId ?? ""),
   } as CSSProperties : undefined;
   const day = nbaCentralDay();
-  const publishedDaily = NBA_OFFICIAL_GAMES_RELEASE_READY && day >= NBA_GAMES_LAUNCH_DAY;
+  const publishedDaily = nbaCanAccessReleasedGames(day);
   const ownerSlot = allowOwnerDailyPreview && !publishedDaily && day < NBA_GAMES_LAUNCH_DAY ? nbaOwnerPreviewDaily(day) : null;
   const officialSlot = publishedDaily ? nbaRegularSeasonDaily(day) : null;
   const dailyType = publishedDaily ? officialSlot?.gameType : ownerSlot;
@@ -60,7 +60,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
   const hasSaved = !hasCompleted && Boolean(daily.projection?.progressRevision);
   const dailyLink = publishedDaily ? "/nba/today" : ownerSlot ? "/nba/today?mode=owner-test" : "/nba/play";
   const dailyLabel = dailyType ? NBA_DAILY_GAME_LABELS[dailyType] : "Basketball Daily";
-  const dailyState = !dailyEnabled ? "RELEASE PENDING" : publishedDaily
+  const dailyState = !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : "STARTS OCT 30" : publishedDaily
     ? hasCompleted ? "COMPLETED" : hasSaved ? "IN PROGRESS" : "AVAILABLE"
     : "OWNER PREVIEW";
 
@@ -79,7 +79,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
             <div><small>2026–27 RECORD</small><strong>—</strong><span>AWAITING RESULTS</span></div>
             <Link to="/nba/picks">VIEW PICKS →</Link>
           </div>
-          <span className="nba-hq-owner__picks-note">{futures?.locked ? "FUTURES LOCKED" : "FUTURES OPEN"} · CUP AND PLAYOFF PICKS WILL APPEAR WHEN RELEASED</span>
+          <span className="nba-hq-owner__picks-note">{futures?.locked ? "FUTURES LOCKED" : "FUTURES OPEN"} · CUP PICKS OPEN · PLAYOFF PICKS IN APRIL</span>
         </section>
 
         <Link to={dailyLink} className="nba-hq-owner__daily" aria-label="Open Basketball Daily Challenge">
@@ -88,7 +88,7 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
             <strong>{dailyLabel}</strong>
             <small>{publishedDaily && hasCompleted ? "Official result saved"
               : ownerSlot ? "Practice · Unranked"
-              : dailyEnabled ? "Ready when you are" : "Official launch pending"}</small>
+              : dailyEnabled ? "Ready when you are" : day > NBA_REGULAR_SEASON_LAST_DAY ? "Regular-season Daily complete" : "Official NBA Daily begins October 30"}</small>
           </div>
           <div className="nba-hq-owner__daily-result">
             {hasCompleted && score != null ? <strong>{score}<small>/100</small></strong> : <strong>{dailyEnabled ? "PLAY" : "VIEW"}</strong>}
