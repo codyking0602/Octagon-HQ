@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NBA_GAMES_LAUNCH_DAY, NBA_REGULAR_SEASON_LAST_DAY, nbaCanAccessReleasedGames, nbaCentralDay,
-  nbaOwnerPreviewDaily, nbaRegularSeasonDaily, NBA_DAILY_GAME_LABELS } from "./nbaDailySchedule";
+import { NBA_REGULAR_SEASON_LAST_DAY, nbaCanAccessReleasedGames, nbaCentralDay,
+  nbaRegularSeasonDaily, NBA_DAILY_GAME_LABELS } from "./nbaDailySchedule";
 import { NBA_FUTURES_SELECTIONS, emptyNbaFutures, nbaFuturesProgress } from "./nbaFutures";
 import { loadNbaFutures } from "./nbaFuturesRepository";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
+import { useTodayChallengeOverview } from "../play/useTodayChallengeOverview";
 import { dailyOfficialDisplayScore } from "../play/DailyTwoGameStatus";
 import { nbaSpotlightWeekLabel, readVerifiedNbaWeekly, type NbaWeeklySpotlight } from "./nbaWeeklySpotlight";
 import { nbaTeamColor } from "./nbaTeamBranding";
@@ -12,7 +13,7 @@ import { NBA_TEAMS } from "./nbaFutures";
 import type { CSSProperties } from "react";
 import "../../styles/nba-owner-home.css";
 
-export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hideChampionship = false }: { profileId: string; allowOwnerDailyPreview?: boolean; hideChampionship?: boolean }) {
+export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }: { profileId: string; signedIn: boolean; hideChampionship?: boolean }) {
   const [futures, setFutures] = useState<{ count: number; locked: boolean } | null>(null);
   const [weekly, setWeekly] = useState<NbaWeeklySpotlight | null>(null);
   const playerTeamId = weekly?.player.teamId ?? NBA_TEAMS.find(team=>team.name===weekly?.player.team)?.id;
@@ -25,13 +26,17 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
   } as CSSProperties : undefined;
   const day = nbaCentralDay();
   const publishedDaily = nbaCanAccessReleasedGames(day);
-  const ownerSlot = allowOwnerDailyPreview && !publishedDaily && day < NBA_GAMES_LAUNCH_DAY ? nbaOwnerPreviewDaily(day) : null;
   const officialSlot = publishedDaily ? nbaRegularSeasonDaily(day) : null;
-  const dailyType = publishedDaily ? officialSlot?.gameType : ownerSlot;
+  const dailyType = officialSlot?.gameType;
   const dailyEnabled = Boolean(dailyType);
+  // Home reflects public official Daily only. Owner rehearsals remain isolated on
+  // their explicit test route and cannot be mistaken for ranked NBA results.
   const daily = useTodayChallengeRuntime({
-    profileId, enabled: dailyEnabled,
-    sport: publishedDaily ? "nba" : "nba_preview",
+    profileId, enabled: signedIn && dailyEnabled, sport: "nba",
+  });
+  const dailyOverview = useTodayChallengeOverview({
+    profileId, enabled: signedIn && dailyEnabled,
+    projection: daily.projection, sport: "nba",
   });
 
   useEffect(() => {
@@ -56,13 +61,17 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
 
   const count = futures?.count;
   const hasCompleted = Boolean(daily.projection?.officialAttempt);
-  const score = dailyOfficialDisplayScore(daily.projection);
+  const ownLeaderboardEntry = dailyOverview.leaderboard?.unlocked
+    ? dailyOverview.leaderboard.entries.find(entry => entry.isCurrentUser)
+    : null;
+  const rank = ownLeaderboardEntry?.rank ?? null;
+  const score = dailyOfficialDisplayScore(daily.projection, ownLeaderboardEntry?.normalizedScore);
   const hasSaved = !hasCompleted && Boolean(daily.projection?.progressRevision);
-  const dailyLink = publishedDaily ? "/nba/today" : ownerSlot ? "/nba/today?mode=owner-test" : "/nba/play";
+  const dailyLink = dailyEnabled ? "/nba/today" : "/nba/play";
   const dailyLabel = dailyType ? NBA_DAILY_GAME_LABELS[dailyType] : "Basketball Daily";
-  const dailyState = !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : "STARTS OCT 30" : publishedDaily
-    ? hasCompleted ? "COMPLETED" : hasSaved ? "IN PROGRESS" : "AVAILABLE"
-    : "OWNER PREVIEW";
+  const dailyState = !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : "STARTS OCT 30"
+    : !signedIn ? "SIGN IN" : hasCompleted ? "COMPLETED" : hasSaved ? "IN PROGRESS"
+    : daily.loading && !daily.projection ? "LOADING" : daily.error && !daily.projection ? "UNAVAILABLE" : "AVAILABLE";
 
   return (
     <>
@@ -86,12 +95,15 @@ export function NbaOwnerHomeHq({ profileId, allowOwnerDailyPreview = false, hide
           <div>
             <span>NBA DAILY CHALLENGE <small>{dailyState}</small></span>
             <strong>{dailyLabel}</strong>
-            <small>{publishedDaily && hasCompleted ? "Official result saved"
-              : ownerSlot ? "Practice · Unranked"
-              : dailyEnabled ? "Ready when you are" : day > NBA_REGULAR_SEASON_LAST_DAY ? "Regular-season Daily complete" : "Official NBA Daily begins October 30"}</small>
+            <small>{!dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "Regular-season Daily complete" : "Official NBA Daily begins October 30"
+              : !signedIn ? "Sign in to track today's score and standing."
+              : hasCompleted ? rank != null ? `#${rank} today` : "Official score locked"
+              : hasSaved ? "Pick up where you left off."
+              : dailyState === "UNAVAILABLE" ? "Today’s challenge is unavailable."
+              : "Ready when you are."}</small>
           </div>
           <div className="nba-hq-owner__daily-result">
-            {hasCompleted && score != null ? <strong>{score}<small>/100</small></strong> : <strong>{dailyEnabled ? "PLAY" : "VIEW"}</strong>}
+            {hasCompleted && score != null ? <strong>{score}<small>/100</small></strong> : <strong>{dailyEnabled ? signedIn ? dailyState : "SIGN IN" : "VIEW"}</strong>}
             <span>OPEN →</span>
           </div>
         </Link>
