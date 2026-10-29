@@ -3,7 +3,7 @@ import {Navigate} from "react-router-dom";
 import {useIdentity} from "../identity/IdentityProvider";
 import {NBA_TEAM_BY_ID} from "./nbaFutures";
 import {NbaTeamMark,nbaTeamColor} from "./nbaTeamBranding";
-import {CUP_GROUPS,CUP_POINTS,cupPickCount,type CupGroupPicks} from "./nbaCup2026";
+import {CUP_GROUPS,cupPickCount,type CupGroupPicks} from "./nbaCup2026";
 import {loadCupPreview,saveCupPreview} from "./nbaCupRepository";
 import "../../styles/nba-hq.css";
 import "./nbaCup2026.css";
@@ -43,7 +43,8 @@ export function NbaCupGroups(){
     });
     observer.observe(target);
     return()=>observer.disconnect();
-  },[loading]);
+  },[loading,dirtySaveTarget]);
+  const dirtySaveTarget=picks!==null&&serializePicks(picks)!==saved;
   const count=cupPickCount(picks??{});
   const dirty=picks!==null&&serializePicks(picks)!==saved;
   const complete=count===6&&!dirty;
@@ -53,7 +54,7 @@ export function NbaCupGroups(){
     try{
       const response=await saveCupPreview(picks);
       setPicks(response.picks);setSaved(serializePicks(response.picks));setLocked(response.locked);
-      setNotice(cupPickCount(response.picks)===6?"6/6 PICKS SAVED ✓":"NBA Cup picks saved.");
+      setNotice("Picks saved.");
     }catch(err){setError(err instanceof Error?err.message:"Unable to save picks.");}
     finally{setSaving(false);}
   }
@@ -64,10 +65,13 @@ export function NbaCupGroups(){
   return <section className="nba-cup" data-testid="nba-cup-picks" aria-label="NBA Cup 2026 group picks">
     <div className="nba-cup__main">
       <section className="nba-cup__summary" aria-label="NBA Cup group-pick progress">
-        <div className="nba-cup__summary-title"><b>GROUP WINNERS</b><b>{count}/6 {complete?"PICKS SAVED":"PICKED"}</b></div>
-        <div className="nba-cup__progress" role="progressbar" aria-label="Groups picked" aria-valuenow={count} aria-valuemin={0} aria-valuemax={6}><span style={{width:(count/6*100)+"%"}} /></div>
-        <p>Pick one winner from each of the six groups.</p>
-        <div className="nba-cup__summary-foot"><span>OCT 30 – NOV 27 · GROUP PLAY</span><strong>{locked?"PICKS LOCKED":dirty?"UNSAVED CHANGES":complete?"6/6 PICKS SAVED ✓":"PICKS OPEN"}</strong></div>
+        <h1>NBA Cup 2026</h1>
+        <div className="nba-cup__summary-title"><strong>GROUP WINNERS</strong><span>OCT 30 – NOV 27</span></div>
+        <p>Six group winners. December knockout bracket coming next.</p>
+        <div className="nba-cup__progress-line">
+          <div className="nba-cup__progress" role="progressbar" aria-label="Groups picked" aria-valuenow={count} aria-valuemin={0} aria-valuemax={6}><span style={{width:(count/6*100)+"%"}} /></div>
+          <strong>{count}/6 {dirty?"SELECTED · UNSAVED":complete?"PICKS SAVED ✓":locked?"LOCKED":"PICKED"}</strong>
+        </div>
       </section>
       {loading?<p role="status">Loading NBA Cup picks…</p>:null}
       {error?<p role="alert" className="nba-hq-error">{error}</p>:null}
@@ -77,7 +81,7 @@ export function NbaCupGroups(){
         </button>)}
       </div>
       {CUP_GROUPS.filter(g=>g.conference===conference).map(group=><section className="nba-cup__group" key={group.id} aria-label={group.name}>
-        <header><h2>{group.name}</h2><small>{picks[group.id]?"✓ PICKED":"5 POINTS"}</small></header>
+        <header><h2>{group.name}</h2>{picks[group.id]?<small>✓ PICKED</small>:null}</header>
         <div className="nba-cup__teams">{group.teams.map(id=>{
           const team=NBA_TEAM_BY_ID.get(id);
           if(!team)return null;
@@ -93,21 +97,13 @@ export function NbaCupGroups(){
       <button className="nba-cup__conference-next" type="button" onClick={()=>switchConference(conference==="East"?"West":"East",true)}>
         {conference==="East"?"CONTINUE TO WEST GROUPS →":"← REVIEW EAST GROUPS"}
       </button>
-      <section className="nba-cup__save" ref={saveRef}>
-        <div><strong>{locked?"PICKS LOCKED":complete?"6/6 PICKS SAVED ✓":count===6?"ALL SIX GROUPS PICKED":(6-count)+" PICKS REMAIN"}</strong>
-          <small>{locked?"Your NBA Cup picks are final.":dirty?"Unsaved changes": "Selections saved"}</small></div>
-        {!locked&&dirty?<button type="button" className="primary-action" disabled={saving} onClick={()=>void save()}>
+      {dirty&&!locked?<section className="nba-cup__save" ref={saveRef}>
+        <div><strong>{count===6?"ALL SIX GROUPS SELECTED":(6-count)+" PICKS REMAIN"}</strong><small>Unsaved changes</small></div>
+        <button type="button" className="primary-action" disabled={saving} onClick={()=>void save()}>
           {saving?"SAVING…":"SAVE PICKS"}
-        </button>:null}
-      </section>
-      {notice?<p role="status" className="nba-cup__notice">{notice}</p>:null}
-      <details className="nba-cup__next">
-        <summary><span><small>COMING IN DECEMBER</small><strong>KNOCKOUT BRACKET</strong></span><b aria-hidden="true">⌄</b></summary>
-        <div className="nba-cup__next-body">
-          <p>Once eight teams qualify, pick four quarterfinal winners, two semifinal winners, and the champion.</p>
-          <div className="nba-cup__points">{Object.entries(CUP_POINTS).map(([key,value])=><span key={key}>{key==="groups"?"Groups":key==="quarterfinals"?"Quarterfinals":key==="semifinals"?"Semifinals":"Champion"}<b>{value}</b></span>)}</div>
-        </div>
-      </details>
+        </button>
+      </section>:null}
+      <span className="sr-only" role="status" aria-live="polite">{notice}</span>
       {dirty&&!locked&&!saveVisible?<div className="nba-cup__floating-save" role="region" aria-label="Unsaved NBA Cup picks">
         <span>{count}/6 SELECTED</span><button type="button" disabled={saving} onClick={()=>void save()}>{saving?"SAVING…":"SAVE PICKS"}</button>
       </div>:null}
