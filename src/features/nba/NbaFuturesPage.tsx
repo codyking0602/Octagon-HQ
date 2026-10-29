@@ -1,5 +1,6 @@
 import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { Link } from "react-router-dom";
+import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
 import type { ReactNode } from "react";
 import { NbaTeamMark,nbaTeamColor } from "./nbaTeamBranding";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -240,6 +241,7 @@ export default function NbaFuturesPage() {
       <p>Pick the entire season. One card, 100 points, and 15% of the Basketball Championship.</p>
       <div className="nba-hq-weightline"><span>FUTURES 15%</span><span>CUP 10%</span><span>PLAYOFFS 55%</span><span>GAMES 20%</span></div>
       <Link to="/championship/nba">BASKETBALL CHAMPIONSHIP ↗</Link>
+      {canPreviewNbaWhoAmI(identity.profile) ? <Link to="/nba/cup" className="secondary-action">NBA CUP GROUP PICKS · OWNER TEST →</Link> : null}
     </header>
     {!identity.profile?.id?<section className="surface-card nba-hq-notice"><p>Sign in to save your official NBA Futures predictions.</p>
       <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO PICK</button></section>:null}
