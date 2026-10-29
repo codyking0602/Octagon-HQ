@@ -41,6 +41,17 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertTrue(approved_square_thumb_source({"source_url": espn}, espn, (600, 600)))
         self.assertFalse(approved_square_thumb_source({"source_page_url": "https://www.ufc.com/athlete/tom-nolan"}, espn, (600, 600)))
         self.assertFalse(approved_square_thumb_source({"source_url": espn}, espn, (600, 900)))
+        # ESPN's real MMA headshot product is sometimes 600x436, not square.
+        # An explicit individual review is required for that source shape.
+        self.assertFalse(approved_square_thumb_source({"source_url": espn}, espn, (600, 436)))
+        self.assertTrue(approved_square_thumb_source(
+            {"source_url": espn, "fighter_name": "Tom Nolan", "official_headshot_reviewed": True},
+            espn, (600, 436)
+        ))
+        self.assertFalse(approved_square_thumb_source(
+            {"source_url": espn, "official_headshot_reviewed": True},
+            espn, (600, 436)
+        ))
         self.assertFalse(approved_square_thumb_source({}, "https://a.espncdn.com/i/athletes/bodyshot/5144007.png", (600, 600)))
         self.assertFalse(approved_square_thumb_source({}, "https://third-party.example/photo.png", (600, 600)))
         self.assertFalse(approved_square_thumb_source({}, "https://www.ufc.com/athlete/tom-nolan", (600, 600)))

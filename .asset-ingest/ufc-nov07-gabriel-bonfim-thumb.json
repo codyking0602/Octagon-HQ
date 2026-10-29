@@ -1,0 +1,8 @@
+{
+  "kind": "thumb",
+  "destination": "public/assets/fighters/gabriel-bonfim-thumb.webp",
+  "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/4921516.png",
+  "fighter_name": "Gabriel Bonfim",
+  "official_headshot_reviewed": true,
+  "force_background_removal": true
+}

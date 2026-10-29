@@ -241,13 +241,21 @@ def approved_square_thumb_source(spec, source_url, size):
         # UFC's own 256x160 transparent event-results headshot is approved.
         # It is a real headshot product, not its athlete_bio_full_body pose.
         return (width, height) == (256, 160)
-    if abs(width - height) > max(width, height) * 0.06:
-        return False
     if host == "a.espncdn.com":
-        return bool(re.fullmatch(
+        if not re.fullmatch(
             r"/i/headshots/mma/players/full/[0-9]+[.]png",
             urlparse(source_url).path
-        ))
+        ):
+            return False
+        # ESPN's genuine MMA face-dominant headshot product can be 600x436.
+        # Permit that exact format only after individual identity/framing review;
+        # never relax the UFC promotional-body or non-headshot URL gates.
+        if (width, height) == (600, 436):
+            return (spec.get("official_headshot_reviewed") is True
+                    and bool(spec.get("fighter_name")))
+        return abs(width - height) <= max(width, height) * 0.06
+    if abs(width - height) > max(width, height) * 0.06:
+        return False
     if host in {"www.ufc.com", "ufc.com"}:
         # UFC may serve promotional body images from athlete pages. Requiring
         # individual editorial verification avoids accepting them as thumbs.
@@ -458,7 +466,7 @@ def main():
         fail(f"cannot decode source image: {exc}")
 
     if kind == "thumb" and not approved_square_thumb_source(spec, source_url, im.size):
-        fail("thumbnail requires a verified square UFC or ESPN headshot source")
+        fail("thumbnail requires a verified UFC event-results or ESPN MMA headshot source")
 
     if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
         try:
