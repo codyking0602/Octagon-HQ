@@ -73,7 +73,6 @@ function boardEligibility(plan: HitTheNumberFormatPlan, statRows: readonly HitTh
 type BoardEligibility = ReturnType<typeof boardEligibility>;
 
 function orderedLegalSelection(
-  plan: HitTheNumberFormatPlan,
   ids: readonly string[],
   eligible: BoardEligibility,
 ): string[] | null {
@@ -120,7 +119,7 @@ export function hitTheNumberRandomPoolQuality(
   let hasMidScore = false;
 
   combinations(plan.fighterIds, plan.pickCount, (fighterIds) => {
-    if (!orderedLegalSelection(plan, fighterIds, eligibility)) return;
+    if (!orderedLegalSelection(fighterIds, eligibility)) return;
 
     const total = fighterIds.reduce((sum, fighterId) => {
       const value = rows.get(fighterId)?.[plan.statId];
@@ -188,7 +187,7 @@ function balancedTargetPlan(
   const eligibility = boardEligibility(plan, statRows);
   const outcomes: Array<{ total: number; ids: string[] }> = [];
   combinations(plan.fighterIds, plan.pickCount, fighterIds => {
-    const ordered = orderedLegalSelection(plan, fighterIds, eligibility);
+    const ordered = orderedLegalSelection(fighterIds, eligibility);
     if (!ordered) return;
     const total = ordered.reduce((sum, id) => sum + Number(rows.get(id)?.[plan.statId] ?? 0), 0);
     if (total > 0) outcomes.push({ total, ids: ordered });
