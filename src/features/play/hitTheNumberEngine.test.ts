@@ -250,7 +250,7 @@ describe("Hit the Number foundation", () => {
 
     expect(observedStats).toEqual(new Set(HIT_THE_NUMBER_GENERATION_PROFILE.stats.map((stat) => stat.value)));
     expect(observedPicks).toEqual(new Set([4, 5, 6, 7]));
-    expect(observedFilters).toEqual(new Set(["all", "division"]));
+    expect(observedFilters).toEqual(new Set(["all"]));
   });
 
   it("caps generated pick count to the positive fighter depth in narrow pools", () => {
