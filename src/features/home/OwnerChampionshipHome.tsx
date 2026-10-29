@@ -413,7 +413,7 @@ export function OwnerChampionshipHome({
       {archiveMlb ? (
         <Link id="mlb-2026-standings" className="home-champ-preview__mlb-archive-link" to="/championship/mlb" aria-label="Open 2026 MLB Postseason season recap">
           <span className="home-champ-preview__mlb-archive-icon" aria-hidden="true">⚾</span>
-          <span className="home-champ-preview__mlb-archive-copy"><strong>MLB POSTSEASON · 2026</strong><small>SEASON COMPLETE · BRACKET · PICKS · PLAY</small></span>
+          <span className="home-champ-preview__mlb-archive-copy"><strong>MLB POSTSEASON · 2026</strong><small>FINAL CHAMPIONSHIP · VIEW RESULTS</small></span>
           <span className="home-champ-preview__mlb-archive-score">{mlb?.own ? `#${mlb.own.overall_rank} · ${formatChampionshipPoints(mlb.own.total_points)} PTS` : loading ? "…" : "FINAL"}</span>
           <span aria-hidden="true">›</span>
         </Link>
