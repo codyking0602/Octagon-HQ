@@ -149,5 +149,6 @@ export function nbaCanAccessPublicCasual(day: string) {
 }
 
 export function nbaCanAccessReleasedGames(day: string) {
-  return NBA_OFFICIAL_GAMES_RELEASE_READY && ordinal(day) >= ordinal(NBA_GAMES_LAUNCH_DAY);
+  return NBA_OFFICIAL_GAMES_RELEASE_READY && ordinal(day) >= ordinal(NBA_GAMES_LAUNCH_DAY)
+    && ordinal(day) <= ordinal(NBA_REGULAR_SEASON_LAST_DAY);
 }
