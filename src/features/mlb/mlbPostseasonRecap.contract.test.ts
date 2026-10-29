@@ -18,7 +18,7 @@ describe("2026 MLB Championship recap", () => {
     expect(picks).toContain("archiveMode = false");
     expect(picks).toContain("!archiveMode && !hub.bracketLocked");
     expect(picks).toContain("hub.series.filter(item => item.round === round)");
-    expect(picks).toContain("YOUR PICK CORRECT");
+    expect(picks).toContain("✓ CORRECT PICK");
     expect(picks).toContain("NO PICK RECORDED");
     expect(picks).toContain("archiveMode ? 2026 : undefined");
   });
