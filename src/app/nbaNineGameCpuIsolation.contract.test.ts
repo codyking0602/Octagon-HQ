@@ -33,7 +33,7 @@ const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 describe("NBA Daily all-nine-mode CPU isolation", () => {
   it("retains canonical first-attempt publications for all eight other owner preview days", () => {
     for (const [index, game] of NBA_OWNER_PREVIEW_ORDER.entries()) {
-      if (game === "who_am_i") continue;
+      if (game === "who_am_i" || index >= 7) continue; // Oct 30-31 now belong to public Daily.
       const day = new Date(Date.UTC(2026, 9, 23 + index)).toISOString().slice(0, 10);
       expect(lean[game](day, "nba-daily-owner-prelaunch-v1", game)).toEqual(
         buildNbaServerDailyPublication(day, "nba-daily-owner-prelaunch-v1", game));
@@ -136,16 +136,16 @@ describe("NBA Daily lean gameplay equivalence", () => {
         isolated: advanceNbaWavelengthLeanDailyRuntime,
       },
       {
-        day: "2026-10-30", gameType: "hit_the_number" as const, action: null,
+        day: "2026-11-07", gameType: "hit_the_number" as const, action: null,
         isolated: advanceNbaHitNumberLeanDailyRuntime,
       },
       {
-        day: "2026-10-31", gameType: "higher_lower" as const, action: { choice: "higher" },
+        day: "2026-11-17", gameType: "higher_lower" as const, action: { choice: "higher" },
         isolated: advanceNbaHigherLowerLeanDailyRuntime,
       },
     ];
     for (const item of cases) {
-      const context = initial(item.day, "nba-daily-owner-prelaunch-v1", item.gameType);
+      const context = initial(item.day, item.day >= "2026-10-30" ? "nba-daily-regular-v3-oct30-public" : "nba-daily-owner-prelaunch-v1", item.gameType);
       const action = item.gameType === "hit_the_number"
         ? { fighter_id: ((context.publicState.active_round as Value).available_subject_ids as string[])[0] ?? (context.publicState.active_round as Value).available_subject_ids }
         : item.action;

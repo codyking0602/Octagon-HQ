@@ -34,18 +34,20 @@ const horizon = Array.from({ length: 182 }, (_, index) => add(start, index));
 describe("locked three-sport Daily scheduling policy", () => {
   it("matches every future SQL canonical cycle to the TypeScript content-calendar mirror", () => {
     const migration = readFileSync("supabase/migrations/202612310406_lock_three_sport_daily_cadence.sql", "utf8");
-    function sqlCycle(version: string) {
+    function sqlCycle(version: string, source = migration) {
       const marker = `('${version}','America/Chicago'`;
-      const start = migration.indexOf(marker);
+      const start = source.indexOf(marker);
       expect(start).toBeGreaterThanOrEqual(0);
-      const open = migration.indexOf("array[", start) + 6;
-      const close = migration.indexOf("]::text[]", open);
+      const open = source.indexOf("array[", start) + 6;
+      const close = source.indexOf("]::text[]", open);
       expect(close).toBeGreaterThan(open);
-      return [...migration.slice(open, close).matchAll(/'([a-z_]+)'/g)].map((match) => match[1]);
+      return [...source.slice(open, close).matchAll(/'([a-z_]+)'/g)].map((match) => match[1]);
     }
     expect(sqlCycle("football-daily-v21-locked-oct25")).toEqual(FOOTBALL_FUTURE_WEIGHTED_CYCLE);
     expect(sqlCycle("ufc-daily-v21-48h-oct25")).toEqual(UFC_FUTURE_WEIGHTED_CYCLE);
-    expect(sqlCycle("nba-daily-regular-v2-locked")).toEqual(NBA_DAILY_WEIGHTED_CYCLE);
+    expect(sqlCycle("nba-daily-regular-v2-locked")).toHaveLength(28); // Historical schedule remains archived.
+    const nbaCutover = readFileSync("supabase/migrations/202612310889_nba_public_oct30_daily_cutover.sql", "utf8");
+    expect(sqlCycle("nba-daily-regular-v3-oct30-public", nbaCutover)).toEqual(NBA_DAILY_WEIGHTED_CYCLE);
     const approved = readFileSync("supabase/migrations/202612310408_activate_approved_three_sport_higher_lower.sql", "utf8");
     function approvedCycle(version: string) {
       const marker = `('${version}','America/Chicago'`;
@@ -106,7 +108,7 @@ describe("locked three-sport Daily scheduling policy", () => {
     expect(lockedWeightedGameForDay("football", "2026-12-07")).toBe("bar_trivia");
   });
 
-  it("publishes Football daily, UFC on Oct 25/27/29, NBA on Nov 1/3/5, with no drift", () => {
+  it("publishes Football daily, UFC on Oct 25/27/29, NBA on Oct 30/Nov 1/3, with no drift", () => {
     let football = 0, ufc = 0, nba = 0;
     for (const day of horizon) {
       football++;
@@ -114,14 +116,14 @@ describe("locked three-sport Daily scheduling policy", () => {
       const nb = nbaRegularSeasonDaily(day);
       if (uf) ufc++;
       if (nb?.isPublicationDay) nba++;
-      if (day >= "2026-11-01" && day <= "2027-04-11") {
+      if (day >= "2026-10-30" && day <= "2027-04-11") {
         expect(uf && nb?.isPublicationDay).toBe(false);
       }
       expect(ufcActiveDailyDay(day)).toBe(
         add(start, Math.floor((Date.parse(day) - Date.parse(start)) / 172800000) * 2),
       );
     }
-    expect([football, ufc, nba]).toEqual([182, 91, 81]);
+    expect([football, ufc, nba]).toEqual([182, 91, 82]);
     expect(isUfcPublicationDay("2026-10-25")).toBe(true);
     expect(isUfcPublicationDay("2026-10-26")).toBe(false);
     expect(ufcActiveDailyDay("2026-11-01")).toBe("2026-10-31");

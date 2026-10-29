@@ -20,10 +20,10 @@ function provisionalDates() {
 }
 
 describe("Football Higher or Lower six-month readiness / integration gate", () => {
-  it("does not independently activate the unmerged coordinated scheduler", () => {
+  it("preserves the historical Football cadence independently of NBA public readiness", () => {
     expect(FOOTBALL_HIGHER_LOWER_APPROVED_DAILY_WEIGHT).toBe(2);
     expect(FOOTBALL_LOCKED_WEIGHTED_CYCLE).not.toContain("higher_lower");
-    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
+    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
   });
 
   it("simulates fourteen distinct 10-question official Daily boards using real seeded publisher and canonical source records", () => {
