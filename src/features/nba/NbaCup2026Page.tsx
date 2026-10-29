@@ -5,6 +5,7 @@ import {NBA_TEAM_BY_ID} from "./nbaFutures";
 import {NbaTeamMark,nbaTeamColor} from "./nbaTeamBranding";
 import {CUP_GROUPS,CUP_POINTS,cupPickCount,type CupGroupPicks} from "./nbaCup2026";
 import {loadCupPreview,saveCupPreview} from "./nbaCupRepository";
+import "../../styles/nba-hq.css";
 import "./nbaCup2026.css";
 
 const serializePicks=(value:CupGroupPicks)=>JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b))));
