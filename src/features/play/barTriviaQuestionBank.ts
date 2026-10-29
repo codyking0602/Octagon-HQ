@@ -6,6 +6,7 @@ import { FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS, FOOTBALL_BAR_TRIVIA_LAST_CAL
 import { applyFootballBarTriviaV2Rewrite } from "./barTriviaFootballRewritesV2";
 import { footballTriviaConceptKey } from "./barTriviaFootballConcepts";
 import { UFC_BAR_TRIVIA_V3_RETIRE_IDS, UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES, UFC_BAR_TRIVIA_V3_PROMPT_OVERRIDES } from "./ufcBarTriviaV3Editorial";
+import { UFC_BAR_TRIVIA_FOCUSED_RETIREMENTS, UFC_BAR_TRIVIA_FOCUSED_PROMPT_OVERRIDES, UFC_BAR_TRIVIA_FOCUSED_SOURCE_OVERRIDES } from "./ufcBarTriviaFocusedQuality20261029";
 import { UFC_BAR_TRIVIA_V3_EASY_MEDIUM } from "./ufcBarTriviaV3EasyMedium";
 import { UFC_BAR_TRIVIA_V3_HARD_FINAL } from "./ufcBarTriviaV3HardFinal";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
@@ -156,13 +157,13 @@ function calibrateBarTriviaDifficulty(question: BarTriviaQuestion): BarTriviaQue
 
 export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] =
   RAW_BAR_TRIVIA_QUESTION_BANK
-    .filter((question) => !(question.id in BAR_TRIVIA_EDITORIAL_RETIREMENTS) && !FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS.has(question.id) && !FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS.has(question.id) && (question.league !== "ufc" || !UFC_BAR_TRIVIA_V3_RETIRE_IDS.has(question.id)))
+    .filter((question) => !(question.id in BAR_TRIVIA_EDITORIAL_RETIREMENTS) && !FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS.has(question.id) && !FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS.has(question.id) && (question.league !== "ufc" || (!UFC_BAR_TRIVIA_V3_RETIRE_IDS.has(question.id) && !(question.id in UFC_BAR_TRIVIA_FOCUSED_RETIREMENTS))))
     .map(applyFootballBarTriviaV2Rewrite)
     .map(calibrateBarTriviaDifficulty)
     .map((question) => {
       if (question.league !== "ufc") return { ...question, factKey: footballTriviaConceptKey(question.id) };
-      const prompt = UFC_BAR_TRIVIA_V3_PROMPT_OVERRIDES[question.id] ?? question.prompt;
+      const prompt = UFC_BAR_TRIVIA_FOCUSED_PROMPT_OVERRIDES[question.id] ?? UFC_BAR_TRIVIA_V3_PROMPT_OVERRIDES[question.id] ?? question.prompt;
       const event = prompt.match(/\bUFC\s+(\d{2,3})\b/i);
-      const sourceUrl = question.sourceUrl ?? (event ? `https://www.ufc.com/event/ufc-${event[1]}` : "https://www.ufc.com/news/top-500-ufc-moments-list");
+      const sourceUrl = UFC_BAR_TRIVIA_FOCUSED_SOURCE_OVERRIDES[question.id] ?? question.sourceUrl ?? (event ? `https://www.ufc.com/event/ufc-${event[1]}` : "https://www.ufc.com/news/top-500-ufc-moments-list");
       return { ...question, prompt, sourceUrl, factKey: footballTriviaConceptKey(question.id) };
     });

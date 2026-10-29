@@ -319,10 +319,11 @@ export function buildBarTriviaRun(
       continue;
     }
 
-    // Football has four easy, three medium, two hard, and one Last Call.
-    // Keep the existing 3/3/3/1 scoring rounds and the Q4 ease-in: Q7 is a
-    // medium CONTENT question that earns Round 3 points. Other sports unchanged.
-    if (index === 6 && footballQualityMix) {
+    // Football and UFC have four easy, three medium, two hard, and one
+    // Last Call. Preserve 3/3/3/1 SCORING rounds and the Q4 ease-in:
+    // Q7 is medium CONTENT earning its existing Round 3 points.
+    // NBA/MLB selection remains unchanged.
+    if (index === 6 && (footballQualityMix || league === "ufc")) {
       const accessible = pickQuestion(
         eligiblePool(bank.filter((question) =>
           question.league === league &&

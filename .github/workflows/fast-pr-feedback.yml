@@ -116,7 +116,7 @@ jobs:
           saw_bar_trivia=false
           for file in "${changed_files[@]}"; do
             case "$file" in
-              src/features/games/barTriviaEngine.ts|src/features/play/barTrivia*.ts|src/features/play/footballTeamThemeDailyPacks*.ts|docs/audits/football-bar-trivia*.md|.github/workflows/fast-pr-feedback.yml)
+              src/features/games/barTriviaEngine.ts|src/features/play/barTrivia*.ts|src/features/play/ufcBarTrivia*.ts|src/features/play/footballTeamThemeDailyPacks*.ts|docs/audits/football-bar-trivia*.md|docs/audits/ufc-bar-trivia*.md|.github/workflows/fast-pr-feedback.yml)
                 saw_bar_trivia=true
                 ;;
               *) bar_trivia_only=false; break ;;
@@ -166,9 +166,9 @@ jobs:
           if [ "$millionaire_only" = true ] && [ "$saw_millionaire" = true ]; then
             npm test -- src/features/play/millionaireDailyRuntime.test.ts src/features/play/millionaireEditorialFutureCandidates.test.ts src/features/play/millionaireSixMonthEditorialGate.test.ts --run
           elif [ "${{ steps.scope.outputs.bar_trivia_only }}" = true ]; then
-            # Every changed Football Bar Trivia system plus actual Daily replay,
-            # themed pack and shared-engine UFC regressions.
-            npm test -- src/features/play/barTriviaContent.test.ts src/features/play/barTriviaEngine.test.ts src/features/play/barTriviaEditorialCuration.test.ts src/features/play/barTriviaDailyRuntime.test.ts src/features/play/barTriviaRecentRepeat.test.ts src/features/play/barTriviaFootballSixMonth.test.ts src/features/play/footballTeamThemeDailyPacks.test.ts src/features/play/barTriviaOct22CurrentEvents.test.ts --run
+            # Football + UFC Bar Trivia editorial, real published Daily replay,
+            # themed pack and shared-engine regressions.
+            npm test -- src/features/play/barTriviaContent.test.ts src/features/play/barTriviaEngine.test.ts src/features/play/barTriviaEditorialCuration.test.ts src/features/play/barTriviaDailyRuntime.test.ts src/features/play/barTriviaRecentRepeat.test.ts src/features/play/barTriviaFootballSixMonth.test.ts src/features/play/footballTeamThemeDailyPacks.test.ts src/features/play/barTriviaOct22CurrentEvents.test.ts src/features/play/ufcBarTriviaV3Editorial.test.ts src/features/play/ufcBarTriviaFocusedQuality20261029.test.ts --run
           else
             npm test -- --changed="$BASE_SHA" --passWithNoTests
           fi
