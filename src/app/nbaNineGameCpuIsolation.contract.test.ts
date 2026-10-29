@@ -6,7 +6,7 @@ import type { OfficialDailyRuntimeContext } from "../features/play/todaysChallen
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildNbaServerDailyPublication } from "../features/nba/nbaDailyServerPublication";
-import { NBA_OWNER_PREVIEW_ORDER } from "../features/nba/nbaDailySchedule";
+import { NBA_OWNER_PREVIEW_ORDER, nbaRegularSeasonDaily } from "../features/nba/nbaDailySchedule";
 import { buildNbaAverageFanLeanPublication } from "../features/nba/nbaDailyServerPublication";
 import { buildNbaSportsFeudLeanPublication } from "../features/nba/nbaDailyServerPublication";
 import { buildNbaMillionaireLeanPublication } from "../features/nba/nbaDailyServerPublication";
@@ -31,23 +31,36 @@ const bundler = readFileSync("scripts/bundle-daily-challenge-runtime.mjs", "utf8
 const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 
 describe("NBA Daily all-nine-mode CPU isolation", () => {
-  it("retains canonical first-attempt publications for all eight other owner preview days", () => {
-    for (const [index, game] of NBA_OWNER_PREVIEW_ORDER.entries()) {
-      if (game === "who_am_i" || index >= 6) continue; // Oct 29 board was promoted; public starts on that day.
-      const day = new Date(Date.UTC(2026, 9, 23 + index)).toISOString().slice(0, 10);
-      expect(lean[game](day, "nba-daily-owner-prelaunch-v1", game)).toEqual(
-        buildNbaServerDailyPublication(day, "nba-daily-owner-prelaunch-v1", game));
-    }
+  it("keeps historical owner QA isolated while the Oct 29 board is public", () => {
+    expect(NBA_OWNER_PREVIEW_ORDER.slice(0, 6)).toEqual([
+      "average_fan", "sports_feud", "millionaire", "who_am_i", "find_leader", "wavelength",
+    ]);
+    // No replay of a historical preview can become the publicly scheduled board.
+    expect(edge).toContain('admin.rpc("get_nba_owner_prelaunch_materialization_request")');
+    expect(edge).toContain('admin.rpc("get_daily_challenge_materialization_request"');
+    expect(edge).toContain('p_sport: "nba"');
   });
-  it("retains canonical content for each public first appearance", () => {
-    expect(lean.average_fan("2026-11-15", "nba-daily-regular-v3-oct30-public", "average_fan")).toEqual(buildNbaServerDailyPublication("2026-11-15", "nba-daily-regular-v3-oct30-public", "average_fan"));
-    expect(lean.sports_feud("2026-11-01", "nba-daily-regular-v3-oct30-public", "sports_feud")).toEqual(buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v3-oct30-public", "sports_feud"));
-    expect(lean.millionaire("2026-11-05", "nba-daily-regular-v3-oct30-public", "millionaire")).toEqual(buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v3-oct30-public", "millionaire"));
-    expect(lean.hit_the_number("2026-11-07", "nba-daily-regular-v3-oct30-public", "hit_the_number")).toEqual(buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v3-oct30-public", "hit_the_number"));
-    expect(lean.find_leader("2026-11-09", "nba-daily-regular-v3-oct30-public", "find_leader")).toEqual(buildNbaServerDailyPublication("2026-11-09", "nba-daily-regular-v3-oct30-public", "find_leader"));
-    expect(lean.wavelength("2026-11-11", "nba-daily-regular-v3-oct30-public", "wavelength")).toEqual(buildNbaServerDailyPublication("2026-11-11", "nba-daily-regular-v3-oct30-public", "wavelength"));
-    expect(lean.higher_lower("2026-11-17", "nba-daily-regular-v3-oct30-public", "higher_lower")).toEqual(buildNbaServerDailyPublication("2026-11-17", "nba-daily-regular-v3-oct30-public", "higher_lower"));
-    expect(lean.bar_trivia("2026-11-19", "nba-daily-regular-v3-oct30-public", "bar_trivia")).toEqual(buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v3-oct30-public", "bar_trivia"));
+  it("retains lean-vs-canonical content for each verified public first appearance", () => {
+    for (const [game, publisher] of Object.entries(lean)) {
+      // October 29 already has the exact immutable certified Bar Trivia setup.
+      // Starting November 1, resolve each *actual* opening date from the same
+      // 28-board schedule used by production instead of hardcoded old dates.
+      let found: string | null = null;
+      for (let offset = 0; offset < 65; offset++) {
+        const day = new Date(Date.UTC(2026, 10, 1 + offset)).toISOString().slice(0, 10);
+        const slot = nbaRegularSeasonDaily(day);
+        if (slot?.isPublicationDay && slot.gameType === game) {
+          found = day;
+          break;
+        }
+      }
+      expect(found, `First public appearance missing: ${game}`).not.toBeNull();
+      const day = found!;
+      expect(nbaRegularSeasonDaily(day)).toMatchObject({ day, gameType: game, isPublicationDay: true });
+      expect(publisher(day, "nba-daily-regular-v3-oct30-public", game)).toEqual(
+        buildNbaServerDailyPublication(day, "nba-daily-regular-v3-oct30-public", game as Parameters<typeof buildNbaServerDailyPublication>[2]),
+      );
+    }
     expect(readFileSync("src/features/nba/nbaDailySchedule.ts", "utf8")).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY = true");
     expect(edge).toContain("NBA_DAILY_EDGE_RELEASE_READY = true");
   });
@@ -156,7 +169,9 @@ describe("NBA Daily lean gameplay equivalence", () => {
   });
 
   it("keeps NBA Bar Trivia initial answer identical", () => {
-    const context = initial("2026-11-19", "nba-daily-regular-v3-oct30-public", "bar_trivia");
+    const day = new Date(Date.UTC(2026, 10, 19)).toISOString().slice(0, 10);
+    expect(nbaRegularSeasonDaily(day)?.gameType).toBe("bar_trivia");
+    const context = initial(day, "nba-daily-regular-v3-oct30-public", "bar_trivia");
     const question = context.publicState.current_question as Value;
     const action = { choice: (question.choices as string[])[0] };
     expect(advanceBarTriviaDailyRuntime(context, action)).toEqual(advanceNbaOfficialDailyRuntime(context, action));
