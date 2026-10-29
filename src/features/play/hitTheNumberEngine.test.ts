@@ -297,6 +297,21 @@ describe("Hit the Number foundation", () => {
     })).toThrow("No exact ufc-ko-tko-wins solution exists for target 1.");
   });
 
+  it("limits new custom-target boards to four or five picks by default", () => {
+    const rows = playFighters.slice(0, 8).map(fighter => testStatRow(fighter.id, 5));
+    for (const target of [20, 25]) {
+      const board = createHitTheNumberBoard({
+        seed: `custom-target-${target}`,
+        statId: "ufc-wins",
+        target,
+        boardType: "open-roster",
+        statRows: rows,
+      });
+      expect(board.publicSetup.pickCount).toBe(target / 5);
+      expect([4, 5]).toContain(board.publicSetup.pickCount);
+    }
+  });
+
   it("builds a 14-choice pool around the hidden exact solution without exposing values", () => {
     const board = createHitTheNumberBoard({
       seed: "random-pool",
