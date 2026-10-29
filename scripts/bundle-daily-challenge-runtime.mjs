@@ -99,22 +99,11 @@ const bundles = [
     requiredExports: ["advanceAverageFanDailyRuntime", "buildAverageFanDailySetup"],
   },
   {
-    label: "Football Daily publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationAll.ts"),
-    fileName: "football-publication.generated.mjs",
+    label: "Football Average Fan lean publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationAverageFan.ts"),
+    fileName: "football-average-fan-publication.generated.mjs",
     requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smokes: [
-      { day: "2026-09-27", gameType: "who_am_i" },
-      { day: "2026-09-16", gameType: "wavelength" },
-      { day: "2026-09-15", gameType: "find_leader" },
-      { day: "2026-09-21", gameType: "blind_resume" },
-      { day: "2026-09-18", gameType: "hit_the_number" },
-      { day: "2026-09-24", gameType: "millionaire" },
-      { day: "2026-09-23", gameType: "sports_feud" },
-      { day: "2026-09-29", gameType: "bar_trivia" },
-      { day: "2026-10-01", gameType: "average_fan" },
-      { day: "2026-09-17", gameType: "keep_4_cut_4" },
-    ],
+    smokes: [{ day: "2026-11-02", gameType: "average_fan", scheduleVersion: "football-daily-v22-higher-lower-oct27" }],
   },
   {
     // The October 27 Wavelength board requires two canonical rounds; importing
@@ -335,6 +324,9 @@ for (const generator of [
 ]) {
   await import(generator);
 }
+
+// Explicitly discard obsolete all-game bundle left by prior local builds.
+await rm(resolve(outDir, "football-publication.generated.mjs"), { force: true });
 
 for (const bundle of bundles) {
   const output = resolve(outDir, bundle.fileName);
