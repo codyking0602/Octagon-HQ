@@ -175,12 +175,15 @@ WHERE preview_day.central_day=date '2026-10-29'
   AND preview_day.schedule_version='nba-daily-owner-prelaunch-v1';
 
 DO $verify$
-DECLARE v_day date; v_public private.daily_challenges; v_n integer;
+DECLARE v_day date; v_expected date; v_public private.daily_challenges; v_n integer;
 BEGIN
   FOR v_day IN SELECT d::date FROM generate_series('2026-10-29'::date,'2026-11-04'::date,'1 day'::interval) d LOOP
-    IF private.daily_challenge_active_day(v_day,'nba') <>
-      CASE WHEN v_day <= date '2026-10-31' THEN date '2026-10-29'
-      ELSE date '2026-11-01' + ((v_day-date '2026-11-01')/2)*2 END THEN
+    IF v_day <= date '2026-10-31' THEN
+      v_expected := date '2026-10-29';
+    ELSE
+      v_expected := date '2026-11-01' + ((v_day-date '2026-11-01')/2)*2;
+    END IF;
+    IF private.daily_challenge_active_day(v_day,'nba') <> v_expected THEN
       RAISE EXCEPTION 'NBA October 29 cadence invalid on %',v_day;
     END IF;
   END LOOP;
