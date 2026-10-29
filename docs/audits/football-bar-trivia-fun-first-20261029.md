@@ -46,8 +46,9 @@ This is a bounded **cutover reconciliation**, not a magical dynamic history sour
 - Maintain **4 easy / 3 medium / 2 hard / 1 Last Call** content difficulty through first six questions, a medium ease-in at Q7 and two hard at Q8/Q9.
 - Preserve all existing ten-question scoring rounds, perfect-score denominator, double-round multiplier, wager, reveals and results. A Q7 medium *content* question earns its existing Round 3 points; this avoids a global scoring redesign.
 - NFL/CFB remain random from audited pools, **not scripted ten-question runs**.
+- The already approved December 7 Cowboys–Seahawks special keeps **all ten original questions, answer choices, reveals and scoring**. Only Q4 (easy) and Q7 (medium) difficulty labels are aligned with 4/3/2/1; they retain their original scoring rounds.
 - The generator uses **recent-safe soft caps** on recognizable "first" prompts (target <=2) and identity/fan-culture trivia (target <=3) only when an unused, history-fresh alternative exists. This matters because recent-repeat protection takes priority.
-- UFC, NBA and MLB remain untouched. Dedicated December 7 Cowboys-Seahawks board and older published official boards are preserved.
+- UFC, NBA and MLB remain untouched. Dedicated December 7 Cowboys–Seahawks content and older published official boards are preserved.
 
 ## Exact-head verification gates
 
