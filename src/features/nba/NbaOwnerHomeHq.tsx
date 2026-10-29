@@ -69,7 +69,7 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
   const hasSaved = !hasCompleted && Boolean(daily.projection?.progressRevision);
   const dailyLink = dailyEnabled ? "/nba/today" : "/nba";
   const dailyLabel = dailyType ? NBA_DAILY_GAME_LABELS[dailyType] : "Basketball Daily";
-  const dailyState = !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : "STARTS OCT 30"
+  const dailyState = !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : "STARTS OCT 29"
     : !signedIn ? "SIGN IN" : hasCompleted ? "COMPLETED" : hasSaved ? "IN PROGRESS"
     : daily.loading && !daily.projection ? "LOADING" : daily.error && !daily.projection ? "UNAVAILABLE" : "AVAILABLE";
 
@@ -95,7 +95,7 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
           <div>
             <span>NBA DAILY CHALLENGE <small>{dailyState}</small></span>
             <strong>{dailyLabel}</strong>
-            <small>{!dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "Regular-season Daily complete" : "Official NBA Daily begins October 30"
+            <small>{!dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "Regular-season Daily complete" : "Official NBA Daily begins October 29"
               : !signedIn ? "Sign in to track today's score and standing."
               : hasCompleted ? rank != null ? `#${rank} today` : "Official score locked"
               : hasSaved ? "Pick up where you left off."
