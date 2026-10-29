@@ -333,7 +333,7 @@ export default function NbaOfficialDailyPage() {
       advance={(action, options) => { void runtime.advance(action, options); }}
       onExit={() => navigate("/nba")}
     />
-    {projection.officialAttempt ? <section className="nba-official-daily__saved-score" aria-label="Official NBA Daily total score">
+    {projection.officialAttempt ? <section className="nba-official-daily__saved-score" aria-label={ownerTest ? "NBA practice total score" : "Official NBA Daily total score"}>
       {ownerTest ? "PRACTICE SCORE" : "OFFICIAL SAVED SCORE"} · <strong>{dailyOfficialDisplayScore(projection)}/100</strong>
     </section> : null}
     {ownerTest ? <p className="play-v2__muted">Practice scores do not count toward public standings or championship points.</p> : null}
