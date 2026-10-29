@@ -76,7 +76,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       };
       if (!run[0]?.id.startsWith("theme-cowboys-seahawks-2026-")) {
         expect(mix, date).toEqual({ easy: 4, medium: 3, hard: 2, lastCall: 1 });
-        expect(run.filter((q) => /\\bfirst\\b/i.test(q.prompt)).length, date).toBeLessThanOrEqual(2);
+        expect(run.filter((q) => /\bfirst\b/i.test(q.prompt)).length, date).toBeLessThanOrEqual(2);
       }
       for (const question of run) {
         const key = question.factKey ?? question.id;
