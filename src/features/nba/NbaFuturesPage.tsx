@@ -11,6 +11,8 @@ import { NBA_SEASON,NBA_TEAMS,NBA_FUTURES_MAX,NBA_FUTURES_SELECTIONS,
 import { loadNbaFutures,saveNbaFutures,type NbaFuturesSnapshot } from "./nbaFuturesRepository";
 import "../../styles/nba-hq.css";
 import {NbaCupHero} from "./NbaCupHero";
+import {loadCupPreview} from "./nbaCupRepository";
+import {cupPickCount} from "./nbaCup2026";
 
 function formattedLock(value:string) {
   return new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",month:"short",day:"numeric",
@@ -190,6 +192,7 @@ function NbaFuturesGroupEntry({entry}:{entry:NbaFuturesSnapshot["entries"][numbe
 export default function NbaFuturesPage() {
   const identity=useIdentity();
   const [snapshot,setSnapshot]=useState<NbaFuturesSnapshot|null>(null);
+  const [cupProgress,setCupProgress]=useState<number|null>(null);
   const [draft,setDraft]=useState<NbaFuturesPicks|null>(null);
   const [loading,setLoading]=useState(true);
   const [saving,setSaving]=useState(false);
@@ -236,6 +239,15 @@ export default function NbaFuturesPage() {
   const progress=draft?nbaFuturesProgress(draft):0;
   const locked=snapshot?.locked??false;
   const cupAvailable=canPreviewNbaWhoAmI(identity.profile);
+  useEffect(()=>{
+    let active=true;
+    setCupProgress(null);
+    if(cupAvailable&&identity.profile?.id){
+      void loadCupPreview().then(result=>{if(active)setCupProgress(cupPickCount(result.picks));})
+        .catch(()=>{if(active)setCupProgress(null);});
+    }
+    return()=>{active=false};
+  },[cupAvailable,identity.profile?.id]);
   return <div className="page nba-hq-page nba-picks-page" data-sport="nba">
     {cupAvailable?<NbaCupHero linked/>:
       <header className="nba-hq-hero">
@@ -244,7 +256,7 @@ export default function NbaFuturesPage() {
         <p>Pick the entire season. One card, 100 points, and 15% of the Basketball Championship.</p>
       </header>}
     {cupAvailable?<div className="nba-picks__cup-status">
-      <span>GROUP PLAY · OCT 30 – NOV 27</span><strong>CUP 10% OF SEASON</strong>
+      <span>GROUP PLAY · OCT 30 – NOV 27</span><strong>{cupProgress===null?"CUP 10% OF SEASON":`${cupProgress}/6 GROUP PICKS`}</strong>
     </div>:null}
     {!identity.profile?.id?<section className="surface-card nba-hq-notice"><p>Sign in to save your NBA Futures predictions.</p>
       <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO PICK</button></section>:null}
