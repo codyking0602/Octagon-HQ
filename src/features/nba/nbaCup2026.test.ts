@@ -69,6 +69,7 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
   });
   it("retains private Cup access while avoiding duplicate save controls",()=>{
     const cup=readFileSync("src/features/nba/NbaCup2026Page.tsx","utf8");
+    const hero=readFileSync("src/features/nba/NbaCupHero.tsx","utf8");
     expect(cup).not.toMatch(/private owner test|owner test|owner preview|test only/i);
     expect(cup).toContain("nba-cup__floating-save");
     expect(cup).toContain("IntersectionObserver");
