@@ -42,10 +42,10 @@ describe("Football Hit the Number canonical fact integration", () => {
   it("uses exactly the curated NFL running/receiving catalog and canonical recognizable subjects", () => {
     expect(footballHitTheNumberSubjects.length).toBeGreaterThan(50);
     expect(new Set(footballHitTheNumberSubjects.map((subject) => subject.id)).size).toBe(footballHitTheNumberSubjects.length);
-    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG).toHaveLength(14);
+    expect(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG).toHaveLength(15);
 
     const groups = new Set(FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG.map((row) => row.group));
-    expect(groups).toEqual(new Set(["nfl-qb-career", "nfl-rb-career", "nfl-receiving-career", "nfl-qb-season", "nfl-team-season", "cfb"]));
+    expect(groups).toEqual(new Set(["nfl-qb-career", "nfl-rb-career", "nfl-receiving-career", "nfl-qb-season", "nfl-team-season", "cfb-player-peak", "cfb"]));
 
     const nflMetrics = FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG
       .filter((row) => row.league === "NFL")
@@ -54,7 +54,7 @@ describe("Football Hit the Number canonical fact integration", () => {
       .filter((row) => row.league === "CFB")
       .map((row) => row.metricId);
     expect(nflMetrics).toHaveLength(9);
-    expect(cfbMetrics).toHaveLength(5);
+    expect(cfbMetrics).toHaveLength(6);
     expect(new Set([...nflMetrics, ...cfbMetrics])).toEqual(new Set([
       "nfl-season-passing-yards",
       "nfl-team-points-per-game",
@@ -65,11 +65,12 @@ describe("Football Hit the Number canonical fact integration", () => {
       "nfl-career-rushing-touchdowns",
       "nfl-career-receiving-yards",
       "nfl-career-receiving-touchdowns",
-      "cfb-team-points-for",
       "cfb-team-points-against",
-      "cfb-team-wins",
       "cfb-team-points-per-game",
       "cfb-team-point-differential",
+      "cfb-best-season-passing-touchdowns",
+      "cfb-best-season-rushing-yards",
+      "cfb-best-season-receiving-yards",
     ]));
     for (const subject of footballHitTheNumberSubjects) {
       expect(subject.casualEligible, subject.id).toBe(true);
@@ -95,6 +96,10 @@ describe("Football Hit the Number canonical fact integration", () => {
       "Great NFL Running Backs",
       "NFL Receiving Greats",
       "NFL Team Seasons",
+      "College Quarterback Stars",
+      "College Rushing Stars",
+      "College Receiving Stars",
+      "Memorable College Teams",
       "National Champions",
       "BCS Era Champions",
       "CFP Era Champions",
@@ -227,7 +232,7 @@ describe("Football Hit the Number canonical fact integration", () => {
     const newMetrics = new Set([
       "nfl-career-passing-touchdowns",
       "nfl-season-passing-yards",
-      "cfb-team-wins",
+      "cfb-best-season-rushing-yards",
     ]);
     let cfb = 0;
     const runs = 1_000;
@@ -255,7 +260,7 @@ describe("Football Hit the Number canonical fact integration", () => {
       }
     }
 
-    expect(seenMetrics.size).toBe(14);
+    expect(seenMetrics.size).toBe(15);
     expect(seenNewMetrics).toEqual(newMetrics);
     expect(picks).toEqual(new Set([4, 5]));
     expect(fourCount / runs).toBeGreaterThanOrEqual(0.8);
