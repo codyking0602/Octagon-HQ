@@ -52,7 +52,7 @@ export function NbaWelcomeTakeover({ profileId }: { profileId: string }) {
           <h1>WELCOME TO<br/><em>BASKETBALL HQ</em></h1>
           <p className="nba-welcome__deck">One championship. An entire NBA season.</p>
           <div className="nba-welcome__phase is-current">
-            <div><small>01 · AVAILABLE NOW</small><strong>NBA FUTURES</strong><p>30 team win-total Over/Unders, playoff teams, awards, NBA champion, and more. 100 points up for grabs.</p></div>
+            <div><small>01 · FUTURES LOCKED</small><strong>NBA FUTURES</strong><p>Futures picks are locked. Review saved win-total, playoff, awards, and champion selections as the season unfolds.</p></div>
             <b>15%</b>
           </div>
           <div className="nba-welcome__phase">
