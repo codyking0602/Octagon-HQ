@@ -69,7 +69,10 @@ describe("NBA official games release plan", () => {
   });
   it("reuses the exact October 29 server board, owner 81 and score, and original Nov 1 rotation", () => {
     const sql=readFileSync("supabase/migrations/202612310890_nba_oct29_public_bar_trivia_carryover.sql","utf8");
-    expect(sql).toContain("SET schedule_version='nba-daily-launch-oct29-bar-trivia-v1'");
+    expect(sql).toContain("INSERT INTO private.daily_challenges");
+    expect(sql).toContain("v_public_id,central_day,'nba-daily-launch-oct29-bar-trivia-v1'");
+    expect(sql).toContain("INSERT INTO private.daily_challenge_attempts");
+    expect(sql).toContain("private.daily_challenge_progress");
     expect(sql).toContain("v_score <> 81");
     expect(sql).toContain("h.normalized_score=81");
     expect(sql).toContain("v_daily.setup_id IS NULL");
