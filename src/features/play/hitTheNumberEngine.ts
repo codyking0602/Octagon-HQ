@@ -5,8 +5,9 @@ import { deriveUfcCareerStats } from "./ufcCareerStats";
 
 export const HIT_THE_NUMBER_VERSION = "hit-the-number-v2" as const;
 export const HIT_THE_NUMBER_MIN_PICKS = 4;
-export const HIT_THE_NUMBER_MAX_PICKS = 7;
-export const HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE = 12;
+export const HIT_THE_NUMBER_MAX_PICKS = 7; // historical published scores remain valid
+export const HIT_THE_NUMBER_GENERATED_MAX_PICKS = 5;
+export const HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE = 14;
 
 /**
  * Factual Hit the Number catalog. Every metric is derived from the canonical
@@ -56,10 +57,8 @@ export const HIT_THE_NUMBER_GENERATION_PROFILE = {
     { value: "division", weight: 0 },
   ],
   picks: [
-    { value: 4, weight: 15 },
-    { value: 5, weight: 35 },
-    { value: 6, weight: 35 },
-    { value: 7, weight: 15 },
+    { value: 4, weight: 85 },
+    { value: 5, weight: 15 },
   ],
 } as const;
 
@@ -108,6 +107,7 @@ export interface CreateGeneratedHitTheNumberBoardOptions {
   seed: string;
   boardType: HitTheNumberBoardType;
   statRows?: readonly HitTheNumberStatRow[];
+  pickCount?: 4 | 5;
 }
 
 export type HitTheNumberResultStatus = "perfect" | "under" | "bust";
@@ -207,8 +207,39 @@ function validatePickCount(value: number) {
 }
 
 export function hitTheNumberRandomPoolSize(pickCount: number) {
-  validatePickCount(pickCount);
-  return Math.min(HIT_THE_NUMBER_DEFAULT_RANDOM_POOL_SIZE, pickCount * 2);
+  if (pickCount === 4) return 12;
+  if (pickCount === 5) return 14;
+  throw new Error("New UFC Hit the Number pools only support four or five picks.");
+}
+
+/** Stat-value tiers keep every board from becoming all stars or all low totals. */
+export function balancedHitTheNumberPool(
+  eligible: readonly PlayFighter[],
+  solutionIds: readonly string[],
+  statId: HitTheNumberStatId,
+  statRows: readonly HitTheNumberStatRow[],
+  poolSize: number,
+  random: () => number,
+): string[] {
+  const byId = rowMap(statRows);
+  const sorted = [...eligible].sort((a, b) => valueFor(byId, a.id, statId) - valueFor(byId, b.id, statId));
+  const cutOne = Math.ceil(sorted.length / 3);
+  const cutTwo = Math.ceil(sorted.length * 2 / 3);
+  const tiers = [sorted.slice(0, cutOne), sorted.slice(cutOne, cutTwo), sorted.slice(cutTwo)];
+  const quotas = poolSize === 12 ? [4, 4, 4] : [5, 4, 5];
+  const selected = new Set(solutionIds);
+  for (let tier = 0; tier < tiers.length; tier += 1) {
+    const segment = tiers[tier]!;
+    const already = segment.filter(fighter => selected.has(fighter.id)).length;
+    // Reserve all original solution IDs before filling tiers; never truncate them.
+    for (const fighter of shuffleLineup(segment.filter(fighter => !selected.has(fighter.id)), random)
+      .slice(0, Math.min(poolSize - selected.size, Math.max(0, quotas[tier]! - already)))) selected.add(fighter.id);
+  }
+  if (selected.size < poolSize) {
+    for (const fighter of shuffleLineup(sorted.filter(fighter => !selected.has(fighter.id)), random)
+      .slice(0, poolSize - selected.size)) selected.add(fighter.id);
+  }
+  return shuffleLineup([...selected], random);
 }
 
 function weightedValue<T>(
@@ -368,9 +399,10 @@ export function createHitTheNumberBoard(options: CreateHitTheNumberBoardOptions)
       throw new Error(`Not enough positive ${options.statId} fighters to build a Hit the Number board.`);
     }
     pickCount = validatePickCount(
-      options.pickCount
-        ?? HIT_THE_NUMBER_MIN_PICKS
-          + Math.floor(random() * (maximumGeneratedPicks - HIT_THE_NUMBER_MIN_PICKS + 1)),
+      options.pickCount ?? weightedValue(
+        HIT_THE_NUMBER_GENERATION_PROFILE.picks.filter(row => row.value <= maximumGeneratedPicks),
+        random,
+      ),
     );
     solutionFighterIds = generatedSolution(
       eligible,
@@ -397,15 +429,7 @@ export function createHitTheNumberBoard(options: CreateHitTheNumberBoardOptions)
     if (eligible.length < requestedPoolSize) {
       throw new Error(`Random Hit the Number pool needs ${requestedPoolSize} eligible fighters to preserve decoys.`);
     }
-    const solutionSet = new Set(solutionFighterIds);
-    const extras = shuffleLineup(
-      eligible.filter((fighter) => !solutionSet.has(fighter.id)),
-      random,
-    ).slice(0, requestedPoolSize - solutionFighterIds.length);
-    fighterIds = shuffleLineup(
-      [...solutionFighterIds, ...extras.map((fighter) => fighter.id)],
-      random,
-    );
+    fighterIds = balancedHitTheNumberPool(eligible, solutionFighterIds, options.statId, statRows, requestedPoolSize, random);
   }
 
   return {
@@ -446,7 +470,7 @@ export function createGeneratedHitTheNumberBoard(
     : {};
   const eligible = hitTheNumberEligibleFighters(statId, filter, statRows);
   const positiveCount = positiveFighterCount(statId, filter, statRows);
-  const maximumPicks = Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount);
+  const maximumPicks = Math.min(HIT_THE_NUMBER_GENERATED_MAX_PICKS, positiveCount);
   const pickOptions = HIT_THE_NUMBER_GENERATION_PROFILE.picks.filter(
     (row) => row.value <= maximumPicks
       && (
@@ -457,7 +481,8 @@ export function createGeneratedHitTheNumberBoard(
   if (!pickOptions.length) {
     throw new Error("Hit the Number generated challenge does not have enough fighter depth.");
   }
-  const pickCount = weightedValue(pickOptions, random);
+  const pickCount = options.pickCount ?? weightedValue(pickOptions, random);
+  if (!pickOptions.some(option => option.value === pickCount)) throw new Error("Unavailable UFC pick count.");
 
   return createHitTheNumberBoard({
     seed: options.seed,

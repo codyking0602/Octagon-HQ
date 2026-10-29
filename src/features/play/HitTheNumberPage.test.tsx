@@ -202,9 +202,9 @@ describe("Hit the Number casual game", () => {
     const pickCount = Number(selectionHeading.match(/\/\s*(\d+)\s+selected/)?.[1]);
     const fighterCount = container.querySelectorAll(".hit-number-fighter-card").length;
     expect(pickCount).toBeGreaterThanOrEqual(4);
-    expect(pickCount).toBeLessThanOrEqual(7);
+    expect(pickCount).toBeLessThanOrEqual(5);
     expect(fighterCount).toBeGreaterThan(0);
-    expect(fighterCount).toBeLessThanOrEqual(12);
+    expect(fighterCount).toBeLessThanOrEqual(14);
     expect(container.querySelectorAll(".hit-number-stat-value")).toHaveLength(0);
     expect(container.textContent).toContain("RANDOM POOL");
     expect(screen.getByRole("button", { name: "RANDOM POOL" })).toHaveAttribute("aria-pressed", "true");
@@ -235,7 +235,7 @@ describe("Hit the Number casual game", () => {
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "one-from-each");
     expect(container.textContent).not.toContain("ONE FROM EACH");
     expect(container.textContent).toContain(plan.format.configurationLabel!.toUpperCase());
-    expect(roleSlots).toHaveLength(5);
+    expect(roleSlots).toHaveLength(plan.pickCount);
     plan.format.slots.forEach((slot, index) => {
       expect(roleSlots[index]?.textContent).toContain(slot.label);
     });
@@ -263,7 +263,7 @@ describe("Hit the Number casual game", () => {
     expect(container.querySelector(".hit-number-page")).toHaveAttribute("data-format-id", "build-the-team");
     expect(container.textContent).not.toContain("BUILD THE TEAM");
     expect(container.textContent).toContain(plan.format.configurationLabel!.toUpperCase());
-    expect(roleSlots).toHaveLength(5);
+    expect(roleSlots).toHaveLength(plan.pickCount);
     plan.format.slots.forEach((slot, index) => {
       expect(roleSlots[index]?.textContent).toContain(slot.label);
     });

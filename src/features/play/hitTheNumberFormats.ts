@@ -1,7 +1,8 @@
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
 import {
   HIT_THE_NUMBER_GENERATION_PROFILE,
-  HIT_THE_NUMBER_MAX_PICKS,
+  HIT_THE_NUMBER_GENERATED_MAX_PICKS,
+  balancedHitTheNumberPool,
   HIT_THE_NUMBER_MIN_PICKS,
   createGeneratedHitTheNumberBoard,
   hitTheNumberEligibleFighters,
@@ -64,6 +65,7 @@ export interface CreateHitTheNumberFormatPlanOptions {
   seed: string;
   boardType: HitTheNumberBoardType;
   statRows?: readonly HitTheNumberStatRow[];
+  pickCount?: 4 | 5;
 }
 
 export const HIT_THE_NUMBER_FORMAT_GENERATION_PROFILE = {
@@ -382,22 +384,14 @@ function fighterPool(
   boardType: HitTheNumberBoardType,
   eligible: readonly PlayFighter[],
   solutionFighterIds: readonly string[],
+  statId: HitTheNumberStatId,
+  statRows: readonly HitTheNumberStatRow[],
   random: () => number,
 ) {
-  if (boardType === "open-roster") return eligible.map((fighter) => fighter.id);
+  if (boardType === "open-roster") return eligible.map(fighter => fighter.id);
   const poolSize = hitTheNumberRandomPoolSize(solutionFighterIds.length);
-  if (eligible.length < poolSize) {
-    throw new Error(`Hit the Number format needs ${poolSize} eligible fighters to preserve decoys.`);
-  }
-  const solutionSet = new Set(solutionFighterIds);
-  const extras = shuffleLineup(
-    eligible.filter((fighter) => !solutionSet.has(fighter.id)),
-    random,
-  ).slice(0, poolSize - solutionFighterIds.length);
-  return shuffleLineup(
-    [...solutionFighterIds, ...extras.map((fighter) => fighter.id)],
-    random,
-  );
+  if (eligible.length < poolSize) throw new Error("UFC Hit the Number format lacks balanced-pool depth.");
+  return balancedHitTheNumberPool(eligible, solutionFighterIds, statId, statRows, poolSize, random);
 }
 
 function buildSpecialPlan(
@@ -417,7 +411,7 @@ function buildSpecialPlan(
         (fighter) => valueFor(rowsById, fighter.id, statId) > 0,
       ).length;
       return generatedPickOptions(
-        Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount),
+        Math.min(HIT_THE_NUMBER_GENERATED_MAX_PICKS, positiveCount),
         options.boardType,
         eligible.length,
       ).length > 0;
@@ -426,12 +420,14 @@ function buildSpecialPlan(
     const theme = viableThemes[Math.floor(random() * viableThemes.length)]!;
     const eligible = baseEligible.filter((fighter) => fighterMatchesRules(fighter, theme.rules, rowsById));
     const positiveCount = eligible.filter((fighter) => valueFor(rowsById, fighter.id, statId) > 0).length;
-    const pickCount = generatedPickCount(
-      Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount),
+    const pickCount = options.pickCount ?? generatedPickCount(
+      Math.min(HIT_THE_NUMBER_GENERATED_MAX_PICKS, positiveCount),
       options.boardType,
       eligible.length,
       random,
     );
+    if (pickCount != null && !generatedPickOptions(Math.min(HIT_THE_NUMBER_GENERATED_MAX_PICKS, positiveCount), options.boardType, eligible.length)
+      .some(row => row.value === pickCount)) return null;
     if (pickCount == null) return null;
     const solutionFighterIds = generatedSolution(eligible, statId, pickCount, rowsById, random);
     if (!solutionFighterIds) return null;
@@ -440,15 +436,24 @@ function buildSpecialPlan(
       statId,
       target: solutionFighterIds.reduce((sum, fighterId) => sum + valueFor(rowsById, fighterId, statId), 0),
       pickCount,
-      fighterIds: fighterPool(options.boardType, eligible, solutionFighterIds, random),
+      fighterIds: fighterPool(options.boardType, eligible, solutionFighterIds, statId, statRows, random),
       solutionFighterIds,
       format: formatSetup(formatId, theme),
     };
   }
 
-  const catalog = formatId === "one-from-each"
+  const originalCatalog = formatId === "one-from-each"
     ? HIT_THE_NUMBER_ONE_FROM_EACH_CATALOG
     : HIT_THE_NUMBER_BUILD_TEAM_CATALOG;
+  const requestedCount = options.pickCount ?? 4;
+  const catalog = originalCatalog.map(set => ({
+    ...set,
+    id: requestedCount === 4 ? set.id + "-four" : set.id,
+    label: requestedCount === 4
+      ? formatId === "one-from-each" ? "Four-Division Mix" : set.label + " · 4 Fighters"
+      : set.label,
+    slots: set.slots.slice(0, requestedCount),
+  }));
   const viabilityRandom = () => 0.5;
   const viableSets = catalog.filter((slotSet) => {
     if (slotSolution(slotSet.slots, baseEligible, statId, rowsById, viabilityRandom) == null) return false;
@@ -466,7 +471,7 @@ function buildSpecialPlan(
     statId,
     target: solutionFighterIds.reduce((sum, fighterId) => sum + valueFor(rowsById, fighterId, statId), 0),
     pickCount: slotSet.slots.length,
-    fighterIds: fighterPool(options.boardType, eligible, solutionFighterIds, random),
+    fighterIds: fighterPool(options.boardType, eligible, solutionFighterIds, statId, statRows, random),
     solutionFighterIds,
     format: formatSetup(formatId, slotSet),
   };
@@ -477,9 +482,14 @@ export function createHitTheNumberFormatPlan(
 ): HitTheNumberFormatPlan {
   const random = seededLineupRandom("hit-the-number-format-plan", options.seed, options.boardType);
   const formatId = weightedValue(HIT_THE_NUMBER_FORMAT_GENERATION_PROFILE.formats, random);
+  const pickCount = options.pickCount ?? weightedValue(
+    HIT_THE_NUMBER_GENERATION_PROFILE.picks,
+    seededLineupRandom("ufc-hit-number-fixed-pick-count", options.seed, options.boardType),
+  );
+  const fixedOptions = { ...options, pickCount };
 
   if (formatId === "classic") {
-    const board = createGeneratedHitTheNumberBoard(options);
+    const board = createGeneratedHitTheNumberBoard(fixedOptions);
     return {
       boardType: options.boardType,
       statId: board.publicSetup.statId,
@@ -497,7 +507,7 @@ export function createHitTheNumberFormatPlan(
     random,
   );
   for (const statId of [firstStat, ...remainingStats]) {
-    const plan = buildSpecialPlan(formatId, statId, options, random);
+    const plan = buildSpecialPlan(formatId, statId, fixedOptions, random);
     if (plan) return plan;
   }
   throw new Error(`Hit the Number ${formatId} has no verified solvable format plan.`);
