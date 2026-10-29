@@ -187,9 +187,6 @@ export default function HomePage() {
   // Approved compact Home HQ designs are public, including signed-out visitors.
   const ownerPreview = true;
   const compactFootballPreview = true;
-  // Owner-only NBA daily game previews stay private; the polished Basketball HQ layout is shared.
-  const nbaHqOwnerPreview = Boolean(identity.profile?.canControlPicks === true
-    && identity.profile.displayName.trim().toUpperCase() === "CODY");
   const sportPreference = useOptionalSport();
   const notifications = useOptionalNotifications();
   const sportOrder = prioritizedSports(notifications && (notifications.pushSportStatus === "ready" || notifications.pushSportStatus === "saving") ? notifications.pushSports : null);
@@ -492,14 +489,14 @@ export default function HomePage() {
       {ownerSport !== "all" ? (
         ownerSport === "football" ? footballHq
           : ownerSport === "ufc" ? ufcHq
-          : ownerSport === "nba" && nbaVisible ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} />
+          : ownerSport === "nba" && nbaVisible ? <NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} />
           : null
       ) : (
         <>
           {visibleOrder.map(sport => (
             <Fragment key={sport}>
               {sport === "football" ? footballHq : sport === "ufc" ? ufcHq
-                : sport === "nba" ? <NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} hideChampionship />
+                : sport === "nba" ? <NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} hideChampionship />
                 : null}
             </Fragment>
           ))}
