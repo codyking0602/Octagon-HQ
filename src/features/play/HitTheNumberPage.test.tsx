@@ -184,8 +184,8 @@ describe("Hit the Number casual game", () => {
   it("lets the player choose only Open Roster versus Random Pool while the format is generated", () => {
     const { container } = renderGame();
 
-    expect(screen.getByRole("button", { name: "OPEN ROSTER" })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "RANDOM POOL" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "OPEN ROSTER" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "RANDOM POOL" })).toHaveAttribute("aria-pressed", "true");
     expect(container.querySelectorAll("select")).toHaveLength(0);
     expect(container.textContent).not.toContain("ROSTER FILTER");
     expect(container.querySelector(".hit-number-page")?.getAttribute("data-format-id"))
@@ -194,6 +194,7 @@ describe("Hit the Number casual game", () => {
 
   it("switches to a bounded Random Pool and generates a fresh lineup", () => {
     const { container } = renderGame();
+    fireEvent.click(screen.getByRole("button", { name: "OPEN ROSTER" }));
     const firstChallengeId = container.querySelector(".hit-number-page")?.getAttribute("data-challenge-id");
 
     fireEvent.click(screen.getByRole("button", { name: "RANDOM POOL" }));
@@ -214,6 +215,7 @@ describe("Hit the Number casual game", () => {
 
   it("searches the generated Open Roster and NEW LINEUP clears the search with a fresh identity", () => {
     const { container } = renderGame();
+    fireEvent.click(screen.getByRole("button", { name: "OPEN ROSTER" }));
     const firstCard = container.querySelector<HTMLButtonElement>(".hit-number-fighter-card")!;
     const firstName = firstCard.querySelector("strong")!.textContent!;
     const search = screen.getByPlaceholderText("Search by name");
