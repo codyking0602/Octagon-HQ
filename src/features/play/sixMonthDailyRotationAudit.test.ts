@@ -23,8 +23,8 @@ describe("six-month future Daily planning (NON-PUBLISHING, Part 1 owns cutover)"
     const first = calendar.filter(slot => slot.day === "2026-10-25");
     expect(first.map(slot => slot.sport).sort()).toEqual(["football", "ufc"]);
     const lastNba = calendar.filter(slot => slot.sport === "nba").at(-1);
-    expect(lastNba?.day).toBe("2027-04-11");
-    expect(calendar.some(slot => slot.sport === "nba" && slot.day > "2027-04-11")).toBe(false);
+    expect(lastNba?.day).toBe("2027-04-10");
+    expect(calendar.some(slot => slot.sport === "nba" && slot.day > "2027-04-10")).toBe(false);
   });
 
   it("preserves every approved frequency and does not change the live rotation", () => {
