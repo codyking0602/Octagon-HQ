@@ -307,7 +307,7 @@ describe("Hit the Number foundation", () => {
     });
 
     expect(board.publicSetup.fighterIds).toHaveLength(14);
-    expect(new Set(board.publicSetup.fighterIds).size).toBe(12);
+    expect(new Set(board.publicSetup.fighterIds).size).toBe(14);
     for (const fighterId of board.privateSetup.solutionFighterIds) {
       expect(board.publicSetup.fighterIds).toContain(fighterId);
     }
