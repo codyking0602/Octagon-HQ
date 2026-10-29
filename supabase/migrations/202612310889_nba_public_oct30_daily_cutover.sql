@@ -48,7 +48,7 @@ VALUES ('nba-daily-regular-v3-oct30-public','America/Chicago',
     'find_leader',
     'wavelength',
     'millionaire',
-    'bar_trivia',
+    'bar_trivia'
 ]::text[],'nba')
 ON CONFLICT (version) DO NOTHING;
 
