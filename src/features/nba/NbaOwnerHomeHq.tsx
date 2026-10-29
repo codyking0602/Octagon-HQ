@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NBA_REGULAR_SEASON_LAST_DAY, nbaCanAccessReleasedGames, nbaCentralDay,
-  nbaRegularSeasonDaily, NBA_DAILY_GAME_LABELS } from "./nbaDailySchedule";
+  nbaOwnerPreviewDaily, nbaRegularSeasonDaily, NBA_DAILY_GAME_LABELS } from "./nbaDailySchedule";
 import { NBA_FUTURES_SELECTIONS, emptyNbaFutures, nbaFuturesProgress } from "./nbaFutures";
 import { loadNbaFutures } from "./nbaFuturesRepository";
 import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
@@ -13,7 +13,7 @@ import { NBA_TEAMS } from "./nbaFutures";
 import type { CSSProperties } from "react";
 import "../../styles/nba-owner-home.css";
 
-export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }: { profileId: string; signedIn: boolean; hideChampionship?: boolean }) {
+export function NbaOwnerHomeHq({ profileId, signedIn, showPrelaunchPractice = false, hideChampionship = false }: { profileId: string; signedIn: boolean; showPrelaunchPractice?: boolean; hideChampionship?: boolean }) {
   const [futures, setFutures] = useState<{ count: number; locked: boolean } | null>(null);
   const [weekly, setWeekly] = useState<NbaWeeklySpotlight | null>(null);
   const playerTeamId = weekly?.player.teamId ?? NBA_TEAMS.find(team=>team.name===weekly?.player.team)?.id;
@@ -27,16 +27,18 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
   const day = nbaCentralDay();
   const publishedDaily = nbaCanAccessReleasedGames(day);
   const officialSlot = publishedDaily ? nbaRegularSeasonDaily(day) : null;
-  const dailyType = officialSlot?.gameType;
+  // The Oct 29 practice score is still the owner's real saved result. Display it
+  // without promoting its private namespace or rank to public NBA standings.
+  const practiceType = showPrelaunchPractice && !publishedDaily ? nbaOwnerPreviewDaily(day) : null;
+  const isPractice = practiceType != null;
+  const dailyType = officialSlot?.gameType ?? practiceType;
   const dailyEnabled = Boolean(dailyType);
-  // Home reflects public official Daily only. Owner rehearsals remain isolated on
-  // their explicit test route and cannot be mistaken for ranked NBA results.
   const daily = useTodayChallengeRuntime({
-    profileId, enabled: signedIn && dailyEnabled, sport: "nba",
+    profileId, enabled: signedIn && dailyEnabled, sport: isPractice ? "nba_preview" : "nba",
   });
   const dailyOverview = useTodayChallengeOverview({
-    profileId, enabled: signedIn && dailyEnabled,
-    projection: daily.projection, sport: "nba",
+    profileId, enabled: signedIn && publishedDaily && dailyEnabled,
+    projection: publishedDaily ? daily.projection : null, sport: "nba",
   });
 
   useEffect(() => {
@@ -67,9 +69,10 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
   const rank = ownLeaderboardEntry?.rank ?? null;
   const score = dailyOfficialDisplayScore(daily.projection, ownLeaderboardEntry?.normalizedScore);
   const hasSaved = !hasCompleted && Boolean(daily.projection?.progressRevision);
-  const dailyLink = dailyEnabled ? "/nba/today" : "/nba";
+  const dailyLink = isPractice ? "/nba/today?mode=owner-test" : dailyEnabled ? "/nba/today" : "/nba";
   const dailyLabel = dailyType ? NBA_DAILY_GAME_LABELS[dailyType] : "Basketball Daily";
-  const dailyState = !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : "STARTS OCT 30"
+  const dailyState = isPractice ? hasCompleted ? "PRACTICE COMPLETE" : hasSaved ? "PRACTICE IN PROGRESS" : "PRACTICE"
+    : !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : "STARTS OCT 30"
     : !signedIn ? "SIGN IN" : hasCompleted ? "COMPLETED" : hasSaved ? "IN PROGRESS"
     : daily.loading && !daily.projection ? "LOADING" : daily.error && !daily.projection ? "UNAVAILABLE" : "AVAILABLE";
 
@@ -95,7 +98,8 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
           <div>
             <span>NBA DAILY CHALLENGE <small>{dailyState}</small></span>
             <strong>{dailyLabel}</strong>
-            <small>{!dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "Regular-season Daily complete" : "Official NBA Daily begins October 30"
+            <small>{isPractice ? hasCompleted ? "Practice result · not ranked" : "Practice · official NBA Daily starts Oct 30"
+              : !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "Regular-season Daily complete" : "Official NBA Daily begins October 30"
               : !signedIn ? "Sign in to track today's score and standing."
               : hasCompleted ? rank != null ? `#${rank} today` : "Official score locked"
               : hasSaved ? "Pick up where you left off."
