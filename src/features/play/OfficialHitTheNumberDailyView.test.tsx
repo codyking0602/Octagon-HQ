@@ -92,7 +92,7 @@ describe("OfficialHitTheNumberDailyView formats", () => {
     );
     const slots = [...container.querySelectorAll<HTMLButtonElement>(".hit-number-role-slot")];
 
-    expect(slots).toHaveLength(5);
+    expect(slots).toHaveLength(Number(setup.publicSetup.pickCount));
     expect(container.querySelector(".hit-number-slots")).toBeNull();
     fireEvent.click(slots[2]!);
 
@@ -115,13 +115,11 @@ describe("OfficialHitTheNumberDailyView formats", () => {
       value: TodayChallengeProjection,
     ) => TodayChallengeProjection;
     const optimistic = optimisticUpdate(projection(day, setup));
-    expect(optimistic.publicState.slot_assignments).toEqual([
-      null,
-      null,
-      fighter.dataset.fighterId,
-      null,
-      null,
-    ]);
+    expect(optimistic.publicState.slot_assignments).toEqual(
+      Array.from({ length: Number(setup.publicSetup.pickCount) }, (_, index) => (
+        index === 2 ? fighter.dataset.fighterId : null
+      )),
+    );
   });
 
   it("renders an already-materialized board without format metadata as legacy Classic", () => {
