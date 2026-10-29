@@ -4,6 +4,7 @@ import {
   buildFootballFindLeaderBoard, footballFindLeaderCanonicalMetricByMetric,
 } from "./footballFindLeaderModel";
 import { footballFindLeaderCfbPeakContext } from "./footballFindLeaderCfbPeakContext";
+import { footballCfbSchoolAsset } from "./footballSubjectAssets";
 
 const metrics = [
   "cfb-player-rushing-yards", "cfb-player-rushing-touchdowns",
@@ -28,9 +29,16 @@ describe("CFB Find the Leader verified best-season identity", () => {
         for (const candidate of board!.candidates) {
           expect(candidate.season, candidate.id).toEqual(expect.any(Number));
           expect(candidate.subtitle, candidate.id).toMatch(/ · /);
+          expect(candidate.school, candidate.id).toBeTruthy();
+          expect(candidate.subtitle).toContain(candidate.school!);
         }
       }
     }
+  });
+
+  it("resolves the peak-school mark rather than reusing a player career logo", () => {
+    expect(footballCfbSchoolAsset("Alabama")?.src).toContain("/333.png");
+    expect(footballCfbSchoolAsset("Georgia")?.src).toContain("/61.png");
   });
 
   it("rejects stale-value peak metadata rather than mislabeling a different season", () => {
