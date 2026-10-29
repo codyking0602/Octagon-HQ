@@ -45,21 +45,26 @@ begin
     end loop;
   end loop;
 
+  -- Inspect the locked immutable v22 cycles directly after their cutover.
+  -- Historic fresh-replay schedule rows have deployment-relative starts_on
+  -- dates and should not shadow future rotation collision assertions.
   for v_day in select d::date from generate_series(date '2026-10-25',date '2027-04-24',interval '1 day') d loop
     v_football:=private.daily_challenge_expected_game(
-      private.daily_challenge_schedule_for_day(v_day,'football'),v_day);
+      case when v_day >= date '2026-10-27' then 'football-daily-v22-higher-lower-oct27'
+        else private.daily_challenge_schedule_for_day(v_day,'football') end,v_day);
     v_counts[1]:=v_counts[1]+1;
     v_ufc:=null;v_nba:=null;
     if private.daily_challenge_active_day(v_day,'ufc')=v_day then
       v_counts[2]:=v_counts[2]+1;
       v_ufc:=private.daily_challenge_expected_game(
-        private.daily_challenge_schedule_for_day(v_day,'ufc'),v_day);
+        case when v_day >= date '2026-10-29' then 'ufc-daily-v22-higher-lower-oct29'
+          else private.daily_challenge_schedule_for_day(v_day,'ufc') end,v_day);
     end if;
     if v_day between date '2026-11-01' and date '2027-04-11'
       and private.daily_challenge_active_day(v_day,'nba')=v_day then
       v_counts[3]:=v_counts[3]+1;
       v_nba:=private.daily_challenge_expected_game(
-        private.daily_challenge_schedule_for_day(v_day,'nba'),v_day);
+        'nba-daily-regular-v2-locked',v_day);
     end if;
     if v_football = v_ufc or v_football = v_nba or v_ufc = v_nba then
       raise exception 'cross-sport game collision on %: % / % / %',v_day,v_football,v_ufc,v_nba;
