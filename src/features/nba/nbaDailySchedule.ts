@@ -1,5 +1,7 @@
 /** NBA games release calendar. Dates are interpreted in America/Chicago. */
-export const NBA_GAMES_LAUNCH_DAY = "2026-10-30";
+export const NBA_GAMES_LAUNCH_DAY = "2026-10-29";
+export const NBA_INTRODUCTORY_LAST_DAY = "2026-10-31";
+export const NBA_REGULAR_48H_ANCHOR = "2026-10-30";
 export const NBA_CASUAL_PUBLIC_DAY = "2026-10-29";
 export const NBA_REGULAR_SEASON_LAST_DAY = "2027-04-11";
 export const NBA_OWNER_PREVIEW_FIRST_DAY = "2026-10-23";
@@ -79,7 +81,7 @@ export const NBA_CASUAL_GAME_TYPES = [
   "who_am_i", "find_leader", "hit_the_number", "higher_lower",
 ] as const satisfies readonly NbaDailyGame[];
 
-/** One different game per calendar day for owner preview, Oct 23–31. */
+/** Prior owner-only rehearsals, October 23–28. October 29 was promoted unchanged to public Bar Trivia. */
 export const NBA_OWNER_PREVIEW_ORDER: readonly NbaDailyGame[] = [
   "average_fan", "sports_feud", "millionaire", "who_am_i", "find_leader",
   "wavelength", "bar_trivia", "hit_the_number", "higher_lower",
@@ -121,14 +123,29 @@ export interface NbaDailyScheduleSlot {
   isPublicationDay: boolean;
 }
 
-/** Public NBA Daily opens October 30, then every 48 hours opposite UFC through April 11. */
+/** One Oct 29–31 public Bar Trivia; Nov 1 resumes 48h NBA Daily opposite UFC. */
 export function nbaRegularSeasonDaily(day: string): NbaDailyScheduleSlot | null {
   const target = ordinal(day);
   const first = ordinal(NBA_GAMES_LAUNCH_DAY);
   const last = ordinal(NBA_REGULAR_SEASON_LAST_DAY);
   if (target < first || target > last) return null;
-  const appearanceIndex = Math.floor((target - first) / 2);
-  const scheduled = first + appearanceIndex * 2;
+  // Preserve the original, server-authored October 29 Bar Trivia board and
+  // completed 81/100 attempt as the real first public Daily. This one opening
+  // challenge lasts through October 31; no new NBA board opens on October 30.
+  if (target <= ordinal(NBA_INTRODUCTORY_LAST_DAY)) {
+    return {
+      day: NBA_GAMES_LAUNCH_DAY,
+      nextDay: "2026-11-01",
+      gameType: "bar_trivia",
+      appearanceIndex: 0,
+      isPublicationDay: target === first,
+    };
+  }
+  // The previously certified 28-game rotation stays unchanged from Nov 1.
+  // No conflict with UFC's Oct 31 / Nov 2 / Nov 4 opening cadence.
+  const regularAnchor = ordinal(NBA_REGULAR_48H_ANCHOR);
+  const appearanceIndex = Math.floor((target - regularAnchor) / 2);
+  const scheduled = regularAnchor + appearanceIndex * 2;
   return {
     day: fromOrdinal(scheduled),
     nextDay: fromOrdinal(scheduled + 2),
