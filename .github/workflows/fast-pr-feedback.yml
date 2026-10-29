@@ -108,6 +108,23 @@ jobs:
           fi
           echo "rankings_only=$rankings_only" >> "$GITHUB_OUTPUT"
 
+          # A focused Bar Trivia-only draft does not need Vitest's enormous
+          # --changed transitive graph; full Validate V2 still runs when ready.
+          bar_trivia_only=true
+          saw_bar_trivia=false
+          for file in "${changed_files[@]}"; do
+            case "$file" in
+              src/features/games/barTriviaEngine.ts|src/features/play/barTrivia*.ts|src/features/play/footballTeamThemeDailyPacks*.ts|docs/audits/football-bar-trivia*.md|.github/workflows/fast-pr-feedback.yml)
+                saw_bar_trivia=true
+                ;;
+              *) bar_trivia_only=false; break ;;
+            esac
+          done
+          if [ "$saw_bar_trivia" != true ]; then
+            bar_trivia_only=false
+          fi
+          echo "bar_trivia_only=$bar_trivia_only" >> "$GITHUB_OUTPUT"
+
       - name: Standard typecheck
         if: steps.scope.outputs.whoami_only != 'true'
         run: npm run typecheck
@@ -145,6 +162,10 @@ jobs:
           done
           if [ "$millionaire_only" = true ] && [ "$saw_millionaire" = true ]; then
             npm test -- src/features/play/millionaireDailyRuntime.test.ts src/features/play/millionaireEditorialFutureCandidates.test.ts src/features/play/millionaireSixMonthEditorialGate.test.ts --run
+          elif [ "${{ steps.scope.outputs.bar_trivia_only }}" = true ]; then
+            # Every changed Football Bar Trivia system plus actual Daily replay,
+            # themed pack and shared-engine UFC regressions.
+            npm test -- src/features/play/barTriviaContent.test.ts src/features/play/barTriviaEngine.test.ts src/features/play/barTriviaEditorialCuration.test.ts src/features/play/barTriviaDailyRuntime.test.ts src/features/play/barTriviaRecentRepeat.test.ts src/features/play/barTriviaFootballSixMonth.test.ts src/features/play/footballTeamThemeDailyPacks.test.ts src/features/play/barTriviaOct22CurrentEvents.test.ts --run
           else
             npm test -- --changed="$BASE_SHA" --passWithNoTests
           fi
