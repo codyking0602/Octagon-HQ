@@ -21,8 +21,10 @@ describe("NBA game route public release safety",()=>{
     expect(canAccessNbaCasualRoute("/nba/millionaire","","2026-10-29")).toBe(false);
     expect(canAccessNbaCasualRoute("/nba/today","","2026-10-29")).toBe(false);
   });
-  it("opens all nine official NBA Daily routes October 30",()=>{
-    expect(canAccessNbaGames(member,"2026-10-30")).toBe(true);
-    expect(canAccessNbaGames(null,"2026-10-30")).toBe(true);
+  it("keeps local preview URLs owner-only after official NBA Daily starts",()=>{
+    expect(canAccessNbaGames(member,"2026-10-30")).toBe(false);
+    expect(canAccessNbaGames(null,"2026-10-30")).toBe(false);
+    expect(canAccessNbaCasualRoute("/nba/millionaire","","2026-10-30")).toBe(false);
+    expect(canAccessNbaCasualRoute("/nba/who-am-i","?mode=daily","2026-10-30")).toBe(false);
   });
 });
