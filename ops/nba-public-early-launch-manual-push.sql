@@ -30,7 +30,7 @@ update private.notification_nba_release_gate set public_enabled=true
 where singleton;
 
 with recipients as (
-  select profile.id
+  select distinct profile.id
   from public.profiles profile
   join private.profile_pin_credentials credential
     on credential.profile_id=profile.id
