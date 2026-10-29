@@ -235,6 +235,7 @@ function FindLeader({ projection, advance }: GameProps) {
       shortLabel={statLabel}
       candidates={candidates}
       leaderId={attempt ? String(reveal.leader_id ?? "") : null}
+      direction={String(setup.context ?? "").startsWith("Lowest ") ? "lower" : "higher"}
       eliminatedIds={eliminatedIds}
       result={attempt ? {
         score: dailyTwoGameActiveScore(projection) ?? attempt.normalizedScore,
@@ -242,7 +243,7 @@ function FindLeader({ projection, advance }: GameProps) {
         fatalId,
       } : null}
       eyebrow="TODAY’S CHALLENGE"
-      intro="Eliminate nine decoys until only the leader remains."
+      intro="Eliminate nine decoys until only the leader remains. Compare only these ten."
       onEliminate={attempt ? null : (id) => advance({ eliminated_id: id })}
       renderVisual={(candidate, compact) => (
         <FootballFindLeaderVisual

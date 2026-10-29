@@ -25,6 +25,33 @@ function renderCandidate(candidate: FootballFindLeaderPresentationCandidate) {
 }
 
 describe("Football Find the Leader candidate identity presentation", () => {
+  it("ranks lower-is-better results correctly and shows the full team season", () => {
+    const html = renderToStaticMarkup(
+      <FootballFindLeaderPresentation
+        question="Who allowed the fewest points?"
+        context="Lowest among ten."
+        categoryLabel="CFB CHAMPION SEASONS"
+        statLabel="Opponent PPG"
+        shortLabel="OPP PPG"
+        candidates={[
+          { id: "a", name: "2020 Alabama", subtitle: "CFB team season", value: 19.4 },
+          { id: "b", name: "2021 Georgia", subtitle: "CFB team season", value: 10.2 },
+          { id: "c", name: "2019 LSU", subtitle: "CFB team season", value: 21.9 },
+        ]}
+        leaderId="b"
+        direction="lower"
+        eliminatedIds={["a", "b"]}
+        result={{ score: 20, perfect: false, fatalId: "b" }}
+        eyebrow="REPLAYABLE GAME"
+        renderVisual={() => <span />}
+      />,
+    );
+    const reveal = html.slice(html.indexOf('class="football-find-reveal"'));
+    expect(reveal).toContain("<em>#1</em><span><strong>Georgia</strong><small>2021</small>");
+    expect(reveal.indexOf("Georgia")).toBeLessThan(reveal.indexOf("Alabama"));
+    expect(reveal.indexOf("Alabama")).toBeLessThan(reveal.indexOf("LSU"));
+  });
+
   it("restores the Peyton Manning season year from a previously published Daily without season metadata", () => {
     const html = renderCandidate({
       id: "nflverse-player-season-00-0010346-2008",

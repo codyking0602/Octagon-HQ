@@ -13,7 +13,7 @@ describe("Football Find the Leader mobile compression", () => {
 
   it("compresses the mobile hero, progress rail, and five-row board", () => {
     expect(mobileCss).toContain("font-size: clamp(17px, 4.8vw, 21px);");
-    expect(mobileCss).toContain(".football-find-hero__copy > p:not(.eyebrow) {\n    display: none;");
+    expect(mobileCss).toContain(".football-find-hero__copy > p:not(.eyebrow) {\n    display: block;");
     expect(mobileCss).toContain("min-height: 27px;");
     expect(mobileCss).toContain("height: 72px;");
     expect(mobileCss).toContain("width: 52px;\n    height: 52px;");
