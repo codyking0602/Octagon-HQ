@@ -98,7 +98,7 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const nbaMode = location.pathname === "/nba" || location.pathname.startsWith("/nba/");
   const nbaVisible = canPreviewNba(identity?.profile);
   const visibleSport = (sport: SelectedSport) =>
-    (sport === "mlb" && !canViewMlbPlayoffs(identity?.profile)) || (sport === "nba" && !nbaVisible)
+    (sport === "mlb") || (sport === "nba" && !nbaVisible)
       ? "football" : sport;
   // Bottom tab entry follows frozen Home choice. All Sports follows the most
   // recently visited/selected sport across BOTH sections, not separate tabs.

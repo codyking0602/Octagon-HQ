@@ -1,0 +1,51 @@
+.mlb-closeout-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(112, 166, 137, .36);
+  border-radius: 16px;
+  background: linear-gradient(120deg, #1b2925, #121919);
+  color: #f2faf5;
+}
+.mlb-closeout-banner__copy { display: grid; gap: 3px; min-width: 0; }
+.mlb-closeout-banner__copy small { color: #a3c9b6; font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+.mlb-closeout-banner__copy strong { font-size: 18px; letter-spacing: -.025em; }
+.mlb-closeout-banner__copy span { color: #c1d2c9; font-size: 12px; }
+.mlb-closeout-banner > a {
+  flex: none; border-radius: 9px; border: 1px solid rgba(186, 232, 203, .4);
+  background: #e2f3e8; color: #173027; padding: 10px 12px;
+  text-decoration: none; font-size: 11px; font-weight: 900; text-align: center;
+}
+.mlb-closeout-banner > a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.mlb-season-archive {
+  scroll-margin-top: 105px;
+  display: grid; gap: 12px; padding: 16px;
+  border: 1px solid #35473d; border-radius: 18px;
+  background: #151b19; color: #f5f9f6; min-width: 0;
+}
+.mlb-season-archive__header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.mlb-season-archive__header small { color: #a8baa8; font-size: 9px; font-weight: 800; letter-spacing: .1em; }
+.mlb-season-archive__header h2 { font-size: 18px; margin: 5px 0 0; line-height: 1.2; }
+.mlb-season-archive__header > span { flex: none; color: #acbdb2; font-weight: 800; font-size: 9px; }
+.mlb-season-archive__entries { display: grid; min-width: 0; }
+.mlb-season-archive__headings { display: flex; justify-content: space-between; color: #9fad9f; font-size: 9px; letter-spacing: .07em; font-weight: 800; padding: 3px 2px 8px; }
+.mlb-season-archive__entry { border-top: 1px solid #334139; }
+.mlb-season-archive__entry summary { cursor: pointer; list-style: none; display: grid; grid-template-columns: 34px minmax(0,1fr) auto 14px; align-items: center; gap: 9px; min-height: 52px; }
+.mlb-season-archive__entry summary::-webkit-details-marker { display: none; }
+.mlb-season-archive__entry summary > b { color: #aed3bc; font-size: 12px; }
+.mlb-season-archive__entry summary > span:nth-child(2) { min-width: 0; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.mlb-season-archive__entry summary > span:nth-child(2) strong { overflow-wrap: anywhere; font-size: 13px; }
+.mlb-season-archive__entry summary small { color: #a9c6b4; font-size: 9px; }
+.mlb-season-archive__points { font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mlb-season-archive__entry[open] summary > span:last-child { transform: rotate(180deg); }
+.mlb-season-archive__breakdown { padding: 0 6px 12px 43px; display: grid; gap: 7px; }
+.mlb-season-archive__breakdown > span { display: flex; justify-content: space-between; gap: 12px; color: #bacbc0; font-size: 12px; }
+.mlb-season-archive__breakdown strong { color: #f4f8f4; white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 510px) {
+  .mlb-closeout-banner { flex-direction: column; align-items: stretch; }
+  .mlb-closeout-banner > a { align-self: flex-start; }
+  .mlb-season-archive { padding: 12px; }
+  .mlb-season-archive__header h2 { font-size: 16px; }
+}

@@ -45,11 +45,11 @@ export type HqThemeScope = "neutral" | SelectedSport;
 function sportContextForPath(pathname: string): SportContext | null {
   if (pathname === "/picks") return { sport: "ufc", section: "PICKS", switchable: true };
   if (pathname === "/football/picks") return { sport: "football", section: "PICKS", switchable: true };
-  if (pathname === "/mlb/picks") return { sport: "mlb", section: "PICKS", switchable: true };
+  if (pathname === "/mlb/picks") return { sport: "mlb", section: "PICKS", switchable: false };
   if (pathname === "/nba/picks") return { sport: "nba", section: "PICKS", switchable: true };
   if (pathname === "/play") return { sport: "ufc", section: "PLAY", switchable: true };
   if (pathname === "/football") return { sport: "football", section: "PLAY", switchable: true };
-  if (pathname === "/mlb") return { sport: "mlb", section: "PLAY", switchable: true };
+  if (pathname === "/mlb") return { sport: "mlb", section: "PLAY", switchable: false };
   if (pathname === "/nba") return { sport: "nba", section: "PLAY", switchable: true };
   if (pathname === "/rankings") return { sport: "ufc", section: "RANKINGS", switchable: false };
   if (pathname === "/intelligence") return { sport: "ufc", section: "INTELLIGENCE", switchable: false };
@@ -175,11 +175,11 @@ export function AppShell() {
   const nbaVisible = canPreviewNba(identity.profile);
   const showMlbWelcome = Boolean(
     identity.profile
-    && (location.pathname === "/mlb" || (location.pathname === "/" && !nbaVisible))
+    && location.pathname === "/mlb"
     && (MLB_PLAYOFFS_PUBLIC_ENABLED || identity.profile.canControlPicks === true)
   );
   const mlbWelcomeMode = MLB_PLAYOFFS_PUBLIC_ENABLED ? "launch" : "preview";
-  const effectiveSelectedSport = (selectedSport === "mlb" && !mlbVisible) || (selectedSport === "nba" && !nbaVisible) ? "football" : selectedSport;
+  const effectiveSelectedSport = selectedSport === "mlb" || (selectedSport === "nba" && !nbaVisible) ? "football" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
   const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
   // Root/deep-linked section URLs update only their own navigation preference.

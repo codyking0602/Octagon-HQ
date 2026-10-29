@@ -16,10 +16,11 @@ export const PICKS_SPORT_STORAGE_KEY = "the-hq:picks-sport";
 export const HOME_SPORT_STORAGE_KEY = "the-hq:home-sport";
 export const LAST_USED_SPORT_STORAGE_KEY = "the-hq:last-used-sport";
 
-export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "nba", "mlb"];
+// MLB remains accessible in the 2026 results archive, but is not an active sport option.
+export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "nba"];
 
 export function nextSport(current: SelectedSport, showMlb = true, showNba = true, order: readonly SelectedSport[] = SPORT_ORDER): SelectedSport {
-  const available = order.filter((sport) => (showMlb || sport !== "mlb") && (showNba || sport !== "nba"));
+  const available = order.filter((sport) => sport !== "mlb" && (showNba || sport !== "nba"));
   return available[(available.indexOf(current) + 1) % available.length] ?? "football";
 }
 
@@ -29,12 +30,16 @@ function isSelectedSport(value: string | null): value is SelectedSport {
   return value === "ufc" || value === "football" || value === "mlb" || value === "nba";
 }
 
+function isActiveSport(value: string | null): value is SelectedSport {
+  return isSelectedSport(value) && value !== "mlb";
+}
+
 function readPersistedSport(): SelectedSport {
   if (typeof window === "undefined") return DEFAULT_SPORT;
 
   try {
     const storedSport = window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY);
-    return isSelectedSport(storedSport) ? storedSport : DEFAULT_SPORT;
+    return isActiveSport(storedSport) ? storedSport : DEFAULT_SPORT;
   } catch {
     return DEFAULT_SPORT;
   }
@@ -47,7 +52,7 @@ function readSectionSport(key: string): SelectedSport {
   if (typeof window === "undefined") return legacySport;
   try {
     const stored = window.localStorage.getItem(key);
-    if (isSelectedSport(stored)) return stored;
+    if (isActiveSport(stored)) return stored;
     window.localStorage.setItem(key, legacySport);
   } catch {
     // The selection still works in memory when storage is unavailable.
@@ -59,9 +64,9 @@ function readLastUsedSport(): SelectedSport {
   if (typeof window === "undefined") return DEFAULT_SPORT;
   try {
     const stored = window.localStorage.getItem(LAST_USED_SPORT_STORAGE_KEY);
-    if (isSelectedSport(stored)) return stored;
+    if (isActiveSport(stored)) return stored;
     const priorPicks = window.localStorage.getItem(PICKS_SPORT_STORAGE_KEY);
-    if (isSelectedSport(priorPicks)) return priorPicks;
+    if (isActiveSport(priorPicks)) return priorPicks;
   } catch {
     // Local storage is optional.
   }
@@ -72,7 +77,7 @@ function readHomeSport(): HomeSport {
   if (typeof window === "undefined") return DEFAULT_SPORT;
   try {
     const stored = window.localStorage.getItem(HOME_SPORT_STORAGE_KEY);
-    if (stored === "all" || isSelectedSport(stored)) return stored;
+    if (stored === "all" || isActiveSport(stored)) return stored;
   } catch {
     // Fall back to the existing preference.
   }
