@@ -1,0 +1,8 @@
+{
+  "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/4295192.png",
+  "destination": "public/assets/fighters/sean-brady-thumb.webp",
+  "kind": "thumb",
+  "fighter_name": "Sean Brady",
+  "verified_espn_athlete_id": "4295192",
+  "official_headshot_reviewed": true
+}
