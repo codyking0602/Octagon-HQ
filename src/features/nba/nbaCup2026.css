@@ -82,3 +82,32 @@
 .nba-cup__save{scroll-margin-bottom:115px}
 .nba-cup__summary p{margin:0 0 8px}
 @media(max-width:460px){.nba-cup-hero{background-position:63% center}.nba-cup-hero__bottom{max-width:72%}.nba-cup__save button{width:100%;min-height:41px}}
+
+/* Clean, image-only Cup artwork. The contextual heading lives immediately below. */
+.nba-picks-page .nba-cup-hero {
+  display:block;
+  height:clamp(174px,46vw,220px);
+  min-height:0;
+  padding:0;
+  border-radius:14px;
+  background-image:url("/images/nba-cup-2026-hero.webp");
+  background-size:cover;
+  background-position:50% 42%;
+}
+.nba-picks-page .nba-cup__summary{padding:13px;display:grid;gap:7px}
+.nba-picks-page .nba-cup__summary h1{
+  color:#f6f7f8;font-size:clamp(1.3rem,5vw,1.75rem);
+  line-height:1.1;letter-spacing:-.02em;margin:0;
+}
+.nba-picks-page .nba-cup__summary-title{gap:12px;font-size:.63rem;font-weight:850;letter-spacing:.09em;color:#f0b56c}
+.nba-picks-page .nba-cup__summary-title span{color:#9faab3;font-size:.61rem;white-space:nowrap}
+.nba-picks-page .nba-cup__summary p{font-size:.72rem;color:#bcc4cb;margin:0;line-height:1.35}
+.nba-picks-page .nba-cup__progress-line{display:flex;gap:10px;align-items:center;margin-top:5px;min-width:0}
+.nba-picks-page .nba-cup__progress-line .nba-cup__progress{flex:1;min-width:30px;margin:0;height:4px}
+.nba-picks-page .nba-cup__progress-line>strong{font-size:.63rem;line-height:1.1;white-space:nowrap;color:#eab577;letter-spacing:.015em}
+@media(max-width:460px){
+  .nba-picks-page .nba-cup-hero{height:178px;background-position:50% 42%}
+  .nba-picks-page .nba-cup__summary{gap:6px}
+  .nba-picks-page .nba-cup__summary-title{font-size:.59rem}
+  .nba-picks-page .nba-cup__summary-title span{font-size:.55rem}
+}

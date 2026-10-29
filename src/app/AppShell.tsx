@@ -1,4 +1,5 @@
 import { Suspense, useEffect } from "react";
+import "../styles/picks-disclosures.css";
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
@@ -129,7 +130,7 @@ function SportContextRow({
             onChange={(event) => onSelectSport(event.target.value as SelectedSport)}
           >
             {sportsForDisplay(order, showMlb, showNba).map(sport => (
-              <option key={sport} value={sport}>{sportNames[sport]}</option>
+              <option key={sport} value={sport}>{sport === "nba" ? "NBA" : sportNames[sport]}</option>
             ))}
           </select>
         </label>

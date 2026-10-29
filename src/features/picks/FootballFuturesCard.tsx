@@ -495,13 +495,13 @@ export function FootballFuturesCard() {
   };
 
   return (
-    <details className={`surface-card football-futures${locked ? " is-locked" : ""}`} aria-labelledby="football-futures-title">
+    <details className={`surface-card football-futures hq-picks-disclosure${locked ? " is-locked" : ""}`} aria-labelledby="football-futures-title">
       <summary className="football-futures__summary">
-        <span className="football-futures__summary-label" id="football-futures-title">SEASON FUTURES</span>
-        <strong className="football-futures__summary-status">
+        <span className="football-futures__summary-label hq-picks-disclosure__title" id="football-futures-title">SEASON FUTURES</span>
+        <strong className="football-futures__summary-status hq-picks-disclosure__meta">
           {FOOTBALL_FUTURES_MAX_POINTS.total} POTENTIAL PTS
         </strong>
-        <span className="football-futures__chevron" aria-hidden="true">⌄</span>
+        <span className="football-futures__chevron hq-picks-disclosure__chevron" aria-hidden="true">⌄</span>
       </summary>
 
       <div className="football-futures__body">

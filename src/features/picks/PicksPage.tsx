@@ -456,8 +456,8 @@ export default function PicksPage() {
       {identity.profile ? <PicksSeasonHub history={picks.history} loading={picks.loading} /> : null}
 
       {activeEvent && activeLifecycle ? (
-          <details className="surface-card picks-scoring-guide">
-            <summary>SCORING &amp; UNDERDOG LOCK RULES</summary>
+          <details className="surface-card picks-scoring-guide hq-picks-disclosure">
+            <summary><span className="hq-picks-disclosure__title">SCORING &amp; UNDERDOG LOCK RULES</span><span className="hq-picks-disclosure__chevron" aria-hidden="true">⌄</span></summary>
             <p><strong>Correct pick +4</strong><span>Incorrect and missing picks score 0. Draws, no contests, cancellations, and fights removed from Picks are excluded.</span></p>
             <p><strong>Underdog Lock bonus by odds</strong><span>Choose one fighter at +100 or longer. A winning lock adds the frozen lock-time bonus below.</span></p>
             <div className="picks-scoring-tiers" aria-label="Underdog Lock bonus tiers">

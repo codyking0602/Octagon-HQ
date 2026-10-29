@@ -150,7 +150,7 @@ export function PicksSeasonHub({
       tabIndex={targetEvent ? -1 : undefined}
     >
       <details
-        className="surface-card picks-season-hub"
+        className="surface-card picks-season-hub hq-picks-disclosure hq-picks-disclosure--archive"
         open={hubOpen}
         onToggle={(toggleEvent) => setHubOpen(toggleEvent.currentTarget.open)}
       >
