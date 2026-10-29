@@ -2,7 +2,7 @@ import {describe,expect,it} from "vitest";
 import {existsSync,readFileSync} from "node:fs";
 import {CUP_GROUPS,CUP_POINTS,cupPickCount,validCupPicks} from "./nbaCup2026";
 
-describe("2026 NBA Cup owner group-picks preview",()=>{
+describe("2026 NBA Cup public group-picks release",()=>{
   it("has exactly six valid groups, five teams apiece, and no repeated teams",()=>{
     expect(CUP_GROUPS).toHaveLength(6);
     const ids=CUP_GROUPS.flatMap(g=>[...g.teams]);
@@ -26,9 +26,9 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
     expect(validCupPicks([])).toBe(false);
     expect(validCupPicks(null)).toBe(false);
   });
-  it("is protected by both an owner-only route and separate server permissions",()=>{
+  it("opens the Cup to members while retaining authenticated per-profile access and manual lock",()=>{
     const gate=readFileSync("src/features/nba/NbaCupOwnerGate.tsx","utf8");
-    expect(gate).toContain("canPreviewNbaWhoAmI(identity.profile)");
+    expect(gate).toContain("canPreviewNba(identity.profile)");
     expect(gate).not.toContain("canAccessNbaGames");
     const sql=readFileSync("supabase/migrations/202612310886_nba_cup_owner_group_preview.sql","utf8");
     expect(sql).toContain("public.pick_control_owners");
@@ -37,11 +37,20 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
     expect(sql).toContain("enable row level security");
     expect(sql).toContain("revoke all on public.nba_cup_group_preview_2026");
     expect(sql).toContain("manually_locked");
+    const publicSql=readFileSync("supabase/migrations/202612310887_nba_cup_public_group_picks.sql","utf8");
+    expect(publicSql).toContain("public.get_nba_cup_group_preview()");
+    expect(publicSql).toContain("public.save_nba_cup_group_preview(p_picks jsonb)");
+    expect(publicSql).toContain("auth.uid()");
+    expect(publicSql).not.toContain("pick_control_owners");
+    expect(publicSql).toContain("nba_cup_group_picks_locked");
+    expect(publicSql).toContain("nba_cup_invalid_group_pick_");
+    expect(publicSql).toContain("to authenticated;");
+    expect(publicSql).toContain("from public,anon;");
     expect(sql).not.toContain("now()>=");
     const router=readFileSync("src/app/router.tsx","utf8");
     expect(router).toContain('path: "nba/cup", element: <NbaCupOwnerGate><NbaCup2026Page /></NbaCupOwnerGate>');
     const futures=readFileSync("src/features/nba/NbaFuturesPage.tsx","utf8");
-    expect(futures).toContain("canPreviewNbaWhoAmI(identity.profile)");
+    expect(futures).toContain("const cupAvailable=NBA_PUBLIC_ENABLED;");
     expect(futures).toContain("<NbaCupHero/>");
     expect(futures).toContain("<NbaCupGroups/>");
   });
