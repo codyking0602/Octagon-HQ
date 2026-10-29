@@ -47,10 +47,10 @@ export function NbaHomeHq({ signedIn, compact = false }: { signedIn: boolean; co
       </header>
 
       {compact ? (
-        <Link className="home-weekly-games-row nba-home-compact-link" to="/nba/picks" aria-label="Open NBA Futures picks">
+        <Link className="home-weekly-games-row nba-home-compact-link" to="/nba/picks" aria-label="Open Basketball Picks">
           <span className="home-weekly-games-row__copy">
-            <small>NBA FUTURES · {status}</small>
-            <strong>{count === null ? "Predict the season" : `${count} OF ${NBA_FUTURES_SELECTIONS} PICKS`}</strong>
+            <small>BASKETBALL PICKS · {locked ? "CUP OPEN" : status}</small>
+            <strong>{count === null ? "NBA Cup groups are open" : `FUTURES ${count} OF ${NBA_FUTURES_SELECTIONS}`}</strong>
           </span>
           <b>OPEN →</b>
         </Link>
@@ -88,20 +88,20 @@ export function NbaHomeHq({ signedIn, compact = false }: { signedIn: boolean; co
               </Link>
             </div>
             <div className="nba-home-futures-actions">
-              <span>LOCKS OCT 20 · 2 PM CT</span>
+              <span>{locked ? "FUTURES LOCKED · CUP PICKS OPEN" : "FUTURES OPEN"}</span>
               <Link className="secondary-action" to="/nba/picks">
                 {locked ? "REVIEW FUTURES" : "OPEN FUTURES"} →
               </Link>
             </div>
           </section>
 
-          <div className="home-weekly-games-row nba-home-up-next" aria-label="Upcoming NBA Cup Picks">
+          <Link className="home-weekly-games-row nba-home-up-next" to="/nba/picks" aria-label="Open NBA Cup group picks">
             <span className="home-weekly-games-row__copy">
-              <small>UP NEXT · NBA CUP PICKS</small>
-              <strong>December · Cup knockout rounds</strong>
+              <small>NOW OPEN · NBA CUP GROUP PICKS</small>
+              <strong>Pick six group winners · knockout rounds in December</strong>
             </span>
             <b>10% OF SEASON</b>
-          </div>
+          </Link>
 
           <Link className="home-weekly-games-row nba-home-championship-row" to="/championship/nba" aria-label="View Basketball Championship">
             <span className="home-weekly-games-row__copy">

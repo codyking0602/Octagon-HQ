@@ -52,20 +52,20 @@ export function NbaWelcomeTakeover({ profileId }: { profileId: string }) {
           <h1>WELCOME TO<br/><em>BASKETBALL HQ</em></h1>
           <p className="nba-welcome__deck">One championship. An entire NBA season.</p>
           <div className="nba-welcome__phase is-current">
-            <div><small>01 · AVAILABLE NOW</small><strong>NBA FUTURES</strong><p>30 team win-total Over/Unders, playoff teams, awards, NBA champion, and more. 100 points up for grabs.</p></div>
+            <div><small>01 · FUTURES LOCKED</small><strong>NBA FUTURES</strong><p>Futures picks are locked. Review saved win-total, playoff, awards, and champion selections as the season unfolds.</p></div>
             <b>15%</b>
           </div>
           <div className="nba-welcome__phase">
-            <div><small>02 · DECEMBER</small><strong>NBA CUP PICKS</strong><p>Our first basketball Picks competition, beginning with the Cup knockout rounds.</p></div><b>10%</b>
+            <div><small>02 · AVAILABLE NOW</small><strong>NBA CUP PICKS</strong><p>Pick six NBA Cup group winners now; complete the knockout bracket in December.</p></div><b>10%</b>
           </div>
           <div className="nba-welcome__phase">
-            <div><small>03 · AFTER THE WORLD SERIES</small><strong>BASKETBALL GAMES</strong><p>New NBA games join the HQ throughout the regular season.</p></div><b>20%</b>
+            <div><small>03 · AVAILABLE NOW</small><strong>BASKETBALL GAMES</strong><p>Four Casual games are open. Official NBA Daily begins October 30 and rotates all nine games.</p></div><b>20%</b>
           </div>
           <div className="nba-welcome__phase">
             <div><small>04 · APRIL 2027</small><strong>NBA PLAYOFF PICKS</strong><p>The main championship competition. Follow the postseason through the Finals.</p></div><b>55%</b>
           </div>
           <div className="nba-welcome__actions">
-            <button type="button" className="nba-welcome__primary" onClick={() => complete(true)}>OPEN NBA FUTURES <span aria-hidden="true">→</span></button>
+            <button type="button" className="nba-welcome__primary" onClick={() => complete(true)}>EXPLORE NBA PICKS <span aria-hidden="true">→</span></button>
             <button type="button" className="nba-welcome__later" onClick={() => complete(false)}>EXPLORE THE HQ LATER</button>
           </div>
           {!NBA_PUBLIC_ENABLED ? <small className="nba-welcome__preview-label">OWNER PREVIEW · NOT PUBLIC</small> : null}

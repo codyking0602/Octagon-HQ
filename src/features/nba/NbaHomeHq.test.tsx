@@ -25,14 +25,14 @@ describe("Basketball home hub", () => {
     });
   });
 
-  it("uses shared sport HQ layout with futures progress, championship and coming competition", async () => {
+  it("uses shared sport HQ layout with futures progress, championship and open Cup competition", async () => {
     render(<MemoryRouter><NbaHomeHq signedIn /></MemoryRouter>);
     const hub = screen.getByRole("region", { name: "Basketball HQ" });
     expect(hub).toHaveClass("home-sport-hq", "home-sport-hq--nba");
     expect(screen.getByText("2026–27 NBA Season")).toBeInTheDocument();
     expect(await screen.findByText("5 OF 55")).toBeInTheDocument();
     expect(screen.getByText("50 PICKS REMAINING")).toBeInTheDocument();
-    expect(screen.getByText("December · Cup knockout rounds")).toBeInTheDocument();
+    expect(screen.getByText("Pick six group winners · knockout rounds in December")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Open Basketball Championship" })).toHaveAttribute("href", "/championship/nba");
     expect(screen.getByRole("link", { name: /open futures/i })).toHaveAttribute("href", "/nba/picks");
     expect(screen.queryByRole("button", { name: /replay introduction/i })).not.toBeInTheDocument();
@@ -42,9 +42,9 @@ describe("Basketball home hub", () => {
     render(<MemoryRouter><NbaHomeHq signedIn compact /></MemoryRouter>);
     const hub = screen.getByRole("region", { name: "Basketball HQ" });
     expect(hub).toHaveClass("is-compact");
-    expect(await screen.findByText("5 OF 55 PICKS")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Open NBA Futures picks" })).toHaveAttribute("href", "/nba/picks");
-    expect(screen.queryByText("December · Cup knockout rounds")).not.toBeInTheDocument();
+    expect(await screen.findByText("FUTURES 5 OF 55")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Open Basketball Picks" })).toHaveAttribute("href", "/nba/picks");
+    expect(screen.queryByText("Pick six group winners · knockout rounds in December")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /replay introduction/i })).not.toBeInTheDocument();
   });
 
