@@ -95,6 +95,22 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       .not.toContain("nfl-r3-first-black-modern-hc");
   });
 
+  it("relaunches October 29 with zero superseded published IDs and full difficulty pacing", () => {
+    const oldIds = new Set(FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER
+      .filter((row) => row.league === "nfl")
+      .flatMap((row) => [...row.questionIds]));
+    expect(footballPublishedBarTriviaIdsBeforeDay("nfl", "2026-10-29", 184))
+      .toContain("nfl-current-2026-w7-first-france-game");
+    const fresh = buildBarTriviaDailySetup("nfl", "2026-10-29", "football-daily-v22-higher-lower-oct27");
+    const questions = fresh.privateSetupEvidence.questions as BarTriviaQuestion[];
+    expect(questions).toHaveLength(10);
+    expect(questions.every((q) => !oldIds.has(q.id))).toBe(true);
+    expect(questions.map((q) => q.difficulty).sort()).toEqual(
+      ["easy", "easy", "easy", "easy", "medium", "medium", "medium", "hard", "hard", "last-call"].sort(),
+    );
+    expect(new Set(questions.map((q) => q.factKey ?? q.id)).size).toBe(10);
+  });
+
   it("produces unique question IDs AND fact families over the exact 182-day horizon", () => {
     const seen: Record<"nfl" | "cfb", Set<string>> = { nfl: new Set(), cfb: new Set() };
     const counts: Record<"nfl" | "cfb", number> = { nfl: 0, cfb: 0 };
