@@ -38,6 +38,15 @@ describe("UFC event and Football GOTW kickoff notifications", () => {
     expect(sql).toContain("join private.profile_pin_credentials credential");
   });
 
+  it("retires misclassified historic Football kickoff notices without losing push records", () => {
+    expect(sql).toContain("set dismissed_at = now(),");
+    expect(sql).toContain("read_at = coalesce(read_at, now())");
+    expect(sql).toContain("title like 'Football Picks ·% starts soon'");
+    expect(sql).toContain("set route = '/football/picks',");
+    expect(sql).toContain("summary like 'Football Picks ·%'");
+    expect(sql).not.toContain("delete from private.notification_groups");
+  });
+
   it("routes the GOTW and incomplete-pick phone alerts by the opt-in sport", () => {
     expect(sql).toContain("'football_gotw_starting', '/football'");
     expect(sql).toContain("'picks_incomplete_near_lock', '/football/picks'");
