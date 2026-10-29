@@ -84,7 +84,7 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
         <section className="nba-hq-owner__picks" aria-label="Basketball Picks">
           <h3>BASKETBALL PICKS</h3>
           <div className="nba-hq-owner__picks-grid">
-            <div><small>YOUR PICKS</small><strong>{count == null ? "—" : `${count} OF ${NBA_FUTURES_SELECTIONS}`}</strong></div>
+            <div><small>FUTURES PICKS</small><strong>{count == null ? "—" : `${count} OF ${NBA_FUTURES_SELECTIONS}`}</strong></div>
             <div><small>2026–27 RECORD</small><strong>—</strong><span>AWAITING RESULTS</span></div>
             <Link to="/nba/picks">VIEW PICKS →</Link>
           </div>
