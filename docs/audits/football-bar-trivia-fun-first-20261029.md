@@ -12,7 +12,7 @@ Reviewed the authored NFL/CFB easy, medium, hard, and Last Call source banks, V2
 
 - **NFL: 57** additional retirements: answer giveaways, uninteresting "first" footnotes, franchise/name/logo filler, media and administration trivia, weak Last Calls, and selected repeated cross-game facts.
 - **CFB: 44** additional retirements: team-nickname decoding, peripheral mascot/venue minutiae, uninteresting firsts, and selected repeated cross-game facts.
-- **Nine** question difficulty regrades favor recognizable football moments over administrative arcana. Seven NFL moment questions move into hard; one NFL and one CFB administrative/easy hard question move into medium.
+- **Fourteen** question difficulty regrades favor recognizable football moments over administrative arcana: twelve NFL moments are promoted to hard, while one NFL and one CFB soft question moves to medium.
 - **Four** new individually sourced hard questions: 2018 Miami Miracle (Kenyan Drake), 2020 Hail Murray (DeAndre Hopkins), Tennessee's 2022 Alabama walk-off kick (Chase McGrath), and LSU's 2019-season title performance (Ja'Marr Chase). These are distinct, player-forward facts rather than placeholder replacements.
 - Future-only remaining evergreen inventory calculated from the prior fixed NFL/CFB v3 baselines: **NFL 144** (199 - 57 + 2), **CFB 155** (197 - 44 + 2). The exact playable bank counts must still pass the executable source-of-truth tests at the final head.
 
