@@ -1,5 +1,6 @@
 /** NBA games release calendar. Dates are interpreted in America/Chicago. */
-export const NBA_GAMES_LAUNCH_DAY = "2026-11-01";
+export const NBA_GAMES_LAUNCH_DAY = "2026-10-30";
+export const NBA_CASUAL_PUBLIC_DAY = "2026-10-29";
 export const NBA_REGULAR_SEASON_LAST_DAY = "2027-04-11";
 export const NBA_OWNER_PREVIEW_FIRST_DAY = "2026-10-23";
 
@@ -89,7 +90,7 @@ export const NBA_OWNER_PREVIEW_ORDER: readonly NbaDailyGame[] = [
  * answer-safe result drilldowns and launch notification wired and verified.
  * Date alone must never make local owner previews public.
  */
-export const NBA_OFFICIAL_GAMES_RELEASE_READY = false;
+export const NBA_OFFICIAL_GAMES_RELEASE_READY = true;
 
 const DAY_MS = 86_400_000;
 function ordinal(day: string) {
@@ -120,7 +121,7 @@ export interface NbaDailyScheduleSlot {
   isPublicationDay: boolean;
 }
 
-/** Only published on Nov 1, 3, 5, ... through the end of the regular season. */
+/** Public NBA Daily opens October 30, then every 48 hours opposite UFC through April 11. */
 export function nbaRegularSeasonDaily(day: string): NbaDailyScheduleSlot | null {
   const target = ordinal(day);
   const first = ordinal(NBA_GAMES_LAUNCH_DAY);
@@ -141,6 +142,10 @@ export function nbaOwnerPreviewDaily(day: string): NbaDailyGame | null {
   const offset = ordinal(day) - ordinal(NBA_OWNER_PREVIEW_FIRST_DAY);
   if (offset < 0 || ordinal(day) >= ordinal(NBA_GAMES_LAUNCH_DAY)) return null;
   return NBA_OWNER_PREVIEW_ORDER[offset] ?? null;
+}
+
+export function nbaCanAccessPublicCasual(day: string) {
+  return NBA_OFFICIAL_GAMES_RELEASE_READY && ordinal(day) >= ordinal(NBA_CASUAL_PUBLIC_DAY);
 }
 
 export function nbaCanAccessReleasedGames(day: string) {
