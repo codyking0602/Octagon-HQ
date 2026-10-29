@@ -1,0 +1,33 @@
+.nba-cup__main{max-width:780px;margin:0 auto;padding-bottom:32px;display:grid;gap:13px}
+.nba-cup__summary,.nba-cup__group,.nba-cup__save,.nba-cup__next{border:1px solid rgba(150,160,180,.24);border-radius:14px;padding:15px;background:rgba(135,145,160,.05)}
+.nba-cup__summary-title,.nba-cup__summary-foot{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.nba-cup__summary-title{font-size:13px;letter-spacing:.04em}
+.nba-cup__progress{margin:12px 0;height:6px;background:rgba(150,160,180,.22);border-radius:8px;overflow:hidden}
+.nba-cup__progress span{display:block;height:100%;background:#c99754;transition:width .2s}
+.nba-cup__summary p,.nba-cup__next p{font-size:13px;line-height:1.55;opacity:.82;margin:0 0 13px}
+.nba-cup__summary-foot{font-size:11px;opacity:.8;flex-wrap:wrap}
+.nba-cup__tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:rgba(130,140,155,.13);border-radius:11px;padding:4px}
+.nba-cup__tabs button{font-size:12px;font-weight:800;letter-spacing:.04em;background:transparent;color:inherit;border:0;border-radius:8px;padding:11px}
+.nba-cup__tabs button.is-active{background:var(--card-bg,#222831);box-shadow:0 1px 5px rgba(0,0,0,.18)}
+.nba-cup__group header{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}
+.nba-cup__group h2,.nba-cup__next h2{font-size:16px;margin:0}
+.nba-cup__group header small{font-size:11px;font-weight:800;opacity:.65}
+.nba-cup__teams{display:grid;gap:7px}
+.nba-cup__team{min-height:52px;width:100%;display:flex;align-items:center;gap:12px;border:1px solid rgba(150,160,180,.27);border-left:3px solid;padding:8px 12px;border-radius:10px;color:inherit;background:transparent;text-align:left;cursor:pointer}
+.nba-cup__team.is-selected{background:rgba(185,160,120,.12);border-width:2px;border-left-width:4px}
+.nba-cup__team .nba-team-mark{flex-shrink:0}
+.nba-cup__team>span:nth-child(2){flex:1;font-size:13px;font-weight:700}
+.nba-cup__team b{font-size:19px;opacity:.7}
+.nba-cup__team.is-selected b{opacity:1}
+.nba-cup__team:disabled{cursor:default}
+.nba-cup__save{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.nba-cup__save>div{display:grid;gap:3px}
+.nba-cup__save strong{font-size:12px}
+.nba-cup__save small{font-size:11px;opacity:.7}
+.nba-cup__notice{font-size:13px}
+.nba-cup__next>small{font-size:11px;opacity:.7;font-weight:700;letter-spacing:.035em}
+.nba-cup__next h2{margin:5px 0 10px}
+.nba-cup__points{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:12px}
+.nba-cup__points span{font-size:10px;text-align:center;padding:8px 4px;background:rgba(145,155,165,.12);border-radius:7px}
+.nba-cup__points b{display:block;font-size:18px;margin-top:4px}
+@media(max-width:460px){.nba-cup__summary,.nba-cup__group,.nba-cup__save,.nba-cup__next{padding:12px}.nba-cup__save button{width:100%}.nba-cup__points{grid-template-columns:repeat(2,minmax(0,1fr))}}
