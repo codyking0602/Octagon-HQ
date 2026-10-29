@@ -212,7 +212,7 @@ describe("Owner Championship Home preview", () => {
       .toHaveAttribute("href", "/championship/ufc?tab=play");
   });
 
-  it("counts MLB as a league lead only when MLB actually ranks first", async () => {
+  it("excludes the retired MLB postseason from active league leads", async () => {
     loader.mlb.mockResolvedValue({ own: { overall_rank: 1, total_points: 93 }, standings: [{}, {}, {}] });
     loader.sport.mockImplementation(async (sport) => {
       const data = projection(sport);
@@ -220,12 +220,12 @@ describe("Owner Championship Home preview", () => {
     });
     render(<Preview />);
     const cabinet = screen.getByRole("region", { name: "Your HQ" });
-    expect(await within(cabinet).findByText("93")).toBeInTheDocument();
+    await within(cabinet).findByText("91.3");
     expect(within(cabinet).getByText("LEAGUE LEADS")).toBeInTheDocument();
-    expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("3");
+    expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("2");
     expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon")).toHaveLength(0);
-    expect(within(cabinet).getByText("Football · UFC · MLB")).toBeInTheDocument();
-    expect(within(cabinet).getByText("93")).toBeInTheDocument();
+    expect(within(cabinet).getByText("Football · UFC")).toBeInTheDocument();
+    expect(within(cabinet).queryByText("93")).not.toBeInTheDocument();
   });
 
   it("retains the full three-person bar standings when switching into a sport", async () => {
@@ -280,12 +280,13 @@ describe("Owner Championship Home preview", () => {
     expect(screen.getByRole("link", { name: "Open UFC overall leaderboard" })).toHaveAttribute("href", "/championship/ufc?tab=overall");
   });
 
-  it("keeps MLB postseason standings clickable and omits redundant scoring text", async () => {
+  it("keeps MLB off the active Home selector while retaining the archive separately", async () => {
     render(<Preview />);
-    await screen.findByText("MLB POSTSEASON");
-    fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "mlb" } });
-    expect(screen.getByRole("link", { name: "Open MLB Postseason Championship leaderboard" })).toHaveAttribute("href", "/championship/mlb");
-    expect(screen.queryByText(/MLB retains its existing/)).not.toBeInTheDocument();
+    await screen.findByText("91.3");
+    const board = screen.getByRole("region", { name: "Your HQ" });
+    expect(within(board).queryByRole("option", { name: "MLB" })).not.toBeInTheDocument();
+    expect(within(board).queryByRole("link", { name: /MLB Postseason Championship/i })).not.toBeInTheDocument();
+    expect(loader.mlb).not.toHaveBeenCalled();
   });
 
   it("does not manufacture ratings when the standings RPC is unavailable", async () => {
