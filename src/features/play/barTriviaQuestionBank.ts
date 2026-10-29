@@ -1,7 +1,7 @@
 import { barTriviaDifficultyForRound, barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_EDITORIAL_RETIREMENTS, BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES } from "./barTriviaEditorialCuration";
 import { FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS, FOOTBALL_BAR_TRIVIA_V2_LAST_CALL } from "./barTriviaFootballEditorialV2";
-import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS } from "./barTriviaFootballQuality20261029";
+import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS, FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES } from "./barTriviaFootballQuality20261029";
 import { applyFootballBarTriviaV2Rewrite } from "./barTriviaFootballRewritesV2";
 import { footballTriviaConceptKey } from "./barTriviaFootballConcepts";
 import { UFC_BAR_TRIVIA_V3_RETIRE_IDS, UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES, UFC_BAR_TRIVIA_V3_PROMPT_OVERRIDES } from "./ufcBarTriviaV3Editorial";
@@ -135,7 +135,7 @@ const RAW_BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
 function calibrateBarTriviaDifficulty(question: BarTriviaQuestion): BarTriviaQuestion {
   if (question.contentType !== "evergreen") return question;
 
-  const reviewedRound = question.league === "ufc" ? UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES[question.id] ?? BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES[question.id] : BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES[question.id];
+  const reviewedRound = question.league === "ufc" ? UFC_BAR_TRIVIA_V3_ROUND_OVERRIDES[question.id] ?? BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES[question.id] : FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES[question.id] ?? BAR_TRIVIA_EDITORIAL_ROUND_OVERRIDES[question.id];
   if (reviewedRound) {
     return { ...question, round: reviewedRound, difficulty: barTriviaDifficultyForRound(reviewedRound) };
   }
