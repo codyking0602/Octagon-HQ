@@ -3,7 +3,10 @@ import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { BAR_TRIVIA_EDITORIAL_RETIREMENTS } from "./barTriviaEditorialCuration";
 import { FOOTBALL_BAR_TRIVIA_V2_LAST_CALL, FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS } from "./barTriviaFootballEditorialV2";
 import { FOOTBALL_BAR_TRIVIA_V2_REWRITES } from "./barTriviaFootballRewritesV2";
-import { footballTriviaConceptKey } from "./barTriviaFootballConcepts";
+import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS, FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES } from "./barTriviaFootballQuality20261029";
+import { FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS } from "./barTriviaFootballNewFacts20261029";
+import { footballTriviaConceptKey, footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
+import { FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER, footballPublishedBarTriviaIdsBeforeDay } from "./barTriviaFootballPublishedHistory20261029";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import type { BarTriviaQuestion } from "../games/barTriviaEngine";
@@ -20,6 +23,7 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
   it("honors every v2 retirement and preserves correct four-choice grading for replacements", () => {
     const ids = new Set(BAR_TRIVIA_QUESTION_BANK.map((question) => question.id));
     for (const id of FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS) expect(ids.has(id), id).toBe(false);
+    for (const id of Object.keys(FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS)) expect(ids.has(id), id).toBe(false);
     for (const id of Object.keys(BAR_TRIVIA_EDITORIAL_RETIREMENTS)) expect(ids.has(id), id).toBe(false);
 
     expect(FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS.size).toBe(72);
@@ -35,11 +39,36 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       // Weekly dated news is supplemental; only the certified evergreen inventory is fixed.
       expect(bank.filter((question) => question.contentType === "evergreen"))
-        .toHaveLength(league === "nfl" ? 199 : 197);
+        .toHaveLength(league === "nfl" ? 144 : 155);
       const lastCall = bank.filter((question) => question.round === "last-call");
-      expect(lastCall.length).toBeGreaterThanOrEqual(league === "nfl" ? 15 : 12);
+      // NFL keeps thirteen editorially vetted Last Calls for ten unique outings.
+      expect(lastCall.length).toBeGreaterThanOrEqual(12);
     }
 
+    const requiredRetirements = [
+      "nfl-r2-first-game-outside-na", // 2007 London: low-value first
+      "nfl-r1-bills-mafia",           // answer telegraphed in stem
+      "nfl-easy2-fleur-de-lis",       // stale logo filler
+      "nfl-r3-league-founded-city",  // 1920 league organization: administration, not football
+      "nfl-final-first-sb-kick-return-td", // dull Last Call first
+      "cfb-easy2-spartans",           // nickname decodes the answer
+    ];
+    for (const id of requiredRetirements) expect(ids.has(id), id).toBe(false);
+    for (const [id, round] of Object.entries(FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES)) {
+      const question = BAR_TRIVIA_QUESTION_BANK.find((q) => q.id === id);
+      expect(question, id).toBeDefined();
+      expect(question?.round, id).toBe(round);
+    }
+    expect(FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS).toHaveLength(4);
+    for (const question of FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS) {
+      expect(question.sourceUrl, question.id).toMatch(/^https:\/\//);
+      expect(question.verifiedAt, question.id).toBe("2026-10-29");
+      expect(question.round, question.id).toBe("round3");
+      expect(question.choices, question.id).toHaveLength(4);
+      expect(new Set(question.choices).size, question.id).toBe(4);
+      expect(question.choices, question.id).toContain(question.answer);
+      expect(ids.has(question.id), question.id).toBe(true);
+    }
     const allPrompts = new Set<string>();
     for (const question of BAR_TRIVIA_QUESTION_BANK.filter((q) => q.league === "nfl" || q.league === "cfb")) {
       expect(question.choices).toHaveLength(4);
@@ -50,6 +79,20 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       expect(allPrompts.has(question.league + ":" + prompt), question.id).toBe(false);
       allPrompts.add(question.league + ":" + prompt);
     }
+  });
+
+  it("reconciles actual historical daily snapshots instead of trusting regenerated history", () => {
+    expect(FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER).toHaveLength(5);
+    for (const saved of FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER) {
+      expect(saved.questionIds, saved.day).toHaveLength(10);
+    }
+    const londonAppearances = FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER.filter((saved) =>
+      saved.questionIds.some((id) => id === "nfl-r2-first-game-outside-na"));
+    expect(londonAppearances.map((saved) => saved.day)).toEqual(["2026-09-29", "2026-10-29"]);
+    expect(footballPublishedBarTriviaIdsBeforeDay("nfl", "2026-10-30", 184))
+      .toContain("nfl-r3-first-black-modern-hc");
+    expect(footballPublishedBarTriviaIdsBeforeDay("nfl", "2027-05-05", 184))
+      .not.toContain("nfl-r3-first-black-modern-hc");
   });
 
   it("produces unique question IDs AND fact families over the exact 182-day horizon", () => {
@@ -65,7 +108,25 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       expect(run, date).toHaveLength(10);
       expect(new Set(run.map((q) => q.id)).size, date).toBe(10);
       expect(new Set(run.map((q) => q.factKey ?? q.id)).size, date).toBe(10);
+      // This is content difficulty, not a change to the point/scoring ladder.
+      const mix = {
+        easy: run.filter((q) => q.difficulty === "easy").length,
+        medium: run.filter((q) => q.difficulty === "medium").length,
+        hard: run.filter((q) => q.difficulty === "hard").length,
+        lastCall: run.filter((q) => q.difficulty === "last-call").length,
+      };
+      if (!run[0]?.id.startsWith("theme-cowboys-seahawks-2026-")) {
+        expect(mix, date).toEqual({ easy: 4, medium: 3, hard: 2, lastCall: 1 });
+        expect(run.filter((q) => /\bfirst\b/i.test(q.prompt)).length, date).toBeLessThanOrEqual(2);
+        const isIdentity = (q: BarTriviaQuestion) => /^(fan culture|team names?|team identity|mascots?|nicknames?|school identity|cheers|logos|traditions|stadium culture)$/i.test(q.category);
+        expect(run.filter(isIdentity).length, date).toBeLessThanOrEqual(3);
+      }
+      const actualHistory = new Set(
+        footballPublishedBarTriviaIdsBeforeDay(league, date, 184)
+          .flatMap(footballTriviaFamilyMemberIds)
+      );
       for (const question of run) {
+        expect(actualHistory.has(question.id), `${league} ${date}: repeated real published question/fact ${question.id}`).toBe(false);
         const key = question.factKey ?? question.id;
         expect(seen[league].has(key), league + " " + date + " repeated fact " + key).toBe(false);
         seen[league].add(key);

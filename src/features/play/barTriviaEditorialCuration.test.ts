@@ -89,8 +89,11 @@ describe("2026-10-22 NFL/CFB/UFC Bar Trivia editorial curation", () => {
     for (const league of ["nfl", "cfb", "ufc"] as const) {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       for (const round of ["round1", "round2", "round3", "last-call"] as const) {
+        const floor = league === "nfl" && round === "last-call" ? 12 : 15;
+        // Ten NFL appearances need ten distinct Last Calls, not weak filler
+        // added just to satisfy an older blanket fifteen-question quota.
         expect(bank.filter((q) => q.round === round && q.contentType === "evergreen").length, league + round)
-          .toBeGreaterThanOrEqual(15);
+          .toBeGreaterThanOrEqual(floor);
       }
     }
   });

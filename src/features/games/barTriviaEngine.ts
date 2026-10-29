@@ -274,16 +274,37 @@ export function buildBarTriviaRun(
   const used = new Set<string>();
   const usedCategories = new Set<string>();
   const run: BarTriviaQuestion[] = [];
+  const footballQualityMix = league === "nfl" || league === "cfb";
+  // Soft caps address the *whole* football board without scripting a run.
+  // Preference is applied only when a recent-free, unused alternative exists:
+  // these editorial rules may never defeat six-month no-repeat protection.
+  const isFirstQuestion = (question: BarTriviaQuestion) => /\bfirst\b/i.test(question.prompt);
+  const isIdentityQuestion = (question: BarTriviaQuestion) =>
+    /^(fan culture|team names?|team identity|mascots?|nicknames?|school identity|cheers|logos|traditions|stadium culture)$/i.test(question.category);
+  const eligiblePool = (pool: BarTriviaQuestion[]) => {
+    if (!footballQualityMix) return pool;
+    let available = pool;
+    const prefer = (allow: (q: BarTriviaQuestion) => boolean) => {
+      const better = available.filter((q) =>
+        allow(q) && !used.has(q.id) && !used.has(q.factKey ?? q.id) &&
+        !recentQuestionIds.includes(q.id)
+      );
+      if (better.length) available = better;
+    };
+    if (run.filter(isFirstQuestion).length >= 2) prefer((q) => !isFirstQuestion(q));
+    if (run.filter(isIdentityQuestion).length >= 3) prefer((q) => !isIdentityQuestion(q));
+    return available;
+  };
 
   for (const [index, round] of BAR_TRIVIA_ROUND_SLOTS.entries()) {
     if (index === 3 && league !== "nba") {
       const accessible = pickQuestion(
-        bank.filter((question) =>
+        eligiblePool(bank.filter((question) =>
           question.league === league &&
           question.round === "round1" &&
           question.difficulty === "easy" &&
           question.contentType === "evergreen"
-        ),
+        )),
         used,
         usedCategories,
         recentQuestionIds,
@@ -298,14 +319,45 @@ export function buildBarTriviaRun(
       continue;
     }
 
+    // Football has four easy, three medium, two hard, and one Last Call.
+    // Keep the existing 3/3/3/1 scoring rounds and the Q4 ease-in: Q7 is a
+    // medium CONTENT question that earns Round 3 points. Other sports unchanged.
+    if (index === 6 && footballQualityMix) {
+      const accessible = pickQuestion(
+        eligiblePool(bank.filter((question) =>
+          question.league === league &&
+          question.round === "round2" &&
+          question.difficulty === "medium" &&
+          question.contentType === "evergreen"
+        )),
+        used,
+        usedCategories,
+        recentQuestionIds,
+        random,
+        options.strictRecentNoRepeat === true,
+      );
+      const chosen = { ...accessible, round: "round3" as const };
+      run.push(chosen);
+      used.add(chosen.id);
+      used.add(chosen.factKey ?? chosen.id);
+      usedCategories.add(chosen.category);
+      continue;
+    }
+
     const currentQueue = currentByRound.get(round);
-    const scheduledCurrent = currentQueue?.shift();
+    const currentCandidate = currentQueue?.shift();
+    const scheduledCurrent = currentCandidate && (
+      !footballQualityMix || (
+        (!isFirstQuestion(currentCandidate) || run.filter(isFirstQuestion).length < 2) &&
+        (!isIdentityQuestion(currentCandidate) || run.filter(isIdentityQuestion).length < 3)
+      )
+    ) ? currentCandidate : null;
     const chosen = scheduledCurrent ?? pickQuestion(
-      bank.filter((question) =>
+      eligiblePool(bank.filter((question) =>
         question.league === league &&
         question.round === round &&
         question.contentType === "evergreen"
-      ),
+      )),
       used,
       usedCategories,
       recentQuestionIds,

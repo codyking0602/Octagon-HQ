@@ -15,6 +15,7 @@ import { expandUfcBarTriviaRecentFactIds } from "./ufcBarTriviaV3Editorial";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay, isUfcPublicationDay } from "./dailyChallengeRotation";
 import { footballThemedBarTriviaRunForDay } from "./footballTeamThemeDailyPacks";
 import { footballTriviaConceptKey, footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
+import { footballPublishedBarTriviaIdsBeforeDay } from "./barTriviaFootballPublishedHistory20261029";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import type {
   OfficialDailyAdvanceResult,
@@ -151,8 +152,17 @@ function dailyBarTriviaRun(
     if (candidateDay !== day && !wasBarTriviaDailyAppearance(league, candidateDay)) continue;
     if (league === "ufc" && ufcAppearanceCount > 0 && ufcAppearanceCount % UFC_BAR_TRIVIA_UNIQUE_APPEARANCES === 0) historyIds.splice(3);
     const relevant = league === "ufc" ? historyIds : historyIds.filter((entry) => timestamp - entry.timestamp <= BAR_TRIVIA_RECENT_LOOKBACK_DAYS * DAY_MS);
+    // Replaying the *current* bank cannot reconstruct the historical,
+    // immutable published boards. Merge actual pre-cutover publication IDs
+    // so a previous Daily question cannot repeat simply after a bank rewrite.
+    const actualPublishedIds = league === "nfl" || league === "cfb"
+      ? footballPublishedBarTriviaIdsBeforeDay(league, candidateDay, BAR_TRIVIA_RECENT_LOOKBACK_DAYS)
+      : [];
     const recentIds = league === "ufc" ? expandUfcBarTriviaRecentFactIds(relevant.flatMap(entry => entry.ids))
-      : relevant.flatMap(entry => entry.ids.flatMap(footballTriviaFamilyMemberIds));
+      : [
+          ...relevant.flatMap(entry => entry.ids.flatMap(footballTriviaFamilyMemberIds)),
+          ...actualPublishedIds.flatMap(footballTriviaFamilyMemberIds),
+        ];
     const themed = league === "nfl" ? footballThemedBarTriviaRunForDay(candidateDay) : null;
     const run = themed
       ? themed.map((question) => ({ ...question, factKey: footballTriviaConceptKey(question.id) }))
@@ -162,7 +172,7 @@ function dailyBarTriviaRun(
           ),
           now: candidateDay + "T12:00:00.000Z",
           recentQuestionIds: recentIds,
-          strictRecentNoRepeat: league === "ufc",
+          strictRecentNoRepeat: league === "ufc" || league === "nfl" || league === "cfb",
         });
     latest = run;
     historyIds.unshift({ timestamp, ids: run.map((question) => question.id) });

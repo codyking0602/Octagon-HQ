@@ -136,8 +136,8 @@ describe("Football team-themed Daily packs", () => {
     ]);
     expect(run.map(question => question.difficulty)).toEqual([
       "easy", "easy", "easy",
-      "medium", "medium", "medium",
-      "hard", "hard", "hard", "last-call",
+      "easy", "medium", "medium",
+      "medium", "hard", "hard", "last-call",
     ]);
     expect(run[6]).toMatchObject({
       answer: "DK Metcalf",

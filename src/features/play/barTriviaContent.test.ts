@@ -6,8 +6,8 @@ describe("Bar Trivia question bank", () => {
     const targets = {
       // Safety floors support ten-question runs; keep/cut editorial decisions
       // must not be reversed just to satisfy historic quantity quotas.
-      nfl: { total: 140, round1: 55, round2: 35, round3: 25, lastCall: 10 },
-      cfb: { total: 140, round1: 55, round2: 30, round3: 25, lastCall: 10 },
+      nfl: { total: 140, round1: 40, round2: 30, round3: 20, lastCall: 10 },
+      cfb: { total: 140, round1: 40, round2: 30, round3: 20, lastCall: 10 },
       ufc: { total: 220, round1: 55, round2: 50, round3: 35, lastCall: 15 },
     } as const;
 
@@ -81,7 +81,9 @@ describe("Bar Trivia question bank", () => {
           question.round === "round1" &&
           question.difficulty === "easy",
       );
-      expect(easy.length).toBeGreaterThanOrEqual(60);
+      // Football needs 4 per Daily over 10 NFL / 9 CFB appearances; a curated
+      // 55-question floor retains headroom without reviving weak fillers.
+      expect(easy.length).toBeGreaterThanOrEqual(league === "ufc" ? 60 : 55);
     }
   });
 
