@@ -1,17 +1,17 @@
 import {useEffect,useRef,useState,type CSSProperties} from "react";
-import {Link} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {useIdentity} from "../identity/IdentityProvider";
 import {NBA_TEAM_BY_ID} from "./nbaFutures";
 import {NbaTeamMark,nbaTeamColor} from "./nbaTeamBranding";
 import {CUP_GROUPS,CUP_POINTS,cupPickCount,type CupGroupPicks} from "./nbaCup2026";
 import {loadCupPreview,saveCupPreview} from "./nbaCupRepository";
-import {NbaCupHero} from "./NbaCupHero";
 import "../../styles/nba-hq.css";
 import "./nbaCup2026.css";
 
 const serializePicks=(value:CupGroupPicks)=>JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b))));
 
-export default function NbaCup2026Page(){
+/** Cup group picks live directly within Basketball Picks; the old /nba/cup URL redirects. */
+export function NbaCupGroups(){
   const {profile}=useIdentity();
   const [conference,setConference]=useState<"East"|"West">("East");
   const [picks,setPicks]=useState<CupGroupPicks|null>(null);
@@ -21,7 +21,9 @@ export default function NbaCup2026Page(){
   const [saving,setSaving]=useState(false);
   const [error,setError]=useState("");
   const [notice,setNotice]=useState("");
+  const [saveVisible,setSaveVisible]=useState(true);
   const tabsRef=useRef<HTMLDivElement>(null);
+  const saveRef=useRef<HTMLDivElement>(null);
   useEffect(()=>{
     let active=true;
     setLoading(true);setError("");
@@ -33,15 +35,25 @@ export default function NbaCup2026Page(){
     }).catch(err=>{if(active){setError(err instanceof Error?err.message:"Could not load Cup picks.");setLoading(false);}});
     return()=>{active=false};
   },[profile?.id]);
+  useEffect(()=>{
+    const target=saveRef.current;
+    if(!target||typeof IntersectionObserver==="undefined")return;
+    const observer=new IntersectionObserver(entries=>setSaveVisible(entries[0]?.isIntersecting??false),{
+      rootMargin:"0px 0px -105px 0px",threshold:0.1,
+    });
+    observer.observe(target);
+    return()=>observer.disconnect();
+  },[loading]);
   const count=cupPickCount(picks??{});
   const dirty=picks!==null&&serializePicks(picks)!==saved;
+  const complete=count===6&&!dirty;
   async function save(){
     if(!picks||locked||saving||!dirty)return;
     setSaving(true);setError("");setNotice("");
     try{
       const response=await saveCupPreview(picks);
       setPicks(response.picks);setSaved(serializePicks(response.picks));setLocked(response.locked);
-      setNotice("NBA Cup picks saved.");
+      setNotice(cupPickCount(response.picks)===6?"6/6 PICKS SAVED ✓":"NBA Cup picks saved.");
     }catch(err){setError(err instanceof Error?err.message:"Unable to save picks.");}
     finally{setSaving(false);}
   }
@@ -49,16 +61,14 @@ export default function NbaCup2026Page(){
     setConference(next);
     if(scroll)tabsRef.current?.scrollIntoView({behavior:"smooth",block:"start"});
   }
-  return <div className="page nba-hq-page nba-cup" data-sport="nba" data-testid="nba-cup-picks">
-    <NbaCupHero/>
-    <main className="nba-cup__main">
+  return <section className="nba-cup" data-testid="nba-cup-picks" aria-label="NBA Cup 2026 group picks">
+    <div className="nba-cup__main">
       <section className="nba-cup__summary" aria-label="NBA Cup group-pick progress">
-        <div className="nba-cup__summary-title"><b>GROUP WINNERS</b><b>{count}/6 PICKED</b></div>
+        <div className="nba-cup__summary-title"><b>GROUP WINNERS</b><b>{count}/6 {complete?"PICKS SAVED":"PICKED"}</b></div>
         <div className="nba-cup__progress" role="progressbar" aria-label="Groups picked" aria-valuenow={count} aria-valuemin={0} aria-valuemax={6}><span style={{width:(count/6*100)+"%"}} /></div>
-        <p>Pick one winner from each group. Two wildcards also advance automatically—no extra picks needed.</p>
-        <div className="nba-cup__summary-foot"><span>OCT 30 – NOV 27 · GROUP PLAY</span><strong>{locked?"PICKS LOCKED":dirty?"UNSAVED CHANGES":"PICKS OPEN"}</strong></div>
+        <p>Pick one winner from each of the six groups.</p>
+        <div className="nba-cup__summary-foot"><span>OCT 30 – NOV 27 · GROUP PLAY</span><strong>{locked?"PICKS LOCKED":dirty?"UNSAVED CHANGES":complete?"6/6 PICKS SAVED ✓":"PICKS OPEN"}</strong></div>
       </section>
-      <Link className="nba-cup__back" to="/nba/picks">← BASKETBALL PICKS</Link>
       {loading?<p role="status">Loading NBA Cup picks…</p>:null}
       {error?<p role="alert" className="nba-hq-error">{error}</p>:null}
       {picks?<><div className="nba-cup__tabs" ref={tabsRef} role="group" aria-label="Conference">
@@ -83,25 +93,28 @@ export default function NbaCup2026Page(){
       <button className="nba-cup__conference-next" type="button" onClick={()=>switchConference(conference==="East"?"West":"East",true)}>
         {conference==="East"?"CONTINUE TO WEST GROUPS →":"← REVIEW EAST GROUPS"}
       </button>
-      <section className="nba-cup__save">
-        <div><strong>{count===6?"ALL SIX GROUPS PICKED":(6-count)+" PICKS REMAIN"}</strong>
-          <small>{locked?"Your NBA Cup picks are locked.":dirty?"Unsaved changes": "Selections saved"}</small></div>
-        {!locked?<button type="button" className="primary-action" disabled={!dirty||saving} onClick={()=>void save()}>
-          {saving?"SAVING…":"SAVE MY PICKS"}
+      <section className="nba-cup__save" ref={saveRef}>
+        <div><strong>{locked?"PICKS LOCKED":complete?"6/6 PICKS SAVED ✓":count===6?"ALL SIX GROUPS PICKED":(6-count)+" PICKS REMAIN"}</strong>
+          <small>{locked?"Your NBA Cup picks are final.":dirty?"Unsaved changes": "Selections saved"}</small></div>
+        {!locked&&dirty?<button type="button" className="primary-action" disabled={saving} onClick={()=>void save()}>
+          {saving?"SAVING…":"SAVE PICKS"}
         </button>:null}
       </section>
       {notice?<p role="status" className="nba-cup__notice">{notice}</p>:null}
       <details className="nba-cup__next">
         <summary><span><small>COMING IN DECEMBER</small><strong>KNOCKOUT BRACKET</strong></span><b aria-hidden="true">⌄</b></summary>
         <div className="nba-cup__next-body">
-          <p>Once the eight teams qualify, pick four quarterfinal winners, two semifinal winners and the Cup champion.</p>
+          <p>Once eight teams qualify, pick four quarterfinal winners, two semifinal winners, and the champion.</p>
           <div className="nba-cup__points">{Object.entries(CUP_POINTS).map(([key,value])=><span key={key}>{key==="groups"?"Groups":key==="quarterfinals"?"Quarterfinals":key==="semifinals"?"Semifinals":"Champion"}<b>{value}</b></span>)}</div>
         </div>
       </details>
-      {dirty&&!locked?<div className="nba-cup__floating-save" role="region" aria-label="Unsaved NBA Cup picks">
+      {dirty&&!locked&&!saveVisible?<div className="nba-cup__floating-save" role="region" aria-label="Unsaved NBA Cup picks">
         <span>{count}/6 SELECTED</span><button type="button" disabled={saving} onClick={()=>void save()}>{saving?"SAVING…":"SAVE PICKS"}</button>
       </div>:null}
       </>:null}
-    </main>
-  </div>;
+    </div>
+  </section>;
 }
+
+/** Legacy deep links go to the single Basketball Picks screen, with the same server-side Cup gate. */
+export default function NbaCup2026Page(){return <Navigate to="/nba/picks" replace/>;}

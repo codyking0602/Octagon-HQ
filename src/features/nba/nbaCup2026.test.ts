@@ -42,33 +42,41 @@ describe("2026 NBA Cup owner group-picks preview",()=>{
     expect(router).toContain('path: "nba/cup", element: <NbaCupOwnerGate><NbaCup2026Page /></NbaCupOwnerGate>');
     const futures=readFileSync("src/features/nba/NbaFuturesPage.tsx","utf8");
     expect(futures).toContain("canPreviewNbaWhoAmI(identity.profile)");
-    expect(futures).toContain('<NbaCupHero linked/>');
-    expect(readFileSync("src/features/nba/NbaCupHero.tsx","utf8")).toContain('to="/nba/cup"');
+    expect(futures).toContain("<NbaCupHero/>");
+    expect(futures).toContain("<NbaCupGroups/>");
   });
-  it("uses the supplied trophy artwork and puts the Cup before collapsed Futures",()=>{
+  it("keeps the Cup, team selections and all Futures on one Basketball Picks screen",()=>{
+    const page=readFileSync("src/features/nba/NbaFuturesPage.tsx","utf8");
     const hero=readFileSync("src/features/nba/NbaCupHero.tsx","utf8");
-    const futures=readFileSync("src/features/nba/NbaFuturesPage.tsx","utf8");
-    const css=readFileSync("src/features/nba/nbaCup2026.css","utf8");
+    const cup=readFileSync("src/features/nba/NbaCup2026Page.tsx","utf8");
+    const styles=readFileSync("src/features/nba/nbaCup2026.css","utf8");
+    expect(page).toContain("<NbaCupHero/>");
+    expect(page).toContain("<NbaCupGroups/>");
+    expect(page.indexOf("<NbaCupHero/>")).toBeLessThan(page.indexOf("<NbaCupGroups/>"));
+    expect(page.indexOf("<NbaCupGroups/>")).toBeLessThan(page.indexOf('<details className="nba-picks__futures">'));
+    expect(page).toContain("<strong>FUTURES</strong>");
+    expect(page).not.toMatch(/GROUP FUTURES|SEASON FUTURES/);
+    expect(page).toContain("nba-futures-group-entry--mine");
+    expect(page).toContain("otherEntries.map(entry=><NbaFuturesGroupEntry");
+    expect(page).toContain("entry.profile_id!==identity.profile?.id");
+    expect(hero).not.toMatch(/MAKE CUP PICKS|linked/);
+    expect(hero).not.toContain('to="/nba/cup"');
     expect(hero).toContain("NBA Cup 2026");
-    expect(hero).toContain('to="/nba/cup"');
-    expect(css).toContain('/images/nba-cup-2026-hero.webp');
+    expect(styles).toContain('/images/nba-cup-2026-hero.webp');
     expect(existsSync("public/images/nba-cup-2026-hero.webp")).toBe(true);
-    expect(futures).toContain('<NbaCupHero linked/>');
-    expect(futures).toContain('<details className="nba-picks__futures">');
-    expect(futures).toContain('<details className="nba-picks__scoring">');
-    expect(futures.indexOf("<NbaCupHero linked/>")).toBeLessThan(futures.indexOf('<details className="nba-picks__futures">'));
+    expect(cup).toContain('export function NbaCupGroups()');
+    expect(cup).toContain('return <Navigate to="/nba/picks" replace/>');
   });
-  it("presents a clean, mobile-friendly Cup pick flow without test wording",()=>{
-    const page=readFileSync("src/features/nba/NbaCup2026Page.tsx","utf8");
-    const hero=readFileSync("src/features/nba/NbaCupHero.tsx","utf8");
-    expect(page+hero).not.toMatch(/private owner test|owner test|owner preview|test only/i);
-    expect(page).toContain('data-testid="nba-cup-picks"');
-    expect(page).toContain("nba-cup__floating-save");
-    expect(page).toContain("nba-cup__conference-next");
-    expect(page).toContain("aria-pressed={chosen}");
-    expect(page).toContain('style={{"--team-accent":nbaTeamColor(id)} as CSSProperties}');
-    expect(page).toContain('disabled={locked||saving}');
-    expect(page).toContain('className="nba-cup__next"');
+  it("retains private Cup access while avoiding duplicate save controls",()=>{
+    const cup=readFileSync("src/features/nba/NbaCup2026Page.tsx","utf8");
+    expect(cup).not.toMatch(/private owner test|owner test|owner preview|test only/i);
+    expect(cup).toContain("nba-cup__floating-save");
+    expect(cup).toContain("IntersectionObserver");
+    expect(cup).toContain("!saveVisible");
+    expect(cup).toContain("6/6 PICKS SAVED");
+    expect(cup).toContain('aria-pressed={chosen}');
+    expect(cup).toContain("CONTINUE TO WEST GROUPS");
+    expect(cup).toContain('disabled={locked||saving}');
+    expect(cup).toContain('className="nba-cup__next"');
   });
-
 });

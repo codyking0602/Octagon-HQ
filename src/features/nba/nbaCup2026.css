@@ -1,8 +1,8 @@
 /* Shared Basketball Picks / NBA Cup artwork and compact mobile hierarchy. */
-.nba-cup-hero{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:166px;overflow:hidden;border:1px solid #715439;border-radius:16px;padding:15px 16px;color:#f9f8f6;background-color:#080d15;background-image:linear-gradient(90deg,rgba(5,8,13,.52),rgba(4,7,13,.02)),url("/images/nba-cup-2026-hero.webp");background-size:cover;background-position:center;text-decoration:none}
+.nba-cup-hero{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:166px;overflow:hidden;border:1px solid #715439;border-radius:16px;padding:15px 16px;color:#f9f8f6;background-color:#080d15;background-image:linear-gradient(90deg,rgba(5,8,13,.91) 0%,rgba(5,8,13,.72) 42%,rgba(4,7,13,.08) 85%),url("/images/nba-cup-2026-hero.webp");background-size:cover;background-position:63% center;text-decoration:none}
 .nba-cup-hero__eyebrow{position:relative;margin:0 0 7px!important;color:#f5bb76!important;font-size:.63rem!important;letter-spacing:.13em;font-weight:900}
-.nba-cup-hero h1{position:relative;max-width:60%;font-size:clamp(1.55rem,5.6vw,2.4rem);letter-spacing:-.025em;line-height:1.1;margin:0 0 7px;color:#fff}
-.nba-cup-hero__description{position:relative;max-width:59%;font-size:.72rem!important;line-height:1.38!important;margin:0 0 10px!important;color:#dae0e6!important}
+.nba-cup-hero h1{position:relative;max-width:54%;font-size:clamp(1.55rem,5.6vw,2.4rem);letter-spacing:-.025em;line-height:1.1;margin:0 0 7px;color:#fff}
+.nba-cup-hero__description{position:relative;max-width:53%;font-size:.72rem!important;line-height:1.38!important;margin:0 0 10px!important;color:#dae0e6!important}
 .nba-cup-hero__bottom{position:relative;display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;max-width:95%;font-size:.59rem;font-weight:900;letter-spacing:.025em;color:#edbe81}
 .nba-cup-hero__bottom strong{color:#fff;white-space:nowrap;font-size:.62rem}
 .nba-cup-hero--linked:hover{border-color:#c99a5e}
@@ -52,7 +52,7 @@
 .nba-cup__save>div{display:grid;gap:4px}
 .nba-cup__save strong{font-size:.75rem}
 .nba-cup__save small{font-size:.66rem;color:#a8b5be}
-.nba-cup__save button{min-width:160px}
+.nba-cup__save button{min-width:135px;min-height:40px;padding:9px 16px;font-size:.76rem;background:linear-gradient(110deg,#eeb366,#d99a45);color:#1c140d}
 .nba-cup__notice{font-size:.73rem;color:#bbdda6}
 .nba-cup__next>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .nba-cup__next>summary::-webkit-details-marker{display:none}
@@ -67,7 +67,18 @@
 .nba-cup__points b{display:block;font-size:1rem;margin-top:4px}
 .nba-cup__floating-save{position:fixed;z-index:25;bottom:calc(83px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),750px);padding:8px 9px 8px 13px;display:flex;justify-content:space-between;align-items:center;gap:8px;background:#22262a;border:1px solid #a47945;border-radius:12px;box-shadow:0 8px 28px #000b}
 .nba-cup__floating-save span{font-size:.68rem;font-weight:900;white-space:nowrap}
-.nba-cup__floating-save button{border:0;border-radius:8px;background:#e0a55e;color:#19120a;padding:9px 17px;font-size:.73rem;font-weight:950;cursor:pointer}
+.nba-cup__floating-save button{border:0;border-radius:8px;background:#dfaa62;color:#19120a;padding:9px 17px;font-size:.73rem;font-weight:950;cursor:pointer}
 .nba-cup__floating-save button:disabled{opacity:.65}
-@media(max-width:460px){.nba-cup-hero{min-height:155px;padding:13px}.nba-cup-hero h1{font-size:1.72rem}.nba-cup-hero__description{max-width:57%}.nba-cup__summary,.nba-cup__group,.nba-cup__save,.nba-cup__next{padding:11px}.nba-cup__save button{width:100%}.nba-cup__points{grid-template-columns:repeat(2,minmax(0,1fr))}.nba-picks__futures>summary,.nba-picks__scoring>summary{gap:5px;padding:10px}.nba-picks__futures>summary span{font-size:.55rem}}
+@media(max-width:460px){.nba-cup-hero{min-height:155px;padding:13px}.nba-cup-hero h1{font-size:1.72rem}.nba-cup-hero__description{max-width:53%}.nba-cup__summary,.nba-cup__group,.nba-cup__save,.nba-cup__next{padding:11px}.nba-cup__save button{width:100%}.nba-cup__points{grid-template-columns:repeat(2,minmax(0,1fr))}.nba-picks__futures>summary,.nba-picks__scoring>summary{gap:5px;padding:10px}.nba-picks__futures>summary span{font-size:.55rem}}
 @media(prefers-reduced-motion:reduce){.nba-cup__team,.nba-cup__progress span{transition:none}}
+
+/* One Basketball Picks page: Cup group choices above one combined Futures roster. */
+.nba-picks-page>.nba-cup{min-width:0}
+.nba-cup__main{margin:0;max-width:none}
+.nba-picks-page .nba-futures-form{margin-top:3px}
+.nba-picks__futures-body .nba-futures-group-entry--mine{border-color:#755537;background:#15191c}
+.nba-picks__futures-body .nba-futures-group-entry--mine>summary>strong{color:#f2c48b}
+.nba-picks__mine-body{display:grid;gap:10px}
+.nba-cup__save{scroll-margin-bottom:115px}
+.nba-cup__summary p{margin:0 0 8px}
+@media(max-width:460px){.nba-cup-hero{background-position:63% center}.nba-cup-hero__bottom{max-width:72%}.nba-cup__save button{width:100%;min-height:41px}}
