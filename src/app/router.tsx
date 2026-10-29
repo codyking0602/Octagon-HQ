@@ -71,6 +71,7 @@ const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRou
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
 const MlbPlayoffsPage = lazy(() => import("../features/mlb/MlbPlayoffsPage"));
 const MlbPicksPage = lazy(() => import("../features/mlb/MlbPicksPage"));
+const MlbPostseasonRecapPage = lazy(() => import("../features/mlb/MlbPostseasonRecapPage"));
 const NbaFuturesPage = lazy(() => import("../features/nba/NbaFuturesPage"));
 const NbaCup2026Page = lazy(() => import("../features/nba/NbaCup2026Page"));
 const NbaPlayPage = lazy(() => import("../features/nba/NbaPlayPage"));
@@ -88,6 +89,7 @@ export const appRoutes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: "championship/nba", element: <NbaPreviewGate><NbaChampionshipPage /></NbaPreviewGate> },
+      { path: "championship/mlb", element: <MlbPostseasonRecapPage /> },
       { path: "championship/:sport", element: <ChampionshipLeaderboardPage /> },
       { path: "fighters-to-watch", element: <ShanesWatchlistPage /> },
       { path: "rankings", element: <RankingsPage /> },

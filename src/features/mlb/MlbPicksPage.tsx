@@ -116,12 +116,12 @@ function roundDisplayLabel(round: MlbBracketNode["round"]) {
   return "WORLD SERIES";
 }
 
-export default function MlbPicksPage() {
+export default function MlbPicksPage({ archiveMode = false }: { archiveMode?: boolean }) {
   const identity = useIdentity();
   const signedIn = Boolean(identity.profile);
-  const { hub: liveHub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn);
-  const { championship: liveChampionship, error: championshipError } = useMlbChampionship(signedIn);
-  const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
+  const { hub: liveHub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn, archiveMode ? 2026 : undefined);
+  const { championship: liveChampionship, error: championshipError } = useMlbChampionship(signedIn, archiveMode ? 2026 : undefined);
+  const previewMode = !archiveMode && identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
   const hub = previewMode ? MLB_OWNER_PREVIEW_HUB : liveHub;
   const championship = previewMode ? MLB_OWNER_PREVIEW_CHAMPIONSHIP : liveChampionship;
 
@@ -147,13 +147,13 @@ export default function MlbPicksPage() {
     setViewedProfileId((current) => hub.brackets.some((entry) => entry.profile_id === current) ? current : preferred);
 
     const complete = bracketComplete(hub.bracketTemplate, initialDraft);
-    if (hub.fieldReady && !hub.bracketLocked && !complete) {
+    if (!archiveMode && hub.fieldReady && !hub.bracketLocked && !complete) {
       const first = firstBracketGuideNode(hub.bracketTemplate, initialDraft, false);
       setReviewExisting(false);
       setActiveNodeId(first?.id ?? "");
       setEditingBracket(Boolean(first));
     }
-  }, [hub]);
+  }, [hub, archiveMode]);
 
   const bracketViewers = useMemo(() => {
     if (!hub || !identity.profile) return [];
@@ -268,7 +268,7 @@ export default function MlbPicksPage() {
   );
 
   const activateNode = (node: MlbBracketNode) => {
-    if (hub.bracketLocked || !viewed?.is_current_user) return;
+    if (archiveMode || hub.bracketLocked || !viewed?.is_current_user) return;
     const [left, right] = nodeParticipants(node, draft, hub.bracketTemplate);
     if (!left || !right) return;
     setReviewExisting(complete);
@@ -314,7 +314,7 @@ export default function MlbPicksPage() {
     const selected = displayedPicks[node.id];
     const officialWinner = winners.get(node.id) ?? null;
     const isActive = editingBracket && node.id === activeNodeId;
-    const canActivate = !hub.bracketLocked && Boolean(viewed?.is_current_user) && Boolean(left && right);
+    const canActivate = !archiveMode && !hub.bracketLocked && Boolean(viewed?.is_current_user) && Boolean(left && right);
 
     return (
       <button
@@ -365,7 +365,7 @@ export default function MlbPicksPage() {
   const renderSeriesCard = (series: MlbPlayoffSeries) => {
     const selected = ownSeriesPicks.get(series.series_id) ?? "";
     const picksLockAt = series.picks_lock_at ?? series.starts_at;
-    const locked = picksLockAt ? Date.now() >= Date.parse(picksLockAt) : true;
+    const locked = archiveMode || (picksLockAt ? Date.now() >= Date.parse(picksLockAt) : true);
     const customPickLock = Boolean(series.picks_lock_at && series.picks_lock_at !== series.starts_at);
     const completeSeries = series.status === "complete" || Boolean(series.winner_team_id);
     const assetA = mlbTeamAssetByName(series.team_a_name);
@@ -447,18 +447,18 @@ export default function MlbPicksPage() {
           )}
         </div>
         <footer>
-          <span>{footerLabel} · {seriesLengthLabel(series.round)}</span>
+          <span>{archiveMode ? selected && series.winner_team_id ? selected === series.winner_team_id ? "✓ YOUR PICK CORRECT" : "✕ YOUR PICK INCORRECT" : "NO PICK RECORDED" : `${footerLabel} · ${seriesLengthLabel(series.round)}`}</span>
         </footer>
       </article>
     );
   };
 
   return (
-    <div className="page mlb-picks-page">
+    <div className={`page mlb-picks-page${archiveMode ? " mlb-picks-page--archive" : ""}`}>
       <section id="mlb-bracket" className="mlb-bracket mlb-bracket--interactive" aria-labelledby="mlb-bracket-title">
         <header className="mlb-section-heading mlb-bracket__heading">
           <div><p className="eyebrow">2026 MLB PLAYOFFS</p><h2 id="mlb-bracket-title">Playoff bracket</h2></div>
-          <small>{hub.bracketLocked ? "BRACKET LOCKED" : hub.fieldReady ? bracketLockLabel(hub.bracketLockAt) : "FIELD PENDING"}</small>
+          <small>{archiveMode ? "FINAL BRACKETS" : hub.bracketLocked ? "BRACKET LOCKED" : hub.fieldReady ? bracketLockLabel(hub.bracketLockAt) : "FIELD PENDING"}</small>
         </header>
 
         {!hub.fieldReady ? (
@@ -584,7 +584,7 @@ export default function MlbPicksPage() {
                 );
               })() : null}
 
-              {!editingBracket && viewed?.is_current_user && !hub.bracketLocked ? (
+              {!archiveMode && !editingBracket && viewed?.is_current_user && !hub.bracketLocked ? (
                 <div className="mlb-bracket-shell__actions">
                   <button type="button" className="secondary-action" onClick={startBracketGuide}>
                     {complete ? "EDIT BRACKET" : "CONTINUE BRACKET"}
@@ -611,7 +611,7 @@ export default function MlbPicksPage() {
         )}
       </section>
 
-      <details className="surface-card football-group-hub mlb-picks-group-hub" data-mlb-section="group">
+      {!archiveMode ? <details className="surface-card football-group-hub mlb-picks-group-hub" data-mlb-section="group">
         <summary className="football-group-hub__summary">
           <div className="football-group-hub__summary-copy">
             <span>PICKS &amp; STANDINGS</span>
@@ -848,9 +848,26 @@ export default function MlbPicksPage() {
             </section>
           </section>
         </div>
-      </details>
+      </details> : null}
 
-      <section id="mlb-round-picks" className="football-picks-slate football-picks-slate--current mlb-series-slate" data-mlb-section="current" aria-labelledby="mlb-round-picks-title">
+      {archiveMode ? (
+        <section className="mlb-archive-series" aria-label="All MLB 2026 series picks and results">
+          <header className="mlb-section-heading"><div><p className="eyebrow">ROUND BY ROUND · 2026</p><h2>Series picks &amp; results</h2></div><small>FINAL RESULTS</small></header>
+          {MLB_ROUND_ORDER.map(round => {
+            const series = hub.series.filter(item => item.round === round);
+            if (!series.length) return null;
+            const correct = series.filter(item => ownSeriesPicks.get(item.series_id) && ownSeriesPicks.get(item.series_id) === item.winner_team_id).length;
+            const picked = series.filter(item => ownSeriesPicks.has(item.series_id)).length;
+            return <details key={round} className="mlb-archive-series__round" open={round === "world_series"}>
+              <summary><strong>{MLB_ROUND_LABELS[round]}</strong><span>{correct} CORRECT OF {picked} PICKS</span><b aria-hidden="true">⌄</b></summary>
+              <div className="mlb-archive-series__cards">{series.map(renderSeriesCard)}</div>
+            </details>;
+          })}
+          {!hub.series.length ? <p>No series results have been published.</p> : null}
+        </section>
+      ) : null}
+
+      {!archiveMode ? <section id="mlb-round-picks" className="football-picks-slate football-picks-slate--current mlb-series-slate" data-mlb-section="current" aria-labelledby="mlb-round-picks-title">
         <header className="football-picks-section-header">
           <p className="eyebrow" id="mlb-round-picks-title">{MLB_ROUND_LABELS[hub.currentRound]} SERIES</p>
           <strong>{roundSeries.filter((series) => series.status !== "complete" && !series.winner_team_id).length} OPEN</strong>
@@ -871,9 +888,9 @@ export default function MlbPicksPage() {
             </div>
           </details>
         ) : null}
-      </section>
+      </section> : null}
 
-      <details className="surface-card football-picks-grading mlb-picks-grading" data-mlb-section="grading">
+      {!archiveMode ? <details className="surface-card football-picks-grading mlb-picks-grading" data-mlb-section="grading">
         <summary><span>SCORING &amp; GRADING</span><strong>100-POINT CHAMPIONSHIP</strong></summary>
         <div className="football-picks-grading__body">
           <div className="football-picks-grading__scores mlb-championship-scoring__lanes" aria-label="MLB Championship scoring">
@@ -895,7 +912,7 @@ export default function MlbPicksPage() {
             <p>Ten challenges. Each awards 2.5 / 2 / 1.5 / 1 / 0.5 championship points for 1st through 5th. Ties split the occupied places.</p>
           </section>
         </div>
-      </details>
+      </details> : null}
 
       {error && !previewMode ? <p className="picks-error" role="status">{error}</p> : null}
     </div>

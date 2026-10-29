@@ -98,7 +98,8 @@ describe("MLB Playoffs rollout gate", () => {
   it("keeps owner preview data isolated and archives only official 2026 championship results", () => {
     expect(mlbPicks).toContain("identity.profile?.canControlPicks === true");
     expect(home).not.toContain("<MlbHomeHq");
-    expect(home).toContain("<MlbSeasonArchive");
+    expect(home).not.toContain("<MlbSeasonArchive");
+    expect(home).toContain("archiveMlb");
     expect(home).toContain("canViewMlbCloseoutBanner(identity.profile)");
   });
 

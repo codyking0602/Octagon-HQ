@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { loadMlbChampionship, formatChampionshipPoints, type MlbChampionship } from "./mlbChampionship";
 import "../../styles/mlb-season-archive.css";
 
-/** Permanent, read-only 2026 archive in Home standings. No scores are copied or reset. */
+/** Permanent, read-only 2026 standings in the Championship recap. No scores are copied or reset. */
 export function MlbSeasonArchive({ profileId }: { profileId: string | null }) {
   const [result, setResult] = useState<MlbChampionship | null>(null);
   const [loading, setLoading] = useState(false);

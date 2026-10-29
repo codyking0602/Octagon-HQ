@@ -11,7 +11,8 @@ describe("MLB compact public Home", () => {
   it("retires the active MLB Home card while keeping historical components intact", () => {
     expect(homepage).toContain("const compactFootballPreview = true;");
     expect(homepage).not.toContain("<MlbHomeHq");
-    expect(homepage).toContain("<MlbSeasonArchive");
+    expect(homepage).not.toContain("<MlbSeasonArchive");
+    expect(homepage).toContain("archiveMlb");
     expect(homepage).toContain("canViewMlbCloseoutBanner(identity.profile)");
     expect(mlb).toContain('compactPreview ? " mlb-hq--compact-preview" : ""');
   });
