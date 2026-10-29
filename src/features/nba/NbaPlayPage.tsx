@@ -11,7 +11,7 @@ import { createTodayChallengeRepository } from "../play/todayChallengeRepository
 import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
 import {
   NBA_CASUAL_GAME_TYPES, NBA_DAILY_GAME_LABELS, NBA_DAILY_WEIGHTS,
-  NBA_GAMES_LAUNCH_DAY, nbaCanAccessReleasedGames, nbaCentralDay,
+  NBA_GAMES_LAUNCH_DAY, nbaCanAccessPublicCasual, nbaCanAccessReleasedGames, nbaCentralDay,
   nbaOwnerPreviewDaily, nbaRegularSeasonDaily, type NbaDailyGame,
 } from "./nbaDailySchedule";
 import "../../styles/play-v2.css";
@@ -56,6 +56,7 @@ export default function NbaPlayPage() {
   const day = nbaCentralDay();
   const owner = canPreviewNbaWhoAmI(profile);
   const published = nbaCanAccessReleasedGames(day);
+  const casualPublic = nbaCanAccessPublicCasual(day);
   const slot = nbaRegularSeasonDaily(day);
   const ownerPreview = nbaOwnerPreviewDaily(day);
   const ownerTest = owner && !published && ownerPreview != null;
@@ -102,7 +103,7 @@ export default function NbaPlayPage() {
     <section className="play-v2__daily" aria-label="Today's Challenge" data-sport="nba">
       <div className="play-v2__section-top">
         <span>TODAY'S CHALLENGE</span>
-        <span className="play-v2__daily-status">{ownerTest ? "PRIVATE OWNER TEST" : dailyCompleted ? "COMPLETE" : dailySaved ? "IN PROGRESS" : published ? "OFFICIAL DAILY" : "NOV 1 LAUNCH"}</span>
+        <span className="play-v2__daily-status">{ownerTest ? "PRIVATE OWNER TEST" : !published && casualPublic ? "STARTS OCT 30" : dailyCompleted ? "COMPLETE" : dailySaved ? "IN PROGRESS" : published ? "OFFICIAL DAILY" : "NOV 1 LAUNCH"}</span>
       </div>
       {dailyEnabled && runtime.loading && !dailyProjection ? (
         <p className="play-v2__muted" role="status">Loading today's NBA game…</p>
@@ -153,13 +154,13 @@ export default function NbaPlayPage() {
       </> : <>
         <div className="play-v2__daily-row">
           <div className="play-v2__daily-title">
-            <h2>{day < NBA_GAMES_LAUNCH_DAY ? "NBA Games · November 1" : "NBA Daily is being finalized"}</h2>
+            <h2>{day < NBA_GAMES_LAUNCH_DAY ? "NBA Daily · October 30" : "NBA Daily is being finalized"}</h2>
             <span>{day < NBA_GAMES_LAUNCH_DAY
-              ? "Nine games · every other day through the regular season"
+              ? "Official NBA Daily begins October 30 · every 48 hours"
               : "Official scoring and result verification required before launch"}</span>
           </div>
         </div>
-        <p className="play-v2__muted">NBA Futures and the championship remain available separately.</p>
+        <p className="play-v2__muted">NBA Cup Picks and four Casual games are available now.</p>
       </>}
     </section>
 
@@ -179,7 +180,7 @@ export default function NbaPlayPage() {
         {NBA_CASUAL_GAME_TYPES.map(game => {
           const meta = NBA_CASUAL_GAME_META[game];
           return <button key={game} type="button" className="play-v2__game"
-            disabled={!owner && !published} onClick={() => navigate(NBA_GAME_ROUTES[game])}>
+            disabled={!owner && !casualPublic} onClick={() => navigate(NBA_GAME_ROUTES[game])}>
             <span className="play-v2__game-mark" aria-hidden="true">{meta.icon}</span>
             <strong>{NBA_DAILY_GAME_LABELS[game]}</strong>
             <small>{meta.description}</small>
