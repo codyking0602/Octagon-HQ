@@ -21,7 +21,6 @@ INSERT INTO private.daily_challenge_schedule_versions
  (version,time_zone,anchor_day,starts_on,game_cycle,sport)
 VALUES ('nba-daily-regular-v3-oct30-public','America/Chicago',
  date '2026-10-30',date '2026-10-30',array[
-
     'average_fan',
     'sports_feud',
     'who_am_i',
@@ -35,22 +34,21 @@ VALUES ('nba-daily-regular-v3-oct30-public','America/Chicago',
     'bar_trivia',
     'millionaire',
     'who_am_i',
-    'average_fan',
-    'sports_feud',
-    'wavelength',
     'find_leader',
-    'millionaire',
-    'hit_the_number',
+    'average_fan',
+    'wavelength',
+    'sports_feud',
     'bar_trivia',
-    'sports_feud',
-    'average_fan',
-    'who_am_i',
-    'higher_lower',
+    'hit_the_number',
     'millionaire',
-    'wavelength',
+    'who_am_i',
+    'average_fan',
+    'sports_feud',
+    'higher_lower',
     'find_leader',
-    'bar_trivia'
-
+    'wavelength',
+    'millionaire',
+    'bar_trivia',
 ]::text[],'nba')
 ON CONFLICT (version) DO NOTHING;
 
