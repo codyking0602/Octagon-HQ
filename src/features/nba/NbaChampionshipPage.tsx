@@ -18,7 +18,7 @@ export default function NbaChampionshipPage(){
   },[identity.profile?.id]);
   return <div className="page nba-hq-page" data-sport="nba">
     <header className="nba-hq-hero"><p className="eyebrow">BASKETBALL HQ · 2026–27</p>
-      <h1>Basketball Championship</h1><p>One season champion. Futures launch first; NBA Cup Picks, Playoff Picks, and games join later.</p>
+      <h1>Basketball Championship</h1><p>One season champion. Futures are locked, NBA Cup Picks and games are here, and Playoff Picks arrive in April.</p>
     </header>
     <section className="surface-card nba-hq-championship">
       <h2>Season scoring</h2><div className="nba-hq-weightline">
@@ -32,7 +32,7 @@ export default function NbaChampionshipPage(){
             <small>{e.complete?"COMPLETE":"PARTIAL"} · SCORE PENDING</small></div>)}
         </div>:null}
       </>:error?<p role="alert">{error}</p>:<p>{identity.profile?.id?"Loading entries…":"Sign in to view your entry."}</p>}
-      <Link className="primary-action" to="/nba/picks">VIEW NBA FUTURES →</Link>
+      <Link className="primary-action" to="/nba/picks">VIEW NBA PICKS →</Link>
     </section>
   </div>;
 }
