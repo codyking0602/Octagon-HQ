@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { loadMlbChampionship, type MlbChampionship } from "../mlb/mlbChampionship";
+import { formatChampionshipPoints, loadMlbChampionship, type MlbChampionship } from "../mlb/mlbChampionship";
 import {
   loadSportChampionship,
   type SportChampionship,
   type SportChampionshipEntry,
 } from "../play/sportChampionshipRepository";
 import "../../styles/home-championship-owner.css";
+import "../../styles/mlb-postseason-recap.css";
 
 export type SportFilter = "all" | "football" | "ufc" | "mlb" | "nba";
 import { SPORT_ORDER, type SelectedSport } from "../../app/SportProvider";
@@ -234,6 +235,7 @@ export function OwnerChampionshipHome({
   compactFootballPreview = false,
   compactMlbPreview = false,
   sportOrder = SPORT_ORDER,
+  archiveMlb = false,
 }: {
   streak: number;
   streakLoading: boolean;
@@ -245,6 +247,7 @@ export function OwnerChampionshipHome({
   compactFootballPreview?: boolean;
   compactMlbPreview?: boolean;
   sportOrder?: readonly SelectedSport[];
+  archiveMlb?: boolean;
 }) {
   const [football, setFootball] = useState<SportChampionship | null>(null);
   const [ufc, setUfc] = useState<SportChampionship | null>(null);
@@ -258,7 +261,7 @@ export function OwnerChampionshipHome({
       const [footballResult, ufcResult, mlbResult] = await Promise.allSettled([
         loadSportChampionship("football"),
         loadSportChampionship("ufc"),
-        showMlb ? loadMlbChampionship(2026) : Promise.resolve(null),
+        showMlb || archiveMlb ? loadMlbChampionship(2026) : Promise.resolve(null),
       ]);
       if (!active) return;
       setFootball(footballResult.status === "fulfilled" ? footballResult.value : null);
@@ -272,7 +275,7 @@ export function OwnerChampionshipHome({
     }
     void load();
     return () => { active = false; };
-  }, [showMlb]);
+  }, [showMlb, archiveMlb]);
 
   const chosen = sport === "mlb" && !showMlb ? "all" : sport;
   const compactFootball = compactFootballPreview && chosen === "football" && !showSportSelector;
@@ -407,6 +410,14 @@ export function OwnerChampionshipHome({
       ) : (
         <Detail sport={chosen} result={chosen === "football" ? football : ufc} loading={loading} error={errors[chosen]} compactFootball={compactFootball || compactUfc} />
       )}
+      {archiveMlb ? (
+        <Link id="mlb-2026-standings" className="home-champ-preview__mlb-archive-link" to="/championship/mlb" aria-label="Open 2026 MLB Postseason season recap">
+          <span className="home-champ-preview__mlb-archive-icon" aria-hidden="true">⚾</span>
+          <span className="home-champ-preview__mlb-archive-copy"><strong>MLB POSTSEASON · 2026</strong><small>SEASON COMPLETE · BRACKET · PICKS · PLAY</small></span>
+          <span className="home-champ-preview__mlb-archive-score">{mlb?.own ? `#${mlb.own.overall_rank} · ${formatChampionshipPoints(mlb.own.total_points)} PTS` : loading ? "…" : "FINAL"}</span>
+          <span aria-hidden="true">›</span>
+        </Link>
+      ) : null}
     </section>
   );
 }

@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useOptionalSport } from "../../app/SportProvider";
 import { prioritizedSports, sportsForDisplay, sportNames } from "../../app/sportPriority";
 import { useOptionalNotifications } from "../notifications/NotificationProvider";
@@ -32,8 +32,7 @@ import { currentDailyChallengeChampionship } from "../play/dailyChallengeChampio
 import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
 import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
-import { MlbSeasonArchive } from "../mlb/MlbSeasonArchive";
-import { canViewMlbCloseoutBanner } from "../mlb/mlbOffseason";
+import { canViewMlbCloseoutBanner, MLB_CLOSEOUT_BANNER_EXPIRES_AT } from "../mlb/mlbOffseason";
 import { NbaOwnerHomeHq } from "../nba/NbaOwnerHomeHq";
 import { canPreviewNba } from "../nba/nbaPreviewAccess";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
@@ -164,6 +163,14 @@ export function outstandingUfcChallengeCount(challenges: readonly PlayChallenge[
 
 export default function HomePage() {
   const identity = useIdentity();
+  const [closeoutVisible, setCloseoutVisible] = useState(() => canViewMlbCloseoutBanner(identity.profile));
+  useEffect(() => {
+    setCloseoutVisible(canViewMlbCloseoutBanner(identity.profile));
+    const remaining = MLB_CLOSEOUT_BANNER_EXPIRES_AT - Date.now();
+    if (remaining <= 0) return;
+    const timeout = window.setTimeout(() => setCloseoutVisible(false), remaining);
+    return () => window.clearTimeout(timeout);
+  }, [identity.profile]);
   const navigate = useNavigate();
   const picks = usePicks();
   const playChallenges = useOptionalPlayChallenges();
@@ -467,14 +474,14 @@ export default function HomePage() {
       </section>
       )}
 
-      {canViewMlbCloseoutBanner(identity.profile) ? (
+      {closeoutVisible ? (
         <section className="mlb-closeout-banner" aria-label="2026 MLB postseason complete">
           <div className="mlb-closeout-banner__copy">
             <small>MLB · 2026 POSTSEASON</small>
             <strong>Season complete</strong>
             <span>Every final championship score is saved below.</span>
           </div>
-          <a href="#mlb-2026-standings">VIEW FINAL STANDINGS ↓</a>
+          <a href={ownerSport === "nba" ? "/championship/mlb" : "#mlb-2026-standings"}>VIEW FINAL STANDINGS ↓</a>
         </section>
       ) : null}
 
@@ -501,6 +508,7 @@ export default function HomePage() {
           streak={hqDailyStreak.streak.currentStreak}
           streakLoading={hqDailyStreak.loading}
           showMlb={false} showNba={nbaVisible}
+          archiveMlb
           sport={ownerSport}
           onSportChange={setOwnerSport}
           showSportSelector={false}
@@ -508,7 +516,6 @@ export default function HomePage() {
           sportOrder={visibleOrder}
         />
       ) : null}
-      <MlbSeasonArchive profileId={identity.profile?.id ?? null} />
     </div>
   );
 }
