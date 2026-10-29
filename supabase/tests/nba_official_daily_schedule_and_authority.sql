@@ -17,7 +17,7 @@ begin
     or private.daily_challenge_expected_game(v_schedule.version,date '2026-11-02') <> 'average_fan'
     or private.daily_challenge_expected_game(v_schedule.version,date '2026-11-03') <> 'sports_feud'
     or private.daily_challenge_expected_game(v_schedule.version,date '2026-11-17') <> 'higher_lower'
-    or private.daily_challenge_schedule_for_day(date '2026-11-01','nba') <> 'nba-daily-regular-v2-locked' then
+    or private.daily_challenge_schedule_for_day(date '2026-10-30','nba') <> 'nba-daily-regular-v3-oct30-public' then
     raise exception 'NBA every-other-day schedule mapping invalid';
   end if;
   select * into strict v_new from private.daily_challenge_schedule_versions where version='nba-daily-regular-v2-locked';
@@ -26,9 +26,17 @@ begin
     or (select count(*) from unnest(v_new.game_cycle) g where g='higher_lower')<>2 then
     raise exception 'new NBA spacing must preserve approved weights and distinct immutable version';
   end if;
-  v_request := public.get_daily_challenge_materialization_request('nba','2026-11-02T19:00:00Z'::timestamptz);
-  if v_request->>'central_day' <> '2026-11-01' or v_request->>'expected_game' <> 'average_fan'
-    or v_request->>'schedule_version' <> 'nba-daily-regular-v2-locked' then
+  select * into strict v_new from private.daily_challenge_schedule_versions where version='nba-daily-regular-v3-oct30-public';
+  if cardinality(v_new.game_cycle)<>28
+    or (select count(*) from unnest(v_new.game_cycle) g where g='average_fan')<>4
+    or (select count(*) from unnest(v_new.game_cycle) g where g='sports_feud')<>4
+    or (select count(*) from unnest(v_new.game_cycle) g where g='millionaire')<>4
+    or (select count(*) from unnest(v_new.game_cycle) g where g='higher_lower')<>2 then
+    raise exception 'NBA early public cycle changed approved weights';
+  end if;
+  v_request := public.get_daily_challenge_materialization_request('nba','2026-10-31T19:00:00Z'::timestamptz);
+  if v_request->>'central_day' <> '2026-10-30' or v_request->>'expected_game' <> 'average_fan'
+    or v_request->>'schedule_version' <> 'nba-daily-regular-v3-oct30-public' then
     raise exception 'NBA shared 48-hour Daily identity invalid';
   end if;
   v_submission := jsonb_build_object('answers',(

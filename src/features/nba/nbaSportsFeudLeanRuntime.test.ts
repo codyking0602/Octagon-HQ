@@ -19,7 +19,7 @@ describe("NBA Sports Feud lightweight official Daily runtime", () => {
     expect(edge).toContain('import("./nba-feud-advance.generated.mjs")');
     expect(edge).toContain('context.gameType === "sports_feud"');
     expect(edge).toContain('(await loadNbaFeudAdvanceRuntime()).advanceFamilyFeudDailyCore(context, action)');
-    expect(edge).toContain("const NBA_DAILY_EDGE_RELEASE_READY = false;");
+    expect(edge).toContain("const NBA_DAILY_EDGE_RELEASE_READY = true;");
     expect(edge).toContain("save_daily_challenge_runtime_progress");
   });
 

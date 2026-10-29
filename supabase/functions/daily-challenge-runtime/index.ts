@@ -124,7 +124,7 @@ type FootballHitNumberAdvanceRuntimeModule = {
 };
 // Never open NBA Daily merely because November 1 arrives. The frontend and
 // leaderboard adapter must pass the exact-head release verification first.
-const NBA_DAILY_EDGE_RELEASE_READY = false;
+const NBA_DAILY_EDGE_RELEASE_READY = true;
 
 type AverageFanRuntimeModule = {
   buildAverageFanDailySetup: (

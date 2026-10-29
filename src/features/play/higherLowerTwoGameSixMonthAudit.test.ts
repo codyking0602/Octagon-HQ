@@ -7,6 +7,7 @@ import { advanceNbaOfficialDailyRuntime } from "../nba/nbaDailyServerAdvance";
 import { buildFootballHigherLowerTwoGameDailyPublication } from "./footballHigherLowerDailyRuntime";
 import { buildUfcHigherLowerTwoGameDailyPublication } from "./ufcHigherLowerDailyRuntime";
 import { buildNbaServerDailyPublication, nbaDailyGameAppearance } from "../nba/nbaDailyServerPublication";
+import { nbaRegularSeasonDaily } from "../nba/nbaDailySchedule";
 import { footballHigherLowerQuestionEvidence, footballHigherLowerSemanticPairKey, type FootballHigherLowerQuestion } from "../back-room/footballHigherLowerModel";
 import { nbaHigherLowerSemanticPairKey } from "../nba/nbaHigherLowerModel";
 import { createUfcHigherLowerOfficialBoard, UFC_HIGHER_LOWER_FIRST_SLOT, UFC_HIGHER_LOWER_RESERVED_SLOTS } from "./ufcHigherLowerModel";
@@ -46,6 +47,15 @@ function actualDates() {
     for (const sport of ["football", "ufc", "nba"] as const) {
       if (cells[indexes[sport]] === "higher_lower") results[sport].push(cells[dateIndex]!);
     }
+  }
+  // The archived CSV retains the Nov 1 baseline; use the released Oct 30
+  // canonical NBA schedule for the six actual public Higher or Lower slots.
+  results.nba = [];
+  for (let dayMs = Date.parse("2026-10-30T00:00:00Z");
+    dayMs <= Date.parse("2027-04-11T00:00:00Z"); dayMs += 86_400_000) {
+    const day = new Date(dayMs).toISOString().slice(0, 10);
+    const slot = nbaRegularSeasonDaily(day);
+    if (slot?.isPublicationDay && slot.gameType === "higher_lower") results.nba.push(day);
   }
   return results;
 }
@@ -169,7 +179,7 @@ const artifact: {
   caveats: string[];
   records: Array<Record<string, unknown>>;
 } = {
-  lockedCalendar: finalSchedule, scheduleVersion: "nba-daily-regular-v2-locked",
+  lockedCalendar: finalSchedule, scheduleVersion: "nba-daily-regular-v3-oct30-public",
   activeDates: { football: [], ufc: [], nba: [] },
   caveats: [
     "Football/UFC Higher or Lower are not scheduled in the currently merged canonical calendar.",
@@ -208,7 +218,7 @@ describe("Official Daily Higher or Lower two-game contract and content capacity"
     const versions = [
       ["football", buildFootballHigherLowerTwoGameDailyPublication("2026-11-11", "hl-proof-v1"), advanceFootballOfficialDailyRuntime],
       ["ufc", buildUfcHigherLowerTwoGameDailyPublication("2026-11-02", "hl-proof-v1"), advanceOfficialDailyRuntime],
-      ["nba", buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v2-locked", "higher_lower"), advanceNbaOfficialDailyRuntime],
+      ["nba", buildNbaServerDailyPublication("2026-11-17", "nba-daily-regular-v3-oct30-public", "higher_lower"), advanceNbaOfficialDailyRuntime],
     ] as const;
     for (const [sport, publication, advance] of versions) {
       expect(publication.scoringVersion).toBe("daily-two-game-average-score-v1");
@@ -221,17 +231,17 @@ describe("Official Daily Higher or Lower two-game contract and content capacity"
   it("audits all actual NBA appearances in the merged 182-day coordinated calendar", () => {
     const dates = actualDates();
     artifact.activeDates = dates;
-    expect(dates.nba).toEqual(["2026-11-19", "2026-12-17", "2027-01-14", "2027-02-11", "2027-03-11", "2027-04-08"]);
+    expect(dates.nba).toEqual(["2026-11-17", "2026-12-15", "2027-01-12", "2027-02-09", "2027-03-09", "2027-04-06"]);
     expect(dates.football).toHaveLength(0);
     expect(dates.ufc).toHaveLength(0);
     const seen = new Set<string>();
     for (const day of dates.nba) {
-      const publication = buildNbaServerDailyPublication(day, "nba-daily-regular-v2-locked", "higher_lower");
+      const publication = buildNbaServerDailyPublication(day, "nba-daily-regular-v3-oct30-public", "higher_lower");
       expect(nbaDailyGameAppearance(day, "higher_lower")).toBeGreaterThanOrEqual(0);
       const boards = rows(publication);
       assertUnique("nba", boards, seen);
       capture("nba", day, boards, "actual canonical calendar");
-      expect(buildNbaServerDailyPublication(day, "nba-daily-regular-v2-locked", "higher_lower")).toEqual(publication);
+      expect(buildNbaServerDailyPublication(day, "nba-daily-regular-v3-oct30-public", "higher_lower")).toEqual(publication);
     }
     expect(seen.size).toBe(120);
   }, 180_000);

@@ -24,10 +24,10 @@ begin
   perform public.register_unclaimed_pin_profile(v_player, 'NBA SLOT STREAK', 'NS');
 
   -- One challenge per 48-hour slot, not a separate challenge each calendar day.
-  -- The missed Nov 5 slot intentionally breaks the run; Nov 1 and Nov 3 do not.
-  -- Nov 19 is Higher or Lower under the post-cutover 28-slot locked mix.
-  foreach v_day in array array[date '2026-11-01', date '2026-11-03', date '2026-11-07', date '2026-11-09', date '2026-11-19'] loop
-    v_game := private.daily_challenge_expected_game('nba-daily-regular-v2-locked', v_day);
+  -- The missed Nov 3 slot intentionally breaks the run; Oct 30 and Nov 1 do not.
+  -- Nov 17 is Higher or Lower under the early-public 28-slot mix.
+  foreach v_day in array array[date '2026-10-30', date '2026-11-01', date '2026-11-05', date '2026-11-07', date '2026-11-17'] loop
+    v_game := private.daily_challenge_expected_game('nba-daily-regular-v3-oct30-public', v_day);
     insert into private.daily_challenge_setups (
       game_type, setup_key, content_version, scoring_version, public_setup,
       reveal_setup, private_setup_evidence, private_grading_evidence
@@ -40,7 +40,7 @@ begin
       central_day, schedule_version, game_type, setup_id,
       content_version, scoring_version, fallback_reason
     ) values (
-      v_day, 'nba-daily-regular-v2-locked', v_game, v_setup,
+      v_day, 'nba-daily-regular-v3-oct30-public', v_game, v_setup,
       'nba-streak-proof-v1', 'play-official-score-v1', null
     ) returning id into v_daily;
     insert into private.daily_challenge_attempts (
@@ -59,7 +59,7 @@ begin
   perform set_config('request.jwt.claim.sub', v_player::text, true);
   v_streak := public.get_my_daily_challenge_streak('nba');
   if (v_streak->>'best_streak')::integer <> 2 then
-    raise exception 'NBA 48-hour streak should be 2 across Nov 1/3 and 7/9, not %', v_streak;
+    raise exception 'NBA 48-hour streak should be 2 across Oct 30/Nov 1 and Nov 5/7, not %', v_streak;
   end if;
 
   v_standings := public.get_daily_challenge_standings('nba');
