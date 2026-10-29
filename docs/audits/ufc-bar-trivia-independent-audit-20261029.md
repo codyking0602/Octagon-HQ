@@ -7,7 +7,7 @@
 
 The UFC v3 implementation already performs substantial work:
 - 98 specifically retired legacy questions, 96 reviewed/reworked, 110 newly authored source-linked facts (65 easy/medium and 45 hard/Last Call); additional cross-sport editorial curation retired other UFC entries.
-- Pre-follow-up static bank review: approximately **319 evergreen** plus **12 authored dated current-event** candidates; by evergreen slot, **156 easy / 64 medium / 74 hard / 25 Last Call**. These static figures come from source-file inventory, while the executable tests are authoritative for the final selectable pool. Current-event eligibility varies by date.
+- Pre-follow-up source-of-truth inventory: **320 evergreen** (86 easy / 135 medium / 74 hard / 25 Last Call) plus **12 dated current-event** candidates. After the focused 14-question retirement: **306 evergreen** (80 easy / 129 medium / 74 hard / 23 Last Call), plus the same 12 dated current-event candidates. These counts account for the existing reviewed round overrides and easy calibration; dated current-event eligibility varies by day. Current-event eligibility varies by date.
 - Strong surviving examples: Masvidal/Askren five-second KO, Holly Holm's Rousey upset, Khabib submitting McGregor, Nick Diaz's St-Pierre callout, Anderson Silva/Sonnen comeback, Griffin/Bonnar, Pete Williams over Coleman, Jones/Hamill DQ, and Scott Smith's Pete Sell comeback.
 - Aging history is not inherently bad; UFC 1 Royce Gracie/Gerard Gordeau and Shonie Carter's spinning backfist are genuinely worthwhile Last Call material. Keep those.
 
