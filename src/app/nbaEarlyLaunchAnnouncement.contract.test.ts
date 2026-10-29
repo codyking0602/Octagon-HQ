@@ -3,6 +3,7 @@ import {readFileSync} from "node:fs";
 const runbook=readFileSync("docs/nba-early-public-launch-runbook-20261029.md","utf8");
 const sql=readFileSync("ops/nba-public-early-launch-manual-push.sql","utf8");
 const intro=readFileSync("src/features/nba/NbaWelcomeTakeover.tsx","utf8");
+const championship=readFileSync("src/features/nba/NbaChampionshipPage.tsx","utf8");
 
 describe("NBA launch announcement is post-verification and manual",()=>{
   it("never publishes from migrations, crons, or frontend render",()=>{
@@ -21,5 +22,8 @@ describe("NBA launch announcement is post-verification and manual",()=>{
     expect(intro).toContain("October 30");
     expect(intro).toContain("EXPLORE NBA PICKS");
     expect(intro).not.toContain("AFTER THE WORLD SERIES");
+    expect(championship).toContain("NBA Cup Picks and games are here");
+    expect(championship).toContain("VIEW NBA PICKS");
+    expect(championship).not.toContain("games join later");
   });
 });
