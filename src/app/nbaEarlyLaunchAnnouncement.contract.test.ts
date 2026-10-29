@@ -21,7 +21,7 @@ describe("NBA launch announcement is post-verification and manual",()=>{
   it("updates intro to the current Cup Picks and official NBA Daily",()=>{
     expect(intro).toContain("02 · AVAILABLE NOW");
     expect(intro).toContain("03 · AVAILABLE NOW");
-    expect(intro).toContain("October 30");
+    expect(intro).toContain("Bar Trivia through October 31");
     expect(intro).toContain("EXPLORE NBA PICKS");
     expect(intro).toContain("01 · FUTURES LOCKED");
     expect(intro).not.toContain("01 · AVAILABLE NOW");
