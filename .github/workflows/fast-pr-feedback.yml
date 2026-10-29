@@ -60,7 +60,9 @@ jobs:
       - name: Classify draft scope
         id: scope
         run: |
-          mapfile -t changed_files < <(git diff --name-only "$BASE_SHA" "$SOURCE_SHA")
+          # Compare against merge-base, not moving main tip (other PRs can land).
+          pr_merge_base=$(git merge-base "$BASE_SHA" "$SOURCE_SHA")
+          mapfile -t changed_files < <(git diff --name-only "$pr_merge_base" "$SOURCE_SHA")
           printf 'Changed files:\n'
           printf '  %s\n' "${changed_files[@]}"
 
@@ -149,7 +151,8 @@ jobs:
       - name: Run tests affected by this PR
         if: steps.scope.outputs.whoami_only != 'true' && steps.scope.outputs.rankings_only != 'true'
         run: |
-          mapfile -t files < <(git diff --name-only "$BASE_SHA" "$SOURCE_SHA")
+          pr_merge_base=$(git merge-base "$BASE_SHA" "$SOURCE_SHA")
+          mapfile -t files < <(git diff --name-only "$pr_merge_base" "$SOURCE_SHA")
           millionaire_only=true
           saw_millionaire=false
           for file in "${files[@]}"; do
