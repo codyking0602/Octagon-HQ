@@ -3,8 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { IdentityProfile } from "../identity/identityModel";
 import {
-  NBA_CASUAL_GAME_TYPES, nbaCanAccessPublicCasual,
-  nbaCanAccessReleasedGames, nbaCentralDay,
+  nbaCanAccessPublicCasual, nbaCentralDay,
 } from "./nbaDailySchedule";
 
 type GateProfile = Pick<IdentityProfile, "displayName" | "canControlPicks"> | null | undefined;
@@ -13,8 +12,8 @@ type GateProfile = Pick<IdentityProfile, "displayName" | "canControlPicks"> | nu
 export function canPreviewNbaWhoAmI(profile: GateProfile) {
   return profile?.canControlPicks === true && profile.displayName.trim().toUpperCase() === "CODY";
 }
-export function canAccessNbaGames(profile: GateProfile, centralDay: string) {
-  return canPreviewNbaWhoAmI(profile) || nbaCanAccessReleasedGames(centralDay);
+export function canAccessNbaGames(profile: GateProfile, _centralDay: string) {
+  return canPreviewNbaWhoAmI(profile);
 }
 
 /** Four casual modes open publicly on launch day without prematurely opening official Daily. */
