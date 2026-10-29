@@ -12,6 +12,7 @@ import { getUfcFactualSubject, ufcFactualLedgerSubjects } from "../back-room/ufc
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
 import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
 import { UFC_BAR_TRIVIA_V3_RETIRE_IDS } from "../play/ufcBarTriviaV3Editorial";
+import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS } from "../play/barTriviaFootballQuality20261029";
 import { MILLIONAIRE_DAILY_RUN_COUNT, millionaireDailyRun } from "../play/millionaireDailyQuestionBank";
 import { findDailyContentOverlaps, type DailyContentAuditEntry } from "../play/dailyContentQualityPolicy";
 import {
@@ -500,8 +501,9 @@ describe("Average Fan durable content banks", () => {
     const bar = BAR_TRIVIA_QUESTION_BANK.find((q) =>
       q.id === "cfb-r3-little-brown-jug",
     );
-    expect(bar?.answer).toBe("Minnesota");
-    expect(bar?.prompt).toMatch(/Little Brown Jug.*Michigan/);
+    // This Bar Trivia fact is now explicitly retired, while Average Fan also excludes it.
+    expect(bar).toBeUndefined();
+    expect(FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS.has("cfb-r3-little-brown-jug")).toBe(true);
     expect(selected.some((q) =>
       q.id.startsWith("average-fan:cfb:authored:00-g5:little-brown-jug:"),
     )).toBe(false);
@@ -1315,8 +1317,10 @@ describe("Average Fan durable content banks", () => {
       if (bar) expect(bar.league).toBe(sport);
       else {
         // The cross-game duplicate was deliberately retired from the future-selectable bank.
-        expect(sport).toBe("ufc");
-        expect(UFC_BAR_TRIVIA_V3_RETIRE_IDS.has(barId), `Unaccounted missing source ${barId}`).toBe(true);
+        const explicitlyRetired = sport === "ufc"
+          ? UFC_BAR_TRIVIA_V3_RETIRE_IDS.has(barId)
+          : FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS.has(barId);
+        expect(explicitlyRetired, `Unaccounted missing source ${barId}`).toBe(true);
       }
       expect(AVERAGE_FAN_CONTENT_BANKS[sport].some((row) => row.id.startsWith(averagePrefix)), averagePrefix)
         .toBe(false);
