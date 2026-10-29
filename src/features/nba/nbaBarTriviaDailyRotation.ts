@@ -8,6 +8,7 @@ import {
 import { seededLineupRandom } from "../play/lineupModel";
 import { NBA_BAR_TRIVIA_QUESTION_BANK } from "./nbaBarTriviaQuestionBank";
 import { NBA_BAR_TRIVIA_CURRENT_EVENTS } from "./nbaBarTriviaCurrentEvents";
+import { NBA_DAILY_WEIGHTED_CYCLE } from "./nbaDailySchedule";
 
 /**
  * Zero-based NBA Bar Trivia appearance ordinal (not the calendar day).
@@ -36,7 +37,20 @@ function toPublicationTime(asOf: Date | string): Date {
 }
 
 
-function buildCycle(cycle: number, asOf: Date): readonly NbaBarTriviaDailyBoard[] {
+/** Resolve the actual future calendar date of each Bar Trivia appearance.
+ * A single cycle must be built chronologically, using the same cumulative
+ * no-repeat set even when news eligibility changes between publication days.
+ */
+function scheduledBarTriviaDate(appearance: number): Date {
+  let seen = 0;
+  for (let slot = 0; slot < (appearance + 1) * NBA_DAILY_WEIGHTED_CYCLE.length; slot++) {
+    if (NBA_DAILY_WEIGHTED_CYCLE[slot % NBA_DAILY_WEIGHTED_CYCLE.length] !== "bar_trivia") continue;
+    if (seen++ === appearance) return new Date(Date.UTC(2026, 9, 30 + slot * 2, 18));
+  }
+  throw new Error("NBA Bar Trivia schedule exhausted before appearance " + appearance);
+}
+
+function buildCycle(cycle: number): readonly NbaBarTriviaDailyBoard[] {
   const used = new Set<string>();
   const result: NbaBarTriviaDailyBoard[] = [];
   for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot += 1) {
@@ -44,7 +58,7 @@ function buildCycle(cycle: number, asOf: Date): readonly NbaBarTriviaDailyBoard[
     const questions = buildBarTriviaRun([...NBA_BAR_TRIVIA_QUESTION_BANK, ...NBA_BAR_TRIVIA_CURRENT_EVENTS], "nba", {
       random,
       recentQuestionIds: [...used],
-      now: asOf,
+      now: scheduledBarTriviaDate(cycle * NBA_BAR_TRIVIA_UNIQUE_APPEARANCES + slot),
       // At most two verified, unexpired current events; evergreen fills the rest.
       currentEventTarget: 2,
     });
@@ -75,12 +89,14 @@ export function buildNbaBarTriviaDailyBoard(
     throw new Error("NBA Bar Trivia appearance index must be a nonnegative integer.");
   }
   const cycle = Math.floor(appearanceIndex / NBA_BAR_TRIVIA_UNIQUE_APPEARANCES);
-  const publicationTime = toPublicationTime(asOf);
-  // Date and cycle both matter: a stale story can never remain in cached boards.
-  const cacheKey = `${cycle}:${publicationTime.toISOString().slice(0, 10)}`;
+  // Still validate callers' as-of date, but never restart the curated
+  // no-repeat cycle for each date. That previously caused short-term repeats
+  // when today's news inventory differed from the prior publication day.
+  toPublicationTime(asOf);
+  const cacheKey = String(cycle);
   let boards = cycles.get(cacheKey);
   if (!boards) {
-    boards = buildCycle(cycle, publicationTime);
+    boards = buildCycle(cycle);
     cycles.set(cacheKey, boards);
   }
   return boards[appearanceIndex % NBA_BAR_TRIVIA_UNIQUE_APPEARANCES]!;
