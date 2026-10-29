@@ -60,8 +60,10 @@ describe("Basketball HQ locked Football mobile sizing", () => {
     expect(nbaSpotlightWeekLabel("2026-11-02", "2026-11-08")).toBe("NOV 2–8");
     expect(nbaSpotlightWeekLabel("2026-10-26", "2026-11-01")).toBe("OCT 26–NOV 1");
     expect(component).not.toContain("PLAYER SPOTLIGHT · {weekly.weekStart}");
-    expect(component).toContain("OWNER PREVIEW");
-    expect(component).toContain("Practice · Unranked");
+    expect(component).not.toContain("OWNER PREVIEW");
+    expect(component).not.toContain("Practice · Unranked");
+    expect(component).toContain("Official score locked");
+    expect(component).toContain("STARTS OCT 30");
     expect(component).toContain('className="nba-hq-owner__daily-result"');
     expect(component).toContain("RANK UNAVAILABLE");
     expect(component).toContain("SCORING PENDING");

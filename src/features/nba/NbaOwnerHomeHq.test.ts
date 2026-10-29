@@ -4,17 +4,50 @@ import { readVerifiedNbaWeekly } from "./nbaWeeklySpotlight";
 const homepage = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const owner = readFileSync("src/features/nba/NbaOwnerHomeHq.tsx", "utf8");
 const css = readFileSync("src/styles/nba-owner-home.css", "utf8");
+const router = readFileSync("src/app/router.tsx", "utf8");
+const nav = readFileSync("src/components/BottomNavigation.tsx", "utf8");
 describe("NBA HQ released regular-season presentation", () => {
-  it("shares the Basketball Home design while keeping owner daily testing gated", () => {
-    expect(homepage).toContain('const nbaHqOwnerPreview = Boolean(identity.profile?.canControlPicks === true');
-    expect(homepage).toContain('&& identity.profile.displayName.trim().toUpperCase() === "CODY");');
-    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} allowOwnerDailyPreview={nbaHqOwnerPreview} />');
-    expect(owner).toContain("allowOwnerDailyPreview && !publishedDaily");
+  it("shows the same public NBA Daily state to owners and visitors on Home", () => {
+    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} />');
+    expect(homepage).toContain('<NbaOwnerHomeHq profileId={profileId} signedIn={signedIn} hideChampionship />');
+    expect(homepage).not.toContain("nbaHqOwnerPreview");
+    expect(owner).not.toContain("allowOwnerDailyPreview");
+    expect(owner).not.toContain("nba_preview");
+    expect(owner).not.toContain("OWNER PREVIEW");
+    expect(owner).not.toContain("Practice · Unranked");
+    expect(owner).toContain('const dailyLink = dailyEnabled ? "/nba/today" : "/nba";');
+    expect(owner).not.toContain('"/nba/play"');
+    expect(owner).toContain('to="/nba/picks"');
+    expect(owner).toContain('to="/championship/nba"');
+    expect(owner).toContain('"STARTS OCT 30"');
   });
-  it("opens Cup picks while keeping owner rehearsal isolated and Playoff picks scheduled", () => {
+  it("routes Home NBA Play and Picks to registered pages, including prelaunch", () => {
+    expect(owner).toContain('const dailyLink = dailyEnabled ? "/nba/today" : "/nba";');
+    expect(owner).toContain('<Link to={dailyLink} className="nba-hq-owner__daily"');
+    expect(owner).toContain('<Link to="/nba/picks">VIEW PICKS');
+    expect(owner).toContain('to="/championship/nba"');
+    expect(router).toContain('path: "nba", element: <NbaPreviewGate><NbaPlayPage /></NbaPreviewGate>');
+    expect(router).toContain('path: "nba/today", element: <NbaPreviewGate><NbaOfficialDailyPage /></NbaPreviewGate>');
+    expect(router).toContain('path: "nba/picks", element: <NbaPreviewGate><NbaFuturesPage /></NbaPreviewGate>');
+    expect(nav).toContain('playSport === "football" ? "/football" : playSport === "nba" ? "/nba" : "/play"');
+    expect(nav).toContain('currentPicksSport === "football" ? "/football/picks" : currentPicksSport === "nba" ? "/nba/picks" : "/picks"');
+    expect(owner).not.toContain('"/nba/play"');
+  });
+  it("shows NBA's unlocked rank and canonical completed score like UFC, never a made-up rank", () => {
+    expect(homepage).toContain('const rank = todayRank(leaderboard);');
+    expect(owner).toContain('dailyOverview.leaderboard?.unlocked');
+    expect(owner).toContain('entry.isCurrentUser');
+    expect(owner).toContain('ownLeaderboardEntry?.rank ?? null');
+    expect(owner).toContain('dailyOfficialDisplayScore(daily.projection, ownLeaderboardEntry?.normalizedScore)');
+    expect(owner).toContain('rank != null ? `#${rank} today` : "Official score locked"');
+    expect(owner).toContain('enabled: signedIn && dailyEnabled, sport: "nba"');
+    expect(owner).toContain('enabled: signedIn && dailyEnabled,');
+    expect(owner).toContain('FUTURES PICKS');
+  });
+  it("opens Cup picks while keeping rehearsal off the public Home and Playoff picks scheduled", () => {
     expect(owner).not.toContain("NBA_OFFICIAL_GAMES_RELEASE_READY");
-    expect(owner).toContain("nbaOwnerPreviewDaily");
-    expect(owner).toContain('sport: publishedDaily ? "nba" : "nba_preview"');
+    expect(owner).not.toContain("nbaOwnerPreviewDaily");
+    expect(owner).toContain('sport: "nba"');
     expect(owner).toContain('to="/nba/picks"');
     expect(owner).toContain('to="/championship/nba"');
     expect(owner).toContain("CUP PICKS OPEN · PLAYOFF PICKS IN APRIL");
