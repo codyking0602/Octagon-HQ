@@ -13,7 +13,10 @@ describe("NBA HQ released regular-season presentation", () => {
     expect(owner).not.toContain("nba_preview");
     expect(owner).not.toContain("OWNER PREVIEW");
     expect(owner).not.toContain("Practice · Unranked");
-    expect(owner).toContain('const dailyLink = dailyEnabled ? "/nba/today" : "/nba/play";');
+    expect(owner).toContain('const dailyLink = dailyEnabled ? "/nba/today" : "/nba";');
+    expect(owner).not.toContain('"/nba/play"');
+    expect(owner).toContain('to="/nba/picks"');
+    expect(owner).toContain('to="/championship/nba"');
     expect(owner).toContain('"STARTS OCT 30"');
   });
   it("shows NBA's unlocked rank and canonical completed score like UFC, never a made-up rank", () => {
