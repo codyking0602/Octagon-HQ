@@ -327,8 +327,8 @@ def validate_asset_quality(im, kind):
         # >=128 alpha testing misses it even though it is plainly visible.
         for x in (round(width * 0.87), round(width * 0.95)):
             sample = range(round(height * 0.04), round(height * 0.53))
-            occupied = sum(alpha.getpixel((x, y)) >= 40 for y in sample)
-            if occupied > len(sample) * 0.20:
+            occupied = sum(alpha.getpixel((x, y)) >= 8 for y in sample)
+            if occupied > len(sample) * 0.10:
                 fail("fighter thumbnail retains a translucent side background panel")
     if box[1] < max(2, round(height * 0.015)):
         fail("fighter head has no top safety margin")
@@ -590,15 +590,9 @@ def main():
     original_source = im.copy()
     if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
         try:
-            if kind == "thumb" and im.size == (600, 436) and spec.get("official_headshot_reviewed") is True:
-                im = remove(
-                    im, alpha_matting=True,
-                    alpha_matting_foreground_threshold=240,
-                    alpha_matting_background_threshold=12,
-                    alpha_matting_erode_size=8,
-                ).convert("RGBA")
-            else:
-                im = remove(im).convert("RGBA")
+            # The default model preserves the ESPN MMA portrait cutout.
+            # Strong alpha-matting introduced broad tinted source rectangles.
+            im = remove(im).convert("RGBA")
         except Exception as exc:
             fail(f"background removal failed: {exc}")
 
@@ -613,23 +607,10 @@ def main():
 
     im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
 
-    # A second alpha-matting pass is attempted only if obvious panels survive.
-    # Reprocess from the untouched photograph and fail closed on bad output.
+    # Do not recover a contaminated cutout using destructive alpha matting.
+    # Preserve the original photo identity and reject visibly bad output.
     if inset_side_background_panels(im) or upper_side_background_band(im):
-        try:
-            retried = remove(
-                original_source, alpha_matting=True,
-                alpha_matting_foreground_threshold=240,
-                alpha_matting_background_threshold=12,
-                alpha_matting_erode_size=8,
-            ).convert("RGBA")
-            retried = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(retried))
-            if not inset_side_background_panels(retried) and not upper_side_background_band(retried):
-                im = retried
-        except Exception:
-            pass
-        if inset_side_background_panels(im) or upper_side_background_band(im):
-            fail("background cutout retains publisher panels after retry")
+        fail("background cutout retains publisher panels")
 
     if image_looks_like_silhouette(im):
         fail("source image looks like a placeholder/silhouette rather than a fighter photo")
