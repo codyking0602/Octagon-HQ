@@ -172,7 +172,7 @@ function dailyBarTriviaRun(
           ),
           now: candidateDay + "T12:00:00.000Z",
           recentQuestionIds: recentIds,
-          strictRecentNoRepeat: league === "ufc",
+          strictRecentNoRepeat: league === "ufc" || league === "nfl" || league === "cfb",
         });
     latest = run;
     historyIds.unshift({ timestamp, ids: run.map((question) => question.id) });
