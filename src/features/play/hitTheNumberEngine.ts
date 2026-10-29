@@ -38,23 +38,22 @@ type HitTheNumberLedgerStatId = Exclude<HitTheNumberStatId, HitTheNumberSuppleme
 export type HitTheNumberBoardType = "open-roster" | "random-pool";
 
 export const HIT_THE_NUMBER_GENERATION_PROFILE = {
+  // Historical metrics remain readable, but new play favors seven fighter-defining stats.
+  // Exclude unreconciled supplemental metrics until they are freshly certified.
   stats: [
-    { value: "ufc-fights", weight: 10 },
-    { value: "ufc-wins", weight: 10 },
-    { value: "ufc-decision-wins", weight: 6 },
-    { value: "ufc-finishes", weight: 10 },
-    { value: "ufc-ko-tko-wins", weight: 9 },
-    { value: "ufc-submission-wins", weight: 6 },
-    { value: "ufc-title-fights", weight: 9 },
-    { value: "ufc-title-fight-wins", weight: 8 },
-    { value: "ufc-longest-win-streak", weight: 8 },
-    { value: "ufc-main-events", weight: 9 },
-    { value: "ufc-bonus-awards", weight: 9 },
-    { value: "ufc-first-round-finishes", weight: 6 },
+    { value: "ufc-wins", weight: 18 },
+    { value: "ufc-decision-wins", weight: 10 },
+    { value: "ufc-finishes", weight: 20 },
+    { value: "ufc-ko-tko-wins", weight: 16 },
+    { value: "ufc-submission-wins", weight: 13 },
+    { value: "ufc-title-fight-wins", weight: 12 },
+    { value: "ufc-longest-win-streak", weight: 11 },
   ],
+  // Division labels describe career participation, not division-only stats.
+  // Avoid implying division-scoped totals on newly generated boards.
   filters: [
-    { value: "all", weight: 55 },
-    { value: "division", weight: 45 },
+    { value: "all", weight: 100 },
+    { value: "division", weight: 0 },
   ],
   picks: [
     { value: 4, weight: 15 },

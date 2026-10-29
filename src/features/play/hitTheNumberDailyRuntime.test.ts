@@ -147,22 +147,14 @@ describe("official Hit the Number daily runtime", () => {
     ]));
   });
 
-  it("releases the approved UFCStats-backed stat catalog into official Daily boards", () => {
-    const observedSupplementalStats = new Set<string>();
-
-    for (let index = 0; index < 240 && observedSupplementalStats.size < supplementalStatIds.length; index += 1) {
+  it("keeps stale supplemental sources out of newly generated Official Daily boards", () => {
+    const forbidden = new Set(supplementalStatIds);
+    for (let index = 0; index < 60; index += 1) {
       const setup = buildOfficialDailySetup("hit_the_number", dayAt(index), scheduleVersion);
       for (const child of hitNumberChildSetups(setup)) {
-        const statId = String(child.publicSetup.statId ?? "");
-        if (supplementalStatIds.some((candidate) => candidate === statId)) {
-          observedSupplementalStats.add(statId);
-        }
+        expect(forbidden.has(String(child.publicSetup.statId) as typeof supplementalStatIds[number])).toBe(false);
       }
     }
-
-    supplementalStatIds.forEach((statId) => {
-      expect(observedSupplementalStats.has(statId), `official Daily never generated ${statId}`).toBe(true);
-    });
   });
 
   it("preserves the existing reversible flat-selection runtime for Classic Daily boards", () => {
