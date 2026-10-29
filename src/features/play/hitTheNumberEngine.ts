@@ -364,7 +364,7 @@ export function createHitTheNumberBoard(options: CreateHitTheNumberBoardOptions)
       ? [validatePickCount(options.pickCount)]
       : shuffleLineup(
           Array.from(
-            { length: HIT_THE_NUMBER_MAX_PICKS - HIT_THE_NUMBER_MIN_PICKS + 1 },
+            { length: HIT_THE_NUMBER_GENERATED_MAX_PICKS - HIT_THE_NUMBER_MIN_PICKS + 1 },
             (_, index) => HIT_THE_NUMBER_MIN_PICKS + index,
           ),
           random,
@@ -394,7 +394,7 @@ export function createHitTheNumberBoard(options: CreateHitTheNumberBoardOptions)
     const positiveCount = eligible.filter(
       (fighter) => valueFor(rowsById, fighter.id, options.statId) > 0,
     ).length;
-    const maximumGeneratedPicks = Math.min(HIT_THE_NUMBER_MAX_PICKS, positiveCount);
+    const maximumGeneratedPicks = Math.min(HIT_THE_NUMBER_GENERATED_MAX_PICKS, positiveCount);
     if (maximumGeneratedPicks < HIT_THE_NUMBER_MIN_PICKS) {
       throw new Error(`Not enough positive ${options.statId} fighters to build a Hit the Number board.`);
     }
