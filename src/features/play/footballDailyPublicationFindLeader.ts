@@ -45,9 +45,10 @@ function buildFindLeaderSetup(day: string, scheduleVersion: string, gameIndex = 
     if (board) break;
   }
   if (!board) throw new Error("Football Find the Leader could not build the official board.");
-  const candidates = board.candidates.map(({ id, name, subtitle, season, displayName }) => ({
+  const candidates = board.candidates.map(({ id, name, subtitle, season, displayName, school }) => ({
     id, name, subtitle,
     ...(season != null ? { season, displayName: displayName ?? name } : {}),
+    ...(school ? { school } : {}),
   }));
   return {
     setupKey: gameIndex === 0
