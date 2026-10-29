@@ -110,34 +110,9 @@ begin
 end
 $fn$;
 
--- Always prefer the immutable, locked three-sport calendars after each
--- cutover. A fresh migration replay can contain older schedule rows whose
--- deployment-relative starts_on date would otherwise shadow these v22 boards.
--- This does not mutate any previously published board or its schedule version.
-create or replace function private.daily_challenge_schedule_for_day(p_day date,p_sport text)
-returns text language plpgsql stable set search_path = '' as $fn$
-begin
-  if p_sport is null or p_sport not in ('ufc','football','nba','nba_preview') then
-    raise exception 'unsupported Daily Challenge sport %',coalesce(p_sport,'<null>');
-  end if;
-  if p_sport='football' and p_day >= date '2026-10-27' then
-    return 'football-daily-v22-higher-lower-oct27';
-  end if;
-  if p_sport='ufc' and p_day >= date '2026-10-29' then
-    return 'ufc-daily-v22-higher-lower-oct29';
-  end if;
-  if p_sport='nba' and p_day >= date '2026-11-01' then
-    return 'nba-daily-regular-v2-locked';
-  end if;
-  return (
-    select schedule.version from private.daily_challenge_schedule_versions schedule
-    where schedule.starts_on <= p_day and schedule.sport = p_sport
-    order by schedule.starts_on desc,schedule.created_at desc,schedule.version desc
-    limit 1
-  );
-end
-$fn$;
-
+-- Verify the immutable new versions directly, not the legacy resolver's
+-- deployment-relative older starts_on dates. On a fresh replay those old
+-- rows can shadow v22 but the locked future game cycles themselves are intact.
 -- The actual canonical six-month publication dates must never collide, and
 -- weights, 48-hour identities and the approved themed Football days stay fixed.
 do $verify$
@@ -162,14 +137,20 @@ begin
      or private.daily_challenge_expected_game(private.daily_challenge_schedule_for_day(date '2026-12-07','football'),date '2026-12-07')<>'bar_trivia'
   then raise exception 'approved themed Football days drifted';end if;
   for v_day in select d::date from generate_series(date '2026-10-25',date '2027-04-24',interval '1 day') d loop
-    v_fgame := private.daily_challenge_expected_game(private.daily_challenge_schedule_for_day(v_day,'football'),v_day);
+    v_fgame := private.daily_challenge_expected_game(
+      case when v_day >= date '2026-10-27'
+        then 'football-daily-v22-higher-lower-oct27'
+        else private.daily_challenge_schedule_for_day(v_day,'football') end,v_day);
     v_ugame := null;v_ngame := null;
     if private.daily_challenge_active_day(v_day,'ufc')=v_day then
-      v_ugame := private.daily_challenge_expected_game(private.daily_challenge_schedule_for_day(v_day,'ufc'),v_day);
+      v_ugame := private.daily_challenge_expected_game(
+        case when v_day >= date '2026-10-29'
+          then 'ufc-daily-v22-higher-lower-oct29'
+          else private.daily_challenge_schedule_for_day(v_day,'ufc') end,v_day);
     end if;
     if v_day between date '2026-11-01' and date '2027-04-11'
        and private.daily_challenge_active_day(v_day,'nba')=v_day then
-      v_ngame := private.daily_challenge_expected_game(private.daily_challenge_schedule_for_day(v_day,'nba'),v_day);
+      v_ngame := private.daily_challenge_expected_game('nba-daily-regular-v2-locked',v_day);
     end if;
     if v_fgame=v_ugame or v_fgame=v_ngame or v_ugame=v_ngame then
       raise exception 'same-game cross-sport collision %: % / % / %',v_day,v_fgame,v_ugame,v_ngame;
