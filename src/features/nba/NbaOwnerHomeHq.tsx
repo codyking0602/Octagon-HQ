@@ -67,7 +67,7 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
   const rank = ownLeaderboardEntry?.rank ?? null;
   const score = dailyOfficialDisplayScore(daily.projection, ownLeaderboardEntry?.normalizedScore);
   const hasSaved = !hasCompleted && Boolean(daily.projection?.progressRevision);
-  const dailyLink = dailyEnabled ? "/nba/today" : "/nba/play";
+  const dailyLink = dailyEnabled ? "/nba/today" : "/nba";
   const dailyLabel = dailyType ? NBA_DAILY_GAME_LABELS[dailyType] : "Basketball Daily";
   const dailyState = !dailyEnabled ? day > NBA_REGULAR_SEASON_LAST_DAY ? "SEASON COMPLETE" : "STARTS OCT 30"
     : !signedIn ? "SIGN IN" : hasCompleted ? "COMPLETED" : hasSaved ? "IN PROGRESS"
@@ -103,7 +103,7 @@ export function NbaOwnerHomeHq({ profileId, signedIn, hideChampionship = false }
               : "Ready when you are."}</small>
           </div>
           <div className="nba-hq-owner__daily-result">
-            {hasCompleted && score != null ? <strong>{score}<small>/100</small></strong> : <strong>{dailyEnabled ? signedIn ? dailyState : "SIGN IN" : "VIEW"}</strong>}
+            {hasCompleted && score != null ? <strong>{score}<small>/100</small></strong> : <strong>{dailyEnabled ? signedIn ? dailyState : "SIGN IN" : "PLAY"}</strong>}
             <span>OPEN →</span>
           </div>
         </Link>
