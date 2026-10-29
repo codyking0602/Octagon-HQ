@@ -16,7 +16,8 @@ export type FootballBarTriviaQualityReason =
   | "uninteresting-first"
   | "administrative-trivia"
   | "low-value-identity"
-  | "obscure-detail";
+  | "obscure-detail"
+  | "cross-game-repeat";
 
 export const FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS: Readonly<Record<string, FootballBarTriviaQualityReason>> = {
   // NFL — Round 1. A familiar team slogan should not contain the answer itself.
@@ -118,6 +119,16 @@ export const FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS: Readonly<Record<string, Fo
   "cfb-r3-cfp-first-semifinal-shutout": "uninteresting-first",
   "cfb-r3-cfp-semifinal-first-2ot": "uninteresting-first",
   "cfb-r3-kinnick-death": "obscure-detail",
+  // Lightweight cross-game pass: exact/near-exact facts also in Average Fan.
+  "nfl-r1-megatron": "cross-game-repeat",
+  "nfl-r1-prime-time": "cross-game-repeat",
+  "nfl-easy-beast-mode": "cross-game-repeat",
+  "nfl-easy-gronk": "cross-game-repeat",
+  "nfl-r3-hester-kickoff": "cross-game-repeat",
+  "nfl-r2-wide-right-norwood": "cross-game-repeat",
+  "cfb-v2-final-kick-six": "cross-game-repeat",
+  "cfb-r3-little-brown-jug": "cross-game-repeat",
+  "cfb-r3-2008-utah-sugar": "cross-game-repeat",
 };
 
 export const FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS: ReadonlySet<string> =
@@ -129,11 +140,9 @@ export const FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES: Readonly<Record<string
   "nfl-r2-beebe-lett-chase": "round3",
   "nfl-r2-tebow-ot-receiver": "round3",
   "nfl-easy2-montana": "round3",
-  "nfl-r2-wide-right-norwood": "round3",
   "nfl-r2-we-want-ball": "round3",
   "nfl-r2-freezer-bowl": "round3",
   "nfl-r1-lambeau-leap-originator": "round3",
   "nfl-r3-walter-payton-award": "round2",
-  "cfb-r3-little-brown-jug": "round2",
   "cfb-r3-war-eagle": "round2",
 };
