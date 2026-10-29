@@ -145,6 +145,11 @@ export const FOOTBALL_BAR_TRIVIA_QUALITY_RETIRED_IDS: ReadonlySet<string> =
 
 /** Rebalance difficulty using ALREADY-AUTHORED notable football plays. */
 export const FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES: Readonly<Record<string, BarTriviaRound>> = {
+  "nfl-r2-fog-bowl": "round3",
+  "nfl-r2-river-city-relay-miss": "round3",
+  "nfl-r2-1958-ot-title": "round3",
+  "nfl-easy2-marino": "round3",
+  "nfl-easy2-us-bank": "round3",
   "nfl-r2-music-city-lateral": "round3",
   "nfl-r2-beebe-lett-chase": "round3",
   "nfl-r2-tebow-ot-receiver": "round3",
