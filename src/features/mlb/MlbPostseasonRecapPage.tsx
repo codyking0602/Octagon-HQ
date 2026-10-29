@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
 import { formatChampionshipPoints } from "./mlbChampionship";
 import { useMlbChampionship } from "./useMlbChampionship";
 import MlbPicksPage from "./MlbPicksPage";
 import { MlbSeasonArchive } from "./MlbSeasonArchive";
+import { loadMlbSeasonRecap, type MlbSeasonRecap } from "./mlbSeasonRecap";
+import { MlbPlaySeasonSummary } from "./MlbPlaySeasonSummary";
 import "../../styles/mlb-postseason-recap.css";
 
 export default function MlbPostseasonRecapPage() {
@@ -11,6 +14,16 @@ export default function MlbPostseasonRecapPage() {
   const signedIn = Boolean(identity.profile?.id);
   const { championship, loading, error } = useMlbChampionship(signedIn, 2026);
   const own = championship?.own;
+  const [seasonRecap, setSeasonRecap] = useState<MlbSeasonRecap | null>(null);
+  const [recapError, setRecapError] = useState("");
+  useEffect(() => {
+    let active = true;
+    if (!signedIn) return;
+    void loadMlbSeasonRecap(2026).then(data => {
+      if (active) { setSeasonRecap(data); setRecapError(""); }
+    }).catch(() => { if (active) setRecapError("Detailed results temporarily unavailable."); });
+    return () => { active = false; };
+  }, [signedIn]);
 
   return (
     <div className="page mlb-postseason-recap" data-sport="mlb">
@@ -31,14 +44,18 @@ export default function MlbPostseasonRecapPage() {
                     <div><small>TOTAL POINTS</small><strong>{own ? formatChampionshipPoints(own.total_points) : "—"}</strong><span>OF {championship.totalMax}</span></div>
                   </div>}
             {championship ? (
+              <>
+              <p className="mlb-postseason-recap__scoring-caption">Points earned toward the 100-point championship · not the number of picks correct</p>
               <div className="mlb-postseason-recap__lanes">
-                <div><span>SERIES PICKS</span><strong>{own ? formatChampionshipPoints(own.series_points) : "—"} / {championship.seriesMax}</strong><small>{own ? `#${own.series_rank} FINISH` : "NO RESULT"}</small></div>
-                <div><span>BRACKET</span><strong>{own ? formatChampionshipPoints(own.bracket_points) : "—"} / {championship.bracketMax}</strong><small>{own ? `#${own.bracket_rank} FINISH` : "NO RESULT"}</small></div>
-                <div><span>PLAY</span><strong>{own ? formatChampionshipPoints(own.play_points) : "—"} / {championship.playMax}</strong><small>{own ? `#${own.play_rank} FINISH` : "NO RESULT"}</small></div>
+                <div><span>SERIES PICKS</span><strong>{own ? formatChampionshipPoints(own.series_points) : "—"}</strong><small>OF {championship.seriesMax} MAX</small><b>{own ? `#${own.series_rank} PLACE` : "NO RESULT"}</b></div>
+                <div><span>BRACKET</span><strong>{own ? formatChampionshipPoints(own.bracket_points) : "—"}</strong><small>OF {championship.bracketMax} MAX</small><b>{own ? `#${own.bracket_rank} PLACE` : "NO RESULT"}</b></div>
+                <div><span>PLAY</span><strong>{own ? formatChampionshipPoints(own.play_points) : "—"}</strong><small>OF {championship.playMax} MAX</small><b>{own ? `#${own.play_rank} PLACE` : "NO RESULT"}</b></div>
               </div>
+              </>
             ) : null}
           </section>
-          <MlbPicksPage archiveMode />
+          <MlbPicksPage archiveMode archiveSeriesPicks={seasonRecap?.seriesPicks ?? []} />
+          <MlbPlaySeasonSummary championship={championship} recap={seasonRecap} error={recapError} currentProfileId={identity.profile?.id ?? null} />
           <MlbSeasonArchive profileId={identity.profile?.id ?? null} />
         </>
       ) : <section className="surface-card mlb-state-card">
