@@ -321,8 +321,8 @@ export default function NbaOfficialDailyPage() {
   const projection = runtime.projection;
   return <div className="nba-official-daily official-daily-page" data-sport="nba" data-game={projection.gameType}>
     <nav className="nba-official-daily__top"><button type="button" onClick={() => navigate("/nba")}>← NBA PLAY</button>
-      <span>{ownerTest ? "OWNER TEST" : "OFFICIAL DAILY"} · {NBA_DAILY_GAME_LABELS[projection.gameType as NbaDailyGame] ?? "NBA Daily"}</span>
-      <button type="button" onClick={() => navigate(ownerTest ? "/nba/today?mode=owner-test&view=leaderboard" : "/nba/today?view=leaderboard")}>STANDINGS ↗</button>
+      <span>{ownerTest ? "PRACTICE · UNRANKED" : "OFFICIAL DAILY"} · {NBA_DAILY_GAME_LABELS[projection.gameType as NbaDailyGame] ?? "NBA Daily"}</span>
+      {!ownerTest ? <button type="button" onClick={() => navigate("/nba/today?view=leaderboard")}>STANDINGS ↗</button> : null}
     </nav>
     {runtime.error ? <div className="nba-official-daily__error" role="status">
       {runtime.error instanceof Error ? runtime.error.message : "Your game needs a refresh."}
@@ -334,11 +334,11 @@ export default function NbaOfficialDailyPage() {
       onExit={() => navigate("/nba")}
     />
     {projection.officialAttempt ? <section className="nba-official-daily__saved-score" aria-label="Official NBA Daily total score">
-      {ownerTest ? "SAVED TEST SCORE" : "OFFICIAL SAVED SCORE"} · <strong>{dailyOfficialDisplayScore(projection)}/100</strong>
+      {ownerTest ? "PRACTICE SCORE" : "OFFICIAL SAVED SCORE"} · <strong>{dailyOfficialDisplayScore(projection)}/100</strong>
     </section> : null}
-    {ownerTest ? <p className="play-v2__muted">Owner-only rehearsal · no championship points or public ranking.</p> : null}
+    {ownerTest ? <p className="play-v2__muted">Practice scores do not count toward public standings or championship points.</p> : null}
     {projection.officialAttempt ? <footer className="nba-official-daily__footer">
-      <button type="button" onClick={() => navigate(ownerTest ? "/nba/today?mode=owner-test&view=leaderboard" : "/nba/today?view=leaderboard")}>VIEW TODAY'S LEADERBOARD ↗</button>
+      {!ownerTest ? <button type="button" onClick={() => navigate("/nba/today?view=leaderboard")}>VIEW TODAY'S LEADERBOARD ↗</button> : null}
       <button type="button" onClick={() => navigate("/nba")}>ALL NBA GAMES</button>
     </footer> : null}
   </div>;
