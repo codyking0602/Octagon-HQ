@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { buildBarTriviaDailySetup, UFC_BAR_TRIVIA_UNIQUE_APPEARANCES } from "./barTriviaDailyRuntime";
 import { lockedWeightedGameForDay, isUfcPublicationDay } from "./dailyChallengeRotation";
+import { UFC_BAR_TRIVIA_FOCUSED_RETIREMENTS } from "./ufcBarTriviaFocusedQuality20261029";
 import {
   UFC_BAR_TRIVIA_V3_RETIRE_IDS,
   UFC_BAR_TRIVIA_V3_REWORK_IDS,
@@ -21,10 +22,12 @@ describe("UFC Bar Trivia v3 full editorial rebuild", () => {
     expect(ufc.some((q) => q.id === "ufc-r3-bustamante-ufc-debut")).toBe(false);
   });
 
-  it("adds 110 distinct sourced new facts and enough inventory for a 20-appearance cycle", () => {
+  it("keeps distinct v3 sourced facts after targeted retirement, with enough inventory for 20 appearances", () => {
     const additions = evergreen.filter((q) => q.id.startsWith("ufc-bt-v3-"));
-    expect(additions).toHaveLength(110);
-    expect(new Set(additions.map((q) => q.prompt.trim().toLowerCase())).size).toBe(110);
+    const focusedV3Retirements = Object.keys(UFC_BAR_TRIVIA_FOCUSED_RETIREMENTS).filter((id) => id.startsWith("ufc-bt-v3-"));
+    expect(focusedV3Retirements).toEqual(["ufc-bt-v3-f-014"]);
+    expect(additions).toHaveLength(110 - focusedV3Retirements.length);
+    expect(new Set(additions.map((q) => q.prompt.trim().toLowerCase())).size).toBe(additions.length);
     expect(new Set(ufc.map((q) => q.id)).size).toBe(ufc.length);
     expect(new Set(ufc.map((q) => q.prompt.trim().toLowerCase())).size).toBe(ufc.length);
     const required: Record<string, number> = { round1: 80, round2: 40, round3: 60, "last-call": 20 };
