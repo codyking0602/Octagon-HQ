@@ -7,6 +7,7 @@ import {
 } from "./hitTheNumberEngine";
 import {
   hitTheNumberSlotAcceptsFighter,
+  hitTheNumberSlotsCanComplete,
   type HitTheNumberFormatSetup,
 } from "./hitTheNumberFormats";
 import { getPlayFighter, type PlayFighter } from "./playFighterPool";
@@ -118,7 +119,14 @@ export function HitTheNumberGameView({
     result && setup.boardType === "random-pool" && revealedPoolValues,
   );
   const candidateFighters = activeSlot
-    ? fighters.filter((fighter) => hitTheNumberSlotAcceptsFighter(activeSlot, fighter.id))
+    ? fighters.filter(fighter => {
+        if (!hitTheNumberSlotAcceptsFighter(activeSlot, fighter.id)) return false;
+        const next = format!.slots.map((_, index) => slotAssignments[index] ?? null);
+        const oldIndex = next.indexOf(fighter.id);
+        if (oldIndex !== -1 && oldIndex !== activeSlotIndex) return false;
+        next[activeSlotIndex] = fighter.id;
+        return hitTheNumberSlotsCanComplete(format!, setup.fighterIds, next);
+      })
     : fighters;
   const visibleFighters = revealRandomPool
     ? fighters

@@ -19,6 +19,7 @@ import {
 import {
   hitTheNumberFormatSelectionSatisfies,
   hitTheNumberSlotAcceptsFighter,
+  hitTheNumberSlotsCanComplete,
   type HitTheNumberFormatSetup,
 } from "./hitTheNumberFormats";
 import { createQualityGatedHitTheNumberFormatPlan } from "./hitTheNumberPoolQuality";
@@ -376,6 +377,7 @@ export default function HitTheNumberPage() {
       ))) return;
 
       nextAssignments[slotIndex] = fighterId;
+      if (!hitTheNumberSlotsCanComplete(run.format, setup.fighterIds, nextAssignments)) return;
       setSlotAssignments(nextAssignments);
 
       for (let offset = 1; offset <= run.format.slots.length; offset += 1) {

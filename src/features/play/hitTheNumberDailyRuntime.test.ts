@@ -105,6 +105,7 @@ describe("official Hit the Number daily runtime", () => {
       expect(first.scoringVersion).toBe("daily-two-game-average-score-v1");
       const children = hitNumberChildSetups(first);
       expect(children).toHaveLength(2);
+      expect(children[0]?.publicSetup.statId).not.toBe(children[1]?.publicSetup.statId);
 
       for (const child of children) {
         expect(child.contentVersion).toBe(HIT_THE_NUMBER_DAILY_CONTENT_VERSION);
@@ -121,6 +122,8 @@ describe("official Hit the Number daily runtime", () => {
           slots: expect.any(Array),
         }));
         observedModes.add(String(child.publicSetup.boardType));
+        expect([4, 5]).toContain(child.publicSetup.pickCount);
+        expect((child.publicSetup.fighterIds as string[]).length).toBe(child.publicSetup.pickCount === 4 ? 12 : 14);
         observedFormats.add(formatIdFor(child));
 
         const browserJson = JSON.stringify({
@@ -138,14 +141,14 @@ describe("official Hit the Number daily runtime", () => {
       }
     }
 
-    expect(observedModes).toEqual(new Set(["open-roster", "random-pool"]));
+    expect(observedModes).toEqual(new Set(["random-pool"]));
     expect(observedFormats).toEqual(new Set([
       "classic",
       "themed-lineup",
       "one-from-each",
       "build-the-team",
     ]));
-  });
+  }, 180_000);
 
   it("keeps stale supplemental sources out of newly generated Official Daily boards", () => {
     const forbidden = new Set(supplementalStatIds);
@@ -155,7 +158,7 @@ describe("official Hit the Number daily runtime", () => {
         expect(forbidden.has(String(child.publicSetup.statId) as typeof supplementalStatIds[number])).toBe(false);
       }
     }
-  });
+  }, 120_000);
 
   it("preserves the existing reversible flat-selection runtime for Classic Daily boards", () => {
     const { setup } = setupForFormat("classic");

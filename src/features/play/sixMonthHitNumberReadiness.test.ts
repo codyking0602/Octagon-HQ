@@ -79,7 +79,7 @@ describe("six-month Official Hit the Number seed/content audit (merged canonical
         const values = child.privateGradingEvidence.values as Record<string, number>;
         report.childBoards[sport]++;
         report.metrics[sport + ":" + stat] = (report.metrics[sport + ":" + stat] ?? 0) + 1;
-        expect([4, 5, 6], slot.sport + ":" + slot.day).toContain(count);
+        expect(slot.sport === "ufc" ? [4, 5] : [4, 5, 6], slot.sport + ":" + slot.day).toContain(count);
         expect(Number.isFinite(target) && target > 0, `${sport}:${slot.day}:board-${boardIndex + 1}:${stat}:${target}`).toBe(true);
         expect(new Set(ids).size).toBe(ids.length);
         expect(ids.length).toBeGreaterThan(count);
@@ -114,7 +114,8 @@ describe("six-month Official Hit the Number seed/content audit (merged canonical
           const seedVersion = boardIndex === 0 ? version : version + ":game-2";
           const seed = [HIT_THE_NUMBER_DAILY_CONTENT_VERSION, OFFICIAL_DAILY_RUNTIME_VERSION,
             "hit-the-number", seedVersion, slot.day].join("|");
-          const plan = createSixMonthReadyUfcOfficialHitNumberPlan(seed, pub.boardType as "open-roster" | "random-pool");
+          const priorMetric = boardIndex === 1 ? String(boards[0]!.publicSetup.statId) : undefined;
+          const plan = createSixMonthReadyUfcOfficialHitNumberPlan(seed, pub.boardType as "open-roster" | "random-pool", priorMetric);
           expect(plan.statId).toBe(stat);
           expect(plan.target).toBe(target);
           expect(plan.pickCount).toBe(count);
@@ -122,7 +123,7 @@ describe("six-month Official Hit the Number seed/content audit (merged canonical
           expect(plan.solutionFighterIds.reduce((sum, id) => sum + canonicalRows.get(id)![plan.statId]!, 0)).toBe(target);
           expect(plan.fighterIds).toEqual(ids);
           if (pub.boardType === "random-pool") {
-            expect(ids).toHaveLength(UFC_OFFICIAL_HIT_NUMBER_POOL_SIZES[count as 4 | 5 | 6]);
+            expect(ids).toHaveLength(UFC_OFFICIAL_HIT_NUMBER_POOL_SIZES[count as 4 | 5]);
             expect(hitTheNumberRandomPoolQuality(plan).passes).toBe(true);
           }
         }

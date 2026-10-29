@@ -81,7 +81,7 @@ import {
   type WavelengthRecentHistory,
   type WavelengthRound,
 } from "./wavelengthEngine";
-import { gradeHitTheNumberSelection, type HitTheNumberPublicSetup } from "./hitTheNumberEngine";
+import { gradeHitTheNumberSelection, type HitTheNumberPublicSetup, type HitTheNumberStatRow } from "./hitTheNumberEngine";
 import {
   DAILY_TWO_GAME_SCORING_VERSION,
   dailyUsesTwoGameAverage,
@@ -640,25 +640,18 @@ export function buildOfficialDailySetup(
       });
     }
     if (gameType === "hit_the_number") {
+      const first = buildOfficialHitTheNumberDailySetup(
+        day, scheduleVersion, OFFICIAL_DAILY_RUNTIME_VERSION, OFFICIAL_DAILY_SCORING_VERSION,
+      ) as OfficialDailySetupPublication;
+      const second = buildOfficialHitTheNumberDailySetup(
+        day, `${scheduleVersion}:game-2`, OFFICIAL_DAILY_RUNTIME_VERSION,
+        OFFICIAL_DAILY_SCORING_VERSION, String(first.publicSetup.statId),
+      ) as OfficialDailySetupPublication;
+      if (first.publicSetup.statId === second.publicSetup.statId) {
+        throw new Error("UFC Hit the Number Daily rounds must use different statistics.");
+      }
       return buildTwoGameDailyPublication({
-        sport: "ufc",
-        gameType,
-        day,
-        scheduleVersion,
-        children: [
-          buildOfficialHitTheNumberDailySetup(
-            day,
-            scheduleVersion,
-            OFFICIAL_DAILY_RUNTIME_VERSION,
-            OFFICIAL_DAILY_SCORING_VERSION,
-          ) as OfficialDailySetupPublication,
-          buildOfficialHitTheNumberDailySetup(
-            day,
-            `${scheduleVersion}:game-2`,
-            OFFICIAL_DAILY_RUNTIME_VERSION,
-            OFFICIAL_DAILY_SCORING_VERSION,
-          ) as OfficialDailySetupPublication,
-        ],
+        sport: "ufc", gameType, day, scheduleVersion, children: [first, second],
       });
     }
   }
@@ -869,10 +862,20 @@ function scoreTwoGameChild(
   if (context.gameType === "hit_the_number") {
     const finalSubmission = asRecord(advanced.finalSubmission);
     const selectedIds = stringArray(finalSubmission.selected_ids, "Two-game Hit the Number selections");
-    return gradeHitTheNumberSelection(
-      context.publicSetup as unknown as HitTheNumberPublicSetup,
-      selectedIds,
-    ).score;
+    const publicSetup = context.publicSetup as unknown as HitTheNumberPublicSetup;
+    const storedValues = context.privateGradingEvidence.values == null
+      ? null : asRecord(context.privateGradingEvidence.values);
+    // New official rounds grade the original publication evidence, not mutable rankings.
+    // Legacy publications without a values snapshot retain their original fallback.
+    const snapshotRows: HitTheNumberStatRow[] | undefined = storedValues != null && Object.keys(storedValues).length
+      ? Object.entries(storedValues).map(([fighterId, value]) => {
+          if (!Number.isInteger(value) || Number(value) < 0) {
+            throw new Error("UFC Hit the Number published scoring value is invalid.");
+          }
+          return { fighterId, values: { [publicSetup.statId]: Number(value) } as HitTheNumberStatRow["values"] };
+        })
+      : undefined;
+    return gradeHitTheNumberSelection(publicSetup, selectedIds, snapshotRows).score;
   }
   if (context.gameType === "higher_lower") return Number(advanced.publicState.correct_count) * 10;
   throw new Error(`Unsupported two-game Daily score for ${String(context.gameType)}.`);
