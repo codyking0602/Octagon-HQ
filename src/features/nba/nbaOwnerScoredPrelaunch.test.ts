@@ -9,8 +9,8 @@ const edge = readFileSync("supabase/functions/daily-challenge-runtime/index.ts",
 const page = readFileSync("src/features/nba/NbaOfficialDailyPage.tsx", "utf8");
 const play = readFileSync("src/features/nba/NbaPlayPage.tsx", "utf8");
 
-describe("NBA owner-only scored Oct 23–31 prelaunch", () => {
-  it("keeps all public release flags closed and separates preview from public season standings", () => {
+describe("NBA owner-only scored Oct 23–29 prelaunch", () => {
+  it("keeps owner preview results separate from official public NBA standings", () => {
     expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
     expect(edge).toContain("const NBA_DAILY_EDGE_RELEASE_READY = true;");
     expect(migration).toContain("'nba-daily-owner-prelaunch-v1'");
@@ -25,10 +25,11 @@ describe("NBA owner-only scored Oct 23–31 prelaunch", () => {
     expect(edge).toContain('(await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)');
   });
 
-  it("publishes only the daily game for each of the nine distinct preview dates", () => {
-    const dates = Array.from({ length: 9 }, (_, i) =>
+  it("preserves the distinct prelaunch days before Oct 30 public Daily opens", () => {
+    const dates = Array.from({ length: 7 }, (_, i) =>
       new Date(Date.UTC(2026, 9, 23 + i)).toISOString().slice(0, 10));
-    expect(new Set(dates.map(d => nbaOwnerPreviewDaily(d))).size).toBe(9);
+    expect(new Set(dates.map(d => nbaOwnerPreviewDaily(d))).size).toBe(7);
+    expect(nbaOwnerPreviewDaily("2026-10-30")).toBeNull();
     for (const day of dates) {
       const game = nbaOwnerPreviewDaily(day)!;
       const published = buildNbaServerDailyPublication(day, "nba-daily-owner-prelaunch-v1", game);
