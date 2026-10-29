@@ -241,13 +241,22 @@ def approved_square_thumb_source(spec, source_url, size):
         # UFC's own 256x160 transparent event-results headshot is approved.
         # It is a real headshot product, not its athlete_bio_full_body pose.
         return (width, height) == (256, 160)
+    if host == "a.espncdn.com":
+        match = re.fullmatch(
+            r"/i/headshots/mma/players/full/([0-9]+)[.]png",
+            urlparse(source_url).path,
+        )
+        if not match:
+            return False
+        if (width, height) == (600, 436):
+            return (
+                spec.get("official_headshot_reviewed") is True
+                and bool(str(spec.get("fighter_name") or "").strip())
+                and str(spec.get("verified_espn_athlete_id") or "") == match.group(1)
+            )
+        return abs(width - height) <= max(width, height) * 0.06
     if abs(width - height) > max(width, height) * 0.06:
         return False
-    if host == "a.espncdn.com":
-        return bool(re.fullmatch(
-            r"/i/headshots/mma/players/full/[0-9]+[.]png",
-            urlparse(source_url).path
-        ))
     if host in {"www.ufc.com", "ufc.com"}:
         # UFC may serve promotional body images from athlete pages. Requiring
         # individual editorial verification avoids accepting them as thumbs.
@@ -295,8 +304,8 @@ def validate_asset_quality(im, kind):
         fail("fighter asset retains an opaque rectangular background")
     if coverage > 0.82:
         fail("fighter asset covers too much of the frame; likely background artifact")
-    if upper_side_background_band(im):
-        fail("fighter asset retains a rectangular upper-side background artifact")
+    if upper_side_background_band(im) or inset_side_background_panels(im):
+        fail("fighter asset retains a rectangular publisher background artifact")
     if box[1] < max(2, round(height * 0.015)):
         fail("fighter head has no top safety margin")
     if (box[2] - box[0]) < width * 0.28 or (box[3] - box[1]) < height * 0.42:
@@ -321,6 +330,53 @@ def upper_side_background_band(im):
     return False
 
 
+
+
+def inset_side_background_panels(im):
+    """Find long flat-color publisher rectangles inset from transparent edges."""
+    px = im.load()
+    width, height = im.size
+    min_run = max(24, round(width * 0.105))
+    min_height = max(14, round(height * 0.07))
+    panels = []
+    for side in ("left", "right"):
+        group = []
+        previous = None
+        for y in range(height + 1):
+            candidate = None
+            if y < height:
+                for offset in range(round(width * 0.27)):
+                    x = offset if side == "left" else width - 1 - offset
+                    r, g, b, a = px[x, y]
+                    if a < 170:
+                        continue
+                    direction = 1 if side == "left" else -1
+                    length = 0
+                    while 0 <= x + direction * length < width:
+                        cr, cg, cb, ca = px[x + direction * length, y]
+                        if ca < 150 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 18:
+                            break
+                        length += 1
+                    inner = x + direction * (length - 1)
+                    if length >= min_run and (
+                        (side == "left" and inner <= width * 0.43) or
+                        (side == "right" and inner >= width * 0.57)
+                    ):
+                        candidate = (x, inner, (r, g, b))
+                    break
+            if group and (
+                candidate is None
+                or abs(candidate[0] - previous[0]) > 5
+                or abs(candidate[1] - previous[1]) > 9
+                or max(abs(candidate[2][i] - previous[2][i]) for i in range(3)) > 36
+            ):
+                if len(group) >= min_height:
+                    panels.append((side, group))
+                group = []
+            if candidate is not None:
+                group.append((y, candidate))
+            previous = candidate
+    return panels
 
 
 def remove_flat_side_backgrounds(im):
@@ -361,6 +417,13 @@ def remove_flat_side_backgrounds(im):
                     rr, gg, bb, _ = px[ix, y]
                     px[ix, y] = (rr, gg, bb, 0)
                 break
+    # Remove consistent inset publisher panels, preserving the central athlete.
+    for side, rows in inset_side_background_panels(result):
+        for y, (_, inner, _) in rows:
+            positions = range(0, min(width, inner + 2)) if side == "left" else range(max(0, inner - 1), width)
+            for x in positions:
+                r, g, b, _ = px[x, y]
+                px[x, y] = (r, g, b, 0)
     return result
 
 
@@ -460,6 +523,7 @@ def main():
     if kind == "thumb" and not approved_square_thumb_source(spec, source_url, im.size):
         fail("thumbnail requires a verified square UFC or ESPN headshot source")
 
+    original_source = im.copy()
     if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
         try:
             im = remove(im).convert("RGBA")
@@ -476,6 +540,24 @@ def main():
             fail(f"second background removal failed: {exc}")
 
     im = remove_flat_side_backgrounds(im)
+
+    # A second alpha-matting pass is attempted only if obvious panels survive.
+    # Reprocess from the untouched photograph and fail closed on bad output.
+    if inset_side_background_panels(im) or upper_side_background_band(im):
+        try:
+            retried = remove(
+                original_source, alpha_matting=True,
+                alpha_matting_foreground_threshold=240,
+                alpha_matting_background_threshold=12,
+                alpha_matting_erode_size=8,
+            ).convert("RGBA")
+            retried = remove_flat_side_backgrounds(retried)
+            if not inset_side_background_panels(retried) and not upper_side_background_band(retried):
+                im = retried
+        except Exception:
+            pass
+        if inset_side_background_panels(im) or upper_side_background_band(im):
+            fail("background cutout retains publisher panels after retry")
 
     if image_looks_like_silhouette(im):
         fail("source image looks like a placeholder/silhouette rather than a fighter photo")

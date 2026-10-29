@@ -13,6 +13,7 @@ from scripts.asset_ingest import (
     render_thumb,
     approved_square_thumb_source,
     remove_flat_side_backgrounds,
+    inset_side_background_panels,
     source_looks_clipped,
     upper_side_background_band,
     validate_asset_quality,
@@ -41,6 +42,20 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertTrue(approved_square_thumb_source({"source_url": espn}, espn, (600, 600)))
         self.assertFalse(approved_square_thumb_source({"source_page_url": "https://www.ufc.com/athlete/tom-nolan"}, espn, (600, 600)))
         self.assertFalse(approved_square_thumb_source({"source_url": espn}, espn, (600, 900)))
+        self.assertFalse(approved_square_thumb_source({"source_url": espn}, espn, (600, 436)))
+        reviewed = {
+            "source_url": espn,
+            "fighter_name": "Tom Nolan",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "5144007",
+        }
+        self.assertTrue(approved_square_thumb_source(reviewed, espn, (600, 436)))
+        self.assertFalse(approved_square_thumb_source(
+            {**reviewed, "verified_espn_athlete_id": "4295192"}, espn, (600, 436)
+        ))
+        self.assertFalse(approved_square_thumb_source(
+            {**reviewed, "official_headshot_reviewed": False}, espn, (600, 436)
+        ))
         self.assertFalse(approved_square_thumb_source({}, "https://a.espncdn.com/i/athletes/bodyshot/5144007.png", (600, 600)))
         self.assertFalse(approved_square_thumb_source({}, "https://third-party.example/photo.png", (600, 600)))
         self.assertFalse(approved_square_thumb_source({}, "https://www.ufc.com/athlete/tom-nolan", (600, 600)))
@@ -75,7 +90,7 @@ class AssetIngestQualityTests(unittest.TestCase):
         draw.ellipse((80, 30, 235, 230), fill=(140, 95, 72, 255))
         draw.rectangle((265, 30, 315, 165), fill=(240, 240, 240, 255))
         self.assertTrue(upper_side_background_band(image))
-        self.assert_rejected(image, "thumb", "rectangular upper-side background")
+        self.assert_rejected(image, "thumb", "publisher background artifact")
 
     def test_cleanup_removes_flat_right_block_but_preserves_fighter(self):
         image = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
@@ -91,6 +106,30 @@ class AssetIngestQualityTests(unittest.TestCase):
         cleaned = remove_flat_side_backgrounds(source)
         self.assertEqual(cleaned.getpixel((80, 60))[3], 255)
         self.assertEqual(cleaned.getpixel((80, 180))[3], 255)
+
+    def test_inset_publisher_panel_is_removed_without_erasing_fighter(self):
+        im = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.ellipse((90, 20, 225, 230), fill=(145, 100, 75, 255))
+        for y in range(30, 125):
+            draw.line((255, y, 295, y), fill=(224, 212 + y % 4, 59, 255))
+        self.assertTrue(inset_side_background_panels(im))
+        cleaned = remove_flat_side_backgrounds(im)
+        self.assertFalse(inset_side_background_panels(cleaned))
+        self.assertEqual(cleaned.getpixel((275, 75))[3], 0)
+        self.assertEqual(cleaned.getpixel((155, 75))[3], 255)
+
+    def test_unremoved_inset_panel_fails_closed(self):
+        im = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.ellipse((95, 20, 220, 245), fill=(145, 100, 75, 255))
+        draw.rectangle((255, 30, 295, 155), fill=(185, 180, 192, 255))
+        self.assert_rejected(im, "thumb", "publisher background artifact")
+
+    def test_normal_fighter_is_untouched_by_panel_cleaner(self):
+        im = fake_fighter()
+        self.assertEqual(inset_side_background_panels(im), [])
+        self.assertEqual(im.tobytes(), remove_flat_side_backgrounds(im).tobytes())
 
     def test_full_bleed_opaque_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (200, 200, 200, 255))
