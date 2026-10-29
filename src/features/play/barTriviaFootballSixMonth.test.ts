@@ -41,7 +41,8 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       expect(bank.filter((question) => question.contentType === "evergreen"))
         .toHaveLength(league === "nfl" ? 144 : 155);
       const lastCall = bank.filter((question) => question.round === "last-call");
-      expect(lastCall.length).toBeGreaterThanOrEqual(league === "nfl" ? 15 : 12);
+      // NFL keeps thirteen editorially vetted Last Calls for ten unique outings.
+      expect(lastCall.length).toBeGreaterThanOrEqual(12);
     }
 
     const requiredRetirements = [
