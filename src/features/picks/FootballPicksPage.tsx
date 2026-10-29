@@ -371,7 +371,7 @@ export default function FootballPicksPage() {
           ) : null}
 
           <details className="surface-card football-picks-grading" data-football-section="grading">
-            <summary><span>SCORING &amp; GRADING</span><strong>HOW IT WORKS</strong></summary>
+            <summary><span>SCORING &amp; GRADING</span></summary>
             <div className="football-picks-grading__body">
               <div className="football-picks-grading__scores" aria-label="Weekly football scoring">
                 <span><b>WIN</b><strong>+1</strong></span>
