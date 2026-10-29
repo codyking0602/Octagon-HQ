@@ -301,7 +301,8 @@ jobs:
             test -f supabase/functions/daily-challenge-runtime/nba-wavelength-advance.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/nba-hit-the-number-advance.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/nba-higher-lower-advance.generated.mjs
-            test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs
+            test ! -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-average-fan-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-wavelength-publication.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-wavelength-advance.generated.mjs
              test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs
