@@ -3,7 +3,7 @@ import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 import { BAR_TRIVIA_EDITORIAL_RETIREMENTS } from "./barTriviaEditorialCuration";
 import { FOOTBALL_BAR_TRIVIA_V2_LAST_CALL, FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS } from "./barTriviaFootballEditorialV2";
 import { FOOTBALL_BAR_TRIVIA_V2_REWRITES } from "./barTriviaFootballRewritesV2";
-import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS } from "./barTriviaFootballQuality20261029";
+import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS, FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES } from "./barTriviaFootballQuality20261029";
 import { footballTriviaConceptKey } from "./barTriviaFootballConcepts";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
@@ -37,11 +37,25 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
       const bank = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       // Weekly dated news is supplemental; only the certified evergreen inventory is fixed.
       expect(bank.filter((question) => question.contentType === "evergreen"))
-        .toHaveLength(league === "nfl" ? 174 : 179);
+        .toHaveLength(league === "nfl" ? 155 : 156);
       const lastCall = bank.filter((question) => question.round === "last-call");
       expect(lastCall.length).toBeGreaterThanOrEqual(league === "nfl" ? 15 : 12);
     }
 
+    const requiredRetirements = [
+      "nfl-r2-first-game-outside-na", // 2007 London: low-value first
+      "nfl-r1-bills-mafia",           // answer telegraphed in stem
+      "nfl-easy2-fleur-de-lis",       // stale logo filler
+      "nfl-r3-league-founded-city",  // 1920 league organization: administration, not football
+      "nfl-final-first-sb-kick-return-td", // dull Last Call first
+      "cfb-easy2-spartans",           // nickname decodes the answer
+    ];
+    for (const id of requiredRetirements) expect(ids.has(id), id).toBe(false);
+    for (const [id, round] of Object.entries(FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES)) {
+      const question = BAR_TRIVIA_QUESTION_BANK.find((q) => q.id === id);
+      expect(question, id).toBeDefined();
+      expect(question?.round, id).toBe(round);
+    }
     const allPrompts = new Set<string>();
     for (const question of BAR_TRIVIA_QUESTION_BANK.filter((q) => q.league === "nfl" || q.league === "cfb")) {
       expect(question.choices).toHaveLength(4);
