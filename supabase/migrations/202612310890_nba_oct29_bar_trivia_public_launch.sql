@@ -9,17 +9,31 @@ BEGIN
   SELECT * INTO v_old FROM private.daily_challenges
     WHERE central_day=date '2026-10-29'
       AND schedule_version='nba-daily-owner-prelaunch-v1';
-  IF v_old.id IS NULL OR v_old.game_type <> 'bar_trivia'
-    OR v_old.fallback_reason IS NOT NULL THEN
-    RAISE EXCEPTION 'Oct 29 verified Bar Trivia preview not found';
-  END IF;
-  SELECT count(*) INTO v_attempts FROM private.daily_challenge_attempts
-    WHERE daily_challenge_id=v_old.id AND attempt_kind='official_first'
-      AND normalized_score=81 AND native_score=81;
-  SELECT count(*) INTO v_progress FROM private.daily_challenge_progress
-    WHERE daily_challenge_id=v_old.id;
-  IF v_attempts <> 1 OR v_progress <> 1 THEN
-    RAISE EXCEPTION 'Owner Oct 29 81/100 result is not uniquely intact';
+  IF v_old.id IS NULL THEN
+    -- Fresh local DBs have no production preview records. In an established
+    -- environment that *does* have private previews, a missing launch board
+    -- is a hard failure rather than silently generating replacement content.
+    IF EXISTS (
+      SELECT 1 FROM private.daily_challenges daily
+      JOIN private.daily_challenge_schedule_versions schedule
+        ON schedule.version=daily.schedule_version
+      WHERE schedule.sport='nba_preview'
+    ) THEN
+      RAISE EXCEPTION 'Oct 29 verified Bar Trivia preview not found';
+    END IF;
+    RAISE NOTICE 'Fresh database has no historical preview board; scheduled opening will materialize.';
+  ELSE
+    IF v_old.game_type <> 'bar_trivia' OR v_old.fallback_reason IS NOT NULL THEN
+      RAISE EXCEPTION 'Oct 29 reviewed Bar Trivia board changed';
+    END IF;
+    SELECT count(*) INTO v_attempts FROM private.daily_challenge_attempts
+      WHERE daily_challenge_id=v_old.id AND attempt_kind='official_first'
+        AND normalized_score=81 AND native_score=81;
+    SELECT count(*) INTO v_progress FROM private.daily_challenge_progress
+      WHERE daily_challenge_id=v_old.id;
+    IF v_attempts <> 1 OR v_progress <> 1 THEN
+      RAISE EXCEPTION 'Owner Oct 29 81/100 result is not uniquely intact';
+    END IF;
   END IF;
   IF EXISTS (
     SELECT 1 FROM private.daily_challenges daily
@@ -178,6 +192,16 @@ BEGIN
   SELECT count(*) INTO v_n FROM private.daily_challenge_attempts
     WHERE daily_challenge_id=v_public.id AND attempt_kind='official_first'
       AND native_score=81 AND normalized_score=81;
-  IF v_public.id IS NULL OR v_n<>1 THEN
-    RAISE EXCEPTION 'Public launch board and preserved 81/100 absent'; END IF;
+  IF v_public.id IS NULL THEN
+    -- Only a truly fresh database, with no owner preview history at all,
+    -- may wait for scheduled board materialization. Production must promote.
+    IF EXISTS (
+      SELECT 1 FROM private.daily_challenges daily
+      JOIN private.daily_challenge_schedule_versions schedule
+        ON schedule.version=daily.schedule_version
+      WHERE schedule.sport='nba_preview'
+    ) THEN RAISE EXCEPTION 'Existing preview history was not promoted'; END IF;
+  ELSIF v_n<>1 THEN
+    RAISE EXCEPTION 'Public launch board did not preserve 81/100';
+  END IF;
 END $verify$;
