@@ -479,12 +479,33 @@ try {
       item?.kind === "auction_result_ready" && item?.route === exactRoute
     )), "Participant B result notification"),
   ]);
-  for (const snapshot of resultSnapshots) {
+  for (const [index, snapshot] of resultSnapshots.entries()) {
     const result = snapshot.items.find((item) => item?.kind === "auction_result_ready" && item?.route === exactRoute);
     if (!result || result.priority !== "push_candidate" || result.category !== "games") {
       throw new Error(`Result notification was not push eligible: ${JSON.stringify(result)}`);
     }
     assertSafeSurface("Result notification", result);
+    // Newly created PIN profiles have every sport push disabled by default.
+    // Prove that a UFC Auction cannot bypass that preference before opting
+    // these disposable test participants in for the canonical route proof.
+    const mutedClaim = await rpc(
+      "claim_notification_push_delivery",
+      { p_notification_id: result.id },
+      secretKey,
+      secretKey,
+      "Verify muted Auction push",
+    );
+    if (mutedClaim?.notification !== null || !Array.isArray(mutedClaim?.deliveries)
+      || mutedClaim.deliveries.length !== 0) {
+      throw new Error(`Muted UFC push was not suppressed: ${JSON.stringify(mutedClaim)}`);
+    }
+    await rpc(
+      "set_my_notification_push_sports",
+      { p_ufc: true, p_football: false, p_mlb: false, p_nba: false },
+      [participantA, participantB][index].token,
+      publishableKey,
+      "Opt disposable Auction participant into UFC pushes",
+    );
     const claim = await rpc(
       "claim_notification_push_delivery",
       { p_notification_id: result.id },
