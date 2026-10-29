@@ -34,6 +34,8 @@ with recipients as (
   from public.profiles profile
   join private.profile_pin_credentials credential
     on credential.profile_id=profile.id
+  -- Reserved PIN profiles TEST and TEST2 are QA accounts, not launch recipients.
+  where upper(trim(coalesce(profile.display_name,''))) not in ('TEST','TEST2')
 ), emitted as (
   select profile.id,
     private.publish_notification_to_profile(
