@@ -9,7 +9,7 @@ import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaRegularSeas
 
 describe("NBA official Daily client release safety and all nine presentations", () => {
   it("routes through the existing NBA gate, and never unlocks on date alone", () => {
-    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(false);
+    expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
     expect(routerSource).toContain('path: "nba/today"');
     expect(routerSource).toContain("<NbaPreviewGate><NbaOfficialDailyPage /></NbaPreviewGate>");
     expect(officialPageSource).toContain('const ownerTest = params.get("mode") === "owner-test"');
@@ -20,8 +20,8 @@ describe("NBA official Daily client release safety and all nine presentations", 
     expect(hubSource).toContain('aria-controls="nba-play-daily-leaders"');
     expect(hubSource).toContain('createTodayChallengeRepository(undefined, ownerTest ? "nba_preview" : "nba")');
     expect(hubSource).toContain("enabled: (published || ownerTest) && Boolean(profile?.id)");
-    expect(nbaRegularSeasonDaily("2026-11-01")?.gameType).toBe("average_fan");
-    expect(nbaRegularSeasonDaily("2026-11-02")?.day).toBe("2026-11-01");
+    expect(nbaRegularSeasonDaily("2026-10-30")?.gameType).toBe("average_fan");
+    expect(nbaRegularSeasonDaily("2026-10-31")?.day).toBe("2026-10-30");
   });
   it("uses server revisioned progression, not browser-generated official scores, for all nine games", () => {
     expect(Object.keys(NBA_DAILY_GAME_LABELS)).toHaveLength(9);
