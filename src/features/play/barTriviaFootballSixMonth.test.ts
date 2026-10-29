@@ -5,7 +5,8 @@ import { FOOTBALL_BAR_TRIVIA_V2_LAST_CALL, FOOTBALL_BAR_TRIVIA_V2_RETIREMENTS } 
 import { FOOTBALL_BAR_TRIVIA_V2_REWRITES } from "./barTriviaFootballRewritesV2";
 import { FOOTBALL_BAR_TRIVIA_QUALITY_RETIREMENTS, FOOTBALL_BAR_TRIVIA_QUALITY_ROUND_OVERRIDES } from "./barTriviaFootballQuality20261029";
 import { FOOTBALL_BAR_TRIVIA_QUALITY_NEW_QUESTIONS } from "./barTriviaFootballNewFacts20261029";
-import { footballTriviaConceptKey } from "./barTriviaFootballConcepts";
+import { footballTriviaConceptKey, footballTriviaFamilyMemberIds } from "./barTriviaFootballConcepts";
+import { FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER, footballPublishedBarTriviaIdsBeforeDay } from "./barTriviaFootballPublishedHistory20261029";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
 import { footballBarTriviaLeagueForDay, lockedWeightedGameForDay } from "./dailyChallengeRotation";
 import type { BarTriviaQuestion } from "../games/barTriviaEngine";
@@ -79,6 +80,20 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
     }
   });
 
+  it("reconciles actual historical daily snapshots instead of trusting regenerated history", () => {
+    expect(FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER).toHaveLength(5);
+    for (const saved of FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER) {
+      expect(saved.questionIds, saved.day).toHaveLength(10);
+    }
+    const londonAppearances = FOOTBALL_BAR_TRIVIA_PUBLISHED_PRE_CUTOVER.filter((saved) =>
+      saved.questionIds.includes("nfl-r2-first-game-outside-na"));
+    expect(londonAppearances.map((saved) => saved.day)).toEqual(["2026-09-29", "2026-10-29"]);
+    expect(footballPublishedBarTriviaIdsBeforeDay("nfl", "2026-10-30", 184))
+      .toContain("nfl-r3-first-black-modern-hc");
+    expect(footballPublishedBarTriviaIdsBeforeDay("nfl", "2027-05-05", 184))
+      .not.toContain("nfl-r3-first-black-modern-hc");
+  });
+
   it("produces unique question IDs AND fact families over the exact 182-day horizon", () => {
     const seen: Record<"nfl" | "cfb", Set<string>> = { nfl: new Set(), cfb: new Set() };
     const counts: Record<"nfl" | "cfb", number> = { nfl: 0, cfb: 0 };
@@ -105,7 +120,12 @@ describe("Football Bar Trivia quality-first six-month bank", () => {
         const isIdentity = (q: BarTriviaQuestion) => /^(fan culture|team names?|team identity|mascots?|nicknames?|school identity|cheers|logos|traditions|stadium culture)$/i.test(q.category);
         expect(run.filter(isIdentity).length, date).toBeLessThanOrEqual(3);
       }
+      const actualHistory = new Set(
+        footballPublishedBarTriviaIdsBeforeDay(league, date, 184)
+          .flatMap(footballTriviaFamilyMemberIds)
+      );
       for (const question of run) {
+        expect(actualHistory.has(question.id), `${league} ${date}: repeated real published question/fact ${question.id}`).toBe(false);
         const key = question.factKey ?? question.id;
         expect(seen[league].has(key), league + " " + date + " repeated fact " + key).toBe(false);
         seen[league].add(key);
