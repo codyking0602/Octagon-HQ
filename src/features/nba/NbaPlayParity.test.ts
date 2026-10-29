@@ -26,7 +26,8 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(page).toContain('className="play-v2__daily-row"');
     expect(page).toContain("<span>DAILY WINS</span>");
     expect(page).toContain("overview.standings?.entries.find(entry => entry.isCurrentUser)?.wins");
-    expect(page).toContain('ownerTest ? "PRIVATE TEST SCORES" : "OFFICIAL SCORES ONLY"');
+    expect(page).toContain('"OFFICIAL SCORES ONLY"');
+    expect(page).not.toContain("PRIVATE TEST SCORES");
     expect(page).toContain('first-place finishes');
     expect(page).not.toContain("PERSONAL BEST");
     expect(page).not.toContain("const best =");
@@ -41,13 +42,19 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(NBA_CASUAL_GAME_TYPES).toHaveLength(4);
     expect(new Set(NBA_DAILY_WEIGHTED_CYCLE).size).toBe(9);
     expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
-    expect(page).toContain("Private previews do not count.");
-    expect(page).toContain('ownerTest ? "test games" : "official games"');
+    expect(page).toContain("Practice results do not count toward season totals.");
+    expect(page).toContain("enabled: published && Boolean(profile?.id)");
+    expect(page).toContain("const dailyWins = published");
+    expect(page).not.toContain("owner-test-history");
     expect(page).toContain('dailyCompleted ? "VIEW RESULT"');
-    expect(page).toContain("Owner-only scored rehearsal · not ranked publicly");
+    expect(page).toContain("Practice result · not in public standings");
+    expect(page).toContain('ownerTest ? "PRACTICE · UNRANKED"');
+    expect(page).not.toContain("PRIVATE OWNER TEST");
+    expect(page).toContain("!ownerTest && showDailyStandings");
+    expect(page).toContain("ownerTest ? \"PLAY PRACTICE\"");
     expect(page).toContain('aria-expanded={showDailyStandings}');
     expect(page).toContain("Finish today's game to unlock standings.");
-    expect(page).toContain("Daily Test Catalog");
+    expect(page).toContain("Practice Game Catalog");
     expect(page).toContain("previewRoute(game)");
   });
 
