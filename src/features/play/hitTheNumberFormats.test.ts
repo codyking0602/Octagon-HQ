@@ -24,6 +24,23 @@ describe("Hit the Number format foundation", () => {
     )).toBe(100);
   });
 
+  it("chooses 4/5 before board curation at the approved 85/15 weighting", () => {
+    let four = 0;
+    let five = 0;
+    for (let index = 0; index < 200; index += 1) {
+      const plan = createHitTheNumberFormatPlan({
+        seed: `ufc-85-15-cert-${index}`, boardType: "open-roster",
+      });
+      if (plan.pickCount === 4) four++;
+      else if (plan.pickCount === 5) five++;
+      else throw new Error("Generated a forbidden six/seven fighter board.");
+      if (plan.format.slots.length) expect(plan.format.slots).toHaveLength(plan.pickCount);
+    }
+    expect(four + five).toBe(200);
+    expect(four).toBeGreaterThanOrEqual(150);
+    expect(four).toBeLessThanOrEqual(190);
+  });
+
   it("keeps themes and lineup slots factual and machine-verifiable", () => {
     const allowedKinds = new Set([
       "any",
