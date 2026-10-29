@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import {
   NBA_CASUAL_GAME_TYPES, NBA_DAILY_GAME_LABELS, NBA_DAILY_WEIGHTED_CYCLE,
   NBA_DAILY_WEIGHTS, NBA_GAMES_LAUNCH_DAY, NBA_OFFICIAL_GAMES_RELEASE_READY,
@@ -18,6 +19,15 @@ describe("NBA official games release plan", () => {
       expect(NBA_DAILY_WEIGHTED_CYCLE[i]).not.toBe(NBA_DAILY_WEIGHTED_CYCLE[i - 1]);
     }
     expect(NBA_CASUAL_GAME_TYPES).toEqual(["who_am_i", "find_leader", "hit_the_number", "higher_lower"]);
+  });
+
+  it("keeps frontend and server NBA weighted cycles identical after the anti-collision cutover", () => {
+    const sql = readFileSync("supabase/migrations/202612310889_nba_public_oct30_daily_cutover.sql","utf8");
+    const schedule = sql.match(/VALUES \('nba-daily-regular-v3-oct30-public'[\s\S]*?array\[([\s\S]*?)\]::text\[\],'nba'\)/);
+    expect(schedule).not.toBeNull();
+    const backendCycle = [...schedule![1]!.matchAll(/'([a-z_]+)'/g)].map(match => match[1]);
+    expect(backendCycle).toEqual(NBA_DAILY_WEIGHTED_CYCLE);
+    expect(nbaRegularSeasonDaily("2026-11-25")?.gameType).toBe("find_leader");
   });
 
   it("starts official NBA Daily October 30, opposite UFC, for 82 seasonal appearances", () => {
