@@ -101,12 +101,15 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(bundler).toContain("./generate-football-who-am-i-daily-universes.mjs");
   });
 
-  it("serves published Football Daily reads before loading the shared publication runtime", () => {
+  it("serves published Football Daily reads before loading per-game publication runtimes", () => {
     expect(runtime).toContain('function loadFootballPublicationRuntime(gameType: OfficialDailyGameType)');
     expect(runtime).toContain('function loadFootballAdvanceRuntime()');
     expect(runtime).toContain('function loadAverageFanRuntime()');
     expect(runtime).toContain('import("./average-fan.generated.mjs")');
-    expect(runtime).toContain('import("./football-publication.generated.mjs")');
+    expect(runtime).not.toContain('import("./football-publication.generated.mjs")');
+    expect(runtime).toContain('import("./football-average-fan-publication.generated.mjs")');
+    expect(runtime).toContain('import("./football-bar-trivia-publication.generated.mjs")');
+    expect(runtime).toContain('import("./football-sports-feud-publication.generated.mjs")');
     expect(runtime).toContain('import("./football-millionaire-publication.generated.mjs")');
     expect(runtime).toContain('if (gameType === "millionaire")');
     expect(runtime).toContain('import("./football-advance.generated.mjs")');
@@ -213,14 +216,16 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(footballAdvanceRuntime).not.toContain('from "./footballTodayChallengeRuntime"');
   });
 
-  it("builds one shared Football publication artifact with smoke coverage for every active game family", () => {
+  it("builds isolated Football publisher artifacts with locked-date smoke coverage", () => {
     expect(bundler).toContain('src/features/play/todaysChallengeRuntime.ts');
-    expect(bundler).toContain('src/features/play/footballDailyPublicationAll.ts');
+    expect(bundler).not.toContain('src/features/play/footballDailyPublicationAll.ts');
     expect(bundler).toContain('src/features/play/footballTodayChallengeAdvanceRuntime.ts');
     expect(bundler).toContain('fileName: "runtime.generated.mjs"');
     expect(bundler).toContain('fileName: "average-fan.generated.mjs"');
     expect(bundler).toContain('src/features/play/averageFanDailyRuntime.ts');
-    expect(bundler).toContain('fileName: "football-publication.generated.mjs"');
+    expect(bundler).not.toContain('fileName: "football-publication.generated.mjs"');
+    expect(bundler).toContain('fileName: "football-average-fan-publication.generated.mjs"');
+    expect(bundler).toContain('fileName: "football-bar-trivia-publication.generated.mjs"');
     expect(bundler).toContain('fileName: "football-millionaire-publication.generated.mjs"');
     expect(bundler).toContain('src/features/play/footballDailyPublicationMillionaire.ts');
     expect(bundler).toContain('{ day: "2026-10-26", gameType: "millionaire", scheduleVersion: "football-daily-v21-locked-oct25" }');
@@ -232,13 +237,11 @@ describe("daily challenge runtime cold-start isolation", () => {
       "who_am_i",
       "wavelength",
       "find_leader",
-      "blind_resume",
       "hit_the_number",
       "millionaire",
       "sports_feud",
       "bar_trivia",
       "average_fan",
-      "keep_4_cut_4",
     ]) {
       expect(bundler).toContain(`gameType: "${gameType}"`);
     }
@@ -250,7 +253,8 @@ describe("daily challenge runtime cold-start isolation", () => {
   it("keeps GitHub Actions as the single deployment owner", () => {
     expect(backendWorkflow).toContain('node scripts/bundle-daily-challenge-runtime.mjs');
     expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/average-fan.generated.mjs');
-    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs');
+    expect(backendWorkflow).toContain('test ! -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs');
+    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-average-fan-publication.generated.mjs');
     expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-millionaire-publication.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-who-am-i.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-wavelength.generated.mjs');
