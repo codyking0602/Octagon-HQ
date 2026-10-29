@@ -101,9 +101,19 @@ BEGIN
       END IF;
       v_after:=replace(v_after,'if v_day = date ''2026-10-30''',
                                   'if false and v_day = date ''2026-10-30''');
-      v_after:=replace(v_after,'''nba-daily-regular-v1''','''nba-daily-regular-v3-oct30-public''');
-    ELSIF v_signature LIKE '%publish_combined_daily_closing_reminder%' THEN
-      v_after:=replace(v_after,'''nba-daily-regular-v1''','''nba-daily-regular-v3-oct30-public''');
+    END IF;
+    IF v_signature LIKE '%dispatch_due_nba_notifications%'
+       OR v_signature LIKE '%publish_combined_daily_closing_reminder%' THEN
+      -- The deployed reminders currently use v2, not the original v1.
+      -- Require both the old version and final-day threshold before rewriting.
+      IF position('''nba-daily-regular-v2-locked''' IN v_after)=0
+         OR position('2026-11-02' IN v_after)=0 THEN
+        RAISE EXCEPTION 'NBA closing reminder contract changed: %',v_signature;
+      END IF;
+      v_after:=replace(v_after,'''nba-daily-regular-v2-locked''',
+                                   '''nba-daily-regular-v3-oct30-public''');
+      -- Oct 30–31 is the first 48-hour slot; first 8pm close is Oct 31.
+      v_after:=replace(v_after,'2026-11-02','2026-10-31');
     END IF;
     EXECUTE v_after;
   END LOOP;
