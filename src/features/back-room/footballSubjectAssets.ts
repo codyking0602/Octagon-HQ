@@ -143,6 +143,11 @@ export const footballTeamAssets: Readonly<Record<FootballTeamMediaId, FootballSu
   Object.fromEntries(footballTeamAssetEntries) as Record<FootballTeamMediaId, FootballSubjectAsset>,
 );
 
+// Use the team from the actual source-attested peak season, never the player's career logo.
+export function footballCfbSchoolAsset(school: string): FootballSubjectAsset | null {
+  return footballTeamAssets[footballCfbTeamMediaId(school)] ?? null;
+}
+
 const comparisonPersonAssets = Object.fromEntries(
   footballComparisonDepthItems.flatMap((item) => {
     const subject = getFootballSubject(item.id);
