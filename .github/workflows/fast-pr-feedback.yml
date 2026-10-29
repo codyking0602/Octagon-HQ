@@ -168,7 +168,7 @@ jobs:
           elif [ "${{ steps.scope.outputs.bar_trivia_only }}" = true ]; then
             # Football + UFC Bar Trivia editorial, real published Daily replay,
             # themed pack and shared-engine regressions.
-            npm test -- src/features/play/barTriviaContent.test.ts src/features/play/barTriviaEngine.test.ts src/features/play/barTriviaEditorialCuration.test.ts src/features/play/barTriviaDailyRuntime.test.ts src/features/play/barTriviaRecentRepeat.test.ts src/features/play/barTriviaFootballSixMonth.test.ts src/features/play/footballTeamThemeDailyPacks.test.ts src/features/play/barTriviaOct22CurrentEvents.test.ts src/features/play/ufcBarTriviaV3Editorial.test.ts src/features/play/ufcBarTriviaFocusedQuality20261029.test.ts --run
+            npm test -- src/features/play/barTriviaContent.test.ts src/features/play/barTriviaEngine.test.ts src/features/play/barTriviaEditorialCuration.test.ts src/features/play/barTriviaDailyRuntime.test.ts src/features/play/barTriviaRecentRepeat.test.ts src/features/play/barTriviaFootballSixMonth.test.ts src/features/play/footballTeamThemeDailyPacks.test.ts src/features/play/barTriviaOct22CurrentEvents.test.ts src/features/play/ufcBarTriviaV3Editorial.test.ts src/features/play/ufcBarTriviaFocusedQuality20261029.test.ts src/features/play/ufcBarTriviaV3Distractors.test.ts --run
           else
             npm test -- --changed="$BASE_SHA" --passWithNoTests
           fi
