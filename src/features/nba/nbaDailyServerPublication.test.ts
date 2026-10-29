@@ -27,7 +27,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("constructs a private NBA Average Fan board without leaking answers", () => {
-    const published = buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v3-oct30-public", "average_fan");
+    const published = buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v4-nov01-public", "average_fan");
     expect(published.publicSetup.sport).toBe("nba");
     expect(published.publicSetup.board).toHaveLength(8);
     expect(published.privateSetupEvidence.questions).toHaveLength(8);
@@ -36,7 +36,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("uses the existing Sports Feud grader with immutable NBA private evidence", () => {
-    const published = buildNbaServerDailyPublication("2026-11-03", "nba-daily-regular-v3-oct30-public", "sports_feud");
+    const published = buildNbaServerDailyPublication("2026-11-03", "nba-daily-regular-v4-nov01-public", "sports_feud");
     expect(published.publicSetup.sport).toBe("nba");
     expect(published.publicSetup.presentation_domain).toBe("nba");
     expect(published.privateSetupEvidence.pack).toBeTruthy();
@@ -50,7 +50,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("constructs a canonical Millionaire NBA board with twenty appearance question histories", () => {
-    const published = buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v3-oct30-public", "millionaire");
+    const published = buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v4-nov01-public", "millionaire");
     expect(published.publicSetup.league).toBe("nba");
     expect(published.publicSetup.questions).toHaveLength(8);
     expect(JSON.stringify(published.publicSetup)).not.toContain('"correctChoiceId"');
@@ -66,7 +66,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   }, 120_000);
 
   it("builds two unique NBA Who Am I rounds per official appearance", () => {
-    const published = buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v3-oct30-public", "who_am_i");
+    const published = buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v4-nov01-public", "who_am_i");
     expect(published.publicSetup.sport).toBe("nba");
     expect(published.publicSetup.round_count).toBe(2);
     expect(JSON.stringify(published.publicSetup)).not.toContain('"hidden_subject_id"');
@@ -84,7 +84,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("provides two NBA Find the Leader boards with distinct categories and visible season identity", () => {
-    const publication = buildNbaServerDailyPublication("2026-11-11", "nba-daily-regular-v3-oct30-public", "find_leader");
+    const publication = buildNbaServerDailyPublication("2026-11-11", "nba-daily-regular-v4-nov01-public", "find_leader");
     expect(publication.publicSetup.sport).toBe("nba");
     expect(publication.publicSetup.round_count).toBe(2);
     const rounds = publication.publicSetup.rounds as Record<string, unknown>[];
@@ -98,20 +98,20 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("protects targets and scores for two NBA Wavelength games",()=>{
-    const pub=buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v3-oct30-public", "wavelength");
+    const pub=buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v4-nov01-public", "wavelength");
     expect(pub.publicSetup.round_count).toBe(2);
     expect(JSON.stringify(pub.publicSetup)).not.toContain('"target":');
     expect(pub.privateSetupEvidence.rounds).toHaveLength(2);
   });
   it("preserves capped NBA Hit the Number 4/5-pick rules in both games",()=>{
-    const pub=buildNbaServerDailyPublication("2026-11-09", "nba-daily-regular-v3-oct30-public", "hit_the_number");
+    const pub=buildNbaServerDailyPublication("2026-11-09", "nba-daily-regular-v4-nov01-public", "hit_the_number");
     const rounds=pub.publicSetup.rounds as Record<string,unknown>[];
     expect(rounds).toHaveLength(2);
     expect(rounds.every(row=>[4,5].includes(Number(row.pick_count)))).toBe(true);
     expect(JSON.stringify(pub.publicSetup)).not.toContain('"values":');
   });
   it("protects NBA Higher or Lower comparisons until after final answer",()=>{
-    const pub=buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v3-oct30-public", "higher_lower");
+    const pub=buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v4-nov01-public", "higher_lower");
     expect(pub.scoringVersion).toBe("daily-two-game-average-score-v1");
     const rounds=pub.publicSetup.rounds as Record<string,unknown>[];
     expect(rounds).toHaveLength(2);
@@ -124,7 +124,7 @@ describe("NBA server-authored Daily publication foundation", () => {
   });
 
   it("reuses the canonical Bar Trivia server scorer and answer reveal boundary", () => {
-    const published = buildNbaServerDailyPublication("2026-11-21", "nba-daily-regular-v3-oct30-public", "bar_trivia");
+    const published = buildNbaServerDailyPublication("2026-11-21", "nba-daily-regular-v4-nov01-public", "bar_trivia");
     expect(NBA_SERVER_READY_GAME_TYPES).toEqual(["average_fan", "sports_feud", "bar_trivia", "millionaire", "who_am_i", "find_leader", "wavelength", "hit_the_number", "higher_lower"]);
     expect(published.publicSetup.league).toBe("nba");
     expect(published.privateSetupEvidence.questions).toHaveLength(10);
