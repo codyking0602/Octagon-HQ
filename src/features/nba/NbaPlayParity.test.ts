@@ -48,6 +48,8 @@ describe("NBA Play mirrors UFC Play layout", () => {
     expect(page).toContain('aria-expanded={showDailyStandings}');
     expect(page).toContain("Finish today's game to unlock standings.");
     expect(page).toContain("Daily Test Catalog");
+    expect(page).toContain('owner && !published ? <section className="nba-games-hub__owner-tools"');
+    expect(page).toContain("ownerTest ? \"PRIVATE OWNER TEST\"");
     expect(page).toContain("previewRoute(game)");
   });
 
