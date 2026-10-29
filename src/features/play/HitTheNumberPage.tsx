@@ -8,7 +8,6 @@ import {
   HIT_THE_NUMBER_MIN_PICKS,
   HIT_THE_NUMBER_STATS,
   HIT_THE_NUMBER_VERSION,
-  createGeneratedHitTheNumberBoard,
   gradeHitTheNumberSelection,
   hitTheNumberStatRows,
   type HitTheNumberBoard,
@@ -46,7 +45,7 @@ interface GeneratedHitTheNumberRun {
   format: HitTheNumberFormatSetup;
 }
 
-const DEFAULT_BOARD_TYPE: HitTheNumberBoardType = "open-roster";
+const DEFAULT_BOARD_TYPE: HitTheNumberBoardType = "random-pool";
 const hitTheNumberStatRowByFighterId = new Map(
   hitTheNumberStatRows.map((row) => [row.fighterId, row]),
 );
@@ -118,13 +117,6 @@ function storedFormat(value: ChallengeJson | undefined): HitTheNumberFormatSetup
 
 function createGeneratedRun(seed: string, boardType: HitTheNumberBoardType): GeneratedHitTheNumberRun {
   const plan = createQualityGatedHitTheNumberFormatPlan({ seed, boardType });
-  if (plan.format.formatId === "classic") {
-    return {
-      board: createGeneratedHitTheNumberBoard({ seed, boardType }),
-      format: plan.format,
-    };
-  }
-
   return {
     board: {
       publicSetup: {
