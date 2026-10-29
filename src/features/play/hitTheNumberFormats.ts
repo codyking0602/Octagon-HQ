@@ -530,3 +530,33 @@ export function hitTheNumberFormatSelectionSatisfies(
   }
   return selectionCanFillSlots(format.slots, resolved, rowsById);
 }
+
+/** Ensure every constrained pick can still be followed by a legal distinct lineup.
+ * The same rule is used to filter client-side options and reject dead ends server-side. */
+export function hitTheNumberSlotsCanComplete(
+  format: HitTheNumberFormatSetup,
+  poolIds: readonly string[],
+  assignments: readonly (string | null)[],
+  statRows: readonly HitTheNumberStatRow[] = hitTheNumberStatRows,
+): boolean {
+  if (!format.slots.length) return true;
+  if (assignments.length !== format.slots.length) return false;
+  const used = new Set(assignments.filter((id): id is string => id != null));
+  if (used.size !== assignments.filter(id => id != null).length) return false;
+  for (let index = 0; index < assignments.length; index += 1) {
+    const id = assignments[index];
+    if (id && (!poolIds.includes(id) || !hitTheNumberSlotAcceptsFighter(format.slots[index]!, id, statRows))) return false;
+  }
+  function fill(index: number): boolean {
+    if (index >= assignments.length) return true;
+    if (assignments[index] != null) return fill(index + 1);
+    for (const id of poolIds) {
+      if (used.has(id) || !hitTheNumberSlotAcceptsFighter(format.slots[index]!, id, statRows)) continue;
+      used.add(id);
+      if (fill(index + 1)) return true;
+      used.delete(id);
+    }
+    return false;
+  }
+  return fill(0);
+}

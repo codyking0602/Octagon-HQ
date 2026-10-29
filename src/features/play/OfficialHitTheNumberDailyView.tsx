@@ -8,6 +8,7 @@ import {
 } from "./hitTheNumberEngine";
 import {
   hitTheNumberFormatSelectionSatisfies,
+  hitTheNumberSlotsCanComplete,
   type HitTheNumberFormatSetup,
 } from "./hitTheNumberFormats";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
@@ -149,6 +150,7 @@ function optimisticToggle(
       }
       nextAssignments[slotIndex] = fighterId;
     }
+    if (!hitTheNumberSlotsCanComplete(format, setup.fighterIds, nextAssignments)) return projection;
     const selectedIds = nextAssignments.filter((id): id is string => id != null);
     return {
       ...projection,
