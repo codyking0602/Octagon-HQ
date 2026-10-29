@@ -1,5 +1,6 @@
 import {
   hitTheNumberBoardQualityScore,
+  HIT_THE_NUMBER_GENERATION_PROFILE,
   hitTheNumberStatRows,
   type HitTheNumberResultStatus,
   type HitTheNumberStatRow,
@@ -11,6 +12,7 @@ import {
   type CreateHitTheNumberFormatPlanOptions,
   type HitTheNumberFormatPlan,
 } from "./hitTheNumberFormats";
+import { seededLineupRandom } from "./lineupModel";
 
 export const HIT_THE_NUMBER_RANDOM_POOL_QUALITY = {
   candidateAttempts: 64,
@@ -159,6 +161,45 @@ export function hitTheNumberRandomPoolQuality(
   };
 }
 
+/** Select a reachable target from the middle of the legal lineup distribution.
+ * Both the displayed target and hidden exact solution come from the same legal lineup. */
+function balancedTargetPlan(
+  plan: HitTheNumberFormatPlan,
+  seed: string,
+  statRows: readonly HitTheNumberStatRow[],
+): HitTheNumberFormatPlan {
+  if (plan.boardType !== "random-pool") return plan;
+  const rows = valuesByFighter(statRows);
+  const outcomes: Array<{ total: number; ids: string[] }> = [];
+  combinations(plan.fighterIds, plan.pickCount, fighterIds => {
+    if (!selectionCanSatisfyPlan(plan, fighterIds, statRows)) return;
+    const ordered = plan.format.slots.length === 0 ? [...fighterIds] : (() => {
+      const used = new Set<string>();
+      const assignment: string[] = [];
+      function fill(index: number): boolean {
+        if (index === plan.format.slots.length) return true;
+        for (const id of fighterIds) {
+          if (used.has(id) || !hitTheNumberSlotAcceptsFighter(plan.format.slots[index]!, id, statRows)) continue;
+          used.add(id); assignment[index] = id;
+          if (fill(index + 1)) return true;
+          used.delete(id);
+        }
+        return false;
+      }
+      return fill(0) ? assignment : null;
+    })();
+    if (!ordered) return;
+    const total = ordered.reduce((sum, id) => sum + Number(rows.get(id)?.[plan.statId] ?? 0), 0);
+    if (total > 0) outcomes.push({ total, ids: ordered });
+  });
+  if (outcomes.length < 10) return plan;
+  outcomes.sort((a, b) => a.total - b.total);
+  const random = seededLineupRandom("ufc-hit-number-balanced-target", seed, plan.statId);
+  const percentile = .44 + random() * .12;
+  const selected = outcomes[Math.floor(outcomes.length * percentile)]!;
+  return { ...plan, target: selected.total, solutionFighterIds: selected.ids };
+}
+
 function hitTheNumberDailyPlanPassesQuality(
   plan: HitTheNumberFormatPlan,
   statRows?: readonly HitTheNumberStatRow[],
@@ -177,16 +218,28 @@ function hitTheNumberDailyPlanPassesQuality(
 export function createQualityGatedHitTheNumberFormatPlan(
   options: CreateHitTheNumberFormatPlanOptions,
 ): HitTheNumberFormatPlan {
-  const first = createHitTheNumberFormatPlan(options);
-  if (hitTheNumberDailyPlanPassesQuality(first, options.statRows)) return first;
+  // Lock the pick count once. Failed quality retries must not skew the 85/15 mix.
+  const pick = options.pickCount ?? (() => {
+    const random = seededLineupRandom("ufc-hit-number-fixed-pick-count", options.seed, options.boardType);
+    return (random() < HIT_THE_NUMBER_GENERATION_PROFILE.picks[0]!.weight / 100 ? 4 : 5) as 4 | 5;
+  })();
+  const fixedOptions = { ...options, pickCount: pick };
+  const rows = options.statRows ?? hitTheNumberStatRows;
+  const first = createHitTheNumberFormatPlan(fixedOptions);
+  const balancedFirst = balancedTargetPlan(first, options.seed, rows);
+  if (hitTheNumberDailyPlanPassesQuality(balancedFirst, options.statRows)) return balancedFirst;
 
   for (let attempt = 1; attempt <= HIT_THE_NUMBER_RANDOM_POOL_QUALITY.candidateAttempts; attempt += 1) {
-    const candidate = createHitTheNumberFormatPlan({
-      ...options,
-      seed: `${options.seed}|pool-quality|${attempt}`,
-    });
+    const candidateSeed = `${options.seed}|pool-quality|${attempt}`;
+    let candidate: HitTheNumberFormatPlan;
+    try {
+      candidate = createHitTheNumberFormatPlan({ ...fixedOptions, seed: candidateSeed });
+    } catch {
+      continue;
+    }
     if (candidate.format.formatId !== first.format.formatId) continue;
-    if (hitTheNumberDailyPlanPassesQuality(candidate, options.statRows)) return candidate;
+    const balanced = balancedTargetPlan(candidate, candidateSeed, rows);
+    if (hitTheNumberDailyPlanPassesQuality(balanced, options.statRows)) return balanced;
   }
 
   throw new Error("Hit the Number could not produce a board with real player choice and required pool quality.");

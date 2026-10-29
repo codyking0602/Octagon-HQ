@@ -71,8 +71,8 @@ describe("Hit the Number format foundation", () => {
         expect(hitTheNumberFormatSelectionSatisfies(plan.format, plan.fighterIds)).toBe(true);
       }
       if (plan.format.formatId === "one-from-each" || plan.format.formatId === "build-the-team") {
-        expect(plan.pickCount).toBe(5);
-        expect(plan.format.slots).toHaveLength(5);
+        expect([4, 5]).toContain(plan.pickCount);
+        expect(plan.format.slots).toHaveLength(plan.pickCount);
         plan.format.slots.forEach((slot, slotIndex) => {
           expect(hitTheNumberSlotAcceptsFighter(slot, plan.solutionFighterIds[slotIndex]!)).toBe(true);
         });
@@ -80,7 +80,7 @@ describe("Hit the Number format foundation", () => {
       if (boardType === "random-pool") {
         expect(plan.fighterIds).toHaveLength(hitTheNumberRandomPoolSize(plan.pickCount));
         expect(plan.fighterIds.length).toBeGreaterThan(plan.pickCount);
-        expect(plan.fighterIds.length).toBeLessThanOrEqual(12);
+        expect(plan.fighterIds.length).toBeLessThanOrEqual(14);
         for (const fighterId of plan.solutionFighterIds) {
           expect(plan.fighterIds).toContain(fighterId);
         }

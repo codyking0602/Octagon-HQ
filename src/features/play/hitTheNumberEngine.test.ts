@@ -136,10 +136,8 @@ describe("Hit the Number foundation", () => {
       { value: "division", weight: 0 },
     ]);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.picks).toEqual([
-      { value: 4, weight: 15 },
-      { value: 5, weight: 35 },
-      { value: 6, weight: 35 },
-      { value: 7, weight: 15 },
+      { value: 4, weight: 85 },
+      { value: 5, weight: 15 },
     ]);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.stats.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
     expect(HIT_THE_NUMBER_GENERATION_PROFILE.filters.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
@@ -178,7 +176,8 @@ describe("Hit the Number foundation", () => {
   });
 
   it("sizes Random Pool boards with meaningful decoys", () => {
-    expect([4, 5, 6, 7].map((pickCount) => hitTheNumberRandomPoolSize(pickCount))).toEqual([8, 10, 12, 12]);
+    expect([4, 5].map((pickCount) => hitTheNumberRandomPoolSize(pickCount))).toEqual([12, 14]);
+    expect(() => hitTheNumberRandomPoolSize(6)).toThrow();
   });
 
   it("filters the canonical Play roster before building an open-roster board", () => {
@@ -199,7 +198,7 @@ describe("Hit the Number foundation", () => {
     }
   });
 
-  it("varies the required picks from four through seven and always creates an exact target", () => {
+  it("varies new picks only between four and five and always creates an exact target", () => {
     const observed = new Set<number>();
     const byId = new Map(rankedHitTheNumberStatRows.map((row) => [row.fighterId, row]));
 
@@ -220,7 +219,7 @@ describe("Hit the Number foundation", () => {
       expect(total).toBe(board.publicSetup.target);
     }
 
-    expect(observed).toEqual(new Set([4, 5, 6, 7]));
+    expect(observed).toEqual(new Set([4, 5]));
   });
 
   it("generates the whole casual challenge from only the seed and chosen board type", () => {
@@ -244,12 +243,12 @@ describe("Hit the Number foundation", () => {
       if (boardType === "random-pool") {
         expect(setup.fighterIds).toHaveLength(hitTheNumberRandomPoolSize(setup.pickCount));
         expect(setup.fighterIds.length).toBeGreaterThan(setup.pickCount);
-        expect(setup.fighterIds.length).toBeLessThanOrEqual(12);
+        expect(setup.fighterIds.length).toBeLessThanOrEqual(14);
       }
     }
 
     expect(observedStats).toEqual(new Set(HIT_THE_NUMBER_GENERATION_PROFILE.stats.map((stat) => stat.value)));
-    expect(observedPicks).toEqual(new Set([4, 5, 6, 7]));
+    expect(observedPicks).toEqual(new Set([4, 5]));
     expect(observedFilters).toEqual(new Set(["all"]));
   });
 
@@ -298,16 +297,16 @@ describe("Hit the Number foundation", () => {
     })).toThrow("No exact ufc-ko-tko-wins solution exists for target 1.");
   });
 
-  it("builds a random pool around the hidden exact solution without exposing values", () => {
+  it("builds a 14-choice pool around the hidden exact solution without exposing values", () => {
     const board = createHitTheNumberBoard({
       seed: "random-pool",
       statId: "ufc-wins",
       boardType: "random-pool",
-      pickCount: 6,
-      randomPoolSize: 12,
+      pickCount: 5,
+      randomPoolSize: 14,
     });
 
-    expect(board.publicSetup.fighterIds).toHaveLength(12);
+    expect(board.publicSetup.fighterIds).toHaveLength(14);
     expect(new Set(board.publicSetup.fighterIds).size).toBe(12);
     for (const fighterId of board.privateSetup.solutionFighterIds) {
       expect(board.publicSetup.fighterIds).toContain(fighterId);
