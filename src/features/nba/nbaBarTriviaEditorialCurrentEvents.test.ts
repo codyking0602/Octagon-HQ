@@ -61,7 +61,7 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
     ])).toThrow();
   });
 
-  it("uses at most two timely stories when available with 20 unique appearances", () => {
+  it("never inserts expired launch-week stories into the Nov–Apr 20-board public rotation", () => {
     const seen = new Set<string>();
     let newsCount = 0;
     for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot++) {
@@ -74,11 +74,13 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
         seen.add(q.id);
       }
     }
-    expect(newsCount).toBe(5);
+    // All six currently vetted launch-week stories expire by Nov 7, before
+    // the first scheduled post-launch Bar Trivia appearance on Nov 19.
+    expect(newsCount).toBe(0);
     expect(seen.size).toBe(200);
   });
 
-  it("keeps all 20 appearances unique with the October 27 news addition", () => {
+  it("keeps all 20 appearances unique even when their caller as-of dates change", () => {
     const seen = new Set<string>();
     const news = new Set<string>();
     for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot++) {
@@ -91,11 +93,11 @@ describe("NBA Bar Trivia current-event editorial publishing", () => {
       }
     }
     expect(seen.size).toBe(200);
-    expect(news.size).toBe(6);
+    expect(news.size).toBe(0);
     expect(NBA_BAR_TRIVIA_QUESTION_BANK).toHaveLength(200);
   });
 
-  it("expires stories and falls back to all 200 evergreen questions without filler", () => {
+  it("preserves all 200 evergreen questions in the canonical first 20-board season rotation", () => {
     const seen = new Set<string>();
     for (let slot = 0; slot < NBA_BAR_TRIVIA_UNIQUE_APPEARANCES; slot++) {
       const board = buildNbaBarTriviaDailyBoard(slot, "2026-11-15");

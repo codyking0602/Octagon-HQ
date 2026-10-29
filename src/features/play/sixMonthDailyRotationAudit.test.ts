@@ -17,7 +17,11 @@ describe("six-month future Daily planning (NON-PUBLISHING, Part 1 owns cutover)"
     const calendar = auditMergedPartOneCalendar();
     const actual = summarizeRotation(calendar);
     expect(actual.totals).toEqual({ football: 182, ufc: 91, nba: 82 });
-    expect(actual.collisions.total).toBe(0);
+    // Only the immutable Oct 29 NBA launch board is allowed to share
+    // Football Bar Trivia's publication date. Catch any new collisions.
+    expect(actual.collisions.total).toBe(1);
+    expect(actual.collisions.byPair).toEqual({ "football+nba": 1 });
+    expect(actual.collisions.dates).toEqual(["2026-10-29"]);
     expect(actual.games.football.higher_lower?.count).toBe(13);
     expect(actual.games.ufc.higher_lower?.count).toBe(6);
     const first = calendar.filter(slot => slot.day === "2026-10-25");

@@ -25,10 +25,11 @@ describe("NBA owner-only scored Oct 23–29 prelaunch", () => {
     expect(edge).toContain('(await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action)');
   });
 
-  it("preserves the distinct prelaunch days before Oct 30 public Daily opens", () => {
-    const dates = Array.from({ length: 7 }, (_, i) =>
+  it("preserves six historical owner-only rehearsals before Oct 29 public launch", () => {
+    const dates = Array.from({ length: 6 }, (_, i) =>
       new Date(Date.UTC(2026, 9, 23 + i)).toISOString().slice(0, 10));
-    expect(new Set(dates.map(d => nbaOwnerPreviewDaily(d))).size).toBe(7);
+    expect(new Set(dates.map(d => nbaOwnerPreviewDaily(d))).size).toBe(6);
+    expect(nbaOwnerPreviewDaily("2026-10-29")).toBeNull();
     expect(nbaOwnerPreviewDaily("2026-10-30")).toBeNull();
     for (const day of dates) {
       const game = nbaOwnerPreviewDaily(day)!;

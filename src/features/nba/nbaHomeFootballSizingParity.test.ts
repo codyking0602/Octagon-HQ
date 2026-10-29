@@ -63,7 +63,7 @@ describe("Basketball HQ locked Football mobile sizing", () => {
     expect(component).not.toContain("OWNER PREVIEW");
     expect(component).not.toContain("Practice · Unranked");
     expect(component).toContain("Official score locked");
-    expect(component).toContain("STARTS OCT 30");
+    expect(component).toContain("STARTS OCT 29");
     expect(component).toContain('className="nba-hq-owner__daily-result"');
     expect(component).toContain("RANK UNAVAILABLE");
     expect(component).toContain("SCORING PENDING");

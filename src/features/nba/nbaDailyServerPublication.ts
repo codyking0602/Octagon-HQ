@@ -39,6 +39,9 @@ export function buildNbaServerDailyPublication(
   publicationHistory?: unknown,
 ) {
   if (!scheduleVersion.trim()) throw new Error("NBA Daily schedule version is required.");
+  if (scheduleVersion === "nba-daily-launch-oct29-bar-trivia-v1") {
+    throw new Error("The October 29 public Bar Trivia must use its existing verified saved board, never regenerate it.");
+  }
   // Rehearsal is drawn from a later pool band so the Nov 1 season's first
   // official appearances do not simply recycle questions the owner has seen.
   const ordinal = scheduleVersion === "nba-daily-owner-prelaunch-v1"

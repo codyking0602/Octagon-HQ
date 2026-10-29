@@ -19,6 +19,9 @@ export function nbaLeanDailyPublication(
   expected: NbaDailyGame, builder: (ordinal: number) => OfficialDailySetupPublication,
 ) {
   if (!scheduleVersion.trim() || gameType !== expected) throw new Error("NBA Daily game identity mismatch.");
+  if (scheduleVersion === "nba-daily-launch-oct29-bar-trivia-v1") {
+    throw new Error("The October 29 public Bar Trivia must use its existing verified saved board, never regenerate it.");
+  }
   const ordinal = scheduleVersion === "nba-daily-owner-prelaunch-v1"
     ? (nbaOwnerPreviewDaily(day) === expected ? 20 + NBA_OWNER_PREVIEW_ORDER.indexOf(expected)
       : (() => { throw new Error("NBA owner prelaunch game/day mismatch."); })())

@@ -60,6 +60,8 @@ export default function NbaPlayPage() {
   const slot = nbaRegularSeasonDaily(day);
   const ownerPreview = nbaOwnerPreviewDaily(day);
   const ownerTest = owner && !published && ownerPreview != null;
+  const inauguralDaily = published && slot?.day === "2026-10-29";
+  const inauguralDayNumber = day === "2026-10-29" ? 1 : day === "2026-10-30" ? 2 : 3;
   const featured = published ? slot?.gameType : owner ? ownerPreview ?? slot?.gameType : null;
   const [showOwnerCatalog, setShowOwnerCatalog] = useState(false);
   const [showDailyStandings, setShowDailyStandings] = useState(false);
@@ -120,6 +122,7 @@ export default function NbaPlayPage() {
               ? ownStanding ? "#" + ownStanding.rank + " today" : ownerTest ? "Private test score saved" : "Official result saved"
               : dailySaved ? "Your progress is saved"
               : ownerTest ? "Owner-only scored rehearsal · not ranked publicly"
+              : inauguralDaily ? `NBA launch · day ${inauguralDayNumber} of 3 · closes Oct 31`
               : slot?.isPublicationDay ? "New every other day · 48-hour window" : "Day 2 of 2 · challenge still open"}</span>
           </div>
           {dailyCompleted
@@ -203,7 +206,7 @@ export default function NbaPlayPage() {
       {ownerTest ? <p className="play-v2__muted">Your server-saved test results reset from view at launch; they never count toward public NBA standings.</p> : !published ? <p className="play-v2__muted">Your NBA scores will appear here after official Daily results are enabled. Private previews do not count.</p> : null}
     </section>
 
-    {owner ? <section className="nba-games-hub__owner-tools" aria-label="Owner preview catalog">
+    {owner && !published ? <section className="nba-games-hub__owner-tools" aria-label="Historical owner preview catalog">
       <button type="button" className="nba-games-hub__owner-toggle"
         onClick={() => setShowOwnerCatalog(open => !open)} aria-expanded={showOwnerCatalog}>
         Daily Test Catalog <span>{showOwnerCatalog ? "HIDE" : "SHOW ALL NINE"} ↗</span>
