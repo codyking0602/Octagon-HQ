@@ -9,10 +9,11 @@ import { buildNbaWhoAmIOfficialRounds } from "./nbaWhoAmIDailyRotation";
 
 describe("NBA server-authored Daily publication foundation", () => {
   it("computes appearance ordinals from published every-other-day game slots", () => {
-    expect(nbaDailyGameAppearance("2026-10-30", "average_fan")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-11-15", "average_fan")).toBe(1);
     expect(nbaDailyGameAppearance("2026-11-01", "sports_feud")).toBe(0);
     expect(nbaDailyGameAppearance("2026-11-19", "bar_trivia")).toBe(0);
     expect(() => nbaDailyGameAppearance("2026-10-31", "average_fan")).toThrow();
+    expect(nbaDailyGameAppearance("2026-10-29", "bar_trivia")).toBe(0);
     expect(() => nbaDailyGameAppearance("2026-10-30", "sports_feud")).toThrow();
     let num = 0;
     for (let index = 0; index < 80; index++) {
@@ -25,8 +26,12 @@ describe("NBA server-authored Daily publication foundation", () => {
     expect(NBA_DAILY_WEIGHTED_CYCLE).toHaveLength(28);
   });
 
-  it("constructs a private NBA Average Fan board without leaking answers", () => {
-    const published = buildNbaServerDailyPublication("2026-10-30", "nba-daily-regular-v3-oct30-public", "average_fan");
+  it("refuses to regenerate the already saved first public Bar Trivia board", () => {
+    expect(() => buildNbaServerDailyPublication("2026-10-29", "nba-daily-launch-oct29-bar-trivia-v1", "bar_trivia")).toThrow(/existing verified saved board/);
+  });
+
+  it("constructs a public NBA Average Fan board without leaking answers", () => {
+    const published = buildNbaServerDailyPublication("2026-11-15", "nba-daily-regular-v3-oct30-public", "average_fan");
     expect(published.publicSetup.sport).toBe("nba");
     expect(published.publicSetup.board).toHaveLength(8);
     expect(published.privateSetupEvidence.questions).toHaveLength(8);
