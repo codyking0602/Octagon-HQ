@@ -59,6 +59,13 @@ jobs:
             esac
             # Never let a bad source prevent unrelated fighters from being processed.
             if python "$processor" "$manifest"; then
+              if [[ "$kind" == "thumb" || "$kind" == "spotlight" ]] && git ls-files --error-unmatch "$destination" >/dev/null 2>&1 && git diff --quiet -- "$destination"; then
+                failed=$((failed+1))
+                echo "::error title=Unchanged UFC asset::$destination was unchanged after reprocessing; reject the no-op retry"
+                echo "- ❌ \`$destination\` byte-identical; review source or processor before retry" >> "$GITHUB_STEP_SUMMARY"
+                rm "$manifest"
+                continue
+              fi
               succeeded=$((succeeded+1))
               echo "- ✅ \`$destination\` processed (visual review still required for UFC)" >> "$GITHUB_STEP_SUMMARY"
               rm "$manifest"
@@ -81,8 +88,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${{ steps.process.outputs.succeeded }}" = "0" ] || { git diff --quiet && git diff --cached --quiet; }; then
-            echo "No successfully generated asset changes."
+          if [ "${{ steps.process.outputs.succeeded }}" = "0" ]; then
+            if [ -n "$(git status --porcelain -- .asset-ingest)" ]; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add -A -- .asset-ingest
+              git commit -m "Retire rejected UFC asset manifests"
+              git push origin "HEAD:${GITHUB_REF_NAME}"
+            fi
+            echo "generated=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git diff --quiet && git diff --cached --quiet; then
             echo "generated=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi

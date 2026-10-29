@@ -33,7 +33,7 @@ describe("automatic UFC fighter media", () => {
 
   it("accepts only original verified square UFC/ESPN thumbs, never promotional body renders", () => {
     expect(assetIngest).toContain("approved_square_thumb_source");
-    expect(assetIngest).toContain("thumbnail requires a verified square UFC or ESPN headshot source");
+    expect(assetIngest).toContain('if kind == "thumb" and not approved_square_thumb_source(spec, source_url, im.size)');
     expect(assetIngest).toContain("official_square_headshot_reviewed");
     expect(assetIngest).not.toContain("focus_width = max(1, round(subject.width * 0.76))");
   });

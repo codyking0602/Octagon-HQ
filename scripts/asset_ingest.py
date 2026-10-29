@@ -241,18 +241,43 @@ def approved_square_thumb_source(spec, source_url, size):
         # UFC's own 256x160 transparent event-results headshot is approved.
         # It is a real headshot product, not its athlete_bio_full_body pose.
         return (width, height) == (256, 160)
+    if host == "a.espncdn.com":
+        match = re.fullmatch(
+            r"/i/headshots/mma/players/full/([0-9]+)[.]png",
+            urlparse(source_url).path,
+        )
+        if not match:
+            return False
+        if (width, height) == (600, 436):
+            return (
+                spec.get("official_headshot_reviewed") is True
+                and bool(str(spec.get("fighter_name") or "").strip())
+                and str(spec.get("verified_espn_athlete_id") or "") == match.group(1)
+            )
+        return abs(width - height) <= max(width, height) * 0.06
     if abs(width - height) > max(width, height) * 0.06:
         return False
-    if host == "a.espncdn.com":
-        return bool(re.fullmatch(
-            r"/i/headshots/mma/players/full/[0-9]+[.]png",
-            urlparse(source_url).path
-        ))
     if host in {"www.ufc.com", "ufc.com"}:
         # UFC may serve promotional body images from athlete pages. Requiring
         # individual editorial verification avoids accepting them as thumbs.
         return spec.get("official_square_headshot_reviewed") is True
     return False
+
+
+def trim_thumb_publisher_edge_halos(im):
+    """Clear narrow publisher strokes outside the headshot crown and edge halos."""
+    result = im.copy()
+    alpha = result.getchannel("A").filter(ImageFilter.MinFilter(3))
+    width, height = result.size
+    left_cutoff = round(width * 0.29)
+    right_cutoff = round(width * 0.70)
+    for y in range(round(height * 0.12)):
+        for x in range(left_cutoff):
+            alpha.putpixel((x, y), 0)
+        for x in range(right_cutoff, width):
+            alpha.putpixel((x, y), 0)
+    result.putalpha(alpha)
+    return result
 
 
 def render_thumb(im, size):
@@ -295,8 +320,16 @@ def validate_asset_quality(im, kind):
         fail("fighter asset retains an opaque rectangular background")
     if coverage > 0.82:
         fail("fighter asset covers too much of the frame; likely background artifact")
-    if upper_side_background_band(im):
-        fail("fighter asset retains a rectangular upper-side background artifact")
+    if upper_side_background_band(im) or inset_side_background_panels(im) or horizontal_publisher_strips(im):
+        fail("fighter asset retains a rectangular publisher background artifact")
+    if kind == "thumb":
+        # RemBG may leave a translucent colored publisher panel: normal
+        # >=128 alpha testing misses it even though it is plainly visible.
+        for x in (round(width * 0.87), round(width * 0.95)):
+            sample = range(round(height * 0.04), round(height * 0.53))
+            occupied = sum(alpha.getpixel((x, y)) >= 8 for y in sample)
+            if occupied > len(sample) * 0.10:
+                fail("fighter thumbnail retains a translucent side background panel")
     if box[1] < max(2, round(height * 0.015)):
         fail("fighter head has no top safety margin")
     if (box[2] - box[0]) < width * 0.28 or (box[3] - box[1]) < height * 0.42:
@@ -315,12 +348,99 @@ def upper_side_background_band(im):
     sample_height = max(1, round(height * 0.60))
     # Sample inside output padding as well as at the actual source side.
     for x in (round(width * 0.045), round(width * 0.955)):
-        filled = sum(alpha.getpixel((x, y)) >= 128 for y in range(sample_height))
+        filled = sum(alpha.getpixel((x, y)) >= 8 for y in range(sample_height))
         if filled / sample_height > 0.24:
             return True
     return False
 
 
+
+
+def horizontal_publisher_strips(im):
+    """Find thin uniform bars from source art around the top of a portrait."""
+    px = im.load()
+    w, h = im.size
+    strips = []
+    for y in range(round(h * 0.30)):
+        for side in ("left", "right"):
+            for margin in range(max(1, round(w * 0.14))):
+                x = margin if side == "left" else w - 1 - margin
+                r, g, b, a = px[x, y]
+                if a < 8:
+                    continue
+                direction = 1 if side == "left" else -1
+                n = 0
+                while 0 <= x + direction * n < w:
+                    cr, cg, cb, ca = px[x + direction * n, y]
+                    if ca < 8 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 28:
+                        break
+                    n += 1
+                if n >= max(34, round(w * 0.18)):
+                    inner = x + direction * (n - 1)
+                    if (side == "left" and inner < w * 0.49) or (
+                        side == "right" and inner > w * 0.51
+                    ):
+                        strips.append((y, side, inner))
+                break
+    return strips
+
+
+def remove_horizontal_publisher_strips(im):
+    result = im.copy()
+    px = result.load()
+    for y, side, inner in horizontal_publisher_strips(result):
+        positions = range(0, inner + 2) if side == "left" else range(max(0, inner - 1), result.width)
+        for x in positions:
+            r, g, b, _ = px[x, y]
+            px[x, y] = (r, g, b, 0)
+    return result
+
+
+def inset_side_background_panels(im):
+    """Find long flat-color publisher rectangles inset from transparent edges."""
+    px = im.load()
+    width, height = im.size
+    min_run = max(24, round(width * 0.105))
+    min_height = max(14, round(height * 0.07))
+    panels = []
+    for side in ("left", "right"):
+        group = []
+        previous = None
+        for y in range(height + 1):
+            candidate = None
+            if y < height:
+                for offset in range(round(width * 0.27)):
+                    x = offset if side == "left" else width - 1 - offset
+                    r, g, b, a = px[x, y]
+                    if a < 8:
+                        continue
+                    direction = 1 if side == "left" else -1
+                    length = 0
+                    while 0 <= x + direction * length < width:
+                        cr, cg, cb, ca = px[x + direction * length, y]
+                        if ca < 8 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 28:
+                            break
+                        length += 1
+                    inner = x + direction * (length - 1)
+                    if length >= min_run and (
+                        (side == "left" and inner <= width * 0.43) or
+                        (side == "right" and inner >= width * 0.57)
+                    ):
+                        candidate = (x, inner, (r, g, b))
+                    break
+            if group and (
+                candidate is None
+                or abs(candidate[0] - previous[0]) > 5
+                or abs(candidate[1] - previous[1]) > 9
+                or max(abs(candidate[2][i] - previous[2][i]) for i in range(3)) > 36
+            ):
+                if len(group) >= min_height:
+                    panels.append((side, group))
+                group = []
+            if candidate is not None:
+                group.append((y, candidate))
+            previous = candidate
+    return panels
 
 
 def remove_flat_side_backgrounds(im):
@@ -341,14 +461,14 @@ def remove_flat_side_backgrounds(im):
             for outer in range(search_depth):
                 x = outer if side == "left" else width - 1 - outer
                 r, g, b, a = px[x, y]
-                if a < 205:
+                if a < 8:
                     continue
                 direction = 1 if side == "left" else -1
                 run = []
                 pos = x
                 while 0 <= pos < width:
                     cr, cg, cb, ca = px[pos, y]
-                    if ca < 160 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 6:
+                    if ca < 8 or max(abs(cr-r), abs(cg-g), abs(cb-b)) > 28:
                         break
                     run.append(pos)
                     pos += direction
@@ -361,6 +481,13 @@ def remove_flat_side_backgrounds(im):
                     rr, gg, bb, _ = px[ix, y]
                     px[ix, y] = (rr, gg, bb, 0)
                 break
+    # Remove consistent inset publisher panels, preserving the central athlete.
+    for side, rows in inset_side_background_panels(result):
+        for y, (_, inner, _) in rows:
+            positions = range(0, min(width, inner + 2)) if side == "left" else range(max(0, inner - 1), width)
+            for x in positions:
+                r, g, b, _ = px[x, y]
+                px[x, y] = (r, g, b, 0)
     return result
 
 
@@ -460,8 +587,15 @@ def main():
     if kind == "thumb" and not approved_square_thumb_source(spec, source_url, im.size):
         fail("thumbnail requires a verified square UFC or ESPN headshot source")
 
-    if im.getchannel("A").getextrema() == (255, 255) or upper_side_background_band(im):
+    original_source = im.copy()
+    if (
+        im.getchannel("A").getextrema() == (255, 255)
+        or upper_side_background_band(im)
+        or (kind == "thumb" and im.size == (600, 436) and spec.get("official_headshot_reviewed") is True)
+    ):
         try:
+            # The default model preserves the ESPN MMA portrait cutout.
+            # Strong alpha-matting introduced broad tinted source rectangles.
             im = remove(im).convert("RGBA")
         except Exception as exc:
             fail(f"background removal failed: {exc}")
@@ -475,7 +609,12 @@ def main():
         except Exception as exc:
             fail(f"second background removal failed: {exc}")
 
-    im = remove_flat_side_backgrounds(im)
+    im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
+
+    # Do not recover a contaminated cutout using destructive alpha matting.
+    # Preserve the original photo identity and reject visibly bad output.
+    if inset_side_background_panels(im) or upper_side_background_band(im):
+        fail("background cutout retains publisher panels")
 
     if image_looks_like_silhouette(im):
         fail("source image looks like a placeholder/silhouette rather than a fighter photo")
@@ -511,7 +650,9 @@ def main():
 
     # Publisher rectangles can sit inside the cutout's alpha silhouette rather
     # than at its original image boundary. Re-check after subject placement too.
-    im = remove_flat_side_backgrounds(im)
+    im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
+    if kind == "thumb":
+        im = trim_thumb_publisher_edge_halos(im)
 
     im = im.filter(
         ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2)
