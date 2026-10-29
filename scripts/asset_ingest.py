@@ -322,6 +322,14 @@ def validate_asset_quality(im, kind):
         fail("fighter asset covers too much of the frame; likely background artifact")
     if upper_side_background_band(im) or inset_side_background_panels(im) or horizontal_publisher_strips(im):
         fail("fighter asset retains a rectangular publisher background artifact")
+    if kind == "thumb":
+        # RemBG may leave a translucent colored publisher panel: normal
+        # >=128 alpha testing misses it even though it is plainly visible.
+        for x in (round(width * 0.87), round(width * 0.95)):
+            sample = range(round(height * 0.04), round(height * 0.53))
+            occupied = sum(alpha.getpixel((x, y)) >= 40 for y in sample)
+            if occupied > len(sample) * 0.20:
+                fail("fighter thumbnail retains a translucent side background panel")
     if box[1] < max(2, round(height * 0.015)):
         fail("fighter head has no top safety margin")
     if (box[2] - box[0]) < width * 0.28 or (box[3] - box[1]) < height * 0.42:

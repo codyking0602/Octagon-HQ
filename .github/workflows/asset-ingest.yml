@@ -62,12 +62,12 @@ jobs:
               if [[ "$kind" == "thumb" || "$kind" == "spotlight" ]] && git ls-files --error-unmatch "$destination" >/dev/null 2>&1 && git diff --quiet -- "$destination"; then
                 failed=$((failed+1))
                 echo "::error title=Unchanged UFC asset::$destination was unchanged after reprocessing; reject the no-op retry"
-                echo "- ❌ `$destination` byte-identical; review source or processor before retry" >> "$GITHUB_STEP_SUMMARY"
+                echo "- ❌ \`$destination\` byte-identical; review source or processor before retry" >> "$GITHUB_STEP_SUMMARY"
                 rm "$manifest"
                 continue
               fi
               succeeded=$((succeeded+1))
-              echo "- ✅ `$destination` processed (visual review still required for UFC)" >> "$GITHUB_STEP_SUMMARY"
+              echo "- ✅ \`$destination\` processed (visual review still required for UFC)" >> "$GITHUB_STEP_SUMMARY"
               rm "$manifest"
             else
               if [[ "$kind" == football-* ]]; then

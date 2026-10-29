@@ -156,6 +156,13 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertEqual(cleaned.getpixel((159, 70))[3], 255)
         self.assertLess(cleaned.getpixel((100, 110))[3], im.getpixel((100, 110))[3])
 
+    def test_translucent_rectangular_background_is_rejected(self):
+        im = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.ellipse((90, 20, 220, 230), fill=(151, 105, 77, 255))
+        draw.rectangle((250, 24, 318, 170), fill=(215, 91, 81, 65))
+        self.assert_rejected(im, "thumb", "translucent side background panel")
+
     def test_full_bleed_opaque_background_is_rejected(self):
         image = Image.new("RGBA", (320, 320), (200, 200, 200, 255))
         with self.assertRaises(SystemExit):
