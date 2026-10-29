@@ -5,6 +5,9 @@ export const NBA_REGULAR_CYCLE_ANCHOR_DAY = "2026-11-01";
 export const NBA_CASUAL_PUBLIC_DAY = "2026-10-29";
 export const NBA_REGULAR_SEASON_LAST_DAY = "2027-04-11";
 export const NBA_OWNER_PREVIEW_FIRST_DAY = "2026-10-23";
+// Historical private preview days remain addressable for QA but are never
+// selected by public Play once the official Oct 29 opening is enabled.
+export const NBA_OWNER_PREVIEW_CUTOFF_DAY = "2026-10-30";
 
 export const NBA_DAILY_GAME_LABELS = {
   average_fan: "Average Fan",
@@ -152,7 +155,7 @@ export function nbaRegularSeasonDaily(day: string): NbaDailyScheduleSlot | null 
 
 export function nbaOwnerPreviewDaily(day: string): NbaDailyGame | null {
   const offset = ordinal(day) - ordinal(NBA_OWNER_PREVIEW_FIRST_DAY);
-  if (offset < 0 || ordinal(day) >= ordinal(NBA_GAMES_LAUNCH_DAY)) return null;
+  if (offset < 0 || ordinal(day) >= ordinal(NBA_OWNER_PREVIEW_CUTOFF_DAY)) return null;
   return NBA_OWNER_PREVIEW_ORDER[offset] ?? null;
 }
 
