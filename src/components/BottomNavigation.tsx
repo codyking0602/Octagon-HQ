@@ -105,8 +105,8 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const entry = visibleSport(entrySport(homeSport, lastUsedSport));
   const playSport = entry;
   const currentPicksSport = entry;
-  const selectedPlayRoot = playSport === "football" ? "/football" : playSport === "mlb" ? "/mlb" : playSport === "nba" ? "/nba" : "/play";
-  const selectedPicksRoot = currentPicksSport === "football" ? "/football/picks" : currentPicksSport === "mlb" ? "/mlb/picks" : currentPicksSport === "nba" ? "/nba/picks" : "/picks";
+  const selectedPlayRoot = playSport === "football" ? "/football" : playSport === "nba" ? "/nba" : "/play";
+  const selectedPicksRoot = currentPicksSport === "football" ? "/football/picks" : currentPicksSport === "nba" ? "/nba/picks" : "/picks";
   const currentPlayRoot = footballMode ? "/football" : mlbMode ? "/mlb" : nbaMode ? "/nba" : "/play";
   const currentPicksRoot = footballMode ? "/football/picks" : mlbMode ? "/mlb/picks" : nbaMode ? "/nba/picks" : "/picks";
   // Re-tapping an active tab keeps its current sport and double-tap cycling.

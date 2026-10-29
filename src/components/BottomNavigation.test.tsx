@@ -200,9 +200,9 @@ describe("BottomNavigation", () => {
 
 
   it.each([
-    ["play", "/football", "/play", "/nba", "/mlb"],
-    ["picks", "/football/picks", "/picks", "/nba/picks", "/mlb/picks"],
-  ] as const)("double taps %s through Football, UFC, Basketball, MLB, then Football without intro videos for non-owner users", (_section, first, second, third, fourth) => {
+    ["play", "/football", "/play", "/nba"],
+    ["picks", "/football/picks", "/picks", "/nba/picks"],
+  ] as const)("double taps %s through Football, UFC, Basketball, then Football during MLB offseason", (_section, first, second, third) => {
     window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
     renderNavigation([first], <LocationProbe />);
     const tab = () => screen.getByRole("link", { name: _section === "play" ? "Play" : "Picks" });
@@ -214,10 +214,6 @@ describe("BottomNavigation", () => {
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(third + "|plain");
     expect(window.localStorage.getItem(_section === "play" ? SELECTED_SPORT_STORAGE_KEY : PICKS_SPORT_STORAGE_KEY)).toBe("nba");
-    fireEvent.click(tab());
-    fireEvent.click(tab());
-    expect(screen.getByTestId("location")).toHaveTextContent(fourth + "|plain");
-    expect(window.localStorage.getItem(_section === "play" ? SELECTED_SPORT_STORAGE_KEY : PICKS_SPORT_STORAGE_KEY)).toBe("mlb");
     fireEvent.click(tab());
     fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(first + "|plain");
