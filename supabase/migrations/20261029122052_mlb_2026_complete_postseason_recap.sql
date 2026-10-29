@@ -58,7 +58,7 @@ BEGIN
   ) INTO v_output;
   RETURN v_output;
 END
-$function$
+$function$;
 
 REVOKE ALL ON FUNCTION public.get_mlb_postseason_season_recap(integer) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.get_mlb_postseason_season_recap(integer) TO authenticated;
