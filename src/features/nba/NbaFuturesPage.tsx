@@ -11,8 +11,7 @@ import { NBA_SEASON,NBA_TEAMS,NBA_FUTURES_MAX,NBA_FUTURES_SELECTIONS,
 import { loadNbaFutures,saveNbaFutures,type NbaFuturesSnapshot } from "./nbaFuturesRepository";
 import "../../styles/nba-hq.css";
 import {NbaCupHero} from "./NbaCupHero";
-import {loadCupPreview} from "./nbaCupRepository";
-import {cupPickCount} from "./nbaCup2026";
+import {NbaCupGroups} from "./NbaCup2026Page";
 
 function formattedLock(value:string) {
   return new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",month:"short",day:"numeric",
@@ -192,7 +191,6 @@ function NbaFuturesGroupEntry({entry}:{entry:NbaFuturesSnapshot["entries"][numbe
 export default function NbaFuturesPage() {
   const identity=useIdentity();
   const [snapshot,setSnapshot]=useState<NbaFuturesSnapshot|null>(null);
-  const [cupProgress,setCupProgress]=useState<number|null>(null);
   const [draft,setDraft]=useState<NbaFuturesPicks|null>(null);
   const [loading,setLoading]=useState(true);
   const [saving,setSaving]=useState(false);
@@ -239,57 +237,47 @@ export default function NbaFuturesPage() {
   const progress=draft?nbaFuturesProgress(draft):0;
   const locked=snapshot?.locked??false;
   const cupAvailable=canPreviewNbaWhoAmI(identity.profile);
-  useEffect(()=>{
-    let active=true;
-    setCupProgress(null);
-    if(cupAvailable&&identity.profile?.id){
-      void loadCupPreview().then(result=>{if(active)setCupProgress(cupPickCount(result.picks));})
-        .catch(()=>{if(active)setCupProgress(null);});
-    }
-    return()=>{active=false};
-  },[cupAvailable,identity.profile?.id]);
+  const otherEntries=snapshot?.entries.filter(entry=>entry.profile_id!==identity.profile?.id)??[];
   return <div className="page nba-hq-page nba-picks-page" data-sport="nba">
-    {cupAvailable?<NbaCupHero linked/>:
+    {cupAvailable?<><NbaCupHero/><NbaCupGroups/></>:
       <header className="nba-hq-hero">
         <p className="eyebrow">BASKETBALL HQ · 2026–27</p>
         <h1>NBA Futures</h1>
         <p>Pick the entire season. One card, 100 points, and 15% of the Basketball Championship.</p>
       </header>}
-    {cupAvailable?<div className="nba-picks__cup-status">
-      <span>GROUP PLAY · OCT 30 – NOV 27</span><strong>{cupProgress===null?"CUP 10% OF SEASON":`${cupProgress}/6 GROUP PICKS`}</strong>
-    </div>:null}
     {!identity.profile?.id?<section className="surface-card nba-hq-notice"><p>Sign in to save your NBA Futures predictions.</p>
       <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO PICK</button></section>:null}
     {loading?<p role="status" className="nba-hq-notice">Loading NBA Futures…</p>:null}
     {error?<p role="alert" className="nba-hq-error">{error}</p>:null}
     {draft&&snapshot?<main className="nba-futures-form">
       <details className="nba-picks__futures">
-        <summary><strong>SEASON FUTURES</strong><span>{progress}/{NBA_FUTURES_SELECTIONS} PICKS · {locked?"LOCKED":"OPEN"}</span><b aria-hidden="true">⌄</b></summary>
+        <summary><strong>FUTURES</strong><span>{locked?`${Math.max(snapshot.participants,otherEntries.length+1)} MEMBERS`:`${progress}/${NBA_FUTURES_SELECTIONS} PICKS`}</span><b aria-hidden="true">⌄</b></summary>
         <div className="nba-picks__futures-body">
-          {!locked?<div className="nba-futures-progress">
-            <div><strong>{progress}/{NBA_FUTURES_SELECTIONS} PICKS</strong><span>{saving?"SAVING…":saved?"SAVED ✓":isNbaFuturesComplete(draft)?"ALL PICKS READY":"AUTOSAVES AS YOU PICK"}</span></div>
-            <div className="nba-futures-track"><span style={{width:(100*progress/NBA_FUTURES_SELECTIONS)+"%"}} /></div>
-            <p>{"Scheduled lock: "+formattedLock(snapshot.lock_at)+". Picks stay editable until HQ officially closes entries."}</p>
-          </div>:null}
-          {locked?<RevealedNbaFuturesPicks picks={draft}/>:
-            <NbaFuturesForm picks={draft} locked={locked} onChange={next=>{setDraft(next);setSaved(false);}}/>}
-          {errors.length?<p role="alert" className="nba-hq-error">{errors[0]}</p>:null}
-          {!locked?<div className="nba-futures-save">
-            <button className="primary-action" type="button" disabled={saving||errors.length>0}
-              onClick={()=>persist(draft)}>SAVE MY FUTURES PICKS</button>
-            <small>{isNbaFuturesComplete(draft)?"All 55 selections complete.":"Partial drafts are saved and can be finished later."}</small>
-          </div>:null}
+          <details className="nba-futures-group-entry nba-futures-group-entry--mine">
+            <summary>
+              <strong>{identity.profile?.displayName??"MY PICKS"} (YOU)</strong>
+              <span>{progress}/{NBA_FUTURES_SELECTIONS} · {locked?"LOCKED":"OPEN"}</span>
+              <b>{locked?"VIEW PICKS":"EDIT PICKS"} <span aria-hidden="true">⌄</span></b>
+            </summary>
+            <div className="nba-futures-group-entry-body nba-picks__mine-body">
+              {!locked?<div className="nba-futures-progress">
+                <div><strong>{progress}/{NBA_FUTURES_SELECTIONS} PICKS</strong><span>{saving?"SAVING…":saved?"SAVED ✓":isNbaFuturesComplete(draft)?"ALL PICKS READY":"AUTOSAVES AS YOU PICK"}</span></div>
+                <div className="nba-futures-track"><span style={{width:(100*progress/NBA_FUTURES_SELECTIONS)+"%"}} /></div>
+                <p>{"Scheduled lock: "+formattedLock(snapshot.lock_at)+". Picks stay editable until HQ officially closes entries."}</p>
+              </div>:null}
+              {locked?<RevealedNbaFuturesPicks picks={draft}/>:
+                <NbaFuturesForm picks={draft} locked={locked} onChange={next=>{setDraft(next);setSaved(false);}}/>}
+              {errors.length?<p role="alert" className="nba-hq-error">{errors[0]}</p>:null}
+              {!locked?<div className="nba-futures-save">
+                <button className="primary-action" type="button" disabled={saving||errors.length>0}
+                  onClick={()=>persist(draft)}>SAVE MY FUTURES PICKS</button>
+                <small>{isNbaFuturesComplete(draft)?"All 55 selections complete.":"Partial drafts are saved and can be finished later."}</small>
+              </div>:null}
+            </div>
+          </details>
+          {locked?otherEntries.map(entry=><NbaFuturesGroupEntry key={entry.profile_id} entry={entry}/>):null}
         </div>
       </details>
-      {locked?<section className="nba-futures-reveal" aria-label="Other players NBA Futures">
-        <details className="nba-futures-group-drawer">
-          <summary><strong>GROUP FUTURES</strong><span>{snapshot.entries.length} MEMBERS</span><b aria-hidden="true">⌄</b></summary>
-          <div className="nba-futures-group-drawer__body">
-            {snapshot.entries.map(entry=><NbaFuturesGroupEntry key={entry.profile_id} entry={entry}/>)}
-            {!snapshot.entries.length?<p>No other submitted NBA Futures cards are available.</p>:null}
-          </div>
-        </details>
-      </section>:null}
       <details className="nba-picks__scoring">
         <summary><strong>SCORING &amp; GRADING</strong><span>HOW IT WORKS</span><b aria-hidden="true">⌄</b></summary>
         <div className="nba-picks__scoring-body">
