@@ -34,6 +34,7 @@ import {
   type FootballFindLeaderMetricId,
 } from "./footballFindLeaderStats";
 import { evaluateFootballFindLeaderQuality } from "./footballFindLeaderQuality";
+import { footballFindLeaderCfbPeakContext } from "./footballFindLeaderCfbPeakContext";
 import { queryFootballSubjects, type FootballSubjectQuery } from "./footballSubjectRegistry";
 
 export const footballFindLeaderCanonicalMetricByMetric: Readonly<Record<FootballFindLeaderMetricId, FootballFactMetricId>> = {
@@ -130,6 +131,7 @@ export interface FootballFindLeaderCandidate {
   name: string;
   displayName?: string;
   season?: number;
+  school?: string;
   subtitle: string;
   value: number;
 }
@@ -160,6 +162,7 @@ type ScoredRow = {
   name: string;
   displayName?: string;
   season?: number;
+  school?: string;
   subtitle: string;
   value: number;
   competitionValue: number;
@@ -320,7 +323,12 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
       const fact = getFootballFact(subject.id, poolDefinition.canonicalMetricId);
       const record = getFootballFactualRecord(subject.id);
       if (!fact || !record || !(record.scopes ?? [record.scope]).includes(poolDefinition.factualScope)) return [];
-      const subtitle = subject.kind === "player-season"
+      const cfbPeak = subject.league === "CFB" && subject.kind === "player-career"
+        ? footballFindLeaderCfbPeakContext(subject.id, poolDefinition.canonicalMetricId, fact.fact.value)
+        : null;
+      const subtitle = cfbPeak
+        ? `${cfbPeak.school} · ${subject.position ?? "Player"}`
+        : subject.kind === "player-season"
         ? "NFL quarterback season"
         : subject.kind === "team-season"
           ? `${subject.league} team season`
@@ -329,6 +337,7 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
         id: subject.id,
         name: subject.name,
         ...(subject.season != null ? { displayName: seasonDisplayName(subject), season: subject.season } : {}),
+        ...(cfbPeak ? { displayName: subject.name, season: cfbPeak.season, school: cfbPeak.school } : {}),
         subtitle,
         value: fact.fact.value,
         competitionValue: competitionValue(direction, fact.fact.value),
@@ -413,14 +422,17 @@ export function buildFootballFindLeaderBoard(
   // A featured QB-season board compares peak seasons by DIFFERENT quarterbacks.
   // Older published/shared boards keep their exact original selection behavior.
   const seenNames = new Set<string>();
+  const verifiedPeakRows = rotation === "featured" && (definition.domainId === "cfb-player-rushing" || definition.domainId === "cfb-player-receiving")
+    ? metricRows.filter((row) => row.season != null)
+    : metricRows;
   const pool = rotation === "featured" && definition.domainId === "nfl-qb-season"
-    ? metricRows.filter((row) => {
+    ? verifiedPeakRows.filter((row) => {
         const name = row.displayName ?? row.name;
         if (seenNames.has(name)) return false;
         seenNames.add(name);
         return true;
       })
-    : metricRows;
+    : verifiedPeakRows;
   if (pool.length < FOOTBALL_FIND_LEADER_CANDIDATE_COUNT) return null;
   const random = seededLineupRandom(FOOTBALL_FIND_LEADER_VERSION, seed, definition.id);
   const option = selectFindLeaderCompetition(

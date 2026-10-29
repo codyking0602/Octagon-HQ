@@ -151,12 +151,14 @@ const gateServer = await createServer({
 let footballHitTheNumberSubjects;
 let footballHitTheNumberMetricCatalog;
 let getFootballFact;
+let queryFootballSubjects;
 try {
   const model = await gateServer.ssrLoadModule("/src/features/back-room/footballHitTheNumberModel.ts");
   const factual = await gateServer.ssrLoadModule("/src/features/back-room/footballFactualStats.ts");
   footballHitTheNumberSubjects = model.footballHitTheNumberSubjects;
   footballHitTheNumberMetricCatalog = model.FOOTBALL_HIT_THE_NUMBER_METRIC_CATALOG;
   getFootballFact = factual.getFootballFact;
+  queryFootballSubjects = (await gateServer.ssrLoadModule("/src/features/back-room/footballSubjectRegistry.ts")).queryFootballSubjects;
 } finally {
   await gateServer.close();
 }
@@ -205,3 +207,68 @@ const rows = [...contextByFact.values()]
   .map((row) => [row.subjectId, row.metricId, row.canonicalValue, row.seasons]);
 fs.writeFileSync(contextPath, `${JSON.stringify({ schemaVersion: 1, rows })}\n`);
 console.log(`Generated ${rows.length} playable metric-specific Football Hit the Number peak-season contexts.`);
+
+
+// Reuse pinned CFB source identity and season totals; never attach a career school to a different season.
+const findLeaderMetrics = new Map([
+  ["cfb-best-season-rushing-yards", "rushYards"],
+  ["cfb-best-season-rushing-touchdowns", "rushTouchdowns"],
+  ["cfb-best-season-receptions", "receptions"],
+  ["cfb-best-season-receiving-yards", "receivingYards"],
+  ["cfb-best-season-receiving-touchdowns", "receivingTouchdowns"],
+]);
+const flSubjects = queryFootballSubjects({
+  kind: "player-career", league: "CFB", includeProjectedSourceSubjects: true,
+  recognizabilityTiers: ["A", "B", "C"], casualEligible: true,
+});
+const flVolume = (r) => (r.gamesPlayed || 0) * 100 + (r.passAttempts || 0)
+  + (r.rushAttempts || 0) + (r.receptions || 0) + (r.sacks || 0) * 10
+  + (r.defensiveInterceptions || 0) * 20 + (r.passBreakups || 0) * 5;
+const flRows = [];
+for (const subject of flSubjects) {
+  const sourceId = subject.sourceIdentityKeys.find((key) => key.provider === "cfbfastR")?.id;
+  const sourceRows = sourceId
+    ? (rowsBySourceId.get(String(sourceId)) ?? [])
+    : (rowsByPlayerName.get(normalize(subject.name)) ?? []);
+  const exactName = sourceRows.filter((r) => normalize(r.playerName) === normalize(subject.name));
+  const rows = exactName.length ? exactName : (
+    new Set(sourceRows.map((r) => normalize(r.playerName))).size === 1
+      && new Set(sourceRows.map((r) => String(r.sourcePlayerId))).size === 1 ? sourceRows : []
+  );
+  const bySeason = new Map();
+  for (const row of rows) {
+    if (!Number.isInteger(row.season)) continue;
+    const old = bySeason.get(row.season);
+    if (!old || flVolume(row) > flVolume(old)
+      || (flVolume(row) === flVolume(old) && String(row.team).localeCompare(String(old.team)) < 0)) {
+      bySeason.set(row.season, row);
+    }
+  }
+  for (const [metricId, sourceColumn] of findLeaderMetrics) {
+    const fact = getFootballFact(subject.id, metricId);
+    if (!fact || !(fact.record.scopes ?? [fact.record.scope]).includes("cfb-player-career")) continue;
+    const bestValue = Math.max(0, ...[...bySeason.values()].map((r) => Number(r[sourceColumn]) || 0));
+    const exact = nearlyEqual(bestValue, fact.fact.value)
+      ? [...bySeason.values()].filter((r) =>
+          nearlyEqual(Number(r[sourceColumn]) || 0, fact.fact.value) && String(r.team ?? "").trim()
+        ).sort((a, b) => a.season - b.season)
+      : [];
+    let year = exact[0]?.season;
+    let school = String(exact[0]?.team ?? "").trim();
+    if (!exact.length) {
+      const historical = historicalPeakSeasons.get(`${fact.record.subjectId}:${metricId}`)
+        ?? historicalPeakSeasons.get(`${subject.id}:${metricId}`);
+      if (historical?.length && historical.every((season) => season < 2014) && subject.school?.trim()) {
+        year = historical[0];
+        school = subject.school.trim();
+      }
+    }
+    if (Number.isInteger(year) && school) flRows.push([subject.id, metricId, fact.fact.value, year, school]);
+  }
+}
+flRows.sort((a, b) => `${a[0]}:${a[1]}`.localeCompare(`${b[0]}:${b[1]}`));
+fs.writeFileSync(
+  path.join(root, "data/generated/football/find-leader-peak-season-context.json"),
+  `${JSON.stringify({ schemaVersion: 1, rows: flRows })}\n`,
+);
+console.log(`Generated ${flRows.length} verified CFB Find the Leader stat-season/school identities.`);

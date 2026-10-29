@@ -190,6 +190,7 @@ export default function FootballFindLeaderPage() {
             <FootballFindLeaderVisual
               candidateId={candidate.id}
               candidateName={candidate.name}
+              school={candidate.school}
               domainId={board.domainId}
               compact={compact}
             />
@@ -236,6 +237,7 @@ export default function FootballFindLeaderPage() {
           <FootballFindLeaderVisual
             candidateId={candidate.id}
             candidateName={candidate.name}
+              school={candidate.school}
             domainId={board.domainId}
             compact={compact}
           />

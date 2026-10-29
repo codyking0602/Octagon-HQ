@@ -217,6 +217,8 @@ function FindLeader({ projection, advance }: GameProps) {
       id,
       name: String(candidate.name ?? ""),
       subtitle: String(candidate.subtitle ?? ""),
+      ...(typeof candidate.school === "string" ? { school: candidate.school } : {}),
+      ...(typeof candidate.season === "number" ? { season: candidate.season, displayName: String(candidate.displayName ?? candidate.name ?? "") } : {}),
       ...(typeof revealedCandidate?.value === "number" ? { value: revealedCandidate.value } : {}),
     };
   });
@@ -250,6 +252,7 @@ function FindLeader({ projection, advance }: GameProps) {
           candidateId={candidate.id}
           candidateName={candidate.name}
           league={league}
+          school={candidate.school}
           compact={compact}
         />
       )}

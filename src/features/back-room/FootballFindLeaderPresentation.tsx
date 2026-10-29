@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { footballSubjectAsset } from "./footballSubjectAssets";
+import { footballCfbSchoolAsset, footballSubjectAsset } from "./footballSubjectAssets";
 import "../../styles/football-find-leader.css";
 
 
@@ -19,15 +19,17 @@ export function FootballFindLeaderVisual({
   candidateName,
   domainId,
   league,
+  school,
   compact = false,
 }: {
   candidateId: string;
   candidateName: string;
   domainId?: string;
   league?: string;
+  school?: string;
   compact?: boolean;
 }) {
-  const asset = footballFindLeaderCandidateAsset(domainId, candidateId);
+  const asset = school ? footballCfbSchoolAsset(school) : footballFindLeaderCandidateAsset(domainId, candidateId);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -60,6 +62,7 @@ export interface FootballFindLeaderPresentationCandidate {
   name: string;
   displayName?: string;
   season?: number;
+  school?: string;
   /** NBA season shown in full (e.g. 2016–17); Football still uses the integer year. */
   seasonLabel?: string;
   subtitle: string;
