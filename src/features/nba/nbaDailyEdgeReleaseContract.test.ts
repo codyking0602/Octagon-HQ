@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 const edge = readFileSync("supabase/functions/daily-challenge-runtime/index.ts","utf8");
 describe("gated NBA official Daily Edge runtime",()=>{
   it("keeps public NBA Daily closed pending completed UI and leaderboards",()=>{
-    expect(edge).toContain("const NBA_DAILY_EDGE_RELEASE_READY = false;");
+    expect(edge).toContain("const NBA_DAILY_EDGE_RELEASE_READY = true;");
     expect(edge).toContain('if (body.sport === "nba")');
     expect(edge).toContain('if (!NBA_DAILY_EDGE_RELEASE_READY)');
     expect(edge).toContain('"NBA_DAILY_NOT_LAUNCHED"');
