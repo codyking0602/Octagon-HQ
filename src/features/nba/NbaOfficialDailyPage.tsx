@@ -26,7 +26,7 @@ import { WAVELENGTH_OPINION_DISCLOSURE } from "../play/wavelengthEngine";
 import { nbaHitHeadshot, nbaHitSubjectById } from "./nbaHitTheNumberStats";
 import { NbaPortraitCredits } from "./NbaPortraitCredits";
 import { formatNbaHitNumber } from "./nbaHitTheNumberModel";
-import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaOwnerPreviewDaily, nbaRegularSeasonDaily, nbaCentralDay, type NbaDailyGame } from "./nbaDailySchedule";
+import { NBA_DAILY_GAME_LABELS, NBA_OFFICIAL_GAMES_RELEASE_READY, nbaCanAccessReleasedGames, nbaOwnerPreviewDaily, nbaRegularSeasonDaily, nbaCentralDay, type NbaDailyGame } from "./nbaDailySchedule";
 import { canPreviewNbaWhoAmI } from "./NbaWhoAmIOwnerGate";
 import "../../styles/football-find-leader.css";
 import "../../styles/nba-find-the-leader.css";
@@ -289,6 +289,7 @@ export default function NbaOfficialDailyPage() {
   const [params] = useSearchParams();
   const ownerTest = params.get("mode") === "owner-test"
     && canPreviewNbaWhoAmI(identity.profile)
+    && !nbaCanAccessReleasedGames(nbaCentralDay())
     && nbaOwnerPreviewDaily(nbaCentralDay()) !== null;
   const releaseEnabled = ownerTest || (NBA_OFFICIAL_GAMES_RELEASE_READY && nbaRegularSeasonDaily(nbaCentralDay()) != null);
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);

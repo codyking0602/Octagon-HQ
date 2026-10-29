@@ -1,10 +1,9 @@
 import type { OfficialDailySetupPublication } from "../play/todaysChallengeRuntime";
 import {
-  NBA_DAILY_WEIGHTED_CYCLE,
   NBA_OWNER_PREVIEW_ORDER,
   nbaOwnerPreviewDaily,
-  nbaRegularSeasonDaily,
 } from "./nbaDailySchedule";
+import { nbaDailyGameAppearance } from "./nbaDailyPublicationIdentity";
 import { buildNbaWhoAmIOfficialRounds } from "./nbaWhoAmIDailyRotation";
 import { buildTwoRoundWhoAmIDailyPublication } from "../play/whoAmITwoRoundDailyRuntime";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "../play/officialScoreContract";
@@ -24,16 +23,9 @@ export function buildNbaWhoAmIDailyLeanPublication(day: string, scheduleVersion:
     }
     ordinal = 20 + NBA_OWNER_PREVIEW_ORDER.indexOf("who_am_i");
   } else {
-    const slot = nbaRegularSeasonDaily(day);
-    if (!slot || !slot.isPublicationDay || slot.gameType !== "who_am_i") {
-      throw new Error("NBA Daily publication must match its scheduled Central day and game.");
-    }
-    ordinal = 0;
-    for (let index = 0; index < slot.appearanceIndex; index += 1) {
-      if (NBA_DAILY_WEIGHTED_CYCLE[index % NBA_DAILY_WEIGHTED_CYCLE.length] === "who_am_i") {
-        ordinal += 1;
-      }
-    }
+    // Reuse the single authoritative game-appearance calculator; the public
+    // Oct 29 Bar Trivia opening is counted before the Nov 1 weighted cycle.
+    ordinal = nbaDailyGameAppearance(day, "who_am_i");
   }
   const publication: OfficialDailySetupPublication = buildTwoRoundWhoAmIDailyPublication(
     buildNbaWhoAmIOfficialRounds(ordinal),

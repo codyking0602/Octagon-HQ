@@ -9,7 +9,11 @@ export function nbaDailyGameAppearance(day: string, gameType: NbaDailyGame): num
   }
   let count = 0;
   for (let index = 0; index < slot.appearanceIndex; index++) {
-    if (NBA_DAILY_WEIGHTED_CYCLE[index % NBA_DAILY_WEIGHTED_CYCLE.length] === gameType) count++;
+    // The special Oct 29–31 launch is Bar Trivia. The 28-game weighted
+    // regular cycle starts on Nov 1, one appearance later.
+    const previous = index === 0 ? "bar_trivia"
+      : NBA_DAILY_WEIGHTED_CYCLE[(index - 1) % NBA_DAILY_WEIGHTED_CYCLE.length];
+    if (previous === gameType) count++;
   }
   return count;
 }

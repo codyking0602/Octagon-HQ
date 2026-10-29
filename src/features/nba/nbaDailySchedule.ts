@@ -1,8 +1,13 @@
 /** NBA games release calendar. Dates are interpreted in America/Chicago. */
-export const NBA_GAMES_LAUNCH_DAY = "2026-10-30";
+export const NBA_GAMES_LAUNCH_DAY = "2026-10-29";
+export const NBA_OPENING_LAST_DAY = "2026-10-31";
+export const NBA_REGULAR_CYCLE_ANCHOR_DAY = "2026-11-01";
 export const NBA_CASUAL_PUBLIC_DAY = "2026-10-29";
 export const NBA_REGULAR_SEASON_LAST_DAY = "2027-04-11";
 export const NBA_OWNER_PREVIEW_FIRST_DAY = "2026-10-23";
+// Historical private preview days remain addressable for QA but are never
+// selected by public Play once the official Oct 29 opening is enabled.
+export const NBA_OWNER_PREVIEW_CUTOFF_DAY = "2026-10-30";
 
 export const NBA_DAILY_GAME_LABELS = {
   average_fan: "Average Fan",
@@ -121,26 +126,36 @@ export interface NbaDailyScheduleSlot {
   isPublicationDay: boolean;
 }
 
-/** Public NBA Daily opens October 30, then every 48 hours opposite UFC through April 11. */
+/** Bar Trivia opens publicly Oct 29–31; from Nov 1 NBA rotates every 48h opposite UFC. */
 export function nbaRegularSeasonDaily(day: string): NbaDailyScheduleSlot | null {
   const target = ordinal(day);
   const first = ordinal(NBA_GAMES_LAUNCH_DAY);
   const last = ordinal(NBA_REGULAR_SEASON_LAST_DAY);
   if (target < first || target > last) return null;
-  const appearanceIndex = Math.floor((target - first) / 2);
-  const scheduled = first + appearanceIndex * 2;
+  // Use exactly the Bar Trivia board played by the owner on launch day, not a
+  // freshly generated replacement. Its extended opening window ends Nov 1.
+  if (target <= ordinal(NBA_OPENING_LAST_DAY)) return {
+    day: NBA_GAMES_LAUNCH_DAY,
+    nextDay: NBA_REGULAR_CYCLE_ANCHOR_DAY,
+    gameType: "bar_trivia",
+    appearanceIndex: 0,
+    isPublicationDay: target === first,
+  };
+  const regularFirst = ordinal(NBA_REGULAR_CYCLE_ANCHOR_DAY);
+  const index = Math.floor((target - regularFirst) / 2);
+  const scheduled = regularFirst + index * 2;
   return {
     day: fromOrdinal(scheduled),
     nextDay: fromOrdinal(scheduled + 2),
-    gameType: NBA_DAILY_WEIGHTED_CYCLE[appearanceIndex % NBA_DAILY_WEIGHTED_CYCLE.length]!,
-    appearanceIndex,
+    gameType: NBA_DAILY_WEIGHTED_CYCLE[index % NBA_DAILY_WEIGHTED_CYCLE.length]!,
+    appearanceIndex: index + 1,
     isPublicationDay: scheduled === target,
   };
 }
 
 export function nbaOwnerPreviewDaily(day: string): NbaDailyGame | null {
   const offset = ordinal(day) - ordinal(NBA_OWNER_PREVIEW_FIRST_DAY);
-  if (offset < 0 || ordinal(day) >= ordinal(NBA_GAMES_LAUNCH_DAY)) return null;
+  if (offset < 0 || ordinal(day) >= ordinal(NBA_OWNER_PREVIEW_CUTOFF_DAY)) return null;
   return NBA_OWNER_PREVIEW_ORDER[offset] ?? null;
 }
 

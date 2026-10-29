@@ -59,7 +59,7 @@ export function NbaWelcomeTakeover({ profileId }: { profileId: string }) {
             <div><small>02 · AVAILABLE NOW</small><strong>NBA CUP PICKS</strong><p>Pick six NBA Cup group winners now; complete the knockout bracket in December.</p></div><b>10%</b>
           </div>
           <div className="nba-welcome__phase">
-            <div><small>03 · AVAILABLE NOW</small><strong>BASKETBALL GAMES</strong><p>Four Casual games are open. Official NBA Daily begins October 30 and rotates all nine games.</p></div><b>20%</b>
+            <div><small>03 · AVAILABLE NOW</small><strong>BASKETBALL GAMES</strong><p>Four Casual games are open. Official NBA Daily is live with Bar Trivia through October 31, then rotates all nine games every other day.</p></div><b>20%</b>
           </div>
           <div className="nba-welcome__phase">
             <div><small>04 · APRIL 2027</small><strong>NBA PLAYOFF PICKS</strong><p>The main championship competition. Follow the postseason through the Finals.</p></div><b>55%</b>

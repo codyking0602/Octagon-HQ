@@ -89,7 +89,7 @@ describe("all-sport official Daily action latency safeguards", () => {
     expect(nba).toContain('savedIntermediateContext(context, saved.data, nextSubmissionState)');
     expect(nba).toContain('await finalizePending(');
 
-    const publication = buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v3-oct30-public", "millionaire");
+    const publication = buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v4-nov01-public", "millionaire");
     const context: OfficialDailyRuntimeContext = {
       gameType: "millionaire",
       setupKey: publication.setupKey,

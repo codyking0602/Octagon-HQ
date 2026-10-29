@@ -40,14 +40,14 @@ describe("NBA Daily all-nine-mode CPU isolation", () => {
     }
   });
   it("retains canonical content for each public first appearance", () => {
-    expect(lean.average_fan("2026-10-30", "nba-daily-regular-v3-oct30-public", "average_fan")).toEqual(buildNbaServerDailyPublication("2026-10-30", "nba-daily-regular-v3-oct30-public", "average_fan"));
-    expect(lean.sports_feud("2026-11-01", "nba-daily-regular-v3-oct30-public", "sports_feud")).toEqual(buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v3-oct30-public", "sports_feud"));
-    expect(lean.millionaire("2026-11-05", "nba-daily-regular-v3-oct30-public", "millionaire")).toEqual(buildNbaServerDailyPublication("2026-11-05", "nba-daily-regular-v3-oct30-public", "millionaire"));
-    expect(lean.hit_the_number("2026-11-07", "nba-daily-regular-v3-oct30-public", "hit_the_number")).toEqual(buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v3-oct30-public", "hit_the_number"));
-    expect(lean.find_leader("2026-11-09", "nba-daily-regular-v3-oct30-public", "find_leader")).toEqual(buildNbaServerDailyPublication("2026-11-09", "nba-daily-regular-v3-oct30-public", "find_leader"));
-    expect(lean.wavelength("2026-11-11", "nba-daily-regular-v3-oct30-public", "wavelength")).toEqual(buildNbaServerDailyPublication("2026-11-11", "nba-daily-regular-v3-oct30-public", "wavelength"));
-    expect(lean.higher_lower("2026-11-17", "nba-daily-regular-v3-oct30-public", "higher_lower")).toEqual(buildNbaServerDailyPublication("2026-11-17", "nba-daily-regular-v3-oct30-public", "higher_lower"));
-    expect(lean.bar_trivia("2026-11-19", "nba-daily-regular-v3-oct30-public", "bar_trivia")).toEqual(buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v3-oct30-public", "bar_trivia"));
+    expect(lean.average_fan("2026-11-01", "nba-daily-regular-v4-nov01-public", "average_fan")).toEqual(buildNbaServerDailyPublication("2026-11-01", "nba-daily-regular-v4-nov01-public", "average_fan"));
+    expect(lean.sports_feud("2026-11-03", "nba-daily-regular-v4-nov01-public", "sports_feud")).toEqual(buildNbaServerDailyPublication("2026-11-03", "nba-daily-regular-v4-nov01-public", "sports_feud"));
+    expect(lean.millionaire("2026-11-07", "nba-daily-regular-v4-nov01-public", "millionaire")).toEqual(buildNbaServerDailyPublication("2026-11-07", "nba-daily-regular-v4-nov01-public", "millionaire"));
+    expect(lean.hit_the_number("2026-11-09", "nba-daily-regular-v4-nov01-public", "hit_the_number")).toEqual(buildNbaServerDailyPublication("2026-11-09", "nba-daily-regular-v4-nov01-public", "hit_the_number"));
+    expect(lean.find_leader("2026-11-11", "nba-daily-regular-v4-nov01-public", "find_leader")).toEqual(buildNbaServerDailyPublication("2026-11-11", "nba-daily-regular-v4-nov01-public", "find_leader"));
+    expect(lean.wavelength("2026-11-13", "nba-daily-regular-v4-nov01-public", "wavelength")).toEqual(buildNbaServerDailyPublication("2026-11-13", "nba-daily-regular-v4-nov01-public", "wavelength"));
+    expect(lean.higher_lower("2026-11-19", "nba-daily-regular-v4-nov01-public", "higher_lower")).toEqual(buildNbaServerDailyPublication("2026-11-19", "nba-daily-regular-v4-nov01-public", "higher_lower"));
+    expect(lean.bar_trivia("2026-11-21", "nba-daily-regular-v4-nov01-public", "bar_trivia")).toEqual(buildNbaServerDailyPublication("2026-11-21", "nba-daily-regular-v4-nov01-public", "bar_trivia"));
     expect(readFileSync("src/features/nba/nbaDailySchedule.ts", "utf8")).toContain("NBA_OFFICIAL_GAMES_RELEASE_READY = true");
     expect(edge).toContain("NBA_DAILY_EDGE_RELEASE_READY = true");
   });
@@ -136,16 +136,16 @@ describe("NBA Daily lean gameplay equivalence", () => {
         isolated: advanceNbaWavelengthLeanDailyRuntime,
       },
       {
-        day: "2026-11-07", gameType: "hit_the_number" as const, action: null,
+        day: "2026-11-09", gameType: "hit_the_number" as const, action: null,
         isolated: advanceNbaHitNumberLeanDailyRuntime,
       },
       {
-        day: "2026-11-17", gameType: "higher_lower" as const, action: { choice: "higher" },
+        day: "2026-11-19", gameType: "higher_lower" as const, action: { choice: "higher" },
         isolated: advanceNbaHigherLowerLeanDailyRuntime,
       },
     ];
     for (const item of cases) {
-      const context = initial(item.day, item.day >= "2026-10-30" ? "nba-daily-regular-v3-oct30-public" : "nba-daily-owner-prelaunch-v1", item.gameType);
+      const context = initial(item.day, item.day >= "2026-11-01" ? "nba-daily-regular-v4-nov01-public" : "nba-daily-owner-prelaunch-v1", item.gameType);
       const action = item.gameType === "hit_the_number"
         ? { fighter_id: ((context.publicState.active_round as Value).available_subject_ids as string[])[0] ?? (context.publicState.active_round as Value).available_subject_ids }
         : item.action;
