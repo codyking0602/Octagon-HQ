@@ -1,7 +1,8 @@
 -- Promote the already owner-playtested Oct 29 Bar Trivia board, intact, as the
 -- first public NBA Daily. Oct 29-31 is ONE introductory 72-hour window.
 -- Nov 1 resumes the previously locked NBA every-48h cadence opposite UFC.
--- No replacement question pack, no reset, and no promotion of Oct 23-28 QA scores.
+-- Original immutable private QA records stay unchanged. The official score is
+-- copied from the certified server-graded attempt, not recalculated or invented.
 DO $preflight$
 DECLARE v_daily private.daily_challenges; v_score integer; v_count integer;
 BEGIN
@@ -97,8 +98,8 @@ BEGIN
      '(v_sport = ''nba'' and new.central_day >= date ''2026-10-30'')',
      '(v_sport = ''nba'' and new.central_day >= date ''2026-10-29'')');
 
-  -- Daily standings, wins and streaks count the migrated owner attempt as
-  -- an official first submission without copying or modifying its evidence.
+  -- Daily standings, wins and streaks count the copied, verified first attempt
+  -- as official while leaving all prior private QA records intact.
   v_reg := 'public.get_daily_challenge_standings(text)'::regprocedure;
   v_before := pg_get_functiondef(v_reg::oid);
   IF position('then (central_day - date ''2026-10-30'') / 2' in v_before)=0
@@ -159,8 +160,8 @@ BEGIN
     EXECUTE v_after;
   END LOOP;
 
-  -- Retire the prelaunch auto-materializer before it can recreate the
-  -- migrated October 29 private daily under its old namespace.
+  -- Retire owner-only Oct 29 prelaunch materialization. The immutable
+  -- private record remains safely archived without new private submissions.
   v_reg := 'public.get_nba_owner_prelaunch_materialization_request()'::regprocedure;
   v_before := pg_get_functiondef(v_reg::oid);
   IF position('v_day >= date ''2026-11-01''' in v_before)=0 THEN
@@ -170,15 +171,50 @@ BEGIN
     'v_day >= date ''2026-11-01''','v_day >= date ''2026-10-29''');
 END $patch$;
 
--- Reclassify the existing daily challenge row in place: its UUID, authored
--- setup, exact questions, progress, scoring evidence and 81-point attempt
--- stay unchanged; the history VIEW automatically sees it as official NBA.
-UPDATE private.daily_challenges
-SET schedule_version='nba-daily-launch-oct29-bar-trivia-v1'
-WHERE central_day=date '2026-10-29'
-  AND schedule_version='nba-daily-owner-prelaunch-v1'
-  AND game_type='bar_trivia'
-  AND content_version='nba-bar-trivia-server-v1';
+-- The underlying generalized Daily publication and its attempts are immutable.
+-- Publish an OFFICIAL instance referencing the IDENTICAL verified setup.
+-- Copy the one server-graded 81/100 first attempt and progress without changing
+-- any original private QA record, original authored question, or scoring evidence.
+-- The private origin stays available for audit; the official clone is the only
+-- instance counted by NBA public leaderboards/history/season totals.
+DO $carryover$
+DECLARE v_source private.daily_challenges; v_public_id uuid := gen_random_uuid();
+        v_copied integer;
+BEGIN
+  SELECT * INTO v_source FROM private.daily_challenges
+  WHERE central_day=date '2026-10-29'
+    AND schedule_version='nba-daily-owner-prelaunch-v1'
+    AND game_type='bar_trivia';
+  IF v_source.id IS NULL THEN
+    RAISE EXCEPTION 'Canonical Oct 29 Bar Trivia source vanished';
+  END IF;
+
+  INSERT INTO private.daily_challenges
+  (id,central_day,schedule_version,game_type,setup_id,content_version,
+   scoring_version,fallback_reason,published_at)
+  SELECT v_public_id,central_day,'nba-daily-launch-oct29-bar-trivia-v1',
+         game_type,setup_id,content_version,scoring_version,fallback_reason,published_at
+  FROM private.daily_challenges WHERE id=v_source.id;
+
+  INSERT INTO private.daily_challenge_progress
+  (daily_challenge_id,profile_id,revision,submission_state,public_state,started_at,updated_at)
+  SELECT v_public_id,profile_id,revision,submission_state,public_state,started_at,updated_at
+  FROM private.daily_challenge_progress WHERE daily_challenge_id=v_source.id;
+  GET DIAGNOSTICS v_copied = ROW_COUNT;
+  IF v_copied <> 1 THEN RAISE EXCEPTION 'Owner saved gameplay progress must copy exactly once'; END IF;
+
+  INSERT INTO private.daily_challenge_attempts
+  (id,daily_challenge_id,profile_id,attempt_kind,native_score,normalized_score,
+   completed_at,content_version,scoring_version,public_result,
+   submission_evidence,grading_evidence_snapshot,legacy_find_leader_day,created_at)
+  SELECT gen_random_uuid(),v_public_id,profile_id,attempt_kind,native_score,normalized_score,
+         completed_at,content_version,scoring_version,public_result,
+         submission_evidence,grading_evidence_snapshot,legacy_find_leader_day,created_at
+  FROM private.daily_challenge_attempts
+  WHERE daily_challenge_id=v_source.id AND attempt_kind='official_first';
+  GET DIAGNOSTICS v_copied = ROW_COUNT;
+  IF v_copied <> 1 THEN RAISE EXCEPTION 'Owner server-graded 81/100 attempt must copy exactly once'; END IF;
+END $carryover$;
 
 DO $verify$
 DECLARE v_daily uuid;
@@ -186,12 +222,21 @@ BEGIN
   SELECT id INTO v_daily FROM private.daily_challenges
   WHERE central_day=date '2026-10-29'
   AND schedule_version='nba-daily-launch-oct29-bar-trivia-v1';
-  IF v_daily IS NULL THEN RAISE EXCEPTION 'Public launch board not promoted'; END IF;
+  IF v_daily IS NULL THEN RAISE EXCEPTION 'Public launch board not published'; END IF;
   IF NOT EXISTS (
     SELECT 1 FROM private.daily_challenge_history h
     WHERE h.daily_challenge_id=v_daily AND h.normalized_score=81
       AND h.game_type='bar_trivia'
   ) THEN RAISE EXCEPTION 'Owner 81 score missing from official history'; END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM private.daily_challenges source
+      JOIN private.daily_challenges official ON official.setup_id=source.setup_id
+    WHERE source.central_day=date '2026-10-29'
+      AND source.schedule_version='nba-daily-owner-prelaunch-v1'
+      AND official.id=v_daily
+      AND source.game_type=official.game_type
+      AND source.content_version=official.content_version
+  ) THEN RAISE EXCEPTION 'Official board differs from certified owner source'; END IF;
   IF private.daily_challenge_active_day(date '2026-10-29','nba') <> date '2026-10-29'
      OR private.daily_challenge_active_day(date '2026-10-30','nba') <> date '2026-10-29'
      OR private.daily_challenge_active_day(date '2026-10-31','nba') <> date '2026-10-29'
