@@ -37,7 +37,7 @@ describe("2026 NBA Cup public group-picks release",()=>{
     expect(sql).toContain("enable row level security");
     expect(sql).toContain("revoke all on public.nba_cup_group_preview_2026");
     expect(sql).toContain("manually_locked");
-    const publicSql=readFileSync("supabase/migrations/202612310887_nba_cup_public_group_picks.sql","utf8");
+    const publicSql=readFileSync("supabase/migrations/202612310888_nba_cup_public_group_picks.sql","utf8");
     expect(publicSql).toContain("public.get_nba_cup_group_preview()");
     expect(publicSql).toContain("public.save_nba_cup_group_preview(p_picks jsonb)");
     expect(publicSql).toContain("auth.uid()");
