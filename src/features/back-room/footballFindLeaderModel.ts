@@ -131,6 +131,7 @@ export interface FootballFindLeaderCandidate {
   name: string;
   displayName?: string;
   season?: number;
+  school?: string;
   subtitle: string;
   value: number;
 }
@@ -161,6 +162,7 @@ type ScoredRow = {
   name: string;
   displayName?: string;
   season?: number;
+  school?: string;
   subtitle: string;
   value: number;
   competitionValue: number;
@@ -335,7 +337,7 @@ export function footballFindLeaderMetricRows(metricId: FootballFindLeaderMetricI
         id: subject.id,
         name: subject.name,
         ...(subject.season != null ? { displayName: seasonDisplayName(subject), season: subject.season } : {}),
-        ...(cfbPeak ? { displayName: subject.name, season: cfbPeak.season } : {}),
+        ...(cfbPeak ? { displayName: subject.name, season: cfbPeak.season, school: cfbPeak.school } : {}),
         subtitle,
         value: fact.fact.value,
         competitionValue: competitionValue(direction, fact.fact.value),
