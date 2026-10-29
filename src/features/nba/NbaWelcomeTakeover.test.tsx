@@ -11,7 +11,7 @@ describe("NBA two-stage welcome",()=>{
     expect(screen.queryByText(/start with nba futures/i)).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button",{name:/continue/i}));
     expect(screen.getAllByText(/NBA FUTURES/i).length).toBeGreaterThan(0);
-    expect(screen.getByRole("button",{name:/open nba futures/i})).toBeInTheDocument();
+    expect(screen.getByRole("button",{name:/explore nba picks/i})).toBeInTheDocument();
   });
   it("uses a fresh public announcement, without owner-preview label",()=>{
     expect(nbaWelcomeKey("member")).toContain("2026-public-v1");
@@ -26,7 +26,7 @@ describe("NBA two-stage welcome",()=>{
     </MemoryRouter>);
     expect(screen.getByRole("button",{name:/continue/i})).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button",{name:/continue/i}));
-    expect(screen.getByRole("button",{name:/open nba futures/i})).toBeInTheDocument();
+    expect(screen.getByRole("button",{name:/explore nba picks/i})).toBeInTheDocument();
   });
   it("acknowledges per profile and supports reviewing it again",()=>{
     const r=render(<MemoryRouter><NbaWelcomeTakeover profileId="owner" /></MemoryRouter>);
