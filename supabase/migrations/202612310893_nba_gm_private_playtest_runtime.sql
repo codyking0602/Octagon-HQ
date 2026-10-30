@@ -228,6 +228,7 @@ begin
       returning id into v_run_id;
     insert into private.football_gm_run_snapshots(run_id,revision,state)
       values(v_run_id,1,v_state);
+    perform set_config('octagon.nba_gm_dev_authorized_write','',true);
     return v_state;
   end if;
 
@@ -304,6 +305,7 @@ begin
     from private.football_gm_run_snapshots where run_id=v_run_id;
   insert into private.football_gm_run_snapshots(run_id,revision,state)
     values(v_run_id,v_revision,v_next);
+  perform set_config('octagon.nba_gm_dev_authorized_write','',true);
   return v_next;
 end;
 $$;
