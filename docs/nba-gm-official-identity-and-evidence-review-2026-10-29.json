@@ -3,7 +3,7 @@
   "asOfDate": "2026-10-29",
   "productionPublished": false,
   "completeSixSkillCertified": 0,
-  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility.",
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census.",
   "officialRosterIdentity": [
     {
       "name": "Tyrese Haliburton",
@@ -819,6 +819,72 @@
       "why": "SG in 2024–25, SF in 2025–26; add SG while preserving existing provisional PF, which still needs own lineup evidence.",
       "asOf": "2026-10-29",
       "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    }
+  ],
+  "confirmedNo2025_26NbaSeason": [
+    {
+      "name": "Tyrese Haliburton",
+      "sourceUrl": "https://www.basketball-reference.com/players/h/halibty01.html",
+      "lastNbaSeason": "2024-25",
+      "lastSeasonTeam": "IND",
+      "lastSeasonGames": 73,
+      "lastSeasonPointsPerGame": 18.6,
+      "lastSeasonAssistsPerGame": 9.2,
+      "lastSeasonThreePointPercentage": 38.8,
+      "absentReason": "Achilles injury; played zero 2025–26 NBA regular-season games",
+      "abilityInterpretation": "96 Playmaking, 88 Shooting and 90 OVR remain grounded in previous demonstrated ability, not 2025–26 performance; early 2026–27 return is only 4 games and does not certify complete recovery.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "OFFICIAL_HISTORICAL_NBA_BOX_SCORE_ABSENCE_VERIFIED_NOT_SKILL_CERTIFIED",
+      "gradeStatus": "PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY"
+    },
+    {
+      "name": "Kyrie Irving",
+      "sourceUrl": "https://www.basketball-reference.com/players/i/irvinky01.html",
+      "lastNbaSeason": "2024-25",
+      "lastSeasonTeam": "DAL",
+      "lastSeasonGames": 50,
+      "lastSeasonPointsPerGame": 24.7,
+      "lastSeasonAssistsPerGame": 4.6,
+      "lastSeasonThreePointPercentage": 40.1,
+      "absentReason": "ACL injury; played zero 2025–26 NBA regular-season games",
+      "abilityInterpretation": "92 Scoring and 94 Shooting refer to 2024–25 scoring difficulty/efficiency and longer history; 4 early 2026–27 comeback games insufficient to certify current form.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "OFFICIAL_HISTORICAL_NBA_BOX_SCORE_ABSENCE_VERIFIED_NOT_SKILL_CERTIFIED",
+      "gradeStatus": "PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY"
+    },
+    {
+      "name": "Damian Lillard",
+      "sourceUrl": "https://www.basketball-reference.com/players/l/lillada01.html",
+      "lastNbaSeason": "2024-25",
+      "lastSeasonTeam": "MIL",
+      "lastSeasonGames": 58,
+      "lastSeasonPointsPerGame": 24.9,
+      "lastSeasonAssistsPerGame": 7.1,
+      "lastSeasonThreePointPercentage": 37.6,
+      "absentReason": "Achilles injury; played zero 2025–26 NBA regular-season games",
+      "abilityInterpretation": "82 OVR and long-range guard-shooting profile must be judged on 2024–25 and earlier, with current burst/defense separately reviewed; 3 early 2026–27 Portland games are not a reliable recovery sample.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "OFFICIAL_HISTORICAL_NBA_BOX_SCORE_ABSENCE_VERIFIED_NOT_SKILL_CERTIFIED",
+      "gradeStatus": "PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY"
+    },
+    {
+      "name": "Fred VanVleet",
+      "sourceUrl": "https://www.basketball-reference.com/players/v/vanvlfr01.html",
+      "lastNbaSeason": "2024-25",
+      "lastSeasonTeam": "HOU",
+      "lastSeasonGames": 60,
+      "lastSeasonPointsPerGame": 14.1,
+      "lastSeasonAssistsPerGame": 5.6,
+      "lastSeasonThreePointPercentage": 34.5,
+      "absentReason": "ACL injury; played zero 2025–26 NBA regular-season games",
+      "abilityInterpretation": "81 OVR, guard playmaking/spacing/pressure must refer to demonstrated NBA evidence prior to ACL; early 4-game 2026–27 return does not establish restored peak.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "OFFICIAL_HISTORICAL_NBA_BOX_SCORE_ABSENCE_VERIFIED_NOT_SKILL_CERTIFIED",
+      "gradeStatus": "PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY"
     }
   ]
 }
