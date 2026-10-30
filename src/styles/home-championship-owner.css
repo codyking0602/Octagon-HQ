@@ -960,3 +960,6 @@
 .home-champ-preview[data-sport="all"] .home-champ-preview__summary--row[data-sport="nba"] .home-champ-preview__summary-arrow {
   grid-column: 4;
 }
+
+.home-champ-preview__avatar.member-inline-avatar { display: grid; place-items: center; overflow: hidden; }
+.home-champ-preview__avatar.member-inline-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
