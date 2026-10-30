@@ -113,8 +113,10 @@ export function nbaGmDevCanAdd(
   let safeReserve=0;
   if(phase==="draft"){
     for(const slot of open){
+      const maxCost=(p:NbaGmDevPlayer)=>Math.max(...[0,1,2].map(
+        year=>nbaGmDevSalary(p,year as 0|1|2)));
       const cheapest=catalog.filter(p=>!reserved.has(p.id)&&nbaGmDevEligible(p,slot))
-        .sort((a,b)=>Math.max(...a.salaries)-Math.max(...b.salaries)||a.id.localeCompare(b.id))[0];
+        .sort((a,b)=>maxCost(a)-maxCost(b)||a.id.localeCompare(b.id))[0];
       if(!cheapest)return false;
       reserved.add(cheapest.id);
       safeReserve+=Math.max(...[0,1,2].map(year=>nbaGmDevSalary(cheapest,year as 0|1|2)));
@@ -137,6 +139,47 @@ export function nbaGmDevCandidates(run:NbaGmDevRun,catalog:readonly NbaGmDevPlay
     && nbaGmDevCanAdd(run.picks,player,catalog,run.caps,run.phase))
     .sort((a,b)=>b.currentGrade-a.currentGrade||a.name.localeCompare(b.name));
 }
+/** Narrative scouting only, revealed AFTER Season 1. Never used as an
+ * arbitrary extra chemistry multiplier in the uncalibrated win model. */
+export type NbaGmFitSignal={label:string;status:"STRONG"|"FAIR"|"NEEDS WORK";detail:string};
+export function nbaGmDevFitSignals(
+  picks:readonly NbaGmPick[],catalog:readonly NbaGmDevPlayer[],
+):NbaGmFitSignal[]{
+  if(picks.length!==7)return [];
+  const byId=new Map(catalog.map(player=>[player.id,player]));
+  const rotation=picks.map(pick=>({slot:pick.slot,player:byId.get(pick.playerId)}));
+  if(rotation.some(entry=>!entry.player))return [];
+  const starters=rotation.filter(entry=>entry.slot!=="GUARD"&&entry.slot!=="BIG")
+    .map(entry=>entry.player!);
+  const backcourt=rotation.filter(entry=>["PG","SG","SF","GUARD"].includes(entry.slot))
+    .map(entry=>entry.player!);
+  const interior=rotation.filter(entry=>["PF","C","BIG"].includes(entry.slot))
+    .map(entry=>entry.player!);
+  if(starters.length!==5||backcourt.length<3||interior.length<2)return [];
+  const mean=(players:NbaGmDevPlayer[],key:keyof NbaGmDevPlayer["skills"])=>
+    players.reduce((sum,p)=>sum+p.skills[key],0)/players.length;
+  const ranked=(key:keyof NbaGmDevPlayer["skills"])=>
+    [...starters].map(p=>p.skills[key]).sort((a,b)=>b-a);
+  const scoring=ranked("scoring"),creation=ranked("playmaking");
+  const shooters=starters.filter(p=>p.skills.shooting>=80).length;
+  const state=(score:number,strong:number,fair:number):NbaGmFitSignal["status"]=>
+    score>=strong?"STRONG":score>=fair?"FAIR":"NEEDS WORK";
+  return [
+    {label:"Shot creation",status:state(scoring[0]!*.6+scoring[1]!*.4,87,77),
+      detail:"Your best and second scoring options"},
+    {label:"Floor spacing",status:shooters>=3?"STRONG":shooters===2?"FAIR":"NEEDS WORK",
+      detail:"Starter-quality outside shooting across five positions"},
+    {label:"Secondary playmaking",status:state(creation[1]!,82,72),
+      detail:"A second reliable ball handler beyond the primary creator"},
+    {label:"Perimeter defense",status:state(mean(backcourt,"perimeterDefense"),82,73),
+      detail:"Guard and wing resistance"},
+    {label:"Interior presence",status:state(mean(interior,"interiorDefense"),83,73),
+      detail:"Rim and frontcourt protection"},
+    {label:"Rebounding",status:state(mean(interior,"rebounding"),82,72),
+      detail:"Big-man and frontcourt control of the glass"},
+  ];
+}
+
 export function nbaGmDevCatalogErrors(catalog:readonly NbaGmDevPlayer[]):string[]{
   const errors:string[]=[];
   if(catalog.length!==330)errors.push("Expected 330 privately held NBA GM candidates.");
