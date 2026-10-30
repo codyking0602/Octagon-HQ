@@ -17,7 +17,7 @@ const rows = postseason.slice(1).map((line, i) => {
 });
 const efficiencyMap = new Map(efficiency.slice(1).map(line => {
   const [season, team, wins, losses, offense, defense, net] = line.split(",");
-  return [`${season},${team}`, { wins: Number(wins), losses: Number(losses), net: Number(net), offense: Number(offense), defense: Number(defense) }];
+  return [`${season},${team}`, { wins: Number(wins), losses: Number(losses), net: Number(net), offense: Number(offense), defense: Number(defense) }] as const;
 }));
 
 describe("NBA GM historical postseason cohort integrity", () => {
