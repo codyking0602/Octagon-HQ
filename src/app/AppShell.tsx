@@ -1,6 +1,6 @@
 import { Suspense, useEffect } from "react";
 import "../styles/picks-disclosures.css";
-import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
@@ -278,17 +278,6 @@ export function AppShell() {
           <BackRoomLogoLink enabled={location.pathname === "/play"} />
           <div className="app-header__actions">
             <NotificationHeaderAction />
-            <NavLink
-              className={({ isActive }) => (isActive ? "app-ask-action is-active" : "app-ask-action")}
-              to="/intelligence"
-              aria-label="Open UFC Intelligence"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3.5a7.5 7.5 0 1 0 4.9 13.2L21 20l-1.4-4.7A7.5 7.5 0 0 0 12 3.5Z" />
-                <path d="M9.6 9.2a2.7 2.7 0 0 1 5.1 1.2c0 1.9-2.7 2-2.7 3.7M12 17.2h.01" />
-              </svg>
-              <span className="sr-only">UFC Intelligence</span>
-            </NavLink>
             <IdentityControl />
           </div>
           {sportContext ? (
