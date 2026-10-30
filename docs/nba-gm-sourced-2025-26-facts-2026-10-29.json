@@ -58,7 +58,20 @@
     "individualPeerOct29ScootHenderson": "https://www.landofbasketball.com/nba_players_season_stats/2026/scoot_henderson.htm",
     "individualPeerOct29ScottyPippenJr": "https://www.foxsports.com/nba/scotty-pippen-jr-player-stats?category=assists&seasonType=reg",
     "individualPeerOct29TerrenceShannonJr": "https://www.landofbasketball.com/nba_players_season_stats/2026/terrence_shannon_jr.htm",
-    "individualPeerOct29ZiaireWilliams": "https://www.landofbasketball.com/nba_players_season_stats/2026/ziaire_williams_full.htm"
+    "individualPeerOct29ZiaireWilliams": "https://www.landofbasketball.com/nba_players_season_stats/2026/ziaire_williams_full.htm",
+    "individualSecondOct29GiannisAntetokounmpo": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+    "individualSecondOct29RJBarrett": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+    "individualSecondOct29DillonBrooks": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+    "individualSecondOct29PaulGeorge": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+    "individualSecondOct29AlexCaruso": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+    "individualSecondOct29JarrettAllen": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+    "individualSecondOct29AndrewNembhard": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+    "individualSecondOct29DeMarDeRozan": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+    "individualSecondOct29IsaiahHartenstein": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+    "individualSecondOct29TraeYoung": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+    "individualSecondOct29JalenSuggs": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+    "individualSecondOct29AjayMitchell": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+    "individualSecondOct29WalkerKessler": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm"
   },
   "sourceNotes": [
     "Player seasons are 2025-26; team transfers to 2026-27 do not affect historical 2025-26 fact identity.",
@@ -72,7 +85,8 @@
     "Individual 2025-26 regular-season checks expanded to 225 players; 7 previously uncovered 75–79 overall profiles added with minutes/split/availability notes. No skill grade changed or certified on box-score evidence alone.",
     "Three unqualified 75–79 player profiles added: Jordan Poole, Moritz Wagner, Kentavious Caldwell-Pope, with separated 2025-26 regular-season, playoff and play-in games.",
     "October 29 additional 21 individually verified 2025–26 regular-season player rows (including 10-game Scotty Pippen Jr. assist sample); 2025–26 clubs may differ from current 2026–27 affiliations. Single-season points, 3P%, steals and blocks do not independently establish skill ratings; missing metric values were not extrapolated.",
-    "Dorian Finney-Smith 2025–26 shooting: 27/100 threes in 37 regular-season games and 16.8 minutes/game; keep shooting 80 as a flagged provisional question pending multi-season and shot-profile evidence rather than deducting for one injury-affected season."
+    "Dorian Finney-Smith 2025–26 shooting: 27/100 threes in 37 regular-season games and 16.8 minutes/game; keep shooting 80 as a flagged provisional question pending multi-season and shot-profile evidence rather than deducting for one injury-affected season.",
+    "October 29 focused 13-player NBA regular season evidence batch: 2025–26 samples only; excludes playoff/play-in double-counts and meaningless tiny three-point samples. Current NBA club is independently maintained as 2026–27, not inferred from 2025–26 statistics."
   ],
   "players": [
     {
@@ -214,6 +228,60 @@
       "awards": []
     },
     {
+      "name": "Ajay Mitchell",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 13.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 3.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 3.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 34.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Al Horford",
       "observations": [
         {
@@ -261,6 +329,60 @@
           "metric": "blocksPerGame",
           "value": 1.1,
           "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/al_horford_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Alex Caruso",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 6.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 2.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 29.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
           "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
@@ -352,6 +474,60 @@
           "value": 6.4,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=4",
           "sourceKind": "third-party-2025-26-leaderboard-page-4",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Andrew Nembhard",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 16.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 2.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 7.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 36.1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 0.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -1604,6 +1780,60 @@
       "awards": []
     },
     {
+      "name": "DeMar DeRozan",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 18.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 2.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 4.1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 32,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Deni Avdija",
       "observations": [
         {
@@ -1772,6 +2002,60 @@
           "value": 38.4,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
           "sourceKind": "third-party-2025-26-leaderboard-page-2",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Dillon Brooks",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 20.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 3.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 1.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 34.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -2216,6 +2500,60 @@
       "awards": []
     },
     {
+      "name": "Giannis Antetokounmpo",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 27.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 9.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 5.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 33.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 0.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Goga Bitadze",
       "observations": [
         {
@@ -2376,6 +2714,52 @@
           "value": 11.7,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=3",
           "sourceKind": "third-party-2025-26-leaderboard-page-3",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Isaiah Hartenstein",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 9.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 9.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 3.5,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -2870,6 +3254,60 @@
       "awards": []
     },
     {
+      "name": "Jalen Suggs",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 13.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 3.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 5.5,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 33.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Jalen Williams",
       "observations": [
         {
@@ -3116,6 +3554,52 @@
           "value": 4.4,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=5",
           "sourceKind": "third-party-2025-26-leaderboard-page-5",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Jarrett Allen",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 15.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 8.5,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 1.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -5514,6 +5998,60 @@
       "awards": []
     },
     {
+      "name": "Paul George",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 17.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 5.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 3.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 39.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Paul Reed",
       "observations": [
         {
@@ -5686,6 +6224,60 @@
           "value": 13.5,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
           "sourceKind": "third-party-2025-26-leaderboard-page-2",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "RJ Barrett",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 19.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 5.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 3.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 33.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 0.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -6413,6 +7005,60 @@
       "awards": []
     },
     {
+      "name": "Trae Young",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 17.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 33.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 0.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Tre Johnson",
       "observations": [
         {
@@ -6689,6 +7335,52 @@
           "sourceUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
         }
       ]
+    },
+    {
+      "name": "Walker Kessler",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 14.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 10.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 1.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
     },
     {
       "name": "Wendell Carter Jr.",
