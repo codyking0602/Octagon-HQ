@@ -1369,7 +1369,7 @@ export function footballGmFinalResultV2(input: {
     scoreFormula,
     rosterManagementScore,
     regularSeasonScore,
-    playoffScore,
+    playoffScore: scoreFormula === "legacy" ? oldPlayoffScore : playoffScore,
     resumeScore,
     teamOveralls,
     seasons,
