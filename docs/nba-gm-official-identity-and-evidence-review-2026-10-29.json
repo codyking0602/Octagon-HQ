@@ -3,7 +3,7 @@
   "asOfDate": "2026-10-29",
   "productionPublished": false,
   "completeSixSkillCertified": 0,
-  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification. October 30: Buzelis interior-defense box, tracking, deterrence and role peer review supports a cautious 73 to 77 provisional adjustment; not a full six-skill or exact-position certification. October 30 risk-prioritized peer review applied 7 additional single-skill regrades with linked NBA seasons, historical context and named skill peers. The 18 total provisional changes DO NOT certify any complete athlete profile. Overall ratings are untouched. Two additional position-specific historical role leads (Suggs PG/SG; Dick SG/SF), not final exact game-slot approval.",
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification. October 30: Buzelis interior-defense box, tracking, deterrence and role peer review supports a cautious 73 to 77 provisional adjustment; not a full six-skill or exact-position certification. October 30 risk-prioritized peer review applied 7 additional single-skill regrades with linked NBA seasons, historical context and named skill peers. The 18 total provisional changes DO NOT certify any complete athlete profile. Overall ratings are untouched. Two additional position-specific historical role leads (Suggs PG/SG; Dick SG/SF), not final exact game-slot approval. Franz Wagner shooting 66→71 research adjudicated separately on Oct 30 using historical 3P%, catch-and-shoot, FT and peer comparison; incomplete five other skills.",
   "officialRosterIdentity": [
     {
       "name": "Tyrese Haliburton",
@@ -649,6 +649,27 @@
       "decision": "76 starts, 5.9 AST/1.8 TOV in 2025-26 after 4.4 AST/2.0 TOV in 2024-25; more on-ball advantage management with better care. Assisted shot creation distinct from elite point-of-attack defense and low shotmaking.",
       "comparison": "81 above Suggs 76 for control, near secondary initiators, below Davion Mitchell 83 and Barnes 85, without implying elite PG halfcourt creation.",
       "sourceUrl": "https://www.basketball-reference.com/players/d/daniedy01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Franz Wagner",
+      "season": "2025-26",
+      "games": 34,
+      "minutesPerGame": 30,
+      "threePointPercentage": 34.5,
+      "threePointAttemptsPerGame": 4.1,
+      "freeThrowPercentage": 82.3,
+      "previousSeasonThreePointPercentage": 29.5,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 66,
+      "after": 71,
+      "decision": "Raise Shooting 66→71; primary forward on-ball creation but capable 37.8% catch-and-shoot on 2.2 attempts/game, 34.5% overall NBA threes and 82.3% FT. Two preceding .281/.295 three-point seasons prevent 75+ solid/shooting-specialist grade; 4-game early 2026-27 15% must not dominate.",
+      "comparison": "Compare Scottie Barnes 70 and Paolo Banchero 73 fellow playmaking forwards; Jalen Johnson 75 has distinct contested jumper profile. Ability, usage and shot types separated from scoring 87 and overall 86.",
+      "sourceUrl": "https://www.basketball-reference.com/players/w/wagnefr01.html",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/franz-wagner?gt=Regular+Season&season=2025-26",
+      "dossier": "docs/nba-gm-franz-wagner-2025-26-shooting-peer-review-2026-10-30.md",
       "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
     }
   ],
