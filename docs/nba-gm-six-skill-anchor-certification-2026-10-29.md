@@ -49,8 +49,8 @@ Require canonical NBA IDs for players not yet individually identified; player-sp
 | Skill | Min | Median | Mean | Max | 95–99 | Below 70 |
 |---|---:|---:|---:|---:|---:|---:|
 | Scoring | 57 | 74 | 74.58 | 99 | 6 | 105 |
-| Shooting | 10 | 75 | 68.96 | 99 | 4 | 122 |
-| Playmaking | 40 | 67 | 67.55 | 99 | 3 | 184 |
+| Shooting | 10 | 75 | 68.98 | 99 | 4 | 122 |
+| Playmaking | 40 | 67 | 67.57 | 99 | 3 | 184 |
 | Perimeter Defense | 36 | 69 | 69.60 | 99 | 5 | 172 |
 | Interior Defense | 20 | 57 | 56.70 | 99 | 3 | 230 |
 | Rebounding | 39 | 66 | 65.92 | 99 | 3 | 191 |
@@ -85,7 +85,9 @@ Two previously leaderboard-unqualified 2025–26 players now have individually s
 
 - **Jaden McDaniels Shooting 76→81:** 103 makes on 250 3PA (41.2%) over 73 NBA games, following 100-of-303 (33.0%) in 2024–25; a moderated above-average grade reflects 3.4 three-point attempts per game without treating one year of 41% as elite-specialist shooting. [NBA seasonal record](https://www.basketball-reference.com/players/m/mcdanja02.html).
 - **Bub Carrington Shooting 76→82:** 40.8% on approximately 5.0 three-point attempts per game across 82 games, up from 33.9% in the prior season. Additional shot-difficulty and on-/off-ball evidence remains necessary; the 75-overall peer row is updated. [2025–26 seasonal split](https://www.statmuse.com/nba/player/bub-carrington-30409/splits?seasonYear=2026).
-- **Both** changes apply only to provisional individual Shooting grades, preserve all independent overall values and leave **0 full six-skill certifications**. The small +11 aggregate Shooting-score movement changes the observed mean from **68.93 to 68.96**, with no changes to 95–99 or below-70 counts.
+- **Cam Spencer Playmaking 74→80:** 72 NBA games, 5.6 APG against 1.3 turnovers in 23.8 MPG; 33.1% AST share at 17.2% usage. Above-average secondary creation is supported, but this is not an elite primary-playmaking certificate. [Player season profile](https://www.basketball-reference.com/players/s/spencca01.html).
+- **Collin Sexton Shooting 77→82:** 40.1% on 279 3PA across 68 games and 85.5% FT; the volume is meaningful but not equivalent to 90+ motion-shooter difficulty. [Player shooting profile](https://readthegame.com/player/collin-sexton-1629012?season=2025-26).
+- **All four** changes apply only to provisional individual skill ratings, preserve every independent overall and leave **0 full six-skill certifications**. Shooting mean is now **68.98**, Playmaking mean **67.57**, with no changes to 95–99 or below-70 counts.
 
 ## Current source reconciliation after veteran returnee research
 
