@@ -2253,7 +2253,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-jalen-brunson-a-10",
-            "text": "I am the Knicks' No. 11 captain and the face of New York's Brunson era.",
+            "text": "I wear No. 11 as the Knicks' captain and helped bring playoff excitement back to New York.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -6656,7 +6656,7 @@ export const nbaWhoAmIAuthoredBatch1: readonly NbaWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "nba-deaaron-fox-b-10",
-            "text": "I am De'Aaron Fox, the fast left-handed guard known as Swipa.",
+            "text": "I earned the nickname Swipa for my blazing speed before moving from Sacramento to San Antonio.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
