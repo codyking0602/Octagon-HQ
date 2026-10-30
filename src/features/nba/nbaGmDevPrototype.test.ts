@@ -10,7 +10,7 @@ import { createNbaGmDevRepository } from "./nbaGmDevRepository";
 const board=JSON.parse(readFileSync("docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json","utf8")) as {
  players:Array<{editorialId:string;name:string;teamCode:string;candidatePositions:string[];overall:number;skills:NbaGmDevPlayer["skills"]}>;
 };
-const sql=readFileSync("supabase/migrations/202612310895_nba_gm_spin_first_private_franchise.sql","utf8");
+const sql=readFileSync("supabase/migrations/202612310896_nba_gm_spin_first_private_franchise.sql","utf8");
 const runtime=readFileSync("supabase/migrations/202612310893_nba_gm_private_playtest_runtime.sql","utf8");
 const router=readFileSync("src/app/router.tsx","utf8");
 const hub=readFileSync("src/features/nba/NbaPlayPage.tsx","utf8");
