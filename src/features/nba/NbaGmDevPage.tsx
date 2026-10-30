@@ -177,7 +177,7 @@ export default function NbaGmDevPage(){
   const wheelEnabled=!busy&&!wheelSpinning&&Boolean(run&&(
     isDraft&&!run.pendingTeam||
     run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam&&run.tradesUsed===0||
-    run.phase==="offseason"&&run.picks.length<7&&!run.freeAgencyTeam&&!run.shopPlayerId&&run.freeAgencyVisits<3
+    run.phase==="offseason"&&run.picks.length<7&&!run.freeAgencyTeam&&!run.shopPlayerId
   ));
   return <main className="page nba-gm-dev" data-testid="nba-gm-development-page">
     <header className="nba-gm-dev__header">
@@ -244,7 +244,7 @@ export default function NbaGmDevPage(){
           ENTER THE OFFSEASON
         </button>
       </section>}
-      {(run.phase==="offseason"||run.phase==="final")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
+      {(run.phase==="year1"||run.phase==="offseason"||run.phase==="final")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>THE OFFSEASON</h2></div></div>
         <Results seasons={run.results}/>
@@ -263,9 +263,9 @@ export default function NbaGmDevPage(){
             </>}
           <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER</button>
         </div>}
-        {run.picks.length<7&&!run.shopPlayerId&&(run.freeAgencyTeam||run.freeAgencyVisits<3)&&
+        {run.picks.length<7&&!run.shopPlayerId&&
           <div className="nba-gm-dev__trade">
-            <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits}/3 MARKET VISITS</p>
+            <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits} MARKET VISITS · REPLACEMENT SPINS UNTIL ROSTER IS FILLED</p>
             <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
               pendingTeam={wheelSpinning?null:run.freeAgencyTeam?wheelTeam:null}
               canSpin={wheelEnabled} onSpin={()=>void spin("fa-spin")}/>
@@ -278,8 +278,6 @@ export default function NbaGmDevPage(){
               <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
             </>}
           </div>}
-        {run.picks.length<7&&run.freeAgencyVisits>=3&&!run.freeAgencyTeam&&
-          <p className="nba-gm-dev__error">Free-agent market exhausted. Your rotation needs another eligible player before it can advance.</p>}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
           <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("advance")}>
             LOCK ROSTER · SIMULATE SEASONS 2 & 3
