@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 individually drafted six-skill proposals; 301 have 2025-26 numerical/award context, none of which alone certify six skills or live position. October 30 practical peer reviews documented 22 evidence-led provisional skill adjustments including a final three-case correction pass (Michael Porter Jr. scoring, Jrue Holiday playmaking, Keegan Murray shooting); position eligibility lead for Murray SF/PF remains provisional. No complete six-skill certifications; no gameplay import or overall changes.",
+  "method": "330 individually drafted six-skill proposals; 301 have 2025-26 numerical/award context, none of which alone certify six skills or live position. October 30 practical peer reviews documented 23 evidence-led provisional skill adjustments including DeMar DeRozan midrange shooting 66 to 80 including a final three-case correction pass (Michael Porter Jr. scoring, Jrue Holiday playmaking, Keegan Murray shooting); position eligibility lead for Murray SF/PF remains provisional. No complete six-skill certifications; no gameplay import or overall changes.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -7152,7 +7152,7 @@
       "overall": 80,
       "skills": {
         "scoring": 80,
-        "shooting": 66,
+        "shooting": 80,
         "playmaking": 72,
         "perimeterDefense": 63,
         "interiorDefense": 50,
@@ -7165,14 +7165,17 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nuggets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "Sacramento 2025–26: first in NBA in made midrange field goals (232), about 47.6% on 487 midrange attempts; 374/431 free throws (86.8%), but just 47/147 from 3 (32.0%). Elite volume/difficulty in midrange compensates for limited perimeter range; overall shooting 80 not specialist 90.",
+        "checkedFactUrl": "https://www.nba.com/gamenotes/kings.pdf"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "anchor-calibrated-editorial"
+        "anchor-calibrated-editorial",
+        "evidence-led-midrange-shooting-correction-not-certified"
       ],
-      "gradeEvidenceStatus": "per-skill independent corroboration pending",
+      "gradeEvidenceStatus": "Midrange-specific shooting correction reviewed; five other skills and exact game eligibility not independently certified",
       "sourcedSeasonFacts": {
         "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
         "observations": [
@@ -22339,7 +22342,7 @@
     "uncorroboratedPlayers": 29,
     "sourceContextStatObservations": 951,
     "sourceContextAwardObservations": 37,
-    "evidenceBasedProvisionalCorrections": 22,
+    "evidenceBasedProvisionalCorrections": 23,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
   }
 }
