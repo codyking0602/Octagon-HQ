@@ -116,4 +116,23 @@ describe("NBA GM official roster snapshot — unpublished evidence only", () => 
     expect(source.published).toBe(false);
   });
 
+  it("checks 24 Denver and Golden State official player IDs while preserving all-skill certification holds",()=>{
+    const md=readFileSync("docs/nba-gm-official-24-den-gsw-profiles-2026-10-30.md","utf8");
+    const lines=md.split("\n").filter(line=>line.startsWith("| DEN |")||line.startsWith("| GSW |"));
+    expect(lines).toHaveLength(24);
+    const rows=new Map(source.crosswalk.map(x=>[x.name,x]));
+    for(const line of lines){
+      const cells=line.split("|").map(x=>x.trim());
+      const id=cells[3]?.split("[")[1]?.split("]")[0];
+      expect(id,cells[2]).toMatch(/^[0-9]+$/);
+      expect(cells[3],cells[2]).toContain("https://www.nba.com/player/"+id);
+      const row=rows.get(cells[2]!);
+      expect(row?.teamCode,cells[2]).toBe(cells[1]);
+      expect(row?.officialNBAPlayerId,cells[2]).toBe(id);
+      expect(row?.positionStatus,cells[2]).toContain("not-certified");
+    }
+    expect(source.published).toBe(false);
+    expect(board.certifiedCount).toBe(0);
+  });
+
 });
