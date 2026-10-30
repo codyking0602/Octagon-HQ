@@ -88,6 +88,25 @@ jobs:
 
           echo "whoami_only=$whoami_only" >> "$GITHUB_OUTPUT"
 
+          # NBA authored clue-only drafts use their complete targeted suite,
+          # avoiding the enormous transitive --changed Vitest graph.
+          nba_whoami_only=true
+          saw_nba_whoami=false
+          for file in "${changed_files[@]}"; do
+            case "$file" in
+              src/features/games/nbaWhoAmIAuthored*.ts)
+                saw_nba_whoami=true
+                ;;
+              .github/workflows/fast-pr-feedback.yml|src/app/fastPrFeedbackWorkflow.contract.test.ts)
+                ;;
+              *) nba_whoami_only=false; break ;;
+            esac
+          done
+          if [ "$saw_nba_whoami" != true ]; then
+            nba_whoami_only=false
+          fi
+          echo "nba_whoami_only=$nba_whoami_only" >> "$GITHUB_OUTPUT"
+
           # Ranking-only PRs should run the full ranking suite, rather than
           # Vitest's enormous transitive dependency graph for --changed.
           rankings_only=true
@@ -148,8 +167,13 @@ jobs:
         if: steps.scope.outputs.rankings_only == 'true'
         run: npx vitest run src/features/rankings
 
+      - name: Run NBA Who Am I authored editorial suite
+        if: steps.scope.outputs.nba_whoami_only == 'true'
+        run: |
+          npx vitest run src/features/games/nbaWhoAmIAuthoredScripts.test.ts src/features/games/nbaWhoAmIAuthoredBatch1.test.ts src/features/games/nbaWhoAmIAuthoredBatch2.test.ts src/features/games/nbaWhoAmIAuthoredBatch3.test.ts src/features/games/nbaWhoAmIAuthoredBatch4.test.ts src/features/games/nbaWhoAmIAuthoredIntegration.test.ts
+
       - name: Run tests affected by this PR
-        if: steps.scope.outputs.whoami_only != 'true' && steps.scope.outputs.rankings_only != 'true'
+        if: steps.scope.outputs.whoami_only != 'true' && steps.scope.outputs.rankings_only != 'true' && steps.scope.outputs.nba_whoami_only != 'true'
         run: |
           pr_merge_base=$(git merge-base "$BASE_SHA" "$SOURCE_SHA")
           mapfile -t files < <(git diff --name-only "$pr_merge_base" "$SOURCE_SHA")
