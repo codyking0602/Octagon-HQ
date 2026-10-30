@@ -954,6 +954,36 @@
       "why": "2025–26 positional minute distribution 26% PG, 64% SG, 10% SF; 5.7 APG on 15 starts corroborates meaningful on-ball guard work, allowing PG/SG provisional candidate rather than SG-only; exclude SF until sustained 2026–27 assignment evidence.",
       "asOf": "2026-10-29",
       "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "John Collins",
+      "previousCandidates": [
+        "SF",
+        "PF"
+      ],
+      "reviewedCandidates": [
+        "PF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/c/collijo01.html",
+      "sourceMethod": "Basketball-Reference season-by-season role history and season-specific 2025-26 positional on-court mix; broad official NBA team roster alone insufficient",
+      "why": "NBA Basketball-Reference lists PF for every NBA season 2017-18 through 2026-27, including 69 Clippers 2025-26 games at PF and first 2026-27 Detroit games at PF. Official Detroit NBA.com roster lists Forward-Center, which supports frontcourt role but not a true SF wing slot. Remove unsupported SF candidate; retain PF only pending final lineup-slot certification.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Peyton Watson",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SF",
+        "PF"
+      ],
+      "sourceUrl": "https://sports.ws/nba/peyton-watson?featuredSeason=25_26",
+      "sourceMethod": "Basketball-Reference season-by-season role history and season-specific 2025-26 positional on-court mix; broad official NBA team roster alone insufficient",
+      "why": "2025-26 BRef-derived positional minute splits estimated 52% SF, 32% PF and 16% SG, suggesting SF/PF versatile forward eligibility rather than SF-only. Basketball-Reference current-season primary position SF; preserve SF and add a provisional PF lead. Matchup-based 2026-27 team role still needs evaluation.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
     }
   ],
   "confirmedNo2025_26NbaSeason": [
