@@ -87,6 +87,51 @@ playmaking/assisted-shot indicators, minutes-weighted rotation players and playo
 7. **Owner review:** publish actual coefficients, error analysis, sample selection,
    and mispredicted historical teams before enabling this simulator for users.
 
+## Phase 3.1 fixes — completed in the draft PR, not released
+
+- The server and client now reserve **distinct eligible players** to fill all
+  remaining roster slots instead of repeatedly counting one cheap two-way wing
+  or big as several future signings. The reserve uses the worst applicable
+  year of each fictional game contract, so one concrete legal completion is
+  priced inside all three cap windows. This is deliberately conservative.
+- Offseason cut replacements have an emergency-market fallback: free-agent
+  spins remain available until the seven-player roster is refilled, rather
+  than becoming permanently blocked after three passed teams. An isolated SQL
+  regression specifically exercises four passes, signing, and Years 2–3.
+- Post-Year-1 feedback is exposed on the first season's results screen, using
+  position-aware primary and secondary creation, starter spacing, perimeter
+  resistance, interior protection, and rebounding. These qualitative signals
+  are scouting guidance, **not** extra unpublished win-formula multipliers.
+- The old playoff finish ladder made a title impossible below 64 wins.
+  Denver's actual 2022–23 championship came with 53 regular-season wins.
+  A seeded, round-by-round playoff variance fixture replaces automatic
+  championship thresholds. **Its roll probabilities remain provisional and
+  have NOT been fitted to observed playoff series.**
+
+## Source acquisition and outstanding full-cohort work
+
+- Basketball-Reference's team-rating pages (2022–2026) provide actual team
+  wins, unadjusted and schedule-adjusted ORtg/DRtg/NRtg. The published
+  champion figures above have been cross-checked. Access to the full table
+  through a repeatable automated download was denied during this phase;
+  historical validation must NOT be marked as complete.
+- [BoxScore Lab](https://www.boxscorelab.com/downloads/) offers CC BY 4.0
+  exports of team standings, estimated efficiencies, individual player season
+  totals, and individual team games for 2022–23 through 2025–26. Those
+  *estimated* ratings differ in provenance/method from the Basketball-Reference
+  ratings. They cannot be blended without a normalization and source flag;
+  its public exports also do not cover 2021–22.
+- [NBA Stats four factors](https://www.nba.com/stats/teams/four-factors)
+  provides official season-level effective shooting, turnover and rebound
+  splits, but minutes-weighted player/lineup features and a season-complete
+  2021–22 slice remain necessary to quantify actual complementarity.
+- **Current measured full-cohort status: 0/150 consolidated and
+  independently validated team-season rows.** There are five champion rows
+  and 25 top-table comparison positions in the descriptive research above,
+  but they are NOT a training sample. No train/holdout split or out-of-sample
+  RMSE has been completed. Keep coefficients private and uncertified until
+  that evidence exists.
+
 ## Current private game implementation and blockers
 
 - The owner-only V2 draft and offseason share the existing Football GM private run
