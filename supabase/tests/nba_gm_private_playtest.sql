@@ -36,6 +36,9 @@ begin
   end if;
   v_state := public.nba_gm_dev_action('start');
   if v_state->>'phase'<>'draft' then raise exception 'NBA GM start failed'; end if;
+  if public.load_my_latest_football_gm_run() is not null then
+    raise exception 'NBA GM dev run displaced Football GM solo resume';
+  end if;
 
   foreach v_slot in array array['PG','SG','SF','PF','C','SIXTH','FLEX'] loop
     v_state:=public.nba_gm_dev_action('spin',v_slot);
