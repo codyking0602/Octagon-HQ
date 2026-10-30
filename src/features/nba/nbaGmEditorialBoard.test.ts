@@ -104,7 +104,7 @@ describe("NBA GM first-pass editorial rating board — not published game data",
     expect(new Set(currentTeamRows.map(row => row.team))).toEqual(new Set(NBA_GM_TEAM_CODES));
     for (const row of currentTeamRows) {
       expect(NBA_GM_TEAM_CODES).toContain(row.team);
-      expect(row.evidence, row.name).toMatch(/https:\/\/hoopsnightly\.com\/teams\/[a-z-]+\/roster/);
+      expect(row.evidence, row.name).toMatch(/https:\/\/hoopsnightly\.com\/teams\/[a-z0-9-]+\/roster/);
       expect(row.evidence, row.name).toContain("roster");
     }
   });
@@ -119,7 +119,7 @@ describe("NBA GM first-pass editorial rating board — not published game data",
     for (const line of rows) {
       const cells = line.split("|").map(cell => cell.trim());
       expect(NBA_GM_TEAM_CODES).toContain(cells[2]);
-      expect(line).toMatch(/https:\/\/hoopsnightly\.com\/teams\/[a-z-]+\/roster/);
+      expect(line).toMatch(/https:\/\/hoopsnightly\.com\/teams\/[a-z0-9-]+\/roster/);
     }
   });
 
