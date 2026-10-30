@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 individually drafted six-skill proposals; 301 have 2025-26 numerical/award context, including 19 archived third-party NBA API-linked rows, none of which alone certify six skills or live position. No fully six-skill certified players. October 30 practical peer pass corrected 7 additional single skills with cited 2025-26 + prior-season peer evidence; 18 total evidence-backed provisional trait adjustments. Still 0 full six-skill certifications; no gameplay import.",
+  "method": "330 individually drafted six-skill proposals; 301 have 2025-26 numerical/award context, none of which alone certify six skills or live position. October 30 practical peer reviews documented 22 evidence-led provisional skill adjustments including a final three-case correction pass (Michael Porter Jr. scoring, Jrue Holiday playmaking, Keegan Murray shooting); position eligibility lead for Murray SF/PF remains provisional. No complete six-skill certifications; no gameplay import or overall changes.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -4339,7 +4339,7 @@
       "positionReview": "unverified",
       "overall": 83,
       "skills": {
-        "scoring": 81,
+        "scoring": 86,
         "shooting": 92,
         "playmaking": 61,
         "perimeterDefense": 60,
@@ -4353,16 +4353,19 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 Brooklyn: 52 GP, 24.21 PPG on 18.42 FGA/game, 59.51% true shooting, 3.04 APG; contrasted with Denver's 18.2 PPG in 2024–25.",
+        "checkedFactUrl": "https://www.nba.com/gamenotes/nets.pdf"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "evidence-led-oct30-practical-close-skill-regrade-not-certified"
       ],
       "editorialNote": "Movement three-point specialist, limited creation/defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
-      "gradeEvidenceStatus": "per-skill independent corroboration pending",
+      "gradeEvidenceStatus": "One targeted evidence-led skill reviewed; remaining skill corroboration pending",
       "sourcedSeasonFacts": {
         "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
         "observations": [
@@ -5553,7 +5556,7 @@
       "skills": {
         "scoring": 71,
         "shooting": 80,
-        "playmaking": 79,
+        "playmaking": 81,
         "perimeterDefense": 87,
         "interiorDefense": 56,
         "rebounding": 66
@@ -5565,15 +5568,18 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/trail-blazers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 Portland: 53 GP, 322 assists / 146 turnovers (6.08 / 2.75 per game) in a restored primary guard role; 2024–25 Boston: 3.9 assists/game in a smaller role.",
+        "checkedFactUrl": "https://www.nba.com/stats/player/201950/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "evidence-led-oct30-practical-close-skill-regrade-not-certified"
       ],
-      "gradeEvidenceStatus": "per-skill independent corroboration pending",
+      "gradeEvidenceStatus": "One targeted evidence-led skill reviewed; remaining skill corroboration pending",
       "sourcedSeasonFacts": {
         "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
         "observations": [
@@ -9604,13 +9610,14 @@
       "name": "Keegan Murray",
       "teamCode": "SAC",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
-      "positionReview": "unverified",
+      "positionReview": "season-specific-position-lead-not-certified",
       "overall": 81,
       "skills": {
         "scoring": 76,
-        "shooting": 85,
+        "shooting": 81,
         "playmaking": 60,
         "perimeterDefense": 83,
         "interiorDefense": 73,
@@ -9623,16 +9630,20 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/kings/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 Sacramento: 23 GP, 31/112 3PT (27.7%); previous 2024–25 34.3% and 2023–24 35.8%, against 2022–23 41.1%. Multi-year trend warrants 81 rather than specialist 85, with smaller most-recent sample caveat.",
+        "checkedFactUrl": "https://www.nba.com/stats/player/1631099/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "evidence-led-oct30-practical-close-skill-regrade-not-certified",
+        "historical-sf-pf-eligibility-lead-not-certified"
       ],
       "editorialNote": "Size, catch-and-shoot and two-way wing defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
-      "gradeEvidenceStatus": "per-skill independent corroboration pending",
+      "gradeEvidenceStatus": "One targeted evidence-led skill reviewed; remaining skill corroboration pending",
       "sourcedSeasonFacts": {
         "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
         "observations": [
@@ -22328,7 +22339,7 @@
     "uncorroboratedPlayers": 29,
     "sourceContextStatObservations": 951,
     "sourceContextAwardObservations": 37,
-    "evidenceBasedProvisionalCorrections": 19,
+    "evidenceBasedProvisionalCorrections": 22,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
   }
 }
