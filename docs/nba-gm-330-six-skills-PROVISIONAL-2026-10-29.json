@@ -9292,6 +9292,7 @@
       "name": "Ty Jerome",
       "teamCode": "MEM",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
@@ -12713,7 +12714,7 @@
       "name": "Obi Toppin",
       "teamCode": "IND",
       "candidatePositions": [
-        "SF"
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 80,
@@ -14892,6 +14893,7 @@
       "name": "Bilal Coulibaly",
       "teamCode": "WAS",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
@@ -15727,6 +15729,7 @@
       "name": "Christian Braun",
       "teamCode": "DEN",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
