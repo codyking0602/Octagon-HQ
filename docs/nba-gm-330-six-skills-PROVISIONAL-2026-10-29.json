@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 262 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
+  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 267 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -7145,7 +7145,61 @@
       "editorialNote": "Athletic three-level shooter/scorer, little defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 19.2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_lavine_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_lavine_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_lavine_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 39,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_lavine_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_lavine_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_lavine_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 39 games. 39 regular games, 99/254 threes; injury-limited scoring efficiency, 2025–26 Sacramento; 2026–27 role pending."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -7365,7 +7419,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 20.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/shaedon_sharpe_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 4.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/shaedon_sharpe_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/shaedon_sharpe_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 33.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/shaedon_sharpe_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/shaedon_sharpe_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/shaedon_sharpe_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 50 games. 50 regular games (not 5 playoff/1 play-in), 103/306 threes; scoring role and shooting remain separate; 2025–26 Portland."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -16397,7 +16505,61 @@
       "editorialNote": "Versatile athletic wing stopper and rim finishing",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 10.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/derrick_jones_jr_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 3.5,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/derrick_jones_jr_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 1.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/derrick_jones_jr_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 35.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/derrick_jones_jr_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/derrick_jones_jr_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/derrick_jones_jr_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 50 games. 50 regular +1 play-in; 1.0 blocks as a wing adds rim contest context; 2025–26 Clippers."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -17272,7 +17434,53 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_edey_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 11.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_edey_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 1.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_edey_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_edey_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 1.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_edey_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 11 games. Only 11 games (25.8 MPG). 43 offensive boards in 284 minutes and 1.9 blocks in small high-usage sample; 1/5 threes, deliberately omit 3P%."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -18598,7 +18806,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/khaman_maluach_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/khaman_maluach_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 0.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/khaman_maluach_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 23.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/khaman_maluach_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/khaman_maluach_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/khaman_maluach_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 46 games. 46 NBA games but only 8.9 MPG; three-pointer 5/21 very small; 2025–26 76 OVR is future potential rather than starting-NBA-caliber certified."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -20123,11 +20385,11 @@
     "remainingHeuristicVectors": 0,
     "sourceSpecificEvidenceCoverage": "2025-26 sourced context only, not verification of any of the six skill scores; official NBA player identities and 2026-27 team/position records incomplete.",
     "worksheet": "docs/nba-gm-remaining-126-individual-rating-proposals-2026-10-29.md",
-    "sourceContextPlayers": 262,
+    "sourceContextPlayers": 267,
     "sourceContextSource": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
     "fullSixSkillCertifications": 0,
-    "uncorroboratedPlayers": 68,
-    "sourceContextStatObservations": 705,
+    "uncorroboratedPlayers": 63,
+    "sourceContextStatObservations": 734,
     "sourceContextAwardObservations": 37,
     "evidenceBasedProvisionalCorrections": 6,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
