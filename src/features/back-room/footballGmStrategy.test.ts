@@ -33,6 +33,8 @@ import {
   footballGmOutcomeProbabilities,
   footballGmResolveTradeAssets,
   footballGmScoreFromComponents,
+  footballGmSeasonRecordScore,
+  footballGmThreeYearRecordScore,
   footballGmSeasonResumeScore,
   footballGmSeasonResultV2,
   footballGmSeasonRoll,
@@ -240,45 +242,58 @@ describe("Football GM strategy v7", () => {
     expect(footballGmTeamOverall(98)).toBe(99);
   });
 
-  it("keeps the playoff résumé ladder ordered without replacing roster quality", () => {
-    expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement).toBe(0.90);
-    expect(FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(0.10);
-    expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement + FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(1);
+  it("weights roster construction 90%, wins 3%, and playoff finish 7%", () => {
+    expect(FOOTBALL_GM_SCORE_WEIGHTS).toEqual({
+      rosterManagement: 0.90,
+      regularSeason: 0.03,
+      playoffFinish: 0.07,
+    });
+    expect(Object.values(FOOTBALL_GM_SCORE_WEIGHTS).reduce((sum, weight) => sum + weight, 0)).toBe(1);
 
+    expect(footballGmScoreFromComponents(90, 100, 100)).toBe(91);
+    expect(footballGmScoreFromComponents(100, 80, 80)).toBe(98);
+    expect(footballGmScoreFromComponents(97.7, 92.9, 94.7)).toBe(97.3);
+    expect(footballGmScoreFromComponents(96.3, 92.2, 93.3)).toBe(96.0);
+  });
+
+  it("rewards every regular-season win without pretending 0 wins earns playoff credit", () => {
+    expect(footballGmSeasonRecordScore(0)).toBe(60);
+    expect(footballGmSeasonRecordScore(12)).toBe(88.2);
+    expect(footballGmSeasonRecordScore(17)).toBe(100);
+    expect(footballGmThreeYearRecordScore([16, 14, 12])).toBe(92.9);
+    expect(footballGmThreeYearRecordScore([13, 15, 10])).toBe(89.8);
+    expect(footballGmSeasonRecordScore(13)).toBeGreaterThan(footballGmSeasonRecordScore(12));
+  });
+
+  it("keeps playoff finishes ordered and rewards advancement without a dynasty bonus", () => {
+    const finishes = ["Missed Playoffs", "Wild Card", "Divisional", "Conference Championship", "Super Bowl Loss", "Champion"] as const;
+    expect(finishes.map(footballGmSeasonResumeScore)).toEqual([70, 80, 86, 92, 96, 100]);
     const titleAndTwoMisses = footballGmThreeYearResumeScore(["Champion", "Missed Playoffs", "Missed Playoffs"]);
     const threeDivisionals = footballGmThreeYearResumeScore(["Divisional", "Divisional", "Divisional"]);
-    expect(titleAndTwoMisses).toBe(88.7);
-    expect(threeDivisionals).toBe(92);
-    expect(threeDivisionals).toBeGreaterThan(titleAndTwoMisses);
+    expect(titleAndTwoMisses).toBe(80);
+    expect(threeDivisionals).toBe(86);
+    expect(footballGmScoreFromComponents(90, 90, threeDivisionals))
+      .toBeGreaterThan(footballGmScoreFromComponents(90, 90, titleAndTwoMisses));
 
-    const sameRosterQuality = 90;
-    expect(footballGmScoreFromComponents(sameRosterQuality, threeDivisionals))
-      .toBeGreaterThan(footballGmScoreFromComponents(sameRosterQuality, titleAndTwoMisses));
-    expect(footballGmSeasonResumeScore("Champion")).toBe(100);
-    expect(footballGmSeasonResumeScore("Super Bowl Loss")).toBe(97);
-    expect(footballGmSeasonResumeScore("Conference Championship")).toBe(94);
-    expect(footballGmSeasonResumeScore("Divisional")).toBe(92);
-    expect(footballGmSeasonResumeScore("Wild Card")).toBe(90);
-    expect(footballGmSeasonResumeScore("Missed Playoffs")).toBe(83);
+    // A 12-5 wild-card team outranks a 9-8 wild-card team on the 3% record component.
+    expect(footballGmScoreFromComponents(90, footballGmSeasonRecordScore(12), 80))
+      .toBeGreaterThan(footballGmScoreFromComponents(90, footballGmSeasonRecordScore(9), 80));
+    expect(footballGmThreeYearResumeScore(["Champion", "Divisional", "Wild Card"])).toBe(88.7);
   });
 
-  it("preserves playoff-round progression and makes wildcard setbacks modest at 10% weight", () => {
-    const finishOrder = ["Missed Playoffs", "Wild Card", "Divisional", "Conference Championship", "Super Bowl Loss", "Champion"] as const;
-    const scores = finishOrder.map(footballGmSeasonResumeScore);
-    for (let i = 1; i < scores.length; i += 1) {
-      expect(scores[i]).toBeGreaterThan(scores[i - 1]!);
-    }
-
-    // Two otherwise identical high-end franchises: a wildcard exit in one season
-    // contributes only a small adjustment; no bonus is attached to repeated titles.
-    expect(footballGmScoreFromComponents(96.3, footballGmThreeYearResumeScore(["Wild Card", "Champion", "Champion"]))).toBe(96.3);
-    expect(footballGmScoreFromComponents(96.0, footballGmThreeYearResumeScore(["Champion", "Champion", "Wild Card"]))).toBe(96.1);
-  });
-
-  it("puts playoff résumé on the same high-end scale as normalized Team OVR", () => {
-    const resume = footballGmThreeYearResumeScore(["Champion", "Divisional", "Wild Card"]);
-    expect(resume).toBe(94);
-    expect(footballGmScoreFromComponents(93.3, resume)).toBe(93.4);
+  it("reproduces the October 27 WR matchup from locked real season results", () => {
+    const cody = footballGmScoreFromComponents(
+      97.7,
+      footballGmThreeYearRecordScore([16, 14, 12]),
+      footballGmThreeYearResumeScore(["Champion", "Conference Championship", "Conference Championship"]),
+    );
+    const shane = footballGmScoreFromComponents(
+      96.3,
+      footballGmThreeYearRecordScore([12, 15, 14]),
+      footballGmThreeYearResumeScore(["Wild Card", "Champion", "Champion"]),
+    );
+    expect(cody).toBe(97.3);
+    expect(shane).toBe(96.0);
   });
 
   it("keeps shared-roll postseason floors monotonic from 89 through 98", () => {
@@ -319,7 +334,8 @@ describe("Football GM strategy v7", () => {
         (sum, [finish, probability]) => sum + (footballGmSeasonResumeScore(finish as keyof typeof probabilities) * probability),
         0,
       );
-      return footballGmScoreFromComponents(footballGmTeamOverall(grade), expectedResume);
+      const teamOverall = footballGmTeamOverall(grade);
+      return footballGmScoreFromComponents(teamOverall, teamOverall, expectedResume);
     };
 
     expect(expectedScore(88)).toBeGreaterThan(88);
