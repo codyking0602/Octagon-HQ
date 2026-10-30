@@ -423,3 +423,14 @@
 .play-v2__gm-champion strong { font-size: 18px; line-height: 1.1; }
 .play-v2__gm-champion a { color: #9acaf1; font-size: 11px; font-weight: 850; text-decoration: none; }
 .play-v2__gm-champion-dismiss { position: absolute; top: 7px; right: 9px; background: transparent; border: 0; color: #a5b6c4; font-size: 21px; cursor: pointer; }
+
+.play-v2__leader-member { display: inline-flex; align-items: center; gap: 7px; min-width: 0; }
+.play-v2__leader-member > span:last-child { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.play-v2__leader-member .member-inline-avatar { width: 26px; height: 26px; }
+.play-v2__weekly--compact { display: block; padding: 0; overflow: hidden; }
+.play-v2__weekly-bar { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 12px 13px; color: #f4f7fb; text-decoration: none; }
+.play-v2__weekly-kicker { flex: none; font-size: 9px; font-weight: 900; letter-spacing: .09em; color: #e3bd70; }
+.play-v2__weekly-bar > strong { min-width: 0; flex: 1; font-size: clamp(14px,3.8vw,20px); line-height: 1.1; letter-spacing: -.02em; }
+.play-v2__weekly-cta { flex: none; color: #a4cff4; font-size: 10px; font-weight: 900; white-space: nowrap; }
+.play-v2__weekly-bar:focus-visible { outline: 2px solid #a4cff4; outline-offset: -3px; }
+@media (max-width: 460px) { .play-v2__weekly-kicker { display: none; } }

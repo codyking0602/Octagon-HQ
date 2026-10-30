@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -343,7 +344,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
                 && standingScenarios.some(({ id }) =>
                   canViewWeeklyGmStandingResult(entry, state.attempts, id, false, preview));
               const heading = <>
-                <strong>#{entry.rank} · {entry.display_name}{entry.profile_id === identity.profile?.id ? " · YOU" : ""}</strong>
+                <span className="football-weekly-gm__entry-identity"><strong>#{entry.rank}</strong><MemberInlineAvatar displayName={entry.display_name} profileId={entry.profile_id} isCurrentUser={entry.profile_id === identity.profile?.id} /><strong>{entry.display_name}{entry.profile_id === identity.profile?.id ? " · YOU" : ""}</strong></span>
                 <b>{archive || canViewTotal ? entry.total_score.toFixed(1) + " / 200" : "LOCKED"}</b>
               </>;
               return (

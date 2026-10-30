@@ -1,3 +1,4 @@
+import { InlineAvatar } from "../members/MemberInlineAvatar";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
@@ -146,7 +147,7 @@ export default function NbaPlayPage() {
                   <button key={entry.profileId} type="button" className="play-v2__leader-row"
                     aria-label={"View " + entry.displayName + "'s NBA Daily result"}
                     onClick={() => setSelectedProfileId(entry.profileId)}>
-                    <span><b>#{entry.rank}</b> {entry.isCurrentUser ? "You" : entry.displayName}</span>
+                    <span className="play-v2__leader-member"><b>#{entry.rank}</b><InlineAvatar displayName={entry.displayName} photo={entry.avatarPhotoData} /><span>{entry.isCurrentUser ? "You" : entry.displayName}</span></span>
                     <strong>{entry.normalizedScore}/100</strong>
                   </button>
                 ))}

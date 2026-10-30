@@ -124,3 +124,8 @@
 .football-weekly-gm__picker-badges .risk-medium { color: #f3d28b; border-color: #776c4c; }
 .football-weekly-gm__picker-badges .risk-locked { color: #a8d6b5; border-color: #506959; }
 .football-weekly-gm__picker-list > button { min-height: 84px; }
+
+.football-weekly-gm__entry-identity { display: inline-flex; align-items: center; gap: 7px; min-width: 0; }
+.football-weekly-gm__entry-identity > strong:last-child { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.football-weekly-gm__entry-main .member-inline-avatar { flex-shrink: 0; }
+.football-weekly-gm__entry-main .football-weekly-gm__entry-identity { flex: 1; }
