@@ -113,6 +113,71 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
     for (const flag of review.roleFlags) expect(players.has(flag.name), flag.name).toBe(true);
   });
 
+  it("separately classifies every 2025-26 no-NBA-season exception without fabricating NBA performance", () => {
+    const noSeason = JSON.parse(readFileSync("docs/nba-gm-2025-26-nba-api-301-player-stat-evidence-2026-10-29.json", "utf8")) as {
+      noSeasonRowCandidates:Array<{name:string}>;
+    };
+    const categories = JSON.parse(readFileSync("docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json", "utf8")) as {
+      confirmedNo2025_26NbaSeason:Array<{name:string}>;
+      rookieCollegeEvidence:Array<{name:string;nba2025_26Production:boolean}>;
+      no2025_26NbaSeasonAlternateEvidence:Array<{
+        name:string;season:string;nbaRegularSeasonGames:number;
+        category:string;sourceUrl:string;sixSkillCertification:string;
+      }>;
+      noSeasonSourcePartition:{nbaApiNoSeasonCandidates:number;priorInjuredVeteransReviewed:number;
+        college2026RookiesAlreadyReviewed:number;newlyClassifiedAlternatives:number;unclassified:number};
+    };
+    const veterans = categories.confirmedNo2025_26NbaSeason.map(x=>x.name);
+    const college = categories.rookieCollegeEvidence.map(x=>x.name);
+    const other = categories.no2025_26NbaSeasonAlternateEvidence.map(x=>x.name);
+    expect(veterans).toHaveLength(4);
+    expect(college).toHaveLength(13);
+    expect(other).toHaveLength(12);
+    const names = [...veterans,...college,...other];
+    expect(new Set(names).size).toBe(29);
+    expect(new Set(names)).toEqual(new Set(noSeason.noSeasonRowCandidates.map(x=>x.name)));
+    expect(categories.noSeasonSourcePartition).toMatchObject({
+      nbaApiNoSeasonCandidates:29,
+      priorInjuredVeteransReviewed:4,
+      college2026RookiesAlreadyReviewed:13,
+      newlyClassifiedAlternatives:12,
+      unclassified:0
+    });
+    for(const row of categories.no2025_26NbaSeasonAlternateEvidence) {
+      expect(row.season,row.name).toBe("2025-26");
+      expect(row.nbaRegularSeasonGames,row.name).toBe(0);
+      expect(row.sourceUrl,row.name).toMatch(/^https:\/\//);
+      expect(row.category,row.name).not.toBe("");
+      expect(row.sixSkillCertification,row.name).toBe("NOT_CERTIFIED");
+    }
+    expect(draft.certifiedCount).toBe(0);
+    expect(draft.published).toBe(false);
+  });
+
+  it("keeps October 30 individually verified NBA IDs tied to the right current teams, without implying exact-slot approval", () => {
+    const roster = JSON.parse(readFileSync("docs/nba-gm-official-nba-30-team-roster-crosswalk-2026-10-29.json", "utf8")) as {
+      manuallyVerifiedPlayerIdCount:number;
+      crosswalk:Array<{name:string;teamCode:string;officialNBAPlayerId:string|null;officialPlayerUrl?:string;positionStatus:string}>;
+    };
+    expect(roster.manuallyVerifiedPlayerIdCount).toBeGreaterThanOrEqual(87);
+    const idRows=roster.crosswalk.filter(x=>x.officialNBAPlayerId);
+    expect(new Set(idRows.map(x=>x.officialNBAPlayerId)).size).toBe(idRows.length);
+    const byName=new Map(roster.crosswalk.map(x=>[x.name,x]));
+    for(const [name,team,id] of ([
+      ["Kasparas Jakucionis","MIL","1642857"],
+      ["John Collins","DET","1628381"],
+      ["Andrew Wiggins","MIA","203952"],
+      ["Thomas Sorber","OKC","1642850"],
+      ["Labaron Philon Jr.","PHI","1642889"]
+    ] as Array<[string,string,string]>)) {
+      const row=byName.get(name);
+      expect(row?.teamCode,name).toBe(team);
+      expect(row?.officialNBAPlayerId,name).toBe(id);
+      expect(row?.officialPlayerUrl,name).toContain("/player/"+id);
+      expect(row?.positionStatus,name).toContain("not-certified");
+    }
+  });
+
   it("separates confirmed 2025-26 injury absence from player ability and verifies 8 more exact NBA IDs", () => {
     const supplemental = JSON.parse(readFileSync("docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json","utf8")) as {
       confirmedNo2025_26NbaSeason:Array<{name:string;season:string;nbaRegularSeasonGames:number;lastNbaSeason:string;lastSeasonGames:number;sourceUrl:string;gradeStatus:string}>;
