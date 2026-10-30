@@ -67,7 +67,7 @@ describe("NBA GM unreleased seven-player foundation", () => {
   it("supports all 30 NBA teams and calibration-only budget scenarios", () => {
     expect(NBA_GM_TEAM_CODES.length).toBe(30);
     expect(new Set(NBA_GM_TEAM_CODES).size).toBe(30);
-    expect(NBA_GM_ROSTER_SLOTS).toEqual(["PG", "SG", "SF", "PF", "C", "SIXTH", "FLEX"]);
+    expect(NBA_GM_ROSTER_SLOTS).toEqual(["PG", "SG", "SF", "PF", "C", "GUARD", "BIG"]);
     expect(NBA_GM_BUDGET_SCENARIOS).toEqual([185_000_000, 192_500_000, 200_000_000]);
   });
 
@@ -110,7 +110,8 @@ describe("NBA GM unreleased seven-player foundation", () => {
   it("keeps multidimensional eligibility without letting a center masquerade as PG", () => {
     expect(nbaGmEligibleForSlot(roster[5]!, "SG")).toBe(true);
     expect(nbaGmEligibleForSlot(roster[4]!, "PG")).toBe(false);
-    expect(nbaGmEligibleForSlot(roster[4]!, "SIXTH")).toBe(true);
+    expect(nbaGmEligibleForSlot(roster[4]!, "GUARD")).toBe(false);
+    expect(nbaGmEligibleForSlot(roster[4]!, "BIG")).toBe(true);
     const illegal = picks.map((pick, i) => i === 0 ? { ...pick, playerId: "center" } : pick);
     const review = nbaGmRosterReview(illegal, byId, cap);
     expect(review.errors).toContain("NBA player not eligible for slot: center / PG");
@@ -136,7 +137,7 @@ describe("NBA GM unreleased seven-player foundation", () => {
     const options = nbaGmTeamCandidates("ATL", "PG", [], catalog, cap);
     expect(options.map(player => player.id)).toEqual(["higher-rated", "point", "sixth"]);
     expect(nbaGmTeamCandidates("ATL", "PG", [{ slot: "PG", playerId: "point" }], catalog, cap)).toEqual([]);
-    expect(nbaGmTeamCandidates("ATL", "FLEX", [{ slot: "PG", playerId: "point" }], catalog, cap)
+    expect(nbaGmTeamCandidates("ATL", "BIG", [{ slot: "PG", playerId: "point" }], catalog, cap)
       .some(player => player.id === "point")).toBe(false);
   });
 
