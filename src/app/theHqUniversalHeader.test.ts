@@ -15,8 +15,8 @@ describe("The HQ universal header", () => {
     expect(shell.match(/app-header--universal/g) ?? []).toHaveLength(1);
     expect(shell).not.toContain("<FootballHeader />");
     expect(shell).toContain("<NotificationHeaderAction />");
-    expect(shell).toContain('to="/intelligence"');
-    expect(shell).toContain('aria-label="Open UFC Intelligence"');
+    expect(shell).not.toContain('to="/intelligence"');
+    expect(shell).not.toContain('aria-label="Open UFC Intelligence"');
     expect(shell).toContain("<IdentityControl />");
   });
 
