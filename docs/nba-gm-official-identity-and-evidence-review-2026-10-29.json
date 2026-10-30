@@ -3,7 +3,7 @@
   "asOfDate": "2026-10-29",
   "productionPublished": false,
   "completeSixSkillCertified": 0,
-  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification.",
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification. October 30: Buzelis interior-defense box, tracking, deterrence and role peer review supports a cautious 73 to 77 provisional adjustment; not a full six-skill or exact-position certification.",
   "officialRosterIdentity": [
     {
       "name": "Tyrese Haliburton",
@@ -532,6 +532,29 @@
       "skillsReviewed": [
         "shooting"
       ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Matas Buzelis",
+      "season": "2025-26",
+      "games": 77,
+      "minutesPerGame": 29.2,
+      "blocksPerGame": 1.5,
+      "blocksTotal": 116,
+      "blockPercentage": 4.5,
+      "shotsDefendedAtRimPerGame": 6.1,
+      "rimShootingHeldBelowNormalPercentagePoints": -5.9,
+      "skillsReviewed": [
+        "interiorDefense"
+      ],
+      "before": 73,
+      "after": 77,
+      "decision": "Raise Interior Defense 73→77 on 77-game two-year-confirmed shot-blocking growth, 6.1 rim defenses/game and 5.9 percentage-point rim-shooting suppression. Withhold 80+: non-center help role, negative rim deterrence and weak whole-team defensive impact; defense film still missing.",
+      "comparison": "Above initial below-average 73, near Scottie Barnes 75 in forward rim help, below Peyton Watson 81 as wing help and dramatically below center-anchor Alexandre Sarr 88/Chet Holmgren 95. Not equal rim roles.",
+      "sourceUrl": "https://www.basketball-reference.com/players/b/buzelma01.html",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/matas-buzelis?gt=Regular+Season&season=2025-26",
+      "thirdSourceUrl": "https://spreadsheetsports.com/players/matas-buzelis/",
+      "dossier": "docs/nba-gm-matas-buzelis-2025-26-interior-defense-peer-review-2026-10-30.md",
       "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
     }
   ],
