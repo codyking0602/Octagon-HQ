@@ -3,7 +3,7 @@ import { describe,expect,it } from "vitest";
 import { NBA_GM_ROSTER_SLOTS,NBA_GM_SKILL_KEYS } from "./nbaGmFoundation";
 import {
  NBA_GM_DEV_CAPS,nbaGmDevCanAdd,nbaGmDevAssignRoster,nbaGmDevCandidates,
- nbaGmDevCatalogErrors,nbaGmDevSpend,type NbaGmDevPlayer,type NbaGmDevRun,
+ nbaGmDevCatalogErrors,nbaGmDevFitSignals,nbaGmDevSpend,type NbaGmDevPlayer,type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter,nbaGmScoutTier } from "./nbaGmScouting";
 import { createNbaGmDevRepository } from "./nbaGmDevRepository";
@@ -93,6 +93,25 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(arranged?.find(p=>p.playerId==="sfg")?.slot).toBe("GUARD");
   expect(arranged?.find(p=>p.playerId==="sfb")?.slot).toBe("BIG");
   expect(nbaGmDevAssignRoster(["sf","sf","sf"],sample)).toBeNull();
+ });
+ it("reports complementarity only after Year 1 without adding numerical chemistry",()=>{
+  const slots=NBA_GM_ROSTER_SLOTS;
+  const sample=slots.map((slot,i)=>({
+    ...wemby,id:"scout-"+i,
+    positions:[slot==="GUARD"?"SG":slot==="BIG"?"C":slot] as NbaGmDevPlayer["positions"],
+    skills:{...wemby.skills,shooting:50,playmaking:i===0?94:60},
+  }));
+  const picks=slots.map((slot,i)=>({slot,playerId:sample[i]!.id}));
+  expect(nbaGmDevFitSignals(picks.slice(0,6),sample)).toEqual([]);
+  const weak=nbaGmDevFitSignals(picks,sample);
+  expect(weak.find(p=>p.label==="Floor spacing")?.status).toBe("NEEDS WORK");
+  expect(weak.find(p=>p.label==="Secondary playmaking")?.status).toBe("NEEDS WORK");
+  const corrected=sample.map((player,i)=>({...player,skills:{
+    ...player.skills,shooting:i<3?90:50,playmaking:i===1?87:player.skills.playmaking,
+  }}));
+  const strong=nbaGmDevFitSignals(picks,corrected);
+  expect(strong.find(p=>p.label==="Floor spacing")?.status).toBe("STRONG");
+  expect(strong.find(p=>p.label==="Secondary playmaking")?.status).toBe("STRONG");
  });
  it("preserves hidden exact numbers and NFL tiers with letter-grade skill scouting",()=>{
   expect(nbaGmScoutLetter(99)).toBe("A+");
