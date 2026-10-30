@@ -168,6 +168,7 @@ export interface FootballGmFinalResultV2 {
   playoffScore: number;
   /** Combined result component, retained for existing report summary logic. */
   resumeScore: number;
+  scoreFormula: "legacy" | "current";
   teamOveralls: readonly number[];
   seasons: readonly FootballGmSeasonResultV2[];
   continuity: {
@@ -1351,10 +1352,20 @@ export function footballGmFinalResultV2(input: {
     ? footballGmThreeYearRecordScore(seasons.map((season) => season.wins!))
     : rosterManagementScore;
   const playoffScore = footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
-  const resumeScore = Math.round(((regularSeasonScore * 0.30) + (playoffScore * 0.70)) * 10) / 10;
-  const score = footballGmScoreFromComponents(rosterManagementScore, regularSeasonScore, playoffScore);
+  // The Oct 13 and Oct 20 weekly championships were already finalized under
+  // the original 90% roster / 10% playoff formula. Keep those archives exact.
+  const scoreFormula = /^weekly-gm:2026-10-(?:13|20):/.test(input.seed) ? "legacy" : "current";
+  const resumeScore = scoreFormula === "legacy"
+    ? playoffScore
+    : Math.round(((regularSeasonScore * 0.30) + (playoffScore * 0.70)) * 10) / 10;
+  const score = scoreFormula === "legacy"
+    ? Math.round((rosterManagementScore * 0.90 + footballGmThreeYearResumeScore(
+        seasons.map((season) => season.finish),
+      ) * 0.10) * 10) / 10
+    : footballGmScoreFromComponents(rosterManagementScore, regularSeasonScore, playoffScore);
   return {
     score,
+    scoreFormula,
     rosterManagementScore,
     regularSeasonScore,
     playoffScore,
