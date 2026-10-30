@@ -32,7 +32,7 @@ function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
   const [failed,setFailed]=useState(false);
   const id=player.officialNbaPlayerId;
   return <span className="nba-gm-dev__portrait" aria-hidden="true">
-    {id&&/^\\d+$/.test(id)&&!failed
+    {id&&/^\d+$/.test(id)&&!failed
       ? <img src={`https://cdn.nba.com/headshots/nba/latest/260x190/${id}.png`}
           alt="" loading="lazy" onError={()=>setFailed(true)}/>
       : <TeamMark code={player.teamCode}/>}

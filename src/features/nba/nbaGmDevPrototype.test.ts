@@ -89,6 +89,8 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(page).not.toContain("player.currentGrade");
   expect(page).toContain("nbaGmScoutLetter");
   expect(page).toContain("GmFootballWheel");
+  expect(page).toContain("cdn.nba.com/headshots/nba/latest/260x190/");
+  expect(page).toContain("<PlayerPortrait player={player}/>");
   expect(page).toContain("run.phase===\"year1\"");
   expect(page).toContain('act("offseason")');
   expect(css).toContain("@media(max-width:700px)");

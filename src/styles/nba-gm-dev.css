@@ -96,3 +96,10 @@
 .nba-gm-dev__player{padding:9px}
 .nba-gm-dev__candidate-grid{grid-template-columns:1fr}
 }
+
+/* Official NBA headshot only when the player ID is verified; original team identity fallback otherwise. */
+.nba-gm-dev__portrait{width:47px;height:47px;flex:0 0 47px;display:grid;place-items:center;overflow:hidden;
+  border-radius:11px;background:linear-gradient(145deg,#314458,#10202e)}
+.nba-gm-dev__portrait>img{width:100%;height:100%;object-fit:cover;object-position:center 15%}
+.nba-gm-dev__portrait .nba-gm-dev__team-mark{width:40px;height:40px;flex-basis:40px}
+@media(max-width:700px){.nba-gm-dev__portrait{width:43px;height:43px;flex-basis:43px}}
