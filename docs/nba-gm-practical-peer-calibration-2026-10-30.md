@@ -29,8 +29,21 @@
 | Ja Morant | OVR **81**, Playmaking **84** | 20-game 2025–26 19.5/8.1 with 52% TS and 23.5% 3P; hold current ability inference, keep missed time distinct |
 | Oscar Tshiebwe | Rebounding **96**, OVR 73 | 27 NBA games, 14.4 boards per 36 and strong offensive rebound rate; extreme specialist case plausible but starter-load transfer and contested boards still uncertain |
 | Deandre Ayton | Interior Defense **70** | 72 games, 1.0 BPG; blocks cannot justify an automatic interior bump without real rim assignment/deterrence film |
-| Franz Wagner | Shooting **66**, OVR 86 | 34 games, 34.5% threes on 139 attempts following 29.5% prior year; still uncertain jumper relative to driving/midrange. Leave 66 pending shot-quality evidence, not one season change |
+| Franz Wagner | Shooting **71**, OVR 86 | Separate October 30 multiyear review subsequently moved **66 → 71**: 34 games, 34.5% threes on 139 attempts, improving spot-up evidence and 82.3% FT, but 29.5% in 2024–25 and inconsistent pull-up threes still rule out 75+; see dedicated Franz memo |
 | Austin Reaves | Scoring **88**, OVR 87 | 23.3 PPG and 64.1% TS in 51 games; 88 overall remains a separate potential amendment only after whole-player defensive peer review |
 | Matas Buzelis | Interior Defense **77**, OVR 79 | 1.5 BPG and credible weak-side paint data support prior evidence-backed bump, but no 85-tier full-time center rim protection proven |
 
 **Decision:** 7 targeted changes to six skill cells, no other grades or overalls adjusted in this pass. Existing 11 prior documented grade corrections remain preserved. Review is risk-based and streamlined: unresolved film/shot-difficulty evidence is *not* falsely marked full independent skill certification. NBA.com teams and exact roster eligibility remain a separate gate. All player ratings remain unpublished and on PR #2321 only.
+
+
+## Final practical follow-on — October 30
+
+The seven edits in the main table above were **one batch**, not the total for PR #2321. An additional independent Franz Wagner review approved Shooting **66 → 71**, and a final focused three-case review applied:
+
+| Player | Trait | Before → After | Reason and source |
+|---|---|---|---|
+| Michael Porter Jr. | Scoring | 81 → **86** | Brooklyn 2025–26 24.2 PPG, 18.4 FGA/game over 52 games vs Denver 2024–25 18.2 PPG; first-option volume supports very-good creation, but not top-90. [Official Brooklyn season notes](https://www.nba.com/gamenotes/nets.pdf) |
+| Jrue Holiday | Playmaking | 79 → **81** | 2025–26 Portland 6.1 APG (322 assists in 53 games), versus 3.9 APG as a lower-usage Boston guard in 2024–25; passing role improved, with 146 turnovers warranting moderation. [Historical NBA record](https://www.basketball-reference.com/players/h/holidjr01.html) |
+| Keegan Murray | Shooting | 85 → **81** | 2025–26 27.7% 3P (31/112) and 2024–25 34.3%, after 35.8% and 41.1% earlier; retain above-average upside but not 85 present-day specialist certainty. Historical SF in 2022–24 and PF in 2024–26 supports provisional **SF/PF** lead, not formally certified game-slot eligibility. [Official NBA season splits](https://www.nba.com/stats/player/1631099/) |
+
+**Current aggregate after these changes: 22 documented evidence-led skill corrections in the PR, 330×6 proposal cells retained, 0/330 strict independent six-skill certifications, no overall adjustments, and no publication.** See `docs/nba-gm-practical-ratings-closeout-2026-10-30.md` for the final practical editorial handoff. All new scores remain provisional until release authorization.
