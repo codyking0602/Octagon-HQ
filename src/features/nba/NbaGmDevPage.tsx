@@ -252,19 +252,21 @@ export default function NbaGmDevPage(){
             </>}
           <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER</button>
         </div>}
-        {run.freeAgencyTeam&&<div className="nba-gm-dev__trade">
-          <strong>{NBA_TEAMS.find(t=>t.id===run.freeAgencyTeam)?.name} · 1YR FREE AGENTS</strong>
-          <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
-            pendingTeam={wheelSpinning?null:wheelTeam} canSpin={false} onSpin={()=>{}}/>
-          {!wheelSpinning&&<div className="nba-gm-dev__candidate-grid">
-            {candidates.map(player=><PlayerCard key={player.id} player={player} disabled={busy}
-              action="SIGN" onPick={()=>void act("sign",player.id)}/>)}</div>}
-          <button className="nba-gm-dev__secondary" disabled={busy||wheelSpinning} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
-        </div>}
-        {run.picks.length<7&&!run.freeAgencyTeam&&!run.shopPlayerId&&run.freeAgencyVisits<3&&
-          <><p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits}/3 MARKET VISITS</p>
+        {run.picks.length<7&&!run.shopPlayerId&&(run.freeAgencyTeam||run.freeAgencyVisits<3)&&
+          <div className="nba-gm-dev__trade">
+            <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits}/3 MARKET VISITS</p>
             <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
-              pendingTeam={null} canSpin={wheelEnabled} onSpin={()=>void spin("fa-spin")}/></>}
+              pendingTeam={wheelSpinning?null:run.freeAgencyTeam?wheelTeam:null}
+              canSpin={wheelEnabled} onSpin={()=>void spin("fa-spin")}/>
+            {run.freeAgencyTeam&&!wheelSpinning&&<>
+              <strong>{NBA_TEAMS.find(t=>t.id===run.freeAgencyTeam)?.name} · 1YR FREE AGENTS</strong>
+              <div className="nba-gm-dev__candidate-grid">
+                {candidates.map(player=><PlayerCard key={player.id} player={player} disabled={busy}
+                  action="SIGN" onPick={()=>void act("sign",player.id)}/>)}
+              </div>
+              <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
+            </>}
+          </div>}
         {run.picks.length<7&&run.freeAgencyVisits>=3&&!run.freeAgencyTeam&&
           <p className="nba-gm-dev__error">Free-agent market exhausted. Your rotation needs another eligible player before it can advance.</p>}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
