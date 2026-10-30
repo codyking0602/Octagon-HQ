@@ -71,7 +71,8 @@
     "2025-26 individual regular-season reviews added for 11 missed returning NBA players, distinguishing 2025-26 historical teams from 2026-27 and excluding playoffs and play-in games; 44 additional context observations are NOT certification.",
     "Individual 2025-26 regular-season checks expanded to 225 players; 7 previously uncovered 75–79 overall profiles added with minutes/split/availability notes. No skill grade changed or certified on box-score evidence alone.",
     "Three unqualified 75–79 player profiles added: Jordan Poole, Moritz Wagner, Kentavious Caldwell-Pope, with separated 2025-26 regular-season, playoff and play-in games.",
-    "October 29 additional 21 individually verified 2025–26 regular-season player rows (including 10-game Scotty Pippen Jr. assist sample); 2025–26 clubs may differ from current 2026–27 affiliations. Single-season points, 3P%, steals and blocks do not independently establish skill ratings; missing metric values were not extrapolated."
+    "October 29 additional 21 individually verified 2025–26 regular-season player rows (including 10-game Scotty Pippen Jr. assist sample); 2025–26 clubs may differ from current 2026–27 affiliations. Single-season points, 3P%, steals and blocks do not independently establish skill ratings; missing metric values were not extrapolated.",
+    "Dorian Finney-Smith 2025–26 shooting: 27/100 threes in 37 regular-season games and 16.8 minutes/game; keep shooting 80 as a flagged provisional question pending multi-season and shot-profile evidence rather than deducting for one injury-affected season."
   ],
   "players": [
     {
@@ -1974,6 +1975,14 @@
           "metric": "blocksPerGame",
           "value": 0.2,
           "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dorian_finney_smith.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 27,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dorian_finney_smith_full.htm",
           "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
