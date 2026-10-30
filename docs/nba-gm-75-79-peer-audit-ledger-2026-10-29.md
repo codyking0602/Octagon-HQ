@@ -6,7 +6,7 @@
 
 Players are grouped only by *provisional* position family. Suggested neighbors are within 2 overall points, selected by proximity in the six provisional skill categories to direct an independent film/production review; **the nearest peer is not editorial approval**. Diagnostic conflict flags use simple conservative thresholds only; they should trigger human assessment, never automatic numerical grade changes. A player with one 95+ trait can still be 75–79 overall.
 
-- Cohort size: **149**, 2025–26 individually linked regular-season/award context: **109/149**, no attached NBA 2025–26 context: **40**. Conflicts with recorded performance thresholds: **7** players.
+- Cohort size: **149**, 2025–26 individually linked regular-season/award context: **112/149**, no attached NBA 2025–26 context: **37**. Conflicts with recorded performance thresholds: **7** players.
 - NBA canonical IDs, team codes and proposed positions still require official reconciliation. Rookies and returning injured players need explicit limitations, not assumed 2025–26 performance.
 - Source details where available: `nba-gm-sourced-2025-26-facts-2026-10-29.json`; proposed skill values in `nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json`.
 
@@ -52,7 +52,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Javonte Green | DET | 76 | Forward/Wing | 70/64/61/81/58/66 | Ziaire Williams (76); Sidy Cissoko (76) | Core role-volume peer audit |
 | Jeremiah Fears | NOP | 76 | Guard/Wing | 77/67/72/64/25/44 | Keaton Wagler (76); Brandon Williams (76) | Core role-volume peer audit |
 | Jordan Goodwin | PHX | 76 | Guard/Wing | 64/63/57/87/38/86 | Keon Ellis (78); Gary Payton II (77) | Core role-volume peer audit |
-| Jordan Poole | NOP | 76 | PG/Creator | 80/79/75/50/29/49 | Bogdan Bogdanovic (75); Kasparas Jakucionis (76) | No attached individual 2025-26 leaderboard or award |
+| Jordan Poole | NOP | 76 | PG/Creator | 80/79/75/50/29/49 | Bogdan Bogdanovic (75); Kasparas Jakucionis (76) | 39 GP, 13.4 PPG, 3.1 APG on 37.2% FG / 33.3% 3PT across 288 attempts; high-volume inefficient role needs independent scoring/shooting review |
 | Jose Alvarado | NYK | 76 | Guard/Wing | 67/75/79/81/28/42 | Ryan Rollins (78); Miles McBride (78) | 2025-26 source facts now attached; role/film audit still pending |
 | Julian Strawther | DEN | 76 | Forward/Wing | 73/85/56/59/32/49 | Klay Thompson (77); Gradey Dick (75) | No attached individual 2025-26 leaderboard or award |
 | Justin Champagnie | WAS | 76 | Forward/Wing | 69/72/53/72/55/79 | Ace Bailey (76); Baylor Scheierman (76) | 2025-26 source facts now attached; role/film audit still pending |
@@ -88,11 +88,11 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Jaxson Hayes | UTA | 77 | Forward/Wing | 67/13/42/51/72/76 | Precious Achiuwa (76); Jarred Vanderbilt (76) | 2025-26 source facts now attached; role/film audit still pending |
 | Jaylin Williams | OKC | 77 | Forward/Wing | 68/80/82/55/64/77 | Trey Lyles (75); Santi Aldama (79) | 2025-26 source facts now attached; role/film audit still pending |
 | Jock Landale | ATL | 77 | Big | 68/60/62/61/76/80 | Maxime Raynaud (75); Trevon Brazile (77) | 2025-26 source facts now attached; role/film audit still pending |
-| Kentavious Caldwell-Pope | PHI | 77 | Forward/Wing | 63/80/51/83/30/49 | Klay Thompson (77); Matisse Thybulle (78) | No attached individual 2025-26 leaderboard or award |
+| Kentavious Caldwell-Pope | PHI | 77 | Forward/Wing | 63/80/51/83/30/49 | Klay Thompson (77); Matisse Thybulle (78) | 51 regular-season GP, 8.4 PPG / 2.7 APG; 2025-26 Memphis role, current Philadelphia defense-and-shooting assignment unverified |
 | Klay Thompson | MIA | 77 | Forward/Wing | 67/87/54/61/30/46 | Julian Strawther (76); AJ Green (77) | Core role-volume peer audit |
 | Landry Shamet | NYK | 77 | Guard/Wing | 68/87/53/64/28/43 | Isaiah Joe (78); Sam Merrill (79) | No attached individual 2025-26 leaderboard or award |
 | Marcus Smart | HOU | 77 | PG/Creator | 67/67/73/81/56/55 | Tre Jones (78); Egor Demin (75) | Small sample or availability |
-| Moritz Wagner | BKN | 77 | Big | 77/77/62/54/56/74 | Sandro Mamukelashvili (77); Jalen Smith (79) | No attached individual 2025-26 leaderboard or award |
+| Moritz Wagner | BKN | 77 | Big | 77/77/62/54/56/74 | Sandro Mamukelashvili (77); Jalen Smith (79) | 36 regular-season GP in Orlando, 11.9 MPG, 6.9 PPG / 3.2 RPG; exclude playoff/play-in and account for post-injury limitations; current Brooklyn club is separate |
 | Saddiq Bey | NOP | 77 | Forward/Wing | 75/80/59/64/57/70 | Mario Hezonja (75); AJ Dybantsa (77) | 2025-26 source facts now attached; role/film audit still pending |
 | Sandro Mamukelashvili | LAL | 77 | Big | 77/83/73/60/61/71 | Moritz Wagner (77); Al Horford (77) | 2025-26 source facts now attached; role/film audit still pending |
 | Trevon Brazile | DEN | 77 | Big | 72/42/59/68/77/79 | Paul Reed (79); Aday Mara (76) | No attached individual 2025-26 leaderboard or award |
