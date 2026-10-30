@@ -68,21 +68,30 @@ export function nbaGmDevAssignRoster(playerIds: readonly string[], catalog: read
   const byId=new Map(catalog.map(p=>[p.id,p]));
   const players=playerIds.map(id=>byId.get(id));
   if (players.some(p=>!p))return null;
-  function visit(index:number,used:Set<NbaGmSlot>,picks:NbaGmPick[]):NbaGmPick[]|null {
-    if(index===players.length)return picks;
-    const player=players[index]!;
-    // Prefer a player's exact primary position; bench positions stay flexible.
-    const slots=[...NBA_GM_ROSTER_SLOTS].filter(slot=>nbaGmDevEligible(player,slot))
-      .sort((a,b)=>(a===player.positions[0]?-1:b===player.positions[0]?1:0)
-        || (a==="GUARD"||a==="BIG"?1:0)-(b==="GUARD"||b==="BIG"?1:0));
-    for(const slot of slots){
-      if(used.has(slot))continue;
-      const next=visit(index+1,new Set([...used,slot]),[...picks,{slot,playerId:player.id}]);
-      if(next)return next;
+  // Exhaustive matching like the server: minimize bench assignments globally
+  // before off-primary roles, not merely the first successful DFS branch.
+  let best:{picks:NbaGmPick[];bench:number;offRole:number;tie:string}|null=null;
+  function visit(index:number,used:Set<NbaGmSlot>,picks:NbaGmPick[],
+    bench:number,offRole:number):void {
+    if(best&&(bench>best.bench||(bench===best.bench&&offRole>best.offRole)))return;
+    if(index===players.length){
+      const tie=JSON.stringify(picks);
+      if(!best||bench<best.bench||(bench===best.bench&&offRole<best.offRole)||
+        (bench===best.bench&&offRole===best.offRole&&tie<best.tie)){
+        best={picks,bench,offRole,tie};
+      }
+      return;
     }
-    return null;
+    const player=players[index]!;
+    for(const slot of NBA_GM_ROSTER_SLOTS){
+      if(used.has(slot)||!nbaGmDevEligible(player,slot))continue;
+      visit(index+1,new Set([...used,slot]),[...picks,{slot,playerId:player.id}],
+        bench+(slot==="GUARD"||slot==="BIG"?1:0),
+        offRole+(slot===player.positions[0]?0:1));
+    }
   }
-  return visit(0,new Set(),[]);
+  visit(0,new Set(),[],0,0);
+  return best ? (best as {picks:NbaGmPick[]}).picks : null;
 }
 
 /** Affordable matching with future-slot reserve. Does not claim certainty about
@@ -97,15 +106,22 @@ export function nbaGmDevCanAdd(
   const owned=new Set(assigned.map(p=>p.playerId));
   const open=NBA_GM_ROSTER_SLOTS.filter(slot=>!assigned.some(p=>p.slot===slot));
   const spend=nbaGmDevSpend(assigned,catalog);
-  return [0,1,2].every(year=>{
-    if(phase==="offseason"&&year===0)return true;
-    const reserve=phase==="offseason"?0:open.reduce((sum,slot)=>{
-      const prices=catalog.filter(p=>!owned.has(p.id)&&nbaGmDevEligible(p,slot))
-        .map(p=>nbaGmDevSalary(p,year as 0|1|2));
-      return sum+(prices.length?Math.min(...prices):Number.POSITIVE_INFINITY);
-    },0);
-    return spend[year]!+reserve<=caps[year]!;
-  });
+  // Distinct reserved players protect against double-counting one versatile
+  // cheap player as the solution to multiple open positions. Reserving each
+  // filler's maximum contracted-year cost guarantees a concrete completion.
+  const reserved=new Set(owned);
+  let safeReserve=0;
+  if(phase==="draft"){
+    for(const slot of open){
+      const cheapest=catalog.filter(p=>!reserved.has(p.id)&&nbaGmDevEligible(p,slot))
+        .sort((a,b)=>Math.max(...a.salaries)-Math.max(...b.salaries)||a.id.localeCompare(b.id))[0];
+      if(!cheapest)return false;
+      reserved.add(cheapest.id);
+      safeReserve+=Math.max(...[0,1,2].map(year=>nbaGmDevSalary(cheapest,year as 0|1|2)));
+    }
+  }
+  return [0,1,2].every(year=>(phase==="offseason"&&year===0)||
+    spend[year]!+safeReserve<=caps[year]!);
 }
 /** Legacy call signature retained for foundation and migration contract checks. */
 export function nbaGmDevCanPick(picks: readonly NbaGmPick[],slot:NbaGmSlot,
