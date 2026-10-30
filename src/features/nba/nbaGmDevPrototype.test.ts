@@ -14,6 +14,7 @@ const board = JSON.parse(readFileSync("docs/nba-gm-330-six-skills-PROVISIONAL-20
 const sql = readFileSync("supabase/migrations/202612310894_nba_gm_private_330_development_fixtures.sql","utf8");
 const runtime = readFileSync("supabase/migrations/202612310893_nba_gm_private_playtest_runtime.sql","utf8");
 const router = readFileSync("src/app/router.tsx","utf8");
+const hub = readFileSync("src/features/nba/NbaPlayPage.tsx","utf8");
 const page = readFileSync("src/features/nba/NbaGmDevPage.tsx","utf8");
 const css = readFileSync("src/styles/nba-gm-dev.css","utf8");
 
@@ -86,6 +87,8 @@ describe("NBA GM Phase 2 private playable draft",()=>{
   });
   it("is owner-gated and mobile-safe with no public NBA hub entry or provisional JSON bundle",()=>{
     expect(router).toContain('path: "nba/gm-dev", element: <NbaWhoAmIOwnerGate>');
+    expect(hub).toContain('{owner ? <button type="button" className="play-v2__game"');
+    expect(hub).toContain('navigate("/nba/gm-dev")');
     expect(page).toContain("OWNER PLAYTEST · NOT PUBLIC");
     expect(page).toContain("fictional game-price fixture");
     expect(page).not.toContain("nba-gm-330-six-skills-PROVISIONAL");
