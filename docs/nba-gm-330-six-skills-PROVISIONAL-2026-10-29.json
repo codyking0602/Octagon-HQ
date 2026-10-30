@@ -6976,23 +6976,24 @@
         "shooting": 73,
         "playmaking": 67,
         "perimeterDefense": 78,
-        "interiorDefense": 73,
+        "interiorDefense": 77,
         "rebounding": 69
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
-        "editorialRationale": "Developing two-way scoring wing; upside not credited as current ability.",
+        "editorialRationale": "Developing two-way scoring wing; upside not credited as current ability. INTERIOR DEFENSE EDITORIAL UPDATE (2025-26: 77 GP, 116 blocks/1.5 BPG, ~5.2 contested two-point attempts/game; NBA-tracking rim FG% suppressed ~5-6 points versus normal; moderate 77, not center-anchor grade because weak rim deterrence and -0.4 defensive BPM; see docs/nba-gm-matas-buzelis-2025-26-interior-defense-peer-review-2026-10-30.md.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/bulls/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.nba.com/player/1641824"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "evidence-led-interior-defense-regrade-not-certified"
       ],
       "editorialNote": "Young wing tools, current creation less mature than potential",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -7028,8 +7029,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; interior defense grade reviewed separately against blocks, rim contests, shot suppression and forward-role peers; five other traits pending",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-ajdybantsa",
@@ -22321,7 +22322,7 @@
     "uncorroboratedPlayers": 29,
     "sourceContextStatObservations": 951,
     "sourceContextAwardObservations": 37,
-    "evidenceBasedProvisionalCorrections": 10,
+    "evidenceBasedProvisionalCorrections": 11,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
   }
 }
