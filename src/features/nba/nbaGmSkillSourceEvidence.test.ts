@@ -64,7 +64,7 @@ describe("NBA GM draft ratings evidence, confidence, and source integrity", () =
   it("retains 133 individually traceable source contexts and exactly preserves 2025-26 facts", () => {
     const sourceByName = new Map(source.players.map(row => [normalize(row.name), row]));
     expect(sourceByName.size).toBe(source.players.length);
-    expect(source.players.length).toBeGreaterThanOrEqual(133);
+    expect(source.players.length).toBeGreaterThanOrEqual(207);
     expect(draft.reviewProvenance.sourceContextPlayers).toBe(source.players.length);
     const actual = draft.players.filter(p => p.sourcedSeasonFacts !== null);
     expect(actual.length).toBe(source.players.length);
@@ -92,7 +92,8 @@ describe("NBA GM draft ratings evidence, confidence, and source integrity", () =
         expect(award.honor.trim().length).toBeGreaterThan(2);
       }
     }
-    expect(source.players.reduce((s, p) => s + p.observations.length, 0)).toBeGreaterThanOrEqual(233);
+    expect(source.players.reduce((s, p) => s + p.observations.length, 0)).toBeGreaterThanOrEqual(429);
+    expect(source.players.reduce((s, p) => s + p.awards.length, 0)).toBeGreaterThanOrEqual(37);
   });
 
   it("keeps anchor experts and role specialists distinct without making overall a skill average", () => {
