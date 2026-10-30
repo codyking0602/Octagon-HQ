@@ -8,6 +8,7 @@ import {
 } from "./picksModel";
 import { picksSeasonStandings } from "./picksSeasonStandings";
 import { FootballWeekRecap } from "./FootballWeekRecap";
+import { MemberMiniAvatar } from "../members/MemberMiniAvatar";
 import { LatestEventRecap } from "./LatestEventRecap";
 import { resolvePicksDestination } from "./picksDestination";
 
@@ -227,7 +228,8 @@ export function PicksSeasonHub({
                       </span>
                       <div className="picks-season-standing__identity">
                         <div className="picks-season-standing__name">
-                          <strong>{standing.displayName}</strong>
+                          <MemberMiniAvatar displayName={standing.displayName} />
+                           <strong>{standing.displayName}</strong>
                           {standing.isCurrentUser ? <em>YOU</em> : null}
                         </div>
                         <small>

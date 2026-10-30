@@ -12,6 +12,7 @@ import { createPortal } from "react-dom";
 import { shareAppLink, shareCanonicalDestination } from "../../app/nativeShare";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
+import { MemberAvatarProvider } from "../members/MemberMiniAvatar";
 import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
 import { createAuctionRepository } from "../play/auctionRepository";
 import type { PlayGameId } from "../play/playRegistry";
@@ -618,7 +619,9 @@ export function ChallengeProvider({
 
   return (
     <PlayChallengesContext.Provider value={value}>
-      {children}
+      <MemberAvatarProvider members={members} currentName={activeProfile?.displayName ?? null}>
+        {children}
+      </MemberAvatarProvider>
       {composer && activeProfile && repository ? (
         <ComposerDialog
           draft={composer}

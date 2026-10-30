@@ -423,3 +423,14 @@
 .play-v2__gm-champion strong { font-size: 18px; line-height: 1.1; }
 .play-v2__gm-champion a { color: #9acaf1; font-size: 11px; font-weight: 850; text-decoration: none; }
 .play-v2__gm-champion-dismiss { position: absolute; top: 7px; right: 9px; background: transparent; border: 0; color: #a5b6c4; font-size: 21px; cursor: pointer; }
+
+/* One compact weekly entry point; standings live inside the actual championship. */
+.play-v2__weekly--compact { padding: 0; gap: 0; overflow: hidden; }
+.play-v2__weekly-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 11px 13px; color: #f4f7fb; text-decoration: none; }
+.play-v2__weekly-copy { display: grid; gap: 4px; min-width: 0; }
+.play-v2__weekly-copy small { color: #e3bd70; font-size: 9px; font-weight: 850; letter-spacing: .08em; }
+.play-v2__weekly-copy strong { font-size: clamp(12px, 3.4vw, 15px); letter-spacing: -.025em; }
+.play-v2__weekly-link > b { flex: none; color: #9bcaf2; font-size: 11px; white-space: nowrap; }
+.play-v2__weekly-link:focus-visible { outline: 2px solid #9bcaf2; outline-offset: -3px; }
+.play-v2__leader-name { display: inline-flex; align-items: center; gap: 7px; min-width: 0; }
+.play-v2__leader-name > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

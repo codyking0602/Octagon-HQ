@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { footballLiveStandingsForMembers } from "./footballGroupLiveStandings";
 import type { PickEvent } from "./picksModel";
 import { usePicks } from "./PicksProvider";
+import { MemberMiniAvatar } from "../members/MemberMiniAvatar";
 
 interface GroupPickProgressProps {
   event: PickEvent;
@@ -126,7 +127,8 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
                 onClick={() => setSelectedName(isSelected ? null : member.displayName)}
               >
                 <span className="picks-group-progress__member-status" aria-hidden="true">
-                  {isComplete ? "✓" : member.displayName.trim().charAt(0).toUpperCase()}
+                  <MemberMiniAvatar displayName={member.displayName} small />
+                   {isComplete ? <i className="picks-group-progress__complete-mark" aria-label="Complete">✓</i> : null}
                 </span>
                 <strong>{member.displayName}{member.isCurrentUser ? " · YOU" : ""}</strong>
                 {isFootball && live && live.settled > 0 ? (

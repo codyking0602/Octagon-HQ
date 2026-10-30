@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import type { PickGroupPick } from "./picksModel";
+import { MemberMiniAvatar } from "../members/MemberMiniAvatar";
 
 interface GroupPickRevealProps {
   redFighterSlug: string;
@@ -75,7 +76,8 @@ export function GroupPickReveal({
           <div>
             {selectedGroup.members.map((pick) => (
               <strong className={pick.isCurrentUser ? "is-current-user" : ""} key={pick.displayName}>
-                {pick.displayName}{pick.isCurrentUser ? " · YOU" : ""}
+                <MemberMiniAvatar displayName={pick.displayName} small />
+                 {pick.displayName}{pick.isCurrentUser ? " · YOU" : ""}
               </strong>
             ))}
           </div>

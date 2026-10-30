@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { MemberMiniAvatar } from "../members/MemberMiniAvatar";
 import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import FootballGmModePage from "./FootballGmModePage";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
@@ -343,7 +344,10 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
                 && standingScenarios.some(({ id }) =>
                   canViewWeeklyGmStandingResult(entry, state.attempts, id, false, preview));
               const heading = <>
-                <strong>#{entry.rank} · {entry.display_name}{entry.profile_id === identity.profile?.id ? " · YOU" : ""}</strong>
+                <span className="football-weekly-gm__entry-identity">
+                  <MemberMiniAvatar displayName={entry.display_name} />
+                  <strong>#{entry.rank} · {entry.display_name}{entry.profile_id === identity.profile?.id ? " · YOU" : ""}</strong>
+                </span>
                 <b>{archive || canViewTotal ? entry.total_score.toFixed(1) + " / 200" : "LOCKED"}</b>
               </>;
               return (
