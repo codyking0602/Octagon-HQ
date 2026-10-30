@@ -216,7 +216,7 @@ export function FootballGmFinalExperience({
   const subtitle = closing <= opening - 5 ? "STRONG START, TOUGH FINISH"
     : result.resumeScore + 4 < result.rosterManagementScore ? "GOOD ROSTER, TOUGH FINISH"
       : closing > opening + 4 ? "YOUR TEAM GOT STRONGER"
-        : result.resumeScore > result.rosterManagementScore + 4 ? "PLAYOFFS LIFTED YOUR RUN"
+        : result.resumeScore > result.rosterManagementScore + 4 ? "RESULTS LIFTED YOUR RUN"
           : "THREE SEASONS. YOUR DECISIONS.";
   const record = (season: (typeof result.seasons)[number]) => footballGmSeasonRecordLabel(season) ?? "—";
 
@@ -255,7 +255,7 @@ export function FootballGmFinalExperience({
         )}
         <div className="gm-final__stats">
           <div><b>{result.rosterManagementScore.toFixed(1)}</b><small>AVG TEAM OVR</small></div>
-          <div><b>{result.resumeScore.toFixed(1)}</b><small>PLAYOFF RÉSUMÉ</small></div>
+          <div><b>{result.playoffScore.toFixed(1)}</b><small>PLAYOFF GRADE</small></div>
           <div><b>{retained.length}/7</b><small>CORE RETAINED</small></div>
           <div><b>{changes.length}</b><small>OFFSEASON CHANGES</small></div>
         </div>
@@ -382,7 +382,8 @@ export function FootballGmFinalExperience({
         <section className="gm-final__section surface-card" aria-label="GM score breakdown">
           <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
           <div className="gm-final__math"><span>Roster (90%)</span><i><b style={{ width: result.rosterManagementScore + "%" }} /></i><strong>{result.rosterManagementScore.toFixed(1)}</strong></div>
-          <div className="gm-final__math is-playoff"><span>Playoffs (10%)</span><i><b style={{ width: result.resumeScore + "%" }} /></i><strong>{result.resumeScore.toFixed(1)}</strong></div>
+          <div className="gm-final__math"><span>Season record (3%)</span><i><b style={{ width: result.regularSeasonScore + "%" }} /></i><strong>{result.regularSeasonScore.toFixed(1)}</strong></div>
+          <div className="gm-final__math is-playoff"><span>Playoffs (7%)</span><i><b style={{ width: result.playoffScore + "%" }} /></i><strong>{result.playoffScore.toFixed(1)}</strong></div>
         </section>
         <section className="gm-final__section surface-card" aria-label="Year 3 finances">
           <header className="gm-final__heading"><h2>FINANCIALS · YEAR 3</h2></header>
