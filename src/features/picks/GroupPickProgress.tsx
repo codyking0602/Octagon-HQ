@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { useMemo, useState } from "react";
 import { footballLiveStandingsForMembers } from "./footballGroupLiveStandings";
 import type { PickEvent } from "./picksModel";
@@ -125,9 +126,7 @@ export function GroupPickProgress({ event, locked: _locked, mySelections, embedd
                 aria-expanded={isSelected}
                 onClick={() => setSelectedName(isSelected ? null : member.displayName)}
               >
-                <span className="picks-group-progress__member-status" aria-hidden="true">
-                  {isComplete ? "✓" : member.displayName.trim().charAt(0).toUpperCase()}
-                </span>
+                <MemberInlineAvatar displayName={member.displayName} profileId={member.profileId} isCurrentUser={member.isCurrentUser} className="picks-group-progress__member-avatar" />
                 <strong>{member.displayName}{member.isCurrentUser ? " · YOU" : ""}</strong>
                 {isFootball && live && live.settled > 0 ? (
                   <span className="football-group-live">

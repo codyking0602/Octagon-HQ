@@ -333,3 +333,8 @@
   padding: 3px 5px;
   white-space: nowrap;
 }
+
+.picks-group-progress__member-avatar.member-inline-avatar { flex: none; width: 24px; height: 24px; border-radius: 8px; }
+.picks-group-pick-reveal__member { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.picks-group-pick-reveal__member .member-inline-avatar { width: 23px; height: 23px; flex-basis: 23px; }
+.picks-group-pick-reveal__member > strong { min-width: 0; }

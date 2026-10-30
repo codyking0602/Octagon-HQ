@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { formatChampionshipPoints, loadMlbChampionship, type MlbChampionship } from "../mlb/mlbChampionship";
@@ -194,7 +195,7 @@ function Detail({ sport, result, loading, error, compactFootball = false }: {
                   aria-label={"View " + member.display_name + " Championship standing"}
                 >
                   <span className="home-champ-preview__placing" aria-hidden="true">{member.rank === 1 ? "★" : member.rank}</span>
-                  <span className="home-champ-preview__avatar" aria-hidden="true">{member.initials || member.display_name.slice(0, 2)}</span>
+                  <MemberInlineAvatar className="home-champ-preview__avatar" displayName={member.display_name} profileId={member.profile_id} isCurrentUser={member.profile_id === own.profile_id} />
                   <span className="home-champ-preview__competitor-main">
                     <span className="home-champ-preview__competitor-name">{member.is_current_user || member.profile_id === own.profile_id ? "You" : member.display_name}</span>
                     <span className="home-champ-preview__meter" aria-hidden="true">

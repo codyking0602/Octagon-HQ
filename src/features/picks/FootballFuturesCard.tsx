@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "../../styles/football-futures.css";
 import {
@@ -309,7 +310,7 @@ function RevealedFuturesPicks({ picks }: { picks: FootballFuturesPicks }) {
 function GroupFuture({ name, picks }: { name: string; picks: FootballFuturesPicks }) {
   return (
     <details className="football-futures-group-entry">
-      <summary><strong>{name}</strong><span>VIEW PICKS</span></summary>
+      <summary><strong className="football-futures-group-entry__member"><MemberInlineAvatar displayName={name} />{name}</strong><span>VIEW PICKS</span></summary>
       <div className="football-futures-group-entry__picks">
         <RevealedFuturesPicks picks={picks} />
       </div>

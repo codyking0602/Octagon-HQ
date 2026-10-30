@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
@@ -227,6 +228,7 @@ export function PicksSeasonHub({
                       </span>
                       <div className="picks-season-standing__identity">
                         <div className="picks-season-standing__name">
+                          <MemberInlineAvatar displayName={standing.displayName} profileId={standing.profileId} isCurrentUser={standing.isCurrentUser} />
                           <strong>{standing.displayName}</strong>
                           {standing.isCurrentUser ? <em>YOU</em> : null}
                         </div>

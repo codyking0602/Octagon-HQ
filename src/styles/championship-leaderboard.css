@@ -64,3 +64,8 @@ button.champ-board__member-row:focus-visible { outline: 2px solid var(--champ-ac
 .champ-board__week-row { display: flex; justify-content: space-between; padding: 9px 4px; font-size: 12px; border-bottom: 1px solid var(--border); }
 .champ-board__notice { border: 1px solid var(--border); border-radius: 12px; padding: 18px; color: var(--text-secondary); }
 @media(max-width:390px) { .champ-board__breakdown { padding-left: 12px; } .champ-board__weekly-winner { flex-wrap: wrap; } }
+
+.champ-board__identity .member-inline-avatar { flex-shrink: 0; }
+.champ-board__week-member { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.champ-board__week-member > span:last-child { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.champ-board__week-row { align-items: center; gap: 8px; }

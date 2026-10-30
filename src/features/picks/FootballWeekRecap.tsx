@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { shareCanonicalDestination } from "../../app/nativeShare";
@@ -453,7 +454,7 @@ export function FootballWeekRecap({
                 <article className={result.isCurrentUser ? "is-current-user" : ""} key={result.profileId ?? result.displayName}>
                   <span>{groupRankLabel(result.rank, event.groupResults)}</span>
                   <div>
-                    <strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong>
+                    <div className="picks-event-recap__member-heading"><MemberInlineAvatar displayName={result.displayName} profileId={result.profileId} isCurrentUser={result.isCurrentUser} /><strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong></div>
                     <small>{result.correct}-{result.incorrect} · {pickWinPercentage(result.correct, result.incorrect).toFixed(1)}% ATS{result.lockBonus ? ` · ${result.lockBonus > 0 ? "+" : ""}${result.lockBonus} LOCK` : ""}</small>
                   </div>
                   <b>{result.totalPoints}<small>PTS</small></b>
@@ -514,7 +515,7 @@ export function FootballWeekRecap({
                                 const result = groupPickResult(pick, analysis);
                                 return (
                                   <div className="football-week-recap__pick-row" key={`${pick.displayName}:${pick.pickedFighterSlug ?? "none"}`}>
-                                    <span>{pick.displayName.toUpperCase()}{pick.isCurrentUser ? " (YOU)" : ""}</span>
+                                    <span className="football-week-recap__pick-member"><MemberInlineAvatar displayName={pick.displayName} isCurrentUser={pick.isCurrentUser} /><span>{pick.displayName.toUpperCase()}{pick.isCurrentUser ? " (YOU)" : ""}</span></span>
                                     <strong>{pick.isLock ? <b aria-label="Lock pick">🔒</b> : null}{teamName(game, pick.pickedFighterSlug)}</strong>
                                     <em className={result === "✕" ? "is-missed" : ""}>{result}</em>
                                   </div>

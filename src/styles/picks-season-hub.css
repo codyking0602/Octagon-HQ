@@ -393,3 +393,5 @@
     font-size: 13px;
   }
 }
+
+.picks-season-standing__name .member-inline-avatar { width: 23px; height: 23px; flex-basis: 23px; border-radius: 7px; }

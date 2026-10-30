@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { useId, useState } from "react";
 import type { PickGroupPick } from "./picksModel";
 
@@ -74,9 +75,10 @@ export function GroupPickReveal({
           <span>{selectedGroup.label}</span>
           <div>
             {selectedGroup.members.map((pick) => (
-              <strong className={pick.isCurrentUser ? "is-current-user" : ""} key={pick.displayName}>
-                {pick.displayName}{pick.isCurrentUser ? " · YOU" : ""}
-              </strong>
+              <span className="picks-group-pick-reveal__member" key={pick.displayName}>
+                <MemberInlineAvatar displayName={pick.displayName} isCurrentUser={pick.isCurrentUser} />
+                <strong className={pick.isCurrentUser ? "is-current-user" : ""}>{pick.displayName}{pick.isCurrentUser ? " · YOU" : ""}</strong>
+              </span>
             ))}
           </div>
         </div>

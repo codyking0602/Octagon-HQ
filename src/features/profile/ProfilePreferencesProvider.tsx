@@ -237,6 +237,10 @@ export function ProfilePreferencesProvider({
   );
 }
 
+export function useOptionalProfilePreferences() {
+  return useContext(ProfilePreferencesContext);
+}
+
 export function useProfilePreferences() {
   const value = useContext(ProfilePreferencesContext);
   if (!value) throw new Error("useProfilePreferences must be used inside ProfilePreferencesProvider");

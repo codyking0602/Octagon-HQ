@@ -1,3 +1,4 @@
+import { InlineAvatar } from "../members/MemberInlineAvatar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { createFootballGmMatchRepository } from "./footballGmMatchRepository";
@@ -134,7 +135,7 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
                       <button key={entry.profileId} type="button" className="play-v2__leader-row"
                         aria-label={"View " + entry.displayName + "'s official Daily result"}
                         onClick={() => setSelectedProfileId(entry.profileId)}>
-                        <span><b>#{entry.rank}</b> {entry.isCurrentUser ? "You" : entry.displayName}</span>
+                        <span className="play-v2__leader-member"><b>#{entry.rank}</b><InlineAvatar displayName={entry.displayName} photo={entry.avatarPhotoData} /><span>{entry.isCurrentUser ? "You" : entry.displayName}</span></span>
                         <strong>{entry.normalizedScore}/100</strong>
                       </button>
                     ))}
@@ -364,20 +365,12 @@ function WeeklyCurrent({}: Record<string, never>) {
   const oct27Gm = now >= Date.parse("2026-10-27T05:00:00Z") && now < Date.parse("2026-11-03T06:00:00Z");
   const gmWeek = oct13Gm || oct20Gm || oct27Gm;
   return (
-    <section className="play-v2__weekly" aria-label="Weekly Featured Championship">
-      <div className="play-v2__section-top">
-        <span><span aria-hidden="true">🏆 </span> WEEKLY FEATURED</span>
-        <span>FOOTBALL</span>
-      </div>
-      <h2>{gmWeek ? "NFL GM Championship" : "Auction Center"}</h2>
-      <p>{oct27Gm ? "Choose your WR and RB · Two official franchises · Normal contracts and progression." :
-        oct20Gm ? "Two official franchises · Dak Prescott + Michael Penix Jr. · 200 points." :
-        oct13Gm ? "Two official franchises · Josh Allen + Jaxson Dart · 200 points." :
-        "Make your picks in this week’s featured football auction."}</p>
-      <div className="play-v2__weekly-actions">
-        <Link to={gmWeek ? "/football/weekly-gm" : "/football/weekly-auction"}>OPEN CURRENT WEEKLY →</Link>
-        <Link to="/championship/football?tab=play">PLAY STANDINGS ↗</Link>
-      </div>
+    <section className="play-v2__weekly play-v2__weekly--compact" aria-label="Weekly Featured Championship">
+      <Link className="play-v2__weekly-bar" to={gmWeek ? "/football/weekly-gm" : "/football/weekly-auction"}>
+        <span className="play-v2__weekly-kicker"><span aria-hidden="true">🏆 </span>FEATURED</span>
+        <strong>{gmWeek ? "NFL GM Championship" : "Auction Center"}</strong>
+        <span className="play-v2__weekly-cta">PLAY THIS WEEK →</span>
+      </Link>
     </section>
   );
 }

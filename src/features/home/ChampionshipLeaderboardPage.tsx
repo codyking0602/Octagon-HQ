@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -85,7 +86,7 @@ function SeasonBoard({
             <button type="button" className="champ-board__member-row" aria-expanded={expanded}
               onClick={() => onSelectPlayer(expanded ? null : player.profile_id)}>
               <b className="champ-board__rank">{getRank(player, selectedTab) === 1 ? "🏆" : "#" + getRank(player, selectedTab)}</b>
-              <span className="champ-board__identity"><strong>{player.display_name}</strong>{player.is_current_user ? <small>YOU</small> : null}</span>
+              <span className="champ-board__identity"><MemberInlineAvatar displayName={player.display_name} profileId={player.profile_id} isCurrentUser={player.is_current_user} /><strong>{player.display_name}</strong>{player.is_current_user ? <small>YOU</small> : null}</span>
               <strong className="champ-board__value">{shortScore(getScore(player, selectedTab))}</strong>
               <span className="champ-board__chevron" aria-hidden="true">{expanded ? "⌃" : "›"}</span>
             </button>
@@ -190,7 +191,7 @@ export default function ChampionshipLeaderboardPage() {
           {[...mlb.standings].sort((a, b) => a.overall_rank - b.overall_rank).map((entry) => (
             <div className={`champ-board__member${entry.is_current_user ? " is-you" : ""}`} key={entry.profile_id}>
               <div className="champ-board__member-row"><b className="champ-board__rank">#{entry.overall_rank}</b>
-                <span className="champ-board__identity"><strong>{entry.display_name}</strong></span>
+                <span className="champ-board__identity"><MemberInlineAvatar displayName={entry.display_name} profileId={entry.profile_id} isCurrentUser={entry.is_current_user} /><strong>{entry.display_name}</strong></span>
                 <strong className="champ-board__value">{shortScore(entry.total_points)}</strong></div>
               <div className="champ-board__metrics"><span>Series <b>{shortScore(entry.series_points)}</b></span>
                 <span>Bracket <b>{shortScore(entry.bracket_points)}</b></span><span>Play <b>{shortScore(entry.play_points)}</b></span></div>
@@ -237,7 +238,7 @@ export default function ChampionshipLeaderboardPage() {
                   <div className="champ-board__table-heading"><span>{sport === "ufc" ? "MONTHLY" : "WEEKLY"} PLAYER</span><span>{sport === "ufc" ? "MONTH" : "WEEK"} SCORE</span></div>
                   {currentWeek.entries.map((entry) => (
                     <div key={entry.profile_id} className="champ-board__week-row">
-                      <span>#{entry.rank} · {entry.display_name}</span><strong>{shortScore(entry.rating)}</strong>
+                      <span className="champ-board__week-member"><b>#{entry.rank}</b><MemberInlineAvatar displayName={entry.display_name} profileId={entry.profile_id} isCurrentUser={entry.is_current_user} /><span>{entry.display_name}</span></span><strong>{shortScore(entry.rating)}</strong>
                     </div>
                   ))}
                 </div>
