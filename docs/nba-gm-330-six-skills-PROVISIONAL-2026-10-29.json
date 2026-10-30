@@ -12621,7 +12621,7 @@
       "name": "Javonte Green",
       "teamCode": "DET",
       "candidatePositions": [
-        "SF"
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 76,
@@ -12647,7 +12647,8 @@
       "reviewFlags": [
         "75-79-compression-review",
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "position-evidence-led-lead-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -13001,7 +13002,7 @@
       "name": "Ben Sheppard",
       "teamCode": "IND",
       "candidatePositions": [
-        "SF"
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 74,
@@ -13025,7 +13026,8 @@
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "position-evidence-led-lead-not-certified"
       ],
       "editorialNote": "Low usage shooting/defense, insufficient self-creation",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -13347,7 +13349,7 @@
       "name": "Pelle Larsson",
       "teamCode": "MIA",
       "candidatePositions": [
-        "SF"
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 78,
@@ -13373,7 +13375,8 @@
       "reviewFlags": [
         "75-79-compression-review",
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "position-evidence-led-lead-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -14387,7 +14390,7 @@
       "name": "Anthony Black",
       "teamCode": "ORL",
       "candidatePositions": [
-        "SF"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 79,
@@ -14413,7 +14416,8 @@
       "reviewFlags": [
         "75-79-compression-review",
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "position-evidence-led-lead-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
