@@ -77,7 +77,11 @@
     "individualFinalOct29KhamanMaluach": "https://www.landofbasketball.com/nba_players_season_stats/2026/khaman_maluach_full.htm",
     "individualFinalOct29ZachEdey": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_edey_full.htm",
     "individualFinalOct29ZachLaVine": "https://www.landofbasketball.com/nba_players_season_stats/2026/zach_lavine_full.htm",
-    "individualFinalOct29ShaedonSharpe": "https://www.landofbasketball.com/nba_players_season_stats/2026/shaedon_sharpe_full.htm"
+    "individualFinalOct29ShaedonSharpe": "https://www.landofbasketball.com/nba_players_season_stats/2026/shaedon_sharpe_full.htm",
+    "individualClosingOct29KristapsPorzingis": "https://www.landofbasketball.com/nba_players_season_stats/2026/kristaps_porzingis_full.htm",
+    "individualClosingOct29KeeganMurray": "https://www.landofbasketball.com/nba_players_season_stats/2026/keegan_murray_full.htm",
+    "individualClosingOct29JimmyButler": "https://www.landofbasketball.com/nba_players_season_stats/2026/jimmy_butler_full.htm",
+    "individualClosingOct29DanielGafford": "https://www.landofbasketball.com/nba_players_season_stats/2026/daniel_gafford_full.htm"
   },
   "sourceNotes": [
     "Player seasons are 2025-26; team transfers to 2026-27 do not affect historical 2025-26 fact identity.",
@@ -93,7 +97,8 @@
     "October 29 additional 21 individually verified 2025–26 regular-season player rows (including 10-game Scotty Pippen Jr. assist sample); 2025–26 clubs may differ from current 2026–27 affiliations. Single-season points, 3P%, steals and blocks do not independently establish skill ratings; missing metric values were not extrapolated.",
     "Dorian Finney-Smith 2025–26 shooting: 27/100 threes in 37 regular-season games and 16.8 minutes/game; keep shooting 80 as a flagged provisional question pending multi-season and shot-profile evidence rather than deducting for one injury-affected season.",
     "October 29 focused 13-player NBA regular season evidence batch: 2025–26 samples only; excludes playoff/play-in double-counts and meaningless tiny three-point samples. Current NBA club is independently maintained as 2026–27, not inferred from 2025–26 statistics.",
-    "Additional five verified 2025–26 regular-season dossier rows, including three previously uncovered 75–79 overall players. Zach Edey 11 GP and Khaman Maluach 8.9 MPG are small-sample caveats; exclude postseason and avoid mechanistic grade changes."
+    "Additional five verified 2025–26 regular-season dossier rows, including three previously uncovered 75–79 overall players. Zach Edey 11 GP and Khaman Maluach 8.9 MPG are small-sample caveats; exclude postseason and avoid mechanistic grade changes.",
+    "Four further injury-/role-sensitive star and big-man individual 2025–26 regular-season dossiers; excludes play-in and unwarranted shooting figures for players with zero attempts."
   ],
   "players": [
     {
@@ -1519,6 +1524,52 @@
           "value": 4.5,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=5",
           "sourceKind": "third-party-2025-26-leaderboard-page-5",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Daniel Gafford",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 9.5,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/daniel_gafford_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 6.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/daniel_gafford_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 1.1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/daniel_gafford_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 0.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/daniel_gafford_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 1.3,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/daniel_gafford_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -3931,6 +3982,60 @@
       ]
     },
     {
+      "name": "Jimmy Butler",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 20,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jimmy_butler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 5.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jimmy_butler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 4.9,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jimmy_butler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 37.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jimmy_butler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jimmy_butler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jimmy_butler_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Jock Landale",
       "observations": [
         {
@@ -4503,6 +4608,60 @@
       ]
     },
     {
+      "name": "Keegan Murray",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 14,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/keegan_murray_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 5.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/keegan_murray_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 1.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/keegan_murray_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 27.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/keegan_murray_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/keegan_murray_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 1.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/keegan_murray_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Kel'el Ware",
       "observations": [
         {
@@ -4913,6 +5072,60 @@
           "value": 7.3,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=4",
           "sourceKind": "third-party-2025-26-leaderboard-page-4",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Kristaps Porzingis",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 16.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/kristaps_porzingis_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 5.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/kristaps_porzingis_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 2.5,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/kristaps_porzingis_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 33.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/kristaps_porzingis_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 0.6,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/kristaps_porzingis_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 1.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/kristaps_porzingis_full.htm",
+          "sourceKind": "individually-checked-2025-26-regular-season",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
