@@ -165,6 +165,9 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(Object.keys(calls[2]!.args!)).not.toContain("team");
   expect(Object.keys(calls[2]!.args!)).not.toContain("results");
   expect(sql).toContain("private.nba_gm_v2_season");
+  expect(sql).toContain("':playoff:'||v_round");
+  expect(sql).toContain("v_cutoff:=greatest");
+  expect(sql).not.toContain("when v_wins<64 then 'Finals' else 'Champion'");
   expect(sql).toContain("82-v_wins");
  });
 });
