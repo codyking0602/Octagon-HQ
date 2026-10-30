@@ -147,11 +147,11 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
     }
     const positions = new Map(supplemental.positionEvidenceAdjudications.map(x=>[x.name,x]));
     expect(positions.size).toBeGreaterThanOrEqual(6);
-    for(const [name,candidates] of [
+    for(const [name,candidates] of ([
       ["Bennedict Mathurin",["SG","SF"]],["Luguentz Dort",["SG","SF"]],
       ["Jordan Walsh",["SF","PF"]],["Julian Strawther",["SG","SF"]],
       ["Zach LaVine",["SG","SF"]],["Josh Hart",["SG","SF","PF"]]
-    ]) {
+    ] as Array<[string,string[]]>)) {
       const item=positions.get(name);
       expect(item?.reviewedCandidates).toEqual(candidates);
       expect(item?.certification).toBe("PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION");
