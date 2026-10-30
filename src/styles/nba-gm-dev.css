@@ -60,3 +60,39 @@
 .nba-gm-dev__panel{padding:12px}
 .nba-gm-dev__header{padding:16px}
 .nba-gm-dev__slots button{font-size:11px}}
+
+/* NBA GM V2 inherits NFL wheel geometry and scout-pill tokens. */
+.nba-gm-dev__draft .football-wheel,.nba-gm-dev__offseason .football-wheel,.nba-gm-dev__trade .football-wheel{max-width:420px;margin:0 auto;width:100%}
+.nba-gm-dev__header{padding:16px 20px}
+.nba-gm-dev__header>span{margin-top:9px}
+.nba-gm-dev__header h1{font-size:clamp(30px,5vw,46px)}
+.nba-gm-dev__header p{margin-top:6px}
+.nba-gm-dev__intro strong,.nba-gm-dev__results>small{color:#fac77d;font-size:11px}
+.nba-gm-dev__roster-panel{gap:10px}
+.nba-gm-dev__roster-row{background:#172a3a;gap:8px;flex-wrap:wrap}
+.nba-gm-dev__roster-row>strong{flex-basis:46px}
+.nba-gm-dev__roster-row>b{display:block}
+.nba-gm-dev__roster-row>span:not(.nba-gm-dev__team-mark){flex:1;display:grid;gap:4px}
+.nba-gm-dev__roster-row small{font-size:10px}
+.nba-gm-dev__scout-pills{display:flex!important;gap:4px!important;align-items:center;flex-wrap:wrap}
+.nba-gm-dev__term{color:#c5d5e0;background:#253b4a;padding:3px 6px;font-size:9px;font-weight:900;border-radius:5px}
+.nba-gm-dev__player .football-gm__quality-pill,.nba-gm-dev__roster-row .football-gm__quality-pill{font-size:10px}
+.nba-gm-dev__position-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.nba-gm-dev__position-tabs button{border:1px solid #445a69;background:#1e3343;border-radius:7px;padding:9px 12px;color:#d9e8f2;font-weight:800}
+.nba-gm-dev__position-tabs button.is-selected{border-color:#f5bd71;background:#433222;color:#ffd198}
+.nba-gm-dev__skills{grid-template-columns:repeat(2,minmax(0,1fr))}
+.nba-gm-dev__skills strong{font-size:15px;color:#ffcc86}
+.nba-gm-dev__secondary{padding:7px 9px;border:1px solid #52728a;color:#d9e9f8;background:#1a2d3e;border-radius:7px;font-size:10px;font-weight:900;cursor:pointer}
+.nba-gm-dev__notice{border:1px solid #806332;background:#33291c;color:#ffe1a0;padding:10px;border-radius:8px;font-size:12px}
+.nba-gm-dev__fit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.nba-gm-dev__fit-grid>div{display:flex;justify-content:space-between;gap:9px;align-items:center;padding:10px;background:#1b3040;border-radius:8px}
+.nba-gm-dev__fit-grid span{font-size:12px}.nba-gm-dev__fit-grid strong{font-size:10px;white-space:nowrap}
+.nba-gm-dev__fit-grid .is-strong{color:#6bd3b8}.nba-gm-dev__fit-grid .is-fair{color:#f2ca7d}.nba-gm-dev__fit-grid .is-weak{color:#f6a8a8}
+.nba-gm-dev__trade{display:grid;gap:12px;padding:12px;border:1px solid #3b5164;border-radius:10px}
+@media(max-width:700px){
+.nba-gm-dev__roster{grid-template-columns:1fr}
+.nba-gm-dev__fit-grid{grid-template-columns:1fr}
+.nba-gm-dev__header{padding:13px}
+.nba-gm-dev__player{padding:9px}
+.nba-gm-dev__candidate-grid{grid-template-columns:1fr}
+}
