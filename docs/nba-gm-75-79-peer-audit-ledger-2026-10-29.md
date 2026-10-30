@@ -6,7 +6,7 @@
 
 Players are grouped only by *provisional* position family. Suggested neighbors are within 2 overall points, selected by proximity in the six provisional skill categories to direct an independent film/production review; **the nearest peer is not editorial approval**. Diagnostic conflict flags use simple conservative thresholds only; they should trigger human assessment, never automatic numerical grade changes. A player with one 95+ trait can still be 75–79 overall.
 
-- Cohort size: **149**, 2025–26 individually linked regular-season/award context: **136/149**, no attached NBA 2025–26 context: **13**. Conflicts with recorded performance thresholds: **7** players.
+- Cohort size: **149**, 2025–26 individually linked regular-season/award context: **137/149**, no attached NBA 2025–26 context: **12**. Conflicts with recorded performance thresholds: **7** players.
 - NBA canonical IDs, team codes and proposed positions still require official reconciliation. Rookies and returning injured players need explicit limitations, not assumed 2025–26 performance.
 - Source details where available: `nba-gm-sourced-2025-26-facts-2026-10-29.json`; proposed skill values in `nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json`.
 
@@ -57,7 +57,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Julian Strawther | DEN | 76 | Forward/Wing | 73/82/56/59/32/49 | Klay Thompson (77); Gradey Dick (75) | 2025-26 individually linked: 7.2 PPG, 2 RPG, 1.1 APG, 38.7 3P%; role, film and cross-positional peer calibration still required **Individual peer verdict:** Two-season shot-profile comparison supports 85→82 Shooting (58/150 3PT now vs 94/269 prior); SG added to eligible candidates, not yet official-slot certified; all six remain not certified |
 | Justin Champagnie | WAS | 76 | Forward/Wing | 69/72/53/72/55/79 | Ace Bailey (76); Baylor Scheierman (76) | 2025-26 source facts now attached; role/film audit still pending |
 | Jusuf Nurkic | UTA | 76 | Big | 67/45/75/49/64/85 | Deandre Ayton (78); Derik Queen (78) | 2025-26 individually linked: 10.9 PPG, 10.4 RPG, 4.8 APG, 35.2 3P%; role, film and cross-positional peer calibration still required **Individual peer verdict:** 10.4 RPG, 4.8 APG in 41 GP support 85 Rebounding and passing-big 75 Playmaking, unlike rim-runner Isaiah Jackson; 64 Interior Defense matchup context pending; all six remain not certified |
-| Kasparas Jakucionis | MIL | 76 | PG/Creator | 67/72/78/56/29/51 | Bub Carrington (75); Nolan Traore (74) | No attached individual 2025-26 leaderboard or award |
+| Kasparas Jakucionis | MIL | 76 | PG/Creator | 67/78/78/56/29/51 | Bub Carrington (75); Nolan Traore (74) | No attached individual 2025-26 leaderboard or award |
 | Keaton Wagler | LAC | 76 | Guard/Wing | 73/75/71/58/27/42 | Collin Sexton (77); Jeremiah Fears (76) | Small sample or availability; No attached individual 2025-26 leaderboard or award |
 | Kevin Huerter | DET | 76 | Guard/Wing | 71/85/74/59/35/51 | Mikel Brown Jr. (76); Darius Acuff Jr. (78) | 2025-26 source facts now attached; role/film audit still pending |
 | Khaman Maluach | PHX | 76 | Big | 61/30/48/48/84/78 | Joan Beringer (74); Isaiah Jackson (76) | 2025–26 individually linked: 46 GP but only 8.9 MPG, 3.0 PPG, 2.9 RPG, 0.7 BPG, 23.8% 3P (5/21). **Peer verdict:** 84 Interior Defense and 78 Rebounding are forward-looking, not demonstrated against starters; 30 Shooting remains weak; position C and NBA translation film still required; OVR76 hold |
@@ -180,3 +180,8 @@ The 21 initially newly sourced 75–79 overall candidates above now have distinc
 5. Record confidence and exact URLs for the six traits before marking the player certified.
 
 **All 149 remain on review hold.** The ledger is a completed cohort inventory/triage exercise, not completed independent empirical validation.
+
+
+### October 30 source and skill addendum
+
+Kasparas Jakucionis (overall 76) now has source-linked NBA 2025–26 **53 GP, 17.8 MPG, 66/156 three-pointers (42.3%), 6.2 PPG and 2.6 APG** and historical Illinois 2024–25 31.8% 3P / 84.5% FT. Shooting was provisionally calibrated **72 → 78** (not 85+): compare Josh Hart 77, Jaden McDaniels 81 and Bub Carrington 82 for volume, role and repeatability. The other five skills, exact playable position and overall remain unverified and unchanged. Historical row: `docs/nba-gm-2025-26-nba-api-301-player-stat-evidence-2026-10-29.json`; corroboration: https://www.basketball-reference.com/players/j/jakucka01.html and https://www.sports-reference.com/cbb/players/kasparas-jakucionis-1.html. **No certification implied**.
