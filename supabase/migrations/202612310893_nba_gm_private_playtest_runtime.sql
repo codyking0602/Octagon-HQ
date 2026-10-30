@@ -177,7 +177,7 @@ begin
       + (p.skills->>'interiorDefense')::numeric
       * case when pick->>'slot' in ('C','PF') then 0.55 else 0.23 end
       + (p.skills->>'rebounding')::numeric*0.18)
-      / case when pick->>'slot' in ('PG','SG','SF') then 0.98 else 1.03 end)
+      / case when pick->>'slot' in ('PG','SG','SF') then 0.98 else 1.03 end
       * case when pick->>'slot'='SIXTH' then 0.65
         when pick->>'slot'='FLEX' then 0.55 else 1 end) / 6.2,
     sum(case
