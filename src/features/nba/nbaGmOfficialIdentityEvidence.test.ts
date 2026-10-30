@@ -217,10 +217,16 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
       ["Jordan Walsh",["SF","PF"]],["Julian Strawther",["SG","SF"]],
       ["Zach LaVine",["SG","SF"]],["Josh Hart",["SG","SF","PF"]],
       ["Obi Toppin",["PF"]],["Christian Braun",["SG","SF"]],
-      ["Bilal Coulibaly",["SG","SF"]],["Ty Jerome",["PG","SG"]]
+      ["Bilal Coulibaly",["SG","SF"]],["Ty Jerome",["PG","SG"]],
+      ["John Collins",["PF"]],["Peyton Watson",["SF","PF"]],
+      ["Anthony Black",["PG"]],["Ben Sheppard",["SG"]],
+      ["Pelle Larsson",["SG"]],["Javonte Green",["SG"]]
     ] as Array<[string,string[]]>)) {
       const item=positions.get(name);
       expect(item?.reviewedCandidates).toEqual(candidates);
+      // A position adjudication is meaningful only when the unpublished board reflects it.
+      const boardPosition = draft.players.find(p=>p.name===name) as {candidatePositions?:string[]} | undefined;
+      expect(boardPosition?.candidatePositions,name).toEqual(candidates);
       expect(item?.certification).toBe("PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION");
       expect(item?.sourceUrl).toMatch(/^https:\/\//);
     }
