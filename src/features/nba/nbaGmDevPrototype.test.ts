@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe,expect,it } from "vitest";
 import { NBA_GM_ROSTER_SLOTS,NBA_GM_SKILL_KEYS } from "./nbaGmFoundation";
 import {
- NBA_GM_DEV_CAPS,nbaGmDevCanAdd,nbaGmDevAssignRoster,nbaGmDevCandidates,
+ NBA_GM_DEV_CAPS,nbaGmDevCanAdd,nbaGmDevAssignRoster,nbaGmDevCandidates,nbaGmDevEligible,
  nbaGmDevCatalogErrors,nbaGmDevFitSignals,nbaGmDevSpend,type NbaGmDevPlayer,type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter,nbaGmScoutTier } from "./nbaGmScouting";
@@ -90,8 +90,16 @@ describe("NBA GM private NFL-parity prototype",()=>{
   ];
   const arranged=nbaGmDevAssignRoster(sample.map(p=>p.id),sample);
   expect(arranged?.map(p=>p.slot).sort()).toEqual([...NBA_GM_ROSTER_SLOTS].sort());
-  expect(arranged?.find(p=>p.playerId==="sfg")?.slot).toBe("GUARD");
-  expect(arranged?.find(p=>p.playerId==="sfb")?.slot).toBe("BIG");
+  // Multiple legally equivalent complete arrangements can differ on whether
+  // the versatile wings start or back up. Assert eligibility, not a particular
+  // arbitrary tie-breaking order.
+  expect(nbaGmDevEligible(sample[5]!, "GUARD")).toBe(true);
+  expect(nbaGmDevEligible(sample[6]!, "BIG")).toBe(true);
+  expect(nbaGmDevEligible(sample[2]!, "GUARD")).toBe(false);
+  expect(nbaGmDevEligible(sample[2]!, "BIG")).toBe(false);
+  for(const pick of arranged??[]){
+    expect(nbaGmDevEligible(sample.find(p=>p.id===pick.playerId)!,pick.slot)).toBe(true);
+  }
   expect(nbaGmDevAssignRoster(["sf","sf","sf"],sample)).toBeNull();
  });
  it("reports complementarity only after Year 1 without adding numerical chemistry",()=>{
