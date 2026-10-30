@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize, reopened, converted_to_draft]
     paths:
       - "src/features/nba/nbaGmDev*"
+      - "src/features/nba/nbaGmDraftCompletion.test.ts"
       - "src/features/nba/NbaGmDevPage.tsx"
       - "src/styles/nba-gm-dev.css"
       - "src/app/router.tsx"
@@ -50,4 +51,4 @@ jobs:
       - name: Build production artifacts without deploying
         run: npm run build:artifacts
       - name: NBA GM and Football GM unit regressions
-        run: npx vitest run src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts
+        run: npx vitest run src/features/nba/nbaGmDraftCompletion.test.ts src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts
