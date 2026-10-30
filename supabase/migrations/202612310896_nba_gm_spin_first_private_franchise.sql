@@ -1,6 +1,19 @@
 -- NBA GM private V2. Reuses existing Football GM run/snapshot ownership and guards.
 -- Historical V1 sessions are immutable and remain separately queryable.
 -- GAME contract terms and prices are dev fixtures, NOT verified NBA agreements.
+
+-- Three focused, source-verified positional corrections to the 330-player
+-- PRIVATE catalog. No overall, skill, salary, or team identity is changed.
+-- 2026 NBA official player listings: Naz Reid C-F (#1629675), Cameron Boozer
+-- F-C (#1643409); 2025-26 Basketball-Reference: Collin Murray-Boyles PF.
+-- The original provisional rating-board position flags remain open for audit.
+update private.nba_gm_dev_players set positions=array['PF','C']::text[]
+  where id='nba-gm-draft-nazreid';
+update private.nba_gm_dev_players set positions=array['PF','C']::text[]
+  where id='nba-gm-draft-cameronboozer';
+update private.nba_gm_dev_players set positions=array['PF']::text[]
+  where id='nba-gm-draft-collinmurrayboyles';
+
 create or replace function private.nba_gm_v2_contract(p_id text)
 returns text language sql stable security definer set search_path='' as $$
   select case when right(md5(p_id),1) in ('0','1','2','3','4','5') then '1YR' else '3YR' end;
