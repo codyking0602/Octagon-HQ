@@ -5,7 +5,7 @@ import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
   nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
-  nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
+  nbaGmDevDisplaySalaryYear, nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter, nbaGmScoutTier } from "./nbaGmScouting";
 import { createNbaGmDevRepository, type NbaGmDevOperation } from "./nbaGmDevRepository";
@@ -206,7 +206,7 @@ export default function NbaGmDevPage(){
             return <article className="nba-gm-dev__roster-row" key={slot}>
               <strong>{NBA_GM_DEV_SLOT_LABELS[slot]}</strong>
               {player?<><PlayerPortrait key={player.id} player={player}/>
-                <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,run.phase==="draft"?0:run.phase==="final"?2:1))}</small>
+                <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase)))}</small>
                   <ScoutBadges player={player}/></span>
                 {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                   <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
