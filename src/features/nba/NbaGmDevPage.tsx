@@ -161,12 +161,13 @@ export default function NbaGmDevPage(){
     && nbaGmDevCanAdd(run.picks.filter(pick=>pick.playerId!==run.shopPlayerId),p,catalog,run.caps,"offseason")
   ):[];
   const isDraft=run?.phase==="draft";
-  const showWheel=Boolean(run&&(isDraft&&!run.pendingTeam||
-    run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam||
-    run.phase==="offseason"&&run.picks.length<7&&!run.freeAgencyTeam&&!run.shopPlayerId&&run.freeAgencyVisits<3));
-  const wheelEnabled=!busy&&!wheelSpinning&&Boolean(run&&(isDraft||
-    run.phase==="offseason"&&run.shopPlayerId&&run.tradesUsed===0||
-    run.phase==="offseason"&&run.picks.length<7&&run.freeAgencyVisits<3));
+  // Keep the wheel mounted during its animation and after its result.
+  // Unmounting at pendingTeam would hide the exact NFL GM spin the player expects.
+  const wheelEnabled=!busy&&!wheelSpinning&&Boolean(run&&(
+    isDraft&&!run.pendingTeam||
+    run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam&&run.tradesUsed===0||
+    run.phase==="offseason"&&run.picks.length<7&&!run.freeAgencyTeam&&!run.shopPlayerId&&run.freeAgencyVisits<3
+  ));
   return <main className="page nba-gm-dev" data-testid="nba-gm-development-page">
     <header className="nba-gm-dev__header">
       <Link to="/nba" className="nba-gm-dev__back">← Basketball HQ</Link>
@@ -220,7 +221,7 @@ export default function NbaGmDevPage(){
           <h2>{run.pendingTeam?"CHOOSE YOUR PLAYER":"SPIN FOR AN NBA TEAM"}</h2></div>
           {run.pendingTeam&&<TeamMark code={run.pendingTeam}/>}</div>
         {!run.pendingTeam&&<p className="nba-gm-dev__hint">Spin first, then choose any eligible player. The lineup reflows automatically to keep valid positions.</p>}
-        {showWheel&&<GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+        {<GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
           pendingTeam={wheelSpinning?null:wheelTeam} canSpin={wheelEnabled} onSpin={()=>void spin("spin")}/>}
         {run.pendingTeam&&!wheelSpinning&&<PlayerPicker players={visible} all={candidates} filter={positionFilter}
           setFilter={setPositionFilter} disabled={busy} onPick={id=>void act("pick",id)}/>}
@@ -239,8 +240,10 @@ export default function NbaGmDevPage(){
         <p className="nba-gm-dev__hint">1YR salaries reprice for Years 2–3; 3YR salaries remain locked. Shop one player, use your team-wheel trade partner, or cut and replace a player in the 1YR free-agent market.</p>
         {run.shopPlayerId&&<div className="nba-gm-dev__trade">
           <strong>SHOPPING {byId.get(run.shopPlayerId)?.name}</strong>
-          {!run.tradeTeam?<GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
-            pendingTeam={null} canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>:
+          <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+            pendingTeam={wheelSpinning?null:run.tradeTeam?wheelTeam:null}
+            canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>
+          {run.tradeTeam&&!wheelSpinning&&
             <><p>Trading partner: {NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}. Two offers maximum, one accepted trade.</p>
               <div className="nba-gm-dev__candidate-grid">
                 {eligibleTrade.map(player=><PlayerCard player={player} key={player.id} disabled={busy}
@@ -251,11 +254,12 @@ export default function NbaGmDevPage(){
         </div>}
         {run.freeAgencyTeam&&<div className="nba-gm-dev__trade">
           <strong>{NBA_TEAMS.find(t=>t.id===run.freeAgencyTeam)?.name} · 1YR FREE AGENTS</strong>
-          <div className="nba-gm-dev__candidate-grid">
+          <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+            pendingTeam={wheelSpinning?null:wheelTeam} canSpin={false} onSpin={()=>{}}/>
+          {!wheelSpinning&&<div className="nba-gm-dev__candidate-grid">
             {candidates.map(player=><PlayerCard key={player.id} player={player} disabled={busy}
-              action="SIGN" onPick={()=>void act("sign",player.id)}/>)}
-          </div>
-          <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
+              action="SIGN" onPick={()=>void act("sign",player.id)}/>)}</div>}
+          <button className="nba-gm-dev__secondary" disabled={busy||wheelSpinning} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
         </div>}
         {run.picks.length<7&&!run.freeAgencyTeam&&!run.shopPlayerId&&run.freeAgencyVisits<3&&
           <><p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits}/3 MARKET VISITS</p>
