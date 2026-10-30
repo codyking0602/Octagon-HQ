@@ -14,7 +14,7 @@
   "editorialPopulation": 330,
   "withSourceSeason": 301,
   "withoutSourceSeason": 29,
-  "crossCheckedPublishedLeaderboardObservations": 429,
+  "crossCheckedPublishedLeaderboardObservations": 822,
   "crossCheckErrors": 0,
   "notes": [
     "NBA season-specific player IDs are high-confidence NBA API sourced identity leads, not direct profile-level live roster or final canonical ID certification.",
