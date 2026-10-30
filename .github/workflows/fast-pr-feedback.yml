@@ -206,7 +206,7 @@ jobs:
             esac
           done
           if [ "${{ steps.scope.outputs.nba_gm_private_only }}" = true ]; then
-            npm test -- src/features/nba/nbaGmHistoricalCalibration.test.ts src/features/nba/nbaGmDraftCompletion.test.ts src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts --run
+            npm test -- src/features/nba/nbaGmHistoricalCalibration.test.ts src/features/nba/nbaGmPostseasonCalibration.test.ts src/features/nba/nbaGmDraftCompletion.test.ts src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts --run
           elif [ "$millionaire_only" = true ] && [ "$saw_millionaire" = true ]; then
             npm test -- src/features/play/millionaireDailyRuntime.test.ts src/features/play/millionaireEditorialFutureCandidates.test.ts src/features/play/millionaireSixMonthEditorialGate.test.ts --run
           elif [ "${{ steps.scope.outputs.bar_trivia_only }}" = true ]; then
