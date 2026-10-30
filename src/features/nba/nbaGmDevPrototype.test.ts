@@ -3,7 +3,7 @@ import { describe,expect,it } from "vitest";
 import { NBA_GM_ROSTER_SLOTS,NBA_GM_SKILL_KEYS } from "./nbaGmFoundation";
 import {
  NBA_GM_DEV_CAPS,nbaGmDevCanAdd,nbaGmDevAssignRoster,nbaGmDevCandidates,nbaGmDevEligible,
- nbaGmDevCatalogErrors,nbaGmDevFitSignals,nbaGmDevSpend,type NbaGmDevPlayer,type NbaGmDevRun,
+ nbaGmDevCatalogErrors,nbaGmDevDisplaySalaryYear,nbaGmDevFitSignals,nbaGmDevSalary,nbaGmDevSpend,type NbaGmDevPlayer,type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter,nbaGmScoutTier } from "./nbaGmScouting";
 import { createNbaGmDevRepository } from "./nbaGmDevRepository";
@@ -75,6 +75,18 @@ describe("NBA GM five-season historical win-conversion evidence",()=>{
  });
 });
 describe("NBA GM private NFL-parity prototype",()=>{
+ it("labels salary by the displayed season, including the Year 1 result screen",()=>{
+  expect(["draft","year1","offseason","final"].map(phase=>
+    nbaGmDevDisplaySalaryYear(phase as NbaGmDevRun["phase"]))).toEqual([0,0,1,2]);
+  const repriced={...wemby,gameContract:"1YR" as const,
+    salaries:[10_000_000,12_500_000,14_000_000] as const};
+  expect(nbaGmDevSalary(repriced,nbaGmDevDisplaySalaryYear("year1"))).toBe(10_000_000);
+  expect(nbaGmDevSalary(repriced,nbaGmDevDisplaySalaryYear("offseason"))).toBe(12_500_000);
+  expect(nbaGmDevSalary(repriced,nbaGmDevDisplaySalaryYear("final"))).toBe(14_000_000);
+  expect(nbaGmDevSalary(wemby,nbaGmDevDisplaySalaryYear("final"))).toBe(wemby.salaries[0]);
+  expect(page).toContain("nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase))");
+ });
+
  it("preserves 330 researched candidates, six skills and owner-only access",()=>{
   expect(nbaGmDevCatalogErrors(catalog)).toEqual([]);
   expect(new Set(catalog.map(p=>p.teamCode)).size).toBe(30);
