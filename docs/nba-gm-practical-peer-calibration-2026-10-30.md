@@ -38,7 +38,7 @@
 
 ## Final practical follow-on — October 30
 
-The seven edits in the main table above were **one batch**, not the total for PR #2321. An additional independent Franz Wagner review approved Shooting **66 → 71**, and a final focused three-case review applied:
+The seven edits in the main table above were **one batch**, not the total for PR #2321. An additional independent Franz Wagner review approved Shooting **66 → 71**, and a final focused four-case review applied:
 
 | Player | Trait | Before → After | Reason and source |
 |---|---|---|---|
@@ -46,4 +46,6 @@ The seven edits in the main table above were **one batch**, not the total for PR
 | Jrue Holiday | Playmaking | 79 → **81** | 2025–26 Portland 6.1 APG (322 assists in 53 games), versus 3.9 APG as a lower-usage Boston guard in 2024–25; passing role improved, with 146 turnovers warranting moderation. [Historical NBA record](https://www.basketball-reference.com/players/h/holidjr01.html) |
 | Keegan Murray | Shooting | 85 → **81** | 2025–26 27.7% 3P (31/112) and 2024–25 34.3%, after 35.8% and 41.1% earlier; retain above-average upside but not 85 present-day specialist certainty. Historical SF in 2022–24 and PF in 2024–26 supports provisional **SF/PF** lead, not formally certified game-slot eligibility. [Official NBA season splits](https://www.nba.com/stats/player/1631099/) |
 
-**Current aggregate after these changes: 22 documented evidence-led skill corrections in the PR, 330×6 proposal cells retained, 0/330 strict independent six-skill certifications, no overall adjustments, and no publication.** See `docs/nba-gm-practical-ratings-closeout-2026-10-30.md` for the final practical editorial handoff. All new scores remain provisional until release authorization.
+| DeMar DeRozan | Shooting | 66 → **80** | 2025–26 **232 made mid-range field goals (NBA leader)**, 47.6% mid-range accuracy and 86.8% FT demonstrate excellent in-between shotmaking, whereas only 47/147 3P (32.0%) caps the rating well below specialist 90. The old 66 ignored a central part of the locked Shooting definition; Scoring/Overall remain 80. [Official Sacramento team notes](https://www.nba.com/gamenotes/kings.pdf) |
+
+**Current aggregate after these changes: 23 documented evidence-led skill corrections in the PR, 330×6 proposal cells retained, 0/330 strict independent six-skill certifications, no overall adjustments, and no publication.** See `docs/nba-gm-practical-ratings-closeout-2026-10-30.md` for the final practical editorial handoff. All new scores remain provisional until release authorization.
