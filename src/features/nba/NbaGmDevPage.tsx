@@ -46,14 +46,14 @@ function ScoutBadges({player}:{player:NbaGmDevPlayer}){
     <span className="nba-gm-dev__term">{player.gameContract==="3YR"?"SALARY LOCKED":"REPRICE RISK"}</span>
   </span>;
 }
-function PlayerCard({player,onPick,disabled,action="DRAFT"}:{
-  player:NbaGmDevPlayer;onPick?:()=>void;disabled?:boolean;action?:string;
+function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0}:{
+  player:NbaGmDevPlayer;onPick?:()=>void;disabled?:boolean;action?:string;salaryYear?:0|1|2;
 }){
   return <article className="nba-gm-dev__player" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
     <div className="nba-gm-dev__player-head">
       <PlayerPortrait player={player}/>
       <div className="nba-gm-dev__identity">
-        <strong>{player.name}</strong><small>{player.positions.join(" / ")} · {money(player.salaries[0])} YEAR 1</small>
+        <strong>{player.name}</strong><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,salaryYear))} YEAR {salaryYear+1}</small>
         <ScoutBadges player={player}/>
       </div>
     </div>
@@ -205,8 +205,8 @@ export default function NbaGmDevPage(){
             const player=pick?byId.get(pick.playerId):null;
             return <article className="nba-gm-dev__roster-row" key={slot}>
               <strong>{NBA_GM_DEV_SLOT_LABELS[slot]}</strong>
-              {player?<><PlayerPortrait player={player}/>
-                <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,run.phase==="draft"?0:1))}</small>
+              {player?<><PlayerPortrait key={player.id} player={player}/>
+                <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,run.phase==="draft"?0:run.phase==="final"?2:1))}</small>
                   <ScoutBadges player={player}/></span>
                 {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                   <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
@@ -248,7 +248,7 @@ export default function NbaGmDevPage(){
             <><p>Trading partner: {NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}. Two offers maximum, one accepted trade.</p>
               <div className="nba-gm-dev__candidate-grid">
                 {eligibleTrade.map(player=><PlayerCard player={player} key={player.id} disabled={busy}
-                  action="OFFER FOR" onPick={()=>void act("trade",player.id)}/>)}
+                  action="OFFER FOR" salaryYear={1} onPick={()=>void act("trade",player.id)}/>)}
               </div>
             </>}
           <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER</button>
@@ -263,7 +263,7 @@ export default function NbaGmDevPage(){
               <strong>{NBA_TEAMS.find(t=>t.id===run.freeAgencyTeam)?.name} · 1YR FREE AGENTS</strong>
               <div className="nba-gm-dev__candidate-grid">
                 {candidates.map(player=><PlayerCard key={player.id} player={player} disabled={busy}
-                  action="SIGN" onPick={()=>void act("sign",player.id)}/>)}
+                  action="SIGN" salaryYear={1} onPick={()=>void act("sign",player.id)}/>)}
               </div>
               <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
             </>}
