@@ -101,6 +101,7 @@ export default function NbaPlayPage() {
     <header className="play-v2__heading">
       <div><span>NBA PLAY</span><h1>Play</h1></div>
     </header>
+    {owner && <Link to="/nba/gm-dev" className="nba-gm-owner-entry" style={{display:"block",padding:"10px 13px",marginBottom:12,border:"1px solid #e4a43966",borderRadius:10,textDecoration:"none",color:"inherit",fontWeight:800,fontSize:12}}>NBA GM · PRIVATE DEVELOPMENT PLAYTEST →</Link>}
 
     <section className="play-v2__daily" aria-label="Today's Challenge" data-sport="nba">
       <div className="play-v2__section-top">
