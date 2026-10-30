@@ -91,7 +91,8 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
     expect(review.completeSixSkillCertified).toBe(0);
     expect(draft.players.every(p => p.reviewStatus === "PROVISIONAL_NOT_CERTIFIED")).toBe(true);
     const corrections = review.individualResearch.filter(p => p.after !== null);
-    expect(corrections.map(p => p.name).sort()).toEqual(["Andrew Wiggins", "Bub Carrington", "Cam Spencer", "Collin Sexton", "Jaden McDaniels", "John Collins", "Josh Hart", "Julian Strawther", "Kasparas Jakucionis", "Matas Buzelis", "Peyton Watson"]);
+    expect(corrections.map(p => p.name).sort()).toEqual(["Andrew Wiggins","Bub Carrington","Cam Spencer","Collin Sexton","Davion Mitchell","Dyson Daniels","Gradey Dick","Jaden McDaniels","Jalen Suggs","John Collins","Josh Hart","Julian Strawther","Kasparas Jakucionis","Kel'el Ware","Kevin Huerter","Matas Buzelis","Peyton Watson","Tre Mann"]);
+    expect(corrections).toHaveLength(18);
     for (const c of corrections) {
       expect(c.season).toBe("2025-26");
       expect(c.skillsReviewed).toHaveLength(1);
