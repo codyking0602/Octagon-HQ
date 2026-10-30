@@ -14,7 +14,7 @@ type Row = {
 };
 const source = JSON.parse(readFileSync(
   "docs/nba-gm-official-nba-30-team-roster-crosswalk-2026-10-29.json", "utf8",
-)) as { published: boolean; teamCount: number; playerCount: number; notVerifiedTeams: string[]; crosswalk: Row[] };
+)) as { published: boolean; teamCount: number; playerCount: number; notVerifiedTeams: string[]; manuallyVerifiedPlayerIdCount: number; crosswalk: Row[]; positionConflicts: Row[] };
 const board = JSON.parse(readFileSync(
   "docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json", "utf8",
 )) as { published: boolean; certifiedCount: number; players: Array<{name: string; teamCode: string}> };
@@ -168,6 +168,24 @@ describe("NBA GM official roster snapshot — unpublished evidence only", () => 
       expect(row?.teamCode,cells[2]).toBe(cells[1]);
       expect(row?.officialNBAPlayerId,cells[2]).toBe(id);
       expect(row?.positionStatus,cells[2]).toContain("not-certified");
+    }
+    expect(source.published).toBe(false);
+    expect(board.certifiedCount).toBe(0);
+  });
+
+  it("maintains global official NBA ID uniqueness, count accuracy, and conflict-record equivalence",()=>{
+    const mapped=source.crosswalk.filter(row=>row.officialNBAPlayerId!==null);
+    expect(source.manuallyVerifiedPlayerIdCount).toBe(mapped.length);
+    const allIds=mapped.map(row=>row.officialNBAPlayerId);
+    expect(new Set(allIds).size).toBe(allIds.length);
+    const named=new Map(source.crosswalk.map(row=>[row.name,row]));
+    for(const row of source.positionConflicts){
+      const canonical=named.get(row.name);
+      expect(canonical,row.name).toBeDefined();
+      expect(canonical?.teamCode,row.name).toBe(row.teamCode);
+      if(row.officialNBAPlayerId!==null){
+        expect(canonical?.officialNBAPlayerId,row.name).toBe(row.officialNBAPlayerId);
+      }
     }
     expect(source.published).toBe(false);
     expect(board.certifiedCount).toBe(0);
