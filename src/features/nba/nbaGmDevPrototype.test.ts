@@ -62,6 +62,22 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(nbaGmDevCandidates({...run,pendingTeam:null},catalog)).toEqual([]);
   expect(nbaGmDevCanAdd([{slot:"C",playerId:wemby.id}],wemby,catalog)).toBe(false);
  });
+ it("reserves distinct filler players instead of multiplying one bargain athlete",()=>{
+  const example=[
+   {id:"cheap-guard",positions:["PG","SG"],salary:2000000},
+   {id:"cheap-big",positions:["PF","C"],salary:2000000},
+   {id:"cheap-sf",positions:["SF"],salary:2000000},
+   {id:"costly-pg",positions:["PG"],salary:60000000},
+   {id:"costly-sg",positions:["SG"],salary:60000000},
+   {id:"costly-pf",positions:["PF"],salary:60000000},
+   {id:"costly-c",positions:["C"],salary:60000000},
+  ].map(p=>({...wemby,id:p.id,positions:p.positions as NbaGmDevPlayer["positions"],
+    gameContract:"3YR" as const,salaries:[p.salary,p.salary,p.salary] as const}));
+  // Cheapest assignment is $246M, not the old per-slot reserve's false $130M.
+  expect(nbaGmDevCanAdd([],example[0]!,example)).toBe(false);
+  const cheapOnly=example.slice(0,3);
+  expect(nbaGmDevAssignRoster(cheapOnly.map(p=>p.id),cheapOnly)).toHaveLength(3);
+ });
  it("keeps a true guard and a true big, with secondary-position SF versatility",()=>{
   const sample=[
    {...wemby,id:"pg",positions:["PG"] as const},
@@ -93,6 +109,8 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(page).toContain("<PlayerPortrait player={player}/>");
   expect(page).toContain("run.phase===\"year1\"");
   expect(page).toContain('act("offseason")');
+  expect(page).toContain('run.phase==="year1"||run.phase==="offseason"');
+  expect(page).not.toContain("Free-agent market exhausted.");
   expect(css).toContain("@media(max-width:700px)");
   expect(css).toContain("overflow-wrap:anywhere");
  });
@@ -104,6 +122,8 @@ describe("NBA GM private NFL-parity prototype",()=>{
   expect(nbaGmDevCanAdd([],expensive,[...catalog,expensive])).toBe(false);
   expect(sql).toContain("private.nba_gm_v2_contract");
   expect(sql).toContain("private.nba_gm_v2_salary");
+  expect(sql).toContain("v_reserved_ids");
+  expect(sql).not.toContain("(v_state->>'freeAgencyVisits')::integer>=3");
   expect(sql).toContain("elsif p_action='release'");
   expect(sql).toContain("elsif p_action='trade-spin'");
   expect(sql).toContain("elsif p_action='fa-spin'");
