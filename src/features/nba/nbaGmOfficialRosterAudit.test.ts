@@ -97,4 +97,23 @@ describe("NBA GM official roster snapshot — unpublished evidence only", () => 
     expect(source.published).toBe(false);
   });
 
+  it("keeps 24 directly verified Minnesota and San Antonio profiles aligned to official NBA identities",()=>{
+    const markdown=readFileSync("docs/nba-gm-official-24-min-sas-profiles-2026-10-30.md","utf8");
+    const rows=markdown.split("\n").filter(line=>line.startsWith("| MIN |")||line.startsWith("| SAS |"));
+    expect(rows).toHaveLength(24);
+    const named=new Map(source.crosswalk.map(p=>[p.name,p]));
+    for(const line of rows){
+      const cells=line.split("|").map(x=>x.trim());
+      const id=cells[3]?.split("[")[1]?.split("]")[0];
+      expect(id,cells[2]).toMatch(/^[0-9]+$/);
+      expect(cells[3],cells[2]).toContain("https://www.nba.com/player/"+id);
+      const athlete=named.get(cells[2]!);
+      expect(athlete?.teamCode,cells[2]).toBe(cells[1]);
+      expect(athlete?.officialNBAPlayerId,cells[2]).toBe(id);
+      expect(athlete?.positionStatus,cells[2]).toContain("not-certified");
+    }
+    expect(board.certifiedCount).toBe(0);
+    expect(source.published).toBe(false);
+  });
+
 });
