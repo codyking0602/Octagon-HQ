@@ -90,8 +90,8 @@ describe("NBA GM historical 2025–26 NBA API identity and per-player statistics
        expect(Math.abs(n-o.value),row.name+" "+o.metric+" cross-source mismatch").toBeLessThan(tolerance);
      }
    }
-   expect(checked).toBe(429);
-   expect(data.crossCheckedPublishedLeaderboardObservations).toBe(429);
+   expect(checked).toBeGreaterThanOrEqual(822);
+   expect(data.crossCheckedPublishedLeaderboardObservations).toBe(checked);
    expect(data.crossCheckErrors).toBe(0);
  });
  it("matches all newly linked archival facts to exact 2025-26 player rows while retaining incomplete certification",()=>{
