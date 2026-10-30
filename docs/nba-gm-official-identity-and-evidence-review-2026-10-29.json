@@ -3,7 +3,7 @@
   "asOfDate": "2026-10-29",
   "productionPublished": false,
   "completeSixSkillCertified": 0,
-  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification. October 30: Buzelis interior-defense box, tracking, deterrence and role peer review supports a cautious 73 to 77 provisional adjustment; not a full six-skill or exact-position certification. October 30 risk-prioritized peer review applied 7 additional single-skill regrades with linked NBA seasons, historical context and named skill peers. The 18 total provisional changes DO NOT certify any complete athlete profile. Overall ratings are untouched.",
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification. October 30: Buzelis interior-defense box, tracking, deterrence and role peer review supports a cautious 73 to 77 provisional adjustment; not a full six-skill or exact-position certification. October 30 risk-prioritized peer review applied 7 additional single-skill regrades with linked NBA seasons, historical context and named skill peers. The 18 total provisional changes DO NOT certify any complete athlete profile. Overall ratings are untouched. Two additional position-specific historical role leads (Suggs PG/SG; Dick SG/SF), not final exact game-slot approval.",
   "officialRosterIdentity": [
     {
       "name": "Tyrese Haliburton",
@@ -1155,6 +1155,36 @@
       "sourceUrl": "https://www.basketball-reference.com/players/g/greenja02.html",
       "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
       "why": "Basketball-Reference records SG in 2025-26 Detroit (82 GP, 6 starts) and early 2026-27. Broad NBA G consistent; SF-only candidate would misclassify 2025-26 playable role. Guard-wing positional versatility does not independently prove SF in current lineup.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Jalen Suggs",
+      "previousCandidates": [
+        "SG"
+      ],
+      "reviewedCandidates": [
+        "PG",
+        "SG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/s/suggsja01.html",
+      "sourceMethod": "Basketball-Reference season-by-season Pos (PG 2024-25 and 2025-26, SG earlier), NBA official Orlando G and current NBA creator role",
+      "why": "2025-26 57 GP/56 starts at PG with 5.5 APG, following 2024-25 PG and earlier SG season; SG-only misses primary contemporary guard role; PG/SG remains provisional and requires exact rotation lineup cross-check.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Gradey Dick",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/d/dickgr01.html",
+      "sourceMethod": "Basketball-Reference season-by-season SG 2023-24 through 2025-26, plus NBA.com Clippers G-F roster",
+      "why": "2025-26 Toronto 76 GP at SG after two earlier SG NBA seasons, current LAC officially G-F. SF-only omitted demonstrated SG eligibility; SG/SF is a plausible role-flexible lead rather than certified exact lineup minutes.",
       "asOf": "2026-10-30",
       "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
     }
