@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 individualized provisional six-skill ratings grounded in anchor and dossier review; independent corroboration pending. A separate 2025-26 source-context appendix now contains independently checkable 2025-26 facts for 133/330 players. Numbers are not converted into skill ratings.",
+  "method": "330 individually differentiated provisional six-skill ratings with 162 profiles having independent 2025–26 season source observations. These data are NOT complete per-skill evidence or certification. Current 2026–27 identity/position roster membership not verified and cannot be published.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -164,6 +164,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": [
@@ -237,6 +245,14 @@
             "value": 1.4,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.6,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -331,6 +347,14 @@
             "value": 1.6,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.6,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -438,6 +462,14 @@
             "value": 528,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.9,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -570,6 +602,14 @@
             "value": 1.9,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.7,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -812,6 +852,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": [
@@ -876,6 +924,14 @@
             "value": 11.9,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/rebounds-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -950,6 +1006,14 @@
             "value": 1.9,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.7,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -1333,6 +1397,14 @@
             "value": 1.6,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.6,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -2157,6 +2229,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -2369,6 +2449,14 @@
             "value": 573,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -2868,7 +2956,16 @@
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
         "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
-        "observations": [],
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 11.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
         "awards": [
           {
             "season": "2025-26",
@@ -3045,6 +3142,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/blocks-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -3102,6 +3207,14 @@
             "value": 533,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -3204,6 +3317,14 @@
             "value": 1.5,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.9,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -3397,7 +3518,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -3660,6 +3794,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -3888,6 +4030,22 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -4057,6 +4215,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.7,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -4098,7 +4264,20 @@
       "editorialNote": "Guard scoring and spacing with weak point-of-attack containment",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4291,6 +4470,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -4340,6 +4527,14 @@
             "value": 21.7,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -4420,7 +4615,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4468,6 +4676,14 @@
             "value": 1.4,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 16,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -4564,6 +4780,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/blocks-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.6,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -4606,7 +4830,20 @@
       "editorialNote": "Large guard passer/rebounder, weaker shooting and defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4644,7 +4881,28 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.9,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4700,6 +4958,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/blocks-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -4750,6 +5016,14 @@
             "value": 43.9,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -4893,6 +5167,14 @@
             "value": 2,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 11.9,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -5074,6 +5356,22 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -5116,7 +5414,28 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -5210,6 +5529,22 @@
             "value": 1.1,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/blocks-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 15.2,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.6,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -5349,6 +5684,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/blocks-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 16.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -5438,6 +5781,14 @@
             "value": 21.5,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.2,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -5573,6 +5924,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -5678,6 +6037,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -5766,6 +6133,22 @@
             "value": 1.6,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/blocks-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 11.9,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -5952,6 +6335,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.2,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -6003,6 +6394,14 @@
             "value": 512,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -6404,6 +6803,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -6445,7 +6852,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.2,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -6539,6 +6959,22 @@
             "value": 1.3,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.2,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.9,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -6709,6 +7145,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -6767,6 +7211,14 @@
             "value": 488,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 15.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -6888,7 +7340,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 15.2,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -7064,6 +7529,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -7106,7 +7579,28 @@
       "editorialNote": "Guard passing and rebounding, secondary shooting",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -7564,7 +8058,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.7,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -8055,7 +8562,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -8146,7 +8666,20 @@
       "editorialNote": "Stretch-rim-defense prospect, inconsistent shooting conversion",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -8303,7 +8836,20 @@
       "editorialNote": "Stretch five and boards, average backline defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -8350,6 +8896,14 @@
             "value": 5.4,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/assists-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -8939,6 +9493,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.2,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -9182,6 +9744,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -9233,6 +9803,14 @@
             "value": 40.6,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.6,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -9366,7 +9944,20 @@
       "editorialNote": "Reliable starter 3-and-D, limited lead creation",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.9,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -9557,7 +10148,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -9704,6 +10308,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-pointers-attempted",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -9814,6 +10426,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/blocks-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 15.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -9915,6 +10535,14 @@
             "value": 4.7,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/assists-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 15.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -10171,7 +10799,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -10477,6 +11118,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 15,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -10593,7 +11242,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -10640,6 +11302,14 @@
             "value": 7.4,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/rebounds-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 11.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -10772,7 +11442,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -11274,7 +11957,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -11497,6 +12193,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/blocks-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -11547,6 +12251,14 @@
             "value": 40.4,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -11629,7 +12341,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -12084,7 +12809,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -12799,7 +13537,20 @@
       "editorialNote": "Wing shooting and defense, secondary creation",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -12885,6 +13636,14 @@
             "value": 40.1,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 15.4,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -13061,7 +13820,16 @@
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
         "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
-        "observations": [],
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.6,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
         "awards": [
           {
             "season": "2025-26",
@@ -13108,7 +13876,20 @@
       "editorialNote": "Large 3-and-D wing with limited self-creation",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -13546,7 +14327,16 @@
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
         "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
-        "observations": [],
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
         "awards": [
           {
             "season": "2025-26",
@@ -13672,7 +14462,20 @@
       "editorialNote": "Off-ball wing shot and physical rebounding",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.7,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -13821,7 +14624,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -13939,7 +14755,20 @@
       "editorialNote": "Passing/shooting backup big, limited pure rim defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 38.3,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -14118,6 +14947,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.7,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": []
@@ -14169,6 +15006,14 @@
             "value": 1.5,
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/steals-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 37.1,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
             "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
@@ -14684,7 +15529,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -14770,6 +15628,14 @@
             "sourceUrl": "https://www.leagueleaders.com/nba/2025/rebounds-per-game",
             "sourceKind": "third-party-2025-26-leaderboard",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.5,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": [
@@ -14818,7 +15684,20 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.2,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -15063,7 +15942,16 @@
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
         "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
-        "observations": [],
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.8,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
         "awards": [
           {
             "season": "2025-26",
@@ -15236,7 +16124,28 @@
       "editorialNote": "Young offensive shotmaker, weak perimeter defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.9,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.7,
+            "sourceUrl": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
+            "sourceKind": "third-party-2025-26-leaderboard-page-2",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": []
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -15364,9 +16273,11 @@
     "remainingHeuristicVectors": 0,
     "sourceSpecificEvidenceCoverage": "Incomplete; facts contextual, not film or all-six-skill verification.",
     "worksheet": "docs/nba-gm-remaining-126-individual-rating-proposals-2026-10-29.md",
-    "sourceContextPlayers": 133,
+    "sourceContextPlayers": 162,
     "sourceContextSource": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
     "fullSixSkillCertifications": 0,
-    "uncorroboratedPlayers": 197
+    "uncorroboratedPlayers": 168,
+    "sourceContextStatObservations": 328,
+    "sourceContextAwardObservations": 37
   }
 }
