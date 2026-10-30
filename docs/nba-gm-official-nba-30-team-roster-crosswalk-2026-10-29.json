@@ -7,7 +7,7 @@
   "playerCount": 330,
   "scope": "Every Octagon proposed NBA GM candidate matched with a current NBA.com team roster at the October 29, 2026 editorial snapshot. Broad F/G/C tags read from NBA.com; specific game PG/SG/SF/PF/C slot eligibility, full canonical IDs, contracts, skills and live roster recency remain unverified.",
   "notVerifiedTeams": [],
-  "manuallyVerifiedPlayerIdCount": 231,
+  "manuallyVerifiedPlayerIdCount": 232,
   "nbaSourceCaution": "NBA.com may have current after-snapshot transactions; recheck at publication. 'F' and 'G' are not automatic exact PG/SG/SF/PF eligibility. Eight Atlanta individual NBA.com player IDs now cross-checked; supplement identity overlay remains separate. Twelve Boston Celtics and ten Cleveland Cavaliers players now independently linked to exact NBA.com player profile IDs from current team rosters; broad position discrepancies remain independent. Ten New York and twelve Utah individual profiles were directly linked from NBA.com October rosters; roster-level G/F/C not exact slot eligibility. Nine Brooklyn and ten Chicago NBA.com individual player IDs linked from roster. 'Egor Dëmin' accented NBA display resolves Octagon 'Egor Demin' identity. October 30 additional five individually verified NBA.com player profiles (Collins, Wiggins, Jakucionis, Sorber, Philon) cross-checked for 2026-27 current team and official broad position; none establishes fine PG/SG/SF/PF/C game eligibility. A directly followed October 30 official Detroit/Houston/Lakers roster-to-player profile batch verified 32 identities; see docs/nba-gm-official-32-roster-to-profile-verifications-2026-10-30.md. Official broad positions remain distinct from exact game eligibility. October 30: 22 Dallas and Indiana direct NBA roster-to-profile identity checks added; see docs/nba-gm-official-22-dal-ind-profiles-2026-10-30.md. Kyrie Irving roster link redirects to NBA player directory, requiring independent direct verification. Final exact game roles/skills remain provisional. October 30: 24 additional Minnesota/San Antonio direct current NBA.com roster-profile link identity checks; see docs/nba-gm-official-24-min-sas-profiles-2026-10-30.md; not final position or six-skill approval. October 30: 24 Denver and Golden State direct NBA.com roster-to-player profile links verified. Includes Jimmy Butler III, Nikola Jokic and Kristaps Porzingis display aliases. See docs/nba-gm-official-24-den-gsw-profiles-2026-10-30.md. Exact playable roles and all skills remain provisional. October 30: 21 Thunder and Portland individual NBA.com current roster profile IDs directly verified, see docs/nba-gm-official-21-okc-por-ids-2026-10-30.md; no playable-slot or skill certification. October 30: 22 direct official Washington/Charlotte NBA.com roster-profile links checked; see docs/nba-gm-official-22-was-cha-profiles-2026-10-30.md. Exact playing positions and all six skills remain provisional.",
   "crosswalk": [
     {
@@ -3607,9 +3607,11 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612758/roster",
       "matchedAtEditorialHead": "170ece0152dfb1253776c3ffafe4c404cc8b76e8",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1631099",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official broad forward position; 2023–24 SF and 2024–26 PF historical NBA season leads; game-specific SF/PF eligible slots not certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1631099",
+      "playerIdentitySource": "Official NBA.com Sacramento roster, NBA.com Keegan Murray player career stats, and 2025–26 NBA season API record; exact SF/PF game eligibility still provisional. Verified October 30, 2026."
     },
     {
       "name": "Darius Acuff Jr.",
