@@ -79,7 +79,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Caleb Wilson | CHI | 77 | Forward/Wing | 71/60/63/75/76/82 | Tari Eason (79); Jarace Walker (77) | Small sample or availability; No attached individual 2025-26 leaderboard or award |
 | Cameron Boozer | MEM | 77 | Forward/Wing | 74/70/70/63/68/80 | Santi Aldama (79); Kyle Kuzma (79) | Small sample or availability; No attached individual 2025-26 leaderboard or award |
 | Clint Capela | HOU | 77 | Big | 66/14/49/48/83/87 | Isaiah Jackson (76); Day'Ron Sharpe (78) | 2025-26 source facts now attached; role/film audit still pending |
-| Collin Sexton | LAL | 77 | Guard/Wing | 84/77/70/59/25/43 | Keaton Wagler (76); Jeremiah Fears (76) | 2025-26 3P% vs Shooting: check volume |
+| Collin Sexton | LAL | 77 | Guard/Wing | 84/82/70/59/25/43 | Keaton Wagler (76); Jeremiah Fears (76) | Shooting 77→82: 40.1% on 279 threes, 85.5% FT, 68 GP; not high-volume elite specialist; film/defensive assignments pending |
 | Corey Kispert | ATL | 77 | Forward/Wing | 69/87/62/60/38/51 | Gradey Dick (75); Julian Strawther (76) | 2025-26 source facts now attached; role/film audit still pending |
 | Darryn Peterson | UTA | 77 | Guard/Wing | 75/76/65/63/37/50 | Tre Johnson (79); Jared McCain (78) | Small sample or availability; No attached individual 2025-26 leaderboard or award |
 | Gary Payton II | GSW | 77 | Guard/Wing | 67/54/50/94/55/60 | Kris Dunn (79); Jordan Goodwin (76) | Small sample or availability; 2025-26 source facts now attached; role/film audit still pending |
@@ -132,7 +132,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Anthony Black | ORL | 79 | Forward/Wing | 73/68/79/84/55/69 | Gui Santos (78); Naji Marshall (78) | Core role-volume peer audit |
 | Bennedict Mathurin | NOP | 79 | PG/Creator | 84/73/55/58/38/59 | Ja Morant (81); Dennis Schröder (78) | No attached individual 2025-26 leaderboard or award |
 | Brandin Podziemski | GSW | 79 | PG/Creator | 76/80/82/76/41/78 | Dejounte Murray (80); Andrew Nembhard (81) | 2025-26 source facts now attached; role/film audit still pending |
-| Cam Spencer | MEM | 79 | PG/Creator | 73/90/74/70/36/52 | Immanuel Quickley (81); Collin Gillespie (78) | 2025-26 APG vs Playmaking |
+| Cam Spencer | MEM | 79 | PG/Creator | 73/90/80/70/36/52 | Immanuel Quickley (81); Collin Gillespie (78) | Playmaking 74→80 after 72 GP, 5.6 APG/1.3 turnovers in 23.8 MPG (33.1 AST%); secondary-role/defensive film still pending |
 | Cedric Coward | MEM | 79 | Forward/Wing | 76/75/65/81/63/67 | Christian Braun (81); Matas Buzelis (79) | Core role-volume peer audit |
 | Collin Murray-Boyles | TOR | 79 | Forward/Wing | 71/55/69/85/85/79 | Caleb Wilson (77); Tari Eason (79) | Core role-volume peer audit |
 | Daniss Jenkins | DET | 79 | Guard/Wing | 77/75/75/73/33/53 | Darius Acuff Jr. (78); Ajay Mitchell (80) | Small sample or availability; 2025-26 source facts now attached; role/film audit still pending |
