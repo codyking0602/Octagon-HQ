@@ -3,10 +3,14 @@ import { footballGmPlayerById, footballGmProjectedGradeForPlayer } from "./footb
 import { FOOTBALL_GM_SCORE_WEIGHTS, footballGmScoreFromComponents } from "./footballGmStrategy";
 
 describe("Weekly NFL GM October 13 launch contract", () => {
-  it("uses the same existing 90/10 franchise score in Casual and Weekly", () => {
-    expect(FOOTBALL_GM_SCORE_WEIGHTS).toEqual({ rosterManagement: 0.90, threeYearResume: 0.10 });
-    expect(footballGmScoreFromComponents(80, 100)).toBe(82);
-    expect(footballGmScoreFromComponents(100, 80)).toBe(98);
+  it("uses the shared 90/3/7 franchise formula in Casual and Weekly", () => {
+    expect(FOOTBALL_GM_SCORE_WEIGHTS).toEqual({
+      rosterManagement: 0.90,
+      regularSeason: 0.03,
+      playoffFinish: 0.07,
+    });
+    expect(footballGmScoreFromComponents(80, 100, 100)).toBe(82);
+    expect(footballGmScoreFromComponents(100, 80, 80)).toBe(98);
   });
 
   it("retains Josh Allen's grade and guarantees Jaxson Dart a breakout into Starter territory", () => {
