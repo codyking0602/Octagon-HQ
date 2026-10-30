@@ -327,6 +327,37 @@ describe("Football GM strategy v7", () => {
     expect(result.seasons[0]!.finish).toBe("Champion");
   });
 
+  it("grades persisted 17-game seasons while preserving immutable results and older saves", () => {
+    const roster = codyRunRoster();
+    const starting = footballGmFinalResultV2({ seed: "score-check", yearOneRoster: roster, finalRoster: roster });
+    const locked = [
+      { ...starting.seasons[0]!, wins: 16, losses: 1, finish: "Champion" as const },
+      { ...starting.seasons[1]!, wins: 14, losses: 3, finish: "Conference Championship" as const },
+      { ...starting.seasons[2]!, wins: 12, losses: 5, finish: "Conference Championship" as const },
+    ];
+    const result = footballGmFinalResultV2({
+      seed: "another-seed",
+      yearOneRoster: roster,
+      finalRoster: roster,
+      resolvedSeasons: locked,
+    });
+    expect(result.seasons).toEqual(locked);
+    expect(result.regularSeasonScore).toBe(92.9);
+    expect(result.playoffScore).toBe(94.7);
+    expect(result.score).toBe(footballGmScoreFromComponents(
+      result.rosterManagementScore, result.regularSeasonScore, result.playoffScore,
+    ));
+
+    const legacy = footballGmFinalResultV2({
+      seed: "legacy-report",
+      yearOneRoster: roster,
+      finalRoster: roster,
+      resolvedSeasons: locked.map(({ wins: _wins, losses: _losses, ...season }) => season),
+    });
+    expect(legacy.regularSeasonScore).toBe(legacy.rosterManagementScore);
+    expect(legacy.playoffScore).toBe(94.7);
+  });
+
   it("lands expected GM scores in intuitive bands across the locked outcome curve", () => {
     const expectedScore = (grade: number) => {
       const probabilities = footballGmOutcomeProbabilities(grade);
