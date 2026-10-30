@@ -154,4 +154,23 @@ describe("NBA GM official roster snapshot — unpublished evidence only", () => 
     expect(board.certifiedCount).toBe(0);
   });
 
+  it("checks 22 Washington and Charlotte official NBA player IDs without granting GM release certification",()=>{
+    const md=readFileSync("docs/nba-gm-official-22-was-cha-profiles-2026-10-30.md","utf8");
+    const lines=md.split("\n").filter(line=>line.startsWith("| WAS |")||line.startsWith("| CHA |"));
+    expect(lines).toHaveLength(22);
+    const people=new Map(source.crosswalk.map(p=>[p.name,p]));
+    for(const line of lines){
+      const cells=line.split("|").map(x=>x.trim());
+      const id=cells[3]?.split("[")[1]?.split("]")[0];
+      expect(id,cells[2]).toMatch(/^[0-9]+$/);
+      expect(cells[3],cells[2]).toContain("https://www.nba.com/player/"+id);
+      const row=people.get(cells[2]!);
+      expect(row?.teamCode,cells[2]).toBe(cells[1]);
+      expect(row?.officialNBAPlayerId,cells[2]).toBe(id);
+      expect(row?.positionStatus,cells[2]).toContain("not-certified");
+    }
+    expect(source.published).toBe(false);
+    expect(board.certifiedCount).toBe(0);
+  });
+
 });
