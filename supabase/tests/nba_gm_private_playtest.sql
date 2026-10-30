@@ -97,6 +97,44 @@ begin
   begin perform public.nba_gm_dev_action('spin'); exception when others then v_rejected:=true; end;
   if not v_rejected then raise exception 'Completed V2 draft was mutable'; end if;
 
+  -- Start a second private franchise to exercise the formerly terminal
+  -- three-visit offseason bug. The owner must always be able to refill a cut.
+  v_state:=public.nba_gm_dev_action('start');
+  for v_index in 1..7 loop
+    v_state:=public.nba_gm_dev_action('spin');
+    v_team:=v_state->>'pendingTeam';
+    select p.id into v_player from private.nba_gm_dev_players p
+      where p.team_code=v_team and private.nba_gm_v2_can_add(v_state,p.id)
+      order by private.nba_gm_v2_salary(p.id,3),p.id limit 1;
+    if v_player is null then raise exception 'Recovery test draft hit dead-end'; end if;
+    v_state:=public.nba_gm_dev_action('pick',null,v_player);
+  end loop;
+  v_before:=v_state->'yearOnePicks';
+  v_state:=public.nba_gm_dev_action('offseason');
+  v_old:=v_state->'picks'->0->>'playerId';
+  v_state:=public.nba_gm_dev_action('release',null,v_old);
+  if jsonb_array_length(v_state->'picks')<>6 then raise exception 'Offseason cut did not create vacancy'; end if;
+  for v_index in 1..4 loop
+    v_state:=public.nba_gm_dev_action('fa-spin');
+    if v_state->>'freeAgencyTeam' is null then raise exception 'No emergency free-agent team'; end if;
+    v_state:=public.nba_gm_dev_action('pass-fa');
+  end loop;
+  if (v_state->>'freeAgencyVisits')::integer<>4 then
+    raise exception 'Offseason free agency still stops at three visits'; end if;
+  v_state:=public.nba_gm_dev_action('fa-spin');
+  v_team:=v_state->>'freeAgencyTeam';
+  select p.id into v_player from private.nba_gm_dev_players p
+    where p.team_code=v_team and private.nba_gm_v2_contract(p.id)='1YR'
+      and p.id<>v_old and private.nba_gm_v2_can_add(v_state,p.id)
+    order by private.nba_gm_v2_salary(p.id,3),p.id limit 1;
+  if v_player is null then raise exception 'Emergency team has no eligible 1YR signing'; end if;
+  v_state:=public.nba_gm_dev_action('sign',null,v_player);
+  if jsonb_array_length(v_state->'picks')<>7 or v_state->'yearOnePicks' is distinct from v_before
+    then raise exception 'Emergency signing or original Year 1 roster corrupted'; end if;
+  v_state:=public.nba_gm_dev_action('advance');
+  if v_state->>'phase'<>'final' or jsonb_array_length(v_state->'results')<>3
+    then raise exception 'Replacement did not permit full franchise completion'; end if;
+
   perform set_config('request.jwt.claim.sub',v_outsider::text,true);
   v_rejected:=false;
   begin perform public.nba_gm_dev_catalog(); exception when others then v_rejected:=true; end;
