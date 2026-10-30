@@ -132,6 +132,35 @@ playmaking/assisted-shot indicators, minutes-weighted rotation players and playo
   RMSE has been completed. Keep coefficients private and uncertified until
   that evidence exists.
 
+## Position audit of the 330-player private bank
+
+The frozen source bank contains 330 unique IDs across all 30 NBA teams
+(9–13 per team). All raw position codes are syntactically valid, but **75**
+athletes were marked `SF` only, including several documented guards and
+power forwards. Exactly 91 of the 330 have multiple source-board positions.
+Numeric overall and six skill grades were **not touched**.
+
+Migration `202612310896` corrects the following **11 source-backed positional
+classifications only**, while keeping the original 330-entry research board
+untouched as a provenance artifact:
+
+| Athlete | Corrected private eligibility | Reference |
+| --- | --- | --- |
+| Naz Reid | PF / C | [NBA player profile](https://www.nba.com/player/1629675) |
+| Cameron Boozer | PF / C | [NBA draft profile](https://www.nba.com/draft/2026/prospects/cameron-boozer) |
+| Collin Murray-Boyles | PF | [Basketball-Reference](https://www.basketball-reference.com/players/m/murraco01.html) |
+| Santi Aldama | PF | [Basketball-Reference](https://www.basketball-reference.com/players/a/aldamsa01.html) |
+| Noah Clowney | PF | [Basketball-Reference](https://www.basketball-reference.com/players/c/clownno01.html) |
+| Dean Wade | PF | [Basketball-Reference](https://www.basketball-reference.com/players/w/wadede01.html) |
+| P.J. Washington | PF | [Basketball-Reference](https://www.basketball-reference.com/players/w/washipj01.html) |
+| Jaylin Williams | PF / C | [Basketball-Reference](https://www.basketball-reference.com/players/w/willija07.html) |
+| Klay Thompson | SG / SF | [Basketball-Reference](https://www.basketball-reference.com/players/t/thompkl01.html) |
+| Moses Moody | SG | [Basketball-Reference](https://www.basketball-reference.com/players/m/moodymo01.html) |
+| Kentavious Caldwell-Pope | SG | [Basketball-Reference](https://www.basketball-reference.com/players/c/caldwke01.html) |
+
+All other provisional classifications require full editorial verification;
+their code-level validity does **not** certify basketball-positional accuracy.
+
 ## Current private game implementation and blockers
 
 - The owner-only V2 draft and offseason share the existing Football GM private run
