@@ -80,4 +80,30 @@ describe("NBA authored Who Am I 200-player final integration", () => {
    expect(canPreviewNbaWhoAmI({displayName:"Guest",canControlPicks:true})).toBe(false);
    expect(canPreviewNbaWhoAmI({displayName:"Cody",canControlPicks:false})).toBe(false);
  });
+ it("never spells out the answer, including with a nickname between first and last names", () => {
+   const fold = (value: string) => value.normalize("NFKD")
+     .replace(/[\\u0300-\\u036f]/g, "")
+     .toLowerCase()
+     .replace(/[’']/g, "")
+     .replace(/[^a-z0-9]+/g, " ")
+     .trim();
+
+   for (const player of nbaWhoAmIAuthoredIdentities) {
+     const nameParts = fold(player.name).split(" ").filter(part => !["jr", "ii", "iii", "iv"].includes(part));
+     const firstName = nameParts[0]!;
+     const lastName = nameParts[nameParts.length - 1]!;
+     // Catches "Alonzo Mourning" AND "Alonzo 'Zo' Mourning" without banning "Zo".
+     const explicitAnswer = new RegExp(`\\b${firstName}(?:\\s+[a-z0-9]+){0,3}\\s+${lastName}\\b`);
+     for (const scriptId of ["A", "B"] as const) {
+       for (const clue of player.scripts[scriptId].clues) {
+         expect(fold(clue.text), `${clue.id} reveals ${player.name}`).not.toMatch(explicitAnswer);
+       }
+     }
+   }
+
+   const zo = nbaWhoAmIAuthoredIdentities.find(player => player.name === "Alonzo Mourning")!;
+   expect(zo.scripts.B.clues[9]!.text).toMatch(/\\bZo\\b/);
+   expect(zo.scripts.B.clues[9]!.text).not.toMatch(/\\b(?:Alonzo|Mourning)\\b/i);
+ });
+
 });
