@@ -1,0 +1,1464 @@
+{
+  "version": "nba-gm-evidence-led-review-v1",
+  "asOfDate": "2026-10-29",
+  "productionPublished": false,
+  "completeSixSkillCertified": 0,
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification. October 30: Buzelis interior-defense box, tracking, deterrence and role peer review supports a cautious 73 to 77 provisional adjustment; not a full six-skill or exact-position certification. October 30 risk-prioritized peer review applied 7 additional single-skill regrades with linked NBA seasons, historical context and named skill peers. The 18 total provisional changes DO NOT certify any complete athlete profile. Overall ratings are untouched. Two additional position-specific historical role leads (Suggs PG/SG; Dick SG/SF), not final exact game-slot approval. Franz Wagner shooting 66→71 research adjudicated separately on Oct 30 using historical 3P%, catch-and-shoot, FT and peer comparison; incomplete five other skills.",
+  "officialRosterIdentity": [
+    {
+      "name": "Tyrese Haliburton",
+      "teamCode": "IND",
+      "nbaPlayerId": 1630169,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1630169/tyrese-haliburton",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Pascal Siakam",
+      "teamCode": "IND",
+      "nbaPlayerId": 1627783,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/1627783/pascal-siakam",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Ivica Zubac",
+      "teamCode": "IND",
+      "nbaPlayerId": 1627826,
+      "officialPositionFamily": "C",
+      "officialPlayerUrl": "https://www.nba.com/player/1627826/ivica-zubac",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Andrew Nembhard",
+      "teamCode": "IND",
+      "nbaPlayerId": 1629614,
+      "officialPositionFamily": "G-F",
+      "officialPlayerUrl": "https://www.nba.com/player/1629614/andrew-nembhard",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Kelly Oubre Jr.",
+      "teamCode": "IND",
+      "nbaPlayerId": 1626162,
+      "officialPositionFamily": "F-G",
+      "officialPlayerUrl": "https://www.nba.com/player/1626162/kelly-oubre-jr",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Braden Smith",
+      "teamCode": "IND",
+      "nbaPlayerId": 1643552,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1643552/braden-smith",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Aaron Nesmith",
+      "teamCode": "IND",
+      "nbaPlayerId": 1630174,
+      "officialPositionFamily": "G-F",
+      "officialPlayerUrl": "https://www.nba.com/player/1630174/aaron-nesmith",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Quenton Jackson",
+      "teamCode": "IND",
+      "nbaPlayerId": 1631245,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1631245/quenton-jackson",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Ben Sheppard",
+      "teamCode": "IND",
+      "nbaPlayerId": 1641767,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1641767/ben-sheppard",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "T.J. McConnell",
+      "teamCode": "IND",
+      "nbaPlayerId": 204456,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/204456/tj-mcconnell",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Obi Toppin",
+      "teamCode": "IND",
+      "nbaPlayerId": 1630167,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/1630167/obi-toppin",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Jarace Walker",
+      "teamCode": "IND",
+      "nbaPlayerId": 1641716,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/1641716/jarace-walker",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Giannis Antetokounmpo",
+      "teamCode": "MIA",
+      "nbaPlayerId": 203507,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/203507/giannis-antetokounmpo",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Anthony Davis",
+      "teamCode": "WAS",
+      "nbaPlayerId": 203076,
+      "officialPositionFamily": "F-C",
+      "officialPlayerUrl": "https://www.nba.com/player/203076/anthony_davis",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Ja Morant",
+      "teamCode": "POR",
+      "nbaPlayerId": 1629630,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1629630/ja-morant",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Jaden McDaniels",
+      "teamCode": "MIN",
+      "nbaPlayerId": 1630183,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/1630183/jaden-mcdaniels",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Josh Hart",
+      "teamCode": "NYK",
+      "nbaPlayerId": 1628404,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1628404",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Bub Carrington",
+      "teamCode": "WAS",
+      "nbaPlayerId": 1642267,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1642267",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Cam Spencer",
+      "teamCode": "MEM",
+      "nbaPlayerId": 1642285,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1642285/cam-spencer",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    }
+  ],
+  "official2026DraftIdentity": [
+    {
+      "name": "AJ Dybantsa",
+      "draftingTeam": "WAS",
+      "pick": 1,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Darryn Peterson",
+      "draftingTeam": "UTA",
+      "pick": 2,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Cameron Boozer",
+      "draftingTeam": "MEM",
+      "pick": 3,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Caleb Wilson",
+      "draftingTeam": "CHI",
+      "pick": 4,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Keaton Wagler",
+      "draftingTeam": "LAC",
+      "pick": 5,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Mikel Brown Jr.",
+      "draftingTeam": "BKN",
+      "pick": 6,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Darius Acuff Jr.",
+      "draftingTeam": "SAC",
+      "pick": 7,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Kingston Flemings",
+      "draftingTeam": "ATL",
+      "pick": 8,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Morez Johnson Jr.",
+      "draftingTeam": "DAL",
+      "pick": 9,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Brayden Burries",
+      "draftingTeam": "MIL",
+      "pick": 10,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Aday Mara",
+      "draftingTeam": "OKC",
+      "pick": 12,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Nate Ament",
+      "draftingTeam": "MIA",
+      "pick": 13,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER",
+      "verifiedPostDraftTeam": "MIL",
+      "tradeSourceUrl": "https://www.nba.com/draft/2026/prospects/nate-ament"
+    },
+    {
+      "name": "Hannes Steinbach",
+      "draftingTeam": "CHA",
+      "pick": 14,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    }
+  ],
+  "individualResearch": [
+    {
+      "name": "Jaden McDaniels",
+      "season": "2025-26",
+      "games": 73,
+      "minutesPerGame": 31.7,
+      "threePointPercentage": 41.2,
+      "threePointAttemptsPerGame": 3.4,
+      "previousSeasonThreePointPercentage": 33,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 76,
+      "after": 81,
+      "decision": "Apply cautious shooting increase: 250 three-point attempts and 41.2% over 73 games materially exceed previous 76 projection; do not grade like a high-volume specialist; one-year improvement can regress.",
+      "sourceUrl": "https://www.nba.com/player/1630183/bio",
+      "comparison": "Below Luke Kennard 95 specialist anchor; below Cam Spencer 90; 81 above-average wing shooting is supported by 3.4 3PA without pretending high difficulty was established.",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION",
+      "secondarySourceUrl": "https://www.basketball-reference.com/players/m/mcdanja02.html"
+    },
+    {
+      "name": "Bub Carrington",
+      "season": "2025-26",
+      "games": 82,
+      "minutesPerGame": 27.7,
+      "threePointPercentage": 40.8,
+      "threePointAttemptsPerGame": 5,
+      "previousSeasonThreePointPercentage": 33.9,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 76,
+      "after": 82,
+      "decision": "Apply shooting adjustment for full 82-game 40.8% on 5.0 attempts per game; broader shot mix and pull-up difficulty remain unverified.",
+      "sourceUrl": "https://www.statmuse.com/nba/player/bub-carrington-30409/splits?seasonYear=2026",
+      "comparison": "Higher volume than Jaden McDaniels (5.0 vs 3.4 3PA); below top specialists and not a conversion from 3P% into grade.",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Josh Hart",
+      "season": "2025-26",
+      "threePointPercentage": 41.3,
+      "threePointAttemptsPerGame": 3.7,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 73,
+      "after": 77,
+      "decision": "Cautious 73→77: 100/242 3PT (41.3%) in 2025–26 vs 84/252 (33.3%) in 2024–25 and 31.0% in 2023–24; predominantly lower-difficulty created-for-him attempts and multi-year volatility mean do not jump to 80+. Overall and other five attributes unchanged.",
+      "sourceUrl": "https://www.basketball-reference.com/players/h/hartjo01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION",
+      "games": 66,
+      "previousSeasonThreePointPercentage": 33.3,
+      "comparison": "Below Jaden McDaniels 81 provisional shotmaking; comparable wing volume but lower multi-season confidence; not 85+ specialist."
+    },
+    {
+      "name": "Oscar Tshiebwe",
+      "season": "2025-26",
+      "games": 27,
+      "minutesPerGame": 16.6,
+      "reboundsPerGame": 6.6,
+      "offensiveReboundsPerGame": 2.9,
+      "skillsReviewed": [
+        "rebounding"
+      ],
+      "before": 96,
+      "after": null,
+      "decision": "Do not downgrade from 96 without context: Rockets' official release cites historically exceptional NBA per-36 offensive rebound rate and 16.9 G League RPG; 49 career NBA games at time of signing remains small exposure.",
+      "sourceUrl": "https://www.nba.com/rockets/news/rockets-sign-free-agent-oscar-tshiebwe",
+      "secondarySourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/oscar_tshiebwe_full.htm",
+      "status": "ELITE_SPECIALIST_PLAUSIBLE_BUT_SAMPLE_REQUIRES_REVIEW"
+    },
+    {
+      "name": "Cam Spencer",
+      "season": "2025-26",
+      "assistsPerGame": 5.6,
+      "pointsPerGame": 11.1,
+      "skillsReviewed": [
+        "playmaking"
+      ],
+      "before": 74,
+      "after": 80,
+      "decision": "Apply cautious playmaking correction after 72 regular-season NBA games: 5.6 assists vs 1.3 turnovers in 23.8 minutes, 33.1 AST%, and 17.2 USG%. This is strong measured creation/decision-making for a role guard but not elite lead-guard burden. Retain 79 overall and all other traits; defensive/playmaking film still pending.",
+      "sourceUrl": "https://www.basketball-reference.com/players/s/spencca01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION",
+      "games": 72,
+      "minutesPerGame": 23.8,
+      "turnoversPerGame": 1.3,
+      "assistPercentage": 33.1,
+      "usagePercentage": 17.2,
+      "comparison": "Above current 74 below-average grade; 80 above-average but below Immanuel Quickley and primary-creator elite anchors. Not derived from 5.6 APG alone."
+    },
+    {
+      "name": "Giannis Antetokounmpo",
+      "season": "2025-26",
+      "games": 36,
+      "minutesPerGame": 28.9,
+      "pointsPerGame": 27.6,
+      "reboundsPerGame": 9.8,
+      "assistsPerGame": 5.4,
+      "trueShootingPercentage": 65.8,
+      "skillsReviewed": [
+        "scoring",
+        "shooting",
+        "playmaking",
+        "interiorDefense",
+        "rebounding"
+      ],
+      "before": null,
+      "after": null,
+      "decision": "Add previously absent individually sourced 2025-26 context. Stats belong to Milwaukee season, 2026-27 Miami is separately verified; 36 games limit certainty. This does not establish all six skill grades.",
+      "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+      "secondarySourceUrl": "https://www.nba.com/player/203507/giannis-antetokounmpo",
+      "status": "SOURCE_CONTEXT_ADDED_NOT_CERTIFIED",
+      "tertiarySourceUrl": "https://www.askscores.com/nba/player/giannis-antetokounmpo/2025-26"
+    },
+    {
+      "name": "Tyrese Haliburton",
+      "season": "2025-26",
+      "games": 0,
+      "minutesPerGame": 0,
+      "skillsReviewed": [
+        "playmaking",
+        "shooting"
+      ],
+      "before": null,
+      "after": null,
+      "decision": "Document actual no-season NBA sample (Achilles absence), not zero basketball ability. Review healthy 2024-25 season and 2026-27 short return separately; do not mechanically penalize his 96 playmaking.",
+      "sourceUrl": "https://www.basketball-reference.com/players/h/halibty01.html",
+      "secondarySourceUrl": "https://www.nba.com/player/1630169/tyrese-haliburton",
+      "status": "NO_2025_26_PLAY_INJURY_ALTERNATIVE_SEASON_REQUIRED"
+    },
+    {
+      "name": "Jaden McDaniels",
+      "season": "2024-25",
+      "games": 82,
+      "threePointPercentage": 33,
+      "threePointAttemptsPerGame": 3.7,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": null,
+      "after": null,
+      "decision": "Prior-year baseline corroborates rebound in three-point shooting rather than assuming lifetime 41.2% talent.",
+      "sourceUrl": "https://www.nba.com/player/1630183/bio",
+      "status": "HISTORICAL_CONTEXT"
+    },
+    {
+      "name": "Collin Sexton",
+      "season": "2025-26",
+      "games": 68,
+      "minutesPerGame": 23.7,
+      "pointsPerGame": 15.4,
+      "threePointPercentage": 40.1,
+      "threePointAttempts": 279,
+      "threePointAttemptsPerGame": 4.1,
+      "freeThrowPercentage": 85.5,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 77,
+      "after": 82,
+      "decision": "Apply measured shooting correction: 40.1% on 279 threes in 68 regular-season NBA games plus 85.5% FT; 4.1 3PA per game reflects real but sub-specialist shot volume. Historical shooting and on/off-ball difficulty remain review questions, so use 82, not 90.",
+      "comparison": "Above 77 solid, below 90+ high-volume specialty shooters; compare Bub Carrington 82 (40.8% at 5 attempts) and Jaden McDaniels 81 (41.2% at 3.4 attempts).",
+      "sourceUrl": "https://readthegame.com/player/collin-sexton-1629012?season=2025-26",
+      "secondarySourceUrl": "https://www.nbahouse.net/ask/collin-sexton-splits",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Julian Strawther",
+      "season": "2025-26",
+      "games": 57,
+      "minutesPerGame": 15.1,
+      "threePointPercentage": 38.7,
+      "threePointAttemptsPerGame": 2.6,
+      "previousSeasonThreePointPercentage": 34.9,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 85,
+      "after": 82,
+      "decision": "Reduce 85→82 provisional: 58/150 (38.7%) threes in 2025–26 after 94/269 (34.9%) in 2024–25; limited 15.1 MPG and career 193/557 (.346) do not independently demonstrate elite difficult movement shooting. Other five traits and overall unchanged.",
+      "sourceUrl": "https://www.basketball-reference.com/players/s/strawju01.html",
+      "comparison": "Compared with Cam Spencer 90 and Luke Kennard 95 as high-certainty specialist gravity anchors; limited volume and weaker multi-year efficiency support 82 until film corroboration.",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Peyton Watson",
+      "before": 70,
+      "after": 77,
+      "games": 54,
+      "minutesPerGame": 29.6,
+      "threePointPercentage": 41.1,
+      "threePointAttempts": 197,
+      "previousSeasonThreePointPercentage": 35.3,
+      "decision": "2025-26 81/197 threes (41.1%) over 54 games after 2024-25 48/136 (35.3%) and 2023-24 29.6%; 2.9 catch-and-shoot 3PA per game with 46.8% accuracy vs only ~0.7 pull-up 3PA. Raise 70→77 solid spacing rather than assuming high-difficulty specialist gravity from one improved season.",
+      "comparison": "Above a 70 limited-shooter grade, below Andrew Wiggins and John Collins as more established shooting roles, and far below Luke Kennard 95. Shot variety and playoff defensive game-plan film still pending.",
+      "sourceUrl": "https://www.nba.com/stats/player/1631212/",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/peyton-watson?gt=Regular+Season&season=2025-26",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Kasparas Jakucionis",
+      "before": 72,
+      "after": 78,
+      "games": 53,
+      "minutesPerGame": 17.8,
+      "threePointPercentage": 42.3,
+      "threePointAttempts": 156,
+      "previousSeasonThreePointPercentage": null,
+      "decision": "2025-26 Miami 66/156 3P (42.3%) in 53 games and 87.9% FT, contrasted with 2024-25 Illinois 31.8% 3P on 5.2 attempts/game and 84.5% FT. Raise 72→78 cautiously; 17.8 MPG and 2.9 NBA 3PA/game do not establish difficult-shot gravity or multi-year repeatability.",
+      "comparison": "Near Josh Hart 77 as useful but unproven/variable spacer, below Jaden McDaniels 81 and Bub Carrington 82 with larger NBA samples, far below Luke Kennard 95.",
+      "sourceUrl": "https://www.basketball-reference.com/players/j/jakucka01.html",
+      "secondarySourceUrl": "https://www.sports-reference.com/cbb/players/kasparas-jakucionis-1.html",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "John Collins",
+      "before": 76,
+      "after": 81,
+      "games": 69,
+      "minutesPerGame": 27.1,
+      "threePointPercentage": 40.6,
+      "threePointAttempts": 219,
+      "previousSeasonThreePointPercentage": 39.9,
+      "decision": "2025-26 89/219 (40.6%) threes over 69 games after 39.9% on 148 attempts in 2024-25 and 37.1% on 232 in 2023-24. Above-average stretch-four shooting is repeatedly demonstrated; 3.2 3PA/game and largely complementary floor spacing do not imply movement-shooter excellence.",
+      "comparison": "Similar useful spacing tier to Andrew Wiggins 81 but lower volume/greater frontcourt catch-and-shoot role; above Peyton Watson 77 shorter track record; far below Kennard 95.",
+      "sourceUrl": "https://www.statmuse.com/nba/ask/john-collins-3pt-attempts-made-2026-season",
+      "secondarySourceUrl": "https://www.covers.com/sport/basketball/nba/players/1656/john-collins",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Andrew Wiggins",
+      "before": 78,
+      "after": 81,
+      "games": 68,
+      "minutesPerGame": 30.3,
+      "threePointPercentage": 41.4,
+      "threePointAttempts": 333,
+      "previousSeasonThreePointPercentage": 37.4,
+      "decision": "2025-26 138/333 (41.4%) NBA threes over 68 Miami games (4.9 3PA/game) after 2024-25 37.4% and 2023-24 35.8%; earlier 2021-23 roughly 39% seasons demonstrate real complementary wing shotmaking with multi-year variance. Raise 78→81, not to 85+ without pull-up/contested gravity evidence.",
+      "comparison": "Higher volume and years of NBA evidence than Peyton Watson 77 or rookie Kasparas Jakucionis 78; similar level to John Collins 81 in different wing vs frontcourt shooting roles; below specialist Kennard 95.",
+      "sourceUrl": "https://www.statmuse.com/nba/ask/andrew-wiggins-career-3pt-percentage-2026",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/andrew-wiggins?gt=Regular+Season&season=2025-26",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Matas Buzelis",
+      "season": "2025-26",
+      "games": 77,
+      "minutesPerGame": 29.2,
+      "blocksPerGame": 1.5,
+      "blocksTotal": 116,
+      "blockPercentage": 4.5,
+      "shotsDefendedAtRimPerGame": 6.1,
+      "rimShootingHeldBelowNormalPercentagePoints": -5.9,
+      "skillsReviewed": [
+        "interiorDefense"
+      ],
+      "before": 73,
+      "after": 77,
+      "decision": "Raise Interior Defense 73→77 on 77-game two-year-confirmed shot-blocking growth, 6.1 rim defenses/game and 5.9 percentage-point rim-shooting suppression. Withhold 80+: non-center help role, negative rim deterrence and weak whole-team defensive impact; defense film still missing.",
+      "comparison": "Above initial below-average 73, near Scottie Barnes 75 in forward rim help, below Peyton Watson 81 as wing help and dramatically below center-anchor Alexandre Sarr 88/Chet Holmgren 95. Not equal rim roles.",
+      "sourceUrl": "https://www.basketball-reference.com/players/b/buzelma01.html",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/matas-buzelis?gt=Regular+Season&season=2025-26",
+      "thirdSourceUrl": "https://spreadsheetsports.com/players/matas-buzelis/",
+      "dossier": "docs/nba-gm-matas-buzelis-2025-26-interior-defense-peer-review-2026-10-30.md",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Davion Mitchell",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 63,
+      "after": 78,
+      "decision": "70 games, 90/228 threes (39.5%) after 84/211 threes (39.8%) in 2024-25 establish usable repeatable NBA spot-up shooting; 64.6% FT and 3.3 3PA prevent inflated specialist grade.",
+      "comparison": "Near Josh Hart 77, below Bub Carrington 82 at 414 threes attempted, well below Kennard 95; independent of elite perimeter defense 89.",
+      "sourceUrl": "https://www.basketball-reference.com/players/m/mitchda01.html",
+      "secondarySourceUrl": "https://www.covers.com/sport/basketball/nba/players/5910/davion-mitchell",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Kevin Huerter",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 85,
+      "after": 79,
+      "decision": "2025-26 100/325 threes, 30.8%, following 2024-25 Sacramento 30.2% and Chicago 37.6%; career 36.8% demonstrates competent range but recent shot effectiveness no longer merits an 85 movement-shooter label.",
+      "comparison": "Below currently stronger wing specialist Klay Thompson 87 and Buddy Hield 89; 79 preserves established catch-and-shoot threat above weak spacers.",
+      "sourceUrl": "https://www.basketball-reference.com/players/h/huertke01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Gradey Dick",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 81,
+      "after": 77,
+      "decision": "76 games in 2025-26 but only 56/186 threes (30.1%), after 35% and 36.5% in prior two NBA seasons. 87.5% free throws mitigate a steep downgrade, while 14 MPG and 1 start undermine high-grade NBA specialist assumption.",
+      "comparison": "77 usable not 81 above-average, below Julian Strawther 82 and far below Kennard 95; retains overall 75.",
+      "sourceUrl": "https://www.basketball-reference.com/players/d/dickgr01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Kel'el Ware",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 71,
+      "after": 77,
+      "decision": "Miami big 77 games, 92/233 threes (39.5%) in 2025-26; previous rookie season 35/111 (31.5%). Stretch-center role has improved materially, but off-dribble variety not demonstrated.",
+      "comparison": "77 between forward Matas Buzelis Shooting 73 and stretch big John Collins 81; shooting is distinct from 84 Rebounding and 83 Interior Defense.",
+      "sourceUrl": "https://www.basketball-reference.com/players/w/wareke01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Tre Mann",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 82,
+      "after": 77,
+      "decision": "53 games and 50/155 (32.3%) 3P with 46.2% TS in 12.6 minutes/game; 2024-25 24/60 threes (40%) was only 13 games; shot difficulty and historic skill justify 77 rather than treating present role as no talent.",
+      "comparison": "Below Josh Hart 77? Place in same 77 tier, below Bub Carrington 82 and Kennard 95. 77 reflects volume and repeatability concerns, independent of low OVR 73.",
+      "sourceUrl": "https://www.foxsports.com/nba/tre-mann-player-stats?category=shooting",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/tre-mann?gt=Regular+Season&season=2025-26",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Jalen Suggs",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "playmaking"
+      ],
+      "before": 68,
+      "after": 76,
+      "decision": "57 2025-26 games predominantly at PG with 5.5 AST/2.7 TOV in 27.6 MPG; 2024-25 3.7 AST/2.9 TOV. Increased creation supports usable 76 not 68; turnover load means not top-tier court general.",
+      "comparison": "76 below Tre Jones 78, Davion Mitchell 83, Scottie Barnes 85; his elite perimeter defense 91 remains separate.",
+      "sourceUrl": "https://www.basketball-reference.com/players/s/suggsja01.html",
+      "secondarySourceUrl": "https://basketnews.com/players/35064-jalen-suggs/statistics/regular-season.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Dyson Daniels",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "playmaking"
+      ],
+      "before": 77,
+      "after": 81,
+      "decision": "76 starts, 5.9 AST/1.8 TOV in 2025-26 after 4.4 AST/2.0 TOV in 2024-25; more on-ball advantage management with better care. Assisted shot creation distinct from elite point-of-attack defense and low shotmaking.",
+      "comparison": "81 above Suggs 76 for control, near secondary initiators, below Davion Mitchell 83 and Barnes 85, without implying elite PG halfcourt creation.",
+      "sourceUrl": "https://www.basketball-reference.com/players/d/daniedy01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Franz Wagner",
+      "season": "2025-26",
+      "games": 34,
+      "minutesPerGame": 30,
+      "threePointPercentage": 34.5,
+      "threePointAttemptsPerGame": 4.1,
+      "freeThrowPercentage": 82.3,
+      "previousSeasonThreePointPercentage": 29.5,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 66,
+      "after": 71,
+      "decision": "Raise Shooting 66→71; primary forward on-ball creation but capable 37.8% catch-and-shoot on 2.2 attempts/game, 34.5% overall NBA threes and 82.3% FT. Two preceding .281/.295 three-point seasons prevent 75+ solid/shooting-specialist grade; 4-game early 2026-27 15% must not dominate.",
+      "comparison": "Compare Scottie Barnes 70 and Paolo Banchero 73 fellow playmaking forwards; Jalen Johnson 75 has distinct contested jumper profile. Ability, usage and shot types separated from scoring 87 and overall 86.",
+      "sourceUrl": "https://www.basketball-reference.com/players/w/wagnefr01.html",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/franz-wagner?gt=Regular+Season&season=2025-26",
+      "dossier": "docs/nba-gm-franz-wagner-2025-26-shooting-peer-review-2026-10-30.md",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    }
+  ],
+  "roleFlags": [
+    {
+      "name": "Ben Sheppard",
+      "why": "NBA lists Guard; SF-only GM candidate slot may be too restrictive."
+    },
+    {
+      "name": "Obi Toppin",
+      "why": "NBA lists Forward; SF-only GM candidate slot needs PF/SF positional role check."
+    },
+    {
+      "name": "Josh Hart",
+      "why": "NBA lists Guard; review SF/SG eligibility from actual minutes."
+    },
+    {
+      "name": "Quenton Jackson",
+      "why": "NBA lists Guard; PG-only eligibility needs creation/role evidence."
+    }
+  ],
+  "outstanding": "All 330 remain six-skill provisional. Published 2026-27 NBA rosters/IDs, detailed possession defensive metrics and comparison film are required to certify full grades.",
+  "rookieCollegeEvidence": [
+    {
+      "name": "AJ Dybantsa",
+      "college": "BYU",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 35,
+      "minutesPerGame": 34.8,
+      "pointsPerGame": 25.5,
+      "reboundsPerGame": 6.8,
+      "assistsPerGame": 3.7,
+      "threePointPercentage": 33.1,
+      "blocksPerGame": null,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/aj-dybantsa",
+      "limitations": "35 starts; 33.1% three-point shooting keeps projection distinct from NBA-tested shotmaking.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Darryn Peterson",
+      "college": "Kansas",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 24,
+      "minutesPerGame": 29,
+      "pointsPerGame": 20.2,
+      "reboundsPerGame": 4.2,
+      "assistsPerGame": 1.6,
+      "threePointPercentage": 38.2,
+      "blocksPerGame": null,
+      "sourceUrl": "https://kuathletics.com/sports/mens-basketball/roster/darryn-peterson/16518",
+      "limitations": "24-game college sample; injuries/availability separate. 63/165 college three-point makes/attempts, not NBA shooting proof.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Cameron Boozer",
+      "college": "Duke",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 38,
+      "minutesPerGame": 33.5,
+      "pointsPerGame": 22.5,
+      "reboundsPerGame": 10.2,
+      "assistsPerGame": 4.1,
+      "threePointPercentage": 39.1,
+      "blocksPerGame": null,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/cameron-boozer",
+      "limitations": "Duke 54/138 three-pointers (.391) in 38 starts; frontcourt passing, rebounding and scoring evidenced at collegiate level, not NBA defensive role.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Caleb Wilson",
+      "college": "North Carolina",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 24,
+      "minutesPerGame": 31.3,
+      "pointsPerGame": 19.8,
+      "reboundsPerGame": 9.4,
+      "assistsPerGame": 2.7,
+      "threePointPercentage": 25.9,
+      "blocksPerGame": 1.4,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/caleb-wilson",
+      "limitations": "Injured (thumb) after 24 college games. NBA draft profile contradicts its own overview in a separate Freshman paragraph; use full season and independent UNC source to resolve before certification.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Keaton Wagler",
+      "college": "Illinois",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 37,
+      "minutesPerGame": null,
+      "pointsPerGame": 17.9,
+      "reboundsPerGame": 5.1,
+      "assistsPerGame": 4.2,
+      "threePointPercentage": 40,
+      "blocksPerGame": null,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/keaton-wagler",
+      "limitations": "High-usage shooting and creation in college, but NBA role and defensive resistance unverified.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Mikel Brown Jr.",
+      "college": "Louisville",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 21,
+      "minutesPerGame": 29.2,
+      "pointsPerGame": 18.2,
+      "reboundsPerGame": 3.3,
+      "assistsPerGame": 4.7,
+      "threePointPercentage": 34.4,
+      "blocksPerGame": null,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/mikel-brown",
+      "limitations": "21 college games, 14 missed (back); 7.6 3PA and 3.1 TO; elite prep pedigree does not replace NBA ability test.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Darius Acuff Jr.",
+      "college": "Arkansas",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 36,
+      "minutesPerGame": 35.2,
+      "pointsPerGame": 23.5,
+      "reboundsPerGame": 3.1,
+      "assistsPerGame": 6.4,
+      "threePointPercentage": 44,
+      "blocksPerGame": null,
+      "sourceUrl": "https://www.hogstats.com/players/player.php?id=647",
+      "limitations": "91/207 three-point shooting, 232 assists/78 turnovers. Four 2026-27 NBA games at 20.6% 3PT are too little to override robust college shooting data.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Kingston Flemings",
+      "college": "Houston",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 37,
+      "minutesPerGame": null,
+      "pointsPerGame": 16.1,
+      "reboundsPerGame": 4.1,
+      "assistsPerGame": 5.2,
+      "threePointPercentage": 39,
+      "blocksPerGame": null,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/kingston-flemings",
+      "limitations": "NBA scouting cites primary handler with near 3:1 assist:turnover and defensive point-of-attack aptitude; NCAA-to-NBA translation pending.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Morez Johnson Jr.",
+      "college": "Michigan",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 40,
+      "minutesPerGame": 25.1,
+      "pointsPerGame": 13.1,
+      "reboundsPerGame": 7.3,
+      "assistsPerGame": 1.2,
+      "threePointPercentage": 34.3,
+      "blocksPerGame": 1.1,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/morez-johnson-jr",
+      "limitations": "Only 35 total three-point attempts, so 34.3% does not establish true NBA shooting proficiency. Frontcourt can switch PF/C; official NBA roster F is a broad-tag mismatch to candidate C.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Brayden Burries",
+      "college": "Arizona",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 39,
+      "minutesPerGame": 29.9,
+      "pointsPerGame": 16.1,
+      "reboundsPerGame": 4.9,
+      "assistsPerGame": 2.4,
+      "threePointPercentage": 39.1,
+      "blocksPerGame": null,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/brayden-burries",
+      "limitations": "College combo guard with scoring/shooting aptitude; existing proposed SF-only slot conflicts with NBA official guard family and requires SG role review.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Aday Mara",
+      "college": "Michigan",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 40,
+      "minutesPerGame": 23.4,
+      "pointsPerGame": 12.1,
+      "reboundsPerGame": 6.8,
+      "assistsPerGame": 2.4,
+      "threePointPercentage": 30,
+      "blocksPerGame": 2.6,
+      "sourceUrl": "https://mgoblue.com/sports/mens-basketball/roster/aday-mara/27049",
+      "limitations": "2025-26 Big Ten DPOY, 103 blocks in 40 games; 3-for-10 college three-point shooting is not 30% shooting talent. Strong paint-defense signal, NBA proof still pending.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Nate Ament",
+      "college": "Tennessee",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 35,
+      "minutesPerGame": 29.7,
+      "pointsPerGame": 16.8,
+      "reboundsPerGame": 6.3,
+      "assistsPerGame": 2.4,
+      "threePointPercentage": 33,
+      "blocksPerGame": null,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/nate-ament",
+      "limitations": "No previous NBA production. Initially drafted by Miami No. 13 then traded to Milwaukee; official draft page explicitly says acquired by MIL.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    },
+    {
+      "name": "Hannes Steinbach",
+      "college": "Washington",
+      "season": "2025-26",
+      "competition": "NCAA Division I",
+      "games": 30,
+      "minutesPerGame": 34.6,
+      "pointsPerGame": 18.5,
+      "reboundsPerGame": 11.8,
+      "assistsPerGame": 1.6,
+      "threePointPercentage": 34,
+      "blocksPerGame": 1.2,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/hannes-steinbach",
+      "limitations": "Led NCAA in rebounding at 11.8; 1.6 AST and 2.0 TO. Big Ten production supports rebounding upside but not automatic elite NBA trait grade.",
+      "sourceStatus": "COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED",
+      "nba2025_26Production": false
+    }
+  ],
+  "sourceQualityExceptions": [
+    {
+      "name": "Caleb Wilson",
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/caleb-wilson",
+      "issue": "NBA prospect page overview reports 19.8 PPG / 9.4 RPG / 1.4 BPG across 24 games but a separate freshman bullet section shows 15.9 PPG / 7.1 RPG / 2.3 BPG. Use overview cross-checked to official UNC statistics; do not mix these two stat lines.",
+      "decision": "OFFICIAL_SOURCE_INTERNAL_CONTRADICTION_NEEDS_UNC_TEAM_CROSSCHECK"
+    },
+    {
+      "name": "Cameron Boozer",
+      "sourceUrl": "https://goduke.com/sports/mens-basketball/stats/2025-26",
+      "issue": "Duke 54/138 3PT (.391304) vs secondary copies claiming 39.3%. Use 39.1% from official Duke totals as rounding.",
+      "decision": "OFFICIAL_TEAM_TOTALS_PRIORITIZED"
+    },
+    {
+      "name": "Aday Mara",
+      "sourceUrl": "https://mgoblue.com/sports/mens-basketball/roster/aday-mara/27049",
+      "issue": "NBA draft profile says 30% three-point shooting, based on just 3/10 college shots. Do not infer stretch-center shooting from rate on ten attempts.",
+      "decision": "RATE_SAMPLE_TOO_SMALL"
+    },
+    {
+      "name": "Morez Johnson Jr.",
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/morez-johnson-jr",
+      "issue": "34.3% college 3PT from only 35 attempts, not reliably transferable to NBA shooting proficiency.",
+      "decision": "RATE_SAMPLE_TOO_SMALL"
+    }
+  ],
+  "positionEvidenceAdjudications": [
+    {
+      "name": "Bennedict Mathurin",
+      "previousCandidates": [
+        "PG"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/m/mathube01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "Proposed PG-only did not fit documented 2025–26 primary SG/SF wing role; alter candidate slots pending full 2026–27 verification.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Luguentz Dort",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/d/dortlu01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "NBA.com broad G; historical 2025–26 SF/SG role warrants both, not automatically excluding SF.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Jordan Walsh",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SF",
+        "PF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/w/walshjo01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "NBA.com broad G contrasts 2025–26 Basketball-Reference PF/wing; add PF as provisional.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Julian Strawther",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/s/strawju01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "Recent primary SG and secondary wing role; add SG to formerly SF-only candidate.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Zach LaVine",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/l/lavinza01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "2025–26 primary SG and historical SF flexibility contradict draft SF-only.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Josh Hart",
+      "previousCandidates": [
+        "SF",
+        "PF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF",
+        "PF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/h/hartjo01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "SG in 2024–25, SF in 2025–26; add SG while preserving existing provisional PF, which still needs own lineup evidence.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Obi Toppin",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "PF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/t/toppiob01.html",
+      "sourceMethod": "2025–26 and historical Basketball-Reference primary position; 2025–26 minute-split data for Ty Jerome; NBA.com official broad team labels cross-checked",
+      "why": "Provisional SF-only was mispositioned: Basketball-Reference shows PF as primary position for 2023–24, 2024–25, 2025–26 and early 2026–27; NBA roster lists broad F. Restore PF; do not certify SF/other slot without matchup/lineup evidence.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Christian Braun",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/b/braunch01.html",
+      "sourceMethod": "2025–26 and historical Basketball-Reference primary position; 2025–26 minute-split data for Ty Jerome; NBA.com official broad team labels cross-checked",
+      "why": "2022–23 through 2026–27 Basketball-Reference primary SG, not prior SF-only candidate; flexible perimeter wing minutes allow provisional SG/SF, exact 2026–27 position deployment still needs confirmation.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Bilal Coulibaly",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/c/coulibi01.html",
+      "sourceMethod": "2025–26 and historical Basketball-Reference primary position; 2025–26 minute-split data for Ty Jerome; NBA.com official broad team labels cross-checked",
+      "why": "2025–26 primary SG in 56 starts, 2024–25 and early 2026–27 SF, so both SG and SF are supported historical-season slot leads.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Ty Jerome",
+      "previousCandidates": [
+        "SG"
+      ],
+      "reviewedCandidates": [
+        "PG",
+        "SG"
+      ],
+      "sourceUrl": "https://www.sports.ws/nba/ty-jerome?featuredSeason=25_26",
+      "sourceMethod": "2025–26 and historical Basketball-Reference primary position; 2025–26 minute-split data for Ty Jerome; NBA.com official broad team labels cross-checked",
+      "why": "2025–26 positional minute distribution 26% PG, 64% SG, 10% SF; 5.7 APG on 15 starts corroborates meaningful on-ball guard work, allowing PG/SG provisional candidate rather than SG-only; exclude SF until sustained 2026–27 assignment evidence.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "John Collins",
+      "previousCandidates": [
+        "SF",
+        "PF"
+      ],
+      "reviewedCandidates": [
+        "PF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/c/collijo01.html",
+      "sourceMethod": "Basketball-Reference season-by-season role history and season-specific 2025-26 positional on-court mix; broad official NBA team roster alone insufficient",
+      "why": "NBA Basketball-Reference lists PF for every NBA season 2017-18 through 2026-27, including 69 Clippers 2025-26 games at PF and first 2026-27 Detroit games at PF. Official Detroit NBA.com roster lists Forward-Center, which supports frontcourt role but not a true SF wing slot. Remove unsupported SF candidate; retain PF only pending final lineup-slot certification.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Peyton Watson",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SF",
+        "PF"
+      ],
+      "sourceUrl": "https://sports.ws/nba/peyton-watson?featuredSeason=25_26",
+      "sourceMethod": "Basketball-Reference season-by-season role history and season-specific 2025-26 positional on-court mix; broad official NBA team roster alone insufficient",
+      "why": "2025-26 BRef-derived positional minute splits estimated 52% SF, 32% PF and 16% SG, suggesting SF/PF versatile forward eligibility rather than SF-only. Basketball-Reference current-season primary position SF; preserve SF and add a provisional PF lead. Matchup-based 2026-27 team role still needs evaluation.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Anthony Black",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "PG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/b/blackan01.html",
+      "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
+      "why": "Basketball-Reference lists PG for each of 2023-24, 2024-25, 2025-26 (64 GP/40 starts) and current early 2026-27 Orlando. Lead combo guard and defense versatility do not establish SF wing eligibility; replace unsupported SF-only slot with PG provisional lead.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Ben Sheppard",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/s/sheppbe01.html",
+      "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
+      "why": "Basketball-Reference lists SG in each of 2023-24, 2024-25 and 2025-26 (65 GP, 20 starts), and first 2026-27 Indiana game. Official roster broad G consistent; SF-only slot incorrect; SG provisional until current team-role review.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Pelle Larsson",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/l/larsspe01.html",
+      "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
+      "why": "Basketball-Reference records SG in 2024-25, 2025-26 (70 GP, 54 starts), and current 2026-27 Miami. Current broad NBA G aligns; former SF-only candidate unsupported. SG provisional, not certified.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Javonte Green",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/g/greenja02.html",
+      "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
+      "why": "Basketball-Reference records SG in 2025-26 Detroit (82 GP, 6 starts) and early 2026-27. Broad NBA G consistent; SF-only candidate would misclassify 2025-26 playable role. Guard-wing positional versatility does not independently prove SF in current lineup.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Jalen Suggs",
+      "previousCandidates": [
+        "SG"
+      ],
+      "reviewedCandidates": [
+        "PG",
+        "SG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/s/suggsja01.html",
+      "sourceMethod": "Basketball-Reference season-by-season Pos (PG 2024-25 and 2025-26, SG earlier), NBA official Orlando G and current NBA creator role",
+      "why": "2025-26 57 GP/56 starts at PG with 5.5 APG, following 2024-25 PG and earlier SG season; SG-only misses primary contemporary guard role; PG/SG remains provisional and requires exact rotation lineup cross-check.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Gradey Dick",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/d/dickgr01.html",
+      "sourceMethod": "Basketball-Reference season-by-season SG 2023-24 through 2025-26, plus NBA.com Clippers G-F roster",
+      "why": "2025-26 Toronto 76 GP at SG after two earlier SG NBA seasons, current LAC officially G-F. SF-only omitted demonstrated SG eligibility; SG/SF is a plausible role-flexible lead rather than certified exact lineup minutes.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    }
+  ],
+  "confirmedNo2025_26NbaSeason": [
+    {
+      "name": "Tyrese Haliburton",
+      "sourceUrl": "https://www.basketball-reference.com/players/h/halibty01.html",
+      "lastNbaSeason": "2024-25",
+      "lastSeasonTeam": "IND",
+      "lastSeasonGames": 73,
+      "lastSeasonPointsPerGame": 18.6,
+      "lastSeasonAssistsPerGame": 9.2,
+      "lastSeasonThreePointPercentage": 38.8,
+      "absentReason": "Achilles injury; played zero 2025–26 NBA regular-season games",
+      "abilityInterpretation": "96 Playmaking, 88 Shooting and 90 OVR remain grounded in previous demonstrated ability, not 2025–26 performance; early 2026–27 return is only 4 games and does not certify complete recovery.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "OFFICIAL_HISTORICAL_NBA_BOX_SCORE_ABSENCE_VERIFIED_NOT_SKILL_CERTIFIED",
+      "gradeStatus": "PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY"
+    },
+    {
+      "name": "Kyrie Irving",
+      "sourceUrl": "https://www.basketball-reference.com/players/i/irvinky01.html",
+      "lastNbaSeason": "2024-25",
+      "lastSeasonTeam": "DAL",
+      "lastSeasonGames": 50,
+      "lastSeasonPointsPerGame": 24.7,
+      "lastSeasonAssistsPerGame": 4.6,
+      "lastSeasonThreePointPercentage": 40.1,
+      "absentReason": "ACL injury; played zero 2025–26 NBA regular-season games",
+      "abilityInterpretation": "92 Scoring and 94 Shooting refer to 2024–25 scoring difficulty/efficiency and longer history; 4 early 2026–27 comeback games insufficient to certify current form.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "OFFICIAL_HISTORICAL_NBA_BOX_SCORE_ABSENCE_VERIFIED_NOT_SKILL_CERTIFIED",
+      "gradeStatus": "PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY"
+    },
+    {
+      "name": "Damian Lillard",
+      "sourceUrl": "https://www.basketball-reference.com/players/l/lillada01.html",
+      "lastNbaSeason": "2024-25",
+      "lastSeasonTeam": "MIL",
+      "lastSeasonGames": 58,
+      "lastSeasonPointsPerGame": 24.9,
+      "lastSeasonAssistsPerGame": 7.1,
+      "lastSeasonThreePointPercentage": 37.6,
+      "absentReason": "Achilles injury; played zero 2025–26 NBA regular-season games",
+      "abilityInterpretation": "82 OVR and long-range guard-shooting profile must be judged on 2024–25 and earlier, with current burst/defense separately reviewed; 3 early 2026–27 Portland games are not a reliable recovery sample.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "OFFICIAL_HISTORICAL_NBA_BOX_SCORE_ABSENCE_VERIFIED_NOT_SKILL_CERTIFIED",
+      "gradeStatus": "PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY"
+    },
+    {
+      "name": "Fred VanVleet",
+      "sourceUrl": "https://www.basketball-reference.com/players/v/vanvlfr01.html",
+      "lastNbaSeason": "2024-25",
+      "lastSeasonTeam": "HOU",
+      "lastSeasonGames": 60,
+      "lastSeasonPointsPerGame": 14.1,
+      "lastSeasonAssistsPerGame": 5.6,
+      "lastSeasonThreePointPercentage": 34.5,
+      "absentReason": "ACL injury; played zero 2025–26 NBA regular-season games",
+      "abilityInterpretation": "81 OVR, guard playmaking/spacing/pressure must refer to demonstrated NBA evidence prior to ACL; early 4-game 2026–27 return does not establish restored peak.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "OFFICIAL_HISTORICAL_NBA_BOX_SCORE_ABSENCE_VERIFIED_NOT_SKILL_CERTIFIED",
+      "gradeStatus": "PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY"
+    }
+  ],
+  "no2025_26NbaSeasonAlternateEvidence": [
+    {
+      "name": "Allen Graves",
+      "category": "2026_DRAFT_NCAA_2025_26",
+      "competition": "NCAA Division I, Santa Clara",
+      "games": 35,
+      "ppg": 11.8,
+      "rpg": 6.5,
+      "apg": 1.9,
+      "threePct": 41.3,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/allen-graves",
+      "context": "Santa Clara redshirt freshman; 2026 No. 19 Toronto draft pick. Four college starts despite 35 games; collegiate scoring and steals are not NBA six-skill corroboration.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Baba Miller",
+      "category": "2026_DRAFT_NCAA_2025_26",
+      "competition": "NCAA Division I, Cincinnati",
+      "ppg": 13,
+      "rpg": 10.3,
+      "apg": 3.7,
+      "threePct": 19,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/baba-miller",
+      "context": "Cincinnati senior; 2026 No. 36 Clippers selection, unusual big-forward playmaking. Weak collegiate perimeter shooting warns against inferring NBA Shooting from size/role.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Braden Smith",
+      "category": "2026_DRAFT_NCAA_2025_26",
+      "competition": "NCAA Division I, Purdue",
+      "ppg": 14.3,
+      "rpg": 3.5,
+      "apg": 8.8,
+      "threePct": 36.2,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/braden-smith",
+      "context": "Purdue senior and NCAA career assist leader; selected 38th by Chicago and traded to Indiana. Elite college distributing evidence is not automatic NBA 95+ playmaking against professional defenders.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Bruce Thornton",
+      "category": "2026_DRAFT_NCAA_2025_26",
+      "competition": "NCAA Division I, Ohio State",
+      "ppg": 19.9,
+      "rpg": 5.1,
+      "apg": 3.9,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/bruce-thornton",
+      "context": "Ohio State senior; drafted 31st by New York, rights traded to Houston. Career 2,164 college points, senior 19.9 PPG; no 2025-26 NBA appearances.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Josh Dix",
+      "category": "2026_UNDRAFTED_NCAA_2025_26_TWO_WAY",
+      "competition": "NCAA Division I, Creighton",
+      "games": 34,
+      "ppg": 13.2,
+      "rpg": 3.7,
+      "apg": 2.3,
+      "threePct": 42,
+      "sourceUrl": "https://gleague.nba.com/news/thunder-signs-barnhizer-dix-and-oweh-to-two-way-contracts-2",
+      "secondarySourceUrl": "https://www.nba.com/draft/2026/prospects/josh-dix",
+      "context": "Undrafted 2026 Creighton senior, signed to an Oklahoma City two-way July 3; not a historical NBA 2025-26 player. College shooting evidence, professional defensive translation unproven.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Labaron Philon Jr.",
+      "category": "2026_DRAFT_NCAA_2025_26",
+      "competition": "NCAA Division I, Alabama",
+      "games": 33,
+      "ppg": 22,
+      "rpg": 3.5,
+      "apg": 5,
+      "threePct": 39.9,
+      "sourceUrl": "https://www.nba.com/sixers/76ers-players/labaron-philon-jr",
+      "context": "2026 No. 22 Philadelphia pick, Alabama sophomore 22.0 PPG/5.0 APG with 39.9% 3PT. Small first-week 2026-27 NBA sample separate from college and 2025-26 absence.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Mario Hezonja",
+      "category": "NON_NBA_2025_26_PRO_LEAGUE",
+      "competition": "Spanish Liga Endesa, Real Madrid",
+      "ppg": 17.5,
+      "rpg": 4.9,
+      "apg": 1.9,
+      "sourceUrl": "https://www.realmadrid.com/en-US/news/basket/first-team/latest-news/hezonja-mvp-de-la-liga-endesa-2025-26-01-06-2026",
+      "context": "2025-26 Spanish Liga Endesa MVP; returned to NBA in summer 2026 with Cleveland after overseas play. This is not a 2025-26 NBA stat line, and ACB competition translation needs separate NBA film evaluation.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Meleek Thomas",
+      "category": "2026_DRAFT_NCAA_2025_26",
+      "competition": "NCAA Division I, Arkansas",
+      "games": 37,
+      "ppg": 15.6,
+      "rpg": 3.8,
+      "apg": 2.5,
+      "threePct": 41.6,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/meleek-thomas",
+      "context": "Arkansas freshman; No. 34 pick originally Sacramento, acquired by Cleveland. Strong NCAA movement shooting but limited pro volume; do not automatically upgrade all offensive skills.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Tarris Reed Jr.",
+      "category": "2026_DRAFT_NCAA_2025_26",
+      "competition": "NCAA Division I, Connecticut",
+      "ppg": 14.7,
+      "rpg": 9,
+      "apg": 2.3,
+      "blocksPerGame": 2,
+      "sourceUrl": "https://www.nba.com/draft/2026/prospects/tarris-reed-jr",
+      "context": "UConn senior 14.7/9.0/2.3/2.0 BPG; 2026 No. 26 originally Denver, traded to San Antonio. College interior protection and rebounding are not NBA defensive-stopper certification.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Thomas Sorber",
+      "category": "2025_NBA_DRAFTEE_INJURY_2025_26",
+      "competition": "NBA roster absence due to right ACL tear",
+      "sourceUrl": "https://www.nba.com/news/thunder-1st-round-pick-thomas-sorber-tears-acl-will-miss-rookie-season",
+      "secondarySourceUrl": "https://www.nba.com/thunder/player/1642850/thomas-sorber",
+      "context": "2025 No. 15 pick Oklahoma City; season-ending ACL injury before 2025-26 NBA rookie season. Last Georgetown 2024-25 NCAA season 14.5 PPG/8.5 RPG. Ability and availability must be separate; no invented 2025-26 NBA statistics.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Trevon Brazile",
+      "category": "2026_DRAFT_NCAA_2025_26",
+      "competition": "NCAA Division I, Arkansas",
+      "ppg": 13,
+      "rpg": 7.3,
+      "sourceUrl": "https://www.nba.com/news/live-2026-nba-draft",
+      "context": "Arkansas 2025-26 senior: 45 three-pointers, 58 blocks and 53 steals; 2026 No. 35 via San Antonio, acquired by Denver. College defensive plays and 2026-27 opening-week 9 PPG are distinct samples, not a 2025-26 NBA season.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    },
+    {
+      "name": "Trey Lyles",
+      "category": "NON_NBA_2025_26_PRO_LEAGUE",
+      "competition": "Spanish ACB and EuroLeague, Real Madrid",
+      "sourceUrl": "https://www.realmadrid.com/en-US/news/club/announcements/comunicado-oficial-trey-lyles-10-09-2025",
+      "secondarySourceUrl": "https://basketball.realgm.com/player/Trey-Lyles/Summary/28238",
+      "context": "Signed with Real Madrid September 2025 for 2025-26 through June 2026 after Sacramento 2024-25 NBA. Current Minnesota 2026-27 roster is separate; use 2024-25 NBA ability plus translated 2025-26 overseas 74 games, not fictional NBA 2025-26 stats.",
+      "season": "2025-26",
+      "nbaRegularSeasonGames": 0,
+      "sourceStatus": "ALTERNATIVE_SOURCE_CLASSIFICATION_NOT_NBA_2025_26_SAMPLE",
+      "sixSkillCertification": "NOT_CERTIFIED"
+    }
+  ],
+  "noSeasonSourcePartition": {
+    "nbaApiNoSeasonCandidates": 29,
+    "priorInjuredVeteransReviewed": 4,
+    "college2026RookiesAlreadyReviewed": 13,
+    "newlyClassifiedAlternatives": 12,
+    "unclassified": 0,
+    "warning": "All 29 have an evidence-supported reason for no 2025-26 NBA API row. This is NOT 29 NBA season profiles or 29 fully basketball-reviewed players."
+  }
+}

@@ -1,0 +1,13 @@
+# NBA GM — Deandre Ayton, interior defense 70: rim impact versus complete defensive value
+
+**October 30, 2026 — independent targeted role evaluation; draft-only; grade held at 70, not full certification.**
+
+NBA [2025–26 individual shot defense](https://www.therundown.gg/research/nba/player/deandre-ayton?gt=Regular+Season&season=2025-26) credits **5.3 shots defended at rim per game**, **59.4% opponent FG at rim**, and **4.5 percentage points lower than those shooters' normal percentage**. He also contested **7.9 total shots**, including **5.9 two-point attempts per game**, and blocked **1.0 shot/game** (3.3% block rate). **This is real interior activity, not absence of rim defense.**
+
+But grading him like an 80+ high-impact paint anchor based on 5.3 tracked rim contests would misinterpret the full possession evidence. The same [source's 2025–26 impact measures](https://www.therundown.gg/research/nba/player/deandre-ayton?gt=Regular+Season&season=2025-26) report **defensive box plus-minus −0.9** and **defensive RAPM −2.96**, approximately the bottom 6% of the sourced population. [2025–26 Lakers reconstructed on/off](https://3pointstats.com/p/deandre-ayton) places team defensive efficiency **113.6 on vs 111.8 off** (worse by 1.8 points / 100 with him playing). Alternate [Lakers 2025–26 team on/off](https://deepmetricanalytics.com/nba/team/lal?season=2025) gives similarly weak adjusted-or-raw season comparisons, although values vary with methodology and sample. Those are **lineup-dependent descriptive evidence**, not a sole-player causal conclusion or proof of individual failures.
+
+### Editorial verdict
+
+**Retain Ayton Interior Defense 70** (below-average side of center positional expectation): the actual rim-contest and opponent shot suppression prevent reducing him into a nonexistent rim-defender 50s grade, but inconsistent pick-and-roll rotations, transition communication/effort, and poor overall defensive impact cannot support calling him a solid 75–79 or very good 85–89 anchor. Preserve previously proposed **Scoring 75, Shooting 38, Playmaking 56, Perimeter Defense 54, Rebounding 86 and Overall 78**. Peer prompt: **Clint Capela**, **Isaiah Hartenstein**, **Jakob Poeltl** as more disciplined center-defense role comparators rather than forward shot-blocking peers. Need possession-level rotation film, scheme attribution and multiple team-context impact metrics before final approval. Defensive plus/minus is not itself an interior-defense grade.
+
+**No rating amendment, no full six-skill or exact-position certification.** This resolves the particular outlier concern as a documented **provisional HOLD**, not as a release-ready certification.
