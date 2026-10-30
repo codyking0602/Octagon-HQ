@@ -52,3 +52,41 @@ The eleven players below have **new, individual, source-linked 2025–26 regular
 No overall is derived from arithmetic skill average. A 78 overall scorer/specialist may legitimately shoot 95; a 98 overall lead guard may defend the paint poorly. No 70 floor, no stat-to-grade formula, no NBA 2K grade copying. Shot attempts, adjusted shooting quality, matchup difficulty, minutes, role and film must support *each* final change.
 
 **Every proposed numerical change in this memo remains a reviewer hypothesis.** Before updating the underlying 330-player candidate overall or six-skill JSON, require source-specific individual corroboration, peer comparison and recorded decision. All 330 remain `PROVISIONAL_NOT_CERTIFIED` and excluded from public gameplay. No merge, Supabase change, deployment or production action.
+
+
+## October 30 — archived NBA-season gap closure and four individual shooting calibrations
+
+**Still unpublished and uncertified.** The already preserved 2025–26 historical NBA Stats API-derived archive covers 301 of 330 candidate identities. Of those, 19 actual player-season rows were missing from the separately attached, named season-fact records. Their identity joins and **129 additional season observations** are now attached to individual board profiles. The source is a pinned third-party NBA API-derived dataset, not an independent official NBA.com 2026–27 team or position check; do not count these 129 copied stats among the 429 independently cross-checked leaderboard observations. The 29 without NBA API rows are not assumed to have played.
+
+| Newly attached 2025–26 NBA subject | GP | MPG | PPG / RPG / APG | 3PA / 3P% | Individual limitation |
+|---|---:|---:|---|---|---|
+| Asa Newell | 44 | 11.4 | 5.2 / 2.2 / 0.6 | 75 / 38.7% | Restricted bench minutes; avoid projecting per-game line to starter usage |
+| Cam Whitmore | 21 | 16.9 | 9.2 / 2.8 / 0.7 | 56 / 28.6% | Short sample; verify historical healthy seasons and role |
+| GG Jackson | 55 | 21.4 | 12.5 / 4.3 / 1.5 | 193 / 33.2% | NBA season workload available; possession defense and shot type still pending |
+| Jase Richardson | 54 | 10.9 | 4.4 / 1.2 / 1.1 | 79 / 35.4% | Restricted bench minutes; avoid projecting per-game line to starter usage |
+| Jevon Carter | 53 | 16.4 | 6.4 / 1.7 / 1.6 | 215 / 36.3% | NBA season workload available; possession defense and shot type still pending |
+| Joan Beringer | 40 | 7.8 | 3.9 / 2.3 / 0.3 | 0 / not meaningful (<10 3PA) | Restricted bench minutes; avoid projecting per-game line to starter usage |
+| Kasparas Jakucionis | 53 | 17.8 | 6.2 / 2.6 / 2.6 | 156 / 42.3% | NBA season workload available; possession defense and shot type still pending |
+| Leonard Miller | 46 | 15.6 | 7.8 / 3.9 / 0.9 | 99 / 32.3% | NBA season workload available; possession defense and shot type still pending |
+| Micah Potter | 47 | 19.3 | 9.7 / 5.0 / 1.5 | 168 / 42.3% | NBA season workload available; possession defense and shot type still pending |
+| Mike Conley | 54 | 18.4 | 4.5 / 1.7 / 2.9 | 166 / 33.7% | NBA season workload available; possession defense and shot type still pending |
+| Mo Bamba | 4 | 10.9 | 2.5 / 5.5 / 0.3 | 0 / not meaningful (<10 3PA) | Tiny NBA sample; shots and minutes cannot establish ability |
+| Noa Essengue | 2 | 3.0 | 0.0 / 0.0 / 0.0 | 2 / not meaningful (<10 3PA) | Tiny NBA sample; shots and minutes cannot establish ability |
+| Nolan Traore | 56 | 22.2 | 8.9 / 1.8 / 3.8 | 192 / 31.8% | NBA season workload available; possession defense and shot type still pending |
+| Tidjane Salaün | 37 | 15.6 | 6.0 / 4.0 / 0.7 | 83 / 43.4% | NBA season workload available; possession defense and shot type still pending |
+| Trayce Jackson-Davis | 53 | 9.4 | 3.4 / 2.7 / 0.7 | 1 / not meaningful (<10 3PA) | Restricted bench minutes; avoid projecting per-game line to starter usage |
+| Tre Mann | 53 | 12.6 | 5.5 / 1.7 / 1.6 | 155 / 32.3% | Restricted bench minutes; avoid projecting per-game line to starter usage |
+| Tyrese Proctor | 50 | 10.9 | 5.4 / 1.3 / 1.5 | 131 / 35.1% | Restricted bench minutes; avoid projecting per-game line to starter usage |
+| Yang Hansen | 43 | 7.0 | 2.2 / 1.5 / 0.5 | 42 / 11.9% | Restricted bench minutes; avoid projecting per-game line to starter usage |
+| Zeke Nnaji | 52 | 12.0 | 3.6 / 2.6 / 0.6 | 54 / 25.9% | Restricted bench minutes; avoid projecting per-game line to starter usage |
+
+Historical source: [pinned 2025–26 player-season CSV](https://raw.githubusercontent.com/EasySportsApps/nba_api_25_26_data/f785bb34415b2bf4c80614dcfa4a305cc9969ee5/nba_players_regular_season_25_26_wide_data.csv), with player IDs/games/MPG and all totals retained in `docs/nba-gm-2025-26-nba-api-301-player-stat-evidence-2026-10-29.json`. **No zero-attempt 3P% was interpreted as 0%, and 1-for-1 is not a 100-rated shooting season**; accuracy is omitted from the attached season-fact records below ten three-point attempts.
+
+| Player | Draft Shooting | Evidence-based provisional decision | Peer context and unresolved proof |
+|---|---|---|---|
+| **Peyton Watson** | 70 → **77** | 2025–26 81/197 (41.1%), 54 GP and 29.6 MPG; up from 48/136 (35.3%) in 2024–25 and 29.6% in 2023–24. [NBA.com individual year-by-year splits](https://www.nba.com/stats/player/1631212/), [2025–26 catch/pull-up profile](https://www.therundown.gg/research/nba/player/peyton-watson?gt=Regular+Season&season=2025-26) | 2.9 catch-and-shoot 3PA at 46.8% vs only 0.7 pull-up 3PA; one good year suggests useful floor spacing, not high-difficulty specialist shooting. Lower than Wiggins 81 and Collins 81 with more established NBA samples. |
+| **Kasparas Jakucionis** | 72 → **78** | 53 GP, 66/156 (42.3%) 3P, 87.9% FT in 2025–26 Miami; prior Illinois 2024–25 31.8% 3P, 84.5% FT. [NBA professional career and totals](https://www.basketball-reference.com/players/j/jakucka01.html), [college baseline](https://www.sports-reference.com/cbb/players/kasparas-jakucionis-1.html) | 2.9 3PA at 17.8 MPG; low usage, first-year variance and shot complexity unresolved. Similar modest spacer-tier to Josh Hart 77, below Bub Carrington 82. |
+| **John Collins** | 76 → **81** | 69 GP, 89/219 (40.6%) 3P in 2025–26; previous years 39.9% (2024–25) and 37.1% (2023–24). [Season totals](https://www.statmuse.com/nba/ask/john-collins-3pt-attempts-made-2026-season), [multi-season attempts](https://www.covers.com/sport/basketball/nba/players/1656/john-collins) | Reliable stretch-four shooting, largely complementary catch-and-shoot on ~3.2 attempts/game; similar 81 to Wiggins in a different role, much lower than Kennard's 95. |
+| **Andrew Wiggins** | 78 → **81** | 68 GP, 138/333 (41.4%) 3P in 2025–26 Miami, 37.4% in 2024–25, 35.8% in 2023–24. [2025–26 primary-season volume](https://www.statmuse.com/nba/ask/andrew-wiggins-career-3pt-percentage-2026), [historical seasons](https://www.therundown.gg/research/nba/player/andrew-wiggins?gt=Regular+Season&season=2025-26) | 4.9 3PA/game with multiyear volatility, not automatic 85+ movement gravity; above Watson 77 and similar to Collins 81 at higher wing volume. |
+
+**Board result:** 301/330 players with individually linked 2025–26 NBA-season numerical context, **951** context numerical observations and 37 awards. Overall 75–79 tier: **137/149** attached NBA-season records (remaining 12 need alternative NBA/injury/college evidence). Four new shooting-only proposal changes; **10 total evidence-backed provisional grade changes**. No overall changed; 330/330 remain provisional, 0 fully six-skill certified. Defensive assignments, rim protection film, role peers, official exact position and remaining no-season classifications still block release.
