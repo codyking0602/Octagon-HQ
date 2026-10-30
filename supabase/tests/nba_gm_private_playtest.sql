@@ -6,7 +6,7 @@ declare
   v_owner uuid:=extensions.gen_random_uuid();
   v_outsider uuid:=extensions.gen_random_uuid();
   v_state jsonb;v_player text;v_team text;v_index integer;v_year integer;
-  v_spend bigint;v_old text;v_rejected boolean;v_before jsonb;
+  v_spend bigint;v_old text;v_rejected boolean;v_before jsonb;v_year_one jsonb;
 begin
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
   values
@@ -72,6 +72,7 @@ begin
 
   -- A new negotiation has two fresh offers and must produce a legal
   -- accepted trade, without rewriting the preserved Season 1 lineup.
+  v_year_one:=v_state->'yearOnePicks';
   v_state:=public.nba_gm_dev_action('shop',null,v_old);
   if (v_state->>'tradeAttempts')::integer<>0 then
     raise exception 'New NBA negotiation inherited stale rejected offers'; end if;
@@ -87,7 +88,7 @@ begin
   v_state:=public.nba_gm_dev_action('trade',null,v_player);
   if (v_state->>'tradesUsed')::integer<>1 or jsonb_array_length(v_state->'picks')<>7
     or v_state->>'tradeTeam' is not null or v_state->>'shopPlayerId' is not null
-    or v_state->'yearOnePicks' is distinct from v_before
+    or v_state->'yearOnePicks' is distinct from v_year_one
     or not exists(select 1 from jsonb_array_elements(v_state->'picks') x where x->>'playerId'=v_player)
     or exists(select 1 from jsonb_array_elements(v_state->'picks') x where x->>'playerId'=v_old)
     then raise exception 'NBA trade did not apply cleanly or changed Year 1'; end if;
