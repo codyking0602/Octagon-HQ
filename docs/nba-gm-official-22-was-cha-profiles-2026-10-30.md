@@ -21,7 +21,7 @@
 | CHA | Kon Knueppel | [1642851](https://www.nba.com/player/1642851) |
 | CHA | Grayson Allen | [1628960](https://www.nba.com/player/1628960) |
 | CHA | Ryan Kalkbrenner | [1641750](https://www.nba.com/player/1641750) |
-| CHA | Moussa Diabate | [1631217](https://www.nba.com/player/1631217) |
+| CHA | Moussa Diabaté | [1631217](https://www.nba.com/player/1631217) |
 | CHA | Dennis Schröder | [203471](https://www.nba.com/player/203471) |
 | CHA | Hannes Steinbach | [1643419](https://www.nba.com/player/1643419) |
 | CHA | Brandon Miller | [1641706](https://www.nba.com/player/1641706) |
