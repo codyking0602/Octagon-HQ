@@ -457,6 +457,82 @@
       "sourceUrl": "https://www.basketball-reference.com/players/s/strawju01.html",
       "comparison": "Compared with Cam Spencer 90 and Luke Kennard 95 as high-certainty specialist gravity anchors; limited volume and weaker multi-year efficiency support 82 until film corroboration.",
       "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Peyton Watson",
+      "before": 70,
+      "after": 77,
+      "games": 54,
+      "minutesPerGame": 29.6,
+      "threePointPercentage": 41.1,
+      "threePointAttempts": 197,
+      "previousSeasonThreePointPercentage": 35.3,
+      "decision": "2025-26 81/197 threes (41.1%) over 54 games after 2024-25 48/136 (35.3%) and 2023-24 29.6%; 2.9 catch-and-shoot 3PA per game with 46.8% accuracy vs only ~0.7 pull-up 3PA. Raise 70→77 solid spacing rather than assuming high-difficulty specialist gravity from one improved season.",
+      "comparison": "Above a 70 limited-shooter grade, below Andrew Wiggins and John Collins as more established shooting roles, and far below Luke Kennard 95. Shot variety and playoff defensive game-plan film still pending.",
+      "sourceUrl": "https://www.nba.com/stats/player/1631212/",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/peyton-watson?gt=Regular+Season&season=2025-26",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Kasparas Jakucionis",
+      "before": 72,
+      "after": 78,
+      "games": 53,
+      "minutesPerGame": 17.8,
+      "threePointPercentage": 42.3,
+      "threePointAttempts": 156,
+      "previousSeasonThreePointPercentage": null,
+      "decision": "2025-26 Miami 66/156 3P (42.3%) in 53 games and 87.9% FT, contrasted with 2024-25 Illinois 31.8% 3P on 5.2 attempts/game and 84.5% FT. Raise 72→78 cautiously; 17.8 MPG and 2.9 NBA 3PA/game do not establish difficult-shot gravity or multi-year repeatability.",
+      "comparison": "Near Josh Hart 77 as useful but unproven/variable spacer, below Jaden McDaniels 81 and Bub Carrington 82 with larger NBA samples, far below Luke Kennard 95.",
+      "sourceUrl": "https://www.basketball-reference.com/players/j/jakucka01.html",
+      "secondarySourceUrl": "https://www.sports-reference.com/cbb/players/kasparas-jakucionis-1.html",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "John Collins",
+      "before": 76,
+      "after": 81,
+      "games": 69,
+      "minutesPerGame": 27.1,
+      "threePointPercentage": 40.6,
+      "threePointAttempts": 219,
+      "previousSeasonThreePointPercentage": 39.9,
+      "decision": "2025-26 89/219 (40.6%) threes over 69 games after 39.9% on 148 attempts in 2024-25 and 37.1% on 232 in 2023-24. Above-average stretch-four shooting is repeatedly demonstrated; 3.2 3PA/game and largely complementary floor spacing do not imply movement-shooter excellence.",
+      "comparison": "Similar useful spacing tier to Andrew Wiggins 81 but lower volume/greater frontcourt catch-and-shoot role; above Peyton Watson 77 shorter track record; far below Kennard 95.",
+      "sourceUrl": "https://www.statmuse.com/nba/ask/john-collins-3pt-attempts-made-2026-season",
+      "secondarySourceUrl": "https://www.covers.com/sport/basketball/nba/players/1656/john-collins",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Andrew Wiggins",
+      "before": 78,
+      "after": 81,
+      "games": 68,
+      "minutesPerGame": 30.3,
+      "threePointPercentage": 41.4,
+      "threePointAttempts": 333,
+      "previousSeasonThreePointPercentage": 37.4,
+      "decision": "2025-26 138/333 (41.4%) NBA threes over 68 Miami games (4.9 3PA/game) after 2024-25 37.4% and 2023-24 35.8%; earlier 2021-23 roughly 39% seasons demonstrate real complementary wing shotmaking with multi-year variance. Raise 78→81, not to 85+ without pull-up/contested gravity evidence.",
+      "comparison": "Higher volume and years of NBA evidence than Peyton Watson 77 or rookie Kasparas Jakucionis 78; similar level to John Collins 81 in different wing vs frontcourt shooting roles; below specialist Kennard 95.",
+      "sourceUrl": "https://www.statmuse.com/nba/ask/andrew-wiggins-career-3pt-percentage-2026",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/andrew-wiggins?gt=Regular+Season&season=2025-26",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
     }
   ],
   "roleFlags": [
