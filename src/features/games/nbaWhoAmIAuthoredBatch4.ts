@@ -3129,7 +3129,7 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
         },
         {
           "id": "nba-walt-frazier-b-10",
-          "text": "I was Walt 'Clyde' Frazier, the stylish leader of New York's title teams.",
+          "text": "My 'Clyde' nickname, eye-catching suits and two Knicks championships made me a New York icon.",
           "band": "giveaway",
           "verification": "verified",
           "sourceIds": [
@@ -3472,7 +3472,7 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
         },
         {
           "id": "nba-john-havlicek-a-10",
-          "text": "My steal in the 1965 playoffs inspired the call 'Havlicek stole the ball!'",
+          "text": "My late steal against Philadelphia in the 1965 Eastern finals became one of basketball's most famous radio calls.",
           "band": "giveaway",
           "verification": "verified",
           "sourceIds": [
@@ -3577,7 +3577,7 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
         },
         {
           "id": "nba-john-havlicek-b-10",
-          "text": "I was the Boston legend John 'Hondo' Havlicek.",
+          "text": "I wore No. 17 for Boston, won eight championships and earned the nickname 'Hondo'.",
           "band": "giveaway",
           "verification": "verified",
           "sourceIds": [
@@ -7387,7 +7387,7 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
         },
         {
           "id": "nba-earl-monroe-b-10",
-          "text": "I was Earl 'the Pearl' Monroe, the flashy No. 15 guard.",
+          "text": "I wore No. 15 with the Knicks and dazzled fans with the nickname 'the Pearl'.",
           "band": "giveaway",
           "verification": "verified",
           "sourceIds": [
@@ -9749,7 +9749,7 @@ export const nbaWhoAmIAuthoredBatch4: readonly NbaWhoAmIAuthoredIdentity[] = [
         },
         {
           "id": "nba-jack-sikma-a-10",
-          "text": "My pivot move became known as the Sikma move with the SuperSonics.",
+          "text": "My signature pivot move became a calling card of Seattle's No. 43 center.",
           "band": "giveaway",
           "verification": "verified",
           "sourceIds": [
