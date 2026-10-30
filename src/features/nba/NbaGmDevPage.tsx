@@ -4,7 +4,7 @@ import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
-  nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevSpend,
+  nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
   nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
 import { nbaGmScoutLetter, nbaGmScoutTier } from "./nbaGmScouting";
@@ -71,27 +71,17 @@ function PlayerCard({player,onPick,disabled,action="DRAFT"}:{
 function FitReport({picks,catalog}:{
   picks:NbaGmDevRun["picks"];catalog:NbaGmDevPlayer[];
 }){
-  const byId=new Map(catalog.map(p=>[p.id,p]));
-  const players=picks.map(p=>byId.get(p.playerId)).filter((p):p is NbaGmDevPlayer=>Boolean(p));
-  if(players.length!==7)return null;
-  const average=(skill:keyof NbaGmDevPlayer["skills"])=>
-    players.reduce((sum,p)=>sum+p.skills[skill],0)/7;
-  const needs=[
-    {label:"Shot creation",score:average("scoring")},
-    {label:"Spacing",score:average("shooting")},
-    {label:"Playmaking",score:average("playmaking")},
-    {label:"Perimeter defense",score:average("perimeterDefense")},
-    {label:"Interior defense",score:average("interiorDefense")},
-    {label:"Rebounding",score:average("rebounding")},
-  ];
+  const signals=nbaGmDevFitSignals(picks,catalog);
+  if(!signals.length)return null;
   // Private diagnostic, not the unvalidated winning-percentage formula.
   return <section className="nba-gm-dev__panel nba-gm-dev__fit" aria-label="Season 1 roster scouting report">
     <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>How your rotation fits</h2></div></div>
     <p className="nba-gm-dev__hint">These are roster-level scouting signals, not extra skill ratings or guaranteed outcomes. Use them to plan your offseason.</p>
     <div className="nba-gm-dev__fit-grid">
-      {needs.map(need=><div key={need.label}><span>{need.label}</span>
-        <strong className={need.score>=82?"is-strong":need.score>=73?"is-fair":"is-weak"}>
-          {need.score>=82?"STRONG":need.score>=73?"FAIR":"NEEDS WORK"}
+      {signals.map(signal=><div key={signal.label} title={signal.detail}>
+        <span>{signal.label}</span>
+        <strong className={signal.status==="STRONG"?"is-strong":signal.status==="FAIR"?"is-fair":"is-weak"}>
+          {signal.status}
         </strong>
       </div>)}
     </div>
