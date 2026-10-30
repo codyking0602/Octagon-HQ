@@ -7,8 +7,8 @@
   "playerCount": 330,
   "scope": "Every Octagon proposed NBA GM candidate matched with a current NBA.com team roster at the October 29, 2026 editorial snapshot. Broad F/G/C tags read from NBA.com; specific game PG/SG/SF/PF/C slot eligibility, full canonical IDs, contracts, skills and live roster recency remain unverified.",
   "notVerifiedTeams": [],
-  "manuallyVerifiedPlayerIdCount": 63,
-  "nbaSourceCaution": "NBA.com may have current after-snapshot transactions; recheck at publication. 'F' and 'G' are not automatic exact PG/SG/SF/PF eligibility. Eight Atlanta individual NBA.com player IDs now cross-checked; supplement identity overlay remains separate. Twelve Boston Celtics and ten Cleveland Cavaliers players now independently linked to exact NBA.com player profile IDs from current team rosters; broad position discrepancies remain independent. Ten New York and twelve Utah individual profiles were directly linked from NBA.com October rosters; roster-level G/F/C not exact slot eligibility.",
+  "manuallyVerifiedPlayerIdCount": 82,
+  "nbaSourceCaution": "NBA.com may have current after-snapshot transactions; recheck at publication. 'F' and 'G' are not automatic exact PG/SG/SF/PF eligibility. Eight Atlanta individual NBA.com player IDs now cross-checked; supplement identity overlay remains separate. Twelve Boston Celtics and ten Cleveland Cavaliers players now independently linked to exact NBA.com player profile IDs from current team rosters; broad position discrepancies remain independent. Ten New York and twelve Utah individual profiles were directly linked from NBA.com October rosters; roster-level G/F/C not exact slot eligibility. Nine Brooklyn and ten Chicago NBA.com individual player IDs linked from roster. 'Egor Dëmin' accented NBA display resolves Octagon 'Egor Demin' identity.",
   "crosswalk": [
     {
       "name": "Jalen Johnson",
@@ -297,9 +297,11 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629008",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629008",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Julius Randle",
@@ -307,9 +309,11 @@
       "officialRosterPosition": "F-C",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "203944",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/203944",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Keon Ellis",
@@ -317,9 +321,11 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1631165",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1631165",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Mikel Brown Jr.",
@@ -327,9 +333,11 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1643414",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1643414",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Egor Demin",
@@ -337,9 +345,12 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1642856",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1642856",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending",
+      "officialRosterAccentAlias": "Egor Dëmin"
     },
     {
       "name": "Day'Ron Sharpe",
@@ -347,9 +358,11 @@
       "officialRosterPosition": "C",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630549",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630549",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Noah Clowney",
@@ -357,9 +370,11 @@
       "officialRosterPosition": "F-C",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1641730",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1641730",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Nolan Traore",
@@ -367,9 +382,11 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1642849",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1642849",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Moritz Wagner",
@@ -377,9 +394,11 @@
       "officialRosterPosition": "F-C",
       "officialRosterUrl": "https://www.nba.com/team/1610612751/nets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629021",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629021",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official BKN 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Norman Powell",
@@ -387,9 +406,11 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1626181",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1626181",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Josh Giddey",
@@ -397,9 +418,11 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630581",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630581",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Matas Buzelis",
@@ -407,9 +430,11 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1641824",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1641824",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Caleb Wilson",
@@ -417,9 +442,11 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1643410",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1643410",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Jalen Smith",
@@ -427,9 +454,11 @@
       "officialRosterPosition": "F-C",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630188",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630188",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Tre Jones",
@@ -437,9 +466,11 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630200",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630200",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Isaac Okoro",
@@ -447,9 +478,11 @@
       "officialRosterPosition": "F-G",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630171",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630171",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Noa Essengue",
@@ -457,9 +490,11 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1642855",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1642855",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Leonard Miller",
@@ -467,9 +502,11 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1631159",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1631159",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Buddy Hield",
@@ -477,9 +514,11 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612741/bulls/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1627741",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1627741",
+      "playerIdentitySource": "Individual NBA.com player page directly followed from official CHI 2026–27 roster on 2026-10-29. ID and club verified; position slots pending"
     },
     {
       "name": "Donovan Mitchell",
