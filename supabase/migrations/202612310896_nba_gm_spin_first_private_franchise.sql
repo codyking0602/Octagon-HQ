@@ -14,6 +14,20 @@ update private.nba_gm_dev_players set positions=array['PF','C']::text[]
 update private.nba_gm_dev_players set positions=array['PF']::text[]
   where id='nba-gm-draft-collinmurrayboyles';
 
+-- 2025-26 position checks: Basketball-Reference individual player histories
+-- list Aldama/Clowney/Wade/Washington as PF; Jaylin Williams as PF with
+-- recorded center seasons; Thompson/Moody/Caldwell-Pope as SG.
+-- These corrections fix backup guard / big eligibility, NOT skill ratings.
+update private.nba_gm_dev_players set positions=array['PF']::text[]
+  where id in ('nba-gm-draft-santialdama','nba-gm-draft-noahclowney',
+    'nba-gm-draft-deanwade','nba-gm-draft-pjwashington');
+update private.nba_gm_dev_players set positions=array['PF','C']::text[]
+  where id='nba-gm-draft-jaylinwilliams';
+update private.nba_gm_dev_players set positions=array['SG','SF']::text[]
+  where id='nba-gm-draft-klaythompson';
+update private.nba_gm_dev_players set positions=array['SG']::text[]
+  where id in ('nba-gm-draft-mosesmoody','nba-gm-draft-kentaviouscaldwellpope');
+
 create or replace function private.nba_gm_v2_contract(p_id text)
 returns text language sql stable security definer set search_path='' as $$
   select case when right(md5(p_id),1) in ('0','1','2','3','4','5') then '1YR' else '3YR' end;
