@@ -27,6 +27,17 @@ function TeamMark({code}:{code:string}){
     <span>{code}</span>
   </span>;
 }
+/** NFL-style candidate portraits use only verified NBA IDs, with a team-mark fallback. */
+function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
+  const [failed,setFailed]=useState(false);
+  const id=player.officialNbaPlayerId;
+  return <span className="nba-gm-dev__portrait" aria-hidden="true">
+    {id&&/^\\d+$/.test(id)&&!failed
+      ? <img src={`https://cdn.nba.com/headshots/nba/latest/260x190/${id}.png`}
+          alt="" loading="lazy" onError={()=>setFailed(true)}/>
+      : <TeamMark code={player.teamCode}/>}
+  </span>;
+}
 function ScoutBadges({player}:{player:NbaGmDevPlayer}){
   const tier=nbaGmScoutTier(player);
   return <span className="nba-gm-dev__scout-pills">
@@ -40,7 +51,7 @@ function PlayerCard({player,onPick,disabled,action="DRAFT"}:{
 }){
   return <article className="nba-gm-dev__player" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
     <div className="nba-gm-dev__player-head">
-      <TeamMark code={player.teamCode}/>
+      <PlayerPortrait player={player}/>
       <div className="nba-gm-dev__identity">
         <strong>{player.name}</strong><small>{player.positions.join(" / ")} · {money(player.salaries[0])} YEAR 1</small>
         <ScoutBadges player={player}/>
@@ -204,7 +215,7 @@ export default function NbaGmDevPage(){
             const player=pick?byId.get(pick.playerId):null;
             return <article className="nba-gm-dev__roster-row" key={slot}>
               <strong>{NBA_GM_DEV_SLOT_LABELS[slot]}</strong>
-              {player?<><TeamMark code={player.teamCode}/>
+              {player?<><PlayerPortrait player={player}/>
                 <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,run.phase==="draft"?0:1))}</small>
                   <ScoutBadges player={player}/></span>
                 {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
