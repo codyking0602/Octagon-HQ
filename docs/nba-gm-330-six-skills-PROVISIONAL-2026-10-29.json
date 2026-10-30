@@ -4954,6 +4954,7 @@
       "name": "Josh Hart",
       "teamCode": "NYK",
       "candidatePositions": [
+        "SG",
         "SF",
         "PF"
       ],
@@ -4961,7 +4962,7 @@
       "overall": 82,
       "skills": {
         "scoring": 73,
-        "shooting": 73,
+        "shooting": 77,
         "playmaking": 75,
         "perimeterDefense": 78,
         "interiorDefense": 58,
@@ -4979,7 +4980,8 @@
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "anchor-calibrated-editorial"
+        "anchor-calibrated-editorial",
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -5021,8 +5023,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against multi-season three-point volume, current role and accuracy",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-normanpowell",
@@ -6435,6 +6437,7 @@
       "name": "Zach LaVine",
       "teamCode": "SAC",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
@@ -8897,6 +8900,7 @@
       "name": "Luguentz Dort",
       "teamCode": "ATL",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
@@ -9207,6 +9211,14 @@
             "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dorian_finney_smith.htm",
             "sourceKind": "individually-checked-2025-26-regular-season",
             "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 27,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dorian_finney_smith_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
           }
         ],
         "awards": [],
@@ -9220,7 +9232,8 @@
       "name": "Jordan Walsh",
       "teamCode": "BOS",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 75,
@@ -14438,13 +14451,14 @@
       "name": "Julian Strawther",
       "teamCode": "DEN",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
         "scoring": 73,
-        "shooting": 85,
+        "shooting": 82,
         "playmaking": 56,
         "perimeterDefense": 59,
         "interiorDefense": 32,
@@ -14463,7 +14477,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "editorialNote": "Reserve off-ball shooter, limited creation",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -14523,8 +14538,8 @@
         "awards": [],
         "availabilityContext": "2025–26 regular season: 57 GP; exclude playoffs and play-in; source-linked role context only. 2026–27 team kept separate."
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against multi-season three-point volume, current role and accuracy",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-marvinbagley",
@@ -17003,7 +17018,8 @@
       "name": "Bennedict Mathurin",
       "teamCode": "NOP",
       "candidatePositions": [
-        "PG"
+        "SG",
+        "SF"
       ],
       "positionReview": "unverified",
       "overall": 79,
@@ -19433,9 +19449,9 @@
     "sourceContextSource": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
     "fullSixSkillCertifications": 0,
     "uncorroboratedPlayers": 81,
-    "sourceContextStatObservations": 629,
+    "sourceContextStatObservations": 630,
     "sourceContextAwardObservations": 37,
-    "evidenceBasedProvisionalCorrections": 4,
+    "evidenceBasedProvisionalCorrections": 6,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
   }
 }
