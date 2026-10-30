@@ -81,6 +81,8 @@ describe("NBA GM historical 2025–26 NBA API identity and per-player statistics
        threePointAttempts:p.totals.threePointAttempted,
      };
      for(const o of row.observations){
+       // Archived NBA-API-derived rows are not independent cross-source checks.
+       if ((o as {sourceKind?:string}).sourceKind === "archived-third-party-nba-api-player-row") continue;
        const n=values[o.metric];
        if(n==null)continue;
        checked++;
@@ -91,6 +93,21 @@ describe("NBA GM historical 2025–26 NBA API identity and per-player statistics
    expect(checked).toBe(429);
    expect(data.crossCheckedPublishedLeaderboardObservations).toBe(429);
    expect(data.crossCheckErrors).toBe(0);
+ });
+ it("matches all newly linked archival facts to exact 2025-26 player rows while retaining incomplete certification",()=>{
+   const additions=previous.players.filter(r=>r.observations.some(x=>(x as {sourceKind?:string}).sourceKind==="archived-third-party-nba-api-player-row"));
+   expect(additions).toHaveLength(19);
+   const seasons=new Map(data.players.map(p=>[norm(p.editorialName),p]));
+   for(const row of additions){
+     const season=seasons.get(norm(row.name));
+     expect(season,row.name).toBeDefined();
+     const actual:Record<string,number|null>={pointsPerGame:season!.perGame.points,assistsPerGame:season!.perGame.assists,reboundsPerGame:season!.perGame.totalRebounds,stealsPerGame:season!.perGame.steals,blocksPerGame:season!.perGame.blocks,threePointAttempts:season!.totals.threePointAttempted,threePointPercentage:season!.shooting.threePointPercentage};
+     for(const o of row.observations){
+       expect((o as {sourceKind?:string}).sourceKind).toBe("archived-third-party-nba-api-player-row");
+       expect(o.value,row.name+" "+o.metric).toBe(actual[o.metric]);
+     }
+   }
+   expect(catalog.certifiedCount).toBe(0);
  });
  it("does not rewrite current teams or mistake broad official positions for roster-slot certification",()=>{
    const byName=new Map(data.players.map(p=>[norm(p.editorialName),p]));
