@@ -31,10 +31,15 @@ revoke all on function private.nba_gm_dev_owner() from public, anon, authenticat
 create or replace function private.nba_gm_dev_write_guard()
 returns trigger language plpgsql security definer set search_path = '' as $$
 begin
-  if (new.game_version like 'nba-gm-dev-%'
-      or (tg_op = 'UPDATE' and old.game_version like 'nba-gm-dev-%'))
-    and current_setting('octagon.nba_gm_dev_authorized_write', true) is distinct from 'yes' then
-    raise exception 'NBA GM development runs are server-owned';
+  if current_setting('octagon.nba_gm_dev_authorized_write', true) is distinct from 'yes' then
+    if new.game_version like 'nba-gm-dev-%' then
+      raise exception 'NBA GM development runs are server-owned';
+    end if;
+    if tg_op = 'UPDATE' then
+      if old.game_version like 'nba-gm-dev-%' then
+        raise exception 'NBA GM development runs are server-owned';
+      end if;
+    end if;
   end if;
   return new;
 end;
@@ -80,7 +85,7 @@ declare
   v_reserve bigint;
   v_low bigint;
 begin
-  if p_slot <> all(v_slots) or jsonb_typeof(v_picks) <> 'array'
+  if p_slot is null or p_slot <> all(v_slots) or jsonb_typeof(v_picks) <> 'array'
     or jsonb_array_length(v_picks) >= 7 then return false; end if;
   select * into v_candidate from private.nba_gm_dev_players where id = p_player_id;
   if not found or (p_slot not in ('SIXTH','FLEX') and not p_slot = any(v_candidate.positions))
@@ -146,7 +151,7 @@ begin
       + (p.skills->>'interiorDefense')::numeric
       * case when pick->>'slot' in ('C','PF') then 0.55 else 0.23 end
       + (p.skills->>'rebounding')::numeric*0.18)
-      / case when pick->>'slot' in ('PG','SG','SF') then 0.98 else 0.71 end)
+      / case when pick->>'slot' in ('PG','SG','SF') then 0.98 else 1.03 end)
       * case when pick->>'slot'='SIXTH' then 0.65
         when pick->>'slot'='FLEX' then 0.55 else 1 end) / 6.2,
     sum(case
