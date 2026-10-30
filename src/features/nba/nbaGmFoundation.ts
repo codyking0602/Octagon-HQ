@@ -67,7 +67,7 @@ const positionSet = new Set<string>(NBA_GM_STARTER_POSITIONS);
 const slotSet = new Set<string>(NBA_GM_ROSTER_SLOTS);
 const teamSet = new Set<string>(NBA_GM_TEAM_CODES);
 
-export function nbaGmEligibleForSlot(player: NbaGmPlayer, slot: NbaGmSlot): boolean {
+export function nbaGmEligibleForSlot(player: Pick<NbaGmPlayer, "positions">, slot: NbaGmSlot): boolean {
   // A wing only plays backup guard or big when his verified secondary
   // eligibility includes SG or PF respectively. Pure SF stays at SF.
   return slot === "GUARD"
