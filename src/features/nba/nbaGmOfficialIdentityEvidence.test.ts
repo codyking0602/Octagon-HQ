@@ -12,7 +12,10 @@ const review = JSON.parse(readFileSync("docs/nba-gm-official-identity-and-eviden
   official2026DraftIdentity:Array<{name:string; draftingTeam:string; pick:number; sourceUrl:string; verificationStatus:string}>;
   individualResearch:Array<{name:string; season:string; skillsReviewed:string[]; before:number|null; after:number|null; sourceUrl:string; status:string}>;
   roleFlags:Array<{name:string;why:string}>;
+  rookieCollegeEvidence:Array<{name:string;season:string;competition:string;games:number;sourceUrl:string;sourceStatus:string;nba2025_26Production:boolean;limitations:string}>;
+  sourceQualityExceptions:Array<{name:string;sourceUrl:string;decision:string}>;
 };
+const officialRosters = JSON.parse(readFileSync("docs/nba-gm-official-nba-30-team-roster-crosswalk-2026-10-29.json","utf8")) as {crosswalk:Array<{name:string;teamCode:string;officialRosterPosition:string;officialRosterUrl:string;officialNBAPlayerId:string|null}>; teamCount:number;playerCount:number;positionConflicts:Array<unknown>;published:boolean};
 
 describe("NBA GM evidence-led provisional identity and skill review", () => {
   const players = new Map(draft.players.map(p => [p.name, p]));
@@ -34,6 +37,22 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
     expect(indDraft).toHaveLength(12);
     for (const p of indDraft) expect(names.has(p.name), p.name).toBe(true);
   });
+  it("matches all 330 players to official October roster leads and keeps exact playable slots unresolved", () => {
+    expect(officialRosters.teamCount).toBe(30);
+    expect(officialRosters.playerCount).toBe(330);
+    expect(officialRosters.published).toBe(false);
+    expect(officialRosters.crosswalk).toHaveLength(330);
+    expect(new Set(officialRosters.crosswalk.map(p => p.name)).size).toBe(330);
+    const matches = new Map(officialRosters.crosswalk.map(p => [p.name, p]));
+    for (const p of draft.players) {
+      const row = matches.get(p.name);
+      expect(row, p.name).toBeTruthy();
+      expect(row?.teamCode, p.name).toBe(p.teamCode);
+      expect(row?.officialRosterUrl, p.name).toMatch(/^https:\/\/www\.nba\.com\/team\//);
+      expect(row?.officialRosterPosition.length,p.name).toBeGreaterThan(0);
+    }
+    expect(officialRosters.positionConflicts).toHaveLength(39);
+  });
   it("records first 2026 draft identity and distinguishes pick origin from opening roster", () => {
     expect(review.official2026DraftIdentity).toHaveLength(13);
     const picks = new Set<number>();
@@ -47,6 +66,22 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
     }
     expect(review.official2026DraftIdentity.find(p => p.name === "Nate Ament")?.draftingTeam).toBe("MIA");
     expect(players.get("Nate Ament")?.teamCode).toBe("MIL");
+  });
+  it("separates all 13 rookie college profiles from NBA 2025-26 skill certification", () => {
+    expect(review.rookieCollegeEvidence).toHaveLength(13);
+    const eligible = new Set(review.official2026DraftIdentity.map(e => e.name));
+    for (const r of review.rookieCollegeEvidence) {
+      expect(eligible.has(r.name),r.name).toBe(true);
+      expect(r.season).toBe("2025-26");
+      expect(r.competition).toBe("NCAA Division I");
+      expect(r.games).toBeGreaterThan(0);
+      expect(r.nba2025_26Production).toBe(false);
+      expect(r.sourceStatus).toBe("COLLEGE_EVIDENCE_VERIFIED_NOT_NBA_SIX_SKILL_CERTIFIED");
+      expect(r.sourceUrl).toMatch(/^https:\/\//);
+      expect(r.limitations.length).toBeGreaterThan(20);
+    }
+    expect(review.sourceQualityExceptions).toHaveLength(4);
+    for(const e of review.sourceQualityExceptions) expect(eligible.has(e.name),e.name).toBe(true);
   });
   it("enforces targeted evidence and guards that source context is not all-six certification", () => {
     expect(draft.players).toHaveLength(330);
