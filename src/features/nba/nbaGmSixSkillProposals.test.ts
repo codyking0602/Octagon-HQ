@@ -72,7 +72,7 @@ describe("NBA GM isolated provisional six-skill editorial board",()=>{
    expect(person("Keegan Murray").skills.shooting).toBe(81);
    expect(person("Keegan Murray").overall).toBe(81);
    expect(person("Keegan Murray").candidatePositions).toEqual(["SF","PF"]);
-   expect(person("Keegan Murray").positionReview).toBe("unverified");
+   expect(person("Keegan Murray").positionReview).toBe("season-specific-position-lead-not-certified");
    for(const name of ["Michael Porter Jr.","Jrue Holiday","Keegan Murray"]){
      const row=person(name);
      expect(row.reviewFlags).toContain("evidence-led-oct30-practical-close-skill-regrade-not-certified");
