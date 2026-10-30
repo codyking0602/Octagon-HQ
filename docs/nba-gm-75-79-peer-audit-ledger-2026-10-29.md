@@ -6,7 +6,7 @@
 
 Players are grouped only by *provisional* position family. Suggested neighbors are within 2 overall points, selected by proximity in the six provisional skill categories to direct an independent film/production review; **the nearest peer is not editorial approval**. Diagnostic conflict flags use simple conservative thresholds only; they should trigger human assessment, never automatic numerical grade changes. A player with one 95+ trait can still be 75–79 overall.
 
-- Cohort size: **149**, 2025–26 individually linked leaderboard/award context: **103/149**, no attached 2025–26 context: **46**. Conflicts with recorded performance thresholds: **7** players.
+- Cohort size: **149**, 2025–26 individually linked regular-season/award context: **109/149**, no attached NBA 2025–26 context: **40**. Conflicts with recorded performance thresholds: **7** players.
 - NBA canonical IDs, team codes and proposed positions still require official reconciliation. Rookies and returning injured players need explicit limitations, not assumed 2025–26 performance.
 - Source details where available: `nba-gm-sourced-2025-26-facts-2026-10-29.json`; proposed skill values in `nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json`.
 
@@ -67,7 +67,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Quenton Jackson | IND | 76 | PG/Creator | 68/53/58/79/35/47 | Isaiah Collier (76); Tre Jones (78) | No attached individual 2025-26 leaderboard or award |
 | Royce O'Neale | CHA | 76 | Forward/Wing | 68/82/70/77/60/66 | Tristan da Silva (78); Jake LaRavia (76) | 2025-26 high 3PA vs Shooting |
 | Sidy Cissoko | POR | 76 | Forward/Wing | 67/60/59/85/55/67 | Javonte Green (76); Hugo Gonzalez (75) | 2025-26 source facts now attached; role/film audit still pending |
-| Steven Adams | HOU | 76 | Big | 62/10/64/48/78/94 | Andre Drummond (76); Clint Capela (77) | No attached individual 2025-26 leaderboard or award |
+| Steven Adams | HOU | 76 | Big | 62/10/64/48/78/94 | Andre Drummond (76); Clint Capela (77) | 32 GP, 8.6 RPG in 22.4 MPG; rebound 94 peer/availability review pending |
 | Terrence Shannon Jr. | MIN | 76 | Forward/Wing | 76/66/60/72/51/56 | Ace Bailey (76); Josh Green (74) | No attached individual 2025-26 leaderboard or award |
 | Tim Hardaway Jr. | MIA | 76 | Forward/Wing | 75/88/52/54/24/43 | Klay Thompson (77); Julian Strawther (76) | Core role-volume peer audit |
 | Yves Missi | NOP | 76 | Big | 69/15/43/55/84/78 | Ryan Kalkbrenner (75); Adem Bona (74) | 2025-26 BPG vs Interior Defense |
@@ -106,7 +106,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Gui Santos | GSW | 78 | Forward/Wing | 73/70/72/72/57/68 | Jake LaRavia (76); Kyshawn George (79) | 2025-26 source facts now attached; role/film audit still pending |
 | Isaiah Joe | DET | 78 | Guard/Wing | 68/93/55/65/31/45 | Landry Shamet (77); Sam Merrill (79) | Small sample or availability |
 | Ja'Kobe Walter | TOR | 78 | Guard/Wing | 77/84/58/65/36/48 | Jared McCain (78); Grayson Allen (80) | Core role-volume peer audit |
-| Jakob Poeltl | TOR | 78 | Big | 74/10/79/48/85/84 | Luke Kornet (78); Dereck Lively II (80) | No attached individual 2025-26 leaderboard or award |
+| Jakob Poeltl | TOR | 78 | Big | 74/10/79/48/85/84 | Luke Kornet (78); Dereck Lively II (80) | 46 regular season GP, 10.7 PPG / 7.0 RPG in 25.0 MPG; exclude seven playoff games; rim-defense film pending |
 | Jared McCain | OKC | 78 | Guard/Wing | 79/83/63/69/36/49 | Ja'Kobe Walter (78); Tre Johnson (79) | Small sample or availability; 2025-26 source facts now attached; role/film audit still pending |
 | Jaylen Wells | MEM | 78 | Forward/Wing | 72/82/57/83/59/65 | Julian Champagnie (79); Zaccharie Risacher (77) | 2025-26 source facts now attached; role/film audit still pending |
 | Keldon Johnson | SAS | 78 | Forward/Wing | 83/67/61/68/64/78 | Obi Toppin (80); Jonathan Kuminga (79) | 2025-26 source facts now attached; role/film audit still pending |
@@ -138,7 +138,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Daniss Jenkins | DET | 79 | Guard/Wing | 77/75/75/73/33/53 | Darius Acuff Jr. (78); Ajay Mitchell (80) | Small sample or availability; 2025-26 source facts now attached; role/film audit still pending |
 | Davion Mitchell | MIA | 79 | PG/Creator | 68/63/83/89/25/44 | Tre Jones (78); Fred VanVleet (81) | Small sample or availability |
 | De'Andre Hunter | SAC | 79 | Forward/Wing | 79/78/61/70/63/64 | Rui Hachimura (78); Tobias Harris (79) | Small sample or availability; No attached individual 2025-26 leaderboard or award |
-| De'Anthony Melton | GSW | 79 | Guard/Wing | 73/76/70/87/33/54 | Miles McBride (78); Daniss Jenkins (79) | Small sample or availability; No attached individual 2025-26 leaderboard or award |
+| De'Anthony Melton | GSW | 79 | Guard/Wing | 73/76/70/87/33/54 | Miles McBride (78); Daniss Jenkins (79) | 49 GP, 12.3 PPG / 1.6 SPG; only 29.4% 3PT on 245 shots; injury and shooting 76 vs previous seasons pending |
 | Derrick Jones Jr. | LAC | 79 | Forward/Wing | 71/56/47/89/69/67 | Bilal Coulibaly (80); Toumani Camara (80) | No attached individual 2025-26 leaderboard or award |
 | Duncan Robinson | DET | 79 | Forward/Wing | 67/94/62/56/34/46 | AJ Green (77); Corey Kispert (77) | Core role-volume peer audit |
 | Isaiah Stewart | MEM | 79 | Big | 70/76/57/74/89/79 | Kel'el Ware (80); Jabari Smith Jr. (81) | Core role-volume peer audit |
@@ -154,12 +154,12 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Mitchell Robinson | BOS | 79 | Big | 63/10/46/54/90/93 | Clint Capela (77); Walker Kessler (80) | Core role-volume peer audit |
 | Moussa Diabaté | CHA | 79 | Big | 67/27/61/73/84/90 | Robert Williams III (78); Paul Reed (79) | Core role-volume peer audit |
 | Neemias Queta | BOS | 79 | Big | 68/20/53/60/80/83 | Daniel Gafford (80); Day'Ron Sharpe (78) | Core role-volume peer audit |
-| P.J. Washington | DAL | 79 | Forward/Wing | 75/79/63/82/77/71 | Keegan Murray (81); Jarace Walker (77) | No attached individual 2025-26 leaderboard or award |
+| P.J. Washington | DAL | 79 | Forward/Wing | 75/79/63/82/77/71 | Keegan Murray (81); Jarace Walker (77) | 56 GP, 14.2 PPG / 7.0 RPG, 32.5% 3PT on 4.2 3PA; prior 38.1% merits multi-year shooting review |
 | Paul Reed | DET | 79 | Big | 65/40/58/76/83/84 | Moussa Diabaté (79); Trevon Brazile (77) | Core role-volume peer audit |
 | Quentin Grimes | LAL | 79 | Guard/Wing | 76/84/63/83/40/55 | Donte DiVincenzo (80); Aaron Wiggins (79) | 2025-26 source facts now attached; role/film audit still pending |
 | Sam Merrill | CLE | 79 | Guard/Wing | 68/90/59/58/32/45 | Isaiah Joe (78); Landry Shamet (77) | Small sample or availability |
-| Santi Aldama | DAL | 79 | Forward/Wing | 76/81/67/66/67/79 | Miles Bridges (81); Tobias Harris (79) | No attached individual 2025-26 leaderboard or award |
-| T.J. McConnell | IND | 79 | PG/Creator | 76/28/91/72/24/51 | Dennis Schröder (78); Davion Mitchell (79) | No attached individual 2025-26 leaderboard or award |
+| Santi Aldama | DAL | 79 | Forward/Wing | 76/81/67/66/67/79 | Miles Bridges (81); Tobias Harris (79) | 43 GP, 14.0 PPG / 6.7 RPG, 35.0% on 200 threes; PF/SF eligibility and defense pending |
+| T.J. McConnell | IND | 79 | PG/Creator | 76/28/91/72/24/51 | Dennis Schröder (78); Davion Mitchell (79) | 56 GP, 9.4 PPG / 5.1 APG; 91 Playmaking needs per-minute/turnover and specialist peer validation |
 | Tari Eason | HOU | 79 | Forward/Wing | 74/68/59/86/76/80 | Peyton Watson (80); Caleb Wilson (77) | 2025-26 source facts now attached; role/film audit still pending |
 | Tobias Harris | SAS | 79 | Forward/Wing | 78/77/68/67/66/67 | Kyle Kuzma (79); De'Andre Hunter (79) | 2025-26 source facts now attached; role/film audit still pending |
 | Tre Johnson | WAS | 79 | Guard/Wing | 77/82/65/58/37/51 | Darryn Peterson (77); Malik Monk (80) | 2025-26 source facts now attached; role/film audit still pending |
