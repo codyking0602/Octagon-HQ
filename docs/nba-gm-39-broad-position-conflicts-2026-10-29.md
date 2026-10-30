@@ -4,6 +4,8 @@
 
 ## 39 player-specific discrepancies
 
+**2026-10-30 editorial update:** The 39 rows below preserve the original broad-position conflict *snapshot*, including the original candidate-slot text. They must **not** be read as the live post-review slot list. The authoritative current provisional slot proposals are in `docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json`; 16 individually sourced position decisions and rationales are in `docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json`. No decision fully certifies 2026–27 exact playable eligibility. A broad G/F/C mismatch does not by itself disprove a positional slot, and the original 39 conflicts remain in the audit inventory until fully reconciled.
+
 | Player | Club | Official roster broad position | Proposed exact slots | Review action |
 |---|---|---|---|---|
 | Luguentz Dort | ATL | G | SF | Check SG vs wing SF eligibility and 2025–26 guard defensive assignments; [NBA roster](https://www.nba.com/team/1610612737/hawks/roster) |
