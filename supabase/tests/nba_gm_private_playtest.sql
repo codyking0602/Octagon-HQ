@@ -70,6 +70,28 @@ begin
   if v_state->>'tradeTeam' is not null or v_state->>'shopPlayerId' is not null then
     raise exception 'Failed to cancel trade without roster changes'; end if;
 
+  -- A new negotiation has two fresh offers and must produce a legal
+  -- accepted trade, without rewriting the preserved Season 1 lineup.
+  v_state:=public.nba_gm_dev_action('shop',null,v_old);
+  if (v_state->>'tradeAttempts')::integer<>0 then
+    raise exception 'New NBA negotiation inherited stale rejected offers'; end if;
+  v_state:=public.nba_gm_dev_action('trade-spin');
+  select p.id into v_player from private.nba_gm_dev_players p
+    where p.team_code=v_state->>'tradeTeam'
+      and p.overall<=(select overall+4 from private.nba_gm_dev_players where id=v_old)
+      and private.nba_gm_v2_can_add(jsonb_set(v_state,'{picks}',
+        (select coalesce(jsonb_agg(x),'[]'::jsonb) from jsonb_array_elements(v_state->'picks') x
+          where x->>'playerId'<>v_old)),p.id)
+    order by p.overall,p.id limit 1;
+  if v_player is null then raise exception 'NBA trade wheel spun a partner with no acceptable offer'; end if;
+  v_state:=public.nba_gm_dev_action('trade',null,v_player);
+  if (v_state->>'tradesUsed')::integer<>1 or jsonb_array_length(v_state->'picks')<>7
+    or v_state->>'tradeTeam' is not null or v_state->>'shopPlayerId' is not null
+    or v_state->'yearOnePicks' is distinct from v_before
+    or not exists(select 1 from jsonb_array_elements(v_state->'picks') x where x->>'playerId'=v_player)
+    or exists(select 1 from jsonb_array_elements(v_state->'picks') x where x->>'playerId'=v_old)
+    then raise exception 'NBA trade did not apply cleanly or changed Year 1'; end if;
+
   -- Expiring/retained assets reprice as 1YR; guaranteed game-price fixtures lock for 3YR.
   for v_year in 2..3 loop
     select coalesce(sum(private.nba_gm_v2_salary(pick->>'playerId',v_year)),0) into v_spend
