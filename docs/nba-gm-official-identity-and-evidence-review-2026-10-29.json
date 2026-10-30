@@ -3,7 +3,7 @@
   "asOfDate": "2026-10-29",
   "productionPublished": false,
   "completeSixSkillCertified": 0,
-  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification. October 30: Buzelis interior-defense box, tracking, deterrence and role peer review supports a cautious 73 to 77 provisional adjustment; not a full six-skill or exact-position certification.",
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead. Additional October 30 12-person 2025-26 no-NBA-season partition includes eight 2026 draft players, one undrafted two-way college graduate, a 2025 injured NBA rookie, and two Europe returnees; this classification does not increase numerical NBA-season sources or full certification. October 30: Buzelis interior-defense box, tracking, deterrence and role peer review supports a cautious 73 to 77 provisional adjustment; not a full six-skill or exact-position certification. October 30 risk-prioritized peer review applied 7 additional single-skill regrades with linked NBA seasons, historical context and named skill peers. The 18 total provisional changes DO NOT certify any complete athlete profile. Overall ratings are untouched.",
   "officialRosterIdentity": [
     {
       "name": "Tyrese Haliburton",
@@ -555,6 +555,100 @@
       "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/matas-buzelis?gt=Regular+Season&season=2025-26",
       "thirdSourceUrl": "https://spreadsheetsports.com/players/matas-buzelis/",
       "dossier": "docs/nba-gm-matas-buzelis-2025-26-interior-defense-peer-review-2026-10-30.md",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Davion Mitchell",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 63,
+      "after": 78,
+      "decision": "70 games, 90/228 threes (39.5%) after 84/211 threes (39.8%) in 2024-25 establish usable repeatable NBA spot-up shooting; 64.6% FT and 3.3 3PA prevent inflated specialist grade.",
+      "comparison": "Near Josh Hart 77, below Bub Carrington 82 at 414 threes attempted, well below Kennard 95; independent of elite perimeter defense 89.",
+      "sourceUrl": "https://www.basketball-reference.com/players/m/mitchda01.html",
+      "secondarySourceUrl": "https://www.covers.com/sport/basketball/nba/players/5910/davion-mitchell",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Kevin Huerter",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 85,
+      "after": 79,
+      "decision": "2025-26 100/325 threes, 30.8%, following 2024-25 Sacramento 30.2% and Chicago 37.6%; career 36.8% demonstrates competent range but recent shot effectiveness no longer merits an 85 movement-shooter label.",
+      "comparison": "Below currently stronger wing specialist Klay Thompson 87 and Buddy Hield 89; 79 preserves established catch-and-shoot threat above weak spacers.",
+      "sourceUrl": "https://www.basketball-reference.com/players/h/huertke01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Gradey Dick",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 81,
+      "after": 77,
+      "decision": "76 games in 2025-26 but only 56/186 threes (30.1%), after 35% and 36.5% in prior two NBA seasons. 87.5% free throws mitigate a steep downgrade, while 14 MPG and 1 start undermine high-grade NBA specialist assumption.",
+      "comparison": "77 usable not 81 above-average, below Julian Strawther 82 and far below Kennard 95; retains overall 75.",
+      "sourceUrl": "https://www.basketball-reference.com/players/d/dickgr01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Kel'el Ware",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 71,
+      "after": 77,
+      "decision": "Miami big 77 games, 92/233 threes (39.5%) in 2025-26; previous rookie season 35/111 (31.5%). Stretch-center role has improved materially, but off-dribble variety not demonstrated.",
+      "comparison": "77 between forward Matas Buzelis Shooting 73 and stretch big John Collins 81; shooting is distinct from 84 Rebounding and 83 Interior Defense.",
+      "sourceUrl": "https://www.basketball-reference.com/players/w/wareke01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Tre Mann",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 82,
+      "after": 77,
+      "decision": "53 games and 50/155 (32.3%) 3P with 46.2% TS in 12.6 minutes/game; 2024-25 24/60 threes (40%) was only 13 games; shot difficulty and historic skill justify 77 rather than treating present role as no talent.",
+      "comparison": "Below Josh Hart 77? Place in same 77 tier, below Bub Carrington 82 and Kennard 95. 77 reflects volume and repeatability concerns, independent of low OVR 73.",
+      "sourceUrl": "https://www.foxsports.com/nba/tre-mann-player-stats?category=shooting",
+      "secondarySourceUrl": "https://www.therundown.gg/research/nba/player/tre-mann?gt=Regular+Season&season=2025-26",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Jalen Suggs",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "playmaking"
+      ],
+      "before": 68,
+      "after": 76,
+      "decision": "57 2025-26 games predominantly at PG with 5.5 AST/2.7 TOV in 27.6 MPG; 2024-25 3.7 AST/2.9 TOV. Increased creation supports usable 76 not 68; turnover load means not top-tier court general.",
+      "comparison": "76 below Tre Jones 78, Davion Mitchell 83, Scottie Barnes 85; his elite perimeter defense 91 remains separate.",
+      "sourceUrl": "https://www.basketball-reference.com/players/s/suggsja01.html",
+      "secondarySourceUrl": "https://basketnews.com/players/35064-jalen-suggs/statistics/regular-season.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Dyson Daniels",
+      "season": "2025-26",
+      "skillsReviewed": [
+        "playmaking"
+      ],
+      "before": 77,
+      "after": 81,
+      "decision": "76 starts, 5.9 AST/1.8 TOV in 2025-26 after 4.4 AST/2.0 TOV in 2024-25; more on-ball advantage management with better care. Assisted shot creation distinct from elite point-of-attack defense and low shotmaking.",
+      "comparison": "81 above Suggs 76 for control, near secondary initiators, below Davion Mitchell 83 and Barnes 85, without implying elite PG halfcourt creation.",
+      "sourceUrl": "https://www.basketball-reference.com/players/d/daniedy01.html",
       "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
     }
   ],
