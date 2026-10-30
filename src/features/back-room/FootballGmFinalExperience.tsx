@@ -382,8 +382,8 @@ export function FootballGmFinalExperience({
         <section className="gm-final__section surface-card" aria-label="GM score breakdown">
           <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
           <div className="gm-final__math"><span>Roster (90%)</span><i><b style={{ width: result.rosterManagementScore + "%" }} /></i><strong>{result.rosterManagementScore.toFixed(1)}</strong></div>
-          <div className="gm-final__math"><span>Season record (3%)</span><i><b style={{ width: result.regularSeasonScore + "%" }} /></i><strong>{result.regularSeasonScore.toFixed(1)}</strong></div>
-          <div className="gm-final__math is-playoff"><span>Playoffs (7%)</span><i><b style={{ width: result.playoffScore + "%" }} /></i><strong>{result.playoffScore.toFixed(1)}</strong></div>
+          {result.scoreFormula !== "legacy" ? <div className="gm-final__math"><span>Season record (3%)</span><i><b style={{ width: result.regularSeasonScore + "%" }} /></i><strong>{result.regularSeasonScore.toFixed(1)}</strong></div> : null}
+          <div className="gm-final__math is-playoff"><span>{result.scoreFormula === "legacy" ? "Playoffs (10%)" : "Playoffs (7%)"}</span><i><b style={{ width: result.playoffScore + "%" }} /></i><strong>{result.playoffScore.toFixed(1)}</strong></div>
         </section>
         <section className="gm-final__section surface-card" aria-label="Year 3 finances">
           <header className="gm-final__heading"><h2>FINANCIALS · YEAR 3</h2></header>
