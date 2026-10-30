@@ -7,8 +7,8 @@
   "playerCount": 330,
   "scope": "Every Octagon proposed NBA GM candidate matched with a current NBA.com team roster at the October 29, 2026 editorial snapshot. Broad F/G/C tags read from NBA.com; specific game PG/SG/SF/PF/C slot eligibility, full canonical IDs, contracts, skills and live roster recency remain unverified.",
   "notVerifiedTeams": [],
-  "manuallyVerifiedPlayerIdCount": 87,
-  "nbaSourceCaution": "NBA.com may have current after-snapshot transactions; recheck at publication. 'F' and 'G' are not automatic exact PG/SG/SF/PF eligibility. Eight Atlanta individual NBA.com player IDs now cross-checked; supplement identity overlay remains separate. Twelve Boston Celtics and ten Cleveland Cavaliers players now independently linked to exact NBA.com player profile IDs from current team rosters; broad position discrepancies remain independent. Ten New York and twelve Utah individual profiles were directly linked from NBA.com October rosters; roster-level G/F/C not exact slot eligibility. Nine Brooklyn and ten Chicago NBA.com individual player IDs linked from roster. 'Egor Dëmin' accented NBA display resolves Octagon 'Egor Demin' identity. October 30 additional five individually verified NBA.com player profiles (Collins, Wiggins, Jakucionis, Sorber, Philon) cross-checked for 2026-27 current team and official broad position; none establishes fine PG/SG/SF/PF/C game eligibility.",
+  "manuallyVerifiedPlayerIdCount": 118,
+  "nbaSourceCaution": "NBA.com may have current after-snapshot transactions; recheck at publication. 'F' and 'G' are not automatic exact PG/SG/SF/PF eligibility. Eight Atlanta individual NBA.com player IDs now cross-checked; supplement identity overlay remains separate. Twelve Boston Celtics and ten Cleveland Cavaliers players now independently linked to exact NBA.com player profile IDs from current team rosters; broad position discrepancies remain independent. Ten New York and twelve Utah individual profiles were directly linked from NBA.com October rosters; roster-level G/F/C not exact slot eligibility. Nine Brooklyn and ten Chicago NBA.com individual player IDs linked from roster. 'Egor Dëmin' accented NBA display resolves Octagon 'Egor Demin' identity. October 30 additional five individually verified NBA.com player profiles (Collins, Wiggins, Jakucionis, Sorber, Philon) cross-checked for 2026-27 current team and official broad position; none establishes fine PG/SG/SF/PF/C game eligibility. A directly followed October 30 official Detroit/Houston/Lakers roster-to-player profile batch verified 32 identities; see docs/nba-gm-official-32-roster-to-profile-verifications-2026-10-30.md. Official broad positions remain distinct from exact game eligibility.",
   "crosswalk": [
     {
       "name": "Jalen Johnson",
@@ -766,9 +766,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630595",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630595"
     },
     {
       "name": "Jalen Duren",
@@ -776,9 +777,10 @@
       "officialRosterPosition": "C",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1631105",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1631105"
     },
     {
       "name": "Ausar Thompson",
@@ -786,9 +788,10 @@
       "officialRosterPosition": "G-F",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1641709",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1641709"
     },
     {
       "name": "Duncan Robinson",
@@ -796,9 +799,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629130",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629130"
     },
     {
       "name": "Isaiah Joe",
@@ -806,9 +810,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630198",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630198"
     },
     {
       "name": "Daniss Jenkins",
@@ -816,9 +821,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1642450",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1642450"
     },
     {
       "name": "Kevin Huerter",
@@ -826,9 +832,10 @@
       "officialRosterPosition": "G-F",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1628989",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1628989"
     },
     {
       "name": "Javonte Green",
@@ -836,9 +843,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629750",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629750"
     },
     {
       "name": "John Collins",
@@ -849,7 +857,7 @@
       "officialNBAPlayerId": "1628381",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
       "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
-      "officialPlayerUrl": "https://www.nba.com/player/1628381/john-collins",
+      "officialPlayerUrl": "https://www.nba.com/player/1628381",
       "officialProfileCheckedAsOf": "2026-10-30",
       "officialPlayerIdEvidence": "direct-nba-com-player-profile-current-team"
     },
@@ -859,9 +867,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630194",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630194"
     },
     {
       "name": "Ronald Holland II",
@@ -869,9 +878,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1641842",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1641842"
     },
     {
       "name": "Kevin Durant",
@@ -879,9 +889,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "201142",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/201142"
     },
     {
       "name": "Alperen Şengün",
@@ -889,9 +900,10 @@
       "officialRosterPosition": "C",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630578",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630578"
     },
     {
       "name": "Amen Thompson",
@@ -899,9 +911,10 @@
       "officialRosterPosition": "G-F",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1641708",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1641708"
     },
     {
       "name": "Fred VanVleet",
@@ -909,9 +922,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1627832",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1627832"
     },
     {
       "name": "Reed Sheppard",
@@ -919,9 +933,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1642263",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1642263"
     },
     {
       "name": "Jabari Smith Jr.",
@@ -929,9 +944,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1631095",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1631095"
     },
     {
       "name": "Tari Eason",
@@ -939,9 +955,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1631106",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1631106"
     },
     {
       "name": "Bruce Thornton",
@@ -959,9 +976,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "203935",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/203935"
     },
     {
       "name": "Bogdan Bogdanovic",
@@ -969,9 +987,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "203992",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/203992"
     },
     {
       "name": "Clint Capela",
@@ -979,9 +998,10 @@
       "officialRosterPosition": "C",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "203991",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/203991"
     },
     {
       "name": "Steven Adams",
@@ -989,9 +1009,10 @@
       "officialRosterPosition": "C",
       "officialRosterUrl": "https://www.nba.com/team/1610612745/rockets/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "203500",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/203500"
     },
     {
       "name": "Oscar Tshiebwe",
@@ -1229,9 +1250,10 @@
       "officialRosterPosition": "F-G",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629029",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629029"
     },
     {
       "name": "Austin Reaves",
@@ -1239,9 +1261,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630559",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630559"
     },
     {
       "name": "Walker Kessler",
@@ -1249,9 +1272,10 @@
       "officialRosterPosition": "C",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1631117",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1631117"
     },
     {
       "name": "Sandro Mamukelashvili",
@@ -1259,9 +1283,10 @@
       "officialRosterPosition": "F-C",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630572",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630572"
     },
     {
       "name": "Quentin Grimes",
@@ -1269,9 +1294,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629656",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629656"
     },
     {
       "name": "Matisse Thybulle",
@@ -1279,9 +1305,10 @@
       "officialRosterPosition": "G-F",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629680",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629680"
     },
     {
       "name": "Collin Sexton",
@@ -1289,9 +1316,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629012",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629012"
     },
     {
       "name": "Ziaire Williams",
@@ -1299,9 +1327,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1630533",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1630533"
     },
     {
       "name": "Jake LaRavia",
@@ -1309,9 +1338,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1631222",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1631222"
     },
     {
       "name": "Jarred Vanderbilt",
@@ -1319,9 +1349,10 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612747/lakers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629020",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629020"
     },
     {
       "name": "Giannis Antetokounmpo",
@@ -3611,9 +3642,10 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1629750",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1629750"
     },
     {
       "name": "Ben Sheppard",
