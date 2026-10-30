@@ -1,3 +1,4 @@
+import { applyOct30FootballFeudCorrection, OCT30_CFB_FEUD_CORRECTION, OCT30_CFB_FEUD_STATE_KEY } from "./footballFeudOct30Correction.ts";
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2.110.7";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 import { advancePersistedBlindResumeV3 } from "./blindResumeAdvance.ts";
@@ -368,7 +369,7 @@ function submissionStateWithClientActionId(
 
 function runtimeContext(value: unknown): OfficialDailyRuntimeContext & JsonRecord {
   const row = requiredRecord(value, "Daily runtime context");
-  return {
+  return applyOct30FootballFeudCorrection({
     ...row,
     gameType: requiredString(row.game_type, "Daily game type") as OfficialDailyGameType,
     setupKey: requiredString(row.setup_key, "Daily setup key"),
@@ -378,7 +379,7 @@ function runtimeContext(value: unknown): OfficialDailyRuntimeContext & JsonRecor
     privateGradingEvidence: requiredRecord(row.private_grading_evidence, "Daily private grading evidence"),
     submissionState: requiredRecord(row.submission_state, "Daily submission state"),
     publicState: requiredRecord(row.public_state, "Daily public state"),
-  };
+  });
 }
 
 function childPublication(publication: JsonRecord) {
@@ -1801,6 +1802,8 @@ Deno.serve(async (request) => {
       const history = footballActionHistory(context);
       const nextSubmissionState = submissionStateWithClientActionId({
         ...advanced.submissionState,
+        ...(context.privateSetupEvidence.editorial_correction_version === OCT30_CFB_FEUD_CORRECTION
+          ? { [OCT30_CFB_FEUD_STATE_KEY]: OCT30_CFB_FEUD_CORRECTION } : {}),
         action_history: [...history, action],
       }, dailyClientActionIds(context), clientActionId);
       const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
