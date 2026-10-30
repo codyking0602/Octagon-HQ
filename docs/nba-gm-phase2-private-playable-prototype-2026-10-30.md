@@ -4,7 +4,7 @@ October 30, 2026. **Development only. Not released, approved for production, or 
 
 ## What runs
 
-* Owner-only route: `/nba/gm-dev`, guarded by the same strict CODY control-owner check as historical NBA previews; never linked from the public NBA hub.
+* Owner-only route: `/nba/gm-dev`, guarded by the same strict CODY control-owner check as historical NBA previews; visible as a private owner-only NBA Game Room card; never offered to ordinary public profiles.
 * Reuses Football GM's `private.football_gm_runs` and `private.football_gm_run_snapshots`. No new public GM accounts, match engine, or franchise storage table.
 * 330 candidates and all 1,980 frozen basketball skill grades copied from the merged provisional JSON. The source board is **not bundled into public frontend JavaScript**. The 330-player development fixture lives in a private SQL table, readable only by gated, authenticated RPC.
 * Every player is **position-provisional**. No position-review flag or unverified identity has been silently certified.
