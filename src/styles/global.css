@@ -17,11 +17,11 @@ img { max-width: 100%; }
   backdrop-filter: blur(18px);
 }
 .app-header--universal {
-  min-height: calc(58px + var(--safe-top));
+  min-height: calc(70px + var(--safe-top));
   padding-inline: 12px;
-  border-bottom-color: rgba(212, 175, 55, .24);
-  background: rgba(5, 5, 5, .96);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, .28);
+  border-bottom-color: rgba(255, 255, 255, .12);
+  background: #000;
+  box-shadow: none;
 }
 .the-hq-brand { display: inline-flex; align-items: center; gap: 9px; color: #fff; }
 .the-hq-brand__logo {
@@ -33,19 +33,19 @@ img { max-width: 100%; }
 }
 .the-hq-brand__name { font-size: 18px; font-weight: 950; letter-spacing: -.04em; white-space: nowrap; }
 .the-hq-brand__name small { color: #d4af37; font-size: .58em; letter-spacing: .12em; }
-.app-header--universal .app-header__actions { gap: 6px; }
-.app-header--universal .app-notification-action,
-.app-header--universal .app-ask-action,
-.app-header--universal .identity-trigger { width: 42px; min-width: 42px; height: 42px; border-radius: 13px; background: #111; }
-.app-header--universal .app-notification-action.is-active,
-.app-header--universal .app-ask-action.is-active { border-color: rgba(212, 175, 55, .72); box-shadow: 0 0 0 2px rgba(212, 175, 55, .12); }
-.app-header--universal .identity-trigger.is-ready::after { border-color: rgba(212, 175, 55, .48); }
-.app-header--universal .identity-trigger.is-ready > .identity-trigger__photo { border-right-color: rgba(212, 175, 55, .48); }
-@media (max-width: 420px) {
-  .app-header--universal .identity-trigger.is-ready span { display: none; }
-  .app-header--universal .identity-trigger.is-ready,
-  .app-header--universal .identity-trigger.is-ready > .identity-trigger__photo,
-  .app-header--universal .identity-trigger.is-ready > .identity-trigger__photo > img { width: 42px; min-width: 42px; max-width: 42px; height: 42px; }
+.app-header--universal .app-header__actions { gap: 8px; }
+.app-header--universal .app-notification-action {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+}
+.app-header--universal .app-notification-action.is-active { box-shadow: none; }
+.app-header--universal .app-notification-action:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 2px;
 }
 .app-content { width: min(100%, 780px); margin: 0 auto; padding: var(--space-5) var(--space-4) calc(96px + var(--safe-bottom)); }
 
