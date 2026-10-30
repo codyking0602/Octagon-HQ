@@ -1,0 +1,429 @@
+{
+  "version": "nba-gm-evidence-led-review-v1",
+  "asOfDate": "2026-10-29",
+  "productionPublished": false,
+  "completeSixSkillCertified": 0,
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players.",
+  "officialRosterIdentity": [
+    {
+      "name": "Tyrese Haliburton",
+      "teamCode": "IND",
+      "nbaPlayerId": 1630169,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1630169/tyrese-haliburton",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Pascal Siakam",
+      "teamCode": "IND",
+      "nbaPlayerId": 1627783,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/1627783/pascal-siakam",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Ivica Zubac",
+      "teamCode": "IND",
+      "nbaPlayerId": 1627826,
+      "officialPositionFamily": "C",
+      "officialPlayerUrl": "https://www.nba.com/player/1627826/ivica-zubac",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Andrew Nembhard",
+      "teamCode": "IND",
+      "nbaPlayerId": 1629614,
+      "officialPositionFamily": "G-F",
+      "officialPlayerUrl": "https://www.nba.com/player/1629614/andrew-nembhard",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Kelly Oubre Jr.",
+      "teamCode": "IND",
+      "nbaPlayerId": 1626162,
+      "officialPositionFamily": "F-G",
+      "officialPlayerUrl": "https://www.nba.com/player/1626162/kelly-oubre-jr",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Braden Smith",
+      "teamCode": "IND",
+      "nbaPlayerId": 1643552,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1643552/braden-smith",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Aaron Nesmith",
+      "teamCode": "IND",
+      "nbaPlayerId": 1630174,
+      "officialPositionFamily": "G-F",
+      "officialPlayerUrl": "https://www.nba.com/player/1630174/aaron-nesmith",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Quenton Jackson",
+      "teamCode": "IND",
+      "nbaPlayerId": 1631245,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1631245/quenton-jackson",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Ben Sheppard",
+      "teamCode": "IND",
+      "nbaPlayerId": 1641767,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1641767/ben-sheppard",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "T.J. McConnell",
+      "teamCode": "IND",
+      "nbaPlayerId": 204456,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/204456/tj-mcconnell",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Obi Toppin",
+      "teamCode": "IND",
+      "nbaPlayerId": 1630167,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/1630167/obi-toppin",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Jarace Walker",
+      "teamCode": "IND",
+      "nbaPlayerId": 1641716,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/1641716/jarace-walker",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Giannis Antetokounmpo",
+      "teamCode": "MIA",
+      "nbaPlayerId": 203507,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/203507/giannis-antetokounmpo",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Anthony Davis",
+      "teamCode": "WAS",
+      "nbaPlayerId": 203076,
+      "officialPositionFamily": "F-C",
+      "officialPlayerUrl": "https://www.nba.com/player/203076/anthony_davis",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Ja Morant",
+      "teamCode": "POR",
+      "nbaPlayerId": 1629630,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1629630/ja-morant",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Jaden McDaniels",
+      "teamCode": "MIN",
+      "nbaPlayerId": 1630183,
+      "officialPositionFamily": "F",
+      "officialPlayerUrl": "https://www.nba.com/player/1630183/jaden-mcdaniels",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Josh Hart",
+      "teamCode": "NYK",
+      "nbaPlayerId": 1628404,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1628404",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Bub Carrington",
+      "teamCode": "WAS",
+      "nbaPlayerId": 1642267,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1642267",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    },
+    {
+      "name": "Cam Spencer",
+      "teamCode": "MEM",
+      "nbaPlayerId": 1642285,
+      "officialPositionFamily": "G",
+      "officialPlayerUrl": "https://www.nba.com/player/1642285/cam-spencer",
+      "rosterVerifiedAsOf": "2026-10-29",
+      "verificationStatus": "NBA_PLAYER_ID_AND_CURRENT_TEAM_VERIFIED_EXACT_SLOT_PENDING"
+    }
+  ],
+  "official2026DraftIdentity": [
+    {
+      "name": "AJ Dybantsa",
+      "draftingTeam": "WAS",
+      "pick": 1,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Darryn Peterson",
+      "draftingTeam": "UTA",
+      "pick": 2,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Cameron Boozer",
+      "draftingTeam": "MEM",
+      "pick": 3,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Caleb Wilson",
+      "draftingTeam": "CHI",
+      "pick": 4,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Keaton Wagler",
+      "draftingTeam": "LAC",
+      "pick": 5,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Mikel Brown Jr.",
+      "draftingTeam": "BKN",
+      "pick": 6,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Darius Acuff Jr.",
+      "draftingTeam": "SAC",
+      "pick": 7,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Kingston Flemings",
+      "draftingTeam": "ATL",
+      "pick": 8,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Morez Johnson Jr.",
+      "draftingTeam": "DAL",
+      "pick": 9,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Brayden Burries",
+      "draftingTeam": "MIL",
+      "pick": 10,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Aday Mara",
+      "draftingTeam": "OKC",
+      "pick": 12,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Nate Ament",
+      "draftingTeam": "MIA",
+      "pick": 13,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    },
+    {
+      "name": "Hannes Steinbach",
+      "draftingTeam": "CHA",
+      "pick": 14,
+      "sourceUrl": "https://www.nba.com/draft/2026",
+      "verificationStatus": "DRAFT_IDENTITY_AND_ORIGINAL_PICK_ONLY_NOT_CURRENT_ROSTER"
+    }
+  ],
+  "individualResearch": [
+    {
+      "name": "Jaden McDaniels",
+      "season": "2025-26",
+      "games": 73,
+      "minutesPerGame": 31.7,
+      "threePointPercentage": 41.2,
+      "threePointAttemptsPerGame": 3.4,
+      "previousSeasonThreePointPercentage": 33,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 76,
+      "after": 81,
+      "decision": "Apply cautious shooting increase: 250 three-point attempts and 41.2% over 73 games materially exceed previous 76 projection; do not grade like a high-volume specialist; one-year improvement can regress.",
+      "sourceUrl": "https://www.nba.com/player/1630183/bio",
+      "comparison": "Below Luke Kennard 95 specialist anchor; below Cam Spencer 90; 81 above-average wing shooting is supported by 3.4 3PA without pretending high difficulty was established.",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Bub Carrington",
+      "season": "2025-26",
+      "games": 82,
+      "minutesPerGame": 27.7,
+      "threePointPercentage": 40.8,
+      "threePointAttemptsPerGame": 5,
+      "previousSeasonThreePointPercentage": 33.9,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 76,
+      "after": 82,
+      "decision": "Apply shooting adjustment for full 82-game 40.8% on 5.0 attempts per game; broader shot mix and pull-up difficulty remain unverified.",
+      "sourceUrl": "https://www.statmuse.com/nba/player/bub-carrington-30409/splits?seasonYear=2026",
+      "comparison": "Higher volume than Jaden McDaniels (5.0 vs 3.4 3PA); below top specialists and not a conversion from 3P% into grade.",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Josh Hart",
+      "season": "2025-26",
+      "threePointPercentage": 41.3,
+      "threePointAttemptsPerGame": 3.7,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 73,
+      "after": null,
+      "decision": "Hold for multi-season regression, off-dribble/catch-shot split and defensive concession/context rather than treating this one season as elite shooting.",
+      "sourceUrl": "https://www.therundown.gg/research/nba/player/josh-hart?gt=Regular+Season&season=2025-26",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "name": "Oscar Tshiebwe",
+      "season": "2025-26",
+      "games": 27,
+      "minutesPerGame": 16.6,
+      "reboundsPerGame": 6.6,
+      "offensiveReboundsPerGame": 2.9,
+      "skillsReviewed": [
+        "rebounding"
+      ],
+      "before": 96,
+      "after": null,
+      "decision": "Do not downgrade from 96 without context: Rockets' official release cites historically exceptional NBA per-36 offensive rebound rate and 16.9 G League RPG; 49 career NBA games at time of signing remains small exposure.",
+      "sourceUrl": "https://www.nba.com/rockets/news/rockets-sign-free-agent-oscar-tshiebwe",
+      "secondarySourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/oscar_tshiebwe_full.htm",
+      "status": "ELITE_SPECIALIST_PLAUSIBLE_BUT_SAMPLE_REQUIRES_REVIEW"
+    },
+    {
+      "name": "Cam Spencer",
+      "season": "2025-26",
+      "assistsPerGame": 5.6,
+      "pointsPerGame": 11.1,
+      "skillsReviewed": [
+        "playmaking"
+      ],
+      "before": 74,
+      "after": null,
+      "decision": "Official NBA profile confirms 5.6 APG. Review assist-to-turnover ratio, on-ball time and teammates' finishing before advancing the passing grade. Shooting 90 independently retained.",
+      "sourceUrl": "https://www.nba.com/player/1642285",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "name": "Giannis Antetokounmpo",
+      "season": "2025-26",
+      "games": 36,
+      "minutesPerGame": 28.9,
+      "pointsPerGame": 27.6,
+      "reboundsPerGame": 9.8,
+      "assistsPerGame": 5.4,
+      "trueShootingPercentage": 65.8,
+      "skillsReviewed": [
+        "scoring",
+        "shooting",
+        "playmaking",
+        "interiorDefense",
+        "rebounding"
+      ],
+      "before": null,
+      "after": null,
+      "decision": "Add previously absent individually sourced 2025-26 context. Stats belong to Milwaukee season, 2026-27 Miami is separately verified; 36 games limit certainty. This does not establish all six skill grades.",
+      "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+      "secondarySourceUrl": "https://www.nba.com/player/203507/giannis-antetokounmpo",
+      "status": "SOURCE_CONTEXT_ADDED_NOT_CERTIFIED"
+    },
+    {
+      "name": "Tyrese Haliburton",
+      "season": "2025-26",
+      "games": 0,
+      "minutesPerGame": 0,
+      "skillsReviewed": [
+        "playmaking",
+        "shooting"
+      ],
+      "before": null,
+      "after": null,
+      "decision": "Document actual no-season NBA sample (Achilles absence), not zero basketball ability. Review healthy 2024-25 season and 2026-27 short return separately; do not mechanically penalize his 96 playmaking.",
+      "sourceUrl": "https://www.basketball-reference.com/players/h/halibty01.html",
+      "secondarySourceUrl": "https://www.nba.com/player/1630169/tyrese-haliburton",
+      "status": "NO_2025_26_PLAY_INJURY_ALTERNATIVE_SEASON_REQUIRED"
+    },
+    {
+      "name": "Jaden McDaniels",
+      "season": "2024-25",
+      "games": 82,
+      "threePointPercentage": 33,
+      "threePointAttemptsPerGame": 3.7,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": null,
+      "after": null,
+      "decision": "Prior-year baseline corroborates rebound in three-point shooting rather than assuming lifetime 41.2% talent.",
+      "sourceUrl": "https://www.nba.com/player/1630183/bio",
+      "status": "HISTORICAL_CONTEXT"
+    }
+  ],
+  "roleFlags": [
+    {
+      "name": "Ben Sheppard",
+      "why": "NBA lists Guard; SF-only GM candidate slot may be too restrictive."
+    },
+    {
+      "name": "Obi Toppin",
+      "why": "NBA lists Forward; SF-only GM candidate slot needs PF/SF positional role check."
+    },
+    {
+      "name": "Josh Hart",
+      "why": "NBA lists Guard; review SF/SG eligibility from actual minutes."
+    },
+    {
+      "name": "Quenton Jackson",
+      "why": "NBA lists Guard; PG-only eligibility needs creation/role evidence."
+    }
+  ],
+  "outstanding": "All 330 remain six-skill provisional. Published 2026-27 NBA rosters/IDs, detailed possession defensive metrics and comparison film are required to certify full grades."
+}
