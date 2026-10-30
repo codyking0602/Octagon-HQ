@@ -1018,7 +1018,39 @@ async function getContext(admin: SupabaseClient, dailyChallengeId: string, profi
     p_profile_id: profileId,
   });
   if (response.error) throw new Error("The official daily runtime state is unavailable.");
-  return runtimeContext(response.data);
+  const context = runtimeContext(response.data);
+  // Immutable official attempt rows retain the original grading proof. A
+  // separately recorded correction is projected into the authenticated result.
+  // The same correction is applied by the history view to every leaderboard.
+  if (context.central_day === "2026-10-30"
+    && context.gameType === "sports_feud"
+    && asRecord(context.official_attempt)) {
+    const adjustment = await admin.rpc("get_official_daily_score_correction", {
+      p_daily_challenge_id: dailyChallengeId,
+      p_profile_id: profileId,
+    });
+    if (adjustment.error) throw new Error("The Daily Feud score correction could not be verified.");
+    const delta = Number(adjustment.data ?? 0);
+    if (Number.isInteger(delta) && delta > 0) {
+      const attempt = requiredRecord(context.official_attempt, "Daily Feud official attempt");
+      const originalResult = requiredRecord(attempt.public_result, "Daily Feud original result");
+      return {
+        ...context,
+        official_attempt: {
+          ...attempt,
+          native_score: Math.min(100, Number(attempt.native_score) + delta),
+          normalized_score: Math.min(100, Number(attempt.normalized_score) + delta),
+          public_result: {
+            ...originalResult,
+            score: Math.min(100, Number(attempt.native_score) + delta),
+            fast_money_points: Number(originalResult.fast_money_points ?? 0) + delta,
+            editorial_correction_points: delta,
+          },
+        },
+      };
+    }
+  }
+  return context;
 }
 
 function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
