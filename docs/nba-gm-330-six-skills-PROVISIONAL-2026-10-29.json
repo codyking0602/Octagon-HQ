@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 249 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
+  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 262 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -405,7 +405,61 @@
         "anchor-calibrated-editorial"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 27.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 9.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 5.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 33.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/giannis_antetokounmpo_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 36 games. 2025–26 with Milwaukee (not current Miami); 33.3% three on ONLY 45 attempts; 36-game injury-reduced workload."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4433,7 +4487,61 @@
         "anchor-calibrated-editorial"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 17.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 33.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/trae_young_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 15 games. 15 regular-season games split Atlanta/Washington; prior seasons necessary for high-usage Playmaking and Shooting calibration."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4472,7 +4580,61 @@
       "editorialNote": "Aging two-way wing, shooting/reads rather than peak on-ball load",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 17.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 5.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 3.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 39.2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/paul_george_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 37 games. 37 regular-season Philadelphia games; 11 playoff games excluded; 2026–27 club Boston distinct."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4612,7 +4774,61 @@
         "anchor-calibrated-editorial"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 6.2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 29.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/alex_caruso_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 56 games. 56 regular-season games only; 15 playoffs excluded; strong defense cannot be assessed solely by steals."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4650,7 +4866,61 @@
       "editorialNote": "Physical perimeter stopper, contested scoring inefficient",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 20.2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 3.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 1.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 34.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/dillon_brooks_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 56 games. 56 regular season + 2 play-in + 4 playoff games; DO NOT aggregate all 62."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4686,7 +4956,53 @@
         "anchor-calibrated-editorial"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 15.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 8.5,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 1.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jarrett_allen_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 56 games. 56 regular season (74 including 18 playoffs); 3PT 10.0% on only ~10 attempts is deliberately excluded as meaningless spacing estimate."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4909,7 +5225,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 3.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 3.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 34.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/ajay_mitchell_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 57 games. 57 regular games vs 11 postseason games excluded; three-point role and shot burden pending."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -4945,7 +5315,53 @@
         "anchor-calibrated-editorial"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 9.2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 9.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 3.5,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/isaiah_hartenstein_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 47 games. 47 regular games; 15 playoffs excluded. Only 7 NBA three attempts; no meaningful 3PT% projection."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -5276,7 +5692,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 16.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 7.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 36.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/andrew_nembhard_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 57 games. 57-game lead-guard workload; 7.7 APG and 2.4 turnovers contextualize proposed Playmaking 84."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -5616,7 +6086,61 @@
       "editorialNote": "Excellent pressure guard, limited efficient offensive creation",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 3.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 5.5,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 33.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jalen_suggs_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 57 games. 57 regular games, 2 play-in and 7 playoff games excluded; steal volume supports activity but not full perimeter defense certification."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -5771,7 +6295,53 @@
         "anchor-calibrated-editorial"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 10.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 1.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/walker_kessler_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 5 games. Only 5 NBA 2025–26 Utah games before injury; 6/8 3PT (75%) deliberately excluded from numerical shooting context as nonrepresentative; prior healthy season required."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -6026,7 +6596,61 @@
       "editorialNote": "Rim-pressure wing scoring, inconsistent shot and defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 19.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 5.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 3.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 33.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/rj_barrett_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 57 games. Regular season only, not 7 playoff games; 96/283 three-point."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -6428,7 +7052,61 @@
         "anchor-calibrated-editorial"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 18.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 4.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 32,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.3,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/demar_derozan_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season 77 games. 2025–26 Sacramento (not current Denver), midrange scoring skill distinct from 147 total three-point attempts."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -19445,11 +20123,11 @@
     "remainingHeuristicVectors": 0,
     "sourceSpecificEvidenceCoverage": "2025-26 sourced context only, not verification of any of the six skill scores; official NBA player identities and 2026-27 team/position records incomplete.",
     "worksheet": "docs/nba-gm-remaining-126-individual-rating-proposals-2026-10-29.md",
-    "sourceContextPlayers": 249,
+    "sourceContextPlayers": 262,
     "sourceContextSource": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
     "fullSixSkillCertifications": 0,
-    "uncorroboratedPlayers": 81,
-    "sourceContextStatObservations": 630,
+    "uncorroboratedPlayers": 68,
+    "sourceContextStatObservations": 705,
     "sourceContextAwardObservations": 37,
     "evidenceBasedProvisionalCorrections": 6,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
