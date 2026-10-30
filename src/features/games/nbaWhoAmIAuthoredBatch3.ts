@@ -559,7 +559,7 @@ const entries: readonly Entry[] = [
       "I hit a buzzer-beating three to send Utah to the 1997 NBA Finals.",
       "My last season with the Jazz was 2002-03.",
       "I amassed 15,806 career NBA assists while playing with Karl Malone.",
-      "I am the Utah Jazz's all-time assists-and-steals leader known simply as Stockton."
+      "I wore No. 12 for Utah and retired as the NBA's all-time leader in both assists and steals."
     ]
   },
   {
@@ -618,7 +618,7 @@ const entries: readonly Entry[] = [
       "I collected 18.7 rebounds per game during the 1991-92 season.",
       "I joined Chicago as a rebounding specialist before its 72-win season.",
       "I starred on the Pistons' Bad Boys and then the Bulls' second three-peat.",
-      "My dyed hair and No. 91 Bulls jersey helped make Dennis 'the Worm' Rodman unmistakable."
+      "My dyed hair, No. 91 Bulls jersey and nickname 'the Worm' made me unmistakable."
     ],
     "history": "https://www.nba.com/news/archive-75-dennis-rodman"
   },
@@ -737,7 +737,7 @@ const entries: readonly Entry[] = [
       "I battled the Knicks in a series of bitter late-1990s playoffs.",
       "I won an Olympic gold medal with the United States in 2000.",
       "I returned from kidney disease to help Dwyane Wade and Shaq win Miami's first NBA title.",
-      "I was the Heat shot blocker Alonzo 'Zo' Mourning, who wore No. 33."
+      "I wore No. 33 for Miami and became the Heat's beloved rim protector known as 'Zo'."
     ]
   },
   {
@@ -882,7 +882,7 @@ const entries: readonly Entry[] = [
       "I reached the 2002 conference finals with the Celtics and Paul Pierce.",
       "I played an important bench role in the 2006 playoffs en route to an NBA title with Miami.",
       "I wore No. 8 for Boston and was recognized for my shoulder-shaking shimmy.",
-      "I was the Celtics' Antoine 'Toine' Walker before winning a Heat championship."
+      "I won a title in Miami after starring as Boston's No. 8 forward nicknamed 'Toine'."
     ]
   },
   {
@@ -899,7 +899,7 @@ const entries: readonly Entry[] = [
       "I helped Detroit reach six straight Eastern Conference finals.",
       "I led Detroit in scoring during its 2004 title run.",
       "I was the Pistons guard who wore a protective face mask after breaking his nose.",
-      "I was known as Rip Hamilton, a key scorer on the 2004 champion Detroit Pistons."
+      "My nickname was 'Rip,' and I scored for Detroit's 2004 title team by constantly running off screens."
     ],
     "b": [
       "I made an immediate impact during a championship run after changing teams.",
@@ -911,7 +911,7 @@ const entries: readonly Entry[] = [
       "I played alongside Chauncey Billups, Ben Wallace and Rasheed Wallace in Detroit.",
       "I scored 21.4 points per game in the 2004 Finals win over Los Angeles.",
       "I became a familiar masked No. 32 figure for the Detroit Pistons.",
-      "I was the smooth-shooting UConn alumnus called Rip Hamilton."
+      "I was UConn's 1999 national champion who became Detroit's masked No. 32 guard known as 'Rip'."
     ]
   },
   {
