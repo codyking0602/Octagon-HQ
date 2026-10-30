@@ -78,4 +78,23 @@ describe("NBA GM official roster snapshot — unpublished evidence only", () => 
     expect(board.certifiedCount).toBe(0);
   });
 
+  it("reconciles 22 Dallas and Indiana official roster-to-player identities without granting six-skill signoff", () => {
+    const markdown=readFileSync("docs/nba-gm-official-22-dal-ind-profiles-2026-10-30.md","utf8");
+    const records=markdown.split("\n").filter(line=>line.startsWith("| DAL |")||line.startsWith("| IND |"));
+    expect(records).toHaveLength(22);
+    const byName=new Map(source.crosswalk.map(row=>[row.name,row]));
+    for(const line of records){
+      const columns=line.split("|").map(value=>value.trim());
+      const officialId=columns[3]?.split("[")[1]?.split("]")[0];
+      expect(officialId,columns[2]).toMatch(/^[0-9]+$/);
+      expect(columns[3],columns[2]).toContain("https://www.nba.com/player/"+officialId);
+      const row=byName.get(columns[2]!);
+      expect(row?.teamCode,columns[2]).toBe(columns[1]);
+      expect(row?.officialNBAPlayerId,columns[2]).toBe(officialId);
+      expect(row?.positionStatus,columns[2]).toContain("not-certified");
+    }
+    expect(board.certifiedCount).toBe(0);
+    expect(source.published).toBe(false);
+  });
+
 });
