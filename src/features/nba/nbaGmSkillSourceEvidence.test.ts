@@ -49,8 +49,8 @@ describe("NBA GM draft ratings evidence, confidence, and source integrity", () =
       expect(p.reviewStatus, p.name).toBe("PROVISIONAL_NOT_CERTIFIED");
       expect(["manually-proposed-not-certified", "partially-evidence-reviewed-not-certified"], p.name).toContain(p.gradeReviewStatus);
       if (p.gradeReviewStatus === "partially-evidence-reviewed-not-certified") {
-        expect(p.reviewFlags, p.name).toContain("evidence-led-shooting-regrade-not-certified");
-        expect(p.independentSkillValidation, p.name).toMatch(/^incomplete; shooting grade reviewed separately/);
+        expect(p.reviewFlags.some(flag => /^evidence-led-(shooting|playmaking)-regrade-not-certified$/.test(flag)),p.name).toBe(true);
+        expect(p.independentSkillValidation, p.name).toMatch(/^incomplete; (shooting|playmaking) grade reviewed separately/);
       } else {
         expect(p.independentSkillValidation, p.name).toBe("incomplete");
       }
@@ -66,7 +66,7 @@ describe("NBA GM draft ratings evidence, confidence, and source integrity", () =
     }
   });
 
-  it("retains 133 individually traceable source contexts and exactly preserves 2025-26 facts", () => {
+  it("retains individually traceable source contexts and exactly preserves 2025-26 facts", () => {
     const sourceByName = new Map(source.players.map(row => [normalize(row.name), row]));
     expect(sourceByName.size).toBe(source.players.length);
     expect(source.players.length).toBeGreaterThanOrEqual(207);
