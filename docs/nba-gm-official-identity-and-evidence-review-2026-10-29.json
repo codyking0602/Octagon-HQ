@@ -3,7 +3,7 @@
   "asOfDate": "2026-10-29",
   "productionPublished": false,
   "completeSixSkillCertified": 0,
-  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census.",
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility. Four absent 2025–26 veterans now have verified no-season status and last played 2024–25 NBA production; these are separate from the 2025–26 numeric-source census. Four further slot misclassifications individually adjudicated, each still held as a provisional eligible-position lead.",
   "officialRosterIdentity": [
     {
       "name": "Tyrese Haliburton",
@@ -817,6 +817,65 @@
       "sourceUrl": "https://www.basketball-reference.com/players/h/hartjo01.html",
       "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
       "why": "SG in 2024–25, SF in 2025–26; add SG while preserving existing provisional PF, which still needs own lineup evidence.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Obi Toppin",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "PF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/t/toppiob01.html",
+      "sourceMethod": "2025–26 and historical Basketball-Reference primary position; 2025–26 minute-split data for Ty Jerome; NBA.com official broad team labels cross-checked",
+      "why": "Provisional SF-only was mispositioned: Basketball-Reference shows PF as primary position for 2023–24, 2024–25, 2025–26 and early 2026–27; NBA roster lists broad F. Restore PF; do not certify SF/other slot without matchup/lineup evidence.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Christian Braun",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/b/braunch01.html",
+      "sourceMethod": "2025–26 and historical Basketball-Reference primary position; 2025–26 minute-split data for Ty Jerome; NBA.com official broad team labels cross-checked",
+      "why": "2022–23 through 2026–27 Basketball-Reference primary SG, not prior SF-only candidate; flexible perimeter wing minutes allow provisional SG/SF, exact 2026–27 position deployment still needs confirmation.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Bilal Coulibaly",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/c/coulibi01.html",
+      "sourceMethod": "2025–26 and historical Basketball-Reference primary position; 2025–26 minute-split data for Ty Jerome; NBA.com official broad team labels cross-checked",
+      "why": "2025–26 primary SG in 56 starts, 2024–25 and early 2026–27 SF, so both SG and SF are supported historical-season slot leads.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Ty Jerome",
+      "previousCandidates": [
+        "SG"
+      ],
+      "reviewedCandidates": [
+        "PG",
+        "SG"
+      ],
+      "sourceUrl": "https://www.sports.ws/nba/ty-jerome?featuredSeason=25_26",
+      "sourceMethod": "2025–26 and historical Basketball-Reference primary position; 2025–26 minute-split data for Ty Jerome; NBA.com official broad team labels cross-checked",
+      "why": "2025–26 positional minute distribution 26% PG, 64% SG, 10% SF; 5.7 APG on 15 starts corroborates meaningful on-ball guard work, allowing PG/SG provisional candidate rather than SG-only; exclude SF until sustained 2026–27 assignment evidence.",
       "asOf": "2026-10-29",
       "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
     }
