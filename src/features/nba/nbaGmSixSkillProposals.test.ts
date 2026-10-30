@@ -76,7 +76,7 @@ describe("NBA GM isolated provisional six-skill editorial board",()=>{
    for(const name of ["Michael Porter Jr.","Jrue Holiday","Keegan Murray"]){
      const row=person(name);
      expect(row.reviewFlags).toContain("evidence-led-oct30-practical-close-skill-regrade-not-certified");
-     expect(row.evidence.checkedFactUrl).toMatch(/^https:\/\/www\\.nba\\.com\\//);
+     expect(row.evidence.checkedFactUrl.startsWith("https://www.nba.com/")).toBe(true);
      expect(row.reviewStatus).toBe("PROVISIONAL_NOT_CERTIFIED");
    }
    expect(draft.published).toBe(false);
