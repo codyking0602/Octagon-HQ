@@ -425,3 +425,7 @@ body.picks-recap-open {
   .picks-event-recap__standings,
   .picks-event-recap__moments { padding: 13px; }
 }
+
+.picks-event-recap__member-heading { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.picks-event-recap__member-heading > strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.picks-event-recap__member-heading .member-inline-avatar { width: 23px; height: 23px; flex-basis: 23px; border-radius: 7px; }

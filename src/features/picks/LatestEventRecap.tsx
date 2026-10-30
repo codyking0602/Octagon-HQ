@@ -1,3 +1,4 @@
+import { MemberInlineAvatar } from "../members/MemberInlineAvatar";
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { shareCanonicalDestination } from "../../app/nativeShare";
@@ -372,7 +373,7 @@ export function LatestEventRecap({
               {recap.standings.map((result) => (
                 <article className={result.isCurrentUser ? "is-current-user" : ""} key={result.profileId ?? result.displayName}>
                   <span>{groupRankLabel(result.rank, event.groupResults)}</span>
-                  <div><strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong><small>{result.correct}/{result.correct + result.incorrect} · {winPercentage(result.correct, result.incorrect)}{result.lockBonus ? ` · +${result.lockBonus} lock` : ""}</small></div>
+                  <div><div className="picks-event-recap__member-heading"><MemberInlineAvatar displayName={result.displayName} profileId={result.profileId} isCurrentUser={result.isCurrentUser} /><strong>{result.displayName}{result.isCurrentUser ? <em>YOU</em> : null}</strong></div><small>{result.correct}/{result.correct + result.incorrect} · {winPercentage(result.correct, result.incorrect)}{result.lockBonus ? ` · +${result.lockBonus} lock` : ""}</small></div>
                   <b>{result.totalPoints}<small>PTS</small></b>
                 </article>
               ))}
