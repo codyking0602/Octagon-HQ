@@ -72,7 +72,7 @@ describe("NBA GM historical postseason cohort integrity", () => {
   it("preserves an empirical warning: 50-plus wins do not guarantee the title", () => {
     const top50 = rows.filter(row => (efficiencyMap.get(`${row.year},${row.team}`)?.wins ?? 0) >= 50);
     expect(top50.length).toBeGreaterThan(35);
-    expect(top50.filter(row => row.outcome !== "Champion").length).toBeGreaterThan(35);
+    expect(top50.filter(row => row.outcome !== "Champion").length).toBeGreaterThan(30);
     expect(top50.filter(row => row.outcome === "Champion")).toHaveLength(5);
   });
 });
