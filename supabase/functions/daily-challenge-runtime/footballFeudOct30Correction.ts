@@ -41,7 +41,7 @@ const variants: Record<string, Record<string, string[]>> = {
    "Quality wins": ["signature wins","good wins"],
    "Ranked win": ["ranked wins","beating ranked teams"],
    "Poll voters": ["poll bias","voter bias","biased voting"],
-   "Ranking debate": ["ranking arguments","ranking controversy"],
+   "Ranking debate": ["ranking arguments","ranking controversy","wrong","rankings are wrong","the rankings are wrong","bad rankings","disagree with rankings"],
  },
  "cfb-feud-r2-fast-student-section-actions": {
    "Chant": ["chanting","school chants"],
