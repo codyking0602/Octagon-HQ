@@ -33,6 +33,8 @@ import {
   footballGmOutcomeProbabilities,
   footballGmResolveTradeAssets,
   footballGmScoreFromComponents,
+  footballGmSeasonRecordScore,
+  footballGmThreeYearRecordScore,
   footballGmSeasonResumeScore,
   footballGmSeasonResultV2,
   footballGmSeasonRoll,
@@ -240,32 +242,58 @@ describe("Football GM strategy v7", () => {
     expect(footballGmTeamOverall(98)).toBe(99);
   });
 
-  it("makes championships matter in the three-year GM résumé without replacing roster quality", () => {
-    expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement).toBe(0.90);
-    expect(FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(0.10);
-    expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement + FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(1);
+  it("weights roster construction 90%, wins 3%, and playoff finish 7%", () => {
+    expect(FOOTBALL_GM_SCORE_WEIGHTS).toEqual({
+      rosterManagement: 0.90,
+      regularSeason: 0.03,
+      playoffFinish: 0.07,
+    });
+    expect(Object.values(FOOTBALL_GM_SCORE_WEIGHTS).reduce((sum, weight) => sum + weight, 0)).toBe(1);
 
-    const titleAndTwoMisses = footballGmThreeYearResumeScore(["Champion", "Missed Playoffs", "Missed Playoffs"]);
-    const threeDivisionals = footballGmThreeYearResumeScore(["Divisional", "Divisional", "Divisional"]);
-    expect(titleAndTwoMisses).toBe(88.7);
-    expect(threeDivisionals).toBe(88);
-    expect(titleAndTwoMisses).toBeGreaterThan(threeDivisionals);
-
-    const sameRosterQuality = 90;
-    expect(footballGmScoreFromComponents(sameRosterQuality, titleAndTwoMisses))
-      .toBeGreaterThan(footballGmScoreFromComponents(sameRosterQuality, threeDivisionals));
-    expect(footballGmSeasonResumeScore("Champion")).toBe(100);
-    expect(footballGmSeasonResumeScore("Super Bowl Loss")).toBe(97);
-    expect(footballGmSeasonResumeScore("Conference Championship")).toBe(94);
-    expect(footballGmSeasonResumeScore("Divisional")).toBe(88);
-    expect(footballGmSeasonResumeScore("Wild Card")).toBe(85);
-    expect(footballGmSeasonResumeScore("Missed Playoffs")).toBe(83);
+    expect(footballGmScoreFromComponents(90, 100, 100)).toBe(91);
+    expect(footballGmScoreFromComponents(100, 80, 80)).toBe(98);
+    expect(footballGmScoreFromComponents(97.7, 92.9, 94.7)).toBe(97.3);
+    expect(footballGmScoreFromComponents(96.3, 92.2, 93.3)).toBe(96.0);
   });
 
-  it("puts playoff résumé on the same high-end scale as normalized Team OVR", () => {
-    const resume = footballGmThreeYearResumeScore(["Champion", "Divisional", "Wild Card"]);
-    expect(resume).toBe(91);
-    expect(footballGmScoreFromComponents(93.3, resume)).toBe(93.1);
+  it("rewards every regular-season win without pretending 0 wins earns playoff credit", () => {
+    expect(footballGmSeasonRecordScore(0)).toBe(60);
+    expect(footballGmSeasonRecordScore(12)).toBe(88.2);
+    expect(footballGmSeasonRecordScore(17)).toBe(100);
+    expect(footballGmThreeYearRecordScore([16, 14, 12])).toBe(92.9);
+    expect(footballGmThreeYearRecordScore([13, 15, 10])).toBe(89.8);
+    expect(footballGmSeasonRecordScore(13)).toBeGreaterThan(footballGmSeasonRecordScore(12));
+  });
+
+  it("keeps playoff finishes ordered and rewards advancement without a dynasty bonus", () => {
+    const finishes = ["Missed Playoffs", "Wild Card", "Divisional", "Conference Championship", "Super Bowl Loss", "Champion"] as const;
+    expect(finishes.map(footballGmSeasonResumeScore)).toEqual([70, 80, 86, 92, 96, 100]);
+    const titleAndTwoMisses = footballGmThreeYearResumeScore(["Champion", "Missed Playoffs", "Missed Playoffs"]);
+    const threeDivisionals = footballGmThreeYearResumeScore(["Divisional", "Divisional", "Divisional"]);
+    expect(titleAndTwoMisses).toBe(80);
+    expect(threeDivisionals).toBe(86);
+    expect(footballGmScoreFromComponents(90, 90, threeDivisionals))
+      .toBeGreaterThan(footballGmScoreFromComponents(90, 90, titleAndTwoMisses));
+
+    // A 12-5 wild-card team outranks a 9-8 wild-card team on the 3% record component.
+    expect(footballGmScoreFromComponents(90, footballGmSeasonRecordScore(12), 80))
+      .toBeGreaterThan(footballGmScoreFromComponents(90, footballGmSeasonRecordScore(9), 80));
+    expect(footballGmThreeYearResumeScore(["Champion", "Divisional", "Wild Card"])).toBe(88.7);
+  });
+
+  it("reproduces the October 27 WR matchup from locked real season results", () => {
+    const cody = footballGmScoreFromComponents(
+      97.7,
+      footballGmThreeYearRecordScore([16, 14, 12]),
+      footballGmThreeYearResumeScore(["Champion", "Conference Championship", "Conference Championship"]),
+    );
+    const shane = footballGmScoreFromComponents(
+      96.3,
+      footballGmThreeYearRecordScore([12, 15, 14]),
+      footballGmThreeYearResumeScore(["Wild Card", "Champion", "Champion"]),
+    );
+    expect(cody).toBe(97.3);
+    expect(shane).toBe(96.0);
   });
 
   it("keeps shared-roll postseason floors monotonic from 89 through 98", () => {
@@ -299,6 +327,37 @@ describe("Football GM strategy v7", () => {
     expect(result.seasons[0]!.finish).toBe("Champion");
   });
 
+  it("grades persisted 17-game seasons while preserving immutable results and older saves", () => {
+    const roster = codyRunRoster();
+    const starting = footballGmFinalResultV2({ seed: "score-check", yearOneRoster: roster, finalRoster: roster });
+    const locked = [
+      { ...starting.seasons[0]!, wins: 16, losses: 1, finish: "Champion" as const },
+      { ...starting.seasons[1]!, wins: 14, losses: 3, finish: "Conference Championship" as const },
+      { ...starting.seasons[2]!, wins: 12, losses: 5, finish: "Conference Championship" as const },
+    ];
+    const result = footballGmFinalResultV2({
+      seed: "another-seed",
+      yearOneRoster: roster,
+      finalRoster: roster,
+      resolvedSeasons: locked,
+    });
+    expect(result.seasons).toEqual(locked);
+    expect(result.regularSeasonScore).toBe(92.9);
+    expect(result.playoffScore).toBe(94.7);
+    expect(result.score).toBe(footballGmScoreFromComponents(
+      result.rosterManagementScore, result.regularSeasonScore, result.playoffScore,
+    ));
+
+    const legacy = footballGmFinalResultV2({
+      seed: "legacy-report",
+      yearOneRoster: roster,
+      finalRoster: roster,
+      resolvedSeasons: locked.map(({ wins: _wins, losses: _losses, ...season }) => season),
+    });
+    expect(legacy.regularSeasonScore).toBe(legacy.rosterManagementScore);
+    expect(legacy.playoffScore).toBe(94.7);
+  });
+
   it("lands expected GM scores in intuitive bands across the locked outcome curve", () => {
     const expectedScore = (grade: number) => {
       const probabilities = footballGmOutcomeProbabilities(grade);
@@ -306,7 +365,8 @@ describe("Football GM strategy v7", () => {
         (sum, [finish, probability]) => sum + (footballGmSeasonResumeScore(finish as keyof typeof probabilities) * probability),
         0,
       );
-      return footballGmScoreFromComponents(footballGmTeamOverall(grade), expectedResume);
+      const teamOverall = footballGmTeamOverall(grade);
+      return footballGmScoreFromComponents(teamOverall, teamOverall, expectedResume);
     };
 
     expect(expectedScore(88)).toBeGreaterThan(88);

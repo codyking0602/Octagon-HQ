@@ -47,7 +47,8 @@ export const FOOTBALL_GM_LIVE_OUTCOME_ANCHORS = {
 
 export const FOOTBALL_GM_SCORE_WEIGHTS = {
   rosterManagement: 0.90,
-  threeYearResume: 0.10,
+  regularSeason: 0.03,
+  playoffFinish: 0.07,
 } as const;
 
 const FOOTBALL_GM_TEAM_OVR_ANCHORS = [
@@ -69,11 +70,11 @@ const FOOTBALL_GM_TEAM_OVR_ANCHORS = [
 ] as const;
 
 const FOOTBALL_GM_RESUME_SCORE: Readonly<Record<FootballGmPlayoffFinish, number>> = {
-  "Missed Playoffs": 83,
-  "Wild Card": 85,
-  Divisional: 88,
-  "Conference Championship": 94,
-  "Super Bowl Loss": 97,
+  "Missed Playoffs": 70,
+  "Wild Card": 80,
+  Divisional: 86,
+  "Conference Championship": 92,
+  "Super Bowl Loss": 96,
   Champion: 100,
 };
 
@@ -102,10 +103,26 @@ export function footballGmThreeYearResumeScore(finishes: readonly FootballGmPlay
   return Math.round((finishes.reduce((sum, finish) => sum + footballGmSeasonResumeScore(finish), 0) / finishes.length) * 10) / 10;
 }
 
-export function footballGmScoreFromComponents(rosterManagementScore: number, resumeScore: number) {
+/** A full 17-game season is 60–100, so every simulated win has value. */
+export function footballGmSeasonRecordScore(wins: number) {
+  return Math.round((60 + (40 * clamp(wins, 0, 17) / 17)) * 10) / 10;
+}
+
+export function footballGmThreeYearRecordScore(wins: readonly number[]) {
+  if (!wins.length) return 0;
+  return Math.round((60 + (40 * wins.reduce((sum, value) => sum + clamp(value, 0, 17), 0) / (17 * wins.length))) * 10) / 10;
+}
+
+/** Overall GM score: 90% constructed roster, 3% wins, 7% playoff finish. */
+export function footballGmScoreFromComponents(
+  rosterManagementScore: number,
+  regularSeasonScore: number,
+  playoffScore: number,
+) {
   return Math.round((
     (rosterManagementScore * FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement)
-    + (resumeScore * FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume)
+    + (regularSeasonScore * FOOTBALL_GM_SCORE_WEIGHTS.regularSeason)
+    + (playoffScore * FOOTBALL_GM_SCORE_WEIGHTS.playoffFinish)
   ) * 10) / 10;
 }
 
@@ -147,7 +164,11 @@ export function footballGmSeasonRecordLabel(result: FootballGmSeasonResultV2): s
 export interface FootballGmFinalResultV2 {
   score: number;
   rosterManagementScore: number;
+  regularSeasonScore: number;
+  playoffScore: number;
+  /** Combined result component, retained for existing report summary logic. */
   resumeScore: number;
+  scoreFormula: "legacy" | "current";
   teamOveralls: readonly number[];
   seasons: readonly FootballGmSeasonResultV2[];
   continuity: {
@@ -1322,11 +1343,33 @@ export function footballGmFinalResultV2(input: {
   const optimizedFinal = footballGmReflowRoster(input.finalRoster, 3, input.seed) ?? input.finalRoster;
   const teamOveralls = seasons.map((season) => footballGmTeamOverall(season.teamGrade));
   const rosterManagementScore = Math.round((teamOveralls.reduce((sum, overall) => sum + overall, 0) / teamOveralls.length) * 10) / 10;
-  const resumeScore = footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
-  const score = footballGmScoreFromComponents(rosterManagementScore, resumeScore);
+  // Pre-record historical saves do not contain 17-game records. Use the
+  // underlying roster score as a neutral proxy, never invent game results.
+  const knownRecords = seasons.every((season) => Number.isInteger(season.wins)
+    && Number.isInteger(season.losses) && season.wins! >= 0
+    && season.losses! >= 0 && season.wins! + season.losses! === 17);
+  const regularSeasonScore = knownRecords
+    ? footballGmThreeYearRecordScore(seasons.map((season) => season.wins!))
+    : rosterManagementScore;
+  const playoffScore = footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
+  // The Oct 13 and Oct 20 weekly championships were already finalized under
+  // the original 90% roster / 10% playoff formula. Keep those archives exact.
+  const scoreFormula = /^weekly-gm:2026-10-(?:13|20):/.test(input.seed) ? "legacy" : "current";
+  const oldFinish = [83,85,88,94,97,100];
+  const order = ["Missed Playoffs","Wild Card","Divisional","Conference Championship","Super Bowl Loss","Champion"];
+  const oldPlayoffScore = Math.round(seasons.reduce((sum, s) => sum + oldFinish[order.indexOf(s.finish)]!, 0) / 3 * 10) / 10;
+  const resumeScore = scoreFormula === "legacy"
+    ? oldPlayoffScore
+    : Math.round((regularSeasonScore * 0.30 + playoffScore * 0.70) * 10) / 10;
+  const score = scoreFormula === "legacy"
+    ? Math.round((rosterManagementScore * 0.90 + oldPlayoffScore * 0.10) * 10) / 10
+    : footballGmScoreFromComponents(rosterManagementScore, regularSeasonScore, playoffScore);
   return {
     score,
+    scoreFormula,
     rosterManagementScore,
+    regularSeasonScore,
+    playoffScore: scoreFormula === "legacy" ? oldPlayoffScore : playoffScore,
     resumeScore,
     teamOveralls,
     seasons,
