@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 individually drafted six-skill proposals; 301 have 2025-26 numerical/award context, including 19 archived third-party NBA API-linked rows, none of which alone certify six skills or live position. No fully six-skill certified players.",
+  "method": "330 individually drafted six-skill proposals; 301 have 2025-26 numerical/award context, including 19 archived third-party NBA API-linked rows, none of which alone certify six skills or live position. No fully six-skill certified players. October 30 practical peer pass corrected 7 additional single skills with cited 2025-26 + prior-season peer evidence; 18 total evidence-backed provisional trait adjustments. Still 0 full six-skill certifications; no gameplay import.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -6063,14 +6063,14 @@
       "skills": {
         "scoring": 77,
         "shooting": 70,
-        "playmaking": 68,
+        "playmaking": 76,
         "perimeterDefense": 91,
         "interiorDefense": 48,
         "rebounding": 58
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
-        "editorialRationale": "High-impact perimeter defense, health and offensive limitations.",
+        "editorialRationale": "High-impact perimeter defense, health and offensive limitations. 2026-10-30 PEER CALIBRATION PLAYMAKING: 2025-26 5.5 assists and 2.7 turnovers in 57 games at 27.6 MPG as regular PG; materially above below-average 68, but below high-efficiency primary creators. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -6081,7 +6081,7 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
-        "independent-season-evidence-needed"
+        "evidence-led-playmaking-regrade-not-certified"
       ],
       "editorialNote": "Excellent pressure guard, limited efficient offensive creation",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -6141,8 +6141,8 @@
         "awards": [],
         "availabilityContext": "2025–26 NBA regular season 57 games. 57 regular games, 2 play-in and 7 playoff games excluded; steal volume supports activity but not full perimeter defense certification."
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; playmaking grade reviewed separately against 2025-26 season, multi-year role and named skill peers; other five skills not independently certified",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-peytonwatson",
@@ -6249,14 +6249,14 @@
       "skills": {
         "scoring": 71,
         "shooting": 62,
-        "playmaking": 77,
+        "playmaking": 81,
         "perimeterDefense": 96,
         "interiorDefense": 54,
         "rebounding": 76
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
-        "editorialRationale": "Excellent disruptive defense, still unproven high-volume shooting.",
+        "editorialRationale": "Excellent disruptive defense, still unproven high-volume shooting. 2026-10-30 PEER CALIBRATION PLAYMAKING: 2025-26 5.9 assists and 1.8 turnovers over 76 starts, improved from 4.4/2.0 in 2024-25; dependable secondary guard/wing playmaking, not elite primary initiation. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -6268,7 +6268,8 @@
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "anchor-calibrated-editorial"
+        "anchor-calibrated-editorial",
+        "evidence-led-playmaking-regrade-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -6316,8 +6317,8 @@
         ],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; playmaking grade reviewed separately against 2025-26 season, multi-year role and named skill peers; other five skills not independently certified",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-walkerkessler",
@@ -8859,7 +8860,7 @@
       "overall": 80,
       "skills": {
         "scoring": 72,
-        "shooting": 71,
+        "shooting": 77,
         "playmaking": 54,
         "perimeterDefense": 65,
         "interiorDefense": 83,
@@ -8867,7 +8868,7 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
-        "editorialRationale": "Mobile big with length/spacing potential, not a finished defensive anchor.",
+        "editorialRationale": "Mobile big with length/spacing potential, not a finished defensive anchor. 2026-10-30 PEER CALIBRATION SHOOTING: 2025-26 92/233 3PT (39.5%) in 77 games after rookie 35/111 (31.5%); functional stretch-big shot, not established complex 80+ shooting. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -8877,7 +8878,7 @@
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "editorialNote": "Young length and rebounding big, still learning defensive reads",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -8913,8 +8914,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 season, multi-year role and named skill peers; other five skills not independently certified",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-reedsheppard",
@@ -12575,7 +12576,7 @@
       "overall": 76,
       "skills": {
         "scoring": 71,
-        "shooting": 85,
+        "shooting": 79,
         "playmaking": 74,
         "perimeterDefense": 59,
         "interiorDefense": 35,
@@ -12583,7 +12584,7 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Catch-and-shoot wing/secondary facilitator, defense weakens total impact.",
+        "editorialRationale": "Catch-and-shoot wing/secondary facilitator, defense weakens total impact. 2026-10-30 PEER CALIBRATION SHOOTING: 2025-26 100/325 3PT (30.8%), following 2024-25 SAC 30.2% and CHI 37.6%; established movement threat but present efficiency/repeatability falls short of 85-tier specialist. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -12594,7 +12595,7 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "editorialNote": "Movement three-point shooter/wing passer, weak containment",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -12614,8 +12615,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 season, multi-year role and named skill peers; other five skills not independently certified",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-javontegreen",
@@ -13295,7 +13296,7 @@
       "overall": 79,
       "skills": {
         "scoring": 68,
-        "shooting": 63,
+        "shooting": 78,
         "playmaking": 83,
         "perimeterDefense": 89,
         "interiorDefense": 25,
@@ -13303,7 +13304,7 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Point-of-attack disruption and passing, small-guard scoring limitations.",
+        "editorialRationale": "Point-of-attack disruption and passing, small-guard scoring limitations. 2026-10-30 PEER CALIBRATION SHOOTING: 2025-26 90/228 3PT (39.5%) over 70 games following 2024-25 84/211 (39.8%); 64.6% FT/3.3 3PA keep rating below volume specialists. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -13314,7 +13315,7 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "editorialNote": "Guard defensive pressure and passing, below-average scorer",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -13342,8 +13343,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 season, multi-year role and named skill peers; other five skills not independently certified",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-pellelarsson",
@@ -15872,7 +15873,7 @@
       "overall": 73,
       "skills": {
         "scoring": 75,
-        "shooting": 82,
+        "shooting": 77,
         "playmaking": 64,
         "perimeterDefense": 53,
         "interiorDefense": 27,
@@ -15880,7 +15881,7 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Reserve shot-making guard, narrow defensive contribution and limited minutes.",
+        "editorialRationale": "Reserve shot-making guard, narrow defensive contribution and limited minutes. 2026-10-30 PEER CALIBRATION SHOOTING: 2025-26 50/155 3PT (32.3%), 46.2% TS in 53 low-minute games; prior 2024-25 24/60 but only 13 games; decline from 82 yet retain usable NBA touch. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -15890,7 +15891,7 @@
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "editorialNote": "Reserve isolation jumper with poor defensive value",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -15957,8 +15958,8 @@
         ],
         "awards": []
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 season, multi-year role and named skill peers; other five skills not independently certified",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-deandreayton",
@@ -17901,7 +17902,7 @@
       "overall": 75,
       "skills": {
         "scoring": 74,
-        "shooting": 81,
+        "shooting": 77,
         "playmaking": 63,
         "perimeterDefense": 58,
         "interiorDefense": 36,
@@ -17909,7 +17910,7 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Tall movement shooter with limited defensive consistency.",
+        "editorialRationale": "Tall movement shooter with limited defensive consistency. 2026-10-30 PEER CALIBRATION SHOOTING: 2025-26 56/186 3PT (30.1%) after 2024-25 35.0% and 2023-24 36.5%; 87.5% FT suggests playable shot even with reduced role. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -17921,7 +17922,7 @@
       "reviewFlags": [
         "75-79-compression-review",
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -17939,8 +17940,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 season, multi-year role and named skill peers; other five skills not independently certified",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-ruihachimura",
@@ -22322,7 +22323,7 @@
     "uncorroboratedPlayers": 29,
     "sourceContextStatObservations": 951,
     "sourceContextAwardObservations": 37,
-    "evidenceBasedProvisionalCorrections": 11,
+    "evidenceBasedProvisionalCorrections": 18,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
   }
 }
