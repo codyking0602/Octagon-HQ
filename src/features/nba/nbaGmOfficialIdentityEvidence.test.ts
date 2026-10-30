@@ -91,13 +91,15 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
     expect(review.completeSixSkillCertified).toBe(0);
     expect(draft.players.every(p => p.reviewStatus === "PROVISIONAL_NOT_CERTIFIED")).toBe(true);
     const corrections = review.individualResearch.filter(p => p.after !== null);
-    expect(corrections.map(p => p.name).sort()).toEqual(["Bub Carrington", "Jaden McDaniels"]);
+    expect(corrections.map(p => p.name).sort()).toEqual(["Bub Carrington", "Cam Spencer", "Collin Sexton", "Jaden McDaniels"]);
     for (const c of corrections) {
       expect(c.season).toBe("2025-26");
-      expect(c.skillsReviewed).toEqual(["shooting"]);
+      expect(c.skillsReviewed).toHaveLength(1);
+      const skill = c.skillsReviewed[0]!;
+      expect(["shooting", "playmaking"]).toContain(skill);
       expect(Number.isInteger(c.before)).toBe(true);
       expect(Number.isInteger(c.after)).toBe(true);
-      expect(players.get(c.name)?.skills.shooting).toBe(c.after);
+      expect(players.get(c.name)?.skills[skill]).toBe(c.after);
       expect(players.get(c.name)?.gradeReviewStatus).toBe("partially-evidence-reviewed-not-certified");
       expect(c.status).toBe("EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION");
       expect(c.sourceUrl).toMatch(/^https:\/\//);
