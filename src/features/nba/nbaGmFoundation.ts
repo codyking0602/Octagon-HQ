@@ -8,6 +8,7 @@ export const NBA_GM_SEASON_COUNT = 3;
 export const NBA_GM_REGULAR_SEASON_GAMES = 82;
 export const NBA_GM_ROSTER_SLOTS = ["PG", "SG", "SF", "PF", "C", "SIXTH", "FLEX"] as const;
 export const NBA_GM_STARTER_POSITIONS = ["PG", "SG", "SF", "PF", "C"] as const;
+/** OWNER LOCKED: exactly six NBA GM basketball skill dimensions; no seventh skill. */
 export const NBA_GM_SKILL_KEYS = [
   "scoring",
   "playmaking",
@@ -92,7 +93,7 @@ export function nbaGmCatalogErrors(players: readonly NbaGmPlayer[]): string[] {
     if (player.salaries.length !== 3 || player.salaries.some(amount => !Number.isSafeInteger(amount) || amount < 0)) {
       errors.push("Invalid three-season NBA game salary: " + player.id);
     }
-    if (NBA_GM_SKILL_KEYS.some(key => !Number.isFinite(player.skills[key]) || player.skills[key] < 0 || player.skills[key] > 100)) {
+    if (NBA_GM_SKILL_KEYS.some(key => !Number.isFinite(player.skills[key]) || player.skills[key] < 0 || player.skills[key] > 99)) {
       errors.push("Missing or invalid NBA skill grade: " + player.id);
     }
     if (!validUrl(player.sources.rosterUrl) || !validUrl(player.sources.contractUrl)
