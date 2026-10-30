@@ -139,6 +139,7 @@ returns jsonb language plpgsql stable security definer set search_path='' as $$
 declare
   v_off numeric;v_def numeric;v_fit numeric;v_floor numeric;
   v_noise integer;v_wins integer;v_finish text;
+  v_roll integer;v_cutoff integer;v_round integer;
   v_turnover integer:=coalesce(jsonb_array_length(p_state->'releasedIds'),0)
      +coalesce((p_state->>'tradesUsed')::integer,0);
 begin
@@ -175,11 +176,25 @@ begin
       +least(0,(v_floor-65))*.2
       -case when p_year=1 then 0 else greatest(0,v_turnover-2)*.8 end+v_noise
   )::integer));
-  v_finish:=case when v_wins<40 then 'Missed Playoffs'
-    when v_wins<47 then 'First Round'
-    when v_wins<53 then 'Conference Semifinals'
-    when v_wins<58 then 'Conference Finals'
-    when v_wins<64 then 'Finals' else 'Champion' end;
+  -- A 53-win Denver team won in 2023; a 64+ win season must not
+  -- guarantee a title. This PRIVATE playoff model is a deterministic,
+  -- seed-driven variance fixture, NOT a fitted 150-team NBA estimate.
+  -- Each advancement roll is independent of the regular-season win noise.
+  v_finish:='Missed Playoffs';
+  v_roll:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_year||':entry'),1,8))
+    ::bit(32)::int::bigint)%1000)::integer;
+  if v_wins>=47 or (v_wins>=36 and
+    v_roll<greatest(0,least(950,(v_wins-34)*80))) then
+    v_finish:='First Round';
+    for v_round in 1..4 loop
+      v_roll:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_year||':playoff:'||v_round),1,8))
+        ::bit(32)::int::bigint)%1000)::integer;
+      v_cutoff:=greatest(75,least(890,470+(v_wins-47)*15-(v_round-1)*25));
+      exit when v_roll>=v_cutoff;
+      v_finish:=case v_round when 1 then 'Conference Semifinals'
+        when 2 then 'Conference Finals' when 3 then 'Finals' else 'Champion' end;
+    end loop;
+  end if;
   return jsonb_build_object('season',p_year,'wins',v_wins,'losses',82-v_wins,
     'offense',round(v_off,1),'defense',round(v_def,1),
     'positionalFit',round(v_fit,1),'finish',v_finish);
