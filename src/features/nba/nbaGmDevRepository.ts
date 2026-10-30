@@ -7,6 +7,7 @@ const run=z.object({
   version:z.literal("nba-gm-dev-v2"),seed:z.string().startsWith("nba-gm-"),
   phase:z.enum(["draft","year1","offseason","final"]),
   picks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
+  yearOnePicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
   pendingTeam:z.string().nullable(),pendingSlot:z.null(),spinIndex:z.number().int().nonnegative(),
   caps:z.tuple([z.number().int(),z.number().int(),z.number().int()]),
   results:z.array(z.object({season:z.number().int(),wins:z.number().int(),losses:z.number().int(),

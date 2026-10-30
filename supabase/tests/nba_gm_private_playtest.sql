@@ -48,7 +48,8 @@ begin
       raise exception 'NBA slots cannot be reflowed'; end if;
   end loop;
 
-  if v_state->>'phase'<>'year1' or jsonb_array_length(v_state->'results')<>1 then
+  if v_state->>'phase'<>'year1' or jsonb_array_length(v_state->'results')<>1
+    or jsonb_array_length(v_state->'yearOnePicks')<>7 then
     raise exception 'Season 1 did not lock after 7 picks'; end if;
   if (select count(distinct pick->>'slot') from jsonb_array_elements(v_state->'picks') pick)<>7 then
     raise exception 'Roster does not contain all seven legal NBA roles'; end if;

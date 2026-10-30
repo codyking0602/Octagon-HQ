@@ -23,6 +23,8 @@ export interface NbaGmDevRun {
   seed: string;
   phase: NbaGmDevPhase;
   picks: NbaGmPick[];
+  /** Immutable draft roster used for the Season 1 fit reveal. */
+  yearOnePicks: NbaGmPick[];
   pendingTeam: string | null;
   pendingSlot: null;
   spinIndex: number;

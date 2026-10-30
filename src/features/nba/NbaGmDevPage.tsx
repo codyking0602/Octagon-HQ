@@ -154,7 +154,6 @@ export default function NbaGmDevPage(){
   const spend=run?nbaGmDevSpend(run.picks,catalog):null;
   const candidates=run?nbaGmDevCandidates(run,catalog):[];
   const visible=candidates.filter(p=>!positionFilter||p.positions.includes(positionFilter as "PG"|"SG"|"SF"|"PF"|"C"));
-  const filled=new Set(run?.picks.map(p=>p.slot)??[]);
   const currentTeam=run?.phase==="draft"?run.pendingTeam:run?.tradeTeam??run?.freeAgencyTeam;
   const wheelTeam=currentTeam?wheelTeams.find(team=>team.code===currentTeam)??null:null;
   const eligibleTrade=run?.shopPlayerId?catalog.filter(p=>
@@ -233,7 +232,7 @@ export default function NbaGmDevPage(){
           ENTER THE OFFSEASON
         </button>
       </section>}
-      {(run.phase==="offseason"||run.phase==="final")&&<FitReport picks={run.phase==="final"?run.picks:run.picks} catalog={catalog}/>}
+      {(run.phase==="offseason"||run.phase==="final")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>THE OFFSEASON</h2></div></div>
         <Results seasons={run.results}/>

@@ -44,9 +44,7 @@ declare
   v_out jsonb;
 begin
   if jsonb_typeof(p_picks) <> 'array' then return null; end if;
-  select coalesce(jsonb_agg(x.value order by x.ordinality),'[]'::jsonb)
-    into v_ids from jsonb_array_elements(p_picks) with ordinality x(value,ordinality);
-  select coalesce(jsonb_agg(e.value->>'playerId' order by e.ordinality),'[]'::jsonb)
+   select coalesce(jsonb_agg(e.value->>'playerId' order by e.ordinality),'[]'::jsonb)
     into v_ids from jsonb_array_elements(p_picks) with ordinality e(value,ordinality);
   if p_new_id is not null then v_ids:=v_ids||jsonb_build_array(p_new_id); end if;
   v_count:=jsonb_array_length(v_ids);
@@ -193,7 +191,7 @@ begin
   if p_action='start' then
     v_state:=jsonb_build_object('version','nba-gm-dev-v2',
       'seed','nba-gm-'||extensions.gen_random_uuid()::text,
-      'phase','draft','picks','[]'::jsonb,'pendingTeam',null,
+      'phase','draft','picks','[]'::jsonb,'yearOnePicks','[]'::jsonb,'pendingTeam',null,
       'pendingSlot',null,'spinIndex',0,'caps',jsonb_build_array(192500000,192500000,192500000),
       'results','[]'::jsonb,'shopPlayerId',null,'tradeTeam',null,
       'tradeAttempts',0,'tradesUsed',0,'freeAgencyTeam',null,
@@ -240,6 +238,7 @@ begin
     v_picks:=private.nba_gm_v2_assign(v_picks,p_player_id);
     v_next:=jsonb_set(jsonb_set(v_state,'{picks}',v_picks),'{pendingTeam}','null'::jsonb);
     if jsonb_array_length(v_picks)=7 then
+      v_next:=jsonb_set(v_next,'{yearOnePicks}',v_picks);
       v_result:=private.nba_gm_v2_season(v_next,1);
       v_next:=jsonb_set(jsonb_set(v_next,'{results}',jsonb_build_array(v_result)),
         '{phase}','"year1"'::jsonb);

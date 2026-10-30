@@ -30,7 +30,7 @@ const catalog:NbaGmDevPlayer[]=board.players.map(p=>{
 const wemby=catalog.find(p=>p.name==="Victor Wembanyama")!;
 const kennard=catalog.find(p=>p.name==="Luke Kennard")!;
 const run:NbaGmDevRun={
- version:"nba-gm-dev-v2",seed:"nba-gm-test",phase:"draft",picks:[],
+ version:"nba-gm-dev-v2",seed:"nba-gm-test",phase:"draft",picks:[],yearOnePicks:[],
  pendingTeam:"SAS",pendingSlot:null,spinIndex:1,caps:NBA_GM_DEV_CAPS,results:[],
  shopPlayerId:null,tradeTeam:null,tradeAttempts:0,tradesUsed:0,freeAgencyTeam:null,
  freeAgencyVisits:0,releasedIds:[],
