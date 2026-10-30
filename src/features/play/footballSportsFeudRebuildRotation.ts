@@ -57,7 +57,16 @@ export function previewFootballFeudRebuildRotation(
   const usedFast = new Set<string>();
   const output: { main: SportsFeudAuthoredQuestion[]; fast: SportsFeudAuthoredQuestion[] }[] = [];
   for (let slot = 0; slot < appearances; slot += 1) {
-    const main = allocate(bank.main, usedMain, new Set<string>(), 2, sport + ":" + cycle + ":main:" + slot);
+    let main = allocate(bank.main, usedMain, new Set<string>(), 2, sport + ":" + cycle + ":main:" + slot);
+    // October 30's approved live board is rivalry nicknames instead of a
+    // second school-list. Reserve it here so later CFB dates cannot repeat it.
+    if (sport === "cfb" && cycle === 0 && slot === 0) {
+      const rivalries = bank.main.find(q => q.id === "cfb-feud-r2-main-named-college-rivalries");
+      if (!rivalries || usedMain.has(rivalries.id) || lane(main[0]!) === lane(rivalries)) {
+        throw new Error("October 30 CFB Feud rivalry correction is unavailable.");
+      }
+      main = [main[0]!, rivalries];
+    }
     const fast = allocate(bank.fast, usedFast, new Set(main.map(lane)), 5, sport + ":" + cycle + ":fast:" + slot);
     main.forEach((question) => usedMain.add(question.id));
     fast.forEach((question) => usedFast.add(question.id));
