@@ -3192,7 +3192,7 @@
       "overall": 83,
       "skills": {
         "scoring": 72,
-        "shooting": 76,
+        "shooting": 81,
         "playmaking": 63,
         "perimeterDefense": 91,
         "interiorDefense": 75,
@@ -3200,17 +3200,18 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
-        "editorialRationale": "Elite wing stopper; low creation burden.",
+        "editorialRationale": "Elite wing stopper; low creation burden. SHOOTING EDITORIAL UPDATE (2025-26: 41.2% 3PT (103/250) in 73 games, 3.4 3PA; 2024-25: 33.0% on 3.7 3PA. Moderated increase, not specialist-tier.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/timberwolves/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.nba.com/player/1630183/bio"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "anchor-calibrated-editorial"
+        "anchor-calibrated-editorial",
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -3244,8 +3245,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately; see docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-brandonmiller",
@@ -12778,7 +12779,7 @@
       "overall": 75,
       "skills": {
         "scoring": 69,
-        "shooting": 76,
+        "shooting": 82,
         "playmaking": 75,
         "perimeterDefense": 60,
         "interiorDefense": 35,
@@ -12786,19 +12787,20 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Developing point guard passing and shooting with weak interior/defensive impact.",
+        "editorialRationale": "Developing point guard passing and shooting with weak interior/defensive impact. SHOOTING EDITORIAL UPDATE (2025-26: 40.8% 3PT on 5.0 3PA in 82 games, after 33.9% prior year. Full-season greater-volume proof warrants above-average grade; shot creation context pending.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/wizards/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.nba.com/player/1642267"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -12824,8 +12826,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately; see docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-justinchampagnie",
@@ -17528,6 +17530,8 @@
     "fullSixSkillCertifications": 0,
     "uncorroboratedPlayers": 123,
     "sourceContextStatObservations": 429,
-    "sourceContextAwardObservations": 37
+    "sourceContextAwardObservations": 37,
+    "evidenceBasedProvisionalCorrections": 2,
+    "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
   }
 }
