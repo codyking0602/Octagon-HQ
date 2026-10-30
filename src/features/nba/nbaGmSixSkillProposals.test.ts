@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { NBA_GM_SKILL_KEYS, NBA_GM_TEAM_CODES } from "./nbaGmFoundation";
 
 type Player = { editorialId:string;name:string;teamCode:string|null;candidatePositions:string[];positionReview:string;overall:number;skills:Record<string,number>;evidence:{editorialFile:string;editorialRationale:string;leagueSeasonStatsUrl:string;openingRosterUrl:string;provisionalRosterUrl:string|null;checkedFactUrl?:string|null};confidence:string;reviewStatus:string;reviewFlags:string[] };
-const draft = JSON.parse(readFileSync("docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json","utf8")) as {lockedSkillKeys:string[];published:boolean;certifiedCount:number;players:Player[]};
+const draft = JSON.parse(readFileSync("docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json","utf8")) as {lockedSkillKeys:string[];published:boolean;certifiedCount:number;reviewProvenance:{evidenceBasedProvisionalCorrections:number};players:Player[]};
 const allowedPositions=new Set(["PG","SG","SF","PF","C"]);
 const normalize=(s:string)=>s.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"").replace(/(?:iii|ii|jr|sr)$/,"");
 
@@ -72,6 +72,9 @@ describe("NBA GM isolated provisional six-skill editorial board",()=>{
    expect(person("Keegan Murray").skills.shooting).toBe(81);
    expect(person("Keegan Murray").overall).toBe(81);
    expect(person("Keegan Murray").candidatePositions).toEqual(["SF","PF"]);
+   expect(person("DeMar DeRozan").skills.shooting).toBe(80);
+   expect(person("DeMar DeRozan").overall).toBe(80);
+   expect(draft.reviewProvenance.evidenceBasedProvisionalCorrections).toBe(23);
    expect(person("Keegan Murray").positionReview).toBe("unverified");
    expect(person("Keegan Murray").reviewFlags).toContain("historical-sf-pf-eligibility-lead-not-certified");
    for(const name of ["Michael Porter Jr.","Jrue Holiday","Keegan Murray"]){
