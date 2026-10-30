@@ -3,7 +3,7 @@
   "asOfDate": "2026-10-29",
   "productionPublished": false,
   "completeSixSkillCertified": 0,
-  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players.",
+  "disclaimer": "This supplemental file is independent editorial evidence. A verified NBA ID/team or specific season metric does NOT certify six skills, current exact starter-slot eligibility, or the entire 330-player cohort. Current team differs from 2025-26 team for some players. Six focused candidate-slot corrections use historical position evidence but do not constitute fully verified 2026–27 playable-position eligibility.",
   "officialRosterIdentity": [
     {
       "name": "Tyrese Haliburton",
@@ -319,10 +319,13 @@
         "shooting"
       ],
       "before": 73,
-      "after": null,
-      "decision": "Hold for multi-season regression, off-dribble/catch-shot split and defensive concession/context rather than treating this one season as elite shooting.",
-      "sourceUrl": "https://www.therundown.gg/research/nba/player/josh-hart?gt=Regular+Season&season=2025-26",
-      "status": "REVIEW_REQUIRED"
+      "after": 77,
+      "decision": "Cautious 73→77: 100/242 3PT (41.3%) in 2025–26 vs 84/252 (33.3%) in 2024–25 and 31.0% in 2023–24; predominantly lower-difficulty created-for-him attempts and multi-year volatility mean do not jump to 80+. Overall and other five attributes unchanged.",
+      "sourceUrl": "https://www.basketball-reference.com/players/h/hartjo01.html",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION",
+      "games": 66,
+      "previousSeasonThreePointPercentage": 33.3,
+      "comparison": "Below Jaden McDaniels 81 provisional shotmaking; comparable wing volume but lower multi-season confidence; not 85+ specialist."
     },
     {
       "name": "Oscar Tshiebwe",
@@ -435,6 +438,24 @@
       "comparison": "Above 77 solid, below 90+ high-volume specialty shooters; compare Bub Carrington 82 (40.8% at 5 attempts) and Jaden McDaniels 81 (41.2% at 3.4 attempts).",
       "sourceUrl": "https://readthegame.com/player/collin-sexton-1629012?season=2025-26",
       "secondarySourceUrl": "https://www.nbahouse.net/ask/collin-sexton-splits",
+      "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
+    },
+    {
+      "name": "Julian Strawther",
+      "season": "2025-26",
+      "games": 57,
+      "minutesPerGame": 15.1,
+      "threePointPercentage": 38.7,
+      "threePointAttemptsPerGame": 2.6,
+      "previousSeasonThreePointPercentage": 34.9,
+      "skillsReviewed": [
+        "shooting"
+      ],
+      "before": 85,
+      "after": 82,
+      "decision": "Reduce 85→82 provisional: 58/150 (38.7%) threes in 2025–26 after 94/269 (34.9%) in 2024–25; limited 15.1 MPG and career 193/557 (.346) do not independently demonstrate elite difficult movement shooting. Other five traits and overall unchanged.",
+      "sourceUrl": "https://www.basketball-reference.com/players/s/strawju01.html",
+      "comparison": "Compared with Cam Spencer 90 and Luke Kennard 95 as high-certainty specialist gravity anchors; limited volume and weaker multi-year efficiency support 82 until film corroboration.",
       "status": "EVIDENCE_BACKED_PROVISIONAL_REGRADE_NOT_FULL_CERTIFICATION"
     }
   ],
@@ -704,6 +725,100 @@
       "sourceUrl": "https://www.nba.com/draft/2026/prospects/morez-johnson-jr",
       "issue": "34.3% college 3PT from only 35 attempts, not reliably transferable to NBA shooting proficiency.",
       "decision": "RATE_SAMPLE_TOO_SMALL"
+    }
+  ],
+  "positionEvidenceAdjudications": [
+    {
+      "name": "Bennedict Mathurin",
+      "previousCandidates": [
+        "PG"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/m/mathube01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "Proposed PG-only did not fit documented 2025–26 primary SG/SF wing role; alter candidate slots pending full 2026–27 verification.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Luguentz Dort",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/d/dortlu01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "NBA.com broad G; historical 2025–26 SF/SG role warrants both, not automatically excluding SF.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Jordan Walsh",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SF",
+        "PF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/w/walshjo01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "NBA.com broad G contrasts 2025–26 Basketball-Reference PF/wing; add PF as provisional.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Julian Strawther",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/s/strawju01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "Recent primary SG and secondary wing role; add SG to formerly SF-only candidate.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Zach LaVine",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/l/lavinza01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "2025–26 primary SG and historical SF flexibility contradict draft SF-only.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Josh Hart",
+      "previousCandidates": [
+        "SF",
+        "PF"
+      ],
+      "reviewedCandidates": [
+        "SG",
+        "SF",
+        "PF"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/h/hartjo01.html",
+      "sourceMethod": "Basketball-Reference season-by-season positional roles compared with NBA.com current broad roster labels",
+      "why": "SG in 2024–25, SF in 2025–26; add SG while preserving existing provisional PF, which still needs own lineup evidence.",
+      "asOf": "2026-10-29",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
     }
   ]
 }
