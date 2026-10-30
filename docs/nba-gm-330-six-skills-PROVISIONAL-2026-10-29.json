@@ -6155,7 +6155,7 @@
       "overall": 80,
       "skills": {
         "scoring": 74,
-        "shooting": 70,
+        "shooting": 77,
         "playmaking": 61,
         "perimeterDefense": 88,
         "interiorDefense": 81,
@@ -6174,7 +6174,7 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -6232,8 +6232,8 @@
         "awards": [],
         "availabilityContext": "2025–26 NBA regular season: 54 GP. 54 Denver games, 41.1% on ~3.6 three-point attempts/game; current Cleveland club not inherited from 2025–26. Defensive specialist strengths require matchup-level check."
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 NBA volume, multi-season consistency and position peers; see docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-dysondaniels",
@@ -12694,7 +12694,7 @@
       "overall": 80,
       "skills": {
         "scoring": 78,
-        "shooting": 76,
+        "shooting": 81,
         "playmaking": 57,
         "perimeterDefense": 63,
         "interiorDefense": 74,
@@ -12712,7 +12712,7 @@
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "editorialNote": "Efficient roll scoring/rebounds, partial defensive tradeoff",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -12740,8 +12740,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 NBA volume, multi-season consistency and position peers; see docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-paulreed",
@@ -13533,7 +13533,7 @@
       "overall": 82,
       "skills": {
         "scoring": 79,
-        "shooting": 78,
+        "shooting": 81,
         "playmaking": 67,
         "perimeterDefense": 80,
         "interiorDefense": 69,
@@ -13552,7 +13552,7 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -13586,8 +13586,8 @@
         "awards": [],
         "availabilityContext": null
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 NBA volume, multi-season consistency and position peers; see docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-bobbyportis",
@@ -13789,7 +13789,7 @@
       "overall": 76,
       "skills": {
         "scoring": 67,
-        "shooting": 72,
+        "shooting": 78,
         "playmaking": 78,
         "perimeterDefense": 56,
         "interiorDefense": 29,
@@ -13808,7 +13808,7 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "evidence-led-shooting-regrade-not-certified"
       ],
       "editorialNote": "Young passer, turnover and efficiency risk",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -13875,8 +13875,8 @@
         ],
         "awards": []
       },
-      "independentSkillValidation": "incomplete",
-      "gradeReviewStatus": "manually-proposed-not-certified"
+      "independentSkillValidation": "incomplete; shooting grade reviewed separately against 2025-26 NBA volume, multi-season consistency and position peers; see docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json",
+      "gradeReviewStatus": "partially-evidence-reviewed-not-certified"
     },
     {
       "editorialId": "nba-gm-draft-ajgreen",
@@ -22315,7 +22315,7 @@
     "uncorroboratedPlayers": 29,
     "sourceContextStatObservations": 951,
     "sourceContextAwardObservations": 37,
-    "evidenceBasedProvisionalCorrections": 6,
+    "evidenceBasedProvisionalCorrections": 10,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
   }
 }
