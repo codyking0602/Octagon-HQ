@@ -17,6 +17,7 @@ export const notificationKinds = [
   "picks_card_updated",
   "ufc_event_starting",
   "football_picks_open",
+  "football_gotw_starting",
   "nba_launch_available",
   "nba_daily_four_hours",
   "nba_results_ready",
@@ -231,7 +232,7 @@ function routeMatches(route: string, root: string) {
 
 export function notificationSport(item: Pick<NotificationItem, "kind" | "route">): NotificationSport | null {
   const route = item.route ?? "";
-  if (routeMatches(route, "/football")) return "football";
+  if (item.kind === "football_gotw_starting" || routeMatches(route, "/football")) return "football";
   if (routeMatches(route, "/nba") || routeMatches(route, "/championship/nba") || route.startsWith("/?hq-reveal=basketball-")) return "nba";
   if (routeMatches(route, "/mlb")) return "mlb";
   if (
