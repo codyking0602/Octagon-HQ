@@ -63,6 +63,25 @@ describe("NBA GM isolated provisional six-skill editorial board",()=>{
    const production=readFileSync("src/features/nba/nbaGmFoundation.ts","utf8");
    expect(production).not.toContain("nba-gm-330-six-skills-PROVISIONAL");
  });
+ it("locks practical close evidence-led grades and keeps eligibility explicitly provisional",()=>{
+   const person=(name:string)=>draft.players.find(p=>p.name===name)!;
+   expect(person("Michael Porter Jr.").skills.scoring).toBe(86);
+   expect(person("Michael Porter Jr.").overall).toBe(83);
+   expect(person("Jrue Holiday").skills.playmaking).toBe(81);
+   expect(person("Jrue Holiday").overall).toBe(80);
+   expect(person("Keegan Murray").skills.shooting).toBe(81);
+   expect(person("Keegan Murray").overall).toBe(81);
+   expect(person("Keegan Murray").candidatePositions).toEqual(["SF","PF"]);
+   expect(person("Keegan Murray").positionReview).toBe("unverified");
+   for(const name of ["Michael Porter Jr.","Jrue Holiday","Keegan Murray"]){
+     const row=person(name);
+     expect(row.reviewFlags).toContain("evidence-led-oct30-practical-close-skill-regrade-not-certified");
+     expect(row.evidence.checkedFactUrl).toMatch(/^https:\/\/www\\.nba\\.com\\//);
+     expect(row.reviewStatus).toBe("PROVISIONAL_NOT_CERTIFIED");
+   }
+   expect(draft.published).toBe(false);
+   expect(draft.certifiedCount).toBe(0);
+ });
  it("reports variance without forcing skill distributions or averaging into overall",()=>{
    const keys=draft.lockedSkillKeys;
    for(const key of keys){
