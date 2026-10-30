@@ -19,11 +19,11 @@ The strict independent six-skill research checklist remains **0/330 certified**.
 | 2026–27 official NBA roster team matches | **330/330**, 30 teams | Snapshot only; recheck transactions before release |
 | Directly pinned official NBA IDs in roster crosswalk | **232/330** | 98 await equivalent direct current roster/profile confirmation |
 | 75–79 overall peer cohort | **149/149 inventoried** | Evidence triage done; not individually independently certified |
-| Evidence-led skill adjustments | **22** | Targeted, logged editorial changes; no automatic overall revisions |
+| Evidence-led skill adjustments | **23** | Targeted, logged editorial changes; no automatic overall revisions |
 | Fully independently certified six-skill profiles | **0/330** | Conservative evidence standard preserved |
 | Public imports, migrations, production changes | **0** | This PR remains draft and isolated |
 
-### Final three targeted revisions in this continuation
+### Final four targeted revisions in this continuation
 
 | Candidate | Trait | Decision | Factual grounding and comparison |
 |---|---|---|---|
@@ -31,7 +31,9 @@ The strict independent six-skill research checklist remains **0/330 certified**.
 | **Jrue Holiday** | Playmaking | **79 → 81** | Portland 2025–26: 53 games, 322 assists / 146 turnovers (6.08 / 2.75 per game) as an expanded on-ball guard, versus Boston 2024–25 3.9 APG in a reduced creation role. Value above 79 justified, not an automatic elite 90. 87 Perimeter Defense and overall 80 retained. [Season history](https://www.basketball-reference.com/players/h/holidjr01.html); [NBA player profile](https://www.nba.com/stats/player/201950/). |
 | **Keegan Murray** | Shooting | **85 → 81** | Sacramento 2025–26: 31/112 threes (27.7%) over 23 games; 2024–25 34.3%, 2023–24 35.8%, 2022–23 41.1%. Multi-year record supports above-average spacing potential but not a current 85 specialist. Position candidate **SF/PF** is consistent with historical SF (2022–24) / PF (2024–26) season listings; official NBA roster says broad F, **exact game eligibility not certified**. Overall 81 unchanged. [Official NBA year-by-year](https://www.nba.com/stats/player/1631099/); [historical positions](https://www.basketball-reference.com/players/m/murrake02.html). |
 
-All three are **specific skill judgments**, not mechanical transforms from raw statistics. The earlier **19** evidence-led corrections are preserved. Another five traits per player do not become certified by changing one.
+| **DeMar DeRozan** | Shooting | **66 → 80** | Sacramento 2025–26: **NBA leader with 232 made mid-range field goals**, approximately 47.6% on 487 mid-range attempts; also 86.8% FT. Three-point shooting remains limited (47/147; 32.0% at 1.9 attempts/game), preventing an 85+ specialist grade, but the original 66 wrongly labeled one of the NBA’s most reliable high-difficulty mid-range shooters a poor overall shooter. Scoring 80 and overall 80 remain separate. [Official Kings end-of-season notes](https://www.nba.com/gamenotes/kings.pdf); [2025–26 shot zone breakdown](https://nba.highlightfactory.app/team/sacramento-kings/demar-derozan). |
+
+All four are **specific skill judgments**, not mechanical transforms from raw statistics. The earlier **19** evidence-led corrections and three preceding closeout edits are preserved. Another five traits per player do not become certified by changing one.
 
 ## Frozen editorial decisions for the handoff
 
