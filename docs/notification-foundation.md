@@ -5,7 +5,7 @@
 Notifications are Octagon HQ's single personal and actionable delivery layer.
 
 - The top-right header bell is the permanent entry point.
-- The bell replaces the former What's New header shortcut; the question-mark Octagon Verdict action remains unchanged.
+- The bell replaces the former What's New header shortcut. The old question-mark header shortcut was removed to give the profile photo more room; `/intelligence` remains a direct route.
 - `/notifications` owns one flat notification list.
 - Home does not render a What's New preview; `/whats-new` keeps the complete feed and the notification bell owns unread discovery.
 - Profile preferences and device push are later phases, not part of this foundation.
