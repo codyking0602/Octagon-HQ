@@ -82,7 +82,7 @@ describe("NBA authored Who Am I 200-player final integration", () => {
  });
  it("never spells out the answer, including with a nickname between first and last names", () => {
    const fold = (value: string) => value.normalize("NFKD")
-     .replace(/[\\u0300-\\u036f]/g, "")
+     .replace(/[\u0300-\u036f]/g, "")
      .toLowerCase()
      .replace(/[’']/g, "")
      .replace(/[^a-z0-9]+/g, " ")
@@ -102,8 +102,8 @@ describe("NBA authored Who Am I 200-player final integration", () => {
    }
 
    const zo = nbaWhoAmIAuthoredIdentities.find(player => player.name === "Alonzo Mourning")!;
-   expect(zo.scripts.B.clues[9]!.text).toMatch(/\\bZo\\b/);
-   expect(zo.scripts.B.clues[9]!.text).not.toMatch(/\\b(?:Alonzo|Mourning)\\b/i);
+   expect(zo.scripts.B.clues[9]!.text).toMatch(/\bZo\b/);
+   expect(zo.scripts.B.clues[9]!.text).not.toMatch(/\b(?:Alonzo|Mourning)\b/i);
  });
 
 });
