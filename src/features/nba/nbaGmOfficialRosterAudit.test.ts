@@ -66,9 +66,9 @@ describe("NBA GM official roster snapshot — unpublished evidence only", () => 
     const exactRows=new Map(source.crosswalk.map(p=>[p.name,p]));
     for(const line of matched){
       const cells=line.split("|").map(cell=>cell.trim());
-      const id=cells[3]?.match(/\\[(\\d+)\\]/)?.[1];
+      const id=cells[3]?.split("[")[1]?.split("]")[0];
       const row=exactRows.get(cells[2]!);
-      expect(id,cells[2]).toMatch(/^\\d+$/);
+      expect(id,cells[2]).toMatch(/^[0-9]+$/);
       expect(cells[3],cells[2]).toContain("https://www.nba.com/player/"+id);
       expect(row?.teamCode,cells[2]).toBe(cells[1]);
       expect(row?.officialNBAPlayerId,cells[2]).toBe(id);
