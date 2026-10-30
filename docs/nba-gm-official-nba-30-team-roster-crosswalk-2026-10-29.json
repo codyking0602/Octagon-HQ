@@ -3609,7 +3609,7 @@
       "matchedAtEditorialHead": "170ece0152dfb1253776c3ffafe4c404cc8b76e8",
       "officialNBAPlayerId": "1631099",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official broad forward position; 2023–24 SF and 2024–26 PF historical NBA season leads; game-specific SF/PF eligible slots not-certified",
+      "positionStatus": "official broad forward position; historical SF/PF season leads; exact game-specific SF/PF eligibility not-certified",
       "officialPlayerUrl": "https://www.nba.com/player/1631099",
       "playerIdentitySource": "Official NBA.com Sacramento roster, NBA.com Keegan Murray player career stats, and 2025–26 NBA season API record; exact SF/PF game eligibility still provisional. Verified October 30, 2026."
     },
