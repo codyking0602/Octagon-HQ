@@ -56,7 +56,7 @@ describe("NFL GM final report development outcomes", () => {
     expect(file).toContain("Roster (90%)");
     expect(file).toContain("Season record (3%)");
     expect(file).toContain("Playoffs (7%)");
-    expect(file).not.toContain("Playoffs (10%)");
+    expect(file).toContain("Playoffs (10%)");
   });
 
   it("keeps three-year outcomes and scoring owned by the existing canonical engine", () => {
