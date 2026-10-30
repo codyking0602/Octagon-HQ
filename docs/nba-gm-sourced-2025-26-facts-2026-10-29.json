@@ -34,7 +34,10 @@
     "individualJakobPoeltl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
     "individualPJWashington": "https://www.basketball-reference.com/players/w/washipj01.html",
     "individualDeAnthonyMelton": "https://www.basketball-reference.com/players/m/meltode01.html",
-    "individualStevenAdams": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html"
+    "individualStevenAdams": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+    "individualJordanPoole": "https://www.basketball-reference.com/players/p/poolejo01.html",
+    "individualMoritzWagner": "https://www.basketball-reference.com/teams/ORL/2026.html",
+    "individualKentaviousCaldwellPope": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm"
   },
   "sourceNotes": [
     "Player seasons are 2025-26; team transfers to 2026-27 do not affect historical 2025-26 fact identity.",
@@ -45,7 +48,8 @@
     "Qualified 2025–26 points-per-game leaderboard ranks 101–234 was added from pages 3–5, showing prior-season workload, not independent evaluation of six skills.",
     "Unqualified-in-leaderboard 2025-26 Joel Embiid and Ja Morant added using individually sourced Basketball-Reference season rows, recording actual games played separately from skill ratings.",
     "2025-26 individual regular-season reviews added for 11 missed returning NBA players, distinguishing 2025-26 historical teams from 2026-27 and excluding playoffs and play-in games; 44 additional context observations are NOT certification.",
-    "Individual 2025-26 regular-season checks expanded to 225 players; 7 previously uncovered 75–79 overall profiles added with minutes/split/availability notes. No skill grade changed or certified on box-score evidence alone."
+    "Individual 2025-26 regular-season checks expanded to 225 players; 7 previously uncovered 75–79 overall profiles added with minutes/split/availability notes. No skill grade changed or certified on box-score evidence alone.",
+    "Three unqualified 75–79 player profiles added: Jordan Poole, Moritz Wagner, Kentavious Caldwell-Pope, with separated 2025-26 regular-season, playoff and play-in games."
   ],
   "players": [
     {
@@ -3045,6 +3049,44 @@
       "awards": []
     },
     {
+      "name": "Jordan Poole",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 13.4,
+          "sourceUrl": "https://www.basketball-reference.com/players/p/poolejo01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 3.1,
+          "sourceUrl": "https://www.basketball-reference.com/players/p/poolejo01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 2,
+          "sourceUrl": "https://www.basketball-reference.com/players/p/poolejo01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 33.3,
+          "sourceUrl": "https://www.basketball-reference.com/players/p/poolejo01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Jordan Walsh",
       "observations": [
         {
@@ -3345,6 +3387,44 @@
           "value": 13.2,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=2",
           "sourceKind": "third-party-2025-26-leaderboard-page-2",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Kentavious Caldwell-Pope",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 8.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 2.5,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 2.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 0.8,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -4031,6 +4111,44 @@
           "value": 5.7,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=5",
           "sourceKind": "third-party-2025-26-leaderboard-page-5",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Moritz Wagner",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 6.9,
+          "sourceUrl": "https://www.basketball-reference.com/teams/ORL/2026.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 3.2,
+          "sourceUrl": "https://www.basketball-reference.com/teams/ORL/2026.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 0.8,
+          "sourceUrl": "https://www.basketball-reference.com/teams/ORL/2026.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 31.4,
+          "sourceUrl": "https://www.basketball-reference.com/teams/ORL/2026.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
