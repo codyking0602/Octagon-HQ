@@ -366,7 +366,7 @@ begin
   if (select count(*) from private.nba_gm_dev_players) <> 330
     or (select count(distinct team_code) from private.nba_gm_dev_players) <> 30
     or exists (select 1 from private.nba_gm_dev_players where
-      jsonb_object_length(skills) <> 6 or array_length(positions,1) is null
+      jsonb_typeof(skills) <> 'object' or not (skills ?& array['scoring','shooting','playmaking','perimeterDefense','interiorDefense','rebounding']) or array_length(positions,1) is null
       or salaries[1] <= 0 or salaries[2] <= 0 or salaries[3] <= 0) then
     raise exception 'NBA GM DEV fixture must contain 330 complete six-skill records across 30 teams';
   end if;
