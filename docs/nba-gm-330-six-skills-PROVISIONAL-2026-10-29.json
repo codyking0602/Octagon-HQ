@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 271 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
+  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 282 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -6177,7 +6177,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.6,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/peyton_watson_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 4.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/peyton_watson_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/peyton_watson_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 41.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/peyton_watson_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.9,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/peyton_watson_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 1.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/peyton_watson_full.htm",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 54 GP. 54 Denver games, 41.1% on ~3.6 three-point attempts/game; current Cleveland club not inherited from 2025–26. Defensive specialist strengths require matchup-level check."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -6847,7 +6901,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 16.7,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/murrade01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 5.4,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/murrade01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 6.4,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/murrade01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 30.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/murrade01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/murrade01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.2,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/murrade01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 14 GP. 14-game return from Achilles injury; 3.4 turnovers per game, not ignored when reviewing 84 Playmaking. 2024–25 and earlier primary ability evidence essential."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -7307,7 +7415,61 @@
       "editorialNote": "Mobile defensive big with developing shooting",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 16.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/s/sarral01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 7.4,
+            "sourceUrl": "https://www.basketball-reference.com/players/s/sarral01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.7,
+            "sourceUrl": "https://www.basketball-reference.com/players/s/sarral01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 33.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/s/sarral01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.8,
+            "sourceUrl": "https://www.basketball-reference.com/players/s/sarral01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 2,
+            "sourceUrl": "https://www.basketball-reference.com/players/s/sarral01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 48 GP. 48-game Washington starter sample, 95 total blocks and 150 threes attempted; 6.4 BLK% and 14.6 REB% context, no automatic defense grade from block counts."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -7732,7 +7894,61 @@
       "editorialNote": "Elite perimeter stopper with low-usage scoring",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 8.9,
+            "sourceUrl": "https://www.basketball-reference.com/players/j/joneshe01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 3.4,
+            "sourceUrl": "https://www.basketball-reference.com/players/j/joneshe01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.8,
+            "sourceUrl": "https://www.basketball-reference.com/players/j/joneshe01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 30.9,
+            "sourceUrl": "https://www.basketball-reference.com/players/j/joneshe01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/j/joneshe01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.5,
+            "sourceUrl": "https://www.basketball-reference.com/players/j/joneshe01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 56 GP. All-Defensive first-team 2023–24 and injuries/role, 2025–26 80/259 threes; steals 1.6 not sole proof of full 95 perimeter grade."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -9106,7 +9322,61 @@
       "editorialNote": "Skillful reserve ballhandling/shooting, poor defensive size",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 19.7,
+            "sourceUrl": "https://basketball.realgm.com/player/Ty-Jerome/NBA/85677/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2.8,
+            "sourceUrl": "https://basketball.realgm.com/player/Ty-Jerome/NBA/85677/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 5.7,
+            "sourceUrl": "https://basketball.realgm.com/player/Ty-Jerome/NBA/85677/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 42,
+            "sourceUrl": "https://basketball.realgm.com/player/Ty-Jerome/NBA/85677/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.1,
+            "sourceUrl": "https://basketball.realgm.com/player/Ty-Jerome/NBA/85677/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.3,
+            "sourceUrl": "https://basketball.realgm.com/player/Ty-Jerome/NBA/85677/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 15 GP. 15-game Memphis sample with 42/100 threes and 85 assists/27 turnovers; compare creator role and 2024–25 before judging 83 Shooting and 81 Playmaking."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -12471,7 +12741,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 11.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/toppiob01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 4.4,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/toppiob01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/toppiob01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 35.2,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/toppiob01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.5,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/toppiob01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/toppiob01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 24 GP. 24 games, 37/105 threes and 42/46 free throws; 2023–24 and 2024–25 healthy minutes matter for transition/rim-run Scoring."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -14596,7 +14920,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 11.7,
+            "sourceUrl": "https://www.basketball-reference.com/players/c/coulibi01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 4.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/c/coulibi01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/c/coulibi01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 31.9,
+            "sourceUrl": "https://www.basketball-reference.com/players/c/coulibi01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/c/coulibi01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 1,
+            "sourceUrl": "https://www.basketball-reference.com/players/c/coulibi01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 56 GP. 56 NBA starts; 65/204 threes and 75 steals/54 blocks; 2025–26 primary SG differs from 2026–27 SF, so SG/SF positional review needed."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -15294,7 +15672,53 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 4.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/l/livelde01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 5.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/l/livelde01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 1.9,
+            "sourceUrl": "https://www.basketball-reference.com/players/l/livelde01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/l/livelde01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 1.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/l/livelde01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 7 GP. Seven games and 115 NBA minutes following injury. 0 three-point attempts, DO NOT invent 0% accuracy. 2023–25 evidence needed for 87 interior and 86 rebound."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -15330,7 +15754,61 @@
         "anchor-calibrated-editorial"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12,
+            "sourceUrl": "https://www.basketball-reference.com/players/b/braunch01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 4.8,
+            "sourceUrl": "https://www.basketball-reference.com/players/b/braunch01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.7,
+            "sourceUrl": "https://www.basketball-reference.com/players/b/braunch01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 30.1,
+            "sourceUrl": "https://www.basketball-reference.com/players/b/braunch01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.7,
+            "sourceUrl": "https://www.basketball-reference.com/players/b/braunch01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/b/braunch01.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 44 GP. 44 starts, 43/143 threes, down from 2024–25 89/224 39.7%; primary SG 2025–26 contradicts SF-only provisional slot."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -18793,7 +19271,61 @@
       "editorialNote": "Physical wing scorer and rebounder, spotty defense",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 17.1,
+            "sourceUrl": "https://basketball.realgm.com/player/Miles-Bridges/NBA/74071/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 5.8,
+            "sourceUrl": "https://basketball.realgm.com/player/Miles-Bridges/NBA/74071/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 3.2,
+            "sourceUrl": "https://basketball.realgm.com/player/Miles-Bridges/NBA/74071/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 33.3,
+            "sourceUrl": "https://basketball.realgm.com/player/Miles-Bridges/NBA/74071/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.6,
+            "sourceUrl": "https://basketball.realgm.com/player/Miles-Bridges/NBA/74071/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.4,
+            "sourceUrl": "https://basketball.realgm.com/player/Miles-Bridges/NBA/74071/2026/By_Season/Totals/Regular_Season",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 77 GP. 77 Charlotte games, 148/445 threes, later current Phoenix. 81 overall and 83 Rebounding provisional; separate team and positional role."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -18830,7 +19362,61 @@
         "independent-season-evidence-needed"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 17.8,
+            "sourceUrl": "https://www.basketball-reference.com/players/g/greenja05.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 3.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/g/greenja05.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.8,
+            "sourceUrl": "https://www.basketball-reference.com/players/g/greenja05.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 31.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/g/greenja05.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.1,
+            "sourceUrl": "https://www.basketball-reference.com/players/g/greenja05.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/g/greenja05.html",
+            "sourceKind": "individually-checked-2025-26-regular-season",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": "2025–26 NBA regular season: 32 GP. 32 Phoenix regular-season games only; 2 play-in+4 playoff excluded; 71/227 threes (31.3%) on 7.1 attempts per game requires role/efficiency calibration versus 80 Shooting."
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -20593,11 +21179,11 @@
     "remainingHeuristicVectors": 0,
     "sourceSpecificEvidenceCoverage": "2025-26 sourced context only, not verification of any of the six skill scores; official NBA player identities and 2026-27 team/position records incomplete.",
     "worksheet": "docs/nba-gm-remaining-126-individual-rating-proposals-2026-10-29.md",
-    "sourceContextPlayers": 271,
+    "sourceContextPlayers": 282,
     "sourceContextSource": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
     "fullSixSkillCertifications": 0,
-    "uncorroboratedPlayers": 59,
-    "sourceContextStatObservations": 757,
+    "uncorroboratedPlayers": 48,
+    "sourceContextStatObservations": 822,
     "sourceContextAwardObservations": 37,
     "evidenceBasedProvisionalCorrections": 6,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
