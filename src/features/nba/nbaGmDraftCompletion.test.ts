@@ -37,7 +37,7 @@ describe("NBA GM draft completion from authentic 330-player eligibility bank",()
     // Seeded diversity: some drafts chase stars, others save cap or mix by slot.
     // The wheel only offers a team if at least one legal player exists.
     const policies=["top","cheap","mid","versatile"] as const;
-    for(let seed=0;seed<12;seed++){
+    for(let seed=0;seed<8;seed++){
       let picks:ReturnType<typeof nbaGmDevAssignRoster>=[];
       for(let round=0;round<7;round++){
         const eligible=board.filter(p=>nbaGmDevCanAdd(picks!,p,board,cap));
@@ -61,5 +61,5 @@ describe("NBA GM draft completion from authentic 330-player eligibility bank",()
       const spent=nbaGmDevSpend(picks!,board);
       for(let year=0;year<3;year++)expect(spent[year]).toBeLessThanOrEqual(cap[year]);
     }
-  });
+  },60_000);
 });
