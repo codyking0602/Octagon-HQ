@@ -25,6 +25,7 @@ const catalog: NbaGmDevPlayer[] = board.players.map(p => {
     currentGrade:p.overall,skills:p.skills,
     salaries:[price,Math.round(price*1.05/100_000)*100_000,Math.round(price*1.10/100_000)*100_000],
     pricingKind:"GAME_FIXTURE_NOT_REAL_CONTRACT",eligibilityKind:"PROVISIONAL_EDITORIAL",
+    officialNbaPlayerId:null,officialRosterPosition:"F",positionReview:"unverified",reviewFlags:["unit-test-provisional"],
   };
 });
 const wemby = catalog.find(p => p.name==="Victor Wembanyama")!;
@@ -39,6 +40,8 @@ describe("NBA GM Phase 2 private playable draft",()=>{
   it("preserves the exact 330-player, six-skill baseline with zero published real salaries",()=>{
     expect(nbaGmDevCatalogErrors(catalog)).toEqual([]);
     expect(new Set(catalog.map(p => p.teamCode)).size).toBe(30);
+    expect(sql).toContain("(select count(*) from private.nba_gm_dev_players where official_nba_player_id is not null) <> 232");
+    expect(sql).toContain("official_roster_position,position_review,review_flags");
     expect(NBA_GM_SKILL_KEYS).toHaveLength(6);
     expect(wemby.currentGrade).toBe(99);
     expect(wemby.skills.interiorDefense).toBe(99);
