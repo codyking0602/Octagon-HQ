@@ -27,7 +27,14 @@
     "individualAaronGordon": "https://www.landofbasketball.com/nba_players_season_stats/2026/aaron_gordon_full.htm",
     "individualIvicaZubac": "https://www.landofbasketball.com/nba_players_season_stats/2026/ivica_zubac_full.htm",
     "individualDariusGarland": "https://www.landofbasketball.com/nba_players_season_stats/2026/darius_garland_full.htm",
-    "individualDomantasSabonis": "https://www.basketball-reference.com/players/s/sabondo01.html"
+    "individualDomantasSabonis": "https://www.basketball-reference.com/players/s/sabondo01.html",
+    "individualOscarTshiebwe": "https://www.basketball-reference.com/players/t/tshieos01.html",
+    "individualSantiAldama": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+    "individualTJMcConnell": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+    "individualJakobPoeltl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+    "individualPJWashington": "https://www.basketball-reference.com/players/w/washipj01.html",
+    "individualDeAnthonyMelton": "https://www.basketball-reference.com/players/m/meltode01.html",
+    "individualStevenAdams": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html"
   },
   "sourceNotes": [
     "Player seasons are 2025-26; team transfers to 2026-27 do not affect historical 2025-26 fact identity.",
@@ -37,7 +44,8 @@
     "Second-page rankings 51–100 for 2025–26 PPG and qualified 3P%; historical 2025–26 team labels on source pages are not 2026–27 affiliations.",
     "Qualified 2025–26 points-per-game leaderboard ranks 101–234 was added from pages 3–5, showing prior-season workload, not independent evaluation of six skills.",
     "Unqualified-in-leaderboard 2025-26 Joel Embiid and Ja Morant added using individually sourced Basketball-Reference season rows, recording actual games played separately from skill ratings.",
-    "2025-26 individual regular-season reviews added for 11 missed returning NBA players, distinguishing 2025-26 historical teams from 2026-27 and excluding playoffs and play-in games; 44 additional context observations are NOT certification."
+    "2025-26 individual regular-season reviews added for 11 missed returning NBA players, distinguishing 2025-26 historical teams from 2026-27 and excluding playoffs and play-in games; 44 additional context observations are NOT certification.",
+    "Individual 2025-26 regular-season checks expanded to 225 players; 7 previously uncovered 75–79 overall profiles added with minutes/split/availability notes. No skill grade changed or certified on box-score evidence alone."
   ],
   "players": [
     {
@@ -1217,6 +1225,52 @@
       "awards": []
     },
     {
+      "name": "De'Anthony Melton",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 12.3,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 3.2,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 2.6,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 29.4,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1.6,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Dean Wade",
       "observations": [
         {
@@ -2245,6 +2299,44 @@
           "value": 8.2,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=4",
           "sourceKind": "third-party-2025-26-leaderboard-page-4",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Jakob Poeltl",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 10.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.7,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -4299,6 +4391,44 @@
       "awards": []
     },
     {
+      "name": "Oscar Tshiebwe",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 7.8,
+          "sourceUrl": "https://www.basketball-reference.com/players/t/tshieos01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 6.6,
+          "sourceUrl": "https://www.basketball-reference.com/players/t/tshieos01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.2,
+          "sourceUrl": "https://www.basketball-reference.com/players/t/tshieos01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 1.2,
+          "sourceUrl": "https://www.basketball-reference.com/players/t/tshieos01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Oso Ighodaro",
       "observations": [
         {
@@ -4307,6 +4437,44 @@
           "value": 6.5,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/points-per-game?page=4",
           "sourceKind": "third-party-2025-26-leaderboard-page-4",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "P.J. Washington",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 14.2,
+          "sourceUrl": "https://www.basketball-reference.com/players/w/washipj01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 7,
+          "sourceUrl": "https://www.basketball-reference.com/players/w/washipj01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 1.8,
+          "sourceUrl": "https://www.basketball-reference.com/players/w/washipj01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 32.5,
+          "sourceUrl": "https://www.basketball-reference.com/players/w/washipj01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
@@ -4745,6 +4913,44 @@
       "awards": []
     },
     {
+      "name": "Santi Aldama",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 14,
+          "sourceUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 6.7,
+          "sourceUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 2.9,
+          "sourceUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 35,
+          "sourceUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
       "name": "Scottie Barnes",
       "observations": [
         {
@@ -4888,6 +5094,82 @@
           "value": 7.4,
           "sourceUrl": "https://www.leagueleaders.com/nba/2025/assists-per-game",
           "sourceKind": "third-party-2025-26-leaderboard",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "Steven Adams",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 5.8,
+          "sourceUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 8.6,
+          "sourceUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 1.5,
+          "sourceUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "blocksPerGame",
+          "value": 0.6,
+          "sourceUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": []
+    },
+    {
+      "name": "T.J. McConnell",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 9.4,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 5.1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 2.2,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "stealsPerGame",
+          "value": 1,
+          "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+          "sourceKind": "individual-2025-26-regular-season-profile",
           "gradeInterpretation": "context-only-not-algorithm"
         }
       ],
