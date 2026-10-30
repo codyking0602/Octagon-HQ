@@ -49,8 +49,8 @@ describe("NBA GM draft ratings evidence, confidence, and source integrity", () =
       expect(p.reviewStatus, p.name).toBe("PROVISIONAL_NOT_CERTIFIED");
       expect(["manually-proposed-not-certified", "partially-evidence-reviewed-not-certified"], p.name).toContain(p.gradeReviewStatus);
       if (p.gradeReviewStatus === "partially-evidence-reviewed-not-certified") {
-        expect(p.reviewFlags.some(flag => /^evidence-led-(shooting|playmaking)-regrade-not-certified$/.test(flag)),p.name).toBe(true);
-        expect(p.independentSkillValidation, p.name).toMatch(/^incomplete; (shooting|playmaking) grade reviewed separately/);
+        expect(p.reviewFlags.some(flag => /^evidence-led-(shooting|playmaking|interior-defense)-regrade-not-certified$/.test(flag)),p.name).toBe(true);
+        expect(p.independentSkillValidation, p.name).toMatch(/^incomplete; (shooting|playmaking|interior defense) grade reviewed separately/);
       } else {
         expect(p.independentSkillValidation, p.name).toBe("incomplete");
       }
