@@ -53,8 +53,8 @@ function extractEditorialCandidates(): Candidate[] {
           overall: Number(cells[2]!.replace(/\*/g, "")),
           fileIndex,
           team: null,
-          rationale: cells[3] ?? "",
-          evidence: cells[4] ?? "",
+          rationale: (fileIndex === 2 ? cells[4] : cells[3]) ?? "",
+          evidence: (fileIndex === 2 ? cells[5] : cells[4]) ?? "",
         });
       } else if (fileIndex >= 3 && /^[A-Z]{3}$/.test(cells[1] ?? "") && /^\*\*\d+\*\*$/.test(cells[3] ?? "")) {
         candidates.push({
