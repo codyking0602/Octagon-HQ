@@ -221,7 +221,8 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
       ["Bilal Coulibaly",["SG","SF"]],["Ty Jerome",["PG","SG"]],
       ["John Collins",["PF"]],["Peyton Watson",["SF","PF"]],
       ["Anthony Black",["PG"]],["Ben Sheppard",["SG"]],
-      ["Pelle Larsson",["SG"]],["Javonte Green",["SG"]]
+      ["Pelle Larsson",["SG"]],["Javonte Green",["SG"]],
+      ["Jalen Suggs",["PG","SG"]],["Gradey Dick",["SG","SF"]]
     ] as Array<[string,string[]]>)) {
       const item=positions.get(name);
       expect(item?.reviewedCandidates).toEqual(candidates);
