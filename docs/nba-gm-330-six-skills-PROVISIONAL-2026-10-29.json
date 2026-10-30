@@ -6149,7 +6149,8 @@
       "name": "Peyton Watson",
       "teamCode": "CLE",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 80,
@@ -6174,7 +6175,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "anchor-calibrated-editorial",
-        "evidence-led-shooting-regrade-not-certified"
+        "evidence-led-shooting-regrade-not-certified",
+        "position-evidence-led-lead-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
@@ -12687,7 +12689,6 @@
       "name": "John Collins",
       "teamCode": "DET",
       "candidatePositions": [
-        "SF",
         "PF"
       ],
       "positionReview": "unverified",
@@ -12712,7 +12713,8 @@
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "evidence-led-shooting-regrade-not-certified"
+        "evidence-led-shooting-regrade-not-certified",
+        "position-evidence-led-lead-not-certified"
       ],
       "editorialNote": "Efficient roll scoring/rebounds, partial defensive tradeoff",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
