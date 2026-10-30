@@ -1,82 +1,113 @@
--- End-to-end owner-only NBA GM seven-slot server draft, using the existing
--- private Football GM persistence tables. All changes roll back.
+-- Owner-only NBA GM V2 lifecycle. Transactional fixture: no production changes.
 begin;
 select set_config('request.jwt.claim.role','service_role',true);
-
 do $$
 declare
-  v_owner uuid := extensions.gen_random_uuid();
-  v_outsider uuid := extensions.gen_random_uuid();
-  v_state jsonb;
-  v_player text;
-  v_team text;
-  v_slot text;
-  v_year integer;
-  v_spend bigint;
-  v_results jsonb;
-  v_rejected boolean;
+  v_owner uuid:=extensions.gen_random_uuid();
+  v_outsider uuid:=extensions.gen_random_uuid();
+  v_state jsonb;v_player text;v_team text;v_index integer;v_year integer;
+  v_spend bigint;v_old text;v_rejected boolean;v_before jsonb;v_year_one jsonb;
 begin
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
   values
     (v_owner,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
-     'nba-gm-dev-owner@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','CODY','historical_unclaimed',true)),
+      'nba-v2-owner@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','CODY','historical_unclaimed',true)),
     (v_outsider,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
-     'nba-gm-dev-member@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','NBA MEMBER','historical_unclaimed',true));
+      'nba-v2-outsider@login.octagon-hq.app','',now(),now(),now(),jsonb_build_object('display_name','NBA MEMBER','historical_unclaimed',true));
   perform public.register_unclaimed_pin_profile(v_owner,'CODY','CG');
   perform public.register_unclaimed_pin_profile(v_outsider,'NBA MEMBER','NM');
   insert into public.pick_control_owners(profile_id) values(v_owner);
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
 
-  if jsonb_array_length(public.nba_gm_dev_catalog())<>330 then
-    raise exception 'Private NBA GM board is not complete';
+  if jsonb_array_length(public.nba_gm_dev_catalog())<>330
+     or exists(select 1 from jsonb_array_elements(public.nba_gm_dev_catalog()) p
+       where p->>'gameContract' not in ('1YR','3YR')) then
+    raise exception 'Private NBA contract/scouting fixtures incomplete';
   end if;
-  if public.nba_gm_dev_action('load') is not null then
-    raise exception 'New owner unexpectedly has an old NBA GM run';
-  end if;
-  v_state := public.nba_gm_dev_action('start');
-  if v_state->>'phase'<>'draft' then raise exception 'NBA GM start failed'; end if;
-  if public.load_my_latest_football_gm_run() is not null then
-    raise exception 'NBA GM dev run displaced Football GM solo resume';
-  end if;
+  if public.nba_gm_dev_action('load') is not null then raise exception 'Unexpected saved V2 franchise'; end if;
+  v_state:=public.nba_gm_dev_action('start');
+  if v_state->>'version'<>'nba-gm-dev-v2' or v_state->>'phase'<>'draft'
+    or v_state->>'pendingSlot' is not null then raise exception 'V2 start invalid'; end if;
+  if public.load_my_latest_football_gm_run() is not null then raise exception 'V2 displaced Football GM save'; end if;
 
-  foreach v_slot in array array['PG','SG','SF','PF','C','SIXTH','FLEX'] loop
-    v_state:=public.nba_gm_dev_action('spin',v_slot);
+  for v_index in 1..7 loop
+    v_state:=public.nba_gm_dev_action('spin');
     v_team:=v_state->>'pendingTeam';
-    if v_team is null or v_state->>'pendingSlot'<>v_slot then
-      raise exception 'Server did not own the NBA team spin';
+    if v_team is null or v_state->>'pendingSlot' is not null then
+      raise exception 'NBA wheel must spin team without a preselected position';
     end if;
     select p.id into v_player from private.nba_gm_dev_players p
-    where p.team_code=v_team and private.nba_gm_dev_can_pick(v_state,v_slot,p.id)
-    order by p.salaries[3] asc limit 1;
-    if v_player is null then raise exception 'Server offered an unpickable NBA team'; end if;
-    v_state:=public.nba_gm_dev_action('pick',v_slot,v_player);
-    if jsonb_array_length(v_state->'picks') <>
-      array_position(array['PG','SG','SF','PF','C','SIXTH','FLEX'],v_slot)
-      then raise exception 'NBA GM draft pick did not persist'; end if;
+      where p.team_code=v_team and private.nba_gm_v2_can_add(v_state,p.id)
+      order by private.nba_gm_v2_salary(p.id,3),p.id limit 1;
+    if v_player is null then raise exception 'Server spun a dead-end NBA team'; end if;
+    v_state:=public.nba_gm_dev_action('pick',null,v_player);
+    if jsonb_array_length(v_state->'picks')<>v_index then
+      raise exception 'NBA pick did not persist'; end if;
+    if private.nba_gm_v2_assign(v_state->'picks') is null then
+      raise exception 'NBA slots cannot be reflowed'; end if;
   end loop;
-  if v_state->>'phase'<>'review' then raise exception 'seven picks not ready for review'; end if;
 
-  for v_year in 1..3 loop
-    select sum(p.salaries[v_year]) into v_spend
-    from jsonb_array_elements(v_state->'picks') pick
-    join private.nba_gm_dev_players p on p.id=pick->>'playerId';
-    if v_spend>192500000 then raise exception 'NBA GM season % cap exceeded',v_year; end if;
+  if v_state->>'phase'<>'year1' or jsonb_array_length(v_state->'results')<>1
+    or jsonb_array_length(v_state->'yearOnePicks')<>7 then
+    raise exception 'Season 1 did not lock after 7 picks'; end if;
+  if (select count(distinct pick->>'slot') from jsonb_array_elements(v_state->'picks') pick)<>7 then
+    raise exception 'Roster does not contain all seven legal NBA roles'; end if;
+  if exists(select 1 from jsonb_array_elements(v_state->'results') s
+    where (s->>'wins')::integer+(s->>'losses')::integer<>82) then
+    raise exception 'Season 1 record does not total 82'; end if;
+  v_before:=v_state->'results';
+  v_state:=public.nba_gm_dev_action('offseason');
+  if v_state->>'phase'<>'offseason' or v_state->'results' is distinct from v_before then
+    raise exception 'Offseason changed a locked Year 1 result'; end if;
+
+  -- Trade partner wheel may be explored and cancelled without changing the roster.
+  v_old:=v_state->'picks'->0->>'playerId';
+  v_state:=public.nba_gm_dev_action('shop',null,v_old);
+  v_state:=public.nba_gm_dev_action('trade-spin');
+  if v_state->>'tradeTeam' is null then raise exception 'No server-owned trade partner'; end if;
+  v_state:=public.nba_gm_dev_action('cancel-trade');
+  if v_state->>'tradeTeam' is not null or v_state->>'shopPlayerId' is not null then
+    raise exception 'Failed to cancel trade without roster changes'; end if;
+
+  -- A new negotiation has two fresh offers and must produce a legal
+  -- accepted trade, without rewriting the preserved Season 1 lineup.
+  v_year_one:=v_state->'yearOnePicks';
+  v_state:=public.nba_gm_dev_action('shop',null,v_old);
+  if (v_state->>'tradeAttempts')::integer<>0 then
+    raise exception 'New NBA negotiation inherited stale rejected offers'; end if;
+  v_state:=public.nba_gm_dev_action('trade-spin');
+  select p.id into v_player from private.nba_gm_dev_players p
+    where p.team_code=v_state->>'tradeTeam'
+      and p.overall<=(select overall+4 from private.nba_gm_dev_players where id=v_old)
+      and private.nba_gm_v2_can_add(jsonb_set(v_state,'{picks}',
+        (select coalesce(jsonb_agg(x),'[]'::jsonb) from jsonb_array_elements(v_state->'picks') x
+          where x->>'playerId'<>v_old)),p.id)
+    order by p.overall,p.id limit 1;
+  if v_player is null then raise exception 'NBA trade wheel spun a partner with no acceptable offer'; end if;
+  v_state:=public.nba_gm_dev_action('trade',null,v_player);
+  if (v_state->>'tradesUsed')::integer<>1 or jsonb_array_length(v_state->'picks')<>7
+    or v_state->>'tradeTeam' is not null or v_state->>'shopPlayerId' is not null
+    or v_state->'yearOnePicks' is distinct from v_year_one
+    or not exists(select 1 from jsonb_array_elements(v_state->'picks') x where x->>'playerId'=v_player)
+    or exists(select 1 from jsonb_array_elements(v_state->'picks') x where x->>'playerId'=v_old)
+    then raise exception 'NBA trade did not apply cleanly or changed Year 1'; end if;
+
+  -- Expiring/retained assets reprice as 1YR; guaranteed game-price fixtures lock for 3YR.
+  for v_year in 2..3 loop
+    select coalesce(sum(private.nba_gm_v2_salary(pick->>'playerId',v_year)),0) into v_spend
+      from jsonb_array_elements(v_state->'picks') pick;
+    if v_spend>192500000 then raise exception 'Future season cap exceeded'; end if;
   end loop;
-  v_results:=private.nba_gm_dev_simulate(v_state);
-  if v_results is distinct from private.nba_gm_dev_simulate(v_state)
-    then raise exception 'Identical NBA GM seed must repeat deterministically'; end if;
-  v_state:=public.nba_gm_dev_action('confirm');
+  v_state:=public.nba_gm_dev_action('advance');
   if v_state->>'phase'<>'final' or jsonb_array_length(v_state->'results')<>3
-    or v_state->'results' is distinct from v_results
-    then raise exception 'Three NBA seasons not locked by the server'; end if;
-  if exists(select 1 from jsonb_array_elements(v_state->'results') r
-    where (r->>'wins')::integer+(r->>'losses')::integer<>82) then
-    raise exception 'NBA season record must total 82 games';
-  end if;
+    or (v_state->'results'->0) is distinct from (v_before->0)
+    then raise exception 'Three-year locked season transition failed'; end if;
+  if exists(select 1 from jsonb_array_elements(v_state->'results') s
+    where (s->>'wins')::integer+(s->>'losses')::integer<>82) then
+    raise exception 'NBA season did not play 82 games'; end if;
   if public.nba_gm_dev_action('load') is distinct from v_state then
-    raise exception 'NBA GM completed game failed resume';
-  end if;
+    raise exception 'Completed V2 run not saved'; end if;
 
   v_rejected:=false;
   begin
@@ -84,23 +115,60 @@ begin
       '{"phase":"final","results":[{"wins":82}]}'::jsonb,true);
   exception when others then v_rejected:=true;
   end;
-  if not v_rejected then raise exception 'Football GM save RPC tampered with NBA GM results'; end if;
-
+  if not v_rejected then raise exception 'Football save tampered with private NBA GM'; end if;
   v_rejected:=false;
-  begin perform public.nba_gm_dev_action('spin','PG'); exception when others then v_rejected:=true; end;
-  if not v_rejected then raise exception 'Completed NBA GM allowed draft mutation'; end if;
+  begin perform public.nba_gm_dev_action('spin'); exception when others then v_rejected:=true; end;
+  if not v_rejected then raise exception 'Completed V2 draft was mutable'; end if;
+
+  -- Start a second private franchise to exercise the formerly terminal
+  -- three-visit offseason bug. The owner must always be able to refill a cut.
+  v_state:=public.nba_gm_dev_action('start');
+  for v_index in 1..7 loop
+    v_state:=public.nba_gm_dev_action('spin');
+    v_team:=v_state->>'pendingTeam';
+    select p.id into v_player from private.nba_gm_dev_players p
+      where p.team_code=v_team and private.nba_gm_v2_can_add(v_state,p.id)
+      order by private.nba_gm_v2_salary(p.id,3),p.id limit 1;
+    if v_player is null then raise exception 'Recovery test draft hit dead-end'; end if;
+    v_state:=public.nba_gm_dev_action('pick',null,v_player);
+  end loop;
+  v_before:=v_state->'yearOnePicks';
+  v_state:=public.nba_gm_dev_action('offseason');
+  v_old:=v_state->'picks'->0->>'playerId';
+  v_state:=public.nba_gm_dev_action('release',null,v_old);
+  if jsonb_array_length(v_state->'picks')<>6 then raise exception 'Offseason cut did not create vacancy'; end if;
+  for v_index in 1..4 loop
+    v_state:=public.nba_gm_dev_action('fa-spin');
+    if v_state->>'freeAgencyTeam' is null then raise exception 'No emergency free-agent team'; end if;
+    v_state:=public.nba_gm_dev_action('pass-fa');
+  end loop;
+  if (v_state->>'freeAgencyVisits')::integer<>4 then
+    raise exception 'Offseason free agency still stops at three visits'; end if;
+  v_state:=public.nba_gm_dev_action('fa-spin');
+  v_team:=v_state->>'freeAgencyTeam';
+  select p.id into v_player from private.nba_gm_dev_players p
+    where p.team_code=v_team and private.nba_gm_v2_contract(p.id)='1YR'
+      and p.id<>v_old and private.nba_gm_v2_can_add(v_state,p.id)
+    order by private.nba_gm_v2_salary(p.id,3),p.id limit 1;
+  if v_player is null then raise exception 'Emergency team has no eligible 1YR signing'; end if;
+  v_state:=public.nba_gm_dev_action('sign',null,v_player);
+  if jsonb_array_length(v_state->'picks')<>7 or v_state->'yearOnePicks' is distinct from v_before
+    then raise exception 'Emergency signing or original Year 1 roster corrupted'; end if;
+  v_state:=public.nba_gm_dev_action('advance');
+  if v_state->>'phase'<>'final' or jsonb_array_length(v_state->'results')<>3
+    then raise exception 'Replacement did not permit full franchise completion'; end if;
 
   perform set_config('request.jwt.claim.sub',v_outsider::text,true);
   v_rejected:=false;
   begin perform public.nba_gm_dev_catalog(); exception when others then v_rejected:=true; end;
-  if not v_rejected then raise exception 'Nonowner could view provisional NBA ratings'; end if;
+  if not v_rejected then raise exception 'Non-owner could see player board'; end if;
   v_rejected:=false;
   begin perform public.nba_gm_dev_action('start'); exception when others then v_rejected:=true; end;
-  if not v_rejected then raise exception 'Nonowner could start NBA GM'; end if;
+  if not v_rejected then raise exception 'Non-owner could start NBA GM'; end if;
 
   if has_table_privilege('authenticated','private.nba_gm_dev_players','SELECT')
     or has_function_privilege('anon','public.nba_gm_dev_catalog()','EXECUTE')
     or has_function_privilege('anon','public.nba_gm_dev_action(text,text,text)','EXECUTE')
-    then raise exception 'NBA GM playtest surface is publicly readable'; end if;
+    then raise exception 'Private catalog or action exposed publicly'; end if;
 end $$;
 rollback;
