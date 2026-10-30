@@ -77,16 +77,16 @@ describe("notification foundation", () => {
 
   it("keeps notifications and Octagon Verdict after the Home What's New preview is retired", () => {
     const notificationAction = shell.indexOf("<NotificationHeaderAction />");
-    const askAction = shell.indexOf('to="/intelligence"');
+    const profileAction = shell.indexOf("<IdentityControl />");
 
     expect(notificationAction).toBeGreaterThan(-1);
-    expect(notificationAction).toBeLessThan(askAction);
+    expect(notificationAction).toBeLessThan(profileAction);
     expect(shell).not.toContain("<WhatsNewHeaderAction />");
-    expect(shell).toContain('aria-label="Open UFC Intelligence"');
+    expect(shell).not.toContain('aria-label="Open UFC Intelligence"');
     expect(home).not.toContain("<WhatsNewPreview />");
     expect(router).toContain('path: "notifications"');
     expect(router).toContain('path: "whats-new"');
-    expect(contract).toContain("question-mark Octagon Verdict action remains unchanged");
+    expect(contract).toContain("The old question-mark header shortcut was removed");
   });
 
   it("uses authenticated RPCs and profile-scoped Realtime without fallbacks", () => {
