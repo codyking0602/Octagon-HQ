@@ -22,9 +22,10 @@ afterEach(() => {
 });
 
 describe("Octagon Verdict Intelligence flow", () => {
-  it("keeps Intelligence in the header and out of primary navigation", async () => {
+  it("removes the old header shortcut while keeping Intelligence out of primary navigation", async () => {
     renderRoute("/");
-    expect(await screen.findByRole("link", { name: "Open UFC Intelligence" })).toHaveAttribute("href", "/intelligence");
+    expect(await screen.findByRole("heading", { name: "Your HQ" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Open UFC Intelligence" })).not.toBeInTheDocument();
 
     const primary = screen.getByRole("navigation", { name: "Primary navigation" });
     expect(within(primary).getAllByRole("link")).toHaveLength(4);
