@@ -29,6 +29,10 @@ const player = z.object({
   }),
   pricingKind: z.literal("GAME_FIXTURE_NOT_REAL_CONTRACT"),
   eligibilityKind: z.literal("PROVISIONAL_EDITORIAL"),
+  officialNbaPlayerId: z.string().nullable(),
+  officialRosterPosition: z.string().min(1),
+  positionReview: z.literal("unverified"),
+  reviewFlags: z.array(z.string()).min(1),
 });
 type RpcClient = { rpc: (name: string, args?: Record<string, unknown>) =>
   PromiseLike<{ data: unknown; error: { message?: string } | null }> };
