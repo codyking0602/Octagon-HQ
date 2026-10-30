@@ -112,4 +112,50 @@ describe("NBA GM evidence-led provisional identity and skill review", () => {
     expect(review.individualResearch.some(e => e.name === "Tyrese Haliburton" && e.status.startsWith("NO_2025_26"))).toBe(true);
     for (const flag of review.roleFlags) expect(players.has(flag.name), flag.name).toBe(true);
   });
+
+  it("separates confirmed 2025-26 injury absence from player ability and verifies 8 more exact NBA IDs", () => {
+    const supplemental = JSON.parse(readFileSync("docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json","utf8")) as {
+      confirmedNo2025_26NbaSeason:Array<{name:string;season:string;nbaRegularSeasonGames:number;lastNbaSeason:string;lastSeasonGames:number;sourceUrl:string;gradeStatus:string}>;
+      positionEvidenceAdjudications:Array<{name:string;reviewedCandidates:string[];certification:string;sourceUrl:string}>;
+    };
+    const missing = supplemental.confirmedNo2025_26NbaSeason;
+    expect(missing.map(x=>x.name).sort()).toEqual(["Damian Lillard","Fred VanVleet","Kyrie Irving","Tyrese Haliburton"]);
+    for(const item of missing) {
+      expect(item.season).toBe("2025-26");
+      expect(item.nbaRegularSeasonGames).toBe(0);
+      expect(item.lastNbaSeason).toBe("2024-25");
+      expect(item.lastSeasonGames).toBeGreaterThan(40);
+      expect(item.gradeStatus).toBe("PROVISIONAL_INJURY_AVAILABILITY_SEPARATE_FROM_ABILITY");
+      expect(item.sourceUrl).toMatch(/^https:\/\//);
+    }
+    const data = JSON.parse(readFileSync("docs/nba-gm-official-nba-30-team-roster-crosswalk-2026-10-29.json","utf8")) as {
+      crosswalk:Array<{name:string;teamCode:string;officialNBAPlayerId:string|null;officialPlayerUrl?:string}>;
+      manuallyVerifiedPlayerIdCount:number;
+    };
+    expect(data.manuallyVerifiedPlayerIdCount).toBeGreaterThanOrEqual(19);
+    expect(data.crosswalk.filter(p=>p.officialNBAPlayerId).length).toBe(data.manuallyVerifiedPlayerIdCount);
+    const named = new Map(data.crosswalk.map(p=>[p.name,p]));
+    for(const [name,id] of [
+      ["Luguentz Dort","1629652"],["Aaron Wiggins","1630598"],["Kingston Flemings","1643412"],
+      ["Nickeil Alexander-Walker","1629638"],["Dorian Finney-Smith","1627827"],
+      ["Asa Newell","1642854"],["Onyeka Okongwu","1630168"],["Corey Kispert","1630557"]
+    ]) {
+      const row=named.get(name);
+      expect(row?.teamCode).toBe("ATL");
+      expect(row?.officialNBAPlayerId).toBe(id);
+      expect(row?.officialPlayerUrl).toBe("https://www.nba.com/player/"+id);
+    }
+    const positions = new Map(supplemental.positionEvidenceAdjudications.map(x=>[x.name,x]));
+    expect(positions.size).toBeGreaterThanOrEqual(6);
+    for(const [name,candidates] of [
+      ["Bennedict Mathurin",["SG","SF"]],["Luguentz Dort",["SG","SF"]],
+      ["Jordan Walsh",["SF","PF"]],["Julian Strawther",["SG","SF"]],
+      ["Zach LaVine",["SG","SF"]],["Josh Hart",["SG","SF","PF"]]
+    ]) {
+      const item=positions.get(name);
+      expect(item?.reviewedCandidates).toEqual(candidates);
+      expect(item?.certification).toBe("PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION");
+      expect(item?.sourceUrl).toMatch(/^https:\/\//);
+    }
+  });
 });
