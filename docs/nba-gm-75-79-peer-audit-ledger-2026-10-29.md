@@ -150,7 +150,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Kyle Kuzma | MIL | 79 | Forward/Wing | 79/71/68/68/68/72 | Tobias Harris (79); Cameron Boozer (77) | 2025-26 source facts now attached; role/film audit still pending |
 | Kyshawn George | WAS | 79 | Forward/Wing | 75/79/71/75/61/66 | Tristan da Silva (78); Christian Braun (81) | 2025-26 source facts now attached; role/film audit still pending |
 | Mark Williams | PHX | 79 | Big | 73/25/56/54/81/87 | Zach Edey (78); Day'Ron Sharpe (78) | Core role-volume peer audit |
-| Matas Buzelis | CHI | 79 | Forward/Wing | 76/73/67/78/73/69 | Jarace Walker (77); Cedric Coward (79) | 2025-26 BPG vs Interior Defense |
+| Matas Buzelis | CHI | 79 | Forward/Wing | 76/73/67/78/77/69 | Jarace Walker (77); Cedric Coward (79) | **Interior Defense 73→77 provisional:** 77 GP, 116 blocks (1.5 BPG), 6.1 rim contests/game and 5.9-point rim suppression; low adjusted deterrence/overall defense keeps below 80. [Sourced individual peer decision](nba-gm-matas-buzelis-2025-26-interior-defense-peer-review-2026-10-30.md); other five skills and exact position NOT certified |
 | Mitchell Robinson | BOS | 79 | Big | 63/10/46/54/90/93 | Clint Capela (77); Walker Kessler (80) | Core role-volume peer audit |
 | Moussa Diabaté | CHA | 79 | Big | 67/27/61/73/84/90 | Robert Williams III (78); Paul Reed (79) | Core role-volume peer audit |
 | Neemias Queta | BOS | 79 | Big | 68/20/53/60/80/83 | Daniel Gafford (80); Day'Ron Sharpe (78) | Core role-volume peer audit |
