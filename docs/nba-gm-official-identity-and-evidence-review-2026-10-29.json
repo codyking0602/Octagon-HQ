@@ -984,6 +984,62 @@
       "why": "2025-26 BRef-derived positional minute splits estimated 52% SF, 32% PF and 16% SG, suggesting SF/PF versatile forward eligibility rather than SF-only. Basketball-Reference current-season primary position SF; preserve SF and add a provisional PF lead. Matchup-based 2026-27 team role still needs evaluation.",
       "asOf": "2026-10-30",
       "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Anthony Black",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "PG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/b/blackan01.html",
+      "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
+      "why": "Basketball-Reference lists PG for each of 2023-24, 2024-25, 2025-26 (64 GP/40 starts) and current early 2026-27 Orlando. Lead combo guard and defense versatility do not establish SF wing eligibility; replace unsupported SF-only slot with PG provisional lead.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Ben Sheppard",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/s/sheppbe01.html",
+      "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
+      "why": "Basketball-Reference lists SG in each of 2023-24, 2024-25 and 2025-26 (65 GP, 20 starts), and first 2026-27 Indiana game. Official roster broad G consistent; SF-only slot incorrect; SG provisional until current team-role review.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Pelle Larsson",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/l/larsspe01.html",
+      "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
+      "why": "Basketball-Reference records SG in 2024-25, 2025-26 (70 GP, 54 starts), and current 2026-27 Miami. Current broad NBA G aligns; former SF-only candidate unsupported. SG provisional, not certified.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
+    },
+    {
+      "name": "Javonte Green",
+      "previousCandidates": [
+        "SF"
+      ],
+      "reviewedCandidates": [
+        "SG"
+      ],
+      "sourceUrl": "https://www.basketball-reference.com/players/g/greenja02.html",
+      "sourceMethod": "Basketball-Reference three-season season-specific Pos and starter-role history; NBA.com official broad team-roster label not precise slot certification",
+      "why": "Basketball-Reference records SG in 2025-26 Detroit (82 GP, 6 starts) and early 2026-27. Broad NBA G consistent; SF-only candidate would misclassify 2025-26 playable role. Guard-wing positional versatility does not independently prove SF in current lineup.",
+      "asOf": "2026-10-30",
+      "certification": "PROVISIONAL_POSITION_LEAD_NOT_FULL_GAME_ELIGIBILITY_CERTIFICATION"
     }
   ],
   "confirmedNo2025_26NbaSeason": [
