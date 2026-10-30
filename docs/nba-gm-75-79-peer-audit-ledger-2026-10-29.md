@@ -6,7 +6,7 @@
 
 Players are grouped only by *provisional* position family. Suggested neighbors are within 2 overall points, selected by proximity in the six provisional skill categories to direct an independent film/production review; **the nearest peer is not editorial approval**. Diagnostic conflict flags use simple conservative thresholds only; they should trigger human assessment, never automatic numerical grade changes. A player with one 95+ trait can still be 75–79 overall.
 
-- Cohort size: **149**, 2025–26 individually linked regular-season/award context: **133/149**, no attached NBA 2025–26 context: **16**. Conflicts with recorded performance thresholds: **7** players.
+- Cohort size: **149**, 2025–26 individually linked regular-season/award context: **136/149**, no attached NBA 2025–26 context: **13**. Conflicts with recorded performance thresholds: **7** players.
 - NBA canonical IDs, team codes and proposed positions still require official reconciliation. Rookies and returning injured players need explicit limitations, not assumed 2025–26 performance.
 - Source details where available: `nba-gm-sourced-2025-26-facts-2026-10-29.json`; proposed skill values in `nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json`.
 
@@ -60,7 +60,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Kasparas Jakucionis | MIL | 76 | PG/Creator | 67/72/78/56/29/51 | Bub Carrington (75); Nolan Traore (74) | No attached individual 2025-26 leaderboard or award |
 | Keaton Wagler | LAC | 76 | Guard/Wing | 73/75/71/58/27/42 | Collin Sexton (77); Jeremiah Fears (76) | Small sample or availability; No attached individual 2025-26 leaderboard or award |
 | Kevin Huerter | DET | 76 | Guard/Wing | 71/85/74/59/35/51 | Mikel Brown Jr. (76); Darius Acuff Jr. (78) | 2025-26 source facts now attached; role/film audit still pending |
-| Khaman Maluach | PHX | 76 | Big | 61/30/48/48/84/78 | Joan Beringer (74); Isaiah Jackson (76) | No attached individual 2025-26 leaderboard or award |
+| Khaman Maluach | PHX | 76 | Big | 61/30/48/48/84/78 | Joan Beringer (74); Isaiah Jackson (76) | 2025–26 individually linked: 46 GP but only 8.9 MPG, 3.0 PPG, 2.9 RPG, 0.7 BPG, 23.8% 3P (5/21). **Peer verdict:** 84 Interior Defense and 78 Rebounding are forward-looking, not demonstrated against starters; 30 Shooting remains weak; position C and NBA translation film still required; OVR76 hold |
 | Mikel Brown Jr. | BKN | 76 | Guard/Wing | 75/76/78/56/32/52 | Darius Acuff Jr. (78); Kevin Huerter (76) | Small sample or availability; No attached individual 2025-26 leaderboard or award |
 | Noah Clowney | BKN | 76 | Forward/Wing | 66/76/50/71/82/78 | Justin Champagnie (76); Dean Wade (76) | Small sample or availability; 2025-26 source facts now attached; role/film audit still pending |
 | Precious Achiuwa | SAC | 76 | Forward/Wing | 66/42/53/78/75/82 | Jarred Vanderbilt (76); Caleb Wilson (77) | Core role-volume peer audit |
@@ -126,7 +126,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Sam Hauser | BOS | 78 | Forward/Wing | 65/87/56/67/49/54 | Max Christie (78); Corey Kispert (77) | Core role-volume peer audit |
 | Tre Jones | CHI | 78 | PG/Creator | 70/69/78/74/37/52 | Dennis Schröder (78); Cam Spencer (79) | Core role-volume peer audit |
 | Tristan da Silva | ORL | 78 | Forward/Wing | 73/84/69/75/61/65 | Kyshawn George (79); Royce O'Neale (76) | 2025-26 source facts now attached; role/film audit still pending |
-| Zach Edey | MEM | 78 | Big | 73/30/56/50/82/87 | Mark Williams (79); Goga Bitadze (77) | No attached individual 2025-26 leaderboard or award |
+| Zach Edey | MEM | 78 | Big | 73/30/56/50/82/87 | Mark Williams (79); Goga Bitadze (77) | 2025–26 individually linked: only 11 NBA GP, 13.6 PPG, 11.1 RPG, 1.9 BPG and 43 offensive boards in 284 minutes. **Peer verdict:** 87 Rebounding and 82 Interior Defense plausible vs Jackson/Bitadze as short-sample rim big; 30 Shooting with 1/5 threes. Do not extrapolate this to an 82-game starting workload; OVR78 hold |
 | Aaron Wiggins | ATL | 79 | Guard/Wing | 78/81/67/76/46/57 | Devin Vassell (80); Quentin Grimes (79) | 2025-26 source facts now attached; role/film audit still pending |
 | Anfernee Simons | PHI | 79 | Guard/Wing | 82/84/75/55/32/47 | Ty Jerome (80); Malik Monk (80) | 2025-26 source facts now attached; role/film audit still pending |
 | Anthony Black | ORL | 79 | Forward/Wing | 73/68/79/84/55/69 | Gui Santos (78); Naji Marshall (78) | Core role-volume peer audit |
@@ -139,7 +139,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 | Davion Mitchell | MIA | 79 | PG/Creator | 68/63/83/89/25/44 | Tre Jones (78); Fred VanVleet (81) | Small sample or availability |
 | De'Andre Hunter | SAC | 79 | Forward/Wing | 79/78/61/70/63/64 | Rui Hachimura (78); Tobias Harris (79) | Small sample or availability; 2025-26 individually linked: 13.7 PPG, 4.1 RPG, 2 APG, 0.7 SPG; role, film and cross-positional peer calibration still required **Individual peer verdict:** 13.7 PPG scoring wing contrasts Mathurin; need defensive matchups and 3PA before changing 78 Shooting or 70 Perimeter Defense; all six remain not certified |
 | De'Anthony Melton | GSW | 79 | Guard/Wing | 73/76/70/87/33/54 | Miles McBride (78); Daniss Jenkins (79) | 49 GP, 12.3 PPG / 1.6 SPG; only 29.4% 3PT on 245 shots; injury and shooting 76 vs previous seasons pending |
-| Derrick Jones Jr. | LAC | 79 | Forward/Wing | 71/56/47/89/69/67 | Bilal Coulibaly (80); Toumani Camara (80) | No attached individual 2025-26 leaderboard or award |
+| Derrick Jones Jr. | LAC | 79 | Forward/Wing | 71/56/47/89/69/67 | Bilal Coulibaly (80); Toumani Camara (80) | 2025–26 individually linked: 50 regular GP, 10.1 PPG, 3.5 RPG, 0.9 SPG, 1.0 BPG, 35.9% 3P. **Peer verdict:** athletic weakside defense 89 Perimeter/69 Interior vs Toumani Camara, but steals/blocks alone cannot verify matchup difficulty; 56 Shooting unverified shot-profile; 79 OVR hold, no six-trait signoff |
 | Duncan Robinson | DET | 79 | Forward/Wing | 67/94/62/56/34/46 | AJ Green (77); Corey Kispert (77) | Core role-volume peer audit |
 | Isaiah Stewart | MEM | 79 | Big | 70/76/57/74/89/79 | Kel'el Ware (80); Jabari Smith Jr. (81) | Core role-volume peer audit |
 | Jalen Smith | CHI | 79 | Big | 72/83/56/58/71/83 | Bobby Portis Jr. (80); Kel'el Ware (80) | 2025-26 source facts now attached; role/film audit still pending |
@@ -169,7 +169,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 
 ## Individual editorial adjudication progress — October 29, 2026
 
-The 21 newly sourced 75–79 overall candidates above now have distinct peer/role judgments in their **Individual peer verdict** cells, using 2025–26 regular-season NBA context and preserving separation of the six traits. This review separates established specialists, low-minute reserves, injured/returning veterans, passing bigs, rim protectors and high-usage scorers; none is marked certified on box scores alone. **133/149** have at least one individually linked NBA-season observation, **16/149** do not. Supplemental 2026 draft players' college evidence is stored separately and is *not* counted as 2025–26 NBA evidence. All 149 current overall values stay untouched. Josh Hart and Julian Strawther provisional shooting adjustments are reviewed separately; the list here updates the Strawther peer comparison without using the change as overall math.
+The 21 initially newly sourced 75–79 overall candidates above now have distinct peer/role judgments in their **Individual peer verdict** cells, using 2025–26 regular-season NBA context and preserving separation of the six traits. This review separates established specialists, low-minute reserves, injured/returning veterans, passing bigs, rim protectors and high-usage scorers; none is marked certified on box scores alone. **136/149** have at least one individually linked NBA-season observation, **16/149** do not. Supplemental 2026 draft players' college evidence is stored separately and is *not* counted as 2025–26 NBA evidence. All 149 current overall values stay untouched. Josh Hart and Julian Strawther provisional shooting adjustments are reviewed separately; the list here updates the Strawther peer comparison without using the change as overall math.
 
 ## Exit criteria for each row
 
