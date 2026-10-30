@@ -47,8 +47,13 @@ describe("NBA GM draft ratings evidence, confidence, and source integrity", () =
     expect(new Set(draft.lockedSkillKeys)).toEqual(new Set(NBA_GM_SKILL_KEYS));
     for (const p of draft.players) {
       expect(p.reviewStatus, p.name).toBe("PROVISIONAL_NOT_CERTIFIED");
-      expect(p.gradeReviewStatus, p.name).toBe("manually-proposed-not-certified");
-      expect(p.independentSkillValidation, p.name).toBe("incomplete");
+      expect(["manually-proposed-not-certified", "partially-evidence-reviewed-not-certified"], p.name).toContain(p.gradeReviewStatus);
+      if (p.gradeReviewStatus === "partially-evidence-reviewed-not-certified") {
+        expect(p.reviewFlags, p.name).toContain("evidence-led-shooting-regrade-not-certified");
+        expect(p.independentSkillValidation, p.name).toMatch(/^incomplete; shooting grade reviewed separately/);
+      } else {
+        expect(p.independentSkillValidation, p.name).toBe("incomplete");
+      }
       expect(p.confidence, p.name).toBe("medium-editorial");
       expect(p.positionReview, p.name).toBe("unverified");
       expect(p.candidatePositions.length, p.name).toBeGreaterThan(0);
