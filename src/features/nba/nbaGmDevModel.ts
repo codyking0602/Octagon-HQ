@@ -46,6 +46,18 @@ export const NBA_GM_DEV_SKILL_LABELS = {
 export const NBA_GM_DEV_SLOT_LABELS: Record<NbaGmSlot, string> = {
   PG:"PG", SG:"SG", SF:"SF", PF:"PF", C:"C", GUARD:"Guard", BIG:"Big",
 };
+/** The displayed current-year salary must match the phase the player just completed. */
+export function nbaGmDevDisplaySalaryYear(phase: NbaGmDevPhase): 0|1|2 {
+  switch (phase) {
+    case "draft":
+    case "year1":
+      return 0;
+    case "offseason":
+      return 1;
+    case "final":
+      return 2;
+  }
+}
 export function nbaGmDevSalary(player: NbaGmDevPlayer, year: 0|1|2) {
   return player.gameContract === "3YR" ? player.salaries[0] : player.salaries[year];
 }
