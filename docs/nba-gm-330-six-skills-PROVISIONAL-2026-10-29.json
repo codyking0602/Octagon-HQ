@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 225 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
+  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 228 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -9695,23 +9695,66 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Useful bench finishing and perimeter shooting with defensive tradeoff.",
+        "editorialRationale": "Useful bench finishing and perimeter shooting with defensive tradeoff. SOURCE CHECK (36 regular season games, 11.9 MPG; exclude two playoff and one play-in appearance from NBA regular stats, early return after prior knee injury; current Brooklyn team differs.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/teams/ORL/2026.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "editorialNote": "Bench shooting/post scoring, defensive mismatch exposure",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 6.9,
+            "sourceUrl": "https://www.basketball-reference.com/teams/ORL/2026.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 3.2,
+            "sourceUrl": "https://www.basketball-reference.com/teams/ORL/2026.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 0.8,
+            "sourceUrl": "https://www.basketball-reference.com/teams/ORL/2026.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 31.4,
+            "sourceUrl": "https://www.basketball-reference.com/teams/ORL/2026.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 36,
+          "seasonTeam": "ORL",
+          "sampleNote": "36 regular season games, 11.9 MPG; exclude two playoff and one play-in appearance from NBA regular stats, early return after prior knee injury; current Brooklyn team differs."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -12659,23 +12702,66 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Veteran perimeter defense and catch-and-shoot role, aging decline.",
+        "editorialRationale": "Veteran perimeter defense and catch-and-shoot role, aging decline. SOURCE CHECK (51 regular-season games at Memphis; current Philadelphia position/defensive assignment and high-efficiency catch-and-shoot role require comparison; a weak single season is not equal to career shooting decline.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/76ers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "editorialNote": "Veteran 3-and-D, no longer high-volume scoring",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 8.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2.5,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 0.8,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_game_logs/2026/kentavious_caldwell_pope_full.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 51,
+          "seasonTeam": "MEM",
+          "sampleNote": "51 regular-season games at Memphis; current Philadelphia position/defensive assignment and high-efficiency catch-and-shoot role require comparison; a weak single season is not equal to career shooting decline."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -16179,22 +16265,65 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Guard shooting/creation flashes, major defense/decision volatility.",
+        "editorialRationale": "Guard shooting/creation flashes, major defense/decision volatility. SOURCE CHECK (39 games, 23.9 MPG, .372 FG and 96/288 3P, .480 effective FG. High-volume role and poor scoring efficiency argue against automatic Scoring or Shooting inflation; 76 overall and skill peer review remain.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pelicans/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/p/poolejo01.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 13.4,
+            "sourceUrl": "https://www.basketball-reference.com/players/p/poolejo01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 3.1,
+            "sourceUrl": "https://www.basketball-reference.com/players/p/poolejo01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2,
+            "sourceUrl": "https://www.basketball-reference.com/players/p/poolejo01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 33.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/p/poolejo01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 39,
+          "seasonTeam": "NOP",
+          "sampleNote": "39 games, 23.9 MPG, .372 FG and 96/288 3P, .480 effective FG. High-volume role and poor scoring efficiency argue against automatic Scoring or Shooting inflation; 76 overall and skill peer review remain."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -18254,11 +18383,11 @@
     "remainingHeuristicVectors": 0,
     "sourceSpecificEvidenceCoverage": "2025-26 sourced context only, not verification of any of the six skill scores; official NBA player identities and 2026-27 team/position records incomplete.",
     "worksheet": "docs/nba-gm-remaining-126-individual-rating-proposals-2026-10-29.md",
-    "sourceContextPlayers": 225,
+    "sourceContextPlayers": 228,
     "sourceContextSource": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
     "fullSixSkillCertifications": 0,
-    "uncorroboratedPlayers": 105,
-    "sourceContextStatObservations": 502,
+    "uncorroboratedPlayers": 102,
+    "sourceContextStatObservations": 514,
     "sourceContextAwardObservations": 37,
     "evidenceBasedProvisionalCorrections": 4,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
