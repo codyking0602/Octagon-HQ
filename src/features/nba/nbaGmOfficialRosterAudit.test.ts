@@ -61,14 +61,18 @@ describe("NBA GM official roster snapshot — unpublished evidence only", () => 
   });
   it("checks 32 direct roster-to-profile October 30 identity links without certifying exact slots", () => {
     const md = readFileSync("docs/nba-gm-official-32-roster-to-profile-verifications-2026-10-30.md", "utf8");
-    const matched = [...md.matchAll(/^\\| (DET|HOU|LAL) \\| ([^|]+) \\| \\[(\\d+)\\]\\(https:\\/\\/www\\.nba\\.com\\/player\\/\\3\\) \\|$/gm)];
+    const matched=md.split("\n").filter(line=>line.startsWith("| DET |")||line.startsWith("| HOU |")||line.startsWith("| LAL |"));
     expect(matched).toHaveLength(32);
-    const exactRows = new Map(source.crosswalk.map(p => [p.name, p]));
-    for (const hit of matched) {
-      const row = exactRows.get(hit[2]!.trim());
-      expect(row?.teamCode, hit[2]).toBe(hit[1]);
-      expect(row?.officialNBAPlayerId, hit[2]).toBe(hit[3]);
-      expect(row?.positionStatus, hit[2]).toContain("not-certified");
+    const exactRows=new Map(source.crosswalk.map(p=>[p.name,p]));
+    for(const line of matched){
+      const cells=line.split("|").map(cell=>cell.trim());
+      const id=cells[3]?.match(/\\[(\\d+)\\]/)?.[1];
+      const row=exactRows.get(cells[2]!);
+      expect(id,cells[2]).toMatch(/^\\d+$/);
+      expect(cells[3],cells[2]).toContain("https://www.nba.com/player/"+id);
+      expect(row?.teamCode,cells[2]).toBe(cells[1]);
+      expect(row?.officialNBAPlayerId,cells[2]).toBe(id);
+      expect(row?.positionStatus,cells[2]).toContain("not-certified");
     }
     expect(source.published).toBe(false);
     expect(board.certifiedCount).toBe(0);
