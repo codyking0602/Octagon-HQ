@@ -6056,6 +6056,7 @@
       "name": "Jalen Suggs",
       "teamCode": "ORL",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
@@ -6070,7 +6071,7 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
-        "editorialRationale": "High-impact perimeter defense, health and offensive limitations. 2026-10-30 PEER CALIBRATION PLAYMAKING: 2025-26 5.5 assists and 2.7 turnovers in 57 games at 27.6 MPG as regular PG; materially above below-average 68, but below high-efficiency primary creators. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
+        "editorialRationale": "High-impact perimeter defense, health and offensive limitations. 2026-10-30 PEER CALIBRATION PLAYMAKING: 2025-26 5.5 assists and 2.7 turnovers in 57 games at 27.6 MPG as regular PG; materially above below-average 68, but below high-efficiency primary creators. See docs/nba-gm-practical-peer-calibration-2026-10-30.md. POSITION REVIEW (2026-10-30): 2024-25 and 2025-26 Basketball-Reference PG in 35 and 57 games, plus earlier SG history; 2025-26 5.5 AST/2.7 TOV; keep both roles, NBA.com G alone not proof.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -6081,7 +6082,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
-        "evidence-led-playmaking-regrade-not-certified"
+        "evidence-led-playmaking-regrade-not-certified",
+        "season-specific-position-lead-not-certified"
       ],
       "editorialNote": "Excellent pressure guard, limited efficient offensive creation",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
@@ -17896,6 +17898,7 @@
       "name": "Gradey Dick",
       "teamCode": "LAC",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
@@ -17910,7 +17913,7 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Tall movement shooter with limited defensive consistency. 2026-10-30 PEER CALIBRATION SHOOTING: 2025-26 56/186 3PT (30.1%) after 2024-25 35.0% and 2023-24 36.5%; 87.5% FT suggests playable shot even with reduced role. See docs/nba-gm-practical-peer-calibration-2026-10-30.md.",
+        "editorialRationale": "Tall movement shooter with limited defensive consistency. 2026-10-30 PEER CALIBRATION SHOOTING: 2025-26 56/186 3PT (30.1%) after 2024-25 35.0% and 2023-24 36.5%; 87.5% FT suggests playable shot even with reduced role. See docs/nba-gm-practical-peer-calibration-2026-10-30.md. POSITION REVIEW (2026-10-30): 2023-24, 2024-25 and 2025-26 Basketball-Reference SG; current LAC NBA.com G-F; SG must not be omitted, SF preserved as plausible wing-switch not yet certified.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
@@ -17922,7 +17925,8 @@
       "reviewFlags": [
         "75-79-compression-review",
         "anchor-calibrated-editorial",
-        "evidence-led-shooting-regrade-not-certified"
+        "evidence-led-shooting-regrade-not-certified",
+        "season-specific-position-lead-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
       "sourcedSeasonFacts": {
