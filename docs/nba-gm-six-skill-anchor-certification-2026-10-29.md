@@ -19,8 +19,8 @@ The ladder is **absolute for each skill**, not scaled to overall or distributed 
 
 ## Scope and provenance
 
-- **330/330** candidate records have six numeric proposals (1,980 skill cells), but **0/330 full evidence certifications**. 204 now carry individual hand-calibrated editorial reviews, and 126 remain lower-confidence dossier/role inferences. Manual review is not a claim of individual stat or film corroboration.
-- All six values were determined **independently of provisional overall**. No averaging, overall-to-skill formula, 70 skill floor, 2K import, or quota reshaping. Default role/trait inference is explicitly flagged as low-confidence and must not be passed as completed research.
+- **330/330** candidate records have six numeric proposals (1,980 skill cells), but **0/330 full evidence certifications**. All 330 now carry differentiated individual editorial proposals; the final 126 were reviewed in the separate 126-player worksheet. No player is independently six-skill certified. Manual review is not a claim of individual stat or film corroboration.
+- All six values were determined **independently of provisional overall**. No averaging, overall-to-skill formula, 70 skill floor, 2K import, or quota reshaping. Every rating remains provisional and must not be passed as completed research; standalone roster-team and generic season sources do not prove individual ratings.
 - Every player has an original editorial rationale and cited supporting *season-wide* sources. Generic stats/roster URLs do **not** establish that each individual was verified in those pages. No canonical player IDs or individually validated position eligibility are asserted.
 - Roster associations follow the existing five batch docs/crosswalk (some are from third-party HoopsNightly); **NBA official team/ID reconciliation remains mandatory** before signoff. Unverified team or position should never enter live game code.
 
@@ -35,11 +35,36 @@ The ladder is **absolute for each skill**, not scaled to overall or distributed 
 
 ## Certification to finish
 
-Require 330 canonical NBA IDs; player-specific NBA 2025–26 stats/advanced defense and efficiency context (or explicit no-sample reason); independent review of every non-overridden skill inference, especially 149 OVR-75–79 names; proven current team and positional eligibility; matchup-specific peer comparisons; flags for 2026 rookies and returnees; updated exact-head test/typecheck and CI. **No player is signed off as fully researched; no gameplay imports are permitted.**
+Require 330 canonical NBA IDs; player-specific 2025–26 volume, impact and film/defense context (or documented no-sample reason); independent review of all 1,980 category grades, especially 149 OVR-75–79 names; proven current team and positional eligibility; matchup-specific peer comparisons; separate availability for 2026 rookies/returnees; updated exact-head test/typecheck and CI. **No player is signed off as fully researched; no gameplay imports are permitted.**
 
 ## Quantitative confidence and duplication audit
 
-- 204 hand-calibrated provisional players; 126 low-inference players; 26 players have at least one individually sourced season fact, **not** a full six-skill verification.
-- 7 repeated six-skill tuples occur in groups of at least four (28 affected players). All are explicitly flagged `rating-cluster-peer-review`; these are an editorial blocker, not an excuse to jitter numbers to meet a quota.
+- 330/330 hand-differentiated individual editorial proposals; no remaining duplicated automatic role vectors. **133/330** players now have independently checkable 2025–26 stats or official awards: **233 leaderboard measurements and 37 award records**. These are factual context, not six-skill rating certification.
+- The proposed 330 six-trait tuples are distinct. This is a diagnostic, not a desired quota: genuinely identical profiles may still be correct after peer review. Earlier repeated automatic role vectors were replaced with differentiated reviews, not random numerical jitter.
 - All 2026 rookies/depth in the six-player supplemental group now retain their actual individually worded evidence and profile URLs; the first generation had incorrectly picked up their team code as a rationale, and that defect was corrected.
 - Candidate positions have been specifically corrected for major PGs, SGs and PFs but remain **provisional** pending verified NBA positions. The next gate is independent NBA ID/team and position reconciliation.
+
+## Post-review distributions — 330 provisional players
+
+| Skill | Min | Median | Mean | Max | 95–99 | Below 70 |
+|---|---:|---:|---:|---:|---:|---:|
+| Scoring | 57 | 74 | 74.58 | 99 | 6 | 105 |
+| Shooting | 10 | 75 | 68.93 | 99 | 4 | 122 |
+| Playmaking | 40 | 67 | 67.55 | 99 | 3 | 184 |
+| Perimeter Defense | 36 | 69 | 69.60 | 99 | 5 | 172 |
+| Interior Defense | 20 | 57 | 56.70 | 99 | 3 | 230 |
+| Rebounding | 39 | 66 | 65.92 | 99 | 3 | 191 |
+
+Actual observations, not imposed quotas; guard interior-defense weaknesses are not evidence of a weak overall player. Overalls remain independent.
+
+## Sourced 2025–26 basketball evidence and grade tensions
+
+The [individual evidence appendix](nba-gm-sourced-2025-26-facts-2026-10-29.json) records 133 source-linked players with 233 leaderboard numeric facts plus 37 NBA official honors. The [remaining 126 editorial reviews](nba-gm-remaining-126-individual-rating-proposals-2026-10-29.md) contain explicit provisional player-specific skill reasoning. Historical stat sources: [PPG](https://www.leagueleaders.com/nba/2025/points-per-game), [APG](https://www.leagueleaders.com/nba/2025/assists-per-game), [RPG](https://www.leagueleaders.com/nba/2025/rebounds-per-game), [3PT%](https://www.leagueleaders.com/nba/2025/three-point-percentage), [3PA](https://www.leagueleaders.com/nba/2025/three-pointers-attempted), [BPG](https://www.leagueleaders.com/nba/2025/blocks-per-game), [SPG](https://www.leagueleaders.com/nba/2025/steals-per-game), [NBA official awards](https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/). These are 2025–26 stats, not claims about 2026–27 team membership.
+
+- **Scoring:** Luka had 33.5 PPG, Shai 31.1. Their 95/99 scoring gap relies on contested-shot quality and efficiency, not PPG alone; reassess with advanced performance context.
+- **Shooting:** Luke Kennard led at 47.8% (3.1 attempts per game), while Kon Knueppel was at 42.5% on 642 attempts, Cam Spencer 44.9%, Isaiah Joe 42.3%, AJ Green 41.9%, Duncan Robinson 41.0% on 536 attempts, and Tim Hardaway Jr. 40.7% on 550 attempts. Volume, gravity and shot difficulty matter. Jaden McDaniels' 76 Shooting versus 41.2% and Josh Hart's 73 versus 41.3% merit role/volume checking, not an automatic bump.
+- **Playmaking:** Jokić 10.7 APG, Cade Cunningham 9.9, Luka 8.3, Jalen Johnson 7.9, Cam Spencer 5.6. Assists are leads, not a conversion to grades.
+- **Defense:** Wembanyama DPOY and 3.1 BPG, Chet 1.9 and first-team All-Defense. Ausar and Dyson led in steals but matchup responsibilities must also inform defense ratings.
+- **Rebounding:** Jokić 12.9 RPG, Towns 11.9, Clingan 11.6, Wembanyama 11.5, Jalen Johnson 10.3. Oscar Tshiebwe's proposed 96 Rebounding is a small NBA-sample outlier requiring independent evidence, not college reputation alone.
+
+**Outstanding:** All 330 canonical IDs and verified current team/positions; complete per-skill film/stat evidence (197 players still have no individually linked 2025–26 leaderboard/award facts); the 149-player 75–79 overall compression cohort; the Jalen Johnson/Chet/Embiid/Morant overall disagreements; offseason injury availability; and release-grade peer calibration. The additional source-evidence test guards provenance, but green tests are not skill certification. No public changes, merge, database operation or deployment is authorized.
