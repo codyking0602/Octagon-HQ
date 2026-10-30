@@ -14,7 +14,9 @@
     "threePointPercentagePage2": "https://www.leagueleaders.com/nba/2025/three-point-percentage?page=2",
     "pointsPerGamePage3": "https://www.leagueleaders.com/nba/2025/points-per-game?page=3",
     "pointsPerGamePage4": "https://www.leagueleaders.com/nba/2025/points-per-game?page=4",
-    "pointsPerGamePage5": "https://www.leagueleaders.com/nba/2025/points-per-game?page=5"
+    "pointsPerGamePage5": "https://www.leagueleaders.com/nba/2025/points-per-game?page=5",
+    "individualJoelEmbiid": "https://www.basketball-reference.com/players/e/embiijo01.html",
+    "individualJaMorant": "https://www.basketball-reference.com/players/m/moranja01.html"
   },
   "sourceNotes": [
     "Player seasons are 2025-26; team transfers to 2026-27 do not affect historical 2025-26 fact identity.",
@@ -22,7 +24,8 @@
     "Season evidence assists/steals/blocks are context, not synonymous with a skill rating.",
     "These URLs support listed statistics but do not individually certify role, matchup difficulty, film, injuries or positions.",
     "Second-page rankings 51–100 for 2025–26 PPG and qualified 3P%; historical 2025–26 team labels on source pages are not 2026–27 affiliations.",
-    "Qualified 2025–26 points-per-game leaderboard ranks 101–234 was added from pages 3–5, showing prior-season workload, not independent evaluation of six skills."
+    "Qualified 2025–26 points-per-game leaderboard ranks 101–234 was added from pages 3–5, showing prior-season workload, not independent evaluation of six skills.",
+    "Unqualified-in-leaderboard 2025-26 Joel Embiid and Ja Morant added using individually sourced Basketball-Reference season rows, recording actual games played separately from skill ratings."
   ],
   "players": [
     {
@@ -1786,6 +1789,50 @@
       "awards": []
     },
     {
+      "name": "Ja Morant",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 19.5,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/moranja01.html",
+          "sourceKind": "basketball-reference-individual-2025-26-season-regular-season-games-20",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 8.1,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/moranja01.html",
+          "sourceKind": "basketball-reference-individual-2025-26-season-regular-season-games-20",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 3.3,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/moranja01.html",
+          "sourceKind": "basketball-reference-individual-2025-26-season-regular-season-games-20",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 23.5,
+          "sourceUrl": "https://www.basketball-reference.com/players/m/moranja01.html",
+          "sourceKind": "basketball-reference-individual-2025-26-season-regular-season-games-20",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": [],
+      "availabilityContext": {
+        "season": "2025-26",
+        "gamesPlayed": 20,
+        "sourceUrl": "https://www.basketball-reference.com/players/m/moranja01.html",
+        "policy": "current basketball skills assessed separately from injury/availability"
+      }
+    },
+    {
       "name": "Ja'Kobe Walter",
       "observations": [
         {
@@ -2416,6 +2463,50 @@
         }
       ],
       "awards": []
+    },
+    {
+      "name": "Joel Embiid",
+      "observations": [
+        {
+          "season": "2025-26",
+          "metric": "pointsPerGame",
+          "value": 26.9,
+          "sourceUrl": "https://www.basketball-reference.com/players/e/embiijo01.html",
+          "sourceKind": "basketball-reference-individual-2025-26-season-regular-season-games-38",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "assistsPerGame",
+          "value": 3.9,
+          "sourceUrl": "https://www.basketball-reference.com/players/e/embiijo01.html",
+          "sourceKind": "basketball-reference-individual-2025-26-season-regular-season-games-38",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "reboundsPerGame",
+          "value": 7.7,
+          "sourceUrl": "https://www.basketball-reference.com/players/e/embiijo01.html",
+          "sourceKind": "basketball-reference-individual-2025-26-season-regular-season-games-38",
+          "gradeInterpretation": "context-only-not-algorithm"
+        },
+        {
+          "season": "2025-26",
+          "metric": "threePointPercentage",
+          "value": 33.3,
+          "sourceUrl": "https://www.basketball-reference.com/players/e/embiijo01.html",
+          "sourceKind": "basketball-reference-individual-2025-26-season-regular-season-games-38",
+          "gradeInterpretation": "context-only-not-algorithm"
+        }
+      ],
+      "awards": [],
+      "availabilityContext": {
+        "season": "2025-26",
+        "gamesPlayed": 38,
+        "sourceUrl": "https://www.basketball-reference.com/players/e/embiijo01.html",
+        "policy": "current basketball skills assessed separately from injury/availability"
+      }
     },
     {
       "name": "John Collins",
