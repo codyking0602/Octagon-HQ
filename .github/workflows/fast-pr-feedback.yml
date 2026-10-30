@@ -129,6 +129,24 @@ jobs:
           fi
           echo "rankings_only=$rankings_only" >> "$GITHUB_OUTPUT"
 
+          # NBA GM private game-only PRs already run exact-head dedicated
+          # NBA/Football GM regressions and the full suite when ready.
+          # Avoid Vitest --changed pulling the entire app through shared wheel imports.
+          nba_gm_private_only=true
+          saw_nba_gm=false
+          for file in "${changed_files[@]}"; do
+            case "$file" in
+              src/features/nba/nbaGm*.ts|src/features/nba/NbaGmDevPage.tsx|src/features/back-room/FootballGmModePage.tsx|src/styles/nba-gm-dev.css|docs/nba-gm-*|supabase/migrations/202612310896_nba_gm_spin_first_private_franchise.sql|supabase/tests/nba_gm_private_playtest.sql|.github/workflows/nba-gm-prototype-ci.yml|.github/workflows/fast-pr-feedback.yml)
+                saw_nba_gm=true
+                ;;
+              *) nba_gm_private_only=false; break ;;
+            esac
+          done
+          if [ "$saw_nba_gm" != true ]; then
+            nba_gm_private_only=false
+          fi
+          echo "nba_gm_private_only=$nba_gm_private_only" >> "$GITHUB_OUTPUT"
+
           # A focused Bar Trivia-only draft does not need Vitest's enormous
           # --changed transitive graph; full Validate V2 still runs when ready.
           bar_trivia_only=true
@@ -187,7 +205,9 @@ jobs:
               *) millionaire_only=false; break ;;
             esac
           done
-          if [ "$millionaire_only" = true ] && [ "$saw_millionaire" = true ]; then
+          if [ "${{ steps.scope.outputs.nba_gm_private_only }}" = true ]; then
+            npm test -- src/features/nba/nbaGmHistoricalCalibration.test.ts src/features/nba/nbaGmDraftCompletion.test.ts src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts --run
+          elif [ "$millionaire_only" = true ] && [ "$saw_millionaire" = true ]; then
             npm test -- src/features/play/millionaireDailyRuntime.test.ts src/features/play/millionaireEditorialFutureCandidates.test.ts src/features/play/millionaireSixMonthEditorialGate.test.ts --run
           elif [ "${{ steps.scope.outputs.bar_trivia_only }}" = true ]; then
             # Football + UFC Bar Trivia editorial, real published Daily replay,
