@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   NBA_GM_BUDGET_SCENARIOS,
   NBA_GM_ROSTER_SLOTS,
+  NBA_GM_SKILL_KEYS,
   NBA_GM_TEAM_CODES,
   nbaGmCatalogErrors,
   nbaGmEligibleForSlot,
@@ -68,6 +69,33 @@ describe("NBA GM unreleased seven-player foundation", () => {
     expect(new Set(NBA_GM_TEAM_CODES).size).toBe(30);
     expect(NBA_GM_ROSTER_SLOTS).toEqual(["PG", "SG", "SF", "PF", "C", "SIXTH", "FLEX"]);
     expect(NBA_GM_BUDGET_SCENARIOS).toEqual([185_000_000, 192_500_000, 200_000_000]);
+  });
+
+  it("preserves the six owner-locked skill categories and permits genuine weaknesses", () => {
+    expect(NBA_GM_SKILL_KEYS).toEqual([
+      "scoring",
+      "playmaking",
+      "shooting",
+      "perimeterDefense",
+      "interiorDefense",
+      "rebounding",
+    ]);
+
+    const shooter = syntheticPlayer("shooter", ["SG"], "ATL", 7_000_000, 77);
+    const eliteShootingSpecialist: NbaGmPlayer = {
+      ...shooter,
+      skills: { ...shooter.skills, shooting: 99, interiorDefense: 43 },
+    };
+    // A 77 overall can have elite shooting and a clear interior weakness.
+    expect(nbaGmCatalogErrors([eliteShootingSpecialist])).toEqual([]);
+
+    const unjustified100: NbaGmPlayer = {
+      ...eliteShootingSpecialist,
+      skills: { ...eliteShootingSpecialist.skills, shooting: 100 },
+    };
+    expect(nbaGmCatalogErrors([unjustified100])).toContain(
+      "Missing or invalid NBA skill grade: shooter",
+    );
   });
 
   it("validates a complete seven-player rotation and all three game-season budgets", () => {
