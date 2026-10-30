@@ -90,3 +90,19 @@ Historical source: [pinned 2025–26 player-season CSV](https://raw.githubuserco
 | **Andrew Wiggins** | 78 → **81** | 68 GP, 138/333 (41.4%) 3P in 2025–26 Miami, 37.4% in 2024–25, 35.8% in 2023–24. [2025–26 primary-season volume](https://www.statmuse.com/nba/ask/andrew-wiggins-career-3pt-percentage-2026), [historical seasons](https://www.therundown.gg/research/nba/player/andrew-wiggins?gt=Regular+Season&season=2025-26) | 4.9 3PA/game with multiyear volatility, not automatic 85+ movement gravity; above Watson 77 and similar to Collins 81 at higher wing volume. |
 
 **Board result:** 301/330 players with individually linked 2025–26 NBA-season numerical context, **951** context numerical observations and 37 awards. Overall 75–79 tier: **137/149** attached NBA-season records (remaining 12 need alternative NBA/injury/college evidence). Four new shooting-only proposal changes; **10 total evidence-backed provisional grade changes**. No overall changed; 330/330 remain provisional, 0 fully six-skill certified. Defensive assignments, rim protection film, role peers, official exact position and remaining no-season classifications still block release.
+
+
+## October 30 — real-season exact-position checks (still provisional)
+
+**Six new individual role corrections** were added after checking actual NBA playing-position history, not relying on G/F/C roster abbreviations alone. `docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json` now holds **16** documented position adjudications, each explicitly **not certified for final GM eligibility**. The 39 broad-position conflict inventory still tracks original mismatches; do not infer its count is now zero.
+
+| Player | Previous GM candidate slots | Updated provisional slots | Exact position evidence |
+|---|---|---|---|
+| John Collins | SF/PF | **PF** | [Basketball-Reference](https://www.basketball-reference.com/players/c/collijo01.html) lists PF every NBA season, including 69 games for Clippers in 2025–26 and current Detroit; NBA.com lists F-C, which does not support SF wing |
+| Peyton Watson | SF | **SF/PF** | [BRef-derived 2025–26 estimated minute mix](https://sports.ws/nba/peyton-watson?featuredSeason=25_26): 52% SF, 32% PF, 16% SG; incumbent primary SF role confirmed by [Basketball-Reference](https://www.basketball-reference.com/players/w/watsope01.html) |
+| Anthony Black | SF | **PG** | [Basketball-Reference](https://www.basketball-reference.com/players/b/blackan01.html) identifies PG in 2023–24 through current early 2026–27 season, including 64 games/40 starts in 2025–26 |
+| Ben Sheppard | SF | **SG** | [Basketball-Reference](https://www.basketball-reference.com/players/s/sheppbe01.html) records 2023–24 through current 2026–27 seasons as SG, 65 games/20 starts last full season |
+| Pelle Larsson | SF | **SG** | [Basketball-Reference](https://www.basketball-reference.com/players/l/larsspe01.html) 2024–25, 2025–26 (70 games/54 starts), 2026–27 all SG |
+| Javonte Green | SF | **SG** | [Basketball-Reference](https://www.basketball-reference.com/players/g/greenja02.html) 2025–26 Detroit 82 games SG and early 2026–27 SG |
+
+**The other five skills and overall for all six remain unchanged.** Additional lineup/defensive assignment and roster-date verification is required before exact game-slot signoff. The prospect/injury/overseas subset with **no 2025–26 NBA API season record is now fully categorized 29/29**, consisting of four injured veterans, 13 previously documented 2026 NCAA rookies, and 12 separately documented college/Europe/injury alternative dossiers. Do not report this as 330/330 NBA season profiles.
