@@ -19,7 +19,7 @@ The ladder is **absolute for each skill**, not scaled to overall or distributed 
 
 ## Scope and provenance
 
-- **330/330** candidate records have six numeric editorial proposals (1,980 proposed skill cells). They are **not 330 individually researched six-skill certifications**. 79 manually calibrated name overrides were prepared; 79 of those occur in this census, and other rows use their preexisting individual qualitative dossiers with conservative role/trait inference. These inferences are review aids, not basketball facts.
+- **330/330** candidate records have six numeric proposals (1,980 skill cells), but **0/330 full evidence certifications**. 204 now carry individual hand-calibrated editorial reviews, and 126 remain lower-confidence dossier/role inferences. Manual review is not a claim of individual stat or film corroboration.
 - All six values were determined **independently of provisional overall**. No averaging, overall-to-skill formula, 70 skill floor, 2K import, or quota reshaping. Default role/trait inference is explicitly flagged as low-confidence and must not be passed as completed research.
 - Every player has an original editorial rationale and cited supporting *season-wide* sources. Generic stats/roster URLs do **not** establish that each individual was verified in those pages. No canonical player IDs or individually validated position eligibility are asserted.
 - Roster associations follow the existing five batch docs/crosswalk (some are from third-party HoopsNightly); **NBA official team/ID reconciliation remains mandatory** before signoff. Unverified team or position should never enter live game code.
@@ -36,3 +36,10 @@ The ladder is **absolute for each skill**, not scaled to overall or distributed 
 ## Certification to finish
 
 Require 330 canonical NBA IDs; player-specific NBA 2025–26 stats/advanced defense and efficiency context (or explicit no-sample reason); independent review of every non-overridden skill inference, especially 149 OVR-75–79 names; proven current team and positional eligibility; matchup-specific peer comparisons; flags for 2026 rookies and returnees; updated exact-head test/typecheck and CI. **No player is signed off as fully researched; no gameplay imports are permitted.**
+
+## Quantitative confidence and duplication audit
+
+- 204 hand-calibrated provisional players; 126 low-inference players; 26 players have at least one individually sourced season fact, **not** a full six-skill verification.
+- 7 repeated six-skill tuples occur in groups of at least four (28 affected players). All are explicitly flagged `rating-cluster-peer-review`; these are an editorial blocker, not an excuse to jitter numbers to meet a quota.
+- All 2026 rookies/depth in the six-player supplemental group now retain their actual individually worded evidence and profile URLs; the first generation had incorrectly picked up their team code as a rationale, and that defect was corrected.
+- Candidate positions have been specifically corrected for major PGs, SGs and PFs but remain **provisional** pending verified NBA positions. The next gate is independent NBA ID/team and position reconciliation.

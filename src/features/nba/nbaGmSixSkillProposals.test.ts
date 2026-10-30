@@ -55,6 +55,11 @@ describe("NBA GM isolated provisional six-skill editorial board",()=>{
      expect(p.reviewFlags.length,p.name).toBeGreaterThan(0);
      expect(["low-inference","medium-editorial"]).toContain(p.confidence);
    }
+   const clusters=new Map<string,Player[]>();
+   for(const p of draft.players){const k=Object.values(p.skills).join("/"); clusters.set(k,[...(clusters.get(k)??[]),p]);}
+   for(const group of clusters.values())if(group.length>=4){
+     expect(group.every(p=>p.reviewFlags.includes("rating-cluster-peer-review")),group.map(p=>p.name).join(",")).toBe(true);
+   }
    const production=readFileSync("src/features/nba/nbaGmFoundation.ts","utf8");
    expect(production).not.toContain("nba-gm-330-six-skills-PROVISIONAL");
  });

@@ -37,7 +37,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/spurs/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 Defensive Player of the Year; season blocks leader (3.1 per game)",
+        "checkedFactUrl": "https://www.nba.com/news/season-review-2025-26"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -69,7 +71,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nuggets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 leader in assists (10.7) and rebounds (12.9) per game",
+        "checkedFactUrl": "https://www.nba.com/news/season-review-2025-26"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -82,6 +86,7 @@
       "name": "Shai Gilgeous-Alexander",
       "teamCode": "OKC",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
@@ -101,7 +106,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/thunder/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 MVP and All-NBA First Team",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -114,7 +121,7 @@
       "name": "Luka Dončić",
       "teamCode": "LAL",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 97,
@@ -133,7 +140,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/lakers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 NBA points-per-game leader (33.5)",
+        "checkedFactUrl": "https://www.nba.com/news/season-review-2025-26"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -146,7 +155,7 @@
       "name": "Giannis Antetokounmpo",
       "teamCode": "MIA",
       "candidatePositions": [
-        "SF"
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 97,
@@ -178,7 +187,7 @@
       "name": "Jalen Brunson",
       "teamCode": "NYK",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 96,
@@ -210,7 +219,7 @@
       "name": "Anthony Edwards",
       "teamCode": "MIN",
       "candidatePositions": [
-        "SF"
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 95,
@@ -242,7 +251,8 @@
       "name": "Kawhi Leonard",
       "teamCode": "TOR",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 94,
@@ -261,7 +271,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/raptors/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-NBA Second Team",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -275,7 +287,7 @@
       "name": "Cade Cunningham",
       "teamCode": "DET",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 94,
@@ -294,7 +306,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pistons/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-NBA First Team; 9.9 assists per game",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -307,7 +321,8 @@
       "name": "Jayson Tatum",
       "teamCode": "BOS",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 94,
@@ -340,8 +355,7 @@
       "name": "Stephen Curry",
       "teamCode": "GSW",
       "candidatePositions": [
-        "SG",
-        "SF"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 93,
@@ -374,7 +388,8 @@
       "name": "Donovan Mitchell",
       "teamCode": "CLE",
       "candidatePositions": [
-        "SG"
+        "SG",
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 93,
@@ -425,7 +440,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/knicks/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 11.9 rebounds per game",
+        "checkedFactUrl": "https://www.basketball-reference.com/leagues/NBA_2026_leaders.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -438,6 +455,7 @@
       "name": "Tyrese Maxey",
       "teamCode": "PHI",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
@@ -470,7 +488,8 @@
       "name": "Kevin Durant",
       "teamCode": "HOU",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 92,
@@ -489,7 +508,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-NBA Second Team",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -502,6 +523,7 @@
       "name": "Jaylen Brown",
       "teamCode": "PHI",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
@@ -521,7 +543,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/76ers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-NBA Second Team",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -567,7 +591,8 @@
       "name": "Scottie Barnes",
       "teamCode": "TOR",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 90,
@@ -586,7 +611,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/raptors/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive Second Team",
+        "checkedFactUrl": "https://www.nba.com/news/history-all-defensive-team"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -599,7 +626,8 @@
       "name": "Devin Booker",
       "teamCode": "PHX",
       "candidatePositions": [
-        "SG"
+        "SG",
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 91,
@@ -631,7 +659,8 @@
       "name": "OG Anunoby",
       "teamCode": "NYK",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 87,
@@ -650,7 +679,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/knicks/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive Second Team",
+        "checkedFactUrl": "https://www.nba.com/news/history-all-defensive-team"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -663,7 +694,8 @@
       "name": "LeBron James",
       "teamCode": "PHI",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 90,
@@ -696,7 +728,7 @@
       "name": "Jalen Johnson",
       "teamCode": "ATL",
       "candidatePositions": [
-        "SF"
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 90,
@@ -715,7 +747,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-NBA Third Team; 566 total assists",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -729,7 +763,7 @@
       "name": "Jamal Murray",
       "teamCode": "DEN",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 90,
@@ -748,7 +782,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nuggets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-NBA Third Team",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -762,6 +798,7 @@
       "name": "Evan Mobley",
       "teamCode": "CLE",
       "candidatePositions": [
+        "PF",
         "C"
       ],
       "positionReview": "unverified",
@@ -794,7 +831,8 @@
       "name": "Jalen Williams",
       "teamCode": "OKC",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 89,
@@ -846,7 +884,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/heat/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive Second Team",
+        "checkedFactUrl": "https://www.nba.com/news/history-all-defensive-team"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -859,7 +899,8 @@
       "name": "Deni Avdija",
       "teamCode": "POR",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 88,
@@ -910,7 +951,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/thunder/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive First Team and All-NBA Third Team",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -924,7 +967,8 @@
       "name": "Stephon Castle",
       "teamCode": "SAS",
       "candidatePositions": [
-        "PG"
+        "PG",
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 88,
@@ -956,7 +1000,7 @@
       "name": "Pascal Siakam",
       "teamCode": "IND",
       "candidatePositions": [
-        "SF"
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 88,
@@ -988,7 +1032,8 @@
       "name": "Cooper Flagg",
       "teamCode": "DAL",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 87,
@@ -1007,7 +1052,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 Rookie of the Year",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -1021,7 +1068,7 @@
       "name": "Paolo Banchero",
       "teamCode": "ORL",
       "candidatePositions": [
-        "SF"
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 88,
@@ -1085,6 +1132,7 @@
       "name": "Lauri Markkanen",
       "teamCode": "UTA",
       "candidatePositions": [
+        "PF",
         "SF"
       ],
       "positionReview": "unverified",
@@ -1149,7 +1197,8 @@
       "name": "Austin Reaves",
       "teamCode": "LAL",
       "candidatePositions": [
-        "SG"
+        "SG",
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 87,
@@ -1181,7 +1230,8 @@
       "name": "James Harden",
       "teamCode": "CLE",
       "candidatePositions": [
-        "PG"
+        "PG",
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 87,
@@ -1280,6 +1330,7 @@
       "name": "Amen Thompson",
       "teamCode": "HOU",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
@@ -1312,6 +1363,7 @@
       "name": "Kyrie Irving",
       "teamCode": "DAL",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
@@ -1377,7 +1429,8 @@
       "name": "Derrick White",
       "teamCode": "BOS",
       "candidatePositions": [
-        "SF"
+        "SG",
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 85,
@@ -1396,7 +1449,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive First Team",
+        "checkedFactUrl": "https://www.nba.com/news/history-all-defensive-team"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -1409,8 +1464,8 @@
       "name": "Jaren Jackson Jr.",
       "teamCode": "UTA",
       "candidatePositions": [
-        "SF",
-        "PF"
+        "PF",
+        "C"
       ],
       "positionReview": "unverified",
       "overall": 86,
@@ -1461,7 +1516,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/timberwolves/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive First Team",
+        "checkedFactUrl": "https://www.nba.com/news/history-all-defensive-team"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -1493,7 +1550,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pistons/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 Most Improved Player finalist and All-NBA Third Team",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -1506,6 +1565,7 @@
       "name": "Dylan Harper",
       "teamCode": "SAS",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
@@ -1538,6 +1598,7 @@
       "name": "Kon Knueppel",
       "teamCode": "CHA",
       "candidatePositions": [
+        "SG",
         "SF"
       ],
       "positionReview": "unverified",
@@ -1557,7 +1618,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hornets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 leader in three-pointers made (273)",
+        "checkedFactUrl": "https://www.nba.com/news/season-review-2025-26"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -1570,7 +1633,7 @@
       "name": "Desmond Bane",
       "teamCode": "ORL",
       "candidatePositions": [
-        "SF"
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 85,
@@ -1634,7 +1697,8 @@
       "name": "Brandon Miller",
       "teamCode": "CHA",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 84,
@@ -1666,7 +1730,7 @@
       "name": "Aaron Gordon",
       "teamCode": "DEN",
       "candidatePositions": [
-        "SF"
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 83,
@@ -1731,7 +1795,7 @@
       "name": "Zion Williamson",
       "teamCode": "NOP",
       "candidatePositions": [
-        "SF"
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 85,
@@ -1796,7 +1860,7 @@
       "name": "De'Aaron Fox",
       "teamCode": "SAS",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 85,
@@ -1834,12 +1898,12 @@
       "positionReview": "unverified",
       "overall": 82,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 65,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 84,
+        "shooting": 82,
+        "playmaking": 83,
+        "perimeterDefense": 64,
+        "interiorDefense": 35,
+        "rebounding": 58
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -1850,10 +1914,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/jazz/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -1861,8 +1926,7 @@
       "name": "Nickeil Alexander-Walker",
       "teamCode": "ATL",
       "candidatePositions": [
-        "SG",
-        "SF"
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 83,
@@ -1881,7 +1945,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 Most Improved Player",
+        "checkedFactUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -1959,7 +2025,8 @@
       "name": "Ausar Thompson",
       "teamCode": "DET",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 83,
@@ -1978,7 +2045,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pistons/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive First Team",
+        "checkedFactUrl": "https://www.nba.com/news/history-all-defensive-team"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -1991,7 +2060,8 @@
       "name": "Michael Porter Jr.",
       "teamCode": "BKN",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 83,
@@ -2023,18 +2093,17 @@
       "name": "Julius Randle",
       "teamCode": "BKN",
       "candidatePositions": [
-        "SF",
         "PF"
       ],
       "positionReview": "unverified",
       "overall": 82,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 82
+        "scoring": 84,
+        "shooting": 70,
+        "playmaking": 74,
+        "perimeterDefense": 62,
+        "interiorDefense": 72,
+        "rebounding": 86
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2045,10 +2114,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2088,7 +2158,8 @@
       "name": "Paul George",
       "teamCode": "BOS",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 82,
@@ -2120,17 +2191,17 @@
       "name": "Damian Lillard",
       "teamCode": "POR",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 82,
       "skills": {
-        "scoring": 76,
-        "shooting": 89,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 82,
+        "shooting": 91,
+        "playmaking": 86,
+        "perimeterDefense": 57,
+        "interiorDefense": 34,
+        "rebounding": 48
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2141,11 +2212,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/trail-blazers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2241,7 +2313,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -2281,7 +2354,7 @@
       "name": "Payton Pritchard",
       "teamCode": "BOS",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 82,
@@ -2364,7 +2437,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/thunder/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive Second Team",
+        "checkedFactUrl": "https://www.nba.com/news/history-all-defensive-team"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -2382,12 +2457,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 76,
+        "scoring": 83,
         "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "playmaking": 75,
+        "perimeterDefense": 76,
+        "interiorDefense": 40,
+        "rebounding": 58
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2398,10 +2473,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/thunder/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2479,12 +2555,12 @@
       "positionReview": "unverified",
       "overall": 82,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 85,
+        "shooting": 89,
+        "playmaking": 67,
+        "perimeterDefense": 66,
+        "interiorDefense": 39,
+        "rebounding": 55
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2495,10 +2571,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/bulls/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2506,17 +2583,17 @@
       "name": "Fred VanVleet",
       "teamCode": "HOU",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 81,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
+        "scoring": 72,
+        "shooting": 79,
+        "playmaking": 83,
         "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "interiorDefense": 32,
+        "rebounding": 56
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2527,11 +2604,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2539,17 +2617,18 @@
       "name": "Jrue Holiday",
       "teamCode": "POR",
       "candidatePositions": [
-        "PG"
+        "PG",
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
+        "scoring": 71,
+        "shooting": 80,
         "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "perimeterDefense": 87,
+        "interiorDefense": 56,
+        "rebounding": 66
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2560,10 +2639,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/trail-blazers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2604,17 +2684,18 @@
       "name": "Andrew Nembhard",
       "teamCode": "IND",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
       "overall": 81,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 77,
+        "shooting": 78,
+        "playmaking": 84,
+        "perimeterDefense": 79,
+        "interiorDefense": 40,
+        "rebounding": 53
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2625,10 +2706,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pacers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2668,7 +2750,8 @@
       "name": "Josh Giddey",
       "teamCode": "CHI",
       "candidatePositions": [
-        "PG"
+        "PG",
+        "SG"
       ],
       "positionReview": "unverified",
       "overall": 82,
@@ -2706,12 +2789,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 76,
-        "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 79,
+        "shooting": 84,
+        "playmaking": 66,
+        "perimeterDefense": 75,
+        "interiorDefense": 52,
+        "rebounding": 57
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2722,10 +2805,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/spurs/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2752,7 +2836,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/trail-blazers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 most total rebounds (892)",
+        "checkedFactUrl": "https://www.basketball-reference.com/leagues/NBA_2026_leaders.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -2765,17 +2851,18 @@
       "name": "Ayo Dosunmu",
       "teamCode": "MIN",
       "candidatePositions": [
-        "SG"
+        "SG",
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 81,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 78,
+        "shooting": 84,
+        "playmaking": 72,
+        "perimeterDefense": 78,
+        "interiorDefense": 44,
+        "rebounding": 60
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2786,10 +2873,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/timberwolves/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2835,12 +2923,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 74,
+        "shooting": 70,
+        "playmaking": 61,
+        "perimeterDefense": 88,
+        "interiorDefense": 81,
+        "rebounding": 67
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2851,10 +2939,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/cavaliers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2881,7 +2970,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 All-Defensive Second Team",
+        "checkedFactUrl": "https://www.nba.com/news/history-all-defensive-team"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -2931,12 +3022,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 74,
+        "shooting": 70,
+        "playmaking": 70,
+        "perimeterDefense": 63,
+        "interiorDefense": 68,
+        "rebounding": 80
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2947,12 +3038,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/grizzlies/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -2965,12 +3057,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 71,
+        "shooting": 55,
+        "playmaking": 69,
+        "perimeterDefense": 85,
+        "interiorDefense": 85,
+        "rebounding": 79
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -2981,11 +3073,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/raptors/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3025,17 +3118,18 @@
       "name": "Tobias Harris",
       "teamCode": "SAS",
       "candidatePositions": [
+        "PF",
         "SF"
       ],
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
+        "scoring": 78,
+        "shooting": 77,
         "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "perimeterDefense": 67,
+        "interiorDefense": 66,
+        "rebounding": 67
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -3046,11 +3140,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/spurs/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3123,17 +3218,17 @@
       "name": "Ja Morant",
       "teamCode": "POR",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 81,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 84,
+        "shooting": 64,
+        "playmaking": 84,
+        "perimeterDefense": 58,
+        "interiorDefense": 30,
+        "rebounding": 56
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -3144,11 +3239,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/trail-blazers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "overall-reassessment-required",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3156,17 +3252,18 @@
       "name": "Dejounte Murray",
       "teamCode": "NOP",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 78,
+        "shooting": 70,
+        "playmaking": 84,
+        "perimeterDefense": 76,
+        "interiorDefense": 42,
+        "rebounding": 65
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -3177,11 +3274,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pelicans/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3189,6 +3287,7 @@
       "name": "Matas Buzelis",
       "teamCode": "CHI",
       "candidatePositions": [
+        "PF",
         "SF"
       ],
       "positionReview": "unverified",
@@ -3227,12 +3326,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 76,
+        "shooting": 66,
+        "playmaking": 61,
+        "perimeterDefense": 67,
+        "interiorDefense": 58,
+        "rebounding": 68
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-first-100-overall-proposals-2026-10-29.md",
@@ -3243,12 +3342,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/wizards/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3352,6 +3452,7 @@
       "name": "C.J. McCollum",
       "teamCode": "ATL",
       "candidatePositions": [
+        "PG",
         "SG"
       ],
       "positionReview": "unverified",
@@ -3422,12 +3523,12 @@
       "positionReview": "unverified",
       "overall": 81,
       "skills": {
-        "scoring": 76,
-        "shooting": 89,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 78,
+        "shooting": 85,
+        "playmaking": 82,
+        "perimeterDefense": 68,
+        "interiorDefense": 37,
+        "rebounding": 51
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -3438,10 +3539,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/raptors/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3454,12 +3556,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 83,
+        "shooting": 75,
+        "playmaking": 68,
+        "perimeterDefense": 67,
+        "interiorDefense": 48,
+        "rebounding": 66
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -3470,10 +3572,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/trail-blazers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3514,7 +3617,8 @@
       "name": "Draymond Green",
       "teamCode": "GSW",
       "candidatePositions": [
-        "SF"
+        "PF",
+        "C"
       ],
       "positionReview": "unverified",
       "overall": 81,
@@ -3715,12 +3819,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 76,
-        "shooting": 89,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 73,
+        "shooting": 90,
+        "playmaking": 74,
+        "perimeterDefense": 70,
+        "interiorDefense": 36,
+        "rebounding": 52
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -3731,11 +3835,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/grizzlies/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3815,12 +3920,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 65,
+        "shooting": 87,
+        "playmaking": 56,
+        "perimeterDefense": 67,
+        "interiorDefense": 49,
+        "rebounding": 54
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -3831,11 +3936,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3848,12 +3954,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "scoring": 68,
+        "shooting": 20,
+        "playmaking": 53,
+        "perimeterDefense": 60,
+        "interiorDefense": 80,
+        "rebounding": 83
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -3864,11 +3970,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3895,7 +4002,9 @@
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/suns/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": null,
+        "individuallyCheckedSeasonFact": "2025–26 qualified 3PT percentage leader (47.8%)",
+        "checkedFactUrl": "https://www.nba.com/news/season-review-2025-26"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
@@ -3914,12 +4023,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 76,
+        "shooting": 82,
+        "playmaking": 67,
+        "perimeterDefense": 82,
+        "interiorDefense": 53,
+        "rebounding": 58
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -3930,10 +4039,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/warriors/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3946,12 +4056,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 65,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 77,
+        "shooting": 82,
+        "playmaking": 65,
+        "perimeterDefense": 58,
+        "interiorDefense": 37,
+        "rebounding": 51
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -3962,11 +4072,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/wizards/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -3999,7 +4110,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -4109,12 +4221,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 76,
-        "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 77,
+        "shooting": 86,
+        "playmaking": 73,
+        "perimeterDefense": 78,
+        "interiorDefense": 37,
+        "rebounding": 52
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -4125,10 +4237,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4136,17 +4249,18 @@
       "name": "Jabari Smith Jr.",
       "teamCode": "HOU",
       "candidatePositions": [
-        "SF"
+        "PF",
+        "C"
       ],
       "positionReview": "unverified",
       "overall": 81,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 76,
+        "shooting": 82,
+        "playmaking": 61,
+        "perimeterDefense": 82,
+        "interiorDefense": 82,
+        "rebounding": 80
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -4157,10 +4271,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4240,12 +4355,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 78,
+        "shooting": 69,
+        "playmaking": 73,
+        "perimeterDefense": 81,
+        "interiorDefense": 60,
+        "rebounding": 74
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -4256,11 +4371,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4275,10 +4391,10 @@
       "skills": {
         "scoring": 76,
         "shooting": 89,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "playmaking": 65,
+        "perimeterDefense": 65,
+        "interiorDefense": 40,
+        "rebounding": 49
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -4289,10 +4405,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hornets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4371,12 +4488,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 67,
+        "shooting": 87,
+        "playmaking": 54,
+        "perimeterDefense": 61,
+        "interiorDefense": 30,
+        "rebounding": 46
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
@@ -4387,11 +4504,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/heat/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4456,7 +4574,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -4502,26 +4621,28 @@
       "positionReview": "unverified",
       "overall": 71,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 69,
+        "shooting": 71,
+        "playmaking": 72,
+        "perimeterDefense": 66,
+        "interiorDefense": 34,
+        "rebounding": 46
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-lower-rookie-overall-anchors-2026-10-29.md",
-        "editorialRationale": "HOU",
+        "editorialRationale": "Current NBA role ~3 minutes per appearance; promising college guard but no demonstrated NBA creation yet.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/t/thornbr01.html"
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed",
+        "small-or-uncertain-nba-sample"
       ]
     },
     {
@@ -4529,31 +4650,33 @@
       "name": "Braden Smith",
       "teamCode": "IND",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 72,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 62,
+        "shooting": 66,
+        "playmaking": 76,
+        "perimeterDefense": 58,
+        "interiorDefense": 31,
+        "rebounding": 45
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-lower-rookie-overall-anchors-2026-10-29.md",
-        "editorialRationale": "IND",
+        "editorialRationale": "Exceptional collegiate organizer, but first two NBA appearances averaged under three minutes; NBA scoring/size transfer unproven.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pacers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/s/smithbr01.html"
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed",
+        "small-or-uncertain-nba-sample"
       ]
     },
     {
@@ -4566,26 +4689,28 @@
       "positionReview": "unverified",
       "overall": 73,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "scoring": 68,
+        "shooting": 65,
+        "playmaking": 65,
+        "perimeterDefense": 72,
+        "interiorDefense": 71,
+        "rebounding": 73
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-lower-rookie-overall-anchors-2026-10-29.md",
-        "editorialRationale": "LAC",
+        "editorialRationale": "Long defensive prospect with just two low-minute NBA appearances; positional versatility remains projected more than proven.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/clippers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/m/milleba01.html"
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed",
+        "small-or-uncertain-nba-sample"
       ]
     },
     {
@@ -4598,26 +4723,28 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 75,
+        "shooting": 72,
+        "playmaking": 66,
+        "perimeterDefense": 61,
+        "interiorDefense": 36,
+        "rebounding": 51
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-lower-rookie-overall-anchors-2026-10-29.md",
-        "editorialRationale": "CLE",
+        "editorialRationale": "Second-round scoring prospect with a promising 16-point NBA debut; one game cannot establish high rotation ability.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/cavaliers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/t/thomame01.html"
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed",
+        "small-or-uncertain-nba-sample"
       ]
     },
     {
@@ -4630,27 +4757,29 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
+        "scoring": 72,
+        "shooting": 30,
         "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
+        "perimeterDefense": 55,
+        "interiorDefense": 80,
         "rebounding": 79
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-lower-rookie-overall-anchors-2026-10-29.md",
-        "editorialRationale": "OKC",
+        "editorialRationale": "Real early rim protection, rebounding and efficient interior finishing in modest minutes; offensive scope narrow.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/thunder/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/m/maraad01.html"
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed",
+        "small-or-uncertain-nba-sample"
       ]
     },
     {
@@ -4663,27 +4792,29 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
+        "scoring": 72,
+        "shooting": 42,
+        "playmaking": 59,
+        "perimeterDefense": 68,
         "interiorDefense": 77,
         "rebounding": 79
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-lower-rookie-overall-anchors-2026-10-29.md",
-        "editorialRationale": "DEN",
+        "editorialRationale": "Early-season productive defensive/rebounding reserve; one week's games do not prove an 80-grade starter.",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nuggets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/b/brazitr01.html"
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed",
+        "small-or-uncertain-nba-sample"
       ]
     },
     {
@@ -4697,12 +4828,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 76,
-        "shooting": 83,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 78,
+        "shooting": 81,
+        "playmaking": 67,
+        "perimeterDefense": 76,
+        "interiorDefense": 46,
+        "rebounding": 57
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -4713,11 +4844,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4762,12 +4894,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 76,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 79,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "scoring": 68,
+        "shooting": 60,
+        "playmaking": 62,
+        "perimeterDefense": 61,
+        "interiorDefense": 76,
+        "rebounding": 80
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -4778,11 +4910,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4795,12 +4928,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 65,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 69,
+        "shooting": 87,
+        "playmaking": 62,
+        "perimeterDefense": 60,
+        "interiorDefense": 38,
+        "rebounding": 51
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -4811,11 +4944,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4828,12 +4962,12 @@
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 72,
+        "shooting": 70,
+        "playmaking": 74,
+        "perimeterDefense": 69,
+        "interiorDefense": 30,
+        "rebounding": 52
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -4844,12 +4978,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4862,11 +4997,11 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
+        "scoring": 72,
+        "shooting": 68,
+        "playmaking": 60,
+        "perimeterDefense": 74,
+        "interiorDefense": 74,
         "rebounding": 70
       },
       "evidence": {
@@ -4878,10 +5013,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4889,17 +5025,18 @@
       "name": "Dorian Finney-Smith",
       "teamCode": "ATL",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 65,
+        "shooting": 80,
+        "playmaking": 55,
+        "perimeterDefense": 81,
+        "interiorDefense": 65,
+        "rebounding": 57
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -4910,11 +5047,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hawks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4927,12 +5065,12 @@
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 72,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 62,
+        "shooting": 67,
+        "playmaking": 56,
+        "perimeterDefense": 84,
+        "interiorDefense": 67,
+        "rebounding": 65
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -4943,11 +5081,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4961,12 +5100,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 72,
-        "shooting": 79,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 82
+        "scoring": 67,
+        "shooting": 80,
+        "playmaking": 64,
+        "perimeterDefense": 71,
+        "interiorDefense": 52,
+        "rebounding": 72
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -4977,11 +5116,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -4994,12 +5134,12 @@
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 66,
+        "shooting": 69,
+        "playmaking": 60,
+        "perimeterDefense": 82,
+        "interiorDefense": 55,
+        "rebounding": 62
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5010,11 +5150,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5027,12 +5168,12 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 76,
+        "scoring": 68,
         "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "playmaking": 82,
+        "perimeterDefense": 69,
+        "interiorDefense": 35,
+        "rebounding": 48
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5043,10 +5184,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5059,12 +5201,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 69,
-        "shooting": 60,
-        "playmaking": 61,
-        "perimeterDefense": 79,
-        "interiorDefense": 86,
-        "rebounding": 87
+        "scoring": 63,
+        "shooting": 10,
+        "playmaking": 46,
+        "perimeterDefense": 54,
+        "interiorDefense": 90,
+        "rebounding": 93
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5075,12 +5217,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5093,12 +5236,12 @@
       "positionReview": "unverified",
       "overall": 73,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 79,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "scoring": 76,
+        "shooting": 70,
+        "playmaking": 50,
+        "perimeterDefense": 48,
+        "interiorDefense": 56,
+        "rebounding": 76
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5109,10 +5252,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/celtics/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5158,12 +5302,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 76,
+        "scoring": 75,
         "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "playmaking": 78,
+        "perimeterDefense": 56,
+        "interiorDefense": 32,
+        "rebounding": 52
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5174,12 +5318,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5192,12 +5337,12 @@
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 76,
-        "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 63,
+        "shooting": 72,
+        "playmaking": 80,
+        "perimeterDefense": 67,
+        "interiorDefense": 45,
+        "rebounding": 62
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5208,11 +5353,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5225,12 +5371,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "scoring": 68,
+        "shooting": 24,
+        "playmaking": 51,
+        "perimeterDefense": 51,
+        "interiorDefense": 78,
+        "rebounding": 88
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5241,11 +5387,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5292,12 +5439,12 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 70,
+        "shooting": 70,
+        "playmaking": 76,
+        "perimeterDefense": 68,
+        "interiorDefense": 33,
+        "rebounding": 50
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5308,10 +5455,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5379,7 +5527,8 @@
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -5426,12 +5575,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 70,
+        "shooting": 69,
+        "playmaking": 78,
+        "perimeterDefense": 74,
+        "interiorDefense": 37,
+        "rebounding": 52
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5442,11 +5591,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/bulls/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5492,12 +5642,12 @@
       "positionReview": "unverified",
       "overall": 72,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 63,
+        "shooting": 60,
+        "playmaking": 58,
+        "perimeterDefense": 70,
+        "interiorDefense": 69,
+        "rebounding": 67
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5508,10 +5658,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/bulls/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5544,7 +5695,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -5591,11 +5743,11 @@
       "overall": 78,
       "skills": {
         "scoring": 76,
-        "shooting": 76,
+        "shooting": 71,
         "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "perimeterDefense": 71,
+        "interiorDefense": 34,
+        "rebounding": 50
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5606,11 +5758,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hornets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5656,12 +5809,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
+        "scoring": 67,
+        "shooting": 27,
         "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "perimeterDefense": 73,
+        "interiorDefense": 84,
+        "rebounding": 90
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5672,11 +5825,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hornets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5689,12 +5843,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 68,
+        "shooting": 82,
+        "playmaking": 70,
+        "perimeterDefense": 77,
+        "interiorDefense": 60,
+        "rebounding": 66
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5705,11 +5859,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hornets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5741,7 +5896,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -5754,12 +5910,12 @@
       "positionReview": "unverified",
       "overall": 73,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "scoring": 66,
+        "shooting": 50,
+        "playmaking": 60,
+        "perimeterDefense": 65,
+        "interiorDefense": 72,
+        "rebounding": 76
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5770,10 +5926,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/hornets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5819,12 +5976,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 65,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 68,
+        "shooting": 90,
+        "playmaking": 59,
+        "perimeterDefense": 58,
+        "interiorDefense": 32,
+        "rebounding": 45
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5835,11 +5992,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/cavaliers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5852,12 +6010,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 78,
+        "shooting": 87,
+        "playmaking": 67,
+        "perimeterDefense": 75,
+        "interiorDefense": 54,
+        "rebounding": 62
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5868,10 +6026,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/cavaliers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5884,12 +6043,12 @@
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 77,
+        "shooting": 77,
+        "playmaking": 63,
+        "perimeterDefense": 66,
+        "interiorDefense": 58,
+        "rebounding": 65
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5900,11 +6059,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/cavaliers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5917,12 +6077,12 @@
       "positionReview": "unverified",
       "overall": 73,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
+        "scoring": 73,
+        "shooting": 77,
+        "playmaking": 73,
         "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "interiorDefense": 33,
+        "rebounding": 49
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5933,11 +6093,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/cavaliers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -5982,12 +6143,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 77,
+        "shooting": 75,
+        "playmaking": 75,
+        "perimeterDefense": 73,
+        "interiorDefense": 33,
+        "rebounding": 53
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -5998,11 +6159,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pistons/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6049,12 +6211,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 70,
+        "shooting": 64,
+        "playmaking": 61,
+        "perimeterDefense": 81,
+        "interiorDefense": 58,
+        "rebounding": 66
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6065,11 +6227,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pistons/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6116,12 +6279,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 81,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 79,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "scoring": 65,
+        "shooting": 40,
+        "playmaking": 58,
+        "perimeterDefense": 76,
+        "interiorDefense": 83,
+        "rebounding": 84
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6132,11 +6295,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pistons/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6201,7 +6365,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -6312,12 +6477,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 69,
-        "shooting": 60,
-        "playmaking": 61,
+        "scoring": 78,
+        "shooting": 66,
+        "playmaking": 60,
         "perimeterDefense": 65,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "interiorDefense": 64,
+        "rebounding": 69
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6328,10 +6493,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pacers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6344,12 +6510,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
+        "scoring": 74,
+        "shooting": 74,
         "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "perimeterDefense": 78,
+        "interiorDefense": 77,
+        "rebounding": 76
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6360,11 +6526,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pacers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6397,7 +6564,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -6410,12 +6578,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
+        "scoring": 71,
+        "shooting": 80,
+        "playmaking": 67,
         "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "interiorDefense": 50,
+        "rebounding": 55
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6426,11 +6594,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/heat/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6496,7 +6665,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -6509,12 +6679,12 @@
       "positionReview": "unverified",
       "overall": 82,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 79,
+        "shooting": 78,
+        "playmaking": 67,
+        "perimeterDefense": 80,
+        "interiorDefense": 69,
+        "rebounding": 63
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6525,10 +6695,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/heat/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6536,17 +6707,17 @@
       "name": "Bobby Portis Jr.",
       "teamCode": "MIA",
       "candidatePositions": [
-        "SF",
-        "PF"
+        "PF",
+        "C"
       ],
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 75,
-        "shooting": 79,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
+        "scoring": 77,
+        "shooting": 89,
+        "playmaking": 56,
+        "perimeterDefense": 63,
+        "interiorDefense": 59,
         "rebounding": 82
       },
       "evidence": {
@@ -6558,10 +6729,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/heat/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6626,7 +6798,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -6659,7 +6832,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -6672,12 +6846,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 66,
+        "shooting": 91,
+        "playmaking": 59,
+        "perimeterDefense": 69,
+        "interiorDefense": 35,
+        "rebounding": 46
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6688,11 +6862,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/bucks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6739,12 +6914,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
+        "scoring": 79,
+        "shooting": 71,
         "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 82
+        "perimeterDefense": 68,
+        "interiorDefense": 68,
+        "rebounding": 72
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6755,11 +6930,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/bucks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6792,7 +6968,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -6904,12 +7081,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
+        "scoring": 67,
+        "shooting": 75,
         "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "perimeterDefense": 81,
+        "interiorDefense": 28,
+        "rebounding": 42
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6920,11 +7097,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/knicks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6937,12 +7115,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 69,
-        "shooting": 83,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "scoring": 66,
+        "shooting": 10,
+        "playmaking": 53,
+        "perimeterDefense": 43,
+        "interiorDefense": 68,
+        "rebounding": 90
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6953,11 +7131,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/knicks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -6970,12 +7149,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 73,
+        "shooting": 68,
+        "playmaking": 79,
+        "perimeterDefense": 84,
+        "interiorDefense": 55,
+        "rebounding": 69
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -6986,11 +7165,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/magic/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7035,12 +7215,12 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 76,
+        "scoring": 73,
         "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "playmaking": 69,
+        "perimeterDefense": 71,
+        "interiorDefense": 36,
+        "rebounding": 48
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -7051,10 +7231,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/magic/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7067,12 +7248,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 73,
+        "shooting": 84,
+        "playmaking": 69,
+        "perimeterDefense": 75,
+        "interiorDefense": 61,
+        "rebounding": 65
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -7083,11 +7264,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/magic/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7133,10 +7315,10 @@
       "overall": 77,
       "skills": {
         "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 79,
-        "interiorDefense": 86,
+        "shooting": 29,
+        "playmaking": 59,
+        "perimeterDefense": 52,
+        "interiorDefense": 81,
         "rebounding": 82
       },
       "evidence": {
@@ -7148,11 +7330,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/magic/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7185,7 +7368,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -7198,12 +7382,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 76,
-        "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 82,
+        "shooting": 84,
+        "playmaking": 75,
+        "perimeterDefense": 55,
+        "interiorDefense": 32,
+        "rebounding": 47
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -7214,11 +7398,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/76ers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7251,7 +7436,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -7284,7 +7470,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -7416,7 +7603,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -7429,11 +7617,11 @@
       "positionReview": "unverified",
       "overall": 72,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
+        "scoring": 70,
+        "shooting": 67,
+        "playmaking": 60,
+        "perimeterDefense": 66,
+        "interiorDefense": 59,
         "rebounding": 70
       },
       "evidence": {
@@ -7445,11 +7633,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/raptors/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7560,12 +7749,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 87,
-        "shooting": 73,
-        "playmaking": 86,
-        "perimeterDefense": 92,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 68,
+        "shooting": 69,
+        "playmaking": 56,
+        "perimeterDefense": 90,
+        "interiorDefense": 63,
+        "rebounding": 65
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -7576,10 +7765,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/wizards/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7594,10 +7784,10 @@
       "skills": {
         "scoring": 75,
         "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "playmaking": 71,
+        "perimeterDefense": 75,
+        "interiorDefense": 61,
+        "rebounding": 66
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -7608,11 +7798,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/wizards/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7625,12 +7816,12 @@
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 76,
-        "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 69,
+        "shooting": 76,
+        "playmaking": 75,
+        "perimeterDefense": 60,
+        "interiorDefense": 35,
+        "rebounding": 53
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -7641,11 +7832,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/wizards/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7679,7 +7871,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -7693,11 +7886,11 @@
       "overall": 75,
       "skills": {
         "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "shooting": 79,
+        "playmaking": 79,
+        "perimeterDefense": 61,
+        "interiorDefense": 50,
+        "rebounding": 58
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -7708,11 +7901,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/wizards/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7757,12 +7951,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 79,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "scoring": 75,
+        "shooting": 38,
+        "playmaking": 56,
+        "perimeterDefense": 54,
+        "interiorDefense": 70,
+        "rebounding": 86
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
@@ -7773,11 +7967,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/wizards/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7790,12 +7985,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 81,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 73,
+        "shooting": 84,
+        "playmaking": 59,
+        "perimeterDefense": 80,
+        "interiorDefense": 49,
+        "rebounding": 53
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -7806,11 +8001,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7856,12 +8052,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 74,
+        "shooting": 79,
+        "playmaking": 57,
+        "perimeterDefense": 76,
+        "interiorDefense": 54,
+        "rebounding": 60
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -7872,12 +8068,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7890,12 +8087,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 76,
-        "shooting": 83,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 86,
-        "rebounding": 79
+        "scoring": 74,
+        "shooting": 20,
+        "playmaking": 51,
+        "perimeterDefense": 56,
+        "interiorDefense": 84,
+        "rebounding": 84
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -7906,10 +8103,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7922,12 +8120,12 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
+        "scoring": 68,
+        "shooting": 32,
+        "playmaking": 53,
+        "perimeterDefense": 67,
         "interiorDefense": 77,
-        "rebounding": 82
+        "rebounding": 79
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -7938,11 +8136,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -7955,12 +8154,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 92,
-        "interiorDefense": 91,
-        "rebounding": 79
+        "scoring": 72,
+        "shooting": 28,
+        "playmaking": 74,
+        "perimeterDefense": 63,
+        "interiorDefense": 87,
+        "rebounding": 86
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -7971,11 +8170,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8015,17 +8215,17 @@
       "name": "Tyus Jones",
       "teamCode": "DEN",
       "candidatePositions": [
-        "SG"
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 66,
+        "shooting": 78,
+        "playmaking": 83,
+        "perimeterDefense": 63,
+        "interiorDefense": 33,
+        "rebounding": 47
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8036,11 +8236,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nuggets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8150,12 +8351,12 @@
       "positionReview": "unverified",
       "overall": 72,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "scoring": 62,
+        "shooting": 65,
+        "playmaking": 53,
+        "perimeterDefense": 66,
+        "interiorDefense": 73,
+        "rebounding": 72
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8166,10 +8367,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/nuggets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8235,7 +8437,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -8248,12 +8451,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 75,
+        "shooting": 69,
+        "playmaking": 77,
+        "perimeterDefense": 65,
+        "interiorDefense": 36,
+        "rebounding": 48
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8264,11 +8467,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/warriors/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8381,12 +8585,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 69,
-        "shooting": 83,
-        "playmaking": 61,
-        "perimeterDefense": 59,
+        "scoring": 67,
+        "shooting": 82,
+        "playmaking": 70,
+        "perimeterDefense": 65,
         "interiorDefense": 77,
-        "rebounding": 79
+        "rebounding": 72
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8397,11 +8601,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/warriors/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8414,12 +8619,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 76,
-        "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 86,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 67,
+        "shooting": 67,
+        "playmaking": 73,
+        "perimeterDefense": 81,
+        "interiorDefense": 56,
+        "rebounding": 55
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8430,12 +8635,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8482,12 +8688,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 79,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "scoring": 66,
+        "shooting": 14,
+        "playmaking": 49,
+        "perimeterDefense": 48,
+        "interiorDefense": 83,
+        "rebounding": 87
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8498,11 +8704,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8515,12 +8722,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 72,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 87
+        "scoring": 62,
+        "shooting": 10,
+        "playmaking": 64,
+        "perimeterDefense": 48,
+        "interiorDefense": 78,
+        "rebounding": 94
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8531,11 +8738,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8580,12 +8788,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 81,
-        "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 86,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 64,
+        "shooting": 60,
+        "playmaking": 78,
+        "perimeterDefense": 91,
+        "interiorDefense": 44,
+        "rebounding": 57
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8596,11 +8804,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/clippers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8634,7 +8843,8 @@
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -8647,12 +8857,12 @@
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 74,
+        "shooting": 81,
+        "playmaking": 63,
+        "perimeterDefense": 58,
+        "interiorDefense": 36,
+        "rebounding": 48
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8663,11 +8873,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/clippers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8675,17 +8886,18 @@
       "name": "Rui Hachimura",
       "teamCode": "LAC",
       "candidatePositions": [
+        "PF",
         "SF"
       ],
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 77,
+        "shooting": 87,
+        "playmaking": 62,
+        "perimeterDefense": 69,
+        "interiorDefense": 66,
+        "rebounding": 63
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8696,11 +8908,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/clippers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8708,7 +8921,8 @@
       "name": "Derrick Jones Jr.",
       "teamCode": "LAC",
       "candidatePositions": [
-        "SF"
+        "SF",
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 79,
@@ -8847,12 +9061,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 86,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 60,
+        "shooting": 65,
+        "playmaking": 49,
+        "perimeterDefense": 92,
+        "interiorDefense": 39,
+        "rebounding": 53
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -8863,11 +9077,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/lakers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -8900,7 +9115,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -9014,12 +9230,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 82
+        "scoring": 76,
+        "shooting": 75,
+        "playmaking": 65,
+        "perimeterDefense": 81,
+        "interiorDefense": 63,
+        "rebounding": 67
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9030,11 +9246,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/grizzlies/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9075,7 +9292,7 @@
       "name": "Jerami Grant",
       "teamCode": "MEM",
       "candidatePositions": [
-        "SF"
+        "PF"
       ],
       "positionReview": "unverified",
       "overall": 79,
@@ -9108,16 +9325,17 @@
       "name": "Isaiah Stewart",
       "teamCode": "MEM",
       "candidatePositions": [
-        "SF"
+        "PF",
+        "C"
       ],
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 72,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 79,
-        "interiorDefense": 91,
+        "scoring": 70,
+        "shooting": 76,
+        "playmaking": 57,
+        "perimeterDefense": 74,
+        "interiorDefense": 89,
         "rebounding": 79
       },
       "evidence": {
@@ -9129,11 +9347,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/grizzlies/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9146,12 +9365,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "scoring": 73,
+        "shooting": 30,
+        "playmaking": 56,
+        "perimeterDefense": 50,
+        "interiorDefense": 82,
+        "rebounding": 87
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9162,11 +9381,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/grizzlies/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9199,7 +9419,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -9212,12 +9433,12 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 73,
+        "shooting": 67,
+        "playmaking": 58,
+        "perimeterDefense": 64,
+        "interiorDefense": 56,
+        "rebounding": 68
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9228,10 +9449,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/grizzlies/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9244,12 +9466,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 76,
+        "shooting": 66,
+        "playmaking": 60,
+        "perimeterDefense": 72,
+        "interiorDefense": 51,
+        "rebounding": 56
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9260,11 +9482,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/timberwolves/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9311,12 +9534,12 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "scoring": 62,
+        "shooting": 28,
+        "playmaking": 49,
+        "perimeterDefense": 66,
+        "interiorDefense": 79,
+        "rebounding": 78
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9327,11 +9550,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/timberwolves/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9395,7 +9619,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -9461,7 +9686,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -9469,17 +9695,18 @@
       "name": "Jordan Poole",
       "teamCode": "NOP",
       "candidatePositions": [
-        "SG"
+        "SG",
+        "PG"
       ],
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 76,
+        "scoring": 80,
         "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "playmaking": 75,
+        "perimeterDefense": 50,
+        "interiorDefense": 29,
+        "rebounding": 49
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9490,11 +9717,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pelicans/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9608,12 +9836,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 76,
+        "scoring": 79,
         "shooting": 83,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "playmaking": 63,
+        "perimeterDefense": 69,
+        "interiorDefense": 36,
+        "rebounding": 49
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9624,11 +9852,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/thunder/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9661,7 +9890,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -9695,7 +9925,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -9741,12 +9972,12 @@
       "positionReview": "unverified",
       "overall": 72,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
+        "scoring": 65,
+        "shooting": 40,
+        "playmaking": 60,
+        "perimeterDefense": 61,
         "interiorDefense": 77,
-        "rebounding": 79
+        "rebounding": 74
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9757,11 +9988,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/thunder/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9807,12 +10039,12 @@
       "positionReview": "unverified",
       "overall": 81,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
-        "playmaking": 79,
+        "scoring": 85,
+        "shooting": 80,
+        "playmaking": 73,
         "perimeterDefense": 65,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "interiorDefense": 44,
+        "rebounding": 56
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9823,10 +10055,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/suns/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9905,12 +10138,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "scoring": 61,
+        "shooting": 30,
+        "playmaking": 48,
+        "perimeterDefense": 48,
+        "interiorDefense": 84,
+        "rebounding": 78
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9921,11 +10154,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/suns/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9938,12 +10172,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "scoring": 73,
+        "shooting": 25,
+        "playmaking": 56,
+        "perimeterDefense": 54,
+        "interiorDefense": 81,
+        "rebounding": 87
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -9954,12 +10188,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/suns/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -9992,7 +10227,8 @@
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -10005,12 +10241,12 @@
       "positionReview": "unverified",
       "overall": 75,
       "skills": {
-        "scoring": 76,
-        "shooting": 89,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 75,
+        "shooting": 63,
+        "playmaking": 80,
+        "perimeterDefense": 65,
+        "interiorDefense": 35,
+        "rebounding": 55
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10021,11 +10257,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/trail-blazers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10038,12 +10275,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
+        "scoring": 67,
+        "shooting": 30,
         "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 82,
-        "rebounding": 82
+        "perimeterDefense": 68,
+        "interiorDefense": 91,
+        "rebounding": 80
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10054,12 +10291,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/trail-blazers/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10170,12 +10408,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 76,
-        "shooting": 76,
+        "scoring": 75,
+        "shooting": 75,
         "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "perimeterDefense": 64,
+        "interiorDefense": 35,
+        "rebounding": 53
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10186,12 +10424,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/kings/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10238,12 +10477,12 @@
       "positionReview": "unverified",
       "overall": 79,
       "skills": {
-        "scoring": 75,
-        "shooting": 83,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 79,
+        "shooting": 78,
+        "playmaking": 61,
+        "perimeterDefense": 70,
+        "interiorDefense": 63,
+        "rebounding": 64
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10254,12 +10493,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/kings/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10272,12 +10512,12 @@
       "positionReview": "unverified",
       "overall": 80,
       "skills": {
-        "scoring": 76,
-        "shooting": 79,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 81,
+        "shooting": 83,
+        "playmaking": 72,
+        "perimeterDefense": 61,
+        "interiorDefense": 37,
+        "rebounding": 51
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10288,10 +10528,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/kings/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10304,12 +10545,12 @@
       "positionReview": "unverified",
       "overall": 73,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 70,
+        "shooting": 68,
+        "playmaking": 64,
+        "perimeterDefense": 71,
+        "interiorDefense": 52,
+        "rebounding": 60
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10320,10 +10561,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/kings/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10370,12 +10612,12 @@
       "positionReview": "unverified",
       "overall": 78,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
+        "scoring": 83,
+        "shooting": 67,
+        "playmaking": 61,
+        "perimeterDefense": 68,
         "interiorDefense": 64,
-        "rebounding": 82
+        "rebounding": 78
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10386,11 +10628,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/spurs/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10488,7 +10731,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -10501,12 +10745,12 @@
       "positionReview": "unverified",
       "overall": 72,
       "skills": {
-        "scoring": 69,
-        "shooting": 45,
-        "playmaking": 61,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 79
+        "scoring": 68,
+        "shooting": 24,
+        "playmaking": 54,
+        "perimeterDefense": 53,
+        "interiorDefense": 74,
+        "rebounding": 76
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10517,10 +10761,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/spurs/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10533,12 +10778,12 @@
       "positionReview": "unverified",
       "overall": 77,
       "skills": {
-        "scoring": 76,
+        "scoring": 75,
         "shooting": 76,
-        "playmaking": 79,
-        "perimeterDefense": 79,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "playmaking": 65,
+        "perimeterDefense": 63,
+        "interiorDefense": 37,
+        "rebounding": 50
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10549,12 +10794,13 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/jazz/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "small-or-uncertain-nba-sample",
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10567,12 +10813,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 81,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 73,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 73,
+        "shooting": 71,
+        "playmaking": 56,
+        "perimeterDefense": 74,
+        "interiorDefense": 54,
+        "rebounding": 62
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10583,11 +10829,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/jazz/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10600,12 +10847,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 76,
-        "shooting": 83,
-        "playmaking": 79,
-        "perimeterDefense": 72,
-        "interiorDefense": 41,
-        "rebounding": 54
+        "scoring": 68,
+        "shooting": 53,
+        "playmaking": 81,
+        "perimeterDefense": 67,
+        "interiorDefense": 37,
+        "rebounding": 59
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10616,11 +10863,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/jazz/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10633,12 +10881,12 @@
       "positionReview": "unverified",
       "overall": 74,
       "skills": {
-        "scoring": 75,
-        "shooting": 73,
-        "playmaking": 68,
-        "perimeterDefense": 79,
-        "interiorDefense": 64,
-        "rebounding": 70
+        "scoring": 67,
+        "shooting": 71,
+        "playmaking": 60,
+        "perimeterDefense": 80,
+        "interiorDefense": 51,
+        "rebounding": 57
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10649,10 +10897,11 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/jazz/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
@@ -10684,7 +10933,8 @@
       "confidence": "low-inference",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "individual-film-and-stat-review-required"
+        "individual-film-and-stat-review-required",
+        "rating-cluster-peer-review"
       ]
     },
     {
@@ -10764,12 +11014,12 @@
       "positionReview": "unverified",
       "overall": 76,
       "skills": {
-        "scoring": 69,
+        "scoring": 67,
         "shooting": 45,
-        "playmaking": 79,
-        "perimeterDefense": 59,
-        "interiorDefense": 77,
-        "rebounding": 82
+        "playmaking": 75,
+        "perimeterDefense": 49,
+        "interiorDefense": 64,
+        "rebounding": 85
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
@@ -10780,11 +11030,12 @@
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/jazz/roster",
         "individualPlayerUrl": null
       },
-      "confidence": "low-inference",
+      "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "individual-film-and-stat-review-required"
+        "anchor-calibrated-editorial",
+        "independent-season-evidence-needed"
       ]
     },
     {
