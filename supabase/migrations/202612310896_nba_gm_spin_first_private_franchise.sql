@@ -88,30 +88,42 @@ declare
   v_reserve bigint;
   v_min bigint;
   v_slot text;
+  v_reserved_ids text[]:=array[]::text[];
+  v_filler_id text;
   v_open text[]:=array['PG','SG','SF','PF','C','GUARD','BIG'];
   v_phase text:=p_state->>'phase';
 begin
   v_arranged:=private.nba_gm_v2_assign(p_state->'picks',p_id);
   if v_arranged is null then return false; end if;
+  -- A separate eligible player must backstop every open roster role. Reserve
+  -- the maximum salary for each chosen filler across all three game years.
+  -- Previously, per-role minima reused the same cheap wing/big multiple times.
+  v_reserve:=0;
+  if v_phase='draft' then
+    foreach v_slot in array v_open loop
+      if exists(select 1 from jsonb_array_elements(v_arranged) pick where pick->>'slot'=v_slot)
+        then continue; end if;
+      select p.id,case when private.nba_gm_v2_contract(p.id)='3YR'
+        then p.salaries[1] else greatest(p.salaries[1],p.salaries[2],p.salaries[3]) end
+      into v_filler_id,v_min
+      from private.nba_gm_dev_players p
+      where p.id not in (select pick->>'playerId' from jsonb_array_elements(v_arranged) pick)
+        and not (p.id=any(v_reserved_ids))
+        and (v_slot=any(p.positions)
+          or (v_slot='GUARD' and p.positions && array['PG','SG'])
+          or (v_slot='BIG' and p.positions && array['PF','C']))
+      order by case when private.nba_gm_v2_contract(p.id)='3YR'
+        then p.salaries[1] else greatest(p.salaries[1],p.salaries[2],p.salaries[3]) end,p.id
+      limit 1;
+      if v_filler_id is null then return false; end if;
+      v_reserved_ids:=array_append(v_reserved_ids,v_filler_id);
+      v_reserve:=v_reserve+v_min;
+    end loop;
+  end if;
   for v_year in 1..3 loop
     if v_phase='offseason' and v_year=1 then continue; end if;
     select coalesce(sum(private.nba_gm_v2_salary(pick->>'playerId',v_year)),0)
       into v_spend from jsonb_array_elements(v_arranged) pick;
-    v_reserve:=0;
-    if v_phase='draft' then
-      foreach v_slot in array v_open loop
-        if exists(select 1 from jsonb_array_elements(v_arranged) pick where pick->>'slot'=v_slot)
-          then continue; end if;
-        select min(private.nba_gm_v2_salary(p.id,v_year)) into v_min
-        from private.nba_gm_dev_players p
-        where p.id not in (select pick->>'playerId' from jsonb_array_elements(v_arranged) pick)
-          and (v_slot=any(p.positions)
-            or (v_slot='GUARD' and p.positions && array['PG','SG'])
-            or (v_slot='BIG' and p.positions && array['PF','C']));
-        if v_min is null then return false; end if;
-        v_reserve:=v_reserve+v_min;
-      end loop;
-    end if;
     if v_spend+v_reserve > 192500000 then return false; end if;
   end loop;
   return true;
@@ -310,9 +322,9 @@ begin
       from jsonb_array_elements(v_picks) pick where pick->>'playerId'<>p_player_id;
     v_next:=jsonb_set(jsonb_set(v_state,'{picks}',v_picks),
       '{releasedIds}',(v_state->'releasedIds')||jsonb_build_array(p_player_id));
+  -- NFL-style emergency market: never strand a franchise after a release.
   elsif p_action='fa-spin' then
     if v_state->>'phase'<>'offseason' or jsonb_array_length(v_picks)>=7
-      or (v_state->>'freeAgencyVisits')::integer>=3
       or v_state->>'freeAgencyTeam' is not null
       or v_state->>'shopPlayerId' is not null
       then raise exception 'No free-agent market visit available'; end if;
