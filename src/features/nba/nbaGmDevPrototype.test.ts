@@ -10,6 +10,12 @@ import { createNbaGmDevRepository } from "./nbaGmDevRepository";
 const board=JSON.parse(readFileSync("docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json","utf8")) as {
  players:Array<{editorialId:string;name:string;teamCode:string;candidatePositions:string[];overall:number;skills:NbaGmDevPlayer["skills"]}>;
 };
+const teamSeasons=readFileSync("docs/nba-gm-150-team-season-efficiency-2022-2026.csv","utf8")
+ .trim().split(/\r?\n/).slice(1).map(line=>{
+  const [season,team,w,l,off,def,net]=line.split(",");
+  return {season:Number(season),team,w:Number(w),l:Number(l),
+    off:Number(off),def:Number(def),net:Number(net)};
+ });
 const sql=readFileSync("supabase/migrations/202612310896_nba_gm_spin_first_private_franchise.sql","utf8");
 const runtime=readFileSync("supabase/migrations/202612310893_nba_gm_private_playtest_runtime.sql","utf8");
 const router=readFileSync("src/app/router.tsx","utf8");
@@ -35,6 +41,39 @@ const run:NbaGmDevRun={
  shopPlayerId:null,tradeTeam:null,tradeAttempts:0,tradesUsed:0,freeAgencyTeam:null,
  freeAgencyVisits:0,releasedIds:[],
 };
+describe("NBA GM five-season historical win-conversion evidence",()=>{
+ it("contains all 150 distinct team seasons with consistent records and ratings",()=>{
+  expect(teamSeasons).toHaveLength(150);
+  expect(new Set(teamSeasons.map(row=>row.season+":"+row.team)).size).toBe(150);
+  for(const year of [2022,2023,2024,2025,2026]){
+   const season=teamSeasons.filter(row=>row.season===year);
+   expect(season).toHaveLength(30);
+   expect(season.reduce((sum,row)=>sum+row.w,0)).toBe(1230);
+   expect(season.reduce((sum,row)=>sum+row.l,0)).toBe(1230);
+   for(const row of season){
+    expect(row.w+row.l).toBe(82);
+    expect(Math.abs(row.net-(row.off-row.def))).toBeLessThan(0.011);
+   }
+  }
+ });
+ it("reproduces the observed-net-rating 2025-26 walk-forward win benchmark",()=>{
+  const training=teamSeasons.filter(row=>row.season<=2025);
+  const test=teamSeasons.filter(row=>row.season===2026);
+  const avg=(values:number[])=>values.reduce((sum,x)=>sum+x,0)/values.length;
+  const xmean=avg(training.map(row=>row.net));
+  const ymean=avg(training.map(row=>row.w));
+  const slope=training.reduce((sum,row)=>sum+(row.net-xmean)*(row.w-ymean),0)/
+    training.reduce((sum,row)=>sum+(row.net-xmean)**2,0);
+  const intercept=ymean-slope*xmean;
+  const rmse=Math.sqrt(avg(test.map(row=>
+    (row.w-intercept-slope*row.net)**2)));
+  expect(training).toHaveLength(120);
+  expect(slope).toBeCloseTo(2.2684,3);
+  expect(intercept).toBeCloseTo(40.9983,3);
+  expect(rmse).toBeCloseTo(3.339,2);
+  // This is an observed-efficiency conversion, NOT a preseason roster-fit forecast.
+ });
+});
 describe("NBA GM private NFL-parity prototype",()=>{
  it("preserves 330 researched candidates, six skills and owner-only access",()=>{
   expect(nbaGmDevCatalogErrors(catalog)).toEqual([]);
