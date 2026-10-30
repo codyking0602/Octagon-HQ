@@ -9,6 +9,11 @@ create table if not exists private.nba_gm_dev_players (
   overall integer not null check (overall between 0 and 99),
   skills jsonb not null,
   salaries bigint[] not null check (array_length(salaries, 1) = 3),
+  official_nba_player_id text,
+  official_roster_position text not null,
+  position_review text not null default 'unverified'
+    check (position_review = 'unverified'),
+  review_flags text[] not null default '{}'::text[],
   pricing_kind text not null default 'GAME_FIXTURE_NOT_REAL_CONTRACT'
     check (pricing_kind = 'GAME_FIXTURE_NOT_REAL_CONTRACT'),
   eligibility_kind text not null default 'PROVISIONAL_EDITORIAL'
@@ -61,7 +66,11 @@ begin
       'id', p.id, 'name', p.name, 'teamCode', p.team_code,
       'positions', p.positions, 'currentGrade', p.overall,
       'skills', p.skills, 'salaries', p.salaries,
-      'pricingKind', p.pricing_kind, 'eligibilityKind', p.eligibility_kind
+      'pricingKind', p.pricing_kind, 'eligibilityKind', p.eligibility_kind,
+      'officialNbaPlayerId', p.official_nba_player_id,
+      'officialRosterPosition', p.official_roster_position,
+      'positionReview', p.position_review,
+      'reviewFlags', p.review_flags
     ) order by p.overall desc, p.name)
     from private.nba_gm_dev_players p
   ), '[]'::jsonb);
