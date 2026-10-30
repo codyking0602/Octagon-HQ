@@ -99,3 +99,13 @@ $$;
 
 
 revoke all on function private.football_weekly_gm_verified_score(jsonb) from public, anon, authenticated;
+
+-- Regrade every completed official attempt in the currently active October 27
+-- championship using the identical protected server function. Existing draws,
+-- roster choices, season outcomes, completion timestamps and previous weeks
+-- remain unchanged. The official leaderboard reads these canonical scores.
+update private.football_weekly_gm_attempts
+set score = private.football_weekly_gm_verified_score(state)
+where week_start = date '2026-10-27'
+  and completed_at is not null
+  and state is not null;
