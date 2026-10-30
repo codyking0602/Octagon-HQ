@@ -45,7 +45,7 @@ describe("NBA GM Phase 2 private playable draft",()=>{
     expect(kennard.skills.shooting).toBe(95);
     expect(kennard.currentGrade).toBe(78);
     expect(sql.match(/\('nba-gm-draft-[^']+'/g)).toHaveLength(330);
-    expect(sql).toContain("GAME fixture");
+    expect(sql).toContain("FICTIONAL game prices");
     expect(runtime).toContain("private.nba_gm_dev_players");
     expect(runtime).toContain("private.football_gm_runs");
     expect(runtime).toContain("private.football_gm_run_snapshots");
