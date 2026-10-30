@@ -25,3 +25,16 @@
 5. Capture explicit owner approval for any final overall modification; draft PR remains unmerged and unpublished.
 
 **Decision status:** Four player profiles evaluated for a focused discrepancy review; no overall changed, no four-profile certification claimed.
+
+## Official NBA identity spot checks (October 2026)
+
+These four URLs establish canonical NBA identity keys, current display position and club for this review subset. They do **not** certify any skill score or the other 326 player identities.
+
+| Player | Official NBA player ID | NBA.com 2026–27 club | NBA.com position | Verified profile |
+|---|---:|---|---|---|
+| Chet Holmgren | 1631096 | Oklahoma City Thunder | Center-Forward | https://www.nba.com/player/1631096 |
+| Jalen Johnson | 1630552 | Atlanta Hawks | Forward | https://www.nba.com/player/1630552/jalen-johnson |
+| Joel Embiid | 203954 | Philadelphia 76ers | Center-Forward | https://www.nba.com/player/203954/joel-embiid |
+| Ja Morant | 1629630 | Portland Trail Blazers | Guard | https://www.nba.com/player/1629630/ja-morant |
+
+Keep these as review-only data until a full 330-ID official crosswalk passes identity collisions, two-way roster affiliation and transaction-date checks.
