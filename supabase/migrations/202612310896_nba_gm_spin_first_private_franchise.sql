@@ -306,7 +306,8 @@ begin
       or not exists(select 1 from jsonb_array_elements(v_picks) pick
         where pick->>'playerId'=p_player_id)
       then raise exception 'Choose one rostered player to shop'; end if;
-    v_next:=jsonb_set(v_state,'{shopPlayerId}',to_jsonb(p_player_id));
+    v_next:=jsonb_set(jsonb_set(v_state,'{shopPlayerId}',to_jsonb(p_player_id)),
+      '{tradeAttempts}','0'::jsonb);
   elsif p_action='trade-spin' then
     v_old_id:=v_state->>'shopPlayerId';
     if v_state->>'phase'<>'offseason' or v_old_id is null
@@ -321,6 +322,8 @@ begin
       and exists(select 1 from private.nba_gm_dev_players p
         where p.team_code=teams.team_code
           and p.id not in(select x->>'playerId' from jsonb_array_elements(v_picks) x)
+          and p.id not in(select x.id from jsonb_array_elements_text(v_state->'releasedIds') x(id))
+          and p.overall<=v_old.overall+4
           and private.nba_gm_v2_can_add(v_next,p.id))
     order by random() limit 1;
     if v_team is null then raise exception 'No legal trade partners'; end if;
@@ -364,6 +367,13 @@ begin
       from jsonb_array_elements(v_picks) pick where pick->>'playerId'<>p_player_id;
     v_next:=jsonb_set(jsonb_set(v_state,'{picks}',v_picks),
       '{releasedIds}',(v_state->'releasedIds')||jsonb_build_array(p_player_id));
+    -- Never finalize a cut unless at least one legal, affordable 1YR replacement exists.
+    if not exists(select 1 from private.nba_gm_dev_players p
+      where private.nba_gm_v2_contract(p.id)='1YR'
+        and p.id not in(select x.id from jsonb_array_elements_text(v_next->'releasedIds') x(id))
+        and private.nba_gm_v2_can_add(v_next,p.id)) then
+      raise exception 'No affordable 1YR replacement; keep this player';
+    end if;
   -- NFL-style emergency market: never strand a franchise after a release.
   elsif p_action='fa-spin' then
     if v_state->>'phase'<>'offseason' or jsonb_array_length(v_picks)>=7
