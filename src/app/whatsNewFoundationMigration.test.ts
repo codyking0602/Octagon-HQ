@@ -55,10 +55,11 @@ describe("What's New foundation", () => {
 
   it("keeps the complete feed behind notifications after retiring the Home preview", () => {
     const notificationAction = shell.indexOf("<NotificationHeaderAction />");
-    const askAction = shell.indexOf('to="/intelligence"');
+    const profileAction = shell.indexOf("<IdentityControl />");
 
     expect(notificationAction).toBeGreaterThan(-1);
-    expect(notificationAction).toBeLessThan(askAction);
+    expect(notificationAction).toBeLessThan(profileAction);
+    expect(shell).not.toContain('to="/intelligence"');
     expect(shell).not.toContain("<WhatsNewHeaderAction />");
     expect(home).not.toContain("<WhatsNewPreview />");
     expect(router).toContain('path: "whats-new"');
