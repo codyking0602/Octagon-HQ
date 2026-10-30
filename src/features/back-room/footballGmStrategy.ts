@@ -70,8 +70,8 @@ const FOOTBALL_GM_TEAM_OVR_ANCHORS = [
 
 const FOOTBALL_GM_RESUME_SCORE: Readonly<Record<FootballGmPlayoffFinish, number>> = {
   "Missed Playoffs": 83,
-  "Wild Card": 85,
-  Divisional: 88,
+  "Wild Card": 90,
+  Divisional: 92,
   "Conference Championship": 94,
   "Super Bowl Loss": 97,
   Champion: 100,
