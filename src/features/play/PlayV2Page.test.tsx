@@ -90,7 +90,7 @@ describe("public Football/UFC Play 2.0 release", () => {
     const inGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z")
       && Date.now() < Date.parse("2026-11-03T06:00:00Z");
     expect(within(hub).getByRole("region", { name: "Weekly Featured Championship" }))
-      .toHaveTextContent(inGmWeek ? "NFL GM Championship" : "Auction Center");
+      .toHaveTextContent(inGmWeek ? "NFL GM CHAMPIONSHIP" : "AUCTION CENTER");
     expect(within(hub).getByRole("link", { name: /play this week/i }))
       .toHaveAttribute("href", inGmWeek ? "/football/weekly-gm" : "/football/weekly-auction");
     expect(within(hub).getByRole("region", { name: "Today's Challenge" })).toHaveTextContent("Sports Feud");
