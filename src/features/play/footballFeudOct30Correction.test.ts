@@ -63,7 +63,7 @@ describe("October 30 CFB Feud live correction",()=>{
   expect(fast.answers[1]?.points).toBe(7);
   expect(fast.alsoAcceptedEntityIds?.includes(big12+":a8")).toBe(true);
   expect(matchFamilyFeudAnswer(p,p.mainBoards[1]!,"Red River Shootout")).toMatchObject({status:"matched"});
-  for(const [index,input] of [[2,"tailgating"],[2,"wear a jersey"],[3,"poll bias"],[4,"yelling"]] as const){
+  for(const [index,input] of [[2,"tailgating"],[2,"wear a jersey"],[3,"poll bias"],[3,"Wrong"],[4,"yelling"]] as const){
     expect(matchFamilyFeudAnswer(p,p.fastMoney[index]!,input).status,input).toBe("matched");
   }
  });
