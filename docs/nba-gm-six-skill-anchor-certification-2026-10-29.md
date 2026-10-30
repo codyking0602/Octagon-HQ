@@ -21,8 +21,8 @@ The ladder is **absolute for each skill**, not scaled to overall or distributed 
 
 - **330/330** candidate records have six numeric proposals (1,980 skill cells), but **0/330 full evidence certifications**. All 330 now carry differentiated individual editorial proposals; the final 126 were reviewed in the separate 126-player worksheet. No player is independently six-skill certified. Manual review is not a claim of individual stat or film corroboration.
 - All six values were determined **independently of provisional overall**. No averaging, overall-to-skill formula, 70 skill floor, 2K import, or quota reshaping. Every rating remains provisional and must not be passed as completed research; standalone roster-team and generic season sources do not prove individual ratings.
-- Every player has an original editorial rationale and cited supporting *season-wide* sources. Generic stats/roster URLs do **not** establish that each individual was verified in those pages. No canonical player IDs or individually validated position eligibility are asserted.
-- Roster associations follow the existing five batch docs/crosswalk (some are from third-party HoopsNightly); **NBA official team/ID reconciliation remains mandatory** before signoff. Unverified team or position should never enter live game code.
+- Every player has an original editorial rationale and cited supporting *season-wide* sources. Generic stats/roster URLs do **not** establish that each individual was verified in those pages. Separate NBA official roster and player-ID verification is partially complete; **no exact playable-slot eligibility or six-trait identity certification** is asserted.
+- A separate [30-team NBA official roster crosswalk](nba-gm-official-nba-30-team-roster-crosswalk-2026-10-29.json) matches **330/330 provisional team assignments** at the audit snapshot, and an [independent identity and evidence overlay](nba-gm-official-identity-and-evidence-review-2026-10-29.json) verifies **19 named NBA IDs**, 13 original 2026 draft identities, and collegiate 2025–26 evidence for 13 rookies. Neither generic G/F/C tags nor draft placement certifies exact PG/SG/SF/PF/C eligibility or skill grades. [39 broad-position conflicts](nba-gm-39-broad-position-conflicts-2026-10-29.md) are explicitly queued.
 
 ## Overall discrepancy queue — do not silently mutate
 
@@ -35,7 +35,7 @@ The ladder is **absolute for each skill**, not scaled to overall or distributed 
 
 ## Certification to finish
 
-Require 330 canonical NBA IDs; player-specific 2025–26 volume, impact and film/defense context (or documented no-sample reason); independent review of all 1,980 category grades, especially 149 OVR-75–79 names; proven current team and positional eligibility; matchup-specific peer comparisons; separate availability for 2026 rookies/returnees; updated exact-head test/typecheck and CI. **No player is signed off as fully researched; no gameplay imports are permitted.**
+Require canonical NBA IDs for players not yet individually identified; player-specific 2025–26 volume, impact and film/defense context (or documented no-sample reason); independent review of all 1,980 category grades, especially 149 OVR-75–79 names; proven current team and positional eligibility; matchup-specific peer comparisons; separate availability for 2026 rookies/returnees; updated exact-head test/typecheck and CI. **No player is signed off as fully researched; no gameplay imports are permitted.**
 
 ## Quantitative confidence and duplication audit
 
@@ -49,7 +49,7 @@ Require 330 canonical NBA IDs; player-specific 2025–26 volume, impact and film
 | Skill | Min | Median | Mean | Max | 95–99 | Below 70 |
 |---|---:|---:|---:|---:|---:|---:|
 | Scoring | 57 | 74 | 74.58 | 99 | 6 | 105 |
-| Shooting | 10 | 75 | 68.93 | 99 | 4 | 122 |
+| Shooting | 10 | 75 | 68.96 | 99 | 4 | 122 |
 | Playmaking | 40 | 67 | 67.55 | 99 | 3 | 184 |
 | Perimeter Defense | 36 | 69 | 69.60 | 99 | 5 | 172 |
 | Interior Defense | 20 | 57 | 56.70 | 99 | 3 | 230 |
@@ -80,3 +80,9 @@ The 2025–26 qualified [points-per-game leaderboard (ranks 51–100)](https://w
 ### Availability-is-not-ability correction evidence
 
 Two previously leaderboard-unqualified 2025–26 players now have individually sourced regular-season records: [Joel Embiid](https://www.basketball-reference.com/players/e/embiijo01.html), **38 games, 26.9 PPG, 7.7 RPG, 3.9 APG, 33.3% from three**, and [Ja Morant](https://www.basketball-reference.com/players/m/moranja01.html), **20 games, 19.5 PPG, 3.3 RPG, 8.1 APG and 23.5% from three**. Availability is annotated separately from skill. Embiid's 88 overall and Morant's 81 overall remain formally challenged against current sustained two-way play rather than changed by formula. Across the full population **207/330** now have 2025–26 source context, including 429 recorded numerical observations and 37 awards. **123/330** still lack individual 2025–26 numerical/award context and require their own source work or a defensible no-sample explanation; six independent skill verifications are outstanding for every player.
+
+## Targeted evidence-led adjustments (not full certification)
+
+- **Jaden McDaniels Shooting 76→81:** 103 makes on 250 3PA (41.2%) over 73 NBA games, following 100-of-303 (33.0%) in 2024–25; a moderated above-average grade reflects 3.4 three-point attempts per game without treating one year of 41% as elite-specialist shooting. [NBA seasonal record](https://www.basketball-reference.com/players/m/mcdanja02.html).
+- **Bub Carrington Shooting 76→82:** 40.8% on approximately 5.0 three-point attempts per game across 82 games, up from 33.9% in the prior season. Additional shot-difficulty and on-/off-ball evidence remains necessary; the 75-overall peer row is updated. [2025–26 seasonal split](https://www.statmuse.com/nba/player/bub-carrington-30409/splits?seasonYear=2026).
+- **Both** changes apply only to provisional individual Shooting grades, preserve all independent overall values and leave **0 full six-skill certifications**. The small +11 aggregate Shooting-score movement changes the observed mean from **68.93 to 68.96**, with no changes to 95–99 or below-70 counts.
