@@ -59,4 +59,19 @@ describe("NBA GM official roster snapshot — unpublished evidence only", () => 
     const runtime = readFileSync("src/features/nba/nbaGmFoundation.ts", "utf8");
     expect(runtime).not.toContain("nba-gm-official-nba-30-team-roster-crosswalk");
   });
+  it("checks 32 direct roster-to-profile October 30 identity links without certifying exact slots", () => {
+    const md = readFileSync("docs/nba-gm-official-32-roster-to-profile-verifications-2026-10-30.md", "utf8");
+    const matched = [...md.matchAll(/^\\| (DET|HOU|LAL) \\| ([^|]+) \\| \\[(\\d+)\\]\\(https:\\/\\/www\\.nba\\.com\\/player\\/\\3\\) \\|$/gm)];
+    expect(matched).toHaveLength(32);
+    const exactRows = new Map(source.crosswalk.map(p => [p.name, p]));
+    for (const hit of matched) {
+      const row = exactRows.get(hit[2]!.trim());
+      expect(row?.teamCode, hit[2]).toBe(hit[1]);
+      expect(row?.officialNBAPlayerId, hit[2]).toBe(hit[3]);
+      expect(row?.positionStatus, hit[2]).toContain("not-certified");
+    }
+    expect(source.published).toBe(false);
+    expect(board.certifiedCount).toBe(0);
+  });
+
 });
