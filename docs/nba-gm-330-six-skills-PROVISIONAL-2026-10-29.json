@@ -11,7 +11,7 @@
   "sourceSnapshot": "2026-10-29",
   "published": false,
   "certifiedCount": 0,
-  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 218 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
+  "method": "330 independently differentiated draft editorial proposals across all six locked skills; 225 players have at least one source-linked 2025–26 statistical/award observation. No player has completed individual six-skill evidence and no published-ready player identity, role or position confirmation.",
   "players": [
     {
       "editorialId": "nba-gm-draft-victorwembanyama",
@@ -8008,23 +8008,66 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
-        "editorialRationale": "Big-wing defense and spacing, modest shot creation.",
+        "editorialRationale": "Big-wing defense and spacing, modest shot creation. SOURCE CHECK (31.0 minutes and 4.2 three-point attempts per game; down from prior 38.1% on 4.2 attempts, so proposed 79 Shooting requires multi-season and shot-difficulty review; 1.1 blocks and positional wing/big switching.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/w/washipj01.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "editorialNote": "Switchable big wing, spot shooting and secondary protection",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14.2,
+            "sourceUrl": "https://www.basketball-reference.com/players/w/washipj01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 7,
+            "sourceUrl": "https://www.basketball-reference.com/players/w/washipj01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 1.8,
+            "sourceUrl": "https://www.basketball-reference.com/players/w/washipj01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 32.5,
+            "sourceUrl": "https://www.basketball-reference.com/players/w/washipj01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 56,
+          "seasonTeam": "DAL",
+          "sampleNote": "31.0 minutes and 4.2 three-point attempts per game; down from prior 38.1% on 4.2 attempts, so proposed 79 Shooting requires multi-season and shot-difficulty review; 1.1 blocks and positional wing/big switching."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -8189,23 +8232,66 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-rotation-specialist-first-pass-2026-10-29.md",
-        "editorialRationale": "Stretch big with useful offensive versatility, defense average.",
+        "editorialRationale": "Stretch big with useful offensive versatility, defense average. SOURCE CHECK (27.9 minutes, 70/200 three-point attempts, prior 120/326 (36.8%). Season team Memphis vs current Dallas; 79 overall and offensive versatility need current defense peer evidence.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/mavericks/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "editorialNote": "Stretch forward with rebounding and connective decisions",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 14,
+            "sourceUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 6.7,
+            "sourceUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.9,
+            "sourceUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 35,
+            "sourceUrl": "https://www.basketball-reference.com/players/a/aldamsa01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 43,
+          "seasonTeam": "MEM",
+          "sampleNote": "27.9 minutes, 70/200 three-point attempts, prior 120/326 (36.8%). Season team Memphis vs current Dallas; 79 overall and offensive versatility need current defense peer evidence."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -11085,23 +11171,66 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Elite backup tempo/short-area passing, tiny shooting footprint.",
+        "editorialRationale": "Elite backup tempo/short-area passing, tiny shooting footprint. SOURCE CHECK (5.1 assists in a backup-guard role; proposed 91 Playmaking may reflect elite per-minute passing but check 2025-26 assist-to-turnover, minutes and high-end lead guards before confirmation.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/pacers/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "editorialNote": "High-end backup passer, nearly absent three-point volume",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 9.4,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 5.1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 2.2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/tj_mcconnell.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 56,
+          "seasonTeam": "IND",
+          "sampleNote": "5.1 assists in a backup-guard role; proposed 91 Playmaking may reflect elite per-minute passing but check 2025-26 assist-to-turnover, minutes and high-end lead guards before confirmation."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -13078,23 +13207,66 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-east-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Strong paint screens, passing and interior defense; narrow modern spacing.",
+        "editorialRationale": "Strong paint screens, passing and interior defense; narrow modern spacing. SOURCE CHECK (46 regular-season games separately from 7 playoff games; 25.0 minutes and zero three-point attempts. Rim defense not inferred from 0.7 blocks alone.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/raptors/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "editorialNote": "Paint defense, screening and interior passing, near-zero spacing",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 10.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.7,
+            "sourceUrl": "https://www.landofbasketball.com/nba_players_season_stats/2026/jakob_poeltl_full.htm",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 46,
+          "seasonTeam": "TOR",
+          "sampleNote": "46 regular-season games separately from 7 playoff games; 25.0 minutes and zero three-point attempts. Rim defense not inferred from 0.7 blocks alone."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -14006,24 +14178,75 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Point-of-attack defense and scoring bursts, long injury/role uncertainty.",
+        "editorialRationale": "Point-of-attack defense and scoring bursts, long injury/role uncertainty. SOURCE CHECK (49 regular-season appearances, excludes 2 play-in games. 72/245 3PT (29.4%) contrasts prior 2022-23 39.0% and 2023-24 36.0%; movement after ACL needs careful skill vs availability distinction.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/warriors/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/m/meltode01.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "availability-separate",
         "75-79-compression-review",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "editorialNote": "Guard defense first, secondary offense and injury risk",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 12.3,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 3.2,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 2.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "threePointPercentage",
+            "value": 29.4,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "stealsPerGame",
+            "value": 1.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/m/meltode01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 49,
+          "seasonTeam": "GSW",
+          "sampleNote": "49 regular-season appearances, excludes 2 play-in games. 72/245 3PT (29.4%) contrasts prior 2022-23 39.0% and 2023-24 36.0%; movement after ACL needs careful skill vs availability distinction."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -14487,22 +14710,65 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Elite screen-setting and offensive boards but limited mobility and scoring.",
+        "editorialRationale": "Elite screen-setting and offensive boards but limited mobility and scoring. SOURCE CHECK (32 games at 22.4 MPG; zero three-point attempts, offensive rebounding and physical screens not summed into shooting/playmaking. NBA minutes/health limitations remain.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
         "75-79-compression-review",
         "anchor-calibrated-editorial",
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 5.8,
+            "sourceUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 8.6,
+            "sourceUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 1.5,
+            "sourceUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.6,
+            "sourceUrl": "https://basketnews.com/players/14012-steven-adams/statistics/regular-season.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 32,
+          "seasonTeam": "HOU",
+          "sampleNote": "32 games at 22.4 MPG; zero three-point attempts, offensive rebounding and physical screens not summed into shooting/playmaking. NBA minutes/health limitations remain."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -14525,22 +14791,65 @@
       },
       "evidence": {
         "editorialFile": "docs/nba-gm-west-depth-proposals-2026-10-29.md",
-        "editorialRationale": "Dominant rebound instincts in limited reserve NBA minutes.",
+        "editorialRationale": "Dominant rebound instincts in limited reserve NBA minutes. SOURCE CHECK (16.6 minutes and 2.9 offensive rebounds per game; exceptional 14.4 RPG per 36 minutes but only 49 NBA career games before this season, and much longer G League evidence; 96 rebounding remains provisional.)",
         "leagueSeasonStatsUrl": "https://www.basketball-reference.com/leagues/NBA_2026_per_game.html",
         "leagueAwardsUrl": "https://pr.nba.com/voting-results-2025-26-nba-regular-season-awards/",
         "openingRosterUrl": "https://www.nba.com/news/nba-rosters-set-for-2026-27-regular-season",
         "provisionalRosterUrl": "https://hoopsnightly.com/teams/rockets/roster",
-        "individualPlayerUrl": null
+        "individualPlayerUrl": "https://www.basketball-reference.com/players/t/tshieos01.html"
       },
       "confidence": "medium-editorial",
       "reviewStatus": "PROVISIONAL_NOT_CERTIFIED",
       "reviewFlags": [
-        "independent-season-evidence-needed"
+        "independent-season-evidence-needed",
+        "individual-season-2025-26-context-reviewed-not-certified"
       ],
       "editorialNote": "Excellent rebounding specialist in reserve role, narrow scoring",
       "ratingMethod": "hand-calibrated-dossier-not-independent-evidence",
       "gradeEvidenceStatus": "per-skill independent corroboration pending",
-      "sourcedSeasonFacts": null,
+      "sourcedSeasonFacts": {
+        "sourceDocument": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
+        "observations": [
+          {
+            "season": "2025-26",
+            "metric": "pointsPerGame",
+            "value": 7.8,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/tshieos01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "reboundsPerGame",
+            "value": 6.6,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/tshieos01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "blocksPerGame",
+            "value": 0.2,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/tshieos01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          },
+          {
+            "season": "2025-26",
+            "metric": "assistsPerGame",
+            "value": 1.2,
+            "sourceUrl": "https://www.basketball-reference.com/players/t/tshieos01.html",
+            "sourceKind": "individual-2025-26-regular-season-profile",
+            "gradeInterpretation": "context-only-not-algorithm"
+          }
+        ],
+        "awards": [],
+        "availabilityContext": {
+          "games": 27,
+          "seasonTeam": "UTA",
+          "sampleNote": "16.6 minutes and 2.9 offensive rebounds per game; exceptional 14.4 RPG per 36 minutes but only 49 NBA career games before this season, and much longer G League evidence; 96 rebounding remains provisional."
+        }
+      },
       "independentSkillValidation": "incomplete",
       "gradeReviewStatus": "manually-proposed-not-certified"
     },
@@ -17945,11 +18254,11 @@
     "remainingHeuristicVectors": 0,
     "sourceSpecificEvidenceCoverage": "2025-26 sourced context only, not verification of any of the six skill scores; official NBA player identities and 2026-27 team/position records incomplete.",
     "worksheet": "docs/nba-gm-remaining-126-individual-rating-proposals-2026-10-29.md",
-    "sourceContextPlayers": 218,
+    "sourceContextPlayers": 225,
     "sourceContextSource": "docs/nba-gm-sourced-2025-26-facts-2026-10-29.json",
     "fullSixSkillCertifications": 0,
-    "uncorroboratedPlayers": 112,
-    "sourceContextStatObservations": 473,
+    "uncorroboratedPlayers": 105,
+    "sourceContextStatObservations": 502,
     "sourceContextAwardObservations": 37,
     "evidenceBasedProvisionalCorrections": 4,
     "officialIdentityTeamVerifiedOverlay": "docs/nba-gm-official-identity-and-evidence-review-2026-10-29.json"
