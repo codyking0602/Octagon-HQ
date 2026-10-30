@@ -134,7 +134,7 @@ export function nbaGmRosterReview(
       errors.push("NBA player not eligible for slot: " + pick.playerId + " / " + pick.slot);
     }
     for (let season = 0; season < 3; season += 1) {
-      spend[season]! += player.salaries[season];
+      spend[season] = spend[season]! + player.salaries[season]!;
     }
   }
   const complete = NBA_GM_ROSTER_SLOTS.every(slot => seenSlots.has(slot)) && picks.length === 7;
