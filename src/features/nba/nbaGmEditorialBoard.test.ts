@@ -109,6 +109,20 @@ describe("NBA GM first-pass editorial rating board — not published game data",
     }
   });
 
+  it("reconciles the earlier 144 candidate names to documented current club snapshots", () => {
+    const text = readFileSync("docs/nba-gm-original-144-team-crosswalk-2026-10-29.md", "utf8");
+    const rows = text.split("\n").filter(line => /^\|\s*[^|]+\|\s*[A-Z]{3}\s*\|/.test(line));
+    expect(rows).toHaveLength(144);
+    const currentNames = rows.map(line => line.split("|")[1]!.trim());
+    const reference = candidates.filter(candidate => candidate.fileIndex < 3).map(candidate => candidate.name);
+    expect(new Set(currentNames.map(normalize))).toEqual(new Set(reference.map(normalize)));
+    for (const line of rows) {
+      const cells = line.split("|").map(cell => cell.trim());
+      expect(NBA_GM_TEAM_CODES).toContain(cells[2]);
+      expect(line).toMatch(/https:\/\/hoopsnightly\.com\/teams\/[a-z-]+\/roster/);
+    }
+  });
+
   it("keeps provisional identity/ability files out of the actual game model", () => {
     const foundation = readFileSync("src/features/nba/nbaGmFoundation.ts", "utf8");
     expect(foundation).not.toContain("east-depth-proposals");
