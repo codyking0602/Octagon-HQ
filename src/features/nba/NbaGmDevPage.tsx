@@ -29,6 +29,7 @@ function PlayerCard({ player, onPick, disabled }: {
       <TeamMark code={player.teamCode} />
       <div className="nba-gm-dev__identity">
         <strong>{player.name}</strong><small>{player.positions.join(" / ")} · {money(player.salaries[0])} / year 1</small>
+        <small>Game positions provisional · NBA ID {player.officialNbaPlayerId ? "cross-checked" : "unresolved"}</small>
       </div>
       <span className="nba-gm-dev__overall">{player.currentGrade}<small>OVR</small></span>
     </div>
