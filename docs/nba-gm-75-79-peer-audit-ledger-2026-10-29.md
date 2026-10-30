@@ -6,7 +6,7 @@
 
 Players are grouped only by *provisional* position family. Suggested neighbors are within 2 overall points, selected by proximity in the six provisional skill categories to direct an independent film/production review; **the nearest peer is not editorial approval**. Diagnostic conflict flags use simple conservative thresholds only; they should trigger human assessment, never automatic numerical grade changes. A player with one 95+ trait can still be 75–79 overall.
 
-- Cohort size: **149**, 2025–26 individually linked leaderboard/award context: **103/149**, no attached 2025–26 context: **95**. Conflicts with recorded performance thresholds: **7** players.
+- Cohort size: **149**, 2025–26 individually linked leaderboard/award context: **103/149**, no attached 2025–26 context: **46**. Conflicts with recorded performance thresholds: **7** players.
 - NBA canonical IDs, team codes and proposed positions still require official reconciliation. Rookies and returning injured players need explicit limitations, not assumed 2025–26 performance.
 - Source details where available: `nba-gm-sourced-2025-26-facts-2026-10-29.json`; proposed skill values in `nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json`.
 
