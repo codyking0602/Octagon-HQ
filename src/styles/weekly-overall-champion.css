@@ -29,3 +29,7 @@
   text-decoration: none;
 }
 .weekly-overall__actions a { color: #101217; background: var(--weekly-accent); }
+
+.weekly-overall__member { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.weekly-overall__member > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.weekly-overall__row { align-items: center; }
