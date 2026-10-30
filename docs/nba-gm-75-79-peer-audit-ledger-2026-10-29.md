@@ -16,7 +16,7 @@ Players are grouped only by *provisional* position family. Suggested neighbors a
 |---|---|---:|---|---|---|---|
 | Bogdan Bogdanovic | HOU | 75 | PG/Creator | 73/85/74/57/28/45 | Jordan Poole (76); Kasparas Jakucionis (76) | No attached individual 2025-26 leaderboard or award |
 | Brice Sensabaugh | UTA | 75 | Forward/Wing | 80/85/54/50/32/56 | Julian Strawther (76); Jamison Battle (75) | 2025-26 source facts now attached; role/film audit still pending |
-| Bub Carrington | WAS | 75 | PG/Creator | 69/76/75/60/35/53 | Nolan Traore (74); Kasparas Jakucionis (76) | 2025-26 3P% vs Shooting: check volume |
+| Bub Carrington | WAS | 75 | PG/Creator | 69/82/75/60/35/53 | Nolan Traore (74); Kasparas Jakucionis (76) | Shooting 76→82 evidence-led (82 GP, 40.8% 3PT on 5.0 attempts); on-/off-ball and defensive peer review still pending |
 | Egor Demin | BKN | 75 | PG/Creator | 63/72/80/67/45/62 | Isaiah Collier (76); Mike Conley (74) | 2025-26 source facts now attached; role/film audit still pending |
 | Gradey Dick | LAC | 75 | Forward/Wing | 74/81/63/58/36/48 | Julian Strawther (76); Corey Kispert (77) | 2025-26 source facts now attached; role/film audit still pending |
 | Hugo Gonzalez | BOS | 75 | Forward/Wing | 66/69/60/82/55/62 | Josh Green (74); Javonte Green (76) | 2025-26 source facts now attached; role/film audit still pending |
