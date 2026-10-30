@@ -6,7 +6,7 @@
 export const NBA_GM_VERSION = "nba-gm-foundation-v1";
 export const NBA_GM_SEASON_COUNT = 3;
 export const NBA_GM_REGULAR_SEASON_GAMES = 82;
-export const NBA_GM_ROSTER_SLOTS = ["PG", "SG", "SF", "PF", "C", "SIXTH", "FLEX"] as const;
+export const NBA_GM_ROSTER_SLOTS = ["PG", "SG", "SF", "PF", "C", "GUARD", "BIG"] as const;
 export const NBA_GM_STARTER_POSITIONS = ["PG", "SG", "SF", "PF", "C"] as const;
 /** OWNER LOCKED: exactly six NBA GM basketball skill dimensions; no seventh skill. */
 export const NBA_GM_SKILL_KEYS = [
@@ -68,10 +68,13 @@ const slotSet = new Set<string>(NBA_GM_ROSTER_SLOTS);
 const teamSet = new Set<string>(NBA_GM_TEAM_CODES);
 
 export function nbaGmEligibleForSlot(player: NbaGmPlayer, slot: NbaGmSlot): boolean {
-  // Sixth Man and FLEX are genuine bench spots; no extra position is invented.
-  return slot === "SIXTH" || slot === "FLEX"
-    ? player.positions.length > 0
-    : player.positions.includes(slot);
+  // A wing only plays backup guard or big when his verified secondary
+  // eligibility includes SG or PF respectively. Pure SF stays at SF.
+  return slot === "GUARD"
+    ? player.positions.some(position => position === "PG" || position === "SG")
+    : slot === "BIG"
+      ? player.positions.some(position => position === "PF" || position === "C")
+      : player.positions.includes(slot);
 }
 
 /** Hard provenance and coverage guard. An empty future research bank is NOT ready. */

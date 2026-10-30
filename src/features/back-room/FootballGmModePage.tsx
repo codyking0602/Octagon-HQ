@@ -395,7 +395,8 @@ function TeamLogo({ teamCode }: { teamCode: string }) {
     : <span className="football-gm__team-fallback">{teamCode}</span>;
 }
 
-function WheelTeamLogo({ team }: { team: WheelFootballTeam }) {
+type GmWheelDisplayTeam = Pick<WheelFootballTeam, "code" | "shortCode" | "name" | "logoSrc" | "primaryColor" | "secondaryColor">;
+function WheelTeamLogo({ team }: { team: GmWheelDisplayTeam }) {
   return (
     <span className="football-wheel-team-logo" aria-hidden="true">
       {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.shortCode}</b>}
@@ -497,7 +498,7 @@ export function PlayerDevelopmentNote({ player, seed }: { player: FootballGmPlay
   </span>;
 }
 
-function wheelTeamBackground(teams: readonly WheelFootballTeam[]) {
+function wheelTeamBackground(teams: readonly GmWheelDisplayTeam[]) {
   if (!teams.length) return undefined;
   const slice = 360 / teams.length;
   const stops = teams.flatMap((team, index) => {
@@ -516,10 +517,10 @@ export function GmFootballWheel({
   canSpin,
   onSpin,
 }: {
-  teams: readonly WheelFootballTeam[];
+  teams: readonly GmWheelDisplayTeam[];
   rotation: number;
   spinning: boolean;
-  pendingTeam: WheelFootballTeam | null;
+  pendingTeam: GmWheelDisplayTeam | null;
   canSpin: boolean;
   onSpin: () => void;
 }) {
