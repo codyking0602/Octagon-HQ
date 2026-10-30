@@ -110,11 +110,10 @@ playmaking/assisted-shot indicators, minutes-weighted rotation players and playo
 
 ## Source acquisition and outstanding full-cohort work
 
-- Basketball-Reference's team-rating pages (2022–2026) provide actual team
-  wins, unadjusted and schedule-adjusted ORtg/DRtg/NRtg. The published
-  champion figures above have been cross-checked. Access to the full table
-  through a repeatable automated download was denied during this phase;
-  historical validation must NOT be marked as complete.
+- Basketball-Reference team-rating pages (2022–2026) supply the source
+  team wins, unadjusted offensive and defensive ratings. All 150 observed
+  rows are archived separately with team/year provenance and checked league
+  totals. The full feature-rich roster-fit calibration is still incomplete.
 - [BoxScore Lab](https://www.boxscorelab.com/downloads/) offers CC BY 4.0
   exports of team standings, estimated efficiencies, individual player season
   totals, and individual team games for 2022–23 through 2025–26. Those
@@ -125,12 +124,15 @@ playmaking/assisted-shot indicators, minutes-weighted rotation players and playo
   provides official season-level effective shooting, turnover and rebound
   splits, but minutes-weighted player/lineup features and a season-complete
   2021–22 slice remain necessary to quantify actual complementarity.
-- **Current measured full-cohort status: 0/150 consolidated and
-  independently validated team-season rows.** There are five champion rows
-  and 25 top-table comparison positions in the descriptive research above,
-  but they are NOT a training sample. No train/holdout split or out-of-sample
-  RMSE has been completed. Keep coefficients private and uncertified until
-  that evidence exists.
+- **Current full-cohort status: 150/150 regular-season team-efficiency
+  rows archived**, including W/L and unadjusted offense/defense; season
+  coverage and league win totals have been checked. See
+  [CSV](./nba-gm-150-team-season-efficiency-2022-2026.csv) and
+  [walk-forward benchmark](./nba-gm-150-team-season-calibration-2026-10-30.md).
+  This tests a *net-efficiency-to-wins conversion using observed season ratings*,
+  not a predictive roster-based offensive/defensive fit model. Four factors,
+  rotation minutes, lineup skill interactions, preseason ratings and
+  held-out playoffs are still missing. Do not call the simulator calibrated.
 
 ## Position audit of the 330-player private bank
 
@@ -173,5 +175,6 @@ their code-level validity does **not** certify basketball-positional accuracy.
 - Year 1 fit feedback is revealed **after** Year 1 and is deliberately qualitative.
   No in-draft live chemistry meter or exposed numerical overalls.
 
-**Certification status: historical champion/top-team descriptive pass complete;
-150-team measured cohort and statistical fitting NOT complete.**
+**Certification status: 150/150 historical team efficiency/win records archived and
+a walk-forward win-conversion benchmark completed; no validated roster-fit,
+minutes-weighted skill or postseason simulator yet.**
