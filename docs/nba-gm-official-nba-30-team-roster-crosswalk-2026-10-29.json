@@ -7,8 +7,8 @@
   "playerCount": 330,
   "scope": "Every Octagon proposed NBA GM candidate matched with a current NBA.com team roster at the October 29, 2026 editorial snapshot. Broad F/G/C tags read from NBA.com; specific game PG/SG/SF/PF/C slot eligibility, full canonical IDs, contracts, skills and live roster recency remain unverified.",
   "notVerifiedTeams": [],
-  "manuallyVerifiedPlayerIdCount": 82,
-  "nbaSourceCaution": "NBA.com may have current after-snapshot transactions; recheck at publication. 'F' and 'G' are not automatic exact PG/SG/SF/PF eligibility. Eight Atlanta individual NBA.com player IDs now cross-checked; supplement identity overlay remains separate. Twelve Boston Celtics and ten Cleveland Cavaliers players now independently linked to exact NBA.com player profile IDs from current team rosters; broad position discrepancies remain independent. Ten New York and twelve Utah individual profiles were directly linked from NBA.com October rosters; roster-level G/F/C not exact slot eligibility. Nine Brooklyn and ten Chicago NBA.com individual player IDs linked from roster. 'Egor Dëmin' accented NBA display resolves Octagon 'Egor Demin' identity.",
+  "manuallyVerifiedPlayerIdCount": 87,
+  "nbaSourceCaution": "NBA.com may have current after-snapshot transactions; recheck at publication. 'F' and 'G' are not automatic exact PG/SG/SF/PF eligibility. Eight Atlanta individual NBA.com player IDs now cross-checked; supplement identity overlay remains separate. Twelve Boston Celtics and ten Cleveland Cavaliers players now independently linked to exact NBA.com player profile IDs from current team rosters; broad position discrepancies remain independent. Ten New York and twelve Utah individual profiles were directly linked from NBA.com October rosters; roster-level G/F/C not exact slot eligibility. Nine Brooklyn and ten Chicago NBA.com individual player IDs linked from roster. 'Egor Dëmin' accented NBA display resolves Octagon 'Egor Demin' identity. October 30 additional five individually verified NBA.com player profiles (Collins, Wiggins, Jakucionis, Sorber, Philon) cross-checked for 2026-27 current team and official broad position; none establishes fine PG/SG/SF/PF/C game eligibility.",
   "crosswalk": [
     {
       "name": "Jalen Johnson",
@@ -846,9 +846,12 @@
       "officialRosterPosition": "F-C",
       "officialRosterUrl": "https://www.nba.com/team/1610612765/pistons/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1628381",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1628381/john-collins",
+      "officialProfileCheckedAsOf": "2026-10-30",
+      "officialPlayerIdEvidence": "direct-nba-com-player-profile-current-team"
     },
     {
       "name": "Paul Reed",
@@ -1396,9 +1399,12 @@
       "officialRosterPosition": "F",
       "officialRosterUrl": "https://www.nba.com/team/1610612748/heat/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "203952",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/203952/andrew-wiggins",
+      "officialProfileCheckedAsOf": "2026-10-30",
+      "officialPlayerIdEvidence": "direct-nba-com-player-profile-current-team"
     },
     {
       "name": "Bobby Portis Jr.",
@@ -1466,9 +1472,12 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612749/bucks/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1642857",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1642857/kasparas-jakucionis",
+      "officialProfileCheckedAsOf": "2026-10-30",
+      "officialPlayerIdEvidence": "direct-nba-com-player-profile-current-team"
     },
     {
       "name": "AJ Green",
@@ -1876,9 +1885,12 @@
       "officialRosterPosition": "C",
       "officialRosterUrl": "https://www.nba.com/team/1610612760/thunder/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1642850",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1642850/thomas-sorber",
+      "officialProfileCheckedAsOf": "2026-10-30",
+      "officialPlayerIdEvidence": "direct-nba-com-player-profile-current-team"
     },
     {
       "name": "Paolo Banchero",
@@ -2056,9 +2068,12 @@
       "officialRosterPosition": "G",
       "officialRosterUrl": "https://www.nba.com/team/1610612755/sixers/roster",
       "matchedAtEditorialHead": "38bfedbb4fd146f6f70a3bb0e942d8d37061ea84",
-      "officialNBAPlayerId": null,
+      "officialNBAPlayerId": "1642889",
       "teamIdentityStatus": "confirmed-on-NBA-official-team-roster-at-audit-snapshot",
-      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified"
+      "positionStatus": "official-broad-position-verified; game-specific PG/SG/SF/PF/C eligibility not-certified",
+      "officialPlayerUrl": "https://www.nba.com/player/1642889/labaron-philon-jr",
+      "officialProfileCheckedAsOf": "2026-10-30",
+      "officialPlayerIdEvidence": "direct-nba-com-player-profile-current-team"
     },
     {
       "name": "Dean Wade",
