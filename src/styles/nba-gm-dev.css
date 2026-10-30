@@ -1,0 +1,56 @@
+.nba-gm{max-width:1080px;margin:0 auto;padding:16px 14px 42px;color:var(--text-primary,#f5f5f7)}
+.nba-gm__header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:0 0 12px}
+.nba-gm__header h1{font-size:clamp(28px,5vw,46px);font-weight:900;line-height:1.1;margin:3px 0;letter-spacing:-.05em}
+.nba-gm__header small,.nba-gm__header p,.nba-gm__header a{font-size:11px;letter-spacing:.07em}
+.nba-gm__header p{margin:3px 0;opacity:.75}.nba-gm__header a{font-weight:800;text-decoration:none;white-space:nowrap;padding:10px;border:1px solid #6668;border-radius:10px;color:inherit}
+.nba-gm__disclaimer{font-size:11px;line-height:1.5;opacity:.85;border-left:3px solid #ecaf36;padding:8px 12px;background:#e6aa2812;margin:0 0 14px}
+.nba-gm__error{padding:12px;color:#ffb1b1;background:#942a2a30;border-radius:10px;font-size:13px}
+.nba-gm__empty,.nba-gm__intro{padding:25px;border:1px solid #9994;border-radius:16px;text-align:center}
+.nba-gm__intro h2{margin:0}.nba-gm__intro p{line-height:1.5;font-size:14px;max-width:550px;margin:12px auto 20px}
+.nba-gm button{appearance:none;background:#e4a439;color:#161616;border:none;border-radius:9px;padding:11px 15px;font-size:12px;line-height:1.15;font-weight:850;cursor:pointer}
+.nba-gm button:disabled{opacity:.4;cursor:not-allowed}
+.nba-gm__cap,.nba-gm__roster,.nba-gm__wheel,.nba-gm__results{background:var(--surface,#151c26);border:1px solid #9993;border-radius:14px;padding:13px;margin:12px 0}
+.nba-gm__section-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:12px;font-size:12px;letter-spacing:.03em}
+.nba-gm__section-top small{opacity:.65;font-size:10px;font-weight:750}
+.nba-gm__caps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.nba-gm__caps>div{min-width:0}.nba-gm__caps span{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:3px;font-size:10px}
+.nba-gm__caps strong{font-size:12px;font-variant-numeric:tabular-nums}
+.nba-gm__cap-track{height:5px;border-radius:99px;background:#aaa3;margin-top:7px;overflow:hidden}
+.nba-gm__cap-track i{display:block;background:#e4a439;height:100%;border-radius:99px}
+.nba-gm__roster-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.nba-gm__slot{min-width:0;padding:9px 7px;border-radius:9px;border:1px dashed #9995;display:flex;flex-direction:column;gap:4px}
+.nba-gm__slot--filled{border-style:solid;border-color:#e4a43966;background:#e4a4390d}
+.nba-gm__slot>span{font-size:10px;color:#e4a439;font-weight:850}
+.nba-gm__slot>strong{font-size:12px;overflow-wrap:anywhere;line-height:1.3}
+.nba-gm__slot>small{font-size:9px;opacity:.7;line-height:1.4}
+.nba-gm__team{display:flex;gap:13px;align-items:center;background:#ffffff08;padding:12px;border-radius:11px;margin-bottom:10px}
+.nba-gm__team .nba-team-mark{width:46px;height:46px;flex:0 0 46px}.nba-gm__team h2{font-size:20px;margin:2px 0;line-height:1.2}
+.nba-gm__team small,.nba-gm__help{font-size:11px;opacity:.72}.nba-gm__help{margin:8px 0 13px}
+.nba-gm__players{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.nba-gm__player{min-width:0;border:1px solid #9994;border-top:3px solid var(--nba-gm-accent,#c99b39);padding:11px;border-radius:11px;background:#ffffff06}
+.nba-gm__player-head,.nba-gm__player-ident{display:flex;gap:9px;align-items:center;min-width:0}
+.nba-gm__player-head{justify-content:space-between}
+.nba-gm__player-ident .nba-team-mark{width:30px;height:30px;flex:0 0 30px}
+.nba-gm__player-ident>div{min-width:0}.nba-gm__player-ident strong{font-size:14px;display:block;line-height:1.2;overflow-wrap:anywhere}
+.nba-gm__player-ident small{display:block;font-size:9px;opacity:.7;margin-top:4px}
+.nba-gm__overall{flex-shrink:0;text-align:center;display:flex;flex-direction:column;line-height:1}
+.nba-gm__overall strong{font-size:24px}.nba-gm__overall small{font-size:8px;opacity:.7}
+.nba-gm__skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:10px 0}
+.nba-gm__skills>div{min-width:0;display:flex;justify-content:space-between;align-items:center;background:#fff1;border-radius:5px;padding:7px 5px;gap:4px}
+.nba-gm__skills small{font-size:8px;line-height:1.2;overflow-wrap:anywhere;opacity:.75}.nba-gm__skills strong{font-size:13px;font-variant-numeric:tabular-nums}
+.nba-gm__player-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.nba-gm__player-foot>span{font-size:9px;letter-spacing:.03em}.nba-gm__player-foot>span strong{font-size:12px}
+.nba-gm__player-foot>span small{display:block;font-size:9px;opacity:.65;margin-top:2px}
+.nba-gm__choose{display:flex;flex-wrap:wrap;gap:5px}.nba-gm__choose button{font-size:10px;padding:8px 10px}
+.nba-gm__spin,.nba-gm__complete{text-align:center;padding:15px 0}
+.nba-gm__spin p,.nba-gm__complete p,.nba-gm__results p{font-size:12px;opacity:.76;line-height:1.5}
+.nba-gm__season-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.nba-gm__season-grid article{background:#fff1;border-radius:10px;padding:15px;display:flex;flex-direction:column;gap:6px}
+.nba-gm__season-grid strong{font-size:30px;font-variant-numeric:tabular-nums}
+.nba-gm__season-grid span{font-weight:850;color:#e4a439;font-size:14px}
+.nba-gm__season-grid small,.nba-gm__season-grid article div{font-size:10px;line-height:1.35}
+@media(max-width:760px){.nba-gm__roster-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.nba-gm__players{grid-template-columns:1fr}}
+@media(max-width:430px){.nba-gm{padding:10px 9px 36px}.nba-gm__caps{grid-template-columns:1fr;gap:9px}.nba-gm__cap,.nba-gm__roster,.nba-gm__wheel,.nba-gm__results{padding:10px}
+.nba-gm__roster-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nba-gm__season-grid{grid-template-columns:1fr}
+.nba-gm__header a{font-size:9px}.nba-gm__header h1{font-size:32px}
+}
