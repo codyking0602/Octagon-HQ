@@ -11,6 +11,10 @@ import {
 export type NbaGmDevPlayer = Omit<NbaGmPlayer, "sources"> & {
   pricingKind: "GAME_FIXTURE_NOT_REAL_CONTRACT";
   eligibilityKind: "PROVISIONAL_EDITORIAL";
+  officialNbaPlayerId: string | null;
+  officialRosterPosition: string;
+  positionReview: "unverified";
+  reviewFlags: readonly string[];
 };
 export type NbaGmDevPhase = "draft" | "review" | "final";
 export interface NbaGmDevSeason {
@@ -109,6 +113,8 @@ export function nbaGmDevCatalogErrors(catalog: readonly NbaGmDevPlayer[]): strin
       p.salaries.length !== 3 || p.salaries.some(s => !Number.isSafeInteger(s) || s <= 0) ||
       NBA_GM_SKILL_KEYS.some(key => !Number.isInteger(p.skills[key]) || p.skills[key] < 0 || p.skills[key] > 99) ||
       p.eligibilityKind !== "PROVISIONAL_EDITORIAL" ||
+      p.positionReview !== "unverified" || !p.officialRosterPosition ||
+      !Array.isArray(p.reviewFlags) || p.reviewFlags.length === 0 ||
       p.pricingKind !== "GAME_FIXTURE_NOT_REAL_CONTRACT") {
       errors.push("Invalid provisional NBA fixture " + p.id);
     }
