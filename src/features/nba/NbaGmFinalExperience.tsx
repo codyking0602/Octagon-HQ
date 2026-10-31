@@ -63,9 +63,15 @@ export function NbaGmFinalExperience({
   const payroll=nbaGmDevSpend(run.picks,catalog)[2];
   const biggestJump=[...finalRows].sort((a,b)=>b.delta-a.delta)[0];
   const biggestDrop=[...finalRows].sort((a,b)=>a.delta-b.delta)[0];
+  const missedEveryPlayoff=results.length===3&&results.every(season=>season.finish==="Missed Playoffs");
+  const totalWins=results.reduce((sum,season)=>sum+season.wins,0);
   const verdict=!score?"LEGACY RUN"
+    :missedEveryPlayoff&&score.score>=78?"TALENT, NO PLAYOFFS"
     :score.score>=92?"ELITE RUN":score.score>=85?"STRONG BUILD"
       :score.score>=78?"SOLID FOUNDATION":score.score>=70?"MIXED RESULTS":"REBUILD NEEDED";
+  const verdictDetail=missedEveryPlayoff
+    ? `${totalWins} WINS IN THREE SEASONS · NO PLAYOFF APPEARANCES`
+    : "THREE SEASONS. YOUR ROSTER DECISIONS.";
   return <div className="football-gm-final gm-final nba-gm-final"
     aria-label="Three-year NBA GM final result">
     <section className="gm-final__hero surface-card">
@@ -73,7 +79,7 @@ export function NbaGmFinalExperience({
       <div className="gm-final__hero-main">
         <div className="gm-final__score"><strong>{score?score.score.toFixed(1):"—"}</strong><span>GM SCORE</span></div>
         <div className="gm-final__verdict"><small>BOTTOM LINE</small><b>{verdict}</b>
-          <span>THREE SEASONS. YOUR ROSTER DECISIONS.</span></div>
+          <span>{verdictDetail}</span></div>
       </div>
       <div className="gm-final__stats">
         <div><b>{score?score.roster.toFixed(1):"—"}</b><small>ROSTER GRADE</small></div>
