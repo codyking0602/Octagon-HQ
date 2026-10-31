@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
@@ -106,6 +106,9 @@ export default function NbaGmDevPage(){
   const [notice,setNotice]=useState("");
   const [wheelRotation,setWheelRotation]=useState(0);
   const [wheelSpinning,setWheelSpinning]=useState(false);
+  const wheelRequestRef=useRef(false);
+  const wheelSequenceRef=useRef(0);
+  useEffect(()=>()=>{wheelSequenceRef.current+=1;},[]);
   const [positionFilter,setPositionFilter]=useState<string|null>(null);
   useEffect(()=>{
     if(!repo){setError("NBA GM needs a connected private backend.");setLoading(false);return;}
@@ -136,20 +139,43 @@ export default function NbaGmDevPage(){
     } finally{setBusy(false);}
   }
   async function spin(action:"spin"|"trade-spin"|"fa-spin"){
-    if(busy||wheelSpinning)return;
-    const state=await act(action);
-    if(!state)return;
-    const teamCode=action==="spin"?state.pendingTeam:action==="trade-spin"?state.tradeTeam:state.freeAgencyTeam;
-    const i=wheelTeams.findIndex(t=>t.code===teamCode);
-    if(i<0)return;
-    const slice=360/wheelTeams.length;
-    const desired=((-(i*slice))%360+360)%360;
-    setWheelRotation(prev=>{
-      const current=((prev%360)+360)%360;
-      return prev+1080+((desired-current+360)%360);
-    });
-    setWheelSpinning(true);
-    window.setTimeout(()=>setWheelSpinning(false),1550);
+    if(!repo||busy||wheelRequestRef.current)return;
+    // Visual feedback starts synchronously. Server alone decides the landing.
+    wheelRequestRef.current=true;
+    const sequence=++wheelSequenceRef.current;
+    setBusy(true);setError("");setNotice("");setWheelSpinning(true);
+    setWheelRotation(prev=>prev+1440);
+    // An unusually slow eligibility RPC must not leave a motionless wheel.
+    const keepTurning=window.setInterval(()=>{
+      if(sequence===wheelSequenceRef.current)setWheelRotation(prev=>prev+720);
+    },1150);
+    try{
+      const state=await repo.action(action);
+      if(sequence!==wheelSequenceRef.current)return;
+      if(!state)throw Error("Spin did not return a franchise state.");
+      const teamCode=action==="spin"?state.pendingTeam:action==="trade-spin"?state.tradeTeam:state.freeAgencyTeam;
+      const i=wheelTeams.findIndex(team=>team.code===teamCode);
+      if(i<0)throw Error("The server returned an unknown team.");
+      window.clearInterval(keepTurning);
+      const slice=360/wheelTeams.length;
+      const desired=((-(i*slice))%360+360)%360;
+      setWheelRotation(prev=>{
+        const current=((prev%360)+360)%360;
+        return prev+720+((desired-current+360)%360);
+      });
+      // Hold the server result until the winning slice is beneath the pointer.
+      window.setTimeout(()=>{
+        if(sequence!==wheelSequenceRef.current)return;
+        setRun(state);setWheelSpinning(false);setBusy(false);
+        wheelRequestRef.current=false;
+      },1550);
+    }catch(failure){
+      window.clearInterval(keepTurning);
+      if(sequence!==wheelSequenceRef.current)return;
+      setError(failure instanceof Error?failure.message:"The spin failed. Please retry.");
+      setWheelSpinning(false);setBusy(false);
+      wheelRequestRef.current=false;
+    }
   }
   const byId=useMemo(()=>new Map(catalog.map(p=>[p.id,p])),[catalog]);
   const spend=run?nbaGmDevSpend(run.picks,catalog):null;
@@ -157,10 +183,11 @@ export default function NbaGmDevPage(){
   const visible=candidates.filter(p=>!positionFilter||p.positions.includes(positionFilter as "PG"|"SG"|"SF"|"PF"|"C"));
   const currentTeam=run?.phase==="draft"?run.pendingTeam:run?.tradeTeam??run?.freeAgencyTeam;
   const wheelTeam=currentTeam?wheelTeams.find(team=>team.code===currentTeam)??null:null;
+  // Partner visibility is not a cap/roster filter. All unowned targets remain
+  // visible, even if an immediate exchange requires another legal structure.
   const eligibleTrade=run?.shopPlayerId?catalog.filter(p=>
     p.teamCode===run.tradeTeam&&!run.picks.some(pick=>pick.playerId===p.id)
-    && nbaGmDevCanAdd(run.picks.filter(pick=>pick.playerId!==run.shopPlayerId),p,catalog,run.caps,"offseason")
-  ):[];
+  ).sort((a,b)=>b.currentGrade-a.currentGrade||a.name.localeCompare(b.name)):[];
   const isDraft=run?.phase==="draft";
   // Keep the wheel mounted during its animation and after its result.
   // Unmounting at pendingTeam would hide the exact NFL GM spin the player expects.
@@ -245,7 +272,7 @@ export default function NbaGmDevPage(){
             pendingTeam={wheelSpinning?null:run.tradeTeam?wheelTeam:null}
             canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>
           {run.tradeTeam&&!wheelSpinning&&
-            <><p>Trading partner: {NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}. Two offers maximum, one accepted trade.</p>
+            <><p>Trading partner: {NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}. Every available player is listed. A target may require a different legal package or more cap space. Two offers maximum.</p>
               <div className="nba-gm-dev__candidate-grid">
                 {eligibleTrade.map(player=><PlayerCard player={player} key={player.id} disabled={busy}
                   action="OFFER FOR" salaryYear={1} onPick={()=>void act("trade",player.id)}/>)}
