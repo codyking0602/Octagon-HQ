@@ -626,7 +626,8 @@ def source_publisher_band(im):
 # #2354). Keep it out of all generated-asset PRs even if an alpha heuristic
 # misses a subtle publisher panel. Different verified clean photos remain eligible.
 VISUALLY_REJECTED_THUMB_BLOBS = {
-    "64f29f5a3427f390edc15bc07e68b5064768ac36",
+    "64f29f5a3427f390edc15bc07e68b5064768ac36",  # first reviewed official source
+    "e6ec8d8e3c9572856bd48bdc5eab3fd2ee3bc117",  # second reviewed official source
 }
 
 
