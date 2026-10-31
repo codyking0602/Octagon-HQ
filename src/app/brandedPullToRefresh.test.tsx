@@ -214,4 +214,54 @@ describe("branded pull-to-refresh", () => {
     expect(region!.style.getPropertyValue("--pull-refresh-distance")).toBe("0px");
     expect(region!.classList.contains("pull-refresh-region--idle")).toBe(true);
   });
+  it("preserves native nested scrolling instead of claiming a pull gesture on Android", () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={["/rankings"]}>
+        <BrandedPullToRefresh>
+          <div style={{ overflowY: "auto", maxHeight: 100 }} data-testid="scroll-panel">
+            <div data-testid="scroll-content">Leaderboard content</div>
+          </div>
+        </BrandedPullToRefresh>
+      </MemoryRouter>,
+    );
+    const panel = screen.getByTestId("scroll-panel");
+    const child = screen.getByTestId("scroll-content");
+    const region = container.querySelector<HTMLElement>(".pull-refresh-region")!;
+    Object.defineProperty(panel, "scrollHeight", { configurable: true, value: 500 });
+    Object.defineProperty(panel, "clientHeight", { configurable: true, value: 100 });
+
+    fireEvent.touchStart(child, { touches: [{ clientX: 24, clientY: 20 }] });
+    const unclaimed = fireEvent.touchMove(child, { touches: [{ clientX: 25, clientY: 180 }] });
+    fireEvent.touchEnd(child);
+
+    expect(unclaimed).toBe(true);
+    expect(region.style.getPropertyValue("--pull-refresh-distance")).toBe("0px");
+    expect(region.classList.contains("pull-refresh-region--idle")).toBe(true);
+    expect(refreshMocks.notifications).not.toHaveBeenCalled();
+  });
+
+  it("does not mistake an overflow-styled panel without scrollable content for nested scrolling", () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={["/football"]}>
+        <BrandedPullToRefresh>
+          <div style={{ overflowY: "auto" }} data-testid="short-panel">
+            <div data-testid="short-content">Short content</div>
+          </div>
+        </BrandedPullToRefresh>
+      </MemoryRouter>,
+    );
+    const panel = screen.getByTestId("short-panel");
+    const child = screen.getByTestId("short-content");
+    const region = container.querySelector<HTMLElement>(".pull-refresh-region")!;
+    Object.defineProperty(panel, "scrollHeight", { configurable: true, value: 100 });
+    Object.defineProperty(panel, "clientHeight", { configurable: true, value: 100 });
+
+    fireEvent.touchStart(child, { touches: [{ clientX: 24, clientY: 20 }] });
+    fireEvent.touchMove(child, { touches: [{ clientX: 25, clientY: 180 }] });
+
+    expect(region.classList.contains("pull-refresh-region--ready")).toBe(true);
+    fireEvent.touchEnd(child);
+    expect(refreshMocks.notifications).toHaveBeenCalledTimes(1);
+  });
+
 });

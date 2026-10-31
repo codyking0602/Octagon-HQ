@@ -42,6 +42,27 @@ const IGNORED_PULL_TARGETS = [
   "[data-pull-refresh-ignore]",
 ].join(",");
 
+// Only own a pull gesture when it starts on the document's main scroller.
+// Android Chrome (and iOS WebKit) can otherwise have a leaderboard, wheel
+// picker or other overflow panel's native scroll cancelled by preventDefault().
+export function touchStartsInsideNestedScroller(
+  target: EventTarget | null,
+  contentRoot: HTMLElement,
+): boolean {
+  let node = target instanceof Element ? target : null;
+  while (node && node !== contentRoot) {
+    if (node instanceof HTMLElement) {
+      const overflowY = window.getComputedStyle(node).overflowY;
+      if (/^(auto|scroll|overlay)$/.test(overflowY)
+          && node.scrollHeight > node.clientHeight + 1) {
+        return true;
+      }
+    }
+    node = node.parentElement;
+  }
+  return false;
+}
+
 function pulseHaptic(pattern: number | number[]) {
   try {
     if (typeof navigator.vibrate === "function") navigator.vibrate(pattern);
@@ -149,6 +170,7 @@ export function BrandedPullToRefresh({ children }: PropsWithChildren) {
       ) return;
       const target = event.target;
       if (target instanceof Element && target.closest(IGNORED_PULL_TARGETS)) return;
+      if (touchStartsInsideNestedScroller(target, content)) return;
 
       const touch = event.touches[0];
       gestureRef.current = {
