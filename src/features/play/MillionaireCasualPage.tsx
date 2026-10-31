@@ -480,7 +480,7 @@ function MillionaireGame({
             })}
           </div>
         </>
-      )}
+      ) : null}
       </div>
     </div>
   );
