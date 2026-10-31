@@ -68,7 +68,7 @@ export function nbaGmScoutRepriceProjection(player:RepriceSubject,season:1|2=1):
   if(player.gameContract==="3YR")return {
     risk:"LOCKED",expectedUpsideDollars:0,largeJumpProbability:0,
   };
-  const currentSalary=player.salaries[season-1];
+  const currentSalary=season===1?player.salaries[0]:player.salaries[1];
   const forecast=player.developmentForecast;
   const odds=player.developmentOdds;
   if(!forecast||!odds){
