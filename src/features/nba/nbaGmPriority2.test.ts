@@ -76,7 +76,7 @@ describe("NBA GM Priority 2 sport-specific scouting calibration",()=>{
     for(const name of ["Derrick White","Rudy Gobert","Trey Murphy III",
       "Matas Buzelis","P.J. Washington"])
       expect(nbaGmScoutTier(byName(name))).toBe("STARTER");
-    for(const name of ["Luke Kennard","T.J. McConnell"])
+    for(const name of ["Luke Kennard","Sam Hauser"])
       expect(nbaGmScoutTier(byName(name))).toBe("DEPTH");
     const teams=NBA_GM_TEAM_CODES.map(team=>players.filter(p=>p.teamCode===team));
     expect(teams.every(team=>team.length>0)).toBe(true);
