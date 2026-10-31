@@ -34,7 +34,7 @@ function TeamMark({code}:{code:string}){
   </span>;
 }
 /** NFL-style candidate portraits use only verified NBA IDs, with a team-mark fallback. */
-function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
+export function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
   const [failed,setFailed]=useState(false);
   const id=nbaGmOfficialHeadshotId(player);
   return <span className="nba-gm-dev__portrait" aria-hidden="true">
@@ -231,11 +231,11 @@ export default function NbaGmDevPage(){
     run.phase==="offseason"&&run.picks.length<7&&run.freeAgencyVisits<3&&!run.freeAgencyTeam&&!run.shopPlayerId
   ));
   return <main className="page nba-gm-dev" data-testid="nba-gm-development-page">
-    <header className="nba-gm-dev__header">
+    <header className={`nba-gm-dev__header${run?.phase==="final"?" is-final":""}`}>
       <Link to="/nba" className="nba-gm-dev__back">← Basketball HQ</Link>
       <span>OWNER PLAYTEST · NOT PUBLIC</span>
       <h1>NBA <em>GM</em></h1>
-      <p>Spin a team. Draft your seven-player rotation. Survive the offseason. Three seasons to build a winner.</p>
+      {run?.phase!=="final"&&<p>Spin a team. Draft your seven-player rotation. Survive the offseason. Three seasons to build a winner.</p>}
     </header>
     {error&&<div className="nba-gm-dev__error" role="alert">{error}</div>}
     {notice&&<div className="nba-gm-dev__notice" role="status">{notice}</div>}
@@ -248,6 +248,7 @@ export default function NbaGmDevPage(){
         onClick={()=>void act("start")}>START THE DRAFT</button>
     </section>}
     {run&&<>
+      {run.phase!=="final"&&<>
       <section className={`football-gm__cap surface-card nba-gm-dev__caps${(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" is-over":""}`}>
         <div className="nba-gm-dev__cap-main">
           <span><small>YEAR {displaySalaryYear+1} CAP</small>
@@ -293,6 +294,7 @@ export default function NbaGmDevPage(){
           })}
         </div>
       </section>
+      </>}
       {run.phase==="draft"&&<section className="nba-gm-dev__panel nba-gm-dev__draft">
         <div className="nba-gm-dev__section-title"><div><small>ROUND {run.picks.length+1} OF 7</small>
           <h2>{run.pendingTeam?"CHOOSE YOUR PLAYER":"SPIN FOR AN NBA TEAM"}</h2></div>
@@ -310,7 +312,7 @@ export default function NbaGmDevPage(){
           ENTER THE OFFSEASON
         </button>
       </section>}
-      {(run.phase==="year1"||run.phase==="offseason"||run.phase==="final")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
+      {(run.phase==="year1"||run.phase==="offseason")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
       {run.phase==="offseason"&&<NbaGmDevelopmentReport run={run} catalog={catalog}/>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>THE OFFSEASON</h2></div></div>
@@ -379,7 +381,7 @@ export default function NbaGmDevPage(){
       </section>}
       {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
-      <footer className="nba-gm-dev__disclaimer">Owner-only QA · Provisional positions and player progression assumptions · Fictional game contracts and cap · Results are not a certified NBA forecast or public.</footer>
+      <footer className="nba-gm-dev__disclaimer">Private owner playtest · Fictional contracts, provisional ratings and player development · Not an official NBA forecast.</footer>
     </>}
   </main>;
 }

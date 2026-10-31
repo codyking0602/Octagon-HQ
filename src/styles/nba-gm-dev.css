@@ -202,3 +202,23 @@
 .nba-gm-dev__reprice.is-high{color:#ffd1a0;background:#693e2a}
 .nba-gm-dev__reprice.is-locked{color:#c2d8e9;background:#283a48}
 .nba-gm-dev__reprice.is-unknown{color:#bfd0df;background:#263849}
+
+/* Priority 4: final result immediately follows the compact title; the
+   live draft cap and roster stay on draft/offseason, not the finished screen. */
+.nba-gm-dev__header.is-final{padding:12px 16px}
+.nba-gm-dev__header.is-final>span{margin-top:5px}
+.nba-gm-dev__header.is-final h1{font-size:clamp(27px,5vw,34px);margin:2px 0}
+.nba-gm-dev .nba-gm-final{display:grid;gap:10px;min-width:0}
+.nba-gm-dev .nba-gm-final .gm-final__hero{min-width:0}
+.nba-gm-dev .nba-gm-final .gm-final__verdict b{overflow-wrap:anywhere}
+.nba-gm-dev .nba-gm-final .gm-final__player-name{min-width:0}
+.nba-gm-dev .nba-gm-final .gm-final__seasons>*{min-width:0}
+.nba-gm-dev .nba-gm-final .gm-final__section{min-width:0}
+@media(max-width:420px){
+  .nba-gm-dev .nba-gm-final .gm-final__hero-main{gap:6px}
+  .nba-gm-dev .nba-gm-final .gm-final__verdict{padding:8px 7px}
+  .nba-gm-dev .nba-gm-final .gm-final__verdict b{font-size:clamp(12px,3.7vw,15px)}
+  .nba-gm-dev .nba-gm-final .gm-final__season{padding-inline:3px}
+  .nba-gm-dev .nba-gm-final .gm-final__transaction{grid-template-columns:24px minmax(0,1fr) auto;gap:4px}
+  .nba-gm-dev .nba-gm-final .gm-final__transaction strong{overflow-wrap:anywhere}
+}
