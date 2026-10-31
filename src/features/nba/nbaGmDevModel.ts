@@ -37,8 +37,13 @@ export interface NbaGmDevRun {
   freeAgencyTeam: string | null;
   freeAgencyVisits: number;
   releasedIds: string[];
+  /** Additive fields; legacy V2 run snapshots remain valid. */
+  development?: Record<string, {year2Grade:number;year3Grade:number;
+    year2Salary:number;year3Salary:number;startingGrade:number}>;
+  scoreBreakdown?: {score:number;roster:number;regularSeason:number;playoffs:number;
+    weights:[number,number,number]};
 }
-export const NBA_GM_DEV_CAPS: NbaGmSalaryWindow = [192_500_000, 192_500_000, 192_500_000];
+export const NBA_GM_DEV_CAPS: NbaGmSalaryWindow = [155_000_000, 155_000_000, 155_000_000];
 export const NBA_GM_DEV_SKILL_LABELS = {
   scoring: "Scoring", shooting: "Shooting", playmaking: "Playmaking",
   perimeterDefense: "Perimeter D", interiorDefense: "Interior D", rebounding: "Rebounding",
