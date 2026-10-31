@@ -129,14 +129,14 @@ export function nbaRegularSeasonDaily(day: string): NbaDailyScheduleSlot | null 
   const first = ordinal(NBA_GAMES_LAUNCH_DAY);
   const last = ordinal(NBA_REGULAR_SEASON_LAST_DAY);
   if (target < first || target > last) return null;
-  // Preserve the original, server-authored October 29 Bar Trivia board and
-  // completed 81/100 attempt as the real first public Daily. This one opening
-  // challenge lasts through October 31; no new NBA board opens on October 30.
+  // Owner-approved Oct 29–31 NBA Millionaire showcase. The previous public
+  // Bar Trivia board/results stay immutable in the archival schedule version;
+  // this new identity starts clean for everyone. Nov 1's locked cadence stays.
   if (target <= ordinal(NBA_INTRODUCTORY_LAST_DAY)) {
     return {
       day: NBA_GAMES_LAUNCH_DAY,
       nextDay: "2026-11-01",
-      gameType: "bar_trivia",
+      gameType: "millionaire",
       appearanceIndex: 0,
       isPublicationDay: target === first,
     };
