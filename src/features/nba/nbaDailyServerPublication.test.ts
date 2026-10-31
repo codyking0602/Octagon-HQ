@@ -13,7 +13,7 @@ describe("NBA server-authored Daily publication foundation", () => {
     expect(nbaDailyGameAppearance("2026-11-01", "sports_feud")).toBe(0);
     expect(nbaDailyGameAppearance("2026-11-19", "bar_trivia")).toBe(0);
     expect(() => nbaDailyGameAppearance("2026-10-31", "average_fan")).toThrow();
-    expect(nbaDailyGameAppearance("2026-10-29", "bar_trivia")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-10-29", "millionaire")).toBe(0);
     expect(() => nbaDailyGameAppearance("2026-10-30", "sports_feud")).toThrow();
     let num = 0;
     for (let index = 0; index < 80; index++) {
