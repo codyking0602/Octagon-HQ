@@ -11,17 +11,21 @@ For NEW V4 player-specific development games ONLY (economyVersion 3, development
 
 This is an authored game calibration, not a historical regression estimate or real NBA projection.
 
-## Before vs after screening
-2,500 deterministic legal seven-slot fixture drafts before the +3 global term, 500 per strategy:
-| Strategy | Before average wins | After creator-only adjustment | Median peak payroll |
-| --- | ---: | ---: | ---: |
-| Star heavy | 28.97 | 30.68 | $133.6M |
-| Balanced | 17.84 | 18.25 | $56.2M |
-| Defense focused | 29.87 | 31.17 | $111.6M |
-| Depth focused | 15.75 | 16.04 | $47.9M |
-| Bargain focused | 13.31 | 13.63 | $40.4M |
+## Reproducible three-season results
 
-New +3 net yields another ~6–7 wins where clamping does not intervene. Directional tests are not population-calibrated NBA historical claims. The Vitest fixture runs 2,500 deterministic three-season franchises / 7,500 synthetic seasons; the SQL regression runs 5 concrete strategies x 200 seeds x 3 years = 3,000 actual authoritative SQL season outcomes, including deterministic postseason and legacy-path checks. Existing backend tests cover spin, trade, release, cap and sign routes; these new harnesses do NOT constitute 2,500 complete live interactive franchise RPC sessions.
+The exact-head `nbaGmThreeSeasonBalance.test.ts` suite completed **2,500 deterministic seven-player fixture drafts, 7,500 simulated 82-game seasons**, across five strategy policies (500 each). It uses the authored 330-player skills and V4 year-two/year-three development. The before figures are evaluated on the **same exact rotations and seeds** with the old skill-to-net mapping, while after includes the new +3 net baseline and the bounded two-creator term.
+
+| Draft strategy | Original mean wins/season | Calibrated mean wins/season | Calibrated Season 3 mean |
+| --- | ---: | ---: | ---: |
+| Star-heavy | 22.58 | **30.28** | 29.88 |
+| Balanced | 19.29 | **26.69** | 26.39 |
+| Defense-first | 22.44 | **29.93** | 29.83 |
+| Depth-first | 17.96 | **25.17** | 25.15 |
+| Bargain-first | 18.14 | **25.47** | 25.44 |
+
+A star-heavy team does **not** automatically dominate a complementary build under a strict cap. This is deliberate; the same seeded roster gets ~7–8 more wins after model correction without removing the downside of weak defense. This sample remains a **fixture-level simulation**, not an observed NBA dataset or a full server action-by-action playthrough.
+
+The independently exercised local SQL migration suite also completes **3,000 server-owned NBA season outputs** across 5 named rosters × 200 fixed seeds × 3 seasons, checking 82-game integrity, postseason finish enumerations, deterministic replay and unmodified legacy V3 conversion. Existing lifecycle SQL tests separately cover owner authentication, spin, legal draft completion, trades, cuts, free agency and cap recovery. These test scopes are not combined into an unsupported claim of 2,500 fully interactive live backend franchises.
 
 ## Result messaging
 Do not alter 90/3/7 numerical score. If three seasons all miss playoffs, label as strong potential without pretending a winning franchise was built.
