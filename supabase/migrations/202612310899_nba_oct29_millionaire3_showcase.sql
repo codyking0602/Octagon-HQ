@@ -107,12 +107,12 @@ WHERE s.game_type='millionaire' AND s.setup_key='millionaire-daily-v5-finish-boa
 ON CONFLICT (schedule_version,central_day) DO NOTHING;
 
 DO $verify$
-DECLARE v_id uuid; v_setup private.daily_challenge_setups; v_count integer;
+DECLARE v_id uuid; v_setup_id uuid; v_setup private.daily_challenge_setups; v_count integer;
 BEGIN
-  SELECT d.id,s INTO v_id,v_setup
+  SELECT d.id,d.setup_id INTO v_id,v_setup_id
   FROM private.daily_challenges d
-  JOIN private.daily_challenge_setups s ON s.id=d.setup_id
   WHERE d.central_day=date '2026-10-29' AND d.schedule_version='nba-daily-launch-oct29-millionaire-v1';
+  SELECT * INTO v_setup FROM private.daily_challenge_setups WHERE id=v_setup_id;
   IF v_id IS NULL OR v_setup.game_type <> 'millionaire'
     OR v_setup.public_setup->>'league' <> 'nba'
     OR v_setup.public_setup->>'host_number' <> '3'
