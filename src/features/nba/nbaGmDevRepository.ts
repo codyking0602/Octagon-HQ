@@ -16,6 +16,10 @@ const run=z.object({
   tradeAttempts:z.number().int().nonnegative(),tradesUsed:z.number().int().nonnegative(),
   freeAgencyTeam:z.string().nullable(),freeAgencyVisits:z.number().int().nonnegative(),
   releasedIds:z.array(z.string()),
+  development:z.record(z.string(),z.object({year2Grade:z.number(),year3Grade:z.number(),
+    year2Salary:z.number(),year3Salary:z.number(),startingGrade:z.number()})).optional(),
+  scoreBreakdown:z.object({score:z.number(),roster:z.number(),regularSeason:z.number(),
+    playoffs:z.number(),weights:z.tuple([z.number(),z.number(),z.number()])}).optional(),
 });
 const player=z.object({
   id:z.string().min(1),name:z.string().min(1),teamCode:z.string(),
@@ -31,7 +35,7 @@ const player=z.object({
 type RpcClient={rpc:(name:string,args?:Record<string,unknown>)=>
   PromiseLike<{data:unknown,error:{message?:string}|null}>};
 export type NbaGmDevOperation="load"|"start"|"spin"|"pick"|"offseason"|
- "shop"|"trade-spin"|"trade"|"cancel-trade"|"release"|"fa-spin"|"sign"|"pass-fa"|"advance";
+ "shop"|"trade-spin"|"trade"|"cancel-trade"|"release"|"fa-spin"|"sign"|"pass-fa"|"emergency-sign"|"advance";
 export function createNbaGmDevRepository(supplied?:RpcClient|null){
   const client=supplied===undefined?getSupabaseClient() as unknown as RpcClient|null:supplied;
   if(!client)return null;
@@ -41,9 +45,9 @@ export function createNbaGmDevRepository(supplied?:RpcClient|null){
       if(error)throw Error(error.message||"NBA GM private catalog unavailable.");
       return z.array(player).length(330).parse(data) as NbaGmDevPlayer[];
     },
-    async action(operation:NbaGmDevOperation,playerId?:string):Promise<NbaGmDevRun|null>{
+    async action(operation:NbaGmDevOperation,playerId?:string,tradeChipId?:string):Promise<NbaGmDevRun|null>{
       const {data,error}=await client.rpc("nba_gm_dev_action",{
-        p_action:operation,p_slot:null,p_player_id:playerId??null,
+        p_action:operation,p_slot:tradeChipId??null,p_player_id:playerId??null,
       });
       if(error)throw Error(error.message||"NBA GM action failed.");
       return data==null?null:run.parse(data) as NbaGmDevRun;
