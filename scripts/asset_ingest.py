@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import ipaddress
 import json
 import os
@@ -621,6 +622,21 @@ def source_publisher_band(im):
     return False
 
 
+# A manual inspection rejected this exact original-only WebP twice (#2352,
+# #2354). Keep it out of all generated-asset PRs even if an alpha heuristic
+# misses a subtle publisher panel. Different verified clean photos remain eligible.
+VISUALLY_REJECTED_THUMB_BLOBS = {
+    "64f29f5a3427f390edc15bc07e68b5064768ac36",
+}
+
+
+def source_thumb_blob_is_rejected(payload):
+    blob_hash = hashlib.sha1(
+        b"blob " + str(len(payload)).encode("ascii") + b"\\0" + payload
+    ).hexdigest()
+    return blob_hash in VISUALLY_REJECTED_THUMB_BLOBS
+
+
 def broad_upper_side_alpha_panel(im):
     """Reject colored/gradient publisher panels even without flat RGB strips.
 
@@ -781,6 +797,8 @@ def ingest_fighter_candidate(spec, kind, dest, size):
     quality = validate_asset_quality(check, kind)
     if kind == "thumb" and (source_publisher_band(check) or broad_upper_side_alpha_panel(check)):
         fail("finished thumbnail retains a publisher band")
+    if kind == "thumb" and source_thumb_blob_is_rejected(encoded.getvalue()):
+        fail("finished thumbnail matches a previously visually rejected publisher-panel photo")
 
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     with open(dest, "wb") as handle:
