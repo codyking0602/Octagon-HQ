@@ -20,6 +20,8 @@ export interface NbaGmDevSeason {
 }
 export interface NbaGmDevRun {
   version: "nba-gm-dev-v2";
+  /** Newly started parity economies are V3; missing denotes original V2 saved run. */
+  economyVersion?: 3;
   seed: string;
   phase: NbaGmDevPhase;
   picks: NbaGmPick[];
