@@ -41,12 +41,18 @@ export function nbaGmRepriceLabel(risk:NbaGmRepriceRisk|null|undefined,
   return {label:"REPRICE RISK",tone:"unknown"};
 }
 
-// New franchises receive server-authored odds from the EXACT same SQL
-// function that resolves development. Old saved runs do not have these odds:
-// neutral is more honest than an unrelated age-only guess.
+// The authoritative v4 SQL odds ALWAYS take precedence in new franchises.
+// Preserve the original age-only display fallback for old V2/V3 saved games
+// as a compatibility policy; it is not the source for any new-run outcomes.
 export function nbaGmScoutOutlook(player:Pick<NbaGmDevPlayer,
   "currentGrade"|"ageAtStart"|"reviewFlags"|"developmentOdds">,
   year:1|2|3=1):"HIGH UPSIDE"|"RISING"|"STEADY"|"BOOM/BUST"|"DECLINE RISK"{
   if(year<3&&player.developmentOdds)return footballGmOutlookFromOdds(player.developmentOdds);
+  const age=player.ageAtStart==null?null:player.ageAtStart+year-1;
+  if(age===null||year===3)return "STEADY";
+  if(age>=35||(age>=32&&player.currentGrade<=85))return "DECLINE RISK";
+  if(age>=32&&player.reviewFlags.includes("availability-separate"))return "BOOM/BUST";
+  if(age<=23&&player.currentGrade<=92)return "HIGH UPSIDE";
+  if(age<=26&&player.currentGrade<=91)return "RISING";
   return "STEADY";
 }
