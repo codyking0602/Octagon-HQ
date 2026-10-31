@@ -31,6 +31,8 @@ const player=z.object({
   pricingKind:z.literal("GAME_FIXTURE_NOT_REAL_CONTRACT"),eligibilityKind:z.literal("PROVISIONAL_EDITORIAL"),
   officialNbaPlayerId:z.string().nullable(),ageAtStart:z.number().int().min(18).max(50).nullable().optional(),
   developmentOdds:z.object({breakoutPct:z.number().min(0).max(100),improvePct:z.number().min(0).max(100),declinePct:z.number().min(0).max(100),steadyPct:z.number().min(0).max(100)}).nullable().optional(),
+  // Keep the owner-gated backend forecast; Zod strips unrecognized keys.
+  repriceRisk:z.enum(["LOW","MEDIUM","HIGH","LOCKED"]).nullable().optional(),
   officialRosterPosition:z.string().min(1),
   positionReview:z.literal("unverified"),reviewFlags:z.array(z.string()).min(1),
 });
