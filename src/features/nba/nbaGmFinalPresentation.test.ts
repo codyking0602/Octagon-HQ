@@ -23,5 +23,17 @@ describe("NBA GM Priority 4 — final presentation focused follow-up",()=>{
   expect(css).toContain('@media(max-width:480px)');
   expect(css).toContain('.nba-gm-final .gm-final__player-identity{grid-template-columns:23px');
   expect(css).toContain('overflow-wrap:anywhere');
+  // The final is a five-column Football roster grid: a draft-size portrait
+  // can overflow a narrow phone even when text wrapping is correct.
+  expect(final).toContain('className="gm-final__portrait nba-gm-final__portrait"');
+  expect(final).not.toContain('className="nba-gm-dev__portrait"');
+  expect(css).toContain('.nba-gm-final .nba-gm-final__portrait>img{object-fit:contain');
+ });
+ it("falls back to a visible team abbreviation when headshot or team SVG fails",()=>{
+  expect(final).toContain('<FinalTeamLogo code={player.teamCode} inset />');
+  expect(final).toContain('<FinalTeamLogo code={row.player.teamCode}/>');
+  expect(final).toContain('onError={() => setFailed(true)}');
+  expect(final).toContain('className="nba-gm-final__team-code"');
+  expect(css).toContain('.nba-gm-final__team-code{display:block');
  });
 });
