@@ -11,6 +11,7 @@ import { blindResumeWinner } from "./blindResumeEngine";
 import {
   blindResumeV3RoundPoints,
   createBlindResumeV3Card,
+  createEvidenceSafeBlindResumeV3Card,
   storedBlindResumeV3Card,
 } from "./blindResumeV3";
 
@@ -147,11 +148,21 @@ describe("Blind Resume V3 shared contract", () => {
     expect([...container.querySelectorAll(".blind-resume-recap__round header b")].every((node) => node.textContent === "CORRECT · +20")).toBe(true);
   });
 
+  it("retains the legacy matchups for old run links without the quality marker", () => {
+    const seed = "legacy-casual-stage3-compat";
+    const legacy = createBlindResumeV3Card(seed).roundSet.pairs[0]!;
+    const { container } = renderBlindResume(`/play/blind-resume?run=${seed}`);
+    const winner = blindResumeWinner(legacy);
+    const buttons = container.querySelectorAll<HTMLButtonElement>(".blind-resume-picks button");
+    fireEvent.click(buttons[legacy.fighterA.id === winner.id ? 0 : 1]!);
+    expect(container.textContent).toContain("+20 POINTS");
+  });
+
   it("restores the exact scored matchup after taking both fighters to Intelligence", () => {
     const seed = "v3-intelligence-return";
-    const card = createBlindResumeV3Card(seed);
+    const card = createEvidenceSafeBlindResumeV3Card(seed);
     const pair = card.roundSet.pairs[0]!;
-    const { container } = renderBlindResumeWithIntelligence(`/play/blind-resume?run=${seed}`);
+    const { container } = renderBlindResumeWithIntelligence(`/play/blind-resume?run=${seed}&q=1`);
     const view = within(container);
 
     fireEvent.click(view.getByText("REVEAL 2 MORE STATS"));
