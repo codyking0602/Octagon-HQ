@@ -23,6 +23,8 @@ from scripts.asset_ingest import (
     require_clean_original_thumb,
     source_publisher_band,
     broad_upper_side_alpha_panel,
+    source_thumb_blob_is_rejected,
+    VISUALLY_REJECTED_THUMB_BLOBS,
     verified_thumb_candidates,
     ingest_fighter_candidate,
     source_needs_background_removal,
@@ -113,6 +115,19 @@ class AssetIngestQualityTests(unittest.TestCase):
                 resolve_ufc_profile_source(
                     "https://www.ufc.com/athlete/johnny-walker", "Johnny Walker", "thumb",
                 )
+
+    def test_previously_rejected_webp_blob_cannot_reenter_a_photo_pr(self):
+        import hashlib
+        sample = b"unit-fixture-not-an-asset"
+        expected = hashlib.sha1(
+            b"blob " + str(len(sample)).encode("ascii") + b"\\0" + sample
+        ).hexdigest()
+        self.assertFalse(source_thumb_blob_is_rejected(sample))
+        self.assertIn(
+            "64f29f5a3427f390edc15bc07e68b5064768ac36",
+            VISUALLY_REJECTED_THUMB_BLOBS,
+        )
+        self.assertEqual(len(expected), 40)
 
     def test_gradient_upper_publisher_panel_is_rejected_without_cleanup(self):
         # Real publisher panels often have a gradient, so flat-color RGB
