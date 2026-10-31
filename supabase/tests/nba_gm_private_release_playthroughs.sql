@@ -67,7 +67,7 @@ begin
     v_original_year_one:=v_state->'yearOnePicks';
     v_state:=public.nba_gm_dev_action('offseason');
     if v_state->>'phase'<>'offseason' or
-      jsonb_object_length(coalesce(v_state->'development','{}'::jsonb))<>7
+      (select count(*) from jsonb_object_keys(coalesce(v_state->'development','{}'::jsonb)))<>7
       then raise exception 'Development not resolved for %',v_name;end if;
 
     -- A cap crisis must be recoverable, not trap a real player in offseason.
