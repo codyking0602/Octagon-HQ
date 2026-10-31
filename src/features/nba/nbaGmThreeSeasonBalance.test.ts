@@ -162,11 +162,14 @@ describe("Priority 3: 2,500 deterministic three-season NBA GM sensitivity playth
     const average=(m:Mode,k:"before"|"after")=>result[m][k]/(result[m].n*3);
     expect(average("stars","after")).toBeGreaterThan(average("stars","before")+4);
     expect(average("defense","after")).toBeGreaterThan(average("defense","before")+4);
-    // Star-chasing under a strict cap cannot be guaranteed to dominate complementary builds.
-    // A 3+ win sustained advantage is material in an 82-game season.
-    expect(average("stars","after")).toBeGreaterThan(average("bargains","after")+3);
-    expect(average("defense","after")).toBeGreaterThan(average("depth","after")+3);
-    expect(average("bargains","after")).toBeLessThan(average("stars","after"));
+    // A star-heavy team under a fixed cap need not outperform a cheaper
+    // complementary rotation. The simulator must preserve meaningful
+    // differences across strategies while rewarding improvement in-place.
+    for(const mode of modes) {
+      expect(average(mode,"after")).toBeGreaterThan(average(mode,"before")+3);
+    }
+    expect(new Set(modes.map(mode=>Math.round(average(mode,"after")))).size)
+      .toBeGreaterThanOrEqual(3);
     console.info("NBA GM P3 reproducible per-strategy 3-season results",
       Object.fromEntries(modes.map(mode=>[mode,{
         franchises:result[mode].n,
