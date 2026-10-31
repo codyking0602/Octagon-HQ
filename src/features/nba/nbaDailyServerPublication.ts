@@ -12,6 +12,7 @@ import {
 import { buildNbaSportsFeudDailyPack } from "./nbaSportsFeudDailyRotation";
 import { buildNbaBarTriviaDailyBoard } from "./nbaBarTriviaDailyRotation";
 import { buildNbaOfficialMillionaireRun } from "./nbaMillionaireDailyRotation";
+import { buildNbaMillionaireShowcaseRun } from "./nbaMillionaireBank";
 import { buildNbaMillionaireDailySetup } from "../play/millionaireDailyRuntime";
 import { buildNbaWhoAmIOfficialRounds } from "./nbaWhoAmIDailyRotation";
 import { buildTwoRoundWhoAmIDailyPublication } from "../play/whoAmITwoRoundDailyRuntime";
@@ -63,7 +64,9 @@ export function buildNbaServerDailyPublication(
         day, scheduleVersion, "nba-official-daily-v1", OFFICIAL_SCORE_CONTRACT_VERSION,
       )
     : gameType === "millionaire"
-    ? buildNbaMillionaireDailySetup(day, scheduleVersion, ordinal, buildNbaOfficialMillionaireRun(ordinal))
+    ? (scheduleVersion === "nba-daily-oct29-millionaire-showcase-v1" && day === "2026-10-29"
+        ? buildNbaMillionaireDailySetup(day, scheduleVersion, 2, buildNbaMillionaireShowcaseRun())
+        : buildNbaMillionaireDailySetup(day, scheduleVersion, ordinal, buildNbaOfficialMillionaireRun(ordinal)))
     : gameType === "average_fan"
     ? buildAverageFanDailySetup("nba", day, scheduleVersion, publicationHistory)
     : gameType === "sports_feud"
