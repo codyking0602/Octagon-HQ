@@ -30,18 +30,18 @@ describe("NBA official games release plan", () => {
     expect(nbaRegularSeasonDaily("2026-11-25")?.gameType).toBe("find_leader");
   });
 
-  it("launches saved Bar Trivia October 29 for three days, then stays opposite UFC every 48 hours", () => {
+  it("switches the Oct 29–31 NBA window to curated Millionaire without shifting Nov 1", () => {
     expect(NBA_GAMES_LAUNCH_DAY).toBe("2026-10-29");
     expect(NBA_REGULAR_SEASON_LAST_DAY).toBe("2027-04-11");
     expect(nbaRegularSeasonDaily("2026-10-28")).toBeNull();
     expect(nbaRegularSeasonDaily("2026-10-29")).toMatchObject({
-      day:"2026-10-29",nextDay:"2026-11-01",gameType:"bar_trivia",isPublicationDay:true,
+      day:"2026-10-29",nextDay:"2026-11-01",gameType:"millionaire",isPublicationDay:true,
     });
     expect(nbaRegularSeasonDaily("2026-10-30")).toMatchObject({
-      day:"2026-10-29",nextDay:"2026-11-01",gameType:"bar_trivia",isPublicationDay:false,
+      day:"2026-10-29",nextDay:"2026-11-01",gameType:"millionaire",isPublicationDay:false,
     });
     expect(nbaRegularSeasonDaily("2026-10-31")).toMatchObject({
-      day:"2026-10-29",nextDay:"2026-11-01",gameType:"bar_trivia",isPublicationDay:false,
+      day:"2026-10-29",nextDay:"2026-11-01",gameType:"millionaire",isPublicationDay:false,
     });
     expect(nbaRegularSeasonDaily("2026-11-01")).toMatchObject({
       day:"2026-11-01",nextDay:"2026-11-03",appearanceIndex:1,isPublicationDay:true,
@@ -57,7 +57,7 @@ describe("NBA official games release plan", () => {
     expect(nbaOwnerPreviewDaily("2026-10-29")).toBeNull();
     expect(nbaOwnerPreviewDaily("2026-10-30")).toBeNull();
   });
-  it("opens casual NBA and the promoted official Bar Trivia on Oct 29", () => {
+  it("opens casual NBA and the new official Millionaire on Oct 29", () => {
     expect(NBA_OFFICIAL_GAMES_RELEASE_READY).toBe(true);
     expect(nbaCanAccessPublicCasual("2026-10-28")).toBe(false);
     expect(nbaCanAccessPublicCasual("2026-10-29")).toBe(true);
@@ -67,7 +67,7 @@ describe("NBA official games release plan", () => {
     expect(nbaCanAccessPublicCasual("2027-04-12")).toBe(true);
     expect(() => nbaRegularSeasonDaily("2026-02-30")).toThrow("Invalid NBA Central date.");
   });
-  it("reuses the exact October 29 server board, owner 81 and score, and original Nov 1 rotation", () => {
+  it("keeps the original Oct 29 Bar Trivia board archived and preserves Nov 1 rotation", () => {
     const sql=readFileSync("supabase/migrations/202612310890_nba_oct29_public_bar_trivia_carryover.sql","utf8");
     expect(sql).toContain("INSERT INTO private.daily_challenges");
     expect(sql).toContain("v_public_id,central_day,'nba-daily-launch-oct29-bar-trivia-v1'");
