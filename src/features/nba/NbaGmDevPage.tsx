@@ -13,6 +13,7 @@ import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook } from "./nbaGmScou
 import { createNbaGmDevRepository, type NbaGmDevOperation } from "./nbaGmDevRepository";
 import { NBA_TEAMS } from "./nbaFutures";
 import { nbaTeamColor, nbaTeamLogoSrc } from "./nbaTeamBranding";
+import { nbaGmOfficialHeadshotId } from "./nbaGmOfficialHeadshots";
 import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
 import "../../styles/football-gm-final.css";
@@ -25,15 +26,17 @@ const wheelTeams=NBA_TEAMS.map(team=>({
 }));
 const labels=Object.keys(NBA_GM_DEV_SKILL_LABELS) as Array<keyof typeof NBA_GM_DEV_SKILL_LABELS>;
 function TeamMark({code}:{code:string}){
+  const [failed,setFailed]=useState(false);
+  useEffect(()=>setFailed(false),[code]);
+  const logo=nbaTeamLogoSrc(code);
   return <span className="nba-gm-dev__team-mark" style={{borderColor:nbaTeamColor(code)}} title={code}>
-    <img src={nbaTeamLogoSrc(code)} alt="" onError={event=>{event.currentTarget.style.display="none";}} />
-    <span>{code}</span>
+    {logo&&!failed?<img src={logo} alt="" onError={()=>setFailed(true)}/>:<b>{code}</b>}
   </span>;
 }
 /** NFL-style candidate portraits use only verified NBA IDs, with a team-mark fallback. */
 function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
   const [failed,setFailed]=useState(false);
-  const id=player.officialNbaPlayerId;
+  const id=nbaGmOfficialHeadshotId(player);
   return <span className="nba-gm-dev__portrait" aria-hidden="true">
     {id&&/^\d+$/.test(id)&&!failed
       ? <img src={`https://cdn.nba.com/headshots/nba/latest/260x190/${id}.png`}
