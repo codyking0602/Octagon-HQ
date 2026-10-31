@@ -28,12 +28,16 @@ describe("automatic UFC fighter media", () => {
     expect(assetIngest).toContain("PLACEHOLDER_URL_MARKERS");
     expect(assetIngest).toContain("source_url_looks_like_placeholder");
     expect(assetIngest).toContain("image_looks_like_silhouette");
-    expect(assetIngest).toContain("source image looks like a placeholder/silhouette rather than a fighter photo");
+    expect(assetIngest).toContain("thumbnail original is a placeholder/silhouette");
+    expect(assetIngest).toContain("require_clean_original_thumb(im)");
   });
 
   it("accepts only original verified square UFC/ESPN thumbs, never promotional body renders", () => {
     expect(assetIngest).toContain("approved_square_thumb_source");
-    expect(assetIngest).toContain('if kind == "thumb" and not approved_square_thumb_source(spec, source_url, im.size)');
+    expect(assetIngest).toContain("if not approved_square_thumb_source(spec, source_url, im.size):");
+    expect(assetIngest).toContain("verified_thumb_candidates(spec)");
+    expect(assetIngest).toContain("fallback_sources");
+    expect(assetIngest).toContain('fail("thumbnail source cannot be cropped or background-removed")');
     expect(assetIngest).toContain("official_square_headshot_reviewed");
     expect(assetIngest).not.toContain("focus_width = max(1, round(subject.width * 0.76))");
   });
