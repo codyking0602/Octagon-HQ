@@ -138,7 +138,7 @@ export default function NbaGmDevPage(){
       if(action==="pick")setPositionFilter(null);
       if(["shop","trade","cancel-trade"].includes(action))setTradeChip(null);
       setRun(state);
-      if(state&&["offseason","trade","sign","emergency-sign","advance"].includes(action)){
+      if(state&&["start","offseason","trade","sign","emergency-sign","advance"].includes(action)){
         void repo.catalog().then(setCatalog).catch(()=>setNotice("Salary scouting will refresh on reload."));
       }
       return state;
