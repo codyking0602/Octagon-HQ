@@ -7,6 +7,7 @@ import {
 } from "./nbaGmDevModel";
 import { nbaGmScoutTier } from "./nbaGmScouting";
 import { nbaTeamLogoSrc } from "./nbaTeamBranding";
+import { nbaGmOfficialHeadshotId } from "./nbaGmOfficialHeadshots";
 
 const money = (amount: number) => "$" + (amount / 1_000_000).toFixed(1) + "M";
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, value));
