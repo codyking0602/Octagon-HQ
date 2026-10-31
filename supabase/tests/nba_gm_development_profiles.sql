@@ -5,7 +5,7 @@ select set_config('request.jwt.claim.role','service_role',true);
 do $qa$
 declare
   p record;v_state jsonb;v_legacy jsonb;v_v2 jsonb;v_o jsonb;
-  v_g2 numeric;v_g3 numeric;v_n numeric;v_original numeric;
+  v_g2 numeric;v_g3 numeric;
   v_r integer;v_up integer:=0;v_down integer:=0;v_count integer:=0;v_salary bigint;
 begin
   if (select count(*) from private.nba_gm_dev_players)<>330 or
@@ -37,7 +37,6 @@ begin
         then raise exception 'Development gain/loss/ceiling violation for %',p.id; end if;
       if v_g2>p.overall+.4 then v_up:=v_up+1; end if;
       if v_g2<p.overall-.4 then v_down:=v_down+1; end if;
-      select private.nba_gm_v3_contract(p.id) into v_n;
       if private.nba_gm_v3_contract(p.id)='3YR' then
         v_salary:=private.nba_gm_v3_salary(v_state,p.id,3);
         if v_salary<>(select salaries[1] from private.nba_gm_dev_players where id=p.id)
