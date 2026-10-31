@@ -29,7 +29,8 @@ const player=z.object({
     perimeterDefense:z.number().int(),interiorDefense:z.number().int(),rebounding:z.number().int()}),
   gameContract:z.enum(["1YR","3YR"]),
   pricingKind:z.literal("GAME_FIXTURE_NOT_REAL_CONTRACT"),eligibilityKind:z.literal("PROVISIONAL_EDITORIAL"),
-  officialNbaPlayerId:z.string().nullable(),officialRosterPosition:z.string().min(1),
+  officialNbaPlayerId:z.string().nullable(),ageAtStart:z.number().int().min(18).max(50).nullable().optional(),
+  officialRosterPosition:z.string().min(1),
   positionReview:z.literal("unverified"),reviewFlags:z.array(z.string()).min(1),
 });
 type RpcClient={rpc:(name:string,args?:Record<string,unknown>)=>
