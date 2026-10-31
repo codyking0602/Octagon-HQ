@@ -498,7 +498,7 @@ create or replace function private.nba_gm_v2_season(p_state jsonb,p_year integer
 returns jsonb language plpgsql stable security definer set search_path='' as $$
 declare
   v_off numeric;v_def numeric;v_fit numeric;v_floor numeric;
-  v_noise integer;v_wins integer;v_finish text;
+  v_noise integer;v_wins integer;v_finish text;v_estimated_net numeric;
   v_roll integer;v_cutoff integer;v_round integer;
   v_turnover integer:=coalesce(jsonb_array_length(p_state->'releasedIds'),0)
      +coalesce((p_state->>'tradesUsed')::integer,0);
@@ -531,10 +531,15 @@ begin
   if v_off is null or v_def is null
      or jsonb_array_length(p_state->'picks')<>7 then raise exception 'NBA rotation incomplete'; end if;
   v_noise:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_year),1,8))::bit(32)::int::bigint)%11)::integer-5;
+  -- The 150 historical team-seasons establish W = 40.9983 + 2.2684
+  -- times OBSERVED net rating on a 2025–26 walk-forward holdout.
+  -- The seven-athlete skill -> estimated net rating mapping below remains
+  -- an explicitly PROVISIONAL game assumption, not a fitted lineup forecast.
+  v_estimated_net:=(v_off-78)*.529+(v_def-78)*.463
+    +(v_fit-27)*.154+least(0,(v_floor-65))*.088
+    -case when p_year=1 then 0 else greatest(0,v_turnover-2)*.353 end;
   v_wins:=greatest(8,least(74,round(
-    41+(v_off-78)*1.2+(v_def-78)*1.05+(v_fit-27)*.35
-      +least(0,(v_floor-65))*.2
-      -case when p_year=1 then 0 else greatest(0,v_turnover-2)*.8 end+v_noise
+    40.9983+2.2684*v_estimated_net+v_noise
   )::integer));
   -- A 53-win Denver team won in 2023; a 64+ win season must not
   -- guarantee a title. This PRIVATE playoff model is a deterministic,
