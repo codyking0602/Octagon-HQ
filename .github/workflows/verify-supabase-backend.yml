@@ -16,6 +16,10 @@ on:
       - "scripts/verify-sync-function-deployment.mjs"
       - "scripts/verify-whats-new-live.mjs"
       - "supabase/**"
+      # Private NBA GM final UI relies on the exact same server-owned lifecycle.
+      - "src/features/nba/NbaGmFinalExperience.tsx"
+      - "src/features/nba/nbaGmFinalPresentation.test.ts"
+      - ".github/workflows/nba-gm-prototype-ci.yml"
   workflow_dispatch:
 
 permissions:
