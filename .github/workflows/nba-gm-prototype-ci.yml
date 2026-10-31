@@ -16,6 +16,10 @@ on:
       - "src/features/nba/nbaGmScouting.ts"
       - "src/features/nba/nbaGmFootballParity.test.tsx"
       - "supabase/migrations/202612310897_nba_gm_football_parity_private.sql"
+      - "supabase/migrations/202612310898_nba_gm_dev_profiles_setup.sql"
+      - "data/curated/nba/gm-nba-development-profiles-2026-10-30.json"
+      - "src/features/nba/nbaGmDevelopmentProfiles.test.ts"
+      - "supabase/tests/nba_gm_development_profiles.sql"
       - "src/styles/nba-gm-dev.css"
       - "src/app/router.tsx"
       - "supabase/migrations/202612310893_nba_gm_private_playtest_runtime.sql"
@@ -61,4 +65,4 @@ jobs:
       - name: Build production artifacts without deploying
         run: npm run build:artifacts
       - name: NBA GM and Football GM unit regressions
-        run: npx vitest run src/features/nba/nbaGmHistoricalCalibration.test.ts src/features/nba/nbaGmPostseasonCalibration.test.ts src/features/nba/nbaGmDraftCompletion.test.ts src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmFootballParity.test.tsx src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts
+        run: npx vitest run src/features/nba/nbaGmHistoricalCalibration.test.ts src/features/nba/nbaGmPostseasonCalibration.test.ts src/features/nba/nbaGmDraftCompletion.test.ts src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmFootballParity.test.tsx src/features/nba/nbaGmDevelopmentProfiles.test.ts src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts

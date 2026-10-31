@@ -11,6 +11,8 @@ export type NbaGmDevPlayer = Omit<NbaGmPlayer, "sources"> & {
   officialNbaPlayerId: string | null;
   /** Verified 2025–26 NBA Stats API birthdate, aged as of game launch. */
   ageAtStart?: number | null;
+  /** Authoritative server odds; absent for old saved development models. */
+  developmentOdds?: {breakoutPct:number;improvePct:number;declinePct:number;steadyPct:number}|null;
   officialRosterPosition: string;
   positionReview: "unverified";
   reviewFlags: readonly string[];
@@ -24,6 +26,8 @@ export interface NbaGmDevRun {
   version: "nba-gm-dev-v2";
   /** Newly started parity economies are V3; missing denotes original V2 saved run. */
   economyVersion?: 3;
+  /** New franchises only; missing keeps V2 and original V3 development unchanged. */
+  developmentModelVersion?: 2;
   seed: string;
   phase: NbaGmDevPhase;
   picks: NbaGmPick[];

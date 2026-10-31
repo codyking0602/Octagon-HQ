@@ -4,7 +4,7 @@ import type { NbaGmDevPlayer, NbaGmDevRun } from "./nbaGmDevModel";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 const slot=z.enum(NBA_GM_ROSTER_SLOTS);
 const run=z.object({
-  version:z.literal("nba-gm-dev-v2"),economyVersion:z.literal(3).optional(),seed:z.string().startsWith("nba-gm-"),
+  version:z.literal("nba-gm-dev-v2"),economyVersion:z.literal(3).optional(),developmentModelVersion:z.literal(2).optional(),seed:z.string().startsWith("nba-gm-"),
   phase:z.enum(["draft","year1","offseason","final"]),
   picks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
   yearOnePicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
@@ -30,6 +30,7 @@ const player=z.object({
   gameContract:z.enum(["1YR","3YR"]),
   pricingKind:z.literal("GAME_FIXTURE_NOT_REAL_CONTRACT"),eligibilityKind:z.literal("PROVISIONAL_EDITORIAL"),
   officialNbaPlayerId:z.string().nullable(),ageAtStart:z.number().int().min(18).max(50).nullable().optional(),
+  developmentOdds:z.object({breakoutPct:z.number().min(0).max(100),improvePct:z.number().min(0).max(100),declinePct:z.number().min(0).max(100),steadyPct:z.number().min(0).max(100)}).nullable().optional(),
   officialRosterPosition:z.string().min(1),
   positionReview:z.literal("unverified"),reviewFlags:z.array(z.string()).min(1),
 });

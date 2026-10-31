@@ -107,7 +107,8 @@ jobs:
             supabase/tests/sport_championship_weekly_winners.sql \
             supabase/tests/sport_championship_2026_season_starts.sql \
             supabase/tests/nba_cup_public_release.sql \
-            supabase/tests/nba_gm_private_playtest.sql
+            supabase/tests/nba_gm_private_playtest.sql \
+            supabase/tests/nba_gm_development_profiles.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
