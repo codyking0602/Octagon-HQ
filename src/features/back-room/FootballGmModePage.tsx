@@ -516,6 +516,7 @@ export function GmFootballWheel({
   pendingTeam,
   canSpin,
   onSpin,
+  ariaLabel = "Football team wheel",
 }: {
   teams: readonly GmWheelDisplayTeam[];
   rotation: number;
@@ -523,9 +524,10 @@ export function GmFootballWheel({
   pendingTeam: GmWheelDisplayTeam | null;
   canSpin: boolean;
   onSpin: () => void;
+  ariaLabel?: string;
 }) {
   return (
-    <section className="football-wheel surface-card" aria-label="Football team wheel">
+    <section className="football-wheel surface-card" aria-label={ariaLabel}>
       <div className="football-wheel__pointer" aria-hidden="true" />
       <div
         className={`football-wheel__disc${spinning ? " is-spinning" : ""}${teams.length > 40 ? " is-dense" : ""}`}
