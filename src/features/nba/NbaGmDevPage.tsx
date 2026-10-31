@@ -203,6 +203,7 @@ export default function NbaGmDevPage(){
   }
   const byId=useMemo(()=>new Map(catalog.map(p=>[p.id,p])),[catalog]);
   const spend=run?nbaGmDevSpend(run.picks,catalog):null;
+  const displaySalaryYear=run?nbaGmDevDisplaySalaryYear(run.phase):0;
   const capCrisis=Boolean(run&&spend&&(spend[1]>run.caps[1]||spend[2]>run.caps[2]));
   const candidates=run?nbaGmDevCandidates(run,catalog):[];
   const visible=candidates.filter(p=>!positionFilter||p.positions.includes(positionFilter as "PG"|"SG"|"SF"|"PF"|"C"));
@@ -246,12 +247,18 @@ export default function NbaGmDevPage(){
         onClick={()=>void act("start")}>START THE DRAFT</button>
     </section>}
     {run&&<>
-      <section className="nba-gm-dev__panel nba-gm-dev__caps">
-        <div><small>{isDraft?"DRAFT":"YOUR ROSTER"}</small><strong>{run.picks.length} / 7</strong></div>
-        {[0,1,2].map(index=><div key={index}>
-          <small>YEAR {index+1} CAP</small><strong>{money(spend?.[index]??0)} <span>/ {money(run.caps[index]!)}</span></strong>
-          <div className="nba-gm-dev__bar"><i style={{width:Math.min(100,100*(spend?.[index]??0)/run.caps[index]!)+"%"}}/></div>
-        </div>)}
+      <section className={`football-gm__cap surface-card nba-gm-dev__caps${(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" is-over":""}`}>
+        <div className="nba-gm-dev__cap-main">
+          <span><small>YEAR {displaySalaryYear+1} CAP</small>
+            <strong>{money(spend?.[displaySalaryYear]??0)} / {money(run.caps[displaySalaryYear]!)}</strong></span>
+          <b>{money(Math.abs(run.caps[displaySalaryYear]!-(spend?.[displaySalaryYear]??0)))}
+            {(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" OVER":" LEFT"}</b>
+        </div>
+        <i><em style={{width:Math.min(100,100*(spend?.[displaySalaryYear]??0)/run.caps[displaySalaryYear]!)+"%"}}/></i>
+        <div className="nba-gm-dev__cap-forecast">
+          {[0,1,2].filter(index=>index!==displaySalaryYear).map(index=>
+            <span key={index}><small>YEAR {index+1}</small><b>{money(spend?.[index]??0)} / {money(run.caps[index]!)}</b></span>)}
+        </div>
       </section>
       <section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
