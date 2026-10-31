@@ -30,21 +30,27 @@ begin
   foreach v_day in array array[date '2026-10-29', date '2026-11-01', date '2026-11-05', date '2026-11-07', date '2026-11-17'] loop
     v_schedule := private.daily_challenge_schedule_for_day(v_day, 'nba');
     v_game := private.daily_challenge_expected_game(v_schedule, v_day);
-    insert into private.daily_challenge_setups (
-      game_type, setup_key, content_version, scoring_version, public_setup,
-      reveal_setup, private_setup_evidence, private_grading_evidence
-    ) values (
-      v_game, 'nba-streak-proof:' || v_day::text, 'nba-streak-proof-v1',
-      'play-official-score-v1', '{}'::jsonb, '{}'::jsonb,
-      '{}'::jsonb, '{}'::jsonb
-    ) returning id into v_setup;
-    insert into private.daily_challenges (
-      central_day, schedule_version, game_type, setup_id,
-      content_version, scoring_version, fallback_reason
-    ) values (
-      v_day, v_schedule, v_game, v_setup,
-      'nba-streak-proof-v1', 'play-official-score-v1', null
-    ) returning id into v_daily;
+    -- Oct 29 is already published as the owner-approved Millionaire 3 board.
+    -- Reuse that canonical immutable board rather than fabricating a duplicate.
+    select id into v_daily from private.daily_challenges
+    where central_day=v_day and schedule_version=v_schedule;
+    if v_daily is null then
+      insert into private.daily_challenge_setups (
+        game_type, setup_key, content_version, scoring_version, public_setup,
+        reveal_setup, private_setup_evidence, private_grading_evidence
+      ) values (
+        v_game, 'nba-streak-proof:' || v_day::text, 'nba-streak-proof-v1',
+        'play-official-score-v1', '{}'::jsonb, '{}'::jsonb,
+        '{}'::jsonb, '{}'::jsonb
+      ) returning id into v_setup;
+      insert into private.daily_challenges (
+        central_day, schedule_version, game_type, setup_id,
+        content_version, scoring_version, fallback_reason
+      ) values (
+        v_day, v_schedule, v_game, v_setup,
+        'nba-streak-proof-v1', 'play-official-score-v1', null
+      ) returning id into v_daily;
+    end if;
     insert into private.daily_challenge_attempts (
       daily_challenge_id, profile_id, attempt_kind, native_score,
       normalized_score, completed_at, content_version, scoring_version,

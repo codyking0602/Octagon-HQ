@@ -17,8 +17,8 @@ begin
     or private.daily_challenge_expected_game(v_schedule.version,date '2026-11-02') <> 'average_fan'
     or private.daily_challenge_expected_game(v_schedule.version,date '2026-11-03') <> 'sports_feud'
     or private.daily_challenge_expected_game(v_schedule.version,date '2026-11-17') <> 'higher_lower'
-    or private.daily_challenge_schedule_for_day(date '2026-10-29','nba') <> 'nba-daily-launch-oct29-bar-trivia-v1'
-    or private.daily_challenge_schedule_for_day(date '2026-10-30','nba') <> 'nba-daily-launch-oct29-bar-trivia-v1'
+    or private.daily_challenge_schedule_for_day(date '2026-10-29','nba') <> 'nba-daily-launch-oct29-millionaire-v1'
+    or private.daily_challenge_schedule_for_day(date '2026-10-30','nba') <> 'nba-daily-launch-oct29-millionaire-v1'
     or private.daily_challenge_schedule_for_day(date '2026-11-01','nba') <> 'nba-daily-regular-v3-oct30-public' then
     raise exception 'NBA every-other-day schedule mapping invalid';
   end if;
@@ -37,8 +37,8 @@ begin
     raise exception 'NBA early public cycle changed approved weights';
   end if;
   v_request := public.get_daily_challenge_materialization_request('nba','2026-10-31T19:00:00Z'::timestamptz);
-  if v_request->>'central_day' <> '2026-10-29' or v_request->>'expected_game' <> 'bar_trivia'
-    or v_request->>'schedule_version' <> 'nba-daily-launch-oct29-bar-trivia-v1' then
+  if v_request->>'central_day' <> '2026-10-29' or v_request->>'expected_game' <> 'millionaire'
+    or v_request->>'schedule_version' <> 'nba-daily-launch-oct29-millionaire-v1' then
     raise exception 'NBA shared 48-hour Daily identity invalid';
   end if;
   v_submission := jsonb_build_object('answers',(
@@ -47,7 +47,7 @@ begin
   v_evidence := jsonb_build_object('question_ids',(
     select jsonb_agg('q'||i) from generate_series(0,9) as i),
     'correct_choices',(
-    select jsonb_agg('higher') from generate_series(0,9) as i));
+    select jsonb_agg('higher'::text) from generate_series(0,9) as i));
   select * into v_grade from private.grade_daily_challenge('higher_lower','play-official-score-v1',v_submission,v_evidence);
   if v_grade.native_score <> 7 or v_grade.normalized_score <> 70 then raise exception 'NBA Higher/Lower scorer incorrect'; end if;
   if private.daily_challenge_expected_game('football-daily-v18-average-fan-oct1',date '2026-10-01') <> 'average_fan'
