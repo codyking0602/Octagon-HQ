@@ -40,8 +40,15 @@ begin
         when 'HIGH' then v_high:=v_high+1;
         else raise exception 'Missing one-year risk for %',p.id;
       end case;
-      if private.nba_gm_v5_reprice_risk(v_old,p.id) is not null then
-        raise exception 'Legacy saved run received a new-risk forecast %',p.id;end if;
+
+    end if;
+    -- Legacy V2 terms can differ from V3. A true V2 3YR is locked;
+    -- only legacy 1YR players have no comparable new-model risk forecast.
+    if private.nba_gm_v3_contract_for_state(v_old,p.id)='3YR' then
+      if private.nba_gm_v5_reprice_risk(v_old,p.id)<>'LOCKED' then
+        raise exception 'Legacy locked term mismatched for %',p.id;end if;
+    elsif private.nba_gm_v5_reprice_risk(v_old,p.id) is not null then
+      raise exception 'Legacy 1YR run received a new-risk forecast %',p.id;
     end if;
     v_year3:=private.nba_gm_v5_reprice_risk(v_offseason,p.id);
     if v_year3 is distinct from 'LOCKED' and v_year3 not in ('LOW','MEDIUM','HIGH') then
