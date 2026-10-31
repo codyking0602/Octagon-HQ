@@ -1,4 +1,7 @@
 import { readFileSync } from "node:fs";
+import { render, fireEvent } from "@testing-library/react";
+import { PlayerPortrait } from "./NbaGmDevPage";
+import type { NbaGmDevPlayer } from "./nbaGmDevModel";
 import { describe, expect, it } from "vitest";
 import { NBA_GM_VERIFIED_HEADSHOT_IDS, nbaGmOfficialHeadshotId } from "./nbaGmOfficialHeadshots";
 
@@ -40,6 +43,28 @@ describe("NBA GM 30-team headshot and Football presentation parity", () => {
     expect(page).toContain("nba-gm-dev__reprice is-");
     expect(css).toContain(".nba-gm-dev__reprice.is-high");
     expect(repository).toContain('repriceRisk:z.enum(["LOW","MEDIUM","HIGH","LOCKED"]).nullable().optional()');
+  });
+
+  it("renders official NBA portraits and gracefully falls back on failed images for all 30 teams",()=>{
+    // JSDOM verifies the actual React failure path, not just a numeric-ID regex.
+    // CDN availability can change: no remote network response is assumed.
+    expect(players).toHaveLength(330);
+    for(const player of players) {
+      const {container,unmount}=render(<PlayerPortrait player={player as NbaGmDevPlayer}/>);
+      const img=container.querySelector(".nba-gm-dev__portrait > img");
+      expect(img,player.name).not.toBeNull();
+      expect(img!.getAttribute("src")).toContain(nbaGmOfficialHeadshotId(player)!);
+      fireEvent.error(img!);
+      const fallback=container.querySelector(".nba-gm-dev__portrait .nba-gm-dev__team-mark");
+      expect(fallback,player.teamCode).not.toBeNull();
+      const logo=fallback!.querySelector("img");
+      if(logo) {
+        fireEvent.error(logo);
+        expect(fallback!.textContent).toContain(player.teamCode);
+      }
+      unmount();
+    }
+    expect(new Set(players.map(player=>player.teamCode)).size).toBe(30);
   });
 
   it("uses the recovered identities on draft, roster and final screens", () => {

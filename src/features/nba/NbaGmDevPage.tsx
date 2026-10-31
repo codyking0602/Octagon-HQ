@@ -34,7 +34,7 @@ function TeamMark({code}:{code:string}){
   </span>;
 }
 /** NFL-style candidate portraits use only verified NBA IDs, with a team-mark fallback. */
-function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
+export function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
   const [failed,setFailed]=useState(false);
   const id=nbaGmOfficialHeadshotId(player);
   return <span className="nba-gm-dev__portrait" aria-hidden="true">
