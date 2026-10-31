@@ -1,11 +1,9 @@
 -- Private NBA GM parity patch; legacy V1 snapshots and prior V2 revisions remain untouched.
 -- All transitions still require the existing owner gate and Football GM write guard.
 -- These are deliberately fictional 7-man franchise salaries, NOT actual NBA contracts.
--- DEVELOPMENT CALIBRATION WARNING: the existing NBA catalog does not contain
--- validated dates of birth/longitudinal player ceilings for all 330 athletes.
--- Therefore this seeded model uses grade headroom, six-skill profile, repeated
--- breakout damping and risk cohorts; it does NOT pretend invented ages are factual.
--- Future age-specific calibration requires a sourced 330-player age table.
+-- Source-verified birthdates cover 301 of 330 players. Remaining ages stay
+-- unknown, with neutral fallback probabilities rather than invented ages.
+-- Development ceilings/risk remain provisional, basketball-informed game models.
 
 -- NBA API CommonPlayerInfo birthdates, matched by exact player ID and editorial identity.
 -- PINNED SOURCE EasySportsApps/nba_api_25_26_data@f785bb34415b2bf4c80614dcfa4a305cc9969ee5
@@ -876,7 +874,10 @@ begin
    order by (r.completed_at is null) desc,r.updated_at desc limit 1;
   return coalesce((select jsonb_agg(jsonb_build_object(
     'id',p.id,'name',p.name,'teamCode',p.team_code,'positions',p.positions,
-    'currentGrade',p.overall,'skills',p.skills,'salaries',case when v_state->>'phase' in ('offseason','final') then jsonb_build_array(private.nba_gm_v3_salary(v_state,p.id,1),private.nba_gm_v3_salary(v_state,p.id,2),private.nba_gm_v3_salary(v_state,p.id,3)) else to_jsonb(p.salaries) end,
+    'currentGrade',p.overall,'skills',p.skills,
+    'ageAtStart',case when p.verified_birth_date is null then null else
+      extract(year from age(date '2026-10-30',p.verified_birth_date))::integer end,
+    'salaries',case when v_state->>'phase' in ('offseason','final') then jsonb_build_array(private.nba_gm_v3_salary(v_state,p.id,1),private.nba_gm_v3_salary(v_state,p.id,2),private.nba_gm_v3_salary(v_state,p.id,3)) else to_jsonb(p.salaries) end,
     'gameContract',private.nba_gm_v3_contract_for_state(v_state,p.id),
     'pricingKind',p.pricing_kind,'eligibilityKind',p.eligibility_kind,
     'officialNbaPlayerId',p.official_nba_player_id,
