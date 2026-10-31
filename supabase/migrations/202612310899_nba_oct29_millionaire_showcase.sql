@@ -33,7 +33,7 @@ BEGIN
   ] LOOP
     v_before := pg_get_functiondef(v_reg::oid);
     IF position('schedule.sport = p_sport' IN v_before) = 0
-      OR position('source.schedule_version' IN v_before) > 0
+      OR position('source.schedule_version <> ''nba-daily-launch-oct29-bar-trivia-v1''' IN v_before) > 0
     THEN RAISE EXCEPTION 'NBA history function contract has drifted: %',v_reg; END IF;
     v_after := replace(v_before,
       'schedule.sport = p_sport',
@@ -44,7 +44,7 @@ BEGIN
   v_reg := 'public.get_my_daily_challenge_streak(text)'::regprocedure;
   v_before := pg_get_functiondef(v_reg::oid);
   IF position('and s.sport=p_sport' IN v_before) = 0
-    OR position('h.schedule_version' IN v_before) > 0
+    OR position('h.schedule_version<>''nba-daily-launch-oct29-bar-trivia-v1''' IN v_before) > 0
   THEN RAISE EXCEPTION 'NBA streak function contract has drifted'; END IF;
   EXECUTE replace(v_before,'and s.sport=p_sport',
     'and s.sport=p_sport and (p_sport<>''nba'' or h.schedule_version<>''nba-daily-launch-oct29-bar-trivia-v1'')');
