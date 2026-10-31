@@ -15,6 +15,9 @@ declare
   v_year2 bigint;v_year3 bigint;v_count integer;v_score numeric;
   v_found boolean;v_seed text;
   v_name text;
+  v_roster_summary text;
+  v_contender_picks jsonb;v_contender_state jsonb;v_contender_result jsonb;
+  v_contender_wins integer:=0;v_seed_index integer;v_contender_cap bigint;
 begin
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,
     email_confirmed_at,created_at,updated_at,raw_user_meta_data)
@@ -25,6 +28,41 @@ begin
   insert into public.pick_control_owners(profile_id) values(v_owner);
   perform set_config('request.jwt.claim.role','authenticated',true);
   perform set_config('request.jwt.claim.sub',v_owner::text,true);
+
+  -- Independent, deliberately complementary *legal* $155M rotation.
+  -- A credible contender must actually be possible under P3 without adding
+  -- artificial wins to the six genuine random-wheel drafts below.
+  v_contender_picks:=jsonb_build_array(
+    jsonb_build_object('slot','PG','playerId','nba-gm-draft-shaigilgeousalexander'),
+    jsonb_build_object('slot','SG','playerId','nba-gm-draft-ausarthompson'),
+    jsonb_build_object('slot','SF','playerId','nba-gm-draft-cooperflagg'),
+    jsonb_build_object('slot','PF','playerId','nba-gm-draft-isaiahstewart'),
+    jsonb_build_object('slot','C','playerId','nba-gm-draft-joelembiid'),
+    jsonb_build_object('slot','GUARD','playerId','nba-gm-draft-jrueholiday'),
+    jsonb_build_object('slot','BIG','playerId','nba-gm-draft-kristapsporzingis')
+  );
+  if private.nba_gm_v2_assign(v_contender_picks) is null then
+    raise exception 'The reference contender is not a legal seven-position roster';end if;
+  v_contender_state:=jsonb_build_object('economyVersion',3,
+    'developmentModelVersion',2,'phase','draft',
+    'seed','nba-gm-release-contender','picks',v_contender_picks,
+    'yearOnePicks',v_contender_picks,'releasedIds','[]'::jsonb,'tradesUsed',0,
+    'caps','[155000000,155000000,155000000]'::jsonb);
+  select coalesce(sum(private.nba_gm_v3_salary(v_contender_state,pick->>'playerId',3)),0)
+    into v_contender_cap from jsonb_array_elements(v_contender_picks) pick;
+  if v_contender_cap>155000000 then
+    raise exception 'Reference contender is not within Year 3 draft cap: %',v_contender_cap;end if;
+  for v_seed_index in 1..30 loop
+    v_contender_state:=jsonb_set(v_contender_state,'{seed}',
+      to_jsonb('nba-gm-release-contender-'||v_seed_index));
+    v_contender_result:=private.nba_gm_v2_season(v_contender_state,1);
+    v_contender_wins:=v_contender_wins+(v_contender_result->>'wins')::integer;
+  end loop;
+  if v_contender_wins<30*50 then
+    raise exception 'Legal complementarity contender cannot average 50 wins: %',
+      v_contender_wins/30.0;end if;
+  raise notice 'NBA GM MODEL CEILING: legal seven-player contender across 30 fixed seeds = avg % wins, Year 3 baseline commitment %',
+    round(v_contender_wins/30.0,1),v_contender_cap;
 
   for v_strategy in 1..6 loop
     v_name:=case v_strategy when 1 then 'star-heavy'
@@ -137,6 +175,11 @@ begin
         where r.profile_id=v_owner and r.game_version='nba-gm-dev-v2'
           and r.seed=v_seed limit 1) is distinct from v_state then
       raise exception 'Final seed-specific franchise did not persist %',v_name;end if;
+    select string_agg(pick->>'slot'||':'||p.name||' ('||p.overall||')',', '
+      order by array_position(array['PG','SG','SF','PF','C','GUARD','BIG'],pick->>'slot'))
+      into v_roster_summary from jsonb_array_elements(v_picks) pick
+      join private.nba_gm_dev_players p on p.id=pick->>'playerId';
+    raise notice 'NBA GM ACTUAL DRAFT % | %',v_name,v_roster_summary;
     raise notice 'NBA GM FULL RPC % seed % | Y1 %-% % | Y2 %-% % | Y3 %-% % | score % | cap Y2 %, Y3 %',
        v_name,v_seed,
        v_state->'results'->0->>'wins',v_state->'results'->0->>'losses',
