@@ -13,6 +13,9 @@ export type NbaGmDevPlayer = Omit<NbaGmPlayer, "sources"> & {
   ageAtStart?: number | null;
   /** Authoritative server odds; absent for old saved development models. */
   developmentOdds?: {breakoutPct:number;improvePct:number;declinePct:number;steadyPct:number}|null;
+  /** Immutable authored v4 season baseline; never the future seeded outcome. */
+  developmentForecast?: {gradeAtCalibration:number;maxAnnualGain:number;maxAnnualLoss:number;
+    careerHeadroom:number;marketVariancePct:number}|null;
   officialRosterPosition: string;
   positionReview: "unverified";
   reviewFlags: readonly string[];
