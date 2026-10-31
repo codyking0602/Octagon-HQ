@@ -92,8 +92,8 @@ These test the *visible draft budget estimates*, not realized offseason overages
 
 ## Integration instructions for Priority 1
 
-1. **Merge only after exact-head CI and migration review**. The additive migration is `supabase/migrations/202612310899_nba_gm_scouting_reprice_signals.sql`. No existing migration is edited.
+1. **Merge only after exact-head CI and migration review**. The additive migration is `supabase/migrations/202612310900_nba_gm_scouting_reprice_signals.sql`. No existing migration is edited.
 2. In `NbaGmDevPage.tsx`'s `ScoutBadges`, import `nbaGmRepriceLabel` from `./nbaGmScouting`. Replace the current hardcoded `player.gameContract==="3YR"?"SALARY LOCKED":"REPRICE RISK"` with `nbaGmRepriceLabel(player.repriceRisk, player.gameContract).label`. The helper's `.tone` is `low | med | high | locked | unknown` for matching Football-styled pills. **Do not duplicate risk math on the client.**
 3. `nbaGmScoutTier` now returns the NBA cutoffs without changing the Football GM implementation or any numeric grades. Reuse the existing Elite/Impact/Starter/Depth CSS treatments, but leave all Priority 1 layout/headshots to its owner.
 4. After `offseason`, refresh the catalog with the existing `repo.catalog()` call so risk projections advance to Year 3. Keep 3YR locks visible and display actual development separately.
-5. If the Priority 1 branch added another `202612310899_...` migration, resolve sequence **before** integrating. Never overwrite applied migrations or modify production in this PR.
+5. If the Priority 1 branch added another `202612310900_...` migration, resolve sequence **before** integrating. Never overwrite applied migrations or modify production in this PR.
