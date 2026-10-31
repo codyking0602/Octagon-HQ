@@ -156,6 +156,76 @@ describe("NBA GM Priority 2: 330-person tier and contract forecast calibration",
     expect(migration).not.toContain("p_state->>'seed'");
     expect(migration).not.toContain("update private.football_gm_runs");
   });
+  it("stress-tests 400 seeded seven-person team-wheel strategies within all three $155M caps",()=>{
+    const roles=["C","PG","SF","SG","PF","GUARD","BIG"] as const;
+    type Role=typeof roles[number];
+    type Candidate=typeof board[number]&{player:Athlete;profile:Profile};
+    const byProfile=new Map(profiles.map(p=>[p.id,p]));
+    const pool:Candidate[]=board.map(p=>({...p,
+      player:fixturesById.get(p.editorialId)!,profile:byProfile.get(p.editorialId)!}));
+    const legal=(p:Candidate,slot:Role):boolean=>
+      slot==="GUARD"?p.candidatePositions.some(s=>s==="PG"||s==="SG"):
+      slot==="BIG"?p.candidatePositions.some(s=>s==="PF"||s==="C"):
+      p.candidatePositions.includes(slot);
+    const cost=(p:Candidate,year:0|1|2)=>
+      contract(p.overall)==="3YR"?p.player.salary:
+      year===0?p.player.salary:year===1?p.player.year2:p.player.year3;
+    const maxCost=(p:Candidate)=>Math.max(cost(p,0),cost(p,1),cost(p,2));
+    const candidatesBySlot=new Map(roles.map(slot=>[slot,pool.filter(p=>legal(p,slot))
+      .sort((a,b)=>maxCost(a)-maxCost(b)||a.editorialId.localeCompare(b.editorialId))]));
+    const teams=[...new Set(pool.map(p=>p.teamCode))].sort();
+    const byTeam=new Map(teams.map(team=>[team,pool.filter(p=>p.teamCode===team)]));
+    const hash=(n:number)=>{let x=n|0;x^=x<<13;x^=x>>>17;x^=x<<5;return x>>>0};
+    const tier=(p:Candidate)=>nbaGmScoutTier({currentGrade:p.overall});
+    const totals:Record<string,{success:number;elite:number;impact:number;highest:number}>={};
+    for(const mode of ["best","cheap","balanced","upside"] as const){
+      const result={success:0,elite:0,impact:0,highest:0};
+      for(let attempt=0;attempt<100;attempt++){
+        let state=hash(424242+attempt*337+mode.length*919);
+        const random=()=>{state=hash(state+0x9e3779b9);return state/4294967296};
+        const selected:Candidate[]=[];const spent=[0,0,0];
+        for(let index=0;index<roles.length;index++){
+          const possible=(p:Candidate)=>{
+            if(selected.some(x=>x.editorialId===p.editorialId)||!legal(p,roles[index]!))return false;
+            const used=new Set([...selected.map(x=>x.editorialId),p.editorialId]);
+            let minimumFinish=0;
+            for(const open of roles.slice(index+1)){
+              const filler=candidatesBySlot.get(open)!.find(x=>!used.has(x.editorialId));
+              if(!filler)return false;
+              used.add(filler.editorialId);minimumFinish+=maxCost(filler);
+            }
+            return ([0,1,2] as const).every(year=>
+              spent[year]!+cost(p,year)+minimumFinish<=155000000);
+          };
+          const available=teams.map(team=>byTeam.get(team)!.filter(possible))
+            .filter(group=>group.length>0);
+          if(!available.length)break;
+          const options=available[Math.floor(random()*available.length)]!;
+          const score=(p:Candidate)=>mode==="best"?p.overall:
+            mode==="cheap"?-maxCost(p)/1e6:
+            mode==="balanced"?p.overall-.42*maxCost(p)/1e6:
+            p.profile.breakoutPct*1.2+p.profile.improvePct*.5+
+              p.overall*.4-maxCost(p)/6e6;
+          const pick=options.reduce((a,b)=>score(b)>score(a)?b:a);
+          selected.push(pick);
+          ([0,1,2] as const).forEach(year=>spent[year]!+=cost(pick,year));
+        }
+        if(selected.length===7){
+          result.success++;result.highest=Math.max(result.highest,...spent);
+          result.elite+=selected.filter(p=>tier(p)==="ELITE").length;
+          result.impact+=selected.filter(p=>tier(p)==="IMPACT").length;
+          expect(roles.every((slot,i)=>legal(selected[i]!,slot))).toBe(true);
+          expect(spent.every(amount=>amount<=155000000)).toBe(true);
+        }
+      }
+      totals[mode]=result;
+      expect(result.success).toBe(100);
+      expect(result.highest).toBeLessThanOrEqual(155000000);
+    }
+    expect(totals.best!.elite).toBeGreaterThan(totals.cheap!.elite);
+    expect(totals.best!.impact).toBeGreaterThan(totals.cheap!.impact);
+    expect(totals.balanced!.impact).toBeGreaterThan(totals.upside!.impact);
+  });
   it("shares authoritative scouting odds but preserves legacy and final neutral reads",()=>{
     for(const p of profiles){
       const odds={breakoutPct:p.breakoutPct,improvePct:p.improvePct,
