@@ -420,7 +420,7 @@ begin
       -- replacement before finalizing that structural transaction.
       if v_chip_id is not null and not exists(
         select 1 from private.nba_gm_dev_players p
-        where private.nba_gm_v3_contract_for_state(p_state,p.id)='1YR' and p.overall<=81
+        where private.nba_gm_v3_contract_for_state(v_state,p.id)='1YR' and p.overall<=81
           and not exists(select 1 from jsonb_array_elements(v_picks) x
             where x->>'playerId'=p.id)
           and private.nba_gm_v2_can_add(v_next,p.id)) then
@@ -435,7 +435,11 @@ begin
     v_next:=jsonb_set(jsonb_set(v_state,'{shopPlayerId}','null'::jsonb),
       '{tradeTeam}','null'::jsonb);
   elsif p_action='release' then
-    if v_state->>'phase'<>'offseason' or jsonb_array_length(v_state->'releasedIds')>=1
+    if v_state->>'phase'<>'offseason' or
+      (jsonb_array_length(v_state->'releasedIds')>=1 and not exists(
+        select 1 from generate_series(2,3) yr where
+          (select coalesce(sum(private.nba_gm_v3_salary(v_state,x->>'playerId',yr)),0)
+            from jsonb_array_elements(v_picks) x) > (v_state->'caps'->>(yr-1))::bigint))
       or v_state->>'shopPlayerId' is not null or v_state->>'freeAgencyTeam' is not null
       or not exists(select 1 from jsonb_array_elements(v_picks) pick where pick->>'playerId'=p_player_id)
       then raise exception 'You can release one player in this offseason'; end if;
@@ -445,7 +449,7 @@ begin
       '{releasedIds}',(v_state->'releasedIds')||jsonb_build_array(p_player_id));
     -- Never finalize a cut unless at least one legal, affordable 1YR replacement exists.
     if not exists(select 1 from private.nba_gm_dev_players p
-      where private.nba_gm_v3_contract_for_state(p_state,p.id)='1YR'
+      where private.nba_gm_v3_contract_for_state(v_state,p.id)='1YR'
         and p.id not in(select x.id from jsonb_array_elements_text(v_next->'releasedIds') x(id))
         and private.nba_gm_v2_can_add(v_next,p.id)) then
       raise exception 'No affordable 1YR replacement; keep this player';
@@ -460,7 +464,7 @@ begin
     select teams.team_code into v_team from (
       select distinct team_code from private.nba_gm_dev_players
     ) teams where exists(select 1 from private.nba_gm_dev_players p
-      where p.team_code=teams.team_code and private.nba_gm_v3_contract_for_state(p_state,p.id)='1YR'
+      where p.team_code=teams.team_code and private.nba_gm_v3_contract_for_state(v_state,p.id)='1YR'
         and p.id not in(select x.id from jsonb_array_elements_text(v_state->'releasedIds') x(id))
         and private.nba_gm_v2_can_add(v_state,p.id))
     order by random() limit 1;
