@@ -12,9 +12,10 @@ describe("Football Weekly Auction Play quick access", () => {
     expect(footballPlay).toContain('<PlayV2Page sport="football" />');
     expect(playV2).toContain("<WeeklyCurrent />");
     expect(playV2).toContain("WEEKLY FEATURED");
-    expect(playV2).toContain("Auction Center");
+    expect(playV2).toContain("AUCTION CENTER");
     expect(playV2).toContain('"/football/weekly-gm" : "/football/weekly-auction"');
-    expect(playV2).toContain('to="/championship/football?tab=play"');
+    expect(playV2).toContain("PLAY THIS WEEK →");
+    expect(playV2).not.toContain('to="/championship/football?tab=play"');
     expect(playV2).not.toContain("EDIT BIDS");
     expect(playV2).not.toContain("previous_final");
   });
@@ -30,7 +31,8 @@ describe("Football Weekly Auction Play quick access", () => {
 
   it("keeps the approved Football Weekly Featured treatment compact on phones", () => {
     expect(styles).toContain(".play-v2__weekly");
-    expect(styles).toContain(".play-v2__weekly-actions");
+    expect(styles).toContain(".play-v2__weekly--compact");
+    expect(styles).toContain(".play-v2__weekly-link");
     expect(styles).toContain(".play-v2[data-sport=\"football\"]");
     expect(styles).toContain("@media (max-width: 380px)");
   });
