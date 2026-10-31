@@ -42,10 +42,11 @@ function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
   </span>;
 }
 function ScoutBadges({player,run}:{player:NbaGmDevPlayer;run?:NbaGmDevRun}){
+  const {currentGrade:originalGrade}=player;
   const development=run?.development?.[player.id];
   const year=run?.phase==="offseason"?2:run?.phase==="final"?3:1;
   const currentGrade=year===2?development?.year2Grade:year===3?development?.year3Grade:undefined;
-  const display={...player,currentGrade:currentGrade??player.currentGrade};
+  const display={...player,currentGrade:currentGrade??originalGrade};
   const tier=nbaGmScoutTier(display);
   const outlook=nbaGmScoutOutlook(display,year);
   const tone=outlook==="HIGH UPSIDE"?"upside":outlook==="RISING"?"rising"
@@ -61,8 +62,9 @@ function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
   player:NbaGmDevPlayer;onPick?:()=>void;disabled?:boolean;action?:string;salaryYear?:0|1|2;
   run?:NbaGmDevRun;
 }){
+  const {currentGrade:originalGrade}=player;
   const delta=salaryYear===1&&run?.development?.[player.id]
-    ?run.development[player.id]!.year2Grade-player.currentGrade:0;
+    ?run.development[player.id]!.year2Grade-originalGrade:0;
   return <article className="nba-gm-dev__player" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
     <div className="nba-gm-dev__player-head">
       <PlayerPortrait player={player}/>
