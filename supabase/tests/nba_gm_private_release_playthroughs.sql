@@ -129,8 +129,14 @@ begin
     if v_score not between 0 and 100 or
       v_state->'scoreBreakdown'->'weights' is distinct from '[0.9,0.03,0.07]'::jsonb
       then raise exception 'Invalid 90/3/7 score %',v_name;end if;
-    if public.nba_gm_dev_action('load') is distinct from v_state then
-      raise exception 'Final run did not persist %',v_name;end if;
+    -- All six synthetic RPC calls run inside ONE rollback transaction, so
+    -- now() is identical across completed run rows. The normal 'load' latest
+    -- timestamp sort has an artificial tie here that does not occur when real
+    -- browser RPCs run in separate transactions. Verify the exact seed row.
+    if (select r.state from private.football_gm_runs r
+        where r.profile_id=v_owner and r.game_version='nba-gm-dev-v2'
+          and r.seed=v_seed limit 1) is distinct from v_state then
+      raise exception 'Final seed-specific franchise did not persist %',v_name;end if;
     raise notice 'NBA GM FULL RPC % seed % | Y1 %-% % | Y2 %-% % | Y3 %-% % | score % | cap Y2 %, Y3 %',
        v_name,v_seed,
        v_state->'results'->0->>'wins',v_state->'results'->0->>'losses',
