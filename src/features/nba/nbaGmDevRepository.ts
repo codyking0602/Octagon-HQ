@@ -4,7 +4,7 @@ import type { NbaGmDevPlayer, NbaGmDevRun } from "./nbaGmDevModel";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
 const slot=z.enum(NBA_GM_ROSTER_SLOTS);
 const run=z.object({
-  version:z.literal("nba-gm-dev-v2"),seed:z.string().startsWith("nba-gm-"),
+  version:z.literal("nba-gm-dev-v2"),economyVersion:z.literal(3).optional(),seed:z.string().startsWith("nba-gm-"),
   phase:z.enum(["draft","year1","offseason","final"]),
   picks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
   yearOnePicks:z.array(z.object({slot,playerId:z.string().min(1)})).max(7),
