@@ -289,19 +289,37 @@ export default function NbaGmDevPage(){
             canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>
           {run.tradeTeam&&!wheelSpinning&&
             <><p>Trading partner: {NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}. Every available player is listed. A target may require a different legal package or more cap space. Two offers maximum.</p>
+              <div className="nba-gm-dev__chip-list" role="group" aria-label="Optional second outgoing trade player">
+                <span>OPTIONAL SECOND TRADE CHIP</span>
+                {run.picks.filter(pick=>pick.playerId!==run.shopPlayerId).map(pick=>{
+                  const player=byId.get(pick.playerId);
+                  return player?<button type="button" className={tradeChip===player.id?"is-selected":""}
+                    aria-pressed={tradeChip===player.id} key={player.id} disabled={busy}
+                    onClick={()=>setTradeChip(current=>current===player.id?null:player.id)}>
+                    {player.name}
+                  </button>:null;
+                })}
+              </div>
               <div className="nba-gm-dev__candidate-grid">
-                {eligibleTrade.map(player=><PlayerCard player={player} key={player.id} disabled={busy}
-                  action="OFFER FOR" salaryYear={1} onPick={()=>void act("trade",player.id)}/>)}
+                {eligibleTrade.map(player=>{
+                  const remaining=run.picks.filter(pick=>pick.playerId!==run.shopPlayerId&&pick.playerId!==tradeChip);
+                  const legal=nbaGmDevCanAdd(remaining,player,catalog,run.caps,"offseason");
+                  return <div key={player.id} className="nba-gm-dev__trade-target">
+                    {!legal&&<small className="nba-gm-dev__trade-warning">CURRENT PACKAGE NEEDS A DIFFERENT CAP / POSITION FIT</small>}
+                    <PlayerCard player={player} disabled={busy} action={tradeChip?"OFFER PACKAGE FOR":"OFFER FOR"}
+                      salaryYear={1} onPick={()=>void act("trade",player.id,tradeChip??undefined)}/>
+                  </div>;
+                })}
               </div>
             </>}
           <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER</button>
         </div>}
         {run.picks.length<7&&!run.shopPlayerId&&
           <div className="nba-gm-dev__trade">
-            <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits} MARKET VISITS · REPLACEMENT SPINS UNTIL ROSTER IS FILLED</p>
-            <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+            <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits}/3 MARKET VISITS · 1YR SIGNINGS ONLY</p>
+            {run.freeAgencyVisits<3||run.freeAgencyTeam?<GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
               pendingTeam={wheelSpinning?null:run.freeAgencyTeam?wheelTeam:null}
-              canSpin={wheelEnabled} onSpin={()=>void spin("fa-spin")}/>
+              canSpin={wheelEnabled} onSpin={()=>void spin("fa-spin")}/>:null}
             {run.freeAgencyTeam&&!wheelSpinning&&<>
               <strong>{NBA_TEAMS.find(t=>t.id===run.freeAgencyTeam)?.name} · 1YR FREE AGENTS</strong>
               <div className="nba-gm-dev__candidate-grid">
@@ -311,6 +329,14 @@ export default function NbaGmDevPage(){
               <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
             </>}
           </div>}
+        {emergency.length>0&&<div className="nba-gm-dev__trade">
+          <strong>EMERGENCY ROSTER COMPLETION</strong>
+          <p className="nba-gm-dev__hint">All three visits used. Only affordable depth players may fill an open position. No rerolls.</p>
+          <div className="nba-gm-dev__candidate-grid">
+            {emergency.map(player=><PlayerCard key={player.id} player={player} disabled={busy}
+              salaryYear={1} action="SIGN DEPTH" onPick={()=>void act("emergency-sign",player.id)}/>)}
+          </div>
+        </div>}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
           <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("advance")}>
             LOCK ROSTER · SIMULATE SEASONS 2 & 3
