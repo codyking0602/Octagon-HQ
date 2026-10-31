@@ -150,6 +150,19 @@ describe("NBA GM private Football parity boundary",()=>{
     expect(css).toContain("nba-gm-final__team-logo");
     expect(css).toContain("@media(max-width:700px)");
   });
+  it("keeps numerical roster score but accurately describes three missed playoff trips",()=>{
+    const missed={...run,results:[1,2,3].map(season=>({
+      ...results[season-1]!,season,wins:30-season*5,
+      losses:82-(30-season*5),finish:"Missed Playoffs",
+    })),scoreBreakdown:{...run.scoreBreakdown!,score:79.3}};
+    const markup=renderToStaticMarkup(<NbaGmFinalExperience run={missed} catalog={players}/>);
+    expect(markup).toContain("79.3");
+    expect(markup).toContain("TALENT, NO PLAYOFFS");
+    expect(markup).toContain("NO PLAYOFF APPEARANCES");
+    expect(markup).toContain("THREE-YEAR RESULTS");
+    expect(page).toContain('run.phase!=="final"&&<>');
+    expect(page).toContain('run.phase==="final"&&<><NbaGmFinalExperience');
+  });
   it("only sends selected outgoing assets and target IDs to server",async()=>{
     const calls:unknown[][]=[];
     const backend={rpc:async(name:string,args?:Record<string,unknown>)=>{
