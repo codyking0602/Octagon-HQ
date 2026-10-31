@@ -13,7 +13,7 @@ describe("NBA server-authored Daily publication foundation", () => {
     expect(nbaDailyGameAppearance("2026-11-01", "sports_feud")).toBe(0);
     expect(nbaDailyGameAppearance("2026-11-19", "bar_trivia")).toBe(0);
     expect(() => nbaDailyGameAppearance("2026-10-31", "average_fan")).toThrow();
-    expect(nbaDailyGameAppearance("2026-10-29", "bar_trivia")).toBe(0);
+    expect(nbaDailyGameAppearance("2026-10-29", "millionaire")).toBe(0);
     expect(() => nbaDailyGameAppearance("2026-10-30", "sports_feud")).toThrow();
     let num = 0;
     for (let index = 0; index < 80; index++) {
@@ -51,6 +51,22 @@ describe("NBA server-authored Daily publication foundation", () => {
       privateSetupEvidence: published.privateSetupEvidence,
       submissionState: {},
     }, { type: "answer", answer: "unrecognizable made-up answer" })).not.toThrow();
+  });
+
+  it("publishes the vetted Oct 29 showcase as NBA host 3 with protected answers", () => {
+    const publication = buildNbaServerDailyPublication(
+      "2026-10-29", "nba-daily-oct29-millionaire-showcase-v1", "millionaire"
+    );
+    expect(publication.publicSetup.host_number).toBe(3);
+    expect(publication.publicSetup.league).toBe("nba");
+    expect(publication.publicSetup.questions).toHaveLength(8);
+    expect((publication.privateSetupEvidence.run as {id:string}[]).map(q=>q.id)).toEqual([
+      "nba-millionaire-q1-08", "nba-millionaire-q2-10", "nba-millionaire-q3-01",
+      "nba-millionaire-q4-04", "nba-millionaire-q5-03", "nba-millionaire-q6-01",
+      "nba-millionaire-q7-06", "nba-millionaire-q8-01",
+    ]);
+    expect(JSON.stringify(publication.publicSetup)).not.toContain('"correctChoiceId"');
+    expect(JSON.stringify(publication.publicSetup)).not.toContain('"correct_choice_id"');
   });
 
   it("constructs a canonical Millionaire NBA board with twenty appearance question histories", () => {
