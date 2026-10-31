@@ -21,6 +21,8 @@ from scripts.asset_ingest import (
     upper_side_background_band,
     validate_asset_quality,
     source_needs_background_removal,
+    resolve_ufc_profile_source,
+    official_ufc_event_headshot_url,
 )
 
 
@@ -72,6 +74,40 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(approved_square_thumb_source({"source_url": official_ufc}, official_ufc, (600, 436)))
         promotional = "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/DURDEN_CODY_L_03-07.png"
         self.assertFalse(approved_square_thumb_source({"source_url": promotional}, promotional, (256, 160)))
+
+    def test_ufc_profile_thumb_discovery_ignores_full_body_promotional_images(self):
+        from unittest.mock import patch
+        html = b"""
+        <img alt="Waldo Cortes Acosta" src="/images/styles/athlete_bio_full_body/s3/2026-05/WALDO_L.png">
+        <img alt="Johnny Walker" src="/images/styles/event_results_athlete_headshot/s3/2026-07/WALKER_JOHNNY.png">
+        <img alt="Waldo Cortes Acosta" src="/images/styles/event_results_athlete_headshot/s3/2026-07/CORTES_ACOSTA_WALDO.png?itok=abc">
+        """
+        page = "https://www.ufc.com/athlete/waldo-cortes-acosta"
+        with patch("scripts.asset_ingest.request_bytes", return_value=html):
+            url = resolve_ufc_profile_source(page, "Waldo Cortes Acosta", "thumb")
+        self.assertEqual(
+            url,
+            "https://www.ufc.com/images/styles/event_results_athlete_headshot/s3/2026-07/CORTES_ACOSTA_WALDO.png?itok=abc",
+        )
+        self.assertTrue(official_ufc_event_headshot_url(url))
+        self.assertTrue(approved_square_thumb_source(
+            {"source_page_url": page, "fighter_name": "Waldo Cortes Acosta"},
+            url, (256, 160),
+        ))
+        self.assertFalse(approved_square_thumb_source(
+            {"source_page_url": page},
+            "https://www.ufc.com/images/styles/athlete_bio_full_body/s3/2026-05/WALDO_L.png",
+            (256, 160),
+        ))
+
+    def test_ufc_page_missing_event_headshot_fails_instead_of_using_body(self):
+        from unittest.mock import patch
+        html = b'<img alt="Johnny Walker" src="/images/styles/athlete_bio_full_body/s3/2026-01/WALKER_L.png">'
+        with patch("scripts.asset_ingest.request_bytes", return_value=html):
+            with self.assertRaises(SystemExit):
+                resolve_ufc_profile_source(
+                    "https://www.ufc.com/athlete/johnny-walker", "Johnny Walker", "thumb",
+                )
 
     def test_clean_transparent_espn_600_by_436_is_not_resegmented(self):
         # ESPN's authentic face-dominant portrait is sometimes already a
