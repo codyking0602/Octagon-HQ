@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
+import { NbaGmDevelopmentReport } from "./NbaGmDevelopmentReport";
+import { NbaGmFinalExperience } from "./NbaGmFinalExperience";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
   nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
@@ -13,6 +15,7 @@ import { NBA_TEAMS } from "./nbaFutures";
 import { nbaTeamColor, nbaTeamLogoSrc } from "./nbaTeamBranding";
 import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
+import "../../styles/football-gm-final.css";
 import "../../styles/nba-gm-dev.css";
 
 const money=(value:number)=>"$"+(value/1_000_000).toFixed(1)+"M";
@@ -110,6 +113,7 @@ export default function NbaGmDevPage(){
   const wheelSequenceRef=useRef(0);
   useEffect(()=>()=>{wheelSequenceRef.current+=1;},[]);
   const [positionFilter,setPositionFilter]=useState<string|null>(null);
+  const [tradeChip,setTradeChip]=useState<string|null>(null);
   useEffect(()=>{
     if(!repo){setError("NBA GM needs a connected private backend.");setLoading(false);return;}
     let mounted=true;
@@ -123,16 +127,20 @@ export default function NbaGmDevPage(){
     return()=>{mounted=false;};
   },[repo]);
 
-  async function act(action:NbaGmDevOperation,playerId?:string){
+  async function act(action:NbaGmDevOperation,playerId?:string,extraTradeChip?:string){
     if(!repo||busy)return;
     setBusy(true);setError("");setNotice("");
     try {
-      const state=await repo.action(action,playerId);
+      const state=await repo.action(action,playerId,extraTradeChip);
       if(action==="trade"&&state&&run&&state.tradesUsed===run.tradesUsed){
         setNotice("Offer declined. The partner wanted more value.");
       }
       if(action==="pick")setPositionFilter(null);
+      if(["shop","trade","cancel-trade"].includes(action))setTradeChip(null);
       setRun(state);
+      if(state&&["offseason","trade","sign","emergency-sign","advance"].includes(action)){
+        void repo.catalog().then(setCatalog).catch(()=>setNotice("Salary scouting will refresh on reload."));
+      }
       return state;
     } catch(failure){
       setError(failure instanceof Error?failure.message:"Action rejected by the server.");
@@ -188,13 +196,20 @@ export default function NbaGmDevPage(){
   const eligibleTrade=run?.shopPlayerId?catalog.filter(p=>
     p.teamCode===run.tradeTeam&&!run.picks.some(pick=>pick.playerId===p.id)
   ).sort((a,b)=>b.currentGrade-a.currentGrade||a.name.localeCompare(b.name)):[];
+  const emergency=run?.phase==="offseason"&&run.picks.length<7&&
+    run.freeAgencyVisits>=3&&!run.freeAgencyTeam&&!run.shopPlayerId
+    ?catalog.filter(p=>p.gameContract==="1YR"&&p.currentGrade<=78
+      &&!run.picks.some(pick=>pick.playerId===p.id)&&!run.releasedIds.includes(p.id)
+      &&nbaGmDevCanAdd(run.picks,p,catalog,run.caps,"offseason"))
+      .sort((a,b)=>nbaGmDevSalary(a,1)-nbaGmDevSalary(b,1)||a.name.localeCompare(b.name))
+    :[];
   const isDraft=run?.phase==="draft";
   // Keep the wheel mounted during its animation and after its result.
   // Unmounting at pendingTeam would hide the exact NFL GM spin the player expects.
   const wheelEnabled=!busy&&!wheelSpinning&&Boolean(run&&(
     isDraft&&!run.pendingTeam||
     run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam&&run.tradesUsed===0||
-    run.phase==="offseason"&&run.picks.length<7&&!run.freeAgencyTeam&&!run.shopPlayerId
+    run.phase==="offseason"&&run.picks.length<7&&run.freeAgencyVisits<3&&!run.freeAgencyTeam&&!run.shopPlayerId
   ));
   return <main className="page nba-gm-dev" data-testid="nba-gm-development-page">
     <header className="nba-gm-dev__header">
@@ -262,10 +277,11 @@ export default function NbaGmDevPage(){
         </button>
       </section>}
       {(run.phase==="year1"||run.phase==="offseason"||run.phase==="final")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
+      {run.phase==="offseason"&&<NbaGmDevelopmentReport run={run} catalog={catalog}/>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>THE OFFSEASON</h2></div></div>
         <Results seasons={run.results}/>
-        <p className="nba-gm-dev__hint">1YR salaries reprice for Years 2–3; 3YR salaries remain locked. Shop one player, use your team-wheel trade partner, or cut and replace a player in the 1YR free-agent market.</p>
+        <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, negotiate up to two offers, or use one voluntary cut and the limited free-agent market.</p>
         {run.shopPlayerId&&<div className="nba-gm-dev__trade">
           <strong>SHOPPING {byId.get(run.shopPlayerId)?.name}</strong>
           <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
@@ -300,12 +316,9 @@ export default function NbaGmDevPage(){
             LOCK ROSTER · SIMULATE SEASONS 2 & 3
           </button>}
       </section>}
-      {run.phase==="final"&&<section className="nba-gm-dev__panel nba-gm-dev__results">
-        <small>THREE SEASONS · PRIVATE PLAYTEST</small><h2>YOUR FRANCHISE RESULTS</h2>
-        <Results seasons={run.results}/>
-        <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button>
-      </section>}
-      <footer className="nba-gm-dev__disclaimer">Owner-only QA · Provisional positions and scouting · Fictional contract terms and prices · Simulation not historically calibrated or public.</footer>
+      {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
+        <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
+      <footer className="nba-gm-dev__disclaimer">Owner-only QA · Provisional positions and player progression assumptions · Fictional game contracts and cap · Results are not a certified NBA forecast or public.</footer>
     </>}
   </main>;
 }
