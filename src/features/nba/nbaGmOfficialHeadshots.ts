@@ -109,5 +109,5 @@ export const NBA_GM_VERIFIED_HEADSHOT_IDS: Readonly<Record<string, string>> = {
 
 export function nbaGmOfficialHeadshotId(player: {id: string; officialNbaPlayerId: string | null}): string | null {
   const id = player.officialNbaPlayerId ?? NBA_GM_VERIFIED_HEADSHOT_IDS[player.id] ?? null;
-  return id && /^\\d+$/.test(id) ? id : null;
+  return id && /^\d+$/.test(id) ? id : null;
 }
