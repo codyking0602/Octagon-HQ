@@ -9,6 +9,7 @@ import {
 import { createNbaGmDevRepository } from "./nbaGmDevRepository";
 import { NbaGmDevelopmentReport } from "./NbaGmDevelopmentReport";
 import { NbaGmFinalExperience } from "./NbaGmFinalExperience";
+import { nbaGmScoutOutlook } from "./nbaGmScouting";
 
 const sql = readFileSync("supabase/migrations/202612310897_nba_gm_football_parity_private.sql", "utf8");
 const original = readFileSync("supabase/migrations/202612310896_nba_gm_spin_first_private_franchise.sql", "utf8");
@@ -63,6 +64,19 @@ describe("NBA GM private Football parity boundary",()=>{
     expect(sql).toContain("private.nba_gm_dev_owner()");
     expect(sql).toContain("revoke all on function public.nba_gm_dev_action");
     expect(sql).not.toContain("as $\ndeclare");
+  });
+  it("uses 301 uniquely matched birthdates, with 29 explicitly unknown athletes",()=>{
+    const ages=[...sql.matchAll(/\('nba-gm-draft-[^']+',date '\d{4}-\d{2}-\d{2}'\)/g)];
+    expect(ages).toHaveLength(301);
+    expect(new Set(ages.map(row=>row[0].split("'")[1])).size).toBe(301);
+    expect(sql).toContain("verified_birth_date date");
+    expect(sql).toContain("v_age:=case when v_player.verified_birth_date is not null");
+    expect(sql).toContain("v_ceiling:=least(99,v_player.overall");
+    expect(sql).toContain("when v_age>=35 then .23");
+    expect(nbaGmScoutOutlook({...playerFixture,ageAtStart:21,currentGrade:83})).toBe("HIGH UPSIDE");
+    expect(nbaGmScoutOutlook({...playerFixture,ageAtStart:25,currentGrade:83})).toBe("RISING");
+    expect(nbaGmScoutOutlook({...playerFixture,ageAtStart:36,currentGrade:83})).toBe("DECLINE RISK");
+    expect(nbaGmScoutOutlook({...playerFixture,ageAtStart:null})).toBe("STEADY");
   });
   it("keeps grades server-seeded and repricing authoritative, without unlocking 3YR deals",()=>{
     expect(sql).toContain("create or replace function private.nba_gm_v3_grade");
