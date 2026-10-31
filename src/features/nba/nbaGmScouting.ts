@@ -1,4 +1,4 @@
-import { footballGmTalentTier } from "../back-room/footballGmScouting";
+import { footballGmOutlookFromOdds, footballGmTalentTier } from "../back-room/footballGmScouting";
 import type { NbaGmDevPlayer } from "./nbaGmDevModel";
 
 /** Only a display translation. Internal 0-99 values stay intact and hidden. */
@@ -21,10 +21,11 @@ export function nbaGmScoutTier(player:Pick<NbaGmDevPlayer,"currentGrade">){
   return footballGmTalentTier(player.currentGrade);
 }
 
-// Basketball-specific outlook uses the same age/headroom/risk strata as
-// private.nba_gm_v3_grade. Unverified ages get no speculative decline label.
-export function nbaGmScoutOutlook(player:Pick<NbaGmDevPlayer,"currentGrade"|"ageAtStart"|"reviewFlags">,
+// New franchises receive server-authored odds from the exact same SQL function
+// that resolves development. The historical fallback only serves legacy runs.
+export function nbaGmScoutOutlook(player:Pick<NbaGmDevPlayer,"currentGrade"|"ageAtStart"|"reviewFlags"|"developmentOdds">,
   year:1|2|3=1):"HIGH UPSIDE"|"RISING"|"STEADY"|"BOOM/BUST"|"DECLINE RISK"{
+  if(year<3&&player.developmentOdds)return footballGmOutlookFromOdds(player.developmentOdds);
   const age=player.ageAtStart==null?null:player.ageAtStart+year-1;
   if(age===null||year===3)return "STEADY";
   if(age>=35 || (age>=32&&player.currentGrade<=85))return "DECLINE RISK";
