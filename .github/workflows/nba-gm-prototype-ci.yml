@@ -18,6 +18,7 @@ on:
       - "src/features/nba/nbaGmScouting.ts"
       - "src/features/nba/nbaGmScoutingCalibration.test.ts"
       - "src/features/nba/nbaGmThreeSeasonBalance.test.ts"
+      - "src/features/nba/nbaGmFinalPresentation.test.ts"
       - "src/features/nba/nbaGmFootballParity.test.tsx"
       - "supabase/migrations/202612310897_nba_gm_football_parity_private.sql"
       - "supabase/migrations/202612310898_nba_gm_dev_profiles_setup.sql"

@@ -310,7 +310,7 @@ export default function NbaGmDevPage(){
           ENTER THE OFFSEASON
         </button>
       </section>}
-      {(run.phase==="year1"||run.phase==="offseason"||run.phase==="final")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
+      {(run.phase==="year1"||run.phase==="offseason")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
       {run.phase==="offseason"&&<NbaGmDevelopmentReport run={run} catalog={catalog}/>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>THE OFFSEASON</h2></div></div>
@@ -379,7 +379,7 @@ export default function NbaGmDevPage(){
       </section>}
       {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
-      <footer className="nba-gm-dev__disclaimer">Owner-only QA · Provisional positions and player progression assumptions · Fictional game contracts and cap · Results are not a certified NBA forecast or public.</footer>
+      <footer className="nba-gm-dev__disclaimer">Private owner playtest · Provisional ratings and fictional contracts · Not a public NBA forecast.</footer>
     </>}
   </main>;
 }
