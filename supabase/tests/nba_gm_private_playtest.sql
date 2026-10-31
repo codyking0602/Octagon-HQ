@@ -28,6 +28,9 @@ begin
   end if;
   if public.nba_gm_dev_action('load') is not null then raise exception 'Unexpected saved V2 franchise'; end if;
   v_state:=public.nba_gm_dev_action('start');
+  if v_state->>'developmentModelVersion'<>'2' then
+    raise exception 'New NBA GM runs must opt into individual development model 2';
+  end if;
   if v_state->>'version'<>'nba-gm-dev-v2' or v_state->>'economyVersion'<>'3'
     or v_state->>'phase'<>'draft'
     or v_state->'caps' is distinct from '[155000000,155000000,155000000]'::jsonb
