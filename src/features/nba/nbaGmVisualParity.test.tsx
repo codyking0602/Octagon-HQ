@@ -8,7 +8,7 @@ const finalPage = readFileSync("src/features/nba/NbaGmFinalExperience.tsx", "utf
 const css = readFileSync("src/styles/nba-gm-dev.css", "utf8");
 const teamBranding = readFileSync("src/features/nba/nbaTeamBranding.tsx", "utf8");
 
-const players = [...fixture.matchAll(/\\('([^']+)','((?:[^']|'')+)','([A-Z]{3})',ARRAY\\[[^\\n]*?::bigint\\[\\],(null|'[0-9]+'),/g)].map(row => ({
+const players = [...fixture.matchAll(/\('([^']+)','((?:[^']|'')+)','([A-Z]{3})',ARRAY\[[^\n]*?::bigint\[\],(null|'[0-9]+'),/g)].map(row => ({
   id: row[1]!,
   name: row[2]!,
   teamCode: row[3]!,
@@ -22,9 +22,11 @@ describe("NBA GM 30-team headshot and Football presentation parity", () => {
     expect(Object.keys(NBA_GM_VERIFIED_HEADSHOT_IDS)).toHaveLength(98);
     expect(players.filter(player => !player.officialNbaPlayerId)).toHaveLength(98);
     const ids = players.map(player => nbaGmOfficialHeadshotId(player));
-    expect(ids.every(id => id && /^\\d+$/.test(id))).toBe(true);
+    expect(ids.every(id => id && /^\d+$/.test(id))).toBe(true);
     expect(new Set(ids).size).toBe(330);
-    for (const [team, entries] of Object.entries(Object.groupBy(players, player => player.teamCode))) {
+    const byTeam = new Map<string, typeof players>();
+    for (const player of players) byTeam.set(player.teamCode, [...(byTeam.get(player.teamCode) ?? []), player]);
+    for (const [team, entries] of byTeam) {
       expect(team).toMatch(/^[A-Z]{3}$/);
       expect(entries.length).toBeGreaterThanOrEqual(9);
       expect(entries.every(player => Boolean(nbaGmOfficialHeadshotId(player)))).toBe(true);
