@@ -47,7 +47,7 @@ begin
   v_evidence := jsonb_build_object('question_ids',(
     select jsonb_agg('q'||i) from generate_series(0,9) as i),
     'correct_choices',(
-    select jsonb_agg('higher') from generate_series(0,9) as i));
+    select jsonb_agg('higher'::text) from generate_series(0,9) as i));
   select * into v_grade from private.grade_daily_challenge('higher_lower','play-official-score-v1',v_submission,v_evidence);
   if v_grade.native_score <> 7 or v_grade.normalized_score <> 70 then raise exception 'NBA Higher/Lower scorer incorrect'; end if;
   if private.daily_challenge_expected_game('football-daily-v18-average-fan-oct1',date '2026-10-01') <> 'average_fan'
