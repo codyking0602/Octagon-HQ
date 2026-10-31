@@ -37,7 +37,7 @@ const results = [1,2,3].map(season=>({
   defense:78+season,positionalFit:27,finish:"Conference Semifinals",
 }));
 const development = Object.fromEntries(players.map((player,index)=>[player.id,{
-  startingGrade:player.currentGrade,year2Grade:player.currentGrade+(index%2?-.9:2),
+  startingGrade:player.currentGrade,year2Grade:player.currentGrade+(index%2?-.9:3.2),
   year3Grade:player.currentGrade+(index%2?-1.4:3.2),
   year2Salary:player.salaries[1],year3Salary:player.salaries[2],
 }]));
