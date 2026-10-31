@@ -12,14 +12,25 @@ import { nbaGmOfficialHeadshotId } from "./nbaGmOfficialHeadshots";
 const money = (amount: number) => "$" + (amount / 1_000_000).toFixed(1) + "M";
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, value));
 
+/** The final recap uses Football GM's compact portrait size, not NBA's
+ * larger draft card portrait. Always show team identity if either CDN fails. */
+function FinalTeamLogo({code, inset = false}:{code:string;inset?:boolean}) {
+  const [failed, setFailed] = useState(false);
+  const logo = nbaTeamLogoSrc(code);
+  return logo && !failed
+    ? <img className={inset ? "nba-gm-final__logo-inset" : "nba-gm-final__team-logo"}
+        src={logo} alt="" loading="lazy" onError={() => setFailed(true)} />
+    : <b className="nba-gm-final__team-code" aria-hidden="true">{code}</b>;
+}
+
 function Portrait({player}:{player:NbaGmDevPlayer}) {
   const [failed, setFailed] = useState(false);
   const headshotId = nbaGmOfficialHeadshotId(player);
-  return <span className="nba-gm-dev__portrait">
+  return <span className="gm-final__portrait nba-gm-final__portrait">
     {headshotId && !failed
       ? <img src={`https://cdn.nba.com/headshots/nba/latest/260x190/${headshotId}.png`}
           alt="" loading="lazy" onError={() => setFailed(true)} />
-      : <img src={nbaTeamLogoSrc(player.teamCode)} alt="" />}
+      : <FinalTeamLogo code={player.teamCode} inset />}
   </span>;
 }
 
@@ -75,7 +86,7 @@ export function NbaGmFinalExperience({
   return <div className="football-gm-final gm-final nba-gm-final"
     aria-label="Three-year NBA GM final result">
     <section className="gm-final__hero surface-card">
-      <div className="gm-final__eyebrow">YOUR FINAL RESULT <span>NBA · PRIVATE GM PLAYTEST</span></div>
+      <div className="gm-final__eyebrow">YOUR FINAL RESULT <span>NBA · THREE-SEASON RECAP</span></div>
       <div className="gm-final__hero-main">
         <div className="gm-final__score"><strong>{score?score.score.toFixed(1):"—"}</strong><span>GM SCORE</span></div>
         <div className="gm-final__verdict"><small>BOTTOM LINE</small><b>{verdict}</b>
@@ -98,36 +109,36 @@ export function NbaGmFinalExperience({
         </div>)}
       </div>
     </section>
-    <section className="gm-final__section surface-card" aria-label="NBA franchise run highlights">
+    {(arrivals.length>0||(biggestJump?.delta??0)>=.85||(biggestDrop?.delta??0)<=-.85)&&<section className="gm-final__section surface-card" aria-label="NBA franchise run highlights">
       <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>
       <div className="gm-final__highlights">
-        <article className="is-positive"><span aria-hidden="true">↗</span><div>
+        {arrivals.length>0&&<article className="is-positive"><span aria-hidden="true">↗</span><div>
           <small>{arrivals.length?"KEY MOVE":"CORE KEPT"}</small>
           <strong>{arrivals[0]?.player.name??"Your opening seven"}</strong>
           <p>{arrivals.length?"Offseason trade or free agency":"No roster replacements"}</p>
-        </div></article>
-        <article className="is-gold"><span aria-hidden="true">★</span><div>
+        </div></article>}
+        {(biggestJump?.delta??0)>=.85&&<article className="is-gold"><span aria-hidden="true">★</span><div>
           <small>{(biggestJump?.delta??0)>=.85?"BIGGEST LEAP":"CORE ANCHOR"}</small>
           <strong>{biggestJump?.player.name??"Your rotation"}</strong>
           <p>{(biggestJump?.delta??0)>=.85
             ?footballGmDevelopmentResult(biggestJump!.delta):"Roster continuity"}</p>
-        </div></article>
-        <article className="is-negative"><span aria-hidden="true">↘</span><div>
+        </div></article>}
+        {(biggestDrop?.delta??0)<=-.85&&<article className="is-negative"><span aria-hidden="true">↘</span><div>
           <small>DEVELOPMENT CHECK</small><strong>{biggestDrop?.player.name??"No setbacks"}</strong>
           <p>{(biggestDrop?.delta??0)<=-.85
             ?footballGmDevelopmentResult(biggestDrop!.delta):"No notable regression"}</p>
-        </div></article>
+        </div></article>}
       </div>
-    </section>
+    </section>}
     <section className="gm-final__section gm-final__roster surface-card" aria-label="Final NBA roster development outcomes">
       <header className="gm-final__heading"><h2>YOUR FINAL ROSTER</h2><small>YEAR 1 → YEAR 3</small></header>
-      <p className="gm-final__hint">Start is fixed in the middle. Movement shows improvement or decline in categories; exact grades remain private.</p>
+      <p className="gm-final__hint">Movement is shown relative to Year 1; exact ratings stay private.</p>
       <div className="gm-final__roster-list">
         {finalRows.map(row=><article className="gm-final__player" key={row.slot}>
           <div className="gm-final__player-identity">
             <b className="gm-final__position">{NBA_GM_DEV_SLOT_LABELS[row.slot]}</b>
             <Portrait player={row.player}/>
-            <img className="nba-gm-final__team-logo" src={nbaTeamLogoSrc(row.player.teamCode)} alt="" />
+            <FinalTeamLogo code={row.player.teamCode}/>
             <div className="gm-final__player-name">
               <strong>{row.player.name}</strong>
               <small>{row.player.teamCode} · {money(row.report?.year3Salary??row.player.salaries[2])}</small>
@@ -148,7 +159,7 @@ export function NbaGmFinalExperience({
         </article>)}
       </div>
     </section>
-    <section className="gm-final__section surface-card" aria-label="NBA offseason transactions">
+    {arrivals.length>0&&<section className="gm-final__section surface-card" aria-label="NBA offseason transactions">
       <header className="gm-final__heading"><h2>OFFSEASON MOVES</h2><small>{arrivals.length} CHANGED</small></header>
       {arrivals.length?<div className="gm-final__transactions">
         {arrivals.map(row=><div className="gm-final__transaction" key={row.slot}>
@@ -168,7 +179,7 @@ export function NbaGmFinalExperience({
           </div>)}
         </div>
       </details>
-    </section>
+    </section>}
     <div className="gm-final__bottom">
       <section className="gm-final__section surface-card" aria-label="NBA GM score breakdown">
         <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>

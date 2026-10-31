@@ -6,6 +6,7 @@ on:
     paths:
       - "src/features/nba/nbaGmDev*"
       - "src/features/nba/nbaGmOfficialHeadshots.ts"
+      - "scripts/audit-nba-gm-cdn-private.mjs"
       - "src/features/nba/nbaGmVisualParity.test.tsx"
       - "src/features/nba/nbaGmDraftCompletion.test.ts"
       - "src/features/nba/nbaGmHistoricalCalibration.test.ts"
@@ -18,6 +19,7 @@ on:
       - "src/features/nba/nbaGmScouting.ts"
       - "src/features/nba/nbaGmScoutingCalibration.test.ts"
       - "src/features/nba/nbaGmThreeSeasonBalance.test.ts"
+      - "src/features/nba/nbaGmFinalPresentation.test.ts"
       - "src/features/nba/nbaGmFootballParity.test.tsx"
       - "supabase/migrations/202612310897_nba_gm_football_parity_private.sql"
       - "supabase/migrations/202612310898_nba_gm_dev_profiles_setup.sql"
@@ -73,4 +75,9 @@ jobs:
       - name: Build production artifacts without deploying
         run: npm run build:artifacts
       - name: NBA GM and Football GM unit regressions
-        run: npx vitest run src/features/nba/nbaGmHistoricalCalibration.test.ts src/features/nba/nbaGmPostseasonCalibration.test.ts src/features/nba/nbaGmDraftCompletion.test.ts src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmVisualParity.test.tsx src/features/nba/nbaGmFootballParity.test.tsx src/features/nba/nbaGmDevelopmentProfiles.test.ts src/features/nba/nbaGmScoutingCalibration.test.ts src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts
+        run: npx vitest run src/features/nba/nbaGmHistoricalCalibration.test.ts src/features/nba/nbaGmPostseasonCalibration.test.ts src/features/nba/nbaGmDraftCompletion.test.ts src/features/nba/nbaGmDevPrototype.test.ts src/features/nba/nbaGmVisualParity.test.tsx src/features/nba/nbaGmFootballParity.test.tsx src/features/nba/nbaGmDevelopmentProfiles.test.ts src/features/nba/nbaGmScoutingCalibration.test.ts src/features/nba/nbaGmThreeSeasonBalance.test.ts src/features/nba/nbaGmFinalPresentation.test.ts src/features/nba/nbaGmFoundation.test.ts src/features/nba/nbaGmSixSkillProposals.test.ts src/features/back-room/footballGmEngine.test.ts src/features/back-room/footballGmRosterFlow.test.ts src/features/back-room/footballGmLongFoundation.test.ts
+
+      - name: Probe live official NBA image delivery and record all 330 results
+        if: always()
+        timeout-minutes: 7
+        run: node scripts/audit-nba-gm-cdn-private.mjs

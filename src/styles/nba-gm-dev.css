@@ -110,6 +110,9 @@
 .nba-gm-dev .football-gm__development-name{min-width:0;overflow-wrap:anywhere}
 .nba-gm-dev .nba-gm-final{min-width:0}
 .nba-gm-final__team-logo{width:24px;height:24px;object-fit:contain;flex:0 0 24px}
+.nba-gm-final .nba-gm-final__portrait>img{object-fit:contain;object-position:center bottom}
+.nba-gm-final .nba-gm-final__portrait>.nba-gm-final__logo-inset{object-fit:contain;padding:2px}
+.nba-gm-final__team-code{display:block;color:#9bc4e1;font-size:8px;font-weight:900;line-height:1.1;overflow-wrap:anywhere;text-align:center}
 .nba-gm-final .gm-final__player-identity{min-width:0}
 .nba-gm-final .gm-final__player-name{min-width:0}
 .nba-gm-final .gm-final__player-name strong{overflow-wrap:anywhere}
@@ -202,3 +205,23 @@
 .nba-gm-dev__reprice.is-high{color:#ffd1a0;background:#693e2a}
 .nba-gm-dev__reprice.is-locked{color:#c2d8e9;background:#283a48}
 .nba-gm-dev__reprice.is-unknown{color:#bfd0df;background:#263849}
+
+/* Priority 4: constrain only the private NBA recap; retain NFL final tokens. */
+.nba-gm-final .gm-final__hero-main{margin:7px 0 10px}
+.nba-gm-final .gm-final__section{gap:7px}
+.nba-gm-final .gm-final__stats>div{min-height:53px;padding:6px 4px}
+.nba-gm-final .gm-final__season{min-height:104px;padding:8px 5px}
+.nba-gm-final .gm-final__highlights{grid-template-columns:repeat(auto-fit,minmax(min(100%,175px),1fr))}
+.nba-gm-final .gm-final__player{padding:7px 8px}
+.nba-gm-final .gm-final__verdict b{overflow-wrap:anywhere}
+.nba-gm-final .gm-final__verdict span{overflow-wrap:anywhere}
+.nba-gm-final .gm-final__bottom,.nba-gm-final .gm-final__section{min-width:0}
+@media(max-width:480px){
+ .nba-gm-final .gm-final__hero-main{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:7px}
+ .nba-gm-final .gm-final__verdict{padding:8px 7px}
+ .nba-gm-final .gm-final__stats{gap:4px}
+ .nba-gm-final .gm-final__season{min-height:99px;padding:7px 3px}
+ .nba-gm-final .gm-final__player-identity{grid-template-columns:23px 31px 19px minmax(0,1fr) auto;column-gap:3px}
+ .nba-gm-final .gm-final__tier{padding:4px 5px;font-size:9px}
+ .nba-gm-final .gm-final__heading{flex-wrap:wrap}
+}
