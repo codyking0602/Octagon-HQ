@@ -143,28 +143,42 @@ def image_looks_like_silhouette(im):
     return colorful / len(pixels) < 0.01
 
 
-def resolve_ufc_profile_source(page_url, fighter_name):
-    host = (urlparse(page_url).hostname or "").lower()
-    if host not in UFC_PROFILE_HOSTS:
+def official_ufc_event_headshot_url(url):
+    """UFC event-results headshots, never the athlete promotional body art."""
+    parsed = urlparse(url)
+    return (
+        parsed.scheme == "https"
+        and (parsed.hostname or "").lower() in {"ufc.com", "www.ufc.com"}
+        and bool(re.fullmatch(
+            r"/images/styles/event_results_athlete_headshot/s3/20[0-9]{2}-[0-9]{2}/[A-Za-z0-9_.-]+[.]png",
+            parsed.path,
+        ))
+    )
+
+
+def resolve_ufc_profile_source(page_url, fighter_name, kind="spotlight"):
+    parsed_page = urlparse(page_url)
+    host = (parsed_page.hostname or "").lower()
+    if host not in UFC_PROFILE_HOSTS or parsed_page.scheme != "https":
         fail(f"UFC profile host not allowed: {host}")
+    if not re.fullmatch(r"/athlete/[A-Za-z0-9-]+/?", parsed_page.path):
+        fail("source_page_url must be an official UFC athlete profile")
 
     page = request_bytes(page_url, MAX_PAGE_BYTES)
-    html = page.decode("utf-8", errors="replace")
-
     parser = UfcProfileImageParser(fighter_name)
-    parser.feed(html)
-    if not parser.candidates:
-        fail(f"official UFC profile has no fighter image matching {fighter_name}")
+    parser.feed(page.decode("utf-8", errors="replace"))
 
     for candidate in parser.candidates:
         image_url = urljoin(page_url, candidate)
-        if not is_public_https(image_url):
+        if not is_public_https(image_url) or source_url_looks_like_placeholder(image_url):
             continue
-        if source_url_looks_like_placeholder(image_url):
+        if kind == "thumb" and not official_ufc_event_headshot_url(image_url):
             continue
         return image_url
 
-    fail("official UFC profile image URL is not a safe public HTTPS URL")
+    if kind == "thumb":
+        fail(f"official UFC profile has no real event-results headshot for {fighter_name}")
+    fail(f"official UFC profile has no safe fighter photo matching {fighter_name}")
 
 
 def resolve_source(spec):
@@ -181,7 +195,7 @@ def resolve_source(spec):
     if not fighter_name:
         fail("fighter_name is required with source_page_url")
 
-    image_url = resolve_ufc_profile_source(source_page_url, fighter_name)
+    image_url = resolve_ufc_profile_source(source_page_url, fighter_name, spec.get("kind"))
     return image_url, request_bytes(image_url, MAX_BYTES)
 
 
@@ -228,7 +242,9 @@ def source_looks_clipped(im, kind):
 
 def approved_square_thumb_source(spec, source_url, size):
     """Only a verified official UFC/ESPN *headshot product*, never body renders."""
-    if spec.get("source_page_url") or spec.get("crop"):
+    if spec.get("crop"):
+        return False
+    if spec.get("source_page_url") and not official_ufc_event_headshot_url(source_url):
         return False
     host = (urlparse(source_url).hostname or "").lower()
     width, height = size
