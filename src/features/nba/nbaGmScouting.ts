@@ -20,3 +20,16 @@ export function nbaGmScoutLetter(value:number):string{
 export function nbaGmScoutTier(player:Pick<NbaGmDevPlayer,"currentGrade">){
   return footballGmTalentTier(player.currentGrade);
 }
+
+// Basketball-specific outlook uses the same age/headroom/risk strata as
+// private.nba_gm_v3_grade. Unverified ages get no speculative decline label.
+export function nbaGmScoutOutlook(player:Pick<NbaGmDevPlayer,"currentGrade"|"ageAtStart"|"reviewFlags">,
+  year:1|2|3=1):"HIGH UPSIDE"|"RISING"|"STEADY"|"BOOM/BUST"|"DECLINE RISK"{
+  const age=player.ageAtStart==null?null:player.ageAtStart+year-1;
+  if(age===null||year===3)return "STEADY";
+  if(age>=35 || (age>=32&&player.currentGrade<=85))return "DECLINE RISK";
+  if(age>=32&&player.reviewFlags.includes("availability-separate"))return "BOOM/BUST";
+  if(age<=23&&player.currentGrade<=92)return "HIGH UPSIDE";
+  if(age<=26&&player.currentGrade<=91)return "RISING";
+  return "STEADY";
+}

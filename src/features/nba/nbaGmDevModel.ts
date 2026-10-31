@@ -9,6 +9,8 @@ export type NbaGmDevPlayer = Omit<NbaGmPlayer, "sources"> & {
   pricingKind: "GAME_FIXTURE_NOT_REAL_CONTRACT";
   eligibilityKind: "PROVISIONAL_EDITORIAL";
   officialNbaPlayerId: string | null;
+  /** Verified 2025–26 NBA Stats API birthdate, aged as of game launch. */
+  ageAtStart?: number | null;
   officialRosterPosition: string;
   positionReview: "unverified";
   reviewFlags: readonly string[];
@@ -20,6 +22,8 @@ export interface NbaGmDevSeason {
 }
 export interface NbaGmDevRun {
   version: "nba-gm-dev-v2";
+  /** Newly started parity economies are V3; missing denotes original V2 saved run. */
+  economyVersion?: 3;
   seed: string;
   phase: NbaGmDevPhase;
   picks: NbaGmPick[];
@@ -37,8 +41,13 @@ export interface NbaGmDevRun {
   freeAgencyTeam: string | null;
   freeAgencyVisits: number;
   releasedIds: string[];
+  /** Additive fields; legacy V2 run snapshots remain valid. */
+  development?: Record<string, {year2Grade:number;year3Grade:number;
+    year2Salary:number;year3Salary:number;startingGrade:number}>;
+  scoreBreakdown?: {score:number;roster:number;regularSeason:number;playoffs:number;
+    weights:[number,number,number]};
 }
-export const NBA_GM_DEV_CAPS: NbaGmSalaryWindow = [192_500_000, 192_500_000, 192_500_000];
+export const NBA_GM_DEV_CAPS: NbaGmSalaryWindow = [155_000_000, 155_000_000, 155_000_000];
 export const NBA_GM_DEV_SKILL_LABELS = {
   scoring: "Scoring", shooting: "Shooting", playmaking: "Playmaking",
   perimeterDefense: "Perimeter D", interiorDefense: "Interior D", rebounding: "Rebounding",

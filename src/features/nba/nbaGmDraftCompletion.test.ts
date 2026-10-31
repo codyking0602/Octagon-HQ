@@ -26,6 +26,16 @@ const board:NbaGmDevPlayer[]=raw.players.map(player=>{
   };
 });
 const cap=[192_500_000,192_500_000,192_500_000] as const;
+const v3Cap=[155_000_000,155_000_000,155_000_000] as const;
+const v3Board=board.map(player=>{
+  const grade=player.currentGrade;
+  const term=grade>=95||(grade>=81&&grade<=87)||grade<=78?"1YR":"3YR";
+  const first=player.salaries[0];
+  return {...player,gameContract:term as "1YR"|"3YR",
+    salaries:(term==="3YR"?[first,first,first]:player.salaries) as [number,number,number],
+  };
+});
+
 
 describe("NBA GM draft completion from authentic 330-player eligibility bank",()=>{
   it("contains both guard-qualified wings and big-qualified forwards without treating pure SF as either",()=>{
@@ -62,4 +72,34 @@ describe("NBA GM draft completion from authentic 330-player eligibility bank",()
       for(let year=0;year<3;year++)expect(spent[year]).toBeLessThanOrEqual(cap[year]);
     }
   },60_000);
+  it("completes 12 diverse V3 draft wheels under the $155M three-year salary cap",()=>{
+    const policies=["top","cheap","mid","versatile"] as const;
+    const totals:number[]=[];
+    for(let seed=0;seed<12;seed++){
+      let picks:ReturnType<typeof nbaGmDevAssignRoster>=[];
+      for(let round=0;round<7;round++){
+        const eligible=v3Board.filter(p=>nbaGmDevCanAdd(picks!,p,v3Board,v3Cap));
+        expect(eligible.length).toBeGreaterThan(0);
+        const teams=NBA_GM_TEAM_CODES.filter(code=>eligible.some(p=>p.teamCode===code));
+        const team=teams[(seed*13+round*17+seed*round)%teams.length]!;
+        const options=eligible.filter(p=>p.teamCode===team);
+        const policy=policies[seed%4]!;
+        options.sort((a,b)=>policy==="top"?b.currentGrade-a.currentGrade:
+          policy==="cheap"?a.salaries[0]-b.salaries[0]:
+          policy==="versatile"?b.positions.length-a.positions.length||b.currentGrade-a.currentGrade:
+          Math.abs(a.currentGrade-85)-Math.abs(b.currentGrade-85));
+        const next=options[(seed+round)%Math.min(options.length,3)]!;
+        picks=nbaGmDevAssignRoster([...picks!.map(x=>x.playerId),next.id],v3Board);
+        expect(picks).not.toBeNull();
+        expect(picks).toHaveLength(round+1);
+      }
+      expect(new Set(picks!.map(x=>x.slot))).toEqual(new Set(NBA_GM_ROSTER_SLOTS));
+      const spends=nbaGmDevSpend(picks!,v3Board);
+      spends.forEach((value,year)=>expect(value).toBeLessThanOrEqual(v3Cap[year]));
+      totals.push(spends[0]);
+    }
+    // Sanity-check that a tight cap actually produces meaningful payroll variety.
+    expect(Math.max(...totals)-Math.min(...totals)).toBeGreaterThan(50_000_000);
+  },90_000);
+
 });

@@ -1,18 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { GmFootballWheel } from "../back-room/FootballGmModePage";
 import { NBA_GM_ROSTER_SLOTS } from "./nbaGmFoundation";
+import { NbaGmDevelopmentReport } from "./NbaGmDevelopmentReport";
+import { NbaGmFinalExperience } from "./NbaGmFinalExperience";
 import {
   NBA_GM_DEV_SKILL_LABELS, NBA_GM_DEV_SLOT_LABELS,
   nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
   nbaGmDevDisplaySalaryYear, nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
-import { nbaGmScoutLetter, nbaGmScoutTier } from "./nbaGmScouting";
+import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook } from "./nbaGmScouting";
 import { createNbaGmDevRepository, type NbaGmDevOperation } from "./nbaGmDevRepository";
 import { NBA_TEAMS } from "./nbaFutures";
 import { nbaTeamColor, nbaTeamLogoSrc } from "./nbaTeamBranding";
 import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
+import "../../styles/football-gm-final.css";
 import "../../styles/nba-gm-dev.css";
 
 const money=(value:number)=>"$"+(value/1_000_000).toFixed(1)+"M";
@@ -38,29 +41,42 @@ function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
       : <TeamMark code={player.teamCode}/>}
   </span>;
 }
-function ScoutBadges({player}:{player:NbaGmDevPlayer}){
-  const tier=nbaGmScoutTier(player);
+function ScoutBadges({player,run}:{player:NbaGmDevPlayer;run?:NbaGmDevRun}){
+  const {currentGrade:originalGrade}=player;
+  const development=run?.development?.[player.id];
+  const year=run?.phase==="offseason"?2:run?.phase==="final"?3:1;
+  const currentGrade=year===2?development?.year2Grade:year===3?development?.year3Grade:undefined;
+  const display={...player,currentGrade:currentGrade??originalGrade};
+  const tier=nbaGmScoutTier(display);
+  const outlook=nbaGmScoutOutlook(display,year);
+  const tone=outlook==="HIGH UPSIDE"?"upside":outlook==="RISING"?"rising"
+    :outlook==="BOOM/BUST"?"volatile":outlook==="DECLINE RISK"?"decline":"stable";
   return <span className="nba-gm-dev__scout-pills">
     <span className={"football-gm__quality-pill quality-"+tier.toLowerCase()}>{tier}</span>
+    {year<3&&<span className={"football-gm__outlook-pill outlook-"+tone}>{outlook}</span>}
     <span className="nba-gm-dev__term">{player.gameContract}</span>
     <span className="nba-gm-dev__term">{player.gameContract==="3YR"?"SALARY LOCKED":"REPRICE RISK"}</span>
   </span>;
 }
-function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0}:{
+function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
   player:NbaGmDevPlayer;onPick?:()=>void;disabled?:boolean;action?:string;salaryYear?:0|1|2;
+  run?:NbaGmDevRun;
 }){
+  const {currentGrade:originalGrade}=player;
+  const delta=salaryYear===1&&run?.development?.[player.id]
+    ?run.development[player.id]!.year2Grade-originalGrade:0;
   return <article className="nba-gm-dev__player" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
     <div className="nba-gm-dev__player-head">
       <PlayerPortrait player={player}/>
       <div className="nba-gm-dev__identity">
         <strong>{player.name}</strong><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,salaryYear))} YEAR {salaryYear+1}</small>
-        <ScoutBadges player={player}/>
+        <ScoutBadges player={player} run={run}/>
       </div>
     </div>
     <div className="nba-gm-dev__skills" aria-label={"Scouting grades for "+player.name}>
       {labels.map(key=><div key={key}>
         <small>{NBA_GM_DEV_SKILL_LABELS[key]}</small>
-        <strong>{nbaGmScoutLetter(player.skills[key])}</strong>
+        <strong>{nbaGmScoutLetter(Math.max(0,Math.min(99,Math.round(player.skills[key]+delta))))}</strong>
       </div>)}
     </div>
     {onPick&&<button type="button" className="nba-gm-dev__primary" disabled={disabled} onClick={onPick}>
@@ -106,7 +122,11 @@ export default function NbaGmDevPage(){
   const [notice,setNotice]=useState("");
   const [wheelRotation,setWheelRotation]=useState(0);
   const [wheelSpinning,setWheelSpinning]=useState(false);
+  const wheelRequestRef=useRef(false);
+  const wheelSequenceRef=useRef(0);
+  useEffect(()=>()=>{wheelSequenceRef.current+=1;},[]);
   const [positionFilter,setPositionFilter]=useState<string|null>(null);
+  const [tradeChip,setTradeChip]=useState<string|null>(null);
   useEffect(()=>{
     if(!repo){setError("NBA GM needs a connected private backend.");setLoading(false);return;}
     let mounted=true;
@@ -120,54 +140,90 @@ export default function NbaGmDevPage(){
     return()=>{mounted=false;};
   },[repo]);
 
-  async function act(action:NbaGmDevOperation,playerId?:string){
+  async function act(action:NbaGmDevOperation,playerId?:string,extraTradeChip?:string){
     if(!repo||busy)return;
     setBusy(true);setError("");setNotice("");
     try {
-      const state=await repo.action(action,playerId);
+      const state=await repo.action(action,playerId,extraTradeChip);
       if(action==="trade"&&state&&run&&state.tradesUsed===run.tradesUsed){
         setNotice("Offer declined. The partner wanted more value.");
       }
       if(action==="pick")setPositionFilter(null);
+      if(["shop","trade","cancel-trade"].includes(action))setTradeChip(null);
       setRun(state);
+      if(state&&["start","offseason","trade","sign","emergency-sign","advance"].includes(action)){
+        void repo.catalog().then(setCatalog).catch(()=>setNotice("Salary scouting will refresh on reload."));
+      }
       return state;
     } catch(failure){
       setError(failure instanceof Error?failure.message:"Action rejected by the server.");
     } finally{setBusy(false);}
   }
   async function spin(action:"spin"|"trade-spin"|"fa-spin"){
-    if(busy||wheelSpinning)return;
-    const state=await act(action);
-    if(!state)return;
-    const teamCode=action==="spin"?state.pendingTeam:action==="trade-spin"?state.tradeTeam:state.freeAgencyTeam;
-    const i=wheelTeams.findIndex(t=>t.code===teamCode);
-    if(i<0)return;
-    const slice=360/wheelTeams.length;
-    const desired=((-(i*slice))%360+360)%360;
-    setWheelRotation(prev=>{
-      const current=((prev%360)+360)%360;
-      return prev+1080+((desired-current+360)%360);
-    });
-    setWheelSpinning(true);
-    window.setTimeout(()=>setWheelSpinning(false),1550);
+    if(!repo||busy||wheelRequestRef.current)return;
+    // Visual feedback starts synchronously. Server alone decides the landing.
+    wheelRequestRef.current=true;
+    const sequence=++wheelSequenceRef.current;
+    setBusy(true);setError("");setNotice("");setWheelSpinning(true);
+    setWheelRotation(prev=>prev+1440);
+    // An unusually slow eligibility RPC must not leave a motionless wheel.
+    const keepTurning=window.setInterval(()=>{
+      if(sequence===wheelSequenceRef.current)setWheelRotation(prev=>prev+720);
+    },1150);
+    try{
+      const state=await repo.action(action);
+      if(sequence!==wheelSequenceRef.current)return;
+      if(!state)throw Error("Spin did not return a franchise state.");
+      const teamCode=action==="spin"?state.pendingTeam:action==="trade-spin"?state.tradeTeam:state.freeAgencyTeam;
+      const i=wheelTeams.findIndex(team=>team.code===teamCode);
+      if(i<0)throw Error("The server returned an unknown team.");
+      window.clearInterval(keepTurning);
+      const slice=360/wheelTeams.length;
+      const desired=((-(i*slice))%360+360)%360;
+      setWheelRotation(prev=>{
+        const current=((prev%360)+360)%360;
+        return prev+720+((desired-current+360)%360);
+      });
+      // Hold the server result until the winning slice is beneath the pointer.
+      window.setTimeout(()=>{
+        if(sequence!==wheelSequenceRef.current)return;
+        setRun(state);setWheelSpinning(false);setBusy(false);
+        wheelRequestRef.current=false;
+      },1550);
+    }catch(failure){
+      window.clearInterval(keepTurning);
+      if(sequence!==wheelSequenceRef.current)return;
+      setError(failure instanceof Error?failure.message:"The spin failed. Please retry.");
+      setWheelSpinning(false);setBusy(false);
+      wheelRequestRef.current=false;
+    }
   }
   const byId=useMemo(()=>new Map(catalog.map(p=>[p.id,p])),[catalog]);
   const spend=run?nbaGmDevSpend(run.picks,catalog):null;
+  const capCrisis=Boolean(run&&spend&&(spend[1]>run.caps[1]||spend[2]>run.caps[2]));
   const candidates=run?nbaGmDevCandidates(run,catalog):[];
   const visible=candidates.filter(p=>!positionFilter||p.positions.includes(positionFilter as "PG"|"SG"|"SF"|"PF"|"C"));
   const currentTeam=run?.phase==="draft"?run.pendingTeam:run?.tradeTeam??run?.freeAgencyTeam;
   const wheelTeam=currentTeam?wheelTeams.find(team=>team.code===currentTeam)??null:null;
+  // Partner visibility is not a cap/roster filter. All unowned targets remain
+  // visible, even if an immediate exchange requires another legal structure.
   const eligibleTrade=run?.shopPlayerId?catalog.filter(p=>
     p.teamCode===run.tradeTeam&&!run.picks.some(pick=>pick.playerId===p.id)
-    && nbaGmDevCanAdd(run.picks.filter(pick=>pick.playerId!==run.shopPlayerId),p,catalog,run.caps,"offseason")
-  ):[];
+  ).sort((a,b)=>b.currentGrade-a.currentGrade||a.name.localeCompare(b.name)):[];
+  const emergency=run?.phase==="offseason"&&run.picks.length<7&&
+    run.freeAgencyVisits>=3&&!run.freeAgencyTeam&&!run.shopPlayerId
+    ?catalog.filter(p=>p.gameContract==="1YR"&&p.currentGrade<=78
+      &&!run.picks.some(pick=>pick.playerId===p.id)&&!run.releasedIds.includes(p.id)
+      &&nbaGmDevCanAdd(run.picks,p,catalog,run.caps,"offseason"))
+      .sort((a,b)=>nbaGmDevSalary(a,1)-nbaGmDevSalary(b,1)||a.name.localeCompare(b.name))
+    :[];
   const isDraft=run?.phase==="draft";
   // Keep the wheel mounted during its animation and after its result.
   // Unmounting at pendingTeam would hide the exact NFL GM spin the player expects.
   const wheelEnabled=!busy&&!wheelSpinning&&Boolean(run&&(
     isDraft&&!run.pendingTeam||
     run.phase==="offseason"&&run.shopPlayerId&&!run.tradeTeam&&run.tradesUsed===0||
-    run.phase==="offseason"&&run.picks.length<7&&!run.freeAgencyTeam&&!run.shopPlayerId
+    run.phase==="offseason"&&run.picks.length<7&&run.freeAgencyVisits<3&&!run.freeAgencyTeam&&!run.shopPlayerId
   ));
   return <main className="page nba-gm-dev" data-testid="nba-gm-development-page">
     <header className="nba-gm-dev__header">
@@ -207,10 +263,10 @@ export default function NbaGmDevPage(){
               <strong>{NBA_GM_DEV_SLOT_LABELS[slot]}</strong>
               {player?<><PlayerPortrait key={player.id} player={player}/>
                 <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase)))}</small>
-                  <ScoutBadges player={player}/></span>
+                  <ScoutBadges player={player} run={run}/></span>
                 {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                   <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
-                {run.phase==="offseason"&&run.releasedIds.length<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+                {run.phase==="offseason"&&(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                   <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("release",player.id)}>CUT</button>}
               </>:<span className="nba-gm-dev__empty">OPEN</span>}
             </article>;
@@ -222,7 +278,7 @@ export default function NbaGmDevPage(){
           <h2>{run.pendingTeam?"CHOOSE YOUR PLAYER":"SPIN FOR AN NBA TEAM"}</h2></div>
           {run.pendingTeam&&<TeamMark code={run.pendingTeam}/>}</div>
         {!run.pendingTeam&&<p className="nba-gm-dev__hint">Spin first, then choose any eligible player. The lineup reflows automatically to keep valid positions.</p>}
-        {<GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+        {<GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
           pendingTeam={wheelSpinning?null:wheelTeam} canSpin={wheelEnabled} onSpin={()=>void spin("spin")}/>}
         {run.pendingTeam&&!wheelSpinning&&<PlayerPicker players={visible} all={candidates} filter={positionFilter}
           setFilter={setPositionFilter} disabled={busy} onPick={id=>void act("pick",id)}/>}
@@ -235,50 +291,75 @@ export default function NbaGmDevPage(){
         </button>
       </section>}
       {(run.phase==="year1"||run.phase==="offseason"||run.phase==="final")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
+      {run.phase==="offseason"&&<NbaGmDevelopmentReport run={run} catalog={catalog}/>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>THE OFFSEASON</h2></div></div>
         <Results seasons={run.results}/>
-        <p className="nba-gm-dev__hint">1YR salaries reprice for Years 2–3; 3YR salaries remain locked. Shop one player, use your team-wheel trade partner, or cut and replace a player in the 1YR free-agent market.</p>
+        {capCrisis&&<p className="nba-gm-dev__cap-crisis" role="alert">SALARY CAP CRISIS · Your future payroll is over the cap. Trade or cut a player, then sign an affordable replacement before advancing.</p>}
+        <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, negotiate up to two offers, or use one voluntary cut and the limited free-agent market.</p>
         {run.shopPlayerId&&<div className="nba-gm-dev__trade">
           <strong>SHOPPING {byId.get(run.shopPlayerId)?.name}</strong>
-          <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+          <GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
             pendingTeam={wheelSpinning?null:run.tradeTeam?wheelTeam:null}
             canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>
           {run.tradeTeam&&!wheelSpinning&&
-            <><p>Trading partner: {NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}. Two offers maximum, one accepted trade.</p>
+            <><p>Trading partner: {NBA_TEAMS.find(t=>t.id===run.tradeTeam)?.name}. Every available player is listed. A target may require a different legal package or more cap space. Two offers maximum.</p>
+              <div className="nba-gm-dev__chip-list" role="group" aria-label="Optional second outgoing trade player">
+                <span>OPTIONAL SECOND TRADE CHIP</span>
+                {run.picks.filter(pick=>pick.playerId!==run.shopPlayerId).map(pick=>{
+                  const player=byId.get(pick.playerId);
+                  return player?<button type="button" className={tradeChip===player.id?"is-selected":""}
+                    aria-pressed={tradeChip===player.id} key={player.id} disabled={busy}
+                    onClick={()=>setTradeChip(current=>current===player.id?null:player.id)}>
+                    {player.name}
+                  </button>:null;
+                })}
+              </div>
               <div className="nba-gm-dev__candidate-grid">
-                {eligibleTrade.map(player=><PlayerCard player={player} key={player.id} disabled={busy}
-                  action="OFFER FOR" salaryYear={1} onPick={()=>void act("trade",player.id)}/>)}
+                {eligibleTrade.map(player=>{
+                  const remaining=run.picks.filter(pick=>pick.playerId!==run.shopPlayerId&&pick.playerId!==tradeChip);
+                  const legal=nbaGmDevCanAdd(remaining,player,catalog,run.caps,"offseason");
+                  return <div key={player.id} className="nba-gm-dev__trade-target">
+                    {!legal&&<small className="nba-gm-dev__trade-warning">CURRENT PACKAGE NEEDS A DIFFERENT CAP / POSITION FIT</small>}
+                    <PlayerCard player={player} run={run} disabled={busy} action={tradeChip?"OFFER PACKAGE FOR":"OFFER FOR"}
+                      salaryYear={1} onPick={()=>void act("trade",player.id,tradeChip??undefined)}/>
+                  </div>;
+                })}
               </div>
             </>}
           <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("cancel-trade")}>KEEP MY PLAYER</button>
         </div>}
         {run.picks.length<7&&!run.shopPlayerId&&
           <div className="nba-gm-dev__trade">
-            <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits} MARKET VISITS · REPLACEMENT SPINS UNTIL ROSTER IS FILLED</p>
-            <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+            <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits}/3 MARKET VISITS · 1YR SIGNINGS ONLY</p>
+            {run.freeAgencyVisits<3||run.freeAgencyTeam?<GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
               pendingTeam={wheelSpinning?null:run.freeAgencyTeam?wheelTeam:null}
-              canSpin={wheelEnabled} onSpin={()=>void spin("fa-spin")}/>
+              canSpin={wheelEnabled} onSpin={()=>void spin("fa-spin")}/>:null}
             {run.freeAgencyTeam&&!wheelSpinning&&<>
               <strong>{NBA_TEAMS.find(t=>t.id===run.freeAgencyTeam)?.name} · 1YR FREE AGENTS</strong>
               <div className="nba-gm-dev__candidate-grid">
-                {candidates.map(player=><PlayerCard key={player.id} player={player} disabled={busy}
+                {candidates.map(player=><PlayerCard key={player.id} player={player} run={run} disabled={busy}
                   action="SIGN" salaryYear={1} onPick={()=>void act("sign",player.id)}/>)}
               </div>
               <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
             </>}
           </div>}
+        {emergency.length>0&&<div className="nba-gm-dev__trade">
+          <strong>EMERGENCY ROSTER COMPLETION</strong>
+          <p className="nba-gm-dev__hint">All three visits used. Only affordable depth players may fill an open position. No rerolls.</p>
+          <div className="nba-gm-dev__candidate-grid">
+            {emergency.map(player=><PlayerCard key={player.id} player={player} run={run} disabled={busy}
+              salaryYear={1} action="SIGN DEPTH" onPick={()=>void act("emergency-sign",player.id)}/>)}
+          </div>
+        </div>}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-          <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("advance")}>
+          <button className="nba-gm-dev__primary" disabled={busy||capCrisis} onClick={()=>void act("advance")}>
             LOCK ROSTER · SIMULATE SEASONS 2 & 3
           </button>}
       </section>}
-      {run.phase==="final"&&<section className="nba-gm-dev__panel nba-gm-dev__results">
-        <small>THREE SEASONS · PRIVATE PLAYTEST</small><h2>YOUR FRANCHISE RESULTS</h2>
-        <Results seasons={run.results}/>
-        <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button>
-      </section>}
-      <footer className="nba-gm-dev__disclaimer">Owner-only QA · Provisional positions and scouting · Fictional contract terms and prices · Simulation not historically calibrated or public.</footer>
+      {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
+        <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
+      <footer className="nba-gm-dev__disclaimer">Owner-only QA · Provisional positions and player progression assumptions · Fictional game contracts and cap · Results are not a certified NBA forecast or public.</footer>
     </>}
   </main>;
 }
