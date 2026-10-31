@@ -66,7 +66,7 @@ begin
       v_nba:=private.daily_challenge_expected_game(
         private.daily_challenge_schedule_for_day(v_day,'nba'),v_day);
     end if;
-    -- The saved Oct 29 Bar Trivia is an explicit one-day launch exception.
+    -- The owner-approved Oct 29 NBA Millionaire is a one-time launch exception.
     -- All other cross-sport same-day game collisions remain prohibited.
     if v_football = v_ufc
       or (v_football = v_nba and v_day <> date '2026-10-29')
@@ -97,7 +97,7 @@ begin
   v_old:=public.get_daily_challenge_materialization_request('nba','2026-10-29T20:00:00Z'::timestamptz);
   v_new:=public.get_daily_challenge_materialization_request('nba','2026-10-31T20:00:00Z'::timestamptz);
   if v_old->>'central_day'<>'2026-10-29'
-    or v_old->>'schedule_version'<>'nba-daily-launch-oct29-bar-trivia-v1'
+    or v_old->>'schedule_version'<>'nba-daily-launch-oct29-millionaire-v1'
     or v_old->>'schedule_version'<>v_new->>'schedule_version'
     or v_old->>'expected_game'<>v_new->>'expected_game' then raise exception 'NBA retry identity drift';end if;
   if private.daily_challenge_active_day(date '2026-11-01','ufc')<>date '2026-10-31'
