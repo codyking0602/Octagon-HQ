@@ -66,7 +66,7 @@ Examples: **Cooper Flagg, Jalen Duren, Amen Thompson, LaMelo Ball** show High ex
 
 During drafting, **no actual seeded Year 2 grade or salary is consulted**: the forecast uses v4 probabilities and the current visible grade only. During an offseason, Year 2 has already been revealed, so Year 3 is forecast from the newly visible Year 2 grade and authoritative updated Year 3 odds. The SQL price simulation remains the sole authority for realized grades/contracts. Estimates may be wrong for an individual player; that uncertainty is the gameplay point.
 
-For old saved **V2 and untagged V3** runs, the new risk field is null (the previous generic label remains); their historical age-based outlook fallback and salary/progression behavior remain unchanged. Do not backfill a V4 forecast into legacy saves.
+For old saved **V2 and untagged V3** runs, 1YR risk is null (the previous generic label remains), while existing 3YR players still report **SALARY LOCKED**, even if the V2 contract terms differ from V3. Their historical age-based outlook fallback and salary/progression behavior remain unchanged. Do not backfill a V4 forecast into legacy saves.
 
 ## Scouting odds and progression
 
