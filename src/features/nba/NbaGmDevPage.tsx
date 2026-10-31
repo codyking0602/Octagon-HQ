@@ -265,7 +265,7 @@ export default function NbaGmDevPage(){
           <h2>{run.pendingTeam?"CHOOSE YOUR PLAYER":"SPIN FOR AN NBA TEAM"}</h2></div>
           {run.pendingTeam&&<TeamMark code={run.pendingTeam}/>}</div>
         {!run.pendingTeam&&<p className="nba-gm-dev__hint">Spin first, then choose any eligible player. The lineup reflows automatically to keep valid positions.</p>}
-        {<GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+        {<GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
           pendingTeam={wheelSpinning?null:wheelTeam} canSpin={wheelEnabled} onSpin={()=>void spin("spin")}/>}
         {run.pendingTeam&&!wheelSpinning&&<PlayerPicker players={visible} all={candidates} filter={positionFilter}
           setFilter={setPositionFilter} disabled={busy} onPick={id=>void act("pick",id)}/>}
@@ -286,7 +286,7 @@ export default function NbaGmDevPage(){
         <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, negotiate up to two offers, or use one voluntary cut and the limited free-agent market.</p>
         {run.shopPlayerId&&<div className="nba-gm-dev__trade">
           <strong>SHOPPING {byId.get(run.shopPlayerId)?.name}</strong>
-          <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+          <GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
             pendingTeam={wheelSpinning?null:run.tradeTeam?wheelTeam:null}
             canSpin={wheelEnabled} onSpin={()=>void spin("trade-spin")}/>
           {run.tradeTeam&&!wheelSpinning&&
@@ -319,7 +319,7 @@ export default function NbaGmDevPage(){
         {run.picks.length<7&&!run.shopPlayerId&&
           <div className="nba-gm-dev__trade">
             <p className="nba-gm-dev__hint">FREE AGENCY · {run.freeAgencyVisits}/3 MARKET VISITS · 1YR SIGNINGS ONLY</p>
-            {run.freeAgencyVisits<3||run.freeAgencyTeam?<GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
+            {run.freeAgencyVisits<3||run.freeAgencyTeam?<GmFootballWheel ariaLabel="NBA team wheel" teams={wheelTeams} rotation={wheelRotation} spinning={wheelSpinning}
               pendingTeam={wheelSpinning?null:run.freeAgencyTeam?wheelTeam:null}
               canSpin={wheelEnabled} onSpin={()=>void spin("fa-spin")}/>:null}
             {run.freeAgencyTeam&&!wheelSpinning&&<>
