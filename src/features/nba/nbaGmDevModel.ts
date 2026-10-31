@@ -9,6 +9,8 @@ export type NbaGmDevPlayer = Omit<NbaGmPlayer, "sources"> & {
   pricingKind: "GAME_FIXTURE_NOT_REAL_CONTRACT";
   eligibilityKind: "PROVISIONAL_EDITORIAL";
   officialNbaPlayerId: string | null;
+  /** Verified 2025–26 NBA Stats API birthdate, aged as of game launch. */
+  ageAtStart?: number | null;
   officialRosterPosition: string;
   positionReview: "unverified";
   reviewFlags: readonly string[];
