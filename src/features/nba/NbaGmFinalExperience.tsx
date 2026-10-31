@@ -14,9 +14,10 @@ const clamp = (value: number, low: number, high: number) => Math.min(high, Math.
 
 function Portrait({player}:{player:NbaGmDevPlayer}) {
   const [failed, setFailed] = useState(false);
+  const headshotId = nbaGmOfficialHeadshotId(player);
   return <span className="nba-gm-dev__portrait">
-    {player.officialNbaPlayerId && /^\d+$/.test(player.officialNbaPlayerId) && !failed
-      ? <img src={`https://cdn.nba.com/headshots/nba/latest/260x190/${player.officialNbaPlayerId}.png`}
+    {headshotId && !failed
+      ? <img src={`https://cdn.nba.com/headshots/nba/latest/260x190/${headshotId}.png`}
           alt="" loading="lazy" onError={() => setFailed(true)} />
       : <img src={nbaTeamLogoSrc(player.teamCode)} alt="" />}
   </span>;
