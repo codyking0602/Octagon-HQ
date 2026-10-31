@@ -15,7 +15,7 @@ returns text language sql stable security definer set search_path='' as $$
   select case when p.overall >=95 then '1YR'
     when p.overall between 88 and 94 then '3YR'
     when p.overall between 81 and 87 then '1YR'
-    else '3YR' end
+    when p.overall<=78 then '1YR' else '3YR' end
   from private.nba_gm_dev_players p where p.id=p_id;
 $$;
 revoke all on function private.nba_gm_v2_contract(text) from public,anon,authenticated;
@@ -227,6 +227,46 @@ $$;
 revoke all on function private.nba_gm_v2_season(jsonb,integer) from public,anon,authenticated;
 
 
+-- Mirror the approved Football 90/3/7 roster, record and playoff philosophy.
+-- A 7-player, 82-game NBA model has its own grade ladder; no dynasty bonus.
+create or replace function private.nba_gm_v3_final_score(p_state jsonb)
+returns jsonb language plpgsql stable security definer set search_path='' as $$
+declare
+ v_roster numeric:=0;v_record numeric:=0;v_playoff numeric:=0;
+ v_grade numeric;v_year integer;v_finish text;v_ovr numeric;
+ v_team numeric;v_score numeric;
+begin
+ if jsonb_array_length(p_state->'results')<>3
+   or jsonb_array_length(p_state->'picks')<>7 then
+   raise exception 'Final score requires a complete 3-season franchise';
+ end if;
+ for v_year in 1..3 loop
+   select avg(private.nba_gm_v3_grade(p_state,pick->>'playerId',v_year)*
+     case when pick->>'slot' in ('GUARD','BIG') then .84 else 1 end)
+     /avg(case when pick->>'slot' in ('GUARD','BIG') then .84 else 1 end)
+     into v_grade from jsonb_array_elements(
+       case when v_year=1 then p_state->'yearOnePicks' else p_state->'picks' end) pick;
+   -- NFL-like grade-to-OVR compression; exact grades never revealed.
+   v_ovr:=greatest(60,least(99,round(70+(v_grade-76)*1.5)));
+   v_roster:=v_roster+v_ovr;
+   v_record:=v_record+(p_state->'results'->(v_year-1)->>'wins')::numeric;
+   v_finish:=p_state->'results'->(v_year-1)->>'finish';
+   v_playoff:=v_playoff+case v_finish when 'Champion' then 100
+     when 'Finals' then 96 when 'Conference Finals' then 92
+     when 'Conference Semifinals' then 86 when 'First Round' then 80
+     when 'Missed Playoffs' then 70 else 0 end;
+ end loop;
+ v_roster:=round(v_roster/3,1);
+ v_record:=round(60+40*v_record/(82*3),1);
+ v_playoff:=round(v_playoff/3,1);
+ v_score:=round(v_roster*.90+v_record*.03+v_playoff*.07,1);
+ return jsonb_build_object('score',v_score,'roster',v_roster,
+   'regularSeason',v_record,'playoffs',v_playoff,
+   'weights',jsonb_build_array(.90,.03,.07));
+end;
+$$;
+revoke all on function private.nba_gm_v3_final_score(jsonb) from public,anon,authenticated;
+
 create or replace function public.nba_gm_dev_action(
   p_action text,p_slot text default null,p_player_id text default null
 ) returns jsonb language plpgsql security definer set search_path='' as $$
@@ -236,6 +276,7 @@ declare
   v_old private.nba_gm_dev_players%rowtype;
   v_picks jsonb;v_team text;v_revision integer;v_year integer;v_spend bigint;
   v_old_id text;v_result jsonb;v_attempts integer;v_count integer;
+  v_chip_grade numeric;v_offer_value numeric;v_ask numeric;v_chip_id text;
 begin
   if not private.nba_gm_dev_owner() then raise exception 'NBA GM playtest access required'; end if;
   if (select count(*) from private.nba_gm_dev_players)<>330 then
@@ -273,10 +314,6 @@ begin
       then raise exception 'Finish the existing team spin first'; end if;
     -- Randomize teams first; stop on the FIRST team with legal candidates.
     -- Avoid 330 expensive recursive matching calls before the wheel responds.
-    for v_team in select distinct p.team_code from private.nba_gm_dev_players p
-        order by p.team_code loop
-      null;
-    end loop;
     v_team:=null;
     for v_team in select x.team_code from (select distinct team_code
         from private.nba_gm_dev_players) x order by random() loop
@@ -338,21 +375,49 @@ begin
     select * into v_old from private.nba_gm_dev_players where id=v_old_id;
     select * into v_player from private.nba_gm_dev_players where id=p_player_id;
     if not found or v_player.team_code<>v_state->>'tradeTeam'
-      then raise exception 'Not a player from your trade partner'; end if;
+      or exists(select 1 from jsonb_array_elements(v_picks) x where x->>'playerId'=p_player_id)
+      then raise exception 'Target is not an available player from your trade partner'; end if;
+    -- Optional second outgoing asset through the existing p_slot argument.
+    -- Never trust a client-owned slot or arbitrary extra player.
+    v_chip_id:=nullif(p_slot,'');
+    if v_chip_id is not null and (v_chip_id=v_old_id or
+       not exists(select 1 from jsonb_array_elements(v_picks) x
+          where x->>'playerId'=v_chip_id)) then
+      raise exception 'Additional trade chip must be another rostered player';
+    end if;
     select coalesce(jsonb_agg(pick),'[]'::jsonb) into v_picks
-      from jsonb_array_elements(v_picks) pick where pick->>'playerId'<>v_old_id;
+      from jsonb_array_elements(v_picks) pick
+      where pick->>'playerId'<>v_old_id
+        and (v_chip_id is null or pick->>'playerId'<>v_chip_id);
     v_result:=jsonb_set(v_state,'{picks}',v_picks);
+    -- All targets remain visible; impossible packages get explicit feedback.
     if not private.nba_gm_v2_can_add(v_result,p_player_id) then
-      raise exception 'This target needs a different legal package or more cap space'; end if;
+      raise exception 'Trade target needs different outgoing assets or more cap room'; end if;
+    v_offer_value:=private.nba_gm_v3_grade(v_state,v_old_id,2);
+    if v_chip_id is not null then
+      v_chip_grade:=private.nba_gm_v3_grade(v_state,v_chip_id,2);
+      v_offer_value:=v_offer_value+greatest(0,(v_chip_grade-69)*.32);
+    end if;
+    v_ask:=private.nba_gm_v3_grade(v_state,p_player_id,2)
+      +case when v_player.overall>=95 then 4
+            when v_player.overall>=89 then 2.5 else 1 end;
     v_attempts:=(v_state->>'tradeAttempts')::integer+1;
     v_next:=jsonb_set(v_state,'{tradeAttempts}',to_jsonb(v_attempts));
-    -- Private negotiation mock: do NOT imply live NBA trade value.
-    if private.nba_gm_v3_grade(v_state,p_player_id,2)
-         <= private.nba_gm_v3_grade(v_state,v_old_id,2)+4 then
+    if v_offer_value>=v_ask then
       v_picks:=private.nba_gm_v2_assign(v_picks,p_player_id);
       v_next:=jsonb_set(jsonb_set(jsonb_set(jsonb_set(v_next,'{picks}',v_picks),
         '{shopPlayerId}','null'::jsonb),'{tradeTeam}','null'::jsonb),
         '{tradesUsed}',to_jsonb((v_state->>'tradesUsed')::integer+1));
+      -- Two-for-one deals create a vacancy. Guarantee one legal affordable
+      -- replacement before finalizing that structural transaction.
+      if v_chip_id is not null and not exists(
+        select 1 from private.nba_gm_dev_players p
+        where private.nba_gm_v2_contract(p.id)='1YR' and p.overall<=81
+          and not exists(select 1 from jsonb_array_elements(v_picks) x
+            where x->>'playerId'=p.id)
+          and private.nba_gm_v2_can_add(v_next,p.id)) then
+        raise exception 'Trade package leaves no affordable 1YR roster completion';
+      end if;
     elsif v_attempts>=2 then
       v_next:=jsonb_set(jsonb_set(v_next,'{shopPlayerId}','null'::jsonb),
         '{tradeTeam}','null'::jsonb);
@@ -380,6 +445,7 @@ begin
   -- NFL-style emergency market: never strand a franchise after a release.
   elsif p_action='fa-spin' then
     if v_state->>'phase'<>'offseason' or jsonb_array_length(v_picks)>=7
+      or (v_state->>'freeAgencyVisits')::integer>=3
       or v_state->>'freeAgencyTeam' is not null
       or v_state->>'shopPlayerId' is not null
       then raise exception 'No free-agent market visit available'; end if;
@@ -406,8 +472,21 @@ begin
     v_next:=jsonb_set(jsonb_set(v_state,'{picks}',v_picks),
       '{freeAgencyTeam}','null'::jsonb);
   elsif p_action='pass-fa' then
-    if v_state->>'phase'<>'offseason' then raise exception 'Offseason only'; end if;
+    if v_state->>'phase'<>'offseason' or v_state->>'freeAgencyTeam' is null
+      then raise exception 'No market visit to pass'; end if;
     v_next:=jsonb_set(v_state,'{freeAgencyTeam}','null'::jsonb);
+  elsif p_action='emergency-sign' then
+    if v_state->>'phase'<>'offseason' or jsonb_array_length(v_picks)>=7
+      or (v_state->>'freeAgencyVisits')::integer<3
+      or v_state->>'freeAgencyTeam' is not null or v_state->>'shopPlayerId' is not null
+      then raise exception 'Emergency signings require exhausted visits and an open slot'; end if;
+    select * into v_player from private.nba_gm_dev_players where id=p_player_id;
+    if not found or v_player.overall>78 or private.nba_gm_v2_contract(p_player_id)<>'1YR'
+      or p_player_id in(select x.id from jsonb_array_elements_text(v_state->'releasedIds') x(id))
+      or not private.nba_gm_v2_can_add(v_state,p_player_id)
+      then raise exception 'Only affordable depth free agents can fill an emergency vacancy'; end if;
+    v_picks:=private.nba_gm_v2_assign(v_picks,p_player_id);
+    v_next:=jsonb_set(v_state,'{picks}',v_picks);
   elsif p_action='advance' then
     if v_state->>'phase'<>'offseason'
       or jsonb_array_length(v_picks)<>7 or v_state->>'shopPlayerId' is not null
@@ -425,6 +504,7 @@ begin
         '{phase}','"final"'::jsonb);
     v_next:=jsonb_set(v_next,'{development}',
       private.nba_gm_v3_development_report(v_next,v_picks));
+    v_next:=jsonb_set(v_next,'{scoreBreakdown}',private.nba_gm_v3_final_score(v_next));
   else
     raise exception 'Unsupported NBA GM action';
   end if;
