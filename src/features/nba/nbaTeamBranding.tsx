@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { NbaTeam } from "./nbaFutures";
 
 // Official NBA team IDs power image assets; the team abbreviation is a built-in fallback.
@@ -27,9 +28,12 @@ export const nbaTeamLogoSrc = (id:string) => NBA_IDS[id]
   : "";
 
 export function NbaTeamMark({team}:{team:NbaTeam}) {
+  const [failed,setFailed]=useState(false);
+  useEffect(()=>setFailed(false),[team.id]);
+  const logo=nbaTeamLogoSrc(team.id);
   return <span className="nba-team-mark" aria-hidden="true">
-    <span className="nba-team-mark__fallback">{team.id}</span>
-    <img src={nbaTeamLogoSrc(team.id)} alt="" loading="lazy"
-      onError={event=>{ event.currentTarget.style.display="none"; }} />
+    {logo&&!failed
+      ?<img src={logo} alt="" loading="lazy" onError={()=>setFailed(true)}/>
+      :<span className="nba-team-mark__fallback">{team.id}</span>}
   </span>;
 }
