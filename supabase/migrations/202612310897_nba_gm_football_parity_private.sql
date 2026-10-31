@@ -535,12 +535,21 @@ begin
   -- times OBSERVED net rating on a 2025–26 walk-forward holdout.
   -- The seven-athlete skill -> estimated net rating mapping below remains
   -- an explicitly PROVISIONAL game assumption, not a fitted lineup forecast.
-  v_estimated_net:=(v_off-78)*.529+(v_def-78)*.463
-    +(v_fit-27)*.154+least(0,(v_floor-65))*.088
-    -case when p_year=1 then 0 else greatest(0,v_turnover-2)*.353 end;
-  v_wins:=greatest(8,least(74,round(
-    40.9983+2.2684*v_estimated_net+v_noise
-  )::integer));
+  if p_state->>'economyVersion' is distinct from '3' then
+    -- Exact legacy V2 win conversion, preserving preexisting save behavior.
+    v_wins:=greatest(8,least(74,round(
+      41+(v_off-78)*1.2+(v_def-78)*1.05+(v_fit-27)*.35
+        +least(0,(v_floor-65))*.2
+        -case when p_year=1 then 0 else greatest(0,v_turnover-2)*.8 end+v_noise
+    )::integer));
+  else
+    v_estimated_net:=(v_off-78)*.529+(v_def-78)*.463
+      +(v_fit-27)*.154+least(0,(v_floor-65))*.088
+      -case when p_year=1 then 0 else greatest(0,v_turnover-2)*.353 end;
+    v_wins:=greatest(8,least(74,round(
+      40.9983+2.2684*v_estimated_net+v_noise
+    )::integer));
+  end if;
   -- A 53-win Denver team won in 2023; a 64+ win season must not
   -- guarantee a title. This PRIVATE playoff model is a deterministic,
   -- seed-driven variance fixture, NOT a fitted 150-team NBA estimate.
