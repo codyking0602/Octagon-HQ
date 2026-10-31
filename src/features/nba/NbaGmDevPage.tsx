@@ -9,10 +9,11 @@ import {
   nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
   nbaGmDevDisplaySalaryYear, nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
-import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook } from "./nbaGmScouting";
+import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook, nbaGmRepriceLabel } from "./nbaGmScouting";
 import { createNbaGmDevRepository, type NbaGmDevOperation } from "./nbaGmDevRepository";
 import { NBA_TEAMS } from "./nbaFutures";
 import { nbaTeamColor, nbaTeamLogoSrc } from "./nbaTeamBranding";
+import { nbaGmOfficialHeadshotId } from "./nbaGmOfficialHeadshots";
 import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
 import "../../styles/football-gm-final.css";
@@ -25,15 +26,17 @@ const wheelTeams=NBA_TEAMS.map(team=>({
 }));
 const labels=Object.keys(NBA_GM_DEV_SKILL_LABELS) as Array<keyof typeof NBA_GM_DEV_SKILL_LABELS>;
 function TeamMark({code}:{code:string}){
+  const [failed,setFailed]=useState(false);
+  useEffect(()=>setFailed(false),[code]);
+  const logo=nbaTeamLogoSrc(code);
   return <span className="nba-gm-dev__team-mark" style={{borderColor:nbaTeamColor(code)}} title={code}>
-    <img src={nbaTeamLogoSrc(code)} alt="" onError={event=>{event.currentTarget.style.display="none";}} />
-    <span>{code}</span>
+    {logo&&!failed?<img src={logo} alt="" onError={()=>setFailed(true)}/>:<b>{code}</b>}
   </span>;
 }
 /** NFL-style candidate portraits use only verified NBA IDs, with a team-mark fallback. */
 function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
   const [failed,setFailed]=useState(false);
-  const id=player.officialNbaPlayerId;
+  const id=nbaGmOfficialHeadshotId(player);
   return <span className="nba-gm-dev__portrait" aria-hidden="true">
     {id&&/^\d+$/.test(id)&&!failed
       ? <img src={`https://cdn.nba.com/headshots/nba/latest/260x190/${id}.png`}
@@ -55,7 +58,8 @@ function ScoutBadges({player,run}:{player:NbaGmDevPlayer;run?:NbaGmDevRun}){
     <span className={"football-gm__quality-pill quality-"+tier.toLowerCase()}>{tier}</span>
     {year<3&&<span className={"football-gm__outlook-pill outlook-"+tone}>{outlook}</span>}
     <span className="nba-gm-dev__term">{player.gameContract}</span>
-    <span className="nba-gm-dev__term">{player.gameContract==="3YR"?"SALARY LOCKED":"REPRICE RISK"}</span>
+    <span className={`nba-gm-dev__term nba-gm-dev__reprice is-${nbaGmRepriceLabel(player.repriceRisk,player.gameContract).tone}`}>
+      {nbaGmRepriceLabel(player.repriceRisk,player.gameContract).label}</span>
   </span>;
 }
 function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
@@ -200,6 +204,7 @@ export default function NbaGmDevPage(){
   }
   const byId=useMemo(()=>new Map(catalog.map(p=>[p.id,p])),[catalog]);
   const spend=run?nbaGmDevSpend(run.picks,catalog):null;
+  const displaySalaryYear=run?nbaGmDevDisplaySalaryYear(run.phase):0;
   const capCrisis=Boolean(run&&spend&&(spend[1]>run.caps[1]||spend[2]>run.caps[2]));
   const candidates=run?nbaGmDevCandidates(run,catalog):[];
   const visible=candidates.filter(p=>!positionFilter||p.positions.includes(positionFilter as "PG"|"SG"|"SF"|"PF"|"C"));
@@ -243,32 +248,47 @@ export default function NbaGmDevPage(){
         onClick={()=>void act("start")}>START THE DRAFT</button>
     </section>}
     {run&&<>
-      <section className="nba-gm-dev__panel nba-gm-dev__caps">
-        <div><small>{isDraft?"DRAFT":"YOUR ROSTER"}</small><strong>{run.picks.length} / 7</strong></div>
-        {[0,1,2].map(index=><div key={index}>
-          <small>YEAR {index+1} CAP</small><strong>{money(spend?.[index]??0)} <span>/ {money(run.caps[index]!)}</span></strong>
-          <div className="nba-gm-dev__bar"><i style={{width:Math.min(100,100*(spend?.[index]??0)/run.caps[index]!)+"%"}}/></div>
-        </div>)}
-      </section>
-      <section className="nba-gm-dev__panel nba-gm-dev__roster-panel">
-        <div className="nba-gm-dev__section-title">
-          <div><small>YOUR TEAM</small><h2>7-MAN ROTATION</h2></div>
-          <strong>{run.picks.length}/7</strong>
+      <section className={`football-gm__cap surface-card nba-gm-dev__caps${(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" is-over":""}`}>
+        <div className="nba-gm-dev__cap-main">
+          <span><small>YEAR {displaySalaryYear+1} CAP</small>
+            <strong>{money(spend?.[displaySalaryYear]??0)} / {money(run.caps[displaySalaryYear]!)}</strong></span>
+          <b>{money(Math.abs(run.caps[displaySalaryYear]!-(spend?.[displaySalaryYear]??0)))}
+            {(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" OVER":" LEFT"}</b>
         </div>
-        <div className="nba-gm-dev__roster">
+        <i><em style={{width:Math.min(100,100*(spend?.[displaySalaryYear]??0)/run.caps[displaySalaryYear]!)+"%"}}/></i>
+        <div className="nba-gm-dev__cap-forecast">
+          {[0,1,2].filter(index=>index!==displaySalaryYear).map(index=>
+            <span key={index}><small>YEAR {index+1}</small><b>{money(spend?.[index]??0)} / {money(run.caps[index]!)}</b></span>)}
+        </div>
+      </section>
+      <section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
+        <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
+        <div className="football-gm__roster-grid nba-gm-dev__roster">
           {NBA_GM_ROSTER_SLOTS.map(slot=>{
             const pick=run.picks.find(p=>p.slot===slot);
             const player=pick?byId.get(pick.playerId):null;
-            return <article className="nba-gm-dev__roster-row" key={slot}>
-              <strong>{NBA_GM_DEV_SLOT_LABELS[slot]}</strong>
-              {player?<><PlayerPortrait key={player.id} player={player}/>
-                <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase)))}</small>
-                  <ScoutBadges player={player} run={run}/></span>
-                {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-                  <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
-                {run.phase==="offseason"&&(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-                  <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("release",player.id)}>CUT</button>}
-              </>:<span className="nba-gm-dev__empty">OPEN</span>}
+            return <article className={player?"is-filled":""} key={slot}
+              style={player?{borderLeftColor:nbaTeamColor(player.teamCode)}:undefined}>
+              <small>{NBA_GM_DEV_SLOT_LABELS[slot]}</small>
+              {player?<>
+                <div className="football-gm__roster-player">
+                  <PlayerPortrait key={player.id} player={player}/>
+                  <span className="nba-gm-dev__roster-copy">
+                    <strong>{player.name}</strong>
+                    <em>{player.teamCode} · {player.positions.join(" / ")}</em>
+                    <span className="football-gm__roster-scouting"><ScoutBadges player={player} run={run}/></span>
+                  </span>
+                </div>
+                <div className="football-gm__roster-contract">
+                  <b>{money(nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase)))}</b>
+                </div>
+                {run.phase==="offseason"&&<div className="nba-gm-dev__row-actions">
+                  {run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+                    <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
+                  {(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+                    <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("release",player.id)}>CUT</button>}
+                </div>}
+              </>:<span className="football-gm__open">OPEN</span>}
             </article>;
           })}
         </div>
@@ -369,15 +389,24 @@ function PlayerPicker({players,all,filter,setFilter,disabled,onPick}:{
   onPick:(id:string)=>void;
 }){
   const positions=["PG","SG","SF","PF","C"].filter(pos=>all.some(p=>p.positions.includes(pos as "PG"|"SG"|"SF"|"PF"|"C")));
-  return <div className="nba-gm-dev__picker">
-    <div className="nba-gm-dev__position-tabs" role="group" aria-label="Filter team candidates by basketball position">
-      <button type="button" className={!filter?"is-selected":""} onClick={()=>setFilter(null)}>ALL</button>
-      {positions.map(position=><button type="button" key={position} className={filter===position?"is-selected":""}
-        onClick={()=>setFilter(position)}>{position}</button>)}
+  const code=all[0]?.teamCode??"";
+  return <section className="football-wheel-picker football-gm__picker surface-card nba-gm-dev__picker">
+    <header>
+      {code&&<span className="football-wheel-team-logo"><TeamMark code={code}/></span>}
+      <div><p className="eyebrow">YOUR SPIN</p><h2>{NBA_TEAMS.find(team=>team.id===code)?.name??"NBA TEAM"}</h2>
+        <span>Choose a position, then a player. GM automatically fits the legal roster.</span>
+      </div>
+    </header>
+    <div className="football-wheel-picker__slots football-gm__position-tabs nba-gm-dev__position-tabs"
+      role="group" aria-label="Filter team candidates by basketball position">
+      <button type="button" className={!filter?"is-active is-selected":""} aria-pressed={!filter}
+        onClick={()=>setFilter(null)}><strong>ALL</strong></button>
+      {positions.map(position=><button type="button" key={position} className={filter===position?"is-active is-selected":""}
+        aria-pressed={filter===position} onClick={()=>setFilter(position)}><strong>{position}</strong></button>)}
     </div>
-    <div className="nba-gm-dev__candidate-grid">
+    <div className="football-wheel-picker__candidates nba-gm-dev__candidate-grid">
       {players.map(player=><PlayerCard key={player.id} player={player} disabled={disabled}
         onPick={()=>onPick(player.id)}/>)}
     </div>
-  </div>;
+  </section>;
 }
