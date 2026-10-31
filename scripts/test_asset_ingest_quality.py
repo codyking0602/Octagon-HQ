@@ -20,6 +20,7 @@ from scripts.asset_ingest import (
     source_looks_clipped,
     upper_side_background_band,
     validate_asset_quality,
+    source_needs_background_removal,
 )
 
 
@@ -71,6 +72,32 @@ class AssetIngestQualityTests(unittest.TestCase):
         self.assertFalse(approved_square_thumb_source({"source_url": official_ufc}, official_ufc, (600, 436)))
         promotional = "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-03/DURDEN_CODY_L_03-07.png"
         self.assertFalse(approved_square_thumb_source({"source_url": promotional}, promotional, (256, 160)))
+
+    def test_clean_transparent_espn_600_by_436_is_not_resegmented(self):
+        # ESPN's authentic face-dominant portrait is sometimes already a
+        # transparent PNG. Re-running rembg can create publisher-color bands.
+        espn = "https://a.espncdn.com/i/headshots/mma/players/full/4903365.png"
+        reviewed = {
+            "fighter_name": "Waldo Cortes-Acosta",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "4903365",
+        }
+        source = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(source)
+        draw.ellipse((215, 10, 385, 230), fill=(145, 100, 76, 255))
+        draw.ellipse((78, 215, 530, 600), fill=(165, 108, 74, 255))
+        self.assertTrue(approved_square_thumb_source(reviewed, espn, source.size))
+        self.assertFalse(source_needs_background_removal(source))
+        self.assertTrue(source_needs_background_removal(
+            Image.new("RGBA", (600, 436), (240, 240, 240, 255))
+        ))
+
+    def test_transparent_headshot_with_publisher_panel_still_needs_cleanup(self):
+        source = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(source)
+        draw.ellipse((220, 25, 390, 265), fill=(145, 100, 76, 255))
+        draw.rectangle((510, 25, 575, 220), fill=(230, 210, 70, 255))
+        self.assertTrue(source_needs_background_removal(source))
 
     def test_fit_does_not_reframe_original_square_headshot(self):
         source = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
