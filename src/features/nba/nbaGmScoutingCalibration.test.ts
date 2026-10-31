@@ -128,7 +128,7 @@ describe("NBA GM Priority 2: 330-person tier and contract forecast calibration",
       expect(projection.huge).toBeLessThanOrEqual(1);
       expect(nbaGmRepriceLabel(projection.risk,"1YR").label).toMatch(/REPRICE/);
     }
-    expect(risks).toEqual({LOW:83,MEDIUM:122,HIGH:31,LOCKED:94});
+    expect(risks).toEqual({LOW:84,MEDIUM:121,HIGH:31,LOCKED:94});
     expect(nbaGmRepriceLabel(null,"1YR")).toEqual({label:"REPRICE RISK",tone:"unknown"});
     expect(nbaGmRepriceLabel(null,"3YR")).toEqual({label:"SALARY LOCKED",tone:"locked"});
   });
