@@ -33,7 +33,7 @@ const deploy = readFileSync(".github/workflows/deploy-supabase.yml", "utf8");
 describe("NBA Daily all-nine-mode CPU isolation", () => {
   it("smoke-tests only the actual first regular-season Average Fan publication", () => {
     expect(nbaRegularSeasonDaily("2026-10-30")).toMatchObject({
-      day: "2026-10-29", gameType: "bar_trivia", isPublicationDay: false,
+      day: "2026-10-29", gameType: "millionaire", isPublicationDay: false,
     });
     expect(nbaRegularSeasonDaily("2026-11-15")).toMatchObject({
       day: "2026-11-15", gameType: "average_fan", isPublicationDay: true,
@@ -52,7 +52,8 @@ describe("NBA Daily all-nine-mode CPU isolation", () => {
   });
   it("retains lean-vs-canonical content for each verified public first appearance", () => {
     for (const [game, publisher] of Object.entries(lean)) {
-      // October 29 already has the exact immutable certified Bar Trivia setup.
+      // The archived October 29 Bar Trivia setup remains immutable while
+      // the approved Millionaire edition is the active introductory board.
       // Starting November 1, resolve each *actual* opening date from the same
       // 28-board schedule used by production instead of hardcoded old dates.
       let found: string | null = null;
