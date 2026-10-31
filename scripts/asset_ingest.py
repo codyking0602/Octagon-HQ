@@ -385,6 +385,23 @@ def horizontal_publisher_strips(im):
     return strips
 
 
+def source_needs_background_removal(im):
+    """Preserve clean official transparent headshots; do not re-segment them.
+
+    ESPN MMA publishes legitimate 600x436 transparent cutouts. Size and the
+    editorial-review flag prove source eligibility, not a need to run rembg.
+    Only opaque photos or visibly contaminated transparent cutouts need it.
+    All resulting assets still pass the same strict output quality gates.
+    """
+    if im.getchannel("A").getextrema() == (255, 255):
+        return True
+    return bool(
+        upper_side_background_band(im)
+        or inset_side_background_panels(im)
+        or horizontal_publisher_strips(im)
+    )
+
+
 def remove_horizontal_publisher_strips(im):
     result = im.copy()
     px = result.load()
@@ -588,11 +605,7 @@ def main():
         fail("thumbnail requires a verified square UFC or ESPN headshot source")
 
     original_source = im.copy()
-    if (
-        im.getchannel("A").getextrema() == (255, 255)
-        or upper_side_background_band(im)
-        or (kind == "thumb" and im.size == (600, 436) and spec.get("official_headshot_reviewed") is True)
-    ):
+    if source_needs_background_removal(im):
         try:
             # The default model preserves the ESPN MMA portrait cutout.
             # Strong alpha-matting introduced broad tinted source rectangles.
