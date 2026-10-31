@@ -187,6 +187,7 @@ export default function NbaGmDevPage(){
   }
   const byId=useMemo(()=>new Map(catalog.map(p=>[p.id,p])),[catalog]);
   const spend=run?nbaGmDevSpend(run.picks,catalog):null;
+  const capCrisis=Boolean(run&&spend&&(spend[1]>run.caps[1]||spend[2]>run.caps[2]));
   const candidates=run?nbaGmDevCandidates(run,catalog):[];
   const visible=candidates.filter(p=>!positionFilter||p.positions.includes(positionFilter as "PG"|"SG"|"SF"|"PF"|"C"));
   const currentTeam=run?.phase==="draft"?run.pendingTeam:run?.tradeTeam??run?.freeAgencyTeam;
@@ -252,7 +253,7 @@ export default function NbaGmDevPage(){
                   <ScoutBadges player={player}/></span>
                 {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                   <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
-                {run.phase==="offseason"&&run.releasedIds.length<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+                {run.phase==="offseason"&&(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                   <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("release",player.id)}>CUT</button>}
               </>:<span className="nba-gm-dev__empty">OPEN</span>}
             </article>;
@@ -281,6 +282,7 @@ export default function NbaGmDevPage(){
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
         <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>THE OFFSEASON</h2></div></div>
         <Results seasons={run.results}/>
+        {capCrisis&&<p className="nba-gm-dev__cap-crisis" role="alert">SALARY CAP CRISIS · Your future payroll is over the cap. Trade or cut a player, then sign an affordable replacement before advancing.</p>}
         <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, negotiate up to two offers, or use one voluntary cut and the limited free-agent market.</p>
         {run.shopPlayerId&&<div className="nba-gm-dev__trade">
           <strong>SHOPPING {byId.get(run.shopPlayerId)?.name}</strong>
@@ -338,7 +340,7 @@ export default function NbaGmDevPage(){
           </div>
         </div>}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-          <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("advance")}>
+          <button className="nba-gm-dev__primary" disabled={busy||capCrisis} onClick={()=>void act("advance")}>
             LOCK ROSTER · SIMULATE SEASONS 2 & 3
           </button>}
       </section>}
