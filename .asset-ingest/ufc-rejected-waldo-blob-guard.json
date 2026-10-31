@@ -1,0 +1,13 @@
+{
+  "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/4903365.png",
+  "fighter_name": "Waldo Cortes Acosta",
+  "official_headshot_reviewed": true,
+  "verified_espn_athlete_id": "4903365",
+  "fallback_sources": [
+    {
+      "source_page_url": "https://www.ufc.com/athlete/waldo-cortes-acosta"
+    }
+  ],
+  "kind": "thumb",
+  "destination": "public/assets/fighters/waldo-cortes-acosta-thumb.webp"
+}
