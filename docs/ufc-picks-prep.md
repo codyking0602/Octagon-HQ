@@ -20,15 +20,16 @@ Every prep/refresh run must resolve thumb readiness in this order:
 
 1. Search **only** ESPN's MMA headshot product and UFC's actual event-results headshot product for the correct athlete. ESPN MMA face-dominant headshots can legitimately be 600×436; require `official_headshot_reviewed=true`, exact athlete name, and `verified_espn_athlete_id` matching the official CDN URL. Square source pixels are not required for this verified ESPN product. UFC's `event_results_athlete_headshot` transparent original is 256×160, even though the app displays it inside a square thumb tile. Its format is valid; UFC's `athlete_bio_full_body` promotional photo is not. A UFC athlete *page* with a full-body photo does **not** count.
 2. For existing repo thumbs, verify the exact underlying **official headshot-product URL and face-focused image**, not just dimensions, transparency, or a clean cutout. Without proven square-headshot provenance, that file is **not approved**.
-3. Ingest only individually verified official UFC or ESPN headshot-product URLs. Do **not** try to fix full-body promotional images by trimming, zooming, clipping, or background removal.
-4. When no qualifying UFC/ESPN square portrait is available, display the existing missing-image placeholder and mark `thumb_pending`. Recheck during fight week; never substitute a third-party or Spotlight image.
-5. The October 31, 2026 Picks card is explicitly fail-closed in `officialUfcPicksHeadshots.ts`: only documented official UFC/ESPN headshot URLs render. Any missing or unverified fighter stays blank even when an old local image exists.
+3. Use an **already-transparent, artifact-free original** for thumbs. Never run rembg, segmentation, alpha matting, publisher-panel cleanup, forced background removal, or destructive cropping on thumbnails. Preserve the real fighter photography and fit the unmodified transparent portrait on the 320×320 tile. Detect and reject opaque or visibly contaminated originals, even if technically valid PNGs.
+4. If an ESPN original fails, try the separately verified UFC event-results original (or vice versa). The existing Asset Ingest manifest accepts up to three individually verified `fallback_sources`, each with its own source URL or official UFC athlete-profile URL and ESPN athlete-ID verification where applicable. Never substitute a full-body UFC athlete promotional photo, another fighter, or an unproven local file. All attempted sources must be reviewed before any media is marked ready.
+5. When no qualifying UFC/ESPN square portrait is available, display the existing missing-image placeholder and mark `thumb_pending`. Recheck during fight week; never substitute a third-party or Spotlight image.
+6. The October 31, 2026 Picks card is explicitly fail-closed in `officialUfcPicksHeadshots.ts`: only documented official UFC/ESPN headshot URLs render. Any missing or unverified fighter stays blank even when an old local image exists.
 
 When an acceptable UFC/ESPN thumbnail is available:
 
 - `public/assets/fighters/<fighter-slug>-thumb.webp`
 
-The original source must already be an **official fighter headshot**, not a promotional torso shot artificially made square. UFC's own transparent 256×160 event-results headshots are approved and displayed in the square tile without distortion. The source may have an opaque background; background removal is allowed only *after* the actual headshot has passed provenance, identity and framing review. The finished WebP must pass 320×320 alpha checks.
+The original source must already be an **official fighter headshot**, not a promotional torso shot artificially made square. UFC's own transparent 256×160 event-results headshots are approved and displayed in the square tile without distortion. The thumbnail source must have genuine transparency already; opaque or publisher-contaminated originals are rejected, not repaired. Spotlight artwork follows its separate approved processing rule. The finished WebP must pass 320×320 alpha checks.
 
 For every fighter on the main card:
 

@@ -584,6 +584,190 @@ def ingest_owner_gane_profile(spec):
     }))
 
 
+
+def source_publisher_band(im):
+    """Catch large, nearly solid upper side rectangles missed by edge-only checks.
+
+    Real hair and shoulders vary in texture; publisher strips occupy many
+    neighboring rows with a long, nearly uniform RGB run near an outer side.
+    """
+    px = im.load()
+    w, h = im.size
+    if w < 50 or h < 50:
+        return False
+    y0, y1 = round(h * 0.09), round(h * 0.62)
+    min_rows = max(8, round(h * 0.055))
+    for side in ("left", "right"):
+        rows = 0
+        for y in range(y0, y1):
+            if side == "right":
+                xs = range(round(w * 0.72), round(w * 0.97))
+            else:
+                xs = range(round(w * 0.03), round(w * 0.28))
+            colors = [px[x, y] for x in xs if px[x, y][3] >= 8]
+            total = max(1, len(xs))
+            if len(colors) < total * 0.80:
+                rows = 0
+                continue
+            # Strong, flat horizontal blocks in otherwise transparent corners.
+            if all(max(color[channel] for color in colors) -
+                   min(color[channel] for color in colors) <= 20
+                   for channel in range(3)):
+                rows += 1
+                if rows >= min_rows:
+                    return True
+            else:
+                rows = 0
+    return False
+
+
+def require_clean_original_thumb(im):
+    """Only use an already-transparent, genuine official headshot.
+
+    No rembg, alpha matting, color painting, side trimming, or replacement
+    backgrounds are allowed for thumbs. A rejected original must be replaced
+    by a *different verified official source*, never 'repaired' in place.
+    """
+    alpha = im.getchannel("A")
+    if alpha.getextrema()[0] != 0:
+        fail("thumbnail original has no fully transparent background; select another official source")
+    corners = [
+        alpha.getpixel((0, 0)), alpha.getpixel((im.width - 1, 0)),
+        alpha.getpixel((0, im.height - 1)),
+        alpha.getpixel((im.width - 1, im.height - 1)),
+    ]
+    if sum(value < 8 for value in corners) < 3:
+        fail("thumbnail original retains an opaque corner/background")
+    if (upper_side_background_band(im)
+            or inset_side_background_panels(im)
+            or horizontal_publisher_strips(im)
+            or source_publisher_band(im)):
+        fail("thumbnail original retains a publisher background panel; try another official source")
+    if image_looks_like_silhouette(im):
+        fail("thumbnail original is a placeholder/silhouette")
+
+
+def verified_thumb_candidates(spec):
+    """Explicit ESPN/UFC alternate headshots, each separately provenance-checked."""
+    alternates = spec.get("fallback_sources", [])
+    if not isinstance(alternates, list) or len(alternates) > 3:
+        fail("fallback_sources must be a list of at most three verified official sources")
+    original = dict(spec)
+    original.pop("fallback_sources", None)
+    candidates = [original]
+    for candidate in alternates:
+        if not isinstance(candidate, dict):
+            fail("each fallback source must be a source specification")
+        if candidate.get("fighter_name") not in (None, spec.get("fighter_name")):
+            fail("fallback source cannot change the fighter identity")
+        if set(candidate) - {
+            "source_url", "source_page_url", "fighter_name",
+            "official_headshot_reviewed", "official_square_headshot_reviewed",
+            "verified_espn_athlete_id",
+        }:
+            fail("unsupported fallback source field")
+        next_spec = {
+            "kind": "thumb",
+            "destination": spec["destination"],
+            "fighter_name": spec.get("fighter_name"),
+            **candidate,
+        }
+        if bool(next_spec.get("source_url")) == bool(next_spec.get("source_page_url")):
+            fail("each fallback must provide exactly one official source")
+        candidates.append(next_spec)
+    return candidates
+
+
+def ingest_fighter_candidate(spec, kind, dest, size):
+    source_url, data = resolve_source(spec)
+    if source_url_looks_like_placeholder(source_url):
+        fail("source URL is a known placeholder or silhouette asset")
+    try:
+        im = Image.open(BytesIO(data)).convert("RGBA")
+    except Exception as exc:
+        fail(f"cannot decode source image: {exc}")
+
+    if kind == "thumb":
+        if not approved_square_thumb_source(spec, source_url, im.size):
+            fail("thumbnail requires a verified UFC/ESPN headshot product")
+        if spec.get("force_background_removal") or spec.get("crop"):
+            fail("thumbnail source cannot be cropped or background-removed")
+        require_clean_original_thumb(im)
+    else:
+        if source_needs_background_removal(im):
+            try:
+                im = remove(im).convert("RGBA")
+            except Exception as exc:
+                fail(f"spotlight background removal failed: {exc}")
+            if im.getchannel("A").getextrema() == (255, 255):
+                fail("spotlight background removal produced no transparency")
+        if spec.get("force_background_removal"):
+            try:
+                im = remove(im).convert("RGBA")
+            except Exception as exc:
+                fail(f"spotlight second background removal failed: {exc}")
+        im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
+        if inset_side_background_panels(im) or upper_side_background_band(im):
+            fail("spotlight cutout retains publisher panels")
+        if image_looks_like_silhouette(im):
+            fail("spotlight is a placeholder/silhouette")
+
+    im = im.crop(crop_box(im, spec.get("crop")))
+    clipping = source_looks_clipped(im, kind)
+    if clipping:
+        fail(clipping)
+
+    if kind == "spotlight":
+        visible_box = im.getchannel("A").getbbox()
+        if not visible_box:
+            fail("spotlight source has no visible pixels")
+        subject = im.crop(visible_box)
+        side_pad = round(size[0] * 0.025)
+        top_pad = round(size[1] * 0.035)
+        scale = min(
+            (size[0] - side_pad * 2) / subject.width,
+            (size[1] - top_pad) / subject.height,
+        )
+        fitted = subject.resize(
+            (max(1, round(subject.width * scale)), max(1, round(subject.height * scale))),
+            Image.Resampling.LANCZOS,
+        )
+        canvas = Image.new("RGBA", size, (0, 0, 0, 0))
+        canvas.alpha_composite(fitted, ((size[0] - fitted.width) // 2,
+                                         max(top_pad, size[1] - fitted.height)))
+        im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(canvas))
+        im = im.filter(ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2))
+    else:
+        # Pure fit onto a transparent tile: preserve original fighter pixels.
+        im = render_thumb(im, size)
+
+    # Validate *before* writing. A failed candidate must never leave an
+    # unreviewed WebP in the working tree (which a later successful batchmate
+    # could accidentally cause to be committed).
+    encoded = BytesIO()
+    im.save(encoded, "WEBP", lossless=True, quality=100, method=6)
+    encoded.seek(0)
+    check = Image.open(encoded).convert("RGBA")
+    if check.size != size or check.getchannel("A").getextrema() == (255, 255):
+        fail("finished asset failed dimension/alpha gate")
+    quality = validate_asset_quality(check, kind)
+    if kind == "thumb" and source_publisher_band(check):
+        fail("finished thumbnail retains a publisher band")
+
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    with open(dest, "wb") as handle:
+        handle.write(encoded.getvalue())
+
+    return {
+        "destination": dest,
+        "size": list(check.size),
+        "alpha_extrema": list(check.getchannel("A").getextrema()),
+        "source_host": urlparse(source_url).hostname,
+        "source_url": source_url,
+        "quality": quality,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("manifest")
@@ -599,113 +783,31 @@ def main():
         fail("kind must be thumb or spotlight")
 
     dest = spec.get("destination", "")
-    suffix = f"-{kind}.webp"
     if (
         not dest.startswith(PREFIX)
-        or not dest.endswith(suffix)
+        or not dest.endswith(f"-{kind}.webp")
         or ".." in dest
     ):
         fail("destination is outside approved fighter asset path")
 
     size = (320, 320) if kind == "thumb" else (626, 800)
-    source_url, data = resolve_source(spec)
-    if source_url_looks_like_placeholder(source_url):
-        fail("source URL is a known placeholder or silhouette asset")
-
-    try:
-        im = Image.open(BytesIO(data)).convert("RGBA")
-    except Exception as exc:
-        fail(f"cannot decode source image: {exc}")
-
-    if kind == "thumb" and not approved_square_thumb_source(spec, source_url, im.size):
-        fail("thumbnail requires a verified square UFC or ESPN headshot source")
-
-    original_source = im.copy()
-    if source_needs_background_removal(im):
+    candidates = verified_thumb_candidates(spec) if kind == "thumb" else [spec]
+    failures = []
+    for index, candidate in enumerate(candidates, start=1):
         try:
-            # The default model preserves the ESPN MMA portrait cutout.
-            # Strong alpha-matting introduced broad tinted source rectangles.
-            im = remove(im).convert("RGBA")
-        except Exception as exc:
-            fail(f"background removal failed: {exc}")
-
-        if im.getchannel("A").getextrema() == (255, 255):
-            fail("background removal produced no visible transparency")
-
-    if spec.get("force_background_removal"):
-        try:
-            im = remove(im).convert("RGBA")
-        except Exception as exc:
-            fail(f"second background removal failed: {exc}")
-
-    im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
-
-    # Do not recover a contaminated cutout using destructive alpha matting.
-    # Preserve the original photo identity and reject visibly bad output.
-    if inset_side_background_panels(im) or upper_side_background_band(im):
-        fail("background cutout retains publisher panels")
-
-    if image_looks_like_silhouette(im):
-        fail("source image looks like a placeholder/silhouette rather than a fighter photo")
-
-    box = crop_box(im, spec.get("crop"))
-    im = im.crop(box)
-    clipping = source_looks_clipped(im, kind)
-    if clipping:
-        fail(clipping)
-
-    if kind == "spotlight":
-        alpha = im.getchannel("A")
-        visible_box = alpha.getbbox()
-        if not visible_box:
-            fail("spotlight source has no visible pixels")
-        subject = im.crop(visible_box)
-        side_pad = round(size[0] * 0.025)
-        top_pad = round(size[1] * 0.035)
-        available_width = size[0] - (side_pad * 2)
-        available_height = size[1] - top_pad
-        scale = min(available_width / subject.width, available_height / subject.height)
-        fitted = subject.resize(
-            (max(1, round(subject.width * scale)), max(1, round(subject.height * scale))),
-            Image.Resampling.LANCZOS,
-        )
-        canvas = Image.new("RGBA", size, (0, 0, 0, 0))
-        left = (size[0] - fitted.width) // 2
-        top = max(top_pad, size[1] - fitted.height)
-        canvas.alpha_composite(fitted, (left, top))
-        im = canvas
-    else:
-        im = render_thumb(im, size)
-
-    # Publisher rectangles can sit inside the cutout's alpha silhouette rather
-    # than at its original image boundary. Re-check after subject placement too.
-    im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
-    if kind == "thumb":
-        im = trim_thumb_publisher_edge_halos(im)
-
-    im = im.filter(
-        ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2)
-    )
-
-    os.makedirs(os.path.dirname(dest), exist_ok=True)
-    im.save(dest, "WEBP", lossless=True, quality=100, method=6)
-
-    check = Image.open(dest).convert("RGBA")
-    if check.size != size or check.getchannel("A").getextrema() == (255, 255):
-        fail("finished asset failed dimension/alpha gate")
-    quality = validate_asset_quality(check, kind)
-
-    print(
-        json.dumps(
-            {
-                "destination": dest,
-                "size": list(check.size),
-                "alpha_extrema": list(check.getchannel("A").getextrema()),
-                "source_host": urlparse(source_url).hostname,
-                "quality": quality,
-            }
-        )
-    )
+            result = ingest_fighter_candidate(candidate, kind, dest, size)
+            result["candidate_index"] = index
+            print(json.dumps(result))
+            return
+        except (SystemExit, OSError, ValueError) as exc:
+            if kind != "thumb":
+                raise
+            failures.append(f"candidate {index}: {str(exc) or type(exc).__name__}")
+            print(
+                f"asset-ingest: rejected thumbnail candidate {index}; trying verified alternate",
+                file=sys.stderr,
+            )
+    fail("no clean verified UFC/ESPN thumbnail source; " + "; ".join(failures))
 
 
 if __name__ == "__main__":
