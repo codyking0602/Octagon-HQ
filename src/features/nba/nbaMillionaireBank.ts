@@ -199,3 +199,28 @@ function chicagoDateKey(): string {
 export function nbaMillionaireDailyPreviewRun(dateKey = chicagoDateKey()): MillionaireRun {
   return createNbaMillionaireRun(`daily-${dateKey}`);
 }
+
+/**
+ * Hand-selected NBA Millionaire opening showcase for Oct 29–31, 2026.
+ * Eight source-backed moments, welcoming Q1/Q2 through an iconic Q8.
+ * Stable ID-bound selection prevents random filler or a shifted tier.
+ */
+export const NBA_MILLIONAIRE_SHOWCASE_IDS = [
+  "nba-millionaire-q1-08", // Dirk's Dallas championship
+  "nba-millionaire-q2-10", // Allen Iverson's nickname
+  "nba-millionaire-q3-01", // Derrick Rose MVP
+  "nba-millionaire-q4-04", // Wiggins drafted by Cleveland
+  "nba-millionaire-q5-03", // Greg Oden ahead of Durant
+  "nba-millionaire-q6-01", // Magic Johnson's first MVP
+  "nba-millionaire-q7-06", // Joe Dumars Finals MVP
+  "nba-millionaire-q8-01", // Jerry West's unique Finals MVP
+] as const;
+
+export function buildNbaMillionaireShowcaseRun(): MillionaireRun {
+  const random = createRandom(stringSeed("nba-oct29-2026-curated-showcase-v1"));
+  return NBA_MILLIONAIRE_SHOWCASE_IDS.map((id, tier) => {
+    const fact = NBA_MILLIONAIRE_QUESTION_BANK[tier]!.find(candidate => candidate.id === id);
+    if (!fact) throw new Error("NBA Millionaire showcase source changed: " + id);
+    return toRuntime(fact, tier, random);
+  }) as unknown as MillionaireRun;
+}
