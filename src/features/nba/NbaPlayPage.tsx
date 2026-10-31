@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { MemberMiniAvatar } from "../members/MemberMiniAvatar";
 import { MatchupsCompact } from "../play/PlayV2Page";
 import { DailyAnswerDetail } from "../play/TodayChallengeHub";
 import { dailyOfficialDisplayScore } from "../play/DailyTwoGameStatus";
@@ -146,7 +147,9 @@ export default function NbaPlayPage() {
                   <button key={entry.profileId} type="button" className="play-v2__leader-row"
                     aria-label={"View " + entry.displayName + "'s NBA Daily result"}
                     onClick={() => setSelectedProfileId(entry.profileId)}>
-                    <span><b>#{entry.rank}</b> {entry.isCurrentUser ? "You" : entry.displayName}</span>
+                    <span className="play-v2__leader-name"><b>#{entry.rank}</b>
+                       <MemberMiniAvatar displayName={entry.displayName} avatarPhotoData={entry.avatarPhotoData} />
+                       <span>{entry.isCurrentUser ? "You" : entry.displayName}</span></span>
                     <strong>{entry.normalizedScore}/100</strong>
                   </button>
                 ))}

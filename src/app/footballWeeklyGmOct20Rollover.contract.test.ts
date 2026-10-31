@@ -31,10 +31,12 @@ describe("October 20 official Weekly GM rollover", () => {
     expect(engine).toContain('seed?.startsWith("weekly-gm:2026-10-20:young:")');
   });
 
-  it("links the October 20–26 Featured card to Weekly GM instead of the auction", () => {
-    expect(playHome).toContain('Date.parse("2026-10-27T05:00:00Z")');
-    expect(playHome).toContain("Dak Prescott + Michael Penix Jr.");
+  it("keeps October 20–26 inside the compact GM feature window and routes to the actual weekly game", () => {
+    expect(playHome).toContain('Date.parse("2026-10-13T05:00:00Z")');
+    expect(playHome).toContain('Date.parse("2026-11-03T06:00:00Z")');
     expect(playHome).toContain('gmWeek ? "/football/weekly-gm" : "/football/weekly-auction"');
+    expect(playHome).toContain("PLAY THIS WEEK →");
+    expect(playHome).not.toContain("PLAY STANDINGS ↗");
     expect(auctionCenter).toContain('Date.parse("2026-10-27T05:00:00Z")');
   });
 

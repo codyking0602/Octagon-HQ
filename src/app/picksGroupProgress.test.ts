@@ -12,9 +12,10 @@ describe("Picks group progress presentation", () => {
     expect(component).toContain("`${completedMembers}/${visibleMembers.length} COMPLETE`");
     expect(component).toContain("{member.completed}/{member.total}");
     expect(component).toContain("const isComplete = member.completed === member.total && member.total > 0");
-    expect(component).toContain('{isComplete ? "✓" : member.displayName.trim().charAt(0).toUpperCase()}');
-    expect(styles).toContain(".picks-group-progress__member-status");
-    expect(styles).toContain("button.is-complete .picks-group-progress__member-status");
+    // Profile photos now replace the single-letter completion icon; preserve the checkmark overlay.
+    expect(component).toContain('<MemberMiniAvatar displayName={member.displayName} small />');
+    expect(component).toContain('{isComplete ? <i className="picks-group-progress__complete-mark" aria-label="Complete">✓</i> : null}');
+    expect(styles).toContain(".picks-group-progress__complete-mark");
   });
 
   it("keeps one inline member comparison open at a time", () => {

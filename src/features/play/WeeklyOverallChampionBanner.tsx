@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { MemberMiniAvatar } from "../members/MemberMiniAvatar";
 import {
   loadSportChampionshipWeekly,
   loadUfcMonthlyChampionship,
@@ -98,7 +99,9 @@ export function WeeklyOverallChampionBanner({ sport }: { sport: Sport }) {
           <div className="weekly-overall__heading"><span>PLAYER</span><span>{period.monthly ? "MONTH" : "WEEK"} SCORE</span></div>
           {period.entries.map(entry => (
             <div className="weekly-overall__row" key={entry.profile_id}>
-              <span><b>#{entry.rank}</b> {entry.display_name}{entry.is_current_user ? " · YOU" : ""}</span>
+              <span className="weekly-overall__identity"><b>#{entry.rank}</b>
+                 <MemberMiniAvatar displayName={entry.display_name} small />
+                 {entry.display_name}{entry.is_current_user ? " · YOU" : ""}</span>
               <strong>{entry.rating?.toFixed(1) ?? "—"}</strong>
             </div>
           ))}

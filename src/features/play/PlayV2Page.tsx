@@ -7,6 +7,7 @@ import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { challengeCounterpartId, challengeDirection, challengeStatus } from "../challenges/challengeModel";
 import { challengePlayRoute, challengeSport } from "../challenges/challengeRuntime";
 import { useIdentity } from "../identity/IdentityProvider";
+import { MemberMiniAvatar } from "../members/MemberMiniAvatar";
 import { isDailyRankKeepCombo } from "./DailyRankKeepComboStatus";
 import { dailyOfficialDisplayScore } from "./DailyTwoGameStatus";
 import { WeeklyOverallChampionBanner } from "./WeeklyOverallChampionBanner";
@@ -134,7 +135,9 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
                       <button key={entry.profileId} type="button" className="play-v2__leader-row"
                         aria-label={"View " + entry.displayName + "'s official Daily result"}
                         onClick={() => setSelectedProfileId(entry.profileId)}>
-                        <span><b>#{entry.rank}</b> {entry.isCurrentUser ? "You" : entry.displayName}</span>
+                        <span className="play-v2__leader-name"><b>#{entry.rank}</b>
+                          <MemberMiniAvatar displayName={entry.displayName} avatarPhotoData={entry.avatarPhotoData} />
+                          <span>{entry.isCurrentUser ? "You" : entry.displayName}</span></span>
                         <strong>{entry.normalizedScore}/100</strong>
                       </button>
                     ))}
@@ -359,25 +362,16 @@ export function MatchupsCompact({ sport }: { sport: PlaySport | "nba" }) {
 
 function WeeklyCurrent({}: Record<string, never>) {
   const now = Date.now();
-  const oct13Gm = now >= Date.parse("2026-10-13T05:00:00Z") && now < Date.parse("2026-10-20T05:00:00Z");
-  const oct20Gm = now >= Date.parse("2026-10-20T05:00:00Z") && now < Date.parse("2026-10-27T05:00:00Z");
-  const oct27Gm = now >= Date.parse("2026-10-27T05:00:00Z") && now < Date.parse("2026-11-03T06:00:00Z");
-  const gmWeek = oct13Gm || oct20Gm || oct27Gm;
+  const gmWeek = now >= Date.parse("2026-10-13T05:00:00Z") && now < Date.parse("2026-11-03T06:00:00Z");
   return (
-    <section className="play-v2__weekly" aria-label="Weekly Featured Championship">
-      <div className="play-v2__section-top">
-        <span><span aria-hidden="true">🏆 </span> WEEKLY FEATURED</span>
-        <span>FOOTBALL</span>
-      </div>
-      <h2>{gmWeek ? "NFL GM Championship" : "Auction Center"}</h2>
-      <p>{oct27Gm ? "Choose your WR and RB · Two official franchises · Normal contracts and progression." :
-        oct20Gm ? "Two official franchises · Dak Prescott + Michael Penix Jr. · 200 points." :
-        oct13Gm ? "Two official franchises · Josh Allen + Jaxson Dart · 200 points." :
-        "Make your picks in this week’s featured football auction."}</p>
-      <div className="play-v2__weekly-actions">
-        <Link to={gmWeek ? "/football/weekly-gm" : "/football/weekly-auction"}>OPEN CURRENT WEEKLY →</Link>
-        <Link to="/championship/football?tab=play">PLAY STANDINGS ↗</Link>
-      </div>
+    <section className="play-v2__weekly play-v2__weekly--compact" aria-label="Weekly Featured Championship">
+      <Link className="play-v2__weekly-link" to={gmWeek ? "/football/weekly-gm" : "/football/weekly-auction"}>
+        <span className="play-v2__weekly-copy">
+          <small>🏆 WEEKLY FEATURED · FOOTBALL</small>
+          <strong>{gmWeek ? "NFL GM CHAMPIONSHIP" : "AUCTION CENTER"}</strong>
+        </span>
+        <b>PLAY THIS WEEK →</b>
+      </Link>
     </section>
   );
 }
