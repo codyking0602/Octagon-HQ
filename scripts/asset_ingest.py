@@ -638,6 +638,15 @@ def main():
         except Exception as exc:
             fail(f"second background removal failed: {exc}")
 
+    if spec.get("experimental_human_segmentation") is True:
+        # Isolated evaluation only: does a human-specific segmentation model
+        # remove publisher stripes that default background removal preserves?
+        from rembg import new_session
+        try:
+            im = remove(original_source, session=new_session("u2net_human_seg")).convert("RGBA")
+        except Exception as exc:
+            fail(f"human-specific segmentation failed: {exc}")
+
     im = remove_horizontal_publisher_strips(remove_flat_side_backgrounds(im))
 
     # Do not recover a contaminated cutout using destructive alpha matting.
