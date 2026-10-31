@@ -121,7 +121,7 @@ export function NbaGmFinalExperience({
     </section>
     <section className="gm-final__section gm-final__roster surface-card" aria-label="Final NBA roster development outcomes">
       <header className="gm-final__heading"><h2>YOUR FINAL ROSTER</h2><small>YEAR 1 → YEAR 3</small></header>
-      <p className="gm-final__hint">Start is fixed in the middle. Movement shows improvement or decline in categories; exact grades remain private.</p>
+      <p className="gm-final__hint">Movement shows improvement or decline; exact grades stay private.</p>
       <div className="gm-final__roster-list">
         {finalRows.map(row=><article className="gm-final__player" key={row.slot}>
           <div className="gm-final__player-identity">
