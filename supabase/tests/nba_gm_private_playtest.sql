@@ -76,11 +76,11 @@ begin
   v_state:=public.nba_gm_dev_action('offseason');
   if v_state->>'phase'<>'offseason' or v_state->'results' is distinct from v_before then
     raise exception 'Offseason changed a locked Year 1 result'; end if;
-  if jsonb_object_length(coalesce(v_state->'development','{}'::jsonb))<>7
+  if (select count(*) from jsonb_object_keys(coalesce(v_state->'development','{}'::jsonb)))<>7
      then raise exception 'Expected seven actual individual progression reports'; end if;
-  if not exists(select 1 from jsonb_each(v_state->'development') row
-    where (row.value->>'year2Grade')::numeric <>
-          (row.value->>'startingGrade')::numeric)
+  if not exists(select 1 from jsonb_each(v_state->'development') entry
+    where (entry.value->>'year2Grade')::numeric <>
+          (entry.value->>'startingGrade')::numeric)
      then raise exception 'Development did not change any player abilities'; end if;
 
   -- Trade partner wheel may be explored and cancelled without changing the roster.
