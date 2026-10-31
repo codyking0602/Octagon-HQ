@@ -348,8 +348,8 @@ begin
   v_grade:=v_player.overall;
   if p_year<=1 or p_state->>'economyVersion' is distinct from '3' then return v_grade; end if;
   for v_step in 2..least(3,p_year) loop
-    v_roll:=(abs((('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':outcome'),1,8))::bit(32)::int::bigint)%10000)::numeric/10000;
-    v_magnitude:=(abs((('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':size'),1,8))::bit(32)::int::bigint)%10000)::numeric/10000;
+    v_roll:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':outcome'),1,8))::bit(32)::int::bigint)%10000)::numeric/10000;
+    v_magnitude:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':size'),1,8))::bit(32)::int::bigint)%10000)::numeric/10000;
     v_prior:=v_grade-v_player.overall;
     v_age:=case when v_player.verified_birth_date is not null then
       extract(year from age(date '2026-10-30',v_player.verified_birth_date))::integer+v_step-1
