@@ -9,7 +9,7 @@ import {
   nbaGmDevCanAdd, nbaGmDevCandidates, nbaGmDevCatalogErrors, nbaGmDevFitSignals, nbaGmDevSpend,
   nbaGmDevDisplaySalaryYear, nbaGmDevSalary, type NbaGmDevPlayer, type NbaGmDevRun,
 } from "./nbaGmDevModel";
-import { nbaGmScoutLetter, nbaGmScoutTier } from "./nbaGmScouting";
+import { nbaGmScoutLetter, nbaGmScoutTier, nbaGmScoutOutlook } from "./nbaGmScouting";
 import { createNbaGmDevRepository, type NbaGmDevOperation } from "./nbaGmDevRepository";
 import { NBA_TEAMS } from "./nbaFutures";
 import { nbaTeamColor, nbaTeamLogoSrc } from "./nbaTeamBranding";
@@ -41,29 +41,40 @@ function PlayerPortrait({player}:{player:NbaGmDevPlayer}){
       : <TeamMark code={player.teamCode}/>}
   </span>;
 }
-function ScoutBadges({player}:{player:NbaGmDevPlayer}){
-  const tier=nbaGmScoutTier(player);
+function ScoutBadges({player,run}:{player:NbaGmDevPlayer;run?:NbaGmDevRun}){
+  const development=run?.development?.[player.id];
+  const year=run?.phase==="offseason"?2:run?.phase==="final"?3:1;
+  const currentGrade=year===2?development?.year2Grade:year===3?development?.year3Grade:undefined;
+  const display={...player,currentGrade:currentGrade??player.currentGrade};
+  const tier=nbaGmScoutTier(display);
+  const outlook=nbaGmScoutOutlook(display,year);
+  const tone=outlook==="HIGH UPSIDE"?"upside":outlook==="RISING"?"rising"
+    :outlook==="BOOM/BUST"?"volatile":outlook==="DECLINE RISK"?"decline":"stable";
   return <span className="nba-gm-dev__scout-pills">
     <span className={"football-gm__quality-pill quality-"+tier.toLowerCase()}>{tier}</span>
+    {year<3&&<span className={"football-gm__outlook-pill outlook-"+tone}>{outlook}</span>}
     <span className="nba-gm-dev__term">{player.gameContract}</span>
     <span className="nba-gm-dev__term">{player.gameContract==="3YR"?"SALARY LOCKED":"REPRICE RISK"}</span>
   </span>;
 }
-function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0}:{
+function PlayerCard({player,onPick,disabled,action="DRAFT",salaryYear=0,run}:{
   player:NbaGmDevPlayer;onPick?:()=>void;disabled?:boolean;action?:string;salaryYear?:0|1|2;
+  run?:NbaGmDevRun;
 }){
+  const delta=salaryYear===1&&run?.development?.[player.id]
+    ?run.development[player.id]!.year2Grade-player.currentGrade:0;
   return <article className="nba-gm-dev__player" style={{borderTopColor:nbaTeamColor(player.teamCode)}}>
     <div className="nba-gm-dev__player-head">
       <PlayerPortrait player={player}/>
       <div className="nba-gm-dev__identity">
         <strong>{player.name}</strong><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,salaryYear))} YEAR {salaryYear+1}</small>
-        <ScoutBadges player={player}/>
+        <ScoutBadges player={player} run={run}/>
       </div>
     </div>
     <div className="nba-gm-dev__skills" aria-label={"Scouting grades for "+player.name}>
       {labels.map(key=><div key={key}>
         <small>{NBA_GM_DEV_SKILL_LABELS[key]}</small>
-        <strong>{nbaGmScoutLetter(player.skills[key])}</strong>
+        <strong>{nbaGmScoutLetter(Math.max(0,Math.min(99,Math.round(player.skills[key]+delta))))}</strong>
       </div>)}
     </div>
     {onPick&&<button type="button" className="nba-gm-dev__primary" disabled={disabled} onClick={onPick}>
@@ -250,7 +261,7 @@ export default function NbaGmDevPage(){
               <strong>{NBA_GM_DEV_SLOT_LABELS[slot]}</strong>
               {player?<><PlayerPortrait key={player.id} player={player}/>
                 <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase)))}</small>
-                  <ScoutBadges player={player}/></span>
+                  <ScoutBadges player={player} run={run}/></span>
                 {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                   <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
                 {run.phase==="offseason"&&(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&
@@ -308,7 +319,7 @@ export default function NbaGmDevPage(){
                   const legal=nbaGmDevCanAdd(remaining,player,catalog,run.caps,"offseason");
                   return <div key={player.id} className="nba-gm-dev__trade-target">
                     {!legal&&<small className="nba-gm-dev__trade-warning">CURRENT PACKAGE NEEDS A DIFFERENT CAP / POSITION FIT</small>}
-                    <PlayerCard player={player} disabled={busy} action={tradeChip?"OFFER PACKAGE FOR":"OFFER FOR"}
+                    <PlayerCard player={player} run={run} disabled={busy} action={tradeChip?"OFFER PACKAGE FOR":"OFFER FOR"}
                       salaryYear={1} onPick={()=>void act("trade",player.id,tradeChip??undefined)}/>
                   </div>;
                 })}
@@ -325,7 +336,7 @@ export default function NbaGmDevPage(){
             {run.freeAgencyTeam&&!wheelSpinning&&<>
               <strong>{NBA_TEAMS.find(t=>t.id===run.freeAgencyTeam)?.name} · 1YR FREE AGENTS</strong>
               <div className="nba-gm-dev__candidate-grid">
-                {candidates.map(player=><PlayerCard key={player.id} player={player} disabled={busy}
+                {candidates.map(player=><PlayerCard key={player.id} player={player} run={run} disabled={busy}
                   action="SIGN" salaryYear={1} onPick={()=>void act("sign",player.id)}/>)}
               </div>
               <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("pass-fa")}>PASS THIS TEAM</button>
@@ -335,7 +346,7 @@ export default function NbaGmDevPage(){
           <strong>EMERGENCY ROSTER COMPLETION</strong>
           <p className="nba-gm-dev__hint">All three visits used. Only affordable depth players may fill an open position. No rerolls.</p>
           <div className="nba-gm-dev__candidate-grid">
-            {emergency.map(player=><PlayerCard key={player.id} player={player} disabled={busy}
+            {emergency.map(player=><PlayerCard key={player.id} player={player} run={run} disabled={busy}
               salaryYear={1} action="SIGN DEPTH" onPick={()=>void act("emergency-sign",player.id)}/>)}
           </div>
         </div>}
