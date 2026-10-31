@@ -20,7 +20,7 @@ const profiles=(JSON.parse(readFileSync("data/curated/nba/gm-nba-development-pro
   profiles:Profile[];
 }).profiles;
 const byId=new Map(profiles.map(profile=>[profile.id,profile]));
-const sql=readFileSync("supabase/migrations/202612310899_nba_gm_private_scout_forecast.sql","utf8");
+const sql=readFileSync("supabase/migrations/202612310930_nba_gm_private_scout_forecast.sql","utf8");
 const engine=readFileSync("supabase/migrations/202612310898_nba_gm_dev_profiles_setup.sql","utf8");
 
 function fixture(p:BoardPlayer):NbaGmDevPlayer{
