@@ -20,6 +20,10 @@ from scripts.asset_ingest import (
     source_looks_clipped,
     upper_side_background_band,
     validate_asset_quality,
+    require_clean_original_thumb,
+    source_publisher_band,
+    verified_thumb_candidates,
+    ingest_fighter_candidate,
     source_needs_background_removal,
     resolve_ufc_profile_source,
     official_ufc_event_headshot_url,
@@ -108,6 +112,90 @@ class AssetIngestQualityTests(unittest.TestCase):
                 resolve_ufc_profile_source(
                     "https://www.ufc.com/athlete/johnny-walker", "Johnny Walker", "thumb",
                 )
+
+    def test_transparent_original_is_fitted_without_background_removal(self):
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        from io import BytesIO
+
+        source = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(source)
+        draw.ellipse((205, 12, 395, 225), fill=(146, 102, 75, 255))
+        draw.ellipse((95, 224, 505, 430), fill=(167, 112, 83, 255))
+        raw = BytesIO()
+        source.save(raw, "PNG")
+        espn = "https://a.espncdn.com/i/headshots/mma/players/full/4903365.png"
+        spec = {
+            "source_url": espn,
+            "fighter_name": "Waldo Cortes Acosta",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "4903365",
+        }
+        with tempfile.TemporaryDirectory() as folder:
+            dest = str(Path(folder) / "test-thumb.webp")
+            with patch("scripts.asset_ingest.resolve_source", return_value=(espn, raw.getvalue())):
+                with patch("scripts.asset_ingest.remove", side_effect=AssertionError("rembg must not run")):
+                    meta = ingest_fighter_candidate(spec, "thumb", dest, (320, 320))
+            check = Image.open(dest).convert("RGBA")
+            self.assertEqual(check.size, (320, 320))
+            self.assertEqual(meta["source_url"], espn)
+            self.assertEqual(check.getpixel((0, 0))[3], 0)
+
+    def test_opaque_and_contaminated_originals_rejected_without_writing(self):
+        import tempfile
+        from pathlib import Path
+        from io import BytesIO
+        from unittest.mock import patch
+
+        espn = "https://a.espncdn.com/i/headshots/mma/players/full/4903365.png"
+        spec = {
+            "source_url": espn,
+            "fighter_name": "Waldo Cortes Acosta",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "4903365",
+        }
+        bad = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(bad)
+        draw.ellipse((205, 10, 395, 250), fill=(150, 105, 85, 255))
+        draw.rectangle((425, 65, 580, 245), fill=(206, 104, 89, 255))
+        self.assertTrue(source_publisher_band(bad))
+        with self.assertRaises(SystemExit):
+            require_clean_original_thumb(bad)
+        with tempfile.TemporaryDirectory() as folder:
+            dest = str(Path(folder) / "not-approved.webp")
+            for source in (bad, Image.new("RGBA", (600, 436), (240, 240, 240, 255))):
+                raw = BytesIO()
+                source.save(raw, "PNG")
+                with patch("scripts.asset_ingest.resolve_source", return_value=(espn, raw.getvalue())):
+                    with patch("scripts.asset_ingest.remove", side_effect=AssertionError("no cleanup allowed")):
+                        with self.assertRaises(SystemExit):
+                            ingest_fighter_candidate(spec, "thumb", dest, (320, 320))
+                self.assertFalse(Path(dest).exists())
+
+    def test_alternate_sources_keep_same_fighter_and_validate_each_source(self):
+        spec = {
+            "kind": "thumb",
+            "destination": "public/assets/fighters/johnny-walker-thumb.webp",
+            "source_url": "https://a.espncdn.com/i/headshots/mma/players/full/3146944.png",
+            "fighter_name": "Johnny Walker",
+            "official_headshot_reviewed": True,
+            "verified_espn_athlete_id": "3146944",
+            "fallback_sources": [{
+                "source_page_url": "https://www.ufc.com/athlete/johnny-walker",
+            }],
+        }
+        options = verified_thumb_candidates(spec)
+        self.assertEqual(len(options), 2)
+        self.assertEqual(options[1]["fighter_name"], "Johnny Walker")
+        self.assertEqual(options[1]["destination"], spec["destination"])
+        self.assertNotIn("source_url", options[1])
+        with self.assertRaises(SystemExit):
+            verified_thumb_candidates({
+                **spec,
+                "fallback_sources": [{"fighter_name": "Different fighter",
+                                      "source_page_url": "https://www.ufc.com/athlete/johnny-walker"}],
+            })
 
     def test_clean_transparent_espn_600_by_436_is_not_resegmented(self):
         # ESPN's authentic face-dominant portrait is sometimes already a
