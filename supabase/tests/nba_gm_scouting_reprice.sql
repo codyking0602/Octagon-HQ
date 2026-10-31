@@ -1,4 +1,4 @@
--- NBA GM Priority 2 backend regression. Run after additive migration 202612310899
+-- NBA GM Priority 2 backend regression. Run after additive migration 202612310900
 -- against disposable/local DB; uses service role ONLY, changes no player data.
 begin;
 select set_config('request.jwt.claim.role','service_role',true);
