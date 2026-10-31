@@ -120,7 +120,7 @@ class AssetIngestQualityTests(unittest.TestCase):
         import hashlib
         sample = b"unit-fixture-not-an-asset"
         expected = hashlib.sha1(
-            b"blob " + str(len(sample)).encode("ascii") + b"\\0" + sample
+            b"blob " + str(len(sample)).encode("ascii") + b"\x00" + sample
         ).hexdigest()
         self.assertFalse(source_thumb_blob_is_rejected(sample))
         self.assertIn(
