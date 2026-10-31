@@ -110,6 +110,9 @@
 .nba-gm-dev .football-gm__development-name{min-width:0;overflow-wrap:anywhere}
 .nba-gm-dev .nba-gm-final{min-width:0}
 .nba-gm-final__team-logo{width:24px;height:24px;object-fit:contain;flex:0 0 24px}
+.nba-gm-final .nba-gm-final__portrait>img{object-fit:contain;object-position:center bottom}
+.nba-gm-final .nba-gm-final__portrait>.nba-gm-final__logo-inset{object-fit:contain;padding:2px}
+.nba-gm-final__team-code{display:block;color:#9bc4e1;font-size:8px;font-weight:900;line-height:1.1;overflow-wrap:anywhere;text-align:center}
 .nba-gm-final .gm-final__player-identity{min-width:0}
 .nba-gm-final .gm-final__player-name{min-width:0}
 .nba-gm-final .gm-final__player-name strong{overflow-wrap:anywhere}
