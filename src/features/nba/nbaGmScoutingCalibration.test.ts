@@ -13,7 +13,7 @@ type Athlete = {id:string;name:string;team:string;grade:number;salary:number;yea
 const profiles = (JSON.parse(readFileSync(
   "data/curated/nba/gm-nba-development-profiles-2026-10-30.json","utf8")) as {profiles:Profile[]}).profiles;
 const fixture = readFileSync("supabase/migrations/202612310894_nba_gm_private_330_development_fixtures.sql","utf8");
-const migration = readFileSync("supabase/migrations/202612310899_nba_gm_scouting_reprice_signals.sql","utf8");
+const migration = readFileSync("supabase/migrations/202612310900_nba_gm_scouting_reprice_signals.sql","utf8");
 const board = (JSON.parse(readFileSync(
   "docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json","utf8")) as {
     players:Array<{editorialId:string;name:string;teamCode:string;overall:number;candidatePositions:string[]}>;
@@ -69,7 +69,7 @@ function forecast(p:Profile,player:Athlete){
     if(over>=Math.max(2400000,player.salary*.15))huge+=weight;
   }
   const share=100*expected/155000000;
-  const risk=share>=.8||(share>=.3&&huge>=.17)?"HIGH":
+  const risk:"LOW"|"MEDIUM"|"HIGH"=share>=.8||(share>=.3&&huge>=.17)?"HIGH":
     share>=.3||large>=.12?"MEDIUM":"LOW";
   return {expected,large,huge,risk};
 }
@@ -208,7 +208,7 @@ describe("NBA GM Priority 2: 330-person tier and contract forecast calibration",
               p.overall*.4-maxCost(p)/6e6;
           const pick=options.reduce((a,b)=>score(b)>score(a)?b:a);
           selected.push(pick);
-          ([0,1,2] as const).forEach(year=>spent[year]!+=cost(pick,year));
+          ([0,1,2] as const).forEach(year=>{spent[year]=spent[year]!+cost(pick,year)});
         }
         if(selected.length===7){
           result.success++;result.highest=Math.max(result.highest,...spent);
