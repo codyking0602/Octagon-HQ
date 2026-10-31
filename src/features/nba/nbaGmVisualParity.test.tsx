@@ -7,6 +7,7 @@ const page = readFileSync("src/features/nba/NbaGmDevPage.tsx", "utf8");
 const finalPage = readFileSync("src/features/nba/NbaGmFinalExperience.tsx", "utf8");
 const css = readFileSync("src/styles/nba-gm-dev.css", "utf8");
 const teamBranding = readFileSync("src/features/nba/nbaTeamBranding.tsx", "utf8");
+const repository = readFileSync("src/features/nba/nbaGmDevRepository.ts", "utf8");
 
 const players = [...fixture.matchAll(/\('([^']+)','((?:[^']|'')+)','([A-Z]{3})',ARRAY\[[^\n]*?::bigint\[\],(null|'[0-9]+'),/g)].map(row => ({
   id: row[1]!,
@@ -38,6 +39,7 @@ describe("NBA GM 30-team headshot and Football presentation parity", () => {
     expect(page).toContain("nbaGmRepriceLabel(player.repriceRisk,player.gameContract)");
     expect(page).toContain("nba-gm-dev__reprice is-");
     expect(css).toContain(".nba-gm-dev__reprice.is-high");
+    expect(repository).toContain('repriceRisk:z.enum(["LOW","MEDIUM","HIGH","LOCKED"]).nullable().optional()');
   });
 
   it("uses the recovered identities on draft, roster and final screens", () => {
