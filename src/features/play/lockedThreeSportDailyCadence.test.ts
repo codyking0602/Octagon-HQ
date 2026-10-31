@@ -137,15 +137,9 @@ describe("locked three-sport Daily scheduling policy", () => {
       const nba = nbaRegularSeasonDaily(day);
       const nbaGame = nba?.isPublicationDay ? nba.gameType : null;
       expect(football).not.toBe(ufc);
-      // The owner-approved, immutable Oct 29 NBA Bar Trivia launch is an
-      // intentional single-day overlap with Football Bar Trivia. Every other
-      // cross-sport publication must remain non-colliding.
-      if (day === "2026-10-29") {
-        expect(football).toBe("bar_trivia");
-        expect(nbaGame).toBe("bar_trivia");
-      } else {
-        expect(football).not.toBe(nbaGame);
-      }
+      // The owner-approved NBA Millionaire showcase also removes the former
+      // October 29 Football/NBA Bar Trivia collision.
+      expect(football).not.toBe(nbaGame);
       expect(ufc && ufc === nbaGame).toBeFalsy();
     }
   });
