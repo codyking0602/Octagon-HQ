@@ -465,7 +465,7 @@ function MillionaireGame({
           <dl><div><dt>Questions correct</dt><dd>{gameState.completedQuestions} / 8</dd></div><div><dt>Millionaire run</dt><dd>{gameState.firstMissQuestionIndex === null ? (gameState.status === "won" ? "Cleared" : "Walked away") : `Ended Q${gameState.firstMissQuestionIndex + 1}`}</dd></div><div><dt>Lifelines used</dt><dd>{usedLifelines}{usedLifelines ? ` (-${usedLifelines * 2})` : ""}</dd></div><div><dt>Time remaining</dt><dd>{millionaireTimeLabel(timeRemainingMs)}</dd></div></dl>
           <div className="millionaire-results__actions"><button type="button" className="is-primary" onClick={restart}>PLAY AGAIN</button>{onChangeLeague ? <button type="button" onClick={onChangeLeague}>CHANGE LEAGUE</button> : null}<button type="button" onClick={onBack}>BACK TO GAMES</button></div>
         </section>
-      ) : (
+      ) : !walkPromptOpen ? (
         <>
           <section className={`millionaire-question${phase === "locked" ? " is-locked" : ""}`} aria-live="polite"><strong>{currentQuestion?.prompt}</strong>{phase === "revealed" && explanation ? <small>{explanation}</small> : null}</section>
           <div className="millionaire-answers" aria-label="Answer choices">
@@ -480,7 +480,7 @@ function MillionaireGame({
             })}
           </div>
         </>
-      )}
+      ) : null}
       </div>
     </div>
   );

@@ -89,7 +89,13 @@ describe("NBA Millionaire money-run elimination and full-board recovery", () => 
       act(() => vi.advanceTimersByTime(MILLIONAIRE_REVEAL_DELAY_MS[run[index]!.level] + MILLIONAIRE_ANSWER_REVEAL_HOLD_MS + 50));
       if (index === 6) {
         expect(document.body.querySelector(".millionaire-decision")).toBeTruthy();
+        expect(document.body.querySelector(".millionaire-question")).toBeNull();
+        expect(document.body.querySelector(".millionaire-answers")).toBeNull();
+        expect(document.body.textContent).not.toContain(run[7]!.prompt);
         fireEvent.click(screen.getByRole("button", { name: /play for/i }));
+        expect(document.body.querySelector(".millionaire-decision")).toBeNull();
+        expect(document.body.textContent).toContain(run[7]!.prompt);
+        expect(document.body.querySelectorAll(".millionaire-answers button")).toHaveLength(4);
       }
     }
     fireEvent.click(screen.getByRole("button", { name: /play again/i }));

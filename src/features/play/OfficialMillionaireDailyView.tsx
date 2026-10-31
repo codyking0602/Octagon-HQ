@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   MILLIONAIRE_LEVELS,
@@ -158,7 +158,7 @@ export function OfficialMillionaireDailyView({
     timeoutSent.current = false;
   }, [projection.progressRevision, state.time_remaining_ms]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (answerFeedback) return;
     if (currentIndex === 7 && completedQuestions === 7 && firstMissQuestionIndex === null && status === "playing" && priorIndex.current !== 7) {
       setWalkPromptOpen(true);
@@ -453,7 +453,7 @@ export function OfficialMillionaireDailyView({
             </dl>
             {onExit ? <button className="millionaire-rules__start millionaire-results__continue" type="button" onClick={onExit}>CONTINUE</button> : null}
           </section>
-        ) : (
+        ) : !walkPromptOpen ? (
           <>
             <section className={`millionaire-question${answerFeedback?.phase === "locked" ? " is-locked" : ""}${String(displayQuestion.id ?? "") === "cfb-mike-ditka-memorial-2026-10-10-q3" ? " is-ditka-memorial" : ""}`} aria-live="polite">
               {String(displayQuestion.id ?? "") === "cfb-mike-ditka-memorial-2026-10-10-q3"
@@ -493,7 +493,7 @@ export function OfficialMillionaireDailyView({
               })}
             </div>
           </>
-        )}
+        ) : null}
       </div>
     </div>,
     document.body,

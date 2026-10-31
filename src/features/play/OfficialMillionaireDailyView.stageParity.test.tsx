@@ -1,4 +1,4 @@
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
 import officialSource from "./OfficialMillionaireDailyView.tsx?raw";
@@ -58,6 +58,55 @@ describe("Official Millionaire stage parity", () => {
     expect(document.body.querySelector(".millionaire-stage-background")?.getAttribute("src"))
       .toBe("/assets/millionaire/Ufc2.png");
     expect(document.body.querySelector(".millionaire-nba-host")).toBeNull();
+  });
+
+
+  it.each(["nba", "ufc", "nfl"] as const)("conceals the %s Q8 board until the walk decision is made", (league) => {
+    const fixture = makeProjection(league === "nfl" ? "ufc" : league, 1);
+    const q7State = {
+      ...fixture,
+      sport: league === "nfl" ? "football" : league,
+      publicSetup: {
+        ...fixture.publicSetup,
+        league,
+        questions: Array.from({ length: 8 }, (_, index) => ({
+          id: `q${index + 1}`,
+          prompt: index === 7 ? "Q8 SECRET QUESTION" : `Question ${index + 1}`,
+          money: index === 7 ? 1_000_000 : 500,
+          choices: [
+            { id: "A", text: "Secret candidate A" },
+            { id: "B", text: "Secret candidate B" },
+            { id: "C", text: "Secret candidate C" },
+            { id: "D", text: "Secret candidate D" },
+          ],
+        })),
+      },
+      publicState: {
+        ...fixture.publicState,
+        current_question_index: 6,
+        completed_questions: 6,
+      },
+    } as DailyProjection;
+    const onAdvance = () => {};
+    const { rerender } = render(<OfficialMillionaireDailyView projection={q7State} busy={false} onAdvance={onAdvance} />);
+    expect(document.body.querySelector(".millionaire-answers")).not.toBeNull();
+
+    // Advancing into Q8 must not flash the next question before the prompt opens.
+    const q8State = {
+      ...q7State,
+      publicState: { ...q7State.publicState, current_question_index: 7, completed_questions: 7 },
+    } as DailyProjection;
+    rerender(<OfficialMillionaireDailyView projection={q8State} busy={false} onAdvance={onAdvance} />);
+    expect(screen.getByLabelText("Walk away decision")).toBeTruthy();
+    expect(document.body.querySelector(".millionaire-question")).toBeNull();
+    expect(document.body.querySelector(".millionaire-answers")).toBeNull();
+    expect(document.body.textContent).not.toContain("Q8 SECRET QUESTION");
+    expect(document.body.textContent).not.toContain("Secret candidate A");
+
+    fireEvent.click(screen.getByRole("button", { name: /play for/i }));
+    expect(screen.queryByLabelText("Walk away decision")).toBeNull();
+    expect(screen.getByText("Q8 SECRET QUESTION")).toBeTruthy();
+    expect(document.body.querySelectorAll(".millionaire-answers button")).toHaveLength(4);
   });
 
   it("uses the exact NBA host layer and stylesheet shared by Casual and Official Daily", () => {
