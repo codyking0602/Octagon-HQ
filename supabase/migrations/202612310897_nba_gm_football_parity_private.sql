@@ -10,7 +10,7 @@
 -- Intentional contract tiers replace opaque MD5 assignment. High-salary stars
 -- receive repricing exposure; established impact players can secure a 3YR lock;
 -- rotation/depth contracts alternate by graded game role (not real NBA terms).
-create or replace function private.nba_gm_v2_contract(p_id text)
+create or replace function private.nba_gm_v3_contract(p_id text)
 returns text language sql stable security definer set search_path='' as $$
   select case when p.overall >=95 then '1YR'
     when p.overall between 88 and 94 then '3YR'
@@ -18,10 +18,16 @@ returns text language sql stable security definer set search_path='' as $$
     when p.overall<=78 then '1YR' else '3YR' end
   from private.nba_gm_dev_players p where p.id=p_id;
 $$;
-revoke all on function private.nba_gm_v2_contract(text) from public,anon,authenticated;
+revoke all on function private.nba_gm_v3_contract(text) from public,anon,authenticated;
 
--- Seeded step-by-step ability progression. No client-supplied result or grade.
--- Skills scale by the actual ability change inside the season resolver.
+-- Earlier V2 saves retain their original MD5-term agreements and cap.
+create or replace function private.nba_gm_v3_contract_for_state(p_state jsonb,p_id text)
+returns text language sql stable security definer set search_path='' as $$
+  select case when p_state->>'economyVersion'='3' then private.nba_gm_v3_contract(p_id)
+    else private.nba_gm_v2_contract(p_id) end;
+$$;
+revoke all on function private.nba_gm_v3_contract_for_state(jsonb,text) from public,anon,authenticated;
+
 create or replace function private.nba_gm_v3_grade(p_state jsonb,p_id text,p_year integer)
 returns numeric language plpgsql stable security definer set search_path='' as $$
 declare
@@ -33,10 +39,10 @@ begin
   select * into v_player from private.nba_gm_dev_players where id=p_id;
   if not found then raise exception 'Unknown NBA GM player'; end if;
   v_grade:=v_player.overall;
-  if p_year<=1 then return v_grade; end if;
+  if p_year<=1 or p_state->>'economyVersion' is distinct from '3' then return v_grade; end if;
   for v_step in 2..least(3,p_year) loop
-    v_roll:=((('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':outcome'),1,8))::bit(32)::bigint)%10000)::numeric/10000;
-    v_magnitude:=((('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':size'),1,8))::bit(32)::bigint)%10000)::numeric/10000;
+    v_roll:=(abs((('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':outcome'),1,8))::bit(32)::int::bigint)%10000)::numeric/10000;
+    v_magnitude:=(abs((('x'||substr(md5(p_state->>'seed'||':'||p_id||':'||v_step||':size'),1,8))::bit(32)::int::bigint)%10000)::numeric/10000;
     v_prior:=v_grade-v_player.overall;
     -- High skill outliers have specialist upside; elite grade headroom is narrow.
     v_up:=least(5.8,greatest(1.5,(99-v_grade)*0.36)
@@ -78,7 +84,9 @@ declare v_player private.nba_gm_dev_players%rowtype;v_delta numeric;v_factor num
 begin
   select * into v_player from private.nba_gm_dev_players where id=p_id;
   if not found then raise exception 'Unknown NBA GM player'; end if;
-  if p_year<=1 or private.nba_gm_v2_contract(p_id)='3YR' then return v_player.salaries[1]; end if;
+  if p_state->>'economyVersion' is distinct from '3' then
+    return private.nba_gm_v2_salary(p_id,p_year); end if;
+  if p_year<=1 or private.nba_gm_v3_contract(p_id)='3YR' then return v_player.salaries[1]; end if;
   if coalesce(p_state->>'phase','draft') in ('draft','year1') then
     return v_player.salaries[greatest(1,least(3,p_year))]; end if;
   v_delta:=private.nba_gm_v3_grade(p_state,p_id,p_year)-v_player.overall;
@@ -129,7 +137,7 @@ begin
     foreach v_slot in array v_open loop
       if exists(select 1 from jsonb_array_elements(v_arranged) pick where pick->>'slot'=v_slot)
         then continue; end if;
-      select p.id,case when private.nba_gm_v2_contract(p.id)='3YR'
+      select p.id,case when private.nba_gm_v3_contract_for_state(p_state,p.id)='3YR'
         then p.salaries[1] else greatest(p.salaries[1],p.salaries[2],p.salaries[3]) end
       into v_filler_id,v_min
       from private.nba_gm_dev_players p
@@ -138,7 +146,7 @@ begin
         and (v_slot=any(p.positions)
           or (v_slot='GUARD' and p.positions && array['PG','SG'])
           or (v_slot='BIG' and p.positions && array['PF','C']))
-      order by case when private.nba_gm_v2_contract(p.id)='3YR'
+      order by case when private.nba_gm_v3_contract_for_state(p_state,p.id)='3YR'
         then p.salaries[1] else greatest(p.salaries[1],p.salaries[2],p.salaries[3]) end,p.id
       limit 1;
       if v_filler_id is null then return false; end if;
@@ -284,7 +292,7 @@ begin
   if p_action='start' then
     v_state:=jsonb_build_object('version','nba-gm-dev-v2',
       'seed','nba-gm-'||extensions.gen_random_uuid()::text,
-      'phase','draft','picks','[]'::jsonb,'yearOnePicks','[]'::jsonb,'pendingTeam',null,
+      'economyVersion',3,'phase','draft','picks','[]'::jsonb,'yearOnePicks','[]'::jsonb,'pendingTeam',null,
       'pendingSlot',null,'spinIndex',0,'caps',jsonb_build_array(155000000,155000000,155000000),
       'results','[]'::jsonb,'shopPlayerId',null,'tradeTeam',null,
       'tradeAttempts',0,'tradesUsed',0,'freeAgencyTeam',null,
@@ -412,7 +420,7 @@ begin
       -- replacement before finalizing that structural transaction.
       if v_chip_id is not null and not exists(
         select 1 from private.nba_gm_dev_players p
-        where private.nba_gm_v2_contract(p.id)='1YR' and p.overall<=81
+        where private.nba_gm_v3_contract_for_state(p_state,p.id)='1YR' and p.overall<=81
           and not exists(select 1 from jsonb_array_elements(v_picks) x
             where x->>'playerId'=p.id)
           and private.nba_gm_v2_can_add(v_next,p.id)) then
@@ -437,7 +445,7 @@ begin
       '{releasedIds}',(v_state->'releasedIds')||jsonb_build_array(p_player_id));
     -- Never finalize a cut unless at least one legal, affordable 1YR replacement exists.
     if not exists(select 1 from private.nba_gm_dev_players p
-      where private.nba_gm_v2_contract(p.id)='1YR'
+      where private.nba_gm_v3_contract_for_state(p_state,p.id)='1YR'
         and p.id not in(select x.id from jsonb_array_elements_text(v_next->'releasedIds') x(id))
         and private.nba_gm_v2_can_add(v_next,p.id)) then
       raise exception 'No affordable 1YR replacement; keep this player';
@@ -452,7 +460,7 @@ begin
     select teams.team_code into v_team from (
       select distinct team_code from private.nba_gm_dev_players
     ) teams where exists(select 1 from private.nba_gm_dev_players p
-      where p.team_code=teams.team_code and private.nba_gm_v2_contract(p.id)='1YR'
+      where p.team_code=teams.team_code and private.nba_gm_v3_contract_for_state(p_state,p.id)='1YR'
         and p.id not in(select x.id from jsonb_array_elements_text(v_state->'releasedIds') x(id))
         and private.nba_gm_v2_can_add(v_state,p.id))
     order by random() limit 1;
@@ -464,7 +472,7 @@ begin
       then raise exception 'Spin the free-agent wheel first'; end if;
     select * into v_player from private.nba_gm_dev_players where id=p_player_id;
     if not found or v_player.team_code<>v_state->>'freeAgencyTeam'
-      or private.nba_gm_v2_contract(p_player_id)<>'1YR'
+      or private.nba_gm_v3_contract_for_state(v_state,p_player_id)<>'1YR'
       or p_player_id in(select x.id from jsonb_array_elements_text(v_state->'releasedIds') x(id))
       or not private.nba_gm_v2_can_add(v_state,p_player_id)
       then raise exception 'Free agent is not eligible'; end if;
@@ -481,7 +489,7 @@ begin
       or v_state->>'freeAgencyTeam' is not null or v_state->>'shopPlayerId' is not null
       then raise exception 'Emergency signings require exhausted visits and an open slot'; end if;
     select * into v_player from private.nba_gm_dev_players where id=p_player_id;
-    if not found or v_player.overall>78 or private.nba_gm_v2_contract(p_player_id)<>'1YR'
+    if not found or v_player.overall>78 or private.nba_gm_v3_contract_for_state(v_state,p_player_id)<>'1YR'
       or p_player_id in(select x.id from jsonb_array_elements_text(v_state->'releasedIds') x(id))
       or not private.nba_gm_v2_can_add(v_state,p_player_id)
       then raise exception 'Only affordable depth free agents can fill an emergency vacancy'; end if;
@@ -525,7 +533,7 @@ revoke all on function public.nba_gm_dev_action(text,text,text) from public,anon
 grant execute on function public.nba_gm_dev_action(text,text,text) to authenticated;
 
 create or replace function public.nba_gm_dev_catalog()
-returns jsonb language plpgsql stable security definer set search_path='' as $
+returns jsonb language plpgsql stable security definer set search_path='' as $$
 declare v_state jsonb;
 begin
   if not private.nba_gm_dev_owner() then raise exception 'NBA GM playtest access required'; end if;
@@ -535,7 +543,7 @@ begin
   return coalesce((select jsonb_agg(jsonb_build_object(
     'id',p.id,'name',p.name,'teamCode',p.team_code,'positions',p.positions,
     'currentGrade',p.overall,'skills',p.skills,'salaries',case when v_state->>'phase' in ('offseason','final') then jsonb_build_array(private.nba_gm_v3_salary(v_state,p.id,1),private.nba_gm_v3_salary(v_state,p.id,2),private.nba_gm_v3_salary(v_state,p.id,3)) else to_jsonb(p.salaries) end,
-    'gameContract',private.nba_gm_v2_contract(p.id),
+    'gameContract',private.nba_gm_v3_contract_for_state(v_state,p.id),
     'pricingKind',p.pricing_kind,'eligibilityKind',p.eligibility_kind,
     'officialNbaPlayerId',p.official_nba_player_id,
     'officialRosterPosition',p.official_roster_position,
