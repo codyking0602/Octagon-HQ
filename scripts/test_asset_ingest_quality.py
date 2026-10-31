@@ -22,6 +22,7 @@ from scripts.asset_ingest import (
     validate_asset_quality,
     require_clean_original_thumb,
     source_publisher_band,
+    broad_upper_side_alpha_panel,
     verified_thumb_candidates,
     ingest_fighter_candidate,
     source_needs_background_removal,
@@ -112,6 +113,24 @@ class AssetIngestQualityTests(unittest.TestCase):
                 resolve_ufc_profile_source(
                     "https://www.ufc.com/athlete/johnny-walker", "Johnny Walker", "thumb",
                 )
+
+    def test_gradient_upper_publisher_panel_is_rejected_without_cleanup(self):
+        # Real publisher panels often have a gradient, so flat-color RGB
+        # checks alone must not certify their alpha silhouettes as clean.
+        im = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(im)
+        draw.ellipse((205, 12, 395, 250), fill=(146, 104, 81, 255))
+        for x in range(420, 590):
+            shade = round((x - 420) / 170 * 95)
+            draw.line((x, 40, x, 210), fill=(120 + shade, 45 + shade // 3, 55, 110))
+        self.assertTrue(broad_upper_side_alpha_panel(im))
+        with self.assertRaises(SystemExit):
+            require_clean_original_thumb(im)
+        clean = Image.new("RGBA", (600, 436), (0, 0, 0, 0))
+        clean_draw = ImageDraw.Draw(clean)
+        clean_draw.ellipse((205, 15, 395, 245), fill=(146, 104, 81, 255))
+        clean_draw.ellipse((115, 248, 485, 430), fill=(165, 112, 83, 255))
+        self.assertFalse(broad_upper_side_alpha_panel(clean))
 
     def test_transparent_original_is_fitted_without_background_removal(self):
         import tempfile
