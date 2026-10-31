@@ -253,25 +253,34 @@ export default function NbaGmDevPage(){
           <div className="nba-gm-dev__bar"><i style={{width:Math.min(100,100*(spend?.[index]??0)/run.caps[index]!)+"%"}}/></div>
         </div>)}
       </section>
-      <section className="nba-gm-dev__panel nba-gm-dev__roster-panel">
-        <div className="nba-gm-dev__section-title">
-          <div><small>YOUR TEAM</small><h2>7-MAN ROTATION</h2></div>
-          <strong>{run.picks.length}/7</strong>
-        </div>
-        <div className="nba-gm-dev__roster">
+      <section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
+        <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
+        <div className="football-gm__roster-grid nba-gm-dev__roster">
           {NBA_GM_ROSTER_SLOTS.map(slot=>{
             const pick=run.picks.find(p=>p.slot===slot);
             const player=pick?byId.get(pick.playerId):null;
-            return <article className="nba-gm-dev__roster-row" key={slot}>
-              <strong>{NBA_GM_DEV_SLOT_LABELS[slot]}</strong>
-              {player?<><PlayerPortrait key={player.id} player={player}/>
-                <span><b>{player.name}</b><small>{player.positions.join(" / ")} · {money(nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase)))}</small>
-                  <ScoutBadges player={player} run={run}/></span>
-                {run.phase==="offseason"&&run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-                  <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
-                {run.phase==="offseason"&&(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-                  <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("release",player.id)}>CUT</button>}
-              </>:<span className="nba-gm-dev__empty">OPEN</span>}
+            return <article className={player?"is-filled":""} key={slot}
+              style={player?{borderLeftColor:nbaTeamColor(player.teamCode)}:undefined}>
+              <small>{NBA_GM_DEV_SLOT_LABELS[slot]}</small>
+              {player?<>
+                <div className="football-gm__roster-player">
+                  <PlayerPortrait key={player.id} player={player}/>
+                  <span className="nba-gm-dev__roster-copy">
+                    <strong>{player.name}</strong>
+                    <em>{player.teamCode} · {player.positions.join(" / ")}</em>
+                    <span className="football-gm__roster-scouting"><ScoutBadges player={player} run={run}/></span>
+                  </span>
+                </div>
+                <div className="football-gm__roster-contract">
+                  <b>{money(nbaGmDevSalary(player,nbaGmDevDisplaySalaryYear(run.phase)))}</b>
+                </div>
+                {run.phase==="offseason"&&<div className="nba-gm-dev__row-actions">
+                  {run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+                    <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
+                  {(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+                    <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("release",player.id)}>CUT</button>}
+                </div>}
+              </>:<span className="football-gm__open">OPEN</span>}
             </article>;
           })}
         </div>
@@ -372,15 +381,24 @@ function PlayerPicker({players,all,filter,setFilter,disabled,onPick}:{
   onPick:(id:string)=>void;
 }){
   const positions=["PG","SG","SF","PF","C"].filter(pos=>all.some(p=>p.positions.includes(pos as "PG"|"SG"|"SF"|"PF"|"C")));
-  return <div className="nba-gm-dev__picker">
-    <div className="nba-gm-dev__position-tabs" role="group" aria-label="Filter team candidates by basketball position">
-      <button type="button" className={!filter?"is-selected":""} onClick={()=>setFilter(null)}>ALL</button>
-      {positions.map(position=><button type="button" key={position} className={filter===position?"is-selected":""}
-        onClick={()=>setFilter(position)}>{position}</button>)}
+  const code=all[0]?.teamCode??"";
+  return <section className="football-wheel-picker football-gm__picker surface-card nba-gm-dev__picker">
+    <header>
+      {code&&<span className="football-wheel-team-logo"><TeamMark code={code}/></span>}
+      <div><p className="eyebrow">YOUR SPIN</p><h2>{NBA_TEAMS.find(team=>team.id===code)?.name??"NBA TEAM"}</h2>
+        <span>Choose a position, then a player. GM automatically fits the legal roster.</span>
+      </div>
+    </header>
+    <div className="football-wheel-picker__slots football-gm__position-tabs nba-gm-dev__position-tabs"
+      role="group" aria-label="Filter team candidates by basketball position">
+      <button type="button" className={!filter?"is-active is-selected":""} aria-pressed={!filter}
+        onClick={()=>setFilter(null)}><strong>ALL</strong></button>
+      {positions.map(position=><button type="button" key={position} className={filter===position?"is-active is-selected":""}
+        aria-pressed={filter===position} onClick={()=>setFilter(position)}><strong>{position}</strong></button>)}
     </div>
-    <div className="nba-gm-dev__candidate-grid">
+    <div className="football-wheel-picker__candidates nba-gm-dev__candidate-grid">
       {players.map(player=><PlayerCard key={player.id} player={player} disabled={disabled}
         onPick={()=>onPick(player.id)}/>)}
     </div>
-  </div>;
+  </section>;
 }
