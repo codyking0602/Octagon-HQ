@@ -130,6 +130,7 @@
 /* NBA GM uses Football GM's seven-slot roster and position-first picker.
    Basketball-only adaptations: six letter grades and full official portraits. */
 .nba-gm-dev .football-gm__roster{border:1px solid #304859;border-radius:15px;background:#101b27;min-width:0}
+.nba-gm-dev .football-gm__roster-grid.nba-gm-dev__roster{grid-template-columns:minmax(0,1fr);gap:0}
 .nba-gm-dev .football-gm__roster>header{padding:12px 14px}
 .nba-gm-dev .football-gm__roster>header strong{font-size:18px}
 .nba-gm-dev .football-gm__roster>header b{font-size:16px;color:#f5f7fa}
