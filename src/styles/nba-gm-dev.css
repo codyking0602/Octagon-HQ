@@ -177,3 +177,21 @@
 .nba-gm-dev .football-gm__roster-scouting .nba-gm-dev__term{font-size:8px;padding:3px 5px}
 .nba-gm-dev .nba-gm-dev__skills{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* Football cap-meter hierarchy, with two unobtrusive NBA future-year amounts. */
+.nba-gm-dev .nba-gm-dev__caps{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;background:#101b27;border:1px solid #304859;border-radius:15px;padding:13px 15px}
+.nba-gm-dev .nba-gm-dev__caps>.nba-gm-dev__cap-main{min-width:0;display:flex;align-items:end;justify-content:space-between;gap:10px;background:none;padding:0}
+.nba-gm-dev .nba-gm-dev__caps>.nba-gm-dev__cap-main span{display:grid;gap:3px}
+.nba-gm-dev .nba-gm-dev__caps>.nba-gm-dev__cap-main strong{font-size:16px;color:#fff}
+.nba-gm-dev .nba-gm-dev__caps>.nba-gm-dev__cap-main b{font-size:13px;color:#89cafd;white-space:nowrap}
+.nba-gm-dev .nba-gm-dev__caps.is-over>.nba-gm-dev__cap-main b{color:#ff9797}
+.nba-gm-dev .nba-gm-dev__caps>i>em{background:linear-gradient(90deg,#c5863e,#f4be72)}
+.nba-gm-dev .nba-gm-dev__caps>.nba-gm-dev__cap-forecast{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:stretch;background:none;padding:0}
+.nba-gm-dev .nba-gm-dev__cap-forecast>span{min-width:0;padding:8px 10px;border-radius:8px;background:#1b2d3c;display:grid;gap:4px}
+.nba-gm-dev .nba-gm-dev__cap-forecast>span small{font-size:9px}
+.nba-gm-dev .nba-gm-dev__cap-forecast>span b{font-size:11px;color:#d9e8f3;overflow-wrap:anywhere}
+@media(max-width:700px){
+.nba-gm-dev .nba-gm-dev__caps{grid-template-columns:minmax(0,1fr)}
+.nba-gm-dev .nba-gm-dev__caps>.nba-gm-dev__cap-main strong{font-size:14px}
+.nba-gm-dev .nba-gm-dev__cap-forecast>span b{font-size:10px}
+}
