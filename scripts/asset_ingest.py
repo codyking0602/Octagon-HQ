@@ -632,7 +632,7 @@ VISUALLY_REJECTED_THUMB_BLOBS = {
 
 def source_thumb_blob_is_rejected(payload):
     blob_hash = hashlib.sha1(
-        b"blob " + str(len(payload)).encode("ascii") + b"\\0" + payload
+        b"blob " + str(len(payload)).encode("ascii") + b"\x00" + payload
     ).hexdigest()
     return blob_hash in VISUALLY_REJECTED_THUMB_BLOBS
 
