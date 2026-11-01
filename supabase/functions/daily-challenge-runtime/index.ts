@@ -1022,8 +1022,10 @@ async function getContext(admin: SupabaseClient, dailyChallengeId: string, profi
   // Immutable official attempt rows retain the original grading proof. A
   // separately recorded correction is projected into the authenticated result.
   // The same correction is applied by the history view to every leaderboard.
-  if (context.central_day === "2026-10-30"
-    && context.gameType === "sports_feud"
+  if (((context.central_day === "2026-10-30" && context.gameType === "sports_feud")
+    || (context.central_day === "2026-11-01"
+      && context.gameType === "sports_feud"
+      && context.schedule_version === "nba-daily-regular-v3-oct30-public"))
     && asRecord(context.official_attempt)) {
     const adjustment = await admin.rpc("get_official_daily_score_correction", {
       p_daily_challenge_id: dailyChallengeId,
