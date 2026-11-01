@@ -52,6 +52,8 @@ def main():
             continue
         records.append({"name": player, "team": (tr.select_one('[data-stat="team_name_abbr"]') or tr.select_one('[data-stat="team"]')).get_text(" ", strip=True) if (tr.select_one('[data-stat="team_name_abbr"]') or tr.select_one('[data-stat="team"]')) else "", "salaries": salaries})
     if len(records) < 300:
+        heads = [(t.get("id"), len(t.select("tbody tr")), [c.get("data-stat") for c in t.select("tbody tr:first-child td")[:8]]) for t in soup.select("table")[:12]]
+        print(json.dumps({"sourceTables": heads, "htmlLength": len(html), "pageTitle": soup.title.get_text(" ", strip=True) if soup.title else None, "firstContractRow": table.select_one("tbody tr").get_text(" ", strip=True)[:300] if table.select_one("tbody tr") else None}, ensure_ascii=False))
         raise RuntimeError("Incomplete NBA live source response; got %d rows" % len(records))
     output={"source":URL,"source_population":len(records),"seasons":SEASONS,"players":records}
     p=Path("/tmp/nba-gm-live-contract-source.json")
