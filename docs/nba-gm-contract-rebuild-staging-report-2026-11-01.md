@@ -9,7 +9,7 @@
 - 266/330 have a **provisional** real end-year and derived game 1YR/3YR term; 64 have no substantiated end-year yet. This prevents deployment, definitive new term statistics, and all valid three-year cap simulations.
 - Source-status breakdown: 229 matched to July 2 salary/term historical records and awaiting November reconfirmation; 60 October 9 salary candidates awaiting reconfirmation with no end-year; 35 independently identified October/November cases still needing second source/option verification; four carry-forward/estimated cases; plus Wembanyama and Jokić official-news end-year adjudications. These categories overlap conceptually with salary vs term; see source status per row.
 - Do **not** activate v4 economy or silently treat provisional salaries as verified. `node scripts/nba-gm-contract-coverage.mjs --strict` must fail until every player has an independently verified, dated 2026–27 salary, options and expiration.
-- No migrations, database changes, production cap changes, saved-run mutations, client routing or score recalculations were made.
+- Two new additive, **unmerged** staging migrations and their SQL tests have been written. The migrations are **not applied to production**; no live game salary, cap, saved run, routing or score changes have been made. Migration 903 stores only private unverified candidate rows, and isolated migration 904 defines guarded V4 salary/term functions that always reject usage until all 330 records are independently verified.
 
 ## Baseline economics compared with provisional source candidates
 
@@ -98,7 +98,7 @@ Game team totals include all candidates; contract counts display **resolved 1YR 
 
 1. Revalidate every October 9 salary candidate against November 1 Basketball Reference, Spotrac and official reporting; adjudicate July-to-November extensions and option years. No guesses when a deal is unsigned.
 2. Reconcile 64 missing expirations; address all 4 estimated/carry-forward salaries and 2-way/partial guarantee cases separately. Salary versus cap-hit source inconsistencies require independent resolution.
-3. Stage **new** `economyVersion:4` data and functions without changing old rows or old V2/V3 behaviors. Record starting salary and real option-inclusive end separately. Do not read the new data for existing runs.
+3. Staged the isolated V4 salary and contract-term functions in migration 904. Their 330/330 certification gate blocks usage today. Remaining integration work is to verify data, choose an owner-approved cap, then explicitly route **new** `economyVersion:4` runs and catalog projections without modifying old V2/V3 rows or saved agreements.
 4. Add new-only salary functions and catalog projection. Old saves keep original prices and agreement years. The current `pricingKind` validator only accepts `GAME_FIXTURE_NOT_REAL_CONTRACT`; version the server/client shape deliberately instead of mislabeling real salaries as fixtures.
 5. Run exact server-authoritative multi-season spin/pick/offseason/trade/release/reprice/free agency/full scoring tests with >=1,000 randomized franchises across $155M–$220M and refined caps, and keep seed, code revision and aggregate distributions. Do not extrapolate Year 1 checks to championship outcomes.
 6. Select one cap from documented statistical results **after** all salaries and terms are confirmed. The true NBA 2026–27 league salary cap ($164.961M) is a context reference for this **seven-player** fictional game, not a gameplay target.
@@ -122,7 +122,7 @@ The limited pilot **does not show a reason to raise the cap from $155M**. Higher
 
 ## Explicitly out of scope for this staging PR
 
-This branch does NOT replace the live game prices, does NOT change the $155M cap, does NOT classify all 330 terms, does NOT deliver a three-season cap winner, does NOT run 1,000 actual backend three-season simulations and is NOT release-ready. PR #2367 merged into main while this audit was being prepared (November 1, 15:54:58 UTC); this new audit branch changes different files and PR #2368 targets the latest merged main. Preserve #2367's visuals/offseason parity when integrating.
+This branch does NOT replace the live game prices, does NOT change the $155M cap, does NOT classify all 330 terms, does NOT deliver a three-season cap winner, does NOT run 1,000 actual backend three-season simulations and is NOT release-ready. The unmerged private V4 calculation functions exist only behind a gate that is currently closed. PR #2367 merged into main while this audit was being prepared (November 1, 15:54:58 UTC); this new audit branch changes different files and PR #2368 targets the latest merged main. Preserve #2367's visuals/offseason parity when integrating.
 
 ## Source provenance
 
