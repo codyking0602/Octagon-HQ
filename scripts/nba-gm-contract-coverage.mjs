@@ -50,7 +50,7 @@ for(const row of records){
   if(!Number.isSafeInteger(start)||start<=0)errors.push("Missing or invalid 2026-27 candidate salary "+b.editorialId);
   if(row.real_contract_end_season){
     const m=/^(20\d\d)-(\d\d)$/.exec(row.real_contract_end_season);
-    if(!m||Number(m[2])!==Number(m[1])+1)errors.push("Invalid end season "+b.editorialId);
+    if(!m||Number(m[2])!==(Number(m[1])+1)%100)errors.push("Invalid end season "+b.editorialId);
     else if(row.proposed_contract!==(Number(m[1])>=2028?"3YR":"1YR"))
       errors.push("Wrong option-inclusive term "+b.editorialId);
   }else if(row.proposed_contract)errors.push("Term without expiry "+b.editorialId);
