@@ -1,0 +1,25 @@
+/* UFC Picks: automatic numbered-event holding state. Scoped to inactive cards. */
+.ufc-next-event-wrap{display:grid;gap:8px;min-width:0}
+.ufc-next-event{padding:0;overflow:hidden;border-radius:20px;background:linear-gradient(155deg,#19191b,#080809);border:1px solid #36373b;min-width:0}
+.ufc-next-event__art{position:relative;height:clamp(112px,31vw,166px);overflow:hidden;isolation:isolate;display:grid;place-items:center;background-image:linear-gradient(to bottom,rgba(0,0,0,.12),rgba(8,8,9,.25) 54%,#111113),var(--ufc-next-event-art,radial-gradient(ellipse at 50% 20%,#642322 0%,#241313 45%,#0a0a0b 78%));background-position:center;background-size:cover}
+.ufc-next-event__art::before{content:"";position:absolute;inset:38% 12% -24%;opacity:.65;transform:perspective(180px) rotateX(18deg);border:3px solid #3e4044;border-radius:40% 40% 25% 25%;background:repeating-linear-gradient(55deg,transparent 0 11px,#5a5b5d66 12px,transparent 13px 24px),repeating-linear-gradient(-55deg,transparent 0 11px,#55575a66 12px,transparent 13px 24px);box-shadow:0 0 55px #f8222233;z-index:-1}
+.ufc-next-event__art::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#09090960,transparent 20%,transparent 80%,#09090960),linear-gradient(0deg,#111113,transparent 70%);z-index:-1}
+.ufc-next-event__art span{font-size:clamp(24px,7vw,34px);font-weight:1000;font-style:italic;letter-spacing:-.06em;color:#fa373d;text-shadow:0 2px 10px #070707}
+.ufc-next-event__body{padding:8px clamp(16px,4vw,25px) 18px;display:grid;justify-items:center;gap:5px;text-align:center;min-width:0}
+.ufc-next-event__eyebrow{margin:0;color:#fa4248;font-size:10px;line-height:1.3;font-weight:900;letter-spacing:.17em}
+.ufc-next-event__body h2{margin:0;color:#fff;font-size:clamp(34px,9.6vw,52px);font-weight:1000;line-height:1.04;letter-spacing:-.045em;text-wrap:balance;overflow-wrap:anywhere}
+.ufc-next-event__matchup{color:#fafafa;font-size:clamp(15px,4.3vw,20px);font-weight:850;line-height:1.23;max-width:100%;text-wrap:balance}
+.ufc-next-event__date{margin:5px 0 0;color:#c8c8cc;font-size:12px;line-height:1.4;font-weight:750}
+.ufc-next-event__venue{margin:0;color:#87878f;font-size:10px;line-height:1.3;max-width:100%;overflow-wrap:anywhere}
+.ufc-next-event__divider{height:1px;background:linear-gradient(90deg,transparent,#4b2328 35%,#4b2328 65%,transparent);width:100%;margin:8px 0 3px}
+.ufc-next-event__timer-label{margin:0;color:#aaaab1;font-size:9px;letter-spacing:.15em;font-weight:950}
+.ufc-next-event__countdown{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:min(100%,320px);margin:2px auto 5px}
+.ufc-next-event__time{display:grid;justify-items:center;align-content:center;gap:0;min-width:0}
+.ufc-next-event__time+.ufc-next-event__time{border-left:1px solid #414148}
+.ufc-next-event__time strong{color:#fff;font-size:clamp(31px,8.4vw,43px);font-weight:950;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.ufc-next-event__time span{margin-top:6px;color:#9f9fa5;font-size:10px;font-weight:850;letter-spacing:.13em}
+.ufc-next-event__status{margin:6px 0 0;padding:7px 12px;border-radius:999px;background:#252528;color:#bdbdc3;font-size:11px;font-weight:750;line-height:1.35}
+.ufc-next-event__fallback{color:#bcbcc1;font-size:13px;line-height:1.4;margin:8px 0}
+.ufc-next-event__owner{justify-self:end;padding:3px 4px;color:#96969d;text-decoration:underline;text-underline-offset:3px;font-size:11px;font-weight:750}
+@media(max-width:360px){.ufc-next-event__art{height:108px}.ufc-next-event__body{padding:8px 13px 15px}.ufc-next-event__date{font-size:11px}.ufc-next-event__venue{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.ufc-next-event__art{scroll-behavior:auto}}
