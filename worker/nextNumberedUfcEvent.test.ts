@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   closestUpcomingNumberedEvent,
   numberedUfcEventLinks,
+  numberedEventScheduleFallback,
   type NextNumberedUfcEvent,
 } from "./nextNumberedUfcEvent";
 
@@ -40,6 +41,23 @@ describe("public numbered UFC Picks calendar", () => {
       card("UFC 334", "2026-11-15T02:00:00Z"),
       card("UFC 335", "2026-12-13T02:00:00Z"),
     ], new Date("2026-11-15T02:01:00Z"))?.name).toBe("UFC 335");
+  });
+
+  it("supports next-year numbered events before fights are booked, but only with official timing", () => {
+    const html = [
+      "<title>UFC 336 | UFC</title>",
+      '<h1>UFC 336</h1>',
+      '<div data-timestamp="2027-01-31T02:00:00Z">Sat, Jan 30 / 9:00 PM EST / Main Card</div>',
+      "<p>Main Card 9:00 PM EST</p>",
+    ].join("");
+    const event = numberedEventScheduleFallback(html, "https://www.ufc.com/event/ufc-336");
+    expect(event?.name).toBe("UFC 336");
+    expect(event?.startsAt).toBe("2027-01-31T02:00:00.000Z");
+    expect(event?.matchup).toBe("Main event to be announced");
+    expect(numberedEventScheduleFallback(
+      html.replace('data-timestamp="2027-01-31T02:00:00Z"', ""),
+      "https://www.ufc.com/event/ufc-336",
+    )).toBeNull();
   });
 
   it("does not invent a countdown for missing or invalid dates", () => {
