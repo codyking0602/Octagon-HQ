@@ -24,6 +24,8 @@ describe("Football GOTW notification breakdown deep links", () => {
     expect(serviceWorker).toContain('route = "/football/gotw?league=" + league');
     expect(serviceWorker).toContain('route.startsWith("/football/gotw?")');
     expect(serviceWorker).toContain('new URL(route, self.location.origin)');
+    expect(serviceWorker).toContain('if (route === "/football")');
+    expect(serviceWorker).toContain('event.notification.title ?? ""');
   });
 
   it("opens the existing published breakdown sheet without requiring a matching Picks slate", () => {
