@@ -1,0 +1,137 @@
+import { parseUfcEventPage } from "../supabase/functions/sync-next-ufc-event/ufcEventParser.ts";
+import { absoluteUfcEventUrl } from "../supabase/functions/sync-next-ufc-event/sourceUrls.ts";
+
+/**
+ * Public, read-only UFC Picks calendar. Discover the next numbered card from
+ * UFC's official event listing without staging or publishing it.
+ */
+const INDEX_URL = "https://www.ufc.com/events?language_content_entity=en";
+const UFC_HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+  Accept: "text/html,application/xhtml+xml",
+  "Accept-Language": "en-US,en;q=0.9",
+  Referer: "https://www.ufc.com/",
+};
+const MAX_CANDIDATES = 12;
+const MAX_HTML_LENGTH = 3_000_000;
+
+export interface NextNumberedUfcEvent {
+  name: string;
+  matchup: string;
+  startsAt: string;
+  venue: string;
+  location: string;
+  imageUrl: string | null;
+}
+
+function safeOfficialImageUrl(html: string) {
+  const metas = html.match(/<meta\b[^>]*>/gi) ?? [];
+  for (const tag of metas) {
+    const property = tag.match(/\b(?:property|name)\s*=\s*["']([^"']+)["']/i)?.[1] ?? "";
+    if (property.toLowerCase() !== "og:image") continue;
+    const src = tag.match(/\bcontent\s*=\s*["']([^"']+)["']/i)?.[1]?.replace(/&amp;/g, "&") ?? "";
+    try {
+      const url = new URL(src);
+      if (url.protocol === "https:" && (
+        url.hostname === "www.ufc.com"
+        || url.hostname === "ufc.com"
+        || url.hostname === "dmxg5wxfqgb4u.cloudfront.net"
+      )) return url.toString();
+    } catch { /* Invalid images fall back to the atmospheric card treatment. */ }
+  }
+  return null;
+}
+
+export function numberedUfcEventLinks(html: string) {
+  // UFC event slugs contain their numbered designation; this excludes Fight
+  // Nights, DWCS and Road to UFC without relying on surrounding marketing text.
+  const links = new Set<string>();
+  const anchors = /<a\b[^>]*\bhref\s*=\s*["']([^"']+)["'][^>]*>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = anchors.exec(html)) !== null) {
+    const url = absoluteUfcEventUrl(match[1]!.replace(/&amp;/g, "&"));
+    if (!url) continue;
+    if (!/^\/event\/ufc-\d{3}(?:-|$)/i.test(new URL(url).pathname)) continue;
+    links.add(url);
+  }
+  return [...links].slice(0, MAX_CANDIDATES);
+}
+
+export function closestUpcomingNumberedEvent(
+  candidates: NextNumberedUfcEvent[],
+  now = new Date(),
+): NextNumberedUfcEvent | null {
+  return candidates
+    .filter((event) => /^UFC \d{3}$/.test(event.name)
+      && Number.isFinite(Date.parse(event.startsAt))
+      && Date.parse(event.startsAt) > now.getTime())
+    .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt))[0] ?? null;
+}
+
+async function officialHtml(url: string, fetchImpl: typeof fetch) {
+  const abort = new AbortController();
+  const timeout = setTimeout(() => abort.abort(), 9000);
+  try {
+    const response = await fetchImpl(url, { headers: UFC_HEADERS, signal: abort.signal });
+    if (!response.ok) throw new Error("UFC source unavailable.");
+    const html = await response.text();
+    if (!html || html.length > MAX_HTML_LENGTH) throw new Error("UFC source content unavailable.");
+    return html;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function discoverNextNumberedUfcEvent(now = new Date(), fetchImpl: typeof fetch = fetch) {
+  const index = await officialHtml(INDEX_URL, fetchImpl);
+  const links = numberedUfcEventLinks(index);
+  if (!links.length) throw new Error("UFC numbered-event discovery unavailable.");
+  const candidates = await Promise.all(links.map(async (url) => {
+    try {
+      const html = await officialHtml(url, fetchImpl);
+      const parsed = parseUfcEventPage(html, url, "", now);
+      if (parsed.metadata.eventType !== "numbered") return null;
+      return {
+        name: parsed.metadata.name,
+        matchup: parsed.metadata.subtitle,
+        startsAt: parsed.metadata.starts_at,
+        venue: parsed.metadata.venue,
+        location: parsed.metadata.location,
+        imageUrl: safeOfficialImageUrl(html),
+      } satisfies NextNumberedUfcEvent;
+    } catch {
+      // Individual unfinished/revised cards must not block other official events.
+      return null;
+    }
+  }));
+  return closestUpcomingNumberedEvent(
+    candidates.filter((event): event is NextNumberedUfcEvent => event !== null),
+    now,
+  );
+}
+
+function jsonResponse(body: object, status: number, maxAge: number) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": status === 200
+        ? "public, max-age=" + maxAge + ", stale-while-revalidate=1800"
+        : "no-store",
+    },
+  });
+}
+
+export async function serveNextNumberedUfcEvent(request: Request, context?: { waitUntil(promise: Promise<unknown>): void }) {
+  const cache = (globalThis as unknown as { caches?: { default: Cache } }).caches?.default;
+  const cached = cache ? await cache.match(request) : null;
+  if (cached) return cached;
+  try {
+    const event = await discoverNextNumberedUfcEvent();
+    const response = jsonResponse({ event }, 200, event ? 1800 : 300);
+    if (cache && context) context.waitUntil(cache.put(request, response.clone()));
+    return response;
+  } catch {
+    return jsonResponse({ event: null, error: "UFC calendar temporarily unavailable" }, 503, 0);
+  }
+}
