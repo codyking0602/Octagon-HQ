@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import "./nextNumberedUfcEvent.css";
+import { numberedUfcCountdownArtwork } from "./numberedUfcCountdownArtwork";
 
 interface NumberedEvent {
   name: string;
@@ -36,6 +36,7 @@ export function NextNumberedUfcEvent({ canControl }: { canControl: boolean }) {
   const [event, setEvent] = useState<NumberedEvent | null>(null);
   const [loading, setLoading] = useState(true);
   const [now, setNow] = useState(() => Date.now());
+  const [failedArtwork, setFailedArtwork] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -73,15 +74,26 @@ export function NextNumberedUfcEvent({ canControl }: { canControl: boolean }) {
 
   const upcoming = event && Date.parse(event.startsAt) > now ? event : null;
   const countdown = upcoming ? countdownUnits(upcoming.startsAt, now) : null;
-  const style = upcoming?.imageUrl
-    ? ({ "--ufc-next-event-art": "url(" + JSON.stringify(upcoming.imageUrl) + ")" } as CSSProperties)
-    : undefined;
+  const candidateArtwork = numberedUfcCountdownArtwork(upcoming);
+  const artwork = candidateArtwork !== failedArtwork ? candidateArtwork : null;
 
   return (
     <div className="ufc-next-event-wrap">
       <section className="surface-card ufc-next-event" aria-label="Next UFC Picks event" aria-live="polite">
-        <div className="ufc-next-event__art" style={style} aria-hidden="true">
-          <span>UFC</span>
+        <div className={`ufc-next-event__art${artwork ? " has-artwork" : ""}`} aria-hidden="true">
+          {artwork ? (
+            <img
+              key={artwork}
+              className="ufc-next-event__poster"
+              src={artwork}
+              alt=""
+              loading="eager"
+              decoding="async"
+              onError={() => setFailedArtwork(artwork)}
+            />
+          ) : null}
+          <div className="ufc-next-event__arena" />
+          {!artwork ? <span>UFC</span> : null}
         </div>
         <div className="ufc-next-event__body">
           <p className="ufc-next-event__eyebrow">NEXT PICKS EVENT</p>
