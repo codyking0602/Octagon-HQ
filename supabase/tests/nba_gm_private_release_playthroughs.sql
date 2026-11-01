@@ -71,7 +71,7 @@ begin
       else 'bargain-heavy' end;
     v_state:=public.nba_gm_dev_action('start');
     v_seed:=v_state->>'seed';
-    if v_state->>'economyVersion'<>'3' or
+    if v_state->>'economyVersion'<>'4' or
        v_state->>'developmentModelVersion'<>'2' then
       raise exception 'Release playthrough did not use opt-in V4 model';end if;
     for v_round in 1..7 loop
