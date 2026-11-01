@@ -23,7 +23,7 @@ export const NOV07_2026_UFC_EVENT_ID =
   "ufc-fight-night-waldo-cortes-acosta-vs-johnny-walker-2026-11-07";
 
 export const november07ReviewedHeadshots: Readonly<Record<string, string>> = {
-  "johnny-walker": "/assets/fighters/johnny-walker-thumb.webp",
+  "johnny-walker": "/assets/fighters/johnny-walker-nov07-thumb.webp",
 };
 
 export const october31OfficialHeadshots: Readonly<Record<string, string>> = {
