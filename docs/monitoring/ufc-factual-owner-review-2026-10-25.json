@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "status": "draft-owner-review-unpublished",
+  "monitoredSport": "ufc",
+  "evidenceRecordedAt": "2026-10-26T02:19:28.824Z",
+  "sourceUrl": "https://www.ufc.com/rankings",
+  "sourceReportRun": "https://github.com/codyking0602/Octagon-HQ/actions/runs/40258479101",
+  "scope": "19 factual ranking observations, no inferred ability changes",
+  "publishAutomatically": false,
+  "authorityChangesApplied": 0,
+  "ratingChangesApplied": 0,
+  "historicalChangesApplied": 0,
+  "approvalsRequired": [
+    "Owner review before any UFC ranking authority changes",
+    "Cross-division and same-name identity verification",
+    "Retest Wheel ranking and gameplay authority before publishing"
+  ],
+  "proposedRankingFacts": [
+    {
+      "fighterId": "aiemann-zahabi",
+      "division": "Bantamweight",
+      "previousCanonical": {
+        "rank": 7,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 9,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "bryce-mitchell",
+      "division": "Bantamweight",
+      "previousCanonical": {
+        "rank": null,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 15,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "deiveson-figueiredo",
+      "division": "Bantamweight",
+      "previousCanonical": {
+        "rank": 9,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 12,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "marcus-mcghee",
+      "division": "Bantamweight",
+      "previousCanonical": {
+        "rank": 15,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 13,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "marlon-vera",
+      "division": "Bantamweight",
+      "previousCanonical": {
+        "rank": 10,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 11,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "payton-talbott",
+      "division": "Bantamweight",
+      "previousCanonical": {
+        "rank": 12,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 7,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "raul-rosas-jr",
+      "division": "Bantamweight",
+      "previousCanonical": {
+        "rank": 11,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 10,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "aleksandar-rakic",
+      "division": "Heavyweight",
+      "previousCanonical": {
+        "rank": 15,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 14,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "derrick-lewis",
+      "division": "Heavyweight",
+      "previousCanonical": {
+        "rank": 13,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 12,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "mario-pinto",
+      "division": "Heavyweight",
+      "previousCanonical": {
+        "rank": 14,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 15,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "alonzo-menifield",
+      "division": "Light Heavyweight",
+      "previousCanonical": {
+        "rank": 14,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 12,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "azamat-murzakanov",
+      "division": "Light Heavyweight",
+      "previousCanonical": {
+        "rank": 8,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 7,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "bogdan-guskov",
+      "division": "Light Heavyweight",
+      "previousCanonical": {
+        "rank": 11,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 10,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "dominick-reyes",
+      "division": "Light Heavyweight",
+      "previousCanonical": {
+        "rank": 10,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 8,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "muhammad-saidov",
+      "division": "Light Heavyweight",
+      "previousCanonical": {
+        "rank": null,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 13,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "reinier-de-ridder",
+      "division": "Light Heavyweight",
+      "previousCanonical": {
+        "rank": null,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 14,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "robert-whittaker",
+      "division": "Light Heavyweight",
+      "previousCanonical": {
+        "rank": 12,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 11,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "joaquin-buckley",
+      "division": "Welterweight",
+      "previousCanonical": {
+        "rank": 10,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 12,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    },
+    {
+      "fighterId": "mike-malott",
+      "division": "Welterweight",
+      "previousCanonical": {
+        "rank": 13,
+        "champion": false
+      },
+      "observedOfficial": {
+        "rank": 10,
+        "champion": false
+      },
+      "sourceUrl": "https://www.ufc.com/rankings",
+      "observedAt": "2026-10-26T02:19:28.824Z",
+      "classification": "factual-ranking-reconciliation-proposal",
+      "abilityChangeSuggested": false
+    }
+  ],
+  "otherIdentityExceptionsForFollowup": [
+    {
+      "name": "Michel Pereira",
+      "division": "Middleweight",
+      "sourceUrl": "https://www.ufc.com/athlete/michel-pereira",
+      "reportedProfileStatus": "Not Fighting",
+      "action": "Verify current UFC status independently; do not infer retirement/release"
+    },
+    {
+      "name": "Rinat Fakhretdinov",
+      "division": "Welterweight",
+      "sourceUrl": "https://www.ufc.com/athlete/rinat-fakhretdinov",
+      "reportedProfileStatus": "Not Fighting",
+      "action": "Verify current UFC status independently; do not infer retirement/release"
+    },
+    {
+      "name": "Muhammad Saidov",
+      "division": "Light Heavyweight",
+      "sourceUrl": "https://www.ufc.com/athlete/muhammad-saidov",
+      "reportedProfileStatus": "Profile identity unresolved via direct slug",
+      "action": "Official ranked-table matches #13; reconcile athlete URL/alias separately"
+    }
+  ],
+  "note": "Separate UFC profile observation job #2150 measured 39 official-active, 2 Not Fighting and 1 identity-unverified across 42 canonical unranked records. UFC ranks observation currently demonstrates 128/170 official-table matches, with all remaining source gaps retained. This review file is an audit proposal, NOT a final ranking or a deployable migration."
+}
