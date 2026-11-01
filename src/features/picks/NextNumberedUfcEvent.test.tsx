@@ -6,6 +6,7 @@ import { NextNumberedUfcEvent, countdownUnits } from "./NextNumberedUfcEvent";
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe("NextNumberedUfcEvent", () => {
@@ -32,6 +33,7 @@ describe("NextNumberedUfcEvent", () => {
   });
 
   it("displays the approved current-event poster and survives image CDN failures", async () => {
+    vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-10-31T23:00:00Z"));
     vi.stubGlobal("fetch", vi.fn(async () => ({
       ok: true,
       json: async () => ({ event: {
