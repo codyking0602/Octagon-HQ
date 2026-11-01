@@ -268,6 +268,7 @@ function jsonResponse(body: object, status: number, maxAge: number) {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
+      "Access-Control-Allow-Origin": "*",
       "Cache-Control": status === 200
         ? "public, max-age=" + maxAge + ", stale-while-revalidate=1800"
         : "no-store",
@@ -282,7 +283,7 @@ export async function serveNextNumberedUfcEvent(request: Request, context?: { wa
   try {
     const event = await discoverNextNumberedUfcEvent();
     const response = jsonResponse({ event }, 200, event ? 1800 : 300);
-    if (cache && context) context.waitUntil(cache.put(request, response.clone()));
+    if (event && cache && context) context.waitUntil(cache.put(request, response.clone()));
     return response;
   } catch {
     return jsonResponse({ event: null, error: "UFC calendar temporarily unavailable" }, 503, 0);
