@@ -107,5 +107,6 @@ begin
  raise notice 'NBA V5 600 seasons, mean owner %, posttrade %, contender %, weak %, owner champions % /150',
   round(v_total[1]/150,1),round(v_total[2]/150,1),
   round(v_total[3]/150,1),round(v_total[4]/150,1),v_champ;
-end $nba_competition$;
+end;
+$nba_competition$;
 rollback;
