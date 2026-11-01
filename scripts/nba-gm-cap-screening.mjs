@@ -9,7 +9,7 @@ import {readFileSync} from "node:fs";
 function parseCsv(s){let out=[],row=[],v="",quoted=false;for(let i=0;i<s.length;i++){const c=s[i];if(c==='"'){if(quoted&&s[i+1]==='"'){v+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(v);v=""}else if(c==='\n'&&!quoted){row.push(v.replace(/\r$/,""));if(row.length>1)out.push(row);row=[];v=""}else v+=c}const[h,...r]=out;return r.map(arr=>Object.fromEntries(h.map((x,i)=>[x,arr[i]])))}
 function pilot(board,src,N=160){
 const sal=new Map(src.map(s=>[s.stable_game_id,s.provisional_game_salary_usd===""?NaN:Number(s.provisional_game_salary_usd)]));
-const players=board.map(b=>({...b,salary:sal.get(b.editorialId)}));if(players.length!==330||players.some(x=>!Number.isSafeInteger(x.salary)))throw Error("Salary averaging incomplete: source-verified future seasons are missing. Refuse to screen a partial pool or silently fall back to first-year salaries.");
+const players=board.map(b=>({...b,salary:sal.get(b.editorialId)}));if(players.length!==330||players.some(x=>!Number.isSafeInteger(x.salary)||x.salary<=0))throw Error("Salary averaging incomplete: source-verified future seasons are missing. Refuse to screen a partial pool or silently fall back to first-year salaries.");
 const roles=["PG","SG","SF","PF","C","GUARD","BIG"],caps=[155,165,175,185,195,205,220].map(x=>x*1e6);
 const legal=(p,r)=>r==="GUARD"?p.candidatePositions.some(x=>["PG","SG"].includes(x)):r==="BIG"?p.candidatePositions.some(x=>["PF","C"].includes(x)):p.candidatePositions.includes(r);
 const positionPools=roles.map(r=>players.filter(p=>legal(p,r)));
