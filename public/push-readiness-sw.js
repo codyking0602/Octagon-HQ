@@ -1,3 +1,9 @@
+// Upgrade legacy GOTW notification taps without rewriting unrelated push types.
+function notificationClickDestination(route, title) {
+  const league = /^(NFL|CFB) Game of the Week starts soon$/i.exec(title?.trim?.() ?? "")?.[1]?.toLowerCase();
+  return route === "/football" && league ? `/football/picks?gotw=${league}` : route;
+}
+
 self.addEventListener("install", () => {
   self.skipWaiting();
 });
@@ -33,9 +39,10 @@ self.addEventListener("push", (event) => {
       ? payload.title.trim()
       : "Octagon HQ";
     const body = typeof payload.summary === "string" ? payload.summary : "You have a new update.";
-    const route = typeof payload.route === "string" && payload.route.startsWith("/")
+    const originalRoute = typeof payload.route === "string" && payload.route.startsWith("/")
       ? payload.route
       : "/notifications";
+    const route = notificationClickDestination(originalRoute, title);
     const icon = typeof payload.icon === "string"
       ? payload.icon
       : "https://codyking0602.github.io/ufc-goat-rankings/assets/app-icon.png";
@@ -57,10 +64,11 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   event.waitUntil((async () => {
-    const route = typeof event.notification.data?.route === "string"
+    const originalRoute = typeof event.notification.data?.route === "string"
       && event.notification.data.route.startsWith("/")
       ? event.notification.data.route
       : "/notifications";
+    const route = notificationClickDestination(originalRoute, event.notification.title);
     const targetUrl = new URL(route, self.location.origin).href;
     const windows = await self.clients.matchAll({
       type: "window",
