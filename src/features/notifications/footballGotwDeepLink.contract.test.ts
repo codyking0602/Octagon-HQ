@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  "supabase/migrations/202612310893_football_gotw_notification_deeplink.sql", "utf8",
+  "supabase/migrations/202612310902_football_gotw_notification_deeplink.sql", "utf8",
 );
 const serviceWorker = readFileSync("public/push-readiness-sw.js", "utf8");
 const router = readFileSync("src/app/router.tsx", "utf8");
