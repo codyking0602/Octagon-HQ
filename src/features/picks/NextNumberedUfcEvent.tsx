@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./nextNumberedUfcEvent.css";
-import { numberedUfcCountdownArtwork } from "./numberedUfcCountdownArtwork";
+import { numberedUfcCountdownArtworkCandidates } from "./numberedUfcCountdownArtwork";
 
 interface NumberedEvent {
   name: string;
@@ -36,7 +36,7 @@ export function NextNumberedUfcEvent({ canControl }: { canControl: boolean }) {
   const [event, setEvent] = useState<NumberedEvent | null>(null);
   const [loading, setLoading] = useState(true);
   const [now, setNow] = useState(() => Date.now());
-  const [failedArtwork, setFailedArtwork] = useState<string | null>(null);
+  const [failedArtwork, setFailedArtwork] = useState<string[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -74,8 +74,8 @@ export function NextNumberedUfcEvent({ canControl }: { canControl: boolean }) {
 
   const upcoming = event && Date.parse(event.startsAt) > now ? event : null;
   const countdown = upcoming ? countdownUnits(upcoming.startsAt, now) : null;
-  const candidateArtwork = numberedUfcCountdownArtwork(upcoming);
-  const artwork = candidateArtwork !== failedArtwork ? candidateArtwork : null;
+  const candidates = numberedUfcCountdownArtworkCandidates(upcoming);
+  const artwork = candidates.find((src) => !failedArtwork.includes(src)) ?? null;
 
   return (
     <div className="ufc-next-event-wrap">
@@ -89,7 +89,7 @@ export function NextNumberedUfcEvent({ canControl }: { canControl: boolean }) {
               alt=""
               loading="eager"
               decoding="async"
-              onError={() => setFailedArtwork(artwork)}
+              onError={() => setFailedArtwork((failed) => [...new Set([...failed, artwork])])}
             />
           ) : null}
           <div className="ufc-next-event__arena" />
