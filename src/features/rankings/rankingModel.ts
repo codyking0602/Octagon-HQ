@@ -55,6 +55,8 @@ export interface RankingVisibleStats {
   finishRatePct: number;
   primeRecord: string;
   roundsWonPct: number;
+  /** Audited prime-fight rounds supporting roundsWonPct (zero means no evidence). */
+  auditedPrimeRoundCount: number;
   activeEliteYears: number;
   timesFinishedPrime: number;
   throughPrimeUfcFights: number;
@@ -248,6 +250,7 @@ function deriveVisibleStats(
     roundsWonPct: roundTotal
       ? round2(((rounds.won + rounds.drawn * 0.5) / roundTotal) * 100)
       : 0,
+    auditedPrimeRoundCount: roundTotal,
     activeEliteYears: activeEliteYears(input, prime.fights),
     timesFinishedPrime,
     throughPrimeUfcFights: throughPrime.wins + throughPrime.losses + throughPrime.draws,
