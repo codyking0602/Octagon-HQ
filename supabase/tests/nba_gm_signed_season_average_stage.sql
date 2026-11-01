@@ -24,8 +24,8 @@ begin
          count(*) filter (where provisional_average_salary is null)
     into v_complete,v_missing
     from private.nba_gm_contract_candidates_2026_27;
-  if v_complete+v_missing<>330 or v_complete<1 or v_missing<1 then
-    raise exception 'All 330 staged, missing future salaries must remain unpriced: % / %',v_complete,v_missing;
+  if v_complete<>330 or v_missing<>0 then
+    raise exception 'All 330 staged sources now have provisional schedule averages, none source-certified: % / %',v_complete,v_missing;
   end if;
 
   select count(*) into v_bad
