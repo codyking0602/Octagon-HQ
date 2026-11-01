@@ -13,9 +13,14 @@ describe("event-specific verified UFC Picks headshot contract", () => {
       .toBeNull();
   });
 
-  it("leaves every unapproved November 7 fighter blank, even if a legacy local or ESPN URL exists", () => {
+  it("uses the individually reviewed owner-supplied Johnny portrait, not the corrupted ESPN CDN", () => {
+    expect(approvedUfcPicksHeadshot(NOV07_2026_UFC_EVENT_ID, "johnny-walker"))
+      .toBe("/assets/fighters/johnny-walker-thumb.webp");
+  });
+
+  it("leaves all remaining unapproved November 7 fighters blank despite legacy local files", () => {
     for (const slug of [
-      "waldo-cortes-acosta", "johnny-walker", "tatiana-suarez",
+      "waldo-cortes-acosta", "tatiana-suarez",
       "virna-jandiroba", "davey-grant", "elijah-smith",
       "seokhyeon-ko", "wellington-turman", "billy-elekana",
       "lucas-fernando", "mantas-kondratavicius", "andre-petroski",
