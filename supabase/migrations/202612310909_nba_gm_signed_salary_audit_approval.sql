@@ -4,6 +4,15 @@
 -- using SalarySwish contracts or BRef active-team payroll (waived deal overlap).
 -- Do not update 330 game IDs, historical V2/V3 salary snapshots or public GM access.
 -- If later signed contract data change, a new reviewed migration is required.
+-- BRef lists him as Ron Holland, while our identity is Ronald Holland II.
+-- Two current sources confirm his existing signed salary years and average.
+update private.nba_gm_contract_candidates_2026_27
+set salary_schedule_status='CURRENT_BREF_AND_SALARYSWISH_CROSSCHECKED',
+    salary_schedule_url='https://www.salaryswish.com/players/ron-holland-ii'
+where player_id='nba-gm-draft-ronaldholland'
+  and candidate_salary=9069600 and signed_salary_2027_28=11491183
+  and provisional_average_salary=10280392 and candidate_contract='1YR';
+
 do $verify_nba_gm_salary_audit$
 declare n integer; v_bad integer; v_years integer; v_actual bigint;
 begin
