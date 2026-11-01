@@ -51,10 +51,13 @@ begin
     return v_start;
   end if;
   -- Same existing conservative draft forecast shape; no seeded future outcome leak.
-  -- Provisional forecast never changes the verified Year 1 price.
+  -- Before development outcomes are revealed, reserve the existing V3 annual
+  -- market uplift (6.5%/12%). This is a known-model baseline, not a
+  -- made-up cap-balancing salary or the actual outcome from seeded repricing.
+  -- Calibration may determine stronger risk-aware future-year reserves.
   if coalesce(p_state->>'phase','draft') in ('draft','year1') then
     return greatest(2500000,
-      round(v_start*(case when p_year=2 then 1.05 else 1.10 end)/100000)*100000)::bigint;
+      round(v_start*(case when p_year=2 then 1.065 else 1.12 end)/100000)*100000)::bigint;
   end if;
   -- Realized V4 development grade is still exclusively server-authoritative.
   -- Reuse the existing v4 player-specific odds, seeded grade and market model.
