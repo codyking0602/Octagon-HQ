@@ -30,11 +30,21 @@ def main():
     for record in payload["players"]:
         by_name[normalize(record["name"])].append(record)
     result = {"sourceCount": len(payload["players"]), "candidateCount": len(candidates), "matched": 0, "missingSource": [], "mismatch": [], "multipleSourceMatches": [], "matchedExact": 0}
+    alias = {"Alexandre Sarr": "Alex Sarr", "Herb Jones": "Herbert Jones",
+             "Ronald Holland II": "Ron Holland", "Bobby Portis Jr.": "Bobby Portis",
+             "GG Jackson": "GG Jackson II", "Robert Williams III": "Robert Williams"}
+    result["potentialTermChanges"] = []
     for person in candidates:
-        choices = by_name[normalize(person["player_name"])]
+        choices = by_name[normalize(alias.get(person["player_name"], person["player_name"]))]
         if not choices:
             result["missingSource"].append({"name": person["player_name"], "id": person["stable_game_id"]})
             continue
+        if len(choices) > 1:
+            # One player may be repeated for waived/old-team cap bookkeeping.
+            # Identical schedule rows can be coalesced, but different money
+            # must be inspected instead of guessed.
+            unique = list({tuple(p["salaries"].get(y) for y in SEASONS): p for p in choices}.values())
+            choices = unique
         if len(choices) > 1:
             # Exact contract-price match narrows duplicate team/waiver obligations;
             # if still ambiguous, all source records must be reviewed manually.
@@ -46,6 +56,10 @@ def main():
                 result["multipleSourceMatches"].append({"name": person["player_name"], "sourceRows": choices})
                 continue
         source = choices[0]
+        # A real 2028-29 playing salary is evidence that a previously
+        # classified 1YR game contract may now be a 3YR after an extension.
+        if source["salaries"].get("2028-29") is not None and person["game_contract"] == "1YR":
+            result["potentialTermChanges"].append({"name":person["player_name"],"id":person["stable_game_id"],"gameTerm":person["game_contract"],"source":source})
         result["matched"] += 1
         conflicts = []
         for i, season in enumerate(SEASONS):
