@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Reproducible year-ONE candidate-price screen only. Not actual server-authoritative
+ * Reproducible year-ONE signed-season-AVERAGE salary screen only. Not actual server-authoritative
  * three-season gameplay or a cap recommendation. No simulation of real
  * development/repricing, trades, releases, FA or championships.
  * Usage: node scripts/nba-gm-cap-screening.mjs
@@ -8,8 +8,8 @@
 import {readFileSync} from "node:fs";
 function parseCsv(s){let out=[],row=[],v="",quoted=false;for(let i=0;i<s.length;i++){const c=s[i];if(c==='"'){if(quoted&&s[i+1]==='"'){v+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(v);v=""}else if(c==='\n'&&!quoted){row.push(v.replace(/\r$/,""));if(row.length>1)out.push(row);row=[];v=""}else v+=c}const[h,...r]=out;return r.map(arr=>Object.fromEntries(h.map((x,i)=>[x,arr[i]])))}
 function pilot(board,src,N=160){
-const sal=new Map(src.map(s=>[s.stable_game_id,Number(s.candidate_2026_27_salary_usd)]));
-const players=board.map(b=>({...b,salary:sal.get(b.editorialId)}));if(players.length!==330||players.some(x=>!Number.isSafeInteger(x.salary)))throw Error("source incomplete");
+const sal=new Map(src.map(s=>[s.stable_game_id,s.provisional_game_salary_usd===""?NaN:Number(s.provisional_game_salary_usd)]));
+const players=board.map(b=>({...b,salary:sal.get(b.editorialId)}));if(players.length!==330||players.some(x=>!Number.isSafeInteger(x.salary)))throw Error("Salary averaging incomplete: source-verified future seasons are missing. Refuse to screen a partial pool or silently fall back to first-year salaries.");
 const roles=["PG","SG","SF","PF","C","GUARD","BIG"],caps=[155,165,175,185,195,205,220].map(x=>x*1e6);
 const legal=(p,r)=>r==="GUARD"?p.candidatePositions.some(x=>["PG","SG"].includes(x)):r==="BIG"?p.candidatePositions.some(x=>["PF","C"].includes(x)):p.candidatePositions.includes(r);
 const positionPools=roles.map(r=>players.filter(p=>legal(p,r)));
@@ -39,8 +39,8 @@ spins+=spinCount;candidateOffers+=spinOffers;sum++;
 }
 output.push({cap:cap/1e6,attempts:sum,completed:success,draftCompletionPct:+(100*success/sum).toFixed(2),meanSalaryM:+(spent/success/1e6).toFixed(2),meanRoomM:+((cap-spent/success)/1e6).toFixed(2),meanRating:+(quality/success).toFixed(2),meanOffersPerSpin:+(candidateOffers/spins).toFixed(2),multipleElitePct:+(100*multi/success).toFixed(2),avgElites:+(stars/success).toFixed(2),emptyCandidateStates:empty});
 }
-return {kind:"PROVISIONAL YEAR-ONE ONLY / NOT THREE-SEASON / NOT CAP RECOMMENDATION",simulations:caps.length*N,strategies:methods,results:output};
+return {kind:"PROVISIONAL AVERAGED SALARY / YEAR-ONE ONLY / NOT THREE-SEASON / NOT CAP RECOMMENDATION",simulations:caps.length*N,strategies:methods,results:output};
 }
 const board=JSON.parse(readFileSync("docs/nba-gm-330-six-skills-PROVISIONAL-2026-10-29.json","utf8")).players;
-const salaryAudit=parseCsv(readFileSync("docs/nba-gm-contract-source-audit-2026-11-01.csv","utf8"));
+const salaryAudit=parseCsv(readFileSync("docs/nba-gm-three-season-salary-averages-2026-11-01.csv","utf8"));
 console.log(JSON.stringify(pilot(board,salaryAudit,160),null,2));
