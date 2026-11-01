@@ -329,7 +329,7 @@ async function verifyReviewedUfcHeadshots(origin, fetchFn = fetch) {
   for (const item of headshots) {
     const path = item?.path;
     if (typeof path !== "string"
-      || !/^\\/assets\\/fighters\\/[a-z0-9-]+-thumb\\.webp$/.test(path)) {
+      || !new RegExp("^/assets/fighters/[a-z0-9-]+-thumb[.]webp$").test(path)) {
       throw new Error("Reviewed UFC headshot path must be a canonical local WebP.");
     }
     const url = new URL(path, origin);
