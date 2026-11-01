@@ -1,7 +1,7 @@
 import { describe,expect,it } from "vitest";
 import { nbaGmDevAssignRoster,type NbaGmDevPlayer } from "./nbaGmDevModel";
 const mk=(id:string,grade:number,positions:Array<"PG"|"SG"|"SF"|"PF"|"C">)=>
-  ({id,currentGrade:grade,positions} as NbaGmDevPlayer);
+  ({id,currentGrade:grade,positions} as unknown as NbaGmDevPlayer);
 describe("NBA GM owner run: do not bench an elite center",()=>{
   it("automatically starts Jokic at C over Bona while preserving seven legal slots",()=>{
     const roster=[
