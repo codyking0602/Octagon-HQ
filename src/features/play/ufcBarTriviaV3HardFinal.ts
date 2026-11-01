@@ -27,7 +27,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "prompt": "Who defeated Wanderlei Silva in their high-profile light heavyweight bout at UFC 79?",
     "choices": [
       "Chuck Liddell",
-      "Wanderlei Silva",
+      "Tito Ortiz",
       "Rashad Evans",
       "Quinton Jackson"
     ],
@@ -405,7 +405,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "prompt": "Who scored a spinning-backfist knockout against Joanna Jedrzejczyk in their rematch at UFC 275?",
     "choices": [
       "Zhang Weili",
-      "Joanna Jedrzejczyk",
+      "Carla Esparza",
       "Rose Namajunas",
       "Jessica Andrade"
     ],
@@ -783,7 +783,7 @@ const authored: readonly BarTriviaQuestionSeed[] = [
     "prompt": "Which fighter submitted Dustin Poirier with a fourth-round D’Arce choke in their 2012 UFC fight?",
     "choices": [
       "Chan Sung Jung",
-      "Dustin Poirier",
+      "Ricardo Lamas",
       "Yair Rodriguez",
       "Max Holloway"
     ],
