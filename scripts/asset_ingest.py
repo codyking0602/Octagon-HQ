@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import ipaddress
 import json
 import os
@@ -621,6 +622,49 @@ def source_publisher_band(im):
     return False
 
 
+# A manual inspection rejected this exact original-only WebP twice (#2352,
+# #2354). Keep it out of all generated-asset PRs even if an alpha heuristic
+# misses a subtle publisher panel. Different verified clean photos remain eligible.
+VISUALLY_REJECTED_THUMB_BLOBS = {
+    "64f29f5a3427f390edc15bc07e68b5064768ac36",  # first reviewed official source
+    "e6ec8d8e3c9572856bd48bdc5eab3fd2ee3bc117",  # second reviewed official source
+}
+
+
+def source_thumb_blob_is_rejected(payload):
+    blob_hash = hashlib.sha1(
+        b"blob " + str(len(payload)).encode("ascii") + b"\x00" + payload
+    ).hexdigest()
+    return blob_hash in VISUALLY_REJECTED_THUMB_BLOBS
+
+
+def broad_upper_side_alpha_panel(im):
+    """Reject colored/gradient publisher panels even without flat RGB strips.
+
+    An official face-dominant headshot should have transparent upper sides.
+    A contiguous upper-side block with alpha across several x positions
+    indicates an existing publisher background, not a clean fighter cutout.
+    """
+    alpha = im.getchannel("A")
+    width, height = im.size
+    if width < 40 or height < 40:
+        return True
+    begin, end = round(height * 0.07), round(height * 0.46)
+    for side in ("left", "right"):
+        xs = (
+            (round(width * 0.08), round(width * 0.17), round(width * 0.27))
+            if side == "left"
+            else (round(width * 0.73), round(width * 0.83), round(width * 0.92))
+        )
+        filled_rows = 0
+        for y in range(begin, end):
+            if sum(alpha.getpixel((x, y)) >= 8 for x in xs) >= 2:
+                filled_rows += 1
+        if filled_rows > (end - begin) * 0.34:
+            return True
+    return False
+
+
 def require_clean_original_thumb(im):
     """Only use an already-transparent, genuine official headshot.
 
@@ -641,7 +685,8 @@ def require_clean_original_thumb(im):
     if (upper_side_background_band(im)
             or inset_side_background_panels(im)
             or horizontal_publisher_strips(im)
-            or source_publisher_band(im)):
+            or source_publisher_band(im)
+            or broad_upper_side_alpha_panel(im)):
         fail("thumbnail original retains a publisher background panel; try another official source")
     if image_looks_like_silhouette(im):
         fail("thumbnail original is a placeholder/silhouette")
@@ -751,8 +796,10 @@ def ingest_fighter_candidate(spec, kind, dest, size):
     if check.size != size or check.getchannel("A").getextrema() == (255, 255):
         fail("finished asset failed dimension/alpha gate")
     quality = validate_asset_quality(check, kind)
-    if kind == "thumb" and source_publisher_band(check):
+    if kind == "thumb" and (source_publisher_band(check) or broad_upper_side_alpha_panel(check)):
         fail("finished thumbnail retains a publisher band")
+    if kind == "thumb" and source_thumb_blob_is_rejected(encoded.getvalue()):
+        fail("finished thumbnail matches a previously visually rejected publisher-panel photo")
 
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     with open(dest, "wb") as handle:
