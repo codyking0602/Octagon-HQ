@@ -57,6 +57,41 @@ for(const row of records){
   if(!row.source_url||!/^https:\/\//.test(row.source_url))errors.push("Missing source "+b.editorialId);
   if(!row.verification_status)errors.push("Missing verification status "+b.editorialId);
 }
+// Owner-approved salary basis: average only the actually signed 2026-27 onward
+// seasons inside NBA GM's three-season window. Unknown future salary is NOT zero.
+const scheduleRecords=parseCSV(data("docs/nba-gm-three-season-salary-averages-2026-11-01.csv"));
+const schedules=new Map(scheduleRecords.map(r=>[r.stable_game_id,r]));
+if(scheduleRecords.length!==330||schedules.size!==330)
+  errors.push("Three-season annualized source must cover exactly 330 unique identities");
+let averagedComplete=0,scheduleVerified=0;
+for(const row of records){
+  const s=schedules.get(row.stable_game_id);
+  if(!s){errors.push("No three-season salary schedule for "+row.stable_game_id);continue}
+  if(s.player_name!==row.player_name||s.game_team!==row.game_team||
+      s.game_contract!==row.proposed_contract||
+      s.real_contract_end_season!==row.real_contract_end_season||
+      Number(s.salary_2026_27_usd)!==Number(row.candidate_2026_27_salary_usd))
+    errors.push("Schedule identity, term, or first-year mismatch "+row.stable_game_id);
+  const expectedYears=Math.min(3,Math.max(1,Number(row.real_contract_end_season.slice(0,4))-2026+1));
+  if(Number(s.seasons_to_average)!==expectedYears)
+    errors.push("Wrong contracted averaging window "+row.stable_game_id);
+  const annual=[s.salary_2026_27_usd,s.salary_2027_28_usd,s.salary_2028_29_usd]
+    .slice(0,expectedYears).map(x=>x===""?NaN:Number(x));
+  const complete=annual.every(v=>Number.isSafeInteger(v)&&v>0);
+  const expected=complete?Math.round(annual.reduce((a,b)=>a+b,0)/expectedYears):null;
+  if(complete)averagedComplete++;
+  if(s.provisional_game_salary_usd!== (expected===null?"":String(expected)))
+    errors.push("Wrong annualized salary or missing year treated as zero "+row.stable_game_id);
+  if(s.independently_verified==="true")scheduleVerified++;
+  if(!/^https:\/\//.test(s.schedule_source_url))
+    errors.push("Unattributed contract schedule "+row.stable_game_id);
+}
+const nfl=JSON.parse(data("data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json"));
+const nflCounts={oneYear:nfl.players.filter(p=>p.gameContract==="1YR").length,
+ threeYear:nfl.players.filter(p=>p.gameContract==="3YR").length};
+if(nflCounts.oneYear+nflCounts.threeYear!==nfl.players.length)
+  errors.push("NFL source includes unidentified game terms");
+
 const verified=records.filter(r=>r.verification_status==="VERIFIED_INDEPENDENT"&&r.proposed_contract);
 const byStatus=Object.fromEntries([...new Set(records.map(r=>r.verification_status))].sort().map(
   k=>[k,records.filter(r=>r.verification_status===k).length]));
@@ -68,8 +103,14 @@ const report={
     threeYear:records.filter(r=>r.original_contract==="3YR").length},
   proposedResolvedTermCounts:{oneYear:records.filter(r=>r.proposed_contract==="1YR").length,
     threeYear:records.filter(r=>r.proposed_contract==="3YR").length},
+  nflGameContracts:{players:nfl.players.length,...nflCounts,
+    oneYearPct:Number((100*nflCounts.oneYear/nfl.players.length).toFixed(1)),
+    threeYearPct:Number((100*nflCounts.threeYear/nfl.players.length).toFixed(1))},
+  nbaAveraging:{players:scheduleRecords.length,complete:averagedComplete,
+    missingScheduledSalaries:scheduleRecords.length-averagedComplete,
+    independentlyVerified:scheduleVerified},
   structuralErrors:errors,
-  economyActivationReady:errors.length===0&&verified.length===330
+  economyActivationReady:errors.length===0&&verified.length===330&&averagedComplete===330&&scheduleVerified===330
 };
 console.log(JSON.stringify(report,null,2));
 if(errors.length||process.argv.includes("--strict")&&!report.economyActivationReady)process.exitCode=1;
