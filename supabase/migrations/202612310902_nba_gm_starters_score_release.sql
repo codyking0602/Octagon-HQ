@@ -109,9 +109,11 @@ begin
   end if;
   -- Only new V4-development franchises use the tighter +/-3 win variance.
   -- Legacy seeds and completed saves keep their original +/-5 calculation.
-  v_noise:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_year),1,8))::bit(32)::int::bigint)
-    %case when p_state->>'economyVersion'='3' and p_state->>'developmentModelVersion'='2' then 7 else 11 end)::integer
-    -case when p_state->>'economyVersion'='3' and p_state->>'developmentModelVersion'='2' then 3 else 5 end;
+  v_noise:=(abs(('x'||substr(md5(p_state->>'seed'||':'||p_year),1,8))::bit(32)::int::bigint)%11)::integer-5;
+  -- Clamp the SAME old seed roll, rather than changing the modulo and
+  -- making a formerly unlucky franchise suddenly lucky (or vice versa).
+  if p_state->>'economyVersion'='3' and p_state->>'developmentModelVersion'='2'
+    then v_noise:=greatest(-3,least(3,v_noise)); end if;
   -- The 150 historical team-seasons establish W = 40.9983 + 2.2684
   -- times OBSERVED net rating on a 2025–26 walk-forward holdout.
   -- The seven-athlete skill -> estimated net rating mapping below remains
