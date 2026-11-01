@@ -13,6 +13,13 @@
 export const OCT31_2026_UFC_EVENT_ID =
   "ufc-fight-night-renato-moicano-vs-tom-nolan-2026-10-31";
 
+// November 7 is still preproduction: no fighter has a visually approved,
+// production-verified clean original UFC/ESPN headshot. Fail closed rather
+// than exposing older local/remote cutouts when this card is later staged.
+// Add exact, reviewed official URLs only after the asset and live-photo gates.
+export const NOV07_2026_UFC_EVENT_ID =
+  "ufc-fight-night-waldo-cortes-acosta-vs-johnny-walker-2026-11-07";
+
 export const october31OfficialHeadshots: Readonly<Record<string, string>> = {
   "renato-moicano": "https://a.espncdn.com/i/headshots/mma/players/full/3028863.png",
   "tom-nolan": "https://a.espncdn.com/i/headshots/mma/players/full/5144007.png",
@@ -34,6 +41,7 @@ export const october31FighterSlugs = [
 
 /** undefined = another event; null = this fighter must display missing image. */
 export function approvedUfcPicksHeadshot(eventId: string, fighterSlug: string): string | null | undefined {
+  if (eventId === NOV07_2026_UFC_EVENT_ID) return null;
   if (eventId !== OCT31_2026_UFC_EVENT_ID) return undefined;
   return october31OfficialHeadshots[fighterSlug] ?? null;
 }
