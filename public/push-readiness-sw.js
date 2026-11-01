@@ -63,10 +63,18 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   event.waitUntil((async () => {
-    const route = typeof event.notification.data?.route === "string"
+    let route = typeof event.notification.data?.route === "string"
       && event.notification.data.route.startsWith("/")
       ? event.notification.data.route
       : "/notifications";
+    // Notifications already displayed before this release still carry /football.
+    // Their OS notification title is enough to recover the proper sport sheet.
+    if (route === "/football") {
+      const title = event.notification.title ?? "";
+      const league = /^NFL Game of the Week starts soon$/i.test(title)
+        ? "nfl" : /^CFB Game of the Week starts soon$/i.test(title) ? "cfb" : null;
+      if (league) route = "/football/gotw?league=" + league;
+    }
     const targetUrl = new URL(route, self.location.origin).href;
     const windows = await self.clients.matchAll({
       type: "window",
