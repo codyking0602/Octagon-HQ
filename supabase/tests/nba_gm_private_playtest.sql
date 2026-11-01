@@ -1,4 +1,4 @@
--- Owner-only NBA GM V3 Football parity lifecycle. Transactional fixture; no production changes.
+-- Owner-only NBA GM V4 contract-window lifecycle, preserving original V3 saves. Transactional fixture; no production changes.
 begin;
 select set_config('request.jwt.claim.role','service_role',true);
 do $$
@@ -31,10 +31,10 @@ begin
   if v_state->>'developmentModelVersion'<>'2' then
     raise exception 'New NBA GM runs must opt into individual development model 2';
   end if;
-  if v_state->>'version'<>'nba-gm-dev-v2' or v_state->>'economyVersion'<>'3'
+  if v_state->>'version'<>'nba-gm-dev-v2' or v_state->>'economyVersion'<>'4'
     or v_state->>'phase'<>'draft'
     or v_state->'caps' is distinct from '[155000000,155000000,155000000]'::jsonb
-    or v_state->>'pendingSlot' is not null then raise exception 'V3 parity start invalid'; end if;
+    or v_state->>'pendingSlot' is not null then raise exception 'V4 owner start invalid'; end if;
   if (select count(*) from private.nba_gm_dev_players where verified_birth_date is not null)<>301
     then raise exception 'Age provenance must be exactly 301 verified birthdates'; end if;
   -- Old V2 saves keep the historical agreement and do not gain V3 development.
