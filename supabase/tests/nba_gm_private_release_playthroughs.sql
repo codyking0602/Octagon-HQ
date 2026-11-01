@@ -175,6 +175,19 @@ begin
         where r.profile_id=v_owner and r.game_version='nba-gm-dev-v2'
           and r.seed=v_seed limit 1) is distinct from v_state then
       raise exception 'Final seed-specific franchise did not persist %',v_name;end if;
+    -- Every successful owner action must have one named, private audit event
+    -- alongside its canonical snapshot. Include start and final advance.
+    if (select count(*) from private.nba_gm_dev_action_events e
+          join private.football_gm_runs r on r.id=e.run_id where r.seed=v_seed)
+        <> (select count(*) from private.football_gm_run_snapshots snap
+          join private.football_gm_runs r on r.id=snap.run_id where r.seed=v_seed)
+       or not exists(select 1 from private.nba_gm_dev_action_events e
+          join private.football_gm_runs r on r.id=e.run_id
+          where r.seed=v_seed and e.action='start' and e.revision=1)
+       or not exists(select 1 from private.nba_gm_dev_action_events e
+          join private.football_gm_runs r on r.id=e.run_id
+          where r.seed=v_seed and e.action='advance')
+    then raise exception 'Private action history is incomplete for %',v_name;end if;
     select string_agg(pick->>'slot'||':'||p.name||' ('||p.overall||')',', '
       order by array_position(array['PG','SG','SF','PF','C','GUARD','BIG'],pick->>'slot'))
       into v_roster_summary from jsonb_array_elements(v_picks) pick
