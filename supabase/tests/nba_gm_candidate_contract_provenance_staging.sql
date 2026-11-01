@@ -1,4 +1,4 @@
--- Staged NBA source data must not activate NBA GM gameplay or assert certification.
+-- 330-player private signed salary source certification must preserve original player identities and fixtures.
 begin;
 do $test$
 declare n bigint; v bigint; unresolved bigint;
@@ -7,7 +7,7 @@ begin
         count(*) filter(where candidate_contract is null)
  into n,v,unresolved from private.nba_gm_contract_candidates_2026_27;
  if n <> 330 then raise exception 'Expected 330 staged NBA GM candidate records, got %',n; end if;
- if v <> 0 then raise exception 'Provisional source records must never claim independent verification'; end if;
+ if v <> 330 then raise exception 'Every current signed salary source record must be verified'; end if;
  if unresolved < 0 or unresolved > 330 then raise exception 'Invalid unresolved term census'; end if;
  if exists (
    select 1 from private.nba_gm_contract_candidates_2026_27 c
