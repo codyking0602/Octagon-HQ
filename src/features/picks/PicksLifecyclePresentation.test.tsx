@@ -273,7 +273,7 @@ describe("Picks lifecycle presentation", () => {
 
   it("does not present a completed event as the active upcoming card", async () => {
     renderPage(repository({ currentEvent: completeEvent }));
-    expect(await screen.findByText("NO ACTIVE CARD")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "NEXT NUMBERED UFC EVENT" })).toBeInTheDocument();
     expect(screen.queryByText("NEXT UFC EVENT")).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: completeEvent.name })).not.toBeInTheDocument();
   });
