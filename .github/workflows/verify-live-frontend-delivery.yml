@@ -60,6 +60,9 @@ jobs:
       - name: Prove live shell CSS and JavaScript delivery
         run: node scripts/verify-live-frontend-delivery.mjs
 
+      - name: Verify live numbered UFC Picks countdown source
+        run: node scripts/verify-next-numbered-ufc-live.mjs
+
       - name: Record exact delivery proof
         shell: bash
         run: |
