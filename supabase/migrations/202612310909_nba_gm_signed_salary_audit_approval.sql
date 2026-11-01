@@ -35,7 +35,7 @@ begin
  if v_bad<>0 then raise exception 'NBA GM audited salary math/identity invalid for % players',v_bad;end if;
  select count(*) into v_bad from private.nba_gm_contract_candidates_2026_27
  where salary_schedule_status is null or salary_schedule_status='INCOMPLETE_NO_MATCHING_FUTURE_SCHEDULE';
- if v_bad<>0 then raise exception 'NBA salary window still incomplete for % players',v_bad;end if;
+ if v_bad<>0 then raise exception 'NBA salary window still incomplete for % players: %',v_bad,(select string_agg(player_id||':'||coalesce(salary_schedule_status,'NULL'),', ') from private.nba_gm_contract_candidates_2026_27 where salary_schedule_status is null or salary_schedule_status='INCOMPLETE_NO_MATCHING_FUTURE_SCHEDULE');end if;
  if not exists (select 1 from private.nba_gm_contract_candidates_2026_27
      where player_id='nba-gm-draft-victorwembanyama' and candidate_contract='3YR'
       and provisional_average_salary=35782749 and candidate_salary=16868246
