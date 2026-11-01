@@ -33,9 +33,15 @@ self.addEventListener("push", (event) => {
       ? payload.title.trim()
       : "Octagon HQ";
     const body = typeof payload.summary === "string" ? payload.summary : "You have a new update.";
-    const route = typeof payload.route === "string" && payload.route.startsWith("/")
+    let route = typeof payload.route === "string" && payload.route.startsWith("/")
       ? payload.route
       : "/notifications";
+    // Route legacy GOTW payloads directly into the published matchup sheet,
+    // without rewriting unrelated notification destinations.
+    if (payload.kind === "football_gotw_starting" && !route.startsWith("/football/gotw?")) {
+      const league = /^NFL\\b/i.test(title) ? "nfl" : /^CFB\\b/i.test(title) ? "cfb" : null;
+      if (league) route = "/football/gotw?league=" + league;
+    }
     const icon = typeof payload.icon === "string"
       ? payload.icon
       : "https://codyking0602.github.io/ufc-goat-rankings/assets/app-icon.png";
