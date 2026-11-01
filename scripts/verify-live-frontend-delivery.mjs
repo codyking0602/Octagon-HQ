@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 const SHA_PATTERN = /^[0-9a-f]{40}$/i;
 const DEFAULT_ORIGIN = "https://the.hq-app.workers.dev";
 const DEFAULT_ATTEMPTS = 12;
@@ -317,6 +318,44 @@ export async function verifyLiveFrontendDelivery({
     : new Error("Live frontend delivery verification failed.");
 }
 
+async function verifyReviewedUfcHeadshots(origin, fetchFn = fetch) {
+  const manifest = JSON.parse(
+    readFileSync("public/assets/fighters/reviewed-ufc-headshots.json", "utf8"),
+  );
+  const headshots = manifest?.headshots;
+  if (!Array.isArray(headshots)) {
+    throw new Error("Reviewed UFC headshots manifest must contain an array.");
+  }
+  for (const item of headshots) {
+    const path = item?.path;
+    if (typeof path !== "string"
+      || !/^\\/assets\\/fighters\\/[a-z0-9-]+-thumb\\.webp$/.test(path)) {
+      throw new Error("Reviewed UFC headshot path must be a canonical local WebP.");
+    }
+    const url = new URL(path, origin);
+    url.searchParams.set("verification", Date.now().toString());
+    const response = await fetchNoCache(url, fetchFn);
+    if (!response.ok) {
+      throw new Error(`Reviewed UFC headshot ${path} returned HTTP ${response.status}.`);
+    }
+    const type = response.headers.get("content-type")?.toLowerCase() ?? "";
+    if (!type.includes("image/webp")) {
+      throw new Error(`Reviewed UFC headshot ${path} returned ${type || "no content type"}.`);
+    }
+    const bytes = Buffer.from(await response.arrayBuffer());
+    if (bytes.length < 4_000
+      || bytes.subarray(0, 4).toString("ascii") !== "RIFF"
+      || bytes.subarray(8, 12).toString("ascii") !== "WEBP") {
+      throw new Error(`Reviewed UFC headshot ${path} is not a valid portrait WebP.`);
+    }
+    const [width, height] = webpDimensions(bytes);
+    if (width !== 320 || height !== 320) {
+      throw new Error(`Reviewed UFC headshot ${path} is ${width}x${height}, expected 320x320.`);
+    }
+  }
+  return headshots.length;
+}
+
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
   const result = await verifyLiveFrontendDelivery({
     origin: process.env.FRONTEND_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN,
@@ -324,6 +363,10 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
     attempts: Number(process.env.FRONTEND_DELIVERY_ATTEMPTS ?? DEFAULT_ATTEMPTS),
     delayMs: Number(process.env.FRONTEND_DELIVERY_DELAY_MS ?? DEFAULT_DELAY_MS),
   });
+  const reviewedUfcPhotos = await verifyReviewedUfcHeadshots(
+    process.env.FRONTEND_PRODUCTION_ORIGIN ?? DEFAULT_ORIGIN,
+  );
+  console.log(`PASS: ${reviewedUfcPhotos} individually reviewed UFC headshot(s) returned live 320x320 WebP.`);
   const auctionProof = result.auctionFormatAssets
     ? `; verified ${result.auctionFormatAssets} Auction format WebPs`
     : "";
