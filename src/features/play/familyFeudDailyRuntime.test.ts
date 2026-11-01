@@ -238,6 +238,32 @@ describe("Family Feud V2 Daily persistence contract", () => {
     }
   });
 
+  it("credits NBA broadcast Fast Money answers in an already-published immutable pack", () => {
+    const persistedPack: FamilyFeudPack = {
+      ...pack,
+      sport: "nba",
+      fastMoney: pack.fastMoney.map((question, index) => index === 0
+        ? { ...question, id: "nba-feud-nba-tv-broadcast",
+            prompt: "Name something you might see or hear during an NBA TV broadcast." }
+        : question),
+    };
+    const publication = buildFamilyFeudDailySetup(
+      persistedPack, "2026-11-01", "nba-daily-regular-v3-oct30-public",
+    );
+    for (const answer of ["3 Pointer", "Three point shot", "Slam dunk", "Free throw", "Buzzer-beater", "Referee whistle"]) {
+      const { submission } = strikeOutBothBoards(publication);
+      const result = advanceFamilyFeudDailyRuntime(context(publication, submission), {
+        type: "answer", answer, question_id: "nba-feud-nba-tv-broadcast",
+        question_index: 0, time_remaining_ms: 40_000,
+      });
+      const state = result.submissionState.engine_state as {
+        fastMoneyResults: Array<{ points: number; matchKind: string }>;
+      };
+      expect(state.fastMoneyResults[0]?.points, answer).toBe(1);
+      expect(publication.privateSetupEvidence.proof).toBeTruthy();
+    }
+  });
+
   it("reveals a found answer in the next visible slot while the remaining three stay hidden", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const result = advanceFamilyFeudDailyRuntime(

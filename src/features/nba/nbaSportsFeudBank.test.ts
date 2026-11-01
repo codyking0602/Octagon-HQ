@@ -216,6 +216,17 @@ describe("NBA Sports Feud curated-bank and unchanged engine contract", () => {
     expect(familyFeudScore(pack, state).hq).toBe(0);
   });
 
+  it("accepts 3 Pointer as an off-board NBA broadcast Fast Money answer", () => {
+    const pack = findSeed("nba-tv-broadcast", "fast");
+    const question = pack.fastMoney.find((row) => row.id === "nba-feud-nba-tv-broadcast")!;
+    const result = matchFamilyFeudAnswer(pack, question, "3 Pointer");
+    expect(result.status).toBe("matched");
+    if (result.status === "matched") {
+      expect(question.alsoAcceptedEntityIds).toContain(result.entityId);
+      expect(pack.entities.find((entity) => entity.id === result.entityId)?.displayName).toBe("Three-pointer");
+    }
+  });
+
   it("limits Fast Money to five responses with one point for a defensible off-board answer", () => {
     const pack = findSeed("lakers-legends", "fast");
     let state = createFamilyFeudState();

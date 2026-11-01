@@ -405,6 +405,39 @@ function hydrateUfcGrapplingAcceptance(pack: FamilyFeudPack): FamilyFeudPack {
   };
 }
 
+
+/** Supply fair off-board answers to already-published NBA broadcast boards.
+ * The official board/proof/ranked top eight remain untouched. */
+function hydrateNbaBroadcastAnswers(pack: FamilyFeudPack): FamilyFeudPack {
+  if (pack.sport !== "nba") return pack;
+  const id = "nba-feud-nba-tv-broadcast";
+  if (!pack.fastMoney.some((question) => question.id === id)) return pack;
+  const entities = [...pack.entities];
+  const fastMoney = pack.fastMoney.map((question) => {
+    if (question.id !== id) return question;
+    const candidateIds = [...question.candidateIds];
+    const alsoAcceptedEntityIds = [...(question.alsoAcceptedEntityIds ?? [])];
+    const additions: ReadonlyArray<readonly [string, readonly string[]]> = [["Three-pointer",["3 pointer","3pt","3 point shot","Three point shot"]],["Dunk",["Slam dunk","Dunk shot"]],["Free throw",["Foul shot"]],["Layup",["Lay up"]],["Buzzer-beater",["Buzzer beater","Game-winning shot"]],["Referee whistle",["Whistle"]],["Crowd cheering",["Fans cheering"]],["Basketball action",["Game action","Live basketball"]]];
+    for (const [name, aliases] of additions) {
+      const existingIndex = entities.findIndex((entity) =>
+        candidateIds.includes(entity.id) && entity.displayName.toLowerCase() === name.toLowerCase());
+      if (existingIndex >= 0) {
+        const existing = entities[existingIndex]!;
+        entities[existingIndex] = { ...existing, aliases: [...new Set([...(existing.aliases ?? []), ...aliases])] };
+        continue;
+      }
+      let suffix = 9;
+      while (entities.some((entity) => entity.id === id + ":v" + suffix)) suffix += 1;
+      const entityId = id + ":v" + suffix;
+      entities.push({ id: entityId, displayName: name, kind: "other", aliases });
+      candidateIds.push(entityId);
+      alsoAcceptedEntityIds.push(entityId);
+    }
+    return { ...question, candidateIds, alsoAcceptedEntityIds };
+  });
+  return { ...pack, entities, fastMoney };
+}
+
 export type FamilyFeudEntityMetadataLookup = (
   id: string,
   displayName: string,
@@ -434,7 +467,7 @@ function privatePack(
       };
     }),
   };
-  const corrected = hydrateUfcGrapplingAcceptance(pack);
+  const corrected = hydrateNbaBroadcastAnswers(hydrateUfcGrapplingAcceptance(pack));
   assertFamilyFeudPack(corrected);
   return corrected;
 }
