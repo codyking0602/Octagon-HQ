@@ -1,0 +1,52 @@
+import { describe, expect, it } from "vitest";
+import {
+  closestUpcomingNumberedEvent,
+  numberedUfcEventLinks,
+  type NextNumberedUfcEvent,
+} from "./nextNumberedUfcEvent";
+
+function card(name: string, startsAt: string): NextNumberedUfcEvent {
+  return { name, startsAt, matchup: "Red vs. Blue", venue: "", location: "", imageUrl: null };
+}
+
+describe("public numbered UFC Picks calendar", () => {
+  it("discovers only numbered UFC event URLs and deduplicates index links", () => {
+    const html = [
+      '<a href="/event/ufc-fight-night-november-7-2026">Fight Night</a>',
+      '<a href="/event/ufc-334-gane-vs-hokit">UFC 334</a>',
+      '<a href="https://www.ufc.com/event/ufc-334-gane-vs-hokit">UFC 334 duplicate</a>',
+      '<a href="/event/ufc-335-oliveira-vs-lopes">UFC 335</a>',
+      '<a href="https://evil.example/event/ufc-336">Not official</a>',
+      '<a href="/event/road-to-ufc-334">Not a numbered event</a>',
+    ].join("");
+    expect(numberedUfcEventLinks(html)).toEqual([
+      "https://www.ufc.com/event/ufc-334-gane-vs-hokit",
+      "https://www.ufc.com/event/ufc-335-oliveira-vs-lopes",
+    ]);
+  });
+
+  it("chooses nearest future numbered card regardless of source order", () => {
+    const now = new Date("2026-10-31T22:00:00Z");
+    expect(closestUpcomingNumberedEvent([
+      card("UFC 335", "2026-12-13T02:00:00Z"),
+      card("UFC Fight Night", "2026-11-08T01:00:00Z"),
+      card("UFC 333", "2026-10-25T02:00:00Z"),
+      card("UFC 334", "2026-11-15T02:00:00Z"),
+    ], now)?.name).toBe("UFC 334");
+  });
+
+  it("rolls to the next numbered card automatically after fight night begins", () => {
+    expect(closestUpcomingNumberedEvent([
+      card("UFC 334", "2026-11-15T02:00:00Z"),
+      card("UFC 335", "2026-12-13T02:00:00Z"),
+    ], new Date("2026-11-15T02:01:00Z"))?.name).toBe("UFC 335");
+  });
+
+  it("does not invent a countdown for missing or invalid dates", () => {
+    expect(closestUpcomingNumberedEvent([
+      card("UFC 334", ""),
+      card("UFC 335", "invalid"),
+      card("UFC 333", "2026-10-25T02:00:00Z"),
+    ], new Date("2026-11-01T00:00:00Z"))).toBeNull();
+  });
+});
