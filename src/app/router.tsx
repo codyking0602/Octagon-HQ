@@ -68,6 +68,7 @@ const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCas
 const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
+const FootballGotwPage = lazy(() => import("../features/picks/FootballGotwPage"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
 const MlbPlayoffsPage = lazy(() => import("../features/mlb/MlbPlayoffsPage"));
 const MlbPicksPage = lazy(() => import("../features/mlb/MlbPicksPage"));
@@ -124,6 +125,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/play-stats", element: <PlayV2StatsPage sport="football" /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
+      { path: "football/gotw", element: <FootballGotwPage /> },
       { path: "football/today", element: <FootballTodayChallengePage /> },
       { path: "football/weekly-auction", element: <FootballWeeklyAuctionCenterPage /> },
       { path: "football/weekly-gm", element: <FootballWeeklyGmPage /> },
