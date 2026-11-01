@@ -16,8 +16,8 @@ begin
     or v_record.signed_salary_2028_29<>46980000
     or v_record.provisional_average_salary<>35782749
     or v_record.average_window_years<>3
-    or v_record.salary_schedule_verified then
-    raise exception 'Wembanyama must lock real 2026-27 through 2028-29 average only; staging not verified';
+    or not v_record.salary_schedule_verified then
+    raise exception 'Wembanyama verified signed-window average missing';
   end if;
 
   select count(*) filter (where provisional_average_salary is not null),
@@ -25,7 +25,7 @@ begin
     into v_complete,v_missing
     from private.nba_gm_contract_candidates_2026_27;
   if v_complete<>330 or v_missing<>0 then
-    raise exception 'All 330 staged sources now have provisional schedule averages, none source-certified: % / %',v_complete,v_missing;
+    raise exception 'All 330 sourced average salaries must be present: % / %',v_complete,v_missing;
   end if;
 
   select count(*) into v_bad
@@ -42,8 +42,8 @@ begin
     end;
   if v_bad<>0 then raise exception 'Staged averages do not match real signed seasons: %',v_bad;end if;
 
-  if private.nba_gm_v4_salary_certified() then
-    raise exception 'Unverified annual salaries unexpectedly opened owner-only V4';
+  if not private.nba_gm_v4_salary_certified() then
+    raise exception 'Full source audit did not authorize owner-only V4';
   end if;
 end $test$;
 rollback;
