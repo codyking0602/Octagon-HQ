@@ -142,14 +142,14 @@ export function numberedEventsFromEspnCalendar(value: unknown): NextNumberedUfcE
       if (!item || typeof item !== "object") continue;
       const row = item as { label?: unknown; startDate?: unknown };
       if (typeof row.label !== "string" || typeof row.startDate !== "string") continue;
-      const label = row.label.replace(/\\s+/g, " ").trim();
-      const match = /^UFC\\s+(\\d{3,4})(?:\\s*:\\s*(.+))?$/i.exec(label);
+      const label = row.label.replace(/\s+/g, " ").trim();
+      const match = /^UFC\s+(\d{3,4})(?:\s*:\s*(.+))?$/i.exec(label);
       if (!match || !Number.isFinite(Date.parse(row.startDate))) continue;
       const matchup = match[2]?.trim();
       records.push({
         name: "UFC " + match[1],
-        matchup: matchup && /\\bvs\\.?\\b/i.test(matchup)
-          ? matchup.replace(/\\s+vs\\.?\\s+/i, " vs. ")
+        matchup: matchup && /\bvs\.?\b/i.test(matchup)
+          ? matchup.replace(/\s+vs\.?\s+/i, " vs. ")
           : "Main event to be announced",
         startsAt: new Date(row.startDate).toISOString(),
         venue: "",
@@ -179,7 +179,7 @@ async function espnCalendar(fetchImpl: typeof fetch) {
 }
 
 async function officialCardEnrichment(event: NextNumberedUfcEvent, fetchImpl: typeof fetch, now: Date) {
-  const number = event.name.match(/^UFC (\\d{3,4})$/)?.[1];
+  const number = event.name.match(/^UFC (\d{3,4})$/)?.[1];
   if (!number) return event;
   const url = absoluteUfcEventUrl("https://www.ufc.com/event/ufc-" + number);
   if (!url) return event;
