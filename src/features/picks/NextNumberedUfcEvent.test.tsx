@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { NextNumberedUfcEvent, countdownUnits } from "./NextNumberedUfcEvent";
@@ -29,6 +29,30 @@ describe("NextNumberedUfcEvent", () => {
     expect(screen.queryByText("EVENT DETAILS")).not.toBeInTheDocument();
     expect(screen.queryByText("STAGE NEXT UFC EVENT")).not.toBeInTheDocument();
     expect(screen.queryByText("NO ACTIVE CARD")).not.toBeInTheDocument();
+  });
+
+  it("displays the approved current-event poster and survives image CDN failures", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ event: {
+        name: "UFC 334", matchup: "Ciryl Gane vs. Josh Hokit",
+        startsAt: "2026-11-15T02:00:00.000Z",
+        venue: "Madison Square Garden", location: "New York",
+        imageUrl: null,
+      } }),
+    })));
+    const { container } = render(<MemoryRouter><NextNumberedUfcEvent canControl={false} /></MemoryRouter>);
+    await screen.findByRole("heading", { name: "UFC 334" });
+    const first = container.querySelector<HTMLImageElement>(".ufc-next-event__poster");
+    expect(first?.src).toContain("fighttime.ru/media/");
+    expect(container.querySelector(".ufc-next-event__art")).toHaveClass("has-artwork");
+    fireEvent.error(first!);
+    await waitFor(() => expect(container.querySelector<HTMLImageElement>(".ufc-next-event__poster")?.src).toContain("ringside24.com/media/"));
+    fireEvent.error(container.querySelector(".ufc-next-event__poster")!);
+    await waitFor(() => expect(container.querySelector(".ufc-next-event__poster")).not.toBeInTheDocument());
+    expect(container.querySelector(".ufc-next-event__art")).not.toHaveClass("has-artwork");
+    expect(container.querySelector(".ufc-next-event__arena")).toBeInTheDocument();
+    expect(screen.getByText("COUNTDOWN TO FIGHT NIGHT")).toBeInTheDocument();
   });
 
   it("keeps owner controls discreet and handles missing official data without fictional dates", async () => {
