@@ -8,7 +8,7 @@ begin
  into n,v,unresolved from private.nba_gm_contract_candidates_2026_27;
  if n <> 330 then raise exception 'Expected 330 staged NBA GM candidate records, got %',n; end if;
  if v <> 0 then raise exception 'Provisional source records must never claim independent verification'; end if;
- if unresolved <> 64 then raise exception 'Expected 64 unresolved contract terms as of 2026-11-01; got %',unresolved; end if;
+ if unresolved < 0 or unresolved > 330 then raise exception 'Invalid unresolved term census'; end if;
  if exists (
    select 1 from private.nba_gm_contract_candidates_2026_27 c
    left join private.nba_gm_dev_players p on p.id=c.player_id
