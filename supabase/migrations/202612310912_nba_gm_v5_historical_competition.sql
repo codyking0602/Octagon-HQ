@@ -186,7 +186,8 @@ begin
     (select count(*) from private.nba_gm_v5_historical_teams where playoff_depth=5)<>5 or
     (select count(distinct season_end) from private.nba_gm_v5_historical_teams)<>5
  then raise exception 'NBA V5 historical 150-team source coverage failed';end if;
-end $cohort$;
+end;
+$cohort$;
 
 
 -- The 2023-24 and 2024-25 NBA real top-seven workloads (60 teams) average
