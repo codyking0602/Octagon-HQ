@@ -5,7 +5,7 @@ import { FootballFuturesCard } from "./FootballFuturesCard";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { footballLockAllowance, gradeFootballAts, type AtsOutcome } from "./footballPicksScoring";
 import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
-import { mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "../home/footballWeeklyPublication";
+import { footballGotwNotificationMatchupId, mergeFootballWeeklyMatchupBreakdowns, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "../home/footballWeeklyPublication";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { footballLiveStandingsForMembers, footballStandingRankLabel } from "./footballGroupLiveStandings";
@@ -114,12 +114,19 @@ export default function FootballPicksPage() {
   const currentStanding = currentProfile ? weeklyStandings.get(currentProfile.profileId) : null;
   const weeklyRank = currentStanding && currentStanding.settled > 0
     ? footballStandingRankLabel(currentStanding.rank, currentStanding.tied) : "—";
-  const matchupBreakdowns = useMemo(() => {
-    return mergeFootballWeeklyMatchupBreakdowns(
-      publishedFootballMatchupsForEvent(event, published ?? null),
-      footballMatchupBreakdownsForEvent(event),
-    );
-  }, [event, published]);
+  const publishedMatchups = useMemo(
+    () => publishedFootballMatchupsForEvent(event, published ?? null),
+    [event, published],
+  );
+  const matchupBreakdowns = useMemo(() => mergeFootballWeeklyMatchupBreakdowns(
+    publishedMatchups,
+    footballMatchupBreakdownsForEvent(event),
+  ), [event, publishedMatchups]);
+  const gotwSport = typeof window === "undefined"
+    ? null : new URLSearchParams(window.location.search).get("gotw");
+  const requestedGotwBreakdownId = gotwSport === "nfl" || gotwSport === "cfb"
+    ? footballGotwNotificationMatchupId(gotwSport, publishedMatchups, matchupBreakdowns)
+    : null;
   // Owner-uploaded Picks gallery images already live in pick-event-headers.
   // They always take priority over the published weekly SeatGeek fallback,
   // even when both the NFL and CFB weekly breakdowns are present.
@@ -294,7 +301,7 @@ export default function FootballPicksPage() {
 
           {matchupBreakdowns.length || event.canControl ? (
             <div className="football-picks-owner-tools">
-              <FootballMatchupBreakdowns breakdowns={matchupBreakdowns} />
+              <FootballMatchupBreakdowns breakdowns={matchupBreakdowns} requestedBreakdownId={requestedGotwBreakdownId} />
             </div>
           ) : null}
           {identity.profile ? (
