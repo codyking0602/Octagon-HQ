@@ -38,6 +38,34 @@ describe("notificationDestination", () => {
     )).toBe("/football/picks?view=recap");
   });
 
+  it("opens the exact week and sport for previously delivered NFL and CFB GOTW notifications", () => {
+    expect(notificationDestination({
+      kind: "football_gotw_starting",
+      route: "/football",
+      title: "NFL Game of the Week starts soon",
+      summary: "Chicago Bears at Seattle Seahawks kicks off in under one hour.",
+      aggregationKey: "football-gotw-starting:2026-10-27:nfl",
+    })).toBe("/football/gotw?league=nfl&week=2026-10-27");
+    expect(notificationDestination({
+      kind: "football_gotw_starting",
+      route: "/football",
+      title: "CFB Game of the Week starts soon",
+      summary: "Miami at North Carolina kicks off in under one hour.",
+      aggregationKey: "football-gotw-starting:2026-10-27:cfb",
+    })).toBe("/football/gotw?league=cfb&week=2026-10-27");
+  });
+
+  it("preserves new GOTW destinations and handles old notifications without aggregation keys", () => {
+    expect(notificationDestination({
+      kind: "football_gotw_starting", route: "/football/gotw?league=nfl&week=2026-10-27",
+      title: "NFL Game of the Week starts soon", summary: "",
+    })).toBe("/football/gotw?league=nfl&week=2026-10-27");
+    expect(notificationDestination({
+      kind: "football_gotw_starting", route: "/football",
+      title: "CFB Game of the Week starts soon", summary: "",
+    })).toBe("/football/gotw?league=cfb");
+  });
+
   it("does not rewrite other Picks notifications", () => {
     expect(destination("picks_repick_required", "/picks")).toBe("/picks");
   });
