@@ -262,7 +262,8 @@ export default function NbaGmDevPage(){
         onClick={()=>void act("start")}>START THE DRAFT</button>
     </section>}
     {run&&<>
-      <section className={`football-gm__cap surface-card nba-gm-dev__caps${(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" is-over":""}`}>
+      {run.phase==="offseason"&&<NbaGmDevelopmentReport run={run} catalog={catalog}/>}
+      {run.phase!=="final"&&<section className={`football-gm__cap surface-card nba-gm-dev__caps${(spend?.[displaySalaryYear]??0)>run.caps[displaySalaryYear]?" is-over":""}`}>
         <div className="nba-gm-dev__cap-main">
           <span><small>YEAR {displaySalaryYear+1} CAP</small>
             <strong>{money(spend?.[displaySalaryYear]??0)} / {money(run.caps[displaySalaryYear]!)}</strong></span>
@@ -274,8 +275,12 @@ export default function NbaGmDevPage(){
           {[0,1,2].filter(index=>index!==displaySalaryYear).map(index=>
             <span key={index}><small>YEAR {index+1}</small><b>{money(spend?.[index]??0)} / {money(run.caps[index]!)}</b></span>)}
         </div>
-      </section>
-      <section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
+      </section>}
+      {run.phase==="offseason"&&<section className="nba-gm-dev__continuity surface-card" aria-label="Roster continuity">
+        <span><small>ROSTER CONTINUITY</small><strong>{run.picks.filter(pick=>run.yearOnePicks.some(original=>original.playerId===pick.playerId)).length}/7 RETAINED</strong></span>
+        <p>Keep your opening core or make a move. Replacing players affects later seasons, not your completed Year 1.</p>
+      </section>}
+      {run.phase!=="final"&&<section className="football-gm__roster surface-card nba-gm-dev__roster-panel">
         <header><span><small>YOUR TEAM</small><strong>7-MAN ROTATION</strong></span><b>{run.picks.length}/7</b></header>
         <p className="nba-gm-dev__hint">The strongest eligible five start automatically. Guard and Big are backups with reduced minutes in the season simulation.</p>
         {benchAlert&&<p className="nba-gm-dev__notice" role="status">Older saved rotation: a higher-rated eligible player is on your bench. New franchises optimize starters. Your saved result is unchanged.</p>}
@@ -301,14 +306,12 @@ export default function NbaGmDevPage(){
                 {run.phase==="offseason"&&<div className="nba-gm-dev__row-actions">
                   {run.tradesUsed<1&&!run.shopPlayerId&&!run.freeAgencyTeam&&
                     <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("shop",player.id)}>SHOP</button>}
-                  {(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&
-                    <button className="nba-gm-dev__secondary" disabled={busy} onClick={()=>void act("release",player.id)}>CUT</button>}
                 </div>}
               </>:<span className="football-gm__open">OPEN</span>}
             </article>;
           })}
         </div>
-      </section>
+      </section>}
       {run.phase==="draft"&&<section className="nba-gm-dev__panel nba-gm-dev__draft">
         <div className="nba-gm-dev__section-title"><div><small>ROUND {run.picks.length+1} OF 7</small>
           <h2>{run.pendingTeam?"CHOOSE YOUR PLAYER":"SPIN FOR AN NBA TEAM"}</h2></div>
@@ -326,11 +329,9 @@ export default function NbaGmDevPage(){
           ENTER THE OFFSEASON
         </button>
       </section>}
-      {(run.phase==="year1"||run.phase==="offseason")&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
-      {run.phase==="offseason"&&<NbaGmDevelopmentReport run={run} catalog={catalog}/>}
+      {run.phase==="year1"&&<FitReport picks={run.yearOnePicks} catalog={catalog}/>}
       {run.phase==="offseason"&&<section className="nba-gm-dev__panel nba-gm-dev__offseason">
-        <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>THE OFFSEASON</h2></div></div>
-        <Results seasons={run.results}/>
+        <div className="nba-gm-dev__section-title"><div><small>AFTER SEASON 1</small><h2>OFFSEASON MOVES</h2></div></div>
         {capCrisis&&<p className="nba-gm-dev__cap-crisis" role="alert">SALARY CAP CRISIS · Your future payroll is over the cap. Trade or cut a player, then sign an affordable replacement before advancing.</p>}
         <p className="nba-gm-dev__hint">Development now changes skills and 1YR market values. A 3YR salary stays locked. Shop a player, negotiate up to two offers, or use one voluntary cut and the limited free-agent market.</p>
         {run.shopPlayerId&&<div className="nba-gm-dev__trade">
@@ -388,11 +389,38 @@ export default function NbaGmDevPage(){
               salaryYear={1} action="SIGN DEPTH" onPick={()=>void act("emergency-sign",player.id)}/>)}
           </div>
         </div>}
+        {(run.releasedIds.length<1||capCrisis)&&!run.shopPlayerId&&!run.freeAgencyTeam&&run.picks.length===7&&
+          <section className="nba-gm-dev__release" aria-label="Voluntary player release">
+            <div className="nba-gm-dev__release-heading"><div><small>ONE VOLUNTARY RELEASE</small><h3>Release a player</h3></div>
+              <span>{run.releasedIds.length===0?"AVAILABLE":"CAP RECOVERY"}</span></div>
+            <p className="nba-gm-dev__hint">A release is permanent. It opens a roster spot for the free-agent wheel; you cannot re-sign this player this offseason.</p>
+            <div className="nba-gm-dev__release-list">
+              {run.picks.map(pick=>{
+                const player=byId.get(pick.playerId);
+                return player?<div className="nba-gm-dev__release-row" key={player.id}>
+                  <span><strong>{player.name}</strong><small>{NBA_GM_DEV_SLOT_LABELS[pick.slot]} · {money(nbaGmDevSalary(player,1))}</small></span>
+                  <button type="button" className="nba-gm-dev__secondary" disabled={busy}
+                    onClick={()=>{if(window.confirm("Release "+player.name+"? This move cannot be undone."))void act("release",player.id);}}>
+                    RELEASE
+                  </button>
+                </div>:null;
+              })}
+            </div>
+          </section>}
+        {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
+          <div className={"nba-gm-dev__window-status"+(capCrisis?" is-crisis":"")} role="status">
+            <strong>{capCrisis?"CAP CRISIS":"WINDOW SET"}</strong>
+            <span>{capCrisis?"Resolve the Years 2 and 3 cap before advancing.":"All seven roster spots are filled. You can move forward or make an offseason move."}</span>
+          </div>}
         {run.picks.length===7&&!run.shopPlayerId&&!run.freeAgencyTeam&&
           <button className="nba-gm-dev__primary" disabled={busy||capCrisis} onClick={()=>void act("advance")}>
             LOCK ROSTER · SIMULATE SEASONS 2 & 3
           </button>}
       </section>}
+      {run.phase==="offseason"&&<details className="nba-gm-dev__fit-disclosure">
+        <summary>ROTATION FIT SCOUTING <span>SHOT CREATION · SPACING · DEFENSE</span></summary>
+        <FitReport picks={run.yearOnePicks} catalog={catalog}/>
+      </details>}
       {run.phase==="final"&&<><NbaGmFinalExperience run={run} catalog={catalog}/>
         <button className="nba-gm-dev__primary" disabled={busy} onClick={()=>void act("start")}>NEW FRANCHISE</button></>}
       <footer className="nba-gm-dev__disclaimer">Private owner playtest · Provisional ratings and fictional contracts · Not a public NBA forecast.</footer>
